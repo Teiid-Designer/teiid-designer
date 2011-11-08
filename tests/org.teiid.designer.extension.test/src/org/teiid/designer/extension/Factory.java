@@ -57,6 +57,22 @@ public class Factory implements Constants {
         return allowedValues;
     }
 
+    public static ModelExtensionPropertyDefinition createDefaultPropertyDefinition() {
+        ModelExtensionDefinition med = createDefinitionWithOneMetaclassAndNoPropertyDefinitions();
+        return new ModelExtensionPropertyDefinitionImpl(med,
+                                                        DEFAULT_SIMPLE_ID,
+                                                        DEFAULT_RUNTIME_TYPE,
+                                                        Boolean.toString(ModelExtensionPropertyDefinition.REQUIRED_DEFAULT),
+                                                        null,
+                                                        null,
+                                                        Boolean.toString(ModelExtensionPropertyDefinition.ADVANCED_DEFAULT),
+                                                        Boolean.toString(ModelExtensionPropertyDefinition.MASKED_DEFAULT),
+                                                        Boolean.toString(ModelExtensionPropertyDefinition.INDEX_DEFAULT),
+                                                        Utils.getStringAllowedValues(),
+                                                        Utils.getTranslations(),
+                                                        Utils.getTranslations());
+    }
+
     public static Set<Translation> createDefaultTranslations() {
         Set<Translation> translations = new HashSet<Translation>(DEFAULT_TRANSLATIONS.length);
         translations.addAll(Arrays.asList(DEFAULT_TRANSLATIONS));
@@ -80,6 +96,12 @@ public class Factory implements Constants {
                                                                     DEFAULT_MED_DESCRIPTION,
                                                                     DEFAULT_VERSION);
         med.addMetaclass(DEFAULT_METACLASS);
+        return med;
+    }
+
+    public static ModelExtensionDefinition createDefinitionWithOneMetaclassWithOnePropertyDefinition() {
+        ModelExtensionDefinition med = createDefinitionWithOneMetaclassAndNoPropertyDefinitions();
+        med.addPropertyDefinition(med.getExtendedMetaclasses()[0], createDefaultPropertyDefinition());
         return med;
     }
 

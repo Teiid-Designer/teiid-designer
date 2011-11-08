@@ -265,5 +265,39 @@ public class ModelExtensionDefinitionTest implements Constants {
     public void shouldSetVersionOnConstruction() {
         assertEquals(ModelExtensionDefinitionHeader.DEFAULT_VERSION, this.med.getVersion());
     }
-    
+
+    @Test
+    public void medsShouldBeEqual() {
+        assertTrue(this.med.equals(Factory.createDefinitionWithNoPropertyDefinitions()));
+        assertTrue(Factory.createDefinitionWithOneMetaclassAndNoPropertyDefinitions()
+                          .equals(Factory.createDefinitionWithOneMetaclassAndNoPropertyDefinitions()));
+    }
+
+    @Test
+    public void medsShouldHaveSameHashCodel() {
+        assertTrue(this.med.hashCode() == Factory.createDefinitionWithNoPropertyDefinitions().hashCode());
+        assertTrue(Factory.createDefinitionWithOneMetaclassAndNoPropertyDefinitions().hashCode() == Factory.createDefinitionWithOneMetaclassAndNoPropertyDefinitions()
+                                                                                                           .hashCode());
+    }
+
+    @Test
+    public void shouldUpdateMetaclassWithNoProperties() {
+        this.med = Factory.createDefinitionWithOneMetaclassAndNoPropertyDefinitions();
+        String original = this.med.getExtendedMetaclasses()[0];
+        String modified = original + "changed"; //$NON-NLS-1$
+        this.med.updateMetaclass(original, modified);
+        assertEquals(1, this.med.getExtendedMetaclasses().length);
+        assertEquals(modified, this.med.getExtendedMetaclasses()[0]);
+    }
+
+    @Test
+    public void shouldUpdateMetaclassWithProperties() {
+        this.med = Factory.createDefinitionWithOneMetaclassWithOnePropertyDefinition();
+        String original = this.med.getExtendedMetaclasses()[0];
+        String modified = original + "changed"; //$NON-NLS-1$
+        this.med.updateMetaclass(original, modified);
+        assertEquals(1, this.med.getExtendedMetaclasses().length);
+        assertEquals(modified, this.med.getExtendedMetaclasses()[0]);
+        assertEquals(1, this.med.getPropertyDefinitions(modified).size());
+    }
 }

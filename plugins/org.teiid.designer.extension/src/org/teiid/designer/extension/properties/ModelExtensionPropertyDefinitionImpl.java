@@ -32,12 +32,6 @@ import com.metamatrix.core.util.CoreStringUtil;
  */
 public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPropertyDefinition {
 
-    public static final boolean ADVANCED_DEFAULT = false;
-    public static final boolean INDEX_DEFAULT = true;
-    public static final boolean MASKED_DEFAULT = false;
-    public static final boolean REQUIRED_DEFAULT = false;
-    public static final Type TYPE_DEFAULT = Type.STRING;
-
     private boolean advanced = ADVANCED_DEFAULT;
     private Set<String> allowedValues;
     private String defaultValue;

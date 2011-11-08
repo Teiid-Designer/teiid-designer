@@ -38,6 +38,31 @@ public interface ModelExtensionPropertyDefinition extends Cloneable, PropertyDef
     char ID_DELIM = ':';
 
     /**
+     * The default value for the advanced property (default is {@value} ).
+     */
+    boolean ADVANCED_DEFAULT = false;
+
+    /**
+     * The default value for the indexed property (default is {@value} ).
+     */
+    boolean INDEX_DEFAULT = true;
+
+    /**
+     * The default value for the masked property (default is {@value} ).
+     */
+    boolean MASKED_DEFAULT = false;
+
+    /**
+     * The default value for the required property (default is {@value} ).
+     */
+    boolean REQUIRED_DEFAULT = false;
+
+    /**
+     * The default value for the runtime type property (default is {@value} ).
+     */
+    Type TYPE_DEFAULT = Type.STRING;
+
+    /**
      * @param newAllowedValue the allowed value being added (cannot be <code>null</code>)
      * @return <code>true</code> if the allowed value was added
      */
@@ -181,7 +206,7 @@ public interface ModelExtensionPropertyDefinition extends Cloneable, PropertyDef
     /**
      * @param newNamespacePrefixProvider the new namespace prefix provider (cannot be <code>null</code>)
      */
-    void setNamespacePrefixProvider(NamespacePrefixProvider newNamespacePrefixProvider);
+    void setNamespacePrefixProvider( NamespacePrefixProvider newNamespacePrefixProvider );
 
     /**
      * @param newRequired the new required value

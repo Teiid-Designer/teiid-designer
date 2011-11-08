@@ -16,6 +16,7 @@ import java.util.Locale;
 import java.util.Set;
 
 import org.teiid.designer.extension.definition.ModelExtensionDefinitionHeader;
+import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition.Type;
 import org.teiid.designer.extension.properties.Translation;
 
 /**
@@ -95,6 +96,10 @@ public interface Constants {
 
     String[] DEFAULT_STRING_ALLOWED_VALUES = new String[] { "value-0", "value-1", "value-2", "value-3", "value-4" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 
+    String DEFAULT_SIMPLE_ID = "simpleId"; //$NON-NLS-1$
+    String DEFAULT_RUNTIME_TYPE = Type.STRING.toString();
+    String DEFAULT_INITIAL_VALUE = "initialValue"; //$NON-NLS-1$
+    
     public class Utils {
         public static Set<String> getExtendableMetamodelUris() {
             Set<String> metamodelUris = new HashSet<String>();
