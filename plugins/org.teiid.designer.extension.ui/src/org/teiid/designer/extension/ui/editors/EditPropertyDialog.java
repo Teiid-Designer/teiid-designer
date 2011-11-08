@@ -13,10 +13,12 @@ import static org.teiid.designer.extension.ui.UiConstants.Form.SECTION_STYLE;
 import static org.teiid.designer.extension.ui.UiConstants.Form.TEXT_STYLE;
 import static org.teiid.designer.extension.ui.UiConstants.Form.VIEWER_STYLE;
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.MED_EDITOR;
+
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Collection;
+
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
@@ -67,6 +69,7 @@ import org.teiid.designer.extension.properties.Translation;
 import org.teiid.designer.extension.ui.Activator;
 import org.teiid.designer.extension.ui.Messages;
 import org.teiid.designer.extension.ui.UiConstants.ImageIds;
+
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.internal.ui.forms.FormUtil;
@@ -1244,9 +1247,9 @@ final class EditPropertyDialog extends FormDialog {
 
         if (dialog.open() == Window.OK) {
             Translation changedDisplayName = dialog.getTranslation();
-            this.propDefn.removeDescription(selectedDisplayName);
-            this.propDefn.addDescription(changedDisplayName);
-            this.descriptionViewer.refresh();
+            this.propDefn.removeDisplayName(selectedDisplayName);
+            this.propDefn.addDisplayName(changedDisplayName);
+            this.displayNameViewer.refresh();
         }
     }
 
@@ -1264,7 +1267,7 @@ final class EditPropertyDialog extends FormDialog {
         }
 
         // if boolean don't allow changes to allowed values
-        enable &= (Type.BOOLEAN != this.propDefn.getType());
+        enable = (Type.BOOLEAN != this.propDefn.getType());
 
         if (this.btnAllowedValues.getEnabled() != enable) {
             this.btnAllowedValues.setEnabled(enable);

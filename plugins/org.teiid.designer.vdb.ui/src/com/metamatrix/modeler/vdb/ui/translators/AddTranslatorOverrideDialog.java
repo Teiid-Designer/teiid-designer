@@ -212,7 +212,7 @@ public class AddTranslatorOverrideDialog extends MessageDialog {
         String errorMsg = TranslatorOverride.validateName(this.name);
 
         if ((errorMsg == null) && this.existingNames.contains(this.name)) {
-            errorMsg = Util.getString(PREFIX + "translatorNameAlreadyExists"); //$NON-NLS-1$
+            errorMsg = Util.getString(PREFIX + "translatorNameAlreadyExists", this.name); //$NON-NLS-1$
         }
 
         return errorMsg;

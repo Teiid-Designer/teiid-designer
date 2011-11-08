@@ -111,7 +111,7 @@ public class EditTranslationDialog extends FormDialog {
         this.translation = this.translationBeingEdited.getTranslation();
 
         // remove the translation being edited
-        this.existingTranslations.remove(this.existingTranslations);
+        this.existingTranslations.remove(this.translationBeingEdited);
     }
 
     /**
@@ -249,11 +249,6 @@ public class EditTranslationDialog extends FormDialog {
      * @return the new or edited translation (never <code>null</code>)
      */
     public Translation getTranslation() {
-        if (isEditMode()) {
-            this.translationBeingEdited.setLocale(this.locale);
-            this.translationBeingEdited.setTranslation(this.translation);
-        }
-
         return new Translation(this.locale, this.translation);
     }
 
@@ -298,7 +293,7 @@ public class EditTranslationDialog extends FormDialog {
                     enable = ((localeBeingEdited == null) || !localeBeingEdited.equals(this.locale));
                 }
 
-                if (enable) {
+                if (!enable) {
                     enable = !CoreStringUtil.equals(this.translation, this.translationBeingEdited.getTranslation());
                 }
             }
