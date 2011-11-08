@@ -1329,7 +1329,9 @@ public class RuntimeAdapter extends RecordFactory {
             try {
                 // gets the current value and if missing in EObject the default property value
                 Properties extensionProperties = assistant.getPropertyValues(eObject);
-
+                if( extensionProperties == null ) {
+                	continue;
+                }
                 for (String propName : extensionProperties.stringPropertyNames()) {
                     ModelExtensionPropertyDefinition propDefn = registry.getPropertyDefinition(metaclassName, propName);
 
