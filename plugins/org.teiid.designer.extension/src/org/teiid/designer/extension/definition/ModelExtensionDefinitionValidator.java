@@ -321,6 +321,14 @@ public final class ModelExtensionDefinitionValidator {
         ValidationStatus status = null;
         ValidationStatus tempStatus = null;
 
+        SIMPLE_ID: {
+            status = validatePropertySimpleId(id);
+
+            if (status.isError()) {
+                return status;
+            }
+        }
+
         NAMESPACE_PREFIX: {
             status = validateNamespacePrefix(namespacePrefix, Collections.<String> emptyList());
 
@@ -502,15 +510,8 @@ public final class ModelExtensionDefinitionValidator {
         return ValidationStatus.createErrorMessage(errorMsg);
     }
 
-    public static ValidationStatus validatePropertySimpleId( String proposedValue,
-                                                             Collection<String> existingPropIds ) {
+    public static ValidationStatus validatePropertySimpleId( String proposedValue ) {
         String errorMsg = containsOnlyIdCharactersCheck(Messages.propertySimpleId, proposedValue);
-
-        if (CoreStringUtil.isEmpty(errorMsg)) {
-            if ((existingPropIds != null) && existingPropIds.contains(proposedValue)) {
-                errorMsg = NLS.bind(Messages.duplicatePropertyIdValidatinMsg, proposedValue);
-            }
-        }
 
         if (CoreStringUtil.isEmpty(errorMsg)) {
             return ValidationStatus.OK_STATUS;

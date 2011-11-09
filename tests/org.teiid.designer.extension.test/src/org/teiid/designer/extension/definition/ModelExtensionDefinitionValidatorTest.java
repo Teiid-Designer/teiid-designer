@@ -248,28 +248,28 @@ public class ModelExtensionDefinitionValidatorTest implements Constants {
 
     @Test
     public void emptyPropertySimpleIdShouldNotBeValid() {
-        assertTrue(ModelExtensionDefinitionValidator.validatePropertySimpleId(CoreStringUtil.Constants.EMPTY_STRING, null)
+        assertTrue(ModelExtensionDefinitionValidator.validatePropertySimpleId(CoreStringUtil.Constants.EMPTY_STRING)
                                                     .isError());
     }
 
     @Test
     public void nullPropertySimpleIdShouldNotBeValid() {
-        assertTrue(ModelExtensionDefinitionValidator.validatePropertySimpleId(null, null).isError());
+        assertTrue(ModelExtensionDefinitionValidator.validatePropertySimpleId(null).isError());
     }
 
     @Test
     public void allSpacesAsPropertySimpleIdShouldNotBeValid() {
-        assertTrue(ModelExtensionDefinitionValidator.validatePropertySimpleId(ALL_SPACES, null).isError());
+        assertTrue(ModelExtensionDefinitionValidator.validatePropertySimpleId(ALL_SPACES).isError());
     }
 
     @Test
     public void interiorSpacesAsPropertySimpleIdShouldNotBeValid() {
-        assertTrue(ModelExtensionDefinitionValidator.validatePropertySimpleId(INTERIOR_SPACES, null).isError());
+        assertTrue(ModelExtensionDefinitionValidator.validatePropertySimpleId(INTERIOR_SPACES).isError());
     }
 
     @Test
     public void specialCharactersAsPropertySimpleIdShouldNotBeValid() {
-        assertTrue(ModelExtensionDefinitionValidator.validatePropertySimpleId(SPECIAL_CHARS, null).isError());
+        assertTrue(ModelExtensionDefinitionValidator.validatePropertySimpleId(SPECIAL_CHARS).isError());
     }
 
     @Test

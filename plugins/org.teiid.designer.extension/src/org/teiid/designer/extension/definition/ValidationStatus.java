@@ -25,7 +25,7 @@ public final class ValidationStatus implements Comparable<ValidationStatus> {
      * @param message the validation message (cannot be <code>null</code> or empty)
      * @return the error validation message (never <code>null</code>)
      */
-    static ValidationStatus createErrorMessage( String message ) {
+    public static ValidationStatus createErrorMessage( String message ) {
         return new ValidationStatus(Severity.ERROR, message);
     }
 
@@ -33,7 +33,7 @@ public final class ValidationStatus implements Comparable<ValidationStatus> {
      * @param message the validation message (cannot be <code>null</code> or empty)
      * @return the information validation message (never <code>null</code>)
      */
-    static ValidationStatus createInfoMessage( String message ) {
+    public static ValidationStatus createInfoMessage( String message ) {
         return new ValidationStatus(Severity.INFO, message);
     }
 
@@ -41,7 +41,7 @@ public final class ValidationStatus implements Comparable<ValidationStatus> {
      * @param message the validation message (cannot be <code>null</code> or empty)
      * @return the OK validation message (never <code>null</code>)
      */
-    static ValidationStatus createOkMessage( String message ) {
+    public static ValidationStatus createOkMessage( String message ) {
         return new ValidationStatus(Severity.OK, message);
     }
 
@@ -49,7 +49,7 @@ public final class ValidationStatus implements Comparable<ValidationStatus> {
      * @param message the validation message (cannot be <code>null</code> or empty)
      * @return the warning validation message (never <code>null</code>)
      */
-    static ValidationStatus createWarningMessage( String message ) {
+    public static ValidationStatus createWarningMessage( String message ) {
         return new ValidationStatus(Severity.WARNING, message);
     }
 

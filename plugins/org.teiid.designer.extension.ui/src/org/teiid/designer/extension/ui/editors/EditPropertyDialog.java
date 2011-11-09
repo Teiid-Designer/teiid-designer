@@ -60,6 +60,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.teiid.designer.extension.definition.ModelExtensionDefinitionValidator;
+import org.teiid.designer.extension.definition.ValidationStatus;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition.PropertyName;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition.Type;
@@ -137,9 +138,13 @@ final class EditPropertyDialog extends FormDialog {
         CoreArgCheck.isNotNull(namespacePrefixProvider, "namespacePrefixProvider is null"); //$NON-NLS-1$
         this.metaclassName = metaclassName;
         this.namespacePrefixProvider = namespacePrefixProvider;
-
-        this.existingPropIds = new ArrayList<String>(existingPropIds);
         this.propDefn = new ModelExtensionPropertyDefinitionImpl(this.namespacePrefixProvider);
+
+        if (existingPropIds == null) {
+            this.existingPropIds = new ArrayList<String>();
+        } else {
+            this.existingPropIds = new ArrayList<String>(existingPropIds);
+        }
 
         // errors
         this.advancedError = new ErrorMessage();
@@ -1604,8 +1609,15 @@ final class EditPropertyDialog extends FormDialog {
     }
 
     private void validateSimpleId() {
-        this.simpleIdError.setStatus(ModelExtensionDefinitionValidator.validatePropertySimpleId(this.propDefn.getSimpleId(),
-                                                                                                this.existingPropIds));
+        String simpleId = this.propDefn.getSimpleId();
+        this.simpleIdError.setStatus(ModelExtensionDefinitionValidator.validatePropertySimpleId(simpleId));
+
+        // make sure ID is not a duplicate
+        if (!this.simpleIdError.isError() && !CoreStringUtil.isEmpty(simpleId) && this.existingPropIds.contains(simpleId)) {
+            this.simpleIdError.setStatus(ValidationStatus.createErrorMessage(NLS.bind(org.teiid.designer.extension.Messages.duplicatePropertyIdValidatinMsg,
+                                                                                      simpleId)));
+        }
+
         addMessage(this.simpleIdError);
     }
 
