@@ -172,11 +172,11 @@ public abstract class ModelExtensionAssistant {
     }
 
     /**
-     * Obtains from the ModelResource, the ModelExtensionDefinition. If there is no ModelExtensionDefinition for this
-     * namespacePrefix, returns <code>null</code>
+     * Obtains from the ModelResource, the ModelExtensionDefinition.
      * 
      * @param modelObject the model object whose ModelExtensionDefinition is being requested (cannot be <code>null</code>)
-     * @return the ModelExtensionDefinition for the requested namespacePrefix
+     * @return the ModelExtensionDefinition for this assistant's namespacePrefix or <code>null</code> if not supported by the model
+     *         object
      * @throws Exception if there is a problem obtaining the ModelExtensionDefinition
      */
     public abstract ModelExtensionDefinition getModelExtensionDefinition( Object modelObject ) throws Exception;

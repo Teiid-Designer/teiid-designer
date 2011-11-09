@@ -44,7 +44,7 @@ public class ModelExtensionAssistantAdapter extends ModelExtensionAssistant {
      */
     @Override
     public Properties getOverriddenValues( Object modelObject ) throws Exception {
-        return null;
+        return new Properties();
     }
 
     /**
@@ -65,7 +65,7 @@ public class ModelExtensionAssistantAdapter extends ModelExtensionAssistant {
      */
     @Override
     public Properties getPropertyValues( Object modelObject ) throws Exception {
-        return null;
+        return new Properties();
     }
 
     /**
@@ -105,6 +105,7 @@ public class ModelExtensionAssistantAdapter extends ModelExtensionAssistant {
      */
     @Override
     public void removeModelExtensionDefinition( Object modelObject ) throws Exception {
+        // nothing to do
     }
 
     /**
@@ -115,6 +116,7 @@ public class ModelExtensionAssistantAdapter extends ModelExtensionAssistant {
     @Override
     public void removeProperty( Object modelObject,
                                 String propId ) throws Exception {
+        // nothing to do
     }
 
     /**
@@ -124,6 +126,7 @@ public class ModelExtensionAssistantAdapter extends ModelExtensionAssistant {
      */
     @Override
     public void saveModelExtensionDefinition( Object modelObject ) throws Exception {
+        // nothing to do
     }
 
     /**
@@ -136,6 +139,7 @@ public class ModelExtensionAssistantAdapter extends ModelExtensionAssistant {
     public void setPropertyValue( Object modelObject,
                                   String propId,
                                   String newValue ) throws Exception {
+        // nothing to do
     }
 
     /**

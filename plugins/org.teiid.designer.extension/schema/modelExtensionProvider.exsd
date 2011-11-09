@@ -6,10 +6,7 @@
          <meta.schema plugin="org.teiid.designer.extension" id="modelExtensionProvider" name="%modelExtensionProvider"/>
       </appInfo>
       <documentation>
-         -- name (mandatory)
--- collection (mandatory)
- -- path to mxd (mandatory)
- -- class of assistant (mandatory)
+         Provides a path to a model extension definition file and a class name of a ModelExtensionAssistant implementation. The assistant is used by the model extension framework to create the ModelExtensionDefinition.
       </documentation>
    </annotation>
 
