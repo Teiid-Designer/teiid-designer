@@ -30,7 +30,7 @@ import com.metamatrix.modeler.core.query.QueryValidationResult;
 import com.metamatrix.modeler.core.query.QueryValidator;
 import com.metamatrix.modeler.transformation.ui.UiConstants;
 import com.metamatrix.query.internal.ui.sqleditor.component.QueryDisplayComponent;
-import com.metamatrix.query.internal.ui.sqleditor.sql.ColorManager;
+import com.metamatrix.ui.graphics.ColorManager;
 
 /**
  * SqlEditorPanel

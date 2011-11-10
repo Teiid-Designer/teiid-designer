@@ -33,8 +33,8 @@ import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.widgets.Composite;
-import com.metamatrix.query.internal.ui.sqleditor.sql.ColorManager;
 import com.metamatrix.query.internal.ui.sqleditor.sql.SqlPartitionScanner;
+import com.metamatrix.ui.graphics.ColorManager;
 
 
 public class CriteriaTextViewer extends SourceViewer {

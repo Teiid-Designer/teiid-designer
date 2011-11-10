@@ -27,7 +27,6 @@ import org.eclipse.jface.text.rules.Token;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.SourceViewerConfiguration;
 import org.eclipse.swt.graphics.RGB;
-import com.metamatrix.query.internal.ui.sqleditor.sql.ColorManager;
 import com.metamatrix.query.internal.ui.sqleditor.sql.SqlAutoIndentStrategy;
 import com.metamatrix.query.internal.ui.sqleditor.sql.SqlCodeScanner;
 import com.metamatrix.query.internal.ui.sqleditor.sql.SqlCompletionProcessor;
@@ -35,6 +34,7 @@ import com.metamatrix.query.internal.ui.sqleditor.sql.SqlDoubleClickStrategy;
 import com.metamatrix.query.internal.ui.sqleditor.sql.SqlPartitionScanner;
 import com.metamatrix.query.internal.ui.sqleditor.sql.SqlTextHover;
 import com.metamatrix.query.internal.ui.sqleditor.sql.SqlWordStrategy;
+import com.metamatrix.ui.graphics.ColorManager;
 
 /**
  * This class defines the editor add-ons; content assist, content formatter,

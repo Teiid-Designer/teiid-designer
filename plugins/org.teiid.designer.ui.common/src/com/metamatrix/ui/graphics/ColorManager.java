@@ -5,11 +5,10 @@
  *
  * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
  */
-package com.metamatrix.query.internal.ui.sqleditor.sql;
+package com.metamatrix.ui.graphics;
 
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
-import com.metamatrix.ui.graphics.GlobalUiColorManager;
 
 /**
  * Colors used in the SQL editor

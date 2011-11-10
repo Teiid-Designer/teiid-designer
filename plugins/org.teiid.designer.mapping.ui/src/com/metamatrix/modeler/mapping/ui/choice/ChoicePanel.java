@@ -83,7 +83,7 @@ import com.metamatrix.modeler.mapping.ui.choice.actions.LaunchCriteriaBuilder;
 import com.metamatrix.modeler.transformation.ui.builder.CriteriaBuilder;
 import com.metamatrix.modeler.transformation.validation.TransformationValidator;
 import com.metamatrix.query.internal.ui.builder.util.ElementViewerFactory;
-import com.metamatrix.query.internal.ui.sqleditor.sql.ColorManager;
+import com.metamatrix.ui.graphics.ColorManager;
 import com.metamatrix.ui.internal.util.UiUtil;
 import com.metamatrix.ui.internal.util.WidgetFactory;
 

@@ -22,9 +22,9 @@ import org.eclipse.jface.text.rules.Token;
 import org.eclipse.jface.text.rules.WhitespaceRule;
 import org.eclipse.jface.text.rules.WordRule;
 import org.eclipse.swt.SWT;
-import com.metamatrix.query.internal.ui.sqleditor.sql.ColorManager;
 import com.metamatrix.query.internal.ui.sqleditor.sql.SqlWhiteSpaceDetector;
 import com.metamatrix.query.internal.ui.sqleditor.sql.SqlWordDetector;
+import com.metamatrix.ui.graphics.ColorManager;
 
 /**
  * The SQLCodeScanner is a RuleBaseScanner.This class finds SQL comments and keywords, as the user edits the document. It is

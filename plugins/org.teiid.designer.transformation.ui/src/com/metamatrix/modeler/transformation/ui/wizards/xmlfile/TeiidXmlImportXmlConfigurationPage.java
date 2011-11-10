@@ -57,7 +57,7 @@ import com.metamatrix.modeler.transformation.ui.UiPlugin;
 import com.metamatrix.modeler.transformation.ui.editors.sqleditor.SqlTextViewer;
 import com.metamatrix.modeler.transformation.ui.wizards.file.TeiidColumnInfo;
 import com.metamatrix.modeler.transformation.ui.wizards.file.TeiidMetadataImportInfo;
-import com.metamatrix.query.internal.ui.sqleditor.sql.ColorManager;
+import com.metamatrix.ui.graphics.ColorManager;
 import com.metamatrix.ui.internal.util.WidgetFactory;
 import com.metamatrix.ui.internal.util.WizardUtil;
 import com.metamatrix.ui.internal.wizard.AbstractWizardPage;

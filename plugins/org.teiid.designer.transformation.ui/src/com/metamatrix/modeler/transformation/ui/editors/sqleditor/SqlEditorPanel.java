@@ -104,7 +104,7 @@ import com.metamatrix.query.internal.ui.sqleditor.component.SetQueryDisplayNode;
 import com.metamatrix.query.internal.ui.sqleditor.component.SqlIndexLocator;
 import com.metamatrix.query.internal.ui.sqleditor.component.UpdateDisplayNode;
 import com.metamatrix.query.internal.ui.sqleditor.component.WhereDisplayNode;
-import com.metamatrix.query.internal.ui.sqleditor.sql.ColorManager;
+import com.metamatrix.ui.graphics.ColorManager;
 import com.metamatrix.ui.text.ScaledFontManager;
 import com.metamatrix.ui.text.StyledTextEditor;
 import com.metamatrix.ui.text.TextFontManager;
