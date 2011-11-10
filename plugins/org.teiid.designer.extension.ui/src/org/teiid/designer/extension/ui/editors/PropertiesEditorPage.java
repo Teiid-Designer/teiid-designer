@@ -131,7 +131,9 @@ public class PropertiesEditorPage extends MedEditorPage {
 
         SECTIONS: {
             Section metaclassSection = createExtendedMetaclassSection(finalTop, toolkit);
+            ((GridData)finalTop.getLayoutData()).heightHint = (this.metaclassViewer.getTable().getItemHeight() * 10);
             Section propertiesSection = createPropertiesSection(finalBottom, toolkit);
+            ((GridData)finalBottom.getLayoutData()).heightHint = (this.propertyViewer.getTable().getItemHeight() * 10);
             propertiesSection.descriptionVerticalSpacing = metaclassSection.getTextClientHeightDifference();
         }
 
@@ -667,6 +669,11 @@ public class PropertiesEditorPage extends MedEditorPage {
      */
     @Override
     protected void handlePropertyChanged( PropertyChangeEvent e ) {
+        // return if GUI hasn't been constructed yet
+        if (this.btnAddMetaclass == null) {
+            return;
+        }
+
         String propName = e.getPropertyName();
 
         if (PropertyName.METACLASS.toString().equals(propName)) {
