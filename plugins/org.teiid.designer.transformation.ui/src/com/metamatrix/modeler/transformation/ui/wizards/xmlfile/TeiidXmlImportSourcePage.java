@@ -453,7 +453,7 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 				if (profile.getName().equalsIgnoreCase(cpName)) {
 					setConnectionProfile(profile);
 					Properties props = profile.getBaseProperties();
-					String home = (String) props.get(HOME);
+					String home = (String) props.get(IXmlProfileConstants.TEIID_PARENT_DIRECTORY_KEY);
 					if (home != null) {
 						String location = home;
 						if (location.length() > 60) {
@@ -462,6 +462,20 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 						}
 						this.dataFileFolderText.setText(location);
 						this.dataFileFolderText.setToolTipText(home);
+					} else {
+						String URL = (String) props.get(IXmlProfileConstants.URL_PROP_ID);
+						if( URL != null ) {
+							String location = URL;
+							if (location.length() > 60) {
+								int len = location.length();
+								location = "..." + location.substring(len - 60, len); //$NON-NLS-1$
+							}
+							this.dataFileFolderText.setText(location);
+							this.dataFileFolderText.setToolTipText(URL);
+						} else {
+							this.dataFileFolderText.setText(EMPTY_STRING);
+							this.dataFileFolderText.setToolTipText(EMPTY_STRING);
+						}
 					}
 
 					clearFileListViewer();
