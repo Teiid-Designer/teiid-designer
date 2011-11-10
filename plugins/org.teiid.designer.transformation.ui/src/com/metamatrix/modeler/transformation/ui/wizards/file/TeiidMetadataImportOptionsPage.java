@@ -30,8 +30,7 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CTabFolder;
-import org.eclipse.swt.custom.CTabItem;
+import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -64,7 +63,8 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
 
 	private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(TeiidMetadataImportOptionsPage.class);
 
-	private static final String TITLE = getString("title"); //$NON-NLS-1$
+	private static final String DELIMITED_TITLE = getString("delimitedColumnsTitle"); //$NON-NLS-1$
+	private static final String FIXED_COLUMNS_WIDTH_TITLE = getString("fixedColumnsWidthTitle"); //$NON-NLS-1$
 	private static final String INITIAL_MESSAGE = getString("initialMessage"); //$NON-NLS-1$
 
 	private final String EMPTY = StringUtilities.EMPTY_STRING;
@@ -86,11 +86,11 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
 	
 	// ====================================================
 	// GENERAL WIDGETS
-	CTabFolder tabFolder;
+	Composite stackPanel;
+	StackLayout stackLayout;
+	
 	Text selectedFileText;
 	Text quoteText,	escapeText;
-	Text numberPreviewLinesText;
-	Label numberLinesInFileLabel;
 	Button useHeaderInSQLCB, includeQuoteCB, includeEscapeCB, includeSkipCB;
 	
 	TextViewer sqlTextViewer;
@@ -99,15 +99,12 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
 	// ====================================================
 	// DELIMITED OPTION WIDGETS
 	Composite delimitedColumnsPanel;
-	CTabItem delimitedColumnsCTab;
 	ListViewer delimitedFileContentsViewer;
 	TableViewer delimitedColumnsViewer;
-	Text delimitedNumberOfCachedLinesText;
 	Label headerLineNumberLabel;
 	Text headerLineNumberText, delimiterText, delimitedFirstDataRowText, otherDelimiterText;
 	Button useHeaderForColumnNamesCB;
 	Button commaRB, spaceRB, tabRB, semicolonRB, barRB, otherDelimiterRB;
-	Button delimitedColumnsRB;
 	Button delimitedParseRowButton;
 	Action delimitedParseRowAction;
 	Button addColumnDelimitedButton, deleteColumnDelimitedButton, upColumnDelimitedButton, downColumnDelimitedButton;
@@ -115,14 +112,12 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
 	// ====================================================
 	// FIXED COLUMN WIDTH OPTION WIDGETS
 	Composite fixedWidthColumnsPanel;
-	CTabItem fixedWidthColumnsCTab;
 	TextViewer fixedFileContentsViewer;
 	TableViewer fixedColumnsViewer;
 	Text fixedFirstDataRowText, cursorPositionText, selectedTextLengthText;
-	Button fixedWidthColumnsRB;
-	Button fixedParseRowButton;
-	Action fixedParseRowAction;
 	Button addColumnFixedButton, deleteColumnFixedButton, upColumnFixedButton, downColumnFixedButton;
+	
+	Action createColumnAction;
 
 	boolean creatingControl = false;
 
@@ -132,7 +127,7 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
 	 * @since 4.0
 	 */
 	public TeiidMetadataImportOptionsPage(TeiidMetadataImportInfo info) {
-		super(TeiidMetadataImportOptionsPage.class.getSimpleName(), TITLE);
+		super(TeiidMetadataImportOptionsPage.class.getSimpleName(), DELIMITED_TITLE);
 		this.info = info;
 		setImageDescriptor(UiPlugin.getDefault().getImageDescriptor(
 				Images.IMPORT_TEIID_METADATA));
@@ -165,11 +160,9 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
         selectedFileText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
 		selectedFileText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		
-		createColumnOptionsRadioGroup(mainPanel);
+		//createFilePreviewOptionsGroup(mainPanel);
 		
-		createFilePreviewOptionsGroup(mainPanel);
-		
-		createCTabFolderTabs(mainPanel);
+		createStackLayout(mainPanel);
 		        
         createTextTableOptionsGroup(mainPanel);
         
@@ -198,6 +191,8 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
 				loadFileContentsViewers();
 			}
 			synchronizeUI();
+			
+			validatePage();
 		}
 	}
 
@@ -221,12 +216,6 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
 		selectedFileText.setText(dataFileInfo.getDataFile().getName());
 
 		boolean isDelimitedOption = this.dataFileInfo.doUseDelimitedColumns();
-		
-    	this.numberPreviewLinesText.setText(Integer.toString(this.dataFileInfo.getNumberOfCachedFileLines()));
-    	
-    	
-    	this.delimitedColumnsRB.setSelection(isDelimitedOption);
-    	this.fixedWidthColumnsRB.setSelection(!isDelimitedOption);
     	
     	this.useHeaderForColumnNamesCB.setSelection(this.dataFileInfo.doUseHeaderForColumnNames());
     	this.headerLineNumberText.setText(Integer.toString(this.dataFileInfo.getHeaderLineNumber()));
@@ -263,8 +252,6 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
 
     	this.headerLineNumberLabel.setEnabled(this.dataFileInfo.doUseHeaderForColumnNames());
     	this.headerLineNumberText.setEnabled(this.dataFileInfo.doUseHeaderForColumnNames());
-    	
-    	this.numberLinesInFileLabel.setText(getString("numberOfLinesLabel", Integer.toString(this.dataFileInfo.getNumberOfLinesInFile()))); //$NON-NLS-1$
 
     	this.delimitedColumnsViewer.getTable().removeAll();
         for( TeiidColumnInfo row : dataFileInfo.getColumnInfoList() ) {
@@ -278,31 +265,39 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
     	
     	updateSqlText();
     	
+		
+		if( isDelimitedOption ) {
+			this.stackLayout.topControl = delimitedColumnsPanel;
+			this.setTitle(DELIMITED_TITLE);
+		} else {
+			this.stackLayout.topControl = fixedWidthColumnsPanel;
+			this.setTitle(FIXED_COLUMNS_WIDTH_TITLE);
+		}
+		
+		this.stackPanel.layout();
+    	
 		synchronizing = false;
 	}
 	
-    private void createCTabFolderTabs( Composite parent ) {
+    private void createStackLayout( Composite parent ) {
 
-        tabFolder = WidgetFactory.createTabFolder(parent, SWT.TOP | SWT.BORDER, GridData.FILL_BOTH, 2);
+    	stackPanel = new Composite(parent, SWT.NONE | SWT.FILL);
+    	stackLayout = new StackLayout();
+    	stackPanel.setLayout(stackLayout);
+    	stackPanel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+    	
 
-        createDelimitedColumnsTab(tabFolder);
-        createFixedWidthColumnsTab(tabFolder);
-        
-        tabFolder.setSelection(delimitedColumnsCTab);
+    	createDelimitedColumnsPanel(stackPanel);
+        createFixedWidthColumnsPanel(stackPanel);
     }
     
-    private void createDelimitedColumnsTab( CTabFolder tabFolder ) {
+    private void createDelimitedColumnsPanel( Composite parentPanel ) {
         // Set overall grid layout
         GridLayout glOuterGridLayout = new GridLayout();
 
-        delimitedColumnsPanel = new Composite(tabFolder, SWT.NONE);
+        delimitedColumnsPanel = new Composite(parentPanel, SWT.NONE);
         delimitedColumnsPanel.setLayout(glOuterGridLayout);
         delimitedColumnsPanel.setLayoutData(new GridData(GridData.FILL_BOTH));
-
-        delimitedColumnsCTab = new CTabItem(tabFolder, SWT.NONE);
-        delimitedColumnsCTab.setControl(delimitedColumnsPanel);
-        delimitedColumnsCTab.setText(getString("delimitedColumns")); //$NON-NLS-1$
-        delimitedColumnsCTab.setToolTipText(getString("delimitedColumnsTooltip")); //$NON-NLS-1$
         
         // Create Bottom Composite
         Composite topPanel = WidgetFactory.createPanel(delimitedColumnsPanel, SWT.NONE, GridData.FILL_HORIZONTAL, 2);
@@ -326,19 +321,14 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
 
     }
     
-    private void createFixedWidthColumnsTab( CTabFolder tabFolder ) {
+    private void createFixedWidthColumnsPanel( Composite parentPanel ) {
         // Set overall grid layout
         GridLayout glOuterGridLayout = new GridLayout();
 
-        fixedWidthColumnsPanel = new Composite(tabFolder, SWT.NONE);
+        fixedWidthColumnsPanel = new Composite(parentPanel, SWT.NONE);
         fixedWidthColumnsPanel.setLayout(glOuterGridLayout);
         fixedWidthColumnsPanel.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-        fixedWidthColumnsCTab = new CTabItem(tabFolder, SWT.NONE);
-        fixedWidthColumnsCTab.setControl(fixedWidthColumnsPanel);
-        fixedWidthColumnsCTab.setText(getString("fixedWidthColumns")); //$NON-NLS-1$
-        fixedWidthColumnsCTab.setToolTipText(getString("fixedWidthColumnsTooltip")); //$NON-NLS-1$
-        
         // Create Bottom Composite
         Composite topPanel = WidgetFactory.createPanel(fixedWidthColumnsPanel, SWT.NONE, GridData.FILL_HORIZONTAL, 2);
         GridLayout tpGL = new GridLayout(2, false);
@@ -358,124 +348,6 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
         createFixedColumnsOptionsGroup(bottomPanel);
       
         createFixedColumnInfoGroup(bottomPanel);
-    }
-    
-    private void createColumnOptionsRadioGroup(Composite parent ) {
-    	Group theGroup = WidgetFactory.createGroup(parent, getString("columnsFormatGroup"), SWT.NONE, 1, 1); //$NON-NLS-1$
-    	theGroup.setLayout(new GridLayout(2, true));
-    	theGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-    	
-    	// delimitedColumnsRB, fixedWidthColumnsRB;
-    	this.delimitedColumnsRB = WidgetFactory.createRadioButton(theGroup, getString("characterDelimited")); //$NON-NLS-1$
-    	
-    	this.delimitedColumnsRB.addSelectionListener(new SelectionAdapter() {
-
-            @Override
-            public void widgetSelected(final SelectionEvent event) {
-            	if( !synchronizing && !creatingControl ) {
-	            	dataFileInfo.setUseDelimitedColumns(delimitedColumnsRB.getSelection());
-	            	if( delimitedColumnsRB.getSelection() ) {
-	            		tabFolder.setSelection(delimitedColumnsCTab);
-	            		delimitedColumnsCTab.getControl().setEnabled(true);
-	            		delimitedColumnsCTab.getControl().setVisible(true);
-	            		fixedWidthColumnsCTab.getControl().setVisible(false);
-	            		fixedWidthColumnsCTab.getControl().setEnabled(false);
-	            		delimitedColumnsPanel.setEnabled(true);
-	            		fixedWidthColumnsPanel.setEnabled(false);
-	            	} else {
-	            		tabFolder.setSelection(fixedWidthColumnsCTab);
-	            		delimitedColumnsCTab.getControl().setEnabled(false);
-	            		fixedWidthColumnsCTab.getControl().setEnabled(true);
-	            		delimitedColumnsCTab.getControl().setVisible(false);
-	            		fixedWidthColumnsCTab.getControl().setVisible(true);
-	            		fixedWidthColumnsPanel.setEnabled(true);
-	            		delimitedColumnsPanel.setEnabled(false);
-	            	}
-	            	handleInfoChanged(false);
-            	}
-            }
-        });
-    	
-    	this.fixedWidthColumnsRB = WidgetFactory.createRadioButton(theGroup, getString("fixedWidth")); //$NON-NLS-1$
-    	
-    	this.fixedWidthColumnsRB.addSelectionListener(new SelectionAdapter() {
-
-            @Override
-            public void widgetSelected(final SelectionEvent event) {
-            	if( !synchronizing && !creatingControl ) {
-	            	dataFileInfo.setFixedWidthColumns(fixedWidthColumnsRB.getSelection());
-	            	if( fixedWidthColumnsRB.getSelection() ) {
-	            		tabFolder.setSelection(fixedWidthColumnsCTab);
-	            		delimitedColumnsCTab.getControl().setEnabled(false);
-	            		fixedWidthColumnsCTab.getControl().setEnabled(true);
-	            		delimitedColumnsCTab.getControl().setVisible(false);
-	            		fixedWidthColumnsCTab.getControl().setVisible(true);
-	            		fixedWidthColumnsPanel.setEnabled(true);
-	            		delimitedColumnsPanel.setEnabled(false);
-	            	} else {
-	            		tabFolder.setSelection(delimitedColumnsCTab);
-	            		delimitedColumnsCTab.getControl().setEnabled(true);
-	            		fixedWidthColumnsCTab.getControl().setEnabled(false);
-	            		delimitedColumnsCTab.getControl().setVisible(true);
-	            		fixedWidthColumnsCTab.getControl().setVisible(false);
-	            		delimitedColumnsPanel.setEnabled(true);
-	            		fixedWidthColumnsPanel.setEnabled(false);
-	            	}
-	            	handleInfoChanged(false);
-            	}
-            }
-        });
-    	
-    	
-    	this.delimitedColumnsRB.setSelection(true);
-    }
-    
-    private void createFilePreviewOptionsGroup(Composite parent ) {
-    	Group theGroup = WidgetFactory.createGroup(parent, getString("filePreviewOptionsGroup"), SWT.NONE, 1, 3); //$NON-NLS-1$
-    	theGroup.setLayout(new GridLayout(3, false));
-    	theGroup.setLayoutData(new GridData());
-    	
-    	Label prefixLabel = new Label(theGroup, SWT.NONE);
-    	prefixLabel.setText(getString("numberOfPreviewLines")); //$NON-NLS-1$
-    	GridData lgd = new GridData();
-        prefixLabel.setLayoutData(lgd);
-        
-    	this.numberPreviewLinesText = WidgetFactory.createTextField(theGroup, SWT.NONE);
-    	GridData gd = new GridData();
-    	gd.minimumWidth = 50;
-
-    	this.numberPreviewLinesText.setLayoutData(gd);
-    	this.numberPreviewLinesText.addModifyListener(new ModifyListener() {
-    		public void modifyText( final ModifyEvent event ) {
-    			if( !synchronizing ) {
-	    			if( !numberPreviewLinesText.getText().isEmpty()) {
-	            		try {
-	        				int nLines = Integer.parseInt(numberPreviewLinesText.getText());
-	        				if( nLines == 0 ) {
-	        					setErrorMessage(getString("numberOfLinesCannotBeNullOrZero")); //$NON-NLS-1$
-	        					return;
-	        				}
-	        				if( nLines != dataFileInfo.getNumberOfCachedFileLines() ) {
-	        					dataFileInfo.setNumberOfCachedFileLines(nLines);
-	        					handleInfoChanged(true);
-	        				}
-	        				setErrorMessage(null);
-	        			} catch (NumberFormatException ex) {
-	        				setErrorMessage(getString("numberOfLinesMustBeInteger", numberPreviewLinesText.getText())); //$NON-NLS-1$
-	        				return;
-	        			}
-	            	} else {
-	            		setErrorMessage(getString("numberOfLinesCannotBeNullOrZero")); //$NON-NLS-1$
-	            		return;
-	            	}
-    			}
-    		}
-    	});
-    	
-    	numberLinesInFileLabel = new Label(theGroup, SWT.NONE);
-    	numberLinesInFileLabel.setText("# Lines in file : XXXXX");//getString("numberOfLinesLabel", 20)); //$NON-NLS-1$
-        prefixLabel.setLayoutData( new GridData(GridData.FILL_HORIZONTAL));
-    	
     }
     
     private void createDelimitedFileOptionsGroup(Composite parent) {
@@ -756,11 +628,7 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-	    		String newName = "column_" + (dataFileInfo.getColumnInfoList().length + 1); //$NON-NLS-1$
-	    	    TeiidColumnInfo newColumn = new TeiidColumnInfo(newName, false, TeiidColumnInfo.DEFAULT_DATATYPE, null, null);
-				
-				dataFileInfo.addColumn(newColumn);
-				handleInfoChanged(false);
+				createColumn();
 			}
     		
 		});
@@ -890,14 +758,6 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
 	  	GridData groupGD = new GridData(GridData.VERTICAL_ALIGN_BEGINNING);
 	  	groupGD.heightHint=GROUP_HEIGHT_190;
 	  	theGroup.setLayoutData(groupGD);
-        
-        this.fixedParseRowAction = new Action(getString("parseSelectedRow")) { //$NON-NLS-1$
-            @Override
-            public void run() {
-            	parseFixedSelectedDataRow();
-            }
-		};
-		//addSpacer(fileContentsGroup, 32);
     	
     	Label firstDataRowLabel = new Label(theGroup, SWT.NONE);
     	firstDataRowLabel.setText(getString("firstRowLineNumber")); //$NON-NLS-1$
@@ -985,6 +845,8 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
 	        	}
 	        }
         }
+        final MenuManager fileContentsMenuManager = new MenuManager();
+        this.fixedFileContentsViewer.getControl().setMenu(fileContentsMenuManager.createContextMenu(parent));
         this.fixedFileContentsViewer.addSelectionChangedListener(new ISelectionChangedListener() {
             /**
              * {@inheritDoc}
@@ -993,10 +855,12 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
              */
             @Override
             public void selectionChanged( final SelectionChangedEvent event ) {
+            	fileContentsMenuManager.removeAll();
 				if( event.getSelection() instanceof TextSelection) {
 					TextSelection sel = (TextSelection)event.getSelection();
 					if( sel.getLength() > 0 ) {
-						// NO OP
+						
+						fileContentsMenuManager.add(createColumnAction);
 					}
 				}
 
@@ -1023,6 +887,13 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
 				}
 			}
 		});
+        
+        this.createColumnAction = new Action(getString("createColumnActionLabel")) { //$NON-NLS-1$
+            @Override
+            public void run() {
+            	createColumn();
+            }
+		};
     }
     
     private void createFixedColumnsOptionsGroup(Composite parent) {
@@ -1040,10 +911,7 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-	    		String newName = "column_" + (dataFileInfo.getColumnInfoList().length + 1); //$NON-NLS-1$
-	    	    TeiidColumnInfo newColumn = new TeiidColumnInfo(newName, false, TeiidColumnInfo.DEFAULT_DATATYPE, null, null);
-				
-				dataFileInfo.addColumn(newColumn);
+	    		createColumn();
 				handleInfoChanged(false);
 			}
     		
@@ -1353,6 +1221,18 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
         
     }
     
+    private void createColumn() {
+    	String newName = "column_" + (dataFileInfo.getColumnInfoList().length + 1); //$NON-NLS-1$
+    	int length = 10;
+    	if( selectedTextLengthText.getText().length() > 0 ) {
+    		length = Integer.parseInt(selectedTextLengthText.getText());
+    	}
+    	TeiidColumnInfo newColumn = new TeiidColumnInfo(newName, TeiidColumnInfo.DEFAULT_DATATYPE, length);
+		dataFileInfo.addColumn(newColumn);
+		
+		handleInfoChanged(false);
+    }
+    
     void updateSqlText() {
     	if( this.dataFileInfo != null ) {
     		if( this.info.getSourceModelName() != null ) {
@@ -1378,7 +1258,7 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
     }
     
     private void setDelimiterValue() {
-    	if( this.delimitedColumnsRB.getSelection()) {
+    	if( this.dataFileInfo.doUseDelimitedColumns()) {
     		setErrorMessage(null);
         	if( this.otherDelimiterRB.getSelection() ) {
 	        	if( !this.otherDelimiterText.getText().isEmpty()) {
@@ -1409,16 +1289,6 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
     
     private void parseDelimitedSelectedDataRow() {
     	IStructuredSelection selectedFile = (IStructuredSelection)this.delimitedFileContentsViewer.getSelection();
-    	if( selectedFile.getFirstElement() != null && selectedFile.getFirstElement() instanceof String ) {
-    		String dataRowStr = (String)selectedFile.getFirstElement();
-    		ParsedDataRowDialog dialog = new ParsedDataRowDialog(getShell(), dataFileInfo, dataRowStr);
-        	
-        	dialog.open();
-    	}
-    }
-    
-    private void parseFixedSelectedDataRow() {
-    	IStructuredSelection selectedFile = (IStructuredSelection)this.fixedFileContentsViewer.getSelection();
     	if( selectedFile.getFirstElement() != null && selectedFile.getFirstElement() instanceof String ) {
     		String dataRowStr = (String)selectedFile.getFirstElement();
     		ParsedDataRowDialog dialog = new ParsedDataRowDialog(getShell(), dataFileInfo, dataRowStr);

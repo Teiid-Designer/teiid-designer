@@ -12,8 +12,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.StringTokenizer;
 
 import org.eclipse.core.runtime.IStatus;
@@ -151,11 +149,6 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants 
 	 * The  <code>Collection</code> of <code>TeiidColumnInfo</code> objects parsed from the defined header information.
 	 */
 	private Collection<TeiidColumnInfo> columnInfoList;
- 	
-	/**
-	 * The  <code>Map</code> of column names to column datatypes defined by the user in the UI
-	 */
-	private Map<String, String> columnDatatypeMap;
 	
 	private boolean ignoreReload = false;
 
@@ -224,7 +217,6 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants 
 	
 	private void initialize() {
 		setStatus(Status.OK_STATUS);
-		this.columnDatatypeMap = new HashMap<String, String>();
 		this.cachedFirstLines = new String[0];
 		this.columnInfoList = new ArrayList<TeiidColumnInfo>();
 		
@@ -235,27 +227,6 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants 
 			fileName = fileName.substring(0, fileName.length()-4);
 		}
 		setViewTableName(fileName + "View"); //$NON-NLS-1$
-	}
-	
-	/**
-	 * 
-	 * @param columnName the column name (never <code>null</code> or empty).
-	 * @param datatype the column datatype (never <code>null</code> or empty).
-	 */
-	public void setDatatype(String columnName, String datatype) {
-		CoreArgCheck.isNotEmpty(columnName, "columnName is null"); //$NON-NLS-1$
-		CoreArgCheck.isNotEmpty(datatype, "datatype is null"); //$NON-NLS-1$
-		
-		this.columnDatatypeMap.put(columnName, datatype);
-	}
-	
-	/**
-	 * 
-	 * @param columnName the column name (never <code>null</code> or empty).
-	 * @return datatype the column datatype (will not be null)
-	 */
-	public String getDatatype(String columnName) {
-		return this.columnDatatypeMap.get(columnName);
 	}
 
 	/**
@@ -442,6 +413,10 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants 
 	public void addColumn(TeiidColumnInfo theInfo) {
 		this.columnInfoList.add(theInfo);
 		validate();
+	}
+	
+	public void clearColumns() {
+		this.columnInfoList.clear();
 	}
 	
 	/*
@@ -674,10 +649,13 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants 
 	 * @param delimitedColumns the boolean indicator that the data file contains columns separated by a delimiter
 	 */
 	public void setUseDelimitedColumns(boolean delimitedColumns) {
-		this.delimitedColumns = delimitedColumns;
-		
-		this.useHeaderForColumnNames = !delimitedColumns;
-		this.fixedWidthColumns = !delimitedColumns;
+		boolean oldValue = this.delimitedColumns;
+		if( oldValue != delimitedColumns ) {
+			this.delimitedColumns = delimitedColumns;
+			
+			this.useHeaderForColumnNames = !delimitedColumns;
+			this.fixedWidthColumns = !delimitedColumns;
+		}
 	}
 	
 	/**

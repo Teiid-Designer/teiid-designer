@@ -129,10 +129,8 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 	private static final String HOME = "HOME"; //$NON-NLS-1$
 	private static final String INCLTYPELINE = "INCLTYPELINE"; //$NON-NLS-1$
 	private static final String INCLCOLUMNNAME = "INCLCOLUMNNAME"; //$NON-NLS-1$
-	private static final String DELIMTYPE = "DELIMTYPE"; //$NON-NLS-1$
-	private static final String VALUE_NO = "NO";
-	private static final String VALUE_YES = "YES";
-	private static final String VALUE_COMMA = "COMMA";
+	private static final String VALUE_YES = "YES"; //$NON-NLS-1$
+	private static final String VALUE_COMMA = "COMMA"; //$NON-NLS-1$
 	
 	private static final String EMPTY_STRING = ""; //$NON-NLS-1$
 	private static final String DOT_XML = ".XML"; //$NON-NLS-1$
@@ -1096,7 +1094,7 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
         	if( info.getSourceModelName() == null ) {
         		this.sourceHelpText.setText(Util.getString(I18N_PREFIX + "sourceModelUndefined")); //$NON-NLS-1$
         	} else {
-        		this.sourceHelpText.setText(Util.getString(I18N_PREFIX + "sourceModelWillBeCreated", info.getSourceModelName())); //$NON-NLS-1$
+        		this.sourceHelpText.setText(Util.getString(I18N_PREFIX + "sourceModelWillBeCreated", info.getSourceModelName(), proceedureName)); //$NON-NLS-1$
         	}
         }
     }
