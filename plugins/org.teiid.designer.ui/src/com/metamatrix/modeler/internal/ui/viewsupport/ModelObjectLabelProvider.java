@@ -25,6 +25,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.definition.ModelExtensionAssistant;
+import org.teiid.designer.extension.definition.ModelObjectExtensionAssistant;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 
 import com.metamatrix.core.util.StringUtilities;
@@ -228,7 +229,8 @@ public class ModelObjectLabelProvider extends LabelProvider
 
             try {
                 for (ModelExtensionAssistant assistant : registry.getModelExtensionAssistants(element.getClass().getName())) {
-                    if (assistant.hasExtensionProperties(element)) {
+                    if ((assistant instanceof ModelObjectExtensionAssistant)
+                            && ((ModelObjectExtensionAssistant)assistant).hasExtensionProperties(element)) {
                         decoration.addOverlay(UiPlugin.getDefault().getExtensionDecoratorImage(), IDecoration.TOP_LEFT);
                         break;
                     }

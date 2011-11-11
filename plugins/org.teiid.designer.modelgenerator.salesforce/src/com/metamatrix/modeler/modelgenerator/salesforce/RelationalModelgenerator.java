@@ -22,8 +22,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.teiid.designer.extension.ExtensionPlugin;
-import org.teiid.designer.extension.definition.ModelExtensionAssistant;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
+import org.teiid.designer.extension.definition.ModelObjectExtensionAssistant;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
 
 import com.metamatrix.core.util.CoreStringUtil;
@@ -61,7 +61,7 @@ public class RelationalModelgenerator {
 
     private IProgressMonitor monitor;
 
-    private final ModelExtensionAssistant assistant;
+    private final ModelObjectExtensionAssistant assistant;
     
     private final ModelExtensionDefinition definition;
     
@@ -85,7 +85,9 @@ public class RelationalModelgenerator {
         tablesByName = new HashMap();
 
         // the assistant should be found in the registry
-        this.assistant = ExtensionPlugin.getInstance().getRegistry().getModelExtensionAssistant(NAMESPACE_PREFIX);
+        this.assistant = (ModelObjectExtensionAssistant)ExtensionPlugin.getInstance()
+                                                                       .getRegistry()
+                                                                       .getModelExtensionAssistant(NAMESPACE_PREFIX);
 
         if (this.assistant == null) {
             throw new IllegalStateException(Messages.getString(I18nUtil.getPropertyPrefix(getClass())

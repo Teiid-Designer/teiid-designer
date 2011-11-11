@@ -8,12 +8,12 @@
 package org.teiid.designer.runtime.extension.rest;
 
 import org.eclipse.emf.ecore.EObject;
-import org.teiid.designer.core.extension.ModelObjectExtensionAssistant;
+import org.teiid.designer.core.extension.EmfModelObjectExtensionAssistant;
 
 /**
  * 
  */
-public class RestModelExtensionAssistant extends ModelObjectExtensionAssistant {
+public class RestModelExtensionAssistant extends EmfModelObjectExtensionAssistant {
 
     /**
      * @param modelObject the model object whose REST extension properties are being removed from (cannot be <code>null</code>)

@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import org.teiid.designer.core.extension.ModelObjectExtensionAssistant;
+import org.teiid.designer.core.extension.EmfModelObjectExtensionAssistant;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
 import org.teiid.designer.extension.properties.Translation;
 
@@ -22,7 +22,7 @@ import com.metamatrix.modeler.modelgenerator.salesforce.SalesforceConstants.SF_T
 /**
  * The <code>SalesforceModelExtensionAssistant</code> provides help when working with the Salesforce model extension properties.
  */
-public final class SalesforceModelExtensionAssistant extends ModelObjectExtensionAssistant {
+public final class SalesforceModelExtensionAssistant extends EmfModelObjectExtensionAssistant {
 
     /**
      * A mapping of property keys from those in the model extension definition to the keys required by the translator.

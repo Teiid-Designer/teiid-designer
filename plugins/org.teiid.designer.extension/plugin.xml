@@ -11,5 +11,6 @@
 
    <extension-point id="modelExtensionProvider" name="%modelExtensionProvider" schema="schema/modelExtensionProvider.exsd"/>
    <extension-point id="extensibleMetamodelProvider" name="%extensibleMetamodelProvider" schema="schema/extensibleMetamodelProvider.exsd"/>
+   <extension-point id="modelObjectExtensionAssistantFactory" name="%modelObjectExtensionAssistantFactory" schema="schema/modelObjectExtensionAssistantFactory.exsd"/>
    
 </plugin>

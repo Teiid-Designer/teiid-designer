@@ -27,8 +27,10 @@ public class Messages extends NLS {
     public static String errorRestoringUserDefinitions;
     public static String errorProcessingExtensionPoint;
     public static String errorProcessingModelExtension;
+    public static String errorProcessingModelExtensionAssistantFactory;
     public static String extensionPropertyNotAdded;
     public static String incorrectModelExtensionAssistantClass;
+    public static String incorrectModelExtensionAssistantFactoryClass;
     public static String invalidBooleanAllowedValue;
     public static String invalidDefinitionFileNewVersion;
     public static String invalidDefinitionFileVersion;
@@ -39,6 +41,7 @@ public class Messages extends NLS {
     public static String modelExtensionAssistantNotFound;
     public static String modelExtensionAssistantSetIdCalled;
     public static String modelExtensionDefinitionHasParseErrors;
+    public static String modelObjectExtensionAssistantFactoryNotFound;
     public static String namespacePrefixAlreadyRegistered;
     public static String namespacePrefixNotFound;
     public static String namespaceUriAlreadyRegistered;
@@ -46,6 +49,7 @@ public class Messages extends NLS {
     public static String parserFoundSkippedEntity;
     public static String parserFoundUnparsedEntityDeclaration;
     public static String problemConstructingModelExtensionAssistantClass;
+    public static String problemConstructingModelExtensionAssistantFactoryClass;
     public static String unknownPropertyType;
     public static String unknownRegistryQueryType;
     public static String valueDoesNotMatchAnAllowedValue;

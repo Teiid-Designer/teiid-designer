@@ -7,8 +7,8 @@
  */
 package com.metamatrix.metamodels.relational.extension;
 
-import org.teiid.designer.core.extension.ModelObjectExtensionAssistant;
+import org.teiid.designer.core.extension.EmfModelObjectExtensionAssistant;
 
-public class SourceFunctionModelExtensionAssistant extends ModelObjectExtensionAssistant {
+public class SourceFunctionModelExtensionAssistant extends EmfModelObjectExtensionAssistant {
 
 }

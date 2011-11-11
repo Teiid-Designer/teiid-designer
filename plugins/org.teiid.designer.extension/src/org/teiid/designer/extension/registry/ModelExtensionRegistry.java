@@ -27,7 +27,6 @@ import org.eclipse.osgi.util.NLS;
 import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.Messages;
 import org.teiid.designer.extension.definition.ModelExtensionAssistant;
-import org.teiid.designer.extension.definition.ModelExtensionAssistantAdapter;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.definition.ModelExtensionDefinitionParser;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
@@ -233,7 +232,8 @@ public final class ModelExtensionRegistry {
         Collection<File> userMedFiles = mgr.getUserDefinitionFiles();
         for (File medFile : userMedFiles) {
             try {
-                addDefinition(new FileInputStream(medFile), new ModelExtensionAssistantAdapter());
+                addDefinition(new FileInputStream(medFile), ExtensionPlugin.getInstance()
+                                                                           .createDefaultModelObjectExtensionAssistant());
             } catch (Exception e) {
                 allSuccess = false;
                 errMessage = NLS.bind(Messages.errorAddingUserDefinition, medFile.getAbsolutePath());

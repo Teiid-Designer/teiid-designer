@@ -12,9 +12,9 @@ import java.util.Collections;
 import java.util.Iterator;
 
 import org.eclipse.emf.ecore.EObject;
-import org.teiid.designer.core.extension.ModelObjectExtensionAssistant;
+import org.teiid.designer.core.extension.EmfModelObjectExtensionAssistant;
 import org.teiid.designer.extension.ExtensionPlugin;
-import org.teiid.designer.extension.definition.ModelExtensionAssistant;
+import org.teiid.designer.extension.definition.ModelObjectExtensionAssistant;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
 
 import com.metamatrix.core.util.CoreArgCheck;
@@ -24,7 +24,7 @@ import com.metamatrix.modeler.core.ModelerCore;
 /**
  * 
  */
-public class DeprecatedModelExtensionAssistant extends ModelObjectExtensionAssistant {
+public class DeprecatedModelExtensionAssistant extends EmfModelObjectExtensionAssistant {
 
     public static final String NAMESPACE_PREFIX = "ext-custom"; //$NON-NLS-1$
     public static final String REST_NAMESPACE_PREFIX = "rest"; //$NON-NLS-1$
@@ -44,8 +44,8 @@ public class DeprecatedModelExtensionAssistant extends ModelObjectExtensionAssis
     private static final String OLD_URI_1 = ModelExtensionPropertyDefinition.Utils.getPropertyId(NAMESPACE_PREFIX, "URI"); //$NON-NLS-1$
     private static final String OLD_URI_2 = ModelExtensionPropertyDefinition.Utils.getPropertyId(NAMESPACE_PREFIX, "uri"); //$NON-NLS-1$
 
-    private ModelExtensionAssistant restAssistant;
-    private ModelExtensionAssistant sourceFunctionAssistant;
+    private ModelObjectExtensionAssistant restAssistant;
+    private ModelObjectExtensionAssistant sourceFunctionAssistant;
 
     /**
      * Converts old REST properties to new ones and saves the REST model extension definition (MED) in the model resource.
@@ -99,19 +99,21 @@ public class DeprecatedModelExtensionAssistant extends ModelObjectExtensionAssis
         return propDefns;
     }
 
-    private ModelExtensionAssistant getRestAssistant() {
+    private ModelObjectExtensionAssistant getRestAssistant() {
         if (this.restAssistant == null) {
-            this.restAssistant = ExtensionPlugin.getInstance().getRegistry().getModelExtensionAssistant(REST_NAMESPACE_PREFIX);
+            this.restAssistant = (ModelObjectExtensionAssistant)ExtensionPlugin.getInstance()
+                                                                               .getRegistry()
+                                                                               .getModelExtensionAssistant(REST_NAMESPACE_PREFIX);
         }
 
         return this.restAssistant;
     }
 
-    private ModelExtensionAssistant getSourceFunctionAssistant() {
+    private ModelObjectExtensionAssistant getSourceFunctionAssistant() {
         if (this.sourceFunctionAssistant == null) {
-            this.sourceFunctionAssistant = ExtensionPlugin.getInstance()
-                                                          .getRegistry()
-                                                          .getModelExtensionAssistant(SOURCE_FUNCTION_NAMESPACE_PREFIX);
+            this.sourceFunctionAssistant = (ModelObjectExtensionAssistant)ExtensionPlugin.getInstance()
+                                                                                         .getRegistry()
+                                                                                         .getModelExtensionAssistant(SOURCE_FUNCTION_NAMESPACE_PREFIX);
         }
 
         return this.sourceFunctionAssistant;
@@ -149,7 +151,7 @@ public class DeprecatedModelExtensionAssistant extends ModelObjectExtensionAssis
     private void convert( Object modelObject,
                           String oldPropId,
                           String newPropId,
-                          ModelExtensionAssistant assistant ) throws Exception {
+                          ModelObjectExtensionAssistant assistant ) throws Exception {
         String value = getPropertyValue(modelObject, oldPropId);
 
         if (!CoreStringUtil.isEmpty(value)) {
@@ -161,7 +163,7 @@ public class DeprecatedModelExtensionAssistant extends ModelObjectExtensionAssis
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.designer.core.extension.ModelObjectExtensionAssistant#setPropertyValue(java.lang.Object, java.lang.String,
+     * @see org.teiid.designer.core.extension.EmfModelObjectExtensionAssistant#setPropertyValue(java.lang.Object, java.lang.String,
      *      java.lang.String)
      */
     @Override
@@ -173,7 +175,7 @@ public class DeprecatedModelExtensionAssistant extends ModelObjectExtensionAssis
 
         // convert all model objects that have the same old namespace property
         Collection<EObject> eObjects = getModelResource(modelObject).getEObjects();
-        ModelExtensionAssistant assistant;
+        ModelObjectExtensionAssistant assistant;
 
         // first save the corresponding MED
         if (OLD_PUSH_DOWN.equals(propId)) {

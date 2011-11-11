@@ -69,7 +69,6 @@ import org.eclipse.ui.texteditor.MarkerUtilities;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.teiid.designer.extension.ExtensionConstants;
 import org.teiid.designer.extension.ExtensionPlugin;
-import org.teiid.designer.extension.definition.ModelExtensionAssistantAdapter;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.definition.ModelExtensionDefinitionParser;
 import org.teiid.designer.extension.definition.ModelExtensionDefinitionWriter;
@@ -296,7 +295,8 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
 
     private void createMed() throws Exception {
         ModelExtensionDefinitionParser parser = new ModelExtensionDefinitionParser(ExtensionPlugin.getInstance().getMedSchema());
-        this.originalMed = parser.parse(getFile().getContents(), new ModelExtensionAssistantAdapter());
+        this.originalMed = parser.parse(getFile().getContents(), ExtensionPlugin.getInstance()
+                                                                                .createDefaultModelObjectExtensionAssistant());
 
         // process parsing errors
         Collection<String> fatals = parser.getFatalErrors();
@@ -314,7 +314,8 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
         }
 
         // copy over to MED being edited
-        this.medBeingEdited = new ModelExtensionDefinition(new ModelExtensionAssistantAdapter());
+        this.medBeingEdited = new ModelExtensionDefinition(ExtensionPlugin.getInstance()
+                                                                          .createDefaultModelObjectExtensionAssistant());
         this.medBeingEdited.setDescription(this.originalMed.getDescription());
         this.medBeingEdited.setMetamodelUri(this.originalMed.getMetamodelUri());
         this.medBeingEdited.setNamespacePrefix(this.originalMed.getNamespacePrefix());

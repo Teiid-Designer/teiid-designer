@@ -9,7 +9,9 @@ package org.teiid.designer.extension.ui.actions;
 
 import static com.metamatrix.modeler.ui.UiConstants.Util;
 import static org.teiid.designer.extension.ui.UiConstants.UTIL;
+
 import java.io.InputStream;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
@@ -17,12 +19,12 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.teiid.designer.extension.ExtensionPlugin;
-import org.teiid.designer.extension.definition.ModelExtensionAssistantAdapter;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.definition.ModelExtensionDefinitionParser;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 import org.teiid.designer.extension.ui.Messages;
 import org.teiid.designer.extension.ui.UiConstants;
+
 import com.metamatrix.modeler.ui.UiPlugin;
 
 /**
@@ -99,7 +101,7 @@ public class RegistryDeploymentValidator {
         try {
             ModelExtensionDefinitionParser parser = new ModelExtensionDefinitionParser(
                                                                                        ExtensionPlugin.getInstance().getMedSchema());
-            med = parser.parse(mxdContents, new ModelExtensionAssistantAdapter());
+            med = parser.parse(mxdContents, ExtensionPlugin.getInstance().createDefaultModelObjectExtensionAssistant());
         } catch (Exception e) {
             UTIL.log(Messages.medFileParseErrorMsg);
         }

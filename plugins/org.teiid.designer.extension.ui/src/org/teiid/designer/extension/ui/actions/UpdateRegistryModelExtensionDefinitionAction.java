@@ -12,7 +12,9 @@ import static org.teiid.designer.extension.ui.Messages.updateMedInRegistryAction
 import static org.teiid.designer.extension.ui.Messages.updateMedInRegistryActionToolTip;
 import static org.teiid.designer.extension.ui.UiConstants.UTIL;
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.REGISTERY_MED_UPDATE_ACTION;
+
 import java.io.InputStream;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
@@ -33,11 +35,11 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.teiid.designer.extension.ExtensionPlugin;
-import org.teiid.designer.extension.definition.ModelExtensionAssistantAdapter;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 import org.teiid.designer.extension.ui.Activator;
 import org.teiid.designer.extension.ui.Messages;
 import org.teiid.designer.extension.ui.editors.ModelExtensionDefinitionEditor;
+
 import com.metamatrix.modeler.ui.UiPlugin;
 import com.metamatrix.modeler.ui.actions.SortableSelectionAction;
 import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
@@ -173,7 +175,7 @@ public final class UpdateRegistryModelExtensionDefinitionAction extends Sortable
     public static void addExtensionToRegistry( IFile medFile ) throws Exception {
         ModelExtensionRegistry registry = (Platform.isRunning() ? ExtensionPlugin.getInstance().getRegistry() : null);
 
-        registry.addDefinition(medFile.getContents(), new ModelExtensionAssistantAdapter());
+        registry.addDefinition(medFile.getContents(), ExtensionPlugin.getInstance().createDefaultModelObjectExtensionAssistant());
     }
 
     /*

@@ -8,12 +8,14 @@
 package org.teiid.designer.extension.ui.wizards;
 
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.CHECK_MARK;
+
 import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -52,15 +54,16 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
-import org.teiid.designer.core.extension.DefaultModelObjectExtensionAssistant;
 import org.teiid.designer.core.extension.ModelExtensionUtils;
 import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.definition.ModelExtensionDefinitionHeader;
 import org.teiid.designer.extension.definition.ModelExtensionDefinitionWriter;
+import org.teiid.designer.extension.definition.ModelObjectExtensionAssistant;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 import org.teiid.designer.extension.ui.Activator;
 import org.teiid.designer.extension.ui.Messages;
+
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelResource;
@@ -759,7 +762,9 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
         ModelExtensionDefinitionHeader medHeader = this.editManager.getCurrentHeaders().get(this.selectedMedIndex);
 
         // Create DefaultMedAssistant
-        DefaultModelObjectExtensionAssistant defaultAssistant = new DefaultModelObjectExtensionAssistant(medHeader);
+        ModelObjectExtensionAssistant defaultAssistant = ExtensionPlugin.getInstance().createDefaultModelObjectExtensionAssistant();
+        defaultAssistant.createModelExtensionDefinition(medHeader);
+
         // Get unregistered MED contents from the Model
         ModelExtensionDefinition unregisteredMed = null;
         try {

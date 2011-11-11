@@ -45,6 +45,7 @@ import org.eclipse.xsd.XSDAttributeUse;
 import org.eclipse.xsd.XSDParticle;
 import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.definition.ModelExtensionAssistant;
+import org.teiid.designer.extension.definition.ModelObjectExtensionAssistant;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 
 import com.metamatrix.metamodels.diagram.Diagram;
@@ -206,7 +207,8 @@ public class ModelNavigatorLabelProvider extends LabelProvider implements IDescr
                 for (String namespacePrefix : registry.getAllNamespacePrefixes()) {
                     ModelExtensionAssistant assistant = registry.getModelExtensionAssistant(namespacePrefix);
 
-                    if (assistant.hasExtensionProperties(file)) {
+                    if ((assistant instanceof ModelObjectExtensionAssistant)
+                            && ((ModelObjectExtensionAssistant)assistant).hasExtensionProperties(file)) {
                         decoration.addOverlay(UiPlugin.getDefault().getExtensionDecoratorImage(), IDecoration.TOP_LEFT);
                         break;
                     }

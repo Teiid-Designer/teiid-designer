@@ -286,4 +286,12 @@
             path="deprecated.mxd">
       </extensionDefinition>
    </extension>
+   <extension
+         id="emfModelExtensionAssistantFactory"
+         point="org.teiid.designer.extension.modelObjectExtensionAssistantFactory">
+      <factory
+            className="org.teiid.designer.core.extension.EmfModelExtensionAssistantFactory"
+            modelObjectType="EMF">
+      </factory>
+   </extension>
 </plugin>

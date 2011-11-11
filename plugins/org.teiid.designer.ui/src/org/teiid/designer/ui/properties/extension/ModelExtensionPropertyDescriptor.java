@@ -36,6 +36,7 @@ import org.eclipse.ui.views.properties.PropertyDescriptor;
 import org.teiid.core.properties.PropertyDefinition;
 import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.definition.ModelExtensionAssistant;
+import org.teiid.designer.extension.definition.ModelObjectExtensionAssistant;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
 
 import com.metamatrix.core.util.CoreArgCheck;
@@ -187,7 +188,7 @@ public class ModelExtensionPropertyDescriptor extends PropertyDescriptor impleme
         return this;
     }
 
-    ModelExtensionAssistant getModelExtensionAssistant( String propId ) {
+    ModelObjectExtensionAssistant getModelExtensionAssistant( String propId ) {
         String namespacePrefix = ModelExtensionPropertyDefinition.Utils.getNamespacePrefix(propId);
 
         if (CoreStringUtil.isEmpty(namespacePrefix)) {
@@ -201,7 +202,7 @@ public class ModelExtensionPropertyDescriptor extends PropertyDescriptor impleme
             log(new Status(IStatus.ERROR, PLUGIN_ID, NLS.bind(Messages.modelExtensionAssistantNotFound, namespacePrefix)));
         }
 
-        return assistant;
+        return ((assistant instanceof ModelObjectExtensionAssistant) ? (ModelObjectExtensionAssistant)assistant : null);
     }
 
     /**
@@ -220,7 +221,7 @@ public class ModelExtensionPropertyDescriptor extends PropertyDescriptor impleme
 
     Object getPropertyValue() {
         String propId = this.propDefn.getId();
-        ModelExtensionAssistant assistant = getModelExtensionAssistant(propId);
+        ModelObjectExtensionAssistant assistant = getModelExtensionAssistant(propId);
 
         if (assistant != null) {
             try {
@@ -268,7 +269,7 @@ public class ModelExtensionPropertyDescriptor extends PropertyDescriptor impleme
 
     void setPropertyValue( Object value ) {
         String propId = this.propDefn.getId();
-        ModelExtensionAssistant assistant = getModelExtensionAssistant(propId);
+        ModelObjectExtensionAssistant assistant = getModelExtensionAssistant(propId);
 
         if (assistant != null) {
             if (value instanceof Integer) {

@@ -26,6 +26,7 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.teiid.core.id.ObjectID;
 import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.definition.ModelExtensionAssistant;
+import org.teiid.designer.extension.definition.ModelObjectExtensionAssistant;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 
@@ -1325,7 +1326,13 @@ public class RuntimeAdapter extends RecordFactory {
         ModelExtensionRegistry registry = ExtensionPlugin.getInstance().getRegistry();
         String metaclassName = eObject.getClass().getName();
 
-        for (ModelExtensionAssistant assistant : registry.getModelExtensionAssistants(metaclassName)) {
+        for (ModelExtensionAssistant tempAssistant : registry.getModelExtensionAssistants(metaclassName)) {
+            if (!(tempAssistant instanceof ModelObjectExtensionAssistant)) {
+                continue;
+            }
+
+            ModelObjectExtensionAssistant assistant = (ModelObjectExtensionAssistant)tempAssistant;
+
             try {
                 // gets the current value and if missing in EObject the default property value
                 Properties extensionProperties = assistant.getPropertyValues(eObject);

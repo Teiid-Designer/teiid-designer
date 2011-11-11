@@ -15,6 +15,7 @@ import java.util.Properties;
 
 import org.eclipse.osgi.util.NLS;
 import org.teiid.designer.extension.definition.ModelExtensionAssistant;
+import org.teiid.designer.extension.definition.ModelObjectExtensionAssistant;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 
@@ -33,13 +34,23 @@ public class ModelExtensionAssistantAggregator {
         this.registry = registry;
     }
 
+    private ModelObjectExtensionAssistant getModelObjectExtensionAssistant( String namespacePrefix ) {
+        ModelExtensionAssistant assistant = this.registry.getModelExtensionAssistant(namespacePrefix);
+
+        if (assistant instanceof ModelObjectExtensionAssistant) {
+            return (ModelObjectExtensionAssistant)assistant;
+        }
+
+        return null;
+    }
+
     public Properties getOverriddenValues( Object modelObject ) throws Exception {
         Properties props = new Properties();
 
         for (String namespacePrefix : this.registry.getAllNamespacePrefixes()) {
-            ModelExtensionAssistant assistant = this.registry.getModelExtensionAssistant(namespacePrefix);
+            ModelObjectExtensionAssistant assistant = getModelObjectExtensionAssistant(namespacePrefix);
 
-            if (assistant.supportsMyNamespace(modelObject)) {
+            if ((assistant != null) && assistant.supportsMyNamespace(modelObject)) {
                 props.putAll(assistant.getOverriddenValues(modelObject));
             }
         }
@@ -69,9 +80,9 @@ public class ModelExtensionAssistantAggregator {
         Properties props = new Properties();
 
         for (String namespacePrefix : this.registry.getAllNamespacePrefixes()) {
-            ModelExtensionAssistant assistant = this.registry.getModelExtensionAssistant(namespacePrefix);
+            ModelObjectExtensionAssistant assistant = getModelObjectExtensionAssistant(namespacePrefix);
 
-            if (assistant.supportsMyNamespace(modelObject)) {
+            if ((assistant != null) && assistant.supportsMyNamespace(modelObject)) {
                 props.putAll(assistant.getPropertyValues(modelObject));
             }
         }
@@ -83,9 +94,9 @@ public class ModelExtensionAssistantAggregator {
         Collection<String> supportedNamespaces = new ArrayList<String>();
 
         for (String namespacePrefix : this.registry.getAllNamespacePrefixes()) {
-            ModelExtensionAssistant assistant = this.registry.getModelExtensionAssistant(namespacePrefix);
+            ModelObjectExtensionAssistant assistant = getModelObjectExtensionAssistant(namespacePrefix);
 
-            if (assistant.supportsMyNamespace(modelObject)) {
+            if ((assistant != null) && assistant.supportsMyNamespace(modelObject)) {
                 supportedNamespaces.add(namespacePrefix);
             }
         }
@@ -95,9 +106,9 @@ public class ModelExtensionAssistantAggregator {
 
     public boolean hasExtensionProperties( File file ) throws Exception {
         for (String namespacePrefix : this.registry.getAllNamespacePrefixes()) {
-            ModelExtensionAssistant assistant = this.registry.getModelExtensionAssistant(namespacePrefix);
+            ModelObjectExtensionAssistant assistant = getModelObjectExtensionAssistant(namespacePrefix);
 
-            if (assistant.hasExtensionProperties(file)) {
+            if ((assistant != null) && assistant.hasExtensionProperties(file)) {
                 return true;
             }
         }
@@ -107,9 +118,9 @@ public class ModelExtensionAssistantAggregator {
 
     public boolean hasExtensionProperties( Object modelObject ) throws Exception {
         for (String namespacePrefix : this.registry.getAllNamespacePrefixes()) {
-            ModelExtensionAssistant assistant = this.registry.getModelExtensionAssistant(namespacePrefix);
+            ModelObjectExtensionAssistant assistant = getModelObjectExtensionAssistant(namespacePrefix);
 
-            if (assistant.hasExtensionProperties(modelObject)) {
+            if ((assistant != null) && assistant.hasExtensionProperties(modelObject)) {
                 return true;
             }
         }
@@ -125,7 +136,7 @@ public class ModelExtensionAssistantAggregator {
             throw new Exception(NLS.bind(Messages.namespacePrefixNotFound, propId));
         }
 
-        ModelExtensionAssistant assistant = this.registry.getModelExtensionAssistant(namespacePrefix);
+        ModelObjectExtensionAssistant assistant = getModelObjectExtensionAssistant(namespacePrefix);
 
         if (assistant == null) {
             throw new Exception(NLS.bind(Messages.modelExtensionAssistantNotFound, propId));
@@ -143,7 +154,7 @@ public class ModelExtensionAssistantAggregator {
             throw new Exception(NLS.bind(Messages.namespacePrefixNotFound, propId));
         }
 
-        ModelExtensionAssistant assistant = this.registry.getModelExtensionAssistant(namespacePrefix);
+        ModelObjectExtensionAssistant assistant = getModelObjectExtensionAssistant(namespacePrefix);
 
         if (assistant == null) {
             throw new Exception(NLS.bind(Messages.modelExtensionAssistantNotFound, propId));

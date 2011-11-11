@@ -16,7 +16,6 @@ import java.util.Locale;
 import java.util.Set;
 
 import org.teiid.designer.extension.definition.ModelExtensionAssistant;
-import org.teiid.designer.extension.definition.ModelExtensionAssistantAdapter;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.definition.ModelExtensionDefinitionParser;
 import org.teiid.designer.extension.definition.ModelExtensionDefinitionWriter;
@@ -32,7 +31,7 @@ import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 public class Factory implements Constants {
 
     public static ModelExtensionAssistant createAssistant() {
-        return new ModelExtensionAssistantAdapter();
+        return new ModelExtensionAssistant();
     }
 
     public static Set<Locale> createDefaultLocales() {

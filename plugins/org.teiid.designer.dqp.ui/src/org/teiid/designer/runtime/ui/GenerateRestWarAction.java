@@ -9,14 +9,17 @@ package org.teiid.designer.runtime.ui;
 
 import static com.metamatrix.modeler.dqp.ui.DqpUiConstants.UTIL;
 import static org.teiid.designer.runtime.extension.rest.RestModelExtensionConstants.NAMESPACE_PREFIX;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import javax.tools.JavaCompiler;
 import javax.tools.ToolProvider;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -33,10 +36,11 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.teiid.designer.dqp.webservice.war.objects.RestProcedure;
 import org.teiid.designer.dqp.webservice.war.ui.wizards.RestWarDeploymentInfoDialog;
 import org.teiid.designer.extension.ExtensionPlugin;
-import org.teiid.designer.extension.definition.ModelExtensionAssistant;
+import org.teiid.designer.extension.definition.ModelObjectExtensionAssistant;
 import org.teiid.designer.runtime.extension.rest.RestModelExtensionConstants;
 import org.teiid.designer.vdb.Vdb;
 import org.teiid.designer.vdb.VdbModelEntry;
+
 import com.metamatrix.core.modeler.util.FileUtils;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.core.util.I18nUtil;
@@ -218,7 +222,9 @@ public class GenerateRestWarAction extends Action implements ISelectionListener,
 
         try {
             // try new way first
-            ModelExtensionAssistant assistant = ExtensionPlugin.getInstance().getRegistry().getModelExtensionAssistant(NAMESPACE_PREFIX);
+            ModelObjectExtensionAssistant assistant = (ModelObjectExtensionAssistant)ExtensionPlugin.getInstance()
+                                                                                                    .getRegistry()
+                                                                                                    .getModelExtensionAssistant(NAMESPACE_PREFIX);
             restMethod = assistant.getPropertyValue(procedure, RestModelExtensionConstants.PropertyIds.REST_METHOD);
 
             if (CoreStringUtil.isEmpty(restMethod.trim())) {
@@ -239,7 +245,9 @@ public class GenerateRestWarAction extends Action implements ISelectionListener,
 
         try {
             // try new way first
-            ModelExtensionAssistant assistant = ExtensionPlugin.getInstance().getRegistry().getModelExtensionAssistant(NAMESPACE_PREFIX);
+            ModelObjectExtensionAssistant assistant = (ModelObjectExtensionAssistant)ExtensionPlugin.getInstance()
+                                                                                                    .getRegistry()
+                                                                                                    .getModelExtensionAssistant(NAMESPACE_PREFIX);
             uri = assistant.getPropertyValue(procedure, RestModelExtensionConstants.PropertyIds.URI);
 
             if (CoreStringUtil.isEmpty(uri)) {

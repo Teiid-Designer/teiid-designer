@@ -42,8 +42,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.teiid.core.types.DataTypeManager;
 import org.teiid.designer.extension.ExtensionPlugin;
-import org.teiid.designer.extension.definition.ModelExtensionAssistant;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
+import org.teiid.designer.extension.definition.ModelObjectExtensionAssistant;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 
 import com.metamatrix.core.util.StringUtilities;
@@ -158,7 +158,7 @@ public class CreatePushdownFunctionAction extends Action implements INewChildAct
 
 	private void injectSourceFunctionModelExtension(ModelResource modelResource, EObject procedure, boolean deterministic) throws Exception {
 		ModelExtensionRegistry registry = ExtensionPlugin.getInstance().getRegistry();
-        ModelExtensionAssistant assistant = registry.getModelExtensionAssistant(NAMESPACE_PREFIX);
+		ModelObjectExtensionAssistant assistant = (ModelObjectExtensionAssistant)registry.getModelExtensionAssistant(NAMESPACE_PREFIX);
 
         if (assistant == null) {
             // should not happen

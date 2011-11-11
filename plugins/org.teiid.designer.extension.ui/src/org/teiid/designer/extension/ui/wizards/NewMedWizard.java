@@ -9,6 +9,7 @@ package org.teiid.designer.extension.ui.wizards;
 
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -37,11 +38,12 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.eclipse.ui.ide.IDE;
+import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.definition.ModelExtensionAssistant;
-import org.teiid.designer.extension.definition.ModelExtensionAssistantAdapter;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.definition.ModelExtensionDefinitionWriter;
 import org.teiid.designer.extension.ui.Messages;
+
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.validation.rules.StringNameValidator;
@@ -162,7 +164,7 @@ public final class NewMedWizard extends AbstractWizard
      * @return a default ModelExtensionDefinition (never <code>null</code>)
      */
     ModelExtensionDefinition createDefaultMed() {
-        ModelExtensionAssistant assistant = new ModelExtensionAssistantAdapter();
+        ModelExtensionAssistant assistant = ExtensionPlugin.getInstance().createDefaultModelObjectExtensionAssistant();
         ModelExtensionDefinition newMed = new ModelExtensionDefinition(assistant);
         return newMed;
     }

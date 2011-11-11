@@ -37,6 +37,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.definition.ModelExtensionAssistant;
+import org.teiid.designer.extension.definition.ModelObjectExtensionAssistant;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 
 import com.metamatrix.metamodels.diagram.Diagram;
@@ -352,7 +353,8 @@ public class ModelExplorerLabelProvider extends LabelProvider
                 for (String namespacePrefix : registry.getAllNamespacePrefixes()) {
                     ModelExtensionAssistant assistant = registry.getModelExtensionAssistant(namespacePrefix);
 
-                    if (assistant.hasExtensionProperties(file)) {
+                    if ((assistant instanceof ModelObjectExtensionAssistant)
+                            && ((ModelObjectExtensionAssistant)assistant).hasExtensionProperties(file)) {
                         decoration.addOverlay(UiPlugin.getDefault().getExtensionDecoratorImage(), IDecoration.TOP_LEFT);
                         break;
                     }

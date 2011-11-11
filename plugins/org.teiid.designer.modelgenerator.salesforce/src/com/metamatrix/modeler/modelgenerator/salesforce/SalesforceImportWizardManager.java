@@ -19,8 +19,8 @@ import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.teiid.designer.extension.ExtensionPlugin;
-import org.teiid.designer.extension.definition.ModelExtensionAssistant;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
+import org.teiid.designer.extension.definition.ModelObjectExtensionAssistant;
 
 import com.metamatrix.modeler.compare.DifferenceProcessor;
 import com.metamatrix.modeler.compare.DifferenceReport;
@@ -177,7 +177,9 @@ public class SalesforceImportWizardManager {
             // Check if the model being updated supports the SF namespace. If not, add the SF MED.
 
             // Find the SF assistant in the registry...
-            ModelExtensionAssistant assistant = ExtensionPlugin.getInstance().getRegistry().getModelExtensionAssistant(NAMESPACE_PREFIX);
+            ModelObjectExtensionAssistant assistant = (ModelObjectExtensionAssistant)ExtensionPlugin.getInstance()
+                                                                                                    .getRegistry()
+                                                                                                    .getModelExtensionAssistant(NAMESPACE_PREFIX);
 
             // If namespace is not yet supported, add the MED
             if (!assistant.supportsMyNamespace(this.updateModel)) {

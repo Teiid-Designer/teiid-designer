@@ -12,6 +12,8 @@ import java.io.FileInputStream;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -28,7 +30,10 @@ import org.osgi.framework.BundleContext;
 import org.teiid.designer.extension.definition.ExtendableMetaclassNameProvider;
 import org.teiid.designer.extension.definition.ModelExtensionAssistant;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
+import org.teiid.designer.extension.definition.ModelObjectExtensionAssistant;
+import org.teiid.designer.extension.definition.ModelObjectExtensionAssistantFactory;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
+
 import com.metamatrix.core.PluginUtil;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.core.util.LoggingUtil;
@@ -54,9 +59,53 @@ public class ExtensionPlugin extends Plugin {
     private ModelExtensionAssistantAggregator assistantAggregator;
     private Map<String, ExtendableMetaclassNameProvider> metaclassNameProvidersMap;
 
+    /**
+     * A factory that creates model object extension assistants.
+     */
+    private ModelObjectExtensionAssistantFactory modelObjectAssistantFactory;
+    
     private ModelExtensionRegistry registry;
 
     private static IPath runtimePath;
+
+    /**
+     * @return the assistant (never <code>null</code>)
+     */
+    public ModelObjectExtensionAssistant createDefaultModelObjectExtensionAssistant() {
+        if (this.modelObjectAssistantFactory == null) {
+            loadModelObjectExtensionAssistantFactories();
+
+            // should always have at least one factory
+            if (this.modelObjectAssistantFactory == null) {
+                // should not happen
+                this.modelObjectAssistantFactory = new ModelObjectExtensionAssistantFactory() {
+                    
+                    /**
+                     * {@inheritDoc}
+                     *
+                     * @see org.teiid.designer.extension.definition.ModelObjectExtensionAssistantFactory#getModelObjectType()
+                     */
+                    @Override
+                    public String getModelObjectType() {
+                        return "NO MODEL OBJECT ASSISTANT FACTORY FOUND"; //$NON-NLS-1$
+                    }
+                    
+                    /**
+                     * {@inheritDoc}
+                     *
+                     * @see org.teiid.designer.extension.definition.ModelObjectExtensionAssistantFactory#createAssistant()
+                     */
+                    @Override
+                    public ModelObjectExtensionAssistant createAssistant() {
+                        Util.log(IStatus.ERROR, Messages.modelObjectExtensionAssistantFactoryNotFound);
+                        return new ModelObjectExtensionAssistantAdapter();
+                    }
+                };
+            }
+        }
+
+        return this.modelObjectAssistantFactory.createAssistant();
+    }
 
     public ModelExtensionAssistantAggregator getModelExtensionAssistantAggregator() {
         return this.assistantAggregator;
@@ -80,7 +129,8 @@ public class ExtensionPlugin extends Plugin {
             ModelExtensionAssistant assistant = this.registry.getModelExtensionAssistant(namespacePrefix);
 
             try {
-                if (assistant.isModelExtensionDefinitionRelated(modelObject)) {
+                if ((assistant instanceof ModelObjectExtensionAssistant)
+                        && ((ModelObjectExtensionAssistant)assistant).isModelExtensionDefinitionRelated(modelObject)) {
                     return true;
                 }
             } catch (Exception e) {
@@ -155,8 +205,7 @@ public class ExtensionPlugin extends Plugin {
                         // attribute CLASS_NAME could be missing or a no-arg constructor in was not found
                         Util.log(IStatus.ERROR,
                                  NLS.bind(Messages.problemConstructingMetaclassNameProviderClass,
-                                          ModelExtensionAssistant.class.getSimpleName(),
-                                          pluginId));
+                                          ModelExtensionAssistant.class.getSimpleName(), pluginId));
                         continue;
                     }
 
@@ -164,8 +213,7 @@ public class ExtensionPlugin extends Plugin {
 
                     if ((metaClassnameProvider != null) && !(metaClassnameProvider instanceof ExtendableMetaclassNameProvider)) {
                         Util.log(IStatus.ERROR, NLS.bind(Messages.incorrectMetaclassNameProviderClass,
-                                                         metaClassnameProvider.getClass().getName(),
-                                                         pluginId));
+                                                         metaClassnameProvider.getClass().getName(), pluginId));
                         continue;
                     }
                     // Get the MetamodelDescriptor for the name provider
@@ -267,7 +315,57 @@ public class ExtensionPlugin extends Plugin {
                 }
             }
         } catch (Exception e) {
-            Util.log(IStatus.ERROR, e, Messages.errorProcessingExtensionPoint);
+            Util.log(IStatus.ERROR, e, NLS.bind(Messages.errorProcessingExtensionPoint, EXT_PT));
+        }
+    }
+
+    /**
+     * Loads the extensions for the factories that creatE model object assistants. 
+     */
+    private void loadModelObjectExtensionAssistantFactories() {
+        final String EXT_PT = PLUGIN_ID + ".modelObjectExtensionAssistantFactory"; //$NON-NLS-1$
+        //        final String TYPE = "modelObjectType"; //$NON-NLS-1$
+        final String CLASS_NAME = "className"; //$NON-NLS-1$
+
+        try {
+            IConfigurationElement[] configElements = Platform.getExtensionRegistry().getConfigurationElementsFor(EXT_PT);
+
+            for (IConfigurationElement configElement : configElements) {
+                final String pluginId = configElement.getNamespaceIdentifier();
+
+                try {
+                    // loop over factories
+                    // String type = configElement.getAttribute(TYPE);
+
+                    // must have a factory class
+                    Object tempFactory = null;
+
+                    try {
+                        tempFactory = configElement.createExecutableExtension(CLASS_NAME);
+                    } catch (Exception e) {
+                        // attribute CLASS_NAME could be missing or a no-arg constructor in was not found
+                        Util.log(IStatus.ERROR, NLS.bind(Messages.problemConstructingModelExtensionAssistantFactoryClass,
+                                                         ModelObjectExtensionAssistantFactory.class.getSimpleName(), pluginId));
+                        continue;
+                    }
+
+                    final Object factory = tempFactory;
+
+                    if ((factory != null) && !(factory instanceof ModelObjectExtensionAssistantFactory)) {
+                        Util.log(IStatus.ERROR, NLS.bind(Messages.incorrectModelExtensionAssistantFactoryClass, factory.getClass()
+                                                                                                                       .getName(),
+                                                         pluginId));
+                        continue;
+                    }
+
+                    this.modelObjectAssistantFactory = (ModelObjectExtensionAssistantFactory)factory;
+                    break; // currently allow only one factory
+                } catch (Exception e) {
+                    Util.log(IStatus.ERROR, e, NLS.bind(Messages.errorProcessingModelExtensionAssistantFactory, pluginId));
+                }
+            }
+        } catch (Exception e) {
+            Util.log(IStatus.ERROR, e, NLS.bind(Messages.errorProcessingExtensionPoint, EXT_PT));
         }
     }
 
@@ -320,7 +418,7 @@ public class ExtensionPlugin extends Plugin {
     }
 
     /*
-     * Save the User-Defined MEDS in the Registry to the defined file system location.  
+     * Save the User-Defined MEDS in the Registry to the defined file system location.
      */
     private void saveUserDefinedMeds() {
         if (this.registry != null) {
@@ -330,8 +428,8 @@ public class ExtensionPlugin extends Plugin {
     }
 
     /*
-     * Load the User-Defined MEDS into the Registry.  These are the MEDS which were previously registered and saved at the 
-     * last shutdown.
+     * Load the User-Defined MEDS into the Registry. These are the MEDS which were previously registered and saved at the last
+     * shutdown.
      */
     private void loadUserDefinedMeds() throws CoreException {
         if (this.registry != null) {
@@ -366,6 +464,141 @@ public class ExtensionPlugin extends Plugin {
         }
 
         return (IPath)runtimePath.clone();
+    }
+
+    protected static class ModelObjectExtensionAssistantAdapter extends ModelObjectExtensionAssistant {
+
+        /**
+         * {@inheritDoc}
+         *
+         * @see org.teiid.designer.extension.definition.ModelObjectExtensionAssistant#getModelExtensionDefinition(java.lang.Object)
+         */
+        @Override
+        public ModelExtensionDefinition getModelExtensionDefinition( Object modelObject ) throws Exception {
+            return null;
+        }
+
+        /**
+         * {@inheritDoc}
+         *
+         * @see org.teiid.designer.extension.definition.ModelObjectExtensionAssistant#getOverriddenValue(java.lang.Object, java.lang.String)
+         */
+        @Override
+        public String getOverriddenValue( Object modelObject,
+                                          String propId ) throws Exception {
+            return null;
+        }
+
+        /**
+         * {@inheritDoc}
+         *
+         * @see org.teiid.designer.extension.definition.ModelObjectExtensionAssistant#getOverriddenValues(java.lang.Object)
+         */
+        @Override
+        public Properties getOverriddenValues( Object modelObject ) throws Exception {
+            return null;
+        }
+
+        /**
+         * {@inheritDoc}
+         *
+         * @see org.teiid.designer.extension.definition.ModelObjectExtensionAssistant#getPropertyValue(java.lang.Object, java.lang.String)
+         */
+        @Override
+        public String getPropertyValue( Object modelObject,
+                                        String propId ) throws Exception {
+            return null;
+        }
+
+        /**
+         * {@inheritDoc}
+         *
+         * @see org.teiid.designer.extension.definition.ModelObjectExtensionAssistant#getPropertyValues(java.lang.Object)
+         */
+        @Override
+        public Properties getPropertyValues( Object modelObject ) throws Exception {
+            return null;
+        }
+
+        /**
+         * {@inheritDoc}
+         *
+         * @see org.teiid.designer.extension.definition.ModelObjectExtensionAssistant#hasExtensionProperties(java.io.File)
+         */
+        @Override
+        public boolean hasExtensionProperties( File file ) throws Exception {
+            return false;
+        }
+
+        /**
+         * {@inheritDoc}
+         *
+         * @see org.teiid.designer.extension.definition.ModelObjectExtensionAssistant#hasExtensionProperties(java.lang.Object)
+         */
+        @Override
+        public boolean hasExtensionProperties( Object modelObject ) throws Exception {
+            return false;
+        }
+
+        /**
+         * {@inheritDoc}
+         *
+         * @see org.teiid.designer.extension.definition.ModelObjectExtensionAssistant#isModelExtensionDefinitionRelated(java.lang.Object)
+         */
+        @Override
+        public boolean isModelExtensionDefinitionRelated( Object modelObject ) throws Exception {
+            return false;
+        }
+
+        /**
+         * {@inheritDoc}
+         *
+         * @see org.teiid.designer.extension.definition.ModelObjectExtensionAssistant#removeModelExtensionDefinition(java.lang.Object)
+         */
+        @Override
+        public void removeModelExtensionDefinition( Object modelObject ) throws Exception {
+        }
+
+        /**
+         * {@inheritDoc}
+         *
+         * @see org.teiid.designer.extension.definition.ModelObjectExtensionAssistant#removeProperty(java.lang.Object, java.lang.String)
+         */
+        @Override
+        public void removeProperty( Object modelObject,
+                                    String propId ) throws Exception {
+        }
+
+        /**
+         * {@inheritDoc}
+         *
+         * @see org.teiid.designer.extension.definition.ModelObjectExtensionAssistant#saveModelExtensionDefinition(java.lang.Object)
+         */
+        @Override
+        public void saveModelExtensionDefinition( Object modelObject ) throws Exception {
+        }
+
+        /**
+         * {@inheritDoc}
+         *
+         * @see org.teiid.designer.extension.definition.ModelObjectExtensionAssistant#setPropertyValue(java.lang.Object, java.lang.String, java.lang.String)
+         */
+        @Override
+        public void setPropertyValue( Object modelObject,
+                                      String propId,
+                                      String newValue ) throws Exception {
+        }
+
+        /**
+         * {@inheritDoc}
+         *
+         * @see org.teiid.designer.extension.definition.ModelObjectExtensionAssistant#supportsMyNamespace(java.lang.Object)
+         */
+        @Override
+        public boolean supportsMyNamespace( Object modelObject ) throws Exception {
+            return false;
+        }
+        
     }
 
 }

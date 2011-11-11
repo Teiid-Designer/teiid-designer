@@ -20,8 +20,8 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.EMap;
 import org.eclipse.emf.ecore.EObject;
 import org.teiid.core.properties.PropertyDefinition;
-import org.teiid.designer.extension.definition.ModelExtensionAssistant;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
+import org.teiid.designer.extension.definition.ModelObjectExtensionAssistant;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
 
 import com.metamatrix.core.util.CoreArgCheck;
@@ -33,11 +33,11 @@ import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 
 /**
- * The <code>ModelObjectExtensionAssistant</code> is a model extension assistant that knows how to work with {@link EObject}s.
+ * The <code>EmfModelObjectExtensionAssistant</code> is a model extension assistant that knows how to work with {@link EObject}s.
  */
-public abstract class ModelObjectExtensionAssistant extends ModelExtensionAssistant {
+public class EmfModelObjectExtensionAssistant extends ModelObjectExtensionAssistant {
 
-    private static final String PREFIX = I18nUtil.getPropertyPrefix(ModelObjectExtensionAssistant.class);
+    private static final String PREFIX = I18nUtil.getPropertyPrefix(EmfModelObjectExtensionAssistant.class);
 
     /**
      * {@inheritDoc}
@@ -164,8 +164,24 @@ public abstract class ModelObjectExtensionAssistant extends ModelExtensionAssist
             }
         }
 
-
         return props;
+    }
+
+    /**
+     * @param modelObject the model object whose property definition is being requested (cannot be <code>null</code>)
+     * @param propId the property identifier whose property definition is being requested (cannot be <code>null</code> or empty)
+     * @return the property definition or <code>null</code> if not found
+     */
+    protected ModelExtensionPropertyDefinition getPropertyDefinition( Object modelObject,
+                                                                      String propId ) {
+        CoreArgCheck.isNotNull(modelObject, "modelObject is null"); //$NON-NLS-1$
+
+        // make sure right namespace
+        if (ModelExtensionPropertyDefinition.Utils.isExtensionPropertyId(propId, getNamespacePrefix())) {
+            return getModelExtensionDefinition().getPropertyDefinition(modelObject.getClass().getName(), propId);
+        }
+
+        return null;
     }
 
     /**
