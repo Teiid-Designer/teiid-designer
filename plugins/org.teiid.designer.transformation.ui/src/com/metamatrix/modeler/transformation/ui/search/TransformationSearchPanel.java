@@ -226,6 +226,7 @@ public class TransformationSearchPanel extends Composite implements ModifyListen
         sqlTextViewer = new SqlTextViewer(sqlTextPanel, new VerticalRuler(0), styles, colorManager);
         sqlDocument = new Document();
         sqlTextViewer.setInput(sqlDocument);
+        sqlTextViewer.getTextWidget().setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
         sqlTextViewer.setEditable(false);
         sqlDocument.set(CoreStringUtil.Constants.EMPTY_STRING);
         sqlTextViewer.getControl().setLayoutData(new GridData(GridData.FILL_BOTH));
