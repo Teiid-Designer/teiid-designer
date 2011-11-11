@@ -992,6 +992,9 @@ public final class MetadataSearchPage extends DialogPage implements ISearchPage,
      */
     @Override
     public boolean performAction() {
+    	// Need to update search manager for container changes since there is no way to hook into it
+    	this.searchMgr.setModelScope(SearchPageUtil.getModelWorkspaceScope(this.searchPageContainer));
+    	
         saveState();
         NewSearchUI.runQueryInBackground(new MetadataSearchQuery(this.searchMgr));
 
@@ -1202,7 +1205,6 @@ public final class MetadataSearchPage extends DialogPage implements ISearchPage,
     @Override
     public void setContainer( ISearchPageContainer container ) {
         this.searchPageContainer = container;
-        this.searchMgr.setModelScope(SearchPageUtil.getModelWorkspaceScope(container));
     }
 
     /**
