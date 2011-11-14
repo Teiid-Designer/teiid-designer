@@ -265,6 +265,10 @@ public class XsdFileSystemImportMainPage extends WizardFileSystemResourceImportP
             setErrorMessage(NO_RESOURCES_SELECTED_MESSAGE);
             return false;
         }
+        
+        if( getContainerFullPath() == null || getResourcePath().segmentCount() == 0 ) {
+        	setErrorMessage(getString("missingTargetLocation")); //$NON-NLS-1$
+        }
 
         enableButtonGroup(true);
         return true;
