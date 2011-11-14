@@ -394,12 +394,27 @@ public class EmfModelObjectExtensionAssistant extends ModelObjectExtensionAssist
         try {
             if (context instanceof IFile) {
                 ModelResource modelResource = getModelResource(context);
-    
+
                 if (modelResource != null) {
                     if (MedOperations.ADD_MED_TO_MODEL.equals(proposedOperationName)) {
-                        return !supportsMyNamespace(modelResource); // model must NOT be currently supporting namespace
+                        // model must NOT be currently supporting namespace
+                        if (!supportsMyNamespace(modelResource)) {
+                            // make sure model is of right metamodel URI to be extended by the MED
+                            String metamodelUri = getModelExtensionDefinition().getMetamodelUri();
+
+                            // MED does not have URI yet
+                            if (CoreStringUtil.isEmpty(metamodelUri)) {
+                                return false;
+                            }
+
+                            // check to make sure MED metamodel URI is the same as model's
+                            return metamodelUri.equals(modelResource.getPrimaryMetamodelUri());
+                        }
+
+                        // model already has namespace stored so can't be added again
+                        return false;
                     }
-                    
+
                     if (MedOperations.DELETE_MED_FROM_MODEL.equals(proposedOperationName)) {
                         return supportsMyNamespace(modelResource); // model must be currently supporting namespace
                     }

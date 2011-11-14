@@ -18,7 +18,6 @@ import org.teiid.designer.extension.properties.Translation;
 
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.core.ModelType;
-import com.metamatrix.metamodels.relational.RelationalPackage;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.modelgenerator.salesforce.Activator;
 import com.metamatrix.modeler.modelgenerator.salesforce.SalesforceConstants.SF_Column;
@@ -94,8 +93,7 @@ public final class SalesforceModelExtensionAssistant extends EmfModelObjectExten
                     && super.supportsMedOperation(proposedOperationName, context)) {
                 ModelResource modelResource = getModelResource(context);
                 assert (modelResource != null) : "superclass is not checking for null model resource"; //$NON-NLS-1$
-                return ((ModelType.PHYSICAL == modelResource.getModelType().getValue()) && // must be a virtual model
-                RelationalPackage.eINSTANCE.getNsURI().equals(modelResource.getModelAnnotation().getPrimaryMetamodelUri()));
+                return (ModelType.PHYSICAL == modelResource.getModelType().getValue());
             }
         } catch (Exception e) {
             IStatus status = new org.eclipse.core.runtime.Status(IStatus.ERROR, Activator.PLUGIN_ID, null, e);

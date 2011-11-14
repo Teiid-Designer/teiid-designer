@@ -41,7 +41,7 @@ public class RestModelExtensionAssistant extends EmfModelObjectExtensionAssistan
             if (MedOperations.ADD_MED_TO_MODEL.equals(proposedOperationName)
                     && super.supportsMedOperation(proposedOperationName, context)) {
                 ModelResource modelResource = getModelResource(context);
-                assert (modelResource != null) : "superclass is not checking for null model resource"; //$NON-NLS-1$
+                assert (modelResource != null) : "model resource is null"; //$NON-NLS-1$
                 return (ModelType.VIRTUAL == modelResource.getModelType().getValue()); // must be a virtual model
             }
         } catch (Exception e) {
