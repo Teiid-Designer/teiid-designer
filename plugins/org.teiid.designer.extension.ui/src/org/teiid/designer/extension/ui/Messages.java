@@ -65,6 +65,12 @@ public class Messages extends NLS {
     public static String medFileGetContentsErrorMsg;
     public static String medFileParseErrorMsg;
     public static String medRegistryAddErrorMsg;
+    public static String medSchemaNotFoundMsg;
+    public static String medFileParseProblemMsg;
+    public static String medBuildTaskName;
+    public static String medBuildSubTaskName;
+    public static String medCleanTaskName;
+    public static String medCleanSubTaskName;
 
     public static String registerMedActionInvalidMedTitle;
     public static String registerMedActionInvalidMedMsg;

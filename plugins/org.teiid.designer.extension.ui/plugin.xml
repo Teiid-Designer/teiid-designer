@@ -77,5 +77,21 @@
          point="org.eclipse.core.resources.markers">
          <super type="org.eclipse.core.resources.problemmarker" />
          <persistent value="true" />
+   </extension>
+   <extension
+         id="modelExtensionDefinitionBuilder"
+         name="%modelExtensionDefinitionBuilder.name"
+         point="org.eclipse.core.resources.builders">
+      <builder
+         callOnEmptyDelta="false"
+         hasNature="true"
+         isConfigurable="false"
+         supportsConfigurations="false">
+         <run
+            class="org.teiid.designer.extension.ui.ModelExtensionDefinitionBuilder">
+            <parameter name="optimize" value="true"/>
+            <parameter name="comment" value="%modelExtensionDefinitionBuilder.name"/>
+         </run>
+      </builder>
    </extension> 
 </plugin>

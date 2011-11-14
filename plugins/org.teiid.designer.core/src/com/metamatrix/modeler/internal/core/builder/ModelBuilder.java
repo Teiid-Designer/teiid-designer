@@ -14,6 +14,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -24,6 +25,7 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.ModelerCoreException;
 import com.metamatrix.modeler.core.TransactionRunnable;
@@ -50,8 +52,6 @@ public class ModelBuilder extends IncrementalProjectBuilder implements Ignorable
     protected void clean( final IProgressMonitor monitor ) throws CoreException {
         super.clean(monitor);
         final IProject proj = getProject();
-        // Delete all problem markers for project
-        proj.deleteMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE);
 
         // construct visitor to be used
         SearchIndexResourceVisitor visitor = new SearchIndexResourceVisitor();
@@ -64,8 +64,10 @@ public class ModelBuilder extends IncrementalProjectBuilder implements Ignorable
 
         // Set build state to not indexed on all resources within project
         for (final Iterator iter = visitor.getResources().iterator(); iter.hasNext();) {
-            final ModelResource resrc = ModelerCore.getModelWorkspace().findModelResource((IResource)iter.next());
+            IResource model = (IResource)iter.next();
+            final ModelResource resrc = ModelerCore.getModelWorkspace().findModelResource(model);
             if (resrc != null) {
+                model.deleteMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE); // clear current markers
                 resrc.setIndexType(ModelResource.NOT_INDEXED);
             }
         }
@@ -86,9 +88,6 @@ public class ModelBuilder extends IncrementalProjectBuilder implements Ignorable
 
         switch (kind) {
             case FULL_BUILD: {
-                // clear all markers on this project, as we are
-                // going to create fresh markets for every thing
-                project.deleteMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE);
                 performFullBuild(monitor);
                 break;
             }
@@ -123,6 +122,16 @@ public class ModelBuilder extends IncrementalProjectBuilder implements Ignorable
             public Object run( final UnitOfWork uow ) throws ModelerCoreException {
                 // build the resources (index and validate)
                 final Container container = doGetContainer();
+                List resources = visitor.getResources();
+
+                // clear all markers on these resources as we are going to create fresh markers
+                for (Object resource : resources) {
+                    try {
+                        ((IResource)resource).deleteMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE);
+                    } catch (CoreException e) {
+                        ModelerCore.Util.log(e);
+                    }
+                }
 
                 ModelBuildUtil.buildResources(monitor, visitor.getResources(), container, false);
 
@@ -165,8 +174,7 @@ public class ModelBuilder extends IncrementalProjectBuilder implements Ignorable
                 IResource resource = delta.getResource();
                 if (isIncludedResource(resource)) {
                     resources.add(resource);
-                    // clear all markers on this resource, as we are
-                    // going to create fresh markets
+                    // clear all markers on this resource, as we are going to create fresh markets
                     resource.deleteMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE);
                 }
                 return true;

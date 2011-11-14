@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
+
 import org.eclipse.core.resources.ICommand;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -25,6 +26,8 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
+import org.teiid.designer.extension.ExtensionConstants;
+
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelFolder;
@@ -165,13 +168,13 @@ public class ModelProjectImpl extends OpenableImpl implements IProjectNature, Mo
     }
 
     /**
-     * Does nothing.
-     * 
      * @see org.eclipse.core.resources.IProjectNature#configure()
      * @since 4.0
      */
     public void configure() throws CoreException {
+        // builders get executed in reverse order
         addToBuildSpec(ModelerCore.BUILDER_ID);
+        addToBuildSpec(ExtensionConstants.MED_BUILDER_ID); 
     }
 
     /**
@@ -182,6 +185,7 @@ public class ModelProjectImpl extends OpenableImpl implements IProjectNature, Mo
      */
     public void deconfigure() throws CoreException {
         removeFromBuildSpec(ModelerCore.BUILDER_ID);
+        removeFromBuildSpec(ExtensionConstants.MED_BUILDER_ID);
     }
 
     /**

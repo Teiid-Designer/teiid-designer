@@ -17,12 +17,8 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IMarker;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IResourceDelta;
@@ -65,7 +61,6 @@ import org.eclipse.ui.forms.editor.SharedHeaderFormEditor;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.part.FileEditorInput;
-import org.eclipse.ui.texteditor.MarkerUtilities;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.teiid.designer.extension.ExtensionConstants;
 import org.teiid.designer.extension.ExtensionPlugin;
@@ -209,8 +204,7 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
 
                 // If editor is not saved, inform user to save first.
                 if (isDirty()) {
-                    MessageDialog.openWarning(getShell(),
-                                              Messages.registerMedActionEditorDirtyTitle,
+                    MessageDialog.openWarning(getShell(), Messages.registerMedActionEditorDirtyTitle,
                                               Messages.registerMedActionEditorDirtyMsg);
                     return;
                 }
@@ -243,13 +237,11 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
                         } catch (Exception e) {
                             wasAdded = false;
                             UTIL.log(IStatus.ERROR, e, NLS.bind(Messages.medRegistryAddErrorMsg, medFile.getName()));
-                            MessageDialog.openInformation(getShell(),
-                                                          Messages.registerMedActionFailedTitle,
+                            MessageDialog.openInformation(getShell(), Messages.registerMedActionFailedTitle,
                                                           Messages.registerMedActionFailedMsg);
                         }
                         if (wasAdded) {
-                            MessageDialog.openInformation(getShell(),
-                                                          Messages.registerMedActionSuccessTitle,
+                            MessageDialog.openInformation(getShell(), Messages.registerMedActionSuccessTitle,
                                                           Messages.registerMedActionSuccessMsg);
                         }
                     }
@@ -280,19 +272,6 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
         contributeToMenu(form.getMenuManager());
     }
 
-    private void createMarker( int severity,
-                               String message ) {
-        Map attributes = new HashMap();
-        attributes.put(IMarker.SEVERITY, severity);
-        attributes.put(IMarker.MESSAGE, message);
-
-        try {
-            MarkerUtilities.createMarker(getFile(), attributes, UiConstants.ExtensionIds.PROBLEM_MARKER);
-        } catch (CoreException e) {
-            UTIL.log(e);
-        }
-    }
-
     private void createMed() throws Exception {
         ModelExtensionDefinitionParser parser = new ModelExtensionDefinitionParser(ExtensionPlugin.getInstance().getMedSchema());
         this.originalMed = parser.parse(getFile().getContents(), ExtensionPlugin.getInstance()
@@ -304,9 +283,6 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
         if ((fatals != null) && !fatals.isEmpty()) {
             throw new RuntimeException(fatals.iterator().next());
         }
-
-        // create markers
-        refreshMarkers(parser.getErrors(), parser.getWarnings(), parser.getInfos());
 
         // unhook listening to current MED being edited
         if (this.medBeingEdited != null) {
@@ -392,7 +368,7 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
 
     /**
      * {@inheritDoc}
-     *
+     * 
      * @see org.eclipse.ui.forms.editor.SharedHeaderFormEditor#dispose()
      */
     @Override
@@ -554,17 +530,17 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
 
     /**
      * {@inheritDoc}
-     *
+     * 
      * @see org.teiid.designer.extension.registry.RegistryListener#process(org.teiid.designer.extension.registry.RegistryEvent)
      */
     @Override
     public void process( RegistryEvent e ) {
         // tell each page to refesh their messages
         getShell().getDisplay().syncExec(new Runnable() {
-            
+
             /**
              * {@inheritDoc}
-             *
+             * 
              * @see java.lang.Runnable#run()
              */
             @Override
@@ -626,7 +602,7 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
 
                                         /**
                                          * {@inheritDoc}
-                                         *
+                                         * 
                                          * @see java.lang.Runnable#run()
                                          */
                                         @Override
@@ -658,37 +634,6 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
         if (isDirty() != newValue) {
             this.dirty = newValue;
             getHeaderForm().dirtyStateChanged();
-        }
-    }
-
-    /**
-     * @param errors the parsing error messages (never <code>null</code>)
-     * @param warnings the parsing warning messages (never <code>null</code>)
-     * @param infos the parsing info messages (never <code>null</code>)
-     * @throws Exception if there is a problem writing the markers to the resource
-     */
-    private void refreshMarkers( Collection<String> errors,
-                                 Collection<String> warnings,
-                                 Collection<String> infos ) throws Exception {
-        IFile file = ((FileEditorInput)getEditorInput()).getFile();
-        file.deleteMarkers(null, true, IResource.DEPTH_INFINITE);
-
-        if (errors != null) {
-            for (String message : errors) {
-                createMarker(IMarker.SEVERITY_ERROR, message);
-            }
-        }
-
-        if (warnings != null) {
-            for (String message : warnings) {
-                createMarker(IMarker.SEVERITY_WARNING, message);
-            }
-        }
-
-        if (infos != null) {
-            for (String message : infos) {
-                createMarker(IMarker.SEVERITY_INFO, message);
-            }
         }
     }
 

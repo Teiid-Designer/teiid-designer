@@ -166,6 +166,9 @@
       <builder
             id="org.teiid.designer.core.modelBuilder">
       </builder>
+      <builder
+            id="org.teiid.designer.extension.ui.modelExtensionDefinitionBuilder">
+      </builder>
    </extension>
 <!-- Hidden Project Nature -->
    <extension
