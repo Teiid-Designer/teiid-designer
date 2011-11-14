@@ -9,6 +9,7 @@ package org.teiid.designer.extension.definition;
 
 import java.util.Set;
 
+import org.teiid.designer.extension.ExtensionConstants;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinitionImpl;
 import org.teiid.designer.extension.properties.Translation;
@@ -19,7 +20,7 @@ import com.metamatrix.core.util.CoreArgCheck;
  * The <code>ModelExtensionAssistant</code> is used when a model extension definition file is parsed and also when working with
  * model objects.
  */
-public class ModelExtensionAssistant {
+public class ModelExtensionAssistant implements ExtensionConstants {
 
     private ModelExtensionDefinition definition;
 
@@ -124,6 +125,23 @@ public class ModelExtensionAssistant {
      */
     public final String getNamespacePrefix() {
         return this.definition.getNamespacePrefix();
+    }
+
+    /**
+     * @param proposedOperationName the name of the operation that will be performed on this assistant's model extension definition
+     *            (never <code>null</code>)
+     * @param context the operation context (can be <code>null</code>)
+     * @return <code>true</code> if the operation should be performed
+     */
+    public boolean supportsMedOperation( String proposedOperationName,
+                                         Object context ) {
+        CoreArgCheck.isNotEmpty(proposedOperationName, "proposedOperationName is empty"); //$NON-NLS-1$
+
+        if (MedOperations.DELETE_MED_FROM_REGISTRY.equals(proposedOperationName) && getModelExtensionDefinition().isBuiltIn()) {
+            return false;
+        }
+
+        return true;
     }
 
 }

@@ -29,6 +29,11 @@ public interface ExtensionConstants {
     String DOT_MED_EXTENSION = '.' + MED_EXTENSION;
 
     /**
+     * The identifier of the model extension definition (MED) file project builder.
+     */
+    String MED_BUILDER_ID = "org.teiid.designer.extension.ui.modelExtensionDefinitionBuilder"; //$NON-NLS-1$
+    
+    /**
      * The model extension definition schema attribute names.
      */
     interface Attributes {
@@ -82,5 +87,22 @@ public interface ExtensionConstants {
             return thisLocale.getDisplayLanguage().compareTo(thatLocale.getDisplayLanguage());
         }
     };
+
+    /**
+     * The default Model Extension Definition (MED) operation names.
+     */
+    interface MedOperations {
+        String ADD_MED_TO_MODEL = "ADD_MED_TO_MODEL"; //$NON-NLS-1$
+        String DELETE_MED_FROM_MODEL = "DELETE_MED_FROM_MODEL"; //$NON-NLS-1$
+        String DELETE_MED_FROM_REGISTRY = "DELETE_MED_FROM_REGISTRY"; //$NON-NLS-1$
+
+        String ADD_METACLASS = "ADD_METACLASS"; //$NON-NLS-1$
+        String DELETE_METACLASS = "DELETE_METACLASS"; //$NON-NLS-1$
+
+        String ADD_PROPERTY_DEFINITION = "ADD_PROPERTY_DEFINITION"; //$NON-NLS-1$
+        String DELETE_PROPERTY_DEFINITION = "DELETE_PROPERTY_DEFINITION"; //$NON-NLS-1$
+
+        String CHANGE_HEADER_INFO = "CHANGE_HEADER_INFO"; //$NON-NLS-1$
+    }
 
 }

@@ -56,6 +56,8 @@ public class ExtensionPlugin extends Plugin {
         return plugin;
     }
 
+    private static IPath runtimePath;
+
     private ModelExtensionAssistantAggregator assistantAggregator;
     private Map<String, ExtendableMetaclassNameProvider> metaclassNameProvidersMap;
 
@@ -66,7 +68,7 @@ public class ExtensionPlugin extends Plugin {
     
     private ModelExtensionRegistry registry;
 
-    private static IPath runtimePath;
+    private File schemaFile;
 
     /**
      * @return the assistant (never <code>null</code>)
@@ -142,34 +144,26 @@ public class ExtensionPlugin extends Plugin {
     }
 
     /**
-     * Get the ModelExtensionDefinition Schema File
-     * 
-     * @return the MED Schema file
-     * @throws Exception
+     * @return the MED schema file
+     * @throws Exception it there is a problem obtaining the schema file
      */
     public File getMedSchema() throws Exception {
-        File schemaFile = null;
-        try {
-            // Model Extension Schema
-            final String SCHEMA_FILE = ExtensionConstants.SCHEMA_FILENAME;
+        if (this.schemaFile == null) {
             Bundle bundle = Platform.getBundle(PLUGIN_ID);
-            URL url = bundle.getEntry(SCHEMA_FILE);
+            URL url = bundle.getEntry(ExtensionConstants.SCHEMA_FILENAME);
 
             if (url == null) {
-                Util.log(IStatus.ERROR, NLS.bind(Messages.definitionSchemaFileNotFoundInWorkspace, PLUGIN_ID));
+                throw new Exception(NLS.bind(Messages.definitionSchemaFileNotFoundInWorkspace, PLUGIN_ID));
             }
 
-            schemaFile = new File(FileLocator.toFileURL(url).getFile());
+            this.schemaFile = new File(FileLocator.toFileURL(url).getFile());
 
-            if (!schemaFile.exists()) {
-                Util.log(IStatus.ERROR, NLS.bind(Messages.definitionSchemaFileNotFoundInFilesystem, PLUGIN_ID));
-                schemaFile = null;
+            if (!this.schemaFile.exists()) {
+                throw new Exception(NLS.bind(Messages.definitionSchemaFileNotFoundInFilesystem, PLUGIN_ID));
             }
-
-        } catch (Exception e) {
-            throw e;
         }
-        return schemaFile;
+
+        return this.schemaFile;
     }
 
     /**
@@ -383,7 +377,8 @@ public class ExtensionPlugin extends Plugin {
         ((LoggingUtil)Util).initializePlatformLogger(this);
 
         try {
-            this.registry = new ModelExtensionRegistry(getMedSchema());
+            this.schemaFile = getMedSchema();
+            this.registry = new ModelExtensionRegistry(this.schemaFile);
             loadExtensibleMetamodelUriClassnameMap();
             this.registry.setMetamodelUris(this.metaclassNameProvidersMap.keySet());
             this.assistantAggregator = new ModelExtensionAssistantAggregator(this.registry);
@@ -587,6 +582,17 @@ public class ExtensionPlugin extends Plugin {
         public void setPropertyValue( Object modelObject,
                                       String propId,
                                       String newValue ) throws Exception {
+        }
+
+        /**
+         * {@inheritDoc}
+         *
+         * @see org.teiid.designer.extension.definition.ModelExtensionAssistant#supportsMedOperation(java.lang.String, java.lang.Object)
+         */
+        @Override
+        public boolean supportsMedOperation( String proposedOperationName,
+                                             Object context ) {
+            return false;
         }
 
         /**

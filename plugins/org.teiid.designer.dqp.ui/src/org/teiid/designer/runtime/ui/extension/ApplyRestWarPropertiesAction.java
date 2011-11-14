@@ -9,6 +9,8 @@ package org.teiid.designer.runtime.ui.extension;
 
 import static com.metamatrix.modeler.dqp.ui.DqpUiConstants.UTIL;
 
+import org.teiid.designer.extension.ExtensionConstants.MedOperations;
+
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.metamodels.relational.Procedure;
 
@@ -58,7 +60,8 @@ public class ApplyRestWarPropertiesAction extends RestWarPropertiesAction {
     protected boolean isValidSelection( Procedure procedure ) {
         try {
             // check for existence of either new extension framework properties or 7.4 properties
-            if (!getNewAssistant().supportsMyNamespace(procedure) && !getOldAssistant().hasOldRestProperties(procedure)) {
+            if (getNewAssistant().supportsMedOperation(MedOperations.ADD_MED_TO_MODEL, getModelResource().getResource())
+                    && !getOldAssistant().hasOldRestProperties(procedure)) {
                 return true;
             }
         } catch (Exception e) {

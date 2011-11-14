@@ -12,6 +12,7 @@ import static com.metamatrix.modeler.dqp.ui.DqpUiConstants.UTIL;
 import java.util.Collection;
 
 import org.eclipse.emf.ecore.EObject;
+import org.teiid.designer.extension.ExtensionConstants.MedOperations;
 
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.metamodels.relational.Procedure;
@@ -65,7 +66,7 @@ public class RemoveRestWarPropertiesAction extends RestWarPropertiesAction {
     protected boolean isValidSelection( Procedure procedure ) {
         try {
             // check for existence of new extension framework properties
-            if (getNewAssistant().supportsMyNamespace(procedure)) {
+            if (getNewAssistant().supportsMedOperation(MedOperations.DELETE_MED_FROM_MODEL, getModelResource().getResource())) {
                 return true;
             }
 

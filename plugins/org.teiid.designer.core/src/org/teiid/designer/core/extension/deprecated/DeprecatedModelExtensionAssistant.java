@@ -213,4 +213,16 @@ public class DeprecatedModelExtensionAssistant extends EmfModelObjectExtensionAs
             ModelerCore.Util.log(ModelerCore.Util.getString("DeprecatedModelExtensionAssistant.propertyNotFound", propId)); //$NON-NLS-1$
         }
     }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.teiid.designer.extension.definition.ModelExtensionAssistant#supportsMedOperation(java.lang.String, java.lang.Object)
+     */
+    @Override
+    public boolean supportsMedOperation( String proposedOperationName,
+                                         Object context ) {
+        return false;
+    }
+
 }

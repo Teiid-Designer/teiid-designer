@@ -40,16 +40,6 @@ public class EmfModelObjectExtensionAssistant extends ModelObjectExtensionAssist
     private static final String PREFIX = I18nUtil.getPropertyPrefix(EmfModelObjectExtensionAssistant.class);
 
     /**
-     * {@inheritDoc}
-     * 
-     * @see org.teiid.designer.extension.definition.ModelExtensionAssistant#namespaceSupportedBy(java.lang.Object)
-     */
-    @Override
-    public boolean supportsMyNamespace( Object modelObject ) throws Exception {
-        return ModelExtensionUtils.isSupportedNamespace(getModelResource(modelObject), getNamespacePrefix());
-    }
-
-    /**
      * @param modelObject the model object (must be either an
      * @return the model resource (never <code>null</code>)
      * @throws IllegalArgumentException if the model object is not either an {@link EObject} or a {@link ModelResource}
@@ -388,6 +378,48 @@ public class EmfModelObjectExtensionAssistant extends ModelObjectExtensionAssist
                 }
             }
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.teiid.designer.extension.definition.ModelObjectExtensionAssistant#supportsMedOperation(java.lang.String,
+     *      java.lang.Object)
+     */
+    @Override
+    public boolean supportsMedOperation( String proposedOperationName,
+                                         Object context ) {
+        CoreArgCheck.isNotEmpty(proposedOperationName, "proposedOperationName is empty"); //$NON-NLS-1$
+
+        try {
+            if (context instanceof IFile) {
+                ModelResource modelResource = getModelResource(context);
+    
+                if (modelResource != null) {
+                    if (MedOperations.ADD_MED_TO_MODEL.equals(proposedOperationName)) {
+                        return !supportsMyNamespace(modelResource); // model must NOT be currently supporting namespace
+                    }
+                    
+                    if (MedOperations.DELETE_MED_FROM_MODEL.equals(proposedOperationName)) {
+                        return supportsMyNamespace(modelResource); // model must be currently supporting namespace
+                    }
+                }
+            }
+        } catch (Exception e) {
+            Util.log(e);
+        }
+
+        return super.supportsMedOperation(proposedOperationName, context);
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.teiid.designer.extension.definition.ModelExtensionAssistant#namespaceSupportedBy(java.lang.Object)
+     */
+    @Override
+    public boolean supportsMyNamespace( Object modelObject ) throws Exception {
+        return ModelExtensionUtils.isSupportedNamespace(getModelResource(modelObject), getNamespacePrefix());
     }
 
 }

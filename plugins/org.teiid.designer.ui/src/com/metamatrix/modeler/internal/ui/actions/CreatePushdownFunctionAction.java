@@ -13,7 +13,6 @@ import java.util.Collection;
 import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
@@ -41,7 +40,9 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.teiid.core.types.DataTypeManager;
+import org.teiid.designer.extension.ExtensionConstants.MedOperations;
 import org.teiid.designer.extension.ExtensionPlugin;
+import org.teiid.designer.extension.definition.ModelExtensionAssistant;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.definition.ModelObjectExtensionAssistant;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
@@ -57,7 +58,6 @@ import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.internal.core.workspace.ModelObjectAnnotationHelper;
 import com.metamatrix.modeler.internal.ui.PluginConstants;
 import com.metamatrix.modeler.internal.ui.editors.ModelEditor;
-import com.metamatrix.modeler.internal.ui.viewsupport.ModelIdentifier;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.internal.ui.viewsupport.RelationalObjectFactory;
 import com.metamatrix.modeler.ui.UiConstants;
@@ -156,14 +156,19 @@ public class CreatePushdownFunctionAction extends Action implements INewChildAct
 		
 	}
 
+	private ModelObjectExtensionAssistant getAssistant() {
+        ModelExtensionRegistry registry = ExtensionPlugin.getInstance().getRegistry();
+        return (ModelObjectExtensionAssistant)registry.getModelExtensionAssistant(NAMESPACE_PREFIX);
+	}
+
 	private void injectSourceFunctionModelExtension(ModelResource modelResource, EObject procedure, boolean deterministic) throws Exception {
-		ModelExtensionRegistry registry = ExtensionPlugin.getInstance().getRegistry();
-		ModelObjectExtensionAssistant assistant = (ModelObjectExtensionAssistant)registry.getModelExtensionAssistant(NAMESPACE_PREFIX);
+		ModelObjectExtensionAssistant assistant = getAssistant();
 
         if (assistant == null) {
             // should not happen
         	UiConstants.Util.log(IStatus.ERROR, UiConstants.Util.getString("CreatePushdownFunctionAction.missingSourceFunctionModelExtensionAssistant")); //$NON-NLS-1$
         } else {
+            ModelExtensionRegistry registry = ExtensionPlugin.getInstance().getRegistry();
             ModelExtensionDefinition definition = registry.getDefinition(NAMESPACE_PREFIX);
 
             if (definition == null) {
@@ -249,8 +254,13 @@ public class CreatePushdownFunctionAction extends Action implements INewChildAct
        boolean result = false;
        if ( ! SelectionUtilities.isMultiSelection(selection) ) {
            Object obj = SelectionUtilities.getSelectedObject(selection);
-           if ( obj instanceof IFile && ModelUtilities.isModelFile((IFile) obj) &&
-           		ModelIdentifier.isRelationalSourceModel((IResource)obj)) {
+           ModelExtensionAssistant assistant = getAssistant();
+
+           if ((assistant == null) || (obj == null)) {
+               return false;
+           }
+
+           if (assistant.supportsMedOperation(MedOperations.ADD_MED_TO_MODEL, obj)) {
         	   this.selectedModel = (IFile) obj;
                result = true;
            }

@@ -25,7 +25,6 @@ import com.metamatrix.metamodels.relational.Procedure;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
-import com.metamatrix.modeler.internal.ui.viewsupport.ModelIdentifier;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.ui.actions.SortableSelectionAction;
 import com.metamatrix.modeler.ui.editors.ModelEditorManager;
@@ -130,14 +129,10 @@ public abstract class RestWarPropertiesAction extends SortableSelectionAction {
         boolean enable = false;
         EObject eObject = SelectionUtilities.getSelectedEObject(selection);
 
-        if (eObject != null) {
+        if ((eObject != null) && (eObject instanceof Procedure)) {
+            this.procedure = (Procedure)eObject;
             this.modelResource = ModelUtilities.getModelResource(eObject);
-
-            if ((this.modelResource != null) && ModelIdentifier.isVirtualModelType(this.modelResource)
-                    && (eObject instanceof Procedure)) {
-                this.procedure = (Procedure)eObject;
-                enable = isValidSelection(this.procedure);
-            }
+            enable = isValidSelection(this.procedure);
         }
 
         // not a valid selection
