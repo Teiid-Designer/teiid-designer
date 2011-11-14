@@ -22,6 +22,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
@@ -43,6 +44,8 @@ import com.metamatrix.modeler.core.ModelerCoreException;
 import com.metamatrix.modeler.core.types.DatatypeConstants;
 import com.metamatrix.modeler.core.types.DatatypeManager;
 import com.metamatrix.modeler.core.workspace.ModelResource;
+import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
+import com.metamatrix.modeler.internal.ui.viewsupport.ModelObjectUtilities;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Message;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Model;
@@ -249,6 +252,10 @@ public class RelationalModelBuilder {
 			throws ModelerCoreException {
 		Message message = operation.getOutputMessage();
 		
+		if( message == null ) {
+			return;
+		}
+		
 		Part[] parts = message.getParts();
 		for (int i = 0; i < parts.length; i++) {
 			Part part = parts[i];
@@ -329,13 +336,30 @@ public class RelationalModelBuilder {
 			modelAnnotation.setModelType(ModelType.PHYSICAL_LITERAL);
 			modelAnnotation.setPrimaryMetamodelUri(RelationalPackage.eNS_URI);
 			modelAnnotation.setNameInSource(port.getLocationURI());
-			createPhysicalProcedure(port.getService(), serviceModel);
+			
+			if( ! procedureExists(serviceModel, INVOKE)) {
+				createPhysicalProcedure(port.getService(), serviceModel);
+			}
 			
 			// Inject the connection profile properties into the physical model
 			connProvider.setConnectionInfo(serviceModel, connectionProfile);
 		}
 		return serviceModel;
 	}
+	
+    public boolean procedureExists(ModelResource modelResource, String procedureName) throws ModelWorkspaceException {
+    	if( modelResource != null ) {
+			for( Object obj : modelResource.getAllRootEObjects() ) {
+
+                EObject eObj = (EObject)obj;
+                if (eObj instanceof Procedure  && procedureName.equalsIgnoreCase(ModelObjectUtilities.getName(eObj)) ) {
+                    return true;
+                }
+			}
+    	}
+    	
+    	return false;
+    }
 
 	public ModelResource getVirtualModelForService(Operation operation)
 			throws CoreException {

@@ -290,7 +290,11 @@ public class SelectWsdlOperationsPage extends AbstractWizardPage
         sb.append(operation.getName() + " [Operation]\n"); //$NON-NLS-1$
         sb.append("id: \t\t\t\t\t" + operation.getId() + '\n'); //$NON-NLS-1$
         sb.append("input message: \t" + operation.getInputMessage().getName() + '\n'); //$NON-NLS-1$
-        sb.append("output message: \t" + operation.getOutputMessage().getName() + '\n'); //$NON-NLS-1$
+        String outputMsg = "<none>"; //$NON-NLS-1$
+        if(  operation.getOutputMessage() != null ) {
+        	outputMsg =  operation.getOutputMessage().getName();
+        }
+        sb.append("output message: \t" + outputMsg + '\n'); //$NON-NLS-1$
         Fault[] faults = operation.getFaults();
         sb.append("fault names: \t\t"); //$NON-NLS-1$
         if (faults == null || faults.length == 0) {
@@ -304,7 +308,7 @@ public class SelectWsdlOperationsPage extends AbstractWizardPage
                 }
             }
         }
-        // --------------------------------------------------------
+        // -------------------------------------------------------- 
         // Add Problem Messages
         // --------------------------------------------------------
         if (!operation.canModel()) {
