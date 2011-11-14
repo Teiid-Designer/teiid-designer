@@ -10,6 +10,7 @@ package com.metamatrix.modeler.compare.ui.tree;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.mapping.Mapping;
 import org.eclipse.emf.mapping.MappingHelper;
@@ -25,20 +26,18 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
-import org.eclipse.swt.custom.ViewForm;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
+
 import com.metamatrix.modeler.compare.DifferenceDescriptor;
 import com.metamatrix.modeler.compare.DifferenceReport;
 import com.metamatrix.modeler.compare.DifferenceType;
@@ -53,8 +52,7 @@ import com.metamatrix.ui.internal.widget.DefaultTreeViewerController;
 /**
  * Panel to show the tree of changes, allowing for selection / deselection of parts of them.
  */
-public class CompareTreePanel extends ViewForm /* Composite */
-implements UiConstants, PluginConstants {
+public class CompareTreePanel implements UiConstants, PluginConstants {
 
     private Tree tree;
     // private CheckboxTreeViewer treeViewer;
@@ -77,13 +75,12 @@ implements UiConstants, PluginConstants {
     private TreeItem tiCurrentSelection;
     private boolean bUpdatingSelection = false;
 
-    private Button btnSelectAll;
-    private Button btnUnselectAll;
-
     private ToolBar tbToolBar;
     private ToolBarManager tbmToolBarMgr;
     private Action actUp;
     private Action actDown;
+    
+    private Composite parent;
 
     private static final String SELECT_ALL_TEXT = UiConstants.Util.getString("CompareTreePanel.selectAll.text"); //$NON-NLS-1$   
 
@@ -132,7 +129,7 @@ implements UiConstants, PluginConstants {
                              boolean showCheckBoxes,
                              boolean bDisplayOnlyPrimaryMetamodelObjects,
                              int terminology ) {
-        super(theParent, SWT.NULL);
+    	this.parent = theParent;
 
         this.title = theTitle;
         this.showCheckBoxes = showCheckBoxes;
@@ -157,29 +154,36 @@ implements UiConstants, PluginConstants {
 
     private void initialize( int terminology ) {
 
-        // create title and make it bold
-        CLabel lblTitle = WidgetFactory.createLabel(this, this.title);
-
-        Font fOld = lblTitle.getFont();
-        FontData data = fOld.getFontData()[0];
-        data.setStyle(SWT.BOLD);
-        Font fNewFont = GlobalUiFontManager.getFont(data);
-        lblTitle.setFont(fNewFont);
-
-        this.setTopLeft(lblTitle);
+    	if( this.title != null && this.title.trim().length() > 0 ) {
+	        // create title and make it bold
+	        CLabel lblTitle = WidgetFactory.createLabel(this.parent, this.title);
+	
+	        Font fOld = lblTitle.getFont();
+	        FontData data = fOld.getFontData()[0];
+	        data.setStyle(SWT.BOLD);
+	        Font fNewFont = GlobalUiFontManager.getFont(data);
+	        lblTitle.setFont(fNewFont);
+    	}
+    	
+        // create the up/down toolbar
+        createToolBar();
 
         // tree
         this.controller = new CompareTreeController();
 
         if (showCheckBoxes) {
-            this.treeViewer = WidgetFactory.createTreeViewer(this, SWT.SINGLE | SWT.CHECK, GridData.FILL_BOTH, this.controller);
+            this.treeViewer = WidgetFactory.createTreeViewer(this.parent, SWT.SINGLE | SWT.CHECK | SWT.V_SCROLL | SWT.H_SCROLL, GridData.FILL_BOTH, this.controller);
         } else {
             // create the treeviewer without the SWT.CHECK style
-            this.treeViewer = WidgetFactory.createTreeViewer(this, SWT.SINGLE, GridData.FILL_BOTH, this.controller);
+            this.treeViewer = WidgetFactory.createTreeViewer(this.parent, SWT.SINGLE | SWT.V_SCROLL | SWT.H_SCROLL, GridData.FILL_BOTH, this.controller);
         }
 
         this.tree = this.treeViewer.getTree();
-        this.setContent(tree);
+        this.treeViewer.getTree().setVisible(true);
+
+        GridData treeGD = new GridData(GridData.FILL_BOTH);
+        treeGD.heightHint = 140;
+        this.tree.setLayoutData(treeGD);
 
         contentProvider = new MappingTreeContentProvider();
 
@@ -209,55 +213,11 @@ implements UiConstants, PluginConstants {
             treeViewer.addFilter(pmofViewerFilter);
         }
 
-        // button panel
-        if (showCheckBoxes) {
-            createSelectUnSelectButtonPanel(this);
-        }
-
-        // create the up/down toolbar
-        createToolBar();
-
         this.tree.addSelectionListener(new SelectionAdapter() {
 
             @Override
             public void widgetSelected( SelectionEvent theEvent ) {
                 handleTreeNodeSelection();
-            }
-        });
-
-    }
-
-    private void createSelectUnSelectButtonPanel( Composite parent ) {
-
-        // create panel to hold all the buttons
-        Composite pnlButtons = WidgetFactory.createPanel(parent, GridData.HORIZONTAL_ALIGN_CENTER);
-        GridLayout gridLayout = new GridLayout();
-        pnlButtons.setLayout(gridLayout);
-        gridLayout.numColumns = 2;
-        GridData gridData = new GridData(GridData.CENTER/* GridData.FILL_HORIZONTAL */);
-        pnlButtons.setLayoutData(gridData);
-
-        // select all button
-        this.btnSelectAll = WidgetFactory.createButton(pnlButtons, SELECT_ALL_TEXT, GridData.FILL_HORIZONTAL);
-        this.btnSelectAll.setEnabled(true);
-        this.btnSelectAll.setToolTipText(SELECT_ALL_TIP);
-        this.btnSelectAll.addSelectionListener(new SelectionAdapter() {
-
-            @Override
-            public void widgetSelected( SelectionEvent theEvent ) {
-                handleSelectAll();
-            }
-        });
-
-        // unselect all button
-        this.btnUnselectAll = WidgetFactory.createButton(pnlButtons, UNSELECT_ALL_TEXT, GridData.FILL_HORIZONTAL);
-        this.btnUnselectAll.setEnabled(true);
-        this.btnUnselectAll.setToolTipText(UNSELECT_ALL_TIP);
-        this.btnUnselectAll.addSelectionListener(new SelectionAdapter() {
-
-            @Override
-            public void widgetSelected( SelectionEvent theEvent ) {
-                handleUnselectAll();
             }
         });
 
@@ -278,8 +238,7 @@ implements UiConstants, PluginConstants {
 
     protected void createToolBar() {
 
-        tbToolBar = new ToolBar(this, SWT.FLAT | SWT.WRAP);
-        this.setTopRight(tbToolBar);
+        tbToolBar = new ToolBar(this.parent, SWT.FLAT | SWT.WRAP);
         tbmToolBarMgr = new PaneToolBarManager(tbToolBar);
 
         // == Down (next) Arrow
@@ -308,6 +267,33 @@ implements UiConstants, PluginConstants {
         tbmToolBarMgr.add(actUp);
 
         tbmToolBarMgr.update(true);
+        
+        // button panel
+        if (showCheckBoxes) {
+        	Action selectAll = new Action() {
+
+                @Override
+                public void run() {
+                	handleSelectAll();
+                }
+            };
+            selectAll.setToolTipText(SELECT_ALL_TIP);
+            selectAll.setText(SELECT_ALL_TEXT);
+            tbmToolBarMgr.add(selectAll);
+            
+        	Action unselectAll = new Action() {
+
+                @Override
+                public void run() {
+                	handleUnselectAll();
+                }
+            };
+            unselectAll.setToolTipText(UNSELECT_ALL_TIP);
+            unselectAll.setText(UNSELECT_ALL_TEXT);
+            tbmToolBarMgr.add(unselectAll);
+        	
+            tbmToolBarMgr.update(true);
+        }
     }
 
     void handleSelectAll() {

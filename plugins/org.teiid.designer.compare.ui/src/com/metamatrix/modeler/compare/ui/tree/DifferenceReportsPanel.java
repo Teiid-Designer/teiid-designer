@@ -10,6 +10,7 @@ package com.metamatrix.modeler.compare.ui.tree;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.mapping.Mapping;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -30,8 +31,10 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.compare.DifferenceDescriptor;
 import com.metamatrix.modeler.compare.DifferenceReport;
@@ -54,6 +57,7 @@ public class DifferenceReportsPanel extends Composite implements CoreStringUtil.
 
     private static final String FIRST_FILE_TEXT = UiConstants.Util.getString("DifferenceReportsPanel.firstFile.text"); //$NON-NLS-1$
     private static final String SECOND_FILE_TEXT = UiConstants.Util.getString("DifferenceReportsPanel.secondFile.text"); //$NON-NLS-1$
+    private static final String DIFFERENCES_GROUP = UiConstants.Util.getString("DifferenceReportsPanel.differencesGroup"); //$NON-NLS-1$
 
     public static final int USE_OLD_NEW_TERMINOLOGY = 1;
     public static final int USE_FIRST_SECOND_TERMINOLOGY = 2;
@@ -83,12 +87,11 @@ public class DifferenceReportsPanel extends Composite implements CoreStringUtil.
     private Label newOnlyImgLabel;
     private Text txtDeletes;
 
-    private SashForm sfSashform;
+//    private SashForm sfSashform;
     private CompareTreePanel treePanel;
     private DifferenceDescriptorPanel diffDescriptorPanel;
     private String treeTitle;
     private String tableTitle;
-    private int[] weights = {6, 4};
     private List<DifferenceReport> theDifferenceReports;
     private String sMessage;
     private String sModelName;
@@ -354,7 +357,7 @@ public class DifferenceReportsPanel extends Composite implements CoreStringUtil.
         gridLayout.numColumns = 1;
         this.setLayout(gridLayout);
         this.setLayoutData(new GridData(GridData.FILL_BOTH));
-
+ 
         // pnlOuter
         pnlOuter = new /* PaintAdaptable */Composite(this, SWT.NONE);
         GridLayout gridLayout01 = new GridLayout();
@@ -368,45 +371,22 @@ public class DifferenceReportsPanel extends Composite implements CoreStringUtil.
         // Add Header
         createHeaderPanel(pnlOuter);
 
-        // add SashForm
-        sfSashform = new SashForm(pnlOuter, SWT.NONE);
-        sfSashform.setOrientation(SWT.VERTICAL);
-        sfSashform.setLayoutData(new GridData(GridData.FILL_BOTH));
+        Group diffGroup = WidgetFactory.createGroup(pnlOuter, DIFFERENCES_GROUP, SWT.NONE);
+        
+        diffGroup.setLayoutData(new GridData(GridData.FILL_BOTH));
 
         // add tree to top of SashForm
-        this.treePanel = new CompareTreePanel(sfSashform, this.treeTitle, showCheckboxes, bDisplayOnlyPrimaryMetamodelObjects,
+        this.treePanel = new CompareTreePanel(diffGroup, this.treeTitle, showCheckboxes, bDisplayOnlyPrimaryMetamodelObjects,
                                               this.terminology);
-        this.treePanel.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-        // add table to bottom of SashForm
-        Composite pnlBottomOuter = new Composite(sfSashform, SWT.NONE) {
-
-            /**
-             * @see org.eclipse.swt.widgets.Composite#computeSize(int, int, boolean)
-             * @since 4.2
-             */
-            @Override
-            public Point computeSize( int wHint,
-                                      int hHint,
-                                      boolean changed ) {
-
-                return super.computeSize(SWT.DEFAULT, SWT.DEFAULT, changed);
-            }
-        };
-
-        GridLayout gridLayout07 = new GridLayout();
-        gridLayout07.numColumns = 1;
-        gridLayout07.verticalSpacing = 1;
-        gridLayout07.marginHeight = 1;
-        pnlBottomOuter.setLayout(gridLayout07);
-        GridData gd07 = new GridData(GridData.FILL_BOTH);
-        pnlBottomOuter.setLayoutData(gd07);
-
-        this.diffDescriptorPanel = new DifferenceDescriptorPanel(pnlBottomOuter, this.tableTitle, enablePropertySelection,
+        this.diffDescriptorPanel = new DifferenceDescriptorPanel(diffGroup, this.tableTitle, enablePropertySelection,
                                                                  showCheckboxes, terminology);
 
-        this.diffDescriptorPanel.setLayoutData(new GridData(GridData.FILL_BOTH));
+        GridData descGD = new GridData(GridData.FILL_BOTH);
+        descGD.heightHint = 140;
+        this.diffDescriptorPanel.setLayoutData(descGD);
         this.diffDescriptorPanel.clear();
+        
 
         // Add a Selection Listener to Tree
         this.treePanel.getTreeViewer().addSelectionChangedListener(new ISelectionChangedListener() {
@@ -430,7 +410,6 @@ public class DifferenceReportsPanel extends Composite implements CoreStringUtil.
             }
         });
 
-        sfSashform.setWeights(weights);
         getTreeViewer().getTree().setFocus();
     }
 

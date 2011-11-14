@@ -9,6 +9,7 @@ package com.metamatrix.modeler.compare.ui.wizard;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.ICheckStateListener;
@@ -18,6 +19,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+
 import com.metamatrix.modeler.compare.DifferenceReport;
 import com.metamatrix.modeler.compare.PropertyDifference;
 import com.metamatrix.modeler.compare.ui.UiConstants;
