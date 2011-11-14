@@ -8,14 +8,12 @@
 package org.teiid.designer.extension.ui.wizards;
 
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.CHECK_MARK;
-
 import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -55,7 +53,9 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 import org.teiid.designer.core.extension.ModelExtensionUtils;
+import org.teiid.designer.extension.ExtensionConstants;
 import org.teiid.designer.extension.ExtensionPlugin;
+import org.teiid.designer.extension.definition.ModelExtensionAssistant;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.definition.ModelExtensionDefinitionHeader;
 import org.teiid.designer.extension.definition.ModelExtensionDefinitionWriter;
@@ -63,7 +63,6 @@ import org.teiid.designer.extension.definition.ModelObjectExtensionAssistant;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 import org.teiid.designer.extension.ui.Activator;
 import org.teiid.designer.extension.ui.Messages;
-
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelResource;
@@ -72,7 +71,6 @@ import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.ui.editors.ModelEditor;
 import com.metamatrix.modeler.internal.ui.explorer.ModelExplorerLabelProvider;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelIdentifier;
-import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.ui.UiPlugin;
 import com.metamatrix.modeler.ui.editors.ModelEditorManager;
 import com.metamatrix.modeler.ui.viewsupport.ModelingResourceFilter;
@@ -373,8 +371,8 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
                                 if (editor != null && editor.isDirty()) {
                                     isDirty = true;
                                 }
-                                // Check whether model is not dirty and is extendable
-                                if (!isDirty && isMetamodelExtendable(modelResource) && ModelUtilities.isPhysical(modelResource)) {
+                                // Check whether model is not dirty and can add or remove any of the MEDs from it.
+                                if (!isDirty && canExtend((IFile)theElement)) {
                                     result = true;
                                 }
 
@@ -389,6 +387,32 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
             return result;
         }
     };
+
+    /**
+     * Determine if the selection allows add or remove of any registered MED
+     * 
+     * @param theFile the selected IFile
+     * @return 'true' if the selection is an extendable model
+     * @since 7.6
+     */
+    private boolean canExtend( IFile theFile ) {
+        boolean result = false;
+
+        // Get all the MEDs currently registered
+        Collection<ModelExtensionDefinition> meds = this.registry.getAllDefinitions();
+
+        // If any of the MEDs can be added or removed, action is valid
+        for (ModelExtensionDefinition med : meds) {
+            ModelExtensionAssistant assistant = med.getModelExtensionAssistant();
+            if (assistant.supportsMedOperation(ExtensionConstants.MedOperations.ADD_MED_TO_MODEL, theFile)
+                || assistant.supportsMedOperation(ExtensionConstants.MedOperations.DELETE_MED_FROM_MODEL, theFile)) {
+                result = true;
+                break;
+            }
+        }
+
+        return result;
+    }
 
     boolean isMetamodelExtendable( ModelResource modelResource ) {
         if (this.registry != null && modelResource != null) {

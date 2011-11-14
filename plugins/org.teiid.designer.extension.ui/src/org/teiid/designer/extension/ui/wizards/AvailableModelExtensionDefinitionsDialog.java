@@ -9,8 +9,8 @@ package org.teiid.designer.extension.ui.wizards;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
@@ -36,14 +36,15 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.dialogs.SelectionStatusDialog;
+import org.teiid.designer.extension.ExtensionConstants;
 import org.teiid.designer.extension.ExtensionPlugin;
+import org.teiid.designer.extension.definition.ModelExtensionAssistant;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.definition.ModelExtensionDefinitionHeader;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 import org.teiid.designer.extension.ui.Messages;
 import org.teiid.designer.extension.ui.UiConstants;
 import com.metamatrix.modeler.core.workspace.ModelResource;
-import com.metamatrix.modeler.internal.ui.viewsupport.ModelIdentifier;
 import com.metamatrix.ui.internal.util.WidgetFactory;
 import com.metamatrix.ui.internal.util.WidgetUtil;
 import com.metamatrix.ui.internal.viewsupport.StatusInfo;
@@ -58,7 +59,6 @@ public class AvailableModelExtensionDefinitionsDialog extends SelectionStatusDia
     private List<ModelExtensionDefinition> availableMedsList;
     private List<ModelExtensionDefinition> selectedMedsList;
     private TableViewer tableViewer;
-    private static final String DEPRECATED_MED_NS_URI = "org.teiid.designer.extension.deprecated"; //$NON-NLS-1$
 
     /**
      * Construct an instance of AvailableModelExtensionDefinitionsDialog.
@@ -73,7 +73,7 @@ public class AvailableModelExtensionDefinitionsDialog extends SelectionStatusDia
 
         this.registry = (Platform.isRunning() ? ExtensionPlugin.getInstance().getRegistry() : null);
         this.modelResource = resource;
-        this.availableMedsList = getValidModelExtensionDefinitions(this.modelResource, currentModelHeaders);
+        this.availableMedsList = getAddableMEDs(this.modelResource, currentModelHeaders);
         this.selectedMedsList = new ArrayList();
     }
 
@@ -143,33 +143,23 @@ public class AvailableModelExtensionDefinitionsDialog extends SelectionStatusDia
     }
 
     /**
-     * Get the list of valid ModelExtensionDefinitions for this ModelResource. This valid Extension definitions are those that can
-     * extend the modelResources metamodel URI. Only the MEDs that are not already active on the model are shown.
+     * Get the list of registered ModelExtensionDefinitions that can be added to this ModelResource. If the model already contains
+     * a MED it will not be included.
      * 
      * @param modelResource the ModelResource
      * @param currentModelHeaders the Med Headers already applied to the model resource
      * @return the list of valid ModelExtensionDefinitions for the supplied ModelResource
      */
-    private List<ModelExtensionDefinition> getValidModelExtensionDefinitions( ModelResource modelResource,
-                                                                              List<ModelExtensionDefinitionHeader> currentModelHeaders ) {
-        List<ModelExtensionDefinition> resultList = Collections.EMPTY_LIST;
-        if (isMetamodelExtendable(modelResource)) {
-            resultList = new ArrayList<ModelExtensionDefinition>();
-            // Metamodel URI of the ModelResource
-            String selectedMetamodelUri = ModelIdentifier.getPrimaryMetamodelURI(modelResource);
-            // Get All Registered Definitions
-            Collection<ModelExtensionDefinition> allDefinitions = this.registry.getAllDefinitions();
-            // Iterate all registered MEDS.
-            for (ModelExtensionDefinition med : allDefinitions) {
-                // If (1) a MED can extend the modelResource metamodel URI, and (2) the MED namespace/version are not already
-                // represented -
-                // then add it to the result List
-                if (med.extendsMetamodelUri(selectedMetamodelUri)
-                    && !headerListContains(currentModelHeaders, med.getNamespacePrefix(), med.getVersion())
-                    && !DEPRECATED_MED_NS_URI.equals(med.getNamespaceUri())) { // TODO: Remove later. Dont allow deprecated MED to
-                                                                               // be added to model.
-                    resultList.add(med);
-                }
+    private List<ModelExtensionDefinition> getAddableMEDs( ModelResource modelResource,
+                                                           List<ModelExtensionDefinitionHeader> currentModelHeaders ) {
+        List<ModelExtensionDefinition> resultList = new ArrayList<ModelExtensionDefinition>();
+        IFile file = (IFile)modelResource.getResource();
+        Collection<ModelExtensionDefinition> allDefinitions = this.registry.getAllDefinitions();
+        for (ModelExtensionDefinition med : allDefinitions) {
+            ModelExtensionAssistant assistant = med.getModelExtensionAssistant();
+            if (assistant.supportsMedOperation(ExtensionConstants.MedOperations.ADD_MED_TO_MODEL, file) &&
+            !headerListContains(currentModelHeaders, med.getNamespacePrefix(), med.getVersion())) {
+                resultList.add(med);
             }
         }
         return resultList;
@@ -193,14 +183,6 @@ public class AvailableModelExtensionDefinitionsDialog extends SelectionStatusDia
             }
         }
         return contains;
-    }
-
-    private boolean isMetamodelExtendable( ModelResource modelResource ) {
-        if (this.registry != null && modelResource != null) {
-            String selectedModelURI = ModelIdentifier.getPrimaryMetamodelURI(modelResource);
-            return registry.isExtendable(selectedModelURI);
-        }
-        return false;
     }
 
     /*

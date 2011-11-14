@@ -7,9 +7,10 @@
  */
 package org.teiid.designer.extension.ui.actions;
 
+import java.util.Collection;
 import java.util.List;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
@@ -17,16 +18,16 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
+import org.teiid.designer.extension.ExtensionConstants;
 import org.teiid.designer.extension.ExtensionPlugin;
+import org.teiid.designer.extension.definition.ModelExtensionAssistant;
+import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 import org.teiid.designer.extension.ui.Messages;
 import org.teiid.designer.extension.ui.wizards.ManageModelExtensionDefnsWizard;
-import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelResource;
-import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
-import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
+import com.metamatrix.modeler.internal.core.workspace.ModelFileUtil;
 import com.metamatrix.modeler.internal.ui.editors.ModelEditor;
-import com.metamatrix.modeler.internal.ui.viewsupport.ModelIdentifier;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.ui.UiPlugin;
 import com.metamatrix.modeler.ui.actions.SortableSelectionAction;
@@ -53,7 +54,7 @@ public class ManageModelExtensionDefnsAction extends SortableSelectionAction {
     @Override
     public boolean isValidSelection( ISelection selection ) {
         // Enable for single/multiple Virtual Tables
-        return isExtendableModelSelected(selection);
+        return canManageModelSelected(selection);
     }
 
     /**
@@ -97,7 +98,7 @@ public class ManageModelExtensionDefnsAction extends SortableSelectionAction {
      */
     @Override
     public boolean isApplicable( ISelection selection ) {
-        return isExtendableModelSelected(selection);
+        return canManageModelSelected(selection);
     }
 
     /**
@@ -107,47 +108,39 @@ public class ManageModelExtensionDefnsAction extends SortableSelectionAction {
      * @return 'true' if the selection is an extendable model
      * @since 7.6
      */
-    private boolean isExtendableModelSelected( ISelection theSelection ) {
+    private boolean canManageModelSelected( ISelection theSelection ) {
         boolean result = false;
+
         List allObjs = SelectionUtilities.getSelectedObjects(theSelection);
         // Must be a single selection
         if (!allObjs.isEmpty() && allObjs.size() == 1) {
             Object selectedObj = allObjs.get(0);
-            // the selected model must (1) have a metamodelURI that can be extended and (2) be a source model
-            if (selectedObj instanceof IFile) {
-                result = false;
-                try {
-                    ModelResource modelResource = ModelUtil.getModelResource((IFile)selectedObj, false);
-                    if ((modelResource != null) && isMetamodelExtendable(modelResource) && ModelUtilities.isPhysical(modelResource)) {
+            // For Model Selection, get IFile instance
+            if (isModelFile(selectedObj)) {
+                // Get all the MEDs currently registered
+                Collection<ModelExtensionDefinition> meds = this.registry.getAllDefinitions();
+
+                // If any of the MEDs can be added or removed, action is valid
+                for (ModelExtensionDefinition med : meds) {
+                    ModelExtensionAssistant assistant = med.getModelExtensionAssistant();
+                    if (assistant.supportsMedOperation(ExtensionConstants.MedOperations.ADD_MED_TO_MODEL, selectedObj)
+                        || assistant.supportsMedOperation(ExtensionConstants.MedOperations.DELETE_MED_FROM_MODEL, selectedObj)) {
                         result = true;
+                        break;
                     }
-                } catch (final ModelWorkspaceException theException) {
-                    ModelerCore.Util.log(IStatus.ERROR, theException, theException.getMessage());
                 }
-            } else {
-                result = false;
             }
         }
 
         return result;
     }
 
-    /**
-     * Determine if the selection is allowed to have a Model Extension Definition. Asks the registry if the metamodel URI is a
-     * valid extendable URI.
-     * @param modelResource the model resource
-     * @return 'true' if the models metamodel URI is extendable.
-     * @since 7.6
-     */
-    private boolean isMetamodelExtendable( ModelResource modelResource ) {
-        boolean isExtendable = false;
-        if (this.registry != null && modelResource != null) {
-            String selectedModelUri = ModelIdentifier.getPrimaryMetamodelURI(modelResource);
-            if (selectedModelUri != null) {
-                isExtendable = this.registry.isExtendable(selectedModelUri);
-            }
+    private boolean isModelFile( Object obj ) {
+        if (obj instanceof IFile) {
+            final IPath path = ((IFile)obj).getLocation();
+            if (path != null) return ModelFileUtil.isModelFile(path.toFile());
         }
-        return isExtendable;
+        return false;
     }
 
 }
