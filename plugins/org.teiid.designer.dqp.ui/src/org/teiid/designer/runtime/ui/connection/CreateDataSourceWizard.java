@@ -28,12 +28,14 @@ import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
@@ -56,6 +58,7 @@ import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelIdentifier;
+import com.metamatrix.ui.graphics.GlobalUiColorManager;
 import com.metamatrix.ui.internal.util.WidgetFactory;
 import com.metamatrix.ui.internal.util.WidgetUtil;
 import com.metamatrix.ui.internal.wizard.AbstractWizard;
@@ -182,7 +185,7 @@ public class CreateDataSourceWizard extends AbstractWizard implements IProfileCh
         }
 
         this.dataSourceNameText = WidgetFactory.createTextField(mainPanel, GridData.FILL_HORIZONTAL, 1, dataSourceName);
-
+        this.dataSourceNameText.setForeground(GlobalUiColorManager.EMPHASIS_COLOR);
         this.dataSourceNameText.addModifyListener(new ModifyListener() {
             @Override
             public void modifyText( ModifyEvent e ) {
@@ -190,6 +193,15 @@ public class CreateDataSourceWizard extends AbstractWizard implements IProfileCh
                 validateInputs();
             }
         });
+        
+        {
+        	Text helpText = new Text(mainPanel, SWT.WRAP | SWT.READ_ONLY);
+        	helpText.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
+        	helpText.setForeground(GlobalUiColorManager.NOTE_COLOR);
+        	helpText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+        	((GridData)helpText.getLayoutData()).horizontalSpan = 2;
+        	helpText.setText(getString("dataSourceNameHelp.txt"));  //$NON-NLS-1$
+        }
 
         // ===========>>>> Create Connections Group
         final Group connectionSourceGroup = WidgetFactory.createGroup(mainPanel,
@@ -204,8 +216,7 @@ public class CreateDataSourceWizard extends AbstractWizard implements IProfileCh
             @Override
             public void widgetSelected( final SelectionEvent event ) {
                 if (hasModelResources) {
-                    modelsCombo.setEnabled(useModelCheckBox.getSelection());
-                    connectionProfilesCombo.setEnabled(!useModelCheckBox.getSelection());
+                	resetComboBoxes();
                     useConnectionProfileCheckBox.setSelection(!useModelCheckBox.getSelection());
 
                     handleModelResourceSelection();
@@ -274,8 +285,7 @@ public class CreateDataSourceWizard extends AbstractWizard implements IProfileCh
 
             @Override
             public void widgetSelected( final SelectionEvent event ) {
-                connectionProfilesCombo.setEnabled(useConnectionProfileCheckBox.getSelection());
-                modelsCombo.setEnabled(!useConnectionProfileCheckBox.getSelection());
+                resetComboBoxes();
                 useModelCheckBox.setSelection(!useConnectionProfileCheckBox.getSelection());
 
                 if (useConnectionProfileCheckBox.getSelection()) {
@@ -289,10 +299,6 @@ public class CreateDataSourceWizard extends AbstractWizard implements IProfileCh
         });
 
         WidgetFactory.createLabel(connectionSourceGroup, getString("connectionProfile.label")); //$NON-NLS-1$
-        // ArrayList profileList = new ArrayList();
-        // for( IConnectionProfile prof : ProfileManager.getInstance().getProfiles()) {
-        // profileList.add(prof);
-        // }
 
         profileLabelProvider = new LabelProvider() {
 
@@ -320,15 +326,6 @@ public class CreateDataSourceWizard extends AbstractWizard implements IProfileCh
             }
         });
 
-        // .addModifyListener(new ModifyListener() {
-        //
-        // public void modifyText( final ModifyEvent event ) {
-        // if (useConnectionProfileCheckBox.getSelection()) {
-        // handleConnectionProfileSelected();
-        // }
-        // }
-        // });
-
         this.connectionProfilesCombo.setVisibleItemCount(10);
 
         newCPButton = WidgetFactory.createButton(connectionSourceGroup, NEW_BUTTON);
@@ -348,10 +345,16 @@ public class CreateDataSourceWizard extends AbstractWizard implements IProfileCh
                 profileWorker.edit();
             }
         });
-
-        this.useConnectionProfileCheckBox.setSelection(!useModelRes);
-        this.connectionProfilesCombo.setEnabled(!useModelRes);
-        this.modelsCombo.setEnabled(useModelRes);
+        
+        if( useModelRes ) {
+        	this.useConnectionProfileCheckBox.setSelection(false);
+	        this.connectionProfilesCombo.setEnabled(false);
+	        this.modelsCombo.setEnabled(true);
+        } else {
+	        this.useConnectionProfileCheckBox.setSelection(true);
+	        this.connectionProfilesCombo.setEnabled(true);
+	        this.modelsCombo.setEnabled(false);
+        }
 
         // ===========>>>>
         Group propsGroup = WidgetFactory.createGroup(mainPanel, getString("connectionProperties.label"), GridData.FILL_BOTH, 2, 2); //$NON-NLS-1$
@@ -366,6 +369,7 @@ public class CreateDataSourceWizard extends AbstractWizard implements IProfileCh
         int tableStyle = SWT.BORDER | SWT.V_SCROLL | SWT.FULL_SELECTION;
         propsViewer = new TableViewer(propsGroup, tableStyle);
         Table table = propsViewer.getTable();
+        table.setForeground(GlobalUiColorManager.EMPHASIS_COLOR);
 
         final GridData gridData = new GridData(GridData.FILL_BOTH); // SWT.FILL, SWT.FILL, true, true);
         gridData.grabExcessHorizontalSpace = true;
@@ -413,10 +417,29 @@ public class CreateDataSourceWizard extends AbstractWizard implements IProfileCh
         } else {
             setConnectionProperties();
         }
+        
+        resetComboBoxes();
 
         // ===========>>>> If we're in edit mode, load the UI objects with the info from the input dataRole
 
         return mainPanel;
+    }
+    
+    private void resetComboBoxes() {
+    	
+        connectionProfilesCombo.setEnabled(useConnectionProfileCheckBox.getSelection());
+        modelsCombo.setEnabled(!useConnectionProfileCheckBox.getSelection());
+    	
+    	this.modelsCombo.setForeground(getColorForEnablement(this.modelsCombo.getEnabled()));
+    	this.connectionProfilesCombo.setForeground(getColorForEnablement(this.connectionProfilesCombo.getEnabled()));
+    }
+    
+    private Color getColorForEnablement(boolean enabled) {
+    	if( enabled ) {
+    		return GlobalUiColorManager.EMPHASIS_COLOR;
+    	} else {
+    		return GlobalUiColorManager.EMPHASIS_COLOR_DISABLED;
+    	}
     }
 
     void handleModelResourceSelection() {

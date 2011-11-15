@@ -11,9 +11,13 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
+
+import com.metamatrix.ui.internal.util.UiUtil;
 
 
 /**
@@ -24,6 +28,10 @@ import org.eclipse.swt.widgets.Display;
 public class GlobalUiColorManager {
 
     private static Map<RGB, Color> fColorTable = Collections.synchronizedMap(new HashMap<RGB, Color>(10));
+    
+    public static final Color NOTE_COLOR = UiUtil.getSystemColor(SWT.COLOR_DARK_BLUE);
+    public static final Color EMPHASIS_COLOR = UiUtil.getSystemColor(SWT.COLOR_DARK_BLUE);
+    public static final Color EMPHASIS_COLOR_DISABLED = UiUtil.getSystemColor(SWT.COLOR_WIDGET_NORMAL_SHADOW);
 
     /**
      * Method disposes of the colors.
