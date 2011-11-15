@@ -12,16 +12,13 @@ import static org.teiid.designer.extension.ui.UiConstants.UTIL;
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.CHECK_MARK;
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.REGISTERY_MED_UPDATE_ACTION;
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.UNREGISTER_MED;
-
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.Action;
@@ -76,10 +73,8 @@ import org.teiid.designer.extension.registry.RegistryListener;
 import org.teiid.designer.extension.ui.Activator;
 import org.teiid.designer.extension.ui.Messages;
 import org.teiid.designer.extension.ui.actions.RegistryDeploymentValidator;
-import org.teiid.designer.extension.ui.actions.UpdateRegistryModelExtensionDefinitionAction;
 import org.teiid.designer.extension.ui.editors.ModelExtensionDefinitionEditor;
 import org.teiid.designer.extension.ui.wizards.NewMedWizard;
-
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.internal.ui.explorer.ModelExplorerLabelProvider;
 import com.metamatrix.modeler.ui.UiPlugin;
@@ -454,36 +449,13 @@ public final class ModelExtensionRegistryView extends ViewPart {
             }
 
             // -------------------------------------------------
-            // Do some validation checks before registering.
+            // Attempt the deployment. Does a lot of checking
             // -------------------------------------------------
-            InputStream fileContents = null;
-            try {
-                fileContents = mxdFile.getContents();
-            } catch (CoreException e) {
-                UTIL.log(IStatus.ERROR, e, NLS.bind(Messages.medFileGetContentsErrorMsg, mxdFile.getName()));
-            }
-
-            if (fileContents != null) {
-                boolean isDeployable = RegistryDeploymentValidator.checkMedDeployable(registry, fileContents);
-                // If the URI is not registered, go ahead with registration
-                if (isDeployable) {
-                    boolean success = true;
-                    // Add the Extension Definition to the registry
-                    try {
-                        UpdateRegistryModelExtensionDefinitionAction.addExtensionToRegistry(mxdFile);
-                    } catch (Exception e) {
-                        success = false;
-                        UTIL.log(IStatus.ERROR, e, NLS.bind(Messages.medRegistryAddErrorMsg, mxdFile.getName()));
-                        MessageDialog.openInformation(getShell(),
-                                                      Messages.registerMedActionFailedTitle,
-                                                      Messages.registerMedActionFailedMsg);
-                    }
-                    if (success) {
-                        MessageDialog.openInformation(getShell(),
-                                                      Messages.registerMedActionSuccessTitle,
-                                                      Messages.registerMedActionSuccessMsg);
-                    }
-                }
+            boolean wasAdded = RegistryDeploymentValidator.doDeployment(this.registry, mxdFile);
+            if (wasAdded) {
+                MessageDialog.openInformation(getShell(),
+                                              Messages.registerMedActionSuccessTitle,
+                                              Messages.registerMedActionSuccessMsg);
             }
         }
     }

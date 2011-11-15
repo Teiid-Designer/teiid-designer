@@ -12,9 +12,7 @@ import static org.teiid.designer.extension.ui.Messages.updateMedInRegistryAction
 import static org.teiid.designer.extension.ui.Messages.updateMedInRegistryActionToolTip;
 import static org.teiid.designer.extension.ui.UiConstants.UTIL;
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.REGISTERY_MED_UPDATE_ACTION;
-
 import java.io.InputStream;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
@@ -35,11 +33,11 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.teiid.designer.extension.ExtensionPlugin;
+import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 import org.teiid.designer.extension.ui.Activator;
 import org.teiid.designer.extension.ui.Messages;
 import org.teiid.designer.extension.ui.editors.ModelExtensionDefinitionEditor;
-
 import com.metamatrix.modeler.ui.UiPlugin;
 import com.metamatrix.modeler.ui.actions.SortableSelectionAction;
 import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
@@ -111,26 +109,68 @@ public final class UpdateRegistryModelExtensionDefinitionAction extends Sortable
         }
 
         if (fileContents != null) {
-            boolean isDeployable = RegistryDeploymentValidator.checkMedDeployable(registry, fileContents);
-            // If the URI is not registered, go ahead with registration
-            if (isDeployable) {
-                // Update the registry using the validated MED
-                BusyIndicator.showWhile(Display.getDefault(), new Runnable() {
+            // Parse file contents to get the MED. Show info dialog if not parsable.
+            ModelExtensionDefinition med = RegistryDeploymentValidator.parseMed(fileContents, true);
 
-                    @Override
-                    public void run() {
-                        internalRun();
+            // Continue checks on parsable MED
+            if (med != null) {
+                ModelExtensionDefinition medNSPrefixMatch = RegistryDeploymentValidator.getRegisteredMedWithNSPrefix(registry,
+                                                                                                                     med.getNamespacePrefix());
+                ModelExtensionDefinition medNSUriMatch = RegistryDeploymentValidator.getRegisteredMedWithNSUri(registry,
+                                                                                                               med.getNamespaceUri());
+
+                boolean nsPrefixConflict = false;
+                boolean nsUriConflict = false;
+                boolean nsPrefixAndUriConflictSameMed = false;
+
+                if (medNSPrefixMatch != null) nsPrefixConflict = true;
+                if (medNSUriMatch != null) nsUriConflict = true;
+                if (nsPrefixConflict && nsUriConflict && medNSPrefixMatch.equals(medNSUriMatch)) nsPrefixAndUriConflictSameMed = true;
+
+                // No conflicts - add it to the registry
+                if (!nsPrefixConflict && !nsUriConflict) {
+                    // Add the selected Med
+                    BusyIndicator.showWhile(Display.getDefault(), new Runnable() {
+                        @Override
+                        public void run() {
+                            internalRun(false);
+                        }
+                    });
+                    // If there is (1) just a NS Prefix Conflict or (2) NS Prefix AND URI, but they are same MED, prompt user
+                    // whether to update
+                } else if (nsPrefixConflict && (!nsUriConflict || (nsUriConflict && nsPrefixAndUriConflictSameMed))) {
+                    // Do not re-deploy the same MED
+                    if (med.equals(medNSPrefixMatch)) {
+                        RegistryDeploymentValidator.showMedNSPrefixAlreadyRegisteredDialog();
+                    } else {
+                        boolean doUpdate = RegistryDeploymentValidator.showMedNSPrefixAlreadyRegisteredDoUpdateDialog();
+                        if (doUpdate) {
+                            // Add the selected Med
+                            BusyIndicator.showWhile(Display.getDefault(), new Runnable() {
+                                @Override
+                                public void run() {
+                                    internalRun(true);
+                                }
+                            });
+                        }
                     }
-                });
+                    // If there is a NS URI Conflict, prompt user to fix it
+                } else if (nsUriConflict) {
+                    RegistryDeploymentValidator.showMedNSUriAlreadyRegisteredDialog();
+                }
             }
         }
     }
 
-    void internalRun() {
+    void internalRun( boolean isUpdate ) {
         boolean wasAdded = true;
         try {
             if (this.selectedMed != null) {
-                addExtensionToRegistry(this.selectedMed);
+                if (isUpdate) {
+                    updateExtensionInRegistry(this.selectedMed);
+                } else {
+                    addExtensionToRegistry(this.selectedMed);
+                }
             }
         } catch (Exception e) {
             wasAdded = false;
@@ -175,6 +215,25 @@ public final class UpdateRegistryModelExtensionDefinitionAction extends Sortable
     public static void addExtensionToRegistry( IFile medFile ) throws Exception {
         ModelExtensionRegistry registry = (Platform.isRunning() ? ExtensionPlugin.getInstance().getRegistry() : null);
 
+        registry.addDefinition(medFile.getContents(), ExtensionPlugin.getInstance().createDefaultModelObjectExtensionAssistant());
+    }
+
+    /**
+     * If a MED with the same NS Prefix is already registered, it will be removed and replaced with the supplied MED
+     * 
+     * @param medFile the file containing the med definition
+     * @throws Exception throws exception if the add operation failed
+     */
+    public static void updateExtensionInRegistry( IFile medFile ) throws Exception {
+        ModelExtensionRegistry registry = (Platform.isRunning() ? ExtensionPlugin.getInstance().getRegistry() : null);
+
+        // If MED with this prefix is registered, remove it first
+        ModelExtensionDefinition med = RegistryDeploymentValidator.parseMed(medFile.getContents(), false);
+        if (registry.isNamespacePrefixRegistered(med.getNamespacePrefix())) {
+            registry.removeDefinition(med.getNamespacePrefix());
+        }
+
+        // Add the supplied MED
         registry.addDefinition(medFile.getContents(), ExtensionPlugin.getInstance().createDefaultModelObjectExtensionAssistant());
     }
 

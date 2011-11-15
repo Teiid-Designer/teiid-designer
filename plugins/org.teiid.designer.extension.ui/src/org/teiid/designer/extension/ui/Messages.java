@@ -76,6 +76,7 @@ public class Messages extends NLS {
     public static String registerMedActionInvalidMedMsg;
     public static String registerMedActionNamespacePrefixRegisteredTitle;
     public static String registerMedActionNamespacePrefixRegisteredMsg;
+    public static String registerMedActionNamespacePrefixRegisteredDoUpdateMsg;
     public static String registerMedActionNamespaceUriRegisteredTitle;
     public static String registerMedActionNamespaceUriRegisteredMsg;
     public static String registerMedActionFailedTitle;

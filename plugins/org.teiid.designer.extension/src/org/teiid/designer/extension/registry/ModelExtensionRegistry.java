@@ -8,7 +8,6 @@
 package org.teiid.designer.extension.registry;
 
 import static org.teiid.designer.extension.ExtensionPlugin.Util;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -20,7 +19,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.osgi.util.NLS;
@@ -30,7 +28,6 @@ import org.teiid.designer.extension.definition.ModelExtensionAssistant;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.definition.ModelExtensionDefinitionParser;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
-
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
 
@@ -280,6 +277,24 @@ public final class ModelExtensionRegistry {
     public ModelExtensionDefinition getDefinition( String namespacePrefix ) {
         CoreArgCheck.isNotEmpty(namespacePrefix, "namespacePrefix is empty"); //$NON-NLS-1$
         return this.definitions.get(namespacePrefix);
+    }
+
+    /**
+     * @param namespaceUri the namespace URI whose model extension definition is being requested (cannot be <code>null</code> or
+     *        empty)
+     * @return the model extension definition or <code>null</code> if not found
+     */
+    public ModelExtensionDefinition getDefinitionWithNSUri( String namespaceUri ) {
+        CoreArgCheck.isNotEmpty(namespaceUri, "namespacePrefix is empty"); //$NON-NLS-1$
+        ModelExtensionDefinition resultMed = null;
+        Collection<ModelExtensionDefinition> allMeds = getAllDefinitions();
+        for (ModelExtensionDefinition med : allMeds) {
+            if (namespaceUri.equals(med.getNamespaceUri())) {
+                resultMed = med;
+                break;
+            }
+        }
+        return resultMed;
     }
 
     /**
