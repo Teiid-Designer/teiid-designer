@@ -40,7 +40,7 @@ import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 /**
  * Utilities that manage persisting of model extension definitions in model objects.
  */
-public class ModelExtensionUtils {
+class ModelExtensionUtils {
 
     private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(ModelExtensionUtils.class);
 

@@ -8,6 +8,7 @@
 package org.teiid.designer.extension.ui.wizards;
 
 import java.util.List;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
@@ -18,10 +19,13 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.ui.IWorkbench;
-import org.teiid.designer.core.extension.ModelExtensionUtils;
+import org.teiid.designer.extension.ExtensionPlugin;
+import org.teiid.designer.extension.definition.ModelExtensionAssistant;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
+import org.teiid.designer.extension.definition.ModelObjectExtensionAssistant;
 import org.teiid.designer.extension.ui.Messages;
 import org.teiid.designer.extension.ui.UiConstants;
+
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
@@ -68,6 +72,13 @@ public class ManageModelExtensionDefnsWizard extends AbstractWizard {
     @Override
     public boolean finish() {
         final IRunnableWithProgress op = new IRunnableWithProgress() {
+
+            /**
+             * {@inheritDoc}
+             *
+             * @see org.eclipse.jface.operation.IRunnableWithProgress#run(org.eclipse.core.runtime.IProgressMonitor)
+             */
+            @Override
             public void run( final IProgressMonitor monitor ) {
                 // Get the options and execute the build.
                 doFinish(monitor);
@@ -131,7 +142,12 @@ public class ManageModelExtensionDefnsWizard extends AbstractWizard {
             for (String namespacePrefix : namespacesToRemove) {
                 try {
                     monitor.subTask(Messages.manageMedsWizardRemoveMedsMsg);
-                    ModelExtensionUtils.removeModelExtensionDefinition(modelResource, namespacePrefix);
+                    ModelExtensionAssistant assistant = ExtensionPlugin.getInstance()
+                                                                       .getRegistry()
+                                                                       .getModelExtensionAssistant(namespacePrefix);
+                    assert (assistant instanceof ModelObjectExtensionAssistant) 
+                           : "ModelExtensionAssistant is not a ModelObjectExtensionAssistant"; //$NON-NLS-1$
+                    ((ModelObjectExtensionAssistant)assistant).removeModelExtensionDefinition(modelResource);
                 } catch (Exception e) {
                     hasErrors = true;
                     addStatus(IStatus.ERROR, Messages.manageMedsWizardRemoveMedsError, e);
@@ -149,7 +165,9 @@ public class ManageModelExtensionDefnsWizard extends AbstractWizard {
             for (ModelExtensionDefinition med : medsToAdd) {
                 try {
                     monitor.subTask(Messages.manageMedsWizardAddMedsMsg);
-                    ModelExtensionUtils.updateModelExtensionDefinition(modelResource, med);
+                    ModelExtensionAssistant assistant = med.getModelExtensionAssistant();
+                    assert (assistant instanceof ModelObjectExtensionAssistant) : "assistant is not a model object assistant"; //$NON-NLS-1$ 
+                    ((ModelObjectExtensionAssistant)assistant).saveModelExtensionDefinition(modelResource);
                 } catch (Exception e) {
                     hasErrors = true;
                     addStatus(IStatus.ERROR, Messages.manageMedsWizardAddMedsError, e);

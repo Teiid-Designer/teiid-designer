@@ -8,12 +8,14 @@
 package org.teiid.designer.extension.ui.wizards;
 
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.CHECK_MARK;
+
 import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -52,9 +54,9 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
-import org.teiid.designer.core.extension.ModelExtensionUtils;
 import org.teiid.designer.extension.ExtensionConstants;
 import org.teiid.designer.extension.ExtensionPlugin;
+import org.teiid.designer.extension.ModelExtensionAssistantAggregator;
 import org.teiid.designer.extension.definition.ModelExtensionAssistant;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.definition.ModelExtensionDefinitionHeader;
@@ -63,6 +65,7 @@ import org.teiid.designer.extension.definition.ModelObjectExtensionAssistant;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 import org.teiid.designer.extension.ui.Activator;
 import org.teiid.designer.extension.ui.Messages;
+
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelResource;
@@ -125,15 +128,17 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
      */
     private List<ModelExtensionDefinitionHeader> getModelExtensionDefnHeaders( ModelResource modelResource ) {
         List<ModelExtensionDefinitionHeader> headers = new ArrayList<ModelExtensionDefinitionHeader>();
+        ExtensionPlugin extPlugin = ExtensionPlugin.getInstance();
 
         try {
             // Get the namespaces which are currently persisted on the model
-            Collection<String> supportedNamespaces = ModelExtensionUtils.getSupportedNamespaces(modelResource);
+            ModelExtensionAssistantAggregator aggregator = extPlugin.getModelExtensionAssistantAggregator();
+            Collection<String> supportedNamespaces = aggregator.getSupportedNamespacePrefixes(modelResource);
 
             // Get the associated Headers
-            for (String namespace : supportedNamespaces) {
-                ModelExtensionDefinitionHeader header = ModelExtensionUtils.getModelExtensionDefinitionHeader(modelResource,
-                                                                                                              namespace);
+            for (String namespacePrefix : supportedNamespaces) {
+                ModelExtensionAssistant assistant = this.registry.getModelExtensionAssistant(namespacePrefix);
+                ModelExtensionDefinitionHeader header = assistant.getModelExtensionDefinition().getHeader();
                 headers.add(header);
             }
         } catch (Exception e) {
@@ -395,7 +400,7 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
      * @return 'true' if the selection is an extendable model
      * @since 7.6
      */
-    private boolean canExtend( IFile theFile ) {
+    boolean canExtend( IFile theFile ) {
         boolean result = false;
 
         // Get all the MEDs currently registered

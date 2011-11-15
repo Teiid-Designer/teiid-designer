@@ -293,7 +293,7 @@ public class EmfModelObjectExtensionAssistant extends ModelObjectExtensionAssist
 
         for (Object eObject : modelResource.getEObjects()) {
             assert eObject instanceof EObject;
-            Annotation annotation = ModelExtensionUtils.getModelObjectAnnotation((EObject)modelObject, false);
+            Annotation annotation = ModelExtensionUtils.getModelObjectAnnotation((EObject)eObject, false);
 
             if (annotation != null) {
                 String metaclassName = eObject.getClass().getName();
