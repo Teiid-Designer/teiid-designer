@@ -9,7 +9,8 @@ package org.teiid.designer.datatools.salesforce.ui;
 
 import java.util.List;
 import java.util.Properties;
-
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -38,7 +39,6 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.progress.UIJob;
 import org.teiid.designer.datatools.salesforce.ISalesForceProfileConstants;
-
 import com.metamatrix.core.util.StringUtilities;
 import com.metamatrix.modeler.modelgenerator.salesforce.ui.Activator;
 import com.metamatrix.modeler.modelgenerator.salesforce.ui.ModelGeneratorSalesforceUiConstants;
@@ -66,6 +66,7 @@ public class SalesForceProfileDetailsWizardPage extends ConnectionProfileDetails
     private Text urlText;
 
     private boolean validatedConnection = false;
+    private Pattern urlPattern;
 
     /**
      * @param wizardPageName
@@ -73,6 +74,8 @@ public class SalesForceProfileDetailsWizardPage extends ConnectionProfileDetails
     public SalesForceProfileDetailsWizardPage( String pageName ) {
         super(pageName, UTIL.getString("SalesForceProfileDetailsWizardPage.Name"), //$NON-NLS-1$
               AbstractUIPlugin.imageDescriptorFromPlugin(Activator.PLUGIN_ID, "icons/salesforce_wiz.gif")); //$NON-NLS-1$
+        // Regex provided by SF
+        urlPattern = Pattern.compile("^https://[^/?]+\\.(sales|visual\\.)force\\.com/services/(S|s)(O|o)(A|a)(P|p)/(u|c)/.*"); //$NON-NLS-1$
         // TODO: image
         /*)
         */
@@ -271,6 +274,11 @@ public class SalesForceProfileDetailsWizardPage extends ConnectionProfileDetails
                 setErrorMessage(UTIL.getString("Common.URL.Error.Message")); //$NON-NLS-1$
                 setPingButtonEnabled(false);
                 return;
+                // Validate the URL
+            } else if (!isSFURLValid(properties.get(ISalesForceProfileConstants.URL_PROP_ID).toString())) {
+                setErrorMessage(UTIL.getString("Common.URLInvalid.Error.Message")); //$NON-NLS-1$
+                setPingButtonEnabled(false);
+                return;
             }
         } else {
             setErrorMessage(null);
@@ -286,6 +294,11 @@ public class SalesForceProfileDetailsWizardPage extends ConnectionProfileDetails
 //        setPageComplete(true);
 //        setMessage(UTIL.getString("Click.Next")); //$NON-NLS-1$
 
+    }
+
+    private boolean isSFURLValid( String sfURL ) {
+        Matcher matcher = this.urlPattern.matcher(sfURL);
+        return matcher.matches();
     }
 
     /**
