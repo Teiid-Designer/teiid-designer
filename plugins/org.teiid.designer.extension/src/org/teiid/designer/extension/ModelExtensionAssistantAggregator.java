@@ -68,9 +68,13 @@ public class ModelExtensionAssistantAggregator {
         Collection<ModelExtensionPropertyDefinition> propDefns = new ArrayList<ModelExtensionPropertyDefinition>();
         String metaclassName = modelObject.getClass().getName();
 
+        // only return properties that have namespace that is both supported by model and registered in the registry
         for (String namespacePrefix : supportedNamespacePrefixes) {
             ModelExtensionAssistant assistant = this.registry.getModelExtensionAssistant(namespacePrefix);
-            propDefns.addAll(assistant.getModelExtensionDefinition().getPropertyDefinitions(metaclassName));
+
+            if (assistant != null) {
+                propDefns.addAll(assistant.getModelExtensionDefinition().getPropertyDefinitions(metaclassName));
+            }
         }
 
         return propDefns;
@@ -90,18 +94,14 @@ public class ModelExtensionAssistantAggregator {
         return props;
     }
 
+    /**
+     * @param modelObject the model object whose supported namespace prefixes are being requested (cannot be <code>null</code>)
+     * @return the namespace prefixes of the MEDs stored in the model (never <code>null</code>)
+     * @throws Exception if there is a problem access the model object
+     */
     public Collection<String> getSupportedNamespacePrefixes( Object modelObject ) throws Exception {
-        Collection<String> supportedNamespaces = new ArrayList<String>();
-
-        for (String namespacePrefix : this.registry.getAllNamespacePrefixes()) {
-            ModelObjectExtensionAssistant assistant = getModelObjectExtensionAssistant(namespacePrefix);
-
-            if ((assistant != null) && assistant.supportsMyNamespace(modelObject)) {
-                supportedNamespaces.add(namespacePrefix);
-            }
-        }
-
-        return supportedNamespaces;
+        ModelObjectExtensionAssistant assistant = ExtensionPlugin.getInstance().createDefaultModelObjectExtensionAssistant();
+        return assistant.getSupportedNamespaces(modelObject);
     }
 
     public boolean hasExtensionProperties( File file ) throws Exception {

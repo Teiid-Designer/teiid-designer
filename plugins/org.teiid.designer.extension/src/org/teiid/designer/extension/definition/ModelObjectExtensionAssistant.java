@@ -8,6 +8,7 @@
 package org.teiid.designer.extension.definition;
 
 import java.io.File;
+import java.util.Collection;
 import java.util.Properties;
 
 /**
@@ -72,6 +73,14 @@ public abstract class ModelObjectExtensionAssistant extends ModelExtensionAssist
      * @throws Exception if there is a problem obtaining the extension properties
      */
     public abstract Properties getPropertyValues( Object modelObject ) throws Exception;
+
+    /**
+     * @param modelResource the model resource whose supported namespaces are being obtained (cannot be <code>null</code>)
+     * @return the namespace prefixes of all model extension definitions that are persisted in the model resource (never
+     *         <code>null</code>)
+     * @throws Exception if there is a problem accessing the model resource
+     */
+    public abstract Collection<String> getSupportedNamespaces( Object modelObject ) throws Exception;
 
     /**
      * @param file the file being checked for extension properties (cannot be <code>null</code>)

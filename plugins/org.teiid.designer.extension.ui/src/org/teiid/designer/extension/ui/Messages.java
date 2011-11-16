@@ -71,6 +71,11 @@ public class Messages extends NLS {
     public static String medBuildSubTaskName;
     public static String medCleanTaskName;
     public static String medCleanSubTaskName;
+    public static String modelFilesBuildProblemMsg;
+    public static String modelFileBuildErrorMsg;
+    public static String modelBuildSubTaskName;
+    public static String modelMedNotFoundInRegistry;
+    public static String modelMedDifferentVersionThanOneFoundInRegistry;
 
     public static String registerMedActionInvalidMedTitle;
     public static String registerMedActionInvalidMedMsg;

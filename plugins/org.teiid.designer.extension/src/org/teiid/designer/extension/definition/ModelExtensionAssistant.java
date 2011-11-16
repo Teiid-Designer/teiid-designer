@@ -39,9 +39,9 @@ public class ModelExtensionAssistant implements ExtensionConstants {
     /**
      * This method should only be called by the {@link ModelExtensionDefinitionParser}.
      * 
-     * @param namespacePrefix the unique namespace prefix (never <code>null</code> or empty)
-     * @param namespaceUri the unique namespace URI (never <code>null</code> or empty)
-     * @param metamodelUri the metamodel URI this definition is extending (never <code>null</code> or empty)
+     * @param namespacePrefix the unique namespace prefix (can be <code>null</code> or empty)
+     * @param namespaceUri the unique namespace URI (can be <code>null</code> or empty)
+     * @param metamodelUri the metamodel URI this definition is extending (can be <code>null</code> or empty)
      * @param description the description of the definition (can be <code>null</code> or empty)
      * @param version the definition version (can be <code>null</code> or empty)
      * @return the new model extension definition (never <code>null</code>)

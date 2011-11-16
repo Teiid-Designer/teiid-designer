@@ -509,11 +509,6 @@ public class ModelExtensionDefinition implements NamespacePrefixProvider, Proper
             return false;
         final ModelExtensionDefinition other = (ModelExtensionDefinition)object;
 
-        // Check BuiltIn status
-        if (this.isBuiltIn() != other.isBuiltIn()) {
-            return false;
-        }
-
         // Check MED headers equal
         if (!getHeader().equals(other.getHeader())) {
             return false;

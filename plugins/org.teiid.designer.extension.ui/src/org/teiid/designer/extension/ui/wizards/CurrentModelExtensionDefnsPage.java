@@ -664,6 +664,7 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
 
         // Add Med Button
         this.addMedButton = new Button(buttonComposite, SWT.PUSH);
+        this.addMedButton.setLayoutData(new GridData(SWT.FILL, SWT.NONE, false, false));
         this.addMedButton.setText(Messages.currentMedsPageAddMedButton);
         this.addMedButton.setToolTipText(Messages.currentMedsPageAddMedTooltip);
         this.addMedButton.addSelectionListener(new SelectionAdapter() {
@@ -676,6 +677,7 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
 
         // Remove Med Button
         this.removeMedButton = new Button(buttonComposite, SWT.PUSH);
+        this.removeMedButton.setLayoutData(new GridData(SWT.FILL, SWT.NONE, false, false));
         this.removeMedButton.setText(Messages.currentMedsPageRemoveMedButton);
         this.removeMedButton.setToolTipText(Messages.currentMedsPageRemoveMedTooltip);
         this.removeMedButton.addSelectionListener(new SelectionAdapter() {
@@ -688,6 +690,7 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
 
         // Remove Med Button
         this.saveMedButton = new Button(buttonComposite, SWT.PUSH);
+        this.saveMedButton.setLayoutData(new GridData(SWT.FILL, SWT.NONE, false, false));
         this.saveMedButton.setText(Messages.currentMedsPageSaveMedButton);
         this.saveMedButton.setToolTipText(Messages.currentMedsPageSaveMedTooltip);
         this.saveMedButton.addSelectionListener(new SelectionAdapter() {

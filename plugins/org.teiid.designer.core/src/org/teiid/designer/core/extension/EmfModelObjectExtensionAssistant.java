@@ -10,6 +10,7 @@ package org.teiid.designer.core.extension;
 import static com.metamatrix.modeler.core.ModelerCore.Util;
 
 import java.io.File;
+import java.util.Collection;
 import java.util.Properties;
 
 import org.eclipse.core.resources.IFile;
@@ -225,6 +226,16 @@ public class EmfModelObjectExtensionAssistant extends ModelObjectExtensionAssist
 
         return props;
     }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.teiid.designer.extension.definition.ModelObjectExtensionAssistant#getSupportedNamespaces(java.lang.Object)
+     */
+    @Override
+    public Collection<String> getSupportedNamespaces( Object modelObject ) throws Exception {
+        return ModelExtensionUtils.getSupportedNamespaces(getModelResource(modelObject));
+   }
 
     /**
      * {@inheritDoc}

@@ -67,7 +67,7 @@ public class ModelBuilder extends IncrementalProjectBuilder implements Ignorable
             IResource model = (IResource)iter.next();
             final ModelResource resrc = ModelerCore.getModelWorkspace().findModelResource(model);
             if (resrc != null) {
-                model.deleteMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE); // clear current markers
+                model.deleteMarkers(IMarker.PROBLEM, false, IResource.DEPTH_INFINITE); // clear current markers
                 resrc.setIndexType(ModelResource.NOT_INDEXED);
             }
         }
@@ -127,7 +127,7 @@ public class ModelBuilder extends IncrementalProjectBuilder implements Ignorable
                 // clear all markers on these resources as we are going to create fresh markers
                 for (Object resource : resources) {
                     try {
-                        ((IResource)resource).deleteMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE);
+                        ((IResource)resource).deleteMarkers(IMarker.PROBLEM, false, IResource.DEPTH_INFINITE);
                     } catch (CoreException e) {
                         ModelerCore.Util.log(e);
                     }
@@ -175,7 +175,7 @@ public class ModelBuilder extends IncrementalProjectBuilder implements Ignorable
                 if (isIncludedResource(resource)) {
                     resources.add(resource);
                     // clear all markers on this resource, as we are going to create fresh markets
-                    resource.deleteMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE);
+                    resource.deleteMarkers(IMarker.PROBLEM, false, IResource.DEPTH_INFINITE);
                 }
                 return true;
             }

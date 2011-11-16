@@ -10,6 +10,8 @@ package org.teiid.designer.extension;
 import java.io.File;
 import java.io.FileInputStream;
 import java.net.URL;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -491,7 +493,7 @@ public class ExtensionPlugin extends Plugin {
          */
         @Override
         public Properties getOverriddenValues( Object modelObject ) throws Exception {
-            return null;
+            return new Properties();
         }
 
         /**
@@ -512,7 +514,17 @@ public class ExtensionPlugin extends Plugin {
          */
         @Override
         public Properties getPropertyValues( Object modelObject ) throws Exception {
-            return null;
+            return new Properties();
+        }
+
+        /**
+         * {@inheritDoc}
+         *
+         * @see org.teiid.designer.extension.definition.ModelObjectExtensionAssistant#getSupportedNamespaces(java.lang.Object)
+         */
+        @Override
+        public Collection<String> getSupportedNamespaces( Object modelObject ) throws Exception {
+            return Collections.emptyList();
         }
 
         /**
@@ -552,6 +564,7 @@ public class ExtensionPlugin extends Plugin {
          */
         @Override
         public void removeModelExtensionDefinition( Object modelObject ) throws Exception {
+            // nothing to do
         }
 
         /**
@@ -562,6 +575,7 @@ public class ExtensionPlugin extends Plugin {
         @Override
         public void removeProperty( Object modelObject,
                                     String propId ) throws Exception {
+            // nothing to do
         }
 
         /**
@@ -571,6 +585,7 @@ public class ExtensionPlugin extends Plugin {
          */
         @Override
         public void saveModelExtensionDefinition( Object modelObject ) throws Exception {
+            // nothing to do
         }
 
         /**
@@ -582,6 +597,7 @@ public class ExtensionPlugin extends Plugin {
         public void setPropertyValue( Object modelObject,
                                       String propId,
                                       String newValue ) throws Exception {
+            // nothing to do
         }
 
         /**

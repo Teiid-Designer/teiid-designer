@@ -181,12 +181,12 @@ class ModelExtensionUtils {
                                 String simpleId = null;
                                 Set<Translation> displayNames = null;
                                 String runtimeType = null;
-                                String required = null;
+                                String required = Boolean.toString(ModelExtensionPropertyDefinition.REQUIRED_DEFAULT);
                                 String defaultValue = null;
                                 String fixedValue = null;
-                                String advanced = null;
-                                String masked = null;
-                                String index = null;
+                                String advanced = Boolean.toString(ModelExtensionPropertyDefinition.ADVANCED_DEFAULT);
+                                String masked = Boolean.toString(ModelExtensionPropertyDefinition.MASKED_DEFAULT);
+                                String index = Boolean.toString(ModelExtensionPropertyDefinition.INDEX_DEFAULT);
                                 Set<String> allowedValues = null;
                                 Set<Translation> descriptions = null;
 
@@ -218,7 +218,7 @@ class ModelExtensionUtils {
                                                         + "modelExtensionDefinitionTagUnexpectedClass", temp.getClass())); //$NON-NLS-1$
                                             }
 
-                                            EStringToStringMapEntryImpl displayNameEntry = (EStringToStringMapEntryImpl)object;
+                                            EStringToStringMapEntryImpl displayNameEntry = (EStringToStringMapEntryImpl)temp;
                                             String localeTxt = displayNameEntry.getKey();
                                             displayNames.add(new Translation(I18nUtil.parseLocaleString(localeTxt),
                                                                              displayNameEntry.getValue()));
@@ -236,7 +236,7 @@ class ModelExtensionUtils {
                                                         + "modelExtensionDefinitionTagUnexpectedClass", temp.getClass())); //$NON-NLS-1$
                                             }
 
-                                            EStringToStringMapEntryImpl descriptionEntry = (EStringToStringMapEntryImpl)object;
+                                            EStringToStringMapEntryImpl descriptionEntry = (EStringToStringMapEntryImpl)temp;
                                             String localeTxt = descriptionEntry.getKey();
                                             descriptions.add(new Translation(I18nUtil.parseLocaleString(localeTxt),
                                                                              descriptionEntry.getValue()));
@@ -827,6 +827,13 @@ class ModelExtensionUtils {
                     // id
                     if (!CoreStringUtil.equals(propDefTags.get(PropertyTagKeys.ID), propDefn.getSimpleId())) {
                         propDefTags.put(PropertyTagKeys.ID, propDefn.getSimpleId());
+                    }
+
+                    // index
+                    value = Boolean.toString(propDefn.shouldBeIndexed());
+
+                    if (!CoreStringUtil.equals(propDefTags.get(PropertyTagKeys.INDEX), value)) {
+                        propDefTags.put(PropertyTagKeys.INDEX, value);
                     }
 
                     // modifiable

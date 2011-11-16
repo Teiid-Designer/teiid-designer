@@ -15,6 +15,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
@@ -27,6 +28,7 @@ import org.eclipse.core.runtime.Plugin;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.teiid.core.id.ObjectID;
+
 import com.metamatrix.core.plugin.PluginUtilities;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.Stopwatch;
@@ -136,7 +138,7 @@ public class ModelBuildUtil {
             while (itr.hasNext()) {
                 final IResource iResource = (IResource)itr.next();
                 if (iResource.exists()) {
-                    iResource.deleteMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE);
+                    iResource.deleteMarkers(IMarker.PROBLEM, false, IResource.DEPTH_INFINITE);
                 } // endif
             }
         } catch (final CoreException e) {
@@ -156,7 +158,7 @@ public class ModelBuildUtil {
             // going to create fresh markets
             // defect 16537 - make sure resource exists before deleting markers
             if (iResource.exists()) {
-                iResource.deleteMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE);
+                iResource.deleteMarkers(IMarker.PROBLEM, false, IResource.DEPTH_INFINITE);
             } // endif
         } catch (final CoreException e) {
             ModelerCore.Util.log(e);
