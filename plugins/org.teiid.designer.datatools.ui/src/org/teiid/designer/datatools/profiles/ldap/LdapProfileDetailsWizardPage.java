@@ -9,7 +9,6 @@ package org.teiid.designer.datatools.profiles.ldap;
 
 import java.util.List;
 import java.util.Properties;
-
 import org.eclipse.datatools.connectivity.ui.wizards.ConnectionProfileDetailsPage;
 import org.eclipse.datatools.connectivity.ui.wizards.NewConnectionProfileWizard;
 import org.eclipse.swt.SWT;
@@ -25,7 +24,6 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.teiid.designer.datatools.ui.DatatoolsUiConstants;
-
 import com.metamatrix.ui.internal.util.WidgetFactory;
 
 /**
@@ -92,7 +90,7 @@ public class LdapProfileDetailsWizardPage extends ConnectionProfileDetailsPage i
         gd.horizontalSpan = 1;
         profileText.setLayoutData(gd);
         profileText.setText(((ConnectionProfileWizard)getWizard()).getProfileName());
-//        profileText.setEnabled(false);
+        // profileText.setEnabled(false);
 
         descriptionLabel = new Label(scrolled, SWT.NONE);
         descriptionLabel.setText(UTIL.getString("Common.Description.Label")); //$NON-NLS-1$
@@ -108,7 +106,7 @@ public class LdapProfileDetailsWizardPage extends ConnectionProfileDetailsPage i
         gd.horizontalSpan = 1;
         descriptionText.setLayoutData(gd);
         descriptionText.setText(((ConnectionProfileWizard)getWizard()).getProfileDescription());
-//        descriptionText.setEnabled(false);
+        // descriptionText.setEnabled(false);
 
         usernameLabel = new Label(scrolled, SWT.NONE);
         usernameLabel.setText(UTIL.getString("Common.Username.Label")); //$NON-NLS-1$
@@ -264,6 +262,7 @@ public class LdapProfileDetailsWizardPage extends ConnectionProfileDetailsPage i
             return;
         }
         setPageComplete(true);
+        setPingButtonEnabled(true);
         setMessage(UTIL.getString("Click.Next.or.Finish")); //$NON-NLS-1$
 
     }

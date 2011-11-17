@@ -38,6 +38,18 @@
          id="org.teiid.designer.datatools.profiles.ldap.ConnectionProfileWizard"
          name="LDAP"
          profile="org.teiid.designer.datatools.profiles.ldap.LDAPConnectionProfile"/>
+   <connectionProfile
+            category="org.eclipse.datatools.connectivity.db.category"
+            icon="icons/jdbc_16.gif"
+            id="org.teiid.datatools.connectivity.connectionProfile"
+            name="LDAP"
+            pingFactory="org.teiid.datatools.connectivity.TeiidJDBCConnectionFactory"
+            propertiesPersistenceHook="org.teiid.datatools.connectivity.TeiidPersistanceHook"/>
+      <connectionFactory
+            class="org.teiid.datatools.connectivity.TeiidJDBCConnectionFactory"
+            id="java.sql.Connection"
+            name="JDBC Connection"
+            profile="org.teiid.datatools.connectivity.connectionProfile"/>
    </extension>
 
    <extension

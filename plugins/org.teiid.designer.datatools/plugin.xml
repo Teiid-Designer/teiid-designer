@@ -21,7 +21,14 @@
       <connectionProfile
             category="org.teiid.designer.import.category"
             id="org.teiid.designer.datatools.profiles.ldap.LDAPConnectionProfile"
-            name="LDAP"/>
+            name="LDAP" 
+            pingFactory="org.teiid.designer.datatools.profiles.ldap.LDAPConnectionFactory"
+            propertiesPersistenceHook="org.teiid.designer.datatools.profiles.ldap.LDAPPersistanceHook"/>
+      <connectionFactory
+            class="org.teiid.designer.datatools.profiles.ldap.LDAPConnectionFactory"
+            id="java.sql.Connection"
+            name="LDAP Connection"
+            profile="org.teiid.designer.datatools.profiles.ldap.LDAPConnectionProfile"/>
    </extension>
    
    <extension
