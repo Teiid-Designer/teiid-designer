@@ -37,6 +37,7 @@ import org.teiid.designer.extension.definition.ModelObjectExtensionAssistantFact
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 
 import com.metamatrix.core.PluginUtil;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.core.util.LoggingUtil;
 
@@ -109,6 +110,17 @@ public class ExtensionPlugin extends Plugin {
         }
 
         return this.modelObjectAssistantFactory.createAssistant();
+    }
+
+    /**
+     * @param namespacePrefix the namespace prefix to assign the assistant (cannot be <code>null</code> or empty)
+     * @return the assistant (never <code>null</code>)
+     */
+    public ModelObjectExtensionAssistant createDefaultModelObjectExtensionAssistant( String namespacePrefix ) {
+        CoreArgCheck.isNotEmpty(namespacePrefix, "namespacePrefix is empty"); //$NON-NLS-1$
+        ModelObjectExtensionAssistant assistant = createDefaultModelObjectExtensionAssistant();
+        assistant.createModelExtensionDefinition(namespacePrefix, null, null, null, null);
+        return assistant;
     }
 
     public ModelExtensionAssistantAggregator getModelExtensionAssistantAggregator() {

@@ -137,7 +137,8 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
 
             // Get the associated Headers
             for (String namespacePrefix : supportedNamespaces) {
-                ModelExtensionAssistant assistant = this.registry.getModelExtensionAssistant(namespacePrefix);
+                ModelExtensionAssistant assistant = ExtensionPlugin.getInstance()
+                                                                   .createDefaultModelObjectExtensionAssistant(namespacePrefix);
                 ModelExtensionDefinitionHeader header = assistant.getModelExtensionDefinition().getHeader();
                 headers.add(header);
             }
@@ -252,8 +253,8 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
         // -----------------------------------------------
         Composite bottomComposite = new Composite(parent, SWT.NULL);
         bottomComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-        GridLayout bottomLayout = new GridLayout();
-        bottomLayout.numColumns = 2;
+        GridLayout bottomLayout = new GridLayout(2, false);
+        bottomLayout.horizontalSpacing = 0;
         bottomComposite.setLayout(bottomLayout);
 
         // Table and Buttons
@@ -658,9 +659,13 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
      */
     private Composite createTableButtonComposite( Composite composite ) {
         Composite buttonComposite = new Composite(composite, SWT.NULL);
-        GridLayout buttonLayout = new GridLayout();
-        buttonLayout.numColumns = 1;
-        buttonComposite.setLayout(buttonLayout);
+        GridLayout layout = new GridLayout();
+        buttonComposite.setLayout(layout);
+        layout.verticalSpacing = 0;
+        layout.marginWidth = 0;
+        layout.marginTop = 5;
+        buttonComposite.setLayout(layout);
+        buttonComposite.setLayoutData(new GridData(SWT.BEGINNING, SWT.TOP, false, false));
 
         // Add Med Button
         this.addMedButton = new Button(buttonComposite, SWT.PUSH);

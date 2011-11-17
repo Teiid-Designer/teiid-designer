@@ -281,8 +281,7 @@ public final class ModelExtensionDefinitionBuilder extends IncrementalProjectBui
                 ModelObjectExtensionAssistant registryAssistant = (ModelObjectExtensionAssistant)temp;
                 ModelExtensionDefinition registryMed = registryAssistant.getModelExtensionDefinition();
                 ModelObjectExtensionAssistant modelAssistant = ExtensionPlugin.getInstance()
-                                                                              .createDefaultModelObjectExtensionAssistant();
-                modelAssistant.createModelExtensionDefinition(namespacePrefix, null, null, null, null);
+                                                                              .createDefaultModelObjectExtensionAssistant(namespacePrefix);
                 ModelExtensionDefinition modelMed = modelAssistant.getModelExtensionDefinition(modelFile);
 
                 if (!medsAreEqual(registryMed, modelMed)) {

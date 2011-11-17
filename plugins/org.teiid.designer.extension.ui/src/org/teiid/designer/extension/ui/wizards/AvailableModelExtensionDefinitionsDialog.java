@@ -10,6 +10,7 @@ package org.teiid.designer.extension.ui.wizards;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
@@ -44,6 +45,7 @@ import org.teiid.designer.extension.definition.ModelExtensionDefinitionHeader;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 import org.teiid.designer.extension.ui.Messages;
 import org.teiid.designer.extension.ui.UiConstants;
+
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.ui.internal.util.WidgetFactory;
 import com.metamatrix.ui.internal.util.WidgetUtil;
@@ -77,8 +79,10 @@ public class AvailableModelExtensionDefinitionsDialog extends SelectionStatusDia
         this.selectedMedsList = new ArrayList();
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.window.Window#createDialogArea(org.eclipse.swt.widgets.Composite)
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets.Composite)
      */
     @Override
     protected Control createDialogArea(Composite parent) {
@@ -106,8 +110,10 @@ public class AvailableModelExtensionDefinitionsDialog extends SelectionStatusDia
         return composite;
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.window.Window#create()
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.eclipse.ui.dialogs.SelectionStatusDialog#create()
      */
     @Override
     public void create() {
@@ -119,9 +125,12 @@ public class AvailableModelExtensionDefinitionsDialog extends SelectionStatusDia
         return this.selectedMedsList;
     }
 
-    /*
-     * @see SelectionStatusDialog#computeResult()
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.eclipse.ui.dialogs.SelectionStatusDialog#computeResult()
      */
+    @Override
     protected void computeResult() {
         setResult(((IStructuredSelection)this.tableViewer.getSelection()).toList());
     }
@@ -165,7 +174,7 @@ public class AvailableModelExtensionDefinitionsDialog extends SelectionStatusDia
         return resultList;
     }
 
-    /*
+    /**
      * Determine if the supplied namespacePrefix and version are already contained in the supplied list of ModelExtensionDefinitionHeaders
      * @param currentModelHeaders the list of ModelExtensionDefinitionHeader
      * @param namespacePrefix the namespace prefix
@@ -185,7 +194,7 @@ public class AvailableModelExtensionDefinitionsDialog extends SelectionStatusDia
         return contains;
     }
 
-    /*
+    /**
      * Create a TableViewer for the available ModelExtensionDefinitions
      */
     private TableViewer createTableViewer( Composite composite ) {
@@ -198,6 +207,7 @@ public class AvailableModelExtensionDefinitionsDialog extends SelectionStatusDia
         table.setLinesVisible(true);
         table.setLayout(new TableLayout());
         table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+        ((GridData)table.getLayoutData()).heightHint = table.getItemHeight() * 5;
 
         // create columns
         createColumns(viewer, table);
@@ -278,7 +288,7 @@ public class AvailableModelExtensionDefinitionsDialog extends SelectionStatusDia
         return viewer;
     }
 
-    private void handleMedSelectionChanged() {
+    void handleMedSelectionChanged() {
         this.selectedMedsList.clear();
         // Update the selected Meds List
         int[] selectedMedIndices = this.tableViewer.getTable().getSelectionIndices();
@@ -376,7 +386,7 @@ public class AvailableModelExtensionDefinitionsDialog extends SelectionStatusDia
 
     }
 
-    /*
+    /**
      * Get the current ModelExtensionDefinitionHeader list
      */
     List<ModelExtensionDefinition> getAvailableMeds() {
