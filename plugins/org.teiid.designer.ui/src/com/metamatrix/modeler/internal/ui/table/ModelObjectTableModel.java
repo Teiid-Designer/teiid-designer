@@ -348,7 +348,7 @@ public class ModelObjectTableModel implements UiConstants, EObjectPropertiesOrde
      * @see com.metamatrix.modeler.internal.ui.table.ModelTableColumnPreferencesListener#columnsChanged()
      */
     public void propertiesChanged(List eObjects) {
-        if (eObjects.contains(this.eObject)) {
+        if (eObjects == null || eObjects.contains(this.eObject)) {
             this.columnsBuilt = false;
             buildPropertyIdMap();
             buildColumns();

@@ -53,6 +53,8 @@ public class TableNotificationHandler implements INotifyChangedListener, UiConst
     /** Collection of <code>Class</code>es that should not be added as a tabe to the table editor. */
     private List excludedTypes = new ArrayList();
 
+    private static final String EXTENDED_METACLASS_PREFIX = "extendedMetaclass:"; //$NON-NLS-1$
+
     TableNotificationHandler( ModelTableEditor editor ) {
         this.tableEditor = editor;
         this.emfResource = editor.getEmfResource();
@@ -339,6 +341,18 @@ public class TableNotificationHandler implements INotifyChangedListener, UiConst
         if (annotatedEObject == null) {
             return;
         }
+
+        // New Metaclass Extension annotation scheme makes it difficult to determine EClass (upon which table maps are based).
+        // - We will look for change change involving EXTENDED_METACLASS_PREFIX. In this case, do a forced Refresh to
+        // pick up the properties change.
+        boolean forceRefresh = false;
+        if (annotatedEObject instanceof EStringToStringMapEntryImpl) {
+            String key = ((EStringToStringMapEntryImpl)annotatedEObject).getKey();
+            if (key.startsWith(EXTENDED_METACLASS_PREFIX)) {
+                forceRefresh = true;
+            }
+        }
+
         // if (NotificationUtilities.isRemoved(theNotification)) {
         TableViewer viewer = (TableViewer)viewersByClass.get(annotatedEObject.eClass());
         if (viewer != null) {
@@ -347,6 +361,23 @@ public class TableNotificationHandler implements INotifyChangedListener, UiConst
                 Object row = model.getRowElementForInstance(annotatedEObject);
                 if (row != null) {
                     viewer.refresh(row);
+                }
+            }
+        }
+
+        // In case of extended metaclass updates, refresh all the viewers.
+        if (forceRefresh) {
+            Collection<EClass> eClasses = viewersByClass.keySet();
+            for (EClass eClass : eClasses) {
+                TableViewer tViewer = (TableViewer)viewersByClass.get(eClass);
+                if (!tViewer.getTable().isDisposed()) {
+                    ModelObjectTableModel model = (ModelObjectTableModel)modelsByClass.get(eClass);
+                    model.refreshProperties();
+                    EObjectPropertiesOrderPreferences modelTableColumnUtils = UiPlugin.getDefault().getEObjectPropertiesOrderPreferences();
+                    if (modelTableColumnUtils != null) {
+                        modelTableColumnUtils.firePropertiesChanged(null);
+                    }
+                    tViewer.refresh();
                 }
             }
         }
