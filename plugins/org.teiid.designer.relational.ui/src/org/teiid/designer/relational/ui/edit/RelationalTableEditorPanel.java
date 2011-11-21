@@ -127,6 +127,8 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 		}
 		
 		synchronizeUI();
+		
+        this.nameText.setFocus();
 	}
 	
 	@Override

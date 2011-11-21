@@ -65,6 +65,7 @@ public class EditRelationalObjectDialog extends TitleAreaDialog implements IDial
     		setMessage(Messages.validationOkCreateObject);
     	} else {
     		if( status.getSeverity() == IStatus.WARNING ) {
+    			setErrorMessage(null);
     			setMessage(status.getMessage(), IMessageProvider.WARNING);
     		} else {
     			setErrorMessage(status.getMessage());
