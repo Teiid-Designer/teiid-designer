@@ -53,4 +53,22 @@
             isVirtual="false">
       </metamodelDescriptorType>
    </extension>
+   
+	<extension
+         id="newChildRelationalTableAction"
+         name="%newChildRelationalTableAction"
+         point="org.teiid.designer.ui.newChildAction">
+      <class
+            name="org.teiid.designer.relational.ui.actions.CreateRelationalTableAction">
+      </class>
+   </extension>
+
+   <extension
+         id="newSiblingRelationalTableAction"
+         name="%newSiblingRelationalTableAction"
+         point="org.teiid.designer.ui.newSiblingAction">
+      <class
+            name="org.teiid.designer.relational.ui.actions.CreateRelationalTableAction">
+      </class>
+   </extension>
 </plugin>

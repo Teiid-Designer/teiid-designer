@@ -11,6 +11,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Properties;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.osgi.util.NLS;
+import org.teiid.designer.relational.Messages;
+import org.teiid.designer.relational.RelationalPlugin;
+
 
 /**
  * 
@@ -46,6 +52,35 @@ public class RelationalForeignKey extends RelationalReference {
         super(name);
         setType(TYPES.FK);
         this.columns = new ArrayList<RelationalColumn>();
+    }
+    
+    public RelationalForeignKey clone() {
+    	RelationalForeignKey clonedFK = new RelationalForeignKey(getName());
+    	clonedFK.setNameInSource(getNameInSource());
+    	clonedFK.setDescription(getDescription());
+    	clonedFK.setForeignKeyMultiplicity(getForeignKeyMultiplicity());
+    	clonedFK.setPrimaryKeyMultiplicity(getPrimaryKeyMultiplicity());
+    	clonedFK.setUniqueKeyName(getUniqueKeyName());
+    	clonedFK.setUniqueKeyTableName(getUniqueKeyTableName());
+    	clonedFK.setModelType(getModelType());
+    	for( RelationalColumn col : getColumns() ) {
+    		clonedFK.addColumn(col);
+    	}
+    	return clonedFK;
+    }
+    
+    public void inject(RelationalForeignKey originalFK) {
+    	setName(originalFK.getName());
+    	setNameInSource(originalFK.getNameInSource());
+    	setDescription(originalFK.getDescription());
+    	setForeignKeyMultiplicity(originalFK.getForeignKeyMultiplicity());
+    	setPrimaryKeyMultiplicity(originalFK.getPrimaryKeyMultiplicity());
+    	setUniqueKeyName(originalFK.getUniqueKeyName());
+    	setUniqueKeyTableName(originalFK.getUniqueKeyTableName());
+    	setModelType(originalFK.getModelType());
+    	for( RelationalColumn col : originalFK.getColumns() ) {
+    		addColumn(col);
+    	}
     }
     
     /**
@@ -134,4 +169,20 @@ public class RelationalForeignKey extends RelationalReference {
             }
         }
     }
+    
+	@Override
+	public void validate() {
+		// Walk through the properties for the table and set the status
+		super.validate();
+		
+		if( !this.getStatus().isOK() ) {
+			return;
+		}
+		
+		if( this.getColumns().isEmpty() ) {
+			setStatus(new Status(IStatus.ERROR, RelationalPlugin.PLUGIN_ID, 
+						NLS.bind(Messages.validate_error_fkNoColumnsDefined, getName())));
+			return;
+		}
+	}
 }

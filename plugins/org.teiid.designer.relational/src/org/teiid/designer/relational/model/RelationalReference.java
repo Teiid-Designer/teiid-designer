@@ -7,7 +7,15 @@
  */
 package org.teiid.designer.relational.model;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.osgi.util.NLS;
+import org.teiid.designer.relational.Messages;
 import org.teiid.designer.relational.RelationalConstants;
+import org.teiid.designer.relational.RelationalPlugin;
+
+import com.metamatrix.core.util.StringUtilities;
+import com.metamatrix.metamodels.core.ModelType;
 
 /**
  * 
@@ -22,8 +30,6 @@ public class RelationalReference implements RelationalConstants {
     public static final int REPLACE = 1;
     public static final int CREATE_UNIQUE_NAME = 2;
     
-    
-    
     private int type = TYPES.UNDEFINED;
     private RelationalReference parent;
     private String  name;
@@ -32,10 +38,15 @@ public class RelationalReference implements RelationalConstants {
     
     private int processType;
     
+    private IStatus currentStatus;
+    
+    private int modelType = ModelType.PHYSICAL;
+    
     
     public RelationalReference() {
         super();
         this.processType = CREATE_ANYWAY;
+        this.currentStatus = Status.OK_STATUS;
     }
     /**
      * @param name
@@ -58,6 +69,7 @@ public class RelationalReference implements RelationalConstants {
      */
     public void setParent( RelationalReference parent ) {
         this.parent = parent;
+        handleInfoChanged();
     }
     /**
      * @return name
@@ -69,7 +81,10 @@ public class RelationalReference implements RelationalConstants {
      * @param name Sets name to the specified value.
      */
     public void setName( String name ) {
-        this.name = name;
+    	if( !StringUtilities.equals(this.name, name) ) {
+    		this.name = name;
+    		handleInfoChanged();
+    	}
     }
     /**
      * @return nameInSource
@@ -81,7 +96,10 @@ public class RelationalReference implements RelationalConstants {
      * @param nameInSource Sets nameInSource to the specified value.
      */
     public void setNameInSource( String nameInSource ) {
-        this.nameInSource = nameInSource;
+    	if( !StringUtilities.equals(this.nameInSource, nameInSource) ) {
+    		this.nameInSource = nameInSource;
+    		handleInfoChanged();
+    	} 
     }
     /**
      * @return description
@@ -93,7 +111,18 @@ public class RelationalReference implements RelationalConstants {
      * @param name Sets name to the specified value.
      */
     public void setDescription( String description ) {
-        this.description = description;
+    	if( !StringUtilities.equals(this.description, description) ) {
+    		this.description = description;
+    		handleInfoChanged();
+    	} 
+    }
+    
+    public int getModelType() {
+        return this.modelType;
+    }
+    
+    public void setModelType(int value) {
+        this.modelType = value;
     }
     
     /**
@@ -107,6 +136,7 @@ public class RelationalReference implements RelationalConstants {
      */
     protected void setType( int type ) {
         this.type = type;
+        
     }
     
     public int getProcessType() {
@@ -115,5 +145,30 @@ public class RelationalReference implements RelationalConstants {
     
     public void setDoProcessType(int value) {
         this.processType = value;
+    }
+    
+    public String getDisplayName() {
+    	return TYPE_NAMES[getType()];
+    }
+;    
+    public void setStatus(IStatus status) {
+    	this.currentStatus = status;
+    }
+    
+    public IStatus getStatus() {
+    	return this.currentStatus;
+    }
+    
+    protected void handleInfoChanged() {
+    	validate();
+    }
+    
+    public void validate() {
+		if( this.getName() == null || this.getName().trim().length() == 0 ) {
+			setStatus(new Status(IStatus.ERROR, RelationalPlugin.PLUGIN_ID, 
+						NLS.bind(Messages.validate_error_nameCannotBeNullOrEmpty, getDisplayName())));
+			return;
+		}
+		setStatus(Status.OK_STATUS);
     }
 }

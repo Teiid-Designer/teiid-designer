@@ -52,20 +52,20 @@ public class RelationalProcedureResultSet extends RelationalTable {
     /**
      * {@inheritDoc}
      *
-     * @see org.teiid.designer.relational.model.RelationalTable#addPrimaryKey(org.teiid.designer.relational.model.RelationalPrimaryKey)
+     * @see org.teiid.designer.relational.model.RelationalTable#setPrimaryKey(org.teiid.designer.relational.model.RelationalPrimaryKey)
      */
     @Override
-    public void addPrimaryKey( RelationalPrimaryKey pk ) {
+    public void setPrimaryKey( RelationalPrimaryKey pk ) {
         throw new UnsupportedOperationException("addPrimaryKey() not supported for Procedure Result Sets"); //$NON-NLS-1$
     }
 
     /**
      * {@inheritDoc}
      *
-     * @see org.teiid.designer.relational.model.RelationalTable#addUniqueConstraint(org.teiid.designer.relational.model.RelationalUniqueConstraint)
+     * @see org.teiid.designer.relational.model.RelationalTable#setUniqueConstraint(org.teiid.designer.relational.model.RelationalUniqueConstraint)
      */
     @Override
-    public void addUniqueConstraint( RelationalUniqueConstraint uc ) {
+    public void setUniqueConstraint( RelationalUniqueConstraint uc ) {
         throw new UnsupportedOperationException("addUniqueConstraint() not supported for Procedure Result Sets"); //$NON-NLS-1$
     }
 

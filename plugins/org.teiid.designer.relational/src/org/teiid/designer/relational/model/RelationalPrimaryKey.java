@@ -11,6 +11,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Properties;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.osgi.util.NLS;
+import org.teiid.designer.relational.Messages;
+import org.teiid.designer.relational.RelationalPlugin;
+
 
 /**
  * 
@@ -45,10 +51,14 @@ public class RelationalPrimaryKey extends RelationalReference {
      */
     public void setColumns( Collection<RelationalColumn> columns ) {
         this.columns = columns;
+        handleInfoChanged();
     }
     
     public void addColumn(RelationalColumn column) {
-        this.columns.add(column);
+    	if( this.columns.add(column) ) {
+    		column.setParent(this);
+    		handleInfoChanged();
+    	} 
     }
     
     public void setProperties(Properties props) {
@@ -68,5 +78,22 @@ public class RelationalPrimaryKey extends RelationalReference {
                 setDescription(value);
             }
         }
+        handleInfoChanged();
     }
+    
+	@Override
+	public void validate() {
+		// Walk through the properties for the table and set the status
+		super.validate();
+		
+		if( !this.getStatus().isOK() ) {
+			return;
+		}
+		
+		if( this.getColumns().isEmpty() ) {
+			setStatus(new Status(IStatus.ERROR, RelationalPlugin.PLUGIN_ID, 
+						NLS.bind(Messages.validate_error_pkNoColumnsDefined, getName())));
+			return;
+		}
+	}
 }

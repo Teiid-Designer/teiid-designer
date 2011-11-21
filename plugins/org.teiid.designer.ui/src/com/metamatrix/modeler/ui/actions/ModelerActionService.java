@@ -677,6 +677,9 @@ public final class ModelerActionService extends AbstractActionService
                                 // Note: these should not be sorted - they always go on the bottom of the menu
                                 for (int i = 0; i < getNewChildExtensions().length; ++i) {
                                     INewChildAction action = getNewChildExtensions()[i];
+                                    if( i == 0 ) {
+                                    	menu.add(new Separator());
+                                    }
                                     if (action.canCreateChild((IFile)obj)) {
                                         menu.add(action);
                                         if (isReadOnly) {
@@ -759,6 +762,9 @@ public final class ModelerActionService extends AbstractActionService
                     for (int i = 0; i < getNewSiblingExtensions().length; ++i) {
                         INewSiblingAction action = getNewSiblingExtensions()[i];
                         if (action.canCreateSibling(eObj)) {
+                            if( i == 0 ) {
+                            	menu.add(new Separator());
+                            }
                             menu.add(action);
                             if (isReadOnly) {
                                 action.setEnabled(false);

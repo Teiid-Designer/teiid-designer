@@ -11,6 +11,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Properties;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.teiid.designer.relational.Messages;
+import org.teiid.designer.relational.RelationalPlugin;
+
 /**
  * 
  */
@@ -25,8 +30,9 @@ public class RelationalTable extends RelationalReference {
     public static final boolean DEFAULT_MATERIALIZED = false;
     public static final String DEFAULT_MATERIALIZED_TABLE = null; 
     public static final boolean DEFAULT_SUPPORTS_UPDATE = true; 
-    public static final boolean DEFAULT_SYSTEM = false; 
+    public static final boolean DEFAULT_SYSTEM = false;
     
+    public static final String DEFAULT_DATATYPE = "string"; //$NON-NLS-1$
 
     private int  cardinality;
     private boolean materialized;
@@ -34,8 +40,8 @@ public class RelationalTable extends RelationalReference {
     private boolean supportsUpdate;
     private boolean system;
     private Collection<RelationalColumn> columns;
-    private Collection<RelationalPrimaryKey> primaryKeys;
-    private Collection<RelationalUniqueConstraint> uniqueContraints;
+    private RelationalPrimaryKey primaryKey;
+    private RelationalUniqueConstraint uniqueContraint;
     private Collection<RelationalAccessPattern> accessPatterns;
     private Collection<RelationalForeignKey> foreignKeys;
     
@@ -56,8 +62,6 @@ public class RelationalTable extends RelationalReference {
     
     private void init() {
         this.columns = new ArrayList<RelationalColumn>();
-        this.primaryKeys = new ArrayList<RelationalPrimaryKey>();
-        this.uniqueContraints = new ArrayList<RelationalUniqueConstraint>();
         this.accessPatterns = new ArrayList<RelationalAccessPattern>();
         this.foreignKeys = new ArrayList<RelationalForeignKey>();
     }
@@ -72,7 +76,10 @@ public class RelationalTable extends RelationalReference {
      * @param cardinality Sets cardinality to the specified value.
      */
     public void setCardinality( int cardinality ) {
-        this.cardinality = cardinality;
+        if( this.cardinality != cardinality ) {
+        	this.cardinality = cardinality;
+        	handleInfoChanged();
+        }
     }
     /**
      * @return materialized
@@ -84,7 +91,10 @@ public class RelationalTable extends RelationalReference {
      * @param materialized Sets materialized to the specified value.
      */
     public void setMaterialized( boolean materialized ) {
-        this.materialized = materialized;
+        if( this.materialized != materialized ) {
+        	this.materialized = materialized;
+        	handleInfoChanged();
+        }
     }
     /**
      * @return materializedTable
@@ -96,7 +106,10 @@ public class RelationalTable extends RelationalReference {
      * @param materializedTable Sets materializedTable to the specified value.
      */
     public void setMaterializedTable( RelationalReference materializedTable ) {
-        this.materializedTable = materializedTable;
+    	if( this.materializedTable != materializedTable ) {
+    		this.materializedTable = materializedTable;
+    		handleInfoChanged();
+    	}
     }
     /**
      * @return supportsUpdate
@@ -108,7 +121,10 @@ public class RelationalTable extends RelationalReference {
      * @param supportsUpdate Sets supportsUpdate to the specified value.
      */
     public void setSupportsUpdate( boolean supportsUpdate ) {
-        this.supportsUpdate = supportsUpdate;
+    	if( this.supportsUpdate != supportsUpdate ) {
+    		this.supportsUpdate = supportsUpdate;
+    		handleInfoChanged();
+    	}
     }
     /**
      * @return system
@@ -120,7 +136,10 @@ public class RelationalTable extends RelationalReference {
      * @param system Sets system to the specified value.
      */
     public void setSystem( boolean system ) {
-        this.system = system;
+    	if( this.system != system ) {
+	        this.system = system;
+	        handleInfoChanged();
+    	}
     }
 
     /**
@@ -131,32 +150,52 @@ public class RelationalTable extends RelationalReference {
     }
     
     public void addColumn(RelationalColumn column) {
-        column.setParent(this);
-        this.columns.add(column);
+    	if( this.columns.add(column) ) {
+    		column.setParent(this);
+    		handleInfoChanged();
+    	} 
+    }
+    
+    public boolean removeColumn(RelationalColumn column) {
+    	if( this.columns.remove(column) ) {
+    		handleInfoChanged();
+    		return true;
+    	}
+    	return false;
     }
 
     /**
      * @return primaryKeys
      */
-    public Collection<RelationalPrimaryKey> getPrimaryKeys() {
-        return primaryKeys;
+    public RelationalPrimaryKey getPrimaryKey() {
+        return primaryKey;
     }
 
-    public void addPrimaryKey(RelationalPrimaryKey pk) {
-        pk.setParent(this);
-        this.primaryKeys.add(pk);
+    public void setPrimaryKey(RelationalPrimaryKey pk) {
+    	if( this.primaryKey != pk ) {
+	    	if( pk != null ) {
+	    		pk.setParent(this);
+	    	}
+	        this.primaryKey = pk;
+	        handleInfoChanged();
+    	}
     }
     
     /**
      * @return uniqueContraints
      */
-    public Collection<RelationalUniqueConstraint> getUniqueContraints() {
-        return uniqueContraints;
+    public RelationalUniqueConstraint getUniqueContraint() {
+        return uniqueContraint;
     }
     
-    public void addUniqueConstraint(RelationalUniqueConstraint uc) {
-        uc.setParent(this);
-        this.uniqueContraints.add(uc);
+    public void setUniqueConstraint(RelationalUniqueConstraint uc) {
+    	if( this.uniqueContraint != uc ) {
+	    	if( uc != null ) {
+	    		uc.setParent(this);
+	    	}
+	        this.uniqueContraint = uc;
+	        handleInfoChanged();
+    	}
     }
     
     /**
@@ -167,8 +206,18 @@ public class RelationalTable extends RelationalReference {
     }
     
     public void addAccessPattern(RelationalAccessPattern ap) {
-        ap.setParent(this);
-        this.accessPatterns.add(ap);
+    	if( this.accessPatterns.add(ap) ) {
+    		ap.setParent(this);
+    		handleInfoChanged();
+    	}
+    }
+    
+    public boolean removeAccessPattern(RelationalAccessPattern ap) {
+    	if( this.accessPatterns.remove(ap) ) {
+    		handleInfoChanged();
+    		return true;
+    	}
+    	return false;
     }
 
     /**
@@ -179,7 +228,18 @@ public class RelationalTable extends RelationalReference {
     }
 
     public void addForeignKey(RelationalForeignKey fk) {
-        this.foreignKeys.add(fk);
+    	if( this.foreignKeys.add(fk) ) {
+    		fk.setParent(this);
+    		handleInfoChanged();
+    	}
+    }
+    
+    public boolean removeForeignKey(RelationalForeignKey fk) {
+    	if( this.foreignKeys.remove(fk) ) {
+    		handleInfoChanged();
+    		return true;
+    	}
+    	return false;
     }
     
     public void setProperties(Properties props) {
@@ -208,5 +268,116 @@ public class RelationalTable extends RelationalReference {
             } 
         }
     }
+    
+    public RelationalColumn createColumn() {
+    	return createColumn(DEFAULT_DATATYPE, RelationalColumn.DEFAULT_STRING_LENGTH);
+    }
+    
+    public RelationalColumn createColumn(String datatype, int length) {
+    	return createColumn("newColumn_" + (getColumns().size() + 1), datatype, length); //$NON-NLS-1$
+    }
+    
+    public RelationalColumn createColumn(String name, String datatype, int length) {
+    	RelationalColumn newColumn = new RelationalColumn(name);
+    	newColumn.setDatatype(datatype);
+    	newColumn.setLength(length);
+    	addColumn(newColumn);
+    	return newColumn;
+    }
+    
+	public boolean canMoveColumnUp(RelationalColumn column) {
+		return getColumnIndex(column) > 0;
+	}
+	
+	public boolean canMoveColumnDown(RelationalColumn column) {
+		return getColumnIndex(column) < getColumns().size()-1;
+	}
+	
+	private int getColumnIndex(RelationalColumn column) {
+		int i=0;
+		for( RelationalColumn existingColumn : getColumns() ) {
+			if( existingColumn == column) {
+				return i;
+			}
+			i++;
+		}
+		
+		// Shouldn't ever get here!
+		return -1;
+	}
+	
+	public void moveColumnUp(RelationalColumn theColumn) {
+		int startIndex = getColumnIndex(theColumn);
+		if( startIndex > 0 ) {
+			// Make Copy of List & get columnInfo of startIndex-1
+			RelationalColumn[] existingColumns = getColumns().toArray(new RelationalColumn[0]);
+			RelationalColumn priorColumn = existingColumns[startIndex-1];
+			existingColumns[startIndex-1] = theColumn;
+			existingColumns[startIndex] = priorColumn;
+			
+			Collection<RelationalColumn> newColumns = new ArrayList<RelationalColumn>(existingColumns.length);
+			for( RelationalColumn info : existingColumns) {
+				newColumns.add(info);
+			}
+			
+			this.columns = newColumns;
+		}
+	}
+	
+	public void moveColumnDown(RelationalColumn theColumn) {
+		int startIndex = getColumnIndex(theColumn);
+		if( startIndex < (getColumns().size()-1) ) {
+			// Make Copy of List & get columnInfo of startIndex+1
+			RelationalColumn[] existingColumns = getColumns().toArray(new RelationalColumn[0]);
+			RelationalColumn afterColumn = existingColumns[startIndex+1];
+			existingColumns[startIndex+1] = theColumn;
+			existingColumns[startIndex] = afterColumn;
+			
+			Collection<RelationalColumn> newColumns = new ArrayList<RelationalColumn>(existingColumns.length);
+			for( RelationalColumn info : existingColumns) {
+				newColumns.add(info);
+			}
+			
+			this.columns = newColumns;
+		}
+	}
+	
+	@Override
+	public void validate() {
+		// Walk through the properties for the table and set the status
+		super.validate();
+		
+		if( getStatus().getSeverity() == IStatus.ERROR ) {
+			return;
+		}
+		
+		if( this.isMaterialized() && this.materializedTable == null ) {
+			setStatus(new Status(IStatus.WARNING, RelationalPlugin.PLUGIN_ID, 
+					Messages.validate_error_materializedTableHasNoTableDefined ));
+			return;
+		}
+		
+		if( this.getPrimaryKey() != null && !this.getPrimaryKey().getStatus().isOK()) {
+			setStatus(this.getPrimaryKey().getStatus());
+			return;
+		}
+		
+		if( this.getUniqueContraint() != null && !this.getUniqueContraint().getStatus().isOK()) {
+			setStatus(this.getUniqueContraint().getStatus());
+			return;
+		}
+		
+		for( RelationalForeignKey fk : this.getForeignKeys() ) {
+			if( !fk.getStatus().isOK()) {
+				setStatus(fk.getStatus());
+				return;
+			}
+		}
+		
+		if( this.getColumns().isEmpty() ) {
+			setStatus(new Status(IStatus.WARNING, RelationalPlugin.PLUGIN_ID, 
+					Messages.validate_warning_noColumnsDefined ));
+		}
+	}
 
 }

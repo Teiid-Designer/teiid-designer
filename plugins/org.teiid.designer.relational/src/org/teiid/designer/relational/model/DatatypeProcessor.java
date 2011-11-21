@@ -9,6 +9,8 @@ package org.teiid.designer.relational.model;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.osgi.util.NLS;
+import org.teiid.designer.relational.Messages;
 import org.teiid.designer.relational.RelationalPlugin;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.ModelerCoreException;
@@ -92,8 +94,7 @@ public class DatatypeProcessor {
                 result = this.datatypeManager.findDatatype(convertedTypeName);
             }
         } catch (ModelerCoreException e) {
-            String message = RelationalPlugin.Util.getString("DatatypeProcessor.Error_finding_datatatype", convertedTypeName); //$NON-NLS-1$
-            RelationalPlugin.Util.log(IStatus.WARNING, message);
+            RelationalPlugin.Util.log(IStatus.WARNING, NLS.bind(Messages.datatypeProcessor_error_finding_datatatype, convertedTypeName));
             result = getObjectDatatype();
         }
         return result;
@@ -104,8 +105,7 @@ public class DatatypeProcessor {
             try {
                 objectDatatype = this.datatypeManager.getBuiltInDatatype(DATATYPE_OBJECT);
             } catch (ModelerCoreException e) {
-                String message = RelationalPlugin.Util.getString("DatatypeProcessor.Error_finding_datatatype", DATATYPE_OBJECT); //$NON-NLS-1$
-                RelationalPlugin.Util.log(IStatus.WARNING, message);
+                RelationalPlugin.Util.log(IStatus.WARNING, NLS.bind(Messages.datatypeProcessor_error_finding_datatatype, DATATYPE_OBJECT));
             }
         }
         

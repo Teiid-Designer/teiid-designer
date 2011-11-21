@@ -54,11 +54,11 @@ public class ModelObjectLabelProvider extends LabelProvider
     /** The color being replaced. */
     private static final Color TEMP_COLOR = GlobalUiColorManager.getColor(new RGB(247, 247, 247));
 
-    private static final Color PHYSICAL_COLOR = GlobalUiColorManager.getColor(new RGB(0, 220, 225));
+    private static final Color PHYSICAL_COLOR = GlobalUiColorManager.getColor(new RGB(0, 180, 255));
 
     private static final Color LOGICAL_COLOR = GlobalUiColorManager.getColor(new RGB(0, 220, 152));
 
-    private static final Color VIRTUAL_COLOR = GlobalUiColorManager.getColor(new RGB(255, 204, 102));
+    private static final Color VIRTUAL_COLOR = GlobalUiColorManager.getColor(new RGB(255, 255, 156));
 
     static Color gray = null;
 

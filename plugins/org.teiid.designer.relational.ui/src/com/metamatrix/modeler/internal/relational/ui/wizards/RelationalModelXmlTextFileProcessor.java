@@ -390,7 +390,7 @@ public class RelationalModelXmlTextFileProcessor extends AbstractObjectProcessor
         Properties pkProps = getProperties(primaryKeyNode.getAttributes());
         RelationalPrimaryKey pk = new RelationalPrimaryKey();
         pk.setProperties(pkProps);
-        table.addPrimaryKey(pk);
+        table.setPrimaryKey(pk);
         NodeList pkChildren = primaryKeyNode.getChildNodes();
         if(pkChildren != null && pkChildren.getLength() > 0) {
             for(int j = 0 ; j < pkChildren.getLength();j++) {
@@ -468,7 +468,7 @@ public class RelationalModelXmlTextFileProcessor extends AbstractObjectProcessor
         Properties ucProps = getProperties(uniqueConstraintNode.getAttributes());
         RelationalUniqueConstraint uc = new RelationalUniqueConstraint();
         uc.setProperties(ucProps);
-        table.addUniqueConstraint(uc);
+        table.setUniqueConstraint(uc);
         NodeList ucChildren = uniqueConstraintNode.getChildNodes();
         if(ucChildren != null && ucChildren.getLength() > 0) {
             for(int j = 0 ; j < ucChildren.getLength();j++) {

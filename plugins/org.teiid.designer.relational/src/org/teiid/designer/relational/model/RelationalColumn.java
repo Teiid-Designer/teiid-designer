@@ -62,6 +62,8 @@ public class RelationalColumn extends RelationalReference {
     public static final boolean DEFAULT_SELECTABLE = true;
     public static final boolean DEFAULT_UPDATEABLE = true;
     
+    public static final int DEFAULT_STRING_LENGTH = 10;
+    
     private int distinctValueCount;
     private int nullValueCount;
     private String  datatype;

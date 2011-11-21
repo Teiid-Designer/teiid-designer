@@ -31,6 +31,22 @@ public interface RelationalConstants {
         public static final int INDEX = 13;
     }
     
+    final static String[] TYPE_NAMES = {
+    	"Model", //$NON-NLS-1$
+    	"Schema", //$NON-NLS-1$
+    	"Catalog", //$NON-NLS-1$
+    	"Table", //$NON-NLS-1$
+    	"View", //$NON-NLS-1$
+    	"Procedure", //$NON-NLS-1$
+    	"Parameter", //$NON-NLS-1$
+    	"Column", //$NON-NLS-1$
+    	"Primary Key", //$NON-NLS-1$
+    	"Foreign Key", //$NON-NLS-1$
+    	"Unique Constraint", //$NON-NLS-1$
+    	"Result Set", //$NON-NLS-1$
+    	"Index" //$NON-NLS-1$
+    };
+    
     class TYPES_LITERAL {
         public static final String UNDEFINED = "UNDEFINED"; //$NON-NLS-1$
         public static final String MODEL = "MODEL"; //$NON-NLS-1$
@@ -72,6 +88,7 @@ public interface RelationalConstants {
         public static final String UNSPECIFICIED = "UNSPECIFICIED"; //$NON-NLS-1$
         public static final String ZERO_TO_MANY = "ZERO_TO_MANY"; //$NON-NLS-1$
         public static final String ZERO_TO_ONE = "ZERO_TO_ONE"; //$NON-NLS-1$
+        public static final String[] AS_ARRAY = { MANY, ONE, UNSPECIFICIED, ZERO_TO_MANY, ZERO_TO_ONE };
     }
     
     // AUTO, MULTIPLE, ONE, ZERO

@@ -13,14 +13,17 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.osgi.util.NLS;
+import org.teiid.designer.relational.Messages;
 import org.teiid.designer.relational.RelationalConstants;
 import org.teiid.designer.relational.RelationalPlugin;
+
 import com.metamatrix.core.util.CoreArgCheck;
-import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.metamodels.core.Annotation;
 import com.metamatrix.metamodels.core.AnnotationContainer;
 import com.metamatrix.metamodels.core.CoreFactory;
@@ -52,18 +55,8 @@ import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
  * Class provides building EMF Relational Metamodel objects from Relational Model objects
  */
 public class RelationalModelFactory implements RelationalConstants {
-    private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(RelationalModelFactory.class);
     public static final String RELATIONAL_PACKAGE_URI = RelationalPackage.eNS_URI;
     public static final RelationalFactory FACTORY = RelationalFactory.eINSTANCE;
-   
-    
-    static String getString( final String id ) {
-        return RelationalPlugin.Util.getString(I18N_PREFIX + id);
-    }
-    
-    static String getString( final String id , final Object param) {
-        return RelationalPlugin.Util.getString(I18N_PREFIX + id, param);
-    }
     
     private DatatypeProcessor datatypeProcessor;
     
@@ -91,7 +84,7 @@ public class RelationalModelFactory implements RelationalConstants {
     
     public void buildFullModel(RelationalModel model, ModelResource modelResource, IProgressMonitor progressMonitor) throws ModelerCoreException {
         
-        progressMonitor.setTaskName(getString("creatingModelChildren")); //$NON-NLS-1$
+        progressMonitor.setTaskName(Messages.relationalModelFactory_creatingModelChildren);
         for( RelationalReference child : model.getChildren() ) {
             int processType = child.getProcessType();
             
@@ -113,13 +106,13 @@ public class RelationalModelFactory implements RelationalConstants {
             progressMonitor.worked(1);
         }
         
-        progressMonitor.setTaskName(getString("creatingForeigneKeys")); //$NON-NLS-1$
+        progressMonitor.setTaskName(Messages.relationalModelFactory_creatingForeigneKeys);
         progressMonitor.worked(1);
         for( RelationalForeignKey fkRef : fkTableMap.keySet()) {
             createForeignKey(fkRef, fkTableMap.get(fkRef), modelResource);
         }
         
-        progressMonitor.setTaskName(getString("creatingIndexes")); //$NON-NLS-1$
+        progressMonitor.setTaskName(Messages.relationalModelFactory_creatingIndexes);
         progressMonitor.worked(1);
         for( RelationalIndex indexRef : indexes ) {
             EObject index = createIndex(indexRef, modelResource);
@@ -128,7 +121,7 @@ public class RelationalModelFactory implements RelationalConstants {
     }
     
     private void deleteChildWithName(ModelResource targetResource, RelationalReference ref, IProgressMonitor progressMonitor) throws ModelerCoreException {
-        progressMonitor.setTaskName(getString("replacingModelObject",ref.getName())); //$NON-NLS-1$
+        progressMonitor.setTaskName(NLS.bind(Messages.relationalModelFactory_replacingModelObject, ref.getName()));
         
         Collection<EObject> existingChildren = targetResource.getEmfResource().getContents();
         EObject childToDelete = null;
@@ -148,7 +141,7 @@ public class RelationalModelFactory implements RelationalConstants {
     public EObject buildObject( RelationalReference obj, ModelResource modelResource, IProgressMonitor progressMonitor) throws ModelWorkspaceException {
         EObject newEObject = null;
         
-        progressMonitor.setTaskName(getString("creatingModelChild", obj.getName())); //$NON-NLS-1$
+        progressMonitor.setTaskName(NLS.bind(Messages.relationalModelFactory_creatingModelChild, obj.getName()));
         switch (obj.getType()) {
             case TYPES.MODEL: {
                 // NOOP. Shouldn't get here
@@ -177,8 +170,8 @@ public class RelationalModelFactory implements RelationalConstants {
             
             case TYPES.UNDEFINED:
             default: {
-                String message = RelationalPlugin.Util.getString("RelationalModelFactory.Unknown_object_type_0_cannot_be_processed", obj.getName()); //$NON-NLS-1$
-                RelationalPlugin.Util.log(IStatus.WARNING, message);
+                RelationalPlugin.Util.log(IStatus.WARNING, 
+                		NLS.bind(Messages.relationalModelFactory_unknown_object_type_0_cannot_be_processed, obj.getName()));
             } break;
         }
         
@@ -211,16 +204,18 @@ public class RelationalModelFactory implements RelationalConstants {
         
         // Add Primary Keys
         // Add Columns
-        for( RelationalPrimaryKey pk : tableRef.getPrimaryKeys()) {
+        RelationalPrimaryKey pk = tableRef.getPrimaryKey();
+        if( pk != null ) {
             createPrimaryKey(pk, baseTable, modelResource);
         }
         
-        for( RelationalUniqueConstraint uc : tableRef.getUniqueContraints()) {
+        RelationalUniqueConstraint uc = tableRef.getUniqueContraint();
+        if( uc != null){
             createUniqueConstraint(uc, baseTable, modelResource);
         }
         
-        for( RelationalAccessPattern uc : tableRef.getAccessPatterns()) {
-            createAccessPattern(uc, baseTable, modelResource);
+        for( RelationalAccessPattern ap : tableRef.getAccessPatterns()) {
+            createAccessPattern(ap, baseTable, modelResource);
         }
         
         for( RelationalForeignKey fk : tableRef.getForeignKeys()) {
@@ -527,8 +522,8 @@ public class RelationalModelFactory implements RelationalConstants {
                 }
             }
         } catch (ModelWorkspaceException e) {
-            String message = RelationalPlugin.Util.getString("RelationalModelFactory.Error_finding_table_named ", tableName); //$NON-NLS-1$
-            RelationalPlugin.Util.log(IStatus.ERROR, message);
+            RelationalPlugin.Util.log(IStatus.ERROR, 
+            		NLS.bind(Messages.relationalModelFactory_error_finding_table_named, tableName));
         }
 
         return null;
@@ -714,8 +709,8 @@ public class RelationalModelFactory implements RelationalConstants {
 
                 annotation.setDescription(description);
             } catch (ModelWorkspaceException e) {
-                String message = RelationalPlugin.Util.getString("RelationalModelFactory.Error_adding_desciption_to_0 ", eObject); //$NON-NLS-1$
-                RelationalPlugin.Util.log(IStatus.ERROR, message);
+                RelationalPlugin.Util.log(IStatus.ERROR, 
+                	NLS.bind(Messages.relationalModelFactory_error_adding_desciption_to_0, eObject));
             }
 
         }

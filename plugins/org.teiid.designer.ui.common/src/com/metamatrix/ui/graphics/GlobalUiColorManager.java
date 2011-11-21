@@ -29,10 +29,23 @@ public class GlobalUiColorManager {
 
     private static Map<RGB, Color> fColorTable = Collections.synchronizedMap(new HashMap<RGB, Color>(10));
     
-    public static final Color NOTE_COLOR = UiUtil.getSystemColor(SWT.COLOR_DARK_BLUE);
-    public static final Color EMPHASIS_COLOR = UiUtil.getSystemColor(SWT.COLOR_DARK_BLUE);
-    public static final Color EMPHASIS_COLOR_DISABLED = UiUtil.getSystemColor(SWT.COLOR_WIDGET_NORMAL_SHADOW);
+    public static final Color NOTE_COLOR = getSystemColor(SWT.COLOR_DARK_BLUE);
+    public static final Color EMPHASIS_COLOR = getSystemColor(SWT.COLOR_DARK_BLUE);
+    public static final Color EMPHASIS_COLOR_DISABLED = getSystemColor(SWT.COLOR_WIDGET_NORMAL_SHADOW);
+    
+    private static Color varColor;
 
+    static Color getSystemColor(final int colorID) {
+    	varColor = null;
+    	UiUtil.runInSwtThread(new Runnable() {
+			@Override
+			public void run() {
+				varColor = UiUtil.getSystemColor(colorID);
+			}
+		}, true);
+    	
+    	return varColor;
+    }
     /**
      * Method disposes of the colors.
      */
