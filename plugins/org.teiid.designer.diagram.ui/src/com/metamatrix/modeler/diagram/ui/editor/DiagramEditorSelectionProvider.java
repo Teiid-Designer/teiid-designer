@@ -9,10 +9,16 @@ package com.metamatrix.modeler.diagram.ui.editor;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
+
+import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
 
 /**
  * DiagramEditorSelectionProvider is the ModelObjectSelectionProvider for the DiagramViewer.
@@ -84,8 +90,20 @@ public class DiagramEditorSelectionProvider implements ISelectionProvider, ISele
     }
 
     private void fireSelectionChanged(SelectionChangedEvent event) {
+    	SelectionChangedEvent theEvent = event;
+    	ISelection selection = event.getSelection();
+    	boolean invalidSelection = false;
+    	for( Object eobj : SelectionUtilities.getSelectedEObjects(selection)) {
+    		if( ((EObject)eobj).eResource() == null ) {
+    			invalidSelection = true;
+    		}
+    		if( invalidSelection ) break;
+    	}
+    	if( invalidSelection ) {
+    		theEvent = new SelectionChangedEvent(event.getSelectionProvider(), new StructuredSelection());
+    	}
         for ( Iterator iter = listenerList.iterator() ; iter.hasNext() ; ) {
-            ((ISelectionChangedListener) iter.next()).selectionChanged(event);
+            ((ISelectionChangedListener) iter.next()).selectionChanged(theEvent);
         }
     }
 
