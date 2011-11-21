@@ -23,6 +23,7 @@ import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.definition.ModelExtensionAssistant;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.definition.ModelObjectExtensionAssistant;
+import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 import org.teiid.designer.extension.ui.Messages;
 import org.teiid.designer.extension.ui.UiConstants;
 
@@ -134,7 +135,7 @@ public class ManageModelExtensionDefnsWizard extends AbstractWizard {
         }
 
         // Starting the update process
-        monitor.beginTask(Messages.manageMedsWizardUpdateMedsMsg, 300);
+        monitor.beginTask(Messages.manageMedsWizardUpdateMedsMsg, 400);
 
         // Remove Selected Namespaces
         List<String> namespacesToRemove = currentModelExtensionDefnsPage.getNamespacesToRemove();
@@ -177,6 +178,35 @@ public class ManageModelExtensionDefnsWizard extends AbstractWizard {
         }
         monitor.worked(100);
 
+        // Update MEDs
+        List<String> namespacesToUpdate = this.currentModelExtensionDefnsPage.getNamespacesToUpdate();
+
+        if (!namespacesToUpdate.isEmpty()) {
+            monitor.subTask(Messages.manageMedsWizardUpdateMedsMsg);
+            ModelExtensionRegistry registry = ExtensionPlugin.getInstance().getRegistry();
+
+            for (String namespacePrefix : namespacesToUpdate) {
+                // get the assistant for the registry version of the MED
+                ModelExtensionAssistant assistant = registry.getModelExtensionAssistant(namespacePrefix);
+        
+                if (assistant instanceof ModelObjectExtensionAssistant) {
+                    try {
+                        // save registry copy of MED to model
+                        ((ModelObjectExtensionAssistant)assistant).saveModelExtensionDefinition(modelResource);
+                    } catch (Exception e) {
+                        hasErrors = true;
+                        addStatus(IStatus.ERROR, Messages.manageMedsWizardUpdateMedsError, e);
+                        ModelerCore.Util.log(IStatus.ERROR, e, e.getMessage());
+                    }
+                } else {
+                    // TODO should not happen
+                    ModelerCore.Util.log(IStatus.ERROR, Messages.manageMedsWizardModelObjectExtensionAssistantNotFound);
+                }
+            }
+        }
+
+        monitor.worked(100);
+        
         // Save the ModelResource
         try {
             monitor.subTask(Messages.manageMedsWizardSaveModelMsg);

@@ -96,9 +96,10 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
 
     private TableViewer tableViewer;
     private MedHeadersEditManager editManager;
+    private Collection<ModelExtensionDefinition> modelMeds;
 
     private int selectedMedIndex = -1; // Index of the current Med Selection
-    private Button addMedButton, removeMedButton, saveMedButton; // Buttons for adding/removing/saving MED
+    private Button addMedButton, removeMedButton, saveMedButton, updateMedButton; // Buttons for adding/removing/saving/updating MED
 
     protected int currentStatus = STATUS_OK; // Current status of wizard
 
@@ -134,13 +135,15 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
             // Get the namespaces which are currently persisted on the model
             ModelExtensionAssistantAggregator aggregator = extPlugin.getModelExtensionAssistantAggregator();
             Collection<String> supportedNamespaces = aggregator.getSupportedNamespacePrefixes(modelResource);
+            this.modelMeds = new ArrayList<ModelExtensionDefinition>(supportedNamespaces.size());
 
             // Get the associated Headers
             for (String namespacePrefix : supportedNamespaces) {
-                ModelExtensionAssistant assistant = ExtensionPlugin.getInstance()
-                                                                   .createDefaultModelObjectExtensionAssistant(namespacePrefix);
-                ModelExtensionDefinitionHeader header = assistant.getModelExtensionDefinition().getHeader();
-                headers.add(header);
+                ModelObjectExtensionAssistant assistant = ExtensionPlugin.getInstance()
+                                                                         .createDefaultModelObjectExtensionAssistant(namespacePrefix);
+                ModelExtensionDefinition med = assistant.getModelExtensionDefinition(this.modelResource);
+                this.modelMeds.add(med);
+                headers.add(med.getHeader());
             }
         } catch (Exception e) {
             ModelerCore.Util.log(IStatus.ERROR, e, e.getMessage());
@@ -168,6 +171,13 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
      */
     public List<String> getNamespacesToRemove() {
         return this.editManager.getNamespacesToRemove();
+    }
+
+    /**
+     * @return the namespace prefixes whose MED should be replaced with the same MED from the registry (never <code>null</code>)
+     */
+    public List<String> getNamespacesToUpdate() {
+        return this.editManager.getNamespacesToUpdate();
     }
 
     /*
@@ -346,6 +356,7 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
                 this.tableViewer.refresh();
             } else {
                 this.modelResource = null;
+                this.modelMeds = null;
                 this.editManager = new MedHeadersEditManager(Collections.EMPTY_LIST);
                 this.tableViewer.refresh();
             }
@@ -554,43 +565,59 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
     private void createColumns( final TableViewer viewer,
                                 final Table table ) {
         // NOTE: create in the order in ColumnIndexes
-        TableViewerColumn column = new TableViewerColumn(viewer, SWT.LEFT);
-        configureColumn(column, ColumnIndexes.NAMESPACE_PREFIX, ColumnHeaders.NAMESPACE_PREFIX, true);
+        TableViewerColumn column = new TableViewerColumn(viewer, SWT.RIGHT);
+        configureColumn(column, ColumnIndexes.REGISTERED, ColumnHeaders.REGISTERED, ColumnToolTips.REGISTERED, false);
 
         column = new TableViewerColumn(viewer, SWT.RIGHT);
-        configureColumn(column, ColumnIndexes.REGISTERED, ColumnHeaders.REGISTERED, true);
+        configureColumn(column, ColumnIndexes.DIFFERENT, ColumnHeaders.DIFFERENT, ColumnToolTips.DIFFERENT, false);
+
+        column = new TableViewerColumn(viewer, SWT.LEFT);
+        configureColumn(column, ColumnIndexes.NAMESPACE_PREFIX, ColumnHeaders.NAMESPACE_PREFIX, ColumnToolTips.NAMESPACE_PREFIX,
+                        true);
 
         column = new TableViewerColumn(viewer, SWT.RIGHT);
-        configureColumn(column, ColumnIndexes.VERSION, ColumnHeaders.VERSION, true);
+        configureColumn(column, ColumnIndexes.VERSION, ColumnHeaders.VERSION, ColumnToolTips.VERSION, true);
 
         final TableViewerColumn lastColumn = new TableViewerColumn(viewer, SWT.LEFT);
-        configureColumn(lastColumn, ColumnIndexes.DESCRIPTION, ColumnHeaders.DESCRIPTION, true);
+        configureColumn(lastColumn, ColumnIndexes.DESCRIPTION, ColumnHeaders.DESCRIPTION, ColumnToolTips.DESCRIPTION, true);
     }
 
     private void configureColumn( TableViewerColumn viewerColumn,
                                   int columnIndex,
                                   String headerText,
+                                  String headerToolTip,
                                   boolean resizable ) {
         viewerColumn.setLabelProvider(new MedLabelProvider(columnIndex));
 
         TableColumn column = viewerColumn.getColumn();
         column.setText(headerText);
+        column.setToolTipText(headerToolTip);
         column.setMoveable(false);
         column.setResizable(resizable);
     }
 
+    interface ColumnIndexes {
+        int REGISTERED = 0;
+        int DIFFERENT = 1;
+        int NAMESPACE_PREFIX = 2;
+        int VERSION = 3;
+        int DESCRIPTION = 4;
+    }
+
     interface ColumnHeaders {
-        String NAMESPACE_PREFIX = Messages.namespacePrefixColumnText;
         String REGISTERED = Messages.registeredColumnText;
+        String DIFFERENT = Messages.medsDifferentColumnText;
+        String NAMESPACE_PREFIX = Messages.namespacePrefixColumnText;
         String VERSION = Messages.versionColumnText;
         String DESCRIPTION = Messages.descriptionColumnText;
     }
 
-    interface ColumnIndexes {
-        int NAMESPACE_PREFIX = 0;
-        int REGISTERED = 1;
-        int VERSION = 2;
-        int DESCRIPTION = 3;
+    interface ColumnToolTips {
+        String REGISTERED = Messages.registeredColumnToolTip;
+        String DIFFERENT = Messages.medsDifferentColumnToolTip;
+        String NAMESPACE_PREFIX = Messages.namespacePrefixColumnToolTip;
+        String VERSION = Messages.versionColumnToolTip;
+        String DESCRIPTION = Messages.descriptionColumnToolTip;
     }
 
     class MedLabelProvider extends ColumnLabelProvider {
@@ -608,10 +635,15 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
          */
         @Override
         public Image getImage( Object element ) {
+            assert element instanceof ModelExtensionDefinitionHeader;
+            ModelExtensionDefinitionHeader medHeader = (ModelExtensionDefinitionHeader)element;
+
             if (this.columnIndex == ColumnIndexes.REGISTERED) {
-                assert element instanceof ModelExtensionDefinitionHeader;
-                ModelExtensionDefinitionHeader medHeader = (ModelExtensionDefinitionHeader)element;
                 if (isRegistered(medHeader)) {
+                    return Activator.getDefault().getImage(CHECK_MARK);
+                }
+            } else if (this.columnIndex == ColumnIndexes.DIFFERENT) {
+                if (isDifferent(medHeader)) {
                     return Activator.getDefault().getImage(CHECK_MARK);
                 }
             }
@@ -629,12 +661,13 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
             assert element instanceof ModelExtensionDefinitionHeader;
             ModelExtensionDefinitionHeader header = (ModelExtensionDefinitionHeader)element;
 
-            if (this.columnIndex == ColumnIndexes.NAMESPACE_PREFIX) {
-                return header.getNamespacePrefix();
+            // these columns just display an image
+            if ((this.columnIndex == ColumnIndexes.REGISTERED) || (this.columnIndex == ColumnIndexes.DIFFERENT)) {
+                return null;
             }
 
-            if (this.columnIndex == ColumnIndexes.REGISTERED) {
-                return null;
+            if (this.columnIndex == ColumnIndexes.NAMESPACE_PREFIX) {
+                return header.getNamespacePrefix();
             }
 
             if (this.columnIndex == ColumnIndexes.VERSION) {
@@ -693,7 +726,7 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
         });
         this.removeMedButton.setEnabled(false);
 
-        // Remove Med Button
+        // Save Med Button
         this.saveMedButton = new Button(buttonComposite, SWT.PUSH);
         this.saveMedButton.setLayoutData(new GridData(SWT.FILL, SWT.NONE, false, false));
         this.saveMedButton.setText(Messages.currentMedsPageSaveMedButton);
@@ -705,6 +738,19 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
             }
         });
         this.saveMedButton.setEnabled(false);
+
+        // Update Med Button
+        this.updateMedButton = new Button(buttonComposite, SWT.PUSH);
+        this.updateMedButton.setLayoutData(new GridData(SWT.FILL, SWT.NONE, false, false));
+        this.updateMedButton.setText(Messages.currentMedsPageUpdateMedButton);
+        this.updateMedButton.setToolTipText(Messages.currentMedsPageUpdateMedTooltip);
+        this.updateMedButton.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected( SelectionEvent e ) {
+                handleUpdateMed();
+            }
+        });
+        this.updateMedButton.setEnabled(false);
 
         return buttonComposite;
     }
@@ -720,10 +766,12 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
         // Register Button - enabled if an unregistered MED is selected
         if (this.selectedMedIndex >= 0) {
             ModelExtensionDefinitionHeader medHeader = this.editManager.getCurrentHeaders().get(this.selectedMedIndex);
-            if (!isRegistered(medHeader)) {
+            if (!isRegistered(medHeader) || isDifferent(medHeader)) {
                 this.saveMedButton.setEnabled(true);
+                this.updateMedButton.setEnabled(true);
             } else {
                 this.saveMedButton.setEnabled(false);
+                this.updateMedButton.setEnabled(false);
             }
         } else {
             this.saveMedButton.setEnabled(false);
@@ -731,6 +779,43 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
 
         // Add Button - always enabled
         this.addMedButton.setEnabled(true);
+    }
+
+    ModelExtensionDefinition getModelMed(String namespacePrefix) {
+        if (this.modelMeds != null) {
+            for (ModelExtensionDefinition med : this.modelMeds) {
+                if (med.getNamespacePrefix().equals(namespacePrefix)) {
+                    return med;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @param medHeader the MED header being checked
+     * @return <code>true</code> if this MED is different than the same MED in the registry
+     */
+    boolean isDifferent( ModelExtensionDefinitionHeader medHeader ) {
+        if (isRegistered(medHeader)) {
+            String namespacePrefix = medHeader.getNamespacePrefix();
+            
+            // if not currently stored in model then not different
+            ModelExtensionDefinition modelMed = getModelMed(namespacePrefix);
+
+            if (modelMed == null) {
+                return false;
+            }
+
+            // since we know the namespace is registered we will always have a definition
+            if (!getRegistry().getDefinition(namespacePrefix).equals(modelMed)) {
+                // only different if user hasn't agreed to already update it
+                return !this.editManager.getNamespacesToUpdate().contains(namespacePrefix);
+            }
+        }
+
+        return false;
     }
 
     /*
@@ -827,4 +912,16 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
         this.tableViewer.refresh();
     }
 
+    void handleUpdateMed() {
+        // get confirmation from user
+        boolean confirmed = MessageDialog.openConfirm(getShell(),
+                                                      Messages.currentMedsPageUpdateMedDialogTitle,
+                                                      Messages.currentMedsPageUpdateMedDialogMsg);
+
+        if (confirmed) {
+            String namespacePrefix = this.editManager.getCurrentHeaders().get(this.selectedMedIndex).getNamespacePrefix();
+            this.editManager.updateModelExtensionDefinition(this.registry.getDefinition(namespacePrefix));
+            this.tableViewer.refresh();
+        }
+    }
 }

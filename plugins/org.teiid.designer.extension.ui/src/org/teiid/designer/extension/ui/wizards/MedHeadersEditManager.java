@@ -9,8 +9,10 @@ package org.teiid.designer.extension.ui.wizards;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.definition.ModelExtensionDefinitionHeader;
+
 import com.metamatrix.core.util.CoreArgCheck;
 
 /**
@@ -22,6 +24,7 @@ public class MedHeadersEditManager {
     private List<ModelExtensionDefinitionHeader> originalMedHeaderList;
     private List<ModelExtensionDefinition> medsToAddList;
     private List<String> namespacesToRemoveList;
+    private List<String> namespacesToUpdateList;
 
     /**
      * Constructor for MedHeadersEditManager.
@@ -34,6 +37,7 @@ public class MedHeadersEditManager {
         this.currentMedHeaderList = new ArrayList(headerList);
         this.medsToAddList = new ArrayList<ModelExtensionDefinition>();
         this.namespacesToRemoveList = new ArrayList<String>();
+        this.namespacesToUpdateList = new ArrayList<String>();
     }
 
     public void addModelExtensionDefinition(ModelExtensionDefinition med) {
@@ -62,6 +66,24 @@ public class MedHeadersEditManager {
         }
     }
 
+    public void updateModelExtensionDefinition( ModelExtensionDefinition med ) {
+        CoreArgCheck.isNotNull(med, "med is null"); //$NON-NLS-1$
+
+        // if the current MED header list does not contain a match already, then add this med
+        ModelExtensionDefinitionHeader updateMedHeader = med.getHeader();
+
+        // replace current header with this new one
+        for (ModelExtensionDefinitionHeader header : this.currentMedHeaderList) {
+            if (header.getNamespacePrefix().equals(updateMedHeader.getNamespacePrefix())) {
+                this.currentMedHeaderList.remove(header);
+                this.currentMedHeaderList.add(updateMedHeader);
+                break;
+            }
+        }
+
+        this.namespacesToUpdateList.add(updateMedHeader.getNamespacePrefix());
+    }
+
     public void removeModelExtensionDefinition( String nsPrefix ) {
         CoreArgCheck.isNotNull(nsPrefix, "Namespace Prefix is null"); //$NON-NLS-1$
 
@@ -75,6 +97,9 @@ public class MedHeadersEditManager {
         if (addListIndex != -1) {
             this.medsToAddList.remove(addListIndex);
         }
+
+        // If there is a MED with a matching namespace in the Update List, remove it
+        this.namespacesToUpdateList.remove(nsPrefix);
 
         // Remove the MED with matching namespace from the current list.
         int currentListIndex = getListIndexOfNamespace(this.currentMedHeaderList, nsPrefix);
@@ -113,6 +138,13 @@ public class MedHeadersEditManager {
     }
 
     /**
+     * @return namespacesToRemoveList
+     */
+    public List<String> getNamespacesToUpdate() {
+        return this.namespacesToUpdateList;
+    }
+
+    /**
      * {@inheritDoc}
      * 
      * @see java.lang.Object#toString()
@@ -135,6 +167,10 @@ public class MedHeadersEditManager {
         }
         text.append("NsPrefixes to REMOVE: \n"); //$NON-NLS-1$
         for (String nsPrefix : namespacesToRemoveList) {
+            text.append("  NSPrefix: " + nsPrefix + '\n'); //$NON-NLS-1$ 
+        }
+        text.append("NsPrefixes to UPDATE: \n"); //$NON-NLS-1$
+        for (String nsPrefix : this.namespacesToUpdateList) {
             text.append("  NSPrefix: " + nsPrefix + '\n'); //$NON-NLS-1$ 
         }
 

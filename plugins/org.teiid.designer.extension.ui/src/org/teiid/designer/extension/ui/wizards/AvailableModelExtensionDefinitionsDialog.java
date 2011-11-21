@@ -52,7 +52,7 @@ import com.metamatrix.ui.internal.util.WidgetUtil;
 import com.metamatrix.ui.internal.viewsupport.StatusInfo;
 
 /**
- * AvailableModelExtensionDefinitionsDialog is a dialog for displaying the results of a ModelStatisticsVisitor.
+ * AvailableModelExtensionDefinitionsDialog is a dialog that is used to add model extension definitions to a model.
  */
 public class AvailableModelExtensionDefinitionsDialog extends SelectionStatusDialog {
 

@@ -105,7 +105,6 @@ public class EmfModelObjectExtensionAssistant extends ModelObjectExtensionAssist
         PropertyDefinition propDefn = getPropertyDefinition(modelObject, propId);
 
         if (propDefn == null) {
-            Util.log(Util.getString(PREFIX + "propertyDefinitionNotFound", propId)); //$NON-NLS-1$
             return null;
         }
 
@@ -341,7 +340,32 @@ public class EmfModelObjectExtensionAssistant extends ModelObjectExtensionAssist
      */
     @Override
     public void saveModelExtensionDefinition( Object modelObject ) throws Exception {
-        ModelExtensionUtils.updateModelExtensionDefinition(getModelResource(modelObject), getModelExtensionDefinition());
+        ModelResource modelResource = getModelResource(modelObject);
+        assert (modelResource !=  null) : "Model resource should not be null"; //$NON-NLS-1$
+        boolean update = supportsMyNamespace(modelObject); // see if this is an update
+        ModelExtensionUtils.updateModelExtensionDefinition(modelResource, getModelExtensionDefinition());
+
+        // remove any properties that are no longer supported by the MED
+        if (update) {
+//            ModelExtensionRegistry registry = ExtensionPlugin.getInstance().getRegistry();
+//
+//            for (Object eObject : modelResource.getEObjects()) {
+//                assert eObject instanceof EObject;
+//                // TODO remove orphaned properties from model object. getOverriddenValues only returns registered properties
+//                Properties overriddenProperties = getOverriddenValues(eObject);
+//
+//                if (!overriddenProperties.isEmpty()) {
+//                    String metaclassName = eObject.getClass().getName();
+//
+//                    for (String propId : overriddenProperties.stringPropertyNames()) {
+//                        // remove property if it doesn't exist any more
+//                        if (registry.getPropertyDefinition(metaclassName, propId) == null) {
+//                            removeProperty(modelObject, propId);
+//                        }
+//                    }
+//                }
+//            }
+        }
     }
 
     /**

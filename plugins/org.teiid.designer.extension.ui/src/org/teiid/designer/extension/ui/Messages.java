@@ -19,17 +19,24 @@ public class Messages extends NLS {
     public static String namespaceUriColumnText;
     public static String versionColumnText;
     public static String registeredColumnText;
-    
+    public static String medsDifferentColumnText;
+
+    public static String registeredColumnToolTip;
+    public static String medsDifferentColumnToolTip;
+    public static String namespacePrefixColumnToolTip;
+    public static String versionColumnToolTip;
+    public static String descriptionColumnToolTip;
+
     public static String localeColumnText;
     public static String localeColumnToolTip;
     public static String translationColumnText;
     public static String translationColumnToolTip;
-    
+
     public static String addPropertyDescriptionDialogTitle;
     public static String editPropertyDescriptionDialogTitle;
     public static String addPropertyDisplayNameDialogTitle;
     public static String editPropertyDisplayNameDialogTitle;
-    
+
     public static String translationDialogMsg;
     public static String localeLabel;
     public static String translationLabel;
@@ -40,7 +47,7 @@ public class Messages extends NLS {
     public static String allowedValueLabel;
     public static String allowedValueToolTip;
     public static String editAllowedValueDialogTitle;
-    
+
     public static String cloneMedActionText;
     public static String cloneMedActionToolTip;
     public static String findMedReferencesActionText;
@@ -76,6 +83,8 @@ public class Messages extends NLS {
     public static String modelBuildSubTaskName;
     public static String modelMedNotFoundInRegistry;
     public static String modelMedDifferentVersionThanOneFoundInRegistry;
+    public static String medChangedOnFileSystemDialogTitle;
+    public static String medChangedOnFileSystemDialogMsg;
 
     public static String registerMedActionInvalidMedTitle;
     public static String registerMedActionInvalidMedMsg;
@@ -115,6 +124,7 @@ public class Messages extends NLS {
     public static String manageMedsWizardInitError;
     public static String manageMedsWizardResult;
     public static String manageMedsWizardUpdateMedsMsg;
+    public static String manageMedsWizardUpdateMedsError;
     public static String manageMedsWizardAddMedsMsg;
     public static String manageMedsWizardRemoveMedsMsg;
     public static String manageMedsWizardSaveModelMsg;
@@ -123,6 +133,7 @@ public class Messages extends NLS {
     public static String manageMedsWizardSaveModelError;
     public static String manageMedsWizardSuccessMsg;
     public static String manageMedsWizardErrorMsg;
+    public static String manageMedsWizardModelObjectExtensionAssistantNotFound;
 
     public static String currentMedsPageTitle;
     public static String currentMedsPageDescription;
@@ -144,6 +155,10 @@ public class Messages extends NLS {
     public static String currentMedsPageTableLabel;
     public static String currentMedsPageRemoveDialogTitle;
     public static String currentMedsPageRemoveDialogMsg;
+    public static String currentMedsPageUpdateMedButton;
+    public static String currentMedsPageUpdateMedTooltip;
+    public static String currentMedsPageUpdateMedDialogTitle;
+    public static String currentMedsPageUpdateMedDialogMsg;
 
     public static String availableMedsDialogTitle;
     public static String availableMedsDialogMsg;
@@ -234,7 +249,7 @@ public class Messages extends NLS {
     public static String editMetaclassNothingSelected;
     public static String editMetaclassEditedMetaclassSelected;
     public static String editMetaclassAlreadyExtendedMetaclassSelected;
-    
+
     public static String addPropertyDialogTitle;
     public static String editPropertyDialogMaskedButtonText;
     public static String editPropertyDialogMaskedButtonToolTip;

@@ -10,12 +10,14 @@ package org.teiid.designer.extension.ui.editors;
 import static org.teiid.designer.extension.ui.UiConstants.UTIL;
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.MED_EDITOR;
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.REGISTERY_MED_UPDATE_ACTION;
+
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
@@ -42,6 +44,7 @@ import org.eclipse.jface.dialogs.PageChangedEvent;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.window.Window;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorInput;
@@ -73,6 +76,9 @@ import org.teiid.designer.extension.ui.Messages;
 import org.teiid.designer.extension.ui.UiConstants;
 import org.teiid.designer.extension.ui.actions.RegistryDeploymentValidator;
 import org.teiid.designer.extension.ui.actions.ShowModelExtensionRegistryViewAction;
+
+import com.metamatrix.modeler.internal.core.workspace.ResourceChangeUtilities;
+import com.metamatrix.modeler.internal.ui.forms.FormUtil;
 
 /**
  * 
@@ -216,8 +222,7 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
                 ModelExtensionRegistry registry = (Platform.isRunning() ? getRegistry() : null);
                 boolean wasAdded = RegistryDeploymentValidator.doDeployment(registry, medFile);
                 if (wasAdded) {
-                    MessageDialog.openInformation(getShell(),
-                                                  Messages.registerMedActionSuccessTitle,
+                    MessageDialog.openInformation(getShell(), Messages.registerMedActionSuccessTitle,
                                                   Messages.registerMedActionSuccessMsg);
                 }
             }
@@ -584,6 +589,13 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
                                             getEditorSite().getPage().closeEditor(accessThis(), false);
                                         }
                                     });
+                                }
+                            } else if (ResourceChangeUtilities.isContentChanged(delta)) {
+                                // file changed on file system by another editor
+                                if (!FormUtil.openQuestion(getShell(), Messages.medChangedOnFileSystemDialogTitle,
+                                                           Activator.getDefault().getImage(MED_EDITOR),
+                                                           NLS.bind(Messages.medChangedOnFileSystemDialogMsg, getFile().getName()))) {
+                                    // TODO implement refresh editor state here
                                 }
                             }
 
