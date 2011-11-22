@@ -8,6 +8,13 @@
   See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
 -->
 <plugin>
-   <extension-point id="org.teiid.designer.vdb.sourceHandler" name="%sourceHandler" schema="schema/org.teiid.designer.vdb.sourceHandler.exsd"/>   
+   <extension-point id="org.teiid.designer.vdb.sourceHandler" name="%sourceHandler" schema="schema/org.teiid.designer.vdb.sourceHandler.exsd"/>
+
+   <extension
+         point="org.teiid.designer.core.refactorModelHandler">
+      <refactorHandler
+            name="org.teiid.designer.vdb.VdbRefactorHandler">
+      </refactorHandler>
+   </extension>   
 </plugin>
 

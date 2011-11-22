@@ -342,6 +342,7 @@ public class ResourceRenameCommand extends ResourceRefactorCommand {
         
     }
     
+    @Override
     protected IStatus refactorModelContents(IProgressMonitor monitor, final Map refactoredPaths ) {
         Collection errorList = new ArrayList();
 
@@ -356,6 +357,9 @@ public class ResourceRenameCommand extends ResourceRefactorCommand {
 	                RefactorModelExtensionManager.helpUpdateModelContents(IRefactorModelHandler.RENAME, modelResource, refactoredPaths, monitor);
 	                    
 	                modelResource.save(null, false);
+	            } else {
+                    RefactorModelExtensionManager.helpUpdateNonModelResource(IRefactorModelHandler.RENAME, modifiedRes,
+                                                                             refactoredPaths, monitor);
 	            }
 	
 	        } catch (ModelWorkspaceException e) {

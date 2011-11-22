@@ -108,6 +108,25 @@ public class RefactorModelExtensionManager {
 			handler.helpUpdateDependentModelContents(type, modelResource, refactoredPaths, monitor);
 		}
 	}
+
+    public static void helpUpdateNonModelResource( int type,
+                                                   IResource refactoredResource,
+                                                   Map refactoredPaths,
+                                                   IProgressMonitor monitor ) {
+        if (!handlersLoaded) {
+            loadExtensions();
+        }
+
+        try {
+            for (IRefactorModelHandler handler : handlers) {
+                if (handler instanceof IRefactorNonModelResourceHandler) {
+                    ((IRefactorNonModelResourceHandler)handler).processNonModel(type, refactoredResource, refactoredPaths, monitor);
+                }
+            }
+        } catch (Exception e) {
+            ModelerCore.Util.log(IStatus.ERROR, e, e.getMessage());
+        }
+    }
 	
 	/**
 	 * Method which delegates to all handlers the ability to update or perform internal refactoring for the refactored models
