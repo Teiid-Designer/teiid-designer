@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Properties;
 
+import com.metamatrix.metamodels.relational.aspects.validation.RelationalStringNameValidator;
+
 
 /**
  * 
@@ -22,6 +24,7 @@ public class RelationalAccessPattern extends RelationalReference {
         super();
         setType(TYPES.AP);
         this.columns = new ArrayList<RelationalColumn>();
+        setNameValidator(new RelationalStringNameValidator(false, true));
     }
     
     /**
@@ -31,6 +34,7 @@ public class RelationalAccessPattern extends RelationalReference {
         super(name);
         setType(TYPES.AP);
         this.columns = new ArrayList<RelationalColumn>();
+        setNameValidator(new RelationalStringNameValidator(false, true));
     }
     
     /**

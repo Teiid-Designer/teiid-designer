@@ -29,6 +29,9 @@ public class Messages extends NLS {
 	public static String validate_error_ucNoColumnsDefined;
 	public static String validate_error_materializedTableHasNoTableDefined;
 	public static String validate_warning_noColumnsDefined;
+	public static String validate_error_fKUniqueKeyNameIsUndefined;
+	public static String validate_error_fKReferencedUniqueKeyTableIsUndefined;
+	public static String validate_error_duplicateColumnNamesInTable;
 
     static {
         NLS.initializeMessages("org.teiid.designer.relational.messages", Messages.class); //$NON-NLS-1$

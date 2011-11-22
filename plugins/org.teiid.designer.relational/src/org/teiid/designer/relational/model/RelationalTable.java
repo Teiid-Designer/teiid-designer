@@ -13,8 +13,11 @@ import java.util.Properties;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.osgi.util.NLS;
 import org.teiid.designer.relational.Messages;
 import org.teiid.designer.relational.RelationalPlugin;
+
+import com.metamatrix.metamodels.relational.aspects.validation.RelationalStringNameValidator;
 
 /**
  * 
@@ -64,6 +67,7 @@ public class RelationalTable extends RelationalReference {
         this.columns = new ArrayList<RelationalColumn>();
         this.accessPatterns = new ArrayList<RelationalAccessPattern>();
         this.foreignKeys = new ArrayList<RelationalForeignKey>();
+        setNameValidator(new RelationalStringNameValidator(true, true));
     }
     
     /**
@@ -374,10 +378,31 @@ public class RelationalTable extends RelationalReference {
 			}
 		}
 		
+		// Check Column Status values
+		for( RelationalColumn col : getColumns() ) {
+			if( col.getStatus().getSeverity() == IStatus.ERROR ) {
+				setStatus(new Status(IStatus.ERROR, RelationalPlugin.PLUGIN_ID, col.getStatus().getMessage() ));
+				return;
+			}
+		}
+		
+		// Check Column Status values
+		for( RelationalColumn outerColumn : getColumns() ) {
+			for( RelationalColumn innerColumn : getColumns() ) {
+				if( outerColumn != innerColumn ) {
+					if( outerColumn.getName().equalsIgnoreCase(innerColumn.getName())) {
+						setStatus(new Status(IStatus.ERROR, RelationalPlugin.PLUGIN_ID, 
+								NLS.bind(Messages.validate_error_duplicateColumnNamesInTable, getName())));
+					}
+				}
+			}
+		}
+		
 		if( this.getColumns().isEmpty() ) {
 			setStatus(new Status(IStatus.WARNING, RelationalPlugin.PLUGIN_ID, 
 					Messages.validate_warning_noColumnsDefined ));
 		}
+		
 	}
 
 }

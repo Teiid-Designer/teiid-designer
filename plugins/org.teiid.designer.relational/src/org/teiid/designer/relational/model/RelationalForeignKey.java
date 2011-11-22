@@ -17,6 +17,8 @@ import org.eclipse.osgi.util.NLS;
 import org.teiid.designer.relational.Messages;
 import org.teiid.designer.relational.RelationalPlugin;
 
+import com.metamatrix.metamodels.relational.aspects.validation.RelationalStringNameValidator;
+
 
 /**
  * 
@@ -43,6 +45,7 @@ public class RelationalForeignKey extends RelationalReference {
         super();
         setType(TYPES.FK);
         this.columns = new ArrayList<RelationalColumn>();
+        setNameValidator(new RelationalStringNameValidator(false, true));
     }
     
     /**
@@ -52,6 +55,7 @@ public class RelationalForeignKey extends RelationalReference {
         super(name);
         setType(TYPES.FK);
         this.columns = new ArrayList<RelationalColumn>();
+        setNameValidator(new RelationalStringNameValidator(false, true));
     }
     
     public RelationalForeignKey clone() {
@@ -182,6 +186,18 @@ public class RelationalForeignKey extends RelationalReference {
 		if( this.getColumns().isEmpty() ) {
 			setStatus(new Status(IStatus.ERROR, RelationalPlugin.PLUGIN_ID, 
 						NLS.bind(Messages.validate_error_fkNoColumnsDefined, getName())));
+			return;
+		}
+		
+		if( this.getUniqueKeyName() == null || this.getUniqueKeyName().length() == 0 ) {
+			setStatus(new Status(IStatus.ERROR, RelationalPlugin.PLUGIN_ID, 
+					NLS.bind(Messages.validate_error_fKUniqueKeyNameIsUndefined, getName())));
+			return;
+		}
+		
+		if( this.getUniqueKeyTableName() == null || this.getUniqueKeyTableName().length() == 0 ) {
+			setStatus(new Status(IStatus.ERROR, RelationalPlugin.PLUGIN_ID, 
+					Messages.validate_error_fKReferencedUniqueKeyTableIsUndefined));
 			return;
 		}
 	}

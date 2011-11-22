@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Properties;
 
+import com.metamatrix.metamodels.relational.aspects.validation.RelationalStringNameValidator;
+
 
 /**
  * 
@@ -32,6 +34,7 @@ public class RelationalProcedure extends RelationalReference {
         super();
         setType(TYPES.PROCEDURE);
         this.parameters = new ArrayList<RelationalParameter>();
+        setNameValidator(new RelationalStringNameValidator(true, true));
     }
     /**
      * @param name
@@ -40,6 +43,7 @@ public class RelationalProcedure extends RelationalReference {
         super(name);
         setType(TYPES.PROCEDURE);
         this.parameters = new ArrayList<RelationalParameter>();
+        setNameValidator(new RelationalStringNameValidator(true, true));
     }
 
     /**

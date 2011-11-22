@@ -14,8 +14,10 @@ import org.teiid.designer.relational.Messages;
 import org.teiid.designer.relational.RelationalConstants;
 import org.teiid.designer.relational.RelationalPlugin;
 
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.StringUtilities;
 import com.metamatrix.metamodels.core.ModelType;
+import com.metamatrix.modeler.core.validation.rules.StringNameValidator;
 
 /**
  * 
@@ -42,11 +44,12 @@ public class RelationalReference implements RelationalConstants {
     
     private int modelType = ModelType.PHYSICAL;
     
+    private StringNameValidator nameValidator = new StringNameValidator();
     
     public RelationalReference() {
         super();
         this.processType = CREATE_ANYWAY;
-        this.currentStatus = Status.OK_STATUS;
+        this.currentStatus = Status.OK_STATUS; 
     }
     /**
      * @param name
@@ -150,13 +153,22 @@ public class RelationalReference implements RelationalConstants {
     public String getDisplayName() {
     	return TYPE_NAMES[getType()];
     }
-;    
+    
     public void setStatus(IStatus status) {
     	this.currentStatus = status;
     }
     
     public IStatus getStatus() {
     	return this.currentStatus;
+    }
+    
+    public StringNameValidator getNameValidator() {
+    	return this.nameValidator;
+    }
+    
+    public void setNameValidator(StringNameValidator nameValidator) {
+    	CoreArgCheck.isNotNull(nameValidator, "nameValidator"); //$NON-NLS-1$
+    	this.nameValidator = nameValidator;
     }
     
     protected void handleInfoChanged() {
@@ -167,6 +179,12 @@ public class RelationalReference implements RelationalConstants {
 		if( this.getName() == null || this.getName().trim().length() == 0 ) {
 			setStatus(new Status(IStatus.ERROR, RelationalPlugin.PLUGIN_ID, 
 						NLS.bind(Messages.validate_error_nameCannotBeNullOrEmpty, getDisplayName())));
+			return;
+		}
+		// Validate non-null string
+		String errorMessage = getNameValidator().checkValidName(this.getName());
+		if( errorMessage != null && !errorMessage.isEmpty() ) {
+			setStatus(new Status(IStatus.ERROR, RelationalPlugin.PLUGIN_ID, errorMessage));
 			return;
 		}
 		setStatus(Status.OK_STATUS);

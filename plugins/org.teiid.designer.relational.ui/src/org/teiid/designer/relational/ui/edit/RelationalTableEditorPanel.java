@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.viewers.CellEditor;
@@ -71,7 +72,6 @@ import org.teiid.designer.relational.model.RelationalUniqueConstraint;
 import org.teiid.designer.relational.ui.Messages;
 import org.teiid.designer.relational.ui.util.RelationalUiUtil;
 
-import com.metamatrix.core.util.StringUtilities;
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.metamodels.relational.PrimaryKey;
 import com.metamatrix.metamodels.relational.UniqueConstraint;
@@ -219,28 +219,43 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 		synchronizing = true;
 		
 		if( table.getName() != null ) {
-			this.nameText.setText(table.getName());
-		} else { 
-			this.nameText.setText(EMPTY_STRING);
+			if( WidgetUtil.widgetValueChanged(this.nameText, table.getName()) ) {
+				this.nameText.setText(table.getName());
+			}
+		} else {
+			if( WidgetUtil.widgetValueChanged(this.nameText, EMPTY_STRING) ) {
+				this.nameText.setText(EMPTY_STRING);
+			}
 		}
 		
 		if( table.getNameInSource() != null ) {
-			this.nameInSourceText.setText(table.getNameInSource());
-		} else { 
-			this.nameInSourceText.setText(EMPTY_STRING);
+			if( WidgetUtil.widgetValueChanged(this.nameText, table.getNameInSource()) ) {
+				this.nameInSourceText.setText(table.getNameInSource());
+			}
+		} else {
+			if( WidgetUtil.widgetValueChanged(this.nameText, EMPTY_STRING) ) {
+				this.nameInSourceText.setText(EMPTY_STRING);
+			}
 		}
 		
-		cardinalityText.setText(Integer.toString(this.table.getCardinality()));
+		if( WidgetUtil.widgetValueChanged(this.cardinalityText, this.table.getCardinality()) ) {
+			this.cardinalityText.setText(Integer.toString(this.table.getCardinality()));
+		}
 		
 		boolean isMaterialized = this.table.isMaterialized();	
-		this.materializedCB.setSelection(isMaterialized);
+		if( WidgetUtil.widgetValueChanged(materializedCB, isMaterialized)) {
+			this.materializedCB.setSelection(isMaterialized);
+		}
 		this.materializedTableText.setEnabled(isMaterialized);
 		this.findTableReferenceButton.setEnabled(isMaterialized);
 		
-		this.supportsUpdateCB.setSelection(this.table.getSupportsUpdate());
+		if( WidgetUtil.widgetValueChanged(materializedCB, this.table.getSupportsUpdate())) {
+			this.supportsUpdateCB.setSelection(this.table.getSupportsUpdate());
+		}
 		
-		this.isSystemTableCB.setSelection(this.table.isSystem());
-		
+		if( WidgetUtil.widgetValueChanged(isSystemTableCB, this.table.isSystem())) {
+			this.isSystemTableCB.setSelection(this.table.isSystem());
+		}
 		generalPropertiesTab.setImage(RelationalUiUtil.getRelationalImage(TYPES.TABLE, table.getModelType(), table.getStatus()));
 		
     	this.columnsViewer.getTable().removeAll();
@@ -264,25 +279,32 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
         foreignKeysTab.setImage(RelationalUiUtil.getRelationalImage(TYPES.FK, table.getModelType(), maxStatus));
         
         if( this.table.getPrimaryKey() == null ) {
-        	this.includePrimaryKeyCB.setSelection(false);
+        	if( WidgetUtil.widgetValueChanged(includePrimaryKeyCB, false)) {
+        		this.includePrimaryKeyCB.setSelection(false);
+        	}
         	this.primaryKeyNameText.setEnabled(false);
-        	this.primaryKeyNameText.setText(EMPTY_STRING);
+        	if( WidgetUtil.widgetValueChanged(primaryKeyNameText, EMPTY_STRING)) {
+        		this.primaryKeyNameText.setText(EMPTY_STRING);
+        	}
         	this.primaryKeyNISText.setEnabled(false);
-        	this.primaryKeyNISText.setText(EMPTY_STRING);
+        	if( WidgetUtil.widgetValueChanged(primaryKeyNISText, EMPTY_STRING)) {
+        		this.primaryKeyNISText.setText(EMPTY_STRING);
+        	}
         	this.changePkColumnsButton.setEnabled(false);
         	this.pkColumnsViewer.getTable().removeAll();
         	this.pkColumnsViewer.getTable().setEnabled(false);
         	this.primaryKeyTab.setImage(UiPlugin.getDefault().getImage(UiConstants.Images.PK_ICON));
         } else {
         	this.pkColumnsViewer.getTable().setEnabled(true);
-        	this.includePrimaryKeyCB.setSelection(true);
+        	if( WidgetUtil.widgetValueChanged(includePrimaryKeyCB, true)) {
+        		this.includePrimaryKeyCB.setSelection(true);
+        	}
         	this.primaryKeyNameText.setEnabled(true);
-        	if( this.table.getPrimaryKey().getName() != null && 
-        			StringUtilities.equals(this.primaryKeyNameText.getText(), this.table.getPrimaryKey().getName())) {
+        	if( this.table.getPrimaryKey().getName() != null && WidgetUtil.widgetValueChanged(primaryKeyNameText, this.table.getPrimaryKey().getName())) {
         		this.primaryKeyNameText.setText(this.table.getPrimaryKey().getName());
         	}
         	this.primaryKeyNISText.setEnabled(true);
-        	if( this.table.getPrimaryKey().getNameInSource() != null ) {
+        	if( this.table.getPrimaryKey().getNameInSource() != null && WidgetUtil.widgetValueChanged(primaryKeyNISText, this.table.getPrimaryKey().getNameInSource())) {
         		this.primaryKeyNISText.setText(this.table.getPrimaryKey().getNameInSource());
         	}
         	this.pkColumnsViewer.getTable().removeAll();
@@ -296,23 +318,31 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
         }
         
         if( this.table.getUniqueContraint() == null ) {
-        	this.includeUniqueConstraintCB.setSelection(false);
+        	if( WidgetUtil.widgetValueChanged(includeUniqueConstraintCB, false)) {
+        		this.includeUniqueConstraintCB.setSelection(false);
+        	}
         	this.uniqueConstraintNameText.setEnabled(false);
-        	this.uniqueConstraintNameText.setText(EMPTY_STRING);
+        	if( WidgetUtil.widgetValueChanged(uniqueConstraintNameText, EMPTY_STRING)) {
+        		this.uniqueConstraintNameText.setText(EMPTY_STRING);
+        	}
         	this.uniqueConstraintNISText.setEnabled(false);
-        	this.uniqueConstraintNISText.setText(EMPTY_STRING);
+        	if( WidgetUtil.widgetValueChanged(uniqueConstraintNISText, EMPTY_STRING)) {
+        		this.uniqueConstraintNISText.setText(EMPTY_STRING);
+        	}
         	this.changeUcColumnsButton.setEnabled(false);
         	this.ucColumnsViewer.getTable().removeAll();
         	this.ucColumnsViewer.getTable().setEnabled(false);
         } else {
         	this.ucColumnsViewer.getTable().setEnabled(true);
-        	this.includeUniqueConstraintCB.setSelection(true);
+        	if( WidgetUtil.widgetValueChanged(includeUniqueConstraintCB, true)) {
+        		this.includeUniqueConstraintCB.setSelection(true);
+        	}
         	this.uniqueConstraintNameText.setEnabled(true);
-        	if( this.table.getUniqueContraint().getName() != null) {
+        	if( this.table.getUniqueContraint().getName() != null && WidgetUtil.widgetValueChanged(uniqueConstraintNameText, this.table.getUniqueContraint().getName())) {
         		this.uniqueConstraintNameText.setText(this.table.getUniqueContraint().getName());
         	}
         	this.uniqueConstraintNISText.setEnabled(true);
-        	if( this.table.getUniqueContraint().getNameInSource() != null ) {
+        	if( this.table.getUniqueContraint().getNameInSource() != null && WidgetUtil.widgetValueChanged(uniqueConstraintNISText, this.table.getUniqueContraint().getNameInSource())) {
         		this.uniqueConstraintNISText.setText(this.table.getUniqueContraint().getName());
         	}
         	this.ucColumnsViewer.getTable().removeAll();
@@ -1226,6 +1256,7 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 				if( newValue != null && newValue.length() > 0 && !newValue.equalsIgnoreCase(oldValue)) {
 					((RelationalColumn)element).setName(newValue);
 					columnsViewer.refresh(element);
+					handleInfoChanged();
 				}
 			}
 		}
@@ -1910,9 +1941,32 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 									}
 								}
     						}
+		        			String tblName = EMPTY_STRING;
+		        			String keyName = EMPTY_STRING;
+		        			boolean foundCheckedItem = false;;
+    						for( TableItem item : keyViewer.getTable().getItems()) {
+	    		        		if( item.getChecked() ) {
+	    		        			foundCheckedItem = true;
+	    		        			EObject selectedKey = (EObject)item.getData();
+	    		        			if( selectedKey instanceof UniqueConstraint ) {
+	    		        				tblName = ((UniqueConstraint)selectedKey).getTable().getName();
+	    		        				keyName = ((UniqueConstraint)selectedKey).getName();
+	    		        			} else {
+	    		        				tblName = ((PrimaryKey)selectedKey).getTable().getName();
+	    		        				keyName = ((PrimaryKey)selectedKey).getName();
+	    		        			}
+	    		        			editedFK.setUniqueKeyName(keyName);
+	    		        			editedFK.setUniqueKeyTableName(tblName);
+	    		        		}
+    						}
+    						if( !foundCheckedItem ) {
+    							editedFK.setUniqueKeyName(keyName);
+    		        			editedFK.setUniqueKeyTableName(tblName);
+    						}
+    						
     						processingChecks = false;
-    						//synchronizeUI();
-    						//validatePage();
+
+    						validate();
     					}
 
     					public void widgetDefaultSelected(SelectionEvent e) {
@@ -1986,6 +2040,24 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 					return new Object[0];
 				}
 			});
+    		
+    		this.theColumnDataViewer.getTable().addSelectionListener(
+    				new SelectionListener() {
+
+    					public void widgetSelected(SelectionEvent e) {
+    						editedFK.getColumns().clear();
+    			        	for( TableItem item : theColumnDataViewer.getTable().getItems() ) {
+    			        		
+    			        		if( item.getChecked() ) {
+    			        			editedFK.addColumn((RelationalColumn)item.getData());
+    			        		}
+    			        	}
+    						validate();
+    					}
+
+    					public void widgetDefaultSelected(SelectionEvent e) {
+    					}
+    				});
 			
     		theColumnDataViewer.setLabelProvider(new ColumnDataLabelProvider(0));
     		
@@ -2063,7 +2135,13 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
         		enable = false;
         		setErrorMessage(editedFK.getStatus().getMessage());
         	} else {
-        		setErrorMessage(null);
+        		if( editedFK.getStatus().getSeverity() < IStatus.ERROR ) {
+        			setErrorMessage(null);
+        		} else if(editedFK.getStatus().getSeverity() == IStatus.WARNING) {
+        			setMessage(editedFK.getStatus().getMessage(), IMessageProvider.WARNING);
+        		} else if(editedFK.getStatus().getSeverity() == IStatus.ERROR) {
+        			setErrorMessage(editedFK.getStatus().getMessage());
+        		}
         	}
         	
         	getButton(IDialogConstants.OK_ID).setEnabled(enable);
@@ -2077,32 +2155,32 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
         
         @Override
         protected void okPressed() {
-        	for( TableItem item : keyViewer.getTable().getItems() ) {
-        		if( item.getChecked() ) {
-        			EObject selectedKey = (EObject)item.getData();
-        			if( selectedKey instanceof UniqueConstraint ) {
-        				this.selectedTableName = ((UniqueConstraint)selectedKey).getTable().getName();
-        				this.selectedKeyOrConstraint = ((UniqueConstraint)selectedKey).getName();
-        			} else {
-        				this.selectedTableName = ((PrimaryKey)selectedKey).getTable().getName();
-        				this.selectedKeyOrConstraint = ((PrimaryKey)selectedKey).getName();
-        			}
-        			this.editedFK.setUniqueKeyName(this.selectedKeyOrConstraint);
-        			this.editedFK.setUniqueKeyTableName(this.selectedTableName);
-        		}
-        	}
-        	
-          	for( TableItem item : theColumnDataViewer.getTable().getItems() ) {
-        		if( item.getChecked() ) {
-        			editedFK.addColumn((RelationalColumn)item.getData());
-        		}
-        	}
-          	if( this.foreignKeyMultiCombo.getText() != null ) {
-          		editedFK.setForeignKeyMultiplicity(this.foreignKeyMultiCombo.getText());
-          	}
-          	if( this.uniqueKeyMultiCombo.getText() != null ) {
-          		editedFK.setPrimaryKeyMultiplicity(this.uniqueKeyMultiCombo.getText());
-          	}
+//        	for( TableItem item : keyViewer.getTable().getItems() ) {
+//        		if( item.getChecked() ) {
+//        			EObject selectedKey = (EObject)item.getData();
+//        			if( selectedKey instanceof UniqueConstraint ) {
+//        				this.selectedTableName = ((UniqueConstraint)selectedKey).getTable().getName();
+//        				this.selectedKeyOrConstraint = ((UniqueConstraint)selectedKey).getName();
+//        			} else {
+//        				this.selectedTableName = ((PrimaryKey)selectedKey).getTable().getName();
+//        				this.selectedKeyOrConstraint = ((PrimaryKey)selectedKey).getName();
+//        			}
+//        			this.editedFK.setUniqueKeyName(this.selectedKeyOrConstraint);
+//        			this.editedFK.setUniqueKeyTableName(this.selectedTableName);
+//        		}
+//        	}
+//        	
+//          	for( TableItem item : theColumnDataViewer.getTable().getItems() ) {
+//        		if( item.getChecked() ) {
+//        			editedFK.addColumn((RelationalColumn)item.getData());
+//        		}
+//        	}
+//          	if( this.foreignKeyMultiCombo.getText() != null ) {
+//          		editedFK.setForeignKeyMultiplicity(this.foreignKeyMultiCombo.getText());
+//          	}
+//          	if( this.uniqueKeyMultiCombo.getText() != null ) {
+//          		editedFK.setPrimaryKeyMultiplicity(this.uniqueKeyMultiCombo.getText());
+//          	}
           	if( isEdit ) {
           		this.originalFK.inject(editedFK);
           	}

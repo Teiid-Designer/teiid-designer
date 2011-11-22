@@ -9,6 +9,8 @@ package org.teiid.designer.relational.model;
 
 import java.util.Properties;
 
+import com.metamatrix.metamodels.relational.aspects.validation.RelationalStringNameValidator;
+
 
 /**
  * 
@@ -47,6 +49,7 @@ public class RelationalParameter extends RelationalReference {
     public RelationalParameter() {
         super();
         setType(TYPES.PARAMETER);
+        setNameValidator(new RelationalStringNameValidator(false, true));
     }
     
     /**
@@ -55,6 +58,7 @@ public class RelationalParameter extends RelationalReference {
     public RelationalParameter( String name ) {
         super(name);
         setType(TYPES.PARAMETER);
+        setNameValidator(new RelationalStringNameValidator(false, true));
     }
     
     /**

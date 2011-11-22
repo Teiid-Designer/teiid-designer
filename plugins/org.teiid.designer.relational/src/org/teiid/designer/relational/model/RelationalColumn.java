@@ -9,6 +9,8 @@ package org.teiid.designer.relational.model;
 
 import java.util.Properties;
 
+import com.metamatrix.metamodels.relational.aspects.validation.RelationalStringNameValidator;
+
 
 /**
  * 
@@ -91,6 +93,7 @@ public class RelationalColumn extends RelationalReference {
     public RelationalColumn() {
         super();
         setType(TYPES.COLUMN);
+        setNameValidator(new RelationalStringNameValidator(false, true));
     }
     
     /**
@@ -99,6 +102,7 @@ public class RelationalColumn extends RelationalReference {
     public RelationalColumn( String name ) {
         super(name);
         setType(TYPES.COLUMN);
+        setNameValidator(new RelationalStringNameValidator(false, true));
     }
 
     /**
@@ -377,6 +381,12 @@ public class RelationalColumn extends RelationalReference {
     public void setUpdateable( boolean updateable ) {
         this.updateable = updateable;
     }
+    
+	@Override
+	public void validate() {
+		// Walk through the properties for the table and set the status
+		super.validate();
+	}
     
     public void setProperties(Properties props) {
         for( Object key : props.keySet() ) {

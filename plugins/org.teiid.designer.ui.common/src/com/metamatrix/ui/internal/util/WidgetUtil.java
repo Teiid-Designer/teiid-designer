@@ -55,6 +55,7 @@ import org.eclipse.swt.widgets.Sash;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.swt.widgets.Widget;
@@ -70,6 +71,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.core.util.CoreStringUtil;
+import com.metamatrix.core.util.StringUtilities;
 import com.metamatrix.ui.UiConstants;
 import com.metamatrix.ui.internal.InternalUiConstants;
 import com.metamatrix.ui.internal.widget.ITreeViewerController;
@@ -1240,6 +1242,66 @@ public final class WidgetUtil implements
             return dlg.getResult();
         }
         return EMPTY_STRING_ARRAY;
+    }
+    
+    /**
+     * Utility method to check the changed status of a Text widget
+     * 
+     * @param widget
+     *            The Text widget; may not be null.
+     * @param targetValue
+     *            The target string value of the widget
+     * @return true if the target value is different than current widget value, false otherwise
+     */
+    public static boolean widgetValueChanged(Text widget, String targetValue) {
+    	CoreArgCheck.isNotNull(widget);
+    	return !StringUtilities.equals(widget.getText(), targetValue);
+    }
+    
+    /**
+     * Utility method to check the changed status of a Text widget designed for integer input values
+     * 
+     * @param widget
+     *            The Text widget; may not be null.
+     * @param targetValue
+     *            The target integer value of the widget
+     * @return true if the target value is different than current widget value, false otherwise
+     */
+    public static boolean widgetValueChanged(Text widget, int targetValue) {
+    	CoreArgCheck.isNotNull(widget);
+    	if( widget.getText() == null || widget.getText().length() == 0 ) {
+    		return true;
+    	}
+    	int widgetValue = Integer.valueOf(widget.getText());
+    	return widgetValue != targetValue;
+    }
+    
+    /**
+     * Utility method to check the changed status of a Combo widget
+     * 
+     * @param widget
+     *            The Combo widget; may not be null.
+     * @param targetValue
+     *            The target string value of the widget
+     * @return true if the target value is different than current widget value, false otherwise
+     */
+    public static boolean widgetValueChanged(Combo widget, String targetValue) {
+    	CoreArgCheck.isNotNull(widget);
+    	return !StringUtilities.equals(widget.getText(), targetValue);
+    }
+    
+    /**
+     * Utility method to check the changed status of a Button widget
+     * 
+     * @param widget
+     *            The Button widget; may not be null.
+     * @param targetValue
+     *            The target string value of the widget
+     * @return true if the target value is different than current widget value, false otherwise
+     */
+    public static boolean widgetValueChanged(Button widget, boolean selected) {
+    	CoreArgCheck.isNotNull(widget);
+    	return widget.getSelection() != selected;
     }
 
     // ============================================================================================================================

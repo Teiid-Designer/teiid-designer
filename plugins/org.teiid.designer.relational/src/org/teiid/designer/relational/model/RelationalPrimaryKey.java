@@ -17,6 +17,8 @@ import org.eclipse.osgi.util.NLS;
 import org.teiid.designer.relational.Messages;
 import org.teiid.designer.relational.RelationalPlugin;
 
+import com.metamatrix.metamodels.relational.aspects.validation.RelationalStringNameValidator;
+
 
 /**
  * 
@@ -29,6 +31,7 @@ public class RelationalPrimaryKey extends RelationalReference {
         super();
         setType(TYPES.PK);
         this.columns = new ArrayList<RelationalColumn>();
+        setNameValidator(new RelationalStringNameValidator(false, true));
     }
     
     /**
@@ -38,6 +41,7 @@ public class RelationalPrimaryKey extends RelationalReference {
         super(name);
         setType(TYPES.PK);
         this.columns = new ArrayList<RelationalColumn>();
+        setNameValidator(new RelationalStringNameValidator(false, true));
     }
     
     /**

@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Properties;
 
+import com.metamatrix.metamodels.relational.aspects.validation.RelationalStringNameValidator;
+
 
 /**
  * 
@@ -36,6 +38,7 @@ public class RelationalIndex extends RelationalReference {
         super();
         setType(TYPES.INDEX);
         this.columns = new ArrayList<RelationalColumn>();
+        setNameValidator(new RelationalStringNameValidator(false, true));
     }
     
     /**
@@ -45,6 +48,7 @@ public class RelationalIndex extends RelationalReference {
         super(name);
         setType(TYPES.INDEX);
         this.columns = new ArrayList<RelationalColumn>();
+        setNameValidator(new RelationalStringNameValidator(false, true));
     }
     
     /**
