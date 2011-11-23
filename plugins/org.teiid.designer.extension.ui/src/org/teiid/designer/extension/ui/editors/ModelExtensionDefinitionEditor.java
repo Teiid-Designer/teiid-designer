@@ -44,12 +44,13 @@ import org.eclipse.jface.dialogs.PageChangedEvent;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.window.Window;
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IFileEditorInput;
+import org.eclipse.ui.IMemento;
+import org.eclipse.ui.IPersistableEditor;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.dialogs.SaveAsDialog;
 import org.eclipse.ui.editors.text.FileDocumentProvider;
@@ -78,16 +79,22 @@ import org.teiid.designer.extension.ui.actions.RegistryDeploymentValidator;
 import org.teiid.designer.extension.ui.actions.ShowModelExtensionRegistryViewAction;
 
 import com.metamatrix.modeler.internal.core.workspace.ResourceChangeUtilities;
-import com.metamatrix.modeler.internal.ui.forms.FormUtil;
 
 /**
  * 
  */
-public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor implements IResourceChangeListener,
-        PropertyChangeListener, RegistryListener {
+public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor implements IPersistableEditor,
+        IResourceChangeListener, PropertyChangeListener, RegistryListener {
+
+    /**
+     * The memento key for the index of the selected editor.
+     */
+    private static final String SELECTED_PAGE = "SELECTED_PAGE"; //$NON-NLS-1$
 
     private boolean dirty = false;
     private boolean readOnly = false;
+    
+    private IMemento memento;
 
     private final FileDocumentProvider documentProvider = new FileDocumentProvider();
 
@@ -175,7 +182,18 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
                 }
             });
 
-            this.overviewPage.setFocus();
+            // restore state
+            int selectedPageNum = 0;
+
+            if (this.memento != null) {
+                int value = this.memento.getInteger(SELECTED_PAGE);
+
+                if (value != -1) {
+                    selectedPageNum = value;
+                }
+            }
+
+            setActivePage(selectedPageNum);
         } catch (Exception e) {
             // this will open a "Could not open editor" page with exception details
             throw new RuntimeException(Messages.errorOpeningMedEditor, e);
@@ -591,12 +609,12 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
                                     });
                                 }
                             } else if (ResourceChangeUtilities.isContentChanged(delta)) {
+//                              // TODO implement refresh editor state here (fix: this code gets executed even when editor makes change)
                                 // file changed on file system by another editor
-                                if (!FormUtil.openQuestion(getShell(), Messages.medChangedOnFileSystemDialogTitle,
-                                                           Activator.getDefault().getImage(MED_EDITOR),
-                                                           NLS.bind(Messages.medChangedOnFileSystemDialogMsg, getFile().getName()))) {
-                                    // TODO implement refresh editor state here
-                                }
+//                                if (!FormUtil.openQuestion(getShell(), Messages.medChangedOnFileSystemDialogTitle,
+//                                                           Activator.getDefault().getImage(MED_EDITOR),
+//                                                           NLS.bind(Messages.medChangedOnFileSystemDialogMsg, getFile().getName()))) {
+//                                }
                             }
 
                             return false; // stop visiting
@@ -639,6 +657,27 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
             this.propertiesPage.setResourceReadOnly(this.readOnly);
             this.overviewPage.getManagedForm().refresh();
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.eclipse.ui.IPersistableEditor#restoreState(org.eclipse.ui.IMemento)
+     */
+    @Override
+    public void restoreState( IMemento memento ) {
+        this.memento = memento;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.eclipse.ui.IPersistable#saveState(org.eclipse.ui.IMemento)
+     */
+    @Override
+    public void saveState( IMemento memento ) {
+        int selectedPageNum = getActivePage();
+        memento.putInteger(SELECTED_PAGE, selectedPageNum);
     }
 
     /**
