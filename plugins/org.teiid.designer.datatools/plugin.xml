@@ -26,7 +26,7 @@
             propertiesPersistenceHook="org.teiid.designer.datatools.profiles.ldap.LDAPPersistanceHook"/>
       <connectionFactory
             class="org.teiid.designer.datatools.profiles.ldap.LDAPConnectionFactory"
-            id="java.sql.Connection"
+            id="LDAP"
             name="LDAP Connection"
             profile="org.teiid.designer.datatools.profiles.ldap.LDAPConnectionProfile"/>
    </extension>
