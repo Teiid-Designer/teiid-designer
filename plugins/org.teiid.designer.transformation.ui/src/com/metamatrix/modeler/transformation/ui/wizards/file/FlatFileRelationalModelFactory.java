@@ -48,6 +48,8 @@ public class FlatFileRelationalModelFactory implements UiConstants {
     public static final String INVOKE_HTTP = "invokeHttp"; //$NON-NLS-1$
     public static final String ALL_INVOKE_PROCEDURES = "allInvokeProcedures"; //$NON-NLS-1$
     
+    public static final int DEFAULT_STRING_LENGTH = 255;
+    
     private static boolean isTransactionable = ModelerCore.getPlugin() != null;
     
     public ModelResource createModel(IPath location, String modelName) throws ModelerCoreException {
@@ -165,6 +167,7 @@ public class FlatFileRelationalModelFactory implements UiConstants {
     	column_2.setName("filePath"); //$NON-NLS-1$
     	if( stringType != null) {
     		column_2.setType(stringType);
+    		column_2.setLength(DEFAULT_STRING_LENGTH);
     	}
     	addValue(result, column_2, result.getColumns());
     	
@@ -184,6 +187,7 @@ public class FlatFileRelationalModelFactory implements UiConstants {
     	param.setProcedure(proc);
     	if( stringType != null) {
     		param.setType(stringType);
+    		param.setLength(DEFAULT_STRING_LENGTH);
     	}
     	
     	ProcedureResult result = factory.createProcedureResult();
@@ -219,6 +223,7 @@ public class FlatFileRelationalModelFactory implements UiConstants {
     	param.setProcedure(proc);
     	if( stringType != null) {
     		param.setType(stringType);
+    		param.setLength(DEFAULT_STRING_LENGTH);
     	}
     	param = factory.createProcedureParameter();
     	param.setProcedure(proc);
@@ -257,6 +262,7 @@ public class FlatFileRelationalModelFactory implements UiConstants {
     	param.setNullable(NullableType.NULLABLE_LITERAL);
     	if( stringType != null) {
     		param.setType(stringType);
+    		param.setLength(DEFAULT_STRING_LENGTH);
     	}
     	
     	param = factory.createProcedureParameter();
@@ -273,6 +279,7 @@ public class FlatFileRelationalModelFactory implements UiConstants {
     	param.setNullable(NullableType.NULLABLE_LITERAL);
     	if( objectType != null) {
     		param.setType(stringType);
+    		param.setLength(DEFAULT_STRING_LENGTH);
     	}
     	
     	param = factory.createProcedureParameter();
@@ -291,6 +298,7 @@ public class FlatFileRelationalModelFactory implements UiConstants {
     	param.setNullable(NullableType.NULLABLE_LITERAL);
     	if( stringType != null) {
     		param.setType(stringType);
+    		param.setLength(DEFAULT_STRING_LENGTH);
     	}
     	
     	addValue(mr, proc, getModelResourceContents(mr));
@@ -316,6 +324,7 @@ public class FlatFileRelationalModelFactory implements UiConstants {
     	param.setNullable(NullableType.NULLABLE_LITERAL);
     	if( stringType != null) {
     		param.setType(stringType);
+    		param.setLength(DEFAULT_STRING_LENGTH);
     	}
     	
     	param = factory.createProcedureParameter();
@@ -332,6 +341,7 @@ public class FlatFileRelationalModelFactory implements UiConstants {
     	param.setNullable(NullableType.NULLABLE_LITERAL);
     	if( stringType != null) {
     		param.setType(stringType);
+    		param.setLength(DEFAULT_STRING_LENGTH);
     	}
     	
     	param = factory.createProcedureParameter();
