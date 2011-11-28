@@ -1106,7 +1106,7 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
     	
     	IPath modelPath = new Path(sourceModelFilePath.toOSString()).append(this.sourceModelFileText.getText());
 		if( !modelPath.toString().toUpperCase().endsWith(".XMI")) { //$NON-NLS-1$
-			modelPath = modelPath.addFileExtension(".xmi"); //$NON-NLS-1$
+			modelPath = modelPath.addFileExtension("xmi"); //$NON-NLS-1$
 		}
     	
     	IResource sourceModel = ResourcesPlugin.getWorkspace().getRoot().getFile(modelPath);
@@ -1135,7 +1135,7 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
     	
     	IPath modelPath = new Path(sourceModelFilePath.toOSString()).append(this.sourceModelFileText.getText());
 		if( !modelPath.toString().toUpperCase().endsWith(".XMI")) { //$NON-NLS-1$
-			modelPath = modelPath.addFileExtension(".xmi"); //$NON-NLS-1$
+			modelPath = modelPath.addFileExtension("xmi"); //$NON-NLS-1$
 		}
     	
     	IResource sourceModel = ResourcesPlugin.getWorkspace().getRoot().getFile(modelPath);
