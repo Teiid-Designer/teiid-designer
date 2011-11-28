@@ -315,8 +315,7 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 		dataFileFolderText.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
 		dataFileFolderText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
 		dataFileFolderText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		
-		
+		dataFileFolderText.setEditable(false);
 
 		createFileTableViewer(folderContentsGroup);
 		
@@ -327,6 +326,7 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
         selectedFileText.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
         selectedFileText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
 		selectedFileText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		selectedFileText.setEditable(false);
 
 	}
 
@@ -901,7 +901,7 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 		
 		IPath modelPath = new Path(sourceModelFilePath.toOSString()).append(this.sourceModelFileText.getText());
 		if( !modelPath.toString().toUpperCase().endsWith(".XMI")) { //$NON-NLS-1$
-			modelPath = modelPath.addFileExtension(".xmi"); //$NON-NLS-1$
+			modelPath = modelPath.addFileExtension("xmi"); //$NON-NLS-1$
 		}
 		
 		ModelWorkspaceItem item = ModelWorkspaceManager.getModelWorkspaceManager().findModelWorkspaceItem(modelPath, IResource.FILE);
@@ -1091,7 +1091,7 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 	    		this.sourceHelpText.setText(Util.getString(I18N_PREFIX + "existingSourceModelHasNoProcedure", info.getSourceModelName(), proceedureName)); //$NON-NLS-1$
 	    	}
         } else {
-        	if( info.getSourceModelName() == null ) {
+        	if( info.getSourceModelName() == null  || info.getSourceModelName().length() == 0) {
         		this.sourceHelpText.setText(Util.getString(I18N_PREFIX + "sourceModelUndefined")); //$NON-NLS-1$
         	} else {
         		this.sourceHelpText.setText(Util.getString(I18N_PREFIX + "sourceModelWillBeCreated", info.getSourceModelName(), proceedureName)); //$NON-NLS-1$

@@ -821,6 +821,7 @@ public class TeiidXmlImportXmlConfigurationPage extends AbstractWizardPage imple
 	        
 	        column = new TableViewerColumn(this.columnsViewer, SWT.LEFT);
 	        column.getColumn().setText(getString("path") + getSpaces(30)); //$NON-NLS-1$ 
+	        column.getColumn().setToolTipText(getString("pathTooltip")); //$NON-NLS-1$
 	        column.setLabelProvider(new ColumnDataLabelProvider(4));
 	        column.setEditingSupport(new ColumnInfoTextEditingSupport(this.columnsViewer, XML_PATH_PROP));
 	        column.getColumn().pack();

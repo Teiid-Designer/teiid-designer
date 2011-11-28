@@ -135,6 +135,7 @@ public class TeiidMetadataImportViewModelPage extends AbstractWizardPage
         selectedFileText.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
         selectedFileText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
 		selectedFileText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		selectedFileText.setEditable(false);
 		
 		new Label(mainPanel, SWT.NONE);
 		new Label(mainPanel, SWT.NONE);
@@ -318,11 +319,15 @@ public class TeiidMetadataImportViewModelPage extends AbstractWizardPage
 			return;
 
 		String newName = ""; //$NON-NLS-1$
-		if (this.viewModelFileText.getText() != null
-				&& this.viewModelFileText.getText().length() > 0) {
-			newName = this.viewModelFileText.getText();
-			this.info.setViewModelName(newName);
-			this.info.setViewModelExists(viewModelExists());
+		if (this.viewModelFileText.getText() != null) {
+			if( this.viewModelFileText.getText().length() == 0 ) {
+				this.info.setViewModelName(newName);
+				this.info.setViewModelExists(false);
+			} else {
+				newName = this.viewModelFileText.getText();
+				this.info.setViewModelName(newName);
+				this.info.setViewModelExists(viewModelExists());
+			}
 
 		}
 
@@ -419,7 +424,7 @@ public class TeiidMetadataImportViewModelPage extends AbstractWizardPage
 		if (info.viewModelExists()) {
 			this.viewHelpText.setText(Util.getString(I18N_PREFIX + "existingViewModelMessage", info.getViewModelName())); //$NON-NLS-1$
 		} else {
-			if (info.getViewModelName() == null) {
+			if (info.getViewModelName() == null || info.getViewModelName().length() == 0) {
 				this.viewHelpText.setText(Util.getString(I18N_PREFIX + "viewModelUndefined")); //$NON-NLS-1$
 			} else {
 				this.viewHelpText.setText(Util.getString(I18N_PREFIX + "newViewModelMessage", info.getViewModelName())); //$NON-NLS-1$
@@ -454,7 +459,7 @@ public class TeiidMetadataImportViewModelPage extends AbstractWizardPage
 
 		IPath modelPath = new Path(viewModelFilePath.toOSString()).append(this.viewModelFileText.getText());
 		if (!modelPath.toString().toUpperCase().endsWith(".XMI")) { //$NON-NLS-1$
-			modelPath = modelPath.addFileExtension(".xmi"); //$NON-NLS-1$
+			modelPath = modelPath.addFileExtension("xmi"); //$NON-NLS-1$
 		}
 
 		ModelWorkspaceItem item = ModelWorkspaceManager.getModelWorkspaceManager().findModelWorkspaceItem(modelPath, IResource.FILE);

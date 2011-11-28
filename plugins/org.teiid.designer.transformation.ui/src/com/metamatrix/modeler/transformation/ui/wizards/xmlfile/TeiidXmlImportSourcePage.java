@@ -114,7 +114,7 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 	private static final String EDIT_BUTTON = "Edit..."; //Util.getString("Widgets.editLabel"); //$NON-NLS-1$
 
 	private static final String INVALID_PAGE_MESSAGE = getString("invalidPageMessage"); //$NON-NLS-1$
-	private static final String HOME = "HOME"; //$NON-NLS-1$
+	//private static final String HOME = "HOME"; //$NON-NLS-1$
 	private static final String EMPTY_STRING = ""; //$NON-NLS-1$
 	private static final String DOT_XML = ".XML"; //$NON-NLS-1$
 	private static final String DOT_XML_LOWER = ".xml"; //$NON-NLS-1$
@@ -298,6 +298,7 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 		dataFileFolderText.setBackground(WidgetUtil.getReadOnlyBackgroundColor());
 		dataFileFolderText.setForeground(WidgetUtil.getDarkBlueColor());
 		dataFileFolderText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		dataFileFolderText.setEditable(false);
 
 		createFileTableViewer(folderContentsGroup);
 
@@ -308,6 +309,7 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 		selectedFileText.setBackground(WidgetUtil.getReadOnlyBackgroundColor());
 		selectedFileText.setForeground(WidgetUtil.getDarkBlueColor());
 		selectedFileText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		selectedFileText.setEditable(false);
 
 	}
 
@@ -819,7 +821,7 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 
 		IPath modelPath = new Path(sourceModelFilePath.toOSString()).append(this.sourceModelFileText.getText());
 		if (!modelPath.toString().toUpperCase().endsWith(".XMI")) { //$NON-NLS-1$
-			modelPath = modelPath.addFileExtension(".xmi"); //$NON-NLS-1$
+			modelPath = modelPath.addFileExtension("xmi"); //$NON-NLS-1$
 		}
 
 		ModelWorkspaceItem item = ModelWorkspaceManager.getModelWorkspaceManager().findModelWorkspaceItem(modelPath,IResource.FILE);
@@ -1015,7 +1017,7 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 				this.sourceHelpText.setText(Util.getString(I18N_PREFIX + "existingSourceModelHasNoProcedure", info.getSourceModelName(), procedureName)); //$NON-NLS-1$
 			}
 		} else {
-			if (info.getSourceModelName() == null) {
+			if (info.getSourceModelName() == null || info.getSourceModelName().length() == 0) {
 				this.sourceHelpText.setText(Util.getString(I18N_PREFIX + "sourceModelUndefined")); //$NON-NLS-1$
 			} else {
 				this.sourceHelpText.setText(Util.getString(I18N_PREFIX + "sourceModelWillBeCreated", info.getSourceModelName(), procedureName)); //$NON-NLS-1$
