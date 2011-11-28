@@ -30,6 +30,7 @@ import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.metamodels.core.Annotation;
 import com.metamatrix.modeler.core.ModelerCore;
+import com.metamatrix.modeler.core.util.ModelResourceContainerFactory;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 
@@ -393,6 +394,11 @@ public class EmfModelObjectExtensionAssistant extends ModelObjectExtensionAssist
         if (valueIsDefault) {
             if (annotation != null) {
                 annotation.getTags().removeKey(propId);
+
+                // delete the model object annotation if no more properties
+                if (annotation.getTags().isEmpty()) {
+                    ModelResourceContainerFactory.deleteAnnotation(annotation);
+                }
             }
         } else {
             // value is not equal to default so create annotation if necessary
