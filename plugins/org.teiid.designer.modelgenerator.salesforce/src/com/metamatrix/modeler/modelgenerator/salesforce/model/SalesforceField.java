@@ -53,7 +53,9 @@ public interface SalesforceField {
 
 	public static final String DATE_TYPE = "date"; //$NON-NLS-1$
 
-	public static final String DATETIME_TYPE = "datetime"; //$NON-NLS-1$
+    public static final String DATETIME_TYPE = "datetime"; //$NON-NLS-1$
+
+    public static final String TIME_TYPE = "time"; //$NON-NLS-1$
 
 	public static final String URL_TYPE = "url"; //$NON-NLS-1$
 
