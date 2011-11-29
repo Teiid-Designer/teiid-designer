@@ -8,12 +8,14 @@
 package com.metamatrix.modeler.core.metamodel;
 
 import java.util.Collection;
+
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.resource.Resource;
+
 import com.metamatrix.modeler.core.metamodel.aspect.MetamodelAspect;
 import com.metamatrix.modeler.internal.core.metamodel.MetamodelRootClass;
 
@@ -87,6 +89,12 @@ public interface MetamodelRegistry{
      * @return MetamodelDescriptor
      */
     MetamodelDescriptor getMetamodelDescriptor(URI nsUri);
+
+    /**
+     * @param nsUri the namespace URI string for the metamodel in the registry (cannot be <code>null</code> or empty)
+     * @return the localized metamodel name or <code>null</code>
+     */
+    String getMetamodelName(String nsUriString);
     
     /**
      * Convenience method to return the {@link EPackage} for the specified namespace 

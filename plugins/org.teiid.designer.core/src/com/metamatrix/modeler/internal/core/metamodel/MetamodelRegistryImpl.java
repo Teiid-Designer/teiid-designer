@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.Set;
+
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
@@ -30,6 +31,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.ItemProviderAdapter;
+
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.core.extension.XClass;
@@ -67,6 +69,7 @@ public class MetamodelRegistryImpl implements MetamodelRegistry {
      * @see com.metamatrix.modeler.core.metamodel.MetamodelRegistry#containsURI(java.lang.String)
      * @since 5.0
      */
+    @Override
     public boolean containsURI( final String nsUriString ) {
         if (CoreStringUtil.isEmpty(nsUriString)) {
             return false;
@@ -82,6 +85,7 @@ public class MetamodelRegistryImpl implements MetamodelRegistry {
      * @see com.metamatrix.modeler.core.metamodel.ProtoMetamodelRegistry#containsURI(org.eclipse.emf.common.util.URI)
      * @since 5.0
      */
+    @Override
     public boolean containsURI( final URI nsUri ) {
         if (nsUri == null) {
             return false;
@@ -104,6 +108,7 @@ public class MetamodelRegistryImpl implements MetamodelRegistry {
      * @see com.metamatrix.modeler.core.metamodel.MetamodelRegistry#getMetamodelDescriptor(java.lang.String)
      * @since 5.0
      */
+    @Override
     public MetamodelDescriptor getMetamodelDescriptor( final String nsUriString ) {
         CoreArgCheck.isNotNull(nsUriString);
         CoreArgCheck.isNotZeroLength(nsUriString);
@@ -119,6 +124,7 @@ public class MetamodelRegistryImpl implements MetamodelRegistry {
      * @see com.metamatrix.modeler.core.metamodel.ProtoMetamodelRegistry#getMetamodelDescriptor(org.eclipse.emf.common.util.URI)
      * @since 5.0
      */
+    @Override
     public MetamodelDescriptor getMetamodelDescriptor( final URI nsUri ) {
         CoreArgCheck.isNotNull(nsUri);
         return (MetamodelDescriptor)this.descriptorByUriMap.get(nsUri);
@@ -128,15 +134,40 @@ public class MetamodelRegistryImpl implements MetamodelRegistry {
      * @see com.metamatrix.modeler.core.metamodel.ProtoMetamodelRegistry#getMetamodelDescriptors()
      * @since 5.0
      */
+    @Override
     public MetamodelDescriptor[] getMetamodelDescriptors() {
         Collection values = new HashSet(this.descriptorByUriMap.values());
         return (MetamodelDescriptor[])values.toArray(new MetamodelDescriptor[values.size()]);
     }
 
     /**
+     * {@inheritDoc}
+     *
+     * @see com.metamatrix.modeler.core.metamodel.MetamodelRegistry#getMetamodelDisplayName(java.lang.String)
+     */
+    @Override
+    public String getMetamodelName( String nsUriString ) {
+        MetamodelDescriptor descriptor = getMetamodelDescriptor(nsUriString);
+
+        // no descriptor found
+        if (descriptor == null) {
+            return null;
+        }
+
+        String name = descriptor.getDisplayName();
+
+        if (CoreStringUtil.isEmpty(name)) {
+            return descriptor.getName();
+        }
+
+        return name;
+    }
+
+    /**
      * @see com.metamatrix.modeler.core.metamodel.ProtoMetamodelRegistry#getEPackage(org.eclipse.emf.common.util.URI)
      * @since 5.0
      */
+    @Override
     public EPackage getEPackage( final URI nsUri ) {
         CoreArgCheck.isNotNull(nsUri);
         MetamodelDescriptor descriptor = (MetamodelDescriptor)this.descriptorByUriMap.get(nsUri);
@@ -150,6 +181,7 @@ public class MetamodelRegistryImpl implements MetamodelRegistry {
      * @see com.metamatrix.modeler.core.metamodel.ProtoMetamodelRegistry#getResource(org.eclipse.emf.common.util.URI)
      * @since 5.0
      */
+    @Override
     public Resource getResource( final URI nsUri ) {
         CoreArgCheck.isNotNull(nsUri);
         MetamodelDescriptor descriptor = (MetamodelDescriptor)this.descriptorByUriMap.get(nsUri);
@@ -166,6 +198,7 @@ public class MetamodelRegistryImpl implements MetamodelRegistry {
      * @see com.metamatrix.modeler.core.metamodel.ProtoMetamodelRegistry#getURI(java.lang.String)
      * @since 5.0
      */
+    @Override
     public URI getURI( final String nsUriString ) {
         CoreArgCheck.isNotNull(nsUriString);
         CoreArgCheck.isNotZeroLength(nsUriString);
@@ -176,6 +209,7 @@ public class MetamodelRegistryImpl implements MetamodelRegistry {
      * @see com.metamatrix.modeler.core.metamodel.ProtoMetamodelRegistry#getURIs()
      * @since 5.0
      */
+    @Override
     public Collection getURIs() {
         return this.uris;
     }
@@ -184,6 +218,7 @@ public class MetamodelRegistryImpl implements MetamodelRegistry {
      * @see com.metamatrix.modeler.core.metamodel.ProtoMetamodelRegistry#register(com.metamatrix.modeler.core.MetamodelDescriptor)
      * @since 5.0
      */
+    @Override
     public URI register( final MetamodelDescriptor descriptor ) {
         CoreArgCheck.isNotNull(descriptor);
         addDescriptorMappings(descriptor);
@@ -194,6 +229,7 @@ public class MetamodelRegistryImpl implements MetamodelRegistry {
      * @see com.metamatrix.modeler.core.metamodel.ProtoMetamodelRegistry#unregister(org.eclipse.emf.common.util.URI)
      * @since 5.0
      */
+    @Override
     public void unregister( final URI nsUri ) {
         CoreArgCheck.isNotNull(nsUri);
         MetamodelDescriptor descriptor = getMetamodelDescriptor(nsUri);
@@ -206,6 +242,7 @@ public class MetamodelRegistryImpl implements MetamodelRegistry {
      * @see com.metamatrix.modeler.core.metamodel.ProtoMetamodelRegistry#dispose()
      * @since 5.0
      */
+    @Override
     public void dispose() {
         MetamodelDescriptor[] descriptors = getMetamodelDescriptors();
         for (int i = 0; i != descriptors.length; ++i) {
@@ -223,6 +260,7 @@ public class MetamodelRegistryImpl implements MetamodelRegistry {
      * @see com.metamatrix.modeler.core.metamodel.ProtoMetamodelRegistry#getAdapterFactory()
      * @since 5.0
      */
+    @Override
     public AdapterFactory getAdapterFactory() {
         if (this.aspectMgr == null) {
             this.aspectMgr = new MetamodelAspectManager(this);
@@ -235,6 +273,7 @@ public class MetamodelRegistryImpl implements MetamodelRegistry {
      *      java.lang.Class)
      * @since 5.0
      */
+    @Override
     public MetamodelAspect getMetamodelAspect( final EObject eObject,
                                                final Class type ) {
         CoreArgCheck.isNotNull(eObject);
@@ -247,6 +286,7 @@ public class MetamodelRegistryImpl implements MetamodelRegistry {
      *      java.lang.Class)
      * @since 5.0
      */
+    @Override
     public MetamodelAspect getMetamodelAspect( final EClass eClass,
                                                final Class type ) {
         CoreArgCheck.isNotNull(eClass);
@@ -261,6 +301,7 @@ public class MetamodelRegistryImpl implements MetamodelRegistry {
      * @see com.metamatrix.modeler.core.metamodel.MetamodelRegistry#getMetaClassLabel(org.eclipse.emf.ecore.EClass)
      * @since 5.0
      */
+    @Override
     public String getMetaClassLabel( final EClass eClass ) {
         CoreArgCheck.isNotNull(eClass);
 
@@ -285,6 +326,7 @@ public class MetamodelRegistryImpl implements MetamodelRegistry {
      * @see com.metamatrix.modeler.core.metamodel.MetamodelRegistry#getMetaClassURI(org.eclipse.emf.ecore.EClass)
      * @since 5.0
      */
+    @Override
     public String getMetaClassURI( final EClass eClass ) {
         CoreArgCheck.isNotNull(eClass);
         return EcoreUtil.getURI(eClass).toString();
@@ -294,6 +336,7 @@ public class MetamodelRegistryImpl implements MetamodelRegistry {
      * @see com.metamatrix.modeler.core.metamodel.MetamodelRegistry#getMetaClass(java.lang.String)
      * @since 5.0
      */
+    @Override
     public EClass getMetaClass( final String metaClassUriString ) {
         CoreArgCheck.isNotNull(metaClassUriString);
         CoreArgCheck.isNotZeroLength(metaClassUriString);
@@ -312,6 +355,7 @@ public class MetamodelRegistryImpl implements MetamodelRegistry {
      * @see com.metamatrix.modeler.core.metamodel.MetamodelRegistry#getRootMetaClasses(org.eclipse.emf.common.util.URI)
      * @since 5.0
      */
+    @Override
     public EClass[] getRootMetaClasses( final URI nsUri ) {
         CoreArgCheck.isNotNull(nsUri);
         MetamodelDescriptor d = getMetamodelDescriptor(nsUri);
@@ -331,6 +375,7 @@ public class MetamodelRegistryImpl implements MetamodelRegistry {
      * @see com.metamatrix.modeler.core.metamodel.MetamodelRegistry#getMetamodelRootClasses(org.eclipse.emf.common.util.URI)
      * @since 5.0
      */
+    @Override
     public MetamodelRootClass[] getMetamodelRootClasses( URI nsUri ) {
         CoreArgCheck.isNotNull(nsUri);
         MetamodelDescriptor d = getMetamodelDescriptor(nsUri);
@@ -478,6 +523,7 @@ public class MetamodelRegistryImpl implements MetamodelRegistry {
 
     static class MetamodelRootClassNameComparator implements Comparator {
 
+        @Override
         public int compare( Object obj1,
                             Object obj2 ) {
             if (obj1 == null && obj2 == null) {

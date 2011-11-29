@@ -14,6 +14,10 @@ import static org.teiid.designer.extension.ui.UiConstants.Form.TEXT_STYLE;
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.MED_EDITOR;
 
 import java.beans.PropertyChangeEvent;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.eclipse.osgi.util.NLS;
@@ -37,6 +41,7 @@ import org.teiid.designer.extension.ui.Activator;
 import org.teiid.designer.extension.ui.Messages;
 
 import com.metamatrix.core.util.CoreStringUtil;
+import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.internal.ui.forms.FormUtil;
 
 public final class OverviewEditorPage extends MedEditorPage {
@@ -50,6 +55,8 @@ public final class OverviewEditorPage extends MedEditorPage {
     private final ErrorMessage metamodelUriError;
     private final ErrorMessage namespacePrefixError;
     private final ErrorMessage namespaceUriError;
+
+    private Map<String, String> metamodels = new HashMap<String, String>();
 
     public OverviewEditorPage( ModelExtensionDefinitionEditor medEditor ) {
         super(medEditor, MED_OVERVIEW_PAGE, Messages.medEditorOverviewPageTitle);
@@ -162,14 +169,22 @@ public final class OverviewEditorPage extends MedEditorPage {
             ((GridData)this.cbxMetamodelUris.getLayoutData()).heightHint = this.cbxMetamodelUris.getItemHeight() + 4;
 
             // populate URIs
-            Set<String> items = ExtensionPlugin.getInstance().getRegistry().getExtendableMetamodelUris();
+            Set<String> metamodelUris = ExtensionPlugin.getInstance().getRegistry().getExtendableMetamodelUris();
+            Set<String> items = new HashSet<String>(metamodelUris.size());
+            
+            for (String metamodelUri : metamodelUris) {
+                String name = ModelerCore.getMetamodelRegistry().getMetamodelName(metamodelUri);
+                this.metamodels.put(metamodelUri, name);
+                items.add(name);
+            }
             this.cbxMetamodelUris.setItems(items.toArray(new String[items.size()]));
 
             // set value based on MED
             String metamodelUri = getMed().getMetamodelUri();
 
             if (!CoreStringUtil.isEmpty(metamodelUri)) {
-                int index = this.cbxMetamodelUris.indexOf(metamodelUri);
+                String name = getMetamodelName(metamodelUri);
+                int index = this.cbxMetamodelUris.indexOf(name);
 
                 if (index == -1) {
                     UTIL.log(NLS.bind(Messages.overviewPageInvalidMetamodelUriMsg, metamodelUri));
@@ -241,6 +256,28 @@ public final class OverviewEditorPage extends MedEditorPage {
         msgMgr.removeMessage(this.namespaceUriError.getKey());
     }
 
+    private String getMetamodelName(String metamodelUri) {
+        for (String uri : this.metamodels.keySet()) {
+            if (uri.equals(metamodelUri)) {
+                return this.metamodels.get(uri);
+            }
+        }
+
+        assert false : "Unknown metamodel URI: " + metamodelUri; //$NON-NLS-1$
+        return null;
+    }
+
+    private String getMetamodelUri(String metamodelName) {
+        for (Entry<String, String> entry : this.metamodels.entrySet()) {
+            if (entry.getValue().equals(metamodelName)) {
+                return entry.getKey();
+            }
+        }
+
+        assert false : "Unknown metamodel name: " + metamodelName; //$NON-NLS-1$
+        return null;
+    }
+
     /**
      * {@inheritDoc}
      * 
@@ -255,8 +292,9 @@ public final class OverviewEditorPage extends MedEditorPage {
         getMed().setDescription(newDescription);
     }
 
-    void handleMetamodelUriChanged( String newMetamodelUri ) {
+    void handleMetamodelUriChanged( String newMetamodelName ) {
         String oldUri = getMed().getMetamodelUri();
+        String newMetamodelUri = getMetamodelUri(newMetamodelName);
 
         if (CoreStringUtil.valuesAreEqual(newMetamodelUri, oldUri)) {
             return;
