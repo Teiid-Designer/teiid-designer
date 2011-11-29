@@ -955,6 +955,8 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 
 	private boolean validatePage() {
 		
+		setSourceHelpMessage();
+		
 		// Check for model file selected
 		boolean fileSelected = false;
 		for( TableItem item : this.fileViewer.getTable().getItems()) {
@@ -972,9 +974,6 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 			setThisPageComplete(fileParsingStatus.getMessage(), ERROR);
 			return false;
 		}
-		
-		setSourceHelpMessage();
-		
 		
 		// Check for at least ONE open non-hidden Model Project
 		boolean validProj = false;

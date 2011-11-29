@@ -529,6 +529,9 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 							getString("parsingErrorTitle"), //$NON-NLS-1$
 							fileParsingStatus.getMessage());
 				}
+				fileViewer.getTable().select(0);
+				fileViewer.getTable().getItem(0).setChecked(true);
+				info.setDoProcessXml(fileInfo.getDataFile(), true);
 			} else if (urlString != null && urlString.trim().length() > 0) {
 				File xmlFile = null;
 				// Clears the viewer
@@ -577,6 +580,9 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 						fileInfo.setXmlFileUrl(urlString);
 						this.info.addXmlFileInfo(fileInfo);
 					}
+					fileViewer.getTable().select(0);
+					fileViewer.getTable().getItem(0).setChecked(true);
+					info.setDoProcessXml(fileInfo.getDataFile(), true);
 					fileParsingStatus = fileInfo.getParsingStatus();
 					if (fileParsingStatus.getSeverity() == IStatus.ERROR) {
 						MessageDialog.openError(this.getShell(),
@@ -878,7 +884,8 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 	}
 
 	private boolean validatePage() {
-
+		setSourceHelpMessage();
+		
 		// Check for model file selected
 		boolean fileSelected = false;
 		for (TableItem item : this.fileViewer.getTable().getItems()) {
@@ -896,8 +903,6 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 			setThisPageComplete(fileParsingStatus.getMessage(), ERROR);
 			return false;
 		}
-
-		setSourceHelpMessage();
 
 		// Check for at least ONE open non-hidden Model Project
 		boolean validProj = false;

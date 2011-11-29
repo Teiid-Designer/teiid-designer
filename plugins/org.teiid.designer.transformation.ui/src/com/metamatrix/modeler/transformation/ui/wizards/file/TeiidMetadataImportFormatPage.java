@@ -117,6 +117,7 @@ public class TeiidMetadataImportFormatPage extends AbstractWizardPage implements
         selectedFileText.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
         selectedFileText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
 		selectedFileText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		selectedFileText.setEditable(false);
 		
 		createFilePreviewOptionsGroup(mainPanel);
 		

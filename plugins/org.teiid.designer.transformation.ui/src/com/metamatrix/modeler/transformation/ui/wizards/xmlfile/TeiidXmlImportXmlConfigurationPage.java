@@ -24,12 +24,15 @@ import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.ITreeViewerListener;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.TextCellEditor;
+import org.eclipse.jface.viewers.TreeExpansionEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -94,7 +97,7 @@ public class TeiidXmlImportXmlConfigurationPage extends AbstractWizardPage imple
 	Text rootPathText, selectedFileText;
 	Button parseRowButton;
 	Action createColumnAction, setRootPathAction;
-	Button deleteButton, upButton, downButton;
+	Button addColumnButton, deleteButton, upButton, downButton;
 	
 	EditColumnsPanel columnsPanel;	
 	
@@ -184,7 +187,7 @@ public class TeiidXmlImportXmlConfigurationPage extends AbstractWizardPage imple
     	Group xmlTableOptionsGroup = WidgetFactory.createGroup(parent, getString("teiidXMLTableGroup"), SWT.NONE, 1); //$NON-NLS-1$
     	xmlTableOptionsGroup.setLayout(new GridLayout(1, false));
     	GridData gd = new GridData(GridData.FILL_BOTH);
-    	gd.heightHint = 120;
+    	gd.heightHint = 100;
     	xmlTableOptionsGroup.setLayoutData(gd);
     	
     	ColorManager colorManager = new ColorManager();
@@ -209,7 +212,7 @@ public class TeiidXmlImportXmlConfigurationPage extends AbstractWizardPage imple
     	Group fileContentsGroup = WidgetFactory.createGroup(parent, getString("fileContentsGroup"), SWT.NONE, 1, 4); //$NON-NLS-1$
     	fileContentsGroup.setLayout(new GridLayout(4, false));
     	GridData gd = new GridData(GridData.FILL_BOTH);
-    	gd.heightHint = 280;
+    	gd.heightHint = 160;
     	fileContentsGroup.setLayoutData(gd);
     	
 		Label selectedFileLabel = new Label(fileContentsGroup, SWT.NONE);
@@ -219,6 +222,7 @@ public class TeiidXmlImportXmlConfigurationPage extends AbstractWizardPage imple
         selectedFileText.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
         selectedFileText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
 		selectedFileText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		selectedFileText.setEditable(false);
     	
     	this.xmlTreeViewer = new TreeViewer(fileContentsGroup, SWT.BORDER | SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL);
         GridData data = new GridData(GridData.FILL_BOTH);
@@ -262,19 +266,37 @@ public class TeiidXmlImportXmlConfigurationPage extends AbstractWizardPage imple
             /**
              * {@inheritDoc}
              * 
-             * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
+             * @see oblafond@redhat.comrg.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
              */
             @Override
             public void selectionChanged( final SelectionChangedEvent event ) {
             	columnMenuManager.removeAll();
                 IStructuredSelection sel = (IStructuredSelection)xmlTreeViewer.getSelection();
                 if (sel.size() == 1) {
+                	addColumnButton.setEnabled(true);
 					columnMenuManager.add(createColumnAction);
 					columnMenuManager.add(setRootPathAction);
+                } else {
+                	addColumnButton.setEnabled(false);
                 }
 
             }
         });
+        
+        this.xmlTreeViewer.addTreeListener(new ITreeViewerListener() {
+			
+			@Override
+			public void treeExpanded(TreeExpansionEvent e) {
+                IStructuredSelection sel = (IStructuredSelection)xmlTreeViewer.getSelection();
+                addColumnButton.setEnabled(sel.size() == 1);
+			}
+			
+			@Override
+			public void treeCollapsed(TreeExpansionEvent e) {
+                IStructuredSelection sel = (IStructuredSelection)xmlTreeViewer.getSelection();
+                addColumnButton.setEnabled(sel.size() == 1);
+			}
+		} );
         
         this.createColumnAction = new Action(getString("createColumnActionLabel")) { //$NON-NLS-1$
             @Override
@@ -289,6 +311,29 @@ public class TeiidXmlImportXmlConfigurationPage extends AbstractWizardPage imple
             	setRootPath();
             }
 		};
+		
+    	addColumnButton = new Button(fileContentsGroup, SWT.PUSH);
+    	addColumnButton.setText(getString("addColumnButtonLabel")); //$NON-NLS-1$
+    	gd = new GridData();
+    	gd.horizontalSpan = 1;
+    	addColumnButton.setLayoutData(gd);
+    	addColumnButton.addSelectionListener(new SelectionAdapter() {
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				IStructuredSelection sel = (IStructuredSelection)xmlTreeViewer.getSelection();
+		    	Object obj = sel.getFirstElement();
+		    	if( obj instanceof XmlElement ) {
+		    		createColumn();
+		    	} else {
+					String newName = "column_" + (fileInfo.getColumnInfoList().length + 1); //$NON-NLS-1$
+					fileInfo.addColumn(newName, false, TeiidColumnInfo.DEFAULT_DATATYPE, null, null);
+		    	}
+				handleInfoChanged(false);
+			}
+    		
+		});
+    	addColumnButton.setEnabled(false);
 
 
     	//LayoutDebugger.debugLayout(fileContentsGroup);
@@ -301,7 +346,7 @@ public class TeiidXmlImportXmlConfigurationPage extends AbstractWizardPage imple
     	Group columnInfoGroup = WidgetFactory.createGroup(parent, getString("columnInfoGroup"), SWT.NONE, 1); //$NON-NLS-1$
     	columnInfoGroup.setLayout(new GridLayout(2, false));
     	GridData gd = new GridData(GridData.FILL_BOTH);
-    	gd.heightHint = 190;
+    	gd.heightHint = 150;
     	columnInfoGroup.setLayoutData(gd);
 
     	Label prefixLabel = new Label(columnInfoGroup, SWT.NONE);
@@ -327,24 +372,25 @@ public class TeiidXmlImportXmlConfigurationPage extends AbstractWizardPage imple
     	Composite leftToolbarPanel = new Composite(columnInfoGroup, SWT.NONE);
     	leftToolbarPanel.setLayout(new GridLayout());
 	  	GridData ltpGD = new GridData(GridData.VERTICAL_ALIGN_BEGINNING);
-	  	ltpGD.heightHint=150;
+	  	ltpGD.heightHint=120;
 	  	leftToolbarPanel.setLayoutData(ltpGD);
     	
     	Button addButton = new Button(leftToolbarPanel, SWT.PUSH);
     	addButton.setText(getString("addLabel")); //$NON-NLS-1$
+    	addButton.setToolTipText(getString("addButtonTooltip")); //$NON-NLS-1$
     	addButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
     	addButton.addSelectionListener(new SelectionAdapter() {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				IStructuredSelection sel = (IStructuredSelection)xmlTreeViewer.getSelection();
-		    	Object obj = sel.getFirstElement();
-		    	if( obj instanceof XmlElement ) {
-		    		createColumn();
-		    	} else {
+//				IStructuredSelection sel = (IStructuredSelection)xmlTreeViewer.getSelection();
+//		    	Object obj = sel.getFirstElement();
+//		    	if( obj instanceof XmlElement ) {
+//		    		createColumn();
+//		    	} else {
 					String newName = "column_" + (fileInfo.getColumnInfoList().length + 1); //$NON-NLS-1$
 					fileInfo.addColumn(newName, false, TeiidColumnInfo.DEFAULT_DATATYPE, null, null);
-		    	}
+//		    	}
 				handleInfoChanged(false);
 			}
     		
@@ -363,6 +409,7 @@ public class TeiidXmlImportXmlConfigurationPage extends AbstractWizardPage imple
 					fileInfo.removeColumn(info);
 					handleInfoChanged(false);
 					deleteButton.setEnabled(false);
+					columnsPanel.selectRow(-1);
 				}
 			}
     		
@@ -786,13 +833,11 @@ public class TeiidXmlImportXmlConfigurationPage extends AbstractWizardPage imple
 	        table.setLinesVisible(true);
 	        table.setLayout(new TableLayout());
 	    	GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
-	    	gd.heightHint = 165;
+	    	gd.heightHint = 80;
 	    	table.setLayoutData(gd);
 
 	        this.columnsViewer = new TableViewer(table);
-	        
-	        GridData data = new GridData(GridData.FILL_BOTH);
-	        this.columnsViewer.getControl().setLayoutData(data);
+	        this.columnsViewer.getControl().setLayoutData(gd);
 	        
 	        // create columns
 	        TableViewerColumn column = new TableViewerColumn(this.columnsViewer, SWT.LEFT);
@@ -820,7 +865,7 @@ public class TeiidXmlImportXmlConfigurationPage extends AbstractWizardPage imple
 	        column.getColumn().pack();
 	        
 	        column = new TableViewerColumn(this.columnsViewer, SWT.LEFT);
-	        column.getColumn().setText(getString("path") + getSpaces(30)); //$NON-NLS-1$ 
+	        column.getColumn().setText(getString("path")); //$NON-NLS-1$ 
 	        column.getColumn().setToolTipText(getString("pathTooltip")); //$NON-NLS-1$
 	        column.setLabelProvider(new ColumnDataLabelProvider(4));
 	        column.setEditingSupport(new ColumnInfoTextEditingSupport(this.columnsViewer, XML_PATH_PROP));
@@ -865,7 +910,11 @@ public class TeiidXmlImportXmlConfigurationPage extends AbstractWizardPage imple
 		}
 		
 		public void selectRow(int index) {
-			columnsViewer.getTable().select(index);
+			if( index > -1 ) {
+				columnsViewer.getTable().select(index);
+			} else {
+				columnsViewer.setSelection(new StructuredSelection());
+			}
 		}
     	
     }
