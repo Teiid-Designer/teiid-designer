@@ -240,6 +240,24 @@ public class RegistryDeploymentValidator {
                                       Messages.registerMedActionNamespaceUriRegisteredMsg);
     }
 
+    /**
+     * Show the 'MED NSUri conflicts with Built-In' info dialog
+     */
+    public static void showMedNSUriConflictsWBuiltInDialog() {
+        MessageDialog.openInformation(getShell(),
+                                      Messages.registerMedActionNamespaceUriConflictsWBuiltInTitle,
+                                      Messages.registerMedActionNamespaceUriConflictsWBuiltInMsg);
+    }
+
+    /**
+     * Show the 'MED NSPrefix conflicts with Built-In' info dialog
+     */
+    public static void showMedNSPrefixConflictsWBuiltInDialog() {
+        MessageDialog.openInformation(getShell(),
+                                      Messages.registerMedActionNamespacePrefixConflictsWBuiltInTitle,
+                                      Messages.registerMedActionNamespacePrefixConflictsWBuiltInMsg);
+    }
+
     public static boolean doDeployment( ModelExtensionRegistry registry,
                                         IFile mxdFile ) {
         boolean wasAdded = false;
@@ -264,9 +282,18 @@ public class RegistryDeploymentValidator {
             boolean nsPrefixConflict = false;
             boolean nsUriConflict = false;
             boolean nsPrefixAndUriConflictSameMed = false;
+            boolean nsPrefixConflictMedBuiltIn = false;
+            boolean nsUriConflictMedBuiltIn = false;
 
-            if (medNSPrefixMatch != null) nsPrefixConflict = true;
-            if (medNSUriMatch != null) nsUriConflict = true;
+            if (medNSPrefixMatch != null) {
+                nsPrefixConflict = true;
+                nsPrefixConflictMedBuiltIn = medNSPrefixMatch.isBuiltIn();
+            }
+            if (medNSUriMatch != null) {
+                nsUriConflict = true;
+                nsUriConflictMedBuiltIn = medNSUriMatch.isBuiltIn();
+            }
+
             if (nsPrefixConflict && nsUriConflict && medNSPrefixMatch.equals(medNSUriMatch)) nsPrefixAndUriConflictSameMed = true;
 
             // No conflicts - add it to the registry
@@ -281,6 +308,12 @@ public class RegistryDeploymentValidator {
                                                   Messages.registerMedActionFailedTitle,
                                                   Messages.registerMedActionFailedMsg);
                 }
+                // If the NS Prefix conflicts with a Built-in, prompt user to fix
+            } else if (nsPrefixConflictMedBuiltIn) {
+                RegistryDeploymentValidator.showMedNSPrefixConflictsWBuiltInDialog();
+                // If the NS URI conflicts with a Built-in, prompt user to fix
+            } else if (nsUriConflictMedBuiltIn) {
+                RegistryDeploymentValidator.showMedNSUriConflictsWBuiltInDialog();
                 // If there is (1) just a NS Prefix Conflict or (2) NS Prefix AND URI, but they are same MED, prompt user
                 // whether to update
             } else if (nsPrefixConflict && (!nsUriConflict || (nsUriConflict && nsPrefixAndUriConflictSameMed))) {

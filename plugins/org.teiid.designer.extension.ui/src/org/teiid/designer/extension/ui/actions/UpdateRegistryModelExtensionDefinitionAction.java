@@ -122,9 +122,17 @@ public final class UpdateRegistryModelExtensionDefinitionAction extends Sortable
                 boolean nsPrefixConflict = false;
                 boolean nsUriConflict = false;
                 boolean nsPrefixAndUriConflictSameMed = false;
+                boolean nsPrefixConflictMedBuiltIn = false;
+                boolean nsUriConflictMedBuiltIn = false;
 
-                if (medNSPrefixMatch != null) nsPrefixConflict = true;
-                if (medNSUriMatch != null) nsUriConflict = true;
+                if (medNSPrefixMatch != null) {
+                    nsPrefixConflict = true;
+                    nsPrefixConflictMedBuiltIn = medNSPrefixMatch.isBuiltIn();
+                }
+                if (medNSUriMatch != null) {
+                    nsUriConflict = true;
+                    nsUriConflictMedBuiltIn = medNSUriMatch.isBuiltIn();
+                }
                 if (nsPrefixConflict && nsUriConflict && medNSPrefixMatch.equals(medNSUriMatch)) nsPrefixAndUriConflictSameMed = true;
 
                 // No conflicts - add it to the registry
@@ -136,6 +144,12 @@ public final class UpdateRegistryModelExtensionDefinitionAction extends Sortable
                             internalRun(false);
                         }
                     });
+                    // If the NS Prefix conflicts with a Built-in, prompt user to fix
+                } else if (nsPrefixConflictMedBuiltIn) {
+                    RegistryDeploymentValidator.showMedNSPrefixConflictsWBuiltInDialog();
+                    // If the NS URI conflicts with a Built-in, prompt user to fix
+                } else if (nsUriConflictMedBuiltIn) {
+                    RegistryDeploymentValidator.showMedNSUriConflictsWBuiltInDialog();
                     // If there is (1) just a NS Prefix Conflict or (2) NS Prefix AND URI, but they are same MED, prompt user
                     // whether to update
                 } else if (nsPrefixConflict && (!nsUriConflict || (nsUriConflict && nsPrefixAndUriConflictSameMed))) {

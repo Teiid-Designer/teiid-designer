@@ -93,6 +93,11 @@ public class Messages extends NLS {
     public static String registerMedActionNamespacePrefixRegisteredDoUpdateMsg;
     public static String registerMedActionNamespaceUriRegisteredTitle;
     public static String registerMedActionNamespaceUriRegisteredMsg;
+    public static String registerMedActionNamespaceUriConflictsWBuiltInTitle;
+    public static String registerMedActionNamespaceUriConflictsWBuiltInMsg;
+    public static String registerMedActionNamespacePrefixConflictsWBuiltInTitle;
+    public static String registerMedActionNamespacePrefixConflictsWBuiltInMsg;
+
     public static String registerMedActionFailedTitle;
     public static String registerMedActionFailedMsg;
     public static String registerMedActionSuccessTitle;
