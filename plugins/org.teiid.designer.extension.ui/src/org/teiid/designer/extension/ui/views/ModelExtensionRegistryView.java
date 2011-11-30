@@ -12,10 +12,12 @@ import static org.teiid.designer.extension.ui.UiConstants.UTIL;
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.CHECK_MARK;
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.REGISTERY_MED_UPDATE_ACTION;
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.UNREGISTER_MED;
+
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -75,6 +77,7 @@ import org.teiid.designer.extension.ui.Messages;
 import org.teiid.designer.extension.ui.actions.RegistryDeploymentValidator;
 import org.teiid.designer.extension.ui.editors.ModelExtensionDefinitionEditor;
 import org.teiid.designer.extension.ui.wizards.NewMedWizard;
+
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.internal.ui.explorer.ModelExplorerLabelProvider;
 import com.metamatrix.modeler.ui.UiPlugin;
@@ -699,7 +702,8 @@ public final class ModelExtensionRegistryView extends ViewPart {
             }
 
             if (this.columnIndex == ColumnIndexes.METAMODEL_URI) {
-                return med.getMetamodelUri();
+                String metamodelUri = med.getMetamodelUri();
+                return Activator.getDefault().getMetamodelName(metamodelUri);
             }
 
             if (this.columnIndex == ColumnIndexes.VERSION) {
