@@ -241,14 +241,14 @@ public class ModelRowElement {
                     }
                 }
                     
-                Object currentValue = propertySource.getPropertyValue(tableModel.getPropertyId(propertyID));
+                Object currentValue = propertySource.getPropertyValue(propertyID);
                 if ( currentValue == null ) {
                     if ( value != null ) {
-                        propertySource.setPropertyValue(tableModel.getPropertyId(propertyID), value);
+                        propertySource.setPropertyValue(propertyID, value);
                     }
                 } else {
                     if ( ! currentValue.equals(value) ) {
-                        propertySource.setPropertyValue(tableModel.getPropertyId(propertyID), value);
+                        propertySource.setPropertyValue(propertyID, value);
                     }
                 }                        
 

@@ -82,11 +82,6 @@ public class ModelObjectTableModel implements UiConstants, EObjectPropertiesOrde
         return properties.length > 0;
     }
 
-    public Object getPropertyId(String property) {
-        // DON'T call buildColumns();
-        return propertyIdMap.get(property);
-    }
-
     public Object getPropertyIdAtIndex(int index) {
         // DON'T call buildColumns();
         return propertyIdMap.get(propertyList.get(index));
@@ -242,7 +237,7 @@ public class ModelObjectTableModel implements UiConstants, EObjectPropertiesOrde
                     TableColumn column = new TableColumn(table, SWT.NONE);
                     this.tableColumns.add(column);
                     String columnHeader = (String)propertyList.get(i);
-                    columnProperties[i] = columnHeader;
+                    columnProperties[i] = (String)getPropertyIdAtIndex(i);
                     column.setText(columnHeader); 
                     //swjTODO: set column data on this instead of hardcoding 80 pixels
                     column.setWidth(80);
