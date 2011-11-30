@@ -8,7 +8,6 @@
 package com.metamatrix.metamodels.relational.extension;
 
 import org.teiid.designer.core.extension.EmfModelObjectExtensionAssistant;
-
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.metamodels.relational.RelationalPlugin;
 import com.metamatrix.modeler.core.workspace.ModelResource;
@@ -28,7 +27,7 @@ public class SourceFunctionModelExtensionAssistant extends EmfModelObjectExtensi
                     && super.supportsMedOperation(proposedOperationName, context)) {
                 ModelResource modelResource = getModelResource(context);
                 assert (modelResource != null) : "superclass is not checking for null model resource"; //$NON-NLS-1$
-                return (ModelType.VIRTUAL == modelResource.getModelType().getValue()); // must be a virtual model
+                return (ModelType.PHYSICAL == modelResource.getModelType().getValue()); // must be a Physical model
             }
         } catch (Exception e) {
             RelationalPlugin.Util.log(e);
