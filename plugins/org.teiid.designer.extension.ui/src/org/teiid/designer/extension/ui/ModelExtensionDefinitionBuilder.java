@@ -135,8 +135,10 @@ public final class ModelExtensionDefinitionBuilder extends IncrementalProjectBui
                 monitor.subTask(NLS.bind(Messages.modelBuildSubTaskName, modelFile.getName()));
 
                 try {
-                    modelFile.deleteMarkers(ExtensionIds.PROBLEM_MARKER, true, IResource.DEPTH_INFINITE); // clear markers
-                    refreshModelFileMarkers(modelFile); // create MED-related problem markers
+                    if (modelFile.exists()) {
+                        modelFile.deleteMarkers(ExtensionIds.PROBLEM_MARKER, true, IResource.DEPTH_INFINITE); // clear markers
+                        refreshModelFileMarkers(modelFile); // create MED-related problem markers
+                    }
                 } catch (Exception e) {
                     IStatus modelStatus = new Status(IStatus.ERROR, PLUGIN_ID, NLS.bind(Messages.modelFileBuildErrorMsg,
                                                                                         modelFile.getName()), e);
