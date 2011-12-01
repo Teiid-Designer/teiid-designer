@@ -8,18 +8,14 @@
 package org.teiid.designer.extension.ui.wizards;
 
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.CHECK_MARK;
-
 import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.dialogs.IMessageProvider;
@@ -34,7 +30,6 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
-import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.jface.wizard.WizardPage;
@@ -65,18 +60,11 @@ import org.teiid.designer.extension.definition.ModelObjectExtensionAssistant;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 import org.teiid.designer.extension.ui.Activator;
 import org.teiid.designer.extension.ui.Messages;
-
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelResource;
-import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
-import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
-import com.metamatrix.modeler.internal.ui.editors.ModelEditor;
-import com.metamatrix.modeler.internal.ui.explorer.ModelExplorerLabelProvider;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelIdentifier;
 import com.metamatrix.modeler.ui.UiPlugin;
-import com.metamatrix.modeler.ui.editors.ModelEditorManager;
-import com.metamatrix.modeler.ui.viewsupport.ModelingResourceFilter;
 import com.metamatrix.ui.internal.InternalUiConstants;
 import com.metamatrix.ui.internal.util.WidgetFactory;
 import com.metamatrix.ui.internal.util.WidgetUtil;
@@ -220,6 +208,7 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
         gd = new GridData(GridData.FILL_HORIZONTAL);
         gd.horizontalSpan = 2;
         locationText.setLayoutData(gd);
+        locationText.setBackground(locationLabel.getBackground());
         locationText.addModifyListener(new ModifyListener() {
             @Override
             public void modifyText( ModifyEvent e ) {
@@ -229,14 +218,16 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
         locationText.setEditable(false);
 
         // -----------------------------------------------
-        // Label,Text and Browse Button for Model Name
+        // Label and Text widgets for Model Name
         // -----------------------------------------------
         Label modelNameLabel = new Label(topComposite, SWT.NULL);
         modelNameLabel.setText(Messages.currentMedsPageModelNameLabel);
 
         modelNameText = new Text(topComposite, SWT.BORDER | SWT.SINGLE);
         gd = new GridData(GridData.FILL_HORIZONTAL);
+        gd.horizontalSpan = 2;
         modelNameText.setLayoutData(gd);
+        modelNameText.setBackground(modelNameLabel.getBackground());
         modelNameText.addModifyListener(new ModifyListener() {
             @Override
             public void modifyText( ModifyEvent e ) {
@@ -244,19 +235,6 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
             }
         });
         modelNameText.setEditable(false);
-
-        Button browseButton = new Button(topComposite, SWT.PUSH);
-        GridData buttonGridData = new GridData();
-        // buttonGridData.horizontalAlignment = GridData.HORIZONTAL_ALIGN_END;
-        browseButton.setLayoutData(buttonGridData);
-        browseButton.setText(Messages.currentMedsPageBrowseButton);
-        browseButton.setToolTipText(Messages.currentMedsPageBrowseTooltip);
-        browseButton.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected( SelectionEvent e ) {
-                handleBrowseModel();
-            }
-        });
 
         // -----------------------------------------------
         // Bottom Composite for Table and Buttons
@@ -276,6 +254,8 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
         updateModelDisplay();
 
         updateStatus();
+
+        bottomComposite.setFocus();
     }
 
     /**
@@ -323,87 +303,6 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
         setMessage(Messages.currentMedsPageDone, IMessageProvider.NONE);
         setPageComplete(true);
     }
-
-    /**
-     * handler for model browse button clicked
-     */
-    void handleBrowseModel() {
-        // Open the selection dialog for the target relational model
-        Object[] resources = WidgetUtil.showWorkspaceObjectSelectionDialog(Messages.currentMedsPageBrowseDialogTitle,
-                                                                           Messages.currentMedsPageBrowseDialogMsg,
-                                                                           false,
-                                                                           null,
-                                                                           new ModelingResourceFilter(this.extendableModelFilter),
-                                                                           null,
-                                                                           new ModelExplorerLabelProvider());
-
-        if (resources != null && resources.length == 1 && resources[0] instanceof IFile) {
-            IFile selectedFile = (IFile)resources[0];
-            ModelResource selectedModel = null;
-            locationText.setText(""); //$NON-NLS-1$
-            modelNameText.setText(""); //$NON-NLS-1$
-            boolean exceptionOccurred = false;
-            try {
-                selectedModel = ModelUtil.getModelResource(selectedFile, true);
-            } catch (Exception ex) {
-                ModelerCore.Util.log(ex);
-                exceptionOccurred = true;
-            }
-            if (!exceptionOccurred) {
-                this.modelResource = selectedModel;
-                updateModelDisplay();
-                this.editManager = new MedHeadersEditManager(getModelExtensionDefnHeaders(this.modelResource));
-                this.tableViewer.refresh();
-            } else {
-                this.modelResource = null;
-                this.modelMeds = null;
-                this.editManager = new MedHeadersEditManager(Collections.EMPTY_LIST);
-                this.tableViewer.refresh();
-            }
-        }
-    }
-
-    /** Filter for showing just open projects and their folders and extendable models */
-    private ViewerFilter extendableModelFilter = new ViewerFilter() {
-        @Override
-        public boolean select( Viewer theViewer,
-                               Object theParent,
-                               Object theElement ) {
-            boolean result = false;
-
-            if (theElement instanceof IResource) {
-                // If the project is closed, dont show
-                boolean projectOpen = ((IResource)theElement).getProject().isOpen();
-                if (projectOpen) {
-                    // Show open projects and folder structure
-                    if (theElement instanceof IContainer) {
-                        result = true;
-                    } else if (theElement instanceof IFile) {
-                        try {
-                            ModelResource modelResource = ModelUtil.getModelResource((IFile)theElement, false);
-                            if (modelResource != null) {
-                                // Check whether the model file is open and dirty
-                                ModelEditor editor = ModelEditorManager.getModelEditorForFile((IFile)theElement, false);
-                                boolean isDirty = false;
-                                if (editor != null && editor.isDirty()) {
-                                    isDirty = true;
-                                }
-                                // Check whether model is not dirty and can add or remove any of the MEDs from it.
-                                if (!isDirty && canExtend((IFile)theElement)) {
-                                    result = true;
-                                }
-
-                            }
-                        } catch (final ModelWorkspaceException theException) {
-                            ModelerCore.Util.log(IStatus.ERROR, theException, theException.getMessage());
-                        }
-                    }
-                }
-            }
-
-            return result;
-        }
-    };
 
     /**
      * Determine if the selection allows add or remove of any registered MED
