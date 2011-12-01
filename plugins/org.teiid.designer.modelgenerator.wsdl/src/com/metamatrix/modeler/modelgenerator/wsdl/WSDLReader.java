@@ -7,6 +7,8 @@
  */
 package com.metamatrix.modeler.modelgenerator.wsdl;
 
+import java.io.File;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.text.MessageFormat;
@@ -107,9 +109,15 @@ public class WSDLReader {
         }
 		
 		String wsdlUri = getWSDLUri();
-		if(!wsdlUri.contains("http://")) { //$NON-NLS-1$
-			wsdlUri = "file://" + wsdlUri; //$NON-NLS-1$
+		if(!wsdlUri.startsWith("http")) { //$NON-NLS-1$
+			try {
+				wsdlUri =  new File(wsdlUri).toURI().toURL().toString();
+			    setWSDLUri(wsdlUri);
+			} catch (MalformedURLException e) {
+				throw new RuntimeException(e);
+			}
 		}
+		
         monitor.worked(1);
 		IValidationReport report = VALIDATOR.validate(wsdlUri);
 		monitor.worked(1);
