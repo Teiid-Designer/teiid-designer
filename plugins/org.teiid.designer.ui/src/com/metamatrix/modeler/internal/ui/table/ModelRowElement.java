@@ -66,7 +66,7 @@ public class ModelRowElement {
             return ModelObjectUtilities.getDescription(modelObject);
         } else { 
             // get the value from the PropertySource
-            Object value = propertySource.getPropertyValue(propertyID); //tableModel.getPropertyId(propertyID));
+            Object value = propertySource.getPropertyValue(tableModel.getPropertyId(propertyID)); 
             
             if ( value instanceof ItemPropertyDescriptor.PropertyValueWrapper ) {
                 value = ((ItemPropertyDescriptor.PropertyValueWrapper) value).getEditableValue(this.modelObject); 
@@ -241,14 +241,14 @@ public class ModelRowElement {
                     }
                 }
                     
-                Object currentValue = propertySource.getPropertyValue(propertyID);
+                Object currentValue = propertySource.getPropertyValue(tableModel.getPropertyId(propertyID));
                 if ( currentValue == null ) {
                     if ( value != null ) {
-                        propertySource.setPropertyValue(propertyID, value);
+                        propertySource.setPropertyValue(tableModel.getPropertyId(propertyID), value);
                     }
                 } else {
                     if ( ! currentValue.equals(value) ) {
-                        propertySource.setPropertyValue(propertyID, value);
+                        propertySource.setPropertyValue(tableModel.getPropertyId(propertyID), value);
                     }
                 }                        
 

@@ -9,7 +9,6 @@ package org.teiid.designer.ui.properties.extension;
 
 import static com.metamatrix.modeler.ui.UiConstants.PLUGIN_ID;
 import static org.teiid.designer.extension.ExtensionPlugin.Util;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -38,7 +37,6 @@ import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.definition.ModelExtensionAssistant;
 import org.teiid.designer.extension.definition.ModelObjectExtensionAssistant;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
-
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.core.workspace.ModelResource;
@@ -186,6 +184,10 @@ public class ModelExtensionPropertyDescriptor extends PropertyDescriptor impleme
     @Override
     public Object getId() {
         return this;
+    }
+
+    public String getPropDefnId() {
+        return this.propDefn.getId();
     }
 
     ModelObjectExtensionAssistant getModelExtensionAssistant( String propId ) {

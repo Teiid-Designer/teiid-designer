@@ -26,6 +26,7 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.properties.IPropertySourceProvider;
+import org.teiid.designer.ui.properties.extension.ModelExtensionPropertyDescriptor;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.internal.ui.properties.ModelObjectPropertyDescriptor;
 import com.metamatrix.modeler.internal.ui.properties.udp.ExtensionPropertyDescriptor;
@@ -45,6 +46,7 @@ public class ModelObjectTableModel implements UiConstants, EObjectPropertiesOrde
     private ArrayList propertyList;
     private HashMap propertyIdMap;
     private Map propIdDescriptorMap; // key=property ID, value=IPropertyDescriptor
+    private Map extensionDefnValueMap = new HashMap();
     private IPropertySourceProvider propertySourceProvider;
     private IPropertyDescriptor[] properties = new IPropertyDescriptor[0];
     private TableViewer tableViewer;
@@ -80,6 +82,13 @@ public class ModelObjectTableModel implements UiConstants, EObjectPropertiesOrde
     public boolean canView() {
         // DON'T call buildColumns();
         return properties.length > 0;
+    }
+
+    public Object getPropertyId( String property ) {
+        if (this.extensionDefnValueMap.containsKey(property)) {
+            return this.extensionDefnValueMap.get(property);
+        }
+        return property;
     }
 
     public Object getPropertyIdAtIndex(int index) {
@@ -232,12 +241,19 @@ public class ModelObjectTableModel implements UiConstants, EObjectPropertiesOrde
                 buildRowList();
 
                 String[] columnProperties = new String[propertyList.size()];
-    
+                this.extensionDefnValueMap.clear();
+
                 for ( int i=0 ; i< propertyList.size(); ++i ) {
                     TableColumn column = new TableColumn(table, SWT.NONE);
                     this.tableColumns.add(column);
                     String columnHeader = (String)propertyList.get(i);
-                    columnProperties[i] = (String)getPropertyIdAtIndex(i);
+                    Object pId = getPropertyIdAtIndex(i);
+                    if (pId instanceof ModelExtensionPropertyDescriptor) {
+                        ModelExtensionPropertyDescriptor pDescriptor = (ModelExtensionPropertyDescriptor)pId;
+                        pId = pDescriptor.getPropDefnId();
+                        this.extensionDefnValueMap.put(pId, pDescriptor);
+                    }
+                    columnProperties[i] = (String)pId;
                     column.setText(columnHeader); 
                     //swjTODO: set column data on this instead of hardcoding 80 pixels
                     column.setWidth(80);
