@@ -9,6 +9,7 @@ package org.teiid.designer.ui.properties.extension;
 
 import static com.metamatrix.modeler.ui.UiConstants.PLUGIN_ID;
 import static org.teiid.designer.extension.ExtensionPlugin.Util;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -37,6 +38,7 @@ import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.definition.ModelExtensionAssistant;
 import org.teiid.designer.extension.definition.ModelObjectExtensionAssistant;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
+
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.core.workspace.ModelResource;
@@ -228,14 +230,18 @@ public class ModelExtensionPropertyDescriptor extends PropertyDescriptor impleme
         if (assistant != null) {
             try {
                 String value = assistant.getPropertyValue(this.eObject, propId);
+                String[] allowedValues = propDefn.getAllowedValues();
 
-                // must convert to empty string if null as TextCellEditor requires non-null value
                 if (CoreStringUtil.isEmpty(value)) {
+                    // no value but prop defn has allowed values. must return an int so use first allowed value
+                    if ((allowedValues != null) && (allowedValues.length != 0)) {
+                        return 0;
+                    }
+
+                    // must convert to empty string if null as TextCellEditor requires non-null value
                     value = CoreStringUtil.Constants.EMPTY_STRING;
                 } else {
                     // a value that is an allowed values must be converted to the index
-                    String[] allowedValues = propDefn.getAllowedValues();
-
                     if ((allowedValues != null) && (allowedValues.length != 0)) {
                         for (int i = 0; i < allowedValues.length; ++i) {
                             if (allowedValues[i].equalsIgnoreCase(value)) {
