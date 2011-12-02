@@ -8,7 +8,6 @@
 package org.teiid.designer.extension.ui.wizards;
 
 import java.util.List;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
@@ -26,7 +25,6 @@ import org.teiid.designer.extension.definition.ModelObjectExtensionAssistant;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 import org.teiid.designer.extension.ui.Messages;
 import org.teiid.designer.extension.ui.UiConstants;
-
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
@@ -146,6 +144,10 @@ public class ManageModelExtensionDefnsWizard extends AbstractWizard {
                     ModelExtensionAssistant assistant = ExtensionPlugin.getInstance()
                                                                        .getRegistry()
                                                                        .getModelExtensionAssistant(namespacePrefix);
+                    // if assistant is null, it couldn't find in registry. Create a default assistant.
+                    if (assistant == null) {
+                        assistant = ExtensionPlugin.getInstance().createDefaultModelObjectExtensionAssistant(namespacePrefix);
+                    }
                     assert (assistant instanceof ModelObjectExtensionAssistant) 
                            : "ModelExtensionAssistant is not a ModelObjectExtensionAssistant"; //$NON-NLS-1$
                     ((ModelObjectExtensionAssistant)assistant).removeModelExtensionDefinition(modelResource);
@@ -188,7 +190,10 @@ public class ManageModelExtensionDefnsWizard extends AbstractWizard {
             for (String namespacePrefix : namespacesToUpdate) {
                 // get the assistant for the registry version of the MED
                 ModelExtensionAssistant assistant = registry.getModelExtensionAssistant(namespacePrefix);
-        
+                // if assistant is null, it couldn't find in registry. Create a default assistant.
+                if (assistant == null) {
+                    assistant = ExtensionPlugin.getInstance().createDefaultModelObjectExtensionAssistant(namespacePrefix);
+                }
                 if (assistant instanceof ModelObjectExtensionAssistant) {
                     try {
                         // save registry copy of MED to model
