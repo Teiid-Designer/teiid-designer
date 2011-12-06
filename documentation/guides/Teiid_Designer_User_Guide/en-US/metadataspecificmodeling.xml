@@ -624,14 +624,12 @@
           <listitem>
             <para><emphasis role="bold">Step 2</emphasis> - Now we need 
             to identify our procedure as REST eligible. To do this we 
-            add two extended properties to the procedure via the 
-            <emphasis role="bold">Modeling-&gt;Manage Extended 
-            Properties</emphasis> context menu option.</para>
+            add enable REST properties for the procedure(s) via the 
+            <emphasis role="bold">Modeling-&gt;Enable</emphasis> context menu option.</para>
             <para><mediaobject><imageobject>
-            <imagedata fileref="images/screencaps/manage-extended-properties-menu.png"/></imageobject></mediaobject></para>
-            <para>
-              The two required properties are defined in the table 
-              below:
+            <imagedata fileref="images/screencaps/enable-rest-for-procedures.png"/></imageobject></mediaobject></para>
+            <para> This will enable two new properties in the property tab for all procedures defined in the model.
+            The two required properties are defined in the table below: 
               <table frame="all">
                 <title>Required Extended Properties for RESTful 
                 Procedures</title>
@@ -647,7 +645,7 @@
                   </thead>
                   <tbody>
                     <row>
-                      <entry>REST-METHOD</entry>
+                      <entry>Rest Method</entry>
                       <entry>The HTTP method that will determine the 
                       REST mapping of this procedure. Supported methods 
                       are: GET, PUT, POST and DELETE</entry>
@@ -666,9 +664,9 @@
               </table>
             </para>
             <para>Here&apos;s what the above example would look like in 
-            the Extended Properties dialog:</para>
+            the Property tab:</para>
             <para><mediaobject><imageobject>
-            <imagedata fileref="images/screencaps/procedure-rest-extended-properties.png"/></imageobject></mediaobject></para>
+            <imagedata fileref="images/screencaps/rest-properties.png"/></imageobject></mediaobject></para>
             <para>Note that the generated URI will have the model name 
             included as part of the path, so full URL would look like 
             this: <emphasis role="bold">
