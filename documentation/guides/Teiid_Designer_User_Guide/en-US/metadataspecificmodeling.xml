@@ -78,13 +78,10 @@
 		</section>
 		<section id="source-table-wizard-section">
 			<title>Create Relational Table Wizard</title>
-			<para>In Teiid Designer 7.6, a new wizard the<emphasis role="bold">New Child > Base Table...</emphasis> was added to aid in creating tables, complete
+			<para>In Teiid Designer 7.6 a new action, <emphasis role="bold">New Child > Base Table...</emphasis>, was added to aid in creating tables, complete
                 with all of it's child entities.  This action is in addition to the original <emphasis role="bold">New Child > Base Table</emphasis>,
                 which only creates the empty table (and requires numerous separate steps to add it's children)
             </para>
-			<para>Running the action will display the <emphasis role="bold">Create Relational Table</emphasis> dialog. 
-			Enter your database function name, define input parameters including datatype and length, specify output parameter info, 
-			set options and click <emphasis role="bold">OK</emphasis>.</para>
 			
 			<figure>
 				<title>New Base Table Wizard Action</title>
@@ -96,11 +93,13 @@
 			</figure>
 			<para>Running the action will display the <emphasis role="bold">Create Relational Table</emphasis> wizard. The
 				wizard page contains 5 tabbed panels representing the various properties and 
-				components that make up the possible definition of a relational table. This wizard is designed to provide 
+				components that make up the possible definition of a relational table. Enter your database function name, define input
+				 parameters including datatype and length, specify output parameter info, 
+				set options and click <emphasis role="bold">OK</emphasis>.</para>
+			<para>This wizard is designed to provide 
 				feedback as to the completeness of the relational table information as well as the validation state of the 
 				table and it's components.  Note that although errors may be displayed during editing, the wizard is 
 				designed to allow finishing with the construction of an incomplete table containing errors.</para>
-
  			<para>The first tab labeled <emphasis role="bold">Properties</emphasis> contains the input for the simple table properties including name, 
  				name in source, cardinality, supports update and is system table properties.
 			</para>
