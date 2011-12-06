@@ -1499,4 +1499,132 @@
 		</section>
 	</section>
 	
+	<!--  MODEL OBJECT EXTENSION PROPERTIES SECTION -->
+	
+	<section id="model-object-extension-properties-section">
+		<title>Managing Model Object Extensions</title>
+		<para>Extending a model adds extra properties to its model objects. One good use of these extension properties is for 
+			passing data to a customized Teiid translator. The Designer model extension framework consists of:
+			<itemizedlist>
+				<listitem><emphasis role="bold">Model Extension Definitions (MEDs)</emphasis> (See <xref linkend="intro-to-model-extensions" />)</listitem>
+				<listitem><emphasis role="bold">MED Registry</emphasis> -keeps track of all the MEDs that are registered in a workspace. Only registered MEDs can be used to extend a model.
+					)See <xref linkend="med-registry-view" />) 
+				</listitem>
+				<listitem><emphasis role="bold">MED Editor</emphasis> (See <xref linkend="model-extension-definition-editor-section" />)</listitem>
+			</itemizedlist>
+		</para>
+		<section>
+			<title>Create New MED</title>
+			<para>To create a new MED select the <emphasis role="bold">File > New > Other...</emphasis> action to display the 
+				New wizard dialog. Select the <emphasis role="bold">Teiid Designer > Teiid Model Extension Defn</emphasis> option which displays the
+				<emphasis role="bold">New Model Extension Definition</emphasis> dialog. Browse and select existing project or project folder location for 
+					MED file and specify unique file name and press <emphasis role="bold">Finish</emphasis>. (Note if a project is already selected when 
+					wizard is launched, the location field will be pre-populated).
+				</para>
+			<figure>
+				<title>MED Editor Overview Tab</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/screencaps/med-new-wizard-page-1.png" />
+					</imageobject>
+				</mediaobject>
+			</figure>
+		</section>
+		<section>
+			<title>Edit MED</title>
+			<para>To edit an MED file select an existing '.mxd' file in your workspace and right-click select the <emphasis role="bold">Open</emphasis> action.
+				The MED Editor will be opened to allow editing (See <xref linkend="model-extension-definition-editor-section" />).
+			</para>
+			<para>On the Overview tab, you can specify or change the <emphasis role="bold">Namespace Prefix</emphasis>, 
+				<emphasis role="bold">Namespace URI</emphasis>, the <emphasis role="bold">Model Class</emphasis> you wish to extend 
+				(Relational, Web Service, XML Document, and Function) and a description.  Note that version number is available, but is not 
+				currently being used in release 7.6.</para>
+			<para>After entering the basic MED info, you can now switch to the <emphasis role="bold">Properties</emphasis> tab and begin creating
+				your extended property definitions for specific model objects supported by selected model class.
+			<figure>
+				<title>MED Editor Properties Tab</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/screencaps/med-editor-properties-tab.png" />
+					</imageobject>
+				</mediaobject>
+			</figure>
+				</para>
+				
+				<para>Start by selecting the <emphasis role="bold">Add Extended Model Object</emphasis> toolbar button to display the 
+				<emphasis role="bold">Model Object Name</emphasis> selection dialog. Select an object and press <emphasis role="bold">OK</emphasis>.
+				<figure>
+					<title>Select Model Object Name Dialog</title>
+					<mediaobject>
+						<imageobject>
+							<imagedata fileref="images/screencaps/med-model-object-name-selection-dialog.png" />
+						</imageobject>
+					</mediaobject>
+				</figure>
+			</para>
+			<para>Next, select the model object in the <emphasis role="bold">Extended Model Objects</emphasis> section and use the actions and propertes table
+				in the lower <emphasis role="bold">Extension Properties</emphasis> section to add/remove or edit your actual extended properties. Selecting the
+			 	add or edit extension properties actions displays a dialog containing sections to edit general properties, value definition (required, masked, 
+			 	allowed values) as well as display name and description values which can be internationalized.
+				<figure>
+					<title>Edit Property Definition Dialog</title>
+					<mediaobject>
+						<imageobject>
+							<imagedata fileref="images/screencaps/med-edit-property-definition-dialog.png" />
+						</imageobject>
+					</mediaobject>
+				</figure>
+			 </para>
+		</section>
+		<section>
+			<title>Extending Models With MEDs</title>
+			<para>MEDs must be applied to a model in order for their extension properties to be available to that model's model objects. 
+				To manage the applied MEDs for a specific model select the model and right-click select the 
+				<emphasis role="bold">Modeling > Manage Model Extension Definitions</emphasis> action. This will
+				display a dialog listing the current applied MEDS and actions and buttons to add or remove MEDs from a model, extract a MED 
+				from a model and save a copy of it locally as a '.mxd' file and lastly, update the version of MED in a model if it differs from a 
+				version in your MED registry.
+				<figure>
+					<title>Manage Model Extension Definitions Dialog</title>
+					<mediaobject>
+						<imageobject>
+							<imagedata fileref="images/screencaps/med-manage-model-meds-dialog.png" />
+						</imageobject>
+					</mediaobject>
+				</figure>
+			</para>
+			<para>Selecting the <emphasis role="bold">Add</emphasis> button displays a list of applicable MEDS based on model class.
+				<figure>
+					<title>Add Model Extension Definitions Dialog</title>
+					<mediaobject>
+						<imageobject>
+							<imagedata fileref="images/screencaps/med-add-med-to-model-dialog.png" />
+						</imageobject>
+					</mediaobject>
+				</figure>
+			</para>
+			<para>
+				<note>After adding/removing MEDs from the model, click 'Finish' to accept all of the changes.  Cancelling the dialog
+                	will discard all changes and revert to the original model state
+                </note>
+			</para>
+		</section>
+		<section>
+			<title>Setting Extended Property Values</title>
+			<para>Extension properties are user-defined properties available to any extended model object via the Properties View.
+				As shown below, all extension properties are available up under the "Extension" category and are prefixed 
+				with a MED's namespace prefix. If there is an initial value for an extension property it will be set to 
+				the default value using the property definition found in the MED.
+				<figure>
+					<title>Properties View For Extended Model Object</title>
+					<mediaobject>
+						<imageobject>
+							<imagedata fileref="images/screencaps/med-properties-view.png" />
+						</imageobject>
+					</mediaobject>
+				</figure>
+			</para>
+			
+		</section>
+	</section>
 </chapter>

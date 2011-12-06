@@ -1040,13 +1040,62 @@
 			<para>You can also display the view by selecting the the main menu's
 				<emphasis role="bold">Metadata > Show SQL Reserved Words</emphasis> action as shown below.</para>
 			<figure>
-				<title>System Catalog View</title>
+				<title>SQL Reservered Words Action</title>
 				<mediaobject>
 					<imageobject>
 						<imagedata fileref="images/screencaps/show-sql-reserved-words-action.png"/>
 					</imageobject>
 				</mediaobject>
 			</figure>
+		</section>
+		
+		<!-- ####### MED REGISTRY VIEW  ############################################# -->
+	    
+		<section id="med-registry-view">
+			<title>Model Extension Definition Registry View (MED Registry View)</title>
+			<para>
+				To open
+				<emphasis role="bold">Teiid Designer's MED Registry</emphasis>
+				view, select the main menu's
+				<emphasis role="bold">Views > Show View > Other...</emphasis>
+				and select the
+				<emphasis role="bold">Teiid Designer > Model Extension Registry</emphasis>
+				view in the dialog.
+			</para>
+			<para>The <emphasis role="bold">Model Extension Registry</emphasis> view shows the currently registered MEDs. 
+				Registered MEDs can be applied to models in the workspace (see <xref linkend="model-object-extension-properties-section"/>). The Model 
+				Extension Registry view looks like this:</para>
+			<figure id="med-registry-view-figure">
+				<title>System Catalog View</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/screencaps/med-registry-view.png"/>
+					</imageobject>
+				</mediaobject>
+			</figure>
+			<para>You can also open the view by selecting the MED Editor toolbar action in 
+				the right corner of shared sub-editor header section.</para>
+			<para>For each registered MED, the namespace prefix, namespace URI, extended model class, version, 
+				and description is shown. In addition, a flag indicating if the MED is built-in is shown. 
+				The Model Extension Registry view has toolbar actions that register a workspace MED file, 
+				unregister a user-defined MED, and copy a registered MED to the workspace. All these actions 
+				are also available via a context menu.</para>
+			<para>A MED registry keeps track of all the MEDs that are registered in a workspace. Only registered MEDs can be used to extend a model. 
+					There are 2 different types of MEDs stored in the registry:
+					<itemizedlist>
+						<listitem>
+							<para> <emphasis role="bold">Built-In MED</emphasis> - these are registered during Designer installation. These 
+								MEDs cannot be updated or unregistered by the user.</para>
+						</listitem>
+						<listitem>
+							<para> <emphasis role="bold">User-Defined MED</emphasis> - these are created by the user. These MEDs can be 
+								updated, registered, and unregistered by the user.</para>
+						</listitem>
+					</itemizedlist>
+				</para>
+			<para>Note: When a workspace MED is registered it can be deleted from the workspace if desired. 
+				The registry keeps its own copy. And a registered MED can always be copied back to the workspace 
+				by using the appropriate toolbar or context menu action.</para>
 		</section>
 	</section>
 	<section id="teiid-designer-editors-section">
@@ -2108,6 +2157,95 @@
 					</mediaobject>
 				</figure>
 			</section>
+		</section>
+		<section id="model-extension-definition-editor-section">
+			<title>Model Extension Definition Editor</title>
+			<para>The <emphasis role="bold">MED Editor</emphasis> is a multi-tabbed editor and is used to create and edit 
+				user-defined MEDs (*.mxd files) in the workspace. The MED Editor has 3 sub-editors (<emphasis role="bold">Overview, Properties, and Source</emphasis>) 
+				which share a common header section. Here are the MED sub-editor tabs:
+					<itemizedlist>
+						<listitem>
+							<para> <emphasis role="bold">Overview Sub-Editor</emphasis> - this editor is where the general MED information is managed. 
+								This information includes the namespace prefix, namespace URI, extended model class, and the description. 
+								The Overview sub-editor looks like this:
+								<figure>
+									<title>Overview Tab</title>
+									<mediaobject>
+										<imageobject>
+											<imagedata fileref="images/screencaps/med-editor-overview-tab.png" />
+										</imageobject>
+									</mediaobject>
+								</figure>
+							</para>
+						</listitem>
+						<listitem>
+							<para> <emphasis role="bold">Properties Sub-Editor</emphasis> - this editor is where the MED extension properties are managed. 
+								Each extension property must be associated with a model object type. The Properties sub-editor is divided 
+								into 2 sections (<emphasis role="bold">Extended Model Objects</emphasis> and <emphasis role="bold">Extension Properties</emphasis>) and looks like this:
+								<figure>
+									<title>Properties Tab</title>
+									<mediaobject>
+										<imageobject>
+											<imagedata fileref="images/screencaps/med-editor-properties-tab.png" />
+										</imageobject>
+									</mediaobject>
+								</figure>
+							</para>
+						</listitem>
+						<listitem>
+							<para> <emphasis role="bold">Source</emphasis> - this tab is a read-only XML source viewer if you wish to view the details
+								of your MED. This source viewer is NOT editable.
+							</para>
+						</listitem>
+					</itemizedlist>
+				</para>
+				<para>The GUI components on the Overview and Properties sub-editors will be decorated 
+					with an error icon when the data in that GUI component has a validation error. Hovering over an 
+					error decoration displays a tooltip with the specific error message. Those error message relate 
+					to the error messages shown in the common header section. Here is an example of 
+					the error decoration:
+					<figure>
+						<title>Text Field With Error</title>
+						<mediaobject>
+							<imageobject>
+								<imagedata fileref="images/screencaps/med-example-error-text-field.png" />
+							</imageobject>
+						</mediaobject>
+					</figure>
+				</para>
+				<para> The MED sub-editors share a header section. The header is composed of the following:
+					<itemizedlist>
+						<listitem>
+							<para><emphasis role="bold">Status Image</emphasis> - an image indicating the most severe validation message (error, warning, or info). 
+								If there are no validation messages the model extension image is shown.</para>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Title</emphasis> - the title of the sub-editor being shown.</para>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Menu</emphasis> - a drop-down menu containing actions for (1) adding to and updating the MED in the registry, 
+								and (2) for showing the Model Extension Registry View.</para>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Validation Message</emphasis> - this area will display an OK message or an error summary message. When a 
+								summary message is shown, the tooltip for that message will enumerate all the messages.</para>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Toolbar</emphasis> - contains the same actions as the drop-down menu.</para>
+						</listitem>
+					</itemizedlist> 
+				</para>
+				<para>Below is an example of the shared header section which includes an error message tooltip.
+					<figure>
+						<title>Shared Header Example</title>
+						<mediaobject>
+							<imageobject>
+								<imagedata fileref="images/screencaps/med-editor-shared-header.png" />
+							</imageobject>
+						</mediaobject>
+					</figure>
+				</para>
+					
 		</section>
 	</section>
 	<section id="teiid-designer-menus-section">

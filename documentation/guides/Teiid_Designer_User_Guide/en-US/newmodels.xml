@@ -61,15 +61,6 @@
 							     </inlinemediaobject> <xref linkend="new-web-service-view-model" />
 						</para>
 					</listitem>
-					<listitem>
-						<para>
-							<inlinemediaobject>
-								<imageobject>
-									<imagedata fileref="images/icons/extension-model.png"/>
-								</imageobject>
-							     </inlinemediaobject> <xref linkend="new-extension-model" />
-						</para>
-					</listitem>
 				</itemizedlist>
 			</para>
 		</listitem>
@@ -991,99 +982,5 @@
 			</note><para/>
 		</section>	
 	</section>
-	
-	<!-- ####### EXTENSION MODEL ######################################## -->
-	
-	<section id="new-extension-model">
-		<title>Creating New Extensions Model</title>
-		<para></para>
-		
-		<itemizedlist id="create-empty-extensions-model-section">
-			<title>Create New Extensions Model</title>
-			<listitem>
-				<para>To create a new empty extensions model:
-					<itemizedlist>
-						<listitem>
-							<para><emphasis role="bold">Step 1 </emphasis> - Launch the <xref linkend="launch-new-model-wizard" />.</para>
-						</listitem>
-						<listitem>
-							<para><emphasis role="bold">Step 2 </emphasis> - Specify a unique model name.</para>
-						</listitem>
-						<listitem>
-							<para><emphasis role="bold">Step 3 </emphasis> - Select <emphasis role="bold">Model Extensions</emphasis> option from <emphasis role="bold">Model Class</emphasis> drop-down menu.</para>
-						</listitem>
-						<listitem>
-							<para><emphasis role="bold">Step 4 </emphasis> - Select <emphasis role="bold">Model Class Extension</emphasis> from <emphasis role="bold">Model Type</emphasis> drop-down menu.</para>
-						</listitem>
-						<listitem>
-							<para><emphasis role="bold">Step 5 </emphasis> - Click <emphasis role="bold">Finish</emphasis>.</para>
-						</listitem>
-					</itemizedlist>
-				</para>
-			</listitem>
-		</itemizedlist>					
-		<note>
-			<para>You can change the target location (i.e. project or folder) by 
-				selecting the <guibutton>Browse...</guibutton> button and selecting a project or folder within 
-				your workspace.
-			</para>
-		</note>
-		
-		<itemizedlist>
-			<listitem>
-				<para> In addition to creating a new empty extensions model, the following builder option is available:
-					<itemizedlist>
-						<listitem>
-							<para>Copy from existing model of the same model class.</para>
-						</listitem>
-					</itemizedlist>
-				</para>
-			</listitem>
-		</itemizedlist>
-		
-		<section id="extensions-copy-section">
-			<title>Copy From Existing Model</title>
 
-			<para>This builder option performs a structural copy of the contents of an existing 
-				model to a newly defined model. You can choose a full copy or select individual model 
-				components for copy.</para>
-			<itemizedlist>
-				<listitem>
-					<para>
-						To create a new relational model by copying contents from another extensions model, 
-						complete <xref linkend="create-empty-extensions-model-section" /> above 
-						and continue with these additional steps:
-						<itemizedlist>
-							<listitem>
-								<para><emphasis role="bold">Step 5 </emphasis> - Select the model builder labeled
-								<emphasis role="bold">Copy from existing model of the same model class</emphasis> and 
-								click <emphasis role="bold">Next ></emphasis>.  The <emphasis role="bold">Copy Existing Model</emphasis> dialog
-								will be displayed.</para>
-							</listitem>
-							<listitem>
-								<para><emphasis role="bold">Step 6 </emphasis> - Select an existing relational model from 
-									the workspace using the browse button. <inlinemediaobject>
-								<imageobject>
-									<imagedata fileref="images/icons/elipsis.png"/>
-								</imageobject>
-							</inlinemediaobject></para>
-							</listitem>
-							<listitem>
-								<para><emphasis role="bold">Step 7 </emphasis> - Check the <emphasis role="bold">Copy all descriptions</emphasis> option if desired. 
-									Click <emphasis role="bold">Finish</emphasis></para>
-								<figure>
-									<title>Copy An Existing Model Dialog</title>
-									<mediaobject>
-										<imageobject>
-											<imagedata fileref="images/screencaps/new-model-wizard-relational-copy-from.png"/>
-										</imageobject>
-									</mediaobject>
-								</figure>
-							</listitem>
-						</itemizedlist>
-					</para>
-				</listitem>
-			</itemizedlist>
-		</section>
-	</section>
 </chapter>

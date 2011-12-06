@@ -49,9 +49,6 @@
 						is compatible and optimized for consumption by your applications
 					</para>
 				</listitem>
-				<listitem>
-					<para> resolve semantic differences</para>
-				</listitem>
 			</itemizedlist>
 			This allows you to abstract the structure of the information you
 			expose to and use in your applications from the underlying physical
@@ -588,10 +585,6 @@
 					the form of XML Schemas).</para>
 			</listitem>
 			<listitem> 
-				<para><emphasis role="bold">Model Extensions</emphasis> - for defining property
-					name/value extensions to other model classes.</para>
-			</listitem>
-			<listitem> 
 				<para><emphasis role="bold">Function</emphasis> - The Function metamodel supports the capability to provide
 					user-defined functions, including binary source jars, to use in custom transformation SQL statements.</para>
 			</listitem>
@@ -675,7 +668,115 @@
 			<para>If attempting to preview a relational access pattern, a web service operation or a relational procedure
 				with input parameters, a dialog will request values for required parameters.</para>
 		</note>
-
+		<section id="intro-to-model-extensions">
+			<title>Model Object Extensions</title>
+			
+			<para>Teiid Designer in conjunction with Teiid provides an extensible framework to define 
+				custom properties for model objects over-and-above what is defined in the metamodel. These
+				custom property values are added to your VDB and included in your runtime metadata. This additional 
+				metadata is available to use in your custom translators for both source query manipulation as well as
+				adjusting your result set data being returned.
+			</para>
+			<para>In the 7.6 release, Teiid Designer introduces a new <emphasis role="bold">Model Extension Definition (MED)</emphasis> framework that will replace the current EMF-based 
+				Model Extension metamodel in a later 8.0 release.
+			</para>
+			<para>This new MED framework provides the following improvements:
+				<itemizedlist>
+					<listitem>
+						<para> Eliminate need for separate EMF metamodel. </para>
+					</listitem>
+					<listitem>
+						<para> Simpler approach including reduction of extendable metamodels and metamodel objects (Relational, Web Services,
+							XML Document, User Defined Functions) and replacing EMF terminology with basic object types.
+						 </para>
+					</listitem>
+					<listitem>
+						<para> Allows metamodels to be extended by multiple MEDs</para>
+					</listitem>
+					<listitem>
+						<para> MEDs are stored in models so no added dependency needed in VDB</para>
+					</listitem>
+				</itemizedlist>
+			</para>
+			<para>Also see:  <xref linkend="model-object-extension-properties-section"/> and 
+				<xref linkend="model-extension-definition-editor-section"/>.
+			</para>
+			<section id="model-extension-definition">
+				<title>Model Extension Definition (MED)</title>
+				<para>The purpose of a MED is to define one or more sets of extension properties. Each set of extension properties pertains 
+					to one model object type (or metaclass). Each MED consists of the following:
+					<itemizedlist>
+						<listitem>
+							<para> <emphasis role="bold">Namespace Prefix</emphasis> - a unique identifier. Typically only a small number of 
+								letters and can be used as an abbreviation for the namespace URI. </para>
+						</listitem>
+						<listitem>
+							<para> <emphasis role="bold">Namespace URI</emphasis> - a unique URI.</para>
+						</listitem>
+						<listitem>
+							<para> <emphasis role="bold">Extended Metamodel URI (Model Class)</emphasis> - the metamodel URI that is being extended. Each 
+								metamodel URI also has model class and that is typically what is shown in the Designer. The model classes 
+								supported for extension are:  <emphasis role="bold">Relational, Web Service, XML Document, and Function</emphasis>.
+							</para>
+						</listitem>
+						
+						<listitem>
+							<para> <emphasis role="bold">Version</emphasis> - (currently not being used)</para>
+						</listitem>
+						<listitem>
+							<para> <emphasis role="bold">Description</emphasis> - an optional description or purpose.</para>
+						</listitem>
+						<listitem>
+							<para> <emphasis role="bold">Extended Model Object Types (Metaclasses)</emphasis> - a set of model object types, or metaclasses, 
+								that have extension properties defined.</para>
+						</listitem>
+						<listitem>
+							<para> <emphasis role="bold">Properties</emphasis> - the extension property definitions grouped by model object type.</para>
+						</listitem>
+					</itemizedlist>
+				</para>
+				<para>A <emphasis role="bold">MED</emphasis> file is an XML file with an extension of "mxd." A MED schema file (see attached modelExtension.xsd file) is 
+					used to validate a MED file. Here is a sample MED file:
+				</para>
+				<synopsis>
+&lt;?xml version="1.0" encoding="UTF-8" standalone="no"?&gt;
+&lt;modelExtension xmlns:p="http://org.teiid.modelExtension/2011"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    	metamodelUri="http://www.metamatrix.com/metamodels/Relational"
+    	namespacePrefix="mymodelextension" namespaceUri="org.my.extension.mymodelextension"
+    	version="1"
+    	xsi:schemaLocation="http://org.teiid.modelExtension/2011 modelExtension.xsd"
+    	xmlns="http://org.teiid.modelExtension/2011"&gt;
+    &lt;p:description&gt;This is my model extension&lt;/p:description&gt;
+    &lt;p:extendedMetaclass name="com.metamatrix.metamodels.relational.impl.BaseTableImpl"&gt;
+        &lt;p:property advanced="false" index="true" masked="false" name="copyable" required="false" type="boolean"&gt;
+            &lt;p:description locale="en_US"&gt;Indicates if table can be copied&lt;/p:description&gt;
+            &lt;p:display locale="en_US"&gt;Copyable&lt;/p:display&gt;
+        &lt;/p:property&gt;
+    &lt;/p:extendedMetaclass&gt;
+&lt;/modelExtension&gt;
+				</synopsis>
+				<para>The <emphasis>MED Registry</emphasis> is where the MEDs used by Designer are stored. MED files can be edited
+					by opening the .mxd file in the <xref linkend="model-extension-definition-editor-section" />.</para>
+			</section>
+			<section>
+				<title>Model Extension Definition Registry (MED Registry)</title>
+				<para>A MED registry keeps track of all the MEDs that are registered in a workspace. Only registered MEDs can be used to extend a model. 
+					There are 2 different types of MEDs stored in the registry:
+					<itemizedlist>
+						<listitem>
+							<para> <emphasis role="bold">Built-In MED</emphasis> - these are registered during Designer installation. These 
+								MEDs cannot be updated or unregistered by the user.</para>
+						</listitem>
+						<listitem>
+							<para> <emphasis role="bold">User-Defined MED</emphasis> - these are created by the user. These MEDs can be 
+								updated, registered, and unregistered by the user.</para>
+						</listitem>
+					</itemizedlist>
+				</para>
+				<para>The MED Registry state is persisted and is restored each time a new session is started.</para>
+			</section>
+		</section>
 	</section>
 
 

@@ -57,7 +57,7 @@
 							<para><emphasis role="bold">Step 3 </emphasis> - Select existing DDL from either 
 							   <guimenuitem>Choose from file system...</guimenuitem> or <guimenuitem>Choose from workspace...</guimenuitem>. set the Model 
 								folder location, enter or select valid model name, set Model type (Source Model or View Model), 
-								set desired options and click <emphasis>NEXT></emphasis> (or <emphasis>FINISH></emphasis> if enabled)</para>
+								set desired options and click <emphasis>NEXT></emphasis> (or <emphasis>Finish</emphasis> if enabled)</para>
 							<figure>
 								<title>DDL Import Options</title>
 								<mediaobject>
@@ -70,7 +70,7 @@
 						<listitem>
 							<para><emphasis role="bold">Step 4 </emphasis> - If <emphasis>NEXT></emphasis> is pressed, 
 								a difference report is presented for viewing or de-selecting individual 
-								relational entities. Press <emphasis>FINISH></emphasis> to complete.</para>
+								relational entities. Press <emphasis>Finish</emphasis> to complete.</para>
 							<figure>
 								<title>Review DDL Updates Dialog</title>
 								<mediaobject>
@@ -143,7 +143,7 @@
 						<listitem>
 							<para><emphasis role="bold">Step 4 </emphasis> - After selecting a <emphasis>Connection Profile</emphasis>, 
 								input password (if not provided). Press <emphasis role="bold">Next></emphasis>
-								 (or <emphasis role="bold">Finish></emphasis> if enabled)</para>
+								 (or <emphasis role="bold">Finish</emphasis> if enabled)</para>
 							<figure>
 								<title>Select JDBC Source Configuration Dialog</title>
 								<mediaobject>
@@ -156,7 +156,7 @@
 						<listitem>
 							<para><emphasis role="bold">Step 5 </emphasis> - On the <emphasis role="bold">Select Database Metadata</emphasis> page, 
 								select the types of objects in the database to import. 
-								Press <emphasis role="bold">Next></emphasis> (or <emphasis role="bold">Finish></emphasis> if enabled).</para>
+								Press <emphasis role="bold">Next></emphasis> (or <emphasis role="bold">Finish</emphasis> if enabled).</para>
 							<figure>
 								<title>Select Database Metadata Dialog</title>
 								<mediaobject>
@@ -170,7 +170,7 @@
 							<para><emphasis role="bold">Step 6 </emphasis> - On the <emphasis role="bold">Select Database Objects</emphasis>
 							page, view the contents of the schema, or change selections. Select which database schema objects will 
 							be used to construct relational objects.
-							Press <emphasis role="bold">Next></emphasis> (or <emphasis role="bold">Finish></emphasis> if enabled)</para>
+							Press <emphasis role="bold">Next></emphasis> (or <emphasis role="bold">Finish</emphasis> if enabled)</para>
 							<figure>
 								<title>Select Database Options Dialog</title>
 								<mediaobject>
@@ -183,7 +183,7 @@
 						<listitem>
 							<para><emphasis role="bold">Step 7 </emphasis> - On the <emphasis role="bold">Specify Import Options</emphasis>
 							page, specify desired <emphasis role="bold">Model Name</emphasis> as well as any other options used to 
-							customize the naming of your relational objects. Press <emphasis role="bold">Finish></emphasis> to complete. </para>
+							customize the naming of your relational objects. Press <emphasis role="bold">Finish</emphasis> to complete. </para>
 							<figure>
 								<title>Specify Import Options Dialog</title>
 								<mediaobject>
@@ -214,33 +214,21 @@
 		<title>Import From Flat File Source</title>
 		<itemizedlist>
 			<listitem>
-			   <para>You can import metadata from your flat file data sources and create the metmodels required to query your data in 
+			   <para>You can import metadata from your flat file data sources and create the metamodels required to query your data in 
 			         minutes. Using the steps below you will define your flat file data source, configure your parsing paramaters for the
-			         flat file, generate a source model containing the standard Teiid flat file procedures and create view tables 
+			         flat file, generate a source model containing the standard Teiid flat file procedure and create view tables 
 			         containing the SQL defining the column data in your flat file.</para>
 			         
-			    <para>Teiid supports Flat Files as data sources.  In release 7.5, Teiid Designer introduces a new Import
+			    <para>Teiid supports Flat Files as data sources.  Teiid Designer provides an Import
 			     wizard designed to assist in creating the metadata models required to access the data in your flat files. 
 			     As with Designer's JDBC, Salesforce and WSDL importers, the Flat File importer is based on utilizing a
 			      specific Data Tools Connection Profile.</para>
 			      
-				<para>The results of the importer will include a source model containing the three Flat File procedures 
-				supported by Teiid. Namely:
-					<itemizedlist>
-						<listitem>
-							<para>getFiles()</para>
-						</listitem>
-						<listitem>
-							<para>getTextFiles()</para>
-						</listitem>
-						<listitem>
-							<para>saveFile()</para>
-						</listitem>
-					</itemizedlist>
-				</para>
+				<para>The results of the importer will include a source model containing the getTextFiles() procedures 
+				supported by Teiid.</para>
 
-				<para>The importer will also create a new view model containing a view table for each of your selected 
-				flat file source files. Within these view tables will be generated SQL transformations containing 
+				<para>The importer will also create a new view model containing a view table for your selected 
+				flat file source file. Within the view table will be generated SQL transformation containing 
 				the "getTextFiles()" procedure from your source model as well as the column definitions and parameters 
 				required for the Teiid TEXTTABLE() function used to query the data file. You can also choose to update 
 				an existing view model instead of creating a new view model.</para>
@@ -264,7 +252,7 @@ FROM
 	 TEXTTABLE(f.file COLUMNS Name string, Sport string, Position string, 
 	 Team string, City string, StateCode string, AnnualSalary string 
 	 HEADER 2 SKIP 3) AS A</synopsis></para>
-			         
+			 	<para>To import from your flat file source follow the steps below.</para>
 					<itemizedlist>
 						<listitem>
 							<para><emphasis role="bold">Step 1 </emphasis> - In <emphasis role="bold">Model Explorer</emphasis> 
@@ -277,13 +265,13 @@ FROM
 						</listitem>
 						<listitem>
 							<para><emphasis role="bold">Step 2 </emphasis> - Select the import option 
-								<emphasis role="bold">Teiid Designer > Flat File Source >> Source and View Model</emphasis>  and 
+								<emphasis role="bold">Teiid Designer > File Source (Flat) >> Source and View Model</emphasis>  and 
 								 click <emphasis role="bold">Next></emphasis></para>
 							<figure>
 								<title>Import from Flat File Source</title>
 								<mediaobject>
 									<imageobject>
-										<imagedata fileref="images/screencaps/import-flat-file-selection-dialog.png"/>
+										<imagedata fileref="images/screencaps/teiid-data-file-import-options.png"/>
 									</imageobject>
 								</mediaobject>
 							</figure>
@@ -295,46 +283,60 @@ FROM
 								or <guibutton>Edit...</guibutton> to modify/change an existing connection profile prior to selection.
 								Note that the Flat File Source selection list will be populated with only Flat File connection
 								profiles.</para>
-							<figure>
-								<title>Flat File Source Selection Page</title>
-								<mediaobject>
-									<imageobject>
-										<imagedata fileref="images/screencaps/import-flat-file-page-1.png"/>
-									</imageobject>
-								</mediaobject>
-							</figure>
-						</listitem>
-						<listitem>
-							<para><emphasis role="bold">Step 3a </emphasis> - After selecting a <emphasis role="bold">Connection Profile</emphasis>, 
+							<para>After selecting a <emphasis role="bold">Connection Profile</emphasis>, 
 								the file contents of the folder defined in the connection profile will be displayed in the <emphasis role="bold">Available Data Files</emphasis> panel. 
-								Check each data file you wish to process. Each file will be used to construct a view table containing 
+								Check the the data file you wish to process. The data from this file, along with your custom import options, will be used to construct a view table containing 
 								the required SQL transformation for retrieving your data and returning a result set.</para>
-								
-							<para>Each data file will analized and validated based on a set of parser settings. You can 
-								view the details via the <emphasis role="bold">Edit Parser Settings...</emphasis> button.  If the validation fails, an Error 
-								Status will be displayed instead of OK and you will be required to fix the errors in order to 
-								proceed with importing that data file. You are encouraged to view the parser settings for ALL 
-								your data files to insure that header information, column names etc. are what you expect.</para>
-							
-							<para>The <emphasis role="bold">Teiid Data File Parser Settings</emphasis> dialog, shown below, contains the various parser settings 
-								and TEXTTABLE() method and parameter options.  The <emphasis role="bold">File Contents Preview</emphasis> section displays a 
-								portion of the raw file contents. If your data is character delimited (default), choose the 
-								delimiter character in Delimiter Options section.  If <emphasis role="bold">User header for column names</emphasis> check-box 
-								is selected, the dialog will attempt to parse the header line and extract your column names. 
-								If <emphasis role="bold">Fixed Width</emphasis> option is selected, no header is expected and you are requried to specifiy 
-								the number of data columns, their names, data types and width of each column.</para>
+							<para>Lastly enter or unique source model name in the <emphasis role="bold">Source Model Definition</emphasis> section at the bottom of the page or
+								select an existing source model using the browse button. Note the <emphasis role="bold">Model Status</emphasis> section which will
+								indicate the validity of the model name, whether the model exists or not and whether the model already contains the getTextFiles()
+								procedure. In this case, the source model nor the procedure will be generated.</para>
+							<para>When finished with this page, click <emphasis role="bold">Next></emphasis>.</para>
 							<figure>
-								<title>Teiid Data File Parser Settings</title>
+								<title>Data File Source Selection Page</title>
 								<mediaobject>
 									<imageobject>
-										<imagedata fileref="images/screencaps/import-flat-file-parsing-config-dialog.png"/>
+										<imagedata fileref="images/screencaps/teiid-flat-file-source-page-1.png"/>
 									</imageobject>
 								</mediaobject>
 							</figure>
 						</listitem>
 						<listitem>
-							<para><emphasis role="bold">Step 3b </emphasis> - To aid in determining if your parser settings are 
-								correct you can select a data row in your <emphasis role="bold">File Contents Preview</emphasis> section and click the 
+							<para><emphasis role="bold">Step 4 </emphasis> - The next page, titled <emphasis role="bold">Flat File Column Format Definition</emphasis>, requires
+							    defining the format of your column data in the file. The options are <guibutton>Character delimited</guibutton> and <guibutton>Fixed width</guibutton>.
+							    This page contains a preview of the contents of your file to aid in determining the format. The wizard defaults to displaying the first 20
+							    lines, but you can change that value if you wish.</para>
+							<para>When finished with this page, click <emphasis role="bold">Next></emphasis>.</para>
+							<figure>
+								<title>Data File Source Selection Page</title>
+								<mediaobject>
+									<imageobject>
+										<imagedata fileref="images/screencaps/teiid-flat-file-source-page-2.png"/>
+									</imageobject>
+								</mediaobject>
+							</figure>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Step 5a : Character Delimited Option </emphasis> - The primary purpose of this importer is to help you create a view table containing
+							    the transformation required to query the user-defined data file.  This page presents a number of options you can use to customize
+							    the <emphasis role="bold">Generated SQL Statement</emphasis> , shown in the bottom panel, for the character delimited option. 
+							    Specify header options (Column names in header, header line number and first data line number), Parse selected row, 
+							    changed character delimiter and edit the TEXTTABLE() function options. See the Teiid User's Guide for details on the TEXTTABLE() 
+							    function.</para>
+							   <para>If columns names are not defined in a file header or if you wish to modify or create custom columns, you can
+							   use the <guibutton>ADD</guibutton>, <guibutton>DELETE</guibutton>, 
+							   <guibutton>UP</guibutton>, <guibutton>DOWN</guibutton> to manage the column info in your SQL.</para>
+							<para>When finished with this page, click <emphasis role="bold">Next></emphasis>.</para>
+							<figure>
+								<title>Flat File Delimited Columns Options Page</title>
+								<mediaobject>
+									<imageobject>
+										<imagedata fileref="images/screencaps/teiid-flat-file-source-page-3_delimited.png"/>
+									</imageobject>
+								</mediaobject>
+							</figure>
+							<para>To aid in determining if your parser settings are correct you can select a data row in 
+								your <emphasis role="bold">File Contents Preview</emphasis> section and click the 
 								<emphasis role="bold">Parse Selected Row</emphasis>  button. A dialog will be displayed 
 								showing the list of columns and the resulting column data. If your column data is not what 
 								you expected, you'll need to adjust your settings accordingly.</para>
@@ -347,14 +349,36 @@ FROM
 								</mediaobject>
 							</figure>
 						</listitem>
-						<listitem> 
-							<para><emphasis role="bold">Step 4 </emphasis> - On the <emphasis role="bold">Target Models Definition</emphasis>
-							page, select the target folder locations where your new source and view models will be created. In the case of the 
-							view model, you can also select an existing model for your new view tables. In this case the 
-							<emphasis role="bold">Update Existing Model</emphasis> option will be selected.
-							Press <emphasis role="bold">Finish></emphasis> to generate your models and finish the wizard.</para>
+						<listitem>
+							<para><emphasis role="bold">Step 5b : Fixed Column Width Option </emphasis> - The primary purpose of this importer is to help you create a view table containing
+							    the transformation required to query the user-defined data file.  This page presents a number of options you can use to customize
+							    the <emphasis role="bold">Generated SQL Statement</emphasis> , shown in the bottom panel, for the fixed column width option. 
+							    Specify header options (Column names in header, header line number and first data line number), Parse selected row, 
+							    changed character delimiter and edit the TEXTTABLE() function options. See the Teiid User's Guide for details on the TEXTTABLE() 
+							    function.</para>
+							   <para>If columns names are not defined in a file header or if you wish to modify or create custom columns, you can
+							   use the <guibutton>ADD</guibutton>, <guibutton>DELETE</guibutton>, 
+							   <guibutton>UP</guibutton>, <guibutton>DOWN</guibutton> to manage the column info in your SQL.</para>
+							   <para>You can also utilize the cursor postion and text length values in the upper left panel to determine what your
+							   column widths are in your data file.</para>
+							<para>When finished with this page, click <emphasis role="bold">Next></emphasis>.</para>
 							<figure>
-								<title>Select Database Options Dialog</title>
+								<title>Flat File Fixed Columns Width Options Page</title>
+								<mediaobject>
+									<imageobject>
+										<imagedata fileref="images/screencaps/teiid-flat-file-source-page-3_fixed.png"/>
+									</imageobject>
+								</mediaobject>
+							</figure>
+						</listitem>
+						<listitem> 
+							<para><emphasis role="bold">Step 6 </emphasis> - On the <emphasis role="bold">View Model Definition</emphasis>
+								page, select the target folder location where your new view model will be created. You can also select an existing 
+								model for your new view tables. Note the <emphasis role="bold">Model Status</emphasis> section which will
+								indicate the validity of the model name, whether the model exists or not. Lastly, enter a unique, valid view table name.
+								Press <emphasis role="bold">Finish</emphasis> to generate your models and finish the wizard.</para>
+							<figure>
+								<title>View Model Definition Page</title>
 								<mediaobject>
 									<imageobject>
 										<imagedata fileref="images/screencaps/import-flat-file-page-2.png"/>
@@ -366,7 +390,7 @@ FROM
 			</listitem>
 		</itemizedlist>
 		<para>When your import is finished your source model will be opened in an editor and show a diagram containing the 
-			three generated flat file procedures.</para>
+			your getTextFiles() procedure.</para>
 		<figure>
 			<title>Generated Flat File Procedures</title>
 			<mediaobject>
@@ -376,7 +400,7 @@ FROM
 			</mediaobject>
 		</figure>
 		<para>In addition, the view model will be opened in an editor and will show the generated view tables containing 
-			the completed SQL required to access the data in your flat file using the "getFiles" procedure above and the Teiid TEXTTABLE() function.
+			the completed SQL required to access the data in your flat file using the "getTextFiles" procedure above and the Teiid TEXTTABLE() function.
 			The following figure is an example of a generated view table.</para>
 		<figure>
 			<title>Generated Flat File View Table</title>
@@ -388,6 +412,151 @@ FROM
 		</figure>
 	</section>
 	
+		<!-- ####### XML DATA FILE IMPORTER ######################################### -->
+	
+	<section id="xml-data-file-import-section">
+		<title>Import From XML Data File Source</title>
+		<itemizedlist>
+			<listitem>
+			   <para>Teiid supports XML Files as data sources. You can import from these data sources and create the metamodels required to 
+			   		query your data in minutes. Using the steps below you will define your flat file data source, 
+			   		configure your parsing paramaters for the xml data file, generate a source model containing 
+			   		the required Teiid procedure and create a view table containing the SQL defining the column 
+			   		data in your xml data file.</para>
+			         
+			    <para>As with Designer's JDBC, Salesforce and WSDL importers, the XML File importer is based on utilizing a
+			      specific Data Tools Connection Profile.</para>
+			      
+				<para>The results of the importer will include a source model containing the getTextFiles() procedure or invokeHTTP()
+				procedure which are both supported by Teiid.</para>
+
+				<para>The importer will also create a new view model containing a view table for your selected 
+				flat file source file. Within the view table will be generated SQL transformation containing 
+				the "getTextFiles()" procedure from your source model as well as the column definitions and parameters 
+				required for the Teiid XMLTABLE() function used to query the data file. You can also choose to update 
+				an existing view model instead of creating a new view model.</para>
+
+				<para>The XMLTABLE function uses XQuery to produce tabular ouptut. The XMLTABLE function is implicitly 
+				a nested table and may be correlated to preceeding FROM clause entries. XMLTABLE is part of the 
+				SQL/XML 2006 specification. </para>
+
+				<synopsis>XMLTABLE([&lt;NSP&gt;,] xquery-expression [&lt;PASSING&gt;] [COLUMNS &lt;COLUMN&gt;, ... )] AS name</synopsis>
+				<synopsis>COLUMN := name (FOR ORDINALITY | (datatype [DEFAULT expression] [PATH string]))</synopsis>
+
+				<para>Teiid Designer will construct the full SQL statement for each view table in the form:
+<synopsis>
+SELECT
+	A.entryDate AS entryDate, A.internalAudit AS internalAudit
+FROM
+	(EXEC CCC.getTextFiles('sample.xml')) AS f, 
+	XMLTABLE(XMLNAMESPACES('http://www.kaptest.com/schema/1.0/party' AS pty), 
+	'/pty:students/student' PASSING XMLPARSE(DOCUMENT f.file) 
+	COLUMNS entryDate FOR ORDINALITY, internalAudit string PATH '/internalAudit') AS A</synopsis></para>
+				<para>To import from your XML data file source follow the steps below.</para>
+					<itemizedlist>
+						<listitem>
+							<para><emphasis role="bold">Step 1 </emphasis> - In <emphasis role="bold">Model Explorer</emphasis> 
+								choose the <emphasis role="bold">File > Import</emphasis> action <inlinemediaobject>
+									<imageobject>
+										<imagedata fileref="images/icons/import-wiz.png"/>
+									</imageobject>
+								</inlinemediaobject> in the toolbar or select a project, folder or 
+							 	model in the tree and choose <emphasis role="bold">Import...</emphasis></para>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Step 2 </emphasis> - Select the import option 
+								<emphasis role="bold">Teiid Designer > File Source (XML) >> Source and View Model</emphasis>  and 
+								 click <emphasis role="bold">Next></emphasis></para>
+							<figure>
+								<title>Import from Flat File Source</title>
+								<mediaobject>
+									<imageobject>
+										<imagedata fileref="images/screencaps/teiid-data-file-import-options.png"/>
+									</imageobject>
+								</mediaobject>
+							</figure>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Step 3 </emphasis> - The next page of the wizard allows selection of the
+								XML Import mode that specifies whether the XML file is local or remote. The description at the top
+								describes what operations this wizard will perform.  Select either the <guilabel>XML file on local file system</guilabel>
+								or <guilabel>XML file via remote URL</guilabel> and click <emphasis role="bold">Next></emphasis></para>
+							<figure>
+								<title>XML Import File Options Page</title>
+								<mediaobject>
+									<imageobject>
+										<imagedata fileref="images/screencaps/teiid-xml-file-source-page-1.png"/>
+									</imageobject>
+								</mediaobject>
+							</figure>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Step 4 </emphasis> - Select existing or previous 
+								connection profile from the drop-down selector or press <guibutton>New...</guibutton> button to launch 
+								the <guilabel>New Connection Profile</guilabel> dialog (See Eclispe Data Tools documentation) 
+								or <guibutton>Edit...</guibutton> to modify/change an existing connection profile prior to selection.</para>
+							<para>After selecting a <emphasis role="bold">Connection Profile</emphasis>, 
+								the XML data file from the connection profile will be displayed in the <emphasis role="bold">Available Data Files</emphasis> panel. 
+								Check the the data file you wish to process. The data from this file, along with your custom import options, 
+								will be used to construct a view table containing 
+								the required SQL transformation for retrieving your data and returning a result set.</para>
+							<para>Lastly enter or unique source model name in the <emphasis role="bold">Source Model Definition</emphasis> section at the bottom of the page or
+								select an existing source model using the browse button. Note the <emphasis role="bold">Model Status</emphasis> section which will
+								indicate the validity of the model name, whether the model exists or not and whether the model already contains the getTextFiles()
+								procedure. In this case, the source model nor the procedure will be generated.</para>
+							<para>When finished with this page, click <emphasis role="bold">Next></emphasis>.</para>
+							<figure>
+								<title>XML Data File Source Selection Page</title>
+								<mediaobject>
+									<imageobject>
+										<imagedata fileref="images/screencaps/teiid-xml-file-source-page-2.png"/>
+									</imageobject>
+								</mediaobject>
+							</figure>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Step 5 </emphasis> - The primary purpose of this importer is to help you create a view table containing
+							    the transformation required to query the user-defined data file.  This page presents a number of options you can use to customize
+							    the <emphasis role="bold">Generated SQL Statement</emphasis> , shown in the bottom panel. 
+							    The to panel contains an XML tree view of your file contents and actions/buttons you can use to create column entries
+							    displayed in the middle, <emphasis role="bold">Column Information</emphasis> panel.</para>
+							<para>To create columns, select a root XML element and right-click select <guibutton>Set as root path</guibutton> action. This populates the 
+							   root path value. Next, select columns in the tree that you wish to include on your query and select <guibutton>Add selection as new
+							   column</guibutton> button. You can also modify or create custom columns, by 
+							   using the <guibutton>ADD</guibutton>, <guibutton>DELETE</guibutton>, 
+							   <guibutton>UP</guibutton>, <guibutton>DOWN</guibutton> to manage the column info in your SQL.</para>
+							<para>Note that the <guibutton>Path</guibutton> property value for a column is the selected element's path relative to the
+							   defined root path. If no root path is defined all paths are absolute.  Each column entry requires a datatype and an optional
+							   default value. See the Teiid User's Guide for details on the XMLTABLE() function.</para>
+							<para>When finished with this page, click <emphasis role="bold">Next></emphasis>.</para>
+							<figure>
+								<title>Flat File Delimited Columns Options Page</title>
+								<mediaobject>
+									<imageobject>
+										<imagedata fileref="images/screencaps/teiid-xml-file-source-page-3.png"/>
+									</imageobject>
+								</mediaobject>
+							</figure>
+						</listitem>
+						<listitem> 
+							<para><emphasis role="bold">Step 6 </emphasis> - On the <emphasis role="bold">View Model Definition</emphasis>
+								page, select the target folder location where your new view model will be created. You can also select an existing 
+								model for your new view tables. Note the <emphasis role="bold">Model Status</emphasis> section which will
+								indicate the validity of the model name, whether the model exists or not. Lastly, enter a unique, valid view table name.
+								Press <emphasis role="bold">Finish</emphasis> to generate your models and finish the wizard.</para>
+							<figure>
+								<title>View Model Definition Page</title>
+								<mediaobject>
+									<imageobject>
+										<imagedata fileref="images/screencaps/teiid-xml-file-source-page-4.png"/>
+									</imageobject>
+								</mediaobject>
+							</figure>
+						</listitem>
+					</itemizedlist>
+			</listitem>
+		</itemizedlist>
+	</section>
 	<!-- ####### SALESFORCE IMPORTER ######################################### -->
 	
 	<section id="salesforce-import-section">
@@ -453,7 +622,7 @@ FROM
 						<listitem>
 							<para><emphasis role="bold">Step 5 </emphasis> - On the <emphasis role="bold">Target Model Selection</emphasis> page, 
 								specify the target folder location for your generated model, a unique model name and select desired
-								import options. Press <emphasis role="bold">Next></emphasis> (or <emphasis role="bold">Finish></emphasis> if enabled).</para>
+								import options. Press <emphasis role="bold">Next></emphasis> (or <emphasis role="bold">Finish</emphasis> if enabled).</para>
 							<figure>
 								<title>Target Model Selection Dialog</title>
 								<mediaobject>
@@ -465,7 +634,7 @@ FROM
 						</listitem>
 						<listitem>
 							<para><emphasis role="bold">Step 5a </emphasis> - If you are updating an existing relational model, the next page will be <emphasis role="bold">Review Model Updates</emphasis> page. 
-								Any differences. Press <emphasis role="bold">Finish></emphasis> to create your models and tables.</para>
+								Any differences. Press <emphasis role="bold">Finish</emphasis> to create your models and tables.</para>
 							<figure>
 								<title>Review Model Updates Dialog</title>
 								<mediaobject>
@@ -541,26 +710,87 @@ FROM
 		
 		<itemizedlist>
 			<listitem>
-				<para>These steps required for each type are defined below:
+				<para>These steps are required for each type are defined below:
 					<itemizedlist>
 						<listitem>
-							<para><emphasis><xref linkend="relational-tables-text-import-section" /></emphasis></para>
+							<para><emphasis><xref linkend="relational-model-xml-text-import-section"/></emphasis></para>
 						</listitem>
 						<listitem>
-							<para><emphasis><xref linkend="relational-virtual-tables-text-import-section" /></emphasis></para>
+							<para><emphasis><xref linkend="relational-tables-text-import-section"/></emphasis></para>
 						</listitem>
 						<listitem>
-							<para><emphasis><xref linkend="datatypes-text-import-section" /></emphasis></para>
+							<para><emphasis><xref linkend="relational-virtual-tables-text-import-section"/></emphasis></para>
+						</listitem>
+						<listitem>
+							<para><emphasis><xref linkend="datatypes-text-import-section"/></emphasis></para>
 						</listitem>
 					</itemizedlist>
 				</para>
 			</listitem>
 		</itemizedlist>
 		
+		<!-- ####### RELATIONAL MODEL XML TEXT IMPORTER ######################################### -->
+		
+		<section id="relational-model-xml-text-import-section">
+			<title>Import Relational Model (XML Format)</title>
+			<para>A </para>
+			<itemizedlist>
+				<listitem>
+					<para>To create relational tables from imported xml text file metadata:
+						<itemizedlist>
+							<listitem>
+								<para>
+									Perform <emphasis role="bold">Steps 1 through 3</emphasis> (above) 
+									and select the <emphasis role="bold">Relational Model (XML Format)</emphasis> import type, 
+									then click <emphasis role="bold">Next ></emphasis>
+								</para>
+								<figure>
+									<title>Select Import Type - Relational Model (XML Format) </title>
+									<mediaobject>
+										<imageobject>
+											<imagedata fileref="images/screencaps/import-relational-model-xml-page-1.png"/>
+										</imageobject>
+									</mediaobject>
+								</figure>
+							</listitem>
+							<listitem>
+								<para>
+									Perform <emphasis role="bold">Steps 4 </emphasis> - On the next page, select the XML file on your
+									local file system via the <guibutton>Browse...</guibutton> button. Select a target model to which the imported
+									relational objects will be added via the second <guibutton>Browse...</guibutton> button. The dialog allows selecting 
+									an existing relational model or creating a new model. Note the contents of your selected XML file
+									will be display in the File Contents viewer. Click <emphasis role="bold">Finish</emphasis> to create your new
+								</para>
+								<figure>
+									<title>Select Source Text File and Target Relational Model Page</title>
+									<mediaobject>
+										<imageobject>
+											<imagedata fileref="images/screencaps/import-relational-model-xml-page-2.png"/>
+										</imageobject>
+									</mediaobject>
+								</figure>
+							</listitem>
+						</itemizedlist>
+					</para>
+					<para>If the target model contains named children (tables, views, procedures) that conflict with the
+					objects being imported, a dialog will be displayed giving you options on how to proceed including: replacing specific 
+					existing objects, creating new same-named objects or cancel import entirely.</para>
+					<figure>
+						<title>Duplicate Objects Dialog</title>
+						<mediaobject>
+							<imageobject>
+								<imagedata fileref="images/screencaps/import-relational-model-xml-duplicate-objects.png"/>
+							</imageobject>
+						</mediaobject>
+					</figure>
+				</listitem>
+			</itemizedlist>
+			
+		</section>
 		<!-- ####### RELATIONAL TABLES TEXT IMPORTER ######################################### -->
 		
 		<section id="relational-tables-text-import-section">
-			<title>Import Relational Table Metadata From Text File</title>
+			<title>Import Relational Tables (CSV Format)</title>
 			<para></para>
 			<itemizedlist>
 				<listitem>
@@ -570,11 +800,11 @@ FROM
 							<listitem>
 								<para>
 									Perform <emphasis role="bold">Steps 1 through 3</emphasis> (above) 
-									and select the <emphasis role="bold">Relational Tables</emphasis> import type, 
+									and select the <emphasis role="bold">Relational Tables (CSV Format)</emphasis> import type, 
 									then click <emphasis role="bold">Next ></emphasis>
 								</para>
 								<figure>
-									<title>Select Import Type - Relational Tables </title>
+									<title>Select Import Type - Relational Tables (CSV Format)</title>
 									<mediaobject>
 										<imageobject>
 											<imagedata fileref="images/screencaps/import-from-text-file-page-2-relational.png"/>
@@ -622,7 +852,7 @@ FROM
 		<!-- ####### RELATIONAL VIRTUAL TABLES TEXT IMPORTER ######################################### -->
 		
 		<section id="relational-virtual-tables-text-import-section">
-			<title>Import Relational View Table Metadata From Text File</title>
+			<title>Import Relational View Tables (CSV Format)</title>
 			<para></para>
 			<itemizedlist>
 				<listitem>
@@ -632,11 +862,11 @@ FROM
 							<listitem>
 								<para>
 									Perform <emphasis role="bold">Steps 1 through 3</emphasis> (above) 
-									and select the <emphasis role="bold">Relational Virtual Tables</emphasis> import type, 
+									and select the <emphasis role="bold">Relational Virtual Tables (CSV Format)</emphasis> import type, 
 									then click <emphasis role="bold">Next ></emphasis>
 								</para>
 								<figure>
-									<title>Select Import Type - Relational Virtual Tables </title>
+									<title>Select Import Type - Relational Virtual Tables (CSV Format) </title>
 									<mediaobject>
 										<imageobject>
 											<imagedata fileref="images/screencaps/import-from-text-file-page-2-virtual-tables.png"/>
@@ -683,7 +913,7 @@ FROM
 		<!-- ####### DATATYPES TEXT IMPORTER ######################################### -->
 		
 		<section id="datatypes-text-import-section">
-			<title>Import Datatypes Metadata From Text File</title>
+			<title>Import Datatypes (CSV Format)</title>
 			<para></para>
 			<itemizedlist>
 				<listitem>
@@ -693,11 +923,11 @@ FROM
 							<listitem>
 								<para>
 									Perform <emphasis role="bold">Steps 1 through 3</emphasis> (above) 
-									and select the <emphasis role="bold">Datatypes</emphasis> import type, 
+									and select the <emphasis role="bold">Datatypes (CSV Format)</emphasis> import type, 
 									then click <emphasis role="bold">Next ></emphasis>
 								</para>
 								<figure>
-									<title>Select Import Type - Datatypes</title>
+									<title>Select Import Type - Datatypes (CSV Format)</title>
 									<mediaobject>
 										<imageobject>
 											<imagedata fileref="images/screencaps/import-from-text-file-page-2-datatypes.png"/>
