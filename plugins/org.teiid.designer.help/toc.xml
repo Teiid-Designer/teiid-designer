@@ -3,9 +3,9 @@
 <!DOCTYPE toc
   PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <toc label="Teiid Designer User Guide" topic="index.html">
-   <topic label="Introduction" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/intro-chapter.html">
-      <topic label="What is Teiid Designer?" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/intro-chapter.html#what-is-modeler"/>
-      <topic label="Why Use Teiid Designer?" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/intro-chapter.html#why-use-modeler"/>
+   <topic label="Introduction" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/intro-chapter.html">
+      <topic label="What is Teiid Designer?" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/intro-chapter.html#what-is-modeler"/>
+      <topic label="Why Use Teiid Designer?" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/intro-chapter.html#why-use-modeler"/>
       <topic label="Metadata Overview" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/intro-chapter.html#metadata-overview">
          <topic label="What is Metadata" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/intro-chapter.html#what-is-metadata"/>
          <topic label="Editing Metadata vs. Editing Data" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/intro-chapter.html#editing-metadata-vs-data"/>
@@ -28,7 +28,12 @@
             </topic>
          </topic>
       </topic>
-      <topic label="It's all in the Modeling..." href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/intro-chapter.html#models-101-section"/>
+      <topic label="It's all in the Modeling..." href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/intro-chapter.html#models-101-section">
+         <topic label="Model Object Extensions" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/intro-chapter.html#intro-to-model-extensions">
+            <topic label="Model Extension Definition (MED)" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/intro-chapter.html#model-extension-definition"/>
+            <topic label="Model Extension Definition Registry (MED Registry)" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/intro-chapter.html#d0e817"/>
+         </topic>
+      </topic>
    </topic>
    <topic label="New Model Wizards" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/newmodels-chapter.html">
       <topic label="Creating New Relational Source Model" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/newmodels-chapter.html#new-relational-source-model">
@@ -54,19 +59,18 @@
          <topic label="Build From Relational Models" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/newmodels-chapter.html#web-service-view-from-relational-section"/>
          <topic label="Build From XML Document View Models" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/newmodels-chapter.html#web-service-view-from-xml-doc-section"/>
       </topic>
-      <topic label="Creating New Extensions Model" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/newmodels-chapter.html#new-extension-model">
-         <topic label="Copy From Existing Model" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/newmodels-chapter.html#extensions-copy-section"/>
-      </topic>
    </topic>
    <topic label="Importers" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/importers-chapter.html">
       <topic label="Import DDL" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/importers-chapter.html#ddl-import-section"/>
       <topic label="Import From JDBC Database" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/importers-chapter.html#jdbc-import-section"/>
       <topic label="Import From Flat File Source" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/importers-chapter.html#flat-file-import-section"/>
+      <topic label="Import From XML Data File Source" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/importers-chapter.html#xml-data-file-import-section"/>
       <topic label="Import From Salesforce" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/importers-chapter.html#salesforce-import-section"/>
       <topic label="Import Metadata From Text File" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/importers-chapter.html#text-file-import-section">
-         <topic label="Import Relational Table Metadata From Text File" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/importers-chapter.html#relational-tables-text-import-section"/>
-         <topic label="Import Relational View Table Metadata From Text File" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/importers-chapter.html#relational-virtual-tables-text-import-section"/>
-         <topic label="Import Datatypes Metadata From Text File" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/importers-chapter.html#datatypes-text-import-section"/>
+         <topic label="Import Relational Model (XML Format)" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/importers-chapter.html#relational-model-xml-text-import-section"/>
+         <topic label="Import Relational Tables (CSV Format)" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/importers-chapter.html#relational-tables-text-import-section"/>
+         <topic label="Import Relational View Tables (CSV Format)" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/importers-chapter.html#relational-virtual-tables-text-import-section"/>
+         <topic label="Import Datatypes (CSV Format)" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/importers-chapter.html#datatypes-text-import-section"/>
       </topic>
       <topic label="Import WSDL into Relational Source Model" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/importers-chapter.html#wsdl-to-relational-import-section"/>
       <topic label="Import WSDL Into Web Service" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/importers-chapter.html#wsdl-to-web-service-import-section">
@@ -89,21 +93,28 @@
          </topic>
          <topic label="Input Set Editor (XML)" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/editing-model-objects-chapter.html#input-set-editor-section"/>
          <topic label="Choice Editor (XML)" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/editing-model-objects-chapter.html#choice-editor-section">
-            <topic label="Using the Choice Editor" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/editing-model-objects-chapter.html#d0e5111"/>
-            <topic label="Excluding Fragments" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/editing-model-objects-chapter.html#d0e5138"/>
-            <topic label="Editing Choice Criteria" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/editing-model-objects-chapter.html#d0e5157"/>
-            <topic label="Setting Choice Element Order" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/editing-model-objects-chapter.html#d0e5201"/>
-            <topic label="Setting a Default Choice Action " href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/editing-model-objects-chapter.html#d0e5220"/>
+            <topic label="Using the Choice Editor" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/editing-model-objects-chapter.html#d0e5408"/>
+            <topic label="Excluding Fragments" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/editing-model-objects-chapter.html#d0e5435"/>
+            <topic label="Editing Choice Criteria" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/editing-model-objects-chapter.html#d0e5454"/>
+            <topic label="Setting Choice Element Order" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/editing-model-objects-chapter.html#d0e5498"/>
+            <topic label="Setting a Default Choice Action " href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/editing-model-objects-chapter.html#d0e5517"/>
          </topic>
          <topic label="Recursion Editor (XML)" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/editing-model-objects-chapter.html#recursion-editor-section">
-            <topic label="The Editor" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/editing-model-objects-chapter.html#d0e5304"/>
+            <topic label="The Editor" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/editing-model-objects-chapter.html#d0e5601"/>
          </topic>
          <topic label="Operation Editor" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/editing-model-objects-chapter.html#operation-editor-section"/>
+      </topic>
+      <topic label="Managing Model Object Extensions" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/editing-model-objects-chapter.html#model-object-extension-properties-section">
+         <topic label="Create New MED" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/editing-model-objects-chapter.html#d0e5795"/>
+         <topic label="Edit MED" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/editing-model-objects-chapter.html#d0e5818"/>
+         <topic label="Extending Models With MEDs" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/editing-model-objects-chapter.html#d0e5884"/>
+         <topic label="Setting Extended Property Values" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/editing-model-objects-chapter.html#d0e5916"/>
       </topic>
    </topic>
    <topic label="Metadata-specific Modeling" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/metadata-specific-modeling-chapter.html">
       <topic label="Relational Source Modeling" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/metadata-specific-modeling-chapter.html#relational-source-modeling-section">
          <topic label="Source Function" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/metadata-specific-modeling-chapter.html#source-function-section"/>
+         <topic label="Create Relational Table Wizard" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/metadata-specific-modeling-chapter.html#source-table-wizard-section"/>
       </topic>
       <topic label="Relational View Modeling" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/metadata-specific-modeling-chapter.html#relational-view-modeling-section">
          <topic label="Create Materialized Views" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/metadata-specific-modeling-chapter.html#create-materialized-views-section"/>
@@ -132,10 +143,10 @@
          <topic label="Remove Connection Profile from Source Model" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/test-models-chapter.html#remove-connection-profile"/>
       </topic>
       <topic label="Previewing Data For a Model" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/test-models-chapter.html#test-preview-data-section">
-         <topic label="Preview Relational Table or View" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/test-models-chapter.html#d0e6545"/>
-         <topic label="Preview Relational Table With Access Pattern" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/test-models-chapter.html#d0e6586"/>
-         <topic label="Preview Relational Procedure" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/test-models-chapter.html#d0e6639"/>
-         <topic label="Preview Web Service Operation" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/test-models-chapter.html#d0e6692"/>
+         <topic label="Preview Relational Table or View" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/test-models-chapter.html#d0e7098"/>
+         <topic label="Preview Relational Table With Access Pattern" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/test-models-chapter.html#d0e7139"/>
+         <topic label="Preview Relational Procedure" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/test-models-chapter.html#d0e7192"/>
+         <topic label="Preview Web Service Operation" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/test-models-chapter.html#d0e7245"/>
          <topic label="Sample SQL Results for Preview Data" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/test-models-chapter.html#preview-results-section"/>
       </topic>
       <topic label="Testing With Your VDB" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/test-models-chapter.html#test-vdb-section">
@@ -168,7 +179,7 @@
       <topic label="Teiid Designer Perspectives" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/ui-reference-chapter.html#teiid-designer-perspectives-section">
          <topic label="Teiid Designer Perspective" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/ui-reference-chapter.html#teiid-perpective-section"/>
          <topic label="Opening a Perspective" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/ui-reference-chapter.html#opening-perspective-section"/>
-         <topic label="Further information" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/ui-reference-chapter.html#d0e7706"/>
+         <topic label="Further information" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/ui-reference-chapter.html#d0e8259"/>
       </topic>
       <topic label="Teiid Designer Views" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/ui-reference-chapter.html#teiid-designer-views-section">
          <topic label="Model Explorer View" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/ui-reference-chapter.html#model-explorer-view">
@@ -191,6 +202,7 @@
          <topic label="Teiid Model Classes View" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/ui-reference-chapter.html#model-classes-view"/>
          <topic label="System Catalog View" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/ui-reference-chapter.html#system-catalog-view"/>
          <topic label="SQL Reserved Words View" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/ui-reference-chapter.html#sql-reserved-words-view"/>
+         <topic label="Model Extension Definition Registry View (MED Registry View)" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/ui-reference-chapter.html#med-registry-view"/>
       </topic>
       <topic label="Editors" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/ui-reference-chapter.html#teiid-designer-editors-section">
          <topic label="Model Editor" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/ui-reference-chapter.html#model-editors-section">
@@ -202,8 +214,8 @@
                <topic label="Mapping Transformation Diagram" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/ui-reference-chapter.html#mapping-transformation-diagram-section"/>
             </topic>
             <topic label="Table Editor" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/ui-reference-chapter.html#table-editor-section">
-               <topic label="Editing Properties" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/ui-reference-chapter.html#d0e9525"/>
-               <topic label="Inserting Table Rows" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/ui-reference-chapter.html#d0e9568"/>
+               <topic label="Editing Properties" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/ui-reference-chapter.html#d0e10128"/>
+               <topic label="Inserting Table Rows" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/ui-reference-chapter.html#d0e10171"/>
             </topic>
             <topic label="Simple Datatypes Editor" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/ui-reference-chapter.html#datatypes-editor-section"/>
             <topic label="Semantic Editor" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/ui-reference-chapter.html#semantic-editor-section"/>
@@ -214,6 +226,7 @@
             <topic label="Editing Data Roles" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/ui-reference-chapter.html#editing-data-roles-section"/>
             <topic label="Editing Translator Overrides" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/ui-reference-chapter.html#editing-translator-overrides-section"/>
          </topic>
+         <topic label="Model Extension Definition Editor" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/ui-reference-chapter.html#model-extension-definition-editor-section"/>
       </topic>
       <topic label="Teiid Designer Main Menu" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/ui-reference-chapter.html#teiid-designer-menus-section">
          <topic label="File Menu" href="http://docs.jboss.org/teiid/designer/7.5/user-guide/en-US/html/ui-reference-chapter.html#file-menu-section"/>
