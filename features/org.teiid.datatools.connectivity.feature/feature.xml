@@ -15,7 +15,7 @@
 <feature
       id="org.teiid.datatools.connectivity.feature"
       label="%featureName"
-      version="7.6.0.qualifier"
+      version="7.7.0.qualifier"
       provider-name="Red Hat, Inc.">
 
    <description url="http://www.teiid.org/">

@@ -2,7 +2,7 @@
 <feature
       id="org.teiid.designer.runtime.feature"
       label="Teiid Designer Runtime"
-      version="7.6.0.qualifier"
+      version="7.7.0.qualifier"
       provider-name="Red Hat, Inc.">
 
    <description url="http://www.example.com/description">
@@ -12,7 +12,7 @@ Including: Connection management, VDB creation and management and Data Preview/V
    </description>
 
    <copyright url="http://www.example.com/copyright">
-      Teiid Designer (http://www.jboss.org/teiiddesigner.html) is copyright 2000-2011 MetaMatrix, Inc. and Red Hat, Inc.
+      Teiid Designer (http://www.jboss.org/teiiddesigner.html) is copyright 2000-2012 MetaMatrix, Inc. and Red Hat, Inc.
    </copyright>
 
    <license url="http://www.example.com/license">
