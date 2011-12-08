@@ -27,6 +27,7 @@ public interface UiConstants {
         String MED_EDITOR = PLUGIN_ID + ".modelDefinitionEditor"; //$NON-NLS-1$
         String MED_OVERVIEW_PAGE = PLUGIN_ID + ".overviewPage"; //$NON-NLS-1$
         String MED_PROPERTIES_PAGE = PLUGIN_ID + ".propertiesPage"; //$NON-NLS-1$
+        String MED_SOURCE_PAGE = PLUGIN_ID + ".sourcePage"; //$NON-NLS-1$
     }
     
     interface ExtensionIds {

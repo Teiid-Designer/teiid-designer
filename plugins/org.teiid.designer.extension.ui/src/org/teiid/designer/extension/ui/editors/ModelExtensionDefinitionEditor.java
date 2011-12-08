@@ -54,7 +54,6 @@ import org.eclipse.ui.IPersistableEditor;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.dialogs.SaveAsDialog;
 import org.eclipse.ui.editors.text.FileDocumentProvider;
-import org.eclipse.ui.editors.text.TextEditor;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.IMessageManager;
 import org.eclipse.ui.forms.editor.FormPage;
@@ -93,7 +92,7 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
 
     private boolean dirty = false;
     private boolean readOnly = false;
-    
+
     private IMemento memento;
 
     private final FileDocumentProvider documentProvider = new FileDocumentProvider();
@@ -101,9 +100,6 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
     private ModelExtensionDefinition originalMed;
     private ModelExtensionDefinition medBeingEdited;
 
-    private MedEditorPage overviewPage;
-
-    private MedEditorPage propertiesPage;
     private ScrolledForm scrolledForm;
     private final Collection<MedEditorPage> pages = new ArrayList<MedEditorPage>(2);
 
@@ -137,35 +133,24 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
     @Override
     protected void addPages() {
         // NOTE: pages are added in reverse order
+
         try {
             // last page is a readonly text editor
-            TextEditor sourceEditor = new TextEditor() {
-                /**
-                 * {@inheritDoc}
-                 * 
-                 * @see org.eclipse.ui.texteditor.AbstractDecoratedTextEditor#isEditable()
-                 */
-                @Override
-                public boolean isEditable() {
-                    return false;
-                }
-            };
-
-            // add text editor
-            addPage(0, sourceEditor, getEditorInput());
+            MedEditorPage page = new SourceEditorPage(this);
+            addPage(0, page);
+            this.pages.add(page);
 
             // add properties editor
-            this.propertiesPage = new PropertiesEditorPage(this);
-            addPage(0, this.propertiesPage);
-            this.pages.add(this.propertiesPage);
+            page = new PropertiesEditorPage(this);
+            addPage(0, page);
+            this.pages.add(page);
 
             // add overview editor
-            this.overviewPage = new OverviewEditorPage(this);
-            addPage(0, this.overviewPage);
-            this.pages.add(this.overviewPage);
+            page = new OverviewEditorPage(this);
+            addPage(0, page);
+            this.pages.add(page);
 
             // set text editor title and initialize header text to first page
-            setPageText((getPageCount() - 1), Messages.medEditorSourcePageTitle);
             this.scrolledForm.setText(getPageText(0));
 
             // handle page changes
@@ -561,8 +546,9 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
         refreshDirtyState();
 
         // pass event on to pages
-        this.overviewPage.handlePropertyChanged(e);
-        this.propertiesPage.handlePropertyChanged(e);
+        for (MedEditorPage page : this.pages) {
+            page.handlePropertyChanged(e);
+        }
     }
 
     /**
@@ -609,12 +595,13 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
                                     });
                                 }
                             } else if (ResourceChangeUtilities.isContentChanged(delta)) {
-//                              // TODO implement refresh editor state here (fix: this code gets executed even when editor makes change)
+                                // // TODO implement refresh editor state here (fix: this code gets executed even when editor makes
+                                // change)
                                 // file changed on file system by another editor
-//                                if (!FormUtil.openQuestion(getShell(), Messages.medChangedOnFileSystemDialogTitle,
-//                                                           Activator.getDefault().getImage(MED_EDITOR),
-//                                                           NLS.bind(Messages.medChangedOnFileSystemDialogMsg, getFile().getName()))) {
-//                                }
+                                // if (!FormUtil.openQuestion(getShell(), Messages.medChangedOnFileSystemDialogTitle,
+                                // Activator.getDefault().getImage(MED_EDITOR),
+                                // NLS.bind(Messages.medChangedOnFileSystemDialogMsg, getFile().getName()))) {
+                                // }
                             }
 
                             return false; // stop visiting
@@ -651,17 +638,16 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
         if (isReadOnly() != newValue) {
             this.readOnly = newValue;
 
-            this.overviewPage.setResourceReadOnly(this.readOnly);
-            this.overviewPage.getManagedForm().refresh();
-
-            this.propertiesPage.setResourceReadOnly(this.readOnly);
-            this.overviewPage.getManagedForm().refresh();
+            for (MedEditorPage page : this.pages) {
+                page.setResourceReadOnly(this.readOnly);
+                page.getManagedForm().refresh();
+            }
         }
     }
 
     /**
      * {@inheritDoc}
-     *
+     * 
      * @see org.eclipse.ui.IPersistableEditor#restoreState(org.eclipse.ui.IMemento)
      */
     @Override
@@ -671,7 +657,7 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
 
     /**
      * {@inheritDoc}
-     *
+     * 
      * @see org.eclipse.ui.IPersistable#saveState(org.eclipse.ui.IMemento)
      */
     @Override
