@@ -231,33 +231,29 @@ public class ModelExtensionPropertyDescriptor extends PropertyDescriptor impleme
             try {
                 String value = assistant.getPropertyValue(this.eObject, propId);
                 String[] allowedValues = propDefn.getAllowedValues();
+                boolean hasAllowedValues = ((allowedValues != null) && (allowedValues.length != 0));
 
+                // no value
                 if (CoreStringUtil.isEmpty(value)) {
-                    // no value but prop defn has allowed values. must return an int so use first allowed value
-                    if ((allowedValues != null) && (allowedValues.length != 0)) {
-                        return 0;
+                    // prop defn has allowed values but since we must return an int because there are allowed values return -1 
+                    // which will clear selection in comboboxcelleditor
+                    if (hasAllowedValues) {
+                        return -1;
                     }
 
-                    // must convert to empty string if null as TextCellEditor requires non-null value
+                    // ensure value is empty string not null as TextCellEditor requires non-null value
                     value = CoreStringUtil.Constants.EMPTY_STRING;
-                } else {
+                } else if (hasAllowedValues) {
                     // a value that is an allowed values must be converted to the index
-                    if ((allowedValues != null) && (allowedValues.length != 0)) {
-                        for (int i = 0; i < allowedValues.length; ++i) {
-                            if (allowedValues[i].equalsIgnoreCase(value)) {
-                                return i;
-                            }
-                        }
-
-                        // value is not an allowed value
-                        if (this.propDefn.isRequired()) {
-                            log(new Status(IStatus.ERROR, PLUGIN_ID, NLS.bind(Messages.valueIsNotAnAllowedValueFirstValueUsed,
-                                                                              new Object[] { value, propId, allowedValues[0] })));
-                            value = allowedValues[0];
-                        } else {
-                            log(new Status(IStatus.ERROR, PLUGIN_ID, NLS.bind(Messages.valueIsNotAnAllowedValue, value, propId)));
+                    for (int i = 0; i < allowedValues.length; ++i) {
+                        if (allowedValues[i].equalsIgnoreCase(value)) {
+                            return i;
                         }
                     }
+
+                    // current value is not a current allowed value so just clear comboboxcelleditor selection
+                    log(new Status(IStatus.ERROR, PLUGIN_ID, NLS.bind(Messages.valueIsNotAnAllowedValue, value, propId)));
+                    return -1;
                 }
 
                 return value;
@@ -280,17 +276,15 @@ public class ModelExtensionPropertyDescriptor extends PropertyDescriptor impleme
         ModelObjectExtensionAssistant assistant = getModelExtensionAssistant(propId);
 
         if (assistant != null) {
+            // if integer, value must be an index to an allowed value so convert to the value at that index
             if (value instanceof Integer) {
                 int index = (Integer)value;
-
-                // only could be an index to an allowed value so convert to the value at that index
                 String[] allowedValues = propDefn.getAllowedValues();
 
-                if ((allowedValues != null) && (allowedValues.length == 0)) {
-                    if ((index < 0) || (index > (allowedValues.length - 1))) {
-                        // set to default value
-                        value = null;
-                    }
+                // make sure index makes sense
+                if ((index < 0) || (allowedValues == null) || (allowedValues.length == 0) || (index > (allowedValues.length - 1))) {
+                    // don't return a value
+                    value = CoreStringUtil.Constants.EMPTY_STRING;
                 } else {
                     value = allowedValues[index];
                 }
@@ -357,9 +351,19 @@ public class ModelExtensionPropertyDescriptor extends PropertyDescriptor impleme
 
             // integer values are indexes into allowed values collection
             if (value instanceof Integer) {
-                String stringValue = propDefn.getAllowedValues()[(Integer)value];
+                // if no value set to empty string
+                String stringValue = CoreStringUtil.Constants.EMPTY_STRING;
 
-                if (!CoreStringUtil.equals(stringValue, propDefn.getDefaultValue())) {
+                if (((Integer)value).intValue() == -1) {
+                    // error if no value and value is required
+                    if (propDefn.isRequired()) {
+                        return PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_ERROR_TSK);
+                    }
+                } else {
+                    stringValue = propDefn.getAllowedValues()[(Integer)value];
+                }
+
+                if (!CoreStringUtil.valuesAreEqual(stringValue, propDefn.getDefaultValue())) {
                     return PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_FILE);
                 }
             }
@@ -378,10 +382,15 @@ public class ModelExtensionPropertyDescriptor extends PropertyDescriptor impleme
                 return "*****"; //$NON-NLS-1$
             }
 
+            // convert integer to string when allowed values
             if (element instanceof Integer) {
                 String[] allowedValues = getPropertyDefinition().getAllowedValues();
 
                 if ((allowedValues != null) && (allowedValues.length != 0)) {
+                    if (((Integer)element).intValue() == -1) {
+                        return CoreStringUtil.Constants.EMPTY_STRING;
+                    }
+
                     return allowedValues[(Integer)element];
                 }
             }

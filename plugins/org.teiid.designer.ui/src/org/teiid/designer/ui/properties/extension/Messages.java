@@ -24,7 +24,6 @@ public class Messages extends NLS {
 	public static String unexpectedPropertySourceId;
 	public static String unexpectedPropertyValueType;
 	public static String valueIsNotAnAllowedValue;
-	public static String valueIsNotAnAllowedValueFirstValueUsed;
 	public static String workspaceFileNotFound;
 
     static {
