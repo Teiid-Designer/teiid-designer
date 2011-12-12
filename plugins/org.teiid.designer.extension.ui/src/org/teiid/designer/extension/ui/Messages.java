@@ -172,6 +172,8 @@ public class Messages extends NLS {
     public static String medEditorMarkerType;
     public static String medEditorSaveError;
     public static String medEditorInputNotAFile;
+    public static String medEditorRefreshErrorTitle;
+    public static String medEditorRefreshErrorMsg;
 
     public static String medEditorOverviewPageTitle;
     public static String medEditorOverviewPageToolTip;

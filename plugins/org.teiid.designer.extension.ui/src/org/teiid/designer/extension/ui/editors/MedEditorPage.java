@@ -84,6 +84,11 @@ public abstract class MedEditorPage extends FormPage {
     }
 
     /**
+     * The MED was changed outside of the editor. Page must reload MED content. 
+     */
+    public abstract void handleMedReloaded();
+
+    /**
      * @param e the property change event being handled (never <code>null</code>)
      */
     protected abstract void handlePropertyChanged( PropertyChangeEvent e );
@@ -94,7 +99,7 @@ public abstract class MedEditorPage extends FormPage {
     protected boolean isReadonly() {
         return getMedEditor().isReadOnly();
     }
-
+    
     /**
      * {@inheritDoc}
      * 

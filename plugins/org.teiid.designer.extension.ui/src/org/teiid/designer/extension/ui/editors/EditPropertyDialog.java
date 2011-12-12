@@ -74,6 +74,7 @@ import org.teiid.designer.extension.ui.UiConstants.ImageIds;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.internal.ui.forms.FormUtil;
+import com.metamatrix.modeler.internal.ui.forms.MessageFormDialog;
 import com.metamatrix.ui.internal.util.WidgetUtil;
 
 /**
@@ -1433,8 +1434,9 @@ final class EditPropertyDialog extends FormDialog {
     void handleRemoveAllowedValue() {
         assert (getSelectedAllowedValue() != null) : "Remove allowed value button is enabled and shouldn't be"; //$NON-NLS-1$
 
-        if (FormUtil.openQuestion(getShell(), Messages.removeAllowedValueDialogTitle, Activator.getDefault().getImage(MED_EDITOR),
-                                  NLS.bind(Messages.removeAllowedValueDialogMsg, getSelectedDescription()))) {
+        if (MessageFormDialog.openQuestion(getShell(), Messages.removeAllowedValueDialogTitle,
+                                           Activator.getDefault().getImage(MED_EDITOR),
+                                           NLS.bind(Messages.removeAllowedValueDialogMsg, getSelectedDescription()))) {
             this.propDefn.removeAllowedValue(getSelectedAllowedValue());
             this.lstAllowedValues.remove(getSelectedAllowedValue());
             handleAllowedValueSelected(); // removing from ths List doesn't seem to generate a new selection event
@@ -1444,8 +1446,9 @@ final class EditPropertyDialog extends FormDialog {
     void handleRemoveDescription() {
         assert (getSelectedDescription() != null) : "Remove description button is enabled and shouldn't be"; //$NON-NLS-1$
 
-        if (FormUtil.openQuestion(getShell(), Messages.removeDescriptionDialogTitle, Activator.getDefault().getImage(MED_EDITOR),
-                                  NLS.bind(Messages.removeDescriptionDialogMsg, getSelectedDescription()))) {
+        if (MessageFormDialog.openQuestion(getShell(), Messages.removeDescriptionDialogTitle,
+                                           Activator.getDefault().getImage(MED_EDITOR),
+                                           NLS.bind(Messages.removeDescriptionDialogMsg, getSelectedDescription()))) {
             this.propDefn.removeDescription(getSelectedDescription());
             this.descriptionViewer.refresh();
         }
@@ -1454,8 +1457,9 @@ final class EditPropertyDialog extends FormDialog {
     void handleRemoveDisplayName() {
         assert (getSelectedDisplayName() != null) : "Remove display name button is enabled and shouldn't be"; //$NON-NLS-1$
 
-        if (FormUtil.openQuestion(getShell(), Messages.removeDisplayNameDialogTitle, Activator.getDefault().getImage(MED_EDITOR),
-                                  NLS.bind(Messages.removeDisplayNameDialogMsg, getSelectedDisplayName()))) {
+        if (MessageFormDialog.openQuestion(getShell(), Messages.removeDisplayNameDialogTitle,
+                                           Activator.getDefault().getImage(MED_EDITOR),
+                                           NLS.bind(Messages.removeDisplayNameDialogMsg, getSelectedDisplayName()))) {
             this.propDefn.removeDisplayName(getSelectedDisplayName());
             this.displayNameViewer.refresh();
         }

@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IResourceDelta;
@@ -44,7 +45,10 @@ import org.eclipse.jface.dialogs.PageChangedEvent;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.window.Window;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
@@ -78,6 +82,7 @@ import org.teiid.designer.extension.ui.actions.RegistryDeploymentValidator;
 import org.teiid.designer.extension.ui.actions.ShowModelExtensionRegistryViewAction;
 
 import com.metamatrix.modeler.internal.core.workspace.ResourceChangeUtilities;
+import com.metamatrix.modeler.internal.ui.forms.MessageFormDialog;
 
 /**
  * 
@@ -96,6 +101,8 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
     private IMemento memento;
 
     private final FileDocumentProvider documentProvider = new FileDocumentProvider();
+    private long modificationStamp = 0;
+    private Listener refreshListener;
 
     private ModelExtensionDefinition originalMed;
     private ModelExtensionDefinition medBeingEdited;
@@ -166,6 +173,19 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
                     handlePageChanged();
                 }
             });
+
+            this.refreshListener = new Listener() {
+                /**
+                 * {@inheritDoc}
+                 *
+                 * @see org.eclipse.swt.widgets.Listener#handleEvent(org.eclipse.swt.widgets.Event)
+                 */
+                @Override
+                public void handleEvent( Event event ) {
+                    refreshMed();
+                }
+            };
+            getContainer().addListener(SWT.Activate, refreshListener);
 
             // restore state
             int selectedPageNum = 0;
@@ -325,6 +345,7 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
 
             this.documentProvider.aboutToChange(input);
             this.documentProvider.saveDocument(progressMonitor, input, document, true);
+            this.modificationStamp = this.documentProvider.getModificationStamp(input);
 
             // create new original MED that that will then be copied over to the MED being edited
             createMed();
@@ -483,6 +504,10 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
         page.setFocus();
     }
 
+    private void hookRefreshListener() {
+        getContainer().addListener(SWT.Activate, this.refreshListener);
+    }
+
     /**
      * {@inheritDoc}
      * 
@@ -508,6 +533,14 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
     @Override
     public boolean isSaveAsAllowed() {
         return true;
+    }
+
+    /**
+     * @return <code>true</code> if editor is synchronized with file system
+     */
+    boolean isSynchronized() {
+        long currentModifiedStamp = this.documentProvider.getModificationStamp(getEditorInput());
+        return (this.modificationStamp == currentModifiedStamp);
     }
 
     /**
@@ -593,15 +626,22 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
                                             getEditorSite().getPage().closeEditor(accessThis(), false);
                                         }
                                     });
+                                } else if (ResourceChangeUtilities.isContentChanged(delta)) {
+                                    if (!getShell().isDisposed()) {
+                                        getShell().getDisplay().syncExec(new Runnable() {
+
+                                            /**
+                                             * {@inheritDoc}
+                                             * 
+                                             * @see java.lang.Runnable#run()
+                                             */
+                                            @Override
+                                            public void run() {
+                                                refreshMed();
+                                            }
+                                        });
+                                    }
                                 }
-                            } else if (ResourceChangeUtilities.isContentChanged(delta)) {
-                                // // TODO implement refresh editor state here (fix: this code gets executed even when editor makes
-                                // change)
-                                // file changed on file system by another editor
-                                // if (!FormUtil.openQuestion(getShell(), Messages.medChangedOnFileSystemDialogTitle,
-                                // Activator.getDefault().getImage(MED_EDITOR),
-                                // NLS.bind(Messages.medChangedOnFileSystemDialogMsg, getFile().getName()))) {
-                                // }
                             }
 
                             return false; // stop visiting
@@ -625,6 +665,33 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
         if (isDirty() != newValue) {
             this.dirty = newValue;
             getHeaderForm().dirtyStateChanged();
+        }
+    }
+
+    void refreshMed() {
+        if (!isSynchronized()) {
+            unhookRefreshListener();
+
+            if (MessageFormDialog.openQuestion(getShell(), Messages.medChangedOnFileSystemDialogTitle,
+                                               Activator.getDefault().getImage(MED_EDITOR),
+                                               NLS.bind(Messages.medChangedOnFileSystemDialogMsg, getFile().getName()))) {
+                try {
+                    getFile().refreshLocal(IResource.DEPTH_ONE, null);
+                    this.modificationStamp = this.documentProvider.getModificationStamp(getEditorInput());
+
+                    createMed();
+
+                    for (MedEditorPage page : this.pages) {
+                        page.handleMedReloaded();
+                    }
+                } catch (Exception e) {
+                    UTIL.log(e);
+                    MessageFormDialog.openError(getShell(), Messages.medEditorRefreshErrorTitle,
+                                                Activator.getDefault().getImage(MED_EDITOR), Messages.medEditorRefreshErrorMsg);
+                }
+            }
+
+            hookRefreshListener();
         }
     }
 
@@ -674,6 +741,7 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
     @Override
     public void setFocus() {
         super.setFocus();
+        refreshMed();
         refreshReadOnlyState();
     }
 
@@ -697,6 +765,7 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
             try {
                 // hook new document provider
                 this.documentProvider.connect(input);
+                this.modificationStamp = this.documentProvider.getModificationStamp(input);
                 IAnnotationModel model = this.documentProvider.getAnnotationModel(input);
                 model.connect(this.documentProvider.getDocument(input));
 
@@ -708,6 +777,10 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
         } else {
             throw new RuntimeException(Messages.medEditorInputNotAFile);
         }
+    }
+
+    private void unhookRefreshListener() {
+        getContainer().removeListener(SWT.Activate, this.refreshListener);
     }
 
 }

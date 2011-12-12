@@ -36,7 +36,7 @@ import org.teiid.designer.extension.ui.Activator;
 import org.teiid.designer.extension.ui.Messages;
 
 import com.metamatrix.core.util.CoreStringUtil;
-import com.metamatrix.modeler.internal.ui.forms.FormUtil;
+import com.metamatrix.modeler.internal.ui.forms.MessageFormDialog;
 
 public final class OverviewEditorPage extends MedEditorPage {
 
@@ -44,6 +44,7 @@ public final class OverviewEditorPage extends MedEditorPage {
     private Text txtNamespaceUri;
     private CCombo cbxMetamodelUris;
     private Text txtDescription;
+    private Text txtVersion;
 
     private final ErrorMessage descriptionError;
     private final ErrorMessage metamodelUriError;
@@ -106,8 +107,10 @@ public final class OverviewEditorPage extends MedEditorPage {
 
             this.txtNamespacePrefix = toolkit.createText(finalContainer, CoreStringUtil.Constants.EMPTY_STRING, TEXT_STYLE);
             this.txtNamespacePrefix.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-            String namespacePrefix = getMed().getNamespacePrefix();
-            this.txtNamespacePrefix.setText((namespacePrefix == null) ? CoreStringUtil.Constants.EMPTY_STRING : namespacePrefix);
+
+            // set value
+            refreshNamespacePrefixControl();
+
             this.txtNamespacePrefix.addModifyListener(new ModifyListener() {
 
                 /**
@@ -125,16 +128,15 @@ public final class OverviewEditorPage extends MedEditorPage {
             this.namespacePrefixError.setControl(this.txtNamespacePrefix);
         }
 
-        final Text finalTxtNamespaceUri;
-
         NAMESPACE_URI: {
             toolkit.createLabel(finalContainer, Messages.namespaceUriLabel);
 
             this.txtNamespaceUri = toolkit.createText(finalContainer, CoreStringUtil.Constants.EMPTY_STRING, TEXT_STYLE);
-            finalTxtNamespaceUri = this.txtNamespaceUri;
             this.txtNamespaceUri.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-            String namespaceUri = getMed().getNamespaceUri();
-            this.txtNamespaceUri.setText((namespaceUri == null) ? CoreStringUtil.Constants.EMPTY_STRING : namespaceUri);
+
+            // set value
+            refreshNamespaceUriControl();
+
             this.txtNamespaceUri.addModifyListener(new ModifyListener() {
 
                 /**
@@ -164,19 +166,8 @@ public final class OverviewEditorPage extends MedEditorPage {
             Set<String> metamodelNames = Activator.getDefault().getExtendableMetamodelNames();
             this.cbxMetamodelUris.setItems(metamodelNames.toArray(new String[metamodelNames.size()]));
 
-            // set value based on MED
-            String metamodelUri = getMed().getMetamodelUri();
-
-            if (!CoreStringUtil.isEmpty(metamodelUri)) {
-                String name = Activator.getDefault().getMetamodelName(metamodelUri);
-                int index = this.cbxMetamodelUris.indexOf(name);
-
-                if (index == -1) {
-                    UTIL.log(NLS.bind(Messages.overviewPageInvalidMetamodelUriMsg, metamodelUri));
-                } else {
-                    this.cbxMetamodelUris.select(index);
-                }
-            }
+            // set value
+            refreshMetamodelUriControl();
 
             this.cbxMetamodelUris.addModifyListener(new ModifyListener() {
 
@@ -198,9 +189,11 @@ public final class OverviewEditorPage extends MedEditorPage {
         VERSION: {
             toolkit.createLabel(finalContainer, Messages.versionLabel);
 
-            Text txtVersion = toolkit.createText(finalContainer, CoreStringUtil.Constants.EMPTY_STRING, SWT.READ_ONLY | TEXT_STYLE);
-            txtVersion.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-            txtVersion.setText(String.valueOf(getMed().getVersion()));
+            this.txtVersion = toolkit.createText(finalContainer, CoreStringUtil.Constants.EMPTY_STRING, SWT.READ_ONLY | TEXT_STYLE);
+            this.txtVersion.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+
+            // set value
+            refreshVersionControl();
         }
 
         DESCRIPTION: {
@@ -210,11 +203,9 @@ public final class OverviewEditorPage extends MedEditorPage {
             this.txtDescription = toolkit.createText(finalContainer, CoreStringUtil.Constants.EMPTY_STRING, SWT.BORDER | SWT.MULTI
                     | SWT.H_SCROLL | SWT.V_SCROLL | SWT.WRAP);
             this.txtDescription.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-            String description = getMed().getDescription();
 
-            if (!CoreStringUtil.isEmpty(description)) {
-                this.txtDescription.setText(description);
-            }
+            // set value
+            refreshDescriptionControl();
 
             this.txtDescription.addModifyListener(new ModifyListener() {
 
@@ -255,6 +246,23 @@ public final class OverviewEditorPage extends MedEditorPage {
         getMed().setDescription(newDescription);
     }
 
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.teiid.designer.extension.ui.editors.MedEditorPage#handleMedReloaded()
+     */
+    @Override
+    public void handleMedReloaded() {
+        // make sure GUI has been constructed before reloading
+        if (this.txtNamespacePrefix != null) {
+            refreshNamespacePrefixControl();
+            refreshNamespaceUriControl();
+            refreshMetamodelUriControl();
+            refreshVersionControl();
+            refreshDescriptionControl();
+        }
+    }
+
     void handleMetamodelUriChanged( String newMetamodelName ) {
         String oldUri = getMed().getMetamodelUri();
         String newMetamodelUri = Activator.getDefault().getMetamodelUri(newMetamodelName);
@@ -267,8 +275,8 @@ public final class OverviewEditorPage extends MedEditorPage {
 
         // changing metamodel will remove all metaclasses and associated properties so get confirmation from user
         if (!CoreStringUtil.isEmpty(oldUri) && (getMed().getExtendedMetaclasses().length != 0)) {
-            if (!FormUtil.openQuestion(getShell(), Messages.changeMetamodelDialogTitle,
-                                       Activator.getDefault().getImage(MED_EDITOR), Messages.changeMetamodelDialogMsg)) {
+            if (!MessageFormDialog.openQuestion(getShell(), Messages.changeMetamodelDialogTitle,
+                                                Activator.getDefault().getImage(MED_EDITOR), Messages.changeMetamodelDialogMsg)) {
                 doIt = false;
             }
         }
@@ -306,6 +314,72 @@ public final class OverviewEditorPage extends MedEditorPage {
             validateNamespacePrefix();
         } else if (PropertyName.NAMESPACE_URI.toString().equals(propName)) {
             validateNamespaceUri();
+        }
+    }
+
+    private void refreshDescriptionControl() {
+        String description = getMed().getDescription();
+
+        if (!CoreStringUtil.valuesAreEqual(this.txtDescription.getText(), description)) {
+            this.txtDescription.setText((description == null) ? CoreStringUtil.Constants.EMPTY_STRING : description);
+            validateDescription();
+        }
+    }
+
+    private void refreshMetamodelUriControl() {
+        String metamodelUri = getMed().getMetamodelUri();
+        int currentIndex = this.cbxMetamodelUris.getSelectionIndex();
+        int newIndex = -1; // no selection
+
+        // find new selected index
+        if (!CoreStringUtil.isEmpty(metamodelUri)) {
+            String name = Activator.getDefault().getMetamodelName(metamodelUri);
+
+            if (!CoreStringUtil.isEmpty(name)) {
+                newIndex = this.cbxMetamodelUris.indexOf(name);
+            }
+
+            // metamodel URI not found
+            if (newIndex == -1) {
+                UTIL.log(NLS.bind(Messages.overviewPageInvalidMetamodelUriMsg, metamodelUri));
+            }
+        }
+
+        // change selection if necessary
+        if (newIndex != currentIndex) {
+            if (newIndex == -1) {
+                this.cbxMetamodelUris.setText(CoreStringUtil.Constants.EMPTY_STRING);
+            } else {
+                this.cbxMetamodelUris.select(newIndex);
+            }
+
+            validateMetamodelUri();
+        }
+    }
+
+    private void refreshNamespacePrefixControl() {
+        String namespacePrefix = getMed().getNamespacePrefix();
+
+        if (!CoreStringUtil.valuesAreEqual(this.txtNamespacePrefix.getText(), namespacePrefix)) {
+            this.txtNamespacePrefix.setText((namespacePrefix == null) ? CoreStringUtil.Constants.EMPTY_STRING : namespacePrefix);
+            validateNamespacePrefix();
+        }
+    }
+
+    private void refreshNamespaceUriControl() {
+        String namespaceUri = getMed().getNamespaceUri();
+
+        if (!CoreStringUtil.valuesAreEqual(this.txtNamespaceUri.getText(), namespaceUri)) {
+            this.txtNamespaceUri.setText((namespaceUri == null) ? CoreStringUtil.Constants.EMPTY_STRING : namespaceUri);
+            validateNamespaceUri();
+        }
+    }
+
+    private void refreshVersionControl() {
+        String version = Integer.toString(getMed().getVersion());
+
+        if (!CoreStringUtil.valuesAreEqual(this.txtVersion.getText(), version)) {
+            this.txtVersion.setText(version);
         }
     }
 

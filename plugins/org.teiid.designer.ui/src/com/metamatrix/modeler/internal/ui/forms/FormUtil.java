@@ -7,10 +7,7 @@
  */
 package com.metamatrix.modeler.internal.ui.forms;
 
-import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.resource.JFaceResources;
-import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
@@ -19,8 +16,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.forms.FormDialog;
 import org.eclipse.ui.forms.HyperlinkGroup;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.SectionPart;
@@ -29,7 +24,6 @@ import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
-import org.eclipse.ui.forms.widgets.TableWrapLayout;
 
 public class FormUtil {
 
@@ -158,72 +152,6 @@ public class FormUtil {
 
         // no scrolled form in hierarchy, return null:
         return null;
-    }
-
-    public static boolean openQuestion( Shell parent,
-                                        String title,
-                                        Image titleImage,
-                                        String message ) {
-        class MessageFormDialog extends FormDialog {
-
-            private final Image titleImage;
-            private final String message;
-            private final String title;
-
-            MessageFormDialog( Shell parent,
-                               String title,
-                               Image titleImage,
-                               String message ) {
-                super(parent);
-                this.title = title;
-                this.titleImage = titleImage;
-                this.message = message;
-            }
-            
-            /**
-             * {@inheritDoc}
-             *
-             * @see org.eclipse.jface.dialogs.Dialog#createButton(org.eclipse.swt.widgets.Composite, int, java.lang.String, boolean)
-             */
-            @Override
-            protected Button createButton( Composite parent,
-                                           int id,
-                                           String label,
-                                           boolean defaultButton ) {
-                if (Window.OK == id) {
-                    label = IDialogConstants.YES_LABEL;
-                } else if (Window.CANCEL == id) {
-                    label = IDialogConstants.NO_LABEL;
-                }
-
-                return super.createButton(parent, id, label, defaultButton);
-            }
-
-            /**
-             * {@inheritDoc}
-             * 
-             * @see org.eclipse.ui.forms.FormDialog#createFormContent(org.eclipse.ui.forms.IManagedForm)
-             */
-            @Override
-            protected void createFormContent( IManagedForm managedForm ) {
-                ScrolledForm scrolledForm = managedForm.getForm();
-                scrolledForm.setText(this.title);
-                scrolledForm.setImage(this.titleImage);
-                scrolledForm.setMessage(null, IMessageProvider.INFORMATION);
-
-                FormToolkit toolkit = managedForm.getToolkit();
-                toolkit.decorateFormHeading(scrolledForm.getForm());
-
-                Composite body = scrolledForm.getBody();
-                body.setLayout(new TableWrapLayout());
-                toolkit.createLabel(body, this.message, SWT.WRAP);
-            }
-        }
-
-        FormDialog dialog = new MessageFormDialog(parent, title, titleImage, message);
-        dialog.create();
-        dialog.getShell().pack();
-        return (dialog.open() == Window.OK);
     }
 
     public static void tweakColors( FormToolkit ftk,

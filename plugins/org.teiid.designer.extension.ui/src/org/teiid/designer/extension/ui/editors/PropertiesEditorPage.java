@@ -64,6 +64,7 @@ import org.teiid.designer.extension.ui.Messages;
 import com.metamatrix.core.util.ArrayUtil;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.internal.ui.forms.FormUtil;
+import com.metamatrix.modeler.internal.ui.forms.MessageFormDialog;
 import com.metamatrix.ui.internal.util.WidgetUtil;
 
 /**
@@ -89,7 +90,7 @@ public class PropertiesEditorPage extends MedEditorPage {
 
     public PropertiesEditorPage( ModelExtensionDefinitionEditor medEditor ) {
         super(medEditor, MED_PROPERTIES_PAGE, Messages.medEditorPropertiesPageTitle);
- 
+
         this.metaclassError = new ErrorMessage();
         this.propertyError = new ErrorMessage();
 
@@ -561,7 +562,8 @@ public class PropertiesEditorPage extends MedEditorPage {
 
     void handleAddMetaclass() {
         // Get the metaclass name provider for the med's metamodelUri
-        ExtendableMetaclassNameProvider metaclassNameProvider = ExtensionPlugin.getInstance().getMetaclassNameProvider(getMed().getMetamodelUri());
+        ExtendableMetaclassNameProvider metaclassNameProvider = ExtensionPlugin.getInstance()
+                                                                               .getMetaclassNameProvider(getMed().getMetamodelUri());
         // Current metaclasses extended by the MED
         List<String> currentlyExtendedMetaclasses = Arrays.asList(getMed().getExtendedMetaclasses());
 
@@ -586,12 +588,15 @@ public class PropertiesEditorPage extends MedEditorPage {
 
         // Get the metaclass name provider for the med's metamodelUri
         String metamodelUri = getMed().getMetamodelUri();
-        ExtendableMetaclassNameProvider metaclassNameProvider = ExtensionPlugin.getInstance().getMetaclassNameProvider(metamodelUri);
+        ExtendableMetaclassNameProvider metaclassNameProvider = ExtensionPlugin.getInstance()
+                                                                               .getMetaclassNameProvider(metamodelUri);
 
         // Current metaclasses extended by the MED
         List<String> currentlyExtendedMetaclasses = Arrays.asList(getMed().getExtendedMetaclasses());
 
-        EditMetaclassDialog dialog = new EditMetaclassDialog(getShell(), metaclassNameProvider, currentlyExtendedMetaclasses,
+        EditMetaclassDialog dialog = new EditMetaclassDialog(getShell(),
+                                                             metaclassNameProvider,
+                                                             currentlyExtendedMetaclasses,
                                                              selectedMetaclassName);
         dialog.create();
         dialog.getShell().pack();
@@ -606,7 +611,9 @@ public class PropertiesEditorPage extends MedEditorPage {
     void handleAddProperty() {
         assert (getSelectedMetaclass() != null) : "Selected metaclass is null and shouldn't be"; //$NON-NLS-1$
         String metaclassName = getSelectedMetaclass();
-        EditPropertyDialog dialog = new EditPropertyDialog(getShell(), getMed(), metaclassName,
+        EditPropertyDialog dialog = new EditPropertyDialog(getShell(),
+                                                           getMed(),
+                                                           metaclassName,
                                                            getExistingPropertyIds(metaclassName));
         dialog.create();
         dialog.getShell().pack();
@@ -639,6 +646,19 @@ public class PropertiesEditorPage extends MedEditorPage {
             ModelExtensionPropertyDefinition modifiedPropDefn = dialog.getPropertyDefinition();
             getMed().removePropertyDefinition(metaclassName, selectedPropDefn);
             getMed().addPropertyDefinition(metaclassName, modifiedPropDefn);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.teiid.designer.extension.ui.editors.MedEditorPage#handleMedReloaded()
+     */
+    @Override
+    public void handleMedReloaded() {
+        if (this.metaclassViewer != null) {
+            this.metaclassViewer.setInput(this);
+            validateMetaclasses();
         }
     }
 
@@ -710,8 +730,9 @@ public class PropertiesEditorPage extends MedEditorPage {
         assert !CoreStringUtil.isEmpty(getSelectedMetaclass()) : "Remove metaclass button is enabled and there is no metaclass selected"; //$NON-NLS-1$
         String selectedMetaclassName = getSelectedMetaclass();
 
-        if (FormUtil.openQuestion(getShell(), Messages.removeMetaclassDialogTitle, Activator.getDefault().getImage(MED_EDITOR),
-                                  NLS.bind(Messages.removeMetaclassDialogMsg, selectedMetaclassName))) {
+        if (MessageFormDialog.openQuestion(getShell(), Messages.removeMetaclassDialogTitle,
+                                           Activator.getDefault().getImage(MED_EDITOR),
+                                           NLS.bind(Messages.removeMetaclassDialogMsg, selectedMetaclassName))) {
             getMed().removeMetaclass(selectedMetaclassName);
         }
     }
@@ -721,8 +742,9 @@ public class PropertiesEditorPage extends MedEditorPage {
         assert (getSelectedProperty() != null) : "Remove property button is enabled and there is no property selected"; //$NON-NLS-1$
         ModelExtensionPropertyDefinition selectedPropDefn = getSelectedProperty();
 
-        if (FormUtil.openQuestion(getShell(), Messages.removePropertyDialogTitle, Activator.getDefault().getImage(MED_EDITOR),
-                                  NLS.bind(Messages.removePropertyDialogMsg, selectedPropDefn.getSimpleId()))) {
+        if (MessageFormDialog.openQuestion(getShell(), Messages.removePropertyDialogTitle,
+                                           Activator.getDefault().getImage(MED_EDITOR),
+                                           NLS.bind(Messages.removePropertyDialogMsg, selectedPropDefn.getSimpleId()))) {
             getMed().removePropertyDefinition(getSelectedMetaclass(), selectedPropDefn);
         }
     }

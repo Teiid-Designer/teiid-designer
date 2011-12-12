@@ -26,7 +26,7 @@ import org.teiid.designer.extension.ui.Messages;
  */
 public class SourceEditorPage extends MedEditorPage {
 
-    private Text content;
+    private Text txtContent;
     private final ModelExtensionDefinitionWriter writer;
 
     /**
@@ -50,9 +50,29 @@ public class SourceEditorPage extends MedEditorPage {
         body.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
         body.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
 
-        this.content = new Text(body, SWT.READ_ONLY | SWT.MULTI | SWT.WRAP);
-        this.content.setBackground(body.getBackground());
+        this.txtContent = new Text(body, SWT.READ_ONLY | SWT.MULTI | SWT.WRAP);
+        this.txtContent.setBackground(body.getBackground());
+        this.txtContent.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+        ((GridData)this.txtContent.getLayoutData()).widthHint = 600;
+        ((GridData)this.txtContent.getLayoutData()).minimumWidth = 200;
         setContent();
+    }
+
+    String getMedText() {
+        return this.writer.writeAsText(getMed());
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.teiid.designer.extension.ui.editors.MedEditorPage#handleMedReloaded()
+     */
+    @Override
+    public void handleMedReloaded() {
+        // make sure GUI has been constructed before reloading
+        if (this.txtContent != null) {
+            setContent();
+        }
     }
 
     /**
@@ -62,25 +82,27 @@ public class SourceEditorPage extends MedEditorPage {
      */
     @Override
     protected void handlePropertyChanged( PropertyChangeEvent e ) {
-        if ((this.content != null) && !this.content.isDisposed()) {
-            // make sure UI thread
-            this.content.getDisplay().syncExec(new Runnable() {
+        setContent();
+    }
+
+    void setContent() {
+        // make sure UI thread
+        if ((this.txtContent != null) && !this.txtContent.isDisposed()) {
+            final Text txtMed = this.txtContent;
+
+            this.txtContent.getDisplay().syncExec(new Runnable() {
 
                 /**
                  * {@inheritDoc}
-                 *
+                 * 
                  * @see java.lang.Runnable#run()
                  */
                 @Override
                 public void run() {
-                    setContent();
+                    txtMed.setText(getMedText());
                 }
             });
         }
-    }
-
-    void setContent() {
-        this.content.setText(this.writer.writeAsText(getMed()));
     }
 
     /**
