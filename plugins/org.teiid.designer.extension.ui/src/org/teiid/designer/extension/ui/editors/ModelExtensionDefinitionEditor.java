@@ -10,14 +10,12 @@ package org.teiid.designer.extension.ui.editors;
 import static org.teiid.designer.extension.ui.UiConstants.UTIL;
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.MED_EDITOR;
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.REGISTERY_MED_UPDATE_ACTION;
-
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
@@ -44,6 +42,8 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.PageChangedEvent;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.source.IAnnotationModel;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
@@ -55,6 +55,8 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IPersistableEditor;
+import org.eclipse.ui.ISelectionListener;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.dialogs.SaveAsDialog;
 import org.eclipse.ui.editors.text.FileDocumentProvider;
@@ -65,6 +67,7 @@ import org.eclipse.ui.forms.editor.SharedHeaderFormEditor;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.part.FileEditorInput;
+import org.eclipse.ui.views.contentoutline.ContentOutline;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.teiid.designer.extension.ExtensionConstants;
 import org.teiid.designer.extension.ExtensionPlugin;
@@ -80,7 +83,6 @@ import org.teiid.designer.extension.ui.Messages;
 import org.teiid.designer.extension.ui.UiConstants;
 import org.teiid.designer.extension.ui.actions.RegistryDeploymentValidator;
 import org.teiid.designer.extension.ui.actions.ShowModelExtensionRegistryViewAction;
-
 import com.metamatrix.modeler.internal.core.workspace.ResourceChangeUtilities;
 import com.metamatrix.modeler.internal.ui.forms.MessageFormDialog;
 
@@ -88,7 +90,7 @@ import com.metamatrix.modeler.internal.ui.forms.MessageFormDialog;
  * 
  */
 public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor implements IPersistableEditor,
-        IResourceChangeListener, PropertyChangeListener, RegistryListener {
+ IResourceChangeListener, PropertyChangeListener, RegistryListener, ISelectionListener {
 
     /**
      * The memento key for the index of the selected editor.
@@ -113,6 +115,10 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
     private IAction showRegistryViewAction;
 
     private IAction updateRegisteryAction;
+
+    private MedOutlinePage contentOutlinePage;
+    private int overviewPageIndex = -1;
+    private int propertyPageIndex = -1;
 
     /**
      * Allow inner classes access to the <code>MedEditorPage</code>s.
@@ -151,11 +157,13 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
             page = new PropertiesEditorPage(this);
             addPage(0, page);
             this.pages.add(page);
+            this.propertyPageIndex = 1;
 
             // add overview editor
             page = new OverviewEditorPage(this);
             addPage(0, page);
             this.pages.add(page);
+            this.overviewPageIndex = 0;
 
             // set text editor title and initialize header text to first page
             this.scrolledForm.setText(getPageText(0));
@@ -199,6 +207,10 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
             }
 
             setActivePage(selectedPageNum);
+
+            this.getSite().getWorkbenchWindow().getSelectionService().addSelectionListener(this);
+
+            // this.getSite().setSelectionProvider(this);
         } catch (Exception e) {
             // this will open a "Could not open editor" page with exception details
             throw new RuntimeException(Messages.errorOpeningMedEditor, e);
@@ -451,8 +463,10 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
     @Override
     public Object getAdapter( Class adapter ) {
         if (adapter.equals(IContentOutlinePage.class)) {
-            // TODO implement IContentOutlinePage
-            return null;
+            if (contentOutlinePage == null) {
+                contentOutlinePage = new MedOutlinePage(this);
+            }
+            return contentOutlinePage;
         }
 
         return super.getAdapter(adapter);
@@ -783,4 +797,80 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
         getContainer().removeListener(SWT.Activate, this.refreshListener);
     }
 
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.eclipse.ui.ISelectionListener#selectionChanged(org.eclipse.ui.IWorkbenchPart,
+     *      org.eclipse.jface.viewers.ISelection)
+     */
+    @Override
+    public void selectionChanged( IWorkbenchPart part,
+                                  ISelection selection ) {
+        if (part != this && part instanceof ContentOutline) {
+            if (selection instanceof TreeSelection) {
+                Object obj = ((TreeSelection)selection).getFirstElement();
+                if (obj instanceof MedOutlineTreeNode) {
+                    // Switch to the correct Page based on Outline node selected.
+                    MedOutlineTreeNode medTreeNode = (MedOutlineTreeNode)obj;
+                    switchToSelectedPage(getActivePage(), medTreeNode);
+
+                    // TODO: Finish selection sync between editor and outline view
+
+                    // Switch selected element on editor page
+                    // if (getActivePage() == this.overviewPageIndex) {
+                    // selectOverviewPageComponent(medTreeNode);
+                    // }
+                }
+            }
+        }
+    }
+
+    private void switchToSelectedPage( int currentPageIndex,
+                                       MedOutlineTreeNode medTreeNode ) {
+        MedOutlineTreeNode.NodeType type = medTreeNode.getType();
+        int desiredPageIndex = 0;
+        switch (type) {
+            case NAMESPACE_PREFIX:
+            case NAMESPACE_URI:
+            case MODEL_CLASS:
+            case VERSION:
+            case DESCRIPTION:
+                desiredPageIndex = overviewPageIndex;
+                break;
+            case EXTENDED_METACLASS:
+            case PROPERTY_DEFN:
+                desiredPageIndex = propertyPageIndex;
+                break;
+            default:
+                desiredPageIndex = overviewPageIndex;
+                break;
+        }
+        if (currentPageIndex != desiredPageIndex) {
+            setActivePage(desiredPageIndex);
+        }
+    }
+
+    // private void selectOverviewPageComponent( MedOutlineTreeNode medTreeNode ) {
+    // OverviewEditorPage overviewPage = (OverviewEditorPage)getSelectedPage();
+    // MedOutlineTreeNode.NodeType type = medTreeNode.getType();
+    // switch (type) {
+    // case NAMESPACE_PREFIX:
+    // overviewPage.setFocusNSPrefix();
+    // break;
+    // case NAMESPACE_URI:
+    // overviewPage.setFocusNSUri();
+    // break;
+    // case MODEL_CLASS:
+    // overviewPage.setFocusModelClass();
+    // break;
+    // case VERSION:
+    // overviewPage.setFocusVersion();
+    // break;
+    // case DESCRIPTION:
+    // overviewPage.setFocusDescription();
+    // break;
+    // default:
+    // break;
+    // }
+    // }
 }
