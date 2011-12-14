@@ -76,7 +76,7 @@ public class FlatFileRelationalModelFactory implements UiConstants {
         }
         
         IProject project = mwItem.getResource().getProject();
-        IPath relativeModelPath = project.getProjectRelativePath().append(modelName);
+        IPath relativeModelPath = mwItem.getPath().removeFirstSegments(1).append(modelName);
         final IFile modelFile = project.getFile( relativeModelPath );
         final ModelResource resrc = ModelerCore.create( modelFile );
         resrc.getModelAnnotation().setPrimaryMetamodelUri( RELATIONAL_PACKAGE_URI );
