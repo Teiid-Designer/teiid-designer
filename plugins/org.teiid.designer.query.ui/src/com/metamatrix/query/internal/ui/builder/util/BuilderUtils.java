@@ -115,12 +115,12 @@ public final class BuilderUtils implements UiConstants {
         TEXT_LIMITS.put(STRING_TYPES[9], new Integer(256)); // STRING
 
         VALID_CHARS = new HashMap<String, String>();
-        VALID_CHARS.put(STRING_TYPES[0], "0123456789-."); // BIG_DECIMAL //$NON-NLS-1$
+        VALID_CHARS.put(STRING_TYPES[0], "0123456789-.eE"); // BIG_DECIMAL //$NON-NLS-1$
         VALID_CHARS.put(STRING_TYPES[1], "0123456789-"); // BIG_INTEGER //$NON-NLS-1$
         VALID_CHARS.put(STRING_TYPES[2], "0123456789-"); // BYTE //$NON-NLS-1$
         VALID_CHARS.put(STRING_TYPES[3], null); // CHAR
-        VALID_CHARS.put(STRING_TYPES[4], "0123456789-.E"); // DOUBLE //$NON-NLS-1$
-        VALID_CHARS.put(STRING_TYPES[5], "0123456789-."); // FLOAT //$NON-NLS-1$
+        VALID_CHARS.put(STRING_TYPES[4], "0123456789-+.eE"); // DOUBLE //$NON-NLS-1$
+        VALID_CHARS.put(STRING_TYPES[5], "0123456789-+.eE"); // FLOAT //$NON-NLS-1$
         VALID_CHARS.put(STRING_TYPES[6], "0123456789-"); // INTEGER //$NON-NLS-1$
         VALID_CHARS.put(STRING_TYPES[7], "0123456789-"); // LONG //$NON-NLS-1$
         VALID_CHARS.put(STRING_TYPES[8], "0123456789-"); // SHORT //$NON-NLS-1$

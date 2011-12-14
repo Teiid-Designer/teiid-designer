@@ -14,11 +14,11 @@ import java.sql.Timestamp;
 import java.util.Calendar;
 import org.eclipse.core.runtime.IStatus;
 import org.teiid.core.types.DataTypeManager.DefaultDataTypes;
+import org.teiid.query.sql.LanguageObject;
+import org.teiid.query.sql.symbol.Constant;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.query.internal.ui.builder.util.BuilderUtils;
-import org.teiid.query.sql.LanguageObject;
-import org.teiid.query.sql.symbol.Constant;
 
 /**
  * The <code>ConstantEditorModel</code> class is used as a model for the
@@ -119,17 +119,7 @@ public class ConstantEditorModel extends AbstractLanguageObjectEditorModel imple
                 } else if (typeClass == Character.class) {
                     value = new Character(textValue.charAt(0));
                 } else {
-                    // if both a leading and trailing single quote exist (and not same quote),
-                    // delete them both interior quotes are escaped automatically by the Constant class
-                    String temp = textValue;
-                    StringBuffer sb = new StringBuffer(temp);
-
-                    if (temp.startsWith("'") && temp.endsWith("'") && (temp.length() > 1)) { //$NON-NLS-1$ //$NON-NLS-2$
-                        sb.deleteCharAt(sb.length() - 1);
-                        sb.deleteCharAt(0);
-                    }
-
-                    value = sb.toString();
+                    value = textValue;
                 }
             } else if (isDate()) {
                 value = getDate();
@@ -241,7 +231,7 @@ public class ConstantEditorModel extends AbstractLanguageObjectEditorModel imple
             result = true;
         } else {
             if (isText()) {
-                result = (textValue != null) && (textValue.length() != 0);
+                result = (textValue != null) && isValid();
             } else if (isDate()) {
                 result = (dateValue != null);
             } else if (isTimestamp()) {
@@ -282,12 +272,30 @@ public class ConstantEditorModel extends AbstractLanguageObjectEditorModel imple
     }
 
     public boolean isValid() {
-        return (isText()) ? isValidValue(textValue) : true;
+        return (isText()) ? isValidValue(textValue) && isValidNumber(textValue) : true;
+    }
+    
+    public boolean isValidValue( String theString ) {
+        if (!isText()) {
+            return true;
+        }
+        if ((textValue.length() > getTextLimit(type))) {
+            return false;
+        }
+        // check to see if all valid chars
+        String validChars = BuilderUtils.getValidChars(type);
+
+        if (validChars != null) {
+            for (int length = textValue.length(), i = 0; i < length; i++) {
+                if (validChars.indexOf(textValue.charAt(i)) == -1) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
-    public boolean isValidValue( String theString ) {
-        boolean result = true;
-
+    private boolean isValidNumber( String theString ) {
         // could only not be valid if text type or number type
         Class typeClass = BuilderUtils.getTypeClass(type);
 
@@ -297,22 +305,10 @@ public class ConstantEditorModel extends AbstractLanguageObjectEditorModel imple
                 constructor.newInstance(new Object[] {theString});
             } catch (Exception theException) {
                 // this will catch values too big or too small
-                result = false;
+                return false;
             }
-        } else if (isText() && (textValue.length() <= getTextLimit(type))) {
-            // check to see if all valid chars
-            String validChars = BuilderUtils.getValidChars(type);
-
-            if (validChars != null) {
-                for (int length = textValue.length(), i = 0; i < length; i++) {
-                    if (validChars.indexOf(textValue.charAt(i)) == -1) {
-                        result = false;
-                        break;
-                    }
-                }
-            }
-        }
-        return result;
+        } 
+        return true;
     }
 
     public String paramString() {
