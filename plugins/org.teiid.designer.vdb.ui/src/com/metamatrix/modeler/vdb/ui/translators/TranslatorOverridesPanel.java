@@ -21,6 +21,8 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
@@ -56,6 +58,7 @@ import org.teiid.designer.vdb.Vdb;
 import org.teiid.designer.vdb.connections.SourceHandler;
 import org.teiid.designer.vdb.connections.SourceHandlerExtensionManager;
 
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.core.util.StringUtilities;
 import com.metamatrix.modeler.vdb.ui.VdbUiPlugin;
@@ -78,6 +81,11 @@ public final class TranslatorOverridesPanel extends Composite {
      * Action to remove a custom property.
      */
     private final IAction deletePropertyAction;
+
+    /**
+     * Action to edit a translator override name.
+     */
+    private final IAction editTranslatorAction;
 
     /**
      * Action to remove a translator from those being overridden.
@@ -122,7 +130,6 @@ public final class TranslatorOverridesPanel extends Composite {
             //
 
             this.translatorsViewer = new TableViewer(pnlTranslators, (SWT.V_SCROLL | SWT.H_SCROLL | SWT.FULL_SELECTION));
-            ColumnViewerToolTipSupport.enableFor(this.translatorsViewer);
             this.translatorsViewer.setContentProvider(new IStructuredContentProvider() {
                 /**
                  * {@inheritDoc}
@@ -199,7 +206,19 @@ public final class TranslatorOverridesPanel extends Composite {
             // create column
             final TableViewerColumn column = new TableViewerColumn(this.translatorsViewer, SWT.LEFT);
             column.getColumn().setText(Util.getString(PREFIX + "translatorColumn.text")); //$NON-NLS-1$
-            column.setLabelProvider(new TranslatorLabelProvider());
+            column.setLabelProvider(new ColumnLabelProvider() {
+
+                /**
+                 * {@inheritDoc}
+                 * 
+                 * @see org.eclipse.jface.viewers.ColumnLabelProvider#getText(java.lang.Object)
+                 */
+                @Override
+                public String getText( Object element ) {
+                    TranslatorOverride translator = (TranslatorOverride)element;
+                    return translator.getName();
+                }
+            });
             column.getColumn().pack();
 
             table.addControlListener(new ControlAdapter() {
@@ -241,6 +260,40 @@ public final class TranslatorOverridesPanel extends Composite {
             toolBarMgr.add(addAction);
             toolBarMgr.add(new Separator());
 
+            { // edit translator action
+                this.editTranslatorAction = new Action(CoreStringUtil.Constants.EMPTY_STRING, SWT.BORDER) {
+    
+                    /**
+                     * {@inheritDoc}
+                     * 
+                     * @see org.eclipse.jface.action.Action#run()
+                     */
+                    @Override
+                    public void run() {
+                        handleEditTranslatorOverride();
+                    }
+                };
+    
+                this.editTranslatorAction.setToolTipText(Util.getString(PREFIX + "editTranslatorAction.toolTip")); //$NON-NLS-1$
+                this.editTranslatorAction.setEnabled(false);
+                this.editTranslatorAction.setImageDescriptor(VdbUiPlugin.singleton.getImageDescriptor(EDIT_TRANSLATOR));
+                toolBarMgr.add(this.editTranslatorAction);
+                toolBarMgr.add(new Separator());
+                
+                this.translatorsViewer.addDoubleClickListener(new IDoubleClickListener() {
+                    
+                    /**
+                     * {@inheritDoc}
+                     *
+                     * @see org.eclipse.jface.viewers.IDoubleClickListener#doubleClick(org.eclipse.jface.viewers.DoubleClickEvent)
+                     */
+                    @Override
+                    public void doubleClick( DoubleClickEvent event ) {
+                        handleEditTranslatorOverride();
+                    }
+                });
+            }
+
             //
             // add the delete action to the toolbar
             //
@@ -272,9 +325,7 @@ public final class TranslatorOverridesPanel extends Composite {
             lblDescription.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
             lblDescription.setText(Util.getString(PREFIX + "lblTranslatorDescription")); //$NON-NLS-1$
 
-            this.txtDescription = new Text(pnlOverrides, SWT.MULTI | SWT.BORDER
-                    | SWT.WRAP
-                    | SWT.V_SCROLL);
+            this.txtDescription = new Text(pnlOverrides, SWT.MULTI | SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);
             this.txtDescription.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
             ((GridData)this.txtDescription.getLayoutData()).heightHint = 35;
             this.txtDescription.setToolTipText(Util.getString(PREFIX + "txtTranslatorDescription.toolTip")); //$NON-NLS-1$
@@ -499,6 +550,11 @@ public final class TranslatorOverridesPanel extends Composite {
         return names;
     }
 
+    private String[] getTranslatorTypes() {
+        SourceHandler handler = SourceHandlerExtensionManager.getVdbConnectionFinder();
+        return handler.getTranslatorTypes();
+    }
+
     void handleAddProperty() {
         assert (!this.translatorsViewer.getSelection().isEmpty());
 
@@ -527,8 +583,7 @@ public final class TranslatorOverridesPanel extends Composite {
 
     void handleAddTranslatorOverride() {
         TranslatorOverride translatorOverride = null;
-        SourceHandler handler = SourceHandlerExtensionManager.getVdbConnectionFinder();
-        String[] translatorTypes = handler.getTranslatorTypes();
+        String[] translatorTypes = getTranslatorTypes();
 
         // if no default server or server not connected then there won't be any translators
         if (translatorTypes == null) {
@@ -538,25 +593,12 @@ public final class TranslatorOverridesPanel extends Composite {
                 translatorOverride = new TranslatorOverride(this.vdb, dialog.getName(), dialog.getType(), null);
             }
         } else {
-            ChooseTranslatorOverrideDialog dialog = new ChooseTranslatorOverrideDialog(getShell(), translatorTypes);
+            EditTranslatorOverrideDialog dialog = new EditTranslatorOverrideDialog(getShell(),
+                                                                                 translatorTypes,
+                                                                                 this.vdb.getTranslators());
 
             if (dialog.open() == Window.OK) {
-                Object[] selection = dialog.getResult();
-
-                // add new translator override
-                if (selection != null) {
-                    // create a unique name for override
-                    final String selectedTranslatorType = (String)selection[0];
-                    final char dash = '-';
-                    int i = 1;
-                    String name = (selectedTranslatorType + dash + i);
-
-                    while (isExistingTranslatorName(name)) {
-                        name = (selectedTranslatorType + dash + (++i));
-                    }
-
-                    translatorOverride = new TranslatorOverride(this.vdb, name, selectedTranslatorType, null);
-                }
+                translatorOverride = new TranslatorOverride(this.vdb, dialog.getName(), dialog.getType(), null);
             }
         }
 
@@ -574,7 +616,19 @@ public final class TranslatorOverridesPanel extends Composite {
         if (!this.translatorsViewer.getSelection().isEmpty()) {
             TranslatorOverride translator = getSelectedTranslator();
             translator.setDescription(this.txtDescription.getText());
-            // TODO need to dirty VDB
+        }
+    }
+
+    void handleEditTranslatorOverride() {
+        assert (!this.translatorsViewer.getSelection().isEmpty());
+
+        TranslatorOverride translatorOverride = getSelectedTranslator();
+        EditTranslatorOverrideDialog dialog = new EditTranslatorOverrideDialog(getShell(),
+                                                                               translatorOverride,
+                                                                               this.vdb.getTranslators());
+
+        if (dialog.open() == Window.OK) {
+            this.translatorsViewer.refresh(translatorOverride);
         }
     }
 
@@ -651,6 +705,10 @@ public final class TranslatorOverridesPanel extends Composite {
                 this.txtDescription.setEnabled(false);
             }
 
+            if (this.editTranslatorAction.isEnabled()) {
+                this.editTranslatorAction.setEnabled(false);
+            }
+
             if (this.deleteTranslatorAction.isEnabled()) {
                 this.deleteTranslatorAction.setEnabled(false);
             }
@@ -661,6 +719,10 @@ public final class TranslatorOverridesPanel extends Composite {
         } else {
             if (!this.txtDescription.isEnabled()) {
                 this.txtDescription.setEnabled(true);
+            }
+
+            if (!this.editTranslatorAction.isEnabled()) {
+                this.editTranslatorAction.setEnabled(true);
             }
 
             if (!this.deleteTranslatorAction.isEnabled()) {
@@ -747,16 +809,6 @@ public final class TranslatorOverridesPanel extends Composite {
 
         this.propertiesViewer.refresh();
         WidgetUtil.pack(this.propertiesViewer);
-    }
-
-    private boolean isExistingTranslatorName( String name ) {
-        for (TranslatorOverride translator : this.vdb.getTranslators()) {
-            if (translator.getName().equals(name)) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     class PropertyLabelProvider extends ColumnLabelProvider {
@@ -846,28 +898,4 @@ public final class TranslatorOverridesPanel extends Composite {
         }
     }
 
-    class TranslatorLabelProvider extends ColumnLabelProvider {
-
-        /**
-         * {@inheritDoc}
-         * 
-         * @see org.eclipse.jface.viewers.ColumnLabelProvider#getText(java.lang.Object)
-         */
-        @Override
-        public String getText( Object element ) {
-            TranslatorOverride translator = (TranslatorOverride)element;
-            return translator.getName();
-        }
-
-        /**
-         * {@inheritDoc}
-         * 
-         * @see org.eclipse.jface.viewers.CellLabelProvider#getToolTipText(java.lang.Object)
-         */
-        @Override
-        public String getToolTipText( Object element ) {
-            TranslatorOverride translator = (TranslatorOverride)element;
-            return translator.getDescription();
-        }
-    }
 }

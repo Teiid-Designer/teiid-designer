@@ -87,7 +87,7 @@ public class TranslatorOverride implements Comparable<TranslatorOverride>, Prope
 
     private final AtomicReference<String> description = new AtomicReference<String>();
 
-    private final String name;
+    private final AtomicReference<String> name = new AtomicReference<String>();
 
     private final Map<String, TranslatorOverrideProperty> properties;
 
@@ -109,7 +109,7 @@ public class TranslatorOverride implements Comparable<TranslatorOverride>, Prope
         assert (type != null);
 
         this.vdb = vdb;
-        this.name = name;
+        this.name.set((name == null) ? StringUtilities.EMPTY_STRING : name);
         this.type = type;
         this.description.set((description == null) ? StringUtilities.EMPTY_STRING : description);
         this.properties = new HashMap<String, TranslatorOverrideProperty>();
@@ -118,7 +118,7 @@ public class TranslatorOverride implements Comparable<TranslatorOverride>, Prope
     TranslatorOverride( Vdb vdb,
                         TranslatorElement element ) {
         this.vdb = vdb;
-        this.name = element.getName();
+        this.name.set((element.getName() == null) ? StringUtilities.EMPTY_STRING : element.getName());
         this.type = element.getType();
         this.description.set((element.getDescription() == null) ? StringUtilities.EMPTY_STRING : element.getDescription());
         this.properties = new HashMap<String, TranslatorOverrideProperty>();
@@ -200,7 +200,7 @@ public class TranslatorOverride implements Comparable<TranslatorOverride>, Prope
      * @return name the name of the overridden translator (never <code>null</code>)
      */
     public String getName() {
-        return this.name;
+        return this.name.get();
     }
 
     /**
@@ -317,8 +317,26 @@ public class TranslatorOverride implements Comparable<TranslatorOverride>, Prope
         this.description.set(description);
 
         if (firePropertyEvent) {
-            this.vdb.setModified(this, Event.TRANSLATOR_PROPERTY, null, this.description.get());
+            this.vdb.setModified(this, Event.TRANSLATOR_PROPERTY, oldDescription, this.description.get());
         }
+    }
+
+    /**
+     * @param newName the new translator name
+     */
+    public void setName(String newName) {
+        String oldName = this.name.get();
+
+        // don't set if nothing has changed
+        if (StringUtilities.equals(newName, oldName)) {
+            return;
+        }
+
+        // update value and fire event
+        this.name.set(newName);
+
+        // notify listeners
+        this.vdb.setModified(this, Event.TRANSLATOR_PROPERTY, oldName, this.name.get());
     }
 
     /**
