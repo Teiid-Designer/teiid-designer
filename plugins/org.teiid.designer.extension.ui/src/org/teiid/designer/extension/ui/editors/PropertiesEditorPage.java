@@ -60,6 +60,7 @@ import org.teiid.designer.extension.definition.ModelExtensionDefinitionValidator
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
 import org.teiid.designer.extension.ui.Activator;
 import org.teiid.designer.extension.ui.Messages;
+import org.teiid.designer.extension.ui.model.MedModelNode;
 
 import com.metamatrix.core.util.ArrayUtil;
 import com.metamatrix.core.util.CoreStringUtil;
@@ -747,6 +748,37 @@ public class PropertiesEditorPage extends MedEditorPage {
                                            NLS.bind(Messages.removePropertyDialogMsg, selectedPropDefn.getSimpleId()))) {
             getMed().removePropertyDefinition(getSelectedMetaclass(), selectedPropDefn);
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.teiid.designer.extension.ui.editors.MedEditorPage#select(org.teiid.designer.extension.ui.model.MedModelNode)
+     */
+    @Override
+    boolean select( MedModelNode node ) {
+        assert (node != null) : "node is null"; //$NON-NLS-1$
+
+        if (node.isMetaclass()) {
+            if ((this.metaclassViewer != null) && !this.metaclassViewer.getControl().isDisposed()) {
+                this.metaclassViewer.setSelection(new StructuredSelection(node.getMetaclass()), true);
+                ensureVisible(this.metaclassViewer.getControl());
+            }
+
+            return true;
+        }
+
+        if (node.isPropertyDefinition()) {
+            if ((this.propertyViewer != null) && !this.propertyViewer.getControl().isDisposed()) {
+                select(MedModelNode.createMetaclassNode(node.getMedNode(), node.getMetaclass()));
+                this.propertyViewer.setSelection(new StructuredSelection(node.getPropertyDefinition()), true);
+                ensureVisible(this.propertyViewer.getControl());
+            }
+
+            return true;
+        }
+
+        return false;
     }
 
     /**

@@ -11,6 +11,7 @@ import java.beans.PropertyChangeEvent;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.IMessageManager;
@@ -19,6 +20,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
+import org.teiid.designer.extension.ui.model.MedModelNode;
 
 /**
  * The <code>MedEditorPage</code> is a base class for {@link ModelExtensionDefinitionEditor} pages that require the model extension
@@ -49,6 +51,13 @@ public abstract class MedEditorPage extends FormPage {
         createBody(managedForm.getForm().getBody(), managedForm.getToolkit());
         setResourceReadOnly(isReadonly());
         updateAllMessages();
+    }
+
+    /**
+     * @param c the form control that will be revealed in the MED editor client area (cannot be <code>null</code>) 
+     */
+    protected void ensureVisible(Control c) {
+        FormToolkit.ensureVisible(c);
     }
 
     /**
@@ -99,7 +108,9 @@ public abstract class MedEditorPage extends FormPage {
     protected boolean isReadonly() {
         return getMedEditor().isReadOnly();
     }
-    
+
+    abstract boolean select(MedModelNode node);
+
     /**
      * {@inheritDoc}
      * 

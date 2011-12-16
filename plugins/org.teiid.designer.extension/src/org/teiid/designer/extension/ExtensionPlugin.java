@@ -9,6 +9,7 @@ package org.teiid.designer.extension;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
@@ -32,6 +33,7 @@ import org.osgi.framework.BundleContext;
 import org.teiid.designer.extension.definition.ExtendableMetaclassNameProvider;
 import org.teiid.designer.extension.definition.ModelExtensionAssistant;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
+import org.teiid.designer.extension.definition.ModelExtensionDefinitionParser;
 import org.teiid.designer.extension.definition.ModelObjectExtensionAssistant;
 import org.teiid.designer.extension.definition.ModelObjectExtensionAssistantFactory;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
@@ -68,7 +70,7 @@ public class ExtensionPlugin extends Plugin {
      * A factory that creates model object extension assistants.
      */
     private ModelObjectExtensionAssistantFactory modelObjectAssistantFactory;
-    
+
     private ModelExtensionRegistry registry;
 
     private File schemaFile;
@@ -84,20 +86,20 @@ public class ExtensionPlugin extends Plugin {
             if (this.modelObjectAssistantFactory == null) {
                 // should not happen
                 this.modelObjectAssistantFactory = new ModelObjectExtensionAssistantFactory() {
-                    
+
                     /**
                      * {@inheritDoc}
-                     *
+                     * 
                      * @see org.teiid.designer.extension.definition.ModelObjectExtensionAssistantFactory#getModelObjectType()
                      */
                     @Override
                     public String getModelObjectType() {
                         return "NO MODEL OBJECT ASSISTANT FACTORY FOUND"; //$NON-NLS-1$
                     }
-                    
+
                     /**
                      * {@inheritDoc}
-                     *
+                     * 
                      * @see org.teiid.designer.extension.definition.ModelObjectExtensionAssistantFactory#createAssistant()
                      */
                     @Override
@@ -328,7 +330,7 @@ public class ExtensionPlugin extends Plugin {
     }
 
     /**
-     * Loads the extensions for the factories that creatE model object assistants. 
+     * Loads the extensions for the factories that creatE model object assistants.
      */
     private void loadModelObjectExtensionAssistantFactories() {
         final String EXT_PT = PLUGIN_ID + ".modelObjectExtensionAssistantFactory"; //$NON-NLS-1$
@@ -426,6 +428,18 @@ public class ExtensionPlugin extends Plugin {
         }
     }
 
+    /**
+     * Stream needs to be closed by caller.
+     * 
+     * @param medFileStream the input stream for the model extension definition file being parsed (never <code>null</code>)
+     * @return the model extension definition (never <code>null</code>)
+     * @throws Exception if there is a problem parsing the input stream
+     */
+    public ModelExtensionDefinition parse( InputStream medFileStream ) throws Exception {
+        ModelExtensionDefinitionParser parser = new ModelExtensionDefinitionParser(getMedSchema());
+        return parser.parse(medFileStream, createDefaultModelObjectExtensionAssistant());
+    }
+
     /*
      * Save the User-Defined MEDS in the Registry to the defined file system location.
      */
@@ -479,7 +493,7 @@ public class ExtensionPlugin extends Plugin {
 
         /**
          * {@inheritDoc}
-         *
+         * 
          * @see org.teiid.designer.extension.definition.ModelObjectExtensionAssistant#getModelExtensionDefinition(java.lang.Object)
          */
         @Override
@@ -489,7 +503,7 @@ public class ExtensionPlugin extends Plugin {
 
         /**
          * {@inheritDoc}
-         *
+         * 
          * @see org.teiid.designer.extension.definition.ModelObjectExtensionAssistant#getOverriddenValue(java.lang.Object, java.lang.String)
          */
         @Override
@@ -500,7 +514,7 @@ public class ExtensionPlugin extends Plugin {
 
         /**
          * {@inheritDoc}
-         *
+         * 
          * @see org.teiid.designer.extension.definition.ModelObjectExtensionAssistant#getOverriddenValues(java.lang.Object)
          */
         @Override
@@ -510,7 +524,7 @@ public class ExtensionPlugin extends Plugin {
 
         /**
          * {@inheritDoc}
-         *
+         * 
          * @see org.teiid.designer.extension.definition.ModelObjectExtensionAssistant#getPropertyValue(java.lang.Object, java.lang.String)
          */
         @Override
@@ -521,7 +535,7 @@ public class ExtensionPlugin extends Plugin {
 
         /**
          * {@inheritDoc}
-         *
+         * 
          * @see org.teiid.designer.extension.definition.ModelObjectExtensionAssistant#getPropertyValues(java.lang.Object)
          */
         @Override
@@ -531,7 +545,7 @@ public class ExtensionPlugin extends Plugin {
 
         /**
          * {@inheritDoc}
-         *
+         * 
          * @see org.teiid.designer.extension.definition.ModelObjectExtensionAssistant#getSupportedNamespaces(java.lang.Object)
          */
         @Override
@@ -541,7 +555,7 @@ public class ExtensionPlugin extends Plugin {
 
         /**
          * {@inheritDoc}
-         *
+         * 
          * @see org.teiid.designer.extension.definition.ModelObjectExtensionAssistant#hasExtensionProperties(java.io.File)
          */
         @Override
@@ -551,7 +565,7 @@ public class ExtensionPlugin extends Plugin {
 
         /**
          * {@inheritDoc}
-         *
+         * 
          * @see org.teiid.designer.extension.definition.ModelObjectExtensionAssistant#hasExtensionProperties(java.lang.Object)
          */
         @Override
@@ -561,7 +575,7 @@ public class ExtensionPlugin extends Plugin {
 
         /**
          * {@inheritDoc}
-         *
+         * 
          * @see org.teiid.designer.extension.definition.ModelObjectExtensionAssistant#isModelExtensionDefinitionRelated(java.lang.Object)
          */
         @Override
@@ -571,7 +585,7 @@ public class ExtensionPlugin extends Plugin {
 
         /**
          * {@inheritDoc}
-         *
+         * 
          * @see org.teiid.designer.extension.definition.ModelObjectExtensionAssistant#removeModelExtensionDefinition(java.lang.Object)
          */
         @Override
@@ -581,7 +595,7 @@ public class ExtensionPlugin extends Plugin {
 
         /**
          * {@inheritDoc}
-         *
+         * 
          * @see org.teiid.designer.extension.definition.ModelObjectExtensionAssistant#removeProperty(java.lang.Object, java.lang.String)
          */
         @Override
@@ -592,7 +606,7 @@ public class ExtensionPlugin extends Plugin {
 
         /**
          * {@inheritDoc}
-         *
+         * 
          * @see org.teiid.designer.extension.definition.ModelObjectExtensionAssistant#saveModelExtensionDefinition(java.lang.Object)
          */
         @Override
@@ -602,7 +616,7 @@ public class ExtensionPlugin extends Plugin {
 
         /**
          * {@inheritDoc}
-         *
+         * 
          * @see org.teiid.designer.extension.definition.ModelObjectExtensionAssistant#setPropertyValue(java.lang.Object, java.lang.String, java.lang.String)
          */
         @Override
@@ -614,7 +628,7 @@ public class ExtensionPlugin extends Plugin {
 
         /**
          * {@inheritDoc}
-         *
+         * 
          * @see org.teiid.designer.extension.definition.ModelExtensionAssistant#supportsMedOperation(java.lang.String, java.lang.Object)
          */
         @Override
@@ -625,14 +639,14 @@ public class ExtensionPlugin extends Plugin {
 
         /**
          * {@inheritDoc}
-         *
+         * 
          * @see org.teiid.designer.extension.definition.ModelObjectExtensionAssistant#supportsMyNamespace(java.lang.Object)
          */
         @Override
         public boolean supportsMyNamespace( Object modelObject ) throws Exception {
             return false;
         }
-        
+
     }
 
 }

@@ -10,12 +10,15 @@ package org.teiid.designer.extension.ui.editors;
 import static org.teiid.designer.extension.ui.UiConstants.UTIL;
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.MED_EDITOR;
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.REGISTERY_MED_UPDATE_ACTION;
+
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
@@ -43,7 +46,7 @@ import org.eclipse.jface.dialogs.PageChangedEvent;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.TreeSelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
@@ -67,7 +70,6 @@ import org.eclipse.ui.forms.editor.SharedHeaderFormEditor;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.part.FileEditorInput;
-import org.eclipse.ui.views.contentoutline.ContentOutline;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.teiid.designer.extension.ExtensionConstants;
 import org.teiid.designer.extension.ExtensionPlugin;
@@ -83,6 +85,8 @@ import org.teiid.designer.extension.ui.Messages;
 import org.teiid.designer.extension.ui.UiConstants;
 import org.teiid.designer.extension.ui.actions.RegistryDeploymentValidator;
 import org.teiid.designer.extension.ui.actions.ShowModelExtensionRegistryViewAction;
+import org.teiid.designer.extension.ui.model.MedModelNode;
+
 import com.metamatrix.modeler.internal.core.workspace.ResourceChangeUtilities;
 import com.metamatrix.modeler.internal.ui.forms.MessageFormDialog;
 
@@ -110,23 +114,21 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
     private ModelExtensionDefinition medBeingEdited;
 
     private ScrolledForm scrolledForm;
-    private final Collection<MedEditorPage> pages = new ArrayList<MedEditorPage>(2);
+    private final Map<MedEditorPage, Integer> medEditorPages = new HashMap<MedEditorPage, Integer>(3);
 
     private IAction showRegistryViewAction;
 
     private IAction updateRegisteryAction;
 
     private MedOutlinePage contentOutlinePage;
-    private int overviewPageIndex = -1;
-    private int propertyPageIndex = -1;
 
     /**
      * Allow inner classes access to the <code>MedEditorPage</code>s.
      * 
      * @return the <code>MedEditorPage</code>s (never <code>null</code>)
      */
-    Collection<MedEditorPage> accessMedEditorPages() {
-        return this.pages;
+    Map<MedEditorPage, Integer> accessMedEditorPages() {
+        return this.medEditorPages;
     }
 
     /**
@@ -145,27 +147,27 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
      */
     @Override
     protected void addPages() {
-        // NOTE: pages are added in reverse order
+        int pageNum = 0;
 
         try {
-            // last page is a readonly text editor
-            MedEditorPage page = new SourceEditorPage(this);
-            addPage(0, page);
-            this.pages.add(page);
+            // Page 1: overview editor
+            MedEditorPage page = new OverviewEditorPage(this);
+            addPage(pageNum, page);
+            this.medEditorPages.put(page, pageNum);
 
-            // add properties editor
+            // Page 2: properties editor
+            ++pageNum;
             page = new PropertiesEditorPage(this);
-            addPage(0, page);
-            this.pages.add(page);
-            this.propertyPageIndex = 1;
+            addPage(pageNum, page);
+            this.medEditorPages.put(page, pageNum);
 
-            // add overview editor
-            page = new OverviewEditorPage(this);
-            addPage(0, page);
-            this.pages.add(page);
-            this.overviewPageIndex = 0;
+            // Page 3: readonly text editor
+            ++pageNum;
+            page = new SourceEditorPage(this);
+            addPage(pageNum, page);
+            this.medEditorPages.put(page, pageNum);
 
-            // set text editor title and initialize header text to first page
+            // initialize header text to first page
             this.scrolledForm.setText(getPageText(0));
 
             // handle page changes
@@ -193,6 +195,8 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
                     refreshMed();
                 }
             };
+
+            // hook activation listener
             getContainer().addListener(SWT.Activate, refreshListener);
 
             // restore state
@@ -207,8 +211,6 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
             }
 
             setActivePage(selectedPageNum);
-
-            this.getSite().getWorkbenchWindow().getSelectionService().addSelectionListener(this);
 
             // this.getSite().setSelectionProvider(this);
         } catch (Exception e) {
@@ -341,6 +343,7 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
         try {
             createMed();
             ResourcesPlugin.getWorkspace().addResourceChangeListener(this);
+            site.getWorkbenchWindow().getSelectionService().addSelectionListener(this);
         } catch (Exception e) {
             throw new PartInitException(Messages.errorOpeningMedEditor, e);
         }
@@ -389,6 +392,7 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
     @Override
     public void dispose() {
         getRegistry().removeListener(this); // unregister to receive registry events
+        getSite().getWorkbenchWindow().getSelectionService().removeSelectionListener(this);
         super.dispose();
     }
 
@@ -575,7 +579,7 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
             @Override
             public void run() {
                 if (!getShell().isDisposed()) {
-                    for (MedEditorPage medEditorPage : accessMedEditorPages()) {
+                    for (MedEditorPage medEditorPage : accessMedEditorPages().keySet()) {
                         medEditorPage.updateAllMessages();
                     }
                 }
@@ -592,8 +596,8 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
     public final void propertyChange( PropertyChangeEvent e ) {
         refreshDirtyState();
 
-        // pass event on to pages
-        for (MedEditorPage page : this.pages) {
+        // pass event on to medEditorPages
+        for (MedEditorPage page : this.medEditorPages.keySet()) {
             page.handlePropertyChanged(e);
         }
     }
@@ -695,7 +699,7 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
 
                     createMed();
 
-                    for (MedEditorPage page : this.pages) {
+                    for (MedEditorPage page : this.medEditorPages.keySet()) {
                         page.handleMedReloaded();
                     }
                 } catch (Exception e) {
@@ -719,7 +723,7 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
         if (isReadOnly() != newValue) {
             this.readOnly = newValue;
 
-            for (MedEditorPage page : this.pages) {
+            for (MedEditorPage page : this.medEditorPages.keySet()) {
                 page.setResourceReadOnly(this.readOnly);
                 page.getManagedForm().refresh();
             }
@@ -805,72 +809,31 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
      */
     @Override
     public void selectionChanged( IWorkbenchPart part,
-                                  ISelection selection ) {
-        if (part != this && part instanceof ContentOutline) {
-            if (selection instanceof TreeSelection) {
-                Object obj = ((TreeSelection)selection).getFirstElement();
-                if (obj instanceof MedOutlineTreeNode) {
-                    // Switch to the correct Page based on Outline node selected.
-                    MedOutlineTreeNode medTreeNode = (MedOutlineTreeNode)obj;
-                    switchToSelectedPage(getActivePage(), medTreeNode);
+                                  ISelection workspaceSelection ) {
+        if ((part != this) && (workspaceSelection instanceof IStructuredSelection)) {
+            IStructuredSelection selection = (IStructuredSelection)workspaceSelection;
 
-                    // TODO: Finish selection sync between editor and outline view
+            if (!selection.isEmpty()) {
+                // just pass first selected object on to pages
+                Object element = selection.getFirstElement();
 
-                    // Switch selected element on editor page
-                    // if (getActivePage() == this.overviewPageIndex) {
-                    // selectOverviewPageComponent(medTreeNode);
-                    // }
+                if (element instanceof MedModelNode) {
+                    MedModelNode node = (MedModelNode)element;
+
+                    for (MedEditorPage page : this.medEditorPages.keySet()) {
+                        if (page.select(node)) {
+                            if (getActivePageInstance() != page) {
+                                setActivePage(this.medEditorPages.get(page));
+                            }
+
+                            break;
+                        }
+                    }
                 }
+
+                part.setFocus();
             }
         }
     }
 
-    private void switchToSelectedPage( int currentPageIndex,
-                                       MedOutlineTreeNode medTreeNode ) {
-        MedOutlineTreeNode.NodeType type = medTreeNode.getType();
-        int desiredPageIndex = 0;
-        switch (type) {
-            case NAMESPACE_PREFIX:
-            case NAMESPACE_URI:
-            case MODEL_CLASS:
-            case VERSION:
-            case DESCRIPTION:
-                desiredPageIndex = overviewPageIndex;
-                break;
-            case EXTENDED_METACLASS:
-            case PROPERTY_DEFN:
-                desiredPageIndex = propertyPageIndex;
-                break;
-            default:
-                desiredPageIndex = overviewPageIndex;
-                break;
-        }
-        if (currentPageIndex != desiredPageIndex) {
-            setActivePage(desiredPageIndex);
-        }
-    }
-
-    // private void selectOverviewPageComponent( MedOutlineTreeNode medTreeNode ) {
-    // OverviewEditorPage overviewPage = (OverviewEditorPage)getSelectedPage();
-    // MedOutlineTreeNode.NodeType type = medTreeNode.getType();
-    // switch (type) {
-    // case NAMESPACE_PREFIX:
-    // overviewPage.setFocusNSPrefix();
-    // break;
-    // case NAMESPACE_URI:
-    // overviewPage.setFocusNSUri();
-    // break;
-    // case MODEL_CLASS:
-    // overviewPage.setFocusModelClass();
-    // break;
-    // case VERSION:
-    // overviewPage.setFocusVersion();
-    // break;
-    // case DESCRIPTION:
-    // overviewPage.setFocusDescription();
-    // break;
-    // default:
-    // break;
-    // }
-    // }
 }

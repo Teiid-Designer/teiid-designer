@@ -9,8 +9,7 @@ package org.teiid.designer.extension.ui.editors;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
-import java.util.List;
+
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.widgets.Composite;
@@ -19,6 +18,8 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.views.contentoutline.ContentOutlinePage;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition.PropertyName;
+import org.teiid.designer.extension.ui.model.MedContentProvider;
+import org.teiid.designer.extension.ui.model.MedLabelProvider;
 
 /**
  * MedOutlinePage is the ContentOutlinePage for the ModelEditor. It contains a PageBook which can display a TreeViewer of the
@@ -26,32 +27,52 @@ import org.teiid.designer.extension.definition.ModelExtensionDefinition.Property
  */
 public class MedOutlinePage extends ContentOutlinePage implements PropertyChangeListener, ISelectionListener {
 
-    ModelExtensionDefinitionEditor medEditor;
-    protected TreeViewer contentOutlineViewer;
+    private ModelExtensionDefinition med;
+    private ModelExtensionDefinitionEditor medEditor;
 
     public MedOutlinePage( ModelExtensionDefinitionEditor editor ) {
         super();
         this.medEditor = editor;
+        this.med = this.medEditor.getMed();
+        this.med.addListener(this);
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.eclipse.ui.views.contentoutline.ContentOutlinePage#createControl(org.eclipse.swt.widgets.Composite)
+     */
     @Override
     public void createControl( Composite parent ) {
         super.createControl(parent);
-        contentOutlineViewer = getTreeViewer();
-        contentOutlineViewer.addSelectionChangedListener(this);
-        contentOutlineViewer.setAutoExpandLevel(3);
-        // hook up a selection listener to the selection service
-        getSite().getWorkbenchWindow().getSelectionService().addSelectionListener(this);
 
-        // Set the content and label provider
-        MedOutlineTreeContentProvider contentProvider = new MedOutlineTreeContentProvider(this.medEditor);
-        contentOutlineViewer.setContentProvider(contentProvider);
-        contentOutlineViewer.setLabelProvider(contentProvider);
-        List<ModelExtensionDefinition> medList = new ArrayList<ModelExtensionDefinition>(1);
-        ModelExtensionDefinition med = this.medEditor.getMed();
-        med.addListener(this);
-        medList.add(med);
-        contentOutlineViewer.setInput(medList);
+        TreeViewer viewer = getTreeViewer();
+        viewer.setAutoExpandLevel(3);
+        viewer.setContentProvider(new MedContentProvider());
+        viewer.setLabelProvider(new MedLabelProvider());
+
+        // hook up a listeners
+        getSite().getWorkbenchWindow().getSelectionService().addSelectionListener(this);
+        viewer.addSelectionChangedListener(this);
+
+        // populate view 
+        viewer.setInput(this.med);
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.eclipse.ui.part.Page#dispose()
+     */
+    @Override
+    public void dispose() {
+        getSite().getWorkbenchWindow().getSelectionService().removeSelectionListener(this);
+
+        if (this.med != null) {
+            this.med.removeListener(this);
+        }
+
+        super.dispose();
     }
 
     /**
@@ -61,12 +82,13 @@ public class MedOutlinePage extends ContentOutlinePage implements PropertyChange
      */
     @Override
     public final void propertyChange( PropertyChangeEvent e ) {
+        TreeViewer viewer = getTreeViewer();
         String propName = e.getPropertyName();
 
         if (PropertyName.PROPERTY_DEFINITION.toString().equals(propName)) {
-            contentOutlineViewer.refresh();
+            viewer.refresh();
         } else if (PropertyName.METACLASS.toString().equals(propName)) {
-            contentOutlineViewer.refresh();
+            viewer.refresh();
         }
     }
 

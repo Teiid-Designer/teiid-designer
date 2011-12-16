@@ -34,6 +34,7 @@ import org.teiid.designer.extension.definition.ModelExtensionDefinition.Property
 import org.teiid.designer.extension.definition.ModelExtensionDefinitionValidator;
 import org.teiid.designer.extension.ui.Activator;
 import org.teiid.designer.extension.ui.Messages;
+import org.teiid.designer.extension.ui.model.MedModelNode;
 
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.internal.ui.forms.MessageFormDialog;
@@ -381,6 +382,58 @@ public final class OverviewEditorPage extends MedEditorPage {
         if (!CoreStringUtil.valuesAreEqual(this.txtVersion.getText(), version)) {
             this.txtVersion.setText(version);
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.teiid.designer.extension.ui.editors.MedEditorPage#select(org.teiid.designer.extension.ui.model.MedModelNode)
+     */
+    @Override
+    boolean select( MedModelNode node ) {
+        assert (node != null) : "node is null"; //$NON-NLS-1$
+
+        if (node.isMed() || node.isDescription()) {
+            if ((this.txtDescription != null) && !this.txtDescription.isDisposed()) {
+                ensureVisible(this.txtDescription);
+            }
+
+            return true;
+        }
+
+        if (node.isMetamodelUri()) {
+            if ((this.cbxMetamodelUris != null) && !this.cbxMetamodelUris.isDisposed()) {
+                ensureVisible(this.cbxMetamodelUris);
+            }
+
+            return true;
+        }
+
+        if (node.isNamespacePrefix()) {
+            if ((this.txtNamespacePrefix != null) && !this.txtNamespacePrefix.isDisposed()) {
+                ensureVisible(this.txtNamespacePrefix);
+            }
+
+            return true;
+        }
+
+        if (node.isNamespaceUri()) {
+            if ((this.txtNamespaceUri != null) && !this.txtNamespaceUri.isDisposed()) {
+                ensureVisible(this.txtNamespaceUri);
+            }
+
+            return true;
+        }
+
+        if (node.isVersion()) {
+            if ((this.txtVersion != null) && !this.txtVersion.isDisposed()) {
+                ensureVisible(this.txtVersion);
+            }
+
+            return true;
+        }
+
+        return false;
     }
 
     /**

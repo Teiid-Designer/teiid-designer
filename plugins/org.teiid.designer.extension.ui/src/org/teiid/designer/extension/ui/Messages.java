@@ -300,6 +300,14 @@ public class Messages extends NLS {
     public static String changeMetamodelDialogTitle;
     public static String changeMetamodelDialogMsg;
 
+    public static String namespacePrefixNodeLabel;
+    public static String namespaceUriNodeLabel;
+    public static String metamodelUriNodeLabel;
+    public static String descriptionNodeLabel;
+    public static String versionNodeLabel;
+    public static String medNodeLabel;
+    public static String missingPropertyIdNodeLabel;
+
     static {
         NLS.initializeMessages("org.teiid.designer.extension.ui.messages", Messages.class); //$NON-NLS-1$
     }
