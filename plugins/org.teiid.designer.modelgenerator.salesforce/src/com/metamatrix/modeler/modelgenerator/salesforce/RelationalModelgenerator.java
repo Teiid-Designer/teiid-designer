@@ -425,11 +425,8 @@ public class RelationalModelgenerator {
                 column.setType(dtMgr.getBuiltInDatatype(DatatypeConstants.BuiltInNames.DATE_TIME));
                 column.setNativeType(SalesforceField.DATETIME_TYPE);
             } else if (fieldType.equals(SalesforceField.TIME_TYPE)) {
-                // TODO: Use these lines when TEIID-1852 is resolved
-                // column.setType(dtMgr.getBuiltInDatatype(DatatypeConstants.BuiltInNames.TIME));
-                // column.setNativeType(SalesforceField.TIME_TYPE);
-                column.setType(dtMgr.getBuiltInDatatype(DatatypeConstants.BuiltInNames.STRING));
-                column.setNativeType(SalesforceField.STRING_TYPE);
+                column.setType(dtMgr.getBuiltInDatatype(DatatypeConstants.BuiltInNames.TIME));
+                column.setNativeType(SalesforceField.TIME_TYPE);
             } else if (fieldType.equals(SalesforceField.URL_TYPE)) {
                 column.setType(dtMgr.getBuiltInDatatype(DatatypeConstants.BuiltInNames.STRING));
                 column.setNativeType(SalesforceField.URL_TYPE);
