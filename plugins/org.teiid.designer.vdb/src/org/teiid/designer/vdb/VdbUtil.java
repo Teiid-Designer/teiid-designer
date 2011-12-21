@@ -8,23 +8,24 @@
 package org.teiid.designer.vdb;
 
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
-
 import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
-
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.teiid.designer.vdb.Vdb.Xml;
 import org.teiid.designer.vdb.manifest.PropertyElement;
 import org.teiid.designer.vdb.manifest.VdbElement;
 import org.xml.sax.SAXException;
-
 import com.metamatrix.core.modeler.util.OperationUtil;
 import com.metamatrix.core.modeler.util.OperationUtil.Unreliable;
 
@@ -33,6 +34,23 @@ import com.metamatrix.core.modeler.util.OperationUtil.Unreliable;
  */
 public class VdbUtil {
 	private static final String MANIFEST = "META-INF/vdb.xml"; //$NON-NLS-1$
+	
+	   /**
+     * @param theVdb
+     * @return list of vdb model files
+     */
+    public static Collection<IFile> getVdbModels(Vdb theVdb) {
+        Collection<IFile> iFiles = new ArrayList<IFile>();
+        
+        for( VdbModelEntry modelEntry : theVdb.getModelEntries() ) {
+            IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(modelEntry.getName());
+            if( resource.exists() ) {
+                iFiles.add((IFile)resource);
+            }
+        }
+        
+        return iFiles;
+    }
 	
 	/**
 	 * @param file

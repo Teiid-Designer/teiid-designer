@@ -51,7 +51,7 @@ public class VdbEntry {
                                                                                                           Synchronization.NotApplicable);
     private long checksum;
     final AtomicReference<String> description = new AtomicReference<String>();
-//    private final IResourceChangeListener fileListener;
+
     private final int hashcode;
 
     private final ReadWriteLock checksumLock = new ReentrantReadWriteLock();
@@ -75,17 +75,7 @@ public class VdbEntry {
         this.name = name;
         // Calculate hashcode
         hashcode = 31 + name.hashCode();
-        // Register to listen for changes to this entries associated workspace file
-//        fileListener = new IResourceChangeListener() {
-//            public void resourceChanged( final IResourceChangeEvent event ) {
-//            	if( ResourceChangeUtilities.isProjectClosing(event)) return;
-//            	
-//                final IResourceDelta delta = event.getDelta() == null ? null : event.getDelta().findMember(name);
-//                if (delta == null) return;
-//                if (ResourceChangeUtilities.isContentChanged(delta)) fileChanged(delta);
-//            }
-//        };
-//        ResourcesPlugin.getWorkspace().addResourceChangeListener(fileListener);
+
         if (this.description.get() == null) {
             this.description.set(EMPTY_STR);
         }
@@ -123,7 +113,6 @@ public class VdbEntry {
     }
 
     void dispose() {
-//        ResourcesPlugin.getWorkspace().removeResourceChangeListener(fileListener);
         new File(vdb.getFolder(), name.toString()).delete();
     }
 

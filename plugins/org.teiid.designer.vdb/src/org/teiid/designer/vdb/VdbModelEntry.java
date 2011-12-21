@@ -11,7 +11,6 @@ import static org.teiid.designer.vdb.Vdb.Event.MODEL_JNDI_NAME;
 import static org.teiid.designer.vdb.Vdb.Event.MODEL_SOURCE_NAME;
 import static org.teiid.designer.vdb.Vdb.Event.MODEL_TRANSLATOR;
 import static org.teiid.designer.vdb.Vdb.Event.MODEL_VISIBLE;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -24,9 +23,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-
 import net.jcip.annotations.ThreadSafe;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
@@ -34,6 +31,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
@@ -42,17 +40,14 @@ import org.teiid.designer.vdb.manifest.ProblemElement;
 import org.teiid.designer.vdb.manifest.PropertyElement;
 import org.teiid.designer.vdb.manifest.Severity;
 import org.teiid.designer.vdb.manifest.SourceElement;
-
 import com.metamatrix.core.modeler.CoreModelerPlugin;
 import com.metamatrix.core.modeler.util.FileUtils;
-import com.metamatrix.core.util.Stopwatch;
 import com.metamatrix.core.util.StringUtilities;
 import com.metamatrix.internal.core.index.Index;
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.container.ResourceFinder;
 import com.metamatrix.modeler.core.workspace.ModelResource;
-import com.metamatrix.modeler.internal.core.builder.ModelBuildUtil;
 import com.metamatrix.modeler.internal.core.index.IndexUtil;
 import com.metamatrix.modeler.internal.core.resource.EmfResource;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
@@ -411,11 +406,18 @@ public final class VdbModelEntry extends VdbEntry {
             }
 
             // Build model if necessary
-            Stopwatch watch = new Stopwatch();
-            //watch.start();
-            getVdb().getBuilder().buildResources(monitor, Collections.singleton(workspaceFile), ModelerCore.getModelContainer(), false);
-            //watch.stop();
-            //System.out.println("VdbModelEntry.buildResources() for " +  workspaceFile.getName() + " Delta = " + watch.getTimeValueAsString(watch.getTotalDuration()));
+            // Get Index File and check time/date to see if we need to rebuild or not
+            IPath indexPath = new Path(IndexUtil.INDEX_PATH + indexName); //
+            File indexFile = indexPath.toFile();
+            long indexDate = -1;
+            if( indexFile.exists() ) {
+                indexDate = indexFile.lastModified();
+                
+            }
+            if( workspaceFile.getLocalTimeStamp() > indexDate ) {
+                // Note that this will index and validate the model in the workspace
+                getVdb().getBuilder().buildResources(monitor, Collections.singleton(workspaceFile), ModelerCore.getModelContainer(), false);
+            }
             // Synchronize model problems
             for (final IMarker marker : workspaceFile.findMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE)) {
                 Object attr = marker.getAttribute(IMarker.SEVERITY);

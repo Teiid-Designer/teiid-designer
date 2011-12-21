@@ -11,10 +11,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
@@ -48,10 +46,19 @@ import com.metamatrix.modeler.internal.core.index.ModelIndexer;
 import com.metamatrix.modeler.internal.core.index.ModelSearchIndexer;
 import com.metamatrix.modeler.internal.core.resource.EmfResource;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
-import com.metamatrix.modeler.internal.core.workspace.WorkspaceResourceFinderUtil;
 
+/**
+ * This class was derived from ModelBuildUtil class in order to streamline the validation of models that are specifically part of of a Vdb.
+ * 
+ * In particular, a VDB doesn't care about Search indexes, so the ModelSearchIndexer isn't needed and is not added to INDEXERS list.
+ * 
+ * Also, a synchronizing flag is accessible via start() and stop() methods so a VDB can notify the builder that indexed or validated resources should
+ * be cached so any attempt to re-index or re-validate will be ignored. This can be a performance hog if not enabled in the VDB's synchronize ALL process.
+ */
+@SuppressWarnings("javadoc")
 public class VdbModelBuilder {
-    public static final int MONITOR_TASK_NAME_MAX_LENGTH = 200;
+    
+	public static final int MONITOR_TASK_NAME_MAX_LENGTH = 200;
     public static final String TASK_NAME_TRUNCTATION_SUFFIX = ModelerCore.Util.getString("ModelBuildUtil.taskNameTruncationSuffix"); //$NON-NLS-1$	
 
     public static final String MONITOR_RESOURCE_VALIDATION_MSG = ModelerCore.Util.getString("ModelBuildUtil.Validating_Resource__1"); //$NON-NLS-1$
@@ -72,6 +79,7 @@ public class VdbModelBuilder {
         initIndexers();
     }
     
+
     public VdbModelBuilder() {
     	super();
     	this.indexedResources = new ArrayList<IResource>();
@@ -111,19 +119,9 @@ public class VdbModelBuilder {
         // not modified
         final List modifiedResources = getModifiedResources();
 
-        // collection of models dependent on the models being validated
-        Set<IResource> dependentModels = new HashSet<IResource>();
-        
-        for (final Iterator rsourceIter = iResources.iterator(); rsourceIter.hasNext();) {
-            IResource resource = (IResource)rsourceIter.next();
-            Collection models = WorkspaceResourceFinderUtil.getResourcesThatUse(resource);
-            models.removeAll(iResources);
-            dependentModels.addAll(models);
-        }
 
         // index all the resources
         indexResources(monitor, iResources);
-        indexResources(monitor, dependentModels);
 
         // Reset the modified state of all EMF resources to what it was
         // prior to indexing. This needs to be done since indexing may
@@ -133,7 +131,7 @@ public class VdbModelBuilder {
 
         // validate all the resources
         validateResources(monitor, iResources, container, validateInContext);
-        validateResources(monitor, dependentModels, container, validateInContext);
+//        validateResources(monitor, dependentModels, container, validateInContext);
 
         // Reset the modified state of all EMF resources to what it was prior to validating
         setModifiedResources(modifiedResources);
@@ -307,8 +305,8 @@ public class VdbModelBuilder {
             final String attribute = ModelerCore.EXTENSION_POINT.RESOURCE_INDEXER.ATTRIBUTES.NAME;
             try {
                 final Object instance = PluginUtilities.createExecutableExtension(extension, element, attribute);
-                if (instance instanceof ResourceIndexer){
-                	if ( !(instance instanceof ModelSearchIndexer)) {
+                if (instance instanceof ResourceIndexer ) {
+                	if( !(instance instanceof ModelSearchIndexer) ) {
                 		INDEXERS.add(instance);
                 	}
                 } else {
