@@ -13,7 +13,6 @@ import java.io.Reader;
 import java.net.URI;
 import java.util.Map;
 import org.eclipse.core.resources.FileInfoMatcherDescription;
-import org.eclipse.core.resources.IBuildConfiguration;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFileState;
@@ -643,6 +642,15 @@ public class MockFileResource implements IFile {
 
         }
 
+        /* (non-Javadoc)
+         * @see org.eclipse.core.resources.IProject#build(int, java.lang.String, java.util.Map, org.eclipse.core.runtime.IProgressMonitor)
+         */
+        public void build( int kind,
+                           String builderName,
+                           Map args,
+                           IProgressMonitor monitor ) {
+
+        }
 
         /* (non-Javadoc)
          * @see org.eclipse.core.resources.IProject#close(org.eclipse.core.runtime.IProgressMonitor)
@@ -1564,52 +1572,6 @@ public class MockFileResource implements IFile {
                                   URI arg1,
                                   IProgressMonitor arg2 ) throws CoreException {
         }
-
-		@Override
-		public void build(IBuildConfiguration arg0, int arg1,
-				IProgressMonitor arg2) throws CoreException {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public void build(int arg0, String arg1, Map<String, String> arg2,
-				IProgressMonitor arg3) throws CoreException {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public IBuildConfiguration getActiveBuildConfig() throws CoreException {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public IBuildConfiguration getBuildConfig(String arg0)
-				throws CoreException {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public IBuildConfiguration[] getBuildConfigs() throws CoreException {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public IBuildConfiguration[] getReferencedBuildConfigs(String arg0,
-				boolean arg1) throws CoreException {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public boolean hasBuildConfig(String arg0) throws CoreException {
-			// TODO Auto-generated method stub
-			return false;
-		}
     }
 
     public String getCharset() {
