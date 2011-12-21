@@ -7,7 +7,10 @@
  */
 package org.teiid.designer.vdb;
 
-import static org.teiid.designer.vdb.Vdb.Event.*;
+import static org.teiid.designer.vdb.Vdb.Event.ENTRY_CHECKSUM;
+import static org.teiid.designer.vdb.Vdb.Event.ENTRY_DESCRIPTION;
+import static org.teiid.designer.vdb.Vdb.Event.ENTRY_SYNCHRONIZATION;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,25 +19,24 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+
 import net.jcip.annotations.ThreadSafe;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IResourceChangeEvent;
-import org.eclipse.core.resources.IResourceChangeListener;
-import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.teiid.designer.vdb.manifest.EntryElement;
 import org.teiid.designer.vdb.manifest.PropertyElement;
+
 import com.metamatrix.core.modeler.CoreModelerPlugin;
 import com.metamatrix.core.modeler.util.FileUtils;
 import com.metamatrix.core.modeler.util.OperationUtil;
 import com.metamatrix.core.modeler.util.ZipUtil;
 import com.metamatrix.core.util.ChecksumUtil;
 import com.metamatrix.core.util.StringUtilities;
-import com.metamatrix.modeler.internal.core.workspace.ResourceChangeUtilities;
 
 /**
  *
@@ -49,7 +51,7 @@ public class VdbEntry {
                                                                                                           Synchronization.NotApplicable);
     private long checksum;
     final AtomicReference<String> description = new AtomicReference<String>();
-    private final IResourceChangeListener fileListener;
+//    private final IResourceChangeListener fileListener;
     private final int hashcode;
 
     private final ReadWriteLock checksumLock = new ReentrantReadWriteLock();
@@ -74,16 +76,16 @@ public class VdbEntry {
         // Calculate hashcode
         hashcode = 31 + name.hashCode();
         // Register to listen for changes to this entries associated workspace file
-        fileListener = new IResourceChangeListener() {
-            public void resourceChanged( final IResourceChangeEvent event ) {
-            	if( ResourceChangeUtilities.isProjectClosing(event)) return;
-            	
-                final IResourceDelta delta = event.getDelta() == null ? null : event.getDelta().findMember(name);
-                if (delta == null) return;
-                fileChanged(delta);
-            }
-        };
-        ResourcesPlugin.getWorkspace().addResourceChangeListener(fileListener);
+//        fileListener = new IResourceChangeListener() {
+//            public void resourceChanged( final IResourceChangeEvent event ) {
+//            	if( ResourceChangeUtilities.isProjectClosing(event)) return;
+//            	
+//                final IResourceDelta delta = event.getDelta() == null ? null : event.getDelta().findMember(name);
+//                if (delta == null) return;
+//                if (ResourceChangeUtilities.isContentChanged(delta)) fileChanged(delta);
+//            }
+//        };
+//        ResourcesPlugin.getWorkspace().addResourceChangeListener(fileListener);
         if (this.description.get() == null) {
             this.description.set(EMPTY_STR);
         }
@@ -121,7 +123,7 @@ public class VdbEntry {
     }
 
     void dispose() {
-        ResourcesPlugin.getWorkspace().removeResourceChangeListener(fileListener);
+//        ResourcesPlugin.getWorkspace().removeResourceChangeListener(fileListener);
         new File(vdb.getFolder(), name.toString()).delete();
     }
 
@@ -141,20 +143,20 @@ public class VdbEntry {
         } else if (!name.equals(other.name)) return false;
         return true;
     }
-
-    final void fileChanged( final IResourceDelta delta ) {
-        // TODO: Handle renames
-        if ((delta.getFlags() & (IResourceDelta.REPLACED | IResourceDelta.MOVED_FROM | IResourceDelta.MOVED_TO)) > 0) return; // throw
-                                                                                                                              // new
-                                                                                                                              // UnsupportedOperationException(
-        // toString(delta));
-        final int kind = delta.getKind();
-        if (kind == IResourceDelta.REMOVED) setSynchronization(Synchronization.NotApplicable);
-        else if (kind == IResourceDelta.ADDED || kind == IResourceDelta.CHANGED) {
-            if (getChecksum() != computeChecksum((IFile)delta.getResource())) setSynchronization(Synchronization.NotSynchronized);
-            else setSynchronization(Synchronization.Synchronized);
-        } else throw new UnsupportedOperationException(toString(delta));
-    }
+//
+//    final void fileChanged( final IResourceDelta delta ) {
+//        // TODO: Handle renames
+//        if ((delta.getFlags() & (IResourceDelta.REPLACED | IResourceDelta.MOVED_FROM | IResourceDelta.MOVED_TO)) > 0) return; // throw
+//                                                                                                                              // new
+//                                                                                                                              // UnsupportedOperationException(
+//        // toString(delta));
+//        final int kind = delta.getKind();
+//        if (kind == IResourceDelta.REMOVED) setSynchronization(Synchronization.NotApplicable);
+//        else if (kind == IResourceDelta.ADDED || kind == IResourceDelta.CHANGED) {
+//            if (getChecksum() != computeChecksum((IFile)delta.getResource())) setSynchronization(Synchronization.NotSynchronized);
+//            else setSynchronization(Synchronization.Synchronized);
+//        } else throw new UnsupportedOperationException(toString(delta));
+//    }
 
     /**
      * @return <code>true</code> if the associated file exists
@@ -262,7 +264,10 @@ public class VdbEntry {
         vdb.setModified(this, ENTRY_DESCRIPTION, oldDescription, description);
     }
 
-    void setSynchronization( final Synchronization synchronization ) {
+    /**
+     * @param synchronization the new sychronization
+     */
+    public void setSynchronization( final Synchronization synchronization ) {
         final Synchronization oldSynchronization = getSynchronization();
         if (oldSynchronization == synchronization) return;
         this.synchronization.set(synchronization);
@@ -321,20 +326,20 @@ public class VdbEntry {
         builder.append(')');
         return builder.toString();
     }
-
-    private String toString( final IResourceDelta delta ) {
-        final StringBuilder builder = new StringBuilder("file="); //$NON-NLS-1$
-        builder.append(delta.getFullPath().toString());
-        builder.append(", kind="); //$NON-NLS-1$
-        builder.append(delta.getKind());
-        builder.append(", flags="); //$NON-NLS-1$
-        builder.append(delta.getFlags());
-        builder.append(", from="); //$NON-NLS-1$
-        builder.append(delta.getMovedFromPath());
-        builder.append(", to="); //$NON-NLS-1$
-        builder.append(delta.getMovedToPath());
-        return builder.toString();
-    }
+//
+//    private String toString( final IResourceDelta delta ) {
+//        final StringBuilder builder = new StringBuilder("file="); //$NON-NLS-1$
+//        builder.append(delta.getFullPath().toString());
+//        builder.append(", kind="); //$NON-NLS-1$
+//        builder.append(delta.getKind());
+//        builder.append(", flags="); //$NON-NLS-1$
+//        builder.append(delta.getFlags());
+//        builder.append(", from="); //$NON-NLS-1$
+//        builder.append(delta.getMovedFromPath());
+//        builder.append(", to="); //$NON-NLS-1$
+//        builder.append(delta.getMovedToPath());
+//        return builder.toString();
+//    }
 
     /**
      * Intended for a subclass to append its properties and their values, in the form ", <name>=<value>, ...", to the supplied

@@ -121,6 +121,28 @@ public final class UdfUiPlugin extends AbstractUiPlugin implements EventObjectLi
         	} catch(ModelWorkspaceException ex) {
         		UdfUiPlugin.UTIL.log(ex);
         	}
+        } else if( ModelIdentifier.isRelationalSourceModel(event.getModelResource()) ) {
+        	// Only need to notify UdfManager if the changed resource is a Physical/source model.
+        	// Relational View, XML view, WS view and XSD models do NOT and will not contain functions.
+        	try {
+        	final IPath path = ((IFile)event.getModelResource().getCorrespondingResource()).getRawLocation();
+	        	if( path != null ) {
+			        if (event.getType() == ModelResourceEvent.RELOADED || event.getType() == ModelResourceEvent.ADDED) {
+			        	if( !event.getModelResource().isOpen() ) {
+			        		event.getModelResource().open(new NullProgressMonitor());
+			        	}
+			        	notifySourceModelChanged(event.getModelResource(), false);
+			        } else if( event.getType() == ModelResourceEvent.REMOVED) {
+			        	notifySourceModelChanged(event.getModelResource(), true);
+			        } else if( event.getType() == ModelResourceEvent.CHANGED) {
+			        	notifySourceModelChanged(event.getModelResource(), false);
+			        }
+	        	} else {
+	        		UdfUiPlugin.UTIL.log(IStatus.ERROR, "Error registering function model: " + event.getModelResource().getItemName()); //$NON-NLS-1$
+	        	}
+        	} catch(ModelWorkspaceException ex) {
+        		UdfUiPlugin.UTIL.log(ex);
+        	}
         }
     }
     
@@ -129,6 +151,18 @@ public final class UdfUiPlugin extends AbstractUiPlugin implements EventObjectLi
             public void run() {
             	try {
             		UdfManager.INSTANCE.registerFunctionModel(modelResource, isDelete);
+            	} catch (Exception e) {
+                    UdfUiPlugin.UTIL.log(e);
+                }
+            }
+        });
+    }
+    
+    private void notifySourceModelChanged(final ModelResource modelResource, final boolean isDelete) {
+    	Display.getDefault().syncExec(new Runnable() {
+            public void run() {
+            	try {
+            		UdfManager.INSTANCE.notifySourceModelChanged(modelResource, isDelete);
             	} catch (Exception e) {
                     UdfUiPlugin.UTIL.log(e);
                 }

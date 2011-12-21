@@ -64,7 +64,9 @@ public final class UdfManager implements IResourceChangeListener {
     private static final ModelObjectAnnotationHelper ANNOTATION_HELPER = new ModelObjectAnnotationHelper();
 
     private FunctionLibrary systemFunctionLibrary;
-
+    
+    private FunctionLibrary cachedFunctionLibrary;
+    
     /**
      * A set of function models.
      * 
@@ -73,6 +75,8 @@ public final class UdfManager implements IResourceChangeListener {
     private Set<ModelResource> functionModels = new HashSet<ModelResource>();
 
     private volatile boolean initialized;
+    
+    private boolean changed = false;
 
     /**
      * Don't allow public construction.
@@ -208,16 +212,25 @@ public final class UdfManager implements IResourceChangeListener {
     }
 
     /**
-     * Informs the Query Engine's Function Library that the specified function model should be loaded. This method should be only
-     * once for a model. When the model is changed and saved the changes are broadcast via {@link IResourceChangeEvent}s.
+     * Informs this manager that a function model has changed and that the cached function library needs to be reloaded.
      * 
-     * @param udfModel the model being registered
-     * @throws Exception if there is a problem loading the file
-     * @see #addFunctionModel(File)
+     * @param modelResource the model resource that was changed
+     * @param delete whether it was a delete or not
      */
     public void registerFunctionModel( ModelResource modelResource,
                                        boolean delete ) throws Exception {
         makeModification(modelResource, delete);
+        changed = true;
+    }
+    
+    /**
+     * Informs this manager that a source model has changed and that the cached function library needs to be reloaded.
+     * 
+     * @param modelResource the model resource that was changed
+     * @param delete whether it was a delete or not
+     */
+    public void notifySourceModelChanged( ModelResource modelResource, boolean delete ) {
+        changed = true;
     }
 
     @Override
@@ -298,6 +311,10 @@ public final class UdfManager implements IResourceChangeListener {
     }
 
     public synchronized FunctionLibrary getFunctionLibrary() {
+        //System.out.println("UdfManger.getFunctionLibrary()");
+        if( !changed ) {
+            return this.cachedFunctionLibrary;
+        }
         // Dynamically return a function library for each call rather than cache it here.
         Collection<FunctionTree> functionTrees = new ArrayList<FunctionTree>();
 
@@ -435,9 +452,10 @@ public final class UdfManager implements IResourceChangeListener {
             }
             functionTrees.add(tree);
         }
-
-        return new FunctionLibrary(SYSTEM_FUNCTION_MANAGER.getSystemFunctions(),
-                                   functionTrees.toArray(new FunctionTree[functionTrees.size()]));
+        //System.out.println("UdfManager.getFunctionLibrary() CREATED NEW FUNCTION LIBRARY");
+        this.cachedFunctionLibrary = new FunctionLibrary(SYSTEM_FUNCTION_MANAGER.getSystemFunctions(), functionTrees.toArray(new FunctionTree[functionTrees.size()]));
+        this.changed = false;
+        return this.cachedFunctionLibrary;
     }
 
     private Collection<Procedure> getPushdownFunctions( ModelResource sourceModel ) {

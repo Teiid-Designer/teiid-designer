@@ -58,7 +58,9 @@ import org.xml.sax.SAXException;
 import com.metamatrix.core.modeler.util.FileUtils;
 import com.metamatrix.core.modeler.util.OperationUtil;
 import com.metamatrix.core.modeler.util.OperationUtil.Unreliable;
+import com.metamatrix.core.util.Stopwatch;
 import com.metamatrix.core.util.StringUtilities;
+import com.metamatrix.modeler.internal.core.builder.VdbModelBuilder;
 
 /**
  * 
@@ -97,6 +99,8 @@ public final class Vdb {
     private final AtomicReference<String> description = new AtomicReference<String>();
     private final boolean preview;
     private final int version;
+    
+    private VdbModelBuilder builder;
 
     /**
      * @param file
@@ -106,6 +110,7 @@ public final class Vdb {
     public Vdb( final IFile file,
                 final boolean preview,
                 final IProgressMonitor monitor ) {
+    	this.builder = new VdbModelBuilder();
         this.file = file;
         // Create folder for VDB in state folder
         folder = VdbPlugin.singleton().getStateLocation().append(file.getFullPath()).toFile();
@@ -556,8 +561,19 @@ public final class Vdb {
      * @param monitor
      */
     public final void synchronize( final IProgressMonitor monitor ) {
+    	getBuilder().start();
+
         synchronize(new HashSet<VdbEntry>(modelEntries), monitor);
         synchronize(entries, monitor);
+
+        getBuilder().stop();
+    }
+    
+    /**
+     * @return builder
+     */
+    public VdbModelBuilder getBuilder() {
+    	return this.builder;
     }
 
     /**

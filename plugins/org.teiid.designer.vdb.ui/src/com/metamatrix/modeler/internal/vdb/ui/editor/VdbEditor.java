@@ -103,6 +103,7 @@ import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.internal.core.ModelEditorImpl;
 import com.metamatrix.modeler.internal.core.container.ContainerImpl;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
+import com.metamatrix.modeler.internal.core.workspace.ResourceChangeUtilities;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelIdentifier;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelLabelProvider;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
@@ -2054,7 +2055,8 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                          */
                         @Override
                         public boolean visit( IResourceDelta delta ) {
-                        	
+                            IResource resource = delta.getResource();
+                            
                             if (delta.getResource().equals(getVdb().getFile()) && ((delta.getKind() & IResourceDelta.REMOVED) != 0)) {
                                 Display.getDefault().asyncExec(new Runnable() {
                                     /**
@@ -2076,6 +2078,31 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                                 });
                                 return false;
                             }
+                            
+                            // see if resource is one in the VDB
+                            if ((resource instanceof IFile) && ResourceChangeUtilities.isContentChanged(delta)) {
+                                boolean foundIt = false;
+                                IFile changedFile = (IFile)resource;
+                                
+                                for (VdbEntry entry : getVdb().getModelEntries()) {
+                                    if (entry.getName().equals(changedFile.getFullPath())) {
+                                        entry.setSynchronization(Synchronization.NotSynchronized);
+                                        foundIt = true;
+                                        break;
+                                    }
+                                }
+
+                                if (!foundIt) {
+                                    for (VdbEntry entry : getVdb().getEntries()) {
+                                        if (entry.getName().equals(changedFile.getFullPath())) {
+                                            entry.setSynchronization(Synchronization.NotSynchronized);
+                                            // no need to set foundIt to true as it is not needed later
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+
                             return true;
                         }
                     });

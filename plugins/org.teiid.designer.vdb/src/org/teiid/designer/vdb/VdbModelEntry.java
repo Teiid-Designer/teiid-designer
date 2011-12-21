@@ -45,6 +45,7 @@ import org.teiid.designer.vdb.manifest.SourceElement;
 
 import com.metamatrix.core.modeler.CoreModelerPlugin;
 import com.metamatrix.core.modeler.util.FileUtils;
+import com.metamatrix.core.util.Stopwatch;
 import com.metamatrix.core.util.StringUtilities;
 import com.metamatrix.internal.core.index.Index;
 import com.metamatrix.metamodels.core.ModelType;
@@ -410,7 +411,11 @@ public final class VdbModelEntry extends VdbEntry {
             }
 
             // Build model if necessary
-            ModelBuildUtil.buildResources(monitor, Collections.singleton(workspaceFile), ModelerCore.getModelContainer(), false);
+            Stopwatch watch = new Stopwatch();
+            //watch.start();
+            getVdb().getBuilder().buildResources(monitor, Collections.singleton(workspaceFile), ModelerCore.getModelContainer(), false);
+            //watch.stop();
+            //System.out.println("VdbModelEntry.buildResources() for " +  workspaceFile.getName() + " Delta = " + watch.getTimeValueAsString(watch.getTotalDuration()));
             // Synchronize model problems
             for (final IMarker marker : workspaceFile.findMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE)) {
                 Object attr = marker.getAttribute(IMarker.SEVERITY);
