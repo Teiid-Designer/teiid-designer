@@ -34,6 +34,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
@@ -51,7 +52,6 @@ import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.container.ResourceFinder;
 import com.metamatrix.modeler.core.workspace.ModelResource;
-import com.metamatrix.modeler.internal.core.builder.ModelBuildUtil;
 import com.metamatrix.modeler.internal.core.index.IndexUtil;
 import com.metamatrix.modeler.internal.core.resource.EmfResource;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
@@ -410,7 +410,18 @@ public final class VdbModelEntry extends VdbEntry {
             }
 
             // Build model if necessary
-            ModelBuildUtil.buildResources(monitor, Collections.singleton(workspaceFile), ModelerCore.getModelContainer(), false);
+            // Get Index File and check time/date to see if we need to rebuild or not
+            IPath indexPath = new Path(IndexUtil.INDEX_PATH + indexName); //
+            File indexFile = indexPath.toFile();
+            long indexDate = -1;
+            if( indexFile.exists() ) {
+            	indexDate = indexFile.lastModified();
+            	
+            }
+            if( workspaceFile.getLocalTimeStamp() > indexDate ) {
+            	// Note that this will index and validate the model in the workspace
+            	getVdb().getBuilder().buildResources(monitor, Collections.singleton(workspaceFile), ModelerCore.getModelContainer(), false);
+            }
             // Synchronize model problems
             for (final IMarker marker : workspaceFile.findMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE)) {
                 Object attr = marker.getAttribute(IMarker.SEVERITY);

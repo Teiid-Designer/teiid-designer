@@ -78,6 +78,7 @@ import org.teiid.designer.runtime.preview.jobs.ModelProjectOpenedJob;
 import org.teiid.designer.runtime.preview.jobs.UpdatePreviewVdbJob;
 import org.teiid.designer.vdb.Vdb;
 import org.teiid.designer.vdb.VdbModelEntry;
+import org.teiid.designer.vdb.VdbUtil;
 
 import com.metamatrix.common.xmi.XMIHeader;
 import com.metamatrix.core.util.StringUtilities;
@@ -187,8 +188,7 @@ public final class PreviewManager extends JobChangeAdapter
         assert (pvdbFile != null) : "PVDB is null"; //$NON-NLS-1$
         assert (ModelUtil.isVdbArchiveFile(pvdbFile)) : "IFile is not a VDB"; //$NON-NLS-1$
 
-        Vdb pvdb = new Vdb(pvdbFile, true, null);
-        return pvdb.getVersion();
+        return VdbUtil.getVdbVersion(pvdbFile);
     }
 
     /**
@@ -245,10 +245,8 @@ public final class PreviewManager extends JobChangeAdapter
      */
     private static boolean isPreviewVdb( IResource resource ) {
         if (ModelUtil.isVdbArchiveFile(resource)) {
-            Vdb vdb = new Vdb((IFile)resource, null);
-            return vdb.isPreview();
+        	return VdbUtil.isPreviewVdb((IFile)resource);
         }
-
         return false;
     }
 

@@ -27,6 +27,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
+
 import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -34,7 +35,9 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
+
 import net.jcip.annotations.ThreadSafe;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
@@ -51,10 +54,12 @@ import org.teiid.designer.vdb.manifest.PropertyElement;
 import org.teiid.designer.vdb.manifest.TranslatorElement;
 import org.teiid.designer.vdb.manifest.VdbElement;
 import org.xml.sax.SAXException;
+
 import com.metamatrix.core.modeler.util.FileUtils;
 import com.metamatrix.core.modeler.util.OperationUtil;
 import com.metamatrix.core.modeler.util.OperationUtil.Unreliable;
 import com.metamatrix.core.util.StringUtilities;
+import com.metamatrix.modeler.internal.core.builder.VdbModelBuilder;
 
 /**
  * 
@@ -96,6 +101,8 @@ public final class Vdb {
     private final boolean preview;
     private final int version;
     private int queryTimeout = DEFAULT_TIMEOUT;
+    
+    private VdbModelBuilder builder;
 
     /**
      * @param file
@@ -105,6 +112,7 @@ public final class Vdb {
     public Vdb( final IFile file,
                 final boolean preview,
                 final IProgressMonitor monitor ) {
+    	this.builder = new VdbModelBuilder();
         this.file = file;
         // Create folder for VDB in state folder
         folder = VdbPlugin.singleton().getStateLocation().append(file.getFullPath()).toFile();
@@ -577,8 +585,19 @@ public final class Vdb {
      * @param monitor
      */
     public final void synchronize( final IProgressMonitor monitor ) {
+    	getBuilder().start();
+
         synchronize(new HashSet<VdbEntry>(modelEntries), monitor);
         synchronize(entries, monitor);
+
+        getBuilder().stop();
+    }
+    
+    /**
+     * @return builder
+     */
+    public VdbModelBuilder getBuilder() {
+    	return this.builder;
     }
 
     /**

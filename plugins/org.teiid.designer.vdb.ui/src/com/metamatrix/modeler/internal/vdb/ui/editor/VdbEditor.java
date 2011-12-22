@@ -102,6 +102,7 @@ import org.teiid.designer.vdb.VdbDataRole;
 import org.teiid.designer.vdb.VdbEntry;
 import org.teiid.designer.vdb.VdbEntry.Synchronization;
 import org.teiid.designer.vdb.VdbModelEntry;
+import org.teiid.designer.vdb.VdbUtil;
 import org.teiid.designer.vdb.connections.SourceHandlerExtensionManager;
 
 import com.metamatrix.metamodels.core.ModelAnnotation;
@@ -111,11 +112,13 @@ import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.internal.core.ModelEditorImpl;
 import com.metamatrix.modeler.internal.core.container.ContainerImpl;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
+import com.metamatrix.modeler.internal.core.workspace.ResourceChangeUtilities;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelIdentifier;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelLabelProvider;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.ui.UiConstants;
 import com.metamatrix.modeler.ui.UiPlugin;
+import com.metamatrix.modeler.ui.editors.ModelEditorManager;
 import com.metamatrix.modeler.ui.viewsupport.ModelingResourceFilter;
 import com.metamatrix.modeler.vdb.ui.VdbUiConstants;
 import com.metamatrix.modeler.vdb.ui.VdbUiConstants.Images;
@@ -160,6 +163,8 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
     static final String ADD_FILE_DIALOG_MESSAGE = i18n("addFileDialogMessage"); //$NON-NLS-1$
     static final String ADD_FILE_DIALOG_INVALID_SELECTION_MESSAGE = i18n("addFileDialogInvalidSelectionMessage"); //$NON-NLS-1$
 
+    static final String CONFIRM_DIRTY_MODELS_DIALOG_TITLE = i18n("confirmDirtyModelsDialogTitle"); //$NON-NLS-1$
+    static final String CONFIRM_DIRTY_MODELS_DIALOG_MESSAGE= i18n("confirmDirtyModelsSynchronizeMessage"); //$NON-NLS-1$
     static final String CONFIRM_DIALOG_TITLE = i18n("confirmDialogTitle"); //$NON-NLS-1$
     static final String CONFIRM_SYNCHRONIZE_MESSAGE = i18n("confirmSynchronizeMessage"); //$NON-NLS-1$
     static final String CONFIRM_SYNCHRONIZE_ALL_MESSAGE = i18n("confirmSynchronizeAllMessage"); //$NON-NLS-1$
@@ -342,31 +347,58 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
             boolean showWarningDialog = "".equals(prefStore.getString(SYNCHRONIZE_WITHOUT_WARNING)) ? true //$NON-NLS-1$
             : !prefStore.getBoolean(SYNCHRONIZE_WITHOUT_WARNING);
             boolean synchronize = !showWarningDialog;
+            
+            boolean okIfModelsDirty = true;
 
-            if (showWarningDialog) {
-                MessageDialogWithToggle dialog = MessageDialogWithToggle.openOkCancelConfirm(Display.getCurrent().getActiveShell(),
-                                                                                             CONFIRM_DIALOG_TITLE,
-                                                                                             CONFIRM_SYNCHRONIZE_MESSAGE,
-                                                                                             VdbUiConstants.Util.getString("rememberMyDecision"), //$NON-NLS-1$
-                                                                                             false,
-                                                                                             null,
-                                                                                             null);
-                if (dialog.getReturnCode() == IDialogConstants.OK_ID) {
-                    synchronize = true;
-
-                    // save preference
-                    if (dialog.getToggleState()) {
-                        try {
-                            prefStore.setValue(SYNCHRONIZE_WITHOUT_WARNING, true);
-                            VdbUiPlugin.singleton.getPreferences().flush();
-                        } catch (BackingStoreException e) {
-                            VdbUiConstants.Util.log(e);
-                        }
+            // check Workspace for Dirty Open Editors
+            Collection<IFile> iFiles = VdbUtil.getVdbModels(getVdb());
+            boolean askedQuestion = false;
+            for( IFile theFile : iFiles ) {
+            	if( ModelEditorManager.isOpen(theFile) && ModelEditorManager.getModelEditorForFile(theFile, false).isDirty() ) {
+            		askedQuestion = true;
+            		boolean confirm = MessageDialog.openConfirm(Display.getCurrent().getActiveShell(),
+            				CONFIRM_DIRTY_MODELS_DIALOG_TITLE,
+            				CONFIRM_DIRTY_MODELS_DIALOG_MESSAGE);
+                    if (confirm) {
+                    	okIfModelsDirty = true;
+                    } else {
+                    	okIfModelsDirty = false;
                     }
-                }
+            	}
+            	if( askedQuestion ) {
+            		break;
+            	}
             }
 
-            if (synchronize) {
+            boolean hasDataRoles = !getVdb().getDataPolicyEntries().isEmpty();
+            if (okIfModelsDirty && showWarningDialog) {
+            	if( hasDataRoles ) {
+	                MessageDialogWithToggle dialog = MessageDialogWithToggle.openOkCancelConfirm(Display.getCurrent().getActiveShell(),
+	                                                                                             CONFIRM_DIALOG_TITLE,
+	                                                                                             CONFIRM_SYNCHRONIZE_MESSAGE,
+	                                                                                             VdbUiConstants.Util.getString("rememberMyDecision"), //$NON-NLS-1$
+	                                                                                             false,
+	                                                                                             null,
+	                                                                                             null);
+	                if (dialog.getReturnCode() == IDialogConstants.OK_ID) {
+	                    synchronize = true;
+	
+	                    // save preference
+	                    if (dialog.getToggleState()) {
+	                        try {
+	                            prefStore.setValue(SYNCHRONIZE_WITHOUT_WARNING, true);
+	                            VdbUiPlugin.singleton.getPreferences().flush();
+	                        } catch (BackingStoreException e) {
+	                            VdbUiConstants.Util.log(e);
+	                        }
+	                    }
+	                }
+            	} else {
+            		synchronize = true;
+            	}
+            }
+
+            if (okIfModelsDirty && synchronize) {
                 BusyIndicator.showWhile(Display.getCurrent(), new Runnable() {
                     /**
                      * {@inheritDoc}
@@ -1320,31 +1352,56 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                     boolean showWarningDialog = "".equals(prefStore.getString(SYNCHRONIZE_WITHOUT_WARNING)) ? true //$NON-NLS-1$
                     : !prefStore.getBoolean(SYNCHRONIZE_WITHOUT_WARNING);
                     boolean synchronize = !showWarningDialog;
+                    boolean okIfModelsDirty = true;
 
-                    if (showWarningDialog) {
-                        MessageDialogWithToggle dialog = MessageDialogWithToggle.openOkCancelConfirm(Display.getCurrent().getActiveShell(),
-                                                                                                     CONFIRM_DIALOG_TITLE,
-                                                                                                     CONFIRM_SYNCHRONIZE_ALL_MESSAGE,
-                                                                                                     VdbUiConstants.Util.getString("rememberMyDecision"), //$NON-NLS-1$
-                                                                                                     false,
-                                                                                                     null,
-                                                                                                     null);
-                        if (dialog.getReturnCode() == IDialogConstants.OK_ID) {
-                            synchronize = true;
-
-                            // save if user wants decision remembered
-                            if (dialog.getToggleState()) {
-                                try {
-                                    prefStore.setValue(SYNCHRONIZE_WITHOUT_WARNING, true);
-                                    VdbUiPlugin.singleton.getPreferences().flush();
-                                } catch (BackingStoreException e) {
-                                    VdbUiConstants.Util.log(e);
-                                }
+                    // check Workspace for Dirty Open Editors
+                    Collection<IFile> iFiles = VdbUtil.getVdbModels(getVdb());
+                    boolean askedQuestion = false;
+                    for( IFile theFile : iFiles ) {
+                    	if( ModelEditorManager.isOpen(theFile) && ModelEditorManager.getModelEditorForFile(theFile, false).isDirty() ) {
+                    		askedQuestion = true;
+                    		boolean confirm = MessageDialog.openConfirm(Display.getCurrent().getActiveShell(),
+                                    CONFIRM_DIRTY_MODELS_DIALOG_TITLE,
+                    				CONFIRM_DIRTY_MODELS_DIALOG_MESSAGE);
+                            if (confirm) {
+                            	okIfModelsDirty = true;
+                            } else {
+                            	okIfModelsDirty = false;
                             }
-                        }
+                    	}
+                    	if( askedQuestion ) {
+                    		break;
+                    	}
+                    }
+                    boolean hasDataRoles = !getVdb().getDataPolicyEntries().isEmpty();
+                    if (okIfModelsDirty && showWarningDialog) {
+                    	if( hasDataRoles ) {
+	                        MessageDialogWithToggle dialog = MessageDialogWithToggle.openOkCancelConfirm(Display.getCurrent().getActiveShell(),
+	                                                                                                     CONFIRM_DIALOG_TITLE,
+	                                                                                                     CONFIRM_SYNCHRONIZE_ALL_MESSAGE,
+	                                                                                                     VdbUiConstants.Util.getString("rememberMyDecision"), //$NON-NLS-1$
+	                                                                                                     false,
+	                                                                                                     null,
+	                                                                                                     null);
+	                        if (dialog.getReturnCode() == IDialogConstants.OK_ID) {
+	                            synchronize = true;
+	
+	                            // save if user wants decision remembered
+	                            if (dialog.getToggleState()) {
+	                                try {
+	                                    prefStore.setValue(SYNCHRONIZE_WITHOUT_WARNING, true);
+	                                    VdbUiPlugin.singleton.getPreferences().flush();
+	                                } catch (BackingStoreException e) {
+	                                    VdbUiConstants.Util.log(e);
+	                                }
+	                            }
+	                        }
+                    	} else {
+                    		synchronize = true;
+                    	}
                     }
 
-                    if (synchronize) {
+                    if (okIfModelsDirty && synchronize) {
                         BusyIndicator.showWhile(Display.getCurrent(), new Runnable() {
                             /**
                              * {@inheritDoc}
@@ -2090,8 +2147,9 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                          */
                         @Override
                         public boolean visit( IResourceDelta delta ) {
+                            IResource resource = delta.getResource();
 
-                            if (delta.getResource().equals(getVdb().getFile())
+                            if (resource.equals(getVdb().getFile())
                                 && ((delta.getKind() & IResourceDelta.REMOVED) != 0)) {
                                 Display.getDefault().asyncExec(new Runnable() {
                                     /**
@@ -2113,6 +2171,31 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                                 });
                                 return false;
                             }
+                            
+                            // see if resource is one in the VDB
+                            if ((resource instanceof IFile) && ResourceChangeUtilities.isContentChanged(delta)) {
+                                boolean foundIt = false;
+                                IFile changedFile = (IFile)resource;
+                                
+                                for (VdbEntry entry : getVdb().getModelEntries()) {
+                                    if (entry.getName().equals(changedFile.getFullPath())) {
+                                        entry.setSynchronization(Synchronization.NotSynchronized);
+                                        foundIt = true;
+                                        break;
+                                    }
+                                }
+
+                                if (!foundIt) {
+                                    for (VdbEntry entry : getVdb().getEntries()) {
+                                        if (entry.getName().equals(changedFile.getFullPath())) {
+                                            entry.setSynchronization(Synchronization.NotSynchronized);
+                                            // no need to set foundIt to true as it is not needed later
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+
                             return true;
                         }
                     });
