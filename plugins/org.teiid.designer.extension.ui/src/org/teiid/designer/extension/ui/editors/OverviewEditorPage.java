@@ -14,27 +14,41 @@ import static org.teiid.designer.extension.ui.UiConstants.Form.TEXT_STYLE;
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.MED_EDITOR;
 
 import java.beans.PropertyChangeEvent;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.ISelectionProvider;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
+import org.eclipse.swt.events.FocusAdapter;
+import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.IMessageManager;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
+import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition.PropertyName;
 import org.teiid.designer.extension.definition.ModelExtensionDefinitionValidator;
 import org.teiid.designer.extension.ui.Activator;
 import org.teiid.designer.extension.ui.Messages;
 import org.teiid.designer.extension.ui.model.MedModelNode;
+import org.teiid.designer.extension.ui.model.MedModelNode.ModelType;
 
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.internal.ui.forms.MessageFormDialog;
@@ -66,6 +80,10 @@ public final class OverviewEditorPage extends MedEditorPage {
 
         this.namespaceUriError = new ErrorMessage();
         validateNamespaceUri();
+    }
+
+    MedEditorPage accessPage() {
+        return this;
     }
 
     /**
@@ -224,6 +242,14 @@ public final class OverviewEditorPage extends MedEditorPage {
             // associate control with error message
             this.descriptionError.setControl(this.txtDescription);
         }
+
+        // hook with selection synchronizer
+        MedSelectionSynchronizer selectionSynchronizer = getMedEditor().getSelectionSynchronizer();
+        selectionSynchronizer.addSelectionProvider(new HeaderSelectionProvider(this.txtNamespacePrefix,
+                                                                               this.txtNamespaceUri,
+                                                                               this.cbxMetamodelUris,
+                                                                               this.txtVersion,
+                                                                               this.txtDescription));
 
         // clear any initial messages that were created before the control was set
         IMessageManager msgMgr = ((ModelExtensionDefinitionEditor)getEditor()).getMessageManager();
@@ -387,72 +413,6 @@ public final class OverviewEditorPage extends MedEditorPage {
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.designer.extension.ui.editors.MedEditorPage#select(org.teiid.designer.extension.ui.model.MedModelNode)
-     */
-    @Override
-    boolean select( MedModelNode node ) {
-        assert (node != null) : "node is null"; //$NON-NLS-1$
-
-        if (node.isMed() || node.isDescription()) {
-            if ((this.txtDescription != null) && !this.txtDescription.isDisposed()) {
-                ensureVisible(this.txtDescription);
-            }
-
-            return true;
-        }
-
-        if (node.isMetamodelUri()) {
-            if ((this.cbxMetamodelUris != null) && !this.cbxMetamodelUris.isDisposed()) {
-                ensureVisible(this.cbxMetamodelUris);
-            }
-
-            return true;
-        }
-
-        if (node.isNamespacePrefix()) {
-            if ((this.txtNamespacePrefix != null) && !this.txtNamespacePrefix.isDisposed()) {
-                ensureVisible(this.txtNamespacePrefix);
-            }
-
-            return true;
-        }
-
-        if (node.isNamespaceUri()) {
-            if ((this.txtNamespaceUri != null) && !this.txtNamespaceUri.isDisposed()) {
-                ensureVisible(this.txtNamespaceUri);
-            }
-
-            return true;
-        }
-
-        if (node.isVersion()) {
-            if ((this.txtVersion != null) && !this.txtVersion.isDisposed()) {
-                ensureVisible(this.txtVersion);
-            }
-
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * {@inheritDoc}
-     * 
-     * @see org.eclipse.ui.forms.editor.FormPage#setFocus()
-     */
-    @Override
-    public void setFocus() {
-        if (this.txtNamespacePrefix != null) {
-            this.txtNamespacePrefix.setFocus();
-        } else {
-            super.setFocus();
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     * 
      * @see org.teiid.designer.extension.ui.editors.MedEditorPage#setResourceReadOnly(boolean)
      */
     @Override
@@ -502,6 +462,208 @@ public final class OverviewEditorPage extends MedEditorPage {
         this.namespaceUriError.setStatus(ModelExtensionDefinitionValidator.validateNamespaceUri(getMed().getNamespaceUri(),
                                                                                                 getRegistry().getAllNamespaceUris()));
         updateMessage(this.namespaceUriError);
+    }
+
+    class HeaderSelectionProvider implements MedSelectionProvider {
+
+        private final Map<ModelExtensionDefinition.PropertyName, Control> controls;
+        private ISelectionChangedListener listener; // only one listener (the synchronizer)
+        private ISelection currentSelection = StructuredSelection.EMPTY;
+
+        public HeaderSelectionProvider( Control ctrlNamespacePrefix,
+                                        Control ctrlNamespaceUri,
+                                        Control ctrlMetamodelUri,
+                                        Control ctrlVersion,
+                                        Control ctrlDescription ) {
+            this.controls = new HashMap<ModelExtensionDefinition.PropertyName, Control>(5);
+            MedSelectionSynchronizer selectionSynchronizer = getMedEditor().getSelectionSynchronizer();
+
+            hookListener(ModelExtensionDefinition.PropertyName.NAMESPACE_PREFIX, ctrlNamespacePrefix, selectionSynchronizer);
+            hookListener(ModelExtensionDefinition.PropertyName.NAMESPACE_URI, ctrlNamespaceUri, selectionSynchronizer);
+            hookListener(ModelExtensionDefinition.PropertyName.METAMODEL_URI, ctrlMetamodelUri, selectionSynchronizer);
+            hookListener(ModelExtensionDefinition.PropertyName.VERSION, ctrlVersion, selectionSynchronizer);
+            hookListener(ModelExtensionDefinition.PropertyName.DESCRIPTION, ctrlDescription, selectionSynchronizer);
+        }
+
+        ISelectionProvider accessThis() {
+            return this;
+        }
+
+        /**
+         * {@inheritDoc}
+         * 
+         * @see org.eclipse.jface.viewers.ISelectionProvider#addSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
+         */
+        @Override
+        public void addSelectionChangedListener( ISelectionChangedListener listener ) {
+            assert ((listener instanceof MedSelectionSynchronizer) && (this.listener == null)) : "listener is not a MedSelectionSynchronizer"; //$NON-NLS-1$
+            this.listener = listener;
+        }
+
+        ISelection createSelection( ModelExtensionDefinition.PropertyName propName,
+                                    MedSelectionSynchronizer selectionSynchronizer ) {
+            Object medNode = null;
+
+            if (ModelExtensionDefinition.PropertyName.NAMESPACE_PREFIX == propName) {
+                medNode = selectionSynchronizer.getNamespacePrefixNode();
+            } else if (ModelExtensionDefinition.PropertyName.NAMESPACE_URI == propName) {
+                medNode = selectionSynchronizer.getNamespaceUriNode();
+            } else if (ModelExtensionDefinition.PropertyName.METAMODEL_URI == propName) {
+                medNode = selectionSynchronizer.getMetamodelUriNode();
+            } else if (ModelExtensionDefinition.PropertyName.DESCRIPTION == propName) {
+                medNode = selectionSynchronizer.getDescriptionNode();
+            } else if (ModelExtensionDefinition.PropertyName.VERSION == propName) {
+                medNode = selectionSynchronizer.getVersionNode();
+            }
+
+            assert (medNode != null) : "medNode is null"; //$NON-NLS-1$
+            return new StructuredSelection(medNode);
+        }
+
+        /**
+         * {@inheritDoc}
+         * 
+         * @see org.teiid.designer.extension.ui.editors.MedSelectionProvider#getMedEditorPage()
+         */
+        @Override
+        public MedEditorPage getMedEditorPage() {
+            return accessPage();
+        }
+
+        /**
+         * {@inheritDoc}
+         * 
+         * @see org.teiid.designer.extension.ui.editors.MedSelectionProvider#getSelectedNode(org.teiid.designer.extension.ui.model.MedModelNode.ModelType)
+         */
+        @Override
+        public MedModelNode getSelectedNode( ModelType type ) {
+            if (!this.currentSelection.isEmpty()) {
+                MedModelNode modelNode = (MedModelNode)((IStructuredSelection)this.currentSelection).getFirstElement();
+
+                if (modelNode.getType() == type) {
+                    return modelNode;
+                }
+
+                if (ModelType.MODEL_EXTENSION_DEFINITION == type) {
+                    return modelNode.getMedNode();
+                }
+            }
+
+            return null;
+        }
+
+        ISelectionChangedListener getSelectionListener() {
+            return this.listener;
+        }
+
+        /**
+         * {@inheritDoc}
+         * 
+         * @see org.eclipse.jface.viewers.ISelectionProvider#getSelection()
+         */
+        @Override
+        public ISelection getSelection() {
+            return this.currentSelection;
+        }
+
+        private void hookListener( final ModelExtensionDefinition.PropertyName propName,
+                                   final Control control,
+                                   final MedSelectionSynchronizer selectionSynchronizer ) {
+            this.controls.put(propName, control);
+
+            control.addFocusListener(new FocusAdapter() {
+
+                /**
+                 * {@inheritDoc}
+                 * 
+                 * @see org.eclipse.swt.events.FocusListener#focusGained(org.eclipse.swt.events.FocusEvent)
+                 */
+                @Override
+                public void focusGained( FocusEvent e ) {
+                    if (getSelectionListener() != null) {
+                        getSelectionListener().selectionChanged(new SelectionChangedEvent(accessThis(),
+                                                                                          createSelection(propName,
+                                                                                                          selectionSynchronizer)));
+                    }
+                }
+            });
+
+            if (control.isFocusControl()) {
+                this.currentSelection = createSelection(propName, selectionSynchronizer);
+            }
+        }
+
+        /**
+         * {@inheritDoc}
+         * 
+         * @see org.teiid.designer.extension.ui.editors.MedSelectionProvider#isApplicable(org.eclipse.jface.viewers.IStructuredSelection)
+         */
+        @Override
+        public boolean isApplicable( IStructuredSelection selection ) {
+            if (!selection.isEmpty()) {
+                Object selectedObject = selection.getFirstElement();
+
+                if (selectedObject instanceof MedModelNode) {
+                    MedModelNode modelNode = (MedModelNode)selectedObject;
+
+                    if (modelNode.isMed() || modelNode.isNamespacePrefix() || modelNode.isNamespaceUri()
+                            || modelNode.isDescription() || modelNode.isMetamodelUri() || modelNode.isVersion()) {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        /**
+         * {@inheritDoc}
+         * 
+         * @see org.teiid.designer.extension.ui.editors.MedSelectionProvider#refresh()
+         */
+        @Override
+        public void refresh() {
+            // nothing to do
+        }
+
+        /**
+         * {@inheritDoc}
+         * 
+         * @see org.eclipse.jface.viewers.ISelectionProvider#removeSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
+         */
+        @Override
+        public void removeSelectionChangedListener( ISelectionChangedListener listener ) {
+            this.listener = null;
+        }
+
+        /**
+         * {@inheritDoc}
+         * 
+         * @see org.eclipse.jface.viewers.ISelectionProvider#setSelection(org.eclipse.jface.viewers.ISelection)
+         */
+        @Override
+        public void setSelection( ISelection selection ) {
+            if (!selection.isEmpty() && (selection instanceof IStructuredSelection)) {
+                Object selectedObject = ((IStructuredSelection)selection).getFirstElement();
+
+                if (selectedObject instanceof MedModelNode) {
+                    MedModelNode modelNode = (MedModelNode)selectedObject;
+
+                    if (modelNode.isNamespacePrefix() || modelNode.isMed()) {
+                        ensureVisible(this.controls.get(ModelExtensionDefinition.PropertyName.NAMESPACE_PREFIX));
+                    } else if (modelNode.isNamespaceUri()) {
+                        ensureVisible(this.controls.get(ModelExtensionDefinition.PropertyName.NAMESPACE_URI));
+                    } else if (modelNode.isDescription()) {
+                        ensureVisible(this.controls.get(ModelExtensionDefinition.PropertyName.DESCRIPTION));
+                    } else if (modelNode.isMetamodelUri()) {
+                        ensureVisible(this.controls.get(ModelExtensionDefinition.PropertyName.METAMODEL_URI));
+                    } else if (modelNode.isVersion()) {
+                        ensureVisible(this.controls.get(ModelExtensionDefinition.PropertyName.VERSION));
+                    }
+                }
+            }
+        }
+
     }
 
 }

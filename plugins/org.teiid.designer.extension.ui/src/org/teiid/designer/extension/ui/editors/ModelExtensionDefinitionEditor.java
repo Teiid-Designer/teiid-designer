@@ -45,8 +45,6 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.PageChangedEvent;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.source.IAnnotationModel;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
@@ -58,8 +56,6 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IPersistableEditor;
-import org.eclipse.ui.ISelectionListener;
-import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.dialogs.SaveAsDialog;
 import org.eclipse.ui.editors.text.FileDocumentProvider;
@@ -85,7 +81,6 @@ import org.teiid.designer.extension.ui.Messages;
 import org.teiid.designer.extension.ui.UiConstants;
 import org.teiid.designer.extension.ui.actions.RegistryDeploymentValidator;
 import org.teiid.designer.extension.ui.actions.ShowModelExtensionRegistryViewAction;
-import org.teiid.designer.extension.ui.model.MedModelNode;
 
 import com.metamatrix.modeler.internal.core.workspace.ResourceChangeUtilities;
 import com.metamatrix.modeler.internal.ui.forms.MessageFormDialog;
@@ -94,7 +89,7 @@ import com.metamatrix.modeler.internal.ui.forms.MessageFormDialog;
  * 
  */
 public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor implements IPersistableEditor,
- IResourceChangeListener, PropertyChangeListener, RegistryListener, ISelectionListener {
+        IResourceChangeListener, PropertyChangeListener, RegistryListener {
 
     /**
      * The memento key for the index of the selected editor.
@@ -112,6 +107,7 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
 
     private ModelExtensionDefinition originalMed;
     private ModelExtensionDefinition medBeingEdited;
+    private MedSelectionSynchronizer selectionSynchronizer;
 
     private ScrolledForm scrolledForm;
     private final Map<MedEditorPage, Integer> medEditorPages = new HashMap<MedEditorPage, Integer>(3);
@@ -187,7 +183,7 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
             this.refreshListener = new Listener() {
                 /**
                  * {@inheritDoc}
-                 *
+                 * 
                  * @see org.eclipse.swt.widgets.Listener#handleEvent(org.eclipse.swt.widgets.Event)
                  */
                 @Override
@@ -211,8 +207,6 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
             }
 
             setActivePage(selectedPageNum);
-
-            // this.getSite().setSelectionProvider(this);
         } catch (Exception e) {
             // this will open a "Could not open editor" page with exception details
             throw new RuntimeException(Messages.errorOpeningMedEditor, e);
@@ -325,6 +319,13 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
             }
         }
 
+        // hook selection synchronizer
+        if (this.selectionSynchronizer == null) {
+            this.selectionSynchronizer = new MedSelectionSynchronizer(this);
+        } else {
+            this.selectionSynchronizer.setMed(this.medBeingEdited);
+        }
+
         // register to receive property change events
         this.medBeingEdited.addListener(this);
     }
@@ -343,7 +344,6 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
         try {
             createMed();
             ResourcesPlugin.getWorkspace().addResourceChangeListener(this);
-            site.getWorkbenchWindow().getSelectionService().addSelectionListener(this);
         } catch (Exception e) {
             throw new PartInitException(Messages.errorOpeningMedEditor, e);
         }
@@ -392,7 +392,6 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
     @Override
     public void dispose() {
         getRegistry().removeListener(this); // unregister to receive registry events
-        getSite().getWorkbenchWindow().getSelectionService().removeSelectionListener(this);
         super.dispose();
     }
 
@@ -516,6 +515,10 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
         return getEditorSite().getShell();
     }
 
+    public MedSelectionSynchronizer getSelectionSynchronizer() {
+        return this.selectionSynchronizer;
+    }
+
     void handlePageChanged() {
         FormPage page = (FormPage)getSelectedPage();
         this.scrolledForm.setText(page.getTitle());
@@ -631,8 +634,8 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
                         if (delta.getResource().equals(getFile())) {
                             // MXD file has been deleted so close editor
                             if ((delta.getKind() & IResourceDelta.REMOVED) != 0) {
-                                if (!accessThis().getShell().isDisposed()) {
-                                    accessThis().getShell().getDisplay().asyncExec(new Runnable() {
+                                if (!getShell().isDisposed()) {
+                                    getShell().getDisplay().asyncExec(new Runnable() {
 
                                         /**
                                          * {@inheritDoc}
@@ -644,21 +647,21 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
                                             getEditorSite().getPage().closeEditor(accessThis(), false);
                                         }
                                     });
-                                } else if (ResourceChangeUtilities.isContentChanged(delta)) {
-                                    if (!getShell().isDisposed()) {
-                                        getShell().getDisplay().syncExec(new Runnable() {
+                                }
+                            } else if (ResourceChangeUtilities.isContentChanged(delta)) {
+                                if (!getShell().isDisposed()) {
+                                    getShell().getDisplay().syncExec(new Runnable() {
 
-                                            /**
-                                             * {@inheritDoc}
-                                             * 
-                                             * @see java.lang.Runnable#run()
-                                             */
-                                            @Override
-                                            public void run() {
-                                                refreshMed();
-                                            }
-                                        });
-                                    }
+                                        /**
+                                         * {@inheritDoc}
+                                         * 
+                                         * @see java.lang.Runnable#run()
+                                         */
+                                        @Override
+                                        public void run() {
+                                            refreshMed();
+                                        }
+                                    });
                                 }
                             }
 
@@ -752,6 +755,15 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
     }
 
     /**
+     * @param page the page whose tab needs to be activated by the editor (cannot be <code>null</code>)
+     */
+    public void selectPage(MedEditorPage page) {
+        if (getActivePageInstance() != page) {
+            setActivePage(this.medEditorPages.get(page));
+        }
+    }
+
+    /**
      * {@inheritDoc}
      * 
      * @see org.eclipse.ui.forms.editor.SharedHeaderFormEditor#setFocus()
@@ -799,41 +811,6 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
 
     private void unhookRefreshListener() {
         getContainer().removeListener(SWT.Activate, this.refreshListener);
-    }
-
-    /**
-     * {@inheritDoc}
-     * 
-     * @see org.eclipse.ui.ISelectionListener#selectionChanged(org.eclipse.ui.IWorkbenchPart,
-     *      org.eclipse.jface.viewers.ISelection)
-     */
-    @Override
-    public void selectionChanged( IWorkbenchPart part,
-                                  ISelection workspaceSelection ) {
-        if ((part != this) && (workspaceSelection instanceof IStructuredSelection)) {
-            IStructuredSelection selection = (IStructuredSelection)workspaceSelection;
-
-            if (!selection.isEmpty()) {
-                // just pass first selected object on to pages
-                Object element = selection.getFirstElement();
-
-                if (element instanceof MedModelNode) {
-                    MedModelNode node = (MedModelNode)element;
-
-                    for (MedEditorPage page : this.medEditorPages.keySet()) {
-                        if (page.select(node)) {
-                            if (getActivePageInstance() != page) {
-                                setActivePage(this.medEditorPages.get(page));
-                            }
-
-                            break;
-                        }
-                    }
-                }
-
-                part.setFocus();
-            }
-        }
     }
 
 }

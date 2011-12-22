@@ -7,17 +7,9 @@
  */
 package org.teiid.designer.extension.ui.model;
 
-import static org.teiid.designer.extension.ui.UiConstants.UTIL;
-
-import java.io.IOException;
-import java.io.InputStream;
-
-import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.ui.IFileEditorInput;
-import org.teiid.designer.extension.ExtensionPlugin;
-import org.teiid.designer.extension.definition.ModelExtensionDefinition;
+import org.teiid.designer.extension.ui.editors.ModelExtensionDefinitionEditor;
 
 import com.metamatrix.core.util.ArrayUtil;
 
@@ -43,37 +35,12 @@ public class MedContentProvider implements ITreeContentProvider {
      */
     @Override
     public Object[] getChildren( Object parentElement ) {
+        if (parentElement instanceof ModelExtensionDefinitionEditor) {
+            return new Object[] { ((ModelExtensionDefinitionEditor)parentElement).getSelectionSynchronizer().getMedModelNode() };
+        }
+
         if (parentElement instanceof MedModelNode) {
             return ((MedModelNode)parentElement).getChildren();
-        }
-
-        if (parentElement instanceof ModelExtensionDefinition) {
-            return new Object[] { MedModelNode.createMedNode((ModelExtensionDefinition)parentElement) };
-        }
-
-        if (parentElement instanceof IFile) {
-            InputStream stream = null;
-
-            try {
-                stream = ((IFile)parentElement).getContents();
-                ModelExtensionDefinition med = ExtensionPlugin.getInstance().parse(stream);
-                return getChildren(med);
-            } catch (Exception e) {
-                UTIL.log(e);
-                return ArrayUtil.Constants.EMPTY_ARRAY;
-            } finally {
-                if (stream != null) {
-                    try {
-                        stream.close();
-                    } catch (IOException e) {
-                        UTIL.log(e);
-                    }
-                }
-            }
-        }
-
-        if (parentElement instanceof IFileEditorInput) {
-            return getChildren(((IFileEditorInput)parentElement).getFile());
         }
 
         return ArrayUtil.Constants.EMPTY_ARRAY;

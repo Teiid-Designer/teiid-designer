@@ -20,7 +20,6 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.teiid.designer.extension.definition.ModelExtensionDefinitionWriter;
 import org.teiid.designer.extension.ui.Messages;
-import org.teiid.designer.extension.ui.model.MedModelNode;
 
 /**
  * The readonly text viewer for the MED.
@@ -84,17 +83,6 @@ public class SourceEditorPage extends MedEditorPage {
     @Override
     protected void handlePropertyChanged( PropertyChangeEvent e ) {
         setContent();
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @see org.teiid.designer.extension.ui.editors.MedEditorPage#select(org.teiid.designer.extension.ui.model.MedModelNode)
-     */
-    @Override
-    boolean select( MedModelNode node ) {
-        // nothing to select
-        return false;
     }
 
     void setContent() {

@@ -301,10 +301,21 @@ public class Messages extends NLS {
     public static String changeMetamodelDialogMsg;
 
     public static String namespacePrefixNodeLabel;
+    public static String namespacePrefixNodeToolTip;
+    public static String namespacePrefixNodeNoValueToolTip;
     public static String namespaceUriNodeLabel;
+    public static String namespaceUriNodeToolTip;
+    public static String namespaceUriNodeNoValueToolTip;
     public static String metamodelUriNodeLabel;
+    public static String metamodelUriNodeToolTip;
+    public static String metamodelUriNodeNoValueToolTip;
     public static String descriptionNodeLabel;
+    public static String descriptionNodeToolTip;
+    public static String descriptionNodeNoValueToolTip;
     public static String versionNodeLabel;
+    public static String versionNodeToolTip;
+    public static String metaclassNodeToolTip;
+    public static String propertyNodeToolTip;
     public static String medNodeLabel;
     public static String missingPropertyIdNodeLabel;
 

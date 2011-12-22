@@ -28,6 +28,7 @@ import java.util.List;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -61,6 +62,7 @@ import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
 import org.teiid.designer.extension.ui.Activator;
 import org.teiid.designer.extension.ui.Messages;
 import org.teiid.designer.extension.ui.model.MedModelNode;
+import org.teiid.designer.extension.ui.model.MedModelNode.ModelType;
 
 import com.metamatrix.core.util.ArrayUtil;
 import com.metamatrix.core.util.CoreStringUtil;
@@ -81,7 +83,10 @@ public class PropertiesEditorPage extends MedEditorPage {
     private Button btnRemoveProperty;
 
     private TableViewer metaclassViewer;
+    private MedSelectionProvider metaclassSelectionProvider;
+
     private TableViewer propertyViewer;
+    private MedSelectionProvider propertySelectionProvider;
 
     private final ErrorMessage metaclassError;
     private final ErrorMessage propertyError;
@@ -96,6 +101,10 @@ public class PropertiesEditorPage extends MedEditorPage {
         this.propertyError = new ErrorMessage();
 
         validateMetaclasses(); // this calls validatePropertyDefinitions();
+    }
+
+    MedEditorPage accessPage() {
+        return this;
     }
 
     /**
@@ -138,6 +147,13 @@ public class PropertiesEditorPage extends MedEditorPage {
             ((GridData)finalBottom.getLayoutData()).heightHint = (this.propertyViewer.getTable().getItemHeight() * 10);
             propertiesSection.descriptionVerticalSpacing = metaclassSection.getTextClientHeightDifference();
         }
+
+        // hook selection synchronizer
+        MedSelectionSynchronizer selectionSynchronizer = getMedEditor().getSelectionSynchronizer();
+        this.metaclassSelectionProvider = new SelectionProvider(true);
+        selectionSynchronizer.addSelectionProvider(this.metaclassSelectionProvider);
+        this.propertySelectionProvider = new SelectionProvider(false);
+        selectionSynchronizer.addSelectionProvider(this.propertySelectionProvider);
 
         // populate UI
         this.metaclassViewer.setInput(this);
@@ -541,6 +557,14 @@ public class PropertiesEditorPage extends MedEditorPage {
         return result;
     }
 
+    Viewer getMetaclassViewer() {
+        return this.metaclassViewer;
+    }
+
+    Viewer getPropertyViewer() {
+        return this.propertyViewer;
+    }
+
     String getSelectedMetaclass() {
         IStructuredSelection selection = (IStructuredSelection)this.metaclassViewer.getSelection();
         return (selection.isEmpty() ? null : (String)selection.getFirstElement());
@@ -748,37 +772,6 @@ public class PropertiesEditorPage extends MedEditorPage {
                                            NLS.bind(Messages.removePropertyDialogMsg, selectedPropDefn.getSimpleId()))) {
             getMed().removePropertyDefinition(getSelectedMetaclass(), selectedPropDefn);
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     * 
-     * @see org.teiid.designer.extension.ui.editors.MedEditorPage#select(org.teiid.designer.extension.ui.model.MedModelNode)
-     */
-    @Override
-    boolean select( MedModelNode node ) {
-        assert (node != null) : "node is null"; //$NON-NLS-1$
-
-        if (node.isMetaclass()) {
-            if ((this.metaclassViewer != null) && !this.metaclassViewer.getControl().isDisposed()) {
-                this.metaclassViewer.setSelection(new StructuredSelection(node.getMetaclass()), true);
-                ensureVisible(this.metaclassViewer.getControl());
-            }
-
-            return true;
-        }
-
-        if (node.isPropertyDefinition()) {
-            if ((this.propertyViewer != null) && !this.propertyViewer.getControl().isDisposed()) {
-                select(MedModelNode.createMetaclassNode(node.getMedNode(), node.getMetaclass()));
-                this.propertyViewer.setSelection(new StructuredSelection(node.getPropertyDefinition()), true);
-                ensureVisible(this.propertyViewer.getControl());
-            }
-
-            return true;
-        }
-
-        return false;
     }
 
     /**
@@ -1042,6 +1035,219 @@ public class PropertiesEditorPage extends MedEditorPage {
 
             // don't return a value for the boolean columns
             return null;
+        }
+
+    }
+
+    class SelectionProvider implements MedSelectionProvider {
+
+        private final List<ISelectionChangedListener> listeners;
+        private final boolean metaclassViewerFlag;
+
+        public SelectionProvider( boolean metaclassViewerFlag ) {
+            Viewer viewer = (metaclassViewerFlag ? getMetaclassViewer() : getPropertyViewer());
+            viewer.addSelectionChangedListener(new ISelectionChangedListener() {
+
+                /**
+                 * {@inheritDoc}
+                 * 
+                 * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
+                 */
+                @Override
+                public void selectionChanged( SelectionChangedEvent event ) {
+                    fireSelectionChanged(event);
+                }
+            });
+
+            this.metaclassViewerFlag = metaclassViewerFlag;
+            this.listeners = new ArrayList<ISelectionChangedListener>(1); // should only be synchronizer
+        }
+
+        /**
+         * {@inheritDoc}
+         * 
+         * @see org.eclipse.jface.viewers.ISelectionProvider#addSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
+         */
+        @Override
+        public void addSelectionChangedListener( ISelectionChangedListener listener ) {
+            if (!this.listeners.contains(listener)) {
+                this.listeners.add(listener);
+            }
+        }
+
+        void fireSelectionChanged( SelectionChangedEvent viewerEvent ) {
+            IStructuredSelection viewerSelection = (IStructuredSelection)viewerEvent.getSelection();
+
+            if (!viewerSelection.isEmpty()) {
+                MedSelectionSynchronizer selectionSynchronizer = getMedEditor().getSelectionSynchronizer();
+                MedModelNode modelNode = null;
+
+                if (this.metaclassViewerFlag) {
+                    modelNode = selectionSynchronizer.getMetaclassNode(getSelectedMetaclass());
+                } else {
+                    modelNode = selectionSynchronizer.getPropertyDefinitionNode(getSelectedMetaclass(), getSelectedProperty());
+                }
+
+                SelectionChangedEvent event = new SelectionChangedEvent(this, new StructuredSelection(modelNode));
+
+                for (ISelectionChangedListener listener : this.listeners) {
+                    listener.selectionChanged(event);
+                }
+            }
+        }
+
+        /**
+         * {@inheritDoc}
+         * 
+         * @see org.teiid.designer.extension.ui.editors.MedSelectionProvider#getMedEditorPage()
+         */
+        @Override
+        public MedEditorPage getMedEditorPage() {
+            return accessPage();
+        }
+
+        /**
+         * {@inheritDoc}
+         * 
+         * @see org.eclipse.jface.viewers.ISelectionProvider#getSelection()
+         */
+        @Override
+        public ISelection getSelection() {
+            MedSelectionSynchronizer selectionSynchronizer = getMedEditor().getSelectionSynchronizer();
+
+            // if metaclass need to convert metaclass string to node
+            if (this.metaclassViewerFlag) {
+                String metaclass = getSelectedMetaclass();
+
+                if (metaclass != null) {
+                    MedModelNode metaclassNode = selectionSynchronizer.getMetaclassNode(metaclass);
+
+                    if (metaclassNode != null) {
+                        return new StructuredSelection(metaclassNode);
+                    }
+                }
+            } else { // need to convert propDefn to node
+                ModelExtensionPropertyDefinition propDefn = getSelectedProperty();
+
+                if (propDefn != null) {
+                    MedModelNode propDefnNode = selectionSynchronizer.getPropertyDefinitionNode(getSelectedMetaclass(), propDefn);
+
+                    if (propDefnNode != null) {
+                        return new StructuredSelection(propDefnNode);
+                    }
+                }
+
+            }
+
+            return StructuredSelection.EMPTY;
+        }
+
+        /**
+         * {@inheritDoc}
+         * 
+         * @see org.teiid.designer.extension.ui.editors.MedSelectionProvider#getSelectedNode(org.teiid.designer.extension.ui.model.MedModelNode.ModelType)
+         */
+        @Override
+        public MedModelNode getSelectedNode( ModelType type ) {
+            IStructuredSelection selection = (IStructuredSelection)getSelection();
+
+            if (!selection.isEmpty()) {
+                String metaclass = getSelectedMetaclass();
+
+                if (ModelType.METACLASS == type) {
+                    return getMedEditor().getSelectionSynchronizer().getMetaclassNode(metaclass);
+                }
+
+                if (!this.metaclassViewerFlag && (ModelType.PROPERTY_DEFINITION == type)) {
+                    ModelExtensionPropertyDefinition propDefn = getSelectedProperty();
+                    return getMedEditor().getSelectionSynchronizer().getPropertyDefinitionNode(metaclass, propDefn);
+                }
+            }
+
+            return null;
+        }
+
+        /**
+         * {@inheritDoc}
+         * 
+         * @see org.teiid.designer.extension.ui.editors.MedSelectionProvider#isApplicable(org.eclipse.jface.viewers.IStructuredSelection)
+         */
+        @Override
+        public boolean isApplicable( IStructuredSelection selection ) {
+            if (!selection.isEmpty()) {
+                MedModelNode modelNode = (MedModelNode)selection.getFirstElement();
+
+                if (ModelType.METACLASS == modelNode.getType()) {
+                    return this.metaclassViewerFlag;
+                }
+
+                if (ModelType.PROPERTY_DEFINITION == modelNode.getType()) {
+                    return !this.metaclassViewerFlag;
+                }
+            }
+
+            return false;
+        }
+
+        /**
+         * {@inheritDoc}
+         * 
+         * @see org.teiid.designer.extension.ui.editors.MedSelectionProvider#refresh()
+         */
+        @Override
+        public void refresh() {
+            Viewer viewer = (this.metaclassViewerFlag ? getMetaclassViewer() : getPropertyViewer());
+            viewer.refresh();
+        }
+
+        /**
+         * {@inheritDoc}
+         * 
+         * @see org.eclipse.jface.viewers.ISelectionProvider#removeSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
+         */
+        @Override
+        public void removeSelectionChangedListener( ISelectionChangedListener listener ) {
+            this.listeners.remove(listener);
+        }
+
+        /**
+         * {@inheritDoc}
+         * 
+         * @see org.eclipse.jface.viewers.ISelectionProvider#setSelection(org.eclipse.jface.viewers.ISelection)
+         */
+        @Override
+        public void setSelection( ISelection selection ) {
+            if (!selection.isEmpty() && (selection instanceof IStructuredSelection)) {
+                MedModelNode modelNode = (MedModelNode)((IStructuredSelection)selection).getFirstElement();
+
+                if (!this.metaclassViewerFlag && (ModelType.PROPERTY_DEFINITION == modelNode.getType())) {
+                    // make sure metaclass is selected first
+                    IStructuredSelection metaclassSelection = new StructuredSelection(modelNode.getMetaclass());
+
+                    if (!metaclassSelection.equals(getMetaclassViewer().getSelection())) {
+                        getMetaclassViewer().setSelection(metaclassSelection, true);
+                    }
+
+                    // select prop defn
+                    IStructuredSelection propertySelection = new StructuredSelection(modelNode.getPropertyDefinition());
+
+                    if (!propertySelection.equals(getPropertyViewer().getSelection())) {
+                        getPropertyViewer().setSelection(propertySelection, true);
+                    }
+
+                    ensureVisible(getPropertyViewer().getControl());
+                } else if (ModelType.METACLASS == modelNode.getType()) {
+                    IStructuredSelection metaclassSelection = new StructuredSelection(modelNode.getMetaclass());
+
+                    if (this.metaclassViewerFlag) {
+                        if (!metaclassSelection.equals(getMetaclassViewer().getSelection())) {
+                            getMetaclassViewer().setSelection(metaclassSelection, true);
+                        }
+
+                        ensureVisible(getMetaclassViewer().getControl().getParent());
+                    }
+                }
+            }
         }
 
     }

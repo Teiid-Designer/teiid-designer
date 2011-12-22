@@ -7,39 +7,43 @@
  */
 package org.teiid.designer.extension.ui.editors;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.IStatusLineManager;
+import org.eclipse.jface.action.IToolBarManager;
+import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.ISelectionListener;
-import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.views.contentoutline.ContentOutlinePage;
-import org.teiid.designer.extension.definition.ModelExtensionDefinition;
-import org.teiid.designer.extension.definition.ModelExtensionDefinition.PropertyName;
 import org.teiid.designer.extension.ui.model.MedContentProvider;
 import org.teiid.designer.extension.ui.model.MedLabelProvider;
+import org.teiid.designer.extension.ui.model.MedModelNode;
+import org.teiid.designer.extension.ui.model.MedModelNode.ModelType;
 
 /**
- * MedOutlinePage is the ContentOutlinePage for the ModelEditor. It contains a PageBook which can display a TreeViewer of the
- * Model, plus any other controls that are contributed by ModelEditorPage extensions.
+ * MedOutlinePage is the ContentOutlinePage for the ModelEditor. It contains a PageBook which can display a TreeViewer of the Model,
+ * plus any other controls that are contributed by ModelEditorPage extensions.
  */
-public class MedOutlinePage extends ContentOutlinePage implements PropertyChangeListener, ISelectionListener {
+public class MedOutlinePage extends ContentOutlinePage {
 
-    private ModelExtensionDefinition med;
     private ModelExtensionDefinitionEditor medEditor;
+    private MedSelectionProvider selectionProvider;
 
     public MedOutlinePage( ModelExtensionDefinitionEditor editor ) {
         super();
         this.medEditor = editor;
-        this.med = this.medEditor.getMed();
-        this.med.addListener(this);
     }
 
     /**
      * {@inheritDoc}
-     *
+     * 
      * @see org.eclipse.ui.views.contentoutline.ContentOutlinePage#createControl(org.eclipse.swt.widgets.Composite)
      */
     @Override
@@ -50,13 +54,15 @@ public class MedOutlinePage extends ContentOutlinePage implements PropertyChange
         viewer.setAutoExpandLevel(3);
         viewer.setContentProvider(new MedContentProvider());
         viewer.setLabelProvider(new MedLabelProvider());
+        ColumnViewerToolTipSupport.enableFor(viewer);
 
-        // hook up a listeners
-        getSite().getWorkbenchWindow().getSelectionService().addSelectionListener(this);
-        viewer.addSelectionChangedListener(this);
+        // hook selection synchronizer
+        MedSelectionSynchronizer selectionSynchronizer = getSelectionSynchronizer();
+        this.selectionProvider = new OutlineSelectionProvider(viewer);
+        selectionSynchronizer.addSelectionProvider(this.selectionProvider);
 
-        // populate view 
-        viewer.setInput(this.med);
+        // populate view
+        viewer.setInput(this.medEditor);
     }
 
     /**
@@ -66,42 +72,182 @@ public class MedOutlinePage extends ContentOutlinePage implements PropertyChange
      */
     @Override
     public void dispose() {
-        getSite().getWorkbenchWindow().getSelectionService().removeSelectionListener(this);
-
-        if (this.med != null) {
-            this.med.removeListener(this);
-        }
-
+        getSelectionSynchronizer().removeSelectionProvider(this.selectionProvider);
         super.dispose();
     }
 
-    /**
-     * {@inheritDoc}
-     * 
-     * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
-     */
-    @Override
-    public final void propertyChange( PropertyChangeEvent e ) {
-        TreeViewer viewer = getTreeViewer();
-        String propName = e.getPropertyName();
-
-        if (PropertyName.PROPERTY_DEFINITION.toString().equals(propName)) {
-            viewer.refresh();
-        } else if (PropertyName.METACLASS.toString().equals(propName)) {
-            viewer.refresh();
-        }
+    MedSelectionSynchronizer getSelectionSynchronizer() {
+        return this.medEditor.getSelectionSynchronizer();
     }
 
     /**
      * {@inheritDoc}
-     * 
-     * @see org.eclipse.ui.ISelectionListener#selectionChanged(org.eclipse.ui.IWorkbenchPart,
-     *      org.eclipse.jface.viewers.ISelection)
+     *
+     * @see org.eclipse.ui.part.Page#makeContributions(org.eclipse.jface.action.IMenuManager, org.eclipse.jface.action.IToolBarManager, org.eclipse.jface.action.IStatusLineManager)
      */
     @Override
-    public void selectionChanged( IWorkbenchPart part,
-                                  ISelection selection ) {
-        // TODO: Implement selection changes, based on ModelEditor selections.
+    public void makeContributions( IMenuManager menuManager,
+                                   IToolBarManager toolBarManager,
+                                   IStatusLineManager statusLineManager ) {
+//        super.makeContributions(menuManager, toolBarManager, statusLineManager);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.eclipse.ui.views.contentoutline.ContentOutlinePage#setFocus()
+     */
+    @Override
+    public void setFocus() {
+        super.setFocus();
+        this.selectionProvider.setSelection(getSelectionSynchronizer().getSelection());
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.eclipse.ui.views.contentoutline.ContentOutlinePage#setSelection(org.eclipse.jface.viewers.ISelection)
+     */
+    @Override
+    public void setSelection( ISelection selection ) {
+    }
+
+    class OutlineSelectionProvider implements MedSelectionProvider {
+
+        private final List<ISelectionChangedListener> listeners;
+        private final Viewer viewer;
+
+        public OutlineSelectionProvider( Viewer viewer ) {
+            this.viewer = viewer;
+            this.viewer.addSelectionChangedListener(new ISelectionChangedListener() {
+
+                /**
+                 * {@inheritDoc}
+                 * 
+                 * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
+                 */
+                @Override
+                public void selectionChanged( SelectionChangedEvent event ) {
+                    fireSelectionChanged(event);
+                }
+            });
+
+            this.listeners = new ArrayList<ISelectionChangedListener>(1); // should only be synchronizer
+        }
+
+        /**
+         * {@inheritDoc}
+         * 
+         * @see org.eclipse.jface.viewers.ISelectionProvider#addSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
+         */
+        @Override
+        public void addSelectionChangedListener( ISelectionChangedListener listener ) {
+            if (!this.listeners.contains(listener)) {
+                this.listeners.add(listener);
+            }
+        }
+
+        void fireSelectionChanged( SelectionChangedEvent viewerEvent ) {
+            SelectionChangedEvent event = new SelectionChangedEvent(this, viewerEvent.getSelection());
+
+            for (ISelectionChangedListener listener : this.listeners) {
+                listener.selectionChanged(event);
+            }
+        }
+
+        /**
+         * {@inheritDoc}
+         * 
+         * @see org.teiid.designer.extension.ui.editors.MedSelectionProvider#getMedEditorPage()
+         */
+        @Override
+        public MedEditorPage getMedEditorPage() {
+            return null; // not connected to a editor page
+        }
+
+        /**
+         * {@inheritDoc}
+         * 
+         * @see org.teiid.designer.extension.ui.editors.MedSelectionProvider#getSelectedNode(org.teiid.designer.extension.ui.model.MedModelNode.ModelType)
+         */
+        @Override
+        public MedModelNode getSelectedNode( ModelType type ) {
+            IStructuredSelection selection = (IStructuredSelection)getSelection();
+
+            if (!selection.isEmpty()) {
+                MedModelNode modelNode = (MedModelNode)selection.getFirstElement();
+
+                if (modelNode.getType() == type) {
+                    return modelNode;
+                }
+
+                // walk up ancestry to find
+                modelNode = modelNode.getParent();
+
+                while (modelNode != null) {
+                    if (modelNode.getType() == type) {
+                        return modelNode;
+                    }
+
+                    modelNode = modelNode.getParent();
+                }
+            }
+
+            return null;
+        }
+
+        /**
+         * {@inheritDoc}
+         * 
+         * @see org.eclipse.jface.viewers.ISelectionProvider#getSelection()
+         */
+        @Override
+        public ISelection getSelection() {
+            return this.viewer.getSelection();
+        }
+
+        /**
+         * {@inheritDoc}
+         * 
+         * @see org.teiid.designer.extension.ui.editors.MedSelectionProvider#isApplicable(org.eclipse.jface.viewers.IStructuredSelection)
+         */
+        @Override
+        public boolean isApplicable( IStructuredSelection selection ) {
+            return true;
+        }
+
+        /**
+         * {@inheritDoc}
+         * 
+         * @see org.teiid.designer.extension.ui.editors.MedSelectionProvider#refresh()
+         */
+        @Override
+        public void refresh() {
+            this.viewer.refresh();
+        }
+
+        /**
+         * {@inheritDoc}
+         * 
+         * @see org.eclipse.jface.viewers.ISelectionProvider#removeSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
+         */
+        @Override
+        public void removeSelectionChangedListener( ISelectionChangedListener listener ) {
+            this.listeners.remove(listener);
+        }
+
+        /**
+         * {@inheritDoc}
+         * 
+         * @see org.eclipse.jface.viewers.ISelectionProvider#setSelection(org.eclipse.jface.viewers.ISelection)
+         */
+        @Override
+        public void setSelection( ISelection selection ) {
+            if (!selection.equals(this.viewer.getSelection())) {
+                this.viewer.setSelection(selection);
+            }
+        }
+
     }
 
 }

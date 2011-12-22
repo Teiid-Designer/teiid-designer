@@ -414,7 +414,7 @@ public class ModelExtensionDefinition implements NamespacePrefixProvider, Proper
         boolean removed = propDefns.remove(propDefn);
 
         if (removed) {
-            notifyChangeListeners(PropertyName.PROPERTY_DEFINITION, metaclassName, null);
+            notifyChangeListeners(PropertyName.PROPERTY_DEFINITION, propDefn, null);
         }
 
         return removed;

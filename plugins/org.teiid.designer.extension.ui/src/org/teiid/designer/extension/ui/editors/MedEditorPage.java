@@ -20,7 +20,6 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
-import org.teiid.designer.extension.ui.model.MedModelNode;
 
 /**
  * The <code>MedEditorPage</code> is a base class for {@link ModelExtensionDefinitionEditor} pages that require the model extension
@@ -54,9 +53,9 @@ public abstract class MedEditorPage extends FormPage {
     }
 
     /**
-     * @param c the form control that will be revealed in the MED editor client area (cannot be <code>null</code>) 
+     * @param c the form control that will be revealed in the MED editor client area (cannot be <code>null</code>)
      */
-    protected void ensureVisible(Control c) {
+    protected void ensureVisible( Control c ) {
         FormToolkit.ensureVisible(c);
     }
 
@@ -93,7 +92,7 @@ public abstract class MedEditorPage extends FormPage {
     }
 
     /**
-     * The MED was changed outside of the editor. Page must reload MED content. 
+     * The MED was changed outside of the editor. Page must reload MED content.
      */
     public abstract void handleMedReloaded();
 
@@ -108,8 +107,6 @@ public abstract class MedEditorPage extends FormPage {
     protected boolean isReadonly() {
         return getMedEditor().isReadOnly();
     }
-
-    abstract boolean select(MedModelNode node);
 
     /**
      * {@inheritDoc}

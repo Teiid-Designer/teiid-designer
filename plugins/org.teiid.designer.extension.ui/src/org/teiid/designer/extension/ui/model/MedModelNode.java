@@ -150,11 +150,23 @@ public class MedModelNode {
             return false;
         }
 
-        if (this.data == null) {
-            return (that.data == null);
+        if (this.parent == null) {
+            if (that.parent != null) {
+                return false;
+            }
+        } else if (!this.parent.equals(that.parent)) {
+            return false;
         }
 
-        return this.data.equals(that.data);
+        if (this.data == null) {
+            if (that.data != null) {
+                return false;
+            }
+        } else if (!this.data.equals(that.data)) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -162,7 +174,7 @@ public class MedModelNode {
      */
     public MedModelNode[] getChildren() {
         if (this.kids == null) {
-            if (this.type == ModelType.MODEL_EXTENSION_DEFINITION) {
+            if (isMed()) {
                 String[] metaclasses = getMed().getExtendedMetaclasses();
                 int i = 0;
 
@@ -177,7 +189,7 @@ public class MedModelNode {
                 for (String metaclass : metaclasses) {
                     this.kids[i++] = createMetaclassNode(this, metaclass);
                 }
-            } else if (this.type == ModelType.METACLASS) {
+            } else if (isMetaclass()) {
                 Collection<ModelExtensionPropertyDefinition> propDefns = getMed().getPropertyDefinitions((String)this.data);
                 this.kids = new MedModelNode[propDefns.size()];
                 int i = 0;
@@ -197,38 +209,52 @@ public class MedModelNode {
      * @return the data specific to the node type (can be <code>null</code>)
      */
     public Object getData() {
-        if (this.type == ModelType.NAMESPACE_PREFIX) {
+        if (isNamespacePrefix()) {
             return getMed().getNamespacePrefix();
         }
 
-        if (this.type == ModelType.NAMESPACE_URI) {
+        if (isNamespaceUri()) {
             return getMed().getNamespaceUri();
         }
 
-        if (this.type == ModelType.METAMODEL_URI) {
+        if (isMetamodelUri()) {
             return getMed().getMetamodelUri();
         }
 
-        if (this.type == ModelType.DESCRIPTION) {
+        if (isDescription()) {
             return getMed().getDescription();
         }
 
-        if (this.type == ModelType.VERSION) {
+        if (isVersion()) {
             return getMed().getVersion();
         }
 
         return this.data;
     }
 
+    public MedModelNode getDescriptionNode() {
+        if (isDescription()) {
+            return this;
+        }
+
+        MedModelNode medNode = getMedNode();
+
+        for (MedModelNode kid : medNode.getChildren()) {
+            if (kid.isDescription()) {
+                return kid;
+            }
+        }
+
+        assert false : "description model node not found"; //$NON-NLS-1$
+        return null;
+    }
+
     /**
      * @return the MED (never <code>null</code>)
      */
     public ModelExtensionDefinition getMed() {
-        if (this.type == ModelType.MODEL_EXTENSION_DEFINITION) {
-            return (ModelExtensionDefinition)getData();
-        }
-
-        return this.parent.getMed();
+        MedModelNode medNode = getMedNode();
+        return (ModelExtensionDefinition)medNode.getData();
     }
 
     /**
@@ -247,13 +273,78 @@ public class MedModelNode {
      * @throws IllegalArgumentException if node is not a metaclass node or a property definition node
      */
     public String getMetaclass() {
-        CoreArgCheck.isTrue(((this.type == ModelType.METACLASS) || (this.type == ModelType.PROPERTY_DEFINITION)), null);
+        CoreArgCheck.isTrue((isMetaclass() || isPropertyDefinition()), null);
 
-        if (this.type == ModelType.METACLASS) {
+        if (isMetaclass()) {
             return getData().toString();
         }
 
+        // must be a property definition node
+        assert isPropertyDefinition() : "node is not a property definition model node"; //$NON-NLS-1$
         return getParent().getMetaclass();
+    }
+
+    public MedModelNode getMetaclassNode( String metaclass ) {
+        MedModelNode medNode = getMedNode();
+
+        for (MedModelNode child : medNode.getChildren()) {
+            if (child.isMetaclass() && child.getMetaclass().equals(metaclass)) {
+                return child;
+            }
+        }
+
+        return null;
+    }
+
+    public MedModelNode getMetamodelUriNode() {
+        if (isMetamodelUri()) {
+            return this;
+        }
+
+        MedModelNode medNode = getMedNode();
+
+        for (MedModelNode kid : medNode.getChildren()) {
+            if (kid.isMetamodelUri()) {
+                return kid;
+            }
+        }
+
+        assert false : "metamodel URi model node not found"; //$NON-NLS-1$
+        return null;
+    }
+
+    public MedModelNode getNamespacePrefixNode() {
+        if (isNamespacePrefix()) {
+            return this;
+        }
+
+        MedModelNode medNode = getMedNode();
+
+        for (MedModelNode kid : medNode.getChildren()) {
+            if (kid.isNamespacePrefix()) {
+                return kid;
+            }
+        }
+
+        assert false : "namespace prefix model node not found"; //$NON-NLS-1$
+        return null;
+    }
+
+    public MedModelNode getNamespaceUriNode() {
+        if (isNamespaceUri()) {
+            return this;
+        }
+
+        MedModelNode medNode = getMedNode();
+
+        for (MedModelNode kid : medNode.getChildren()) {
+            if (kid.isNamespaceUri()) {
+                return kid;
+            }
+        }
+
+        assert false : "namespace URi model node not found"; //$NON-NLS-1$
+        return null;
     }
 
     /**
@@ -268,8 +359,44 @@ public class MedModelNode {
      * @throws IllegalArgumentException if node is not a property definition node
      */
     public ModelExtensionPropertyDefinition getPropertyDefinition() {
-        CoreArgCheck.isTrue((this.type == ModelType.PROPERTY_DEFINITION), null);
+        CoreArgCheck.isTrue(isPropertyDefinition(), null);
         return (ModelExtensionPropertyDefinition)getData();
+    }
+
+    public MedModelNode getPropertyDefinitionNode( String metaclass,
+                                                   ModelExtensionPropertyDefinition propDefn ) {
+        MedModelNode metaclassNode = getMetaclassNode(metaclass);
+
+        if (metaclassNode != null) {
+            for (MedModelNode propDefnNode : metaclassNode.getChildren()) {
+                if (propDefn.equals(propDefnNode.getPropertyDefinition())) {
+                    return propDefnNode;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    public ModelType getType() {
+        return this.type;
+    }
+
+    public MedModelNode getVersionNode() {
+        if (isVersion()) {
+            return this;
+        }
+
+        MedModelNode medNode = getMedNode();
+
+        for (MedModelNode kid : medNode.getChildren()) {
+            if (kid.isVersion()) {
+                return kid;
+            }
+        }
+
+        assert false : "version model node not found"; //$NON-NLS-1$
+        return null;
     }
 
     /**
@@ -279,7 +406,9 @@ public class MedModelNode {
      */
     @Override
     public int hashCode() {
-        return HashCodeUtil.hashCode(HashCodeUtil.hashCode(0, this.type), this.data);
+        int result = HashCodeUtil.hashCode(0, this.type);
+        result = HashCodeUtil.hashCode(0, this.parent);
+        return HashCodeUtil.hashCode(result, getData());
     }
 
     /**
@@ -338,7 +467,7 @@ public class MedModelNode {
         return (this.type == ModelType.VERSION);
     }
 
-    private enum ModelType {
+    public enum ModelType {
 
         /**
          * The description.
