@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="org.teiid.designer.runtime.feature"
+      label="Teiid Designer Runtime"
+      version="7.4.3.qualifier"
+      provider-name="Red Hat, Inc.">
+
+   <description url="http://www.example.com/description">
+      Teiid Designer Runtime
+
+Including: Connection management, VDB creation and management and Data Preview/VDB execution
+   </description>
+
+   <copyright url="http://www.example.com/copyright">
+      Teiid Designer (http://www.jboss.org/teiiddesigner.html) is copyright 2000-2011 MetaMatrix, Inc. and Red Hat, Inc.
+   </copyright>
+
+   <license url="http://www.example.com/license">
+      This program and the accompanying materials are made available under the terms of the Eclipse Public License v1.0 which is available at http://www.eclipse.org/legal/epl-v10.html.
+
+Some portions may be licensed to Red Hat, Inc. under one or more contributor license agreements.
+   </license>
+
+   <includes
+         id="org.teiid.designer.feature"
+         version="0.0.0"
+         name="Teiid Designer Design-time"/>
+
+   <requires>
+      <import feature="org.eclipse.datatools.common.doc.user" version="1.7.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.datatools.connectivity.doc.user" version="1.7.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.datatools.connectivity.feature" version="1.7.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.datatools.connectivity.oda.designer.feature" version="1.7.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.datatools.connectivity.oda.feature" version="1.7.1" match="greaterOrEqual"/>
+      <import feature="org.eclipse.datatools.doc.user" version="1.7.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.datatools.enablement.apache.derby.feature" version="1.7.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.datatools.enablement.feature" version="1.7.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.datatools.enablement.hsqldb.feature" version="1.7.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.datatools.enablement.ibm.feature" version="1.7.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.datatools.enablement.ingres.feature" version="1.7.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.datatools.enablement.jdbc.feature" version="1.7.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.datatools.enablement.jdt.feature" version="1.7.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.datatools.enablement.msft.feature" version="1.7.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.datatools.enablement.mysql.feature" version="1.7.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.datatools.enablement.oda.designer.feature" version="1.7.1" match="greaterOrEqual"/>
+      <import feature="org.eclipse.datatools.enablement.oda.feature" version="1.7.1" match="greaterOrEqual"/>
+      <import feature="org.eclipse.datatools.enablement.oracle.feature" version="1.7.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.datatools.enablement.postgresql.feature" version="1.7.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.datatools.enablement.sap.feature" version="1.7.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.datatools.enablement.sqlite.feature" version="1.7.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.datatools.enablement.sybase.feature" version="1.7.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.datatools.intro" version="1.7.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.datatools.modelbase.feature" version="1.7.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.datatools.sqldevtools.data.feature" version="1.7.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.datatools.sqldevtools.ddl.feature" version="1.7.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.datatools.sqldevtools.ddlgen.feature" version="1.7.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.datatools.sqldevtools.feature" version="1.7.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.datatools.sqldevtools.parsers.feature" version="1.7.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.datatools.sqldevtools.results.feature" version="1.7.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.datatools.sqldevtools.schemaobjecteditor.feature" version="1.7.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.datatools.sqldevtools.sqlbuilder.feature" version="1.7.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.datatools.sqltools.doc.user" version="1.7.0" match="greaterOrEqual"/>
+      <import plugin="org.jdom"/>
+   </requires>
+
+   <plugin
+         id="org.teiid.designer.dqp"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.teiid.designer.dqp.ui"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="net.jcip.annotations"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+</feature>

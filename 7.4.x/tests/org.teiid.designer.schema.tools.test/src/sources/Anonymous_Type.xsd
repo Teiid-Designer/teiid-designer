@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.example.org/Anonymous_Type" xmlns:tns="http://www.example.org/Anonymous_Type">
+
+	<!--  "Test for an anonymous type definition" -->
+	<complexType name="Alpha">
+		<sequence>
+			<element name="Beta" type="string" minOccurs="0" maxOccurs="unbounded" nillable="true"></element>
+		</sequence>
+	</complexType>
+
+	<element name="Gamma">
+		<complexType>
+			<sequence>
+				<element name="Delta" type="tns:Alpha" minOccurs="1" maxOccurs="1"></element>
+			</sequence>
+		</complexType>
+	</element>
+
+</schema>

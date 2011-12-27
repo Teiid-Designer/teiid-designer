@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
+<plugin>
+
+     <extension
+         id="xsdResourceFactory"
+         point="org.teiid.designer.core.resourceFactory">
+      <class
+            name="com.metamatrix.metamodels.xsd.XsdResourceFactory">
+      </class>
+      <fileExtension>
+         xsd
+      </fileExtension>
+   </extension>
+
+   <extension
+         point="org.teiid.designer.core.resourceValidator">
+      <class
+            name="com.metamatrix.metamodels.xsd.validator.XsdResourceValidator">
+      </class>
+   </extension>
+   <extension
+         point="org.teiid.designer.core.resourceValidator">
+      <class
+            name="com.metamatrix.metamodels.xsd.validator.SimpleXsdResourceValidator">
+      </class>
+   </extension>
+<!-- INPORTANT: if the URI for this metamodel is changed the constant defined in MtkXmiHandler must also be changed  -->
+   <extension
+         id="xsdImportAspect"
+         point="org.teiid.designer.core.importAspect">
+      <metamodelExtensionID>
+         xsd
+      </metamodelExtensionID>
+      <factoryClass
+            name="com.metamatrix.metamodels.xsd.aspects.imports.XsdImportAspectFactoryImpl">
+      </factoryClass>
+   </extension>
+   
+<!-- ResourceFactory extensions -->
+   <extension
+         id="xsd"
+         name="%metamodelName"
+         point="org.teiid.designer.core.metamodel">
+      <uri>
+         http://www.eclipse.org/xsd/2002/XSD
+      </uri>
+      <alternateUri>
+         mtkplugin:///com.metamatrix.metamodels.Xsd
+      </alternateUri>
+      <rootEntityClass
+            name="org.eclipse.xsd.XSDSchema"
+			maxOccurs="1">
+      </rootEntityClass>
+      <properties
+            createAsPhysical="true"
+            requiresProxies="false"
+            supportsDiagrams="false"
+            createAsNewModel="true"
+            participatoryOnly="false"
+            supportsExtension="false"
+            createAsVirtual="false">
+      </properties>
+      <allowableModelType>
+         TYPE
+      </allowableModelType>
+      <fileExtension>
+         xsd
+      </fileExtension>
+      <packageClass
+            name="org.eclipse.xsd.XSDPackage">
+      </packageClass>
+      <adapterClass
+            name="org.eclipse.xsd.provider.XSDItemProviderAdapterFactory">
+      </adapterClass>
+      <initializers>
+        <initializer name="XML Schema (2001)" description="Create an XML Schema using the 2001 version" class="com.metamatrix.metamodels.xsd.XsdInitializer2001"/>
+        <initializer name="XML Schema (2000)" description="Create an XML Schema using the 2000 version" class="com.metamatrix.metamodels.xsd.XsdInitializer2000"/>
+        <initializer name="XML Schema (1999)" description="Create an XML Schema using the 1999 version" class="com.metamatrix.metamodels.xsd.XsdInitializer1999"/>
+      </initializers>
+   </extension>
+   <extension
+         id="xsdPreferences"
+         point="org.teiid.designer.core.modelValidation">
+      <preference
+            toolTip="How should XML Schema validation problems be handled?  There may be un-resolvable errors using XML Schema validation with interdependent XML Schemas."
+            name="performValidation"
+            label="%performValidation"
+            default="ignore"
+            category="XSD">
+      </preference>
+   </extension>
+<!-- MetamodelAspect extensions -->
+<!--
+   <extension
+         id="xsdUmlAspect"
+         point="org.teiid.designer.core.umlDiagramAspect">
+      <metamodelExtensionID>
+         xsd
+      </metamodelExtensionID>
+      <factoryClass
+            name="com.metamatrix.metamodels.xsd.aspects.uml.XsdUmlAspectFactoryImpl">
+      </factoryClass>
+   </extension>
+-->
+   <extension
+         id="xsdSqlAspect"
+         point="org.teiid.designer.core.sqlAspect">
+      <metamodelExtensionID>
+         xsd
+      </metamodelExtensionID>
+      <factoryClass
+            name="com.metamatrix.metamodels.xsd.aspects.sql.XsdSqlAspectFactoryImpl">
+      </factoryClass>
+   </extension>
+   <extension
+         id="xsdMatcherFactory"
+         point="org.teiid.designer.core.eobjectMatcherFactory">
+      <class
+            name="com.metamatrix.metamodels.xsd.compare.XsdMatcherFactory">
+      </class>
+   </extension>
+   <extension
+         id="xsdValidationAspect"
+         point="org.teiid.designer.core.validationAspect">
+      <metamodelExtensionID>
+         xsd
+      </metamodelExtensionID>
+      <factoryClass
+            name="com.metamatrix.metamodels.xsd.aspects.validation.XsdValidationAspectFactoryImpl">
+      </factoryClass>
+   </extension>
+<!-- EObject Matcher extensions -->
+<!-- This extension defines the Relational Modeling Preferences -->
+   
+</plugin>

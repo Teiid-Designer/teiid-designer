@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: org.teiid.designer.ui.bot.tests
+Bundle-SymbolicName: org.teiid.designer.ui.bot.tests;singleton:=true
+Bundle-Version: 7.4.0.qualifier
+Bundle-ActivationPolicy: lazy
+Bundle-Vendor: 
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Require-Bundle: org.eclipse.swtbot.go,
+ org.eclipse.jdt.junit4.runtime,
+ org.eclipse.datatools.connectivity,
+ org.eclipse.swtbot.eclipse.gef.finder,
+ org.eclipse.draw2d,
+ org.jboss.tools.ui.bot.ext,
+ org.teiid.designer.ui.bot.ext

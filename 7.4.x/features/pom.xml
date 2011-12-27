@@ -1,0 +1,21 @@
+<project
+xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+	  
+	  <groupId>org.jboss.tools</groupId>
+	  <artifactId>org.jboss.tools.parent.pom</artifactId>
+	  <version>0.0.1-SNAPSHOT</version>
+	</parent>
+	<groupId>org.jboss.tools</groupId>
+	<artifactId>features.all</artifactId>
+	<version>0.0.2-SNAPSHOT</version>
+	<packaging>pom</packaging>
+	<modules>
+		<module>org.teiid.designer.feature</module>
+		<module>org.teiid.designer.test.feature</module>
+		<module>org.teiid.designer.runtime.feature</module>
+		<module>org.teiid.datatools.connectivity.feature</module>
+	</modules>
+</project>
+	

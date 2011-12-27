@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
+<plugin>
+
+     <extension-point id="textImportContributor" name="%textImportContributor" schema="schema/textImportContributor.exsd"/>
+
+   <extension
+         point="org.eclipse.ui.importWizards">
+<!-- Modeler Text File Model Object Import Wizard -->
+      <wizard
+            icon="icons/full/cview16/import_text.gif"
+            category="com.metamatrix.modeler.ui"
+            class="com.metamatrix.modeler.tools.textimport.ui.wizards.ImportTextWizard"
+            name="%importTextWizard.name"
+            id="ImportTextWizard">
+         <description>
+            %importTextWizard.description
+         </description>
+      </wizard>
+   </extension>
+</plugin>

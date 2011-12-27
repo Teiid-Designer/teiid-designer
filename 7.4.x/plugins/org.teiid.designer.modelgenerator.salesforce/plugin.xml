@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
+<plugin>
+   <extension
+       id="org.teiid.designer.datatools.salesforce.ConnectionInfoProvider"
+       name="%salesForceConnectionInfoProvider"
+       point="org.teiid.designer.datatools.ConnectionInfoProvider">
+       <ConnectionInfoProvider
+            profile="org.teiid.designer.datatools.salesforce.connectionProfile"
+            class="com.metamatrix.modeler.modelgenerator.salesforce.util.SalesForceConnectionInfoProvider"/>
+   </extension>
+   <extension
+         point="org.eclipse.datatools.connectivity.connectionProfile">
+         <category
+            id="org.teiid.designer.import.category"
+            name="Teiid Importer Connections"/>
+      <connectionProfile
+            category="org.teiid.designer.import.category"
+            icon="icons/salesforce_wiz_16.gif"
+            id="org.teiid.designer.datatools.salesforce.connectionProfile"
+            name="%salesForceConnectionProfileName"
+            pingFactory="org.teiid.designer.datatools.salesforce.ConnectionFactory"
+            propertiesPersistenceHook="org.teiid.designer.datatools.salesforce.PersistanceHook"/>
+      <connectionFactory
+            class="org.teiid.designer.datatools.salesforce.ConnectionFactory"
+            id="org.teiid.designer.datatools.salesforce.ConnectionFactory"
+            name="%salesForceConnectionFactoryName"
+            profile="org.teiid.designer.datatools.salesforce.connectionProfile"/>
+   </extension>
+</plugin>

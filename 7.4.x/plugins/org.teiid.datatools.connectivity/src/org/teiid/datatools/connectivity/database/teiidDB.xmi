@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="ASCII"?>
+<DBDefinition:DatabaseVendorDefinition xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:DBDefinition="http:///org/eclipse/datatools/modelbase/dbdefinition/dbdefinition.ecore" vendor="Teiid" version="7.x" maximumIdentifierLength="64" triggerSupported="false" joinSupported="true" tablespacesSupported="false" maximumCommentLength="64" mQTSupported="true" aliasSupported="true" quotedDMLSupported="false" quotedDDLSupported="false" xmlSupported="true">
+  <predefinedDataTypeDefinitions xmi:id="STRING_1" lengthSupported="true" keyConstraintSupported="true" maximumLength="4000" jdbcEnumType="12" javaClassName="java.lang.String" lengthUnit="DOUBLE_BYTE" displayName="">
+    <defaultValueTypes>CURRENT_USER</defaultValueTypes>
+    <defaultValueTypes>NULL</defaultValueTypes>
+    <name>String</name>
+  </predefinedDataTypeDefinitions>
+  <predefinedDataTypeDefinitions xmi:id="CHARACTER_1" lengthSupported="true" keyConstraintSupported="true" maximumLength="1" jdbcEnumType="1" javaClassName="java.lang.Character" lengthUnit="DOUBLE_BYTE" displayName="">
+    <defaultValueTypes>CURRENT_USER</defaultValueTypes>
+    <defaultValueTypes>NULL</defaultValueTypes>
+    <name>Character</name>
+  </predefinedDataTypeDefinitions>
+  <predefinedDataTypeDefinitions xmi:id="DECIMAL_1" scaleSupported="true" precisionSupported="true" keyConstraintSupported="true" identitySupported="true" maximumLength="1000" primitiveType="DECIMAL" jdbcEnumType="3" javaClassName="java.math.BigDecimal">
+    <defaultValueTypes>NULL</defaultValueTypes>
+    <name>BigDecimal</name>
+  </predefinedDataTypeDefinitions>
+  <predefinedDataTypeDefinitions xmi:id="DOUBLE_PRECISION_1" keyConstraintSupported="true" primitiveType="DOUBLE_PRECISION" jdbcEnumType="8" javaClassName="java.lang.String">
+    <defaultValueTypes>NULL</defaultValueTypes>
+    <name>Double</name>
+  </predefinedDataTypeDefinitions>
+  <predefinedDataTypeDefinitions xmi:id="INTEGER_1" keyConstraintSupported="true" identitySupported="true" primitiveType="INTEGER" jdbcEnumType="4" javaClassName="java.lang.Integer">
+    <defaultValueTypes>NULL</defaultValueTypes>
+    <name>INTEGER</name>
+    <name>INT</name>
+  </predefinedDataTypeDefinitions>
+  <predefinedDataTypeDefinitions xmi:id="NUMERIC_1" keyConstraintSupported="true" primitiveType="BOOLEAN" jdbcEnumType="16" javaClassName="java.lang.Boolean" lengthUnit="BIT" orderingSupported="false">
+    <defaultValueTypes>NULL</defaultValueTypes>
+    <name>Boolean</name>
+  </predefinedDataTypeDefinitions>
+  <predefinedDataTypeDefinitions primitiveType="BINARY" jdbcEnumType="5" javaClassName="java.lang.Byte" lengthUnit="BYTE" orderingSupported="false">
+    <name>Byte</name>
+  </predefinedDataTypeDefinitions>
+  <predefinedDataTypeDefinitions maximumLength="16" primitiveType="SMALLINT" jdbcEnumType="5" javaClassName="java.lang.Short" lengthUnit="BIT" orderingSupported="false" groupingSupported="false">
+    <name>Short</name>
+  </predefinedDataTypeDefinitions>
+  <predefinedDataTypeDefinitions maximumLength="64" primitiveType="BIGINT" jdbcEnumType="-5" javaClassName="java.lang.Long" lengthUnit="BIT" orderingSupported="false">
+    <name>Long</name>
+  </predefinedDataTypeDefinitions>
+  <predefinedDataTypeDefinitions maximumLength="1000" primitiveType="NUMERIC" jdbcEnumType="2" javaClassName="java.lang.BigInteger" lengthUnit="BYTE" orderingSupported="false">
+    <name>BigInteger</name>
+  </predefinedDataTypeDefinitions>
+  <predefinedDataTypeDefinitions primitiveType="FLOAT" jdbcEnumType="7" javaClassName="java.lang.Float"/>
+  <predefinedDataTypeDefinitions primitiveType="DATE" jdbcEnumType="91" javaClassName="java.sql.Date">
+    <name>Date</name>
+  </predefinedDataTypeDefinitions>
+  <predefinedDataTypeDefinitions primitiveType="TIME" jdbcEnumType="92" javaClassName="java.sql.Time">
+    <name>Time</name>
+  </predefinedDataTypeDefinitions>
+  <predefinedDataTypeDefinitions primitiveType="TIMESTAMP" jdbcEnumType="93" javaClassName="java.sql.Timestamp">
+    <name>Timestamp</name>
+  </predefinedDataTypeDefinitions>
+  <predefinedDataTypeDefinitions jdbcEnumType="12" javaClassName="Java.lang.Object">
+    <name>Object</name>
+  </predefinedDataTypeDefinitions>
+  <predefinedDataTypeDefinitions primitiveType="BINARY_LARGE_OBJECT" jdbcEnumType="12" javaClassName="java.sql.Blob">
+    <name>Blob</name>
+  </predefinedDataTypeDefinitions>
+  <predefinedDataTypeDefinitions primitiveType="CHARACTER_VARYING" jdbcEnumType="12" javaClassName="java.sql.Clob">
+    <name>Clob</name>
+  </predefinedDataTypeDefinitions>
+  <predefinedDataTypeDefinitions primitiveType="CHARACTER_VARYING" jdbcEnumType="12" javaClassName="java.sql.SQLXML">
+    <name>XML</name>
+  </predefinedDataTypeDefinitions>
+  <columnDefinition identitySupported="true" identityStartValueSupported="true" identityIncrementSupported="true" identityMinimumSupported="true" identityMaximumSupported="true" identityCycleSupported="true"/>
+  <constraintDefinition clusteredPrimaryKeySupported="true" clusteredUniqueConstraintSupported="true">
+    <parentUpdateDRIRuleType>RESTRICT</parentUpdateDRIRuleType>
+    <parentUpdateDRIRuleType>NO_ACTION</parentUpdateDRIRuleType>
+    <parentDeleteDRIRuleType>RESTRICT</parentDeleteDRIRuleType>
+    <parentDeleteDRIRuleType>CASCADE</parentDeleteDRIRuleType>
+    <parentDeleteDRIRuleType>SET_NULL</parentDeleteDRIRuleType>
+    <parentDeleteDRIRuleType>NO_ACTION</parentDeleteDRIRuleType>
+    <checkOption>NONE</checkOption>
+    <checkOption>LOCAL</checkOption>
+    <checkOption>CASCADE</checkOption>
+  </constraintDefinition>
+  <SQLSyntaxDefinition>
+    <keywords>ALL</keywords>
+    <keywords>AND</keywords>
+    <keywords>ANY</keywords>
+    <keywords>AS</keywords>
+    <keywords>ASC</keywords>
+    <keywords>BEGIN</keywords>
+    <keywords>BETWEEN</keywords>
+    <keywords>BREAK</keywords>
+    <keywords>BY</keywords>
+    <keywords>CASE</keywords>
+    <keywords>CONTINUE</keywords>
+    <keywords>CREATE</keywords>
+    <keywords>CRITERIA</keywords>
+    <keywords>CROSS</keywords>
+    <keywords>DEBUG</keywords>
+    <keywords>DECLARE</keywords>
+    <keywords>DELETE</keywords>
+    <keywords>DESC</keywords>
+    <keywords>DISTINCT</keywords>
+    <keywords>DROP</keywords>
+    <keywords>ELSE</keywords>
+    <keywords>END</keywords>
+    <keywords>ERROR</keywords>
+    <keywords>ESCAPE</keywords>
+    <keywords>EXCEPT</keywords>
+    <keywords>EXEC</keywords>
+    <keywords>EXECUTE</keywords>
+    <keywords>EXISTS</keywords>
+    <keywords>FALSE</keywords>
+    <keywords>FN</keywords>
+    <keywords>FOR</keywords>
+    <keywords>INNER</keywords>
+    <keywords>INSERT</keywords>
+    <keywords>INTERSECT</keywords>
+    <keywords>INTO</keywords>
+    <keywords>IS</keywords>
+    <keywords>JOIN</keywords>
+    <keywords>LEFT</keywords>
+    <keywords>LIKE</keywords>
+    <keywords>LIMIT</keywords>
+    <keywords>LOCAL</keywords>
+    <keywords>LOOP</keywords>
+    <keywords>MAKEDEP</keywords>
+    <keywords>MAKENOTDEP</keywords>
+    <keywords>NOCACHE</keywords>
+    <keywords>NOT</keywords>
+    <keywords>NULL</keywords>
+    <keywords>ON</keywords>
+    <keywords>OJ</keywords>
+    <keywords>OPTION</keywords>
+    <keywords>OR</keywords>
+    <keywords>ORDER</keywords>
+    <keywords>OUTER</keywords>
+    <keywords>PLANONLY</keywords>
+    <keywords>PROCEDURE</keywords>
+    <keywords>RIGHT</keywords>
+    <keywords>SET</keywords>
+    <keywords>SELECT</keywords>
+    <keywords>SHOWPLAN</keywords>
+    <keywords>SOME</keywords>
+    <keywords>TABLE</keywords>
+    <keywords>TEMPORARY</keywords>
+    <keywords>THEN</keywords>
+    <keywords>TRANSLATE</keywords>
+    <keywords>TRUE</keywords>
+    <keywords>UNION</keywords>
+    <keywords>UNKNOWN</keywords>
+    <keywords>UPDATE</keywords>
+    <keywords>USING</keywords>
+    <keywords>VALUES</keywords>
+    <keywords>VIRTUAL</keywords>
+    <keywords>WHEN</keywords>
+    <keywords>WHERE</keywords>
+    <keywords>WITH</keywords>
+    <keywords>WHILE</keywords>
+  </SQLSyntaxDefinition>
+</DBDefinition:DatabaseVendorDefinition>

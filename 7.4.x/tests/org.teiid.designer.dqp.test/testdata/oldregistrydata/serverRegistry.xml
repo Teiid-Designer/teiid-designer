@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<servers>
+  <server url="mm://localhost:8080" user="user8080"/>
+  <server url="mm://localhost:8180" user="user8180" default="true"/>
+  <server url="mm://localhost:8280" user="user8280"/>
+</servers>

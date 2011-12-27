@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
+<plugin>
+   <extension
+       id="org.teiid.designer.modelgenerator.wsdl.ConnectionInfoProvider"
+       name="%wsdlConnectionInfoProvider.name"
+       point="org.teiid.designer.datatools.ConnectionInfoProvider">
+       <ConnectionInfoProvider
+            category="org.eclipse.datatools.enablement.oda.ws"
+            class="com.metamatrix.modeler.modelgenerator.wsdl.SOAPConnectionInfoProvider"/>
+   </extension>
+</plugin>

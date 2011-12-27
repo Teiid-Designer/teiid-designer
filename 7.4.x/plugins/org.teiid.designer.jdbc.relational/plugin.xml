@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
+<plugin>
+
+    
+<!-- Define the extension point for model processors -->
+   <extension-point id="modelProcessor" name="%extension-point.name.0" schema="schema/modelProcessor.exsd"/>
+
+<!-- Define the model processors for the standard Oracle drivers -->
+   <extension
+         id="oracleModelProcessor"
+         name="Oracle"
+         point="org.teiid.designer.jdbc.relational.modelProcessor">
+      <processorType
+            name="oracle">
+      </processorType>
+      <processorClass
+            name="com.metamatrix.modeler.jdbc.relational.impl.custom.OracleModelProcessor">
+      </processorClass>
+   </extension>
+<!-- Define the model processors for the MetaMatrix SQL Server drivers -->
+   <extension
+         id="sqlserverMetaMatrixModelProcessor"
+         name="SQL Server"
+         point="org.teiid.designer.jdbc.relational.modelProcessor">
+      <processorType
+            name="sqlserver">
+      </processorType>
+      <processorClass
+            name="com.metamatrix.modeler.jdbc.relational.impl.custom.SqlServerModelProcessor">
+      </processorClass>
+   </extension>
+<!-- Define the model processors for the MetaMatrix Sybase Server drivers -->
+   <extension
+         id="sybaseMetaMatrixModelProcessor"
+         name="Sybase"
+         point="org.teiid.designer.jdbc.relational.modelProcessor">
+      <processorType
+            name="sybase">
+      </processorType>
+      <processorClass
+            name="com.metamatrix.modeler.jdbc.relational.impl.custom.SybaseModelProcessor">
+      </processorClass>
+   </extension>
+<!-- Define the model processors for the MetaMatrix Sybase Server drivers -->
+   <extension
+         id="db2MetaMatrixModelProcessor"
+         name="DB2"
+         point="org.teiid.designer.jdbc.relational.modelProcessor">
+      <processorType
+            name="db2">
+      </processorType>
+      <processorClass
+            name="com.metamatrix.modeler.jdbc.relational.impl.custom.Db2ModelProcessor">
+      </processorClass>
+   </extension>
+<!-- Define the model processors for the standard Postgres drivers -->
+   <extension
+         id="postgresModelProcessor"
+         name="PostgreSQL"
+         point="org.teiid.designer.jdbc.relational.modelProcessor">
+      <processorType
+            name="postgres">
+      </processorType>
+      <processorClass
+            name="com.metamatrix.modeler.jdbc.relational.impl.custom.PostgresModelProcessor">
+      </processorClass>
+   </extension>
+<!-- Define the model processors for the standard ODBC drivers -->
+   <extension
+         id="odbcModelProcessor"
+         name="ODBC"
+         point="org.teiid.designer.jdbc.relational.modelProcessor">
+      <processorType
+            name="excel">
+      </processorType>
+      <processorClass
+            name="com.metamatrix.modeler.jdbc.relational.impl.custom.ExcelModelProcessor">
+      </processorClass>
+   </extension>
+<!-- Define the model processor for the ModeShape driver -->
+   <extension
+         id="modeShapeModelProcessor"
+         name="%modeShapeModelProcessor"
+         point="org.teiid.designer.jdbc.relational.modelProcessor">
+      <processorType
+            name="modeshape">
+      </processorType>
+      <processorClass
+            name="com.metamatrix.modeler.jdbc.relational.impl.custom.ModeShapeModelProcessor">
+      </processorClass>
+   </extension>
+<!-- EObject Matcher extensions -->
+   <extension
+         id="jdbcMatcherFactory"
+         point="org.teiid.designer.core.eobjectMatcherFactory">
+      <class
+            name="com.metamatrix.modeler.jdbc.relational.compare.JdbcMatcherFactory">
+      </class>
+   </extension>
+<!-- MetamodelAspect extensions -->
+   <extension
+         id="jdbcRelationalSqlAspect"
+         point="org.teiid.designer.core.sqlAspect">
+      <metamodelExtensionID>
+         jdbcMetamodel
+      </metamodelExtensionID>
+      <factoryClass
+            name="com.metamatrix.modeler.jdbc.relational.aspects.sql.JdbcSqlAspectFactoryImpl">
+      </factoryClass>
+   </extension>
+
+</plugin>

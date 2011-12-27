@@ -1,0 +1,526 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
+<xs:schema elementFormDefault="qualified"
+	targetNamespace="http://www.oorsprong.org/websamples.countryinfo"
+	xmlns:tns="http://www.oorsprong.org/websamples.countryinfo"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:complexType name="tContinent">
+
+		<xs:sequence>
+			<xs:element name="sCode" type="xs:string" />
+			<xs:element name="sName" type="xs:string" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="tCurrency">
+
+		<xs:sequence>
+			<xs:element name="sISOCode" type="xs:string" />
+			<xs:element name="sName" type="xs:string" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="tCountryCodeAndName">
+
+		<xs:sequence>
+			<xs:element name="sISOCode" type="xs:string" />
+			<xs:element name="sName" type="xs:string" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="tCountryCodeAndNameGroupedByContinent">
+
+		<xs:sequence>
+			<xs:element name="Continent" type="tns:tContinent" />
+			<xs:element name="CountryCodeAndNames"
+				type="tns:ArrayOftCountryCodeAndName" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="tLanguage">
+
+		<xs:sequence>
+			<xs:element name="sISOCode" type="xs:string" />
+			<xs:element name="sName" type="xs:string" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="tCountryInfo">
+
+		<xs:sequence>
+			<xs:element name="sISOCode" type="xs:string" />
+			<xs:element name="sName" type="xs:string" />
+			<xs:element name="sCapitalCity" type="xs:string" />
+			<xs:element name="sPhoneCode" type="xs:string" />
+			<xs:element name="sContinentCode" type="xs:string" />
+			<xs:element name="sCurrencyISOCode" type="xs:string" />
+			<xs:element name="sCountryFlag" type="xs:string" />
+			<xs:element name="Languages" type="tns:ArrayOftLanguage" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="ArrayOftCountryCodeAndName">
+
+		<xs:sequence>
+			<xs:element name="tCountryCodeAndName"
+				type="tns:tCountryCodeAndName" minOccurs="0" maxOccurs="unbounded"
+				nillable="true" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="ArrayOftLanguage">
+
+		<xs:sequence>
+			<xs:element name="tLanguage" type="tns:tLanguage"
+				minOccurs="0" maxOccurs="unbounded" nillable="true" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="ArrayOftContinent">
+
+		<xs:sequence>
+			<xs:element name="tContinent" type="tns:tContinent"
+				minOccurs="0" maxOccurs="unbounded" nillable="true" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="ArrayOftCurrency">
+
+		<xs:sequence>
+			<xs:element name="tCurrency" type="tns:tCurrency"
+				minOccurs="0" maxOccurs="unbounded" nillable="true" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType
+		name="ArrayOftCountryCodeAndNameGroupedByContinent">
+
+		<xs:sequence>
+			<xs:element name="tCountryCodeAndNameGroupedByContinent"
+				type="tns:tCountryCodeAndNameGroupedByContinent" minOccurs="0"
+				maxOccurs="unbounded" nillable="true" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="ArrayOftCountryInfo">
+
+		<xs:sequence>
+			<xs:element name="tCountryInfo" type="tns:tCountryInfo"
+				minOccurs="0" maxOccurs="unbounded" nillable="true" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:element name="ListOfContinentsByName">
+
+		<xs:complexType>
+			<xs:sequence />
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="ListOfContinentsByNameResponse">
+
+		<xs:complexType>
+
+			<xs:sequence>
+				<xs:element name="ListOfContinentsByNameResult"
+					type="tns:ArrayOftContinent" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="ListOfContinentsByCode">
+
+		<xs:complexType>
+			<xs:sequence />
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="ListOfContinentsByCodeResponse">
+
+		<xs:complexType>
+
+			<xs:sequence>
+				<xs:element name="ListOfContinentsByCodeResult"
+					type="tns:ArrayOftContinent" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="ListOfCurrenciesByName">
+
+		<xs:complexType>
+			<xs:sequence />
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="ListOfCurrenciesByNameResponse">
+
+		<xs:complexType>
+
+			<xs:sequence>
+				<xs:element name="ListOfCurrenciesByNameResult"
+					type="tns:ArrayOftCurrency" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="ListOfCurrenciesByCode">
+
+		<xs:complexType>
+			<xs:sequence />
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="ListOfCurrenciesByCodeResponse">
+
+		<xs:complexType>
+
+			<xs:sequence>
+				<xs:element name="ListOfCurrenciesByCodeResult"
+					type="tns:ArrayOftCurrency" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="CurrencyName">
+
+		<xs:complexType>
+
+			<xs:sequence>
+				<xs:element name="sCurrencyISOCode" type="xs:string" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="CurrencyNameResponse">
+
+		<xs:complexType>
+
+			<xs:sequence>
+				<xs:element name="CurrencyNameResult" type="xs:string" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="ListOfCountryNamesByCode">
+
+		<xs:complexType>
+			<xs:sequence />
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="ListOfCountryNamesByCodeResponse">
+
+		<xs:complexType>
+
+			<xs:sequence>
+				<xs:element name="ListOfCountryNamesByCodeResult"
+					type="tns:ArrayOftCountryCodeAndName" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="ListOfCountryNamesByName">
+
+		<xs:complexType>
+			<xs:sequence />
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="ListOfCountryNamesByNameResponse">
+
+		<xs:complexType>
+
+			<xs:sequence>
+				<xs:element name="ListOfCountryNamesByNameResult"
+					type="tns:ArrayOftCountryCodeAndName" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="ListOfCountryNamesGroupedByContinent">
+
+		<xs:complexType>
+			<xs:sequence />
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="ListOfCountryNamesGroupedByContinentResponse">
+
+		<xs:complexType>
+
+			<xs:sequence>
+				<xs:element
+					name="ListOfCountryNamesGroupedByContinentResult"
+					type="tns:ArrayOftCountryCodeAndNameGroupedByContinent" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="CountryName">
+
+		<xs:complexType>
+
+			<xs:sequence>
+				<xs:element name="sCountryISOCode" type="xs:string" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="CountryNameResponse">
+
+		<xs:complexType>
+
+			<xs:sequence>
+				<xs:element name="CountryNameResult" type="xs:string" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="CountryISOCode">
+
+		<xs:complexType>
+
+			<xs:sequence>
+				<xs:element name="sCountryName" type="xs:string" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="CountryISOCodeResponse">
+
+		<xs:complexType>
+
+			<xs:sequence>
+				<xs:element name="CountryISOCodeResult"
+					type="xs:string" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="CapitalCity">
+
+		<xs:complexType>
+
+			<xs:sequence>
+				<xs:element name="sCountryISOCode" type="xs:string" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="CapitalCityResponse">
+
+		<xs:complexType>
+
+			<xs:sequence>
+				<xs:element name="CapitalCityResult" type="xs:string" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="CountryCurrency">
+
+		<xs:complexType>
+
+			<xs:sequence>
+				<xs:element name="sCountryISOCode" type="xs:string" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="CountryCurrencyResponse">
+
+		<xs:complexType>
+
+			<xs:sequence>
+				<xs:element name="CountryCurrencyResult"
+					type="tns:tCurrency" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="CountryFlag">
+
+		<xs:complexType>
+
+			<xs:sequence>
+				<xs:element name="sCountryISOCode" type="xs:string" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="CountryFlagResponse">
+
+		<xs:complexType>
+
+			<xs:sequence>
+				<xs:element name="CountryFlagResult" type="xs:string" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="CountryIntPhoneCode">
+
+		<xs:complexType>
+
+			<xs:sequence>
+				<xs:element name="sCountryISOCode" type="xs:string" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="CountryIntPhoneCodeResponse">
+
+		<xs:complexType>
+
+			<xs:sequence>
+				<xs:element name="CountryIntPhoneCodeResult"
+					type="xs:string" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="FullCountryInfo">
+
+		<xs:complexType>
+
+			<xs:sequence>
+				<xs:element name="sCountryISOCode" type="xs:string" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="FullCountryInfoResponse">
+
+		<xs:complexType>
+
+			<xs:sequence>
+				<xs:element name="FullCountryInfoResult"
+					type="tns:tCountryInfo" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="FullCountryInfoAllCountries">
+
+		<xs:complexType>
+			<xs:sequence />
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="FullCountryInfoAllCountriesResponse">
+
+		<xs:complexType>
+
+			<xs:sequence>
+				<xs:element name="FullCountryInfoAllCountriesResult"
+					type="tns:ArrayOftCountryInfo" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="CountriesUsingCurrency">
+
+		<xs:complexType>
+
+			<xs:sequence>
+				<xs:element name="sISOCurrencyCode" type="xs:string" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="CountriesUsingCurrencyResponse">
+
+		<xs:complexType>
+
+			<xs:sequence>
+				<xs:element name="CountriesUsingCurrencyResult"
+					type="tns:ArrayOftCountryCodeAndName" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="ListOfLanguagesByName">
+
+		<xs:complexType>
+			<xs:sequence />
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="ListOfLanguagesByNameResponse">
+
+		<xs:complexType>
+
+			<xs:sequence>
+				<xs:element name="ListOfLanguagesByNameResult"
+					type="tns:ArrayOftLanguage" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="ListOfLanguagesByCode">
+
+		<xs:complexType>
+			<xs:sequence />
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="ListOfLanguagesByCodeResponse">
+
+		<xs:complexType>
+
+			<xs:sequence>
+				<xs:element name="ListOfLanguagesByCodeResult"
+					type="tns:ArrayOftLanguage" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="LanguageName">
+
+		<xs:complexType>
+
+			<xs:sequence>
+				<xs:element name="sISOCode" type="xs:string" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="LanguageNameResponse">
+
+		<xs:complexType>
+
+			<xs:sequence>
+				<xs:element name="LanguageNameResult" type="xs:string" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="LanguageISOCode">
+
+		<xs:complexType>
+
+			<xs:sequence>
+				<xs:element name="sLanguageName" type="xs:string" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="LanguageISOCodeResponse">
+
+		<xs:complexType>
+
+			<xs:sequence>
+				<xs:element name="LanguageISOCodeResult"
+					type="xs:string" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>
+

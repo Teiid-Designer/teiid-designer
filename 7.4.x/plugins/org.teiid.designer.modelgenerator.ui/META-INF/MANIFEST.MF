@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: %pluginName
+Bundle-SymbolicName: org.teiid.designer.modelgenerator.ui;singleton:=true
+Bundle-Version: 7.4.2.qualifier
+Bundle-Activator: com.metamatrix.modeler.modelgenerator.ui.ModelerModelGeneratorUiPlugin
+Bundle-Vendor: %pluginProvider
+Bundle-Localization: plugin
+Export-Package: com.metamatrix.modeler.modelgenerator.ui
+Require-Bundle: org.eclipse.core.resources,
+ org.teiid.designer.ui.common,
+ teiid_embedded_query,
+ org.teiid.core.designer,
+ org.eclipse.core.runtime,
+ org.eclipse.emf.edit.ui
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
