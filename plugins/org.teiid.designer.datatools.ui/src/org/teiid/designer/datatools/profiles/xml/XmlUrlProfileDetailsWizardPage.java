@@ -198,7 +198,7 @@ public class XmlUrlProfileDetailsWizardPage  extends ConnectionProfileDetailsPag
         String urlString = properties.get(IXmlProfileConstants.URL_PROP_ID).toString();
         
         if( !urlString.toUpperCase().endsWith(DOT_XML_UPPER_CASE) ) {
-        	setErrorMessage(UTIL.getString("XmlProfileDetailsWizardPage.NotXmlUrl.Message", urlString)); //$NON-NLS-1$
+        	setErrorMessage(UTIL.getString("XmlUrlProfileDetailsWizardPage.NotXmlUrl.Message", urlString)); //$NON-NLS-1$
         	return;
         }
         
