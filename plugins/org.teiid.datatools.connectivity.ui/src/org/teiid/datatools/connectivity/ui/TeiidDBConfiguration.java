@@ -9,9 +9,13 @@ package org.teiid.datatools.connectivity.ui;
 
 import org.eclipse.datatools.sqltools.core.SQLDevToolsConfiguration;
 import org.eclipse.datatools.sqltools.core.services.ExecutionService;
+import org.eclipse.datatools.sqltools.core.services.SQLService;
 
 public class TeiidDBConfiguration extends SQLDevToolsConfiguration {
 
+    /**
+     */
+    static final String[] TERMINATORS = new String[] {";"}; //$NON-NLS-1$
     private static final String[] PRODUCTS = {"Teiid Server", "Teiid"}; //$NON-NLS-1$ //$NON-NLS-2$
 
     private String format( String in ) {
@@ -48,6 +52,44 @@ public class TeiidDBConfiguration extends SQLDevToolsConfiguration {
 	 */
 	public ExecutionService getExecutionService() {
 		return new TeiidExcecutionService();
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @see org.eclipse.datatools.sqltools.core.SQLDevToolsConfiguration#getSQLService()
+	 */
+	@Override
+	public SQLService getSQLService() {
+	    return new SQLService() {
+	        
+	        /**
+	         * {@inheritDoc}
+	         *
+	         * @see org.eclipse.datatools.sqltools.core.services.SQLService#splitSQL(java.lang.String)
+	         */
+	        @Override
+	        public String[] splitSQL( String sql ) {
+	            if (sql.indexOf(';') < 0) {
+	                return new String[] {sql};
+	            }
+	            return splitSQLByTerminatorLine(sql, TERMINATORS);
+	        }
+	        
+	        /**
+	         * {@inheritDoc}
+	         *
+	         * @see org.eclipse.datatools.sqltools.core.services.SQLService#splitSQL(java.lang.String, boolean)
+	         */
+	        @Override
+	        public String[] splitSQL( String sql,
+	                                  boolean splitByDefault ) {
+	            if (splitByDefault) {
+	                return splitSQL(sql);
+	            }
+	            return new String[] {sql};
+	        }
+	    };
 	}
 
 }
