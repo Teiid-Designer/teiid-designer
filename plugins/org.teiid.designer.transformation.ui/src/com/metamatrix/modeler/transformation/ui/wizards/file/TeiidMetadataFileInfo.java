@@ -89,6 +89,11 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants 
      */
 	private boolean useHeaderForColumnNames = true;
 	
+	/**
+     * include the NO TRIM parameter in the view tables's SQL string
+     */
+	private boolean includeNoTrim = false;
+	
     /**
      * The line number of the header containing column names. Must be 1 or greater.
      */
@@ -201,6 +206,7 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants 
 		this.includeHeader = info.doIncludeHeader();
 		this.includeQuote = info.doIncludeQuote();
 		this.includeSkip = info.doIncludeSkip();
+		this.includeNoTrim = info.doIncludeNoTrim();
 		this.cachedFirstLines = info.cachedFirstLines;
 		this.numberOfLinesInFile = info.getNumberOfLinesInFile();
 		this.columnInfoList = new ArrayList<TeiidColumnInfo>();
@@ -577,6 +583,22 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants 
 	
 	/**
 	 * 
+	 * @param includeNoTrim the boolean indicator that the generated view table SQL should include the NO TRIM parameter
+	 */
+	public void setIncludeNoTrim(boolean includeNoTrim) {
+		this.includeNoTrim = includeNoTrim;
+	}
+	
+	/**
+	 * 
+	 * @return includeNoTrim the boolean indicator that the generated view table SQL should include the NO TRIM parameter
+	 */
+	public boolean doIncludeNoTrim() {
+		return this.includeNoTrim;
+	}
+	
+	/**
+	 * 
 	 * @param includeHeader the boolean indicator that the data file contains a header with column names and should 
 	 * be used to load column names
 	 */
@@ -877,7 +899,7 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants 
     	} else if(doIncludeEscape() ) {
     		if( getEscape() != TeiidMetadataFileInfo.DEFAULT_ESCAPE) {
 	    		sb.append("ESCAPE"); //$NON-NLS-1$
-	    		sb.append(SPACE).append('\'').append(getQuote()).append('\'');
+	    		sb.append(SPACE).append('\'').append(getEscape()).append('\'');
     		}
     	}
     	
@@ -890,6 +912,10 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants 
     	if( doIncludeSkip() && getFirstDataRow() > 1 ) {
     		sb.append(SPACE).append("SKIP"); //$NON-NLS-1$
     		sb.append(SPACE).append(Integer.toString(getFirstDataRow()-1));
+    	}
+    	
+    	if( doIncludeNoTrim() && getFirstDataRow() > 1 ) {
+    		sb.append(SPACE).append("NO TRIM"); //$NON-NLS-1$
     	}
     	String string_4 = sb.toString();
     	
