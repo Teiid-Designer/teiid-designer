@@ -3,15 +3,12 @@ package com.metamatrix.modeler.internal.jdbc.relational.util;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
-
 import com.metamatrix.core.plugin.PluginUtilities;
 import com.metamatrix.metamodels.relational.util.RelationalTypeMapping;
 import com.metamatrix.metamodels.relational.util.RelationalTypeMappingImpl;
 import com.metamatrix.modeler.core.ModelerCore;
-import com.metamatrix.modeler.jdbc.JdbcSource;
 import com.metamatrix.modeler.jdbc.relational.JdbcRelationalPlugin;
 import com.metamatrix.modeler.jdbc.relational.RelationalModelProcessor;
 import com.metamatrix.modeler.jdbc.relational.impl.RelationalModelProcessorImpl;
@@ -75,8 +72,8 @@ public class JdbcModelProcessorManager {
      * @param source the JdbcSource; may be null if the default processor should be used
      * @return the new model processor
      */
-    public static RelationalModelProcessor createRelationalModelProcessor( final JdbcSource source) {
-        return createRelationalModelProcessor(source, RelationalTypeMappingImpl.getInstance(), JDBC_TYPE);
+    public static RelationalModelProcessor createRelationalModelProcessor() {
+        return createRelationalModelProcessor(RelationalTypeMappingImpl.getInstance(), JDBC_TYPE);
     }
     
     /**
@@ -90,13 +87,11 @@ public class JdbcModelProcessorManager {
      * used to discover the processor type given a Connection Profile. 
      * </p>
      * 
-     * @param source the JdbcSource; may be null if the default processor should be used
      * @param mapping the RelationalTypeMapping that should be used
      * @param processorType
      * @return the new model processor
      */
-    public static RelationalModelProcessor createRelationalModelProcessor( final JdbcSource source,
-                                                                           final RelationalTypeMapping mapping,
+    public static RelationalModelProcessor createRelationalModelProcessor( final RelationalTypeMapping mapping,
                                                                            final String processorType) {
         RelationalModelProcessor processor = getProcessor(processorType);
 
@@ -117,8 +112,8 @@ public class JdbcModelProcessorManager {
      * @param processorType
      * @return the new model processor
      */
-    public static RelationalModelProcessor createRelationalModelProcessor( final JdbcSource source, final String processorType) {
-        return createRelationalModelProcessor(source, RelationalTypeMappingImpl.getInstance(), processorType);
+    public static RelationalModelProcessor createRelationalModelProcessor( final String processorType ) {
+        return createRelationalModelProcessor(RelationalTypeMappingImpl.getInstance(), processorType);
     }
     
     /**

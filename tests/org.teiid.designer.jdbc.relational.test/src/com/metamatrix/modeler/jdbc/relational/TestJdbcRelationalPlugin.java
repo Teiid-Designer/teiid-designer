@@ -275,7 +275,7 @@ public class TestJdbcRelationalPlugin extends TestCase {
             }
         };
 
-        final RelationalModelProcessor processor = JdbcModelProcessorManager.createRelationalModelProcessor(null, fakeMapping, "JDBC"); //$NON-NLS-1$
+        final RelationalModelProcessor processor = JdbcModelProcessorManager.createRelationalModelProcessor(fakeMapping, "JDBC"); //$NON-NLS-1$
         assertNotNull(processor);
         assertTrue(processor instanceof RelationalModelProcessorImpl);
     }

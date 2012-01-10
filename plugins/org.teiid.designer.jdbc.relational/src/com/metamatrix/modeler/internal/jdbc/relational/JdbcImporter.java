@@ -11,13 +11,11 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.List;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
-
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelResource;
@@ -44,6 +42,7 @@ public final class JdbcImporter implements ModelerJdbcRelationalConstants {
 
     private ModelResource updatedModel;
     private JdbcSource src;
+    private JdbcSource updateSrc;
     private JdbcDatabase db;
 
     /**
@@ -88,19 +87,28 @@ public final class JdbcImporter implements ModelerJdbcRelationalConstants {
      */
     public void setUpdatedModel( final ModelResource model ) throws ModelWorkspaceException {
         this.updatedModel = null;
+        this.updateSrc = null;
+        // Non-null model supplied. Transfer the import settings
         if (model != null) {
             for (final Iterator modelIter = model.getAllRootEObjects().iterator(); modelIter.hasNext();) {
                 final Object obj = modelIter.next();
                 if (obj instanceof JdbcSource) {
                     this.updatedModel = model;
                     try {
-                        this.src = (JdbcSource)ModelerCore.getModelEditor().copy((JdbcSource)obj);
+                        this.updateSrc = (JdbcSource)ModelerCore.getModelEditor().copy((JdbcSource)obj);
                         setUpdatedModelSettings();
                         break;
                     } catch (final Exception err) {
                         throw new ModelWorkspaceException(err);
                     }
                 }
+            }
+            // null model supplied. Reset import settings back to original
+        } else {
+            try {
+                setUpdatedModelSettings();
+            } catch (final Exception err) {
+                throw new ModelWorkspaceException(err);
             }
         }
     }
@@ -113,7 +121,13 @@ public final class JdbcImporter implements ModelerJdbcRelationalConstants {
         if (this.db == null) {
             return;
         }
-        final JdbcImportSettings settings = this.src.getImportSettings();
+        JdbcImportSettings settings = null;
+        if (this.updateSrc != null) {
+            settings = this.updateSrc.getImportSettings();
+        } else if (this.src != null) {
+            settings = this.src.getImportSettings();
+        }
+
         if (settings != null) {
             for (final Iterator objIter = settings.getExcludedObjectPaths().iterator(); objIter.hasNext();) {
                 final IPath path = new Path((String)objIter.next());
@@ -147,10 +161,11 @@ public final class JdbcImporter implements ModelerJdbcRelationalConstants {
 
         // Create the SQL connection ...
         final JdbcManager mgr = JdbcRelationalUtil.getJdbcManager();
-        final Connection connection = mgr.createConnection(this.src, password, monitor);
+        JdbcSource jdbcSrc = (this.updateSrc != null) ? this.updateSrc : this.src;
+        final Connection connection = mgr.createConnection(jdbcSrc, password, monitor);
 
         // Create the JdbcDatabase instance with this connection ...
-        this.db = JdbcPlugin.getJdbcDatabase(this.src, connection);
+        this.db = JdbcPlugin.getJdbcDatabase(jdbcSrc, connection);
     }
 
     /**
@@ -205,11 +220,11 @@ public final class JdbcImporter implements ModelerJdbcRelationalConstants {
      * @since 4.0
      */
     public IStatus importModel( final IProgressMonitor monitor ) throws ModelWorkspaceException {
-        final RelationalModelProcessor processor = JdbcModelProcessorManager.createRelationalModelProcessor(this.src);
+        final RelationalModelProcessor processor = JdbcModelProcessorManager.createRelationalModelProcessor();
 
         // apply the import settings to the model ...
 
-        final IStatus status = processor.execute(this.updatedModel, this.db, this.src.getImportSettings(), monitor);
+        final IStatus status = processor.execute(this.updatedModel, this.db, this.updateSrc.getImportSettings(), monitor);
         return status;
     }
 }

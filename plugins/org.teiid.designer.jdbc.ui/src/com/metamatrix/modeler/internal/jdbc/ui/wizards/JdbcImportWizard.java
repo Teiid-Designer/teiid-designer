@@ -318,7 +318,7 @@ public class JdbcImportWizard extends AbstractWizard
                 public void run( final IProgressMonitor monitor ) throws InvocationTargetException {
                     try {
                         final JdbcSource src = getSource();
-                        final RelationalModelProcessor processor = JdbcModelProcessorManager.createRelationalModelProcessor(src, srcPg.getMetadataProcessor());
+                        final RelationalModelProcessor processor = JdbcModelProcessorManager.createRelationalModelProcessor(srcPg.getMetadataProcessor());
                         processor.setMoveRatherThanCopyAdds(!isUpdatedModel());
 
                         // set property on processor for Inclusion of incomplete FKs.
@@ -645,7 +645,7 @@ public class JdbcImportWizard extends AbstractWizard
             sWatch.start();
             if (ppProcessorPack == null) {
                 final JdbcSource src = getSource();
-                final RelationalModelProcessor processor = JdbcModelProcessorManager.createRelationalModelProcessor(src, srcPg.getMetadataProcessor());
+                final RelationalModelProcessor processor = JdbcModelProcessorManager.createRelationalModelProcessor(srcPg.getMetadataProcessor());
 
                 // set property on processor for Inclusion of incomplete FKs.
                 final boolean includeIncompleteFKs = getDatabase().getIncludes().includeIncompleteFKs();

@@ -11,7 +11,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.List;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -33,7 +32,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IImportWizard;
 import org.eclipse.ui.IWorkbench;
 import org.teiid.core.util.FileUtils;
-
 import com.metamatrix.core.PluginUtil;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
@@ -408,7 +406,7 @@ public class XsdAsRelationalImportWizard extends AbstractWizard implements IImpo
                         XPackage xPackage = getExtensionPackage(getFolder());
 
                         final JdbcSource src = getSource();
-                        final RelationalModelProcessor processor = JdbcModelProcessorManager.createRelationalModelProcessor(src);
+                        final RelationalModelProcessor processor = JdbcModelProcessorManager.createRelationalModelProcessor();
                         processor.setMoveRatherThanCopyAdds(!isUpdatedModel());
 
                         final IFile modelFile = getFolder().getFile(new Path(getModelName()));
@@ -638,7 +636,7 @@ public class XsdAsRelationalImportWizard extends AbstractWizard implements IImpo
                 public void run( final IProgressMonitor monitor ) throws InvocationTargetException {
                     try {
                         final JdbcSource src = getSource();
-                        final RelationalModelProcessor processor = JdbcModelProcessorManager.createRelationalModelProcessor(src);
+                        final RelationalModelProcessor processor = JdbcModelProcessorManager.createRelationalModelProcessor();
                         processor.setMoveRatherThanCopyAdds(!isUpdatedModel());
 
                         final IFile modelFile = getFolder().getFile(new Path(getModelName()));
