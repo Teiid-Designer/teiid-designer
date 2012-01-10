@@ -119,7 +119,22 @@ public class Messages extends NLS {
     public static String newMedWizardNotModelProjMsg;
     public static String newMedWizardSelectFolderMsg;
     public static String newMedWizardMedNameErrorMsg;
+    public static String newMedDetailsPageTitle;
+    public static String newMedMainPageTitle;
+    public static String newMedMainPageOpenInEditorLabel;
+    public static String newMedMainPageLocationTooltip;
+    public static String newMedMainPageMedNameTooltip;
+    public static String newMedMainPageOpenInEditorTooltip;
+
+    public static String newMedDetailsPageMsg;
+    public static String newMedDetailsPageStatusLabel;
     public static String copyMedWizardTitle;
+
+    public static String medNamespacePrefixTooltip;
+    public static String medNamespaceUriTooltip;
+    public static String medMetamodelClassTooltip;
+    public static String medVersionTooltip;
+    public static String medDescriptionToolTip;
 
     public static String manageModelExtensionDefnsActionTitle;
     public static String manageModelExtensionDefnsActionModelDirtyTitle;

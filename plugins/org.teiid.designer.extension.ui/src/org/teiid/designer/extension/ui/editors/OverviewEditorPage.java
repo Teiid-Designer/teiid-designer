@@ -12,12 +12,10 @@ import static org.teiid.designer.extension.ui.UiConstants.EditorIds.MED_OVERVIEW
 import static org.teiid.designer.extension.ui.UiConstants.Form.COMBO_STYLE;
 import static org.teiid.designer.extension.ui.UiConstants.Form.TEXT_STYLE;
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.MED_EDITOR;
-
 import java.beans.PropertyChangeEvent;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
@@ -29,7 +27,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
-import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
@@ -49,7 +46,6 @@ import org.teiid.designer.extension.ui.Activator;
 import org.teiid.designer.extension.ui.Messages;
 import org.teiid.designer.extension.ui.model.MedModelNode;
 import org.teiid.designer.extension.ui.model.MedModelNode.ModelType;
-
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.internal.ui.forms.MessageFormDialog;
 
@@ -126,6 +122,7 @@ public final class OverviewEditorPage extends MedEditorPage {
 
             this.txtNamespacePrefix = toolkit.createText(finalContainer, CoreStringUtil.Constants.EMPTY_STRING, TEXT_STYLE);
             this.txtNamespacePrefix.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+            this.txtNamespacePrefix.setToolTipText(Messages.medNamespacePrefixTooltip);
 
             // set value
             refreshNamespacePrefixControl();
@@ -152,6 +149,7 @@ public final class OverviewEditorPage extends MedEditorPage {
 
             this.txtNamespaceUri = toolkit.createText(finalContainer, CoreStringUtil.Constants.EMPTY_STRING, TEXT_STYLE);
             this.txtNamespaceUri.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+            this.txtNamespaceUri.setToolTipText(Messages.medNamespaceUriTooltip);
 
             // set value
             refreshNamespaceUriControl();
@@ -184,6 +182,7 @@ public final class OverviewEditorPage extends MedEditorPage {
             // populate metamodel names
             Set<String> metamodelNames = Activator.getDefault().getExtendableMetamodelNames();
             this.cbxMetamodelUris.setItems(metamodelNames.toArray(new String[metamodelNames.size()]));
+            this.cbxMetamodelUris.setToolTipText(Messages.medMetamodelClassTooltip);
 
             // set value
             refreshMetamodelUriControl();
@@ -210,6 +209,7 @@ public final class OverviewEditorPage extends MedEditorPage {
 
             this.txtVersion = toolkit.createText(finalContainer, CoreStringUtil.Constants.EMPTY_STRING, SWT.READ_ONLY | TEXT_STYLE);
             this.txtVersion.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+            this.txtVersion.setToolTipText(Messages.medVersionTooltip);
 
             // set value
             refreshVersionControl();
@@ -222,6 +222,7 @@ public final class OverviewEditorPage extends MedEditorPage {
             this.txtDescription = toolkit.createText(finalContainer, CoreStringUtil.Constants.EMPTY_STRING, SWT.BORDER | SWT.MULTI
                     | SWT.H_SCROLL | SWT.V_SCROLL | SWT.WRAP);
             this.txtDescription.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+            this.txtDescription.setToolTipText(Messages.medDescriptionToolTip);
 
             // set value
             refreshDescriptionControl();
