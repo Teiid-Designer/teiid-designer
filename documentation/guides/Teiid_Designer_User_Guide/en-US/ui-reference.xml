@@ -26,24 +26,32 @@
 				5 main UI components or groups of components as shown below. They include:</para>
 			<itemizedlist>
 				<listitem>
-					<para><emphasis><xref linkend="model-explorer-view" /></emphasis></para>
+					<para>
+						<emphasis><xref linkend="model-explorer-view" /></emphasis>
+					</para>
 				</listitem>
 				<listitem>
-					<para><emphasis><xref linkend="teiid-view" /></emphasis> - Teiid 
+					<para>
+						<emphasis><xref linkend="teiid-view" /></emphasis> - Teiid 
 						instance view. Provides view of contents for connected instances of 
-						installed Teiid runtime.</para>
+						installed Teiid runtime.
+					</para>
 				</listitem>
 				<listitem>
-					<para><emphasis><xref linkend="model-editors-section" /></emphasis> - Custom 
-						editors targeted for ".xmi" metadata model files.</para>
+					<para>
+						<emphasis><xref linkend="model-editors-section" /></emphasis> - Custom 
+						editors targeted for ".xmi" metadata model files.
+					</para>
 				</listitem>
 				<listitem>
 					<para><emphasis><xref linkend="properties-view" /></emphasis> - Standard 
 						property values for selected workbench objects.</para>
 				</listitem>
 				<listitem>
-					<para><emphasis>Miscellaneous Views</emphasis> - Includes Problems view, Message 
-						Log view and the Data Tools SQL Results view (opened if Preview Data action is performed)</para>
+					<para>
+						<emphasis>Miscellaneous Views</emphasis> - Includes Problems view, Message 
+						Log view and the Data Tools SQL Results view (opened if Preview Data action is performed)
+					</para>
 				</listitem>
 			</itemizedlist>
 			<figure id="designer-perspective-image">
@@ -165,7 +173,7 @@
 		
 		<para>Views are dockable windows which present data from your models or your 
 			modeling session in various forms. Some views support particular 
-			<xref linkend="editors-chapter" /> and 
+			<xref linkend="model-editors-section" /> and 
 			their content is dependent on workspace selection. This section summarizes most 
 			of the views used and available in Teiid Designer. The full list is presented in 
 			the main menu's <emphasis>Window > Show View > Other...</emphasis> dialog 
@@ -451,50 +459,82 @@
 			
 			<para>Actions available in this view include:</para>
 			<itemizedlist>
-			  <listitem><para><inlinemediaobject>
+			  <listitem>
+				<para>
+					<inlinemediaobject>
 								<imageobject>
 									<imagedata fileref="images/icons/new-teiid-server.png"/>
 								</imageobject>
-							</inlinemediaobject> <emphasis role="bold">New Teiid Instance</emphasis> - Create a new instance of a running Teiid server</para></listitem>
-			  <listitem><para><inlinemediaobject>
+							</inlinemediaobject> <emphasis role="bold">New Teiid Instance</emphasis> - Create a new instance of a running Teiid server
+				</para>
+			</listitem>
+			  <listitem>
+				<para>
+					<inlinemediaobject>
 								<imageobject>
 									<imagedata fileref="images/icons/edit-teiid-server.png"/>
 								</imageobject>
-							</inlinemediaobject> <emphasis role="bold">Teiid Server Properties</emphasis> - View and edit properties of an existing Teiid instance</para></listitem>
-			  <listitem><para><inlinemediaobject>
+							</inlinemediaobject> <emphasis role="bold">Teiid Server Properties</emphasis> - View and edit properties of an existing Teiid instance
+				</para>
+			</listitem>
+			  <listitem>
+				<para>
+					<inlinemediaobject>
 								<imageobject>
 									<imagedata fileref="images/icons/refresh.png"/>
 			 					</imageobject>
-							</inlinemediaobject><emphasis role="bold">Reconnect</emphasis> - Reconnect and refresh contents of the selected Teiid instance</para></listitem>
-			  <listitem><para><inlinemediaobject>
+							</inlinemediaobject><emphasis role="bold">Reconnect</emphasis> - Reconnect and refresh contents of the selected Teiid instance
+				</para>
+			</listitem>
+			  <listitem>
+				<para>
+					<inlinemediaobject>
 								<imageobject>
 									<imagedata fileref="images/icons/delete-teiid-server.png"/>
 								</imageobject>
-							</inlinemediaobject> <emphasis role="bold">Delete</emphasis> - Disconnect and delete the selected Teiid instance</para></listitem>
+							</inlinemediaobject> <emphasis role="bold">Delete</emphasis> - Disconnect and delete the selected Teiid instance
+				</para>
+			</listitem>
 			  </itemizedlist>
 			  <itemizedlist>
-			  <listitem><para><inlinemediaobject>
+			  <listitem>
+				<para>
+					<inlinemediaobject>
 								<imageobject>
 									<imagedata fileref="images/icons/run-vdb.png"/>
 								</imageobject>
-							</inlinemediaobject> <emphasis role="bold">Execute VDB</emphasis> - Creates a JDBC Teiid connection profile and opens the Data Tools Database Development perspective</para></listitem>
-			  <listitem><para><inlinemediaobject>
+							</inlinemediaobject> <emphasis role="bold">Execute VDB</emphasis> - Creates a JDBC Teiid connection profile and opens the Data Tools Database Development perspective
+				</para>
+			</listitem>
+			  <listitem>
+				<para>
+					<inlinemediaobject>
 								<imageobject>
 									<imagedata fileref="images/icons/delete.png"/>
 								</imageobject>
-							</inlinemediaobject> <emphasis role="bold">Undeploy VDB</emphasis> - Removes the selected VDB from the Teiid instance</para></listitem>
+							</inlinemediaobject> <emphasis role="bold">Undeploy VDB</emphasis> - Removes the selected VDB from the Teiid instance
+				</para>
+			</listitem>
 			</itemizedlist>
 			<itemizedlist>
-				<listitem><para><inlinemediaobject>
+				<listitem>
+					<para>
+						<inlinemediaobject>
 								<imageobject>
 									<imagedata fileref="images/icons/new-binding.png"/>
 								</imageobject>
-							</inlinemediaobject> <emphasis role="bold">Create Data Source</emphasis> - Launches the New Data Source wizard</para></listitem>
-				<listitem><para><inlinemediaobject>
+							</inlinemediaobject> <emphasis role="bold">Create Data Source</emphasis> - Launches the New Data Source wizard
+					</para>
+				</listitem>
+				<listitem>
+					<para>
+						<inlinemediaobject>
 								<imageobject>
 									<imagedata fileref="images/icons/delete.png"/>
 								</imageobject>
-							</inlinemediaobject> <emphasis role="bold">Delete Data Source</emphasis> - Removes the selected Data Source from the Teiid instance</para></listitem>
+							</inlinemediaobject> <emphasis role="bold">Delete Data Source</emphasis> - Removes the selected Data Source from the Teiid instance
+					</para>
+				</listitem>
 			</itemizedlist>
 			<para>
 				If you chose the <emphasis role="bold">Use a custom label</emphasis> option, the text entry field will enable as shown below.
@@ -2032,11 +2072,21 @@
 						<para>For details, select a specific editor listed below:
 							<itemizedlist>
 								<listitem>
-									<para><xref linkend="transformation-editor-section" /></para>
-									<para><xref linkend="input-set-editor-section" /></para>
-									<para><xref linkend="choice-editor-section" /></para>
-									<para><xref linkend="recursion-editor-section" /></para>
-									<para><xref linkend="operation-editor-section" /></para>
+									<para>
+										<xref linkend="transformation-editor-section" />
+									</para>
+									<para>
+										<xref linkend="input-set-editor-section" />
+									</para>
+									<para>
+										<xref linkend="choice-editor-section" />
+									</para>
+									<para>
+										<xref linkend="recursion-editor-section" />
+									</para>
+									<para>
+										<xref linkend="operation-editor-section" />
+									</para>
 								</listitem>
 							</itemizedlist>
 						</para>

@@ -455,11 +455,31 @@
 			complex model objects and their unique properties. These objects
 			include:</para>
 		<itemizedlist>
-			<listitem><para><emphasis role="bold"><xref linkend="transformation-editor-section" /></emphasis></para></listitem>
-			<listitem><para><emphasis role="bold"><xref linkend="input-set-editor-section" /></emphasis></para></listitem>
-			<listitem><para><emphasis role="bold"><xref linkend="choice-editor-section" /></emphasis></para></listitem>
-			<listitem><para><emphasis role="bold"><xref linkend="recursion-editor-section" /></emphasis></para></listitem>
-			<listitem><para><emphasis role="bold"><xref linkend="operation-editor-section" /></emphasis></para></listitem>
+			<listitem>
+				<para>
+					<emphasis role="bold"><xref linkend="transformation-editor-section" /></emphasis>
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					<emphasis role="bold"><xref linkend="input-set-editor-section" /></emphasis>
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					<emphasis role="bold"><xref linkend="choice-editor-section" /></emphasis>
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					<emphasis role="bold"><xref linkend="recursion-editor-section" /></emphasis>
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					<emphasis role="bold"><xref linkend="operation-editor-section" /></emphasis>
+				</para>
+			</listitem>
 		</itemizedlist>
 		<para>This section describes these editors in detail.</para>
 		<!-- ####### TRANSFORMATION EDITOR ######################################### -->
@@ -478,16 +498,40 @@
 			<itemizedlist>
 				<listitem><para>Double-click Edit</para>
 					<itemizedlist>
-						<listitem><para>A relational view table or procedure in the Model Explorer or Diagram Editor</para></listitem>
-						<listitem><para>A transformation node in a transformation diagram or mapping transformation diagram</para></listitem>
-						<listitem><para>A mapping class in a mapping diagram or mapping transformation diagram</para></listitem>
+						<listitem>
+							<para>
+								A relational view table or procedure in the Model Explorer or Diagram Editor
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								A transformation node in a transformation diagram or mapping transformation diagram
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								A mapping class in a mapping diagram or mapping transformation diagram
+							</para>
+						</listitem>
 					</itemizedlist>
 				</listitem>
 				<listitem><para>Right-click Edit action on selected object in the Model Explorer, Diagram Editor or Table Editor</para>
 					<itemizedlist>
-						<listitem><para>A relational view table or procedure</para></listitem>
-						<listitem><para>A transformation node in a transformation diagram or mapping transformation diagram</para></listitem>
-						<listitem><para>A mapping class in a mapping diagram or mapping transformation diagram</para></listitem>
+						<listitem>
+							<para>
+								A relational view table or procedure
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								A transformation node in a transformation diagram or mapping transformation diagram
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								A mapping class in a mapping diagram or mapping transformation diagram
+							</para>
+						</listitem>
 					</itemizedlist>
 				</listitem>
 	
@@ -1506,11 +1550,22 @@
 		<para>Extending a model adds extra properties to its model objects. One good use of these extension properties is for 
 			passing data to a customized Teiid translator. The Designer model extension framework consists of:
 			<itemizedlist>
-				<listitem><emphasis role="bold">Model Extension Definitions (MEDs)</emphasis> (See <xref linkend="intro-to-model-extensions" />)</listitem>
-				<listitem><emphasis role="bold">MED Registry</emphasis> -keeps track of all the MEDs that are registered in a workspace. Only registered MEDs can be used to extend a model.
-					)See <xref linkend="med-registry-view" />) 
+				<listitem>
+					<para>
+						<emphasis role="bold">Model Extension Definitions (MEDs)</emphasis> (See <xref linkend="intro-to-model-extensions" />)
+					</para>				
 				</listitem>
-				<listitem><emphasis role="bold">MED Editor</emphasis> (See <xref linkend="model-extension-definition-editor-section" />)</listitem>
+				<listitem>
+					<para>
+						<emphasis role="bold">MED Registry</emphasis> -keeps track of all the MEDs that are registered in a workspace. Only registered MEDs can be used to extend a model.
+					)See <xref linkend="med-registry-view" />) 
+					</para>
+				</listitem>
+				<listitem>
+					<para>
+						<emphasis role="bold">MED Editor</emphasis> (See <xref linkend="model-extension-definition-editor-section" />)
+					</para>				
+				</listitem>
 			</itemizedlist>
 		</para>
 		<section>
@@ -1604,9 +1659,11 @@
 				</figure>
 			</para>
 			<para>
-				<note>After adding/removing MEDs from the model, click 'Finish' to accept all of the changes.  Cancelling the dialog
-                	will discard all changes and revert to the original model state
-                </note>
+				<note>
+					<para>After adding/removing MEDs from the model, click 'Finish' to accept all of the changes.  Cancelling the dialog
+                				will discard all changes and revert to the original model state.
+					</para>
+                		</note>
 			</para>
 		</section>
 		<section>

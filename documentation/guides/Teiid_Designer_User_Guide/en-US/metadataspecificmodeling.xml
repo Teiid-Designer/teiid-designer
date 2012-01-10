@@ -479,7 +479,8 @@
                                     generated web service.</para>
                                   </listitem>
                                   <listitem>
-                                    <para><emphasis role="bold">HTTP 
+                                    <para>
+				    <emphasis role="bold">HTTP 
                                     Basic</emphasis> - the specified 
                                     security realm and role will be 
                                     used. The default realm value is 
@@ -550,7 +551,8 @@
                   </para>
                 </listitem>
                 <listitem>
-                  <para><emphasis role="bold">Step 3</emphasis> - Click 
+                  <para>
+		  <emphasis role="bold">Step 3</emphasis> - Click 
                   <emphasis role="bold">OK</emphasis> to generate the 
                   web service war. When war generation is complete, a 
                   confirmation dialog should appear. Click 
@@ -620,9 +622,9 @@
               <imagedata fileref="images/screencaps/json-input-example.png"/></imageobject></mediaobject>
             </figure>
           </listitem>
-          <listitem/>
           <listitem>
-            <para><emphasis role="bold">Step 2</emphasis> - Now we need 
+            <para>
+	    <emphasis role="bold">Step 2</emphasis> - Now we need 
             to identify our procedure as REST eligible. To do this we 
             add enable REST properties for the procedure(s) via the 
             <emphasis role="bold">Modeling-&gt;Enable</emphasis> context menu option.</para>
@@ -698,7 +700,8 @@
             </important>
           </listitem>
           <listitem>
-            <para><emphasis role="bold">Step 3</emphasis> - 3. If you 
+            <para>
+	    <emphasis role="bold">Step 3</emphasis> - 3. If you 
             have not already done so, you will need to create a data 
             source for your VDB. This can be done in the Teiid View of 
             Designer. Right-click on your deployed VDB and select 
@@ -708,7 +711,8 @@
             VDB.</para>
           </listitem>
           <listitem>
-            <para><emphasis role="bold">Step 4</emphasis> - Right-click 
+            <para>
+	    <emphasis role="bold">Step 4</emphasis> - Right-click 
             on the VDB containing your virtual model(s) with REST 
             eligible procedures and select the <emphasis role="bold">
             Modeling &gt; Generate RESTEasy War</emphasis> action. If 
@@ -719,7 +723,8 @@
             <imagedata fileref="images/screencaps/create-resteasy-war-menu.png"/></imageobject></mediaobject></para>
           </listitem>
           <listitem>
-            <para><emphasis role="bold">Step 5</emphasis> - Fill in 
+            <para>
+	    <emphasis role="bold">Step 5</emphasis> - Fill in 
             missing properties in the <emphasis role="bold">REST War 
             Generation Wizard</emphasis> shown below.</para>
             <figure>
@@ -772,7 +777,8 @@
             </para>
           </listitem>
           <listitem>
-            <para><emphasis role="bold">Step 6</emphasis> - Click 
+            <para>
+	    <emphasis role="bold">Step 6</emphasis> - Click 
             <emphasis role="bold">OK</emphasis> to generate the REST 
             war. When war generation is complete, a confirmation dialog 
             should appear. Click <emphasis role="bold">

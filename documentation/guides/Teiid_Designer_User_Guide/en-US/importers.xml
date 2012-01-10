@@ -671,18 +671,22 @@ FROM
 					<emphasis role="bold">Import > Teiid Designer > Designer Text File >> Source or View Models</emphasis> option. 
 					<itemizedlist>
 						<listitem>
-							<para><emphasis role="bold">Step 1 </emphasis> - In <emphasis role="bold">Designer</emphasis> 
+							<para>
+								<emphasis role="bold">Step 1 </emphasis> - In <emphasis role="bold">Designer</emphasis> 
 								choose the <emphasis role="bold">File > Import</emphasis> action <inlinemediaobject>
 									<imageobject>
 										<imagedata fileref="images/icons/import-wiz.png"/>
 									</imageobject>
 								</inlinemediaobject> in the toolbar or select a project, folder or 
-							 	model in the tree and choose <emphasis role="bold">Import...</emphasis></para>
+							 	model in the tree and choose <emphasis role="bold">Import...</emphasis>
+							</para>
 						</listitem>
 						<listitem>
-							<para><emphasis role="bold">Step 2 </emphasis> - Select the import option 
+							<para>
+								<emphasis role="bold">Step 2 </emphasis> - Select the import option 
 								<emphasis role="bold">Teiid Designer > Designer Text File >> Source or View Models</emphasis> 
-								and click <emphasis role="bold">Next></emphasis></para>
+								and click <emphasis role="bold">Next></emphasis>
+							</para>
 							<figure>
 								<title>Import From Designer Text File</title>
 								<mediaobject>
@@ -693,7 +697,9 @@ FROM
 							</figure>
 						</listitem>
 						<listitem>
-							<para><emphasis role="bold">Step 3 </emphasis> - Select an import type via the drop-down menu shown below.</para>
+							<para>
+								<emphasis role="bold">Step 3 </emphasis> - Select an import type via the drop-down menu shown below.
+							</para>
 							<figure>
 								<title>Import Wizard</title>
 								<mediaobject>
@@ -713,16 +719,24 @@ FROM
 				<para>These steps are required for each type are defined below:
 					<itemizedlist>
 						<listitem>
-							<para><emphasis><xref linkend="relational-model-xml-text-import-section"/></emphasis></para>
+							<para>
+								<emphasis><xref linkend="relational-model-xml-text-import-section"/></emphasis>
+							</para>
 						</listitem>
 						<listitem>
-							<para><emphasis><xref linkend="relational-tables-text-import-section"/></emphasis></para>
+							<para>
+								<emphasis><xref linkend="relational-tables-text-import-section"/></emphasis>
+							</para>
 						</listitem>
 						<listitem>
-							<para><emphasis><xref linkend="relational-virtual-tables-text-import-section"/></emphasis></para>
+							<para>
+								<emphasis><xref linkend="relational-virtual-tables-text-import-section"/></emphasis>
+							</para>
 						</listitem>
 						<listitem>
-							<para><emphasis><xref linkend="datatypes-text-import-section"/></emphasis></para>
+							<para>
+								<emphasis><xref linkend="datatypes-text-import-section"/></emphasis>
+							</para>
 						</listitem>
 					</itemizedlist>
 				</para>
