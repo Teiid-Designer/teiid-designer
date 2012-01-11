@@ -55,6 +55,9 @@
       <uri>
          http://www.metamatrix.com/metamodels/Extension
       </uri>
+      <displayName>
+      	 Model Extension (Deprecated)
+      </displayName>
       <alternateUri>
          mtkplugin:///com.metamatrix.metamodels.Extension
       </alternateUri>

@@ -21,6 +21,7 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -79,15 +80,15 @@ public class NewModelWizardMetamodelPage extends WizardPage
 
     // jh Defect 21886: These strings must agree with the corresponding metamodel names
     // I put them in the i18n because they'll need to be internationalized.
-    protected final static String DEFAULT_CLASS = UiConstants.Util.getString("NewModelWIzardMetamodelPage.defaultClass"); //$NON-NLS-1$
-    protected final static String DEFAULT_TYPE = UiConstants.Util.getString("NewModelWIzardMetamodelPage.defaultType"); //$NON-NLS-1$
+    protected final static String DEFAULT_CLASS = UiConstants.Util.getString("NewModelWizardMetamodelPage.defaultClass"); //$NON-NLS-1$
+    protected final static String DEFAULT_TYPE = UiConstants.Util.getString("NewModelWizardMetamodelPage.defaultType"); //$NON-NLS-1$
 
-    protected final static String RELATIONAL_NAME = UiConstants.Util.getString("NewModelWIzardMetamodelPage.classRelationalName"); //$NON-NLS-1$
-    protected final static String XML_NAME = UiConstants.Util.getString("NewModelWIzardMetamodelPage.classXmlName"); //$NON-NLS-1$
-    protected final static String XML_SCHEMA_NAME = UiConstants.Util.getString("NewModelWIzardMetamodelPage.classXmlSchemaName"); //$NON-NLS-1$
-    protected final static String WEB_SERVICE_NAME = UiConstants.Util.getString("NewModelWIzardMetamodelPage.classWebServiceName"); //$NON-NLS-1$
-    protected final static String MODEL_EXTENSION_NAME = UiConstants.Util.getString("NewModelWIzardMetamodelPage.classModelExtensionName"); //$NON-NLS-1$
-    protected final static String FUNCTION_NAME = UiConstants.Util.getString("NewModelWIzardMetamodelPage.classFunctionName"); //$NON-NLS-1$
+    protected final static String RELATIONAL_NAME = UiConstants.Util.getString("NewModelWizardMetamodelPage.classRelationalName"); //$NON-NLS-1$
+    protected final static String XML_NAME = UiConstants.Util.getString("NewModelWizardMetamodelPage.classXmlName"); //$NON-NLS-1$
+    protected final static String XML_SCHEMA_NAME = UiConstants.Util.getString("NewModelWizardMetamodelPage.classXmlSchemaName"); //$NON-NLS-1$
+    protected final static String WEB_SERVICE_NAME = UiConstants.Util.getString("NewModelWizardMetamodelPage.classWebServiceName"); //$NON-NLS-1$
+    protected final static String MODEL_EXTENSION_NAME = UiConstants.Util.getString("NewModelWizardMetamodelPage.classModelExtensionName"); //$NON-NLS-1$
+    protected final static String FUNCTION_NAME = UiConstants.Util.getString("NewModelWizardMetamodelPage.classFunctionName"); //$NON-NLS-1$
 
     final static List ORDERED_METAMODELS_LIST;
 
@@ -113,6 +114,7 @@ public class NewModelWizardMetamodelPage extends WizardPage
     private static final int STATUS_BAD_FILENAME = 6;
     private static final int STATUS_CLOSED_PROJECT = 7;
     private static final int STATUS_NO_PROJECT_NATURE = 8;
+    private static final int STATUS_DEPRECATED_EXTENSION_METAMODEL = 9;
 
     /** HashMap of key=String metamodel name, value = MetamodelDescriptor */
     protected HashMap descriptorMap = new HashMap();
@@ -217,7 +219,6 @@ public class NewModelWizardMetamodelPage extends WizardPage
 
         metamodelCombo.setItems(virtualModelComboChoices);
         metamodelCombo.select((virtualModelComboChoices.length == 2) ? 1 : 0);
-
         // call the selection listener handler method and put on the UI queue since the listeners
         // don't get events during construction
         metamodelCombo.getDisplay().asyncExec(new Runnable() {
@@ -442,6 +443,11 @@ public class NewModelWizardMetamodelPage extends WizardPage
             case (STATUS_NO_TYPE):
                 updateStatus(Util.getString("NewModelWizard.mustSelectModelType")); //$NON-NLS-1$
                 break;
+            
+            case (STATUS_DEPRECATED_EXTENSION_METAMODEL):
+            	updateStatus(panelMessage);
+            	setMessage(Util.getString("NewModelWizard.extensionMetamodelDeprecated"), IStatus.WARNING); //$NON-NLS-1$
+            	break;
 
             case (STATUS_OK):
             default:
@@ -498,6 +504,12 @@ public class NewModelWizardMetamodelPage extends WizardPage
         if (modelTypesCombo.getSelectionIndex() < 1) {
             currentStatus = STATUS_NO_TYPE;
             return false;
+        }
+        
+        if( metamodelCombo.getSelectionIndex() == 6) {
+        	// WARN USER OF EXTENSION MODEL DEPRECATION
+        	currentStatus = STATUS_DEPRECATED_EXTENSION_METAMODEL;
+        	return true;
         }
         currentStatus = STATUS_OK;
         return true;
