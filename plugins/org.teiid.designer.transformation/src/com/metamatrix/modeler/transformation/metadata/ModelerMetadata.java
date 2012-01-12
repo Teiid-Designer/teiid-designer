@@ -880,6 +880,26 @@ public class ModelerMetadata extends TransformationMetadata {
         return transforms;
     }
     
+    /**
+     * {@inheritDoc}
+     *
+     * @see com.metamatrix.modeler.transformation.metadata.TransformationMetadata#findChildRecordsForColumns(com.metamatrix.modeler.core.metadata.runtime.MetadataRecord, char, java.util.List)
+     */
+    @Override
+    protected Collection findChildRecordsForColumns( MetadataRecord parentRecord,
+                                                     char childRecordType,
+                                                     List uuids ) throws TeiidComponentException {
+        Collection kids = findChildRecords(parentRecord, childRecordType);
+        ArrayList<MetadataRecord> result = new ArrayList<MetadataRecord>();
+        for (Object o : kids) {
+            MetadataRecord mr = (MetadataRecord)o;
+            if (uuids.contains(mr.getUUID())) {
+                result.add(mr);
+            }
+        }
+        return result;
+    }
+    
     @Override
     public FunctionLibrary getFunctionLibrary() {
         return UdfManager.INSTANCE.getFunctionLibrary();
