@@ -27,6 +27,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
@@ -42,8 +43,10 @@ import com.metamatrix.modeler.core.util.ModelVisitorProcessor;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.internal.ui.PluginConstants;
+import com.metamatrix.modeler.internal.ui.editors.ModelEditor;
 import com.metamatrix.modeler.internal.ui.explorer.ModelExplorerContentProvider;
 import com.metamatrix.modeler.internal.ui.explorer.ModelExplorerLabelProvider;
+import com.metamatrix.modeler.internal.ui.viewsupport.ModelIdentifier;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelWorkspaceDialog;
 import com.metamatrix.modeler.internal.ui.wizards.GenerateXsdWizard;
@@ -101,6 +104,10 @@ public class GenerateXsdSchemaAction2 extends SortableSelectionAction {
 
         if (isValidSelection(selection)) {
             thisSelection = (IStructuredSelection)selection;
+            
+            if( ! checkDirtyRelationalModel(thisSelection, iww.getShell()) ) {
+            	return;
+            }
         } else if (canIgnoreSelection) {
             // Set to false in case there's an exception and it doesn't get set back.
             canIgnoreSelection = false;
@@ -220,6 +227,16 @@ public class GenerateXsdSchemaAction2 extends SortableSelectionAction {
         if (SelectionUtilities.isEmptySelection(selection)) {
             isValid = false;
         }
+        
+        if( !SelectionUtilities.isAllEObjects(selection) &&
+        	!SelectionUtilities.isAllIResourceObjects(selection)	) {
+        	isValid = false;
+        }
+        
+        if( SelectionUtilities.isAllIResourceObjects(selection) && 
+        		!SelectionUtilities.isSingleSelection(selection) ) {
+        	isValid = false;
+        }
 
         if (isValid) {
             final Collection objs = SelectionUtilities.getSelectedObjects(selection);
@@ -263,6 +280,29 @@ public class GenerateXsdSchemaAction2 extends SortableSelectionAction {
     @Override
     public boolean isApplicable( ISelection selection ) {
         return isValidSelection(selection);
+    }
+    
+    
+    private boolean checkDirtyRelationalModel( ISelection selection, Shell shell ) {
+    	if( SelectionUtilities.isSingleSelection(selection)) {
+	        final Object obj = SelectionUtilities.getSelectedObject(selection);
+
+           if (obj instanceof IFile) {
+                final ModelResource modelResource = ModelerCore.getModelWorkspace().findModelResource((IFile)obj);
+                if (modelResource != null &&
+                		(ModelIdentifier.isRelationalSourceModel(modelResource) ||
+                		 ModelIdentifier.isRelationalViewModel(modelResource) ) ) {
+                	
+                	ModelEditor openEditor = ModelEditorManager.getModelEditorForFile((IFile)obj, false);
+                	if( openEditor != null && openEditor.isDirty() ) {
+                		MessageDialog.openWarning(shell, UiConstants.Util.getString("GenerateXsdSchemaAction.unsavedChangesTitle"),  //$NON-NLS-1$
+                				UiConstants.Util.getString("GenerateXsdSchemaAction.unsavedChangesMessage", modelResource.getItemName())); //$NON-NLS-1$
+                		return false;
+                	}
+                }
+            }
+    	}
+    	return true;
     }
     
     /*
