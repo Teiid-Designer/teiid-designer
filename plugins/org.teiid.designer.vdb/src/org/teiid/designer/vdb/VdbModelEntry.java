@@ -11,7 +11,6 @@ import static org.teiid.designer.vdb.Vdb.Event.MODEL_JNDI_NAME;
 import static org.teiid.designer.vdb.Vdb.Event.MODEL_SOURCE_NAME;
 import static org.teiid.designer.vdb.Vdb.Event.MODEL_TRANSLATOR;
 import static org.teiid.designer.vdb.Vdb.Event.MODEL_VISIBLE;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -24,9 +23,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-
 import net.jcip.annotations.ThreadSafe;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
@@ -35,6 +32,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.URIUtil;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
@@ -43,7 +41,6 @@ import org.teiid.designer.vdb.manifest.ProblemElement;
 import org.teiid.designer.vdb.manifest.PropertyElement;
 import org.teiid.designer.vdb.manifest.Severity;
 import org.teiid.designer.vdb.manifest.SourceElement;
-
 import com.metamatrix.core.modeler.CoreModelerPlugin;
 import com.metamatrix.core.modeler.util.FileUtils;
 import com.metamatrix.core.util.StringUtilities;
@@ -440,8 +437,7 @@ public final class VdbModelEntry extends VdbEntry {
 
                 if (refs != null) {
                     for (final Resource importedModel : refs) {
-                        // TODO: Does this work for the datatypes model?
-                        java.net.URI uri = java.net.URI.create(importedModel.getURI().toString());
+                        java.net.URI uri = URIUtil.fromString(importedModel.getURI().toString());
                         IFile[] modelFiles = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocationURI(uri);
                         final IPath name = modelFiles[0].getFullPath();
                         VdbModelEntry importedEntry = null;
