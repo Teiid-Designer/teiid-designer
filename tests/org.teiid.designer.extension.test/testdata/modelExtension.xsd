@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://org.teiid.modelExtension/2011"
 	targetNamespace="http://org.teiid.modelExtension/2011" elementFormDefault="qualified" attributeFormDefault="unqualified"
+	xmlns:mxd="http://org.teiid.modelExtension/2011"
 >
 	<xs:element name="modelExtension">
 		<xs:annotation>
@@ -8,15 +9,30 @@
 		</xs:annotation>
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element name="description" type="xs:string" minOccurs="0">
-					<xs:annotation>
-						<xs:documentation>An optional description of the purpose for this model extension.</xs:documentation>
-					</xs:annotation>
-				</xs:element>
+                <xs:element name="description" type="xs:string" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>An optional description of the purpose for this model extension.</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="modelType" minOccurs="0" maxOccurs="2">
+                    <xs:annotation>
+                        <xs:documentation>An optional list of applicable model types. If empty, all model types are applicable.</xs:documentation>
+                    </xs:annotation>
+                    <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                            <xs:enumeration value="PHYSICAL"/>
+                            <xs:enumeration value="VIRTUAL"/>
+                        </xs:restriction>
+                    </xs:simpleType>
+                </xs:element>
 				<xs:element name="extendedMetaclass" type="metaclassType" maxOccurs="unbounded">
 					<xs:annotation>
 						<xs:documentation>One or more metaclasses being extended by this model extension.</xs:documentation>
 					</xs:annotation>
+                    <xs:unique name="uniquePropertyNamesWithinMetaclass">
+                        <xs:selector xpath="mxd:property"/>
+                        <xs:field xpath="@name"/>
+                    </xs:unique>
 				</xs:element>
 			</xs:sequence>
 			<xs:attribute name="namespacePrefix" use="required" type="xs:NCName">
@@ -40,13 +56,21 @@
 				</xs:annotation>
 			</xs:attribute>
 		</xs:complexType>
-	</xs:element>
+        <xs:unique name="uniqueModelTypes">
+            <xs:selector xpath="mxd:modelType"/>
+            <xs:field xpath="."/>
+        </xs:unique>
+        <xs:unique name="uniqueMetaclassNames">
+            <xs:selector xpath="mxd:extendedMetaclass"/>
+            <xs:field xpath="@name"/>
+        </xs:unique>
+ 	</xs:element>
 
-	<xs:simpleType name="nonEmptyString">
-		<xs:restriction base="xs:string">
-			<xs:minLength value="1" />
-		</xs:restriction>
-	</xs:simpleType>
+    <xs:simpleType name="nonEmptyString">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1" />
+        </xs:restriction>
+    </xs:simpleType>
 
 	<xs:complexType name="propertyType">
 		<xs:annotation>
@@ -149,7 +173,19 @@
 				<xs:annotation>
 					<xs:documentation>One or more extended property definitions.</xs:documentation>
 				</xs:annotation>
-			</xs:element>
+                <xs:unique name="uniquePropertyAllowedValues">
+                    <xs:selector xpath="mxd:allowedValue"/>
+                    <xs:field xpath="."/>
+                </xs:unique>
+                <xs:unique name="uniquePropertyDescriptionLocales">
+                    <xs:selector xpath="mxd:description"/>
+                    <xs:field xpath="@locale"/>
+                </xs:unique>
+                <xs:unique name="uniquePropertyDisplayNames">
+                    <xs:selector xpath="mxd:display"/>
+                    <xs:field xpath="@locale"/>
+                </xs:unique>
+  			</xs:element>
 		</xs:sequence>
 		<xs:attribute name="name" type="xs:NCName" use="required">
 			<xs:annotation>

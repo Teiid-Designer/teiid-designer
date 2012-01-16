@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<p:modelExtension metamodelUri="http://www.metamatrix.com/metamodels/Relational" namespaceUri="org.teiid.designer.extension.duplicatePropDescriptionLocales"
+	namespacePrefix="duplicatePropDescriptionLocales" xmlns:p="http://org.teiid.modelExtension/2011" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://org.teiid.modelExtension/2011 modelExtension.xsd " version="1">
+	<p:description>Duplicate property description locales</p:description>
+	<p:extendedMetaclass name="com.metamatrix.metamodels.relational.impl.ProcedureImpl">
+        <p:property name="propA" type="boolean" defaultValue="false" index="true">
+            <p:description locale="en_US">This is propA description.</p:description>
+            <p:description locale="en_GB">This is propA description.</p:description>
+            <p:description locale="en_US">This is propA description.</p:description>
+        </p:property>
+	</p:extendedMetaclass>
+</p:modelExtension>

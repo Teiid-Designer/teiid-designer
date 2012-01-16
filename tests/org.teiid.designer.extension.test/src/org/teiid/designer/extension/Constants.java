@@ -94,12 +94,46 @@ public interface Constants {
     Locale NON_DEFAULT_LOCALE = Locale.US;
     Translation NON_DEFAULT_TRANSLATION = new Translation(NON_DEFAULT_LOCALE, NON_DEFAULT_LOCALE.toString());
 
+    String[] MODEL_TYPES = new String[] {"PHYSICAL", "VIRTUAL"}; //$NON-NLS-1$ //$NON-NLS-2$
+    
     String[] DEFAULT_STRING_ALLOWED_VALUES = new String[] { "value-0", "value-1", "value-2", "value-3", "value-4" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 
     String DEFAULT_SIMPLE_ID = "simpleId"; //$NON-NLS-1$
     String DEFAULT_RUNTIME_TYPE = Type.STRING.toString();
     String DEFAULT_INITIAL_VALUE = "initialValue"; //$NON-NLS-1$
-    
+
+    String DUPLICATE_METACLASSES_MED_FILE_NAME = TESTDATA + File.separatorChar
+            + "duplicateMetaclasses" + ExtensionConstants.DOT_MED_EXTENSION; //$NON-NLS-1$
+    String DUPLICATE_PROP_IDS_MED_FILE_NAME = TESTDATA + File.separatorChar
+            + "duplicatePropIds" + ExtensionConstants.DOT_MED_EXTENSION; //$NON-NLS-1$
+    String DUPLICATE_PROP_IDS_DIFFERENT_METACLASSES_MED_FILE_NAME = TESTDATA + File.separatorChar
+            + "duplicatePropIdsDifferentMetaclasses" + ExtensionConstants.DOT_MED_EXTENSION; //$NON-NLS-1$
+
+    String DUPLICATE_MODEL_TYPES_MED_FILE_NAME = TESTDATA + File.separatorChar
+            + "duplicateModelTypes" + ExtensionConstants.DOT_MED_EXTENSION; //$NON-NLS-1$
+    String ILLEGAL_MODEL_TYPE_MED_FILE_NAME = TESTDATA + File.separatorChar
+            + "illegalModelType" + ExtensionConstants.DOT_MED_EXTENSION; //$NON-NLS-1$
+    String MODEL_TYPES_MAX_EXCEEDED_MED_FILE_NAME = TESTDATA + File.separatorChar
+            + "modelTypesMaxExceeded" + ExtensionConstants.DOT_MED_EXTENSION; //$NON-NLS-1$
+
+    String DUPLICATE_ALLOWED_VALUES_MED_FILE_NAME = TESTDATA + File.separatorChar
+            + "duplicateAllowedValues" + ExtensionConstants.DOT_MED_EXTENSION; //$NON-NLS-1$
+    String DUPLICATE_ALLOWED_VALUES_DIFFERENT_PROPS_MED_FILE_NAME = TESTDATA + File.separatorChar
+            + "duplicateAllowedValuesInDifferentProperties" + ExtensionConstants.DOT_MED_EXTENSION; //$NON-NLS-1$
+
+    String DUPLICATE_PROPERTY_DESCRIPTION_LOCALE_MED_FILE_NAME = TESTDATA + File.separatorChar
+            + "duplicatePropDescriptionLocale" + ExtensionConstants.DOT_MED_EXTENSION; //$NON-NLS-1$
+    String DUPLICATE_PROPERTY_DESCRIPTION_LOCALE_FROM_DIFFERENT_PROPERTIES_MED_FILE_NAME = TESTDATA + File.separatorChar
+            + "duplicatePropDescriptionLocaleFromDifferentProperties" + ExtensionConstants.DOT_MED_EXTENSION; //$NON-NLS-1$
+
+    String DUPLICATE_PROPERTY_DISPLAY_LOCALE_MED_FILE_NAME = TESTDATA + File.separatorChar
+            + "duplicatePropDisplayLocale" + ExtensionConstants.DOT_MED_EXTENSION; //$NON-NLS-1$
+    String DUPLICATE_PROPERTY_DISPLAY_LOCALE_FROM_DIFFERENT_PROPERTIES_MED_FILE_NAME = TESTDATA + File.separatorChar
+            + "duplicatePropDisplayLocaleFromDifferentProperties" + ExtensionConstants.DOT_MED_EXTENSION; //$NON-NLS-1$
+
+    String INVALID_PROPERTY_TYPE_MED_FILE_NAME = TESTDATA + File.separatorChar
+            + "invalidPropertyType" + ExtensionConstants.DOT_MED_EXTENSION; //$NON-NLS-1$
+
     public class Utils {
         public static Set<String> getExtendableMetamodelUris() {
             Set<String> metamodelUris = new HashSet<String>();
@@ -108,6 +142,16 @@ public interface Constants {
             metamodelUris.add(WEB_SERVICE_METAMODEL);
             metamodelUris.add(XML_METAMODEL);
             return metamodelUris;
+        }
+
+        public static Set<String> getDefaultModelTypes() {
+            Set<String> modelTypes = new HashSet<String>(MODEL_TYPES.length);
+
+            for (String modelType : MODEL_TYPES) {
+                modelTypes.add(modelType);
+            }
+
+            return modelTypes;
         }
 
         public static Set<String> getStringAllowedValues() {

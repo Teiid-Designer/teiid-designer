@@ -20,7 +20,6 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.osgi.util.NLS;
 
 import com.metamatrix.core.PluginUtil;
 import com.metamatrix.core.modeler.CoreModelerPlugin;
@@ -78,6 +77,7 @@ public class LoggingUtil implements PluginUtil {
      * @see com.metamatrix.core.PluginUtil#checkJre(java.lang.String)
      * @since 4.0
      */
+    @Override
     public void checkJre( final String version ) throws CoreException {
         final String ver = System.getProperty(JAVA_VERSION);
         final StringTokenizer verIter = new StringTokenizer(ver, VERSION_DELIMITERS);
@@ -118,8 +118,11 @@ public class LoggingUtil implements PluginUtil {
      * 
      * @param status the status to log; may not be null
      */
+    @Override
     public void log( final IStatus status ) {
-        this.logger.log(status);
+        if (Platform.isRunning()) {
+            this.logger.log(status);
+        }
     }
 
     /**
@@ -128,9 +131,12 @@ public class LoggingUtil implements PluginUtil {
      * @param severity the severity, which corresponds to the {@link IStatus#getSeverity() IStatus severity}.
      * @param message the message to be logged
      */
+    @Override
     public void log( final int severity,
                      final String message ) {
-        this.logger.log(new Status(severity, this.pluginId, message));
+        if (Platform.isRunning()) {
+            this.logger.log(new Status(severity, this.pluginId, message));
+        }
     }
 
     /**
@@ -140,10 +146,13 @@ public class LoggingUtil implements PluginUtil {
      * @param message the message to be logged
      * @param t the exception; may be null
      */
+    @Override
     public void log( final int severity,
                      final Throwable t,
                      final String message ) {
-        this.logger.log(new Status(severity, this.pluginId, message, t));
+        if (Platform.isRunning()) {
+            this.logger.log(new Status(severity, this.pluginId, message, t));
+        }
     }
 
     /**
@@ -156,6 +165,7 @@ public class LoggingUtil implements PluginUtil {
      * 
      * @param obj the object to log; may not be null
      */
+    @Override
     public void log( final Object obj ) {
         if (obj != null) {
             log(IStatus.WARNING, obj.toString());
@@ -172,6 +182,7 @@ public class LoggingUtil implements PluginUtil {
      * 
      * @param throwable the Throwable to log; may not be null
      */
+    @Override
     public void log( final Throwable throwable ) {
         log(IStatus.ERROR, throwable, throwable.getLocalizedMessage());
     }
@@ -226,6 +237,7 @@ public class LoggingUtil implements PluginUtil {
         public void run( final ISafeRunnable code ) {
             // Wrap the runnable so we can log the exception
             final ISafeRunnable wrapper = new ISafeRunnable() {
+                @Override
                 public void handleException( Throwable exception ) {
                     // log and then call the code's handle method ...
                     String message = getString("PluginUtilImpl.Error_while_running", getPluginId()); //$NON-NLS-1$
@@ -233,6 +245,7 @@ public class LoggingUtil implements PluginUtil {
                     code.handleException(exception);
                 }
 
+                @Override
                 public void run() throws Exception {
                     SafeRunner.run(code);
                 }
