@@ -11,15 +11,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import org.eclipse.core.runtime.IStatus;
 import org.teiid.designer.core.extension.EmfModelObjectExtensionAssistant;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
 import org.teiid.designer.extension.properties.Translation;
 
 import com.metamatrix.core.util.CoreStringUtil;
-import com.metamatrix.metamodels.core.ModelType;
-import com.metamatrix.modeler.core.workspace.ModelResource;
-import com.metamatrix.modeler.modelgenerator.salesforce.Activator;
 import com.metamatrix.modeler.modelgenerator.salesforce.SalesforceConstants.SF_Column;
 import com.metamatrix.modeler.modelgenerator.salesforce.SalesforceConstants.SF_Table;
 
@@ -78,29 +74,6 @@ public final class SalesforceModelExtensionAssistant extends EmfModelObjectExten
 
         return super.createPropertyDefinition(id, type, required, defaultValue, fixedValue, advanced, masked, index, allowedValues,
                                               descriptions, displayNames);
-    }
-
-    /**
-     * {@inheritDoc}
-     * 
-     * @see org.teiid.designer.extension.definition.ModelExtensionAssistant#supportsMedOperation(java.lang.String, java.lang.Object)
-     */
-    @Override
-    public boolean supportsMedOperation( String proposedOperationName,
-                                         Object context ) {
-        try {
-            if (MedOperations.ADD_MED_TO_MODEL.equals(proposedOperationName)
-                    && super.supportsMedOperation(proposedOperationName, context)) {
-                ModelResource modelResource = getModelResource(context);
-                assert (modelResource != null) : "superclass is not checking for null model resource"; //$NON-NLS-1$
-                return (ModelType.PHYSICAL == modelResource.getModelType().getValue());
-            }
-        } catch (Exception e) {
-            IStatus status = new org.eclipse.core.runtime.Status(IStatus.ERROR, Activator.PLUGIN_ID, null, e);
-            Activator.getDefault().getLog().log(status);
-        }
-
-        return super.supportsMedOperation(proposedOperationName, context);
     }
 
 }

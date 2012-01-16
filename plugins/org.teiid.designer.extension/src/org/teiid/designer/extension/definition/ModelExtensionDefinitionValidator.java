@@ -189,6 +189,49 @@ public final class ModelExtensionDefinitionValidator {
         return ValidationStatus.createErrorMessage(errorMsg);
     }
 
+    public static ValidationStatus validateModelType( String supportedModelType,
+                                                      Set<String> validModelTypes ) {
+        String errorMsg = emptyCheck(Messages.modelType, supportedModelType);
+
+        // invalid to have a null or empty model type
+        if (!CoreStringUtil.isEmpty(errorMsg)) {
+            return ValidationStatus.createErrorMessage(errorMsg);
+        }
+
+        // make sure a valid value
+        if ((validModelTypes != null) && !validModelTypes.isEmpty() && validModelTypes.contains(supportedModelType)) {
+            return ValidationStatus.OK_STATUS;
+        }
+
+        // not a valid model type
+        return ValidationStatus.createErrorMessage(NLS.bind(Messages.invalidModelType, supportedModelType));
+    }
+
+    public static ValidationStatus validateModelTypes( Collection<String> supportedModelTypes,
+                                                       Set<String> validModelTypes ) {
+        // ok to have null or empty collection of model types
+        if ((supportedModelTypes == null) || supportedModelTypes.isEmpty()) {
+            return ValidationStatus.OK_STATUS;
+        }
+
+        // make sure each model type is valid
+        for (String modelType : supportedModelTypes) {
+            ValidationStatus status = validateModelType(modelType, validModelTypes);
+
+            if (status.isError()) {
+                return status;
+            }
+        }
+
+        // make sure no duplicates
+        if (new HashSet(supportedModelTypes).size() != supportedModelTypes.size()) {
+            return ValidationStatus.createErrorMessage(Messages.duplicateModelType);
+        }
+
+        // all model types are valid
+        return ValidationStatus.OK_STATUS;
+    }
+
     public static ValidationStatus validateNamespacePrefix( String namespacePrefix,
                                                             Collection<String> existingNamespacePrefixes ) {
         String errorMsg = containsSpacesCheck(Messages.namespacePrefix, namespacePrefix);

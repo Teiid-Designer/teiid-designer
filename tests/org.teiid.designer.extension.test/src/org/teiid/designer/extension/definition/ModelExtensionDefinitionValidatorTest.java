@@ -10,7 +10,9 @@ package org.teiid.designer.extension.definition;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 
 import org.junit.Test;
 import org.teiid.designer.extension.Constants;
@@ -248,8 +250,7 @@ public class ModelExtensionDefinitionValidatorTest implements Constants {
 
     @Test
     public void emptyPropertySimpleIdShouldNotBeValid() {
-        assertTrue(ModelExtensionDefinitionValidator.validatePropertySimpleId(CoreStringUtil.Constants.EMPTY_STRING)
-                                                    .isError());
+        assertTrue(ModelExtensionDefinitionValidator.validatePropertySimpleId(CoreStringUtil.Constants.EMPTY_STRING).isError());
     }
 
     @Test
@@ -339,6 +340,51 @@ public class ModelExtensionDefinitionValidatorTest implements Constants {
         assertTrue(ModelExtensionDefinitionValidator.validatePropertyAllowedValues(Type.INTEGER.toString(),
                                                                                    allowedValues.toArray(new String[allowedValues.size()]))
                                                     .isError());
+    }
+
+    @Test
+    public void nullModelTypeShouldNotBeValid() {
+        assertTrue(ModelExtensionDefinitionValidator.validateModelType(null, null).isError());
+    }
+
+    @Test
+    public void emptyModelTypeShouldNotBeValid() {
+        assertTrue(ModelExtensionDefinitionValidator.validateModelType(CoreStringUtil.Constants.EMPTY_STRING, null).isError());
+    }
+
+    @Test
+    public void modelTypeShouldNotBeValidWhenNoValidValues() {
+        assertTrue(ModelExtensionDefinitionValidator.validateModelType(MODEL_TYPES[0], null).isError());
+    }
+
+    @Test
+    public void modelTypeShouldBeValidIfValidValue() {
+        assertTrue(ModelExtensionDefinitionValidator.validateModelType(MODEL_TYPES[0], Constants.Utils.getDefaultModelTypes())
+                                                    .isOk());
+    }
+
+    @Test
+    public void modelTypeShouldNotBeValidIfNotValidValue() {
+        assertTrue(ModelExtensionDefinitionValidator.validateModelType(MODEL_TYPES[0] + "badValue", Constants.Utils.getDefaultModelTypes()) //$NON-NLS-1$
+                                                    .isError());
+    }
+
+    @Test
+    public void modelTypesShouldNotBeValidIfDuplicateValuesExist() {
+        String[] duplicateTypes = new String[] { MODEL_TYPES[0], MODEL_TYPES[1], MODEL_TYPES[0] };
+        assertTrue(ModelExtensionDefinitionValidator.validateModelTypes(Arrays.asList(duplicateTypes),
+                                                                        Constants.Utils.getDefaultModelTypes()).isError());
+    }
+
+    @Test
+    public void nullModelTypesShouldBeValid() {
+        assertTrue(ModelExtensionDefinitionValidator.validateModelTypes(null, Constants.Utils.getDefaultModelTypes()).isOk());
+    }
+
+    @Test
+    public void emptyModelTypesShouldBeValid() {
+        assertTrue(ModelExtensionDefinitionValidator.validateModelTypes(Collections.<String>emptyList(),
+                                                                        Constants.Utils.getDefaultModelTypes()).isOk());
     }
 
 }

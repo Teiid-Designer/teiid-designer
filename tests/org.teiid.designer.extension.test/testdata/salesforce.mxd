@@ -4,6 +4,7 @@
 	xsi:schemaLocation="http://org.teiid.modelExtension/2011 modelExtension.xsd " version="1"
 >
 	<p:description>Salesforce extended relational model properties</p:description>
+    <p:modelType>PHYSICAL</p:modelType>
 	<p:extendedMetaclass name="com.metamatrix.metamodels.relational.impl.BaseTableImpl">
 		<p:property name="custom" type="boolean" defaultValue="false">
 			<p:display locale="en_US">Custom</p:display>

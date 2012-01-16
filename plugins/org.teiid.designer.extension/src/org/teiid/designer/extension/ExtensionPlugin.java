@@ -121,7 +121,7 @@ public class ExtensionPlugin extends Plugin {
     public ModelObjectExtensionAssistant createDefaultModelObjectExtensionAssistant( String namespacePrefix ) {
         CoreArgCheck.isNotEmpty(namespacePrefix, "namespacePrefix is empty"); //$NON-NLS-1$
         ModelObjectExtensionAssistant assistant = createDefaultModelObjectExtensionAssistant();
-        assistant.createModelExtensionDefinition(namespacePrefix, null, null, null, null);
+        assistant.createModelExtensionDefinition(namespacePrefix, null, null, null, null, null);
         return assistant;
     }
 

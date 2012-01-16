@@ -24,7 +24,6 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IResourceDelta;
-import org.eclipse.core.resources.IResourceDeltaVisitor;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourceAttributes;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -48,6 +47,8 @@ import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.window.Window;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
@@ -194,6 +195,13 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
 
             // hook activation listener
             getContainer().addListener(SWT.Activate, refreshListener);
+            getContainer().addDisposeListener(new DisposeListener() {
+                
+                @Override
+                public void widgetDisposed( DisposeEvent e ) {
+                    System.err.println(e);
+                }
+            });
 
             // restore state
             int selectedPageNum = 0;
@@ -307,6 +315,10 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
         this.medBeingEdited.setNamespacePrefix(this.originalMed.getNamespacePrefix());
         this.medBeingEdited.setNamespaceUri(this.originalMed.getNamespaceUri());
         this.medBeingEdited.setVersion(this.originalMed.getVersion());
+
+        for (String modelType : this.originalMed.getSupportedModelTypes()) {
+            this.medBeingEdited.addModelType(modelType);
+        }
 
         // clone properties but use a different namespace provider
         for (String metaclassName : this.originalMed.getExtendedMetaclasses()) {
@@ -622,56 +634,96 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
             }
 
             try {
-                delta.accept(new IResourceDeltaVisitor() {
+                IResourceDelta medDelta = delta.findMember(getFile().getFullPath());
 
-                    /**
-                     * {@inheritDoc}
-                     * 
-                     * @see org.eclipse.core.resources.IResourceDeltaVisitor#visit(org.eclipse.core.resources.IResourceDelta)
-                     */
-                    @Override
-                    public boolean visit( IResourceDelta delta ) {
-                        if (delta.getResource().equals(getFile())) {
-                            // MXD file has been deleted so close editor
-                            if ((delta.getKind() & IResourceDelta.REMOVED) != 0) {
-                                if (!getShell().isDisposed()) {
-                                    getShell().getDisplay().asyncExec(new Runnable() {
+                if (medDelta == null) {
+                    return;
+                }
 
-                                        /**
-                                         * {@inheritDoc}
-                                         * 
-                                         * @see java.lang.Runnable#run()
-                                         */
-                                        @Override
-                                        public void run() {
-                                            getEditorSite().getPage().closeEditor(accessThis(), false);
-                                        }
-                                    });
-                                }
-                            } else if (ResourceChangeUtilities.isContentChanged(delta)) {
-                                if (!getShell().isDisposed()) {
-                                    getShell().getDisplay().syncExec(new Runnable() {
+                // MXD file has been deleted so close editor
+                if ((delta.getKind() & IResourceDelta.REMOVED) != 0) {
+                    if (!getShell().isDisposed()) {
+                        getShell().getDisplay().asyncExec(new Runnable() {
 
-                                        /**
-                                         * {@inheritDoc}
-                                         * 
-                                         * @see java.lang.Runnable#run()
-                                         */
-                                        @Override
-                                        public void run() {
-                                            refreshMed();
-                                        }
-                                    });
-                                }
+                            /**
+                             * {@inheritDoc}
+                             * 
+                             * @see java.lang.Runnable#run()
+                             */
+                            @Override
+                            public void run() {
+                                getEditorSite().getPage().closeEditor(accessThis(), false);
                             }
-
-                            return false; // stop visiting
-                        }
-
-                        return true; // keep visiting
+                        });
                     }
-                });
-            } catch (CoreException e) {
+                } else if (ResourceChangeUtilities.isContentChanged(delta)) {
+                    if (!getShell().isDisposed()) {
+                        getShell().getDisplay().asyncExec(new Runnable() {
+
+                            /**
+                             * {@inheritDoc}
+                             * 
+                             * @see java.lang.Runnable#run()
+                             */
+                            @Override
+                            public void run() {
+System.err.println("content changed handler calling refreshMed()");
+                                refreshMed();
+                            }
+                        });
+                    }
+                }
+//
+//                delta.accept(new IResourceDeltaVisitor() {
+//
+//                    /**
+//                     * {@inheritDoc}
+//                     * 
+//                     * @see org.eclipse.core.resources.IResourceDeltaVisitor#visit(org.eclipse.core.resources.IResourceDelta)
+//                     */
+//                    @Override
+//                    public boolean visit( IResourceDelta delta ) {
+//                        if (delta.getResource().equals(getFile())) {
+//                            // MXD file has been deleted so close editor
+//                            if ((delta.getKind() & IResourceDelta.REMOVED) != 0) {
+//                                if (!getShell().isDisposed()) {
+//                                    getShell().getDisplay().asyncExec(new Runnable() {
+//
+//                                        /**
+//                                         * {@inheritDoc}
+//                                         * 
+//                                         * @see java.lang.Runnable#run()
+//                                         */
+//                                        @Override
+//                                        public void run() {
+//                                            getEditorSite().getPage().closeEditor(accessThis(), false);
+//                                        }
+//                                    });
+//                                }
+//                            } else if (ResourceChangeUtilities.isContentChanged(delta)) {
+//                                if (!getShell().isDisposed()) {
+//                                    getShell().getDisplay().asyncExec(new Runnable() {
+//
+//                                        /**
+//                                         * {@inheritDoc}
+//                                         * 
+//                                         * @see java.lang.Runnable#run()
+//                                         */
+//                                        @Override
+//                                        public void run() {
+//                                            refreshMed();
+//                                        }
+//                                    });
+//                                }
+//                            }
+//
+//                            return false; // stop visiting
+//                        }
+//
+//                        return true; // keep visiting
+//                    }
+//                });
+            } catch (Exception e) {
                 UTIL.log(IStatus.ERROR, e, e.getMessage());
             }
         }
@@ -810,7 +862,9 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
     }
 
     private void unhookRefreshListener() {
-        getContainer().removeListener(SWT.Activate, this.refreshListener);
+        if (!getContainer().isDisposed()) {
+            getContainer().removeListener(SWT.Activate, this.refreshListener);
+        }
     }
 
 }

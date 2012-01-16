@@ -10,9 +10,6 @@ package org.teiid.designer.extension.ui.editors;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.action.IStatusLineManager;
-import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -78,18 +75,6 @@ public class MedOutlinePage extends ContentOutlinePage {
 
     MedSelectionSynchronizer getSelectionSynchronizer() {
         return this.medEditor.getSelectionSynchronizer();
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @see org.eclipse.ui.part.Page#makeContributions(org.eclipse.jface.action.IMenuManager, org.eclipse.jface.action.IToolBarManager, org.eclipse.jface.action.IStatusLineManager)
-     */
-    @Override
-    public void makeContributions( IMenuManager menuManager,
-                                   IToolBarManager toolBarManager,
-                                   IStatusLineManager statusLineManager ) {
-//        super.makeContributions(menuManager, toolBarManager, statusLineManager);
     }
 
     /**

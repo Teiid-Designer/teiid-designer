@@ -60,6 +60,7 @@ public class Messages extends NLS {
     public static String description;
     public static String metaclassName;
     public static String metamodelUri;
+    public static String modelType;
     public static String namespacePrefix;
     public static String namespaceUri;
     public static String propertyDescription;
@@ -70,9 +71,11 @@ public class Messages extends NLS {
     public static String version;
 
     public static String okValidationMsg;
+    public static String duplicateModelType;
     public static String duplicatePropertyIdValidatinMsg;
     public static String duplicateTranslationLocaleValidationMsg;
     public static String extendedMetaclassHasNoPropertiesValidationMsg;
+    public static String invalidModelType;
     public static String localeMissingValidationMsg;
     public static String objectIsNullValidationMsg;
     public static String medHasNoMetaclassesValidationMsg;

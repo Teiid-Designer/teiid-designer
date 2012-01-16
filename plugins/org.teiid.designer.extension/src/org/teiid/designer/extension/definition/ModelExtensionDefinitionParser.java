@@ -183,6 +183,7 @@ public class ModelExtensionDefinitionParser {
         private String masked;
         private String metaclassName;
         private String metamodelUri;
+        private StringBuilder modelType = new StringBuilder();
         private String namespacePrefix;
         private String namespaceUri;
         private ModelExtensionPropertyDefinition propDefn;
@@ -246,6 +247,8 @@ public class ModelExtensionDefinitionParser {
                 }
             } else if (ExtensionConstants.Elements.ALLOWED_VALUE.equals(getCurrentElement())) {
                 this.allowedValue.append(value);
+            } else if (ExtensionConstants.Elements.MODEL_TYPE.equals(getCurrentElement())) {
+                this.modelType.append(value);
             } else {
                 if (DEBUG_MODE) {
                     System.err.println("characters not processed=" + value); //$NON-NLS-1$
@@ -357,6 +360,9 @@ public class ModelExtensionDefinitionParser {
                             + ", metamodelUri=" + this.metamodelUri + ", version=" + this.version + ", description=" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                             + this.description);
                 }
+            } else if (ExtensionConstants.Elements.MODEL_TYPE.equals(localName)) {
+                this.assistant.addSupportedModelType(this.modelType.toString());
+                this.modelType.setLength(0);
             }
 
             if (DEBUG_MODE) {
@@ -509,7 +515,8 @@ public class ModelExtensionDefinitionParser {
                 this.metamodelUri = attributes.getValue(ExtensionConstants.Attributes.METAMODEL_URI);
                 this.version = attributes.getValue(ExtensionConstants.Attributes.VERSION);
                 this.definition = this.assistant.createModelExtensionDefinition(this.namespacePrefix, this.namespaceUri,
-                                                                                this.metamodelUri, this.description.toString(), this.version);
+                                                                                this.metamodelUri, null,
+                                                                                this.description.toString(), this.version);
             } else if (ExtensionConstants.Elements.EXTENDED_METACLASS.equals(getCurrentElement())) {
                 this.metaclassName = attributes.getValue(ExtensionConstants.Attributes.NAME);
             } else if (ExtensionConstants.Elements.PROPERTY.equals(getCurrentElement())) {

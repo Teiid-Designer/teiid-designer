@@ -70,6 +70,7 @@ public interface ExtensionConstants {
         String DISPLAY = "display"; //$NON-NLS-1$
         String EXTENDED_METACLASS = "extendedMetaclass"; //$NON-NLS-1$
         String MODEL_EXTENSION = "modelExtension"; //$NON-NLS-1$
+        String MODEL_TYPE = "modelType"; //$NON-NLS-1$
         String PROPERTY = "property"; //$NON-NLS-1$
     }
 
@@ -103,6 +104,8 @@ public interface ExtensionConstants {
         String DELETE_PROPERTY_DEFINITION = "DELETE_PROPERTY_DEFINITION"; //$NON-NLS-1$
 
         String CHANGE_HEADER_INFO = "CHANGE_HEADER_INFO"; //$NON-NLS-1$
+        
+        String SHOW_IN_REGISTRY = "SHOW_IN_REGISTRY"; //$NON-NLS-1$
     }
 
 }

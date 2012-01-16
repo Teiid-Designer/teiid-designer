@@ -63,6 +63,15 @@ public class MedModelNode {
 
     /**
      * @param medNode the MED node (cannot be <code>null</code> and must wrap the MED)
+     * @return the model types node (never <code>null</code>)
+     */
+    public static MedModelNode createModelTypesNode( MedModelNode medNode ) {
+        CoreArgCheck.isTrue(medNode.isMed(), "node is not a MED node"); //$NON-NLS-1$
+        return new MedModelNode(medNode, ModelType.MODEL_TYPES);
+    }
+
+    /**
+     * @param medNode the MED node (cannot be <code>null</code> and must wrap the MED)
      * @return the MED namespace prefix node (never <code>null</code>)
      */
     public static MedModelNode createNamespacePrefixNode( MedModelNode medNode ) {
@@ -178,10 +187,11 @@ public class MedModelNode {
                 String[] metaclasses = getMed().getExtendedMetaclasses();
                 int i = 0;
 
-                this.kids = new MedModelNode[5 + metaclasses.length];
+                this.kids = new MedModelNode[6 + metaclasses.length];
                 this.kids[i++] = createNamespacePrefixNode(this);
                 this.kids[i++] = createNamespaceUriNode(this);
                 this.kids[i++] = createMetamodelUriNode(this);
+                this.kids[i++] = createModelTypesNode(this);
                 this.kids[i++] = createVersionNode(this);
                 this.kids[i++] = createDescriptionNode(this);
 
@@ -219,6 +229,10 @@ public class MedModelNode {
 
         if (isMetamodelUri()) {
             return getMed().getMetamodelUri();
+        }
+
+        if (isModelTypes()) {
+            return getMed().getSupportedModelTypes();
         }
 
         if (isDescription()) {
@@ -310,6 +324,23 @@ public class MedModelNode {
         }
 
         assert false : "metamodel URi model node not found"; //$NON-NLS-1$
+        return null;
+    }
+
+    public MedModelNode getModelTypesNode() {
+        if (isModelTypes()) {
+            return this;
+        }
+
+        MedModelNode medNode = getMedNode();
+
+        for (MedModelNode kid : medNode.getChildren()) {
+            if (kid.isModelTypes()) {
+                return kid;
+            }
+        }
+
+        assert false : "model types model node not found"; //$NON-NLS-1$
         return null;
     }
 
@@ -440,6 +471,13 @@ public class MedModelNode {
     }
 
     /**
+     * @return <code>true</code> if a model types node
+     */
+    public boolean isModelTypes() {
+        return (this.type == ModelType.MODEL_TYPES);
+    }
+
+    /**
      * @return <code>true</code> if a namespace prefix node
      */
     public boolean isNamespacePrefix() {
@@ -488,6 +526,11 @@ public class MedModelNode {
          * A MED.
          */
         MODEL_EXTENSION_DEFINITION,
+
+        /**
+         * The supported model types (empty if all model types are supported).
+         */
+        MODEL_TYPES,
 
         /**
          * The namespace prefix.

@@ -99,6 +99,7 @@ class ModelExtensionUtils {
 
         ModelExtensionDefinitionHeader header = null;
         Annotation defnAnnotation = getDefinitionAnnotation(modelResource, false, namespacePrefix);
+
         if (defnAnnotation != null) {
             EMap<String, String> definitionTags = defnAnnotation.getTags();
             String metamodelUri = definitionTags.get(DefinitionTagKeys.METAMODEL);
@@ -107,8 +108,14 @@ class ModelExtensionUtils {
             String description = definitionTags.get(DefinitionTagKeys.DESCRIPTION);
             String versionStr = definitionTags.get(DefinitionTagKeys.VERSION);
             int version = Integer.parseInt(versionStr);
-            header = new ModelExtensionDefinitionHeader(namespacePrfx, namespaceUri, metamodelUri, description, version);
+            header = new ModelExtensionDefinitionHeader(namespacePrfx,
+                                                        namespaceUri,
+                                                        metamodelUri,
+                                                        getSupportedModelTypes(defnAnnotation),
+                                                        description,
+                                                        version);
         }
+
         return header;
     }
 
@@ -453,6 +460,43 @@ class ModelExtensionUtils {
         return getResourceAnnotationImpl(modelResource, false);
     }
 
+    private static Set<String> getSupportedModelTypes( Annotation defnAnnotation ) throws Exception {
+        EMap<String, String> definitionTags = defnAnnotation.getTags();
+
+        if (definitionTags.containsKey(DefinitionTagKeys.MODEL_TYPES)) {
+            // find the tag annotation for model types
+            for (Object object : definitionTags.entrySet()) {
+                if (!(object instanceof EStringToStringMapEntryImpl)) {
+                    throw new Exception(Util.getString(I18N_PREFIX + "modelExtensionDefinitionTagUnexpectedClass", //$NON-NLS-1$
+                                                       object.getClass()));
+                }
+
+                EStringToStringMapEntryImpl entry = (EStringToStringMapEntryImpl)object;
+
+                // get the annotation for the supported model types
+                if (entry.getKey().equals(DefinitionTagKeys.MODEL_TYPES)) {
+                    Annotation modelTypesAnnotation = getModelObjectAnnotation(entry, false);
+
+                    if (modelTypesAnnotation == null) {
+                        throw new Exception(Util.getString(I18N_PREFIX + "modelTypesAnnotationNotFound", //$NON-NLS-1$
+                                                           definitionTags.get(DefinitionTagKeys.NAMESPACE_PREFIX)));
+                    }
+
+                    EMap<String, String> modelTypesTags = modelTypesAnnotation.getTags();
+                    Set<String> modelTypes = new HashSet<String>(modelTypesTags.size());
+
+                    for (String modelType : modelTypesTags.keySet()) {
+                        modelTypes.add(modelType);
+                    }
+
+                    return modelTypes;
+                }
+            }
+        }
+
+        return Collections.emptySet();
+    }
+
     /**
      * @param modelResource the model resource whose supported namespaces is being checked (cannot be <code>null</code>)
      * @return the namespace prefixes of all model extension definitions that are persisted in the model resource (never
@@ -737,6 +781,24 @@ class ModelExtensionUtils {
                 definitionTags.put(DefinitionTagKeys.DESCRIPTION, description);
             }
 
+            // model types
+            Collection<String> supportedModelTypes = definition.getSupportedModelTypes();
+
+            if (supportedModelTypes.isEmpty()) {
+                definitionTags.remove(DefinitionTagKeys.MODEL_TYPES);
+            } else {
+                Annotation modelTypesAnnotation = getAnnotation(modelResource, definitionAnnotation,
+                                                                   DefinitionTagKeys.MODEL_TYPES,
+                                                                   CoreStringUtil.Constants.EMPTY_STRING, true);
+                EMap<String, String> modelTypesTags = modelTypesAnnotation.getTags();
+                modelTypesTags.clear();
+
+                // add all supported model types
+                for (String modelType : supportedModelTypes) {
+                    modelTypesTags.put(modelType, CoreStringUtil.Constants.EMPTY_STRING);
+                }
+            }
+            
             // properties
             for (String extendedMetaclassName : definition.getExtendedMetaclasses()) {
                 String metaclassKey = constructKey(EXTENDED_METACLASS_PREFIX, extendedMetaclassName);
@@ -887,6 +949,7 @@ class ModelExtensionUtils {
     private interface DefinitionTagKeys {
         String DESCRIPTION = "description"; //$NON-NLS-1$
         String METAMODEL = "metamodel"; //$NON-NLS-1$
+        String MODEL_TYPES = "modelTypes"; //$NON-NLS-1$
         String NAMESPACE_PREFIX = "namespacePrefix"; //$NON-NLS-1$
         String NAMESPACE_URI = "namespaceUri"; //$NON-NLS-1$
         String VERSION = "version"; //$NON-NLS-1$

@@ -220,6 +220,17 @@ public class ModelExtensionDefinitionWriter {
             Text descriptionText = document.createTextNode(med.getDescription());
             descriptionElem.appendChild(descriptionText);
         }
+
+        // -----------------------------------------
+        // Model Types - zero or more child elements
+        // -----------------------------------------
+
+        for (String modelType : med.getSupportedModelTypes()) {
+            Element modelTypeElem = document.createElement(NS_MED_COLON + ExtensionConstants.Elements.MODEL_TYPE);
+            modelExtensionElem.appendChild(modelTypeElem);
+            Text modelTypeText = document.createTextNode(modelType);
+            modelTypeElem.appendChild(modelTypeText);
+        }
     }
 
     /**

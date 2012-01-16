@@ -437,6 +437,17 @@ public class EmfModelObjectExtensionAssistant extends ModelObjectExtensionAssist
                 ModelResource modelResource = getModelResource(context);
 
                 if (modelResource != null) {
+                    Collection<String> modelTypes = getModelExtensionDefinition().getSupportedModelTypes();
+
+                    // if supported model types is empty then all all model types are supported
+                    if (!modelTypes.isEmpty()) {
+                        String modelTypeLiteral = modelResource.getModelType().getLiteral();
+
+                        if (!modelTypes.contains(modelTypeLiteral)) {
+                            return false; // model type not supported
+                        }
+                    }
+
                     if (MedOperations.ADD_MED_TO_MODEL.equals(proposedOperationName)) {
                         // model must NOT be currently supporting namespace
                         if (!supportsMyNamespace(modelResource)) {
@@ -463,6 +474,7 @@ public class EmfModelObjectExtensionAssistant extends ModelObjectExtensionAssist
             }
         } catch (Exception e) {
             Util.log(e);
+            return false;
         }
 
         return super.supportsMedOperation(proposedOperationName, context);

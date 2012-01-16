@@ -12,16 +12,25 @@ import static org.teiid.designer.extension.ui.UiConstants.EditorIds.MED_OVERVIEW
 import static org.teiid.designer.extension.ui.UiConstants.Form.COMBO_STYLE;
 import static org.teiid.designer.extension.ui.UiConstants.Form.TEXT_STYLE;
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.MED_EDITOR;
+
 import java.beans.PropertyChangeEvent;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
+import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
@@ -34,6 +43,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.IMessageManager;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
@@ -46,6 +56,7 @@ import org.teiid.designer.extension.ui.Activator;
 import org.teiid.designer.extension.ui.Messages;
 import org.teiid.designer.extension.ui.model.MedModelNode;
 import org.teiid.designer.extension.ui.model.MedModelNode.ModelType;
+
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.internal.ui.forms.MessageFormDialog;
 
@@ -56,9 +67,11 @@ public final class OverviewEditorPage extends MedEditorPage {
     private CCombo cbxMetamodelUris;
     private Text txtDescription;
     private Text txtVersion;
+    private TableViewer modelTypesViewer;
 
     private final ErrorMessage descriptionError;
     private final ErrorMessage metamodelUriError;
+    private final ErrorMessage modelTypesError;
     private final ErrorMessage namespacePrefixError;
     private final ErrorMessage namespaceUriError;
 
@@ -70,6 +83,9 @@ public final class OverviewEditorPage extends MedEditorPage {
 
         this.metamodelUriError = new ErrorMessage();
         validateMetamodelUri();
+
+        this.modelTypesError = new ErrorMessage();
+        validateModelTypes();
 
         this.namespacePrefixError = new ErrorMessage();
         validateNamespacePrefix();
@@ -204,6 +220,88 @@ public final class OverviewEditorPage extends MedEditorPage {
             this.metamodelUriError.setControl(this.cbxMetamodelUris);
         }
 
+        MODEL_TYPES: {
+            Label label = toolkit.createLabel(finalContainer, Messages.modelTypesLabel);
+            label.setLayoutData(new GridData(SWT.BEGINNING, SWT.TOP, false, false));
+
+            final Table table = toolkit.createTable(finalContainer, SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI | SWT.BORDER);
+            table.setLayoutData(new GridLayout());
+            table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+            ((GridData)table.getLayoutData()).heightHint = table.getItemHeight() * 4;
+            table.setToolTipText(Messages.medModelTypesToolTip);
+
+            // associate control with error message
+            this.modelTypesError.setControl(table);
+
+            this.modelTypesViewer = new TableViewer(table);
+            this.modelTypesViewer.setContentProvider(new IStructuredContentProvider() {
+
+                /**
+                 * {@inheritDoc}
+                 * 
+                 * @see org.eclipse.jface.viewers.IContentProvider#dispose()
+                 */
+                @Override
+                public void dispose() {
+                    // nothing to do
+                }
+
+                /**
+                 * {@inheritDoc}
+                 * 
+                 * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
+                 */
+                @Override
+                public Object[] getElements( Object inputElement ) {
+                    return getAvailableModelTypes();
+                }
+
+                /**
+                 * {@inheritDoc}
+                 * 
+                 * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object,
+                 *      java.lang.Object)
+                 */
+                @Override
+                public void inputChanged( Viewer viewer,
+                                          Object oldInput,
+                                          Object newInput ) {
+                    // nothing to do
+                }
+            });
+
+            this.modelTypesViewer.setLabelProvider(new LabelProvider() {
+
+                /**
+                 * {@inheritDoc}
+                 *
+                 * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
+                 */
+                @Override
+                public String getText( Object element ) {
+                    String modelType = (String)element;
+                    return Activator.getDefault().getModelTypeName(modelType);
+                }
+            });
+
+            // set values
+            this.modelTypesViewer.setInput(this);
+            refreshModelTypesControl();
+
+            this.modelTypesViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+
+                /**
+                 * {@inheritDoc}
+                 * 
+                 * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
+                 */
+                @Override
+                public void selectionChanged( SelectionChangedEvent event ) {
+                    handleModelTypeSelected();
+                }
+            });
+        }
+
         VERSION: {
             toolkit.createLabel(finalContainer, Messages.versionLabel);
 
@@ -249,6 +347,7 @@ public final class OverviewEditorPage extends MedEditorPage {
         selectionSynchronizer.addSelectionProvider(new HeaderSelectionProvider(this.txtNamespacePrefix,
                                                                                this.txtNamespaceUri,
                                                                                this.cbxMetamodelUris,
+                                                                               this.modelTypesViewer.getControl(),
                                                                                this.txtVersion,
                                                                                this.txtDescription));
 
@@ -258,6 +357,16 @@ public final class OverviewEditorPage extends MedEditorPage {
         msgMgr.removeMessage(this.metamodelUriError.getKey());
         msgMgr.removeMessage(this.namespacePrefixError.getKey());
         msgMgr.removeMessage(this.namespaceUriError.getKey());
+    }
+
+    Object[] getAvailableModelTypes() {
+        String metamodelUri = getMed().getMetamodelUri();
+
+        if (CoreStringUtil.isEmpty(metamodelUri)) {
+            return CoreStringUtil.Constants.EMPTY_STRING_ARRAY;
+        }
+
+        return Activator.getDefault().getModelTypes(metamodelUri).toArray();
     }
 
     /**
@@ -286,6 +395,7 @@ public final class OverviewEditorPage extends MedEditorPage {
             refreshNamespacePrefixControl();
             refreshNamespaceUriControl();
             refreshMetamodelUriControl();
+            refreshModelTypesControl();
             refreshVersionControl();
             refreshDescriptionControl();
         }
@@ -311,9 +421,40 @@ public final class OverviewEditorPage extends MedEditorPage {
 
         if (doIt) {
             getMed().setMetamodelUri(newMetamodelUri);
+            refreshModelTypesControl();
         } else if (!CoreStringUtil.isEmpty(oldUri)) {
             String oldMetamodelName = Activator.getDefault().getMetamodelName(oldUri);
             this.cbxMetamodelUris.setText(oldMetamodelName);
+        }
+    }
+
+    void handleModelTypeSelected() {
+        IStructuredSelection selection = (IStructuredSelection)this.modelTypesViewer.getSelection();
+        Collection<String> modelTypes = getMed().getSupportedModelTypes();
+
+        // add any new model types
+        for (Object selectedModelType : selection.toArray()) {
+            if (!modelTypes.contains(selectedModelType)) {
+                getMed().addModelType((String)selectedModelType);
+            }
+        }
+
+        // remove any deleted model types
+        Collection<String> supportedModelTypes = new ArrayList<String>(getMed().getSupportedModelTypes());
+
+        for (String modelType : supportedModelTypes) {
+            boolean found = false;
+
+            for (Object selectedModelType : selection.toArray()) {
+                if (modelType.equals(selectedModelType)) {
+                    found = true;
+                    break;
+                }
+            }
+
+            if (!found) {
+                getMed().removeModelType(modelType);
+            }
         }
     }
 
@@ -351,6 +492,19 @@ public final class OverviewEditorPage extends MedEditorPage {
         if (!CoreStringUtil.valuesAreEqual(this.txtDescription.getText(), description)) {
             this.txtDescription.setText((description == null) ? CoreStringUtil.Constants.EMPTY_STRING : description);
             validateDescription();
+        }
+    }
+
+    private void refreshModelTypesControl() {
+        this.modelTypesViewer.refresh();
+
+        // set selection
+        Set<String> supportedModelTypes = getMed().getSupportedModelTypes();
+
+        if (supportedModelTypes.isEmpty()) {
+            this.modelTypesViewer.getTable().selectAll();
+        } else {
+            this.modelTypesViewer.setSelection(new StructuredSelection(supportedModelTypes.toArray()), true);
         }
     }
 
@@ -453,6 +607,21 @@ public final class OverviewEditorPage extends MedEditorPage {
         updateMessage(this.metamodelUriError);
     }
 
+    private void validateModelTypes() {
+        String metamodelUri = getMed().getMetamodelUri();
+        Set<String> validModelTypes;
+
+        if (CoreStringUtil.isEmpty(metamodelUri)) {
+            validModelTypes = Collections.emptySet();
+        } else {
+            validModelTypes = Activator.getDefault().getModelTypes(metamodelUri);
+        }
+
+        this.modelTypesError.setStatus(ModelExtensionDefinitionValidator.validateModelTypes(getMed().getSupportedModelTypes(),
+                                                                                            validModelTypes));
+        updateMessage(this.modelTypesError);
+    }
+
     private void validateNamespacePrefix() {
         this.namespacePrefixError.setStatus(ModelExtensionDefinitionValidator.validateNamespacePrefix(getMed().getNamespacePrefix(),
                                                                                                       getRegistry().getAllNamespacePrefixes()));
@@ -474,6 +643,7 @@ public final class OverviewEditorPage extends MedEditorPage {
         public HeaderSelectionProvider( Control ctrlNamespacePrefix,
                                         Control ctrlNamespaceUri,
                                         Control ctrlMetamodelUri,
+                                        Control ctrlModelTypes,
                                         Control ctrlVersion,
                                         Control ctrlDescription ) {
             this.controls = new HashMap<ModelExtensionDefinition.PropertyName, Control>(5);
@@ -482,6 +652,7 @@ public final class OverviewEditorPage extends MedEditorPage {
             hookListener(ModelExtensionDefinition.PropertyName.NAMESPACE_PREFIX, ctrlNamespacePrefix, selectionSynchronizer);
             hookListener(ModelExtensionDefinition.PropertyName.NAMESPACE_URI, ctrlNamespaceUri, selectionSynchronizer);
             hookListener(ModelExtensionDefinition.PropertyName.METAMODEL_URI, ctrlMetamodelUri, selectionSynchronizer);
+            hookListener(ModelExtensionDefinition.PropertyName.MODEL_TYPES, ctrlModelTypes, selectionSynchronizer);
             hookListener(ModelExtensionDefinition.PropertyName.VERSION, ctrlVersion, selectionSynchronizer);
             hookListener(ModelExtensionDefinition.PropertyName.DESCRIPTION, ctrlDescription, selectionSynchronizer);
         }
@@ -511,6 +682,8 @@ public final class OverviewEditorPage extends MedEditorPage {
                 medNode = selectionSynchronizer.getNamespaceUriNode();
             } else if (ModelExtensionDefinition.PropertyName.METAMODEL_URI == propName) {
                 medNode = selectionSynchronizer.getMetamodelUriNode();
+            } else if (ModelExtensionDefinition.PropertyName.MODEL_TYPES == propName) {
+                medNode = selectionSynchronizer.getModelTypesNode();
             } else if (ModelExtensionDefinition.PropertyName.DESCRIPTION == propName) {
                 medNode = selectionSynchronizer.getDescriptionNode();
             } else if (ModelExtensionDefinition.PropertyName.VERSION == propName) {
@@ -658,6 +831,8 @@ public final class OverviewEditorPage extends MedEditorPage {
                         ensureVisible(this.controls.get(ModelExtensionDefinition.PropertyName.DESCRIPTION));
                     } else if (modelNode.isMetamodelUri()) {
                         ensureVisible(this.controls.get(ModelExtensionDefinition.PropertyName.METAMODEL_URI));
+                    } else if (modelNode.isModelTypes()) {
+                        ensureVisible(this.controls.get(ModelExtensionDefinition.PropertyName.MODEL_TYPES));
                     } else if (modelNode.isVersion()) {
                         ensureVisible(this.controls.get(ModelExtensionDefinition.PropertyName.VERSION));
                     }

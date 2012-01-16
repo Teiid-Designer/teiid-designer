@@ -135,6 +135,14 @@ public class ModelExtensionDefinition implements NamespacePrefixProvider, Proper
     }
 
     /**
+     * @param modelType the model type being added (cannot be <code>null</code> or empty)
+     * @return <code>true</code> if the model type was added
+     */
+    public boolean addModelType( String modelType ) {
+        return getHeader().addModelType(modelType);
+    }
+
+    /**
      * @param metaclassName the metaclass name to which the extension property definition pertains to (cannot be <code>null</code>
      *            or empty)
      * @param propDefn the property definition being added (cannot be <code>null</code>)
@@ -217,7 +225,7 @@ public class ModelExtensionDefinition implements NamespacePrefixProvider, Proper
     }
 
     /**
-     * @return the metamodel URI (never <code>null</code> or empty)
+     * @return the metamodel URI (can be <code>null</code> or empty)
      */
     public String getMetamodelUri() {
         return this.header.getMetamodelUri();
@@ -314,6 +322,15 @@ public class ModelExtensionDefinition implements NamespacePrefixProvider, Proper
     }
 
     /**
+     * If an empty collection is returned then all model types are supported.
+     * 
+     * @return an unmodifiable collection of supported model types (never <code>null</code> but can be empty)
+     */
+    public Set<String> getSupportedModelTypes() {
+        return getHeader().getSupportedModelTypes();
+    }
+
+    /**
      * @return the version (a positive integer)
      */
     public int getVersion() {
@@ -397,6 +414,14 @@ public class ModelExtensionDefinition implements NamespacePrefixProvider, Proper
         }
 
         return removed;
+    }
+
+    /**
+     * @param modelType the model type being removed (cannot be <code>null</code> or empty)
+     * @return <code>true</code> if the model type was removed
+     */
+    public boolean removeModelType( String modelType ) {
+        return getHeader().removeModelType(modelType);
     }
 
     /**
@@ -562,6 +587,14 @@ public class ModelExtensionDefinition implements NamespacePrefixProvider, Proper
     }
 
     /**
+     * @param modelType the model type being checked (cannot be <code>null</code>)
+     * @return <code>true</code> if the model type is supported by the MED
+     */
+    public boolean supportsModelType( String modelType ) {
+        return getHeader().supportsModelType(modelType);
+    }
+
+    /**
      * {@inheritDoc}
      * 
      * @see java.lang.Object#toString()
@@ -595,6 +628,11 @@ public class ModelExtensionDefinition implements NamespacePrefixProvider, Proper
          * The metaclass name being extended.
          */
         METACLASS,
+
+        /**
+         * The list of applicable model types.
+         */
+        MODEL_TYPES,
 
         /**
          * The namespace prefix.

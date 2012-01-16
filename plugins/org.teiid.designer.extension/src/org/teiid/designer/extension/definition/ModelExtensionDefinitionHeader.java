@@ -9,13 +9,21 @@ package org.teiid.designer.extension.definition;
 
 import static org.teiid.designer.extension.ExtensionPlugin.Util;
 import static org.teiid.designer.extension.Messages.invalidDefinitionFileNewVersion;
+
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.osgi.util.NLS;
 import org.teiid.core.HashCodeUtil;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition.PropertyName;
+
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
 
@@ -45,6 +53,12 @@ public class ModelExtensionDefinitionHeader {
     private String metamodelUri;
 
     /**
+     * A list of applicable model types that the MED can be applied to (can be <code>null</code>). If empty, the MED can be applied
+     * to any model type.
+     */
+    private Set<String> modelTypes;
+
+    /**
      * The unique namespace prefix of this definition (can be <code>null</code> or empty).
      */
     private String namespacePrefix;
@@ -66,12 +80,14 @@ public class ModelExtensionDefinitionHeader {
     public ModelExtensionDefinitionHeader( String namespacePrefix,
                                            String namespaceUri,
                                            String metamodelUri,
+                                           Set<String> modelTypes,
                                            String description,
                                            int version ) {
         this();
         this.namespacePrefix = namespacePrefix;
         this.namespaceUri = namespaceUri;
         this.metamodelUri = metamodelUri;
+        this.modelTypes = modelTypes;
         this.description = description;
         this.version = version;
     }
@@ -86,6 +102,37 @@ public class ModelExtensionDefinitionHeader {
     }
 
     /**
+     * @param modelType the model type being added (cannot be <code>null</code> or empty)
+     * @return <code>true</code> if the model type was added
+     */
+    public boolean addModelType(String modelType) {
+        CoreArgCheck.isNotEmpty(modelType, "modelType is empty"); //$NON-NLS-1$
+
+        if (this.modelTypes == null) {
+            this.modelTypes = new HashSet<String>(1);
+        }
+
+        boolean added = this.modelTypes.add(modelType);
+
+        // alert listeners
+        if (added) {
+            notifyChangeListeners(PropertyName.MODEL_TYPES, null, modelType);
+        }
+
+        return added;
+    }
+
+    /**
+     * @param modelType the model type being added (cannot be <code>null</code> or empty)
+     * @return <code>true</code> if the model type was added
+     */
+    public void clearModelTypes() {
+        if (this.modelTypes != null) {
+            this.modelTypes.clear();
+        }
+    }
+
+    /**
      * {@inheritDoc}
      * 
      * @see java.lang.Object#equals(java.lang.Object)
@@ -96,6 +143,30 @@ public class ModelExtensionDefinitionHeader {
         if (object == null || getClass() != object.getClass()) return false;
 
         final ModelExtensionDefinitionHeader other = (ModelExtensionDefinitionHeader)object;
+
+        // check model types
+        boolean thisEmpty = ((this.modelTypes == null) || this.modelTypes.isEmpty());
+        boolean otherEmpty = ((other.modelTypes == null) || other.modelTypes.isEmpty());
+
+        // make sure both are empty or both are non-empty
+        if (thisEmpty != otherEmpty) {
+            return false;
+        }
+
+        // check model type collections contents
+        if (!thisEmpty) {
+            // make sure collections are the same size
+            if (this.modelTypes.size() != other.modelTypes.size()) {
+                return false;
+            }
+
+            // make sure collections have the same elements
+            for (String modelType : this.modelTypes) {
+                if (!other.modelTypes.contains(modelType)) {
+                    return false;
+                }
+            }
+        }
 
         return CoreStringUtil.valuesAreEqual(this.namespacePrefix, other.namespacePrefix)
                && CoreStringUtil.valuesAreEqual(this.namespaceUri, other.namespaceUri)
@@ -132,6 +203,17 @@ public class ModelExtensionDefinitionHeader {
     }
 
     /**
+     * @return an unmodifiable collection of supported model types (never <code>null</code> but can be empty)
+     */
+    public Set<String> getSupportedModelTypes() {
+        if (this.modelTypes == null) {
+            return Collections.emptySet();
+        }
+
+        return Collections.unmodifiableSet(this.modelTypes);
+    }
+
+    /**
      * @return version
      */
     public int getVersion() {
@@ -163,6 +245,20 @@ public class ModelExtensionDefinitionHeader {
         if (getDescription() != null && !getDescription().isEmpty()) {
             result = HashCodeUtil.hashCode(result, getDescription());
         }
+
+        if ((this.modelTypes != null) && !this.modelTypes.isEmpty()) {
+            if (this.modelTypes.size() == 1) {
+                result = HashCodeUtil.hashCode(result, this.modelTypes.iterator().next());
+            } else {
+                List<String> sortedModelTypes = new ArrayList<String>(this.modelTypes);
+                Collections.sort(sortedModelTypes);
+
+                for (String modelType : sortedModelTypes) {
+                    result = HashCodeUtil.hashCode(result, modelType);
+                }
+            }
+        }
+
         return result;
     }
 
@@ -195,6 +291,26 @@ public class ModelExtensionDefinitionHeader {
     public boolean removeListener( PropertyChangeListener listener ) {
         CoreArgCheck.isNotNull(listener, "listener is null"); //$NON-NLS-1$
         return this.listeners.remove(listener);
+    }
+
+    /**
+     * @param modelType the model type being removed (cannot be <code>null</code> or empty)
+     * @return <code>true</code> if the model type was removed
+     */
+    public boolean removeModelType(String modelType) {
+        CoreArgCheck.isNotEmpty(modelType, "modelType is empty"); //$NON-NLS-1$
+        boolean removed = false;
+
+        if (this.modelTypes != null) {
+            removed = this.modelTypes.remove(modelType);
+        }
+
+        // alert listeners
+        if (removed) {
+            notifyChangeListeners(PropertyName.MODEL_TYPES, modelType, null);
+        }
+
+        return removed;
     }
 
     /**
@@ -281,6 +397,21 @@ public class ModelExtensionDefinitionHeader {
     }
 
     /**
+     * @param modelType the model type being checked (cannot be <code>null</code>)
+     * @return <code>true</code> if the model type is supported by the MED
+     */
+    public boolean supportsModelType(String modelType) {
+        CoreArgCheck.isNotEmpty(modelType, "modelType is empty"); //$NON-NLS-1$
+
+        // if there are no model types then all model types are supported
+        if ((this.modelTypes == null) || this.modelTypes.isEmpty()) {
+            return true;
+        }
+
+        return this.modelTypes.contains(modelType);
+    }
+
+    /**
      * {@inheritDoc}
      * 
      * @see java.lang.Object#toString()
@@ -293,6 +424,12 @@ public class ModelExtensionDefinitionHeader {
         text.append(", namespaceUri=").append(getNamespaceUri()); //$NON-NLS-1$
         text.append(", metamodelUri=").append(getMetamodelUri()); //$NON-NLS-1$
         text.append(", version=").append(getVersion()); //$NON-NLS-1$
+
+        if (this.modelTypes != null) {
+            for (String modelType : this.modelTypes) {
+                text.append(", supported model type=").append(modelType); //$NON-NLS-1$
+            }            
+        }
 
         return text.toString();
     }

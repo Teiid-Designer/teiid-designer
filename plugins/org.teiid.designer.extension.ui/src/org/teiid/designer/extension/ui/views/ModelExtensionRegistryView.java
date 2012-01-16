@@ -8,6 +8,7 @@
 package org.teiid.designer.extension.ui.views;
 
 import static org.teiid.designer.extension.ExtensionConstants.MED_EXTENSION;
+import static org.teiid.designer.extension.ExtensionConstants.MedOperations.SHOW_IN_REGISTRY;
 import static org.teiid.designer.extension.ui.UiConstants.UTIL;
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.CHECK_MARK;
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.REGISTERY_MED_UPDATE_ACTION;
@@ -15,6 +16,7 @@ import static org.teiid.designer.extension.ui.UiConstants.ImageIds.UNREGISTER_ME
 
 import java.io.InputStream;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -121,11 +123,13 @@ public final class ModelExtensionRegistryView extends ViewPart {
     private void configureColumn( TableViewerColumn viewerColumn,
                                   int columnIndex,
                                   String headerText,
+                                  String headerToolTip,
                                   boolean resizable ) {
         viewerColumn.setLabelProvider(new MedLabelProvider(columnIndex));
 
         TableColumn column = viewerColumn.getColumn();
         column.setText(headerText);
+        column.setToolTipText(headerToolTip);
         column.setMoveable(false);
         column.setResizable(resizable);
     }
@@ -213,22 +217,28 @@ public final class ModelExtensionRegistryView extends ViewPart {
     private void createColumns( final Table table ) {
         // NOTE: create in the order in ColumnIndexes
         TableViewerColumn column = new TableViewerColumn(this.viewer, SWT.CENTER);
-        configureColumn(column, ColumnIndexes.BUILT_IN, ColumnHeaders.BUILT_IN, false);
+        configureColumn(column, ColumnIndexes.BUILT_IN, Messages.builtInColumnText, Messages.builtInColumnToolTip, false);
 
         column = new TableViewerColumn(this.viewer, SWT.LEFT);
-        configureColumn(column, ColumnIndexes.NAMESPACE_PREFIX, ColumnHeaders.NAMESPACE_PREFIX, true);
+        configureColumn(column, ColumnIndexes.NAMESPACE_PREFIX, Messages.namespacePrefixColumnText,
+                        Messages.namespacePrefixColumnToolTip, true);
 
         column = new TableViewerColumn(this.viewer, SWT.LEFT);
-        configureColumn(column, ColumnIndexes.NAMESPACE_URI, ColumnHeaders.NAMESPACE_URI, true);
+        configureColumn(column, ColumnIndexes.NAMESPACE_URI, Messages.namespaceUriColumnText, Messages.namespaceUriColumnToolTip,
+                        true);
 
         column = new TableViewerColumn(this.viewer, SWT.LEFT);
-        configureColumn(column, ColumnIndexes.METAMODEL_URI, ColumnHeaders.METAMODEL_URI, true);
+        configureColumn(column, ColumnIndexes.METAMODEL_URI, Messages.extendedMetamodelUriColumnText,
+                        Messages.metamodelUriColumnToolTip, true);
+
+        column = new TableViewerColumn(this.viewer, SWT.LEFT);
+        configureColumn(column, ColumnIndexes.MODEL_TYPES, Messages.modelTypeColumnText, Messages.modelTypesColumnToolTip, true);
 
         column = new TableViewerColumn(this.viewer, SWT.RIGHT);
-        configureColumn(column, ColumnIndexes.VERSION, ColumnHeaders.VERSION, true);
+        configureColumn(column, ColumnIndexes.VERSION, Messages.versionColumnText, Messages.versionColumnToolTip, true);
 
-        final TableViewerColumn lastColumn = new TableViewerColumn(this.viewer, SWT.LEFT);
-        configureColumn(lastColumn, ColumnIndexes.DESCRIPTION, ColumnHeaders.DESCRIPTION, true);
+        column = new TableViewerColumn(this.viewer, SWT.LEFT);
+        configureColumn(column, ColumnIndexes.DESCRIPTION, Messages.descriptionColumnText, Messages.descriptionColumnToolTip, true);
     }
 
     private MenuManager createContextMenu() {
@@ -303,8 +313,15 @@ public final class ModelExtensionRegistryView extends ViewPart {
              */
             @Override
             public Object[] getElements( Object inputElement ) {
-                Collection<ModelExtensionDefinition> definitions = getModelExtensionDefinitions();
-                return definitions.toArray(new ModelExtensionDefinition[definitions.size()]);
+                Collection<ModelExtensionDefinition> definitions = new ArrayList<ModelExtensionDefinition>();
+
+                for (ModelExtensionDefinition med : getModelExtensionDefinitions()) {
+                    if (med.getModelExtensionAssistant().supportsMedOperation(SHOW_IN_REGISTRY, null)) {
+                        definitions.add(med);
+                    }
+                }
+
+                return definitions.toArray();
             }
 
             /**
@@ -440,8 +457,7 @@ public final class ModelExtensionRegistryView extends ViewPart {
             // If open in editor, and it's dirty, notify user
             ModelExtensionDefinitionEditor editor = getOpenEditor(mxdFile);
             if (editor != null && editor.isDirty()) {
-                MessageDialog.openWarning(getShell(),
-                                          Messages.registerMedActionEditorDirtyTitle,
+                MessageDialog.openWarning(getShell(), Messages.registerMedActionEditorDirtyTitle,
                                           Messages.registerMedActionEditorDirtyMsg);
                 return;
             }
@@ -456,8 +472,7 @@ public final class ModelExtensionRegistryView extends ViewPart {
             // -------------------------------------------------
             boolean wasAdded = RegistryDeploymentValidator.doDeployment(this.registry, mxdFile);
             if (wasAdded) {
-                MessageDialog.openInformation(getShell(),
-                                              Messages.registerMedActionSuccessTitle,
+                MessageDialog.openInformation(getShell(), Messages.registerMedActionSuccessTitle,
                                               Messages.registerMedActionSuccessMsg);
             }
         }
@@ -475,29 +490,31 @@ public final class ModelExtensionRegistryView extends ViewPart {
             public boolean select( final Viewer viewer,
                                    final Object parent,
                                    final Object element ) {
-                if (element instanceof IContainer) return true;
+                if (element instanceof IContainer)
+                    return true;
                 final IFile file = (IFile)element;
-                if (!isMedFile(file)) return false;
+                if (!isMedFile(file))
+                    return false;
                 return true;
             }
         };
         ModelingResourceFilter wsFilter = new ModelingResourceFilter(filter);
         wsFilter.setShowHiddenProjects(false);
         final Object[] models = WidgetUtil.showWorkspaceObjectSelectionDialog(Messages.selectMedDialogTitle,
-                                                                              Messages.selectMedDialogMsg,
-                                                                              false,
-                                                                              null,
-                                                                              wsFilter,
+                                                                              Messages.selectMedDialogMsg, false, null, wsFilter,
                                                                               medSelectionValidator,
                                                                               new ModelExplorerLabelProvider());
         // Return selected mxd. If nothing selected, return null
-        if (models.length > 0 && models[0] instanceof IFile) return (IFile)models[0];
+        if (models.length > 0 && models[0] instanceof IFile)
+            return (IFile)models[0];
         return null;
     }
 
     /*
      * Find Open Editor for the currently selected ModelExtensionDefinition
+     * 
      * @param selectedMedFile the mxd file to check
+     * 
      * @return the currently open editor, null if none open.
      */
     private ModelExtensionDefinitionEditor getOpenEditor( IFile selectedMedFile ) {
@@ -567,7 +584,8 @@ public final class ModelExtensionRegistryView extends ViewPart {
      */
     public boolean isMedFile( final IResource resource ) {
         // Check that the resource has the correct lower-case extension
-        if (MED_EXTENSION.equals(resource.getFileExtension())) return true;
+        if (MED_EXTENSION.equals(resource.getFileExtension()))
+            return true;
         return false;
     }
 
@@ -588,8 +606,7 @@ public final class ModelExtensionRegistryView extends ViewPart {
         assert (selectedMed != null) : "Unregister MED action should not be enabled if there is no selection"; //$NON-NLS-1$
 
         // Confirm that user really wants to unregister
-        boolean continueRemove = MessageDialog.openConfirm(getShell(),
-                                                           Messages.unregisterMedConfirmTitle,
+        boolean continueRemove = MessageDialog.openConfirm(getShell(), Messages.unregisterMedConfirmTitle,
                                                            Messages.unregisterMedConfirmMsg);
         if (continueRemove) {
             this.registry.removeDefinition(selectedMed.getNamespacePrefix());
@@ -605,7 +622,7 @@ public final class ModelExtensionRegistryView extends ViewPart {
 
             /**
              * {@inheritDoc}
-             *
+             * 
              * @see org.eclipse.jface.action.Action#setEnabled(boolean)
              */
             @Override
@@ -634,22 +651,14 @@ public final class ModelExtensionRegistryView extends ViewPart {
         }
     }
 
-    interface ColumnHeaders {
-        String BUILT_IN = Messages.builtInColumnText;
-        String DESCRIPTION = Messages.descriptionColumnText;
-        String METAMODEL_URI = Messages.extendedMetamodelUriColumnText;
-        String NAMESPACE_PREFIX = Messages.namespacePrefixColumnText;
-        String NAMESPACE_URI = Messages.namespaceUriColumnText;
-        String VERSION = Messages.versionColumnText;
-    }
-
     interface ColumnIndexes {
         int BUILT_IN = 0;
-        int DESCRIPTION = 5;
+        int DESCRIPTION = 6;
         int METAMODEL_URI = 3;
+        int MODEL_TYPES = 4;
         int NAMESPACE_PREFIX = 1;
         int NAMESPACE_URI = 2;
-        int VERSION = 4;
+        int VERSION = 5;
     }
 
     class MedLabelProvider extends ColumnLabelProvider {
@@ -704,6 +713,29 @@ public final class ModelExtensionRegistryView extends ViewPart {
             if (this.columnIndex == ColumnIndexes.METAMODEL_URI) {
                 String metamodelUri = med.getMetamodelUri();
                 return Activator.getDefault().getMetamodelName(metamodelUri);
+            }
+
+            if (this.columnIndex == ColumnIndexes.MODEL_TYPES) {
+                Collection<String> modelTypes = med.getSupportedModelTypes();
+
+                if (modelTypes.isEmpty()) {
+                    return Messages.allModelTypesAreSupported;
+                }
+
+                StringBuilder text = new StringBuilder();
+                boolean firstTime = true;
+
+                for (String modelType : modelTypes) {
+                    if (firstTime) {
+                        firstTime = false;
+                    } else {
+                        text.append(", "); //$NON-NLS-1$
+                    }
+
+                    text.append(Activator.getDefault().getModelTypeName(modelType));
+                }
+
+                return text.toString();
             }
 
             if (this.columnIndex == ColumnIndexes.VERSION) {

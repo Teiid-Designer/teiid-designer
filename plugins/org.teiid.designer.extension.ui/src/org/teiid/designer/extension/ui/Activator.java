@@ -23,6 +23,7 @@ import com.metamatrix.core.PluginUtil;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.LoggingUtil;
 import com.metamatrix.modeler.core.ModelerCore;
+import com.metamatrix.modeler.core.metamodel.MetamodelRegistry;
 import com.metamatrix.ui.AbstractUiPlugin;
 import com.metamatrix.ui.actions.ActionService;
 
@@ -43,8 +44,15 @@ public final class Activator extends AbstractUiPlugin {
         return _plugin;
     }
 
-    // key=metamodel URI, value=metamodel name
-    private Map<String, String> metamodels = new HashMap<String, String>();
+    /**
+     * key=metamodel URI, value=metamodel display name
+     */
+    private final Map<String, String> metamodels = new HashMap<String, String>();
+
+    /**
+     * key=model type, value=model type display name
+     */
+    private final Map<String, String> modelTypes = new HashMap<String, String>();
 
     /**
      * {@inheritDoc}
@@ -98,6 +106,49 @@ public final class Activator extends AbstractUiPlugin {
     }
 
     /**
+     * @param modelTypeName the name of the model type being requested (cannot be <code>null</code>)
+     * @return the model type associated with the specified name or <code>null</code> if not found
+     */
+    public String getModelType( String modelTypeName ) {
+        CoreArgCheck.isNotEmpty(modelTypeName, "modelTypeName is empty"); //$NON-NLS-1$
+
+        for (Entry<String, String> entry : this.modelTypes.entrySet()) {
+            if (entry.getValue().equals(modelTypeName)) {
+                return entry.getKey();
+            }
+        }
+
+        // not found
+        return null;
+    }
+
+    /**
+     * @param modelType the nmodel type whose display name is being requested (cannot be <code>null</code>)
+     * @return the model type localized display name or <code>null</code> if not found
+     */
+    public String getModelTypeName( String modelType ) {
+        CoreArgCheck.isNotEmpty(modelType, "modelType is empty"); //$NON-NLS-1$
+
+        for (Entry<String, String> entry : this.modelTypes.entrySet()) {
+            if (entry.getKey().equals(modelType)) {
+                return entry.getValue();
+            }
+        }
+
+        // not found
+        return null;
+    }
+
+    /**
+     * @param metamodelUri the metamodel namespace URI whose available model types are being requested (cannot be <code>null</code>
+     *            or empty)
+     * @return the model types (never <code>null</code>)
+     */
+    public Set<String> getModelTypes( String metamodelUri ) {
+        return ModelerCore.getMetamodelRegistry().getModelTypes(metamodelUri);
+    }
+
+    /**
      * {@inheritDoc}
      * 
      * @see com.metamatrix.ui.AbstractUiPlugin#getPluginUtil()
@@ -122,10 +173,18 @@ public final class Activator extends AbstractUiPlugin {
 
         // load metamodel URI/metamodel name map
         Set<String> metamodelUris = ExtensionPlugin.getInstance().getRegistry().getExtendableMetamodelUris();
+        MetamodelRegistry metamodelRegistry = ModelerCore.getMetamodelRegistry();
 
         for (String metamodelUri : metamodelUris) {
-            String name = ModelerCore.getMetamodelRegistry().getMetamodelName(metamodelUri);
+            String name = metamodelRegistry.getMetamodelName(metamodelUri);
             this.metamodels.put(metamodelUri, name);
+
+            for (String modelType : metamodelRegistry.getModelTypes(metamodelUri)) {
+                if (!this.modelTypes.containsKey(modelType)) {
+                    this.modelTypes.put(modelType, metamodelRegistry.getModelTypeName(modelType));
+                }
+            }
+            
         }
     }
 

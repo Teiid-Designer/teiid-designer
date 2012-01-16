@@ -34,6 +34,7 @@ import org.eclipse.emf.edit.provider.ItemProviderAdapter;
 
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
+import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.metamodels.core.extension.XClass;
 import com.metamatrix.modeler.core.metamodel.MetamodelDescriptor;
 import com.metamatrix.modeler.core.metamodel.MetamodelRegistry;
@@ -161,6 +162,56 @@ public class MetamodelRegistryImpl implements MetamodelRegistry {
         }
 
         return name;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see com.metamatrix.modeler.core.metamodel.MetamodelRegistry#getModelTypeName(java.lang.String)
+     */
+    @Override
+    public String getModelTypeName( String modelType ) {
+        CoreArgCheck.isNotEmpty(modelType, "modelType is empty"); //$NON-NLS-1$
+
+        for (MetamodelDescriptor descriptor : getMetamodelDescriptors()) {
+            for (ModelType allowedModelType : descriptor.getAllowableModelTypes()) {
+                if (allowedModelType.getLiteral().equals(modelType)) {
+                    return allowedModelType.getDisplayName();
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see com.metamatrix.modeler.core.metamodel.MetamodelRegistry#getModelTypes(java.lang.String)
+     */
+    @Override
+    public Set<String> getModelTypes( String nsUriString ) {
+        MetamodelDescriptor descriptor = getMetamodelDescriptor(nsUriString);
+
+        // no descriptor found
+        if (descriptor == null) {
+            return Collections.emptySet();
+        }
+
+        ModelType[] modelTypes = descriptor.getAllowableModelTypes();
+
+        if (modelTypes.length != 0) {
+            Set<String> result = new HashSet<String>(modelTypes.length);
+
+            for (ModelType modelType : modelTypes) {
+                result.add(modelType.getLiteral());
+            }
+
+            return result;
+        }
+
+        // should never get here
+        return Collections.emptySet();
     }
 
     /**

@@ -25,6 +25,15 @@ public class ModelExtensionAssistant implements ExtensionConstants {
     private ModelExtensionDefinition definition;
 
     /**
+     * @param modelType the model type being added (cannot be <code>null</code> or empty)
+     */
+    public boolean addSupportedModelType(String modelType) {
+        CoreArgCheck.isNotEmpty(modelType, "modelType is empty"); //$NON-NLS-1$
+        assert (this.definition != null) : "model extension definition is null"; //$NON-NLS-1$
+        return this.definition.addModelType(modelType);
+    }
+
+    /**
      * This method should only be called by the {@link ModelExtensionDefinitionParser}.
      * 
      * @param metaclassName the metaclass name being extended (cannot be <code>null</code> or empty)
@@ -42,6 +51,7 @@ public class ModelExtensionAssistant implements ExtensionConstants {
      * @param namespacePrefix the unique namespace prefix (can be <code>null</code> or empty)
      * @param namespaceUri the unique namespace URI (can be <code>null</code> or empty)
      * @param metamodelUri the metamodel URI this definition is extending (can be <code>null</code> or empty)
+     * @param modelTypes the supported model types (can be <code>null</code> or empty)
      * @param description the description of the definition (can be <code>null</code> or empty)
      * @param version the definition version (can be <code>null</code> or empty)
      * @return the new model extension definition (never <code>null</code>)
@@ -49,9 +59,17 @@ public class ModelExtensionAssistant implements ExtensionConstants {
     public ModelExtensionDefinition createModelExtensionDefinition( String namespacePrefix,
                                                                     String namespaceUri,
                                                                     String metamodelUri,
+                                                                    Set<String> modelTypes,
                                                                     String description,
                                                                     String version ) {
         this.definition = new ModelExtensionDefinition(this, namespacePrefix, namespaceUri, metamodelUri, description, version);
+
+        if ((modelTypes != null) && !modelTypes.isEmpty()) {
+            for (String modelType : modelTypes) {
+                addSupportedModelType(modelType);
+            }
+        }
+
         return this.definition;
     }
 
@@ -63,9 +81,13 @@ public class ModelExtensionAssistant implements ExtensionConstants {
      */
     public ModelExtensionDefinition createModelExtensionDefinition( ModelExtensionDefinitionHeader medHeader ) {
         CoreArgCheck.isNotNull(medHeader, "ModelExtensionDefinitionHeader is null"); //$NON-NLS-1$
-        return createModelExtensionDefinition(medHeader.getNamespacePrefix(), medHeader.getNamespaceUri(),
-                                              medHeader.getMetamodelUri(), medHeader.getDescription(),
-                                              String.valueOf(medHeader.getVersion()));
+        ModelExtensionDefinition med = createModelExtensionDefinition(medHeader.getNamespacePrefix(), medHeader.getNamespaceUri(),
+                                                                      medHeader.getMetamodelUri(),
+                                                                      medHeader.getSupportedModelTypes(),
+                                                                      medHeader.getDescription(),
+                                                                      String.valueOf(medHeader.getVersion()));
+
+        return med;
     }
 
     /**

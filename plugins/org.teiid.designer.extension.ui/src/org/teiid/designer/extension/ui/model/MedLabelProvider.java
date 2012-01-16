@@ -7,6 +7,8 @@
  */
 package org.teiid.designer.extension.ui.model;
 
+import java.util.Collection;
+
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.graphics.Image;
@@ -32,8 +34,8 @@ public class MedLabelProvider extends ColumnLabelProvider {
         if (element instanceof MedModelNode) {
             MedModelNode node = (MedModelNode)element;
 
-            if (node.isDescription() || node.isMetamodelUri() || node.isNamespacePrefix() || node.isNamespaceUri()
-                    || node.isVersion()) {
+            if (node.isDescription() || node.isMetamodelUri() || node.isModelTypes() || node.isNamespacePrefix()
+                    || node.isNamespaceUri() || node.isVersion()) {
                 return Activator.getDefault().getImage(UiConstants.ImageIds.ATTRIBUTE);
             }
 
@@ -73,6 +75,10 @@ public class MedLabelProvider extends ColumnLabelProvider {
 
             if (node.isMetamodelUri()) {
                 return Messages.metamodelUriNodeLabel;
+            }
+
+            if (node.isModelTypes()) {
+                return Messages.modelTypesNodeLabel;
             }
 
             if (node.isDescription()) {
@@ -132,8 +138,31 @@ public class MedLabelProvider extends ColumnLabelProvider {
             }
 
             if (node.isMetamodelUri()) {
-                return CoreStringUtil.isEmpty((String)data) ? Messages.metamodelUriNodeToolTip
-                                                           : NLS.bind(Messages.metamodelUriNodeNoValueToolTip, data);
+                return CoreStringUtil.isEmpty((String)data) ? Messages.metamodelUriNodeNoValueToolTip
+                                                           : NLS.bind(Messages.metamodelUriNodeToolTip, data);
+            }
+
+            if (node.isModelTypes()) {
+                Collection<String> modelTypes = (Collection<String>)data;
+
+                if (modelTypes.isEmpty()) {
+                    return Messages.modelTypesNodeNoValueToolTip;
+                }
+
+                StringBuilder text = new StringBuilder();
+                boolean firstTime = true;
+
+                for (String modelType : modelTypes) {
+                    if (firstTime) {
+                        firstTime = false;
+                    } else {
+                        text.append(", "); //$NON-NLS-1$
+                    }
+
+                    text.append(Activator.getDefault().getModelTypeName(modelType));
+                }
+
+                return NLS.bind(Messages.modelTypesNodeToolTip, data);
             }
 
             if (node.isNamespacePrefix()) {

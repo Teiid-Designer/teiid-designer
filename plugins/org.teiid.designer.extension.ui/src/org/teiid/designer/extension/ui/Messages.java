@@ -15,17 +15,23 @@ public class Messages extends NLS {
     public static String builtInColumnText;
     public static String descriptionColumnText;
     public static String extendedMetamodelUriColumnText;
+    public static String modelTypeColumnText;
     public static String namespacePrefixColumnText;
     public static String namespaceUriColumnText;
     public static String versionColumnText;
     public static String registeredColumnText;
     public static String medsDifferentColumnText;
+    public static String allModelTypesAreSupported;
 
     public static String registeredColumnToolTip;
     public static String medsDifferentColumnToolTip;
     public static String namespacePrefixColumnToolTip;
     public static String versionColumnToolTip;
     public static String descriptionColumnToolTip;
+    public static String builtInColumnToolTip;
+    public static String namespaceUriColumnToolTip;
+    public static String metamodelUriColumnToolTip;
+    public static String modelTypesColumnToolTip;
 
     public static String localeColumnText;
     public static String localeColumnToolTip;
@@ -135,6 +141,7 @@ public class Messages extends NLS {
     public static String medMetamodelClassTooltip;
     public static String medVersionTooltip;
     public static String medDescriptionToolTip;
+    public static String medModelTypesToolTip;
 
     public static String manageModelExtensionDefnsActionTitle;
     public static String manageModelExtensionDefnsActionModelDirtyTitle;
@@ -219,6 +226,7 @@ public class Messages extends NLS {
     public static String descriptionLabel;
     public static String simpleIdLabel;
     public static String runtimeTypeLabel;
+    public static String modelTypesLabel;
 
     public static String addButton;
     public static String editButton;
@@ -324,6 +332,9 @@ public class Messages extends NLS {
     public static String metamodelUriNodeLabel;
     public static String metamodelUriNodeToolTip;
     public static String metamodelUriNodeNoValueToolTip;
+    public static String modelTypesNodeLabel;
+    public static String modelTypesNodeToolTip;
+    public static String modelTypesNodeNoValueToolTip;
     public static String descriptionNodeLabel;
     public static String descriptionNodeToolTip;
     public static String descriptionNodeNoValueToolTip;

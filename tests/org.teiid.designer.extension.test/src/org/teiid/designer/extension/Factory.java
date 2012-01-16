@@ -78,22 +78,17 @@ public class Factory implements Constants {
         return translations;
     }
 
-    public static ModelExtensionDefinition createDefinitionWithNoPropertyDefinitions() {
-        return new ModelExtensionDefinition(createAssistant(),
-                                            DEFAULT_NAMESPACE_PREFIX,
-                                            DEFAULT_NAMESPACE_URI,
-                                            DEFAULT_METAMODEL_URI,
-                                            DEFAULT_MED_DESCRIPTION,
-                                            DEFAULT_VERSION);
+    public static ModelExtensionDefinition createDefinitionWithNoMetaclasses() {
+        ModelExtensionAssistant assistant = createAssistant();
+        return assistant.createModelExtensionDefinition(DEFAULT_NAMESPACE_PREFIX, DEFAULT_NAMESPACE_URI, DEFAULT_METAMODEL_URI,
+                                                        null, DEFAULT_MED_DESCRIPTION, DEFAULT_VERSION);
     }
 
     public static ModelExtensionDefinition createDefinitionWithOneMetaclassAndNoPropertyDefinitions() {
-        ModelExtensionDefinition med = new ModelExtensionDefinition(createAssistant(),
-                                                                    DEFAULT_NAMESPACE_PREFIX,
-                                                                    DEFAULT_NAMESPACE_URI,
-                                                                    DEFAULT_METAMODEL_URI,
-                                                                    DEFAULT_MED_DESCRIPTION,
-                                                                    DEFAULT_VERSION);
+        ModelExtensionAssistant assistant = createAssistant();
+        ModelExtensionDefinition med = assistant.createModelExtensionDefinition(DEFAULT_NAMESPACE_PREFIX, DEFAULT_NAMESPACE_URI,
+                                                                                DEFAULT_METAMODEL_URI, null,
+                                                                                DEFAULT_MED_DESCRIPTION, DEFAULT_VERSION);
         med.addMetaclass(DEFAULT_METACLASS);
         return med;
     }

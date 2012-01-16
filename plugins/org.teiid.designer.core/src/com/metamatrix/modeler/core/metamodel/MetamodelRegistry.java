@@ -8,6 +8,7 @@
 package com.metamatrix.modeler.core.metamodel;
 
 import java.util.Collection;
+import java.util.Set;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.util.URI;
@@ -91,11 +92,24 @@ public interface MetamodelRegistry{
     MetamodelDescriptor getMetamodelDescriptor(URI nsUri);
 
     /**
-     * @param nsUri the namespace URI string for the metamodel in the registry (cannot be <code>null</code> or empty)
-     * @return the localized metamodel name or <code>null</code>
+     * @param nsUriString the namespace URI string for the metamodel in the registry (cannot be <code>null</code> or empty)
+     * @return the localized metamodel name or <code>null</code> if NS URI is not found
      */
-    String getMetamodelName(String nsUriString);
-    
+    String getMetamodelName( String nsUriString );
+
+    /**
+     * @param nsUri the namespace URI string for the metamodel in the registry (cannot be <code>null</code> or empty)
+     * @return the available model type string constants for that metamodel (never <code>null</code> but can be empty if URI is not
+     *         found)
+     */
+    Set<String> getModelTypes( String nsUriString );
+
+    /**
+     * @param modelType the model type string contant whose display name is being requested (cannot be <code>null</code> or empty)
+     * @return the localized model type display name or <code>null</code> if model type is not found
+     */
+    String getModelTypeName( String modelType );
+
     /**
      * Convenience method to return the {@link EPackage} for the specified namespace 
      * URI identifier or null i fone does not exist. 

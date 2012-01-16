@@ -104,6 +104,13 @@ public class MedSelectionSynchronizer implements ISelectionChangedListener, Prop
     }
 
     /**
+     * @return the MED model types model node (never <code>null</code>)
+     */
+    public MedModelNode getModelTypesNode() {
+        return getMedModelNode().getModelTypesNode();
+    }
+
+    /**
      * @return the MED namespace prefix model node (never <code>null</code>)
      */
     public MedModelNode getNamespacePrefixNode() {

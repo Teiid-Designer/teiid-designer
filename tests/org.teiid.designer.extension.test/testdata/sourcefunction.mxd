@@ -3,6 +3,7 @@
 	namespacePrefix="sourcefunction" xmlns:p="http://org.teiid.modelExtension/2011" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://org.teiid.modelExtension/2011 modelExtension.xsd " version="1">
 	<p:description>Source Function properties</p:description>
+    <p:modelType>PHYSICAL</p:modelType>
 	<p:extendedMetaclass name="com.metamatrix.metamodels.relational.impl.ProcedureImpl">
 		<p:property name="deterministic" type="boolean" defaultValue="false" index="true">
 			<p:description locale="en_US">Specifies that the source function will always returns the same result for a specific input value</p:description>

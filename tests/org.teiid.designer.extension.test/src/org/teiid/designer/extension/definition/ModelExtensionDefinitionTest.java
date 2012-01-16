@@ -9,6 +9,7 @@ package org.teiid.designer.extension.definition;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertNull;
 import static junit.framework.Assert.assertTrue;
 
 import org.junit.Before;
@@ -28,7 +29,7 @@ public class ModelExtensionDefinitionTest implements Constants {
 
     @Before
     public void beforeEach() {
-        this.med = Factory.createDefinitionWithNoPropertyDefinitions();
+        this.med = Factory.createDefinitionWithNoMetaclasses();
     }
 
     @Test
@@ -268,14 +269,14 @@ public class ModelExtensionDefinitionTest implements Constants {
 
     @Test
     public void medsShouldBeEqual() {
-        assertTrue(this.med.equals(Factory.createDefinitionWithNoPropertyDefinitions()));
+        assertTrue(this.med.equals(Factory.createDefinitionWithNoMetaclasses()));
         assertTrue(Factory.createDefinitionWithOneMetaclassAndNoPropertyDefinitions()
                           .equals(Factory.createDefinitionWithOneMetaclassAndNoPropertyDefinitions()));
     }
 
     @Test
     public void medsShouldHaveSameHashCodel() {
-        assertTrue(this.med.hashCode() == Factory.createDefinitionWithNoPropertyDefinitions().hashCode());
+        assertTrue(this.med.hashCode() == Factory.createDefinitionWithNoMetaclasses().hashCode());
         assertTrue(Factory.createDefinitionWithOneMetaclassAndNoPropertyDefinitions().hashCode() == Factory.createDefinitionWithOneMetaclassAndNoPropertyDefinitions()
                                                                                                            .hashCode());
     }
@@ -300,4 +301,81 @@ public class ModelExtensionDefinitionTest implements Constants {
         assertEquals(modified, this.med.getExtendedMetaclasses()[0]);
         assertEquals(1, this.med.getPropertyDefinitions(modified).size());
     }
+
+    @Test
+    public void shouldSupportAllModelTypesAfterConstruction() {
+        assertTrue(this.med.supportsModelType(MODEL_TYPES[0]));
+    }
+
+    @Test
+    public void shouldReceivePropertyChangeEventAfterAddingModelType() {
+        String modelType = MODEL_TYPES[0];
+        Listener l = Factory.createPropertyChangeListener();
+        this.med.addListener(l);
+        this.med.addModelType(modelType);
+        assertEquals(1, l.getCount());
+        assertEquals(ModelExtensionDefinition.PropertyName.MODEL_TYPES.toString(), l.getPropertyName());
+        assertNull("Old value is not null", l.getOldValue()); //$NON-NLS-1$
+        assertEquals("New value is not added model type", modelType, l.getNewValue()); //$NON-NLS-1$
+    }
+
+    @Test
+    public void shouldNotReceivePropertyChangeEventAddingDuplicateModelType() {
+        String modelType = MODEL_TYPES[0];
+        this.med.addModelType(modelType);
+        Listener l = Factory.createPropertyChangeListener();
+        this.med.addListener(l);
+        this.med.addModelType(modelType);
+        assertEquals(0, l.getCount());
+    }
+
+    @Test
+    public void shouldReceivePropertyChangeEventRemovingModelType() {
+        String modelType = MODEL_TYPES[0];
+        this.med.addModelType(modelType);
+        Listener l = Factory.createPropertyChangeListener();
+        this.med.addListener(l);
+        this.med.removeModelType(modelType);
+        assertEquals(1, l.getCount());
+        assertEquals(ModelExtensionDefinition.PropertyName.MODEL_TYPES.toString(), l.getPropertyName());
+        assertNull("New value is not null", l.getNewValue()); //$NON-NLS-1$
+        assertEquals("Old value is not removed model type", modelType, l.getOldValue()); //$NON-NLS-1$
+    }
+
+    @Test
+    public void shouldNotReceivePropertyChangeEventRemovingUnsupportedModelType() {
+        Listener l = Factory.createPropertyChangeListener();
+        this.med.addListener(l);
+        this.med.removeModelType(MODEL_TYPES[0]);
+        assertEquals(0, l.getCount());
+    }
+
+    @Test
+    public void shouldSupportAddedModelType() {
+        String modelType = MODEL_TYPES[0];
+        this.med.addModelType(modelType);
+        assertTrue("Added model type is not supported", this.med.supportsModelType(modelType)); //$NON-NLS-1$
+    }
+
+    @Test
+    public void shouldNotSupportUnsupportedModelType() {
+        String addedModelType = MODEL_TYPES[0];
+        String unsupportedModelType = MODEL_TYPES[1];
+        this.med.addModelType(addedModelType);
+        assertFalse("Unsupported model type should not be supported", this.med.supportsModelType(unsupportedModelType)); //$NON-NLS-1$
+    }
+
+    @Test
+    public void shouldProvideSupportedModelTypes() {
+        // add all model types
+        for (String modelType : MODEL_TYPES) {
+            this.med.addModelType(modelType);
+        }
+
+        // make sure all are returned
+        for (String modelType : this.med.getSupportedModelTypes()) {
+            assertTrue("Model type " + modelType + " is not supported and should be", this.med.supportsModelType(modelType)); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+    }
+
 }

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<p:modelExtension metamodelUri="http://www.metamatrix.com/metamodels/Relational" namespaceUri="org.teiid.designer.extension.modelTypesMaxExceeded"
+	namespacePrefix="modelTypesMaxExceeded" xmlns:p="http://org.teiid.modelExtension/2011" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://org.teiid.modelExtension/2011 modelExtension.xsd " version="1">
+	<p:description>Max number of model types exceeded</p:description>
+    <p:modelType>VIRTUAL</p:modelType>
+    <p:modelType>PHYSICAL</p:modelType>
+    <p:modelType>VIRTUAL</p:modelType>
+    <p:extendedMetaclass name="com.metamatrix.metamodels.relational.impl.ProcedureImpl">
+        <p:property name="propA" type="boolean" defaultValue="false" index="true" />
+        <p:property name="propB" type="boolean" defaultValue="true" index="false" />
+        <p:property name="propC" type="boolean" defaultValue="true" index="false" />
+    </p:extendedMetaclass>
+</p:modelExtension>
