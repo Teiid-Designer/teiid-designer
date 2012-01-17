@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
+<plugin>
+
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            category="com.metamatrix.modeler.ui"
+            class="org.teiid.designer.advisor.ui.views.TaskManagerView"
+            icon="icons/full/cview16/AdvisorIcon.png"
+            id="org.teiid.designer.advisor.ui.views.TaskManagerViewID"
+            name="Teid Task Manager">
+      </view>
+   </extension>
+</plugin>

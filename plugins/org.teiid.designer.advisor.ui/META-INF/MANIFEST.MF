@@ -1,0 +1,23 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Advisor UI Plugin
+Bundle-SymbolicName: org.teiid.designer.advisor.ui;singleton:=true
+Bundle-Version: 7.7.0.qualifier
+Bundle-Activator: org.teiid.designer.advisor.ui.AdvisorUiPlugin
+Bundle-Vendor: JBoss by Red Hat
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.teiid.core.designer,
+ teiid_embedded_query,
+ org.teiid.designer.legacy,
+ org.teiid.designer.core,
+ org.teiid.designer.ui.common,
+ org.teiid.designer.ui,
+ org.eclipse.ui.forms,
+ org.teiid.designer.metamodels.core,
+ org.eclipse.ui.workbench,
+ org.teiid.designer.datatools.ui,
+ org.eclipse.datatools.connectivity.ui,
+ org.eclipse.datatools.connectivity.db.generic.ui
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ActivationPolicy: lazy
