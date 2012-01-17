@@ -25,6 +25,7 @@ import org.teiid.designer.advisor.ui.AdvisorUiPlugin;
 import org.teiid.designer.advisor.ui.Messages;
 
 import com.metamatrix.modeler.internal.ui.forms.FormUtil;
+import com.metamatrix.ui.internal.util.WidgetFactory;
 import com.metamatrix.ui.internal.util.WidgetUtil;
 
 public class TasksPanel extends ManagedForm implements AdvisorUiConstants {
@@ -53,7 +54,7 @@ public class TasksPanel extends ManagedForm implements AdvisorUiConstants {
 
         parentForm.setBackground(toolkit.getColors().getBackground());
 
-        this.parentForm.setText(Messages.TeiidTaskManager);
+        this.parentForm.setText(Messages.TeiidActionsManager);
 
         this.parentForm.setLayout(new GridLayout());
 
@@ -63,10 +64,15 @@ public class TasksPanel extends ManagedForm implements AdvisorUiConstants {
         this.parentForm.setBackground(toolkit.getColors().getBackground());
 
         Composite body = parentForm.getBody();
-		int nColumns = 1;
-		GridLayout gl2 = new GridLayout(nColumns, false);
+		//int nColumns = 2;
+		GridLayout gl2 = new GridLayout(2, false);
 		body.setLayout(gl2);
-		body.setLayoutData(new GridData(GridData.FILL_BOTH));
+		GridData gd2 = new GridData(GridData.FILL_BOTH);
+		//gd2.horizontalSpan = 2;
+		body.setLayoutData(gd2);
+		
+		WidgetFactory.createLabel(body, Messages.SelectActionsGroup);
+		
 		final Combo combo = new Combo(body, SWT.NONE | SWT.READ_ONLY);
 		combo.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		WidgetUtil.setComboItems(combo, Arrays.asList(AdvisorUiConstants.MODELING_ASPECT_LABELS_LIST), null, true);

@@ -47,7 +47,8 @@ public interface AdvisorUiConstants {
 			MODELING_ASPECT_LABELS.CONSUME_SOAP_WS,
 			MODELING_ASPECT_LABELS.CONSUME_REST_WS,
 			MODELING_ASPECT_LABELS.CREATE_SOAP_WS,
-			MODELING_ASPECT_LABELS.CREATE_REST_WS
+			MODELING_ASPECT_LABELS.CREATE_REST_WS,
+			MODELING_ASPECT_LABELS.DEFINE_MODELS
 	};
     
     interface MODEL_CLASSES {
@@ -125,8 +126,42 @@ public interface AdvisorUiConstants {
 		
 		String OPEN_DATA_SOURCE_EXPLORER_PERSPECTIVE = Messages.OpenDatatoolsDataSourceExplorer;
 		
-		String NEW_TEIID_MODEL_PROJECT = UTIL.getString("createTeiidModelProject");  //$NON-NLS-1$
+		String NEW_TEIID_MODEL_PROJECT = Messages.CreateTeiidModelProject;
 		String CREATE_VDB = Messages.CreateVdb;
+		String EXECUTE_VDB = Messages.ExecuteVdb; 
+	}
+	
+	interface COMMAND_LABELS_SHORT {
+		String IMPORT_JDBC = Messages.CreateSourceModelFromJdbcSource_Short;
+		String IMPORT_DDL = Messages.CreateSourceModelFromDdlFile_Short;
+		String IMPORT_SALESFORCE = Messages.CreateSourceModelFromSalesforceDataSource_Short;
+		String IMPORT_FLAT_FILE = Messages.ConsumeLocalFlatFileDataSource_Short;
+		String IMPORT_XML_FILE = Messages.ConsumeXmlFileSource_Short;
+		String IMPORT_WSDL_TO_SOURCE = Messages.CreateSourceModelFromWsdlSource_Short;
+		String IMPORT_WSDL_TO_WS = Messages.ConsumeWebSercieWsdl_Short;
+		
+		String NEW_MODEL_RELATIONAL_SOURCE = Messages.CreateNewRelationalSourceModel_Short;
+		String NEW_MODEL_RELATIONAL_VIEW = Messages.CreateNewRelationalViewModel_Short;
+		String NEW_MODEL_WS = Messages.CreateNewWebServiceViewModel_Short;
+		String NEW_MODEL_XML_DOC = Messages.CreateNewXmlDocumentViewModel_Short;
+		String NEW_MODEL_MED = Messages.CreateNewModelExtensionDefinition_Short;
+		
+		String NEW_OBJECT_BASE_TABLE = Messages.CreateNewRelationalBaseTable_Short;
+		String NEW_OBJECT_SOURCE_FUNCTION = Messages.CreateNewRelationalSourceFunction_Short;
+		
+		String CREATE_CONNECTION_JDBC = Messages.CreateJdbcConnection_Short;
+		String CREATE_CONNECTION_FLAT_FILE = Messages.CreateTeiidFlatFileConnection_Short;
+		String CREATE_CONNECTION_XML_FILE_URL = Messages.CreateTeiidRemoteXmlConnection_Short;
+		String CREATE_CONNECTION_XML_FILE_LOCAL = Messages.CreateTeiidLocalXmlConnection_Short;
+		String CREATE_CONNECTION_SALESFORCE = Messages.CreateSalesforceConnection_Short;
+		String CREATE_CONNECTION_LDAP = Messages.CreateLDAPConnection_Short;
+		String CREATE_CONNECTION_MODESHAPE = Messages.CreateModeshapeConnection_Short;
+		String CREATE_CONNECTION_WEB_SERVICE = Messages.CreateWebServicesConnection_Short;
+		
+		String OPEN_DATA_SOURCE_EXPLORER_PERSPECTIVE = Messages.OpenDatatoolsDataSourceExplorer;
+		
+		String NEW_TEIID_MODEL_PROJECT = Messages.CreateTeiidModelProject;
+		String CREATE_VDB = Messages.CreateVdb_Short;
 		String EXECUTE_VDB = Messages.ExecuteVdb; 
 	}
 
@@ -146,6 +181,7 @@ public interface AdvisorUiConstants {
 		String CONSUME_REST_WS = "consumeRestWS"; //$NON-NLS-1$
 		String CREATE_SOAP_WS = "createSoapWS"; //$NON-NLS-1$
 		String CREATE_REST_WS = "createRestWS"; //$NON-NLS-1$
+		String DEFINE_MODELS = "defineModels"; //$NON-NLS-1$
 	}
 	
 	interface MODELING_ASPECT_LABELS {
@@ -158,6 +194,7 @@ public interface AdvisorUiConstants {
 		String CONSUME_REST_WS= Messages.ConsumeARESTWebService;
 		String CREATE_SOAP_WS= Messages.CreateASOAPWebService;
 		String CREATE_REST_WS= Messages.CreateARESTWebService;
+		String DEFINE_MODELS= Messages.DefineModels;
 	}
 
 	interface Images {

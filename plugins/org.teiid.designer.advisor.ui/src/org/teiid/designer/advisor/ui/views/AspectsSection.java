@@ -20,6 +20,7 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
@@ -30,6 +31,9 @@ import org.teiid.designer.advisor.ui.AdvisorUiConstants;
 import org.teiid.designer.advisor.ui.AdvisorUiPlugin;
 import org.teiid.designer.advisor.ui.Messages;
 import org.teiid.designer.advisor.ui.actions.AdvisorActionFactory;
+import org.teiid.designer.advisor.ui.actions.AdvisorActionInfo;
+
+import com.metamatrix.ui.internal.util.WidgetFactory;
 
 public class AspectsSection implements AdvisorUiConstants{
 	private FormToolkit toolkit;
@@ -53,11 +57,13 @@ public class AspectsSection implements AdvisorUiConstants{
 	
 	private void createStackLayout(Composite parent) {
     	stackBodyPanel = new Composite(parent, SWT.NONE | SWT.FILL);
+    	GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+    	//gd.horizontalSpan = 2;
     	stackLayout = new StackLayout();
     	stackLayout.marginWidth = 0;
     	stackLayout.marginHeight = 0;
     	stackBodyPanel.setLayout(stackLayout);
-    	stackBodyPanel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+    	stackBodyPanel.setLayoutData(gd);
     	stackBodyPanel.setData("name", "stackBodyPanel");  //$NON-NLS-1$//$NON-NLS-2$
 	}
 
@@ -72,7 +78,9 @@ public class AspectsSection implements AdvisorUiConstants{
 //        generalSection.setDescription("Aspect Description....");
         
 //        generalSection.getDescriptionControl().setForeground(this.toolkit.getColors().getColor(FormColors.TITLE));
-        generalSection.setLayoutData(new GridData(GridData.FILL_BOTH | GridData.HORIZONTAL_ALIGN_BEGINNING));
+        GridData gd = new GridData(GridData.FILL_BOTH | GridData.HORIZONTAL_ALIGN_BEGINNING);
+        gd.horizontalSpan = 2;
+        generalSection.setLayoutData(gd);
 
         Composite sectionBody = new Composite(generalSection, SWT.NONE);
         sectionBody.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -87,7 +95,8 @@ public class AspectsSection implements AdvisorUiConstants{
         stackedPanels.put(MODELING_ASPECT_IDS.MODEL_DATA_SOURCES, panel1);
         stackedPanels.put(MODELING_ASPECT_IDS.MANAGE_CONNECTIONS, createPanel_2(stackBodyPanel));
         stackedPanels.put(MODELING_ASPECT_IDS.MODEL_PROJECT_MANAGEMENT, createPanel_3(stackBodyPanel));
-        stackedPanels.put(MODELING_ASPECT_IDS.MANAGE_VDBS, createPanel4(stackBodyPanel));
+        stackedPanels.put(MODELING_ASPECT_IDS.MANAGE_VDBS, createPanel_4(stackBodyPanel));
+        stackedPanels.put(MODELING_ASPECT_IDS.DEFINE_MODELS, createPanel_5(stackBodyPanel));
 
         generalSection.setClient(sectionBody);
 	}
@@ -106,13 +115,14 @@ public class AspectsSection implements AdvisorUiConstants{
         panel.setLayout(gLayout);
         panel.setBackground(bkgdColor);
         
-        addHyperlink(panel, COMMAND_LABELS.IMPORT_JDBC, COMMAND_IDS.IMPORT_JDBC);
-        addHyperlink(panel, COMMAND_LABELS.IMPORT_DDL, COMMAND_IDS.IMPORT_DDL);
-        addHyperlink(panel, COMMAND_LABELS.IMPORT_FLAT_FILE, COMMAND_IDS.IMPORT_FLAT_FILE);
-        addHyperlink(panel, COMMAND_LABELS.IMPORT_XML_FILE, COMMAND_IDS.IMPORT_XML_FILE);
-        addHyperlink(panel, COMMAND_LABELS.IMPORT_SALESFORCE, COMMAND_IDS.IMPORT_SALESFORCE);
-        addHyperlink(panel, COMMAND_LABELS.IMPORT_WSDL_TO_SOURCE, COMMAND_IDS.IMPORT_WSDL_TO_SOURCE);
-        addHyperlink(panel, COMMAND_LABELS.IMPORT_WSDL_TO_WS, COMMAND_IDS.IMPORT_WSDL_TO_WS);
+        //addHyperlink(panel, COMMAND_LABELS.IMPORT_JDBC, COMMAND_IDS.IMPORT_JDBC);
+        addHyperlink(panel, COMMAND_IDS.IMPORT_JDBC, false);
+        addHyperlink(panel, COMMAND_IDS.IMPORT_DDL, false);
+        addHyperlink(panel, COMMAND_IDS.IMPORT_FLAT_FILE, false);
+        addHyperlink(panel, COMMAND_IDS.IMPORT_XML_FILE, false);
+        addHyperlink(panel, COMMAND_IDS.IMPORT_SALESFORCE, false);
+        addHyperlink(panel, COMMAND_IDS.IMPORT_WSDL_TO_SOURCE, false);
+        addHyperlink(panel, COMMAND_IDS.IMPORT_WSDL_TO_WS, false);
         
         return panel;
 	}
@@ -132,13 +142,16 @@ public class AspectsSection implements AdvisorUiConstants{
         panel.setLayout(gLayout);
         panel.setBackground(bkgdColor);
         
-        addHyperlink(panel, COMMAND_LABELS.CREATE_CONNECTION_JDBC, COMMAND_IDS.CREATE_CONNECTION_JDBC);
-        addHyperlink(panel, COMMAND_LABELS.CREATE_CONNECTION_FLAT_FILE, COMMAND_IDS.CREATE_CONNECTION_FLAT_FILE);
-        addHyperlink(panel, COMMAND_LABELS.CREATE_CONNECTION_SALESFORCE, COMMAND_IDS.CREATE_CONNECTION_SALESFORCE);
-        addHyperlink(panel, COMMAND_LABELS.CREATE_CONNECTION_XML_FILE_LOCAL, COMMAND_IDS.CREATE_CONNECTION_XML_FILE_LOCAL);
-        addHyperlink(panel, COMMAND_LABELS.CREATE_CONNECTION_XML_FILE_URL, COMMAND_IDS.CREATE_CONNECTION_XML_FILE_URL);
         addHyperlink(panel, COMMAND_LABELS.OPEN_DATA_SOURCE_EXPLORER_PERSPECTIVE, COMMAND_IDS.OPEN_DATA_SOURCE_EXPLORER_PERSPECTIVE);
         
+        Group group = WidgetFactory.createGroup(panel, "Create Connection", GridData.FILL_HORIZONTAL, 2, 2);
+        
+        addHyperlink(group, COMMAND_IDS.CREATE_CONNECTION_JDBC, true);
+        addHyperlink(group, COMMAND_IDS.CREATE_CONNECTION_FLAT_FILE, true);
+        addHyperlink(group, COMMAND_IDS.CREATE_CONNECTION_SALESFORCE, true);
+        addHyperlink(group, COMMAND_IDS.CREATE_CONNECTION_XML_FILE_LOCAL, true);
+        addHyperlink(group, COMMAND_IDS.CREATE_CONNECTION_XML_FILE_URL, true);
+
         return panel;
 	}
 	
@@ -163,7 +176,7 @@ public class AspectsSection implements AdvisorUiConstants{
         return panel;
 	}
 	
-	private Composite createPanel4(Composite parent) {
+	private Composite createPanel_4(Composite parent) {
 		// 
 		Color bkgdColor = this.toolkit.getColors().getBackground();
         Composite panel = new Composite(parent, SWT.NONE);
@@ -180,6 +193,32 @@ public class AspectsSection implements AdvisorUiConstants{
         
         addHyperlink(panel, Messages.CreateVdb, COMMAND_IDS.CREATE_VDB);
         addHyperlink(panel, Messages.ExecuteVdb, COMMAND_IDS.EXECUTE_VDB);
+        
+        return panel;
+	}
+	
+	private Composite createPanel_5(Composite parent) {
+		// 
+		Color bkgdColor = this.toolkit.getColors().getBackground();
+        Composite panel = new Composite(parent, SWT.NONE);
+        panel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+
+        panel.setLayout(new GridLayout());
+        GridLayout gLayout = new GridLayout();
+        gLayout.numColumns = 2;
+        gLayout.marginWidth = 5;
+        gLayout.horizontalSpacing = 5;
+        gLayout.verticalSpacing = 5;
+        panel.setLayout(gLayout);
+        panel.setBackground(bkgdColor);
+        
+        Group group = WidgetFactory.createGroup(panel, "Create", GridData.FILL_HORIZONTAL, 2, 2);
+        addHyperlink(group, COMMAND_IDS.NEW_MODEL_RELATIONAL_SOURCE, true);
+        addHyperlink(group, COMMAND_IDS.NEW_MODEL_RELATIONAL_VIEW, true);
+        addHyperlink(group, COMMAND_IDS.NEW_MODEL_WS, true);
+        addHyperlink(group, COMMAND_IDS.NEW_MODEL_XML_DOC, true);
+        
+        addHyperlink(group, COMMAND_IDS.NEW_MODEL_MED, false);
         
         return panel;
 	}
@@ -203,11 +242,21 @@ public class AspectsSection implements AdvisorUiConstants{
 			this.stackLayout.topControl = stackedPanels.get(MODELING_ASPECT_IDS.CONSUME_SOAP_WS);
 		} else if( aspectId.equalsIgnoreCase(MODELING_ASPECT_LABELS.CONSUME_REST_WS) ) {
 			this.stackLayout.topControl = stackedPanels.get(MODELING_ASPECT_IDS.CONSUME_REST_WS);
+		} else if( aspectId.equalsIgnoreCase(MODELING_ASPECT_LABELS.DEFINE_MODELS) ) {
+			this.stackLayout.topControl = stackedPanels.get(MODELING_ASPECT_IDS.DEFINE_MODELS);
 		} else {
 			// Product Management
 		}
 		this.stackBodyPanel.layout();
 		
+	}
+	
+	private void addHyperlink(Composite parent, String actionId, boolean isSubMenu) {
+		AdvisorActionInfo info = AdvisorActionFactory.getActionInfo(actionId);
+		if( info != null ) {
+			String text = isSubMenu ? info.getShortDisplayName() : info.getDisplayName();
+			addHyperlink(parent, text, actionId);
+		}
 	}
 	
 	private void addHyperlink(Composite parent, String text, String actionId) {

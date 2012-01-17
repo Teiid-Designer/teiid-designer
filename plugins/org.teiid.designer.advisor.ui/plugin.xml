@@ -16,7 +16,7 @@
             class="org.teiid.designer.advisor.ui.views.TaskManagerView"
             icon="icons/full/cview16/AdvisorIcon.png"
             id="org.teiid.designer.advisor.ui.views.TaskManagerViewID"
-            name="Teid Task Manager">
+            name="Teid Actions">
       </view>
    </extension>
 </plugin>

@@ -41,6 +41,36 @@ public class Messages  extends NLS {
     public static String CreateVdb;
     public static String CreateWebServicesConnection;
     
+    
+    public static String ConsumeLocalFlatFileDataSource_Short;
+    public static String ConsumeWebSercieWsdl_Short;
+    public static String ConsumeXmlFileSource_Short;
+    public static String ConsumeARESTWebService_Short;
+    public static String ConsumeASOAPWebService_Short;
+    
+    public static String CreateJdbcConnection_Short;
+    public static String CreateLDAPConnection_Short;
+    public static String CreateModeshapeConnection_Short;
+    public static String CreateNewModelExtensionDefinition_Short;
+    public static String CreateNewRelationalBaseTable_Short;
+    public static String CreateNewRelationalSourceFunction_Short;
+    public static String CreateNewRelationalSourceModel_Short;
+    public static String CreateNewRelationalViewModel_Short;
+    public static String CreateNewWebServiceViewModel_Short;
+    public static String CreateNewXmlDocumentViewModel_Short;
+    public static String CreateSalesforceConnection_Short;
+    public static String CreateSourceModelFromDdlFile_Short;
+    public static String CreateSourceModelFromJdbcSource_Short;
+    public static String CreateSourceModelFromSalesforceDataSource_Short;
+    public static String CreateSourceModelFromWsdlSource_Short;
+    public static String CreateTeiidFlatFileConnection_Short;
+    public static String CreateTeiidLocalXmlConnection_Short;
+    public static String CreateTeiidModelProject_Short;
+    public static String CreateTeiidRemoteXmlConnection_Short;
+    public static String CreateVdb_Short;
+    public static String CreateWebServicesConnection_Short;
+    
+    public static String DefineModels;
     public static String ExecuteVdb;
     
     public static String ModelingAspectOptions;
@@ -55,7 +85,10 @@ public class Messages  extends NLS {
     
     public static String OpenDatatoolsDataSourceExplorer;
     
-    public static String TeiidTaskManager;
+    public static String SelectActionsGroup;
+    
+    public static String TeiidActionsManager;
+    public static String TeiidActions;
 
     static {
         NLS.initializeMessages("org.teiid.designer.advisor.ui.messages", Messages.class); //$NON-NLS-1$
