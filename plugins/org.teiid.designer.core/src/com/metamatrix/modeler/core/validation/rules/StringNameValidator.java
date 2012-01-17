@@ -573,7 +573,6 @@ public class StringNameValidator {
 
                     if (msg == null) {
                         foundInitialChar = true;
-                        changed = true;
                         actualLength++;
                         newName.append(nextChar);
                     } else {
