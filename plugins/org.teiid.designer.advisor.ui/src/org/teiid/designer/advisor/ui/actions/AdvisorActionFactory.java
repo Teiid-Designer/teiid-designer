@@ -12,17 +12,23 @@ import java.util.Map;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.datatools.connectivity.db.generic.ui.wizard.NewJDBCFilteredCPWizard;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.INewWizard;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PartInitException;
 import org.teiid.designer.advisor.ui.AdvisorUiConstants;
-import org.teiid.designer.advisor.ui.Messages;
+import org.teiid.designer.advisor.ui.AdvisorUiPlugin;
 import org.teiid.designer.datatools.ui.dialogs.NewTeiidFilteredCPWizard;
 
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelerUiViewUtils;
+import com.metamatrix.ui.internal.util.UiUtil;
+import com.metamatrix.ui.internal.util.WidgetUtil;
 
 /**
  * Factory intended to provide high-level access to actions and their handlers for Teiid Designer Advisor framework
@@ -47,6 +53,7 @@ public class AdvisorActionFactory implements AdvisorUiConstants {
         addActionHandler(COMMAND_IDS.CREATE_CONNECTION_MODESHAPE, COMMAND_LABELS.CREATE_CONNECTION_MODESHAPE, COMMAND_LABELS_SHORT.CREATE_CONNECTION_MODESHAPE);
         addActionHandler(COMMAND_IDS.CREATE_CONNECTION_SALESFORCE, COMMAND_LABELS.CREATE_CONNECTION_SALESFORCE, COMMAND_LABELS_SHORT.CREATE_CONNECTION_SALESFORCE);
         addActionHandler(COMMAND_IDS.CREATE_CONNECTION_WEB_SERVICE, COMMAND_LABELS.CREATE_CONNECTION_WEB_SERVICE, COMMAND_LABELS_SHORT.CREATE_CONNECTION_WEB_SERVICE);
+        addActionHandler(COMMAND_IDS.CREATE_CONNECTION_WEB_SERVICE_ODA, COMMAND_LABELS.CREATE_CONNECTION_WEB_SERVICE_ODA, COMMAND_LABELS_SHORT.CREATE_CONNECTION_WEB_SERVICE_ODA);
         addActionHandler(COMMAND_IDS.CREATE_CONNECTION_XML_FILE_LOCAL, COMMAND_LABELS.CREATE_CONNECTION_XML_FILE_LOCAL, COMMAND_LABELS_SHORT.CREATE_CONNECTION_XML_FILE_LOCAL);
         addActionHandler(COMMAND_IDS.CREATE_CONNECTION_XML_FILE_URL, COMMAND_LABELS.CREATE_CONNECTION_XML_FILE_URL, COMMAND_LABELS_SHORT.CREATE_CONNECTION_XML_FILE_URL);
         addActionHandler(COMMAND_IDS.NEW_MODEL_RELATIONAL_SOURCE, COMMAND_LABELS.NEW_MODEL_RELATIONAL_SOURCE, COMMAND_LABELS_SHORT.NEW_MODEL_RELATIONAL_SOURCE);
@@ -55,6 +62,10 @@ public class AdvisorActionFactory implements AdvisorUiConstants {
         addActionHandler(COMMAND_IDS.NEW_MODEL_XML_DOC, COMMAND_LABELS.NEW_MODEL_XML_DOC, COMMAND_LABELS_SHORT.NEW_MODEL_XML_DOC);
         addActionHandler(COMMAND_IDS.CREATE_VDB, COMMAND_LABELS.CREATE_VDB, COMMAND_LABELS_SHORT.CREATE_VDB);
         addActionHandler(COMMAND_IDS.EXECUTE_VDB, COMMAND_LABELS.EXECUTE_VDB, COMMAND_LABELS.EXECUTE_VDB);
+        addActionHandler(COMMAND_IDS.OPEN_DATA_SOURCE_EXPLORER_VIEW, COMMAND_LABELS.OPEN_DATA_SOURCE_EXPLORER_VIEW, COMMAND_LABELS.OPEN_DATA_SOURCE_EXPLORER_VIEW);
+        addActionHandler(COMMAND_IDS.CREATE_WEB_SRVICES_DATA_FILE, COMMAND_LABELS.CREATE_WEB_SRVICES_DATA_FILE, COMMAND_LABELS.CREATE_WEB_SRVICES_DATA_FILE);
+        addActionHandler(COMMAND_IDS.GENERATE_WS_MODELS_FROM_WSDL, COMMAND_LABELS.GENERATE_WS_MODELS_FROM_WSDL, COMMAND_LABELS.GENERATE_WS_MODELS_FROM_WSDL);
+
 	}
 	
 	public static AbstractHandler getActionHandler(String id) {
@@ -81,7 +92,10 @@ public class AdvisorActionFactory implements AdvisorUiConstants {
 	
 	public static AdvisorActionInfo createInfo(String commandId, String displayName, String shortDisplayName) {
 		AbstractHandler handler = new TeiidDesignerActionHandler(commandId, displayName);
-		return new AdvisorActionInfo(commandId, displayName, shortDisplayName, handler);
+		AdvisorActionInfo info = new AdvisorActionInfo(commandId, displayName, shortDisplayName, handler);
+		String imageId = getImageId(commandId);
+		info.setImageId(imageId);
+		return info;
 	}
 	
 	public static void executeAction(TeiidDesignerActionHandler actionHandler) {
@@ -158,6 +172,10 @@ public class AdvisorActionFactory implements AdvisorUiConstants {
 			createConnection(CONNECTION_PROFILE_IDS.CATEGORY_WS_CONNECTION);
 	        return;
 		}
+		if( id.equalsIgnoreCase(COMMAND_IDS.CREATE_CONNECTION_WEB_SERVICE_ODA)) {
+			createConnection(CONNECTION_PROFILE_IDS.CATEGORY_ODA_WS_ID);
+	        return;
+		}
 		if( id.equalsIgnoreCase(COMMAND_IDS.CREATE_CONNECTION_XML_FILE_LOCAL)) {
 			createConnection(CONNECTION_PROFILE_IDS.CATEGORY_XML_FILE_LOCAL);
 	        return;
@@ -166,12 +184,124 @@ public class AdvisorActionFactory implements AdvisorUiConstants {
 			createConnection(CONNECTION_PROFILE_IDS.CATEGORY_XML_FILE_URL);
 	        return;
 		}
+		if( id.equalsIgnoreCase(COMMAND_IDS.GENERATE_WS_MODELS_FROM_WSDL)) {
+			 launchWizard(ImportMetadataAction.WSDL_TO_RELATIONAL);
+			 return;
+		}
 		
 		if( id.equalsIgnoreCase(COMMAND_IDS.CREATE_VDB)) {
-			NewVdbAction action = new NewVdbAction();
-			action.run();
+			ModelerUiViewUtils.launchWizard("newVdbWizard", new StructuredSelection()); //$NON-NLS-1$
 	        return;
 		}
+		
+		if( id.equalsIgnoreCase(COMMAND_IDS.NEW_TEIID_MODEL_PROJECT)) {
+			ModelerUiViewUtils.launchWizard("newModelProject", new StructuredSelection()); //$NON-NLS-1$
+	        return;
+		}
+		
+		if( id.equalsIgnoreCase(COMMAND_IDS.OPEN_DATA_SOURCE_EXPLORER_VIEW)) {
+	        try {
+	            UiUtil.getWorkbenchPage().showView("org.eclipse.datatools.connectivity.DataSourceExplorerNavigator"); //$NON-NLS-1$
+	        } catch (final PartInitException err) {
+	            AdvisorUiConstants.UTIL.log(err);
+	            WidgetUtil.showError(err.getLocalizedMessage());
+	        }
+	        return;
+		}
+		
+		MessageDialog.openWarning(Display.getCurrent().getActiveShell(), "Unimplemented Action", 
+					"Action for ID [" + id + "] is not yet implemented");
+	}
+	
+	public static String getImageId(String id) {
+		// IMPORT OPTIONS
+		if( id.equalsIgnoreCase(COMMAND_IDS.IMPORT_DDL)) {
+			 return Images.IMPORT;
+		}
+		if( id.equalsIgnoreCase(COMMAND_IDS.IMPORT_FLAT_FILE)) {
+			return Images.IMPORT;
+		}
+		if( id.equalsIgnoreCase(COMMAND_IDS.IMPORT_JDBC)) {
+			return Images.IMPORT_JDBC;
+		}
+		if( id.equalsIgnoreCase(COMMAND_IDS.IMPORT_SALESFORCE)) {
+			return Images.IMPORT;
+		}
+		if( id.equalsIgnoreCase(COMMAND_IDS.IMPORT_XML_FILE)) {
+			return Images.IMPORT;
+		}
+		if( id.equalsIgnoreCase(COMMAND_IDS.IMPORT_WSDL_TO_SOURCE)) {
+			return Images.IMPORT_WSDL;
+		}
+		if( id.equalsIgnoreCase(COMMAND_IDS.IMPORT_WSDL_TO_WS)) {
+			return Images.IMPORT_WSDL;
+		}
+		
+		// NEW MODEL OPTIONS
+		if( id.equalsIgnoreCase(COMMAND_IDS.NEW_MODEL_RELATIONAL_SOURCE)) {
+			return Images.NEW_MODEL_ACTION;
+		}
+		
+		if( id.equalsIgnoreCase(COMMAND_IDS.NEW_MODEL_RELATIONAL_VIEW)) {
+			return Images.NEW_MODEL_ACTION;
+		}
+		
+		if( id.equalsIgnoreCase(COMMAND_IDS.NEW_MODEL_WS)) {
+			return Images.NEW_MODEL_ACTION;
+		}
+		
+		if( id.equalsIgnoreCase(COMMAND_IDS.NEW_MODEL_XML_DOC)) {
+			return Images.NEW_MODEL_ACTION;
+		}
+		
+		// CONNECTIONPROFILE OPTIONS
+		if( id.equalsIgnoreCase(COMMAND_IDS.CREATE_CONNECTION_JDBC)) {
+			return Images.NEW_CONNECTION_PROFILE;
+		}
+		if( id.equalsIgnoreCase(COMMAND_IDS.CREATE_CONNECTION_FLAT_FILE)) {
+			return Images.NEW_CONNECTION_PROFILE;
+		}
+		if( id.equalsIgnoreCase(COMMAND_IDS.CREATE_CONNECTION_LDAP)) {
+			return Images.NEW_CONNECTION_PROFILE;
+		}
+		if( id.equalsIgnoreCase(COMMAND_IDS.CREATE_CONNECTION_MODESHAPE)) {
+			return Images.NEW_CONNECTION_PROFILE;
+		}
+		if( id.equalsIgnoreCase(COMMAND_IDS.CREATE_CONNECTION_SALESFORCE)) {
+			return Images.NEW_CONNECTION_PROFILE;
+		}
+		if( id.equalsIgnoreCase(COMMAND_IDS.CREATE_CONNECTION_WEB_SERVICE)) {
+			return Images.NEW_CONNECTION_PROFILE;
+		}
+		if( id.equalsIgnoreCase(COMMAND_IDS.CREATE_CONNECTION_WEB_SERVICE_ODA)) {
+			return Images.NEW_CONNECTION_PROFILE;
+		}
+		if( id.equalsIgnoreCase(COMMAND_IDS.CREATE_CONNECTION_XML_FILE_LOCAL)) {
+			return Images.NEW_CONNECTION_PROFILE;
+		}
+		if( id.equalsIgnoreCase(COMMAND_IDS.CREATE_CONNECTION_XML_FILE_URL)) {
+			return Images.NEW_CONNECTION_PROFILE;
+		}
+		if( id.equalsIgnoreCase(COMMAND_IDS.GENERATE_WS_MODELS_FROM_WSDL)) {
+			return Images.IMPORT_WSDL;
+		}
+		
+		if( id.equalsIgnoreCase(COMMAND_IDS.CREATE_VDB)) {
+			return Images.NEW_VDB;
+		}
+		
+		if( id.equalsIgnoreCase(COMMAND_IDS.EXECUTE_VDB)) {
+			return Images.EXECUTE_VDB_ACTION;
+		}
+		
+		if( id.equalsIgnoreCase(COMMAND_IDS.NEW_TEIID_MODEL_PROJECT)) {
+			return Images.NEW_PROJECT_ACTION;
+		}
+		
+		if( id.equalsIgnoreCase(COMMAND_IDS.OPEN_DATA_SOURCE_EXPLORER_VIEW)) {
+			return Images.DATA_SOURCE_EXPLORER_VIEW;
+		}
+		return null;
 	}
 	
 	private static void createNewModel(ModelType type, String modelClass) {
@@ -196,5 +326,13 @@ public class AdvisorActionFactory implements AdvisorUiConstants {
 			wizardDialog.setBlockOnOpen(true);
 			wizardDialog.open();
 		}
+	}
+	
+	private static IWorkbench getWorkbench() {
+		return AdvisorUiPlugin.getDefault().getWorkbench();
+	}
+	
+	private static IWorkbenchWindow getWindow() {
+		return getWorkbench().getActiveWorkbenchWindow();
 	}
 }

@@ -13,6 +13,7 @@ public class AdvisorActionInfo {
 	private final String id;
 	private final String displayName;
 	private final String shortDisplayName;
+	private String imageId;
 	private boolean isSubMenu;
 	
 	AbstractHandler actionHandler;
@@ -65,5 +66,27 @@ public class AdvisorActionInfo {
 	public void setIsSubMenu(boolean isSubMenu) {
 		this.isSubMenu = isSubMenu;
 	}
+
+	public String getImageId() {
+		return this.imageId;
+	}
+
+	public void setImageId(String imageId) {
+		this.imageId = imageId;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder("AdvisorActionInfo"); //$NON-NLS-1$
+		sb.append("\n   Display Name = ").append(this.displayName); //$NON-NLS-1$
+		if( shortDisplayName != null ) {
+			sb.append("\n   Short Name = ").append(this.shortDisplayName); //$NON-NLS-1$
+		}
+		if( imageId != null ) {
+			sb.append("\n   Image ID = ").append(this.imageId);  //$NON-NLS-1$
+		}
+		return sb.toString();
+	}
+	
 	
 }

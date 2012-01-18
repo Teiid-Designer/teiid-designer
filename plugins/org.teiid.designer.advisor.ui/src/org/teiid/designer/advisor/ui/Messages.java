@@ -40,6 +40,8 @@ public class Messages  extends NLS {
     public static String CreateTeiidRemoteXmlConnection;
     public static String CreateVdb;
     public static String CreateWebServicesConnection;
+    public static String CreateOdaWebServicesConnection;
+    public static String GenerateWSModelsFromWsdl;
     
     
     public static String ConsumeLocalFlatFileDataSource_Short;
@@ -69,6 +71,10 @@ public class Messages  extends NLS {
     public static String CreateTeiidRemoteXmlConnection_Short;
     public static String CreateVdb_Short;
     public static String CreateWebServicesConnection_Short;
+    public static String CreateOdaWebServicesConnection_Short;
+    public static String CreateWebServicesDataFile;
+    public static String CreateWebServicesDataFile_Short;
+    public static String GenerateWSModelsFromWsdl_Short;
     
     public static String DefineModels;
     public static String ExecuteVdb;

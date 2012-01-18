@@ -12,6 +12,7 @@ import java.util.Arrays;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
@@ -27,12 +28,15 @@ import org.teiid.designer.advisor.ui.Messages;
 import com.metamatrix.modeler.internal.ui.forms.FormUtil;
 import com.metamatrix.ui.internal.util.WidgetFactory;
 import com.metamatrix.ui.internal.util.WidgetUtil;
+import com.metamatrix.ui.internal.widget.Label;
 
 public class TasksPanel extends ManagedForm implements AdvisorUiConstants {
     FormToolkit toolkit;
 
     private ScrolledForm parentForm;
     private AspectsSection aspectSection;
+    
+    private Combo actionGroupCombo;
 
     /**
      * @since 4.3
@@ -51,8 +55,8 @@ public class TasksPanel extends ManagedForm implements AdvisorUiConstants {
         this.parentForm.setLayoutData(gd);
 
         this.toolkit = getToolkit();
-
-        parentForm.setBackground(toolkit.getColors().getBackground());
+        Color bkgdColor = toolkit.getColors().getBackground();
+        parentForm.setBackground(bkgdColor);
 
         this.parentForm.setText(Messages.TeiidActionsManager);
 
@@ -61,34 +65,38 @@ public class TasksPanel extends ManagedForm implements AdvisorUiConstants {
         this.parentForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
         FormUtil.tweakColors(toolkit, parentForm.getDisplay());
-        this.parentForm.setBackground(toolkit.getColors().getBackground());
+        this.parentForm.setBackground(bkgdColor);
 
         Composite body = parentForm.getBody();
 		//int nColumns = 2;
-		GridLayout gl2 = new GridLayout(2, false);
-		body.setLayout(gl2);
-		GridData gd2 = new GridData(GridData.FILL_BOTH);
-		//gd2.horizontalSpan = 2;
-		body.setLayoutData(gd2);
+		GridLayout gl = new GridLayout(2, false);
+		body.setLayout(gl);
+		gd = new GridData(GridData.FILL_BOTH);
+		body.setLayoutData(gd);
 		
-		WidgetFactory.createLabel(body, Messages.SelectActionsGroup);
+		Label label = WidgetFactory.createLabel(body, Messages.SelectActionsGroup);
+		label.setBackground(bkgdColor);
+		gd = new GridData();
+		gd.verticalAlignment = GridData.CENTER;
+		label.setLayoutData(gd);
 		
-		final Combo combo = new Combo(body, SWT.NONE | SWT.READ_ONLY);
-		combo.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		WidgetUtil.setComboItems(combo, Arrays.asList(AdvisorUiConstants.MODELING_ASPECT_LABELS_LIST), null, true);
-		combo.addSelectionListener(new SelectionAdapter() {
+		actionGroupCombo = new Combo(body, SWT.NONE | SWT.READ_ONLY);
+		gd = new GridData(GridData.FILL_HORIZONTAL);
+		gd.verticalAlignment = GridData.CENTER;
+		actionGroupCombo.setLayoutData(gd);
+		
+		WidgetUtil.setComboItems(actionGroupCombo, Arrays.asList(AdvisorUiConstants.MODELING_ASPECT_LABELS_LIST), null, true);
+		actionGroupCombo.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected( SelectionEvent ev ) {
-            	int selectionIndex = combo.getSelectionIndex();
-            	String aspectId = null;
-            	if( selectionIndex >=0 ) {
-            		aspectId = combo.getItem(selectionIndex);
-            		aspectSection.aspectChanged(aspectId);
-            	}
+            	selectComboItem(actionGroupCombo.getSelectionIndex());
             }
         });
 
         aspectSection = new AspectsSection(toolkit, parentForm.getBody());
+        
+        actionGroupCombo.select(getInitialComboSelectionIndex());
+        selectComboItem(getInitialComboSelectionIndex());
     }
 
     @Override
@@ -103,5 +111,24 @@ public class TasksPanel extends ManagedForm implements AdvisorUiConstants {
         }
 
         return this.toolkit;
+    }
+    
+    private void selectComboItem(int selectionIndex) {
+    	if( selectionIndex >=0 ) {
+    		String aspectId = actionGroupCombo.getItem(selectionIndex);
+    		aspectSection.aspectChanged(aspectId);
+    	}
+    }
+    
+    private int getInitialComboSelectionIndex() {
+    	int index = 0;
+    	for( String item : actionGroupCombo.getItems()) {
+    		if( AdvisorUiConstants.MODELING_ASPECT_LABELS.MODEL_PROJECT_MANAGEMENT.equalsIgnoreCase(item)) {
+    			return index; 
+    		}
+    		index++;
+    	}
+    	
+    	return -1;
     }
 }

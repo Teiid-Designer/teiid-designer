@@ -88,8 +88,12 @@ public interface AdvisorUiConstants {
 		String CREATE_CONNECTION_LDAP = "org.teiid.designer.connection.new.ldap"; //$NON-NLS-1$
 		String CREATE_CONNECTION_MODESHAPE = "org.teiid.designer.connection.new.modeshape"; //$NON-NLS-1$
 		String CREATE_CONNECTION_WEB_SERVICE = "org.teiid.designer.connection.new.ws"; //$NON-NLS-1$
+		String CREATE_CONNECTION_WEB_SERVICE_ODA = "org.teiid.designer.connection.new.odaws"; //$NON-NLS-1$
 		
-		String OPEN_DATA_SOURCE_EXPLORER_PERSPECTIVE = "org.eclipse.datatools.openperspective"; //$NON-NLS-1$
+		String CREATE_WEB_SRVICES_DATA_FILE= "org.teiid.designer.connection.new.wsdatafile"; //$NON-NLS-1$
+		
+		String GENERATE_WS_MODELS_FROM_WSDL = "org.teiid.designer.generatewsmodelsfromwsdl";  //$NON-NLS-1$
+		String OPEN_DATA_SOURCE_EXPLORER_VIEW = "org.eclipse.datatools.openexplorerview"; //$NON-NLS-1$
 		
 		String NEW_TEIID_MODEL_PROJECT = "org.teiid.designer.newProjectCommand"; //$NON-NLS-1$
 		
@@ -123,8 +127,12 @@ public interface AdvisorUiConstants {
 		String CREATE_CONNECTION_LDAP = Messages.CreateLDAPConnection;
 		String CREATE_CONNECTION_MODESHAPE = Messages.CreateModeshapeConnection;
 		String CREATE_CONNECTION_WEB_SERVICE = Messages.CreateWebServicesConnection;
+		String CREATE_CONNECTION_WEB_SERVICE_ODA = Messages.CreateOdaWebServicesConnection;
+		String CREATE_WEB_SRVICES_DATA_FILE= Messages.CreateWebServicesDataFile;
 		
-		String OPEN_DATA_SOURCE_EXPLORER_PERSPECTIVE = Messages.OpenDatatoolsDataSourceExplorer;
+		String GENERATE_WS_MODELS_FROM_WSDL= Messages.GenerateWSModelsFromWsdl;
+		
+		String OPEN_DATA_SOURCE_EXPLORER_VIEW = Messages.OpenDatatoolsDataSourceExplorer;
 		
 		String NEW_TEIID_MODEL_PROJECT = Messages.CreateTeiidModelProject;
 		String CREATE_VDB = Messages.CreateVdb;
@@ -157,6 +165,10 @@ public interface AdvisorUiConstants {
 		String CREATE_CONNECTION_LDAP = Messages.CreateLDAPConnection_Short;
 		String CREATE_CONNECTION_MODESHAPE = Messages.CreateModeshapeConnection_Short;
 		String CREATE_CONNECTION_WEB_SERVICE = Messages.CreateWebServicesConnection_Short;
+		String CREATE_CONNECTION_WEB_SERVICE_ODA= Messages.CreateOdaWebServicesConnection_Short;
+		String CREATE_WEB_SRVICES_DATA_FILE= Messages.CreateWebServicesDataFile_Short;
+		
+		String GENERATE_WS_MODELS_FROM_WSDL= Messages.GenerateWSModelsFromWsdl_Short;
 		
 		String OPEN_DATA_SOURCE_EXPLORER_PERSPECTIVE = Messages.OpenDatatoolsDataSourceExplorer;
 		
@@ -217,11 +229,17 @@ public interface AdvisorUiConstants {
 	    String NEW_MODEL_ACTION = CTOOL16 + "new-model-wiz.gif"; //$NON-NLS-1$
 	    String NEW_PROJECT_ACTION = CTOOL16 + "new-project-wiz.gif";  //$NON-NLS-1$
 	    String EXECUTE_VDB_ACTION = CTOOL16 + "execute-vdb.gif"; //$NON-NLS-1$
+	    
+	    String DATA_SOURCE_EXPLORER_VIEW = CTOOL16 + "data-source-explorer-view.gif";  //$NON-NLS-1$
+	    String NEW_CONNECTION_PROFILE = CTOOL16 + "new-connection-profile.gif";  //$NON-NLS-1$
+	    String IMPORT = CTOOL16 + "import.gif";  //$NON-NLS-1$
+	    String EXPORT = CTOOL16 + "export.gif";  //$NON-NLS-1$
 	}
 	
 	interface CONNECTION_PROFILE_IDS {
 		String CATEGORY_JDBC = "org.eclipse.datatools.connectivity.db.category"; //$NON-NLS-1$
 		String CATEGORY_ODA_FLAT_FILE_ID = "org.eclipse.datatools.connectivity.oda.flatfile"; //$NON-NLS-1$
+		String CATEGORY_ODA_WS_ID = "org.eclipse.datatools.enablement.oda.ws"; //$NON-NLS-1$
 		String CATEGORY_MODESHAPE = "org.teiid.designer.datatools.profiles.modeshape.ModeShapeConnectionProfile"; //$NON-NLS-1$
 		String CATEGORY_XML_FILE_LOCAL = "org.teiid.designer.datatools.profiles.xml.localfile"; //$NON-NLS-1$
 		String CATEGORY_XML_FILE_URL = "org.teiid.designer.datatools.profiles.xml.fileurl"; //$NON-NLS-1$
@@ -229,6 +247,5 @@ public interface AdvisorUiConstants {
 		String CATEGORY_LDAP_CONNECTION = "org.teiid.designer.datatools.profiles.ldap.LDAPConnectionProfile"; //$NON-NLS-1$
 		String CATEGORY_SALESFORCE_CONNECTION = "org.teiid.designer.datatools.salesforce.connectionProfile"; //$NON-NLS-1$
 	}
-
 
 }
