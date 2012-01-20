@@ -9,10 +9,12 @@ package org.teiid.designer.extension.ui.wizards;
 
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Collection;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -37,6 +39,7 @@ import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.ui.PluginConstants;
+import com.metamatrix.modeler.ui.UiConstants;
 import com.metamatrix.modeler.ui.UiPlugin;
 import com.metamatrix.ui.internal.util.WidgetUtil;
 import com.metamatrix.ui.internal.wizard.AbstractWizard;
@@ -47,24 +50,33 @@ import com.metamatrix.ui.internal.wizard.AbstractWizard;
 public final class NewMedWizard extends AbstractWizard
  implements INewWizard, CoreStringUtil.Constants {
 
-    InputStream medInputStream; // supplied InputStream
     IFile createdMedFile; // the file that was saved
 
     private NewMedMainPage newMedMainPage;
     private NewMedDetailsPage newMedDetailsPage;
+    private ModelExtensionDefinition initialMed;
 
     /**
      * @since 7.6
      */
     public NewMedWizard() {
-        this(Messages.newMedWizardTitle);
+        this(Messages.newMedWizardTitle, null);
     }
 
     /**
      * @since 7.6
      */
-    public NewMedWizard( String wizardTitle ) {
+    public NewMedWizard( ModelExtensionDefinition med ) {
+        this(Messages.newMedWizardTitle, med);
+    }
+
+    /**
+     * @since 7.6
+     */
+    public NewMedWizard( String wizardTitle,
+                         ModelExtensionDefinition med ) {
         super(UiPlugin.getDefault(), wizardTitle, null);
+        this.initialMed = med;
     }
 
     /**
@@ -92,9 +104,11 @@ public final class NewMedWizard extends AbstractWizard
                     // Get File
                     createdMedFile = folderLoc.getFile(new Path(medName));
 
-                    // if medInputStream is null, Create a default Med and set options from second page.
-                    if (medInputStream == null) {
-                        ModelExtensionDefinitionWriter medWriter = new ModelExtensionDefinitionWriter();
+                    ModelExtensionDefinitionWriter medWriter = new ModelExtensionDefinitionWriter();
+                    InputStream medInputStream = null;
+
+                    // if no Med was supplied, Create a default Med and set options from second page.
+                    if (NewMedWizard.this.initialMed == null) {
                         ModelExtensionDefinition med = createDefaultMed();
 
                         String namespacePrefix = NewMedWizard.this.newMedDetailsPage.getNamespacePrefix();
@@ -102,18 +116,29 @@ public final class NewMedWizard extends AbstractWizard
                         String metamodelUri = NewMedWizard.this.newMedDetailsPage.getMetamodelUri();
                         int versionInt = NewMedWizard.this.newMedDetailsPage.getVersionInt();
                         String description = NewMedWizard.this.newMedDetailsPage.getDescription();
+                        Collection<String> supportedModelTypes = NewMedWizard.this.newMedDetailsPage.getSupportedModelTypes();
 
                         med.setNamespacePrefix(namespacePrefix);
                         med.setNamespaceUri(namespaceUri);
                         med.setMetamodelUri(metamodelUri);
                         med.setVersion(versionInt);
                         med.setDescription(description);
-
+                        for (String modelType : supportedModelTypes) {
+                            med.addModelType(modelType);
+                        }
                         medInputStream = medWriter.writeAsStream(med);
+                        // If MED was supplied, use it - setting the modifiable values
+                    } else {
+                        String namespacePrefix = NewMedWizard.this.newMedDetailsPage.getNamespacePrefix();
+                        String namespaceUri = NewMedWizard.this.newMedDetailsPage.getNamespaceUri();
+                        String description = NewMedWizard.this.newMedDetailsPage.getDescription();
+                        NewMedWizard.this.initialMed.setNamespacePrefix(namespacePrefix);
+                        NewMedWizard.this.initialMed.setNamespaceUri(namespaceUri);
+                        NewMedWizard.this.initialMed.setDescription(description);
+                        medInputStream = medWriter.writeAsStream(NewMedWizard.this.initialMed);
                     }
 
                     createdMedFile.create(medInputStream, false, monitor);
-
                     folderLoc.refreshLocal(IResource.DEPTH_INFINITE, monitor);
 
                     // open editor - if checkbox is selected
@@ -160,8 +185,12 @@ public final class NewMedWizard extends AbstractWizard
                       final IStructuredSelection selection ) {
 
         IContainer folderLocation = null;
+        // Get folder from selection
         if (selection != null && !selection.isEmpty()) {
             folderLocation = ModelUtil.getContainer(selection.getFirstElement());
+            // If no container was selected, set to the first open project found. user can re-select if desired.
+        } else {
+            folderLocation = getWorkspaceOpenProject();
         }
 
         if (folderLocation != null && !folderInModelProject(folderLocation)) {
@@ -188,11 +217,28 @@ public final class NewMedWizard extends AbstractWizard
     }
 
     protected NewMedDetailsPage createNewMedDetailsPage() {
-        return new NewMedDetailsPage();
+        return new NewMedDetailsPage(this.initialMed);
     }
 
-    public void setMedInput( InputStream medInputStream ) {
-        this.medInputStream = medInputStream;
+    /*
+     * Get first open / non-hidden project from the workspace
+     */
+    private IProject getWorkspaceOpenProject() {
+        IProject openProj = null;
+
+        for (IProject proj : ResourcesPlugin.getWorkspace().getRoot().getProjects()) {
+            try {
+                boolean result = proj.isOpen() && !proj.hasNature(ModelerCore.HIDDEN_PROJECT_NATURE_ID)
+                                 && proj.hasNature(ModelerCore.NATURE_ID);
+                if (result) {
+                    openProj = proj;
+                    break;
+                }
+            } catch (CoreException e) {
+                UiConstants.Util.log(e);
+            }
+        }
+        return openProj;
     }
 
     public IFile getCreatedMedFile() {

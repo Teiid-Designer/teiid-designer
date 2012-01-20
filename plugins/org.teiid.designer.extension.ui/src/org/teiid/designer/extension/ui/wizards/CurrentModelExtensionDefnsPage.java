@@ -9,7 +9,6 @@ package org.teiid.designer.extension.ui.wizards;
 
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.CHECK_MARK;
 import java.io.File;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -55,7 +54,6 @@ import org.teiid.designer.extension.ModelExtensionAssistantAggregator;
 import org.teiid.designer.extension.definition.ModelExtensionAssistant;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.definition.ModelExtensionDefinitionHeader;
-import org.teiid.designer.extension.definition.ModelExtensionDefinitionWriter;
 import org.teiid.designer.extension.definition.ModelObjectExtensionAssistant;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 import org.teiid.designer.extension.ui.Activator;
@@ -774,11 +772,6 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
      * needs to be saved.
      */
     void handleSaveMed() {
-        NewMedWizard wizard = new NewMedWizard(Messages.copyMedWizardTitle);
-        wizard.init(UiPlugin.getDefault().getCurrentWorkbenchWindow().getWorkbench(), null);
-        // Set the selectedMed contents on the wizard
-        ModelExtensionDefinitionWriter writer = new ModelExtensionDefinitionWriter();
-
         // Get the selected Med Header
         ModelExtensionDefinitionHeader medHeader = this.editManager.getCurrentHeaders().get(this.selectedMedIndex);
 
@@ -794,8 +787,8 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
             ModelerCore.Util.log(IStatus.ERROR, e, e.getMessage());
         }
 
-        InputStream iStream = writer.writeAsStream(unregisteredMed);
-        wizard.setMedInput(iStream);
+        NewMedWizard wizard = new NewMedWizard(Messages.copyMedWizardTitle, unregisteredMed);
+        wizard.init(UiPlugin.getDefault().getCurrentWorkbenchWindow().getWorkbench(), null);
 
         // Open wizard dialog
         WizardDialog wizardDialog = new WizardDialog(Display.getCurrent().getActiveShell(), wizard);

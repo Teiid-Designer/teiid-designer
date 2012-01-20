@@ -13,13 +13,10 @@ import static org.teiid.designer.extension.ui.UiConstants.UTIL;
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.CHECK_MARK;
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.REGISTERY_MED_UPDATE_ACTION;
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.UNREGISTER_MED;
-
-import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -70,7 +67,6 @@ import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.eclipse.ui.part.ViewPart;
 import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
-import org.teiid.designer.extension.definition.ModelExtensionDefinitionWriter;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 import org.teiid.designer.extension.registry.RegistryEvent;
 import org.teiid.designer.extension.registry.RegistryListener;
@@ -79,7 +75,6 @@ import org.teiid.designer.extension.ui.Messages;
 import org.teiid.designer.extension.ui.actions.RegistryDeploymentValidator;
 import org.teiid.designer.extension.ui.editors.ModelExtensionDefinitionEditor;
 import org.teiid.designer.extension.ui.wizards.NewMedWizard;
-
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.internal.ui.explorer.ModelExplorerLabelProvider;
 import com.metamatrix.modeler.ui.UiPlugin;
@@ -404,12 +399,8 @@ public final class ModelExtensionRegistryView extends ViewPart {
         ModelExtensionDefinition selectedMed = getSelectedMed();
         assert (selectedMed != null) : "Clone MED action should not be enabled if there is no selection"; //$NON-NLS-1$
 
-        NewMedWizard wizard = new NewMedWizard(Messages.copyMedWizardTitle);
+        NewMedWizard wizard = new NewMedWizard(Messages.copyMedWizardTitle, selectedMed);
         wizard.init(UiPlugin.getDefault().getCurrentWorkbenchWindow().getWorkbench(), null);
-        // Set the selectedMed contents on the wizard
-        ModelExtensionDefinitionWriter writer = new ModelExtensionDefinitionWriter();
-        InputStream iStream = writer.writeAsStream(selectedMed);
-        wizard.setMedInput(iStream);
 
         // Open wizard dialog
         WizardDialog wizardDialog = new WizardDialog(Display.getCurrent().getActiveShell(), wizard);
