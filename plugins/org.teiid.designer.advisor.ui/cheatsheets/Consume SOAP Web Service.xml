@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cheatsheet
+      title="Title">
+   <intro>
+      <description>
+         <b>Consume a SOAP Web Service by creating source and view models based on target WSDL file definition.
+         </b>
+      </description>
+   </intro>
+   <item
+         title="Create Web Service Data File (WSDF)">
+      <description>
+         <b> Define WSDL URL and SOAP endpoint as well as names for target WAR file and generated metadata models.</b>
+      </description>
+            <command
+            required="false"
+            serialization="org.teiid.designer.advisor.ui.commands.defineWebServiceDataFileCommandHandler"/>
+   </item>
+   <item
+         title="Create SOAP Data Source Connection">
+      <description>
+         <b> Define a SOAP data source connection from the WSDF. This following action creates an ODA Web Service connection profile 
+         using the WSDL URL and endpoint info.</b>
+      </description>
+            <command
+            required="false"
+            serialization="org.teiid.designer.advisor.ui.commands.createWebServicesSOAPConnectionCommandHandler"/>
+   </item>
+   <item
+         title="Generate Models">
+      <description>
+         <b> Define WSDL URL and SOAP endpoint as well as names for target WAR file and generated metadata models.</b>
+      </description>
+            <command
+            required="false"
+            serialization="org.teiid.designer.advisor.ui.commands.importWsdlToRelationalCommandHandler"/>
+   </item>
+   <item
+         title="Create a VDB">
+      <description>
+         <b> Create a VDB containing your generated models.</b>
+      </description>
+            <command
+            required="false"
+            serialization="org.teiid.designer.advisor.ui.commands.newVdbCommandHandler"/>
+   </item>   
+   <item
+         title="Test your VDB">
+      <description>
+         <b> Execute your VDB by deploying to a running Teiid server, creating a JDBC connection to that VDB, opening
+         a SQL Scrapbook Editor and executing queries against your VDB.</b>
+      </description>
+            <command
+            required="false"
+            serialization="org.teiid.designer.advisor.ui.commands.executeVdbCommandHandler"/>
+   </item>
+   <item
+         title="Generate WAR">
+      <description>
+         <b> Generate your Web Service WAR file.</b>
+      </description>
+            <command
+            required="false"
+            serialization="org.teiid.designer.advisor.ui.commands.generateWSWarCommandHandler"/>
+   </item>
+</cheatsheet>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cheatsheet
+      title="Create Relational Model From JDBC">
+   <intro>
+      <description>
+         <b>Import JDBC Metadata to create relational models of your data.</b>
+      </description>
+   </intro>
+   <item
+         title="Select Import &gt; Metadata Modeling">
+      <description>
+         <b>Select: File &gt; Import &gt; Metadata Modeling option.</b>
+      </description>
+      <command
+            required="false"
+            serialization="org.eclipse.ui.file.import"/>
+   </item>
+   <item
+         title="Select New &gt; Metadata Model">
+      <description>
+         <b>Select: File &gt; New &gt; Metadata Model option.</b>
+      </description>
+      <command
+            required="false"
+            serialization="org.teiid.designer.advisor.ui.commands.importJdbcCommandHandler"/>
+   </item>
+   <item
+         title="Create Relational Model">
+      <description>
+         <b>Create Relational Model</b>
+      </description>
+      <command
+            required="false"
+            serialization="org.teiid.designer.advisor.ui.commands.newRelationalModelCommandHandler"/>
+   </item>
+      <item
+         title="Create Relational View Model">
+      <description>
+         <b>Create Relational View Model</b>
+      </description>
+      <command
+            required="false"
+            serialization="org.teiid.designer.advisor.ui.commands.newRelationalViewModelCommandHandler"/>
+      </item>
+      <item
+         title="Create XML View Model">
+      <description>
+         <b>Create XML View Model</b>
+      </description>
+      <command
+            required="false"
+            serialization="org.teiid.designer.advisor.ui.commands.newXmlViewModelCommandHandler"/>
+      </item>
+</cheatsheet>
