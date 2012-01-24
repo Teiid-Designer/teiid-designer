@@ -8,15 +8,181 @@
   See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
 -->
 <plugin>
-
+   <extension-point id="advisorStatusProvider" name="%advisorStatusProvider.extension-point.name" schema="schema/advisorStatusProvider.exsd"/>
+   <extension-point id="advisorSupplier" name="%advisorSupplier.extension-point.name" schema="schema/advisorSupplier.exsd"/>
    <extension
          point="org.eclipse.ui.views">
       <view
             category="com.metamatrix.modeler.ui"
-            class="org.teiid.designer.advisor.ui.views.TaskManagerView"
+            class="org.teiid.designer.advisor.ui.views.DSPAdvisorView"
+            icon="icons/full/cview16/DSPAdvisor.png"
+            id="org.teiid.designer.advisor.ui.views.DSPAdvisorView"
+            name="%dspadvisorview.name">
+      </view>
+   </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            category="com.metamatrix.modeler.ui"
+            class="org.teiid.designer.advisor.ui.views.ActionsManagerView"
             icon="icons/full/cview16/AdvisorIcon.png"
             id="org.teiid.designer.advisor.ui.views.TaskManagerViewID"
             name="Teid Actions">
       </view>
+   </extension>
+   
+   <extension
+         point="org.eclipse.ui.cheatsheets.cheatSheetContent">
+      <category
+            id="org.teiid.designer.ui.category"
+            name="Designer">
+      </category>
+      <cheatsheet
+            category="org.teiid.designer.ui.category"
+            composite="false"
+            contentFile="$nl$/cheatsheets/New Model From JDBC Import.xml"
+            id="org.teiid.designer.ui.cheatsheet_advisor_01"
+            name="Sample Actions Cheatsheet">
+         <description>
+            Create Relational Model from JDBC Import
+         </description>
+      </cheatsheet>
+      <cheatsheet
+            category="org.teiid.designer.ui.category"
+            composite="false"
+            contentFile="$nl$/cheatsheets/Consume SOAP Web Service.xml"
+            id="org.teiid.designer.ui.cheatsheet_advisor_02"
+            name="Consume a SOAP Web Service">
+         <description>
+            Consume a SOAP Web Service by creating source and view models based on target WSDL file definition
+         </description>
+      </cheatsheet>
+   </extension>
+<!-- CHEAT SHEET ACTION COMMANDS -->
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            categoryId="org.eclipse.ui.category.file"
+            defaultHandler="org.teiid.designer.advisor.ui.commands.NewXmlViewModelWizardHandler"
+            description="%command.description"
+            id="org.teiid.designer.advisor.ui.commands.NewXmlViewModelCommandHandler"
+            name="%command.name">
+      </command>
+      <command
+            categoryId="org.eclipse.ui.category.file"
+            defaultHandler="org.teiid.designer.advisor.ui.commands.NewRelationalViewModelWizardHandler"
+            description="%command.description.0"
+            id="org.teiid.designer.advisor.ui.commands.NewRelationalViewModelCommandHandler"
+            name="%command.name.0">
+      </command>
+      <command
+            categoryId="org.eclipse.ui.category.file"
+            defaultHandler="org.teiid.designer.advisor.ui.commands.NewRelationalModelWizardHandler"
+            description="%command.description.1"
+            id="org.teiid.designer.advisor.ui.commands.newRelationalModelCommandHandler"
+            name="%command.name.1">
+      </command>
+      <command
+            categoryId="org.eclipse.ui.category.file"
+            defaultHandler="org.teiid.designer.advisor.ui.commands.ImportJdbcCommandHandler"
+            description="%command.description.2"
+            id="org.teiid.designer.advisor.ui.commands.importJdbcCommandHandler"
+            name="%command.name.2">
+      </command>
+      <command
+            categoryId="org.eclipse.ui.category.file"
+            defaultHandler="org.teiid.designer.advisor.ui.commands.ImportDdlCommandHandler"
+            description="%command.description.3"
+            id="org.teiid.designer.advisor.ui.commands.importDdlCommandHandler"
+            name="%command.name.3">
+      </command>
+      <command
+            categoryId="org.eclipse.ui.category.file"
+            defaultHandler="org.teiid.designer.advisor.ui.commands.ImportFlatFileCommandHandler"
+            description="%command.description.4"
+            id="org.teiid.designer.advisor.ui.commands.importFlatFileCommandHandler"
+            name="%command.name.4">
+      </command>
+      <command
+            categoryId="org.eclipse.ui.category.file"
+            defaultHandler="org.teiid.designer.advisor.ui.commands.ImportSalesforceCommandHandler"
+            description="%command.description.5"
+            id="org.teiid.designer.advisor.ui.commands.importSalesforceCommandHandler"
+            name="%command.name.5">
+      </command>
+      <command
+            categoryId="org.eclipse.ui.category.file"
+            defaultHandler="org.teiid.designer.advisor.ui.commands.ImportWsdlToRelationalCommandHandler"
+            description="%command.description.6"
+            id="org.teiid.designer.advisor.ui.commands.importWsdlToRelationalCommandHandler"
+            name="%command.name.6">
+      </command>
+      <command
+            categoryId="org.eclipse.ui.category.file"
+            defaultHandler="org.teiid.designer.advisor.ui.commands.ImportWsdlToWebServiceCommandHandler"
+            description="%command.description.7"
+            id="org.teiid.designer.advisor.ui.commands.importWsdlToWebServiceCommandHandler"
+            name="%command.name.7">
+      </command>
+      <command
+            categoryId="org.eclipse.ui.category.file"
+            defaultHandler="org.teiid.designer.advisor.ui.commands.ImportXmlSchemaCommandHandler"
+            description="%command.description.8"
+            id="org.teiid.designer.advisor.ui.commands.importXmlSchemaCommandHandler"
+            name="%command.name.8">
+      </command>
+      <command
+            categoryId="org.eclipse.ui.category.file"
+            defaultHandler="org.teiid.designer.advisor.ui.commands.CreateWebServicesSOAPConnectionCommandHandler"
+            description="%command.description.9"
+            id="org.teiid.designer.advisor.ui.commands.createWebServicesSOAPConnectionCommandHandler"
+            name="%command.name.9">
+      </command>
+      <command
+            categoryId="org.eclipse.ui.category.file"
+            defaultHandler="org.teiid.designer.advisor.ui.commands.DefineWebServiceDataFileCommandHandler"
+            description="%command.description.10"
+            id="org.teiid.designer.advisor.ui.commands.defineWebServiceDataFileCommandHandler"
+            name="%command.name.10">
+      </command>
+      <command
+            categoryId="org.eclipse.ui.category.file"
+            defaultHandler="org.teiid.designer.advisor.ui.commands.ExecuteVdbCommandHandler"
+            description="%command.description.11"
+            id="org.teiid.designer.advisor.ui.commands.executeVdbCommandHandler"
+            name="%command.name.11">
+      </command>
+      <command
+            categoryId="org.eclipse.ui.category.file"
+            defaultHandler="org.teiid.designer.advisor.ui.commands.NewVdbCommandHandler"
+            description="%command.description.12"
+            id="org.teiid.designer.advisor.ui.commands.newVdbCommandHandler"
+            name="%command.name.12">
+      </command>
+      <command
+            categoryId="org.eclipse.ui.category.file"
+            defaultHandler="org.teiid.designer.advisor.ui.commands.GenerateWSWarCommandHandler"
+            description="%command.description.13"
+            id="org.teiid.designer.advisor.ui.commands.generateWSWarCommandHandler"
+            name="%command.name.13">
+      </command>
+   </extension>
+   <extension
+        id="RelationalModelingSupplier"
+        name="%relationalModelingSupplier.extension.name"
+        point="org.teiid.designer.advisor.ui.advisorStatusProvider">
+      <advisorStatusProvider
+         name="org.teiid.designer.dsp.ui.views.advisor.relational.RelationalModelingSupplier"
+         label="%relationalModelingSupplier.extension.label">
+      </advisorStatusProvider>
+   </extension>
+   <extension
+   		 id="XmlModelingSupplier"
+   		 name="%xmlModelingSupplier.extension.name"
+         point="org.teiid.designer.advisor.ui.advisorStatusProvider">
+      <advisorStatusProvider
+            label="%xmlModelingSupplier.extension.label"
+            name="org.teiid.designer.dsp.ui.views.advisor.relational.XmlModelingSupplier">
+      </advisorStatusProvider>
    </extension>
 </plugin>
