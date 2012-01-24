@@ -8,7 +8,7 @@
 package org.teiid.designer.runtime.ui;
 
 import static com.metamatrix.modeler.dqp.ui.DqpUiConstants.UTIL;
-import static org.teiid.designer.runtime.extension.rest.RestModelExtensionConstants.NAMESPACE_PREFIX;
+import static org.teiid.designer.runtime.extension.rest.RestModelExtensionConstants.NAMESPACE_PROVIDER;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -224,14 +224,14 @@ public class GenerateRestWarAction extends Action implements ISelectionListener,
             // try new way first
             ModelObjectExtensionAssistant assistant = (ModelObjectExtensionAssistant)ExtensionPlugin.getInstance()
                                                                                                     .getRegistry()
-                                                                                                    .getModelExtensionAssistant(NAMESPACE_PREFIX);
+                                                                                                    .getModelExtensionAssistant(NAMESPACE_PROVIDER.getNamespacePrefix());
             restMethod = assistant.getPropertyValue(procedure, RestModelExtensionConstants.PropertyIds.REST_METHOD);
 
             if (CoreStringUtil.isEmpty(restMethod.trim())) {
                 // try old way
                 restMethod = (String)ANNOTATION_HELPER.getPropertyValueAnyCase(procedure,
                                                                                ModelObjectAnnotationHelper.EXTENDED_PROPERTY_NAMESPACE
-                                                                               + "REST-METHOD"); //$NON-NLS-1$
+                                                                                       + "REST-METHOD"); //$NON-NLS-1$
             }
         } catch (Exception e) {
             UTIL.log(e);
@@ -247,13 +247,13 @@ public class GenerateRestWarAction extends Action implements ISelectionListener,
             // try new way first
             ModelObjectExtensionAssistant assistant = (ModelObjectExtensionAssistant)ExtensionPlugin.getInstance()
                                                                                                     .getRegistry()
-                                                                                                    .getModelExtensionAssistant(NAMESPACE_PREFIX);
+                                                                                                    .getModelExtensionAssistant(NAMESPACE_PROVIDER.getNamespacePrefix());
             uri = assistant.getPropertyValue(procedure, RestModelExtensionConstants.PropertyIds.URI);
 
             if (CoreStringUtil.isEmpty(uri)) {
                 uri = (String)ANNOTATION_HELPER.getPropertyValueAnyCase(procedure,
                                                                         ModelObjectAnnotationHelper.EXTENDED_PROPERTY_NAMESPACE
-                                                                        + "URI"); //$NON-NLS-1$
+                                                                                + "URI"); //$NON-NLS-1$
             }
         } catch (Exception e) {
             UTIL.log(e);

@@ -65,7 +65,7 @@ import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition.PropertyName;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition.Type;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinitionImpl;
-import org.teiid.designer.extension.properties.NamespacePrefixProvider;
+import org.teiid.designer.extension.properties.NamespaceProvider;
 import org.teiid.designer.extension.properties.Translation;
 import org.teiid.designer.extension.ui.Activator;
 import org.teiid.designer.extension.ui.Messages;
@@ -86,7 +86,7 @@ final class EditPropertyDialog extends FormDialog {
     private static final String MC_SUFFIX = "Impl"; //$NON-NLS-1$
 
     private final String metaclassName;
-    private final NamespacePrefixProvider namespacePrefixProvider;
+    private final NamespaceProvider namespaceProvider;
 
     private Button btnEditDescription;
     private Button btnEditDisplayName;
@@ -130,16 +130,16 @@ final class EditPropertyDialog extends FormDialog {
     private final ErrorMessage typeError;
 
     public EditPropertyDialog( Shell shell,
-                               NamespacePrefixProvider namespacePrefixProvider,
+                               NamespaceProvider namespaceProvider,
                                String metaclassName,
                                Collection<String> existingPropIds ) {
         super(shell);
 
         CoreArgCheck.isNotEmpty(metaclassName, "metaclassName is empty"); //$NON-NLS-1$
-        CoreArgCheck.isNotNull(namespacePrefixProvider, "namespacePrefixProvider is null"); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(namespaceProvider, "namespaceProvider is null"); //$NON-NLS-1$
         this.metaclassName = metaclassName;
-        this.namespacePrefixProvider = namespacePrefixProvider;
-        this.propDefn = new ModelExtensionPropertyDefinitionImpl(this.namespacePrefixProvider);
+        this.namespaceProvider = namespaceProvider;
+        this.propDefn = new ModelExtensionPropertyDefinitionImpl(this.namespaceProvider);
 
         if (existingPropIds == null) {
             this.existingPropIds = new ArrayList<String>();
@@ -161,11 +161,11 @@ final class EditPropertyDialog extends FormDialog {
     }
 
     public EditPropertyDialog( Shell shell,
-                               NamespacePrefixProvider namespacePrefixProvider,
+                               NamespaceProvider namespaceProvider,
                                String metaclassName,
                                Collection<String> existingPropIds,
                                ModelExtensionPropertyDefinition propDefnBeingEdited ) {
-        this(shell, namespacePrefixProvider, metaclassName, existingPropIds);
+        this(shell, namespaceProvider, metaclassName, existingPropIds);
         this.propDefnBeingEdited = propDefnBeingEdited;
 
         if (this.propDefnBeingEdited != null) {
@@ -698,7 +698,7 @@ final class EditPropertyDialog extends FormDialog {
         NAMESPACE_PREFIX: {
             toolkit.createLabel(finalContainer, Messages.namespacePrefixLabel);
 
-            Label label = toolkit.createLabel(finalContainer, this.namespacePrefixProvider.getNamespacePrefix());
+            Label label = toolkit.createLabel(finalContainer, this.namespaceProvider.getNamespacePrefix());
             label.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
         }
 

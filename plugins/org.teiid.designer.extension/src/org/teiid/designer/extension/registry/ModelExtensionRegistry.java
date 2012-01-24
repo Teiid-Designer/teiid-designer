@@ -8,6 +8,7 @@
 package org.teiid.designer.extension.registry;
 
 import static org.teiid.designer.extension.ExtensionPlugin.Util;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -19,6 +20,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.osgi.util.NLS;
@@ -28,8 +30,8 @@ import org.teiid.designer.extension.definition.ModelExtensionAssistant;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.definition.ModelExtensionDefinitionParser;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
+
 import com.metamatrix.core.util.CoreArgCheck;
-import com.metamatrix.core.util.CoreStringUtil;
 
 /**
  * 
@@ -348,37 +350,16 @@ public final class ModelExtensionRegistry {
                                                                    String propId ) {
         CoreArgCheck.isNotEmpty(propId, "propId is empty"); //$NON-NLS-1$
 
-        // get the namespace prefix from the id
-        String namespacePrefix = ModelExtensionPropertyDefinition.Utils.getNamespacePrefix(propId);
+        for (ModelExtensionDefinition definition : getAllDefinitions()) {
+            ModelExtensionPropertyDefinition propDefn = definition.getPropertyDefinition(metaclassName, propId);
 
-        if (!CoreStringUtil.isEmpty(namespacePrefix)) {
-            ModelExtensionDefinition definition = getDefinition(namespacePrefix);
-
-            if (definition != null) {
-                return definition.getPropertyDefinition(metaclassName, propId);
+            if (propDefn != null) {
+                return propDefn;
             }
         }
 
         // not found
         return null;
-    }
-
-    /**
-     * @param namespacePrefix the namespace prefix containing the extension property definitions being requested (cannot be
-     *            <code>null</code> or empty )
-     * @param metaclassName the metaclass name whose extension property definitions are being requested (cannot be <code>null</code>
-     *            or empty )
-     * @return the property definitions (never <code>null</code>)
-     */
-    public Collection<ModelExtensionPropertyDefinition> getPropertyDefinitions( String namespacePrefix,
-                                                                                String metaclassName ) {
-        ModelExtensionDefinition definition = getDefinition(namespacePrefix);
-
-        if (definition != null) {
-            return definition.getPropertyDefinitions(metaclassName);
-        }
-
-        return Collections.emptyList();
     }
 
     /**

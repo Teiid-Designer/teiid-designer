@@ -30,7 +30,7 @@ public class ModelExtensionPropertyDefinitionImplTest {
 
     @Before
     public void beforeEach() {
-        this.propDefn = new ModelExtensionPropertyDefinitionImpl(Factory.createDefaultNamespacePrefixProvider());
+        this.propDefn = new ModelExtensionPropertyDefinitionImpl(Factory.createDefaultNamespaceProvider());
     }
 
     @Test
@@ -48,11 +48,6 @@ public class ModelExtensionPropertyDefinitionImplTest {
         assertTrue(this.propDefn != this.propDefn.clone());
     }
 
-    @Test
-    public void namespacePrefixShouldBeProvidedAfterConstruction() {
-        assertEquals(Constants.DEFAULT_NAMESPACE_PREFIX, this.propDefn.getNamespacePrefix());
-    }
-
     @Test(expected = IllegalArgumentException.class)
     public void shouldNotAllowNullNamespaceProvider() {
         new ModelExtensionPropertyDefinitionImpl(null);
@@ -60,7 +55,7 @@ public class ModelExtensionPropertyDefinitionImplTest {
 
     @Test
     public void shouldAllowNullParametersAtConstruction() {
-        new ModelExtensionPropertyDefinitionImpl(Factory.createDefaultNamespacePrefixProvider(),
+        new ModelExtensionPropertyDefinitionImpl(Factory.createDefaultNamespaceProvider(),
                                                  null,
                                                  null,
                                                  null,

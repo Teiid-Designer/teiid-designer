@@ -8,12 +8,18 @@
 package org.teiid.designer.extension.properties;
 
 /**
- * The <code>NamespacePrefixProvider</code> provides a namespace prefix for those classes needing one.  
+ * The <code>NamespaceProvider</code> provides a namespace prefix for those classes needing one.
  */
-public interface NamespacePrefixProvider {
-    
+public interface NamespaceProvider {
+
     /**
      * @return the namespace prefix (can be <code>null</code> or empty)
      */
     String getNamespacePrefix();
+
+    /**
+     * @return the namespace URI (can be <code>null</code> or empty)
+     */
+    String getNamespaceUri();
+
 }

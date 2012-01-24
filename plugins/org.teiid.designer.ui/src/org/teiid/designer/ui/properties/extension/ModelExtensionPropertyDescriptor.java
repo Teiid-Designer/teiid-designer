@@ -10,6 +10,8 @@ package org.teiid.designer.ui.properties.extension;
 import static com.metamatrix.modeler.ui.UiConstants.PLUGIN_ID;
 import static org.teiid.designer.extension.ExtensionPlugin.Util;
 
+import java.util.Collection;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -74,7 +76,9 @@ public class ModelExtensionPropertyDescriptor extends PropertyDescriptor impleme
     public ModelExtensionPropertyDescriptor( EObject eObject,
                                              ModelExtensionPropertyDefinition propDefn ) {
         super(propDefn.getId(), (CoreStringUtil.isEmpty(propDefn.getDisplayName()) ? propDefn.getId()
-                                                                                  : propDefn.getNamespacePrefix() + ':'
+                                                                                  : propDefn.getNamespaceProvider()
+                                                                                            .getNamespacePrefix()
+                                                                                          + ':'
                                                                                           + propDefn.getDisplayName()));
 
         CoreArgCheck.isNotNull(eObject, "eObject is null"); //$NON-NLS-1$
@@ -193,20 +197,26 @@ public class ModelExtensionPropertyDescriptor extends PropertyDescriptor impleme
     }
 
     ModelObjectExtensionAssistant getModelExtensionAssistant( String propId ) {
-        String namespacePrefix = ModelExtensionPropertyDefinition.Utils.getNamespacePrefix(propId);
+        Collection<ModelExtensionAssistant> assistants = ExtensionPlugin.getInstance()
+                                                                        .getRegistry()
+                                                                        .getModelExtensionAssistants(this.eObject.getClass()
+                                                                                                                 .getName());
 
-        if (CoreStringUtil.isEmpty(namespacePrefix)) {
-            log(new Status(IStatus.ERROR, PLUGIN_ID, NLS.bind(Messages.namespacePrefixIsEmpty, propId)));
+        // no assistants found that have properties defined for the model object type
+        if (assistants.isEmpty()) {
+            log(new Status(IStatus.ERROR, PLUGIN_ID, NLS.bind(Messages.modelExtensionAssistantNotFound, propId)));
             return null;
         }
 
-        ModelExtensionAssistant assistant = ExtensionPlugin.getInstance().getRegistry().getModelExtensionAssistant(namespacePrefix);
-
-        if (assistant == null) {
-            log(new Status(IStatus.ERROR, PLUGIN_ID, NLS.bind(Messages.modelExtensionAssistantNotFound, namespacePrefix)));
+        // find the assistant for the property
+        for (ModelExtensionAssistant assistant : assistants) {
+            if (ModelExtensionPropertyDefinition.Utils.isExtensionPropertyId(propId, assistant.getModelExtensionDefinition())) {
+                return ((assistant instanceof ModelObjectExtensionAssistant) ? (ModelObjectExtensionAssistant)assistant : null);
+            }
         }
-
-        return ((assistant instanceof ModelObjectExtensionAssistant) ? (ModelObjectExtensionAssistant)assistant : null);
+    
+        log(new Status(IStatus.ERROR, PLUGIN_ID, NLS.bind(Messages.modelExtensionAssistantNotFound, propId)));
+        return null;
     }
 
     /**

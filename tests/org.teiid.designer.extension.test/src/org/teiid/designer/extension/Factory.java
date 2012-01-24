@@ -21,7 +21,7 @@ import org.teiid.designer.extension.definition.ModelExtensionDefinitionParser;
 import org.teiid.designer.extension.definition.ModelExtensionDefinitionWriter;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinitionImpl;
-import org.teiid.designer.extension.properties.NamespacePrefixProvider;
+import org.teiid.designer.extension.properties.NamespaceProvider;
 import org.teiid.designer.extension.properties.Translation;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 
@@ -40,12 +40,17 @@ public class Factory implements Constants {
         return locales;
     }
 
-    public static NamespacePrefixProvider createDefaultNamespacePrefixProvider() {
-        return new NamespacePrefixProvider() {
+    public static NamespaceProvider createDefaultNamespaceProvider() {
+        return new NamespaceProvider() {
 
             @Override
             public String getNamespacePrefix() {
                 return DEFAULT_NAMESPACE_PREFIX;
+            }
+
+            @Override
+            public String getNamespaceUri() {
+                return DEFAULT_NAMESPACE_URI;
             }
         };
     }
@@ -121,7 +126,7 @@ public class Factory implements Constants {
         return new MedRegistryListener();
     }
 
-    public static List<ModelExtensionPropertyDefinition> getTestPropertyDefns( NamespacePrefixProvider prefixProvider ) {
+    public static List<ModelExtensionPropertyDefinition> getTestPropertyDefns( NamespaceProvider namespaceProvider ) {
         List<ModelExtensionPropertyDefinition> propertyDefns = new ArrayList<ModelExtensionPropertyDefinition>(3);
 
         String name = "testProp1"; //$NON-NLS-1$
@@ -135,7 +140,7 @@ public class Factory implements Constants {
         Set<String> allowedValues = new HashSet<String>();
         Set<Translation> descriptions = new HashSet<Translation>();
         Set<Translation> displayNames = new HashSet<Translation>();
-        ModelExtensionPropertyDefinition propDefn1 = new ModelExtensionPropertyDefinitionImpl(prefixProvider,
+        ModelExtensionPropertyDefinition propDefn1 = new ModelExtensionPropertyDefinitionImpl(namespaceProvider,
                                                                                               name,
                                                                                               type,
                                                                                               required,
@@ -159,7 +164,7 @@ public class Factory implements Constants {
         displayNames.add(new Translation(Locale.CHINESE, "Chinese DisplayName")); //$NON-NLS-1$
         displayNames.add(new Translation(Locale.JAPANESE, "Japanese DisplayName")); //$NON-NLS-1$
 
-        ModelExtensionPropertyDefinition propDefn2 = new ModelExtensionPropertyDefinitionImpl(prefixProvider,
+        ModelExtensionPropertyDefinition propDefn2 = new ModelExtensionPropertyDefinitionImpl(namespaceProvider,
                                                                                               name,
                                                                                               type,
                                                                                               required,
@@ -186,7 +191,7 @@ public class Factory implements Constants {
         displayNames.add(new Translation(Locale.ENGLISH, "English DisplayName")); //$NON-NLS-1$
         displayNames.add(new Translation(Locale.CHINESE, "Chinese DisplayName")); //$NON-NLS-1$
 
-        ModelExtensionPropertyDefinition propDefn3 = new ModelExtensionPropertyDefinitionImpl(prefixProvider,
+        ModelExtensionPropertyDefinition propDefn3 = new ModelExtensionPropertyDefinitionImpl(namespaceProvider,
                                                                                               name,
                                                                                               type,
                                                                                               required,

@@ -9,7 +9,7 @@ package org.teiid.designer.runtime.ui.extension;
 
 import static com.metamatrix.modeler.dqp.ui.DqpUiConstants.UTIL;
 import static com.metamatrix.modeler.dqp.ui.DqpUiConstants.Images.EXTENSION_PROPS_ICON;
-import static org.teiid.designer.runtime.extension.rest.RestModelExtensionConstants.NAMESPACE_PREFIX;
+import static org.teiid.designer.runtime.extension.rest.RestModelExtensionConstants.NAMESPACE_PROVIDER;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
@@ -51,7 +51,7 @@ public abstract class RestWarPropertiesAction extends SortableSelectionAction {
         setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(EXTENSION_PROPS_ICON));
 
         ModelExtensionRegistry registry = ExtensionPlugin.getInstance().getRegistry();
-        this.assistant = (RestModelExtensionAssistant)registry.getModelExtensionAssistant(NAMESPACE_PREFIX);
+        this.assistant = (RestModelExtensionAssistant)registry.getModelExtensionAssistant(NAMESPACE_PROVIDER.getNamespacePrefix());
 
         // should not happen
         if (this.assistant == null) {
@@ -59,7 +59,7 @@ public abstract class RestWarPropertiesAction extends SortableSelectionAction {
         }
 
         // get the assistant that converts 7.4 extension properties
-        this.deprecatedAssistant = (DeprecatedModelExtensionAssistant)registry.getModelExtensionAssistant(DeprecatedModelExtensionAssistant.NAMESPACE_PREFIX);
+        this.deprecatedAssistant = (DeprecatedModelExtensionAssistant)registry.getModelExtensionAssistant(DeprecatedModelExtensionAssistant.NAMESPACE_PROVIDER.getNamespacePrefix());
 
         // should not happen
         if (this.deprecatedAssistant == null) {

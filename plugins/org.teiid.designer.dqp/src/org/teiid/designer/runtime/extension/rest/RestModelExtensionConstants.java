@@ -8,16 +8,35 @@
 package org.teiid.designer.runtime.extension.rest;
 
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
+import org.teiid.designer.extension.properties.NamespaceProvider;
 
 /**
  * 
  */
 public interface RestModelExtensionConstants {
 
-    /**
-     * The namespace prefix for the REST extension properties.
-     */
-    String NAMESPACE_PREFIX = "rest"; //$NON-NLS-1$
+    NamespaceProvider NAMESPACE_PROVIDER = new NamespaceProvider() {
+
+        /**
+         * {@inheritDoc}
+         * 
+         * @see org.teiid.designer.extension.properties.NamespaceProvider#getNamespacePrefix()
+         */
+        @Override
+        public String getNamespacePrefix() {
+            return "rest"; //$NON-NLS-1$
+        }
+
+        /**
+         * {@inheritDoc}
+         * 
+         * @see org.teiid.designer.extension.properties.NamespaceProvider#getNamespaceUri()
+         */
+        @Override
+        public String getNamespaceUri() {
+            return "http://www.jboss.org/teiiddesigner/ext/rest/2012"; //$NON-NLS-1$
+        }
+    };
 
     /**
      * The fully qualified extension property definition identifiers.
@@ -27,12 +46,12 @@ public interface RestModelExtensionConstants {
         /**
          * The property definition identifer for the rest method.
          */
-        String REST_METHOD = ModelExtensionPropertyDefinition.Utils.getPropertyId(NAMESPACE_PREFIX, "restMethod"); //$NON-NLS-1$
+        String REST_METHOD = ModelExtensionPropertyDefinition.Utils.getPropertyId(NAMESPACE_PROVIDER, "restMethod"); //$NON-NLS-1$
 
         /**
          * The property definition identifier for the URI.
          */
-        String URI = ModelExtensionPropertyDefinition.Utils.getPropertyId(NAMESPACE_PREFIX, "uri"); //$NON-NLS-1$
+        String URI = ModelExtensionPropertyDefinition.Utils.getPropertyId(NAMESPACE_PROVIDER, "uri"); //$NON-NLS-1$
     }
 
 }

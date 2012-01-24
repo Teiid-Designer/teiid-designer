@@ -13,14 +13,12 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Properties;
 
-import org.eclipse.osgi.util.NLS;
 import org.teiid.designer.extension.definition.ModelExtensionAssistant;
 import org.teiid.designer.extension.definition.ModelObjectExtensionAssistant;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 
 import com.metamatrix.core.util.CoreArgCheck;
-import com.metamatrix.core.util.CoreStringUtil;
 
 /**
  * 
@@ -126,40 +124,5 @@ public class ModelExtensionAssistantAggregator {
         }
 
         return false;
-    }
-
-    public void removeProperty( Object modelObject,
-                                String propId ) throws Exception {
-        String namespacePrefix = ModelExtensionPropertyDefinition.Utils.getNamespacePrefix(propId);
-
-        if (CoreStringUtil.isEmpty(namespacePrefix)) {
-            throw new Exception(NLS.bind(Messages.namespacePrefixNotFound, propId));
-        }
-
-        ModelObjectExtensionAssistant assistant = getModelObjectExtensionAssistant(namespacePrefix);
-
-        if (assistant == null) {
-            throw new Exception(NLS.bind(Messages.modelExtensionAssistantNotFound, propId));
-        }
-
-        assistant.removeProperty(modelObject, propId);
-    }
-
-    public void setPropertyValue( Object modelObject,
-                                  String propId,
-                                  String newValue ) throws Exception {
-        String namespacePrefix = ModelExtensionPropertyDefinition.Utils.getNamespacePrefix(propId);
-
-        if (CoreStringUtil.isEmpty(namespacePrefix)) {
-            throw new Exception(NLS.bind(Messages.namespacePrefixNotFound, propId));
-        }
-
-        ModelObjectExtensionAssistant assistant = getModelObjectExtensionAssistant(namespacePrefix);
-
-        if (assistant == null) {
-            throw new Exception(NLS.bind(Messages.modelExtensionAssistantNotFound, propId));
-        }
-
-        assistant.setPropertyValue(modelObject, propId, newValue);
     }
 }

@@ -317,7 +317,7 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
 
             for (ModelExtensionPropertyDefinition propDefn : this.originalMed.getPropertyDefinitions(metaclassName)) {
                 ModelExtensionPropertyDefinition copy = (ModelExtensionPropertyDefinition)propDefn.clone();
-                copy.setNamespacePrefixProvider(this.medBeingEdited);
+                copy.setNamespaceProvider(this.medBeingEdited);
                 this.medBeingEdited.addPropertyDefinition(metaclassName, copy);
             }
         }

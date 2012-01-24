@@ -158,7 +158,7 @@ public class CreatePushdownFunctionAction extends Action implements INewChildAct
 
 	private ModelObjectExtensionAssistant getAssistant() {
         ModelExtensionRegistry registry = ExtensionPlugin.getInstance().getRegistry();
-        return (ModelObjectExtensionAssistant)registry.getModelExtensionAssistant(NAMESPACE_PREFIX);
+        return (ModelObjectExtensionAssistant)registry.getModelExtensionAssistant(NAMESPACE_PROVIDER.getNamespacePrefix());
 	}
 
 	private void injectSourceFunctionModelExtension(ModelResource modelResource, EObject procedure, boolean deterministic) throws Exception {
@@ -168,8 +168,7 @@ public class CreatePushdownFunctionAction extends Action implements INewChildAct
             // should not happen
         	UiConstants.Util.log(IStatus.ERROR, UiConstants.Util.getString("CreatePushdownFunctionAction.missingSourceFunctionModelExtensionAssistant")); //$NON-NLS-1$
         } else {
-            ModelExtensionRegistry registry = ExtensionPlugin.getInstance().getRegistry();
-            ModelExtensionDefinition definition = registry.getDefinition(NAMESPACE_PREFIX);
+            ModelExtensionDefinition definition = assistant.getModelExtensionDefinition();
 
             if (definition == null) {
                 // should not happen

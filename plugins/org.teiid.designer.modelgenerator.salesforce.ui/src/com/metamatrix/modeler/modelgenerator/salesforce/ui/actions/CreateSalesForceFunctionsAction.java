@@ -7,7 +7,7 @@
  */
 package com.metamatrix.modeler.modelgenerator.salesforce.ui.actions;
 
-import static com.metamatrix.modeler.modelgenerator.salesforce.SalesforceConstants.NAMESPACE_PREFIX;
+import static com.metamatrix.modeler.modelgenerator.salesforce.SalesforceConstants.NAMESPACE_PROVIDER;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
@@ -94,7 +94,7 @@ public class CreateSalesForceFunctionsAction extends SortableSelectionAction {
                 try {
                     ModelObjectExtensionAssistant assistant = (ModelObjectExtensionAssistant)ExtensionPlugin.getInstance()
                                                                                                             .getRegistry()
-                                                                                                            .getModelExtensionAssistant(NAMESPACE_PREFIX);
+                                                                                                            .getModelExtensionAssistant(NAMESPACE_PROVIDER.getNamespacePrefix());
                     return assistant.hasExtensionProperties(file);
                 } catch (Exception e) {
                     UiConstants.Util.log(e);

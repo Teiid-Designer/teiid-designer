@@ -7,7 +7,7 @@
  */
 package com.metamatrix.modeler.modelgenerator.salesforce;
 
-import static com.metamatrix.modeler.modelgenerator.salesforce.SalesforceConstants.NAMESPACE_PREFIX;
+import static com.metamatrix.modeler.modelgenerator.salesforce.SalesforceConstants.NAMESPACE_PROVIDER;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -179,7 +179,7 @@ public class SalesforceImportWizardManager {
             // Find the SF assistant in the registry...
             ModelObjectExtensionAssistant assistant = (ModelObjectExtensionAssistant)ExtensionPlugin.getInstance()
                                                                                                     .getRegistry()
-                                                                                                    .getModelExtensionAssistant(NAMESPACE_PREFIX);
+                                                                                                    .getModelExtensionAssistant(NAMESPACE_PROVIDER.getNamespacePrefix());
 
             // If namespace is not yet supported, add the MED
             if (!assistant.supportsMyNamespace(this.updateModel)) {

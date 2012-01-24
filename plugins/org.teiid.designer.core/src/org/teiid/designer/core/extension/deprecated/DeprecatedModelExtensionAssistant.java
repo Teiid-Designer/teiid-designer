@@ -16,6 +16,7 @@ import org.teiid.designer.core.extension.EmfModelObjectExtensionAssistant;
 import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.definition.ModelObjectExtensionAssistant;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
+import org.teiid.designer.extension.properties.NamespaceProvider;
 
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
@@ -26,23 +27,81 @@ import com.metamatrix.modeler.core.ModelerCore;
  */
 public class DeprecatedModelExtensionAssistant extends EmfModelObjectExtensionAssistant {
 
-    public static final String NAMESPACE_PREFIX = "ext-custom"; //$NON-NLS-1$
-    public static final String REST_NAMESPACE_PREFIX = "rest"; //$NON-NLS-1$
-    public static final String SOURCE_FUNCTION_NAMESPACE_PREFIX = "sourcefunction"; //$NON-NLS-1$
+    public static final NamespaceProvider NAMESPACE_PROVIDER;
 
-    private static final String NEW_PUSH_DOWN = ModelExtensionPropertyDefinition.Utils.getPropertyId(SOURCE_FUNCTION_NAMESPACE_PREFIX,
-                                                                                                     "deterministic"); //$NON-NLS-1$
-    private static final String NEW_REST_METHOD = ModelExtensionPropertyDefinition.Utils.getPropertyId(REST_NAMESPACE_PREFIX,
-                                                                                                       "restMethod"); //$NON-NLS-1$
+    private static final String REST_NAMESPACE_PREFIX = "rest"; //$NON-NLS-1$
+    private static final String SOURCE_FUNCTION_NAMESPACE_PREFIX = "relational"; //$NON-NLS-1$
 
-    private static final String NEW_URI = ModelExtensionPropertyDefinition.Utils.getPropertyId(REST_NAMESPACE_PREFIX, "uri"); //$NON-NLS-1$
-    private static final String OLD_PUSH_DOWN = ModelExtensionPropertyDefinition.Utils.getPropertyId(NAMESPACE_PREFIX,
-                                                                                                     "deterministic"); //$NON-NLS-1$
+    private static final String NEW_PUSH_DOWN;
+    private static final String NEW_REST_METHOD;
 
-    private static final String OLD_REST_METHOD = ModelExtensionPropertyDefinition.Utils.getPropertyId(NAMESPACE_PREFIX,
-                                                                                                       "REST-METHOD"); //$NON-NLS-1$
-    private static final String OLD_URI_1 = ModelExtensionPropertyDefinition.Utils.getPropertyId(NAMESPACE_PREFIX, "URI"); //$NON-NLS-1$
-    private static final String OLD_URI_2 = ModelExtensionPropertyDefinition.Utils.getPropertyId(NAMESPACE_PREFIX, "uri"); //$NON-NLS-1$
+    private static final String NEW_URI;
+    private static final String OLD_PUSH_DOWN;
+
+    private static final String OLD_REST_METHOD;
+    private static final String OLD_URI_1;
+    private static final String OLD_URI_2;
+
+    static {
+        NamespaceProvider relationalNamespaceProvider = new NamespaceProvider() {
+            
+            @Override
+            public String getNamespaceUri() {
+                return null;
+            }
+            
+            @Override
+            public String getNamespacePrefix() {
+                return SOURCE_FUNCTION_NAMESPACE_PREFIX;
+            }
+        };
+
+        NEW_PUSH_DOWN = ModelExtensionPropertyDefinition.Utils.getPropertyId(relationalNamespaceProvider, "deterministic"); //$NON-NLS-1$
+
+        NamespaceProvider restNamespaceProvider = new NamespaceProvider() {
+            
+            @Override
+            public String getNamespaceUri() {
+                return null;
+            }
+            
+            @Override
+            public String getNamespacePrefix() {
+                return REST_NAMESPACE_PREFIX;
+            }
+        };
+
+        NEW_REST_METHOD = ModelExtensionPropertyDefinition.Utils.getPropertyId(restNamespaceProvider, "restMethod"); //$NON-NLS-1$
+        NEW_URI = ModelExtensionPropertyDefinition.Utils.getPropertyId(restNamespaceProvider, "uri"); //$NON-NLS-1$
+
+        NAMESPACE_PROVIDER = new NamespaceProvider() {
+            
+            /**
+             * {@inheritDoc}
+             *
+             * @see org.teiid.designer.extension.properties.NamespaceProvider#getNamespaceUri()
+             */
+            @Override
+            public String getNamespaceUri() {
+                return null;
+            }
+            
+            /**
+             * {@inheritDoc}
+             *
+             * @see org.teiid.designer.extension.properties.NamespaceProvider#getNamespacePrefix()
+             */
+            @Override
+            public String getNamespacePrefix() {
+                return "ext-custom"; //$NON-NLS-1$
+            }
+        };
+
+        OLD_PUSH_DOWN = ModelExtensionPropertyDefinition.Utils.getPropertyId(NAMESPACE_PROVIDER, "deterministic"); //$NON-NLS-1$
+        OLD_REST_METHOD = ModelExtensionPropertyDefinition.Utils.getPropertyId(NAMESPACE_PROVIDER, "REST-METHOD"); //$NON-NLS-1$
+        OLD_URI_1 = ModelExtensionPropertyDefinition.Utils.getPropertyId(NAMESPACE_PROVIDER, "URI"); //$NON-NLS-1$
+        OLD_URI_2 = ModelExtensionPropertyDefinition.Utils.getPropertyId(NAMESPACE_PROVIDER, "uri"); //$NON-NLS-1$
+    }
 
     private ModelObjectExtensionAssistant restAssistant;
     private ModelObjectExtensionAssistant sourceFunctionAssistant;
@@ -78,10 +137,7 @@ public class DeprecatedModelExtensionAssistant extends EmfModelObjectExtensionAs
     public Collection<ModelExtensionPropertyDefinition> getPropertyDefinitions( EObject modelObject ) throws Exception {
         CoreArgCheck.isNotNull(modelObject, "modelObject"); //$NON-NLS-1$
         String metaclassName = modelObject.getClass().getName();
-        Collection<ModelExtensionPropertyDefinition> propDefns = ExtensionPlugin.getInstance()
-                                                                                .getRegistry()
-                                                                                .getPropertyDefinitions(NAMESPACE_PREFIX,
-                                                                                                        metaclassName);
+        Collection<ModelExtensionPropertyDefinition> propDefns = getModelExtensionDefinition().getPropertyDefinitions(metaclassName);
 
         if (propDefns.isEmpty()) {
             return Collections.emptyList();

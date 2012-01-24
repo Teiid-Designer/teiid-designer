@@ -7,14 +7,35 @@
  */
 package com.metamatrix.modeler.modelgenerator.salesforce;
 
+import org.teiid.designer.extension.properties.NamespaceProvider;
+
 /**
  * Various SalesForce constants
  */
 public interface SalesforceConstants {
 
-    String EXTENDED_METAMODEL_ID = "org.teiid.designer.model.extension.salesforce"; //$NON-NLS-1$
-    String NAMESPACE = "http://org.teiid.designer/metamodels/Salesforce"; //$NON-NLS-1$
-    String NAMESPACE_PREFIX = "salesforce"; //$NON-NLS-1$
+    NamespaceProvider NAMESPACE_PROVIDER = new NamespaceProvider() {
+
+        /**
+         * {@inheritDoc}
+         *
+         * @see org.teiid.designer.extension.properties.NamespaceProvider#getNamespacePrefix()
+         */
+        @Override
+        public String getNamespacePrefix() {
+            return "salesforce"; //$NON-NLS-1$
+        }
+
+        /**
+         * {@inheritDoc}
+         *
+         * @see org.teiid.designer.extension.properties.NamespaceProvider#getNamespaceUri()
+         */
+        @Override
+        public String getNamespaceUri() {
+            return "http://www.teiid.org/translator/salesforce/2012"; //$NON-NLS-1$
+        }
+    };
 
     /**
      * Relational column extension property simple identifiers (no namesace).

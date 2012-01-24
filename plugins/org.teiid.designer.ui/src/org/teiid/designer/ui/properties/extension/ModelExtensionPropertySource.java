@@ -66,7 +66,7 @@ public class ModelExtensionPropertySource implements IPropertySource {
 
             // TODO remove this code when the "ext-custom" prefix is no longer supported
             // add in these manually as the MED will not have been saved in the model
-            DeprecatedModelExtensionAssistant assistant = (DeprecatedModelExtensionAssistant)registry.getModelExtensionAssistant(DeprecatedModelExtensionAssistant.NAMESPACE_PREFIX);
+            DeprecatedModelExtensionAssistant assistant = (DeprecatedModelExtensionAssistant)registry.getModelExtensionAssistant(DeprecatedModelExtensionAssistant.NAMESPACE_PROVIDER.getNamespacePrefix());
             propDefns.addAll(assistant.getPropertyDefinitions(this.eObject));
         } catch (Exception e) {
             Util.log(IStatus.ERROR, e, NLS.bind(Messages.errorCreatingPropertyDescriptors, metaclassName));

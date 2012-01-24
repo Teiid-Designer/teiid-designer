@@ -25,7 +25,7 @@ import org.teiid.core.HashCodeUtil;
 import org.teiid.designer.extension.ExtensionConstants;
 import org.teiid.designer.extension.Messages;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
-import org.teiid.designer.extension.properties.NamespacePrefixProvider;
+import org.teiid.designer.extension.properties.NamespaceProvider;
 
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
@@ -33,7 +33,7 @@ import com.metamatrix.core.util.CoreStringUtil;
 /**
  * A <code>ModelExtensionDefinition</code> defines extension properties for metaclasses within a metamodel.
  */
-public class ModelExtensionDefinition implements NamespacePrefixProvider, PropertyChangeListener {
+public class ModelExtensionDefinition implements NamespaceProvider, PropertyChangeListener {
 
     /**
      * The model extension assistant (never <code>null</code>).
@@ -241,7 +241,7 @@ public class ModelExtensionDefinition implements NamespacePrefixProvider, Proper
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.designer.extension.properties.NamespacePrefixProvider#getNamespacePrefix()
+     * @see org.teiid.designer.extension.properties.NamespaceProvider#getNamespacePrefix()
      */
     @Override
     public String getNamespacePrefix() {
@@ -249,8 +249,11 @@ public class ModelExtensionDefinition implements NamespacePrefixProvider, Proper
     }
 
     /**
-     * @return the namespace URI (can be <code>null</code> or empty)
+     * {@inheritDoc}
+     *
+     * @see org.teiid.designer.extension.properties.NamespaceProvider#getNamespaceUri()
      */
+    @Override
     public String getNamespaceUri() {
         return this.header.getNamespaceUri();
     }
@@ -272,12 +275,19 @@ public class ModelExtensionDefinition implements NamespacePrefixProvider, Proper
         CoreArgCheck.isNotEmpty(metaclassName, "metaclassName is empty"); //$NON-NLS-1$
         CoreArgCheck.isNotEmpty(propId, "propId is empty"); //$NON-NLS-1$
 
+        // make sure property ID is one for this definition
+        if (!ModelExtensionPropertyDefinition.Utils.isExtensionPropertyId(propId, this)) {
+            return null;
+        }
+
         Collection<ModelExtensionPropertyDefinition> props = internalGetProperties(metaclassName);
 
+        // definition does not have any properties for that metaclass
         if (props == null) {
             return null;
         }
 
+        // find property
         for (ModelExtensionPropertyDefinition propDefn : props) {
             if (propId.equals(propDefn.getId())) {
                 return propDefn;

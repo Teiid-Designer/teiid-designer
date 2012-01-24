@@ -41,17 +41,17 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
     private boolean index = INDEX_DEFAULT;
     private CopyOnWriteArrayList<PropertyChangeListener> listeners;
     private boolean masked = MASKED_DEFAULT;
-    private NamespacePrefixProvider namespacePrefixProvider;
+    private NamespaceProvider namespaceProvider;
     private boolean required = REQUIRED_DEFAULT;
     private String simpleId;
     private Type type = TYPE_DEFAULT;
 
     /**
-     * @param namespacePrefixProvider the namespace prefix provider (cannot be <code>null</code>)
+     * @param namespaceProvider the namespace provider (cannot be <code>null</code>)
      */
-    public ModelExtensionPropertyDefinitionImpl( NamespacePrefixProvider namespacePrefixProvider ) {
-        CoreArgCheck.isNotNull(namespacePrefixProvider, "namespacePrefixProvider is null"); //$NON-NLS-1$
-        this.namespacePrefixProvider = namespacePrefixProvider;
+    public ModelExtensionPropertyDefinitionImpl( NamespaceProvider namespacePrefixProvider ) {
+        CoreArgCheck.isNotNull(namespacePrefixProvider, "namespaceProvider is null"); //$NON-NLS-1$
+        this.namespaceProvider = namespacePrefixProvider;
 
         this.listeners = new CopyOnWriteArrayList<PropertyChangeListener>();
         this.allowedValues = new HashSet<String>();
@@ -60,7 +60,7 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
     }
 
     /**
-     * @param namespacePrefixProvider the namespace prefix provider (cannot be <code>null</code>)
+     * @param namespaceProvider the namespace provider (cannot be <code>null</code>)
      * @param simpleId the property identifier without the namespace prefix (can be <code>null</code> or empty)
      * @param runtimeType the Teiid runtime type (can be <code>null</code> or empty). Default value is {@value Type#STRING}.
      * @param required <code>true</code> string if this property must have a value (can be <code>null</code> or empty). Default
@@ -78,7 +78,7 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
      * @param descriptions the one or more translations of the property description (can be <code>null</code> or empty)
      * @param displayNames the one or more translations of the property display name (can be <code>null</code> or empty)
      */
-    public ModelExtensionPropertyDefinitionImpl( NamespacePrefixProvider namespacePrefixProvider,
+    public ModelExtensionPropertyDefinitionImpl( NamespaceProvider namespaceProvider,
                                                  String simpleId,
                                                  String runtimeType,
                                                  String required,
@@ -90,7 +90,7 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
                                                  Set<String> allowedValues,
                                                  Set<Translation> descriptions,
                                                  Set<Translation> displayNames ) {
-        this(namespacePrefixProvider);
+        this(namespaceProvider);
 
         this.simpleId = simpleId;
         this.defaultValue = defaultValue;
@@ -272,7 +272,7 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
 
         // string properties
         if (!CoreStringUtil.valuesAreEqual(getSimpleId(), that.getSimpleId())
-                || !CoreStringUtil.valuesAreEqual(getNamespacePrefix(), that.getNamespacePrefix())
+                || !CoreStringUtil.valuesAreEqual(getId(), that.getId())
                 || !CoreStringUtil.valuesAreEqual(getFixedValue(), that.getFixedValue())
                 || !CoreStringUtil.valuesAreEqual(getDefaultValue(), that.getDefaultValue())) {
             return false;
@@ -434,20 +434,17 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
      */
     @Override
     public String getId() {
-        return Utils.getPropertyId(getNamespacePrefix(), this.simpleId);
+        return Utils.getPropertyId(this.namespaceProvider, this.simpleId);
     }
 
     /**
      * {@inheritDoc}
-     * <p>
-     * If the {@link NamespacePrefixProvider namespace prefix provider} has been set, it will be used to provide the namespace
-     * prefix.
-     * 
-     * @see org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition#getNamespacePrefix()
+     *
+     * @see org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition#getNamespaceProvider()
      */
     @Override
-    public String getNamespacePrefix() {
-        return this.namespacePrefixProvider.getNamespacePrefix();
+    public NamespaceProvider getNamespaceProvider() {
+        return this.namespaceProvider;
     }
 
     /**
@@ -498,10 +495,10 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
         // string properties
         if (!CoreStringUtil.isEmpty(getSimpleId())) {
             result = HashCodeUtil.hashCode(result, getSimpleId());
-        }
 
-        if (!CoreStringUtil.isEmpty(getNamespacePrefix())) {
-            result = HashCodeUtil.hashCode(result, getNamespacePrefix());
+            if (!CoreStringUtil.isEmpty(getId())) {
+                result = HashCodeUtil.hashCode(result, getId());
+            }
         }
 
         if (!CoreStringUtil.isEmpty(getFixedValue())) {
@@ -874,11 +871,12 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition#setNamespacePrefixProvider(org.teiid.designer.extension.properties.NamespacePrefixProvider)
+     * @see org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition#setNamespacePrefixProvider(org.teiid.designer.extension.properties.NamespaceProvider)
      */
     @Override
-    public void setNamespacePrefixProvider( NamespacePrefixProvider newNamespacePrefixProvider ) {
-        this.namespacePrefixProvider = newNamespacePrefixProvider;
+    public void setNamespaceProvider( NamespaceProvider newNamespaceProvider ) {
+        CoreArgCheck.isNotNull(newNamespaceProvider, "newNamespaceProvider is null"); //$NON-NLS-1$
+        this.namespaceProvider = newNamespaceProvider;
     }
 
     /**

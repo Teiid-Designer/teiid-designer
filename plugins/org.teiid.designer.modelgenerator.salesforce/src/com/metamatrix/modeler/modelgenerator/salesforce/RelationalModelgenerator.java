@@ -7,14 +7,16 @@
  */
 package com.metamatrix.modeler.modelgenerator.salesforce;
 
-import static com.metamatrix.modeler.modelgenerator.salesforce.SalesforceConstants.NAMESPACE_PREFIX;
+import static com.metamatrix.modeler.modelgenerator.salesforce.SalesforceConstants.NAMESPACE_PROVIDER;
 import static com.metamatrix.modeler.modelgenerator.salesforce.SalesforceConstants.SF_Column.PICKLIST_VALUES;
+
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
@@ -23,6 +25,7 @@ import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.definition.ModelObjectExtensionAssistant;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
+
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.metamodels.core.CoreFactory;
@@ -84,15 +87,14 @@ public class RelationalModelgenerator {
         // the assistant should be found in the registry
         this.assistant = (ModelObjectExtensionAssistant)ExtensionPlugin.getInstance()
                                                                        .getRegistry()
-                                                                       .getModelExtensionAssistant(NAMESPACE_PREFIX);
+                                                                       .getModelExtensionAssistant(NAMESPACE_PROVIDER.getNamespacePrefix());
 
         if (this.assistant == null) {
             throw new IllegalStateException(Messages.getString(I18nUtil.getPropertyPrefix(getClass())
                     + "modelExtensionAssistantNotFound")); //$NON-NLS-1$
         }
 
-        // the definition should be found in the registry
-        this.definition = ExtensionPlugin.getInstance().getRegistry().getDefinition(NAMESPACE_PREFIX);
+        this.definition = this.assistant.getModelExtensionDefinition();
 
         if (this.definition == null) {
             throw new IllegalStateException(Messages.getString(I18nUtil.getPropertyPrefix(getClass())
@@ -117,8 +119,8 @@ public class RelationalModelgenerator {
         
         // Create a schema object in the relational model.
         Schema schema = RelationalFactory.eINSTANCE.createSchema();
-        schema.setName(NAMESPACE_PREFIX);
-        schema.setNameInSource(NAMESPACE_PREFIX);
+        schema.setName(NAMESPACE_PROVIDER.getNamespacePrefix());
+        schema.setNameInSource(NAMESPACE_PROVIDER.getNamespacePrefix());
         resource.getContents().add(schema);
         
         // add Salesforce MED
@@ -199,7 +201,7 @@ public class RelationalModelgenerator {
     }
 
     private void setInitialPropertyValue(EObject eObject, String simplePropertyId, String expectedValue) throws Exception {
-        String propId = ModelExtensionPropertyDefinition.Utils.getPropertyId(NAMESPACE_PREFIX, simplePropertyId);
+        String propId = ModelExtensionPropertyDefinition.Utils.getPropertyId(NAMESPACE_PROVIDER, simplePropertyId);
         String currentValue = this.assistant.getPropertyValue(eObject, propId);
 
         if (!CoreStringUtil.equals(expectedValue, currentValue)) {

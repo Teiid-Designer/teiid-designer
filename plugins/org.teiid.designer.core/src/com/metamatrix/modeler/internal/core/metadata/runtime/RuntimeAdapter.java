@@ -1355,7 +1355,9 @@ public class RuntimeAdapter extends RecordFactory {
                     }
 
                     if (!propertyNames.contains(propName)) {
-                        addPropertyWord(objectID, name, propDefn.getSimpleId(), propValue, true, modelPath, wordEntries);
+                        String propKey = ModelExtensionPropertyDefinition.Utils.getIndexedId(assistant.getModelExtensionDefinition(),
+                                                                                             propDefn.getSimpleId());
+                        addPropertyWord(objectID, name, propKey, propValue, true, modelPath, wordEntries);
                         propertyNames.add(propName);
                     }
                 }

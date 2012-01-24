@@ -38,6 +38,16 @@ public interface ModelExtensionPropertyDefinition extends Cloneable, PropertyDef
     char ID_DELIM = ':';
 
     /**
+     * For indexed ID, the delimiter character that starts a namespace URI.
+     */
+    char URI_START_DELIM = '{';
+
+    /**
+     * For indexed ID, the delimiter character that ends a namespace URI.
+     */
+    char URI_END_DELIM = '}';
+
+    /**
      * The default value for the advanced property (default is {@value} ).
      */
     boolean ADVANCED_DEFAULT = false;
@@ -118,9 +128,9 @@ public interface ModelExtensionPropertyDefinition extends Cloneable, PropertyDef
     String getFixedValue();
 
     /**
-     * @return the namespace prefix (can be <code>null</code> or empty)
+     * @return the namespace provider (cannot be <code>null</code>)
      */
-    String getNamespacePrefix();
+    NamespaceProvider getNamespaceProvider();
 
     /**
      * @return the runtime type (can be <code>null</code> or empty)
@@ -204,9 +214,9 @@ public interface ModelExtensionPropertyDefinition extends Cloneable, PropertyDef
     void setMasked( boolean newMasked );
 
     /**
-     * @param newNamespacePrefixProvider the new namespace prefix provider (cannot be <code>null</code>)
+     * @param newNamespaceProvider the new namespace provider (cannot be <code>null</code>)
      */
-    void setNamespacePrefixProvider( NamespacePrefixProvider newNamespacePrefixProvider );
+    void setNamespaceProvider( NamespaceProvider newNamespaceProvider );
 
     /**
      * @param newRequired the new required value
@@ -368,10 +378,25 @@ public interface ModelExtensionPropertyDefinition extends Cloneable, PropertyDef
         }
 
         /**
+         * @param namespaceProvider the namespace provider (can be <code>null</code>)
+         * @param simpleId the property simple identifier (can be <code>null</code> or empty)
+         * @return the property ID which should be indexed or <code>null</code> if either the namespace provider or simple
+         *         identifier is empty
+         */
+        public static String getIndexedId( NamespaceProvider namespaceProvider,
+                                           String simpleId ) {
+            if ((namespaceProvider == null) || CoreStringUtil.isEmpty(simpleId)) {
+                return null;
+            }
+
+            return URI_START_DELIM + namespaceProvider.getNamespaceUri() + URI_END_DELIM + simpleId;
+        }
+
+        /**
          * @param propId the string being checked (can be <code>null</code> or empty)
          * @return the namespace prefix or <code>null</code> if not found
          */
-        public static String getNamespacePrefix( String propId ) {
+        private static String getNamespacePrefix( String propId ) {
             if (CoreStringUtil.isEmpty(propId)) {
                 return null;
             }
@@ -391,34 +416,42 @@ public interface ModelExtensionPropertyDefinition extends Cloneable, PropertyDef
         }
 
         /**
-         * @param namespacePrefix the namespace prefix (can be <code>null</code> or empty)
+         * @param namespaceProvider the namespace provider (can be <code>null</code>)
          * @param propertySimpleId the simple identifier (can be <code>null</code> or empty)
-         * @return the property ID or <code>null</code> if either the namespace prefix or simple identifier is empty
+         * @return the property ID or <code>null</code> if either the namespace provider or simple identifier is empty
          */
-        public static String getPropertyId( String namespacePrefix,
+        public static String getPropertyId( NamespaceProvider namespaceProvider,
                                             String propertySimpleId ) {
-            if (CoreStringUtil.isEmpty(namespacePrefix) || CoreStringUtil.isEmpty(propertySimpleId)) {
+            if ((namespaceProvider == null) || CoreStringUtil.isEmpty(propertySimpleId)) {
                 return null;
             }
 
-            return namespacePrefix + ModelExtensionPropertyDefinition.ID_DELIM + propertySimpleId;
+            return namespaceProvider.getNamespacePrefix() + ModelExtensionPropertyDefinition.ID_DELIM + propertySimpleId;
         }
 
         /**
-         * @param id the identifier being checked (can be <code>null</code> or empty)
-         * @param namespacePrefix the namespace prefix used to determine the result (cannot be <code>null</code> or empty)
-         * @return <code>true</code> if the identifier is a property definition ID for the specified namespace prefix
+         * @param propId the property ID being checked (cannot be <code>null</code> or empty)
+         * @param namespaceProvider the namespace provider used to determine the result (cannot be <code>null</code>)
+         * @return <code>true</code> if the identifier is a property definition ID for the specified namespace provider
          */
-        public static boolean isExtensionPropertyId( String id,
-                                                     String namespacePrefix ) {
-            CoreArgCheck.isNotEmpty(namespacePrefix, "namespacePrefix is empty"); //$NON-NLS-1$
+        public static boolean isExtensionPropertyId( String propId,
+                                                     NamespaceProvider namespaceProvider ) {
+            CoreArgCheck.isNotEmpty(propId, "propId is empty"); //$NON-NLS-1$
+            CoreArgCheck.isNotNull(namespaceProvider, "namespaceProvider is null"); //$NON-NLS-1$
 
-            if ((id != null) && id.startsWith(namespacePrefix + ModelExtensionPropertyDefinition.ID_DELIM)) {
-                return (id.length() > (namespacePrefix.length() + Character.toString(ModelExtensionPropertyDefinition.ID_DELIM)
-                                                                           .length()));
+            String nsPrefix = namespaceProvider.getNamespacePrefix();
+
+            if (CoreStringUtil.isEmpty(nsPrefix)) {
+                return false;
             }
 
-            return false;
+            String propNsPrefix = getNamespacePrefix(propId);
+
+            if (CoreStringUtil.isEmpty(propNsPrefix)) {
+                return false;
+            }
+
+            return propNsPrefix.equals(nsPrefix);
         }
 
         /**

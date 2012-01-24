@@ -97,11 +97,6 @@ public class EmfModelObjectExtensionAssistant extends ModelObjectExtensionAssist
     protected String getOverriddenValue( Object modelObject,
                                          String propId,
                                          String currentValue ) throws Exception {
-        // make sure right namespace
-        if (!ModelExtensionPropertyDefinition.Utils.isExtensionPropertyId(propId, getNamespacePrefix())) {
-            throw new Exception(Util.getString(PREFIX + "wrongNamespacePrefix", propId, getNamespacePrefix())); //$NON-NLS-1$
-        }
-
         // make sure the property definition is found
         PropertyDefinition propDefn = getPropertyDefinition(modelObject, propId);
 
@@ -136,11 +131,12 @@ public class EmfModelObjectExtensionAssistant extends ModelObjectExtensionAssist
             Annotation annotation = ModelExtensionUtils.getModelObjectAnnotation((EObject)modelObject, false);
 
             if (annotation != null) {
+                ModelExtensionDefinition med = getModelExtensionDefinition();
                 EMap<String, String> tags = annotation.getTags();
 
                 for (String propId : tags.keySet()) {
                     // only get properties of my namespace
-                    if (getNamespacePrefix().equals(ModelExtensionPropertyDefinition.Utils.getNamespacePrefix(propId))) {
+                    if (ModelExtensionPropertyDefinition.Utils.isExtensionPropertyId(propId, med)) {
                         try {
                             String overridenValue = getOverriddenValue(modelObject, propId, tags.get(propId));
 
@@ -168,7 +164,7 @@ public class EmfModelObjectExtensionAssistant extends ModelObjectExtensionAssist
         CoreArgCheck.isNotNull(modelObject, "modelObject is null"); //$NON-NLS-1$
 
         // make sure right namespace
-        if (ModelExtensionPropertyDefinition.Utils.isExtensionPropertyId(propId, getNamespacePrefix())) {
+        if (ModelExtensionPropertyDefinition.Utils.isExtensionPropertyId(propId, getModelExtensionDefinition())) {
             return getModelExtensionDefinition().getPropertyDefinition(modelObject.getClass().getName(), propId);
         }
 
@@ -326,8 +322,8 @@ public class EmfModelObjectExtensionAssistant extends ModelObjectExtensionAssist
                                 String propId ) throws Exception {
         CoreArgCheck.isInstanceOf(EObject.class, modelObject);
 
-        // make sure right namespace
-        if (!ModelExtensionPropertyDefinition.Utils.isExtensionPropertyId(propId, getNamespacePrefix())) {
+        // make sure property defined in MED
+        if (!ModelExtensionPropertyDefinition.Utils.isExtensionPropertyId(propId, getModelExtensionDefinition())) {
             throw new Exception(Util.getString(PREFIX + "wrongNamespacePrefix", propId, getNamespacePrefix())); //$NON-NLS-1$
         }
 

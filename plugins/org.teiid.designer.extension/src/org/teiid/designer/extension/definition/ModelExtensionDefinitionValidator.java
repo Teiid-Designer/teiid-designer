@@ -11,7 +11,6 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -350,8 +349,7 @@ public final class ModelExtensionDefinitionValidator {
     }
 
     @SuppressWarnings("unused")
-    public static ValidationStatus validatePropertyDefinition( String namespacePrefix,
-                                                               String id,
+    public static ValidationStatus validatePropertyDefinition( String simpleId,
                                                                String runtimeType,
                                                                boolean requiresDefaultValue,
                                                                String defaultValue,
@@ -365,15 +363,7 @@ public final class ModelExtensionDefinitionValidator {
         ValidationStatus tempStatus = null;
 
         SIMPLE_ID: {
-            status = validatePropertySimpleId(id);
-
-            if (status.isError()) {
-                return status;
-            }
-        }
-
-        NAMESPACE_PREFIX: {
-            status = validateNamespacePrefix(namespacePrefix, Collections.<String> emptyList());
+            status = validatePropertySimpleId(simpleId);
 
             if (status.isError()) {
                 return status;
@@ -485,8 +475,7 @@ public final class ModelExtensionDefinitionValidator {
                                                                                 propDefn.getSimpleId()));
                         }
 
-                        status = validatePropertyDefinition(propDefn.getNamespacePrefix(), propDefn.getSimpleId(),
-                                                            propDefn.getRuntimeType(),
+                        status = validatePropertyDefinition(propDefn.getSimpleId(), propDefn.getRuntimeType(),
                                                             !CoreStringUtil.isEmpty(propDefn.getDefaultValue()),
                                                             propDefn.getDefaultValue(),
                                                             !CoreStringUtil.isEmpty(propDefn.getFixedValue()),
