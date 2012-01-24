@@ -19,6 +19,8 @@ Require-Bundle: org.eclipse.ui,
  org.teiid.designer.datatools.ui,
  org.eclipse.datatools.connectivity.ui,
  org.eclipse.datatools.connectivity.db.generic.ui,
- org.eclipse.datatools.connectivity.ui.dse;bundle-version="1.1.4"
+ org.eclipse.datatools.connectivity.ui.dse,
+ org.eclipse.ui.cheatsheets,
+ org.eclipse.core.resources
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
