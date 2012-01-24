@@ -16,7 +16,7 @@ import org.eclipse.ui.part.ViewPart;
 
 import com.metamatrix.ui.internal.util.UiUtil;
 
-public class TaskManagerView  extends ViewPart {
+public class ActionsManagerView  extends ViewPart {
     private static final String TASK_MANAGER_HELP_ID = "org.teiid.designer.advisor.ui.taskManagerView"; //$NON-NLS-1$
 
     private Composite control;
@@ -27,7 +27,7 @@ public class TaskManagerView  extends ViewPart {
     /**
      * The constructor.
      */
-    public TaskManagerView() {
+    public ActionsManagerView() {
         super();
     }
 
@@ -42,7 +42,7 @@ public class TaskManagerView  extends ViewPart {
         layout.marginWidth = 0;
         control.setLayout(layout);
         
-        new TasksPanel(control);
+        new ActionsPanel(control);
 
         IWorkbenchHelpSystem helpSystem = UiUtil.getWorkbench().getHelpSystem();
         helpSystem.setHelp(control, TASK_MANAGER_HELP_ID);

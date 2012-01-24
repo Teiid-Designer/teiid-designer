@@ -28,7 +28,7 @@ import com.metamatrix.ui.internal.product.ProductCustomizerMgr;
  * NewModelAction is a hook for the active help system to run the New Metadata Model wizard. The action is not exposed anywhere in
  * the Modeler ui.
  */
-public final class NewModelAction extends Action implements AdvisorConstants {
+public final class NewModelAction extends Action implements AdvisorUiConstants {
 
     private NewModelWizardInput newModelInput;
 
@@ -39,7 +39,7 @@ public final class NewModelAction extends Action implements AdvisorConstants {
         super();
         setText("New Model Action"); //$NON-NLS-1$
         setToolTipText("New Model Action Tooltip"); //$NON-NLS-1$
-        setImageDescriptor(AdvisorUiPlugin.getDefault().getImageDescriptor(AdvisorUiConstants.Images.NEW_MODEL_ACTION));
+        setImageDescriptor(AdvisorUiPlugin.getDefault().getImageDescriptor(Images.NEW_MODEL_ACTION));
 
     }
     

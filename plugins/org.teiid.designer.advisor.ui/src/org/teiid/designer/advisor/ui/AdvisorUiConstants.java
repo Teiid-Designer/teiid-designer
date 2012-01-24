@@ -46,8 +46,8 @@ public interface AdvisorUiConstants {
 			MODELING_ASPECT_LABELS.MANAGE_VDBS,
 			MODELING_ASPECT_LABELS.CONSUME_SOAP_WS,
 			MODELING_ASPECT_LABELS.CONSUME_REST_WS,
-			MODELING_ASPECT_LABELS.CREATE_SOAP_WS,
-			MODELING_ASPECT_LABELS.CREATE_REST_WS,
+			//MODELING_ASPECT_LABELS.CREATE_SOAP_WS,
+			//MODELING_ASPECT_LABELS.CREATE_REST_WS,
 			MODELING_ASPECT_LABELS.DEFINE_MODELS
 	};
     
@@ -208,6 +208,11 @@ public interface AdvisorUiConstants {
 		String CREATE_REST_WS= Messages.CreateARESTWebService;
 		String DEFINE_MODELS= Messages.DefineModels;
 	}
+	
+	interface VIEW_IDS {
+		String DATA_SOURCE_EXPLORER = "org.eclipse.datatools.connectivity.DataSourceExplorerNavigator"; //$NON-NLS-1$
+		String PROBLEMS_VIEW = "org.eclipse.ui.views.ProblemView"; //$NON-NLS-1$
+	}
 
 	interface Images {
 	    String IMG_PATH = "icons/full/"; //$NON-NLS-1$
@@ -222,9 +227,11 @@ public interface AdvisorUiConstants {
 	    String IMPORT_WSDL = CTOOL16 + "import-wsdl.gif"; //$NON-NLS-1$
 	    String IMPORT_JDBC = CTOOL16 + "import-jdbc.gif"; //$NON-NLS-1$
 	    String CREATE_WEB_SERVICE = CTOOL16 + "create-web-service.png"; //$NON-NLS-1$
+	    String NEW_WEB_SERVICES_MODEL = CTOOL16 + "new-web-services-model.png"; //$NON-NLS-1$
+	    String CREATE_WEB_SRVICES_DATA_FILE = CTOOL16 + "new-web-services-definition-file.png"; //$NON-NLS-1$
 	
 	    String NEW_WS_MODEL = OBJ16 + "new-web-service.png"; //$NON-NLS-1$
-	    String EXPORT_WAR = CTOOL16 + "export-war.gif"; //$NON-NLS-1$
+	    String EXPORT_WAR = CTOOL16 + "export-war.png"; //$NON-NLS-1$
 	    String NEW_VDB = CTOOL16 + "new-vdb-wiz.gif"; //$NON-NLS-1$
 	    String NEW_MODEL_ACTION = CTOOL16 + "new-model-wiz.gif"; //$NON-NLS-1$
 	    String NEW_PROJECT_ACTION = CTOOL16 + "new-project-wiz.gif";  //$NON-NLS-1$
@@ -234,6 +241,71 @@ public interface AdvisorUiConstants {
 	    String NEW_CONNECTION_PROFILE = CTOOL16 + "new-connection-profile.gif";  //$NON-NLS-1$
 	    String IMPORT = CTOOL16 + "import.gif";  //$NON-NLS-1$
 	    String EXPORT = CTOOL16 + "export.gif";  //$NON-NLS-1$
+	    
+	    String LINK_TO_HELP = CTOOL16 + "link-to-help.gif"; //$NON-NLS-1$
+	    String LIGHT_BULB = CTOOL16 + "light-bulb.gif"; //$NON-NLS-1$
+	    
+	    
+        public static String VDB_PROJECT = CVIEW16 + "vdbproject.png"; //$NON-NLS-1$
+        public static String MODEL_PROJECT = CVIEW16 + "modelproject.png"; //$NON-NLS-1$
+        public static String EXIT = CTOOL16 + "exit.gif"; //$NON-NLS-1$
+        public static String DELETE = CTOOL16 + "delete.gif"; //$NON-NLS-1$
+        public static String NEW_VDB_WIZARD = WIZBAN + "newvdbwizard.gif"; //$NON-NLS-1$
+        public static String OPEN = CTOOL16 + "openVdb.gif"; //$NON-NLS-1$
+        public static String OPEN_OR_CREATE_VDB = CTOOL16 + "openOrCreateVdb.gif"; //$NON-NLS-1$
+        public static String REBUILD_VDB = CTOOL16 + "rebuild_vdb.gif"; //$NON-NLS-1$
+        public static String CONFIGURATION_MANAGER_VIEW = CVIEW16 + "ConfigurationManagerView.gif"; //$NON-NLS-1$
+        public static String CONNECTOR_BINDINGS = CVIEW16 + "ConnectorBindings.gif"; //$NON-NLS-1$
+        public static String CONNECTOR_BINDINGS_WITH_ERROR = CVIEW16 + "ConnectorBindingsWithError.gif"; //$NON-NLS-1$
+        public static String BUILD_ALL = CVIEW16 + "build_exec.gif"; //$NON-NLS-1$
+        public static String MODEL_STATISTICS = CVIEW16 + "statistics.gif"; //$NON-NLS-1$
+        public static String VIEW_MODEL_TYPES = CVIEW16 + "viewModelTypes.gif"; //$NON-NLS-1$
+        public static String VIEW_WEB_SERVICES = CVIEW16 + "viewWebServices.gif"; //$NON-NLS-1$
+        public static String BUILD_IMPORTS = OBJ16 + "Imports.gif"; //$NON-NLS-1$
+        public static String IMPORT_EXAMPLE_VDB = WIZBAN + "importExampleVdb.gif"; //$NON-NLS-1$
+        public static String NEW_WEB_SERVICE = CTOOL16 + "NewWebService.png"; //$NON-NLS-1$
+
+        // --------------------------------------------------------------------------------
+        // For WebServiceAdvisorStatusPanel
+        public static String CHECKED_BOX = CTOOL16 + "checked_box.png"; //$NON-NLS-1$
+        public static String WARNING_CHECKED_BOX = CTOOL16 + "warning_checked_box.png"; //$NON-NLS-1$
+        public static String EMPTY_BOX = CTOOL16 + "empty_box.png"; //$NON-NLS-1$
+        public static String WARNING_EMPTY_BOX = CTOOL16 + "warning_empty_box.png"; //$NON-NLS-1$
+        public static String PROBLEM_BOX = CTOOL16 + "problem_box.png"; //$NON-NLS-1$
+        public static String WARNING_PROBLEM_BOX = CTOOL16 + "warning_problem_box.gif"; //$NON-NLS-1$
+        public static String EMPTY_GRAY_BOX = CTOOL16 + "empty_gray_box.gif"; //$NON-NLS-1$
+        // button versions....
+        public static String CHECKED_BOX_BUTTON = CTOOL16 + "checked_box_button.gif"; //$NON-NLS-1$
+        public static String WARNING_CHECKED_BOX_BUTTON = CTOOL16 + "warning_checked_box_button.gif"; //$NON-NLS-1$
+        public static String EMPTY_BOX_BUTTON = CTOOL16 + "empty_box_button.gif"; //$NON-NLS-1$
+        public static String WARNING_EMPTY_BOX_BUTTON = CTOOL16 + "warning_empty_box_button.gif"; //$NON-NLS-1$
+        public static String PROBLEM_BOX_BUTTON = CTOOL16 + "problem_box_button.gif"; //$NON-NLS-1$
+        public static String WARNING_PROBLEM_BOX_BUTTON = CTOOL16 + "warning_problem_box_button.gif"; //$NON-NLS-1$
+        public static String EMPTY_GRAY_BOX_BUTTON = CTOOL16 + "empty_gray_box_button.gif"; //$NON-NLS-1$
+
+        public static String VDB_OK = CTOOL16 + "vdb_ok_status.gif"; //$NON-NLS-1$
+        public static String VDB_ERROR = CTOOL16 + "vdb_error_status.gif"; //$NON-NLS-1$
+        public static String VDB_SAVE_REQUIRED = CTOOL16 + "vdb_save_required.gif"; //$NON-NLS-1$
+
+        public static String IMPORT_XSD = CTOOL16 + "import_xsd.gif"; //$NON-NLS-1$
+        public static String IMPORT_VDB_ICON = WIZBAN + "import_vdb.gif"; //$NON-NLS-1$
+        public static String EDIT_BINDINGS = CVIEW16 + "ConnectorBindings.gif"; //$NON-NLS-1$
+        public static String NEW_MODEL_WIZARD = CVIEW16 + "newmodel_wiz.gif"; //$NON-NLS-1$
+        public static String FIX_IT = CTOOL16 + "fix_it.gif"; //$NON-NLS-1$
+        public static String LIGHTBULB_ICON = CTOOL16 + "lightbulb.gif"; //$NON-NLS-1$
+
+        public static String PREVIEW_WSDL = CTOOL16 + "preview_wsdl.gif"; //$NON-NLS-1$
+        public static String PREVIEW_WSDL_ERROR = CTOOL16 + "preview_wsdl_error.gif"; //$NON-NLS-1$
+        public static String PREVIEW_WSDL_GRAY = DTOOL16 + "preview_wsdl_disabled.gif"; //$NON-NLS-1$
+
+        public static String PROBLEM_ERROR = CTOOL16 + "ProblemMarker_error.gif"; //$NON-NLS-1$
+        public static String PROBLEM_WARNING = CTOOL16 + "ProblemMarker_warning.gif"; //$NON-NLS-1$
+        public static String PROBLEM_INFO = CTOOL16 + "ProblemMarker_info.gif"; //$NON-NLS-1$
+
+        public static String HELP_ICON = CTOOL16 + "linkto_help.gif"; //$NON-NLS-1$
+        public static String PROBLEMS_VIEW = CTOOL16 + "problems_view.gif"; //$NON-NLS-1$
+        public static String NEW_MODEL = CTOOL16 + "newmodel_wiz.gif"; //$NON-NLS-1$
+        // --------------------------------------------------------------------------------
 	}
 	
 	interface CONNECTION_PROFILE_IDS {
@@ -246,6 +318,45 @@ public interface AdvisorUiConstants {
 		String CATEGORY_WS_CONNECTION = "org.teiid.designer.datatools.profiles.ws.WSConnectionProfile"; //$NON-NLS-1$
 		String CATEGORY_LDAP_CONNECTION = "org.teiid.designer.datatools.profiles.ldap.LDAPConnectionProfile"; //$NON-NLS-1$
 		String CATEGORY_SALESFORCE_CONNECTION = "org.teiid.designer.datatools.salesforce.connectionProfile"; //$NON-NLS-1$
+	}
+
+	/**
+	 * Constants related to extensions, including all extension ID's.
+	 * 
+	 * @since 4.0
+	 */
+	interface Extensions {
+	    // Perspectives
+	
+	    // content supplier's IDs must match their class name
+	
+	    String ADVISOR_VIEW_ID = PLUGIN_ID + ".views.DSPAdvisorView"; //$NON-NLS-1$
+	    String JDBC_IMPORT_POST_PROCESSSOR = PLUGIN_ID + ".wizards.vdbViewImportPostProcessor"; //$NON-NLS-1$
+	}
+
+	/**
+	 * Constants related to extension points, including all extension point ID's and extension point schema component names.
+	 * 
+	 * @since 4.0
+	 */
+	interface ExtensionPoints {
+	    interface AdvisorStatusManagerExtension {
+	        String ID = "advisorStatusProvider"; //$NON-NLS-1$
+	        String CLASSNAME = "name"; //$NON-NLS-1$
+	    }
+	}
+
+	public interface Groups {
+	    public static final int GROUP_MODEL_VALIDATION = 0;
+	    public static final int GROUP_SOURCES = 1;
+	    public static final int GROUP_CONNECTIONS = 2;
+	    public static final int GROUP_VIEWS = 3;
+	    public static final int GROUP_VIEW_MAPPINGS = 4;
+	    public static final int GROUP_XML_SCHEMAS = 5;
+	    public static final int GROUP_WEBSERVICE_MODELS = 6;
+	    public static final int GROUP_PREVIEW_WSDL = 7;
+	    public static final int GROUP_VDBS = 8;
+	    public static final int GROUP_PROJECT = 9;
 	}
 
 }

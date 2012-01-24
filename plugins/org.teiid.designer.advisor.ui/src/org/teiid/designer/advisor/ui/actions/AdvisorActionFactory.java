@@ -99,7 +99,11 @@ public class AdvisorActionFactory implements AdvisorUiConstants {
 	}
 	
 	public static void executeAction(TeiidDesignerActionHandler actionHandler) {
-		String id = actionHandler.getId();
+		AdvisorActionFactory.executeAction(actionHandler.getId());
+	}
+	
+	public static void executeAction(String id) {
+		
 		
 		// IMPORT OPTIONS
 		if( id.equalsIgnoreCase(COMMAND_IDS.IMPORT_DDL)) {
@@ -283,7 +287,11 @@ public class AdvisorActionFactory implements AdvisorUiConstants {
 			return Images.NEW_CONNECTION_PROFILE;
 		}
 		if( id.equalsIgnoreCase(COMMAND_IDS.GENERATE_WS_MODELS_FROM_WSDL)) {
-			return Images.IMPORT_WSDL;
+			return Images.NEW_WEB_SERVICES_MODEL;
+		}
+		
+		if( id.equalsIgnoreCase(COMMAND_IDS.CREATE_WEB_SRVICES_DATA_FILE)) {
+			return Images.CREATE_WEB_SRVICES_DATA_FILE;
 		}
 		
 		if( id.equalsIgnoreCase(COMMAND_IDS.CREATE_VDB)) {

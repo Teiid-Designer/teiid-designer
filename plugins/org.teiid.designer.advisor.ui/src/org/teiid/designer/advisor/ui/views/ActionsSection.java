@@ -35,7 +35,7 @@ import org.teiid.designer.advisor.ui.actions.AdvisorActionInfo;
 
 import com.metamatrix.ui.internal.util.WidgetFactory;
 
-public class AspectsSection implements AdvisorUiConstants{
+public class ActionsSection implements AdvisorUiConstants{
 	private FormToolkit toolkit;
 
 	private Section section;
@@ -48,7 +48,7 @@ public class AspectsSection implements AdvisorUiConstants{
 	 * @param parent
 	 * @param style
 	 */
-	public AspectsSection(FormToolkit toolkit, Composite parent) {
+	public ActionsSection(FormToolkit toolkit, Composite parent) {
 		super();
 		this.toolkit = toolkit;
 		stackedPanels = new HashMap<String, Composite>();
