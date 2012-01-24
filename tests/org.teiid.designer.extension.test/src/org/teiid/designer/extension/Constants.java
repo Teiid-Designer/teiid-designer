@@ -39,7 +39,7 @@ public interface Constants {
 
     String SALESFORCE_MED_FILE_NAME = TESTDATA + File.separatorChar + "salesforce" + ExtensionConstants.DOT_MED_EXTENSION; //$NON-NLS-1$
     String SALESFORCE_MED_PREFIX = "salesforce"; //$NON-NLS-1$
-    String SALESFORCE_MED_URI = "org.teiid.designer.extension.salesforce"; //$NON-NLS-1$
+    String SALESFORCE_MED_URI = "http://www.teiid.org/translator/salesforce/2012"; //$NON-NLS-1$
     String[] SALESFORCE_MED_METACLASSES = new String[] { TABLE_METACLASS_NAME, COLUMN_METACLASS_NAME };
     String[] SALESFORCE_METACLASS_0_PROP_IDS = new String[] { "custom", "supportsCreate", "supportsDelete", "supportsIdLookup", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
             "supportsMerge", "supportsQuery", "supportsReplicate", "supportsRetrieve", "supportsSearch" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
@@ -47,19 +47,19 @@ public interface Constants {
 
     String REST_MED_FILE_NAME = TESTDATA + File.separatorChar + "rest" + ExtensionConstants.DOT_MED_EXTENSION; //$NON-NLS-1$
     String REST_MED_PREFIX = "rest"; //$NON-NLS-1$
-    String REST_MED_URI = "org.teiid.designer.extension.rest"; //$NON-NLS-1$
+    String REST_MED_URI = "http://www.jboss.org/teiiddesigner/ext/rest/2012"; //$NON-NLS-1$
     String[] REST_MED_METACLASSES = new String[] { PROCEDURE_METACLASS_NAME };
     String[] REST_METACLASS_0_PROP_IDS = new String[] { "restMethod", "uri" }; //$NON-NLS-1$ //$NON-NLS-2$
 
-    String SOURCE_FUNCTION_MED_FILE_NAME = TESTDATA + File.separatorChar + "sourcefunction" + ExtensionConstants.DOT_MED_EXTENSION; //$NON-NLS-1$
-    String SOURCE_FUNCTION_MED_PREFIX = "sourcefunction"; //$NON-NLS-1$
-    String SOURCE_FUNCTION_MED_URI = "org.teiid.designer.extension.sourcefunction"; //$NON-NLS-1$
+    String SOURCE_FUNCTION_MED_FILE_NAME = TESTDATA + File.separatorChar + "relational" + ExtensionConstants.DOT_MED_EXTENSION; //$NON-NLS-1$
+    String SOURCE_FUNCTION_MED_PREFIX = "relational"; //$NON-NLS-1$
+    String SOURCE_FUNCTION_MED_URI = "http://www.teiid.org/ext/relational/2012"; //$NON-NLS-1$
     String[] SOURCE_FUNCTION_MED_METACLASSES = new String[] { PROCEDURE_METACLASS_NAME };
     String[] SOURCE_FUNCTION_METACLASS_0_PROP_IDS = new String[] { "deterministic" }; //$NON-NLS-1$
 
     String DEPRECATED_MED_FILE_NAME = TESTDATA + File.separatorChar + "deprecated" + ExtensionConstants.DOT_MED_EXTENSION; //$NON-NLS-1$
     String DEPRECATED_MED_PREFIX = "ext-custom"; //$NON-NLS-1$
-    String DEPRECATED_MED_URI = "org.teiid.designer.extension.deprecated"; //$NON-NLS-1$
+    String DEPRECATED_MED_URI = "http://www.jboss.org/teiiddesigner/ext/deprecated/2012"; //$NON-NLS-1$
     String[] DEPRECATED_MED_METACLASSES = new String[] { PROCEDURE_METACLASS_NAME };
     String[] DEPRECATED_METACLASS_0_PROP_IDS = new String[] { "deterministic", "REST-METHOD", "URI" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 

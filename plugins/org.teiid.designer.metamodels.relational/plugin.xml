@@ -187,7 +187,7 @@
          point="org.teiid.designer.extension.modelExtensionProvider">
       <extensionDefinition
             className="com.metamatrix.metamodels.relational.extension.SourceFunctionModelExtensionAssistant"
-            path="sourcefunction.mxd">
+            path="relational.mxd">
       </extensionDefinition>
    </extension>
    

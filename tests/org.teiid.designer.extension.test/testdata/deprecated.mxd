@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:modelExtension metamodelUri="http://www.metamatrix.com/metamodels/Relational" namespaceUri="org.teiid.designer.extension.deprecated"
-	namespacePrefix="ext-custom" xmlns:p="http://org.teiid.modelExtension/2011" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://org.teiid.modelExtension/2011 modelExtension.xsd " version="1"
->
-	<p:description>Designer 7.4 extension properties</p:description>
+<p:modelExtension metamodelUri="http://www.metamatrix.com/metamodels/Relational"
+                  namespaceUri="http://www.jboss.org/teiiddesigner/ext/deprecated/2012"
+                  namespacePrefix="ext-custom"
+                  xmlns:p="http://org.teiid.modelExtension/2011"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://org.teiid.modelExtension/2011 modelExtension.xsd "
+                  version="1">
+    <p:description>Designer 7.4 extension properties</p:description>
 
     <!-- Pushdown and REST Extension Properties -->
     <p:extendedMetaclass name="com.metamatrix.metamodels.relational.impl.ProcedureImpl">
