@@ -555,6 +555,24 @@ public final class UiUtil implements UiConstants {
 
         return false;
     }
+    
+    /**
+     * Simple access to open any view given a registered view string id.
+     * @param viewId the id of the eclipse contributed view part
+     * @return successful or not
+     */
+    public static boolean showView(String viewId) {
+    	boolean success = false;
+        IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+        if (activePage != null) {
+            try {
+                activePage.showView(viewId);
+                success = true;
+            } catch (PartInitException e) {
+            }
+        }
+    	return success;
+    }
 
     /**
      * Updates the specified integer-based preference with the specified value if and only if:
@@ -562,7 +580,7 @@ public final class UiUtil implements UiConstants {
      * <li>It equals the specified default value and the current preference value is not zero (i.e., does not represent the
      * default value). In this case, the value will be removed from the specified preference store.</li>
      * <li>It does not equal the specified default value and does not equal the current preference value.</li>
-     * </ul>>
+     * </ul>
      * 
      * @param preference
      * @param value

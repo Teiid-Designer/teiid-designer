@@ -50,7 +50,7 @@ public class WorkspaceResourceFinderUtil {
     protected static final IResource[] EMPTY_IRESOURCE_ARRAY = new IResource[0];
     protected static final IPath[] EMPTY_IPATH_ARRAY = new IPath[0];
 
-    private static final ResourceFilter VDB_RESOURCE_FILTER = new VdbResourceFilter();
+    public static final ResourceFilter VDB_RESOURCE_FILTER = new VdbResourceFilter();
 
     // org.eclipse.emf.common.util.URI constants
     private static final String SCHEME_PLATFORM = "platform:"; //$NON-NLS-1$
