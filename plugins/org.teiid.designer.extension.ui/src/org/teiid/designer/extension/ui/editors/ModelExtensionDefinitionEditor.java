@@ -24,6 +24,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IResourceDelta;
+import org.eclipse.core.resources.IResourceDeltaVisitor;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourceAttributes;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -625,44 +626,55 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
             }
 
             try {
-                IResourceDelta medDelta = delta.findMember(getFile().getFullPath());
+                delta.accept(new IResourceDeltaVisitor() {
 
-                if (medDelta == null) {
-                    return;
-                }
+                    /**
+                     * {@inheritDoc}
+                     * 
+                     * @see org.eclipse.core.resources.IResourceDeltaVisitor#visit(org.eclipse.core.resources.IResourceDelta)
+                     */
+                    @Override
+                    public boolean visit( IResourceDelta delta ) {
+                        if (delta.getResource().equals(getFile())) {
+                            // MXD file has been deleted so close editor
+                            if ((delta.getKind() & IResourceDelta.REMOVED) != 0) {
+                                if (!getShell().isDisposed()) {
+                                    getShell().getDisplay().asyncExec(new Runnable() {
 
-                // MXD file has been deleted so close editor
-                if ((delta.getKind() & IResourceDelta.REMOVED) != 0) {
-                    if (!getShell().isDisposed()) {
-                        getShell().getDisplay().asyncExec(new Runnable() {
+                                        /**
+                                         * {@inheritDoc}
+                                         * 
+                                         * @see java.lang.Runnable#run()
+                                         */
+                                        @Override
+                                        public void run() {
+                                            getEditorSite().getPage().closeEditor(accessThis(), false);
+                                        }
+                                    });
+                                }
+                            } else if (ResourceChangeUtilities.isContentChanged(delta)) {
+                                if (!getShell().isDisposed()) {
+                                    getShell().getDisplay().syncExec(new Runnable() {
 
-                            /**
-                             * {@inheritDoc}
-                             * 
-                             * @see java.lang.Runnable#run()
-                             */
-                            @Override
-                            public void run() {
-                                getEditorSite().getPage().closeEditor(accessThis(), false);
+                                        /**
+                                         * {@inheritDoc}
+                                         * 
+                                         * @see java.lang.Runnable#run()
+                                         */
+                                        @Override
+                                        public void run() {
+                                            refreshMed();
+                                        }
+                                    });
+                                }
                             }
-                        });
-                    }
-                } else if (ResourceChangeUtilities.isContentChanged(delta)) {
-                    if (!getShell().isDisposed()) {
-                        getShell().getDisplay().asyncExec(new Runnable() {
 
-                            /**
-                             * {@inheritDoc}
-                             * 
-                             * @see java.lang.Runnable#run()
-                             */
-                            @Override
-                            public void run() {
-                                refreshMed();
-                            }
-                        });
+                            return false; // stop visiting
+                        }
+
+                        return true; // keep visiting
                     }
-                }
+                });
             } catch (Exception e) {
                 UTIL.log(IStatus.ERROR, e, e.getMessage());
             }
