@@ -124,6 +124,9 @@ public class DSPAdvisorPanel extends ManagedForm
     }
 
     public void notifyStatusChanged( final ModelProjectStatus theStatus ) {
+    	if( this.statusSection.getSection().isDisposed() ) {
+    		return;
+    	}
         Display.getDefault().syncExec(new Runnable() {
             public void run() {
                 updateStatus(theStatus);

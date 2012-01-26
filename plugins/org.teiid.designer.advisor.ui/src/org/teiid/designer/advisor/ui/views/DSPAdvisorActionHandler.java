@@ -52,16 +52,29 @@ public class DSPAdvisorActionHandler implements IAdvisorActionHandler, AdvisorUi
     NewModelAction newRelationalViewModelAction;
 
     // InfoPopAction's
-    private InfoPopAction newVdbIPAction;
+    
     private InfoPopAction showProblemsViewIPAction;
+    
     private InfoPopAction importJdbcIPAction;
+    private InfoPopAction importSalesforceIPAction;
+    private InfoPopAction importDdlIPAction;
+    private InfoPopAction importFlatFileIPAction;
+    private InfoPopAction importXmlFileIPAction;
+    
+    
     private InfoPopAction openDSEIPAction;
     private InfoPopAction newJdbcCPIPAction;
     private InfoPopAction newSFCPIPAction;
+    private InfoPopAction newWSSoapIPAction;
     private InfoPopAction importXsdIPAction;
     private InfoPopAction newRelationalSourceModelIPAction;
     private InfoPopAction newRelationalViewModelIPAction;
     private InfoPopAction toggleAutoBuildIPAction;
+    
+    private InfoPopAction previewDataIPAction;
+    
+    private InfoPopAction newVdbIPAction;
+    private InfoPopAction executeVdbIPAction;
 
     private ModelProjectStatus status;
 
@@ -107,19 +120,18 @@ public class DSPAdvisorActionHandler implements IAdvisorActionHandler, AdvisorUi
 	        IAction newJdbcCPAction = new Action() {
 	            @Override
 	            public void run() {
-//	            	AdvisorActionFactory.executeAction(COMMAND_IDS.CREATE_CONNECTION_JDBC);
-	    			INewWizard wiz = (INewWizard) new NewTeiidFilteredCPWizard(CONNECTION_PROFILE_IDS.CATEGORY_JDBC);
+	            	AdvisorActionFactory.executeAction(COMMAND_IDS.CREATE_CONNECTION_JDBC);
+//	    			INewWizard wiz = (INewWizard) new NewTeiidFilteredCPWizard(CONNECTION_PROFILE_IDS.CATEGORY_JDBC);
 	    			
-	    			WizardDialog wizardDialog = new WizardDialog(Display.getCurrent().getActiveShell(), (Wizard) wiz);
-	    			wizardDialog.setBlockOnOpen(false);
-	    			wizardDialog.open();
+//	    			WizardDialog wizardDialog = new WizardDialog(Display.getCurrent().getActiveShell(), (Wizard) wiz);
+//	    			wizardDialog.setBlockOnOpen(false);
+//	    			wizardDialog.open();
 	            }
 	        };
 	        newJdbcCPAction.setText("Create JDBC Connection Profile");
 	        newJdbcCPAction.setToolTipText("Create JDBC Connection Profile");
 	        
 	        this.newJdbcCPIPAction = new InfoPopAction(newJdbcCPAction, 
-	        			//new NewConnectionProfileAction(NewConnectionProfileAction.CATEGORY_JDBC, "Create JDBC Connection Profile", "Create JDBC Connection Profile"),
 	        			InfoPopAction.TYPE_DO, "New JDBC Connection", imageHelper.NEW_CONNECTION_PROFILE_IMAGE);
 	        
 	        IAction newSalesforceCPAction = new Action() {
@@ -132,8 +144,19 @@ public class DSPAdvisorActionHandler implements IAdvisorActionHandler, AdvisorUi
 	        newSalesforceCPAction.setToolTipText("Create Salesforce Connection Profile");
 	        
 	        this.newSFCPIPAction = new InfoPopAction(newSalesforceCPAction,
-	    			//new NewConnectionProfileAction(NewConnectionProfileAction.CATEGORY_SALESFORCE_CONNECTION, "Create Saleforce Connection Profile", "Create Saleforce Connection Profile"),
 	    			InfoPopAction.TYPE_DO, "New Salesforce Connection", imageHelper.NEW_CONNECTION_PROFILE_IMAGE);
+	        
+	        IAction newWSSoapCPAction = new Action() {
+	            @Override
+	            public void run() {
+	            	AdvisorActionFactory.executeAction(COMMAND_IDS.CREATE_CONNECTION_WEB_SERVICE_ODA);
+	            }
+	        };
+	        newWSSoapCPAction.setText("Create SOAP Web Service Connection Profile");
+	        newWSSoapCPAction.setToolTipText("Create SOAP Web Service Connection Profile");
+	        
+	        this.newWSSoapIPAction = new InfoPopAction(newWSSoapCPAction,
+	    			InfoPopAction.TYPE_DO, "New SOAP WS Connection", imageHelper.NEW_CONNECTION_PROFILE_IMAGE);
 
         }
         // --------------------------------------------------------------------------
@@ -152,23 +175,90 @@ public class DSPAdvisorActionHandler implements IAdvisorActionHandler, AdvisorUi
         this.showProblemsViewIPAction = new InfoPopAction(delegateOpenProblemsViewAction, InfoPopAction.TYPE_FIX,
                                                           DSPAdvisorI18n.Options_Action_OpenProblemsView_description,
                                                           imageHelper.PROBLEMS_VIEW_IMAGE);
-        //        
-        // --------------------------------------------------------------------------
-        // jdbc import:
-        IAction delegateImportJdbcAction = new Action() {
-            @Override
-            public void run() {
-                ModelerUiViewUtils.launchWizard("jdbcImportWizard", new StructuredSelection()); //$NON-NLS-1$
-            }
-        };
-        delegateImportJdbcAction.setText(DSPAdvisorI18n.Action_ImportJdbc_text);
-        delegateImportJdbcAction.setToolTipText(DSPAdvisorI18n.Action_ImportJdbc_tooltip);
-        delegateImportJdbcAction.setImageDescriptor(AdvisorUiPlugin.getDefault().getImageDescriptor(AdvisorUiConstants.Images.IMPORT_JDBC));
+        IMPORT_ACTIONS : {
+	        //        
+	        // =========>>>> JDBC
+	        // 
+	        IAction delegateImportJdbcAction = new Action() {
+	            @Override
+	            public void run() {
+	            	AdvisorActionFactory.executeAction(COMMAND_IDS.IMPORT_JDBC);
+	            }
+	        };
+	        delegateImportJdbcAction.setText(DSPAdvisorI18n.Action_ImportJdbc_text);
+	        delegateImportJdbcAction.setToolTipText(DSPAdvisorI18n.Action_ImportJdbc_tooltip);
+	        delegateImportJdbcAction.setImageDescriptor(AdvisorUiPlugin.getDefault().getImageDescriptor(AdvisorUiConstants.Images.IMPORT_JDBC));
+	
+	        importJdbcIPAction = new InfoPopAction(delegateImportJdbcAction, InfoPopAction.TYPE_DO,
+	                                               DSPAdvisorI18n.Options_Action_ImportJDBC_description,
+	                                               imageHelper.IMPORT_JDBC_IMAGE);
+	        //        
+	        // =========>>>> DDL
+	        // 
+	        IAction delegateImportDdlAction = new Action() {
+	            @Override
+	            public void run() {
+	                AdvisorActionFactory.executeAction(COMMAND_IDS.IMPORT_SALESFORCE);
+	            }
+	        };
+	        delegateImportDdlAction.setText(DSPAdvisorI18n.Action_ImportDdl_text);
+	        delegateImportDdlAction.setToolTipText(DSPAdvisorI18n.Action_ImportDdl_tooltip);
+	        delegateImportDdlAction.setImageDescriptor(AdvisorUiPlugin.getDefault().getImageDescriptor(AdvisorUiConstants.Images.IMPORT_JDBC));
+	
+	        importDdlIPAction = new InfoPopAction(delegateImportDdlAction, InfoPopAction.TYPE_DO,
+	                                               DSPAdvisorI18n.Options_Action_ImportDdl_description,
+	                                               imageHelper.IMPORT_JDBC_IMAGE);
+	        //        
+	        // =========>>>> FLAT FILE
+	        // 
+	        IAction delegateImportFlatFileAction = new Action() {
+	            @Override
+	            public void run() {
+	                AdvisorActionFactory.executeAction(COMMAND_IDS.IMPORT_SALESFORCE);
+	            }
+	        };
+	        delegateImportFlatFileAction.setText(DSPAdvisorI18n.Action_ImportFlatFile_text);
+	        delegateImportFlatFileAction.setToolTipText(DSPAdvisorI18n.Action_ImportFlatFile_tooltip);
+	        delegateImportFlatFileAction.setImageDescriptor(AdvisorUiPlugin.getDefault().getImageDescriptor(AdvisorUiConstants.Images.IMPORT_JDBC));
+	
+	        importFlatFileIPAction = new InfoPopAction(delegateImportFlatFileAction, InfoPopAction.TYPE_DO,
+	                                               DSPAdvisorI18n.Options_Action_ImportFlatFile_description,
+	                                               imageHelper.IMPORT_JDBC_IMAGE);
+	        
+        	//	        
+	        // =========>>>> FLAT FILE
+	        // 
+	        IAction delegateImportXmlFileAction = new Action() {
+	            @Override
+	            public void run() {
+	                AdvisorActionFactory.executeAction(COMMAND_IDS.IMPORT_SALESFORCE);
+	            }
+	        };
+	        delegateImportXmlFileAction.setText(DSPAdvisorI18n.Action_ImportXmlFile_text);
+	        delegateImportXmlFileAction.setToolTipText(DSPAdvisorI18n.Action_ImportXmlFile_tooltip);
+	        delegateImportXmlFileAction.setImageDescriptor(AdvisorUiPlugin.getDefault().getImageDescriptor(AdvisorUiConstants.Images.IMPORT_JDBC));
+	
+	        importXmlFileIPAction = new InfoPopAction(delegateImportXmlFileAction, InfoPopAction.TYPE_DO,
+	                                               DSPAdvisorI18n.Options_Action_ImportXmlFile_description,
+	                                               imageHelper.IMPORT_JDBC_IMAGE);
+	        //        
+	        // =========>>>> Salesforce
+	        // 
+	        IAction delegateImportSalesforceAction = new Action() {
+	            @Override
+	            public void run() {
+	                AdvisorActionFactory.executeAction(COMMAND_IDS.IMPORT_SALESFORCE);
+	            }
+	        };
+	        delegateImportSalesforceAction.setText(DSPAdvisorI18n.Action_ImportSalesforce_text);
+	        delegateImportSalesforceAction.setToolTipText(DSPAdvisorI18n.Action_ImportSalesforce_tooltip);
+	        delegateImportSalesforceAction.setImageDescriptor(AdvisorUiPlugin.getDefault().getImageDescriptor(AdvisorUiConstants.Images.IMPORT_JDBC));
+	
+	        importSalesforceIPAction = new InfoPopAction(delegateImportSalesforceAction, InfoPopAction.TYPE_DO,
+	                                               DSPAdvisorI18n.Options_Action_ImportSalesforce_description,
+	                                               imageHelper.IMPORT_JDBC_IMAGE);
 
-        importJdbcIPAction = new InfoPopAction(delegateImportJdbcAction, InfoPopAction.TYPE_DO,
-                                               DSPAdvisorI18n.Options_Action_ImportJDBC_description,
-                                               imageHelper.IMPORT_JDBC_IMAGE);
-
+        }
         // --------------------------------------------------------------------------
         // XSD import:
         IAction delegateImportXsdAction = new Action() {
@@ -184,33 +274,53 @@ public class DSPAdvisorActionHandler implements IAdvisorActionHandler, AdvisorUi
         importXsdIPAction = new InfoPopAction(delegateImportXsdAction, InfoPopAction.TYPE_DO,
                                               DSPAdvisorI18n.Options_Action_ImportXsd_description, imageHelper.IMPORT_XSD_IMAGE);
 
-        // --------------------------------------------------------------------------
-        // New VDB
-        // --------------------------------------------------------------------------
-        IAction delegateNewVdbAction = new Action() {
-            @Override
-            public void run() {
-                ModelerUiViewUtils.launchWizard("newVdbWizard", new StructuredSelection()); //$NON-NLS-1$
-                // MessageDialog.openInformation(getShell(), "NEW VDB Action", "NOT YET IMPLEMENTED");
-                // Display.getDefault().asyncExec(new Runnable() {
-                // public void run() {
-                // final IAction pAction =
-                // ProductCustomizerMgr.getInstance().getProductCharacteristics().
-                // getProductAction(IModelingProductCharacteristics.ACTION_XSD_IMPORT);
-                // if( pAction != null ) {
-                // pAction.run();
-                // }
-                // }
-                // });
-
-            }
-        };
-        delegateNewVdbAction.setText(DSPAdvisorI18n.Action_NewVdb_text);
-        delegateNewVdbAction.setToolTipText(DSPAdvisorI18n.Action_NewVdb_tooltip);
-        delegateNewVdbAction.setImageDescriptor(AdvisorUiPlugin.getDefault().getImageDescriptor(AdvisorUiConstants.Images.NEW_VDB));
-        newVdbIPAction = new InfoPopAction(delegateNewVdbAction, InfoPopAction.TYPE_DO,
+        VDB_AND_EXECUTION : {
+	        // --------------------------------------------------------------------------
+	        // New VDB
+	        // --------------------------------------------------------------------------
+	        IAction delegateNewVdbAction = new Action() {
+	            @Override
+	            public void run() {
+	            	AdvisorActionFactory.executeAction(COMMAND_IDS.CREATE_VDB);
+	            }
+	        };
+	        delegateNewVdbAction.setText(DSPAdvisorI18n.Action_NewVdb_text);
+	        delegateNewVdbAction.setToolTipText(DSPAdvisorI18n.Action_NewVdb_tooltip);
+	        delegateNewVdbAction.setImageDescriptor(AdvisorUiPlugin.getDefault().getImageDescriptor(AdvisorUiConstants.Images.NEW_VDB));
+	        newVdbIPAction = new InfoPopAction(delegateNewVdbAction, InfoPopAction.TYPE_DO,
                                            DSPAdvisorI18n.Options_Action_NewVdb_description, imageHelper.NEW_VDB_IMAGE);
+	        
+	        // --------------------------------------------------------------------------
+	        // Execute VDB
+	        // --------------------------------------------------------------------------
+	        IAction delegateExecuteVdbAction = new Action() {
+	            @Override
+	            public void run() {
+	            	AdvisorActionFactory.executeAction(COMMAND_IDS.EXECUTE_VDB);
+	            }
+	        };
+	        delegateExecuteVdbAction.setText(DSPAdvisorI18n.Action_ExecuteVdb_text);
+	        delegateExecuteVdbAction.setToolTipText(DSPAdvisorI18n.Action_ExecuteVdb_tooltip);
+	        delegateExecuteVdbAction.setImageDescriptor(AdvisorUiPlugin.getDefault().getImageDescriptor(AdvisorUiConstants.Images.EXECUTE_VDB_ACTION));
+	        executeVdbIPAction = new InfoPopAction(delegateNewVdbAction, InfoPopAction.TYPE_FIX,
+                                           DSPAdvisorI18n.Options_Action_ExecuteVdb_description, imageHelper.EXECUTE_VDB_IMAGE);
+	        
+	        // --------------------------------------------------------------------------
+	        // Execute VDB
+	        // --------------------------------------------------------------------------
+	        IAction delegatePreviewDataAction = new Action() {
+	            @Override
+	            public void run() {
+	            	AdvisorActionFactory.executeAction(COMMAND_IDS.PREVIEW_DATA);
+	            }
+	        };
+	        delegatePreviewDataAction.setText(DSPAdvisorI18n.Action_PreviewData_text);
+	        delegatePreviewDataAction.setToolTipText(DSPAdvisorI18n.Action_PreviewData_tooltip);
+	        delegatePreviewDataAction.setImageDescriptor(AdvisorUiPlugin.getDefault().getImageDescriptor(AdvisorUiConstants.Images.PREVIEW_DATA));
+	        previewDataIPAction = new InfoPopAction(delegatePreviewDataAction, InfoPopAction.TYPE_FIX,
+                                           DSPAdvisorI18n.Options_Action_PreviewData_description, imageHelper.PREVIEW_DATA_IMAGE);
 
+        }
         // --------------------------------------------------------------------------
         // New Relational Source Model
         // --------------------------------------------------------------------------
@@ -300,7 +410,10 @@ public class DSPAdvisorActionHandler implements IAdvisorActionHandler, AdvisorUi
                     actions.add(showProblemsViewIPAction);
                 }
                 actions.add(importJdbcIPAction);
+                actions.add(importDdlIPAction);
+                actions.add(importSalesforceIPAction);
                 actions.add(newRelationalSourceModelIPAction);
+                actions.add(previewDataIPAction);
             }
                 break;
 
@@ -313,13 +426,17 @@ public class DSPAdvisorActionHandler implements IAdvisorActionHandler, AdvisorUi
                     actions.add(showProblemsViewIPAction);
                 }
                 actions.add(newRelationalViewModelIPAction);
+                actions.add(importFlatFileIPAction);
+                actions.add(importXmlFileIPAction);
+                actions.add(previewDataIPAction);
             }
                 break;
 
             case GROUP_CONNECTIONS: {
             	actions.add(openDSEIPAction);
-            	//actions.add(newJdbcCPIPAction);
-            	//actions.add(newSFCPIPAction);
+            	actions.add(newJdbcCPIPAction);
+            	actions.add(newSFCPIPAction);
+            	actions.add(newWSSoapIPAction);
             }
                 break;
 

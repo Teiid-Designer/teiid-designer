@@ -91,6 +91,8 @@ public class Messages  extends NLS {
     
     public static String OpenDatatoolsDataSourceExplorer;
     
+    public static String PreviewData;
+    
     public static String SelectActionsGroup;
     
     public static String TeiidActionsManager;

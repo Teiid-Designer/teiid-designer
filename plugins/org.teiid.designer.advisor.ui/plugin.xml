@@ -24,10 +24,10 @@
          point="org.eclipse.ui.views">
       <view
             category="com.metamatrix.modeler.ui"
-            class="org.teiid.designer.advisor.ui.views.ActionsManagerView"
+            class="org.teiid.designer.advisor.ui.views.ActionLibraryView"
             icon="icons/full/cview16/AdvisorIcon.png"
-            id="org.teiid.designer.advisor.ui.views.TaskManagerViewID"
-            name="Teid Actions">
+            id="org.teiid.designer.advisor.ui.views.ActionLibraryViewID"
+            name="Action Library">
       </view>
    </extension>
    

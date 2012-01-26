@@ -96,10 +96,10 @@ public class ActionsPanel extends ManagedForm implements AdvisorUiConstants {
 
         aspectSection = new ActionsSection(toolkit, body);
         
-        Button tempButton1 = new Button(body, SWT.PUSH);
-        tempButton1.setText("TEST 1");
-        Button tempButton2 = new Button(body, SWT.PUSH);
-        tempButton2.setText("TEST 2");
+//        Button tempButton1 = new Button(body, SWT.PUSH);
+//        tempButton1.setText("TEST 1");
+//        Button tempButton2 = new Button(body, SWT.PUSH);
+//        tempButton2.setText("TEST 2");
         
         new ActionsCheatSheetSection(toolkit, body);
         

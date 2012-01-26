@@ -99,6 +99,7 @@ public interface AdvisorUiConstants {
 		
 		String CREATE_VDB = "org.teiid.designer.new.vdb"; //$NON-NLS-1$
 		String EXECUTE_VDB = "org.teiid.designer.execute.vdb"; //$NON-NLS-1$
+		String PREVIEW_DATA = "org.teiid.designer.previewData"; //$NON-NLS-1$
 	}
 	
 	interface COMMAND_LABELS {
@@ -136,7 +137,8 @@ public interface AdvisorUiConstants {
 		
 		String NEW_TEIID_MODEL_PROJECT = Messages.CreateTeiidModelProject;
 		String CREATE_VDB = Messages.CreateVdb;
-		String EXECUTE_VDB = Messages.ExecuteVdb; 
+		String EXECUTE_VDB = Messages.ExecuteVdb;
+		String PREVIEW_DATA = Messages.PreviewData; 
 	}
 	
 	interface COMMAND_LABELS_SHORT {
@@ -236,6 +238,7 @@ public interface AdvisorUiConstants {
 	    String NEW_MODEL_ACTION = CTOOL16 + "new-model-wiz.gif"; //$NON-NLS-1$
 	    String NEW_PROJECT_ACTION = CTOOL16 + "new-project-wiz.gif";  //$NON-NLS-1$
 	    String EXECUTE_VDB_ACTION = CTOOL16 + "execute-vdb.gif"; //$NON-NLS-1$
+	    String PREVIEW_DATA = CTOOL16 + "preview-data.gif"; //$NON-NLS-1$
 	    
 	    String DATA_SOURCE_EXPLORER_VIEW = CTOOL16 + "data-source-explorer-view.gif";  //$NON-NLS-1$
 	    String NEW_CONNECTION_PROFILE = CTOOL16 + "new-connection-profile.gif";  //$NON-NLS-1$

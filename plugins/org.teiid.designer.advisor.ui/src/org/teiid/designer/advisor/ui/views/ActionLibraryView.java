@@ -16,8 +16,8 @@ import org.eclipse.ui.part.ViewPart;
 
 import com.metamatrix.ui.internal.util.UiUtil;
 
-public class ActionsManagerView  extends ViewPart {
-    private static final String TASK_MANAGER_HELP_ID = "org.teiid.designer.advisor.ui.taskManagerView"; //$NON-NLS-1$
+public class ActionLibraryView  extends ViewPart {
+    private static final String ACTION_LIBRARY_VIEW_HELP_ID = "org.teiid.designer.advisor.ui.actionLibraryView"; //$NON-NLS-1$
 
     private Composite control;
 
@@ -27,7 +27,7 @@ public class ActionsManagerView  extends ViewPart {
     /**
      * The constructor.
      */
-    public ActionsManagerView() {
+    public ActionLibraryView() {
         super();
     }
 
@@ -45,7 +45,7 @@ public class ActionsManagerView  extends ViewPart {
         new ActionsPanel(control);
 
         IWorkbenchHelpSystem helpSystem = UiUtil.getWorkbench().getHelpSystem();
-        helpSystem.setHelp(control, TASK_MANAGER_HELP_ID);
+        helpSystem.setHelp(control, ACTION_LIBRARY_VIEW_HELP_ID);
     }
 
     /**

@@ -21,6 +21,7 @@ import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.teiid.designer.advisor.ui.AdvisorUiConstants;
 import org.teiid.designer.advisor.ui.AdvisorUiPlugin;
 import org.teiid.designer.datatools.ui.dialogs.NewTeiidFilteredCPWizard;
@@ -213,7 +214,7 @@ public class AdvisorActionFactory implements AdvisorUiConstants {
 	        return;
 		}
 		
-		MessageDialog.openWarning(Display.getCurrent().getActiveShell(), "Unimplemented Action", 
+		MessageDialog.openWarning(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Unimplemented Action", 
 					"Action for ID [" + id + "] is not yet implemented");
 	}
 	
@@ -324,15 +325,16 @@ public class AdvisorActionFactory implements AdvisorUiConstants {
 	private static void createConnection(String id) {
 		if( id.equalsIgnoreCase(CONNECTION_PROFILE_IDS.CATEGORY_JDBC) ) {
 			NewJDBCFilteredCPWizard wiz = new NewJDBCFilteredCPWizard();
-	        WizardDialog wizardDialog = new WizardDialog(Display.getCurrent().getActiveShell(), wiz);
-	        wizardDialog.setBlockOnOpen(true);
-	        wizardDialog.open();
+			ModelerUiViewUtils.launchWizard(wiz, new StructuredSelection());
+//	        WizardDialog wizardDialog = new WizardDialog(Display.getCurrent().getActiveShell(), wiz);
+//	        wizardDialog.setBlockOnOpen(true);
+//	        wizardDialog.open();
 		} else {
 			INewWizard wiz = (INewWizard) new NewTeiidFilteredCPWizard(id);
-	
-			WizardDialog wizardDialog = new WizardDialog(Display.getCurrent().getActiveShell(), (Wizard) wiz);
-			wizardDialog.setBlockOnOpen(true);
-			wizardDialog.open();
+			ModelerUiViewUtils.launchWizard(wiz, new StructuredSelection());
+//			WizardDialog wizardDialog = new WizardDialog(Display.getCurrent().getActiveShell(), (Wizard) wiz);
+//			wizardDialog.setBlockOnOpen(true);
+//			wizardDialog.open();
 		}
 	}
 	

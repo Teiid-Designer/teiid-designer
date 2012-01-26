@@ -50,6 +50,7 @@ public class DSPPluginImageHelper implements AdvisorUiConstants.Images {
     public final Image IMPORT_WSDL_IMAGE = AdvisorUiPlugin.getDefault().getImage(IMPORT_WSDL);
     public final Image EXPORT_WAR_IMAGE = AdvisorUiPlugin.getDefault().getImage(EXPORT_WAR);
     public final Image EXECUTE_VDB_IMAGE = AdvisorUiPlugin.getDefault().getImage(EXECUTE_VDB_ACTION);
+    public final Image PREVIEW_DATA_IMAGE = AdvisorUiPlugin.getDefault().getImage(PREVIEW_DATA);
     public final Image OPEN_DATA_SOURCE_EXPLORER_IMAGE = AdvisorUiPlugin.getDefault().getImage(DATA_SOURCE_EXPLORER_VIEW);
     public final Image NEW_CONNECTION_PROFILE_IMAGE = AdvisorUiPlugin.getDefault().getImage(NEW_CONNECTION_PROFILE);
 }

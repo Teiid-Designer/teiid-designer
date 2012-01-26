@@ -47,6 +47,8 @@ public class DSPAdvisorI18n extends NLS {
     public static String Action_FixLabel;
 
     // Actions & Options
+    public static String Action_ExecuteVdb_text;
+    public static String Action_ExecuteVdb_tooltip;
     public static String Action_NewVdb_text;
     public static String Action_NewVdb_tooltip;
     public static String Action_SaveVdb_text;
@@ -63,10 +65,14 @@ public class DSPAdvisorI18n extends NLS {
     public static String Action_ImportJdbc_tooltip;
     public static String Action_ImportXsd_text;
     public static String Action_ImportXsd_tooltip;
+    public static String Action_PreviewData_text;
+    public static String Action_PreviewData_tooltip;
 
     public static String Options_Action_OpenProblemsView_description;
     public static String Options_Action_ImportJDBC_description;
     public static String Options_Action_ImportXsd_description;
+    public static String Options_Action_PreviewData_description;
+    public static String Options_Action_ExecuteVdb_description;
     public static String Options_Action_NewVdb_description;
     public static String Options_Action_NewRelationalSourceModel_description;
     public static String Options_Action_NewRelationalViewModel_description;
@@ -90,6 +96,9 @@ public class DSPAdvisorI18n extends NLS {
     public static String Action_ImportFlatFile_text;
     public static String Action_ImportFlatFile_tooltip;
     public static String Options_Action_ImportFlatFile_description;
+    public static String Action_ImportXmlFile_text;
+    public static String Action_ImportXmlFile_tooltip;
+    public static String Options_Action_ImportXmlFile_description;
     public static String Options_Action_OpenDSEAction_description;
     
 
