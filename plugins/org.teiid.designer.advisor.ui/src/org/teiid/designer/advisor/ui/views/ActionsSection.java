@@ -125,6 +125,7 @@ public class ActionsSection implements AdvisorUiConstants{
         addHyperlink(panel, COMMAND_IDS.IMPORT_SALESFORCE, false);
         addHyperlink(panel, COMMAND_IDS.IMPORT_WSDL_TO_SOURCE, false);
         addHyperlink(panel, COMMAND_IDS.IMPORT_WSDL_TO_WS, false);
+        addHyperlink(panel, COMMAND_IDS.PREVIEW_DATA, false);
         
         return panel;
 	}

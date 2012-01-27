@@ -14,17 +14,12 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.datatools.connectivity.db.generic.ui.wizard.NewJDBCFilteredCPWizard;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.INewWizard;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.teiid.designer.advisor.ui.AdvisorUiConstants;
-import org.teiid.designer.advisor.ui.AdvisorUiPlugin;
 import org.teiid.designer.datatools.ui.dialogs.NewTeiidFilteredCPWizard;
+import org.teiid.designer.runtime.ui.preview.PreviewDataAction;
 
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelerUiViewUtils;
@@ -63,6 +58,7 @@ public class AdvisorActionFactory implements AdvisorUiConstants {
         addActionHandler(COMMAND_IDS.NEW_MODEL_XML_DOC, COMMAND_LABELS.NEW_MODEL_XML_DOC, COMMAND_LABELS_SHORT.NEW_MODEL_XML_DOC);
         addActionHandler(COMMAND_IDS.CREATE_VDB, COMMAND_LABELS.CREATE_VDB, COMMAND_LABELS_SHORT.CREATE_VDB);
         addActionHandler(COMMAND_IDS.EXECUTE_VDB, COMMAND_LABELS.EXECUTE_VDB, COMMAND_LABELS.EXECUTE_VDB);
+        addActionHandler(COMMAND_IDS.PREVIEW_DATA, COMMAND_LABELS.PREVIEW_DATA, COMMAND_LABELS.PREVIEW_DATA);
         addActionHandler(COMMAND_IDS.OPEN_DATA_SOURCE_EXPLORER_VIEW, COMMAND_LABELS.OPEN_DATA_SOURCE_EXPLORER_VIEW, COMMAND_LABELS.OPEN_DATA_SOURCE_EXPLORER_VIEW);
         addActionHandler(COMMAND_IDS.CREATE_WEB_SRVICES_DATA_FILE, COMMAND_LABELS.CREATE_WEB_SRVICES_DATA_FILE, COMMAND_LABELS.CREATE_WEB_SRVICES_DATA_FILE);
         addActionHandler(COMMAND_IDS.GENERATE_WS_MODELS_FROM_WSDL, COMMAND_LABELS.GENERATE_WS_MODELS_FROM_WSDL, COMMAND_LABELS.GENERATE_WS_MODELS_FROM_WSDL);
@@ -214,8 +210,14 @@ public class AdvisorActionFactory implements AdvisorUiConstants {
 	        return;
 		}
 		
-		MessageDialog.openWarning(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Unimplemented Action", 
-					"Action for ID [" + id + "] is not yet implemented");
+		if( id.equalsIgnoreCase(COMMAND_IDS.PREVIEW_DATA)) {
+			PreviewDataAction action = new PreviewDataAction();
+			action.run();
+	        return;
+		}
+		
+		MessageDialog.openWarning(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Unimplemented Action",  //$NON-NLS-1$
+					"Action for ID [" + id + "] is not yet implemented"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 	
 	public static String getImageId(String id) {
@@ -303,6 +305,10 @@ public class AdvisorActionFactory implements AdvisorUiConstants {
 			return Images.EXECUTE_VDB_ACTION;
 		}
 		
+		if( id.equalsIgnoreCase(COMMAND_IDS.PREVIEW_DATA)) {
+			return Images.PREVIEW_DATA;
+		}
+		
 		if( id.equalsIgnoreCase(COMMAND_IDS.NEW_TEIID_MODEL_PROJECT)) {
 			return Images.NEW_PROJECT_ACTION;
 		}
@@ -326,23 +332,10 @@ public class AdvisorActionFactory implements AdvisorUiConstants {
 		if( id.equalsIgnoreCase(CONNECTION_PROFILE_IDS.CATEGORY_JDBC) ) {
 			NewJDBCFilteredCPWizard wiz = new NewJDBCFilteredCPWizard();
 			ModelerUiViewUtils.launchWizard(wiz, new StructuredSelection());
-//	        WizardDialog wizardDialog = new WizardDialog(Display.getCurrent().getActiveShell(), wiz);
-//	        wizardDialog.setBlockOnOpen(true);
-//	        wizardDialog.open();
 		} else {
 			INewWizard wiz = (INewWizard) new NewTeiidFilteredCPWizard(id);
 			ModelerUiViewUtils.launchWizard(wiz, new StructuredSelection());
-//			WizardDialog wizardDialog = new WizardDialog(Display.getCurrent().getActiveShell(), (Wizard) wiz);
-//			wizardDialog.setBlockOnOpen(true);
-//			wizardDialog.open();
 		}
 	}
 	
-	private static IWorkbench getWorkbench() {
-		return AdvisorUiPlugin.getDefault().getWorkbench();
-	}
-	
-	private static IWorkbenchWindow getWindow() {
-		return getWorkbench().getActiveWorkbenchWindow();
-	}
 }
