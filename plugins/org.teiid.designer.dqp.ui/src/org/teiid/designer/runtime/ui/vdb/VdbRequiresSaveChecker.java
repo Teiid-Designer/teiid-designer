@@ -1,4 +1,4 @@
-package org.teiid.designer.runtime.ui;
+package org.teiid.designer.runtime.ui.vdb;
 
 import java.lang.reflect.InvocationTargetException;
 

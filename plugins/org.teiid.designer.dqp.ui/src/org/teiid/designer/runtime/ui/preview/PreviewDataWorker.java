@@ -1,11 +1,11 @@
 /*
  * JBoss, Home of Professional Open Source.
- *
- * See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
- *
- * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
- */
-package com.metamatrix.modeler.internal.dqp.ui.actions;
+*
+* See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+*
+* See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+*/
+package org.teiid.designer.runtime.ui.preview;
 
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
@@ -38,7 +38,6 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.BusyIndicator;
@@ -49,10 +48,10 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressConstants;
 import org.teiid.adminapi.Admin;
 import org.teiid.datatools.connectivity.ConnectivityUtil;
@@ -66,11 +65,10 @@ import org.teiid.designer.runtime.TeiidVdb;
 import org.teiid.designer.runtime.preview.PreviewManager;
 import org.teiid.designer.runtime.preview.jobs.TeiidPreviewVdbJob;
 import org.teiid.designer.runtime.preview.jobs.WorkspacePreviewVdbJob;
-import org.teiid.designer.runtime.ui.RuntimeAssistant;
+import org.teiid.designer.runtime.ui.server.RuntimeAssistant;
 
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.metamodels.webservice.Operation;
-import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlAspectHelper;
 import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlProcedureAspect;
 import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlTableAspect;
@@ -78,24 +76,17 @@ import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
-import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
-import com.metamatrix.modeler.internal.dqp.ui.jdbc.IResults;
 import com.metamatrix.modeler.internal.dqp.ui.workspace.dialogs.AccessPatternColumnsDialog;
 import com.metamatrix.modeler.internal.dqp.ui.workspace.dialogs.ParameterInputDialog;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelIdentifier;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelObjectUtilities;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
-import com.metamatrix.modeler.ui.actions.SortableSelectionAction;
 import com.metamatrix.modeler.ui.editors.ModelEditorManager;
 import com.metamatrix.modeler.webservice.util.WebServiceUtil;
-import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
 import com.metamatrix.ui.internal.util.UiUtil;
 
-/**
- * @since 5.0
- */
-public class PreviewTableDataContextAction extends SortableSelectionAction {
-	public static final String THIS_CLASS = I18nUtil.getPropertyPrefix(PreviewTableDataContextAction.class);
+public class PreviewDataWorker {
+	public static final String THIS_CLASS = I18nUtil.getPropertyPrefix(PreviewDataWorker.class);
 	
     static String getString( String key ) {
         return DqpUiConstants.UTIL.getString(THIS_CLASS + key);
@@ -110,86 +101,180 @@ public class PreviewTableDataContextAction extends SortableSelectionAction {
 	}
     
     /**
-     * @since 5.0
-     */
-    public PreviewTableDataContextAction() {
-        super();
-        setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(DqpUiConstants.Images.PREVIEW_DATA_ICON));
-        setWiredForSelection(true);
-        setToolTipText(getString("tooltip")); //$NON-NLS-1$
-    }
-
-    /**
-     * @param sql
-     * @param ID
-     * @return
-     * @throws CoreException
-     */
-    private ILaunchConfigurationWorkingCopy creatLaunchConfig( String sql,
-                                                               DatabaseIdentifier ID ) throws CoreException {
-        ILaunchConfigurationWorkingCopy config = LaunchHelper.createExternalClientConfiguration(ID, "pvdb"); //$NON-NLS-1$
-        config.setAttribute(RoutineLaunchConfigurationAttribute.ROUTINE_LAUNCH_SQL, sql);
-        // ROUTINE_LAUNCH_TYPE 3 is ad-hoc SQL
-        config.setAttribute(RoutineLaunchConfigurationAttribute.ROUTINE_LAUNCH_TYPE, 3);
-        return config;
-    }
-
-    /**
-     * This method was created to allow the transformation.ui plugin, and TransformationObjectEditorPage to get it's own instance
-     * of this action so it can allow preview of the specific edited virtual table or procedure. This allows the original action
-     * to remain workspace selection driven. Override abstract method
+     * Valid selections include Relational Tables, Procedures.
      * 
-     * @see com.metamatrix.modeler.ui.actions.SortableSelectionAction#getClone()
+     * @return is previeable or not
+     */
+    public boolean isPreviewableEObject( EObject eObject ) {
+        // An object can be previewed if it is of a certain object type in a Source/Relational model
+        // This is changed from previous releases because the requirement of having a Source binding prior to
+        // enablement has changed. Now the binding check is moved to the run() method which performs the check
+        // and queries the user for any additional info that's needed to execute the preview, including creating
+        // a source binding if necessary.
+
+
+        // eObj must be previewable
+        return ModelObjectUtilities.isExecutable(eObject);
+
+    }
+    
+    public void executePreview(EObject eObject) throws ModelWorkspaceException {
+    	run(eObject);
+    }
+    
+    public Shell getShell() {
+    	return PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+    }
+    
+    public boolean isPreviewPossible() {
+    	if( !ModelEditorManager.getDirtyResources().isEmpty() ) {
+    		boolean doContinue = MessageDialog.openQuestion(getShell(), 
+    				getString("unsavedModelsWarning.title"),  //$NON-NLS-1$
+    				getString("unsavedModelsWarning.message")); //$NON-NLS-1$
+        	if( !doContinue ) {
+        		return false;
+        	}
+    	}
+
+    	// make sure preview is enabled and that there is a Teiid server
+    	if (!RuntimeAssistant.ensurePreviewEnabled(getShell())) {
+    	    return false;
+    	}
+    	
+    	return true;
+    }
+    
+    /**
+     * @see org.eclipse.jface.action.IAction#run()
      * @since 5.0
      */
-    @Override
-    public SortableSelectionAction getClone() {
-        return new PreviewTableDataContextAction();
+
+    public void run(final EObject eObject) {
+
+    	// if we get here we know preview is enabled and a server exists and can be connected to
+    	
+        if ((Job.getJobManager().find(WorkspacePreviewVdbJob.WORKSPACE_PREVIEW_FAMILY).length != 0) ||
+                (Job.getJobManager().find(TeiidPreviewVdbJob.TEIID_PREVIEW_FAMILY).length != 0)) {
+            PreviewUnavailableDialog dialog = new PreviewUnavailableDialog(getShell());
+            dialog.open();
+            
+            if (dialog.shouldOpenProgressView()) {
+                IWorkbenchPage page = UiUtil.getWorkbenchPage();
+                
+                if (page != null) {
+                    try {
+                        page.showView(IProgressConstants.PROGRESS_VIEW_ID);
+                    } catch (PartInitException e) {
+                        DqpUiConstants.UTIL.log(e);
+                    }
+                }
+            }
+
+            return;
+        }
+        
+        IConnectionInfoHelper helper = new ConnectionInfoHelper();
+        ModelResource mr = ModelUtilities.getModelResourceForModelObject(eObject);
+        if (mr != null && ModelIdentifier.isPhysicalModelType(mr) ) { 
+        	if( !helper.hasConnectionInfo(mr)) {
+	        	MessageDialog.openWarning(getShell(), 
+	        			getString("noPreviewAvailableTitle"),  //$NON-NLS-1$
+	        			getString("noProfileAvailableMissingConnectionInfoMessage", mr.getItemName())); //$NON-NLS-1$
+	        	return;
+	        }
+        	
+        	String translatorName = helper.getTranslatorName(mr);
+        	if( translatorName != null ) {
+        		TeiidTranslator tt = null; 
+        		
+        		try {
+					tt = getServerManager().getDefaultServer().getAdmin().getTranslator(translatorName);
+				} catch (Exception e) {
+					DqpUiConstants.UTIL.log(e);
+				}
+        		
+        		if( tt == null ) {
+        			boolean result = MessageDialog.openQuestion(getShell(), 
+    	        			getString("noMatchingTranslatorTitle"),  //$NON-NLS-1$
+    	        			getString("noMatchingTeiidTranslatorMessage", translatorName, mr.getItemName())); //$NON-NLS-1$
+        			if( !result ) {
+        				return;
+        			}
+        		}
+        		
+        	}
+        }
+        
+        if(! validateResultDisplayProperties()) {
+        	return;
+        }
+        
+        final PreviewManager previewManager = getServerManager().getPreviewManager();
+        assert (previewManager != null) : "PreviewManager is null"; //$NON-NLS-1$
+
+        ProgressMonitorDialog dialog = new ProgressMonitorDialog(getShell());
+        IRunnableWithProgress runnable = new IRunnableWithProgress() {
+            @Override
+            public void run( IProgressMonitor monitor ) throws InvocationTargetException, InterruptedException {
+                try {
+                    previewManager.previewSetup(eObject, monitor);
+                } catch (InterruptedException e) {
+                    throw e;
+                } catch (Exception e) {
+                    throw new InvocationTargetException(e);
+                }
+            }
+        };
+
+
+        // show dialog
+        try {
+            dialog.run(true, true, runnable);
+        } catch (InterruptedException e) {
+            // canceled by user
+        } catch (Throwable e) {
+            if (e instanceof InvocationTargetException) {
+                e = ((InvocationTargetException)e).getTargetException();
+            }
+            DqpUiConstants.UTIL.log(e);
+            MessageDialog.openError(getShell(),
+                                    null,
+                                    getString("error_in_execution")); //$NON-NLS-1$
+        }
+
+        if (dialog.getReturnCode() == Window.OK) {
+            // setup successful so run preview
+            try {
+                internalRun(eObject);
+            } catch (Exception e) {
+                DqpUiConstants.UTIL.log(e);
+                MessageDialog.openError(getShell(),
+                                        null,
+                                        getString("error_in_execution")); //$NON-NLS-1$
+            }
+        }
     }
-
-    private ParameterInputDialog getInputDialog( List<EObject> params ) {
-        ParameterInputDialog dialog = new ParameterInputDialog(getShell(), params);
-        return dialog;
-    }
-
-    private ServerManager getServerManager() {
-        return DqpPlugin.getInstance().getServerManager();
-    }
-
-    private Shell getShell() {
-        return Display.getCurrent().getActiveShell();
-    }
-
-    private IConnection getSqlConnection( IConnectionProfile profile ) {
-        IConnectionProfileProvider provider = profile.getProvider();
-        IConnectionFactoryProvider factory = provider.getConnectionFactory("java.sql.Connection"); //$NON-NLS-1$
-        final String factoryId = factory.getId();
-
-        return profile.createConnection(factoryId);
-    }
-
+    
     /**
      * Open the launch configuration dialog, passing in the current workbench selection.
      * 
      * @throws ModelWorkspaceException
      */
-    private void internalRun() throws ModelWorkspaceException {
+    private void internalRun(final EObject eObject) throws ModelWorkspaceException {
         String sql = null;
         List<String> paramValues = null;
         final Shell shell = getShell();
         
         boolean isXML = false;
         
-    	final EObject selected = SelectionUtilities.getSelectedEObject(getSelection());
-
-    	ModelResource mr = ModelUtilities.getModelResourceForModelObject(selected);
+    	ModelResource mr = ModelUtilities.getModelResourceForModelObject(eObject);
 
     	IProject project = mr.getCorrespondingResource().getProject();
 
     	List accessPatternsColumns = null;
-    	if (SqlAspectHelper.isTable(selected)) {
-    		SqlTableAspect tableAspect = (SqlTableAspect)SqlAspectHelper.getSqlAspect(selected);
-    		Collection accessPatterns = tableAspect.getAccessPatterns(selected);
+    	if (SqlAspectHelper.isTable(eObject)) {
+    		SqlTableAspect tableAspect = (SqlTableAspect)SqlAspectHelper.getSqlAspect(eObject);
+    		Collection accessPatterns = tableAspect.getAccessPatterns(eObject);
 
     		if (accessPatterns != null && !accessPatterns.isEmpty()) {
     			// first need to type the collection since dialog requires typed collection
@@ -212,8 +297,8 @@ public class PreviewTableDataContextAction extends SortableSelectionAction {
     		}
     	}
 
-    	if (selected instanceof Operation) {
-    		List<EObject> inputElements = WebServiceUtil.getInputElements((Operation)selected, false);
+    	if (eObject instanceof Operation) {
+    		List<EObject> inputElements = WebServiceUtil.getInputElements((Operation)eObject, false);
 
     		if (!inputElements.isEmpty()) {
     			ParameterInputDialog dialog = getInputDialog(inputElements);
@@ -221,19 +306,19 @@ public class PreviewTableDataContextAction extends SortableSelectionAction {
 
     			if (dialog.getReturnCode() == Window.OK) {
     				paramValues = dialog.getParameterValues();
-    				sql = WebServiceUtil.getSql((Operation)selected, paramValues);
+    				sql = WebServiceUtil.getSql((Operation)eObject, paramValues);
     				paramValues = Collections.emptyList(); // no need to pass these to the executor
     			} else {
     				return;
     			}
     		} else {
     			paramValues = Collections.emptyList();
-    			sql = WebServiceUtil.getSql((Operation)selected, paramValues);
+    			sql = WebServiceUtil.getSql((Operation)eObject, paramValues);
     		}
     		isXML = true;
-    	} else if (SqlAspectHelper.isProcedure(selected)) {
-    		SqlProcedureAspect procAspect = (SqlProcedureAspect)SqlAspectHelper.getSqlAspect(selected);
-    		List<EObject> params = procAspect.getParameters(selected);
+    	} else if (SqlAspectHelper.isProcedure(eObject)) {
+    		SqlProcedureAspect procAspect = (SqlProcedureAspect)SqlAspectHelper.getSqlAspect(eObject);
+    		List<EObject> params = procAspect.getParameters(eObject);
     		if (params != null && !params.isEmpty()) {
     			ParameterInputDialog dialog = getInputDialog(params);
     			dialog.open();
@@ -252,7 +337,7 @@ public class PreviewTableDataContextAction extends SortableSelectionAction {
     	final Object[] paramValuesAsArray = paramValues.toArray();
 
     	if (sql == null) {
-    		sql = ModelObjectUtilities.getSQL(selected, paramValuesAsArray, accessPatternsColumns);
+    		sql = ModelObjectUtilities.getSQL(eObject, paramValuesAsArray, accessPatternsColumns);
     		sql = insertParameterValuesSQL(sql, paramValues);
     	}
 
@@ -328,6 +413,51 @@ public class PreviewTableDataContextAction extends SortableSelectionAction {
     	}
     }
     
+    private ParameterInputDialog getInputDialog( List<EObject> params ) {
+        ParameterInputDialog dialog = new ParameterInputDialog(getShell(), params);
+        return dialog;
+    }
+    
+	private String insertParameterValuesSQL(String sql, List<String> paramValues) {
+		if( paramValues != null && !paramValues.isEmpty() ) {
+			for (String value : paramValues) {
+				// skip over null values as those don't have a ? to replace
+				if( value != null ) {
+					sql = sql.replaceFirst("\\?", "'" + value + "'"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				}
+			}
+		}
+		return sql;
+	}
+	
+    public ServerManager getServerManager() {
+        return DqpPlugin.getInstance().getServerManager();
+    }
+    
+    /**
+     * @param sql
+     * @param ID
+     * @return
+     * @throws CoreException
+     */
+    private ILaunchConfigurationWorkingCopy creatLaunchConfig( String sql,
+                                                               DatabaseIdentifier ID ) throws CoreException {
+        ILaunchConfigurationWorkingCopy config = LaunchHelper.createExternalClientConfiguration(ID, "pvdb"); //$NON-NLS-1$
+        config.setAttribute(RoutineLaunchConfigurationAttribute.ROUTINE_LAUNCH_SQL, sql);
+        // ROUTINE_LAUNCH_TYPE 3 is ad-hoc SQL
+        config.setAttribute(RoutineLaunchConfigurationAttribute.ROUTINE_LAUNCH_TYPE, 3);
+        return config;
+    }
+    
+
+    private IConnection getSqlConnection( IConnectionProfile profile ) {
+        IConnectionProfileProvider provider = profile.getProvider();
+        IConnectionFactoryProvider factory = provider.getConnectionFactory("java.sql.Connection"); //$NON-NLS-1$
+        final String factoryId = factory.getId();
+
+        return profile.createConnection(factoryId);
+    }
+    
 	private boolean validateResultDisplayProperties() {
 		
 		IPreferenceStore store = ResultsViewUIPlugin.getDefault().getPreferenceStore();
@@ -345,193 +475,6 @@ public class PreviewTableDataContextAction extends SortableSelectionAction {
 		}
 	    return true;
 	}
-
-	private String insertParameterValuesSQL(String sql, List<String> paramValues) {
-		if( paramValues != null && !paramValues.isEmpty() ) {
-			for (String value : paramValues) {
-				// skip over null values as those don't have a ? to replace
-				if( value != null ) {
-					sql = sql.replaceFirst("\\?", "'" + value + "'"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				}
-			}
-		}
-		return sql;
-	}
-
-    /**
-     *
-     */
-    @Override
-    public boolean isApplicable( ISelection selection ) {
-        return isValidSelection(selection);
-    }
-
-    /**
-     * Valid selections include Relational Tables, Procedures or Relational Models. The roots instance variable will populated
-     * with all Tables and Procedures contained within the current selection.
-     * 
-     * @return
-     * @since 4.1
-     */
-    @Override
-    protected boolean isValidSelection( ISelection selection ) {
-    	setToolTipText(getString("tooltip")); //$NON-NLS-1$
-    	setText(getString("tooltip")); //$NON-NLS-1$
-        // An object can be previewed if it is of a certain object type in a Source/Relational model
-        // This is changed from previous releases because the requirement of having a Source binding prior to
-        // enablement has changed. Now the binding check is moved to the run() method which performs the check
-        // and queries the user for any additional info that's needed to execute the preview, including creating
-        // a source binding if necessary.
-
-        // must have one and only one EObject selected
-        EObject eObj = SelectionUtilities.getSelectedEObject(selection);
-        if (eObj == null) return false;
-
-        // eObj must be previewable
-        boolean isExecutable = ModelObjectUtilities.isExecutable(eObj);
-        if( !isExecutable ) return false;
-        
-        setToolTipText(getString("tooltipOnEnable", ModelerCore.getModelEditor().getName(eObj))); //$NON-NLS-1$
-        setText(getString("tooltipOnEnable", ModelerCore.getModelEditor().getName(eObj))); //$NON-NLS-1$
-        return true;
-    }
-
-    /**
-     * @see org.eclipse.jface.action.IAction#run()
-     * @since 5.0
-     */
-    @Override
-    public void run() {
-    	if( !ModelEditorManager.getDirtyResources().isEmpty() ) {
-    		boolean doContinue = MessageDialog.openQuestion(getShell(), 
-    				getString("unsavedModelsWarning.title"),  //$NON-NLS-1$
-    				getString("unsavedModelsWarning.message")); //$NON-NLS-1$
-        	if( !doContinue ) {
-        		return;
-        	}
-    	}
-
-    	// make sure preview is enabled and that there is a Teiid server
-    	if (!RuntimeAssistant.ensurePreviewEnabled(getShell())) {
-    	    return;
-    	}
-
-    	// if we get here we know preview is enabled and a server exists and can be connected to
-    	
-        if ((Job.getJobManager().find(WorkspacePreviewVdbJob.WORKSPACE_PREVIEW_FAMILY).length != 0) ||
-                (Job.getJobManager().find(TeiidPreviewVdbJob.TEIID_PREVIEW_FAMILY).length != 0)) {
-            PreviewUnavailableDialog dialog = new PreviewUnavailableDialog(getShell());
-            dialog.open();
-            
-            if (dialog.shouldOpenProgressView()) {
-                IWorkbenchPage page = UiUtil.getWorkbenchPage();
-                
-                if (page != null) {
-                    try {
-                        page.showView(IProgressConstants.PROGRESS_VIEW_ID);
-                    } catch (PartInitException e) {
-                        DqpUiConstants.UTIL.log(e);
-                    }
-                }
-            }
-
-            return;
-        }
-
-        final EObject eObj = SelectionUtilities.getSelectedEObject(getSelection());
-        
-        IConnectionInfoHelper helper = new ConnectionInfoHelper();
-        ModelResource mr = ModelUtilities.getModelResourceForModelObject(eObj);
-        if (mr != null && ModelIdentifier.isPhysicalModelType(mr) ) { 
-        	if( !helper.hasConnectionInfo(mr)) {
-	        	MessageDialog.openWarning(getShell(), 
-	        			getString("noPreviewAvailableTitle"),  //$NON-NLS-1$
-	        			getString("noProfileAvailableMissingConnectionInfoMessage", mr.getItemName())); //$NON-NLS-1$
-	        	return;
-	        }
-        	
-        	String translatorName = helper.getTranslatorName(mr);
-        	if( translatorName != null ) {
-        		TeiidTranslator tt = null; 
-        		
-        		try {
-					tt = getServerManager().getDefaultServer().getAdmin().getTranslator(translatorName);
-				} catch (Exception e) {
-					DqpUiConstants.UTIL.log(e);
-				}
-        		
-        		if( tt == null ) {
-        			boolean result = MessageDialog.openQuestion(getShell(), 
-    	        			getString("noMatchingTranslatorTitle"),  //$NON-NLS-1$
-    	        			getString("noMatchingTeiidTranslatorMessage", translatorName, mr.getItemName())); //$NON-NLS-1$
-        			if( !result ) {
-        				return;
-        			}
-        		}
-        		
-        	}
-        }
-        
-        if(! validateResultDisplayProperties()) {
-        	return;
-        }
-        
-        final PreviewManager previewManager = getServerManager().getPreviewManager();
-        assert (previewManager != null) : "PreviewManager is null"; //$NON-NLS-1$
-
-        ProgressMonitorDialog dialog = new ProgressMonitorDialog(getShell());
-        IRunnableWithProgress runnable = new IRunnableWithProgress() {
-            @Override
-            public void run( IProgressMonitor monitor ) throws InvocationTargetException, InterruptedException {
-                try {
-                    previewManager.previewSetup(eObj, monitor);
-                } catch (InterruptedException e) {
-                    throw e;
-                } catch (Exception e) {
-                    throw new InvocationTargetException(e);
-                }
-            }
-        };
-
-
-        // show dialog
-        try {
-            dialog.run(true, true, runnable);
-        } catch (InterruptedException e) {
-            // canceled by user
-        } catch (Throwable e) {
-            if (e instanceof InvocationTargetException) {
-                e = ((InvocationTargetException)e).getTargetException();
-            }
-            DqpUiConstants.UTIL.log(e);
-            MessageDialog.openError(getShell(),
-                                    null,
-                                    getString("error_in_execution")); //$NON-NLS-1$
-        }
-
-        if (dialog.getReturnCode() == Window.OK) {
-            // setup successful so run preview
-            try {
-                internalRun();
-            } catch (Exception e) {
-                DqpUiConstants.UTIL.log(e);
-                MessageDialog.openError(getShell(),
-                                        null,
-                                        getString("error_in_execution")); //$NON-NLS-1$
-            }
-        }
-    }
-
-    /**
-     * Show the specified results in the results view.
-     * 
-     * @param theResults the results being displayed
-     * @since 5.5.3
-     */
-    @SuppressWarnings( "unused" )
-    private void showResults( final IResults theResults ) {
-        // REPLACE
-    }
     
     class PreviewUnavailableDialog extends MessageDialog {
         boolean openProgressView = false;
@@ -580,4 +523,5 @@ public class PreviewTableDataContextAction extends SortableSelectionAction {
             return this.openProgressView;
         }
     }
+
 }

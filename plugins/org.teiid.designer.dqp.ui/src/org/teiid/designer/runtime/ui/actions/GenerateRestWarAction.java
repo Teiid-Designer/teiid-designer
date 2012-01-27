@@ -5,7 +5,7 @@
  *
  * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
  */
-package org.teiid.designer.runtime.ui;
+package org.teiid.designer.runtime.ui.actions;
 
 import static com.metamatrix.modeler.dqp.ui.DqpUiConstants.UTIL;
 import static org.teiid.designer.runtime.extension.rest.RestModelExtensionConstants.NAMESPACE_PROVIDER;

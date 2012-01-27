@@ -5,7 +5,7 @@
  *
  * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
  */
-package org.teiid.designer.runtime.ui;
+package org.teiid.designer.runtime.ui.actions;
 
 import java.util.Properties;
 
@@ -31,6 +31,7 @@ import org.teiid.designer.datatools.ui.dialogs.TeiidCPWizardDialog;
 import org.teiid.designer.runtime.ExecutionAdmin;
 import org.teiid.designer.runtime.Server;
 import org.teiid.designer.runtime.TeiidJdbcInfo;
+import org.teiid.designer.runtime.ui.vdb.VdbRequiresSaveChecker;
 import org.teiid.designer.vdb.Vdb;
 
 import com.metamatrix.core.util.I18nUtil;

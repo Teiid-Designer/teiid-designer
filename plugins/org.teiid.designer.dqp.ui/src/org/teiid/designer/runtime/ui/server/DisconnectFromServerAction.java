@@ -1,4 +1,4 @@
-package org.teiid.designer.runtime.ui;
+package org.teiid.designer.runtime.ui.server;
 
 import static com.metamatrix.modeler.dqp.ui.DqpUiConstants.UTIL;
 

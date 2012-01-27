@@ -114,7 +114,7 @@ public interface UiConstants {
         }
 
         // DQP UI
-        String PREVIEW_DATA_ACTION_ID = "com.metamatrix.modeler.internal.dqp.ui.actions.PreviewTableDataContextAction"; //$NON-NLS-1$
+        String PREVIEW_DATA_ACTION_ID = "org.teiid.designer.runtime.ui.preview.PreviewTableDataContextAction"; //$NON-NLS-1$
     }
 
     // ============================================================================================================================

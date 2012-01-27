@@ -67,7 +67,7 @@
         name="%previewTableDataContextAction.name"
         point="org.teiid.designer.ui.modelObjectSpecialAction">
       <specialAction
-         name="com.metamatrix.modeler.internal.dqp.ui.actions.PreviewTableDataContextAction"
+         name="org.teiid.designer.runtime.ui.preview.PreviewTableDataContextAction"
          label="%previewTableDataContextAction.label">
       </specialAction>
    </extension>
@@ -76,7 +76,7 @@
         name="%deployVdbAction.name"
         point="org.teiid.designer.ui.modelResourceAction">
       <resourceAction
-         name="org.teiid.designer.runtime.ui.DeployVdbAction"
+         name="org.teiid.designer.runtime.ui.actions.DeployVdbAction"
          label="%deployVdbAction.label">
       </resourceAction>
    </extension>
@@ -85,7 +85,7 @@
         name="%executeVdbAction.name"
         point="org.teiid.designer.ui.modelResourceAction">
       <resourceAction
-         name="org.teiid.designer.runtime.ui.ExecuteVDBAction"
+         name="org.teiid.designer.runtime.ui.actions.ExecuteVDBAction"
          label="%executeVdbAction.label">
       </resourceAction>
    </extension>
@@ -94,13 +94,13 @@
         name="%generateWarAction.name"
         point="org.teiid.designer.ui.modelResourceAction">
       <resourceAction
-         name="org.teiid.designer.runtime.ui.GenerateWarAction"
+         name="org.teiid.designer.runtime.ui.actions.GenerateWarAction"
          label="%generateWarAction.label"><extension
         id="GenerateWarAction"
         name="%generateWarAction.name"
         point="org.teiid.designer.ui.modelResourceAction">
       <resourceAction
-         name="org.teiid.designer.runtime.ui.GenerateWarAction"
+         name="org.teiid.designer.runtime.ui.actions.GenerateWarAction"
          label="%generateWarAction.label">
       </resourceAction>
    </extension>
@@ -111,7 +111,7 @@
         name="%generateRestWarAction.name"
         point="org.teiid.designer.ui.modelResourceAction">
       <resourceAction
-         name="org.teiid.designer.runtime.ui.GenerateRestWarAction"
+         name="org.teiid.designer.runtime.ui.actions.GenerateRestWarAction"
          label="%generateRestWarAction.label">
       </resourceAction>
    </extension>

@@ -16,7 +16,7 @@ import org.eclipse.ui.part.PluginDropAdapter;
 import org.eclipse.ui.part.ResourceTransfer;
 import org.teiid.designer.runtime.Server;
 import org.teiid.designer.runtime.TeiidTranslator;
-import org.teiid.designer.runtime.ui.DeployVdbAction;
+import org.teiid.designer.runtime.ui.actions.DeployVdbAction;
 
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelResource;

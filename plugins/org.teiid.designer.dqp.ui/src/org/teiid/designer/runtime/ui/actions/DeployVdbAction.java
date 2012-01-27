@@ -5,7 +5,7 @@
  *
  * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
  */
-package org.teiid.designer.runtime.ui;
+package org.teiid.designer.runtime.ui.actions;
 
 import static com.metamatrix.modeler.dqp.ui.DqpUiConstants.PLUGIN_ID;
 import static com.metamatrix.modeler.dqp.ui.DqpUiConstants.UTIL;
@@ -32,6 +32,10 @@ import org.teiid.adminapi.VDB;
 import org.teiid.designer.runtime.PreferenceConstants;
 import org.teiid.designer.runtime.Server;
 import org.teiid.designer.runtime.ServerManager;
+import org.teiid.designer.runtime.ui.server.RuntimeAssistant;
+import org.teiid.designer.runtime.ui.vdb.VdbDeployer;
+import org.teiid.designer.runtime.ui.vdb.VdbRequiresSaveChecker;
+import org.teiid.designer.runtime.ui.vdb.VdbDeployer.DeployStatus;
 import org.teiid.designer.vdb.Vdb;
 
 import com.metamatrix.core.util.I18nUtil;

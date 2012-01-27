@@ -6,7 +6,7 @@
  * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
  */
 
-package org.teiid.designer.runtime.ui;
+package org.teiid.designer.runtime.ui.vdb;
 
 import static com.metamatrix.modeler.dqp.ui.DqpUiConstants.UTIL;
 import org.eclipse.core.resources.IFile;
