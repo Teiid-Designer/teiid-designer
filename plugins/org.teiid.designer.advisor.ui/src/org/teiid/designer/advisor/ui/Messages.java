@@ -17,6 +17,7 @@ public class Messages  extends NLS {
     public static String ConsumeARESTWebService;
     public static String ConsumeASOAPWebService;
 
+    public static String CreateConnection;
     public static String CreateARESTWebService;
     public static String CreateASOAPWebService;
     public static String CreateJdbcConnection;
@@ -77,6 +78,8 @@ public class Messages  extends NLS {
     public static String GenerateWSModelsFromWsdl_Short;
     
     public static String DefineModels;
+    public static String EditTeiidServer;
+    public static String EditTeiidServer_Short;
     public static String ExecuteVdb;
     
     public static String ModelingAspectOptions;
@@ -88,6 +91,8 @@ public class Messages  extends NLS {
     
     public static String NewModelWizardErrorMessage;
     public static String NewModelWizardErrorTitle;
+    public static String NewTeiidServer;
+    public static String NewTeiidServer_Short;
     
     public static String OpenDatatoolsDataSourceExplorer;
     
@@ -97,6 +102,8 @@ public class Messages  extends NLS {
     
     public static String TeiidActionsManager;
     public static String TeiidActions;
+    public static String TeiidServer;
+    public static String Test;
 
     static {
         NLS.initializeMessages("org.teiid.designer.advisor.ui.messages", Messages.class); //$NON-NLS-1$

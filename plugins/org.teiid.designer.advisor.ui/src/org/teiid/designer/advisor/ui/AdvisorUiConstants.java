@@ -48,7 +48,9 @@ public interface AdvisorUiConstants {
 			MODELING_ASPECT_LABELS.CONSUME_REST_WS,
 			//MODELING_ASPECT_LABELS.CREATE_SOAP_WS,
 			//MODELING_ASPECT_LABELS.CREATE_REST_WS,
-			MODELING_ASPECT_LABELS.DEFINE_MODELS
+			MODELING_ASPECT_LABELS.DEFINE_MODELS,
+			MODELING_ASPECT_LABELS.TEIID_SERVER,
+			MODELING_ASPECT_LABELS.TEST
 	};
     
     interface MODEL_CLASSES {
@@ -100,6 +102,9 @@ public interface AdvisorUiConstants {
 		String CREATE_VDB = "org.teiid.designer.new.vdb"; //$NON-NLS-1$
 		String EXECUTE_VDB = "org.teiid.designer.execute.vdb"; //$NON-NLS-1$
 		String PREVIEW_DATA = "org.teiid.designer.previewData"; //$NON-NLS-1$
+		
+		String NEW_TEIID_SERVER = "org.teiid.designer.runtime.newTeiidServer"; //$NON-NLS-1$
+		String EDIT_TEIID_SERVER = "org.teiid.designer.runtime.editTeiidServer"; //$NON-NLS-1$
 	}
 	
 	interface COMMAND_LABELS {
@@ -138,7 +143,10 @@ public interface AdvisorUiConstants {
 		String NEW_TEIID_MODEL_PROJECT = Messages.CreateTeiidModelProject;
 		String CREATE_VDB = Messages.CreateVdb;
 		String EXECUTE_VDB = Messages.ExecuteVdb;
-		String PREVIEW_DATA = Messages.PreviewData; 
+		String PREVIEW_DATA = Messages.PreviewData;
+		
+		String NEW_TEIID_SERVER = Messages.NewTeiidServer;
+		String EDIT_TEIID_SERVER = Messages.EditTeiidServer;
 	}
 	
 	interface COMMAND_LABELS_SHORT {
@@ -176,7 +184,10 @@ public interface AdvisorUiConstants {
 		
 		String NEW_TEIID_MODEL_PROJECT = Messages.CreateTeiidModelProject;
 		String CREATE_VDB = Messages.CreateVdb_Short;
-		String EXECUTE_VDB = Messages.ExecuteVdb; 
+		String EXECUTE_VDB = Messages.ExecuteVdb;
+		
+		String NEW_TEIID_SERVER = Messages.NewTeiidServer_Short;
+		String EDIT_TEIID_SERVER = Messages.EditTeiidServer_Short;
 	}
 
 	interface MODEL_IDS {
@@ -196,6 +207,8 @@ public interface AdvisorUiConstants {
 		String CREATE_SOAP_WS = "createSoapWS"; //$NON-NLS-1$
 		String CREATE_REST_WS = "createRestWS"; //$NON-NLS-1$
 		String DEFINE_MODELS = "defineModels"; //$NON-NLS-1$
+		String TEST = "test"; //$NON-NLS-1$
+		String TEIID_SERVER = Messages.TeiidServer;
 	}
 	
 	interface MODELING_ASPECT_LABELS {
@@ -209,6 +222,8 @@ public interface AdvisorUiConstants {
 		String CREATE_SOAP_WS= Messages.CreateASOAPWebService;
 		String CREATE_REST_WS= Messages.CreateARESTWebService;
 		String DEFINE_MODELS= Messages.DefineModels;
+		String TEST = Messages.Test;
+		String TEIID_SERVER = Messages.TeiidServer;
 	}
 	
 	interface VIEW_IDS {

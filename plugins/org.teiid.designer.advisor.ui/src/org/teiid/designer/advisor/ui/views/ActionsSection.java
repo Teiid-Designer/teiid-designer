@@ -99,6 +99,8 @@ public class ActionsSection implements AdvisorUiConstants{
         stackedPanels.put(MODELING_ASPECT_IDS.DEFINE_MODELS, createPanel_5(stackBodyPanel));
         stackedPanels.put(MODELING_ASPECT_IDS.CONSUME_SOAP_WS, createPanel_6(stackBodyPanel));
         stackedPanels.put(MODELING_ASPECT_IDS.CONSUME_REST_WS, createPanel_7(stackBodyPanel));
+        stackedPanels.put(MODELING_ASPECT_IDS.TEST, createPanel_8(stackBodyPanel));
+        stackedPanels.put(MODELING_ASPECT_IDS.TEIID_SERVER, createPanel_9(stackBodyPanel));
 
         generalSection.setClient(sectionBody);
 	}
@@ -147,7 +149,7 @@ public class ActionsSection implements AdvisorUiConstants{
         
         addHyperlink(panel, COMMAND_LABELS.OPEN_DATA_SOURCE_EXPLORER_VIEW, COMMAND_IDS.OPEN_DATA_SOURCE_EXPLORER_VIEW);
         
-        Group group = WidgetFactory.createGroup(panel, "Create Connection", GridData.FILL_HORIZONTAL, 2, 2);
+        Group group = WidgetFactory.createGroup(panel, Messages.CreateConnection, GridData.FILL_HORIZONTAL, 2, 2);
         
         addHyperlink(group, COMMAND_IDS.CREATE_CONNECTION_JDBC, true);
         addHyperlink(group, COMMAND_IDS.CREATE_CONNECTION_FLAT_FILE, true);
@@ -274,6 +276,51 @@ public class ActionsSection implements AdvisorUiConstants{
         return panel;
 	}
 	
+	private Composite createPanel_8(Composite parent) {
+		// 
+		Color bkgdColor = this.toolkit.getColors().getBackground();
+        Composite panel = new Composite(parent, SWT.NONE);
+        panel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+
+        panel.setLayout(new GridLayout());
+        GridLayout gLayout = new GridLayout();
+        gLayout.numColumns = 2;
+        gLayout.marginWidth = 5;
+        gLayout.horizontalSpacing = 5;
+        gLayout.verticalSpacing = 5;
+        panel.setLayout(gLayout);
+        panel.setBackground(bkgdColor);
+        
+        addHyperlink(panel, Messages.PreviewData, COMMAND_IDS.PREVIEW_DATA);
+        addHyperlink(panel, Messages.ExecuteVdb, COMMAND_IDS.EXECUTE_VDB);
+        
+        return panel;
+	}
+	
+	private Composite createPanel_9(Composite parent) {
+		// 
+		Color bkgdColor = this.toolkit.getColors().getBackground();
+        Composite panel = new Composite(parent, SWT.NONE);
+        panel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+
+        panel.setLayout(new GridLayout());
+        GridLayout gLayout = new GridLayout();
+        gLayout.numColumns = 2;
+        gLayout.marginWidth = 5;
+        gLayout.horizontalSpacing = 5;
+        gLayout.verticalSpacing = 5;
+        panel.setLayout(gLayout);
+        panel.setBackground(bkgdColor);
+        
+        Group group = WidgetFactory.createGroup(panel, "Server", GridData.FILL_HORIZONTAL, 2, 2);
+        addHyperlink(group, COMMAND_IDS.NEW_TEIID_SERVER, true);
+        addHyperlink(group, COMMAND_IDS.EDIT_TEIID_SERVER, true);
+        
+        addHyperlink(panel, Messages.ExecuteVdb, COMMAND_IDS.EXECUTE_VDB);
+        
+        return panel;
+	}
+	
 	public void aspectChanged(String aspectId) {
 		if( aspectId.equalsIgnoreCase(MODELING_ASPECT_LABELS.MODEL_PROJECT_MANAGEMENT) ) {
 			this.stackLayout.topControl = stackedPanels.get(MODELING_ASPECT_IDS.MODEL_PROJECT_MANAGEMENT);
@@ -295,6 +342,10 @@ public class ActionsSection implements AdvisorUiConstants{
 			this.stackLayout.topControl = stackedPanels.get(MODELING_ASPECT_IDS.CONSUME_REST_WS);
 		} else if( aspectId.equalsIgnoreCase(MODELING_ASPECT_LABELS.DEFINE_MODELS) ) {
 			this.stackLayout.topControl = stackedPanels.get(MODELING_ASPECT_IDS.DEFINE_MODELS);
+		} else if( aspectId.equalsIgnoreCase(MODELING_ASPECT_LABELS.TEST) ) {
+			this.stackLayout.topControl = stackedPanels.get(MODELING_ASPECT_IDS.TEST);
+		}  else if( aspectId.equalsIgnoreCase(MODELING_ASPECT_LABELS.TEIID_SERVER) ) {
+			this.stackLayout.topControl = stackedPanels.get(MODELING_ASPECT_IDS.TEIID_SERVER);
 		} else {
 			// Product Management
 		}

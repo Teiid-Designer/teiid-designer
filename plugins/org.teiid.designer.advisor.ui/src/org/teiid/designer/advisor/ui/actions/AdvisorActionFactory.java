@@ -20,6 +20,7 @@ import org.eclipse.ui.PlatformUI;
 import org.teiid.designer.advisor.ui.AdvisorUiConstants;
 import org.teiid.designer.datatools.ui.dialogs.NewTeiidFilteredCPWizard;
 import org.teiid.designer.runtime.ui.preview.PreviewDataAction;
+import org.teiid.designer.runtime.ui.server.RuntimeAssistant;
 
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelerUiViewUtils;
@@ -62,6 +63,8 @@ public class AdvisorActionFactory implements AdvisorUiConstants {
         addActionHandler(COMMAND_IDS.OPEN_DATA_SOURCE_EXPLORER_VIEW, COMMAND_LABELS.OPEN_DATA_SOURCE_EXPLORER_VIEW, COMMAND_LABELS.OPEN_DATA_SOURCE_EXPLORER_VIEW);
         addActionHandler(COMMAND_IDS.CREATE_WEB_SRVICES_DATA_FILE, COMMAND_LABELS.CREATE_WEB_SRVICES_DATA_FILE, COMMAND_LABELS.CREATE_WEB_SRVICES_DATA_FILE);
         addActionHandler(COMMAND_IDS.GENERATE_WS_MODELS_FROM_WSDL, COMMAND_LABELS.GENERATE_WS_MODELS_FROM_WSDL, COMMAND_LABELS.GENERATE_WS_MODELS_FROM_WSDL);
+        addActionHandler(COMMAND_IDS.NEW_TEIID_SERVER, COMMAND_LABELS.NEW_TEIID_SERVER, COMMAND_LABELS_SHORT.NEW_TEIID_SERVER);
+        addActionHandler(COMMAND_IDS.EDIT_TEIID_SERVER, COMMAND_LABELS.EDIT_TEIID_SERVER, COMMAND_LABELS_SHORT.EDIT_TEIID_SERVER);
 
 	}
 	
@@ -213,6 +216,16 @@ public class AdvisorActionFactory implements AdvisorUiConstants {
 		if( id.equalsIgnoreCase(COMMAND_IDS.PREVIEW_DATA)) {
 			PreviewDataAction action = new PreviewDataAction();
 			action.run();
+	        return;
+		}
+		
+		if( id.equalsIgnoreCase(COMMAND_IDS.NEW_TEIID_SERVER)) {
+			RuntimeAssistant.runNewServerAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
+	        return;
+		}
+		
+		if( id.equalsIgnoreCase(COMMAND_IDS.EDIT_TEIID_SERVER)) {
+			RuntimeAssistant.runEditServerAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
 	        return;
 		}
 		
