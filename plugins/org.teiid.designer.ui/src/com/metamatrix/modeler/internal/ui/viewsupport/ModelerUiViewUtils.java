@@ -13,7 +13,6 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IViewPart;
@@ -26,8 +25,8 @@ import org.eclipse.ui.wizards.IWizardDescriptor;
 
 import com.metamatrix.modeler.internal.ui.explorer.ModelExplorerResourceNavigator;
 import com.metamatrix.modeler.ui.UiConstants;
-import com.metamatrix.modeler.ui.UiPlugin;
 import com.metamatrix.modeler.ui.UiConstants.Extensions;
+import com.metamatrix.modeler.ui.UiPlugin;
 import com.metamatrix.ui.internal.product.ProductCustomizerMgr;
 import com.metamatrix.ui.internal.util.UiUtil;
 import com.metamatrix.ui.internal.util.WidgetUtil;
@@ -102,35 +101,47 @@ public class ModelerUiViewUtils {
 
     }
     
-    public static void launchWizard(String id, IStructuredSelection selection) {
-    	 // First see if this is a "new wizard".
-    	 IWizardDescriptor descriptor = PlatformUI.getWorkbench()
-    	   .getNewWizardRegistry().findWizard(id);
-    	 // If not check if it is an "import wizard".
-    	 if (descriptor == null) {
-    	   descriptor = PlatformUI.getWorkbench().getImportWizardRegistry()
-    	   .findWizard(id);
-    	 }
-    	 // Or maybe an export wizard
-    	 if (descriptor == null) {
-    	   descriptor = PlatformUI.getWorkbench().getExportWizardRegistry()
-    	   .findWizard(id);
-    	 }
-    	 try {
-    	   // Then if we have a wizard, open it.
-    	   if (descriptor != null) {
-    	     IWorkbenchWizard wizard = descriptor.createWizard();
-    	     wizard.init(PlatformUI.getWorkbench(), selection);
-    	     
-    	     WizardDialog wd = new WizardDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), wizard);
-    	     wd.create();
-    	     wd.setTitle(wizard.getWindowTitle());
-    	     wd.open();
-    	   }
-    	 } catch (CoreException e) {
-    	   e.printStackTrace();
-    	 }
-    	}
+    /**
+     * Launches new or import type wizard given a wizard ID and an initial selection
+     * 
+     * @param id
+     * @param selection
+     */
+	public static void launchWizard(String id, IStructuredSelection selection) {
+		// First see if this is a "new wizard".
+		IWizardDescriptor descriptor = PlatformUI.getWorkbench().getNewWizardRegistry().findWizard(id);
+		// If not check if it is an "import wizard".
+		if (descriptor == null) {
+			descriptor = PlatformUI.getWorkbench().getImportWizardRegistry().findWizard(id);
+		}
+		// Or maybe an export wizard
+		if (descriptor == null) {
+			descriptor = PlatformUI.getWorkbench().getExportWizardRegistry().findWizard(id);
+		}
+		try {
+			// Then if we have a wizard, open it.
+			if (descriptor != null) {
+				IWorkbenchWizard wizard = descriptor.createWizard();
+				ModelerUiViewUtils.launchWizard(wizard, selection);
+			}
+		} catch (CoreException e) {
+			e.printStackTrace();
+		}
+	}
 
+	/**
+	 * Launches the given wizard and initializes with the given selection
+	 * 
+	 * @param wizard
+	 * @param selection
+	 */
+	public static void launchWizard(IWorkbenchWizard wizard, IStructuredSelection selection) {
+		wizard.init(PlatformUI.getWorkbench(), selection);
+
+		WizardDialog wd = new WizardDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), wizard);
+		wd.create();
+		wd.setTitle(wizard.getWindowTitle());
+		wd.open();
+	}
 
 }
