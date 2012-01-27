@@ -12,6 +12,7 @@ import static com.metamatrix.modeler.dqp.ui.DqpUiConstants.UTIL;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.actions.BaseSelectionListenerAction;
@@ -77,6 +78,19 @@ public final class EditServerAction extends BaseSelectionListenerAction {
      */
     @Override
     public void run() {
+    	// if serverBeingEdited == NULL need to query user to select one in order to continue
+    	
+    	if( this.serverBeingEdited == null ) {
+    		ServerSelectionDialog dialog = new ServerSelectionDialog(this.shell);
+    		dialog.open();
+    		
+    		if (dialog.getReturnCode() == Window.OK) {
+    			this.serverBeingEdited = dialog.getServer();
+    		}
+    	}
+    	
+    	if( this.serverBeingEdited == null ) return;
+    	
         ServerWizard wizard = new ServerWizard(this.serverManager, this.serverBeingEdited);
         WizardDialog dialog = new WizardDialog(this.shell, wizard) {
             /**

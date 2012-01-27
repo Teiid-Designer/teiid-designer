@@ -14,7 +14,12 @@ Export-Package: com.metamatrix.modeler.dqp.ui,
  com.metamatrix.modeler.internal.dqp.ui.workspace.actions,
  com.metamatrix.modeler.internal.dqp.ui.workspace.dialogs,
  org.teiid.designer.runtime.ui,
- org.teiid.designer.runtime.ui.preview
+ org.teiid.designer.runtime.ui.actions,
+ org.teiid.designer.runtime.ui.connection,
+ org.teiid.designer.runtime.ui.extension,
+ org.teiid.designer.runtime.ui.preview,
+ org.teiid.designer.runtime.ui.server,
+ org.teiid.designer.runtime.ui.vdb
 Require-Bundle: org.eclipse.ui.views,
  org.eclipse.jface.text,
  org.eclipse.ui.workbench.texteditor,
