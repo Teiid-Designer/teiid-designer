@@ -1111,9 +1111,13 @@ public class TransformationObjectEditorPage
             }
             setDirty(editor.hasPendingChanges());
             if( allowsUpdates ) {
-	            selectStatus = SqlMappingRootCache.getSqlTransformationStatus(currentMappingRoot,QueryValidator.SELECT_TRNS, true, null);
+            	final SqlTransformationResult currentSelectStatus = SqlMappingRootCache.getSqlTransformationStatus(currentMappingRoot,QueryValidator.SELECT_TRNS, true, null);
 	            if( selectStatus != null ) {
-	            	updateUpdateTabs(selectStatus);
+	            	UiUtil.runInSwtThread(new Runnable() {
+                        public void run() {
+                        	updateUpdateTabs(currentSelectStatus);
+                        }
+                    }, true);
 	            }
             }
 
