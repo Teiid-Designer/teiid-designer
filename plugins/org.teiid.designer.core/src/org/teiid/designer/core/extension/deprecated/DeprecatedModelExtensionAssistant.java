@@ -21,6 +21,8 @@ import org.teiid.designer.extension.properties.NamespaceProvider;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.core.ModelerCore;
+import com.metamatrix.modeler.core.util.ModelObjectClassNameVisitor;
+import com.metamatrix.modeler.core.util.ModelVisitorProcessor;
 
 /**
  * 
@@ -229,7 +231,12 @@ public class DeprecatedModelExtensionAssistant extends EmfModelObjectExtensionAs
         CoreArgCheck.isInstanceOf(EObject.class, modelObject);
         CoreArgCheck.isNotEmpty(propId, "id is empty"); //$NON-NLS-1$
 
-        // convert all model objects that have the same old namespace property
+        // convert all procedure model objects that have the same old namespace property
+        String className = "com.metamatrix.metamodels.relational.impl.ProcedureImpl"; //$NON-NLS-1$
+        ModelObjectClassNameVisitor visitor = new ModelObjectClassNameVisitor(Collections.singletonList(className));
+        ModelVisitorProcessor processor = new ModelVisitorProcessor(visitor, ModelVisitorProcessor.MODE_VISIBLE_CONTAINMENTS);
+        processor.walk(getModelResource(modelObject), ModelVisitorProcessor.DEPTH_INFINITE);
+
         Collection<EObject> eObjects = getModelResource(modelObject).getEObjects();
         ModelObjectExtensionAssistant assistant;
 

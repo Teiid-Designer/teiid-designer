@@ -10,6 +10,7 @@ package org.teiid.designer.core.extension;
 import static com.metamatrix.modeler.core.ModelerCore.Util;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Properties;
 
@@ -30,7 +31,9 @@ import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.metamodels.core.Annotation;
 import com.metamatrix.modeler.core.ModelerCore;
+import com.metamatrix.modeler.core.util.ModelObjectClassNameVisitor;
 import com.metamatrix.modeler.core.util.ModelResourceContainerFactory;
+import com.metamatrix.modeler.core.util.ModelVisitorProcessor;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 
@@ -295,12 +298,16 @@ public class EmfModelObjectExtensionAssistant extends ModelObjectExtensionAssist
         ModelResource modelResource = getModelResource(modelObject);
         ModelExtensionUtils.removeModelExtensionDefinition(modelResource, getNamespacePrefix());
 
-        // remove any other model objects overridden properties
+        // find model objects with classes that match the extended metaclasses in the MED
         ModelExtensionDefinition definition = getModelExtensionDefinition();
+        String[] metaclasses = definition.getExtendedMetaclasses();
+        ModelObjectClassNameVisitor visitor = new ModelObjectClassNameVisitor(Arrays.asList(metaclasses));
+        ModelVisitorProcessor processor = new ModelVisitorProcessor(visitor, ModelVisitorProcessor.MODE_VISIBLE_CONTAINMENTS);
+        processor.walk(modelResource, ModelVisitorProcessor.DEPTH_INFINITE);
 
-        for (Object eObject : modelResource.getEObjects()) {
-            assert eObject instanceof EObject;
-            Annotation annotation = ModelExtensionUtils.getModelObjectAnnotation((EObject)eObject, false);
+        // remove overridden properties
+        for (EObject eObject : visitor.getResult()) {
+            Annotation annotation = ModelExtensionUtils.getModelObjectAnnotation(eObject, false);
 
             if (annotation != null) {
                 String metaclassName = eObject.getClass().getName();
