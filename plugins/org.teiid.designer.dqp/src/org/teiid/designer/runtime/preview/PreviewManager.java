@@ -115,29 +115,9 @@ public final class PreviewManager extends JobChangeAdapter
     implements IExecutionConfigurationListener, IPreferenceChangeListener, IResourceChangeListener, INotifyChangedListener,
     PreviewContext {
 
-    public static final String PREVIEW_PREFIX = "PREVIEW_"; //$NON-NLS-1$
     private static final String PROJECT_VDB_SUFFIX = "_project"; //$NON-NLS-1$
 
     private IPasswordProvider passwordProvider;
-
-    private static String getPreviewVdbPrefix( IResource resource ) {
-        char delim = '_';
-        StringBuilder name = new StringBuilder(PREVIEW_PREFIX + ModelerCore.workspaceUuid().toString() + delim);
-
-        if (resource instanceof IFile) {
-            IPath path = resource.getParent().getFullPath();
-
-            for (String segment : path.segments()) {
-                name.append(segment).append(delim);
-            }
-        }
-        String prefix = name.toString();
-        if (prefix.contains(StringUtilities.SPACE)) {
-            prefix = prefix.replaceAll(StringUtilities.SPACE, StringUtilities.UNDERSCORE);
-        }
-
-        return prefix;
-    }
 
     /**
      * @param modelFile the model whose dependencies are being checked
@@ -172,7 +152,7 @@ public final class PreviewManager extends JobChangeAdapter
      */
     public static String getPreviewProjectVdbName( IProject project ) {
         assert (project != null) : "Project is null"; //$NON-NLS-1$
-        StringBuilder name = new StringBuilder(getPreviewVdbPrefix(project));
+        StringBuilder name = new StringBuilder(Vdb.getPreviewVdbPrefix(project));
         String vdbName = name.append(project.getName()).append(PROJECT_VDB_SUFFIX).toString();
         if (vdbName.contains(StringUtilities.SPACE)) {
             vdbName = vdbName.replaceAll(StringUtilities.SPACE, StringUtilities.UNDERSCORE);
@@ -689,7 +669,7 @@ public final class PreviewManager extends JobChangeAdapter
         }
 
         String name = pvdbFile.getFullPath().removeFileExtension().lastSegment();
-        String prefix = getPreviewVdbPrefix(pvdbFile);
+        String prefix = Vdb.getPreviewVdbPrefix(pvdbFile);
         int index = name.indexOf(prefix);
 
         if (index == -1) {
@@ -707,7 +687,7 @@ public final class PreviewManager extends JobChangeAdapter
             name = new StringBuilder(PreviewManager.getPreviewProjectVdbName((IProject)projectOrModel));
         } else {
             assert (projectOrModel instanceof IFile) : "IResource is not an IFile"; //$NON-NLS-1$
-            String prefix = PreviewManager.getPreviewVdbPrefix(projectOrModel);
+            String prefix = Vdb.getPreviewVdbPrefix(projectOrModel);
 
             if (projectOrModel.getFileExtension().equalsIgnoreCase(TeiidVdb.VDB_EXTENSION)) {
                 String vdbName = projectOrModel.getFullPath().removeFileExtension().lastSegment();

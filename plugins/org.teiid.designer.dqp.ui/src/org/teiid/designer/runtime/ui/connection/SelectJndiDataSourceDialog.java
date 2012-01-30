@@ -20,7 +20,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
 import org.teiid.designer.runtime.Server;
 import org.teiid.designer.runtime.TeiidDataSource;
-import org.teiid.designer.runtime.preview.PreviewManager;
+import org.teiid.designer.vdb.Vdb;
 
 import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
@@ -110,7 +110,7 @@ public class SelectJndiDataSourceDialog extends ElementTreeSelectionDialog imple
                                    Object element ) {
                 if (element instanceof TeiidDataSource) {
                     String name = ((TeiidDataSource)element).getName();
-                    return !name.startsWith(PreviewManager.PREVIEW_PREFIX);
+                    return !name.startsWith(Vdb.PREVIEW_PREFIX);
                 }
 
                 return true;

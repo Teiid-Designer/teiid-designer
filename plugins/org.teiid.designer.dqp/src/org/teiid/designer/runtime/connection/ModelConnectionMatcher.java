@@ -5,7 +5,7 @@ import java.util.Collection;
 
 import org.teiid.designer.runtime.ExecutionAdmin;
 import org.teiid.designer.runtime.TeiidDataSource;
-import org.teiid.designer.runtime.preview.PreviewManager;
+import org.teiid.designer.vdb.Vdb;
 
 import com.metamatrix.modeler.core.ModelerCore;
 
@@ -21,7 +21,7 @@ public class ModelConnectionMatcher {
             }
             TeiidDataSource tds = new TeiidDataSource(name, name, "<unknown>", admin); //$NON-NLS-1$
             
-            if (name.startsWith(PreviewManager.PREVIEW_PREFIX)) {
+            if (name.startsWith(Vdb.PREVIEW_PREFIX)) {
                 if (name.length() > ModelerCore.workspaceUuid().toString().length() + 8) {
                     tds.setPreview(true);
                 }

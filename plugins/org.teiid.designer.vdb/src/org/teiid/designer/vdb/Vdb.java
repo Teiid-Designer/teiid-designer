@@ -58,7 +58,9 @@ import org.xml.sax.SAXException;
 import com.metamatrix.core.modeler.util.FileUtils;
 import com.metamatrix.core.modeler.util.OperationUtil;
 import com.metamatrix.core.modeler.util.OperationUtil.Unreliable;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.StringUtilities;
+import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.internal.core.builder.VdbModelBuilder;
 
 /**
@@ -81,6 +83,37 @@ public final class Vdb {
     private static final String MANIFEST = "META-INF/vdb.xml"; //$NON-NLS-1$
     
     private static final int DEFAULT_TIMEOUT = 0;
+
+    /**
+     * The prefix used before the workspace identifier when creating a Preview VDB name.
+     */
+    public static final String PREVIEW_PREFIX = "PREVIEW_"; //$NON-NLS-1$
+
+    /**
+     * @param resource the resource whose Preview VDB prefix is being requested (cannot be <code>null</code>)
+     * @return the Preview VDB prefix (never <code>null</code>)
+     */
+    public static String getPreviewVdbPrefix( IResource resource ) {
+        CoreArgCheck.isNotNull(resource, "resource is null"); //$NON-NLS-1$
+        char delim = '_';
+        StringBuilder name = new StringBuilder(PREVIEW_PREFIX + ModelerCore.workspaceUuid().toString() + delim);
+
+        if (resource instanceof IFile) {
+            IPath path = resource.getParent().getFullPath();
+
+            for (String segment : path.segments()) {
+                name.append(segment).append(delim);
+            }
+        }
+
+        String prefix = name.toString();
+
+        if (prefix.contains(StringUtilities.SPACE)) {
+            prefix = prefix.replaceAll(StringUtilities.SPACE, StringUtilities.UNDERSCORE);
+        }
+
+        return prefix;
+    }
 
     final IFile file;
 
@@ -117,6 +150,7 @@ public final class Vdb {
         // Create folder for VDB in state folder
         folder = VdbPlugin.singleton().getStateLocation().append(file.getFullPath()).toFile();
         folder.mkdirs();
+
         // Open archive and populate model entries
         if (file.getLocation().toFile().length() == 0L) {
             this.preview = preview;
@@ -127,6 +161,7 @@ public final class Vdb {
         final boolean[] previewable = new boolean[1];
         final int[] vdbVersion = new int[1];
         final int[] queryTimeout = new int[1];
+
         OperationUtil.perform(new Unreliable() {
 
             ZipFile archive = null;

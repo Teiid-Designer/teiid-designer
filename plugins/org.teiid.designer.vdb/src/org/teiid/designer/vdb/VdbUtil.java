@@ -31,6 +31,7 @@ import org.xml.sax.SAXException;
 
 import com.metamatrix.core.modeler.util.OperationUtil;
 import com.metamatrix.core.modeler.util.OperationUtil.Unreliable;
+import com.metamatrix.core.util.CoreArgCheck;
 
 /**
  * Utility methods used to query VDB manifest and VDB's
@@ -62,11 +63,23 @@ public class VdbUtil {
 	 * @return preview attribute value for VDB. true or false
 	 */
 	public static boolean isPreviewVdb(final IFile file) {
-        final boolean[] previewable = new boolean[1];
-        
-        if( !file.exists() ) {
-        	return false;
+        CoreArgCheck.isNotNull(file, "file is null"); //$NON-NLS-1$
+
+        if (!file.exists()) {
+            return false;
         }
+
+        // if VDB file is empty just check file name
+        if (file.getLocation().toFile().length() == 0L) {
+            // make sure file prefix and extension is right
+            if (!Vdb.FILE_EXTENSION_NO_DOT.equals(file.getFileExtension())) {
+                return false;
+            }
+
+            return file.getName().startsWith(Vdb.PREVIEW_PREFIX);
+        }
+
+        final boolean[] previewable = new boolean[1];
         
         OperationUtil.perform(new Unreliable() {
 
@@ -92,7 +105,7 @@ public class VdbUtil {
                     entryStream = archive.getInputStream(zipEntry);
                     if (zipEntry.getName().equals(MANIFEST)) {
                         // Initialize using manifest
-                    	foundManifest = true;
+                        foundManifest = true;
                         final Unmarshaller unmarshaller = getJaxbContext().createUnmarshaller();
                         unmarshaller.setSchema(getManifestSchema());
                         final VdbElement manifest = (VdbElement)unmarshaller.unmarshal(entryStream);
@@ -101,13 +114,13 @@ public class VdbUtil {
                         for (final PropertyElement property : manifest.getProperties()) {
                             final String name = property.getName();
                             if (Xml.PREVIEW.equals(name)) {
-                            	previewable[0] = Boolean.parseBoolean(property.getValue());
+                                previewable[0] = Boolean.parseBoolean(property.getValue());
                             }
                         }
                     }
                     // Don't process any more than we need to.
                     if( foundManifest ) {
-                    	break;
+                        break;
                     }
                 }
             }
@@ -166,11 +179,11 @@ public class VdbUtil {
         return vdbVersion[0];
 	}
 	
-    private static JAXBContext getJaxbContext() throws JAXBException {
+    static JAXBContext getJaxbContext() throws JAXBException {
         return JAXBContext.newInstance(new Class<?>[] { VdbElement.class });
     }
 	
-    private static Schema getManifestSchema() throws SAXException {
+    static Schema getManifestSchema() throws SAXException {
         final SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         return schemaFactory.newSchema(VdbElement.class.getResource("/vdb-deployer.xsd")); //$NON-NLS-1$
     }

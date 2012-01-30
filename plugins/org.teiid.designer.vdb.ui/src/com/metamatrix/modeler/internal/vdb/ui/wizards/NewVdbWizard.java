@@ -50,6 +50,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.eclipse.ui.ide.IDE;
+import org.teiid.designer.vdb.Vdb;
 
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.core.util.I18nUtil;
@@ -132,11 +133,13 @@ public final class NewVdbWizard extends AbstractWizard
 
         // create VDB resource
         final IRunnableWithProgress op = new IRunnableWithProgress() {
-            @SuppressWarnings("unchecked")
-			public void run( final IProgressMonitor monitor ) throws InvocationTargetException {
+            @Override
+            public void run( final IProgressMonitor monitor ) throws InvocationTargetException {
                 try {
                     final IFile vdbFile = NewVdbWizard.this.folder.getFile(new Path(NewVdbWizard.this.name));
                     vdbFile.create(new ByteArrayInputStream(new byte[0]), false, monitor);
+                    Vdb newVdb = new Vdb(vdbFile, false, monitor);
+                    newVdb.save(monitor);
                     NewVdbWizard.this.folder.refreshLocal(IResource.DEPTH_INFINITE, monitor);
 
 
