@@ -2,9 +2,9 @@
 <p:modelExtension metamodelUri="http://www.metamatrix.com/metamodels/Relational"
                   namespaceUri="http://www.teiid.org/translator/salesforce/2012"
                   namespacePrefix="salesforce"
-                  xmlns:p="http://org.teiid.modelExtension/2011"
+                  xmlns:p="http://www.jboss.org/teiiddesigner/ext/2012"
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                  xsi:schemaLocation="http://org.teiid.modelExtension/2011 modelExtension.xsd "
+                  xsi:schemaLocation="http://www.jboss.org/teiiddesigner/ext/2012 http://www.jboss.org/teiiddesigner/ext/2012/modelExtension.xsd"
                   version="1">
     <p:description>Salesforce extended relational model properties</p:description>
     <p:modelType>PHYSICAL</p:modelType>

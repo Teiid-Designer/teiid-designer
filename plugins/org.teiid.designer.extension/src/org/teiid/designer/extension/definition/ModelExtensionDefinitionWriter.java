@@ -181,7 +181,7 @@ public class ModelExtensionDefinitionWriter {
         // modelExtensionElement - Attributes
         // -----------------------------------------
         Attr attr = document.createAttribute(ExtensionConstants.Namespaces.NS_SCHEMALOC);
-        attr.setValue(ExtensionConstants.Namespaces.NS_MED_VALUE + " " + ExtensionConstants.SCHEMA_FILENAME); //$NON-NLS-1$
+        attr.setValue(ExtensionConstants.Namespaces.NS_SCHEMALOC_VALUE);
         modelExtensionElem.setAttributeNode(attr);
 
         // Metamodel URI

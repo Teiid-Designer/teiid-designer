@@ -1,2 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<modelExtension xmlns:p="http://org.teiid.modelExtension/2011" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1" xsi:schemaLocation="http://org.teiid.modelExtension/2011 modelExtension.xsd" xmlns="http://org.teiid.modelExtension/2011"/>
+<modelExtension xmlns:p="http://www.jboss.org/teiiddesigner/ext/2012" 
+                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+                xsi:schemaLocation="http://www.jboss.org/teiiddesigner/ext/2012 http://www.jboss.org/teiiddesigner/ext/2012/modelExtension.xsd" 
+                xmlns="http://www.jboss.org/teiiddesigner/ext/2012"/>

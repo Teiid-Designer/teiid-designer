@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:modelExtension metamodelUri="http://www.metamatrix.com/metamodels/Relational" namespaceUri="org.teiid.designer.extension.duplicatePropDisplayLocaleFromDifferentProperties"
-	namespacePrefix="duplicatePropDisplayLocaleFromDifferentProperties" xmlns:p="http://org.teiid.modelExtension/2011" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://org.teiid.modelExtension/2011 modelExtension.xsd " version="1">
+<p:modelExtension metamodelUri="http://www.metamatrix.com/metamodels/Relational" 
+                  namespaceUri="org.teiid.designer.extension.duplicatePropDisplayLocaleFromDifferentProperties"
+	              namespacePrefix="duplicatePropDisplayLocaleFromDifferentProperties" 
+	              xmlns:p="http://www.jboss.org/teiiddesigner/ext/2012" 
+	              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	              xsi:schemaLocation="http://www.jboss.org/teiiddesigner/ext/2012 http://www.jboss.org/teiiddesigner/ext/2012/modelExtension.xsd" 
+	              version="1">
 	<p:description>Duplicate property display locale from different properties</p:description>
 	<p:extendedMetaclass name="com.metamatrix.metamodels.relational.impl.ProcedureImpl">
         <p:property name="propA" type="boolean" defaultValue="false" index="true">

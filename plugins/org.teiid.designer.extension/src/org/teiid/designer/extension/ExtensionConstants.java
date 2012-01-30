@@ -56,9 +56,10 @@ public interface ExtensionConstants {
         String NS_XSI = "xsi"; //$NON-NLS-1$
         String NS_MED = "p"; //$NON-NLS-1$
         String NS_XSI_VALUE = "http://www.w3.org/2001/XMLSchema-instance"; //$NON-NLS-1$
-        String NS_MED_VALUE = "http://org.teiid.modelExtension/2011"; //$NON-NLS-1$
+        String NS_MED_VALUE = "http://www.jboss.org/teiiddesigner/ext/2012"; //$NON-NLS-1$
         String NS_KEY = "http://www.w3.org/2000/xmlns/"; //$NON-NLS-1$
         String NS_SCHEMALOC = "xsi:schemaLocation"; //$NON-NLS-1$
+        String NS_SCHEMALOC_VALUE = NS_MED_VALUE + ' ' + NS_MED_VALUE + '/' + SCHEMA_FILENAME;
     }
 
     /**

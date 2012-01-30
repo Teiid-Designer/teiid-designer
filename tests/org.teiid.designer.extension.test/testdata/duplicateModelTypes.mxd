@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:modelExtension metamodelUri="http://www.metamatrix.com/metamodels/Relational" namespaceUri="org.teiid.designer.extension.duplicateModelTypes"
-	namespacePrefix="duplicateModelTypes" xmlns:p="http://org.teiid.modelExtension/2011" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://org.teiid.modelExtension/2011 modelExtension.xsd " version="1">
+<p:modelExtension metamodelUri="http://www.metamatrix.com/metamodels/Relational" 
+                  namespaceUri="org.teiid.designer.extension.duplicateModelTypes"
+	              namespacePrefix="duplicateModelTypes" 
+	              xmlns:p="http://www.jboss.org/teiiddesigner/ext/2012" 
+	              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	              xsi:schemaLocation="http://www.jboss.org/teiiddesigner/ext/2012 http://www.jboss.org/teiiddesigner/ext/2012/modelExtension.xsd" 
+	              version="1">
 	<p:description>Duplicate model types</p:description>
     <p:modelType>VIRTUAL</p:modelType>
     <p:modelType>VIRTUAL</p:modelType>

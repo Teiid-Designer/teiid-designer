@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://org.teiid.modelExtension/2011"
-	targetNamespace="http://org.teiid.modelExtension/2011" elementFormDefault="qualified" attributeFormDefault="unqualified"
-	xmlns:mxd="http://org.teiid.modelExtension/2011"
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.jboss.org/teiiddesigner/ext/2012"
+	targetNamespace="http://www.jboss.org/teiiddesigner/ext/2012" elementFormDefault="qualified" attributeFormDefault="unqualified"
+	xmlns:mxd="http://www.jboss.org/teiiddesigner/ext/2012"
 >
 	<xs:element name="modelExtension">
 		<xs:annotation>
