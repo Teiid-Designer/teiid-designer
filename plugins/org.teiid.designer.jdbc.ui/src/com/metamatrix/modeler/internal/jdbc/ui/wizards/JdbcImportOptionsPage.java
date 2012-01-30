@@ -105,6 +105,7 @@ public class JdbcImportOptionsPage extends WizardPage implements
     private static final String NAME_LABEL = getString("nameLabel"); //$NON-NLS-1$
     private static final String FOLDER_LABEL = getString("folderLabel"); //$NON-NLS-1$
     private static final String UPDATE_CHECKBOX = getString("updateCheckBox"); //$NON-NLS-1$
+    private static final String VIRTUAL_MODEL_CHECKBOX = getString("makeTargetModelVirtualBox"); //$NON-NLS-1$
     private static final String MODEL_GROUP = getString("modelGroup"); //$NON-NLS-1$
     private static final String CASE_OPTIONS_GROUP = getString("caseOptionsGroup"); //$NON-NLS-1$
     private static final String CHANGE_CASE_GROUP = getString("changeCaseGroup"); //$NON-NLS-1$
@@ -124,6 +125,7 @@ public class JdbcImportOptionsPage extends WizardPage implements
     private static final String NOT_RELATIONAL_MODEL_MESSAGE = getString("notRelationalModelMessage"); //$NON-NLS-1$
     private static final String READ_ONLY_MODEL_MESSAGE = getString("readOnlyModelMessage"); //$NON-NLS-1$
     private static final String VIRTUAL_MODEL_MESSAGE = getString("virtualModelMessage"); //$NON-NLS-1$
+    private static final String PHYSICAL_MODEL_MESSAGE = "The model to update is not a virtual model."; //$NON-NLS-1$
 
     // ===========================================================================================================================
     // Static Methods
@@ -151,11 +153,12 @@ public class JdbcImportOptionsPage extends WizardPage implements
     private Group changeCaseGroup;
     private Text nameText, folderText;
     private Button updateCheckBox, fullyQualifiedNamesCheckBox, includeCatalogCheckBox, modifyCaseCheckBox,
-    	uppercaseButton, lowercaseButton;
+    	uppercaseButton, lowercaseButton, virtualModelBox;
     private boolean initd;
     private IContainer folder;
     private boolean usesHiddenProject = false;
     private IFile selectedModel;
+    private boolean isVirtual = false;
 
     // ===========================================================================================================================
     // Constructors
@@ -238,6 +241,15 @@ public class JdbcImportOptionsPage extends WizardPage implements
                 }
             });
         }
+        
+		this.virtualModelBox = WidgetFactory.createCheckBox(modelGroup, VIRTUAL_MODEL_CHECKBOX, 0, COLUMN_COUNT);
+		this.virtualModelBox.addSelectionListener(new SelectionAdapter() {
+
+			public void widgetSelected(final SelectionEvent event) {
+				virtualModelBoxSelected();
+			}
+		});
+		this.virtualModelBox.setSelection(isVirtual);
 
         this.updateCheckBox = WidgetFactory.createCheckBox(modelGroup, UPDATE_CHECKBOX, 0, COLUMN_COUNT);
         this.updateCheckBox.addSelectionListener(new SelectionAdapter() {
@@ -487,6 +499,15 @@ public class JdbcImportOptionsPage extends WizardPage implements
 
         if ((resources != null) && (resources.length > 0)) {
             IFile model = (IFile)resources[0];
+            
+            try {
+                ModelResource mr = ModelUtil.getModelResource(model, true);
+                this.isVirtual = mr.getModelAnnotation().getModelType().equals(ModelType.VIRTUAL_LITERAL);
+                this.virtualModelBox.setSelection(this.isVirtual);
+            } catch (ModelWorkspaceException theException) {
+                Util.log(theException);
+            }
+            
             this.selectedModel = model;
             IContainer folder = model.getParent();
 
@@ -498,6 +519,15 @@ public class JdbcImportOptionsPage extends WizardPage implements
         } else {
         	this.selectedModel = null;
         }
+    }
+    
+    void virtualModelBoxSelected() {
+    	// Need to set the JDBC IMport Settings to create or update "Virtual" relational model and NOT Physical
+        
+    	// ALSO Need to change the "VALIDATION" for this page. If IS VIRTUAL and UPDATE is checked, then Selected Relational
+    	// MODEL MUST be VIRTUAL, NOT PHYSICAL
+    	this.isVirtual = virtualModelBox.getSelection();
+    	validatePage(false);
     }
 
     /**
@@ -838,9 +868,13 @@ public class JdbcImportOptionsPage extends WizardPage implements
                             WizardUtil.setPageComplete(this, NOT_RELATIONAL_MODEL_MESSAGE, ERROR);
                             return;
                         }
-                        if (model.getModelType().getValue() == ModelType.VIRTUAL) {
+                        if (!isVirtual() && model.getModelType().getValue() == ModelType.VIRTUAL) {
                             WizardUtil.setPageComplete(this, VIRTUAL_MODEL_MESSAGE, ERROR);
                             return;
+                        }
+                        if (isVirtual() && model.getModelType().getValue() == ModelType.PHYSICAL) {
+                        	WizardUtil.setPageComplete(this, PHYSICAL_MODEL_MESSAGE, ERROR);
+                        	return;
                         }
                     } catch (final ModelWorkspaceException err) {
                         Util.log(err);
@@ -969,5 +1003,9 @@ public class JdbcImportOptionsPage extends WizardPage implements
      */
     public void setInitd(boolean initd) {
         this.initd = initd;
+    }
+        
+    public boolean isVirtual() {
+    	return this.isVirtual;
     }
 }

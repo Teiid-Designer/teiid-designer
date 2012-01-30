@@ -116,6 +116,7 @@ public class JdbcImportWizard extends AbstractWizard
     ProcessorPack ppProcessorPack;
 
     boolean controlsHaveBeenCreated = false;
+    private boolean isVirtual;
 
     private IJdbcImportPostProcessor[] postProcessors;
 
@@ -330,10 +331,18 @@ public class JdbcImportWizard extends AbstractWizard
 
                         final ModelAnnotation modelAnnotation = resrc.getModelAnnotation();
                         modelAnnotation.setPrimaryMetamodelUri(RelationalPackage.eNS_URI);
-                        modelAnnotation.setModelType(ModelType.PHYSICAL_LITERAL);
+                        
+                        ModelType type = ModelType.PHYSICAL_LITERAL;
+                        
+                        isVirtual = optionsPg.isVirtual();
+                       
+                        if( isVirtual ) {
+                        	type = ModelType.VIRTUAL_LITERAL;
+                        }
+                        modelAnnotation.setModelType(type);
 
                         if (resrc instanceof ModelResourceImpl) {
-                            ((ModelResourceImpl)resrc).setModelType(ModelType.PHYSICAL_LITERAL);
+                            ((ModelResourceImpl)resrc).setModelType(type);
                         }
                         if (processor instanceof RelationalModelProcessorImpl) {
                             JdbcImportWizard.this.drDifferenceReport = ((RelationalModelProcessorImpl)processor).generateDifferenceReport(resrc,
@@ -658,10 +667,17 @@ public class JdbcImportWizard extends AbstractWizard
 
                 final ModelAnnotation modelAnnotation = resrc.getModelAnnotation();
                 modelAnnotation.setPrimaryMetamodelUri(RelationalPackage.eNS_URI);
-                modelAnnotation.setModelType(ModelType.PHYSICAL_LITERAL);
+                ModelType type = ModelType.PHYSICAL_LITERAL;
+
+                this.isVirtual = this.optionsPg.isVirtual();
+
+                if( this.isVirtual ) {
+                	type = ModelType.VIRTUAL_LITERAL;
+                }
+                modelAnnotation.setModelType(type);
 
                 if (resrc instanceof ModelResourceImpl) {
-                    ((ModelResourceImpl)resrc).setModelType(ModelType.PHYSICAL_LITERAL);
+                    ((ModelResourceImpl)resrc).setModelType(type);
                 }
                 // Moved this call to AFTER the MODEL TYPE has been set.
                 ModelUtilities.initializeModelContainers(resrc, "Jdbc Import", this); //$NON-NLS-1$
@@ -727,6 +743,12 @@ public class JdbcImportWizard extends AbstractWizard
                 sWatch.stop();
                 sWatch.start(true);
 
+                // Check if Virtual, then re-set ModelType
+                if( isVirtual ) {
+                	ppProcessorPack.getModelResource().getModelAnnotation().setModelType(ModelType.VIRTUAL_LITERAL);
+                	((ModelResourceImpl)ppProcessorPack.getModelResource()).setModelType(ModelType.VIRTUAL_LITERAL);
+                }
+                
                 // Auto save the model & refresh
                 ppProcessorPack.getModelResource().save(monitor, true);
                 sWatch.stop();
