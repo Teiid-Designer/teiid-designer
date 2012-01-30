@@ -576,7 +576,7 @@ public class QueryDisplayComponent implements DisplayNodeConstants, UiConstants 
             // expand Select 
             // Get the list of SELECT symbols
             List symbols = query.getProjectedSymbols();
-            StringBuffer selectStr = new StringBuffer(SELECT_STR+SPACE);
+            StringBuffer selectStr = new StringBuffer(SPACE);
             for(int i=0; i<symbols.size(); i++) {
                 if(i!=0) selectStr.append(COMMA+SPACE);
                 String symbolName = ((SelectSymbol)symbols.get(i)).toString();
