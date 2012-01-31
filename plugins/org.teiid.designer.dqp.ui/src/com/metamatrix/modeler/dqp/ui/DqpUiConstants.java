@@ -123,6 +123,7 @@ public interface DqpUiConstants {
         public static final String CREATE_WAR = PC.CTOOL16 + "deployVdb.png"; //$NON-NLS-1$
         public static final String DEPLOY_VDB = PC.CTOOL16 + "deployVdb.png"; //$NON-NLS-1$
         public static final String EXECUTE_VDB = PC.CTOOL16 + "run_vdb.gif"; //$NON-NLS-1$
+        public static final String EDIT_VDB = PC.CTOOL16 + "edit-vdb.gif"; //$NON-NLS-1$
         public static final String INACTIVE_DEPLOYED_VDB = PC.CTOOL16 + "inactiveDeployedVdb.png"; //$NON-NLS-1$
 
     }

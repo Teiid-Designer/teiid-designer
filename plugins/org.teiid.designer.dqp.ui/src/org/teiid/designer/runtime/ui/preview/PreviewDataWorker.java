@@ -118,10 +118,6 @@ public class PreviewDataWorker {
 
     }
     
-    public void executePreview(EObject eObject) throws ModelWorkspaceException {
-    	run(eObject);
-    }
-    
     public Shell getShell() {
     	return PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
     }

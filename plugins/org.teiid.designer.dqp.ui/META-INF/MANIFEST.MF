@@ -69,6 +69,7 @@ Require-Bundle: org.eclipse.ui.views,
  org.eclipse.datatools.sqltools.result.ui,
  org.teiid.datatools.connectivity.ui,
  org.teiid.designer.sdt,
- org.teiid.designer.extension
+ org.teiid.designer.extension,
+ org.eclipse.datatools.sqltools.sqlscrapbook
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
