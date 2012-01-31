@@ -17,23 +17,17 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.INewWizard;
 import org.teiid.designer.advisor.ui.AdvisorUiConstants;
-import org.teiid.designer.advisor.ui.AdvisorUiPlugin;
 import org.teiid.designer.advisor.ui.AdvisorUiConstants.COMMAND_IDS;
-import org.teiid.designer.advisor.ui.AdvisorUiConstants.CONNECTION_PROFILE_IDS;
+import org.teiid.designer.advisor.ui.AdvisorUiPlugin;
 import org.teiid.designer.advisor.ui.actions.AdvisorActionFactory;
-import org.teiid.designer.advisor.ui.actions.NewConnectionProfileAction;
 import org.teiid.designer.advisor.ui.actions.NewModelAction;
 import org.teiid.designer.advisor.ui.actions.ToggleAutoBuildAction;
 import org.teiid.designer.advisor.ui.core.IAdvisorActionHandler;
 import org.teiid.designer.advisor.ui.core.InfoPopAction;
 import org.teiid.designer.advisor.ui.core.status.AdvisorStatus;
 import org.teiid.designer.advisor.ui.util.DSPPluginImageHelper;
-import org.teiid.designer.datatools.ui.dialogs.NewTeiidFilteredCPWizard;
 
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelerUiViewUtils;
@@ -74,6 +68,7 @@ public class DSPAdvisorActionHandler implements IAdvisorActionHandler, AdvisorUi
     private InfoPopAction previewDataIPAction;
     
     private InfoPopAction newVdbIPAction;
+    private InfoPopAction editVdbIPAction;
     private InfoPopAction executeVdbIPAction;
 
     private ModelProjectStatus status;
@@ -98,7 +93,7 @@ public class DSPAdvisorActionHandler implements IAdvisorActionHandler, AdvisorUi
         // --------------------------------------------------------------------------
         // autobuildAction:
         Action toggleAutoBuildAction = new ToggleAutoBuildAction(AdvisorUiPlugin.getDefault().getCurrentWorkbenchWindow());
-        toggleAutoBuildAction.setText("Toggle Autobuild");
+        toggleAutoBuildAction.setText("Toggle Auto-build");
         this.toggleAutoBuildIPAction = new InfoPopAction(toggleAutoBuildAction,InfoPopAction.TYPE_DO, "Toggle Auto-build", imageHelper.BUILD_IMAGE);
 
         CONNECTION_ACTIONS : {
@@ -291,6 +286,21 @@ public class DSPAdvisorActionHandler implements IAdvisorActionHandler, AdvisorUi
                                            DSPAdvisorI18n.Options_Action_NewVdb_description, imageHelper.NEW_VDB_IMAGE);
 	        
 	        // --------------------------------------------------------------------------
+	        // Edit VDB
+	        // --------------------------------------------------------------------------
+	        IAction delegateEditVdbAction = new Action() {
+	            @Override
+	            public void run() {
+	            	AdvisorActionFactory.executeAction(COMMAND_IDS.EDIT_VDB);
+	            }
+	        };
+	        delegateEditVdbAction.setText(DSPAdvisorI18n.Action_EditVdb_text);
+	        delegateEditVdbAction.setToolTipText(DSPAdvisorI18n.Action_EditVdb_tooltip);
+	        delegateEditVdbAction.setImageDescriptor(AdvisorUiPlugin.getDefault().getImageDescriptor(AdvisorUiConstants.Images.EDIT_VDB_ACTION));
+	        editVdbIPAction = new InfoPopAction(delegateEditVdbAction, InfoPopAction.TYPE_DO,
+                                           DSPAdvisorI18n.Options_Action_EditVdb_description, imageHelper.EDIT_VDB_IMAGE);
+	        
+	        // --------------------------------------------------------------------------
 	        // Execute VDB
 	        // --------------------------------------------------------------------------
 	        IAction delegateExecuteVdbAction = new Action() {
@@ -302,7 +312,7 @@ public class DSPAdvisorActionHandler implements IAdvisorActionHandler, AdvisorUi
 	        delegateExecuteVdbAction.setText(DSPAdvisorI18n.Action_ExecuteVdb_text);
 	        delegateExecuteVdbAction.setToolTipText(DSPAdvisorI18n.Action_ExecuteVdb_tooltip);
 	        delegateExecuteVdbAction.setImageDescriptor(AdvisorUiPlugin.getDefault().getImageDescriptor(AdvisorUiConstants.Images.EXECUTE_VDB_ACTION));
-	        executeVdbIPAction = new InfoPopAction(delegateNewVdbAction, InfoPopAction.TYPE_FIX,
+	        executeVdbIPAction = new InfoPopAction(delegateExecuteVdbAction, InfoPopAction.TYPE_FIX,
                                            DSPAdvisorI18n.Options_Action_ExecuteVdb_description, imageHelper.EXECUTE_VDB_IMAGE);
 	        
 	        // --------------------------------------------------------------------------
@@ -378,9 +388,9 @@ public class DSPAdvisorActionHandler implements IAdvisorActionHandler, AdvisorUi
 
         switch (groupType) {
             case GROUP_VDBS: {
-                // actions.add(saveVdbIPAction);
-                // actions.add(rebuildVdbIPAction);
                 actions.add(newVdbIPAction);
+                actions.add(editVdbIPAction);
+                actions.add(executeVdbIPAction);
             }
                 break;
 
@@ -449,6 +459,12 @@ public class DSPAdvisorActionHandler implements IAdvisorActionHandler, AdvisorUi
                     actions.add(showProblemsViewIPAction);
                 }
                 actions.add(importXsdIPAction);
+            }
+                break;
+                
+            case GROUP_TEST: {
+            	actions.add(previewDataIPAction);
+            	actions.add(executeVdbIPAction);
             }
                 break;
 

@@ -201,6 +201,7 @@ public class ActionsSection implements AdvisorUiConstants{
         panel.setBackground(bkgdColor);
         
         addHyperlink(panel, Messages.CreateVdb, COMMAND_IDS.CREATE_VDB);
+        addHyperlink(panel, Messages.EditVdb, COMMAND_IDS.EDIT_VDB);
         addHyperlink(panel, Messages.ExecuteVdb, COMMAND_IDS.EXECUTE_VDB);
         
         return panel;
@@ -221,7 +222,7 @@ public class ActionsSection implements AdvisorUiConstants{
         panel.setLayout(gLayout);
         panel.setBackground(bkgdColor);
         
-        Group group = WidgetFactory.createGroup(panel, "Create", GridData.FILL_HORIZONTAL, 2, 2);
+        Group group = WidgetFactory.createGroup(panel, Messages.Create, GridData.FILL_HORIZONTAL, 2, 2);
         addHyperlink(group, COMMAND_IDS.NEW_MODEL_RELATIONAL_SOURCE, true);
         addHyperlink(group, COMMAND_IDS.NEW_MODEL_RELATIONAL_VIEW, true);
         addHyperlink(group, COMMAND_IDS.NEW_MODEL_WS, true);
@@ -312,7 +313,7 @@ public class ActionsSection implements AdvisorUiConstants{
         panel.setLayout(gLayout);
         panel.setBackground(bkgdColor);
         
-        Group group = WidgetFactory.createGroup(panel, "Server", GridData.FILL_HORIZONTAL, 2, 2);
+        Group group = WidgetFactory.createGroup(panel, Messages.Server, GridData.FILL_HORIZONTAL, 2, 2);
         addHyperlink(group, COMMAND_IDS.NEW_TEIID_SERVER, true);
         addHyperlink(group, COMMAND_IDS.EDIT_TEIID_SERVER, true);
         

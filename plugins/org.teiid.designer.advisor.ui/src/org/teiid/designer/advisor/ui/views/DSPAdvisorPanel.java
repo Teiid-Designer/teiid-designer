@@ -15,7 +15,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.IPropertyListener;
 import org.eclipse.ui.forms.ManagedForm;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
@@ -83,7 +82,7 @@ public class DSPAdvisorPanel extends ManagedForm
         parentForm.setBackground(toolkit.getColors().getBackground());
         // parentForm = toolkit.createForm(this);
 
-        this.parentForm.setText("Teiid Project Advisor");
+        this.parentForm.setText(DSPAdvisorI18n.TeiidProjectAdvisor);
 
         this.parentForm.setLayout(new GridLayout());
         // parentForm.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));

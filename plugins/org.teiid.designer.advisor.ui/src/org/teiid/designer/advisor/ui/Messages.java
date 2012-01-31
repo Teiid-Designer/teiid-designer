@@ -11,6 +11,7 @@ import org.eclipse.osgi.util.NLS;
 
 public class Messages  extends NLS {
 
+	public static String Create;
     public static String ConsumeLocalFlatFileDataSource;
     public static String ConsumeWebSercieWsdl;
     public static String ConsumeXmlFileSource;
@@ -81,6 +82,8 @@ public class Messages  extends NLS {
     public static String EditTeiidServer;
     public static String EditTeiidServer_Short;
     public static String ExecuteVdb;
+    public static String EditVdb;
+    public static String EditVdb_Short;
     
     public static String ModelingAspectOptions;
     public static String ManageModelProjects;
@@ -99,6 +102,7 @@ public class Messages  extends NLS {
     public static String PreviewData;
     
     public static String SelectActionsGroup;
+    public static String Server;
     
     public static String TeiidActionsManager;
     public static String TeiidActions;

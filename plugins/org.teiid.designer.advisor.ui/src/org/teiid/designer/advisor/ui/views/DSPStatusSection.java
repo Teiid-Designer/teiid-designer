@@ -62,6 +62,7 @@ public class DSPStatusSection implements AdvisorUiConstants.Groups {
     private LabelLabelLinkRow validationRow;
     private LabelLabelLinkRow schemasRow;
     private LabelLabelLinkRow vdbsRow;
+    LabelLabelLinkRow testRow;
 
     private static final int MAX_NAME_CHARS = 20;
 
@@ -127,6 +128,7 @@ public class DSPStatusSection implements AdvisorUiConstants.Groups {
         schemasRow = new LabelLabelLinkRow(GROUP_XML_SCHEMAS, toolkit, sectionBody, DSPAdvisorI18n.XmlSchemaLabel, this.linkListener);
         viewsRow = new LabelLabelLinkRow(GROUP_VIEWS, toolkit, sectionBody, DSPAdvisorI18n.ViewsLabel, this.linkListener);
         vdbsRow = new LabelLabelLinkRow(GROUP_VDBS, toolkit, sectionBody, DSPAdvisorI18n.VDBsLabel, this.linkListener);
+        testRow = new LabelLabelLinkRow(GROUP_TEST, toolkit, sectionBody, DSPAdvisorI18n.TestLabel, this.linkListener);
 
         // Add Separator
         createSeparator(sectionBody, nColumns, 5);
@@ -355,8 +357,9 @@ public class DSPStatusSection implements AdvisorUiConstants.Groups {
             if (status.getViewModelsStatus().getSeverity() == IStatus.ERROR) {
                 hasErrors = true;
             }
+            
             // --------------------------------------------------
-            // Views Status
+            // VDBs Status
             // --------------------------------------------------
 
             this.vdbsRow.update(getButtonImage(GROUP_VDBS, status.getVdbsStatus().getSeverity()),
@@ -367,11 +370,25 @@ public class DSPStatusSection implements AdvisorUiConstants.Groups {
                 hasErrors = true;
             }
 
+            // --------------------------------------------------
+            // Test Status
+            // --------------------------------------------------
+            
+            this.testRow.update(getButtonImage(GROUP_TEST, status.getTestStatus().getSeverity()),
+                    status.getTestStatus().getMessage(),
+                    status.getTestStatus().getMessage(),
+                    status.getTestStatus().getMessage() + CRETURN + DSPAdvisorI18n.Status_ClickForActions);
+            
+            if (status.getTestStatus().getSeverity() == IStatus.ERROR) {
+                hasErrors = true;
+            }
+            
             if (!hasErrors) {
                 statusSummaryImage.setImage(imageHelper.CHECKED_BOX_IMAGE);
             } else {
                 statusSummaryImage.setImage(imageHelper.PROBLEM_BOX_IMAGE);
             }
+
         }
 
         if (status.getCurrentModelProject() != null) {
@@ -397,7 +414,8 @@ public class DSPStatusSection implements AdvisorUiConstants.Groups {
             case GROUP_VIEW_MAPPINGS:
             case GROUP_XML_SCHEMAS:
             case GROUP_WEBSERVICE_MODELS:
-            case GROUP_VDBS: {
+            case GROUP_VDBS:
+            case GROUP_TEST:{
                 if (severity == IStatus.ERROR) {
                     image = this.imageHelper.PROBLEM_BOX_IMAGE;
                 } else if (severity == IStatus.WARNING) {

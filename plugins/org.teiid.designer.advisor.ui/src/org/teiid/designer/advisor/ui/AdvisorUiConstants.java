@@ -102,6 +102,7 @@ public interface AdvisorUiConstants {
 		String CREATE_VDB = "org.teiid.designer.new.vdb"; //$NON-NLS-1$
 		String EXECUTE_VDB = "org.teiid.designer.execute.vdb"; //$NON-NLS-1$
 		String PREVIEW_DATA = "org.teiid.designer.previewData"; //$NON-NLS-1$
+		String EDIT_VDB = "org.teiid.designer.edit.vdb"; //$NON-NLS-1$
 		
 		String NEW_TEIID_SERVER = "org.teiid.designer.runtime.newTeiidServer"; //$NON-NLS-1$
 		String EDIT_TEIID_SERVER = "org.teiid.designer.runtime.editTeiidServer"; //$NON-NLS-1$
@@ -143,6 +144,7 @@ public interface AdvisorUiConstants {
 		String NEW_TEIID_MODEL_PROJECT = Messages.CreateTeiidModelProject;
 		String CREATE_VDB = Messages.CreateVdb;
 		String EXECUTE_VDB = Messages.ExecuteVdb;
+		String EDIT_VDB = Messages.EditVdb;
 		String PREVIEW_DATA = Messages.PreviewData;
 		
 		String NEW_TEIID_SERVER = Messages.NewTeiidServer;
@@ -185,6 +187,7 @@ public interface AdvisorUiConstants {
 		String NEW_TEIID_MODEL_PROJECT = Messages.CreateTeiidModelProject;
 		String CREATE_VDB = Messages.CreateVdb_Short;
 		String EXECUTE_VDB = Messages.ExecuteVdb;
+		String EDIT_VDB = Messages.EditVdb_Short;
 		
 		String NEW_TEIID_SERVER = Messages.NewTeiidServer_Short;
 		String EDIT_TEIID_SERVER = Messages.EditTeiidServer_Short;
@@ -253,6 +256,7 @@ public interface AdvisorUiConstants {
 	    String NEW_MODEL_ACTION = CTOOL16 + "new-model-wiz.gif"; //$NON-NLS-1$
 	    String NEW_PROJECT_ACTION = CTOOL16 + "new-project-wiz.gif";  //$NON-NLS-1$
 	    String EXECUTE_VDB_ACTION = CTOOL16 + "execute-vdb.gif"; //$NON-NLS-1$
+	    String EDIT_VDB_ACTION = CTOOL16 + "edit-vdb.png"; //$NON-NLS-1$
 	    String PREVIEW_DATA = CTOOL16 + "preview-data.gif"; //$NON-NLS-1$
 	    
 	    String DATA_SOURCE_EXPLORER_VIEW = CTOOL16 + "data-source-explorer-view.gif";  //$NON-NLS-1$
@@ -375,6 +379,7 @@ public interface AdvisorUiConstants {
 	    public static final int GROUP_PREVIEW_WSDL = 7;
 	    public static final int GROUP_VDBS = 8;
 	    public static final int GROUP_PROJECT = 9;
+	    public static final int GROUP_TEST = 10;
 	}
 
 }

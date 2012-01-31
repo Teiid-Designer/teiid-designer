@@ -28,6 +28,7 @@ public class ModelProjectStatus extends MultiStatus {
     private IStatus webServiceOperationsStatus;
     private IStatus previewWsdlStatus;
     private IStatus vdbsStatus;
+    private IStatus testStatus;
 
     /**
      * @param thePluginId
@@ -105,6 +106,14 @@ public class ModelProjectStatus extends MultiStatus {
      */
     public IStatus getSourceModelsStatus() {
         return this.sourceModelsStatus;
+    }
+    
+    /**
+     * @return Returns the testStatus.
+     * @since 4.3
+     */
+    public IStatus getTestStatus() {
+        return this.testStatus;
     }
 
     /**
@@ -191,6 +200,14 @@ public class ModelProjectStatus extends MultiStatus {
      */
     public void setSourceModelsStatus( IStatus theSourceModelsStatus ) {
         this.sourceModelsStatus = theSourceModelsStatus;
+    }
+    
+    /**
+     * @param theVdbsStatus The vdbsStatus to set.
+     * @since 4.3
+     */
+    public void setTestStatus( IStatus theTestStatus ) {
+        this.testStatus = theTestStatus;
     }
 
     /**

@@ -136,6 +136,7 @@ public class DSPValidationHelper implements DSPValidationConstants {
         IStatus webServicesStatus = null;
         IStatus completedStatus = null;
         IStatus vdbsStatus = null;
+        IStatus testStatus = null;
 
         // 1) No models have ERRORS
         // NOTE: any missing or busted transformation will be taken care of here.
@@ -231,8 +232,10 @@ public class DSPValidationHelper implements DSPValidationConstants {
         	} else {
         		vdbsStatus = STATUS_MSGS.VDBS_OK;
         	}
+        	testStatus = STATUS_MSGS.VDBS_OK;
         } else {
         	vdbsStatus = STATUS_MSGS.NO_VDBS_ARE_DEFINED;
+        	testStatus = STATUS_MSGS.NO_VDBS_ARE_DEFINED;
         }
         ModelProjectStatus status = null;
         completedStatus = Status.OK_STATUS;
@@ -270,6 +273,8 @@ public class DSPValidationHelper implements DSPValidationConstants {
         status.add(webServicesStatus);
         status.setVdbsStatus(vdbsStatus);
         status.add(vdbsStatus);
+        status.setTestStatus(testStatus);
+        status.add(testStatus);
 
         return status;
     }

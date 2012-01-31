@@ -41,6 +41,7 @@ public class DSPAdvisorI18n extends NLS {
     public static String XmlSchemaLabel;
     public static String WebServicesLabel;
     public static String VDBsLabel;
+    public static String TestLabel;
 
     // Misc
     public static String Action_PreviewWsdlLabel;
@@ -51,6 +52,8 @@ public class DSPAdvisorI18n extends NLS {
     public static String Action_ExecuteVdb_tooltip;
     public static String Action_NewVdb_text;
     public static String Action_NewVdb_tooltip;
+    public static String Action_EditVdb_text;
+    public static String Action_EditVdb_tooltip;
     public static String Action_SaveVdb_text;
     public static String Action_SaveVdb_tooltip;
     public static String Action_NewSourceModel_text;
@@ -74,6 +77,7 @@ public class DSPAdvisorI18n extends NLS {
     public static String Options_Action_PreviewData_description;
     public static String Options_Action_ExecuteVdb_description;
     public static String Options_Action_NewVdb_description;
+    public static String Options_Action_EditVdb_description;
     public static String Options_Action_NewRelationalSourceModel_description;
     public static String Options_Action_NewRelationalViewModel_description;
     public static String Options_Action_NewXmlViewModel_description;
@@ -139,6 +143,8 @@ public class DSPAdvisorI18n extends NLS {
     public static String Status_Project_OK;
     public static String Status_Project_Incomplete;
     public static String Status_Project_Errors;
+    
+    public static String TeiidProjectAdvisor;
 
     // --------------------------------------------------------------------------------------------
     // AdvisorFixDialog contants
