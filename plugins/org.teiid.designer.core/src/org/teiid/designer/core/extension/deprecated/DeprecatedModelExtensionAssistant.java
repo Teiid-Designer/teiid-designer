@@ -23,6 +23,7 @@ import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.util.ModelObjectClassNameVisitor;
 import com.metamatrix.modeler.core.util.ModelVisitorProcessor;
+import com.metamatrix.modeler.core.workspace.ModelResource;
 
 /**
  * 
@@ -231,13 +232,19 @@ public class DeprecatedModelExtensionAssistant extends EmfModelObjectExtensionAs
         CoreArgCheck.isInstanceOf(EObject.class, modelObject);
         CoreArgCheck.isNotEmpty(propId, "id is empty"); //$NON-NLS-1$
 
+        ModelResource modelResource = getModelResource(modelObject);
+
+        if (modelResource == null) {
+            throw new Exception(ModelerCore.Util.getString("DeprecatedModelExtensionAssistant.modelResourceNotFound", modelObject)); //$NON-NLS-1$
+        }
+
         // convert all procedure model objects that have the same old namespace property
         String className = "com.metamatrix.metamodels.relational.impl.ProcedureImpl"; //$NON-NLS-1$
         ModelObjectClassNameVisitor visitor = new ModelObjectClassNameVisitor(Collections.singletonList(className));
         ModelVisitorProcessor processor = new ModelVisitorProcessor(visitor, ModelVisitorProcessor.MODE_VISIBLE_CONTAINMENTS);
-        processor.walk(getModelResource(modelObject), ModelVisitorProcessor.DEPTH_INFINITE);
+        processor.walk(modelResource, ModelVisitorProcessor.DEPTH_INFINITE);
 
-        Collection<EObject> eObjects = getModelResource(modelObject).getEObjects();
+        Collection<EObject> eObjects = visitor.getResult();
         ModelObjectExtensionAssistant assistant;
 
         // first save the corresponding MED

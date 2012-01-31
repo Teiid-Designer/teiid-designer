@@ -12,6 +12,7 @@ import static com.metamatrix.modeler.core.ModelerCore.Util;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Properties;
 
 import org.eclipse.core.resources.IFile;
@@ -45,9 +46,8 @@ public class EmfModelObjectExtensionAssistant extends ModelObjectExtensionAssist
     private static final String PREFIX = I18nUtil.getPropertyPrefix(EmfModelObjectExtensionAssistant.class);
 
     /**
-     * @param modelObject the model object (must be either an
-     * @return the model resource (never <code>null</code>)
-     * @throws IllegalArgumentException if the model object is not either an {@link EObject} or a {@link ModelResource}
+     * @param modelObject the model object (must be either an {@link EObject}, {@link ModelResource}, or an {@link IFile}.
+     * @return the model resource or <code>null</code> if not found
      */
     protected ModelResource getModelResource( Object modelObject ) throws Exception {
         ModelResource modelResource = null;
@@ -58,11 +58,6 @@ public class EmfModelObjectExtensionAssistant extends ModelObjectExtensionAssist
             modelResource = ModelerCore.getModelEditor().findModelResource((EObject)modelObject);
         } else if (modelObject instanceof IFile) {
             modelResource = ModelerCore.getModelEditor().findModelResource((IFile)modelObject);
-        }
-
-        // should have a model resource
-        if (modelResource == null) {
-            CoreArgCheck.isNotNull(modelResource, "modelResource is null"); //$NON-NLS-1$
         }
 
         return modelResource;
@@ -233,7 +228,13 @@ public class EmfModelObjectExtensionAssistant extends ModelObjectExtensionAssist
      */
     @Override
     public Collection<String> getSupportedNamespaces( Object modelObject ) throws Exception {
-        return ModelExtensionUtils.getSupportedNamespaces(getModelResource(modelObject));
+        ModelResource modelResource = getModelResource(modelObject);
+
+        if (modelResource == null) {
+            return Collections.emptyList();
+        }
+
+        return ModelExtensionUtils.getSupportedNamespaces(modelResource);
    }
 
     /**
@@ -248,7 +249,11 @@ public class EmfModelObjectExtensionAssistant extends ModelObjectExtensionAssist
         IFile modelFile = workspace.getRoot().getFileForLocation(location);
 
         if ((modelFile != null) && ModelUtil.isModelFile(modelFile.getFullPath())) {
-            return ModelExtensionUtils.getSupportedNamespaces(getModelResource(modelFile)).contains(getNamespacePrefix());
+            ModelResource modelResource = getModelResource(modelFile);
+
+            if (modelResource != null) {
+                return ModelExtensionUtils.getSupportedNamespaces(modelResource).contains(getNamespacePrefix());
+            }
         }
 
         // none found
@@ -279,12 +284,17 @@ public class EmfModelObjectExtensionAssistant extends ModelObjectExtensionAssist
 
     /**
      * {@inheritDoc}
-     * 
-     * @see org.teiid.designer.extension.definition.ModelExtensionAssistant#getModelExtensionDefinition(java.lang.Object)
+     *
+     * @see org.teiid.designer.extension.definition.ModelObjectExtensionAssistant#getModelExtensionDefinition(java.lang.Object)
      */
     @Override
     public ModelExtensionDefinition getModelExtensionDefinition( Object modelObject ) throws Exception {
         ModelResource modelResource = getModelResource(modelObject);
+
+        if (modelResource == null) {
+            return null;
+        }
+
         return ModelExtensionUtils.getModelExtensionDefinition(this, modelResource);
     }
 
@@ -296,24 +306,27 @@ public class EmfModelObjectExtensionAssistant extends ModelObjectExtensionAssist
     @Override
     public void removeModelExtensionDefinition( Object modelObject ) throws Exception {
         ModelResource modelResource = getModelResource(modelObject);
-        ModelExtensionUtils.removeModelExtensionDefinition(modelResource, getNamespacePrefix());
 
-        // find model objects with classes that match the extended metaclasses in the MED
-        ModelExtensionDefinition definition = getModelExtensionDefinition();
-        String[] metaclasses = definition.getExtendedMetaclasses();
-        ModelObjectClassNameVisitor visitor = new ModelObjectClassNameVisitor(Arrays.asList(metaclasses));
-        ModelVisitorProcessor processor = new ModelVisitorProcessor(visitor, ModelVisitorProcessor.MODE_VISIBLE_CONTAINMENTS);
-        processor.walk(modelResource, ModelVisitorProcessor.DEPTH_INFINITE);
+        if (modelResource != null) {
+            ModelExtensionUtils.removeModelExtensionDefinition(modelResource, getNamespacePrefix());
 
-        // remove overridden properties
-        for (EObject eObject : visitor.getResult()) {
-            Annotation annotation = ModelExtensionUtils.getModelObjectAnnotation(eObject, false);
+            // find model objects with classes that match the extended metaclasses in the MED
+            ModelExtensionDefinition definition = getModelExtensionDefinition();
+            String[] metaclasses = definition.getExtendedMetaclasses();
+            ModelObjectClassNameVisitor visitor = new ModelObjectClassNameVisitor(Arrays.asList(metaclasses));
+            ModelVisitorProcessor processor = new ModelVisitorProcessor(visitor, ModelVisitorProcessor.MODE_VISIBLE_CONTAINMENTS);
+            processor.walk(modelResource, ModelVisitorProcessor.DEPTH_INFINITE);
 
-            if (annotation != null) {
-                String metaclassName = eObject.getClass().getName();
+            // remove overridden properties
+            for (EObject eObject : visitor.getResult()) {
+                Annotation annotation = ModelExtensionUtils.getModelObjectAnnotation(eObject, false);
 
-                for (ModelExtensionPropertyDefinition propDefn : definition.getPropertyDefinitions(metaclassName)) {
-                    removeProperty(eObject, propDefn.getId());
+                if (annotation != null) {
+                    String metaclassName = eObject.getClass().getName();
+
+                    for (ModelExtensionPropertyDefinition propDefn : definition.getPropertyDefinitions(metaclassName)) {
+                        removeProperty(eObject, propDefn.getId());
+                    }
                 }
             }
         }
@@ -439,40 +452,42 @@ public class EmfModelObjectExtensionAssistant extends ModelObjectExtensionAssist
             if (context instanceof IFile) {
                 ModelResource modelResource = getModelResource(context);
 
-                if (modelResource != null) {
-                    Collection<String> modelTypes = getModelExtensionDefinition().getSupportedModelTypes();
+                if (modelResource == null) {
+                    return false;
+                }
 
-                    // if supported model types is empty then all all model types are supported
-                    if (!modelTypes.isEmpty()) {
-                        String modelTypeLiteral = modelResource.getModelType().getLiteral();
+                Collection<String> modelTypes = getModelExtensionDefinition().getSupportedModelTypes();
 
-                        if (!modelTypes.contains(modelTypeLiteral)) {
-                            return false; // model type not supported
+                // if supported model types is empty then all all model types are supported
+                if (!modelTypes.isEmpty()) {
+                    String modelTypeLiteral = modelResource.getModelType().getLiteral();
+
+                    if (!modelTypes.contains(modelTypeLiteral)) {
+                        return false; // model type not supported
+                    }
+                }
+
+                if (MedOperations.ADD_MED_TO_MODEL.equals(proposedOperationName)) {
+                    // model must NOT be currently supporting namespace
+                    if (!supportsMyNamespace(modelResource)) {
+                        // make sure model is of right metamodel URI to be extended by the MED
+                        String metamodelUri = getModelExtensionDefinition().getMetamodelUri();
+
+                        // MED does not have URI yet
+                        if (CoreStringUtil.isEmpty(metamodelUri)) {
+                            return false;
                         }
+
+                        // check to make sure MED metamodel URI is the same as model's
+                        return metamodelUri.equals(modelResource.getPrimaryMetamodelUri());
                     }
 
-                    if (MedOperations.ADD_MED_TO_MODEL.equals(proposedOperationName)) {
-                        // model must NOT be currently supporting namespace
-                        if (!supportsMyNamespace(modelResource)) {
-                            // make sure model is of right metamodel URI to be extended by the MED
-                            String metamodelUri = getModelExtensionDefinition().getMetamodelUri();
+                    // model already has namespace stored so can't be added again
+                    return false;
+                }
 
-                            // MED does not have URI yet
-                            if (CoreStringUtil.isEmpty(metamodelUri)) {
-                                return false;
-                            }
-
-                            // check to make sure MED metamodel URI is the same as model's
-                            return metamodelUri.equals(modelResource.getPrimaryMetamodelUri());
-                        }
-
-                        // model already has namespace stored so can't be added again
-                        return false;
-                    }
-
-                    if (MedOperations.DELETE_MED_FROM_MODEL.equals(proposedOperationName)) {
-                        return supportsMyNamespace(modelResource); // model must be currently supporting namespace
-                    }
+                if (MedOperations.DELETE_MED_FROM_MODEL.equals(proposedOperationName)) {
+                    return supportsMyNamespace(modelResource); // model must be currently supporting namespace
                 }
             }
         } catch (Exception e) {
@@ -490,7 +505,13 @@ public class EmfModelObjectExtensionAssistant extends ModelObjectExtensionAssist
      */
     @Override
     public boolean supportsMyNamespace( Object modelObject ) throws Exception {
-        return ModelExtensionUtils.isSupportedNamespace(getModelResource(modelObject), getNamespacePrefix());
+        ModelResource modelResource = getModelResource(modelObject);
+
+        if (modelResource == null) {
+            return false;
+        }
+
+        return ModelExtensionUtils.isSupportedNamespace(modelResource, getNamespacePrefix());
     }
 
 }
