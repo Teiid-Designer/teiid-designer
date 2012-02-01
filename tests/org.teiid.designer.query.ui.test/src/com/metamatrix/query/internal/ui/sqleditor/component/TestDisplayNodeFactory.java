@@ -637,28 +637,30 @@ public class TestDisplayNodeFactory extends TestCase {
         helpTest(query, "SELECT\n\t\t*\n\tFROM\n\t\tm.g\n\tWHERE\n\t\te1 = 5\n\tGROUP BY e1\n\tHAVING\n\t\te1 > 0\n\tORDER BY e1"); //$NON-NLS-1$
     }
 
-    public void testSelect1() {
-        Select select = new Select();
-        select.addSymbol(new ElementSymbol("e1")); //$NON-NLS-1$
-
-        helpTest(select, "SELECT\n\t\te1"); //$NON-NLS-1$
-    }
-
-    public void testSelect2() {
-        Select select = new Select();
-        select.setDistinct(true);
-        select.addSymbol(new ElementSymbol("e1")); //$NON-NLS-1$
-
-        helpTest(select, "SELECT DISTINCT\n\t\te1"); //$NON-NLS-1$
-    }
-
-    public void testSelect3() {
-        Select select = new Select();
-        select.addSymbol(new ElementSymbol("e1")); //$NON-NLS-1$
-        select.addSymbol(new ElementSymbol("e2")); //$NON-NLS-1$
-
-        helpTest(select, "SELECT\n\t\te1, e2"); //$NON-NLS-1$
-    }
+    // The "Select" display node was basically retired with Teiid 7.7 code-base. It's been replaced by the concept that the SQL Statement
+    // is already a select.
+//    public void testSelect1() {
+//        Select select = new Select();
+//        select.addSymbol(new ElementSymbol("e1")); //$NON-NLS-1$
+//
+//        helpTest(select, "SELECT\n\t\te1"); //$NON-NLS-1$
+//    }
+//
+//    public void testSelect2() {
+//        Select select = new Select();
+//        select.setDistinct(true);
+//        select.addSymbol(new ElementSymbol("e1")); //$NON-NLS-1$
+//
+//        helpTest(select, "SELECT DISTINCT\n\t\te1"); //$NON-NLS-1$
+//    }
+//
+//    public void testSelect3() {
+//        Select select = new Select();
+//        select.addSymbol(new ElementSymbol("e1")); //$NON-NLS-1$
+//        select.addSymbol(new ElementSymbol("e2")); //$NON-NLS-1$
+//
+//        helpTest(select, "SELECT\n\t\te1, e2"); //$NON-NLS-1$
+//    }
 
     public void testSetCriteria1() {
         SetCriteria sc = new SetCriteria();
