@@ -96,15 +96,12 @@ public class DSPStatusSection implements AdvisorUiConstants.Groups {
 
         // addTopSectionButtons(topSection);
 
-        // GridLayout gridLayout = new GridLayout();
-        // gridLayout.horizontalSpacing = 0;
-        // gridLayout.verticalSpacing = 0;
-        // container.setLayout(gridLayout);
-
         section.setText(DSPAdvisorI18n.StatusSectionTitle_NoProjectSelected);
         section.setDescription(DSPAdvisorI18n.StatusSectionDefaultDescription);
         section.getDescriptionControl().setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
-        section.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true)); // SWT.HORIZONTAL, SWT.VERTICAL, true, true));
+        GridData gd = new GridData(GridData.FILL_BOTH | GridData.HORIZONTAL_ALIGN_BEGINNING);
+        gd.horizontalSpan = 2;
+        section.setLayoutData(gd);
 
         Composite sectionBody = toolkit.createComposite(section);
         TableWrapLayout layout = new TableWrapLayout();
@@ -242,6 +239,7 @@ public class DSPStatusSection implements AdvisorUiConstants.Groups {
             this.connectorsRow.setLinkTooltip(DSPAdvisorI18n.NoProjectMessage + CRETURN + DSPAdvisorI18n.Status_ClickForActions);
             this.viewsRow.setLinkTooltip(DSPAdvisorI18n.NoProjectMessage + CRETURN + DSPAdvisorI18n.Status_ClickForActions);
             this.vdbsRow.setLinkTooltip(DSPAdvisorI18n.NoProjectMessage + CRETURN + DSPAdvisorI18n.Status_ClickForActions);
+            this.testRow.setLinkTooltip(DSPAdvisorI18n.NoProjectMessage + CRETURN + DSPAdvisorI18n.Status_ClickForActions);
 
             resetStatusFGColor(true);
 
@@ -438,6 +436,7 @@ public class DSPStatusSection implements AdvisorUiConstants.Groups {
             this.viewsRow.dim();
             this.validationRow.dim();
             this.vdbsRow.dim();
+            this.testRow.dim();
         } else {
             this.validationRow.brighten();
             this.schemasRow.brighten();
@@ -445,6 +444,7 @@ public class DSPStatusSection implements AdvisorUiConstants.Groups {
             this.connectorsRow.brighten();
             this.viewsRow.brighten();
             this.vdbsRow.brighten();
+            this.testRow.brighten();
         }
 
     }
@@ -457,6 +457,7 @@ public class DSPStatusSection implements AdvisorUiConstants.Groups {
         connectorsRow.redraw();
         viewsRow.redraw();
         vdbsRow.redraw();
+        testRow.redraw();
 
         this.section.redraw();
 

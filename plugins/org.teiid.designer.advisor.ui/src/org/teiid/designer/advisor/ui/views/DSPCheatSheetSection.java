@@ -70,6 +70,8 @@ public class DSPCheatSheetSection {
 
         this.section = this.toolkit.createSection(parent, ExpandableComposite.TITLE_BAR | ExpandableComposite.EXPANDED
                                                           | Section.DESCRIPTION | ExpandableComposite.TWISTIE);
+        
+        
         loadCheatSheetExtensions();
 
         initSection();
@@ -80,7 +82,9 @@ public class DSPCheatSheetSection {
         this.section.setText("Related Guides"); //VdbViewConstants.Util.getStringOrKey(PREFIX + "text")); //$NON-NLS-1$
         this.section.setDescription("Cheat sheet section description"); //VdbViewConstants.Util.getStringOrKey(PREFIX + "description")); //$NON-NLS-1$
         this.section.getDescriptionControl().setForeground(this.toolkit.getColors().getColor(IFormColors.TITLE));
-        this.section.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+        GridData gd = new GridData(GridData.FILL_BOTH | GridData.HORIZONTAL_ALIGN_BEGINNING);
+        gd.horizontalSpan = 2;
+        this.section.setLayoutData(gd);
 
         Composite sectionBody = this.toolkit.createComposite(section);
         TableWrapLayout tsbLayout = new TableWrapLayout();

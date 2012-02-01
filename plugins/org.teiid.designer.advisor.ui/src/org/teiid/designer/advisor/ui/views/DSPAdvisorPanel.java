@@ -11,6 +11,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -38,7 +39,6 @@ public class DSPAdvisorPanel extends ManagedForm
 
     private ScrolledForm parentForm;
     private DSPStatusSection statusSection;
-    // private DSPCheatSheetSection cheatSheetSection;
 
     private AdvisorHyperLinkListener linkListener;
 
@@ -76,28 +76,39 @@ public class DSPAdvisorPanel extends ManagedForm
         // addProjectComboSelector(this);
 
         this.toolkit = getToolkit();
+        
+        Color bkgdColor = toolkit.getColors().getBackground();
 
         this.linkListener = new AdvisorHyperLinkListener(this.getForm(), this.toolkit, this.actionHandler);
 
-        parentForm.setBackground(toolkit.getColors().getBackground());
+        parentForm.setBackground(bkgdColor);
         // parentForm = toolkit.createForm(this);
 
         this.parentForm.setText(DSPAdvisorI18n.TeiidProjectAdvisor);
 
         this.parentForm.setLayout(new GridLayout());
         // parentForm.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-        this.parentForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+        GridData formGD = new GridData(SWT.FILL, SWT.FILL, false, true);
+        formGD.verticalAlignment = SWT.BEGINNING;
+        this.parentForm.setLayoutData(formGD);
 
         FormUtil.tweakColors(toolkit, parentForm.getDisplay());
-        this.parentForm.setBackground(toolkit.getColors().getBackground());
+        this.parentForm.setBackground(bkgdColor);
 
         // statusSection = createStatusSection(parentForm.getBody());
         this.statusSection = new DSPStatusSection(toolkit, parentForm.getBody(), this.linkListener);
 
         // Add Simple Separator using a blank label
-        this.toolkit.createLabel(parentForm.getBody(), null);
+        //this.toolkit.createLabel(parentForm.getBody(), null);
 
-        // this.cheatSheetSection =
+        Composite body = parentForm.getBody();
+		GridLayout gl = new GridLayout(2, false);
+		body.setLayout(gl);
+		gd = new GridData(GridData.FILL_HORIZONTAL);
+		body.setLayoutData(gd);
+		
+		new ActionsSection(toolkit, body);
+		
         new DSPCheatSheetSection(toolkit, parentForm.getBody());
 
         AdvisorUiPlugin.getStatusManager().updateStatus(true);

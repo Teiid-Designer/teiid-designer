@@ -7,6 +7,7 @@
  */
 package org.teiid.designer.advisor.ui.views;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,16 +15,21 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
+import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.forms.widgets.Section;
@@ -34,6 +40,7 @@ import org.teiid.designer.advisor.ui.actions.AdvisorActionFactory;
 import org.teiid.designer.advisor.ui.actions.AdvisorActionInfo;
 
 import com.metamatrix.ui.internal.util.WidgetFactory;
+import com.metamatrix.ui.internal.util.WidgetUtil;
 
 public class ActionsSection implements AdvisorUiConstants{
 	private FormToolkit toolkit;
@@ -41,6 +48,8 @@ public class ActionsSection implements AdvisorUiConstants{
 	private Section section;
 	Composite stackBodyPanel;
 	StackLayout stackLayout;
+	
+    private Combo actionGroupCombo;
 	
 	Map<String, Composite> stackedPanels;
 
@@ -70,14 +79,13 @@ public class ActionsSection implements AdvisorUiConstants{
 	@SuppressWarnings("unused")
 	private void createSection(Composite theParent) {
 
-        Section generalSection = this.toolkit.createSection(theParent, Section.TITLE_BAR | Section.EXPANDED );
+        Section generalSection = this.toolkit.createSection(theParent, Section.TITLE_BAR | ExpandableComposite.TWISTIE );
 
         Color bkgdColor = this.toolkit.getColors().getBackground();
-        generalSection.setText(Messages.ModelingAspectOptions);
+        generalSection.setText(Messages.ActionsLibrary);
 
 //        generalSection.setDescription("Aspect Description....");
         
-//        generalSection.getDescriptionControl().setForeground(this.toolkit.getColors().getColor(FormColors.TITLE));
         GridData gd = new GridData(GridData.FILL_BOTH | GridData.HORIZONTAL_ALIGN_BEGINNING);
         gd.horizontalSpan = 2;
         generalSection.setLayoutData(gd);
@@ -88,7 +96,28 @@ public class ActionsSection implements AdvisorUiConstants{
 
         sectionBody.setLayout(new GridLayout());
         
-        createStackLayout(sectionBody);
+        //Composite comboPanel = WidgetFactory.createGroup(sectionBody, "Select Category");
+        Group comboPanel = new Group(sectionBody, SWT.SHADOW_ETCHED_IN);
+        comboPanel.setText(Messages.SelectCategory);
+        comboPanel.setFont(JFaceResources.getBannerFont());
+        comboPanel.setLayout(new GridLayout());
+        comboPanel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        //WidgetFactory.createLabel(comboPanel, "LABEL_1");
+        
+		actionGroupCombo = new Combo(comboPanel, SWT.NONE | SWT.READ_ONLY);
+		gd = new GridData(GridData.FILL_HORIZONTAL);
+		gd.verticalAlignment = GridData.CENTER;
+		actionGroupCombo.setLayoutData(gd);
+		
+		WidgetUtil.setComboItems(actionGroupCombo, Arrays.asList(AdvisorUiConstants.MODELING_ASPECT_LABELS_LIST), null, true);
+		actionGroupCombo.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected( SelectionEvent ev ) {
+            	selectComboItem(actionGroupCombo.getSelectionIndex());
+            }
+        });
+
+        createStackLayout(comboPanel);
 
         Composite panel1 = createPanel_1(stackBodyPanel);
         stackLayout.topControl = panel1;
@@ -103,7 +132,29 @@ public class ActionsSection implements AdvisorUiConstants{
         stackedPanels.put(MODELING_ASPECT_IDS.TEIID_SERVER, createPanel_9(stackBodyPanel));
 
         generalSection.setClient(sectionBody);
+
+        actionGroupCombo.select(getInitialComboSelectionIndex());
+        selectComboItem(getInitialComboSelectionIndex());
 	}
+	
+    private void selectComboItem(int selectionIndex) {
+    	if( selectionIndex >=0 ) {
+    		String aspectId = actionGroupCombo.getItem(selectionIndex);
+    		aspectChanged(aspectId);
+    	}
+    }
+    
+    private int getInitialComboSelectionIndex() {
+    	int index = 0;
+    	for( String item : actionGroupCombo.getItems()) {
+    		if( AdvisorUiConstants.MODELING_ASPECT_LABELS.MODEL_PROJECT_MANAGEMENT.equalsIgnoreCase(item)) {
+    			return index; 
+    		}
+    		index++;
+    	}
+    	
+    	return -1;
+    }
 	
 	private Composite createPanel_1(Composite parent) {
 		Color bkgdColor = this.toolkit.getColors().getBackground();

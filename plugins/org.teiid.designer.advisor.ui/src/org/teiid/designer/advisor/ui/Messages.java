@@ -10,7 +10,8 @@ package org.teiid.designer.advisor.ui;
 import org.eclipse.osgi.util.NLS;
 
 public class Messages  extends NLS {
-
+    public static String ActionsLibrary;
+    
 	public static String Create;
     public static String ConsumeLocalFlatFileDataSource;
     public static String ConsumeWebSercieWsdl;
@@ -85,7 +86,7 @@ public class Messages  extends NLS {
     public static String EditVdb;
     public static String EditVdb_Short;
     
-    public static String ModelingAspectOptions;
+    public static String ActionLibrary;
     public static String ManageModelProjects;
     public static String ModelDataSources;
     public static String ManageConnections;
@@ -102,10 +103,10 @@ public class Messages  extends NLS {
     public static String PreviewData;
     
     public static String SelectActionsGroup;
+    public static String SelectCategory;
     public static String Server;
     
     public static String TeiidActionsManager;
-    public static String TeiidActions;
     public static String TeiidServer;
     public static String Test;
 
