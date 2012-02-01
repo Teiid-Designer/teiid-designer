@@ -114,6 +114,64 @@ public final class ModelExtensionDefinitionValidator {
         return ValidationStatus.OK_STATUS; // any value is valid
     }
 
+    public static ValidationStatus validateMed( ModelExtensionDefinition med,
+                                                Collection<String> existingNamespacePrefixes,
+                                                Collection<String> existingNamespaceUris,
+                                                Collection<String> extendableMetamodelUris,
+                                                Set<String> validModelTypes ) {
+        ValidationStatus status = validateMedHeader(med.getHeader(), existingNamespacePrefixes, existingNamespaceUris,
+                                                    extendableMetamodelUris, validModelTypes);
+        status = validateMetaclassNames(med.getExtendedMetaclasses(), true);
+
+        if (status.isError()) {
+            return status;
+        }
+
+        // should have at least one metaclass
+        status = validatePropertyDefinitions(med.getPropertyDefinitions());
+
+        if (status.isError()) {
+            return status;
+        }
+
+        return ValidationStatus.OK_STATUS; // all good
+    }
+
+    public static ValidationStatus validateMedHeader( ModelExtensionDefinitionHeader header,
+                                                      Collection<String> existingNamespacePrefixes,
+                                                      Collection<String> existingNamespaceUris,
+                                                      Collection<String> extendableMetamodelUris,
+                                                      Set<String> validModelTypes ) {
+        ValidationStatus status = validateNamespacePrefix(header.getNamespacePrefix(), existingNamespacePrefixes);
+
+        if (status.isError()) {
+            return status;
+        }
+        status = validateNamespaceUri(header.getNamespaceUri(), existingNamespaceUris);
+
+        if (status.isError()) {
+            return status;
+        }
+        status = validateMetamodelUri(header.getMetamodelUri(), extendableMetamodelUris);
+
+        if (status.isError()) {
+            return status;
+        }
+        status = validateModelTypes(header.getSupportedModelTypes(), validModelTypes);
+
+        if (status.isError()) {
+            return status;
+        }
+
+        status = validateDescription(header.getDescription());
+
+        if (status.isError()) {
+            return status;
+        }
+
+        return validateVersion(Integer.toString(header.getVersion()));
+    }
+
     public static ValidationStatus validateMetaclassName( String metaclassName ) {
         String errorMsg = emptyCheck(Messages.metaclassName, metaclassName);
 

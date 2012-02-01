@@ -32,7 +32,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
@@ -41,7 +40,6 @@ import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.IPageChangedListener;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.PageChangedEvent;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.source.IAnnotationModel;
@@ -230,31 +228,10 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
             @Override
             public void run() {
                 IEditorInput editorInput = getEditorInput();
-                IFile medFile = null;
+
                 if (editorInput instanceof IFileEditorInput) {
-                    medFile = ((IFileEditorInput)editorInput).getFile();
-                }
-
-                // If editor is not saved, inform user to save first.
-                if (isDirty()) {
-                    MessageDialog.openWarning(getShell(), Messages.registerMedActionEditorDirtyTitle,
-                                              Messages.registerMedActionEditorDirtyMsg);
-                    return;
-                }
-
-                // If the file has any error markers, user is informed to fix them first
-                if (RegistryDeploymentValidator.checkProblemMarkers(medFile)) {
-                    return;
-                }
-
-                // -------------------------------------------------
-                // Do some validation checks before registering.
-                // -------------------------------------------------
-                ModelExtensionRegistry registry = (Platform.isRunning() ? getRegistry() : null);
-                boolean wasAdded = RegistryDeploymentValidator.doDeployment(registry, medFile);
-                if (wasAdded) {
-                    MessageDialog.openInformation(getShell(), Messages.registerMedActionSuccessTitle,
-                                                  Messages.registerMedActionSuccessMsg);
+                    IFile medFile = ((IFileEditorInput)editorInput).getFile();
+                    RegistryDeploymentValidator.deploy(medFile);
                 }
             }
         };
@@ -654,7 +631,7 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
                                 }
                             } else if (ResourceChangeUtilities.isContentChanged(delta)) {
                                 if (!getShell().isDisposed()) {
-                                    getShell().getDisplay().syncExec(new Runnable() {
+                                    getShell().getDisplay().asyncExec(new Runnable() {
 
                                         /**
                                          * {@inheritDoc}
