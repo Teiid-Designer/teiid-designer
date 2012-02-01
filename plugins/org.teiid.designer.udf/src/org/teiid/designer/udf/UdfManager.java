@@ -309,7 +309,7 @@ public final class UdfManager implements IResourceChangeListener {
     
     public synchronized FunctionLibrary getFunctionLibrary() {
     	//System.out.println("UdfManger.getFunctionLibrary()");
-    	if( !changed ) {
+    	if( !changed && this.cachedFunctionLibrary != null ) {
     		return this.cachedFunctionLibrary;
     	}
     	// Dynamically return a function library for each call rather than cache it here.
