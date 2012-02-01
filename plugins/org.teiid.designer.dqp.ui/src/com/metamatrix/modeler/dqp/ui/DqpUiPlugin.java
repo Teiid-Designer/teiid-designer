@@ -10,6 +10,7 @@ package com.metamatrix.modeler.dqp.ui;
 import java.lang.reflect.InvocationTargetException;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -26,6 +27,7 @@ import org.teiid.designer.runtime.connection.IPasswordProvider;
 import org.teiid.designer.runtime.preview.PreviewManager;
 import org.teiid.designer.runtime.preview.jobs.TeiidPreviewVdbCleanupJob;
 import org.teiid.designer.runtime.ui.connection.PreviewMissingPasswordDialog;
+
 import com.metamatrix.core.PluginUtil;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.core.util.PluginUtilImpl;
@@ -163,42 +165,53 @@ public class DqpUiPlugin extends AbstractUiPlugin implements DqpUiConstants {
     @Override
     public void stop( BundleContext context ) throws Exception {
         try {
-            // the server manager shutdown can take a bit of time because of the preview jobs so listen for cancel
-            // button selection in order to cancel any remaining cleanup jobs
-            ProgressMonitorDialog dialog = new ProgressMonitorDialog(null) {
-                @Override
-                protected void cancelPressed() {
-                    super.cancelPressed();
-                    cancelCleanupJobsRequested();
-                }
-            };
-
-            IRunnableWithProgress runnable = new IRunnableWithProgress() {
-                @Override
-                public void run( IProgressMonitor monitor ) throws InvocationTargetException, InterruptedException {
-                    try {
-                        ServerManager serverMgr = DqpPlugin.getInstance().getServerManager();
-                        serverMgr.shutdown(monitor);
-                    } catch (InterruptedException e) {
-                        monitor.setCanceled(true);
-                        throw e;
-                    } catch (Exception e) {
-                        monitor.setCanceled(true);
-                        throw new InvocationTargetException(e);
-                    }
-                }
-            };
-
-            // show dialog if DqpPlugin is available to shutdown the server manager
-            if (DqpPlugin.getInstance() != null) {
-                try {
-                    dialog.run(true, true, runnable);
-                } catch (Exception e) {
-                    DqpUiConstants.UTIL.log(e);
-                }
-            }
+            
+        	UiUtil.runInSwtThread(new Runnable() {
+    			@Override
+    			public void run() {
+    				shutDownServer();
+    			}
+    		}, false);
+        	
         } finally {
             super.stop(context);
+        }
+    }
+    
+    private void shutDownServer() {
+        // the server manager shutdown can take a bit of time because of the preview jobs so listen for cancel
+        // button selection in order to cancel any remaining cleanup jobs
+        ProgressMonitorDialog dialog = new ProgressMonitorDialog(null) {
+            @Override
+            protected void cancelPressed() {
+                super.cancelPressed();
+                cancelCleanupJobsRequested();
+            }
+        };
+
+        IRunnableWithProgress runnable = new IRunnableWithProgress() {
+            @Override
+            public void run( IProgressMonitor monitor ) throws InvocationTargetException, InterruptedException {
+                try {
+                    ServerManager serverMgr = DqpPlugin.getInstance().getServerManager();
+                    serverMgr.shutdown(monitor);
+                } catch (InterruptedException e) {
+                    monitor.setCanceled(true);
+                    throw e;
+                } catch (Exception e) {
+                    monitor.setCanceled(true);
+                    throw new InvocationTargetException(e);
+                }
+            }
+        };
+
+        // show dialog if DqpPlugin is available to shutdown the server manager
+        if (DqpPlugin.getInstance() != null) {
+            try {
+                dialog.run(true, true, runnable);
+            } catch (Exception e) {
+                DqpUiConstants.UTIL.log(e);
+            }
         }
     }
     
