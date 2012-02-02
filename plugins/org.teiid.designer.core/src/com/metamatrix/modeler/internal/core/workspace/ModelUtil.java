@@ -14,11 +14,14 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourceAttributes;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
@@ -28,11 +31,13 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.xsd.XSDPackage;
 import org.eclipse.xsd.util.XSDResourceImpl;
 import org.teiid.core.TeiidException;
 import org.teiid.designer.core.xmi.XMIHeader;
 import org.teiid.designer.core.xmi.XMIHeaderReader;
 import org.teiid.logging.LogManager;
+
 import com.metamatrix.common.vdb.VdbHeader;
 import com.metamatrix.common.vdb.VdbHeaderReader;
 import com.metamatrix.common.xsd.XsdHeader;
@@ -45,6 +50,7 @@ import com.metamatrix.core.util.FileSeparatorUtil;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.metadata.runtime.RuntimeMetadataPlugin;
 import com.metamatrix.metamodels.core.ModelType;
+import com.metamatrix.metamodels.core.extension.ExtensionPackage;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.container.ResourceFinder;
 import com.metamatrix.modeler.core.workspace.ModelResource;
@@ -77,6 +83,21 @@ public class ModelUtil {
     public static final String DOT_EXTENSION_VDB = ".vdb"; //$NON-NLS-1$
     public static final String DOT_EXTENSION_ECORE = ".ecore"; //$NON-NLS-1$
     public static final String DOT_EXTENSION_WSDL = ".wsdl"; //$NON-NLS-1$
+    
+    public static final String MODEL_CLASS_RELATIONAL = "Relational"; //$NON-NLS-1$
+    public static final String MODEL_CLASS_XML = "XML"; //$NON-NLS-1$
+    public static final String MODEL_CLASS_XML_SCHEMA = "XML Schema (XSD)"; //$NON-NLS-1$
+    public static final String MODEL_CLASS_WEB_SERVICE = "Web Service"; //$NON-NLS-1$
+    public static final String MODEL_CLASS_FUNCTION = "Function"; //$NON-NLS-1$
+    public static final String MODEL_CLASS_MODEL_EXTENSION = "Model Extension (Deprecated)"; //$NON-NLS-1$
+    
+    public static final String URI_XML_VIEW_MODEL = "http://www.metamatrix.com/metamodels/XmlDocument"; //$NON-NLS-1$
+    public static final String URI_WEB_SERVICES_VIEW_MODEL = "http://www.metamatrix.com/metamodels/WebService"; //$NON-NLS-1$
+    public static final String URI_FUNCTION_MODEL = "http://www.metamatrix.com/metamodels/MetaMatrixFunction"; //$NON-NLS-1$
+    public static final String URI_EXTENSION_MODEL = ExtensionPackage.eNS_URI;
+    public static final String URI_RELATIONAL_MODEL = "http://www.metamatrix.com/metamodels/Relational"; //$NON-NLS-1$
+    public static final String URI_XML_SCHEMA_MODEL = XSDPackage.eNS_URI;
+    
     private static final String[] EXTENSIONS = new String[] {EXTENSION_XML, EXTENSION_XMI};
 
     private static XmiHeaderCache cache;
@@ -137,6 +158,23 @@ public class ModelUtil {
 
         if (object instanceof Resource) return ModelerCore.getModelEditor().findModelResource((Resource)object);
         return null;
+    }
+    
+    public static String getModelClass(final Object object) throws ModelWorkspaceException {
+    	CoreArgCheck.isNotNull(object);
+    	ModelResource mr = getModel(object);
+    	
+    	if( mr != null ) {
+    		String mmURI = mr.getPrimaryMetamodelUri();
+    		if( mmURI.equals(URI_RELATIONAL_MODEL) ) return MODEL_CLASS_RELATIONAL;
+    		if( mmURI.equals(URI_FUNCTION_MODEL) ) return MODEL_CLASS_FUNCTION;
+    		if( mmURI.equals(URI_EXTENSION_MODEL) ) return MODEL_CLASS_MODEL_EXTENSION;
+    		if( mmURI.equals(URI_XML_VIEW_MODEL) ) return MODEL_CLASS_XML;
+    		if( mmURI.equals(URI_WEB_SERVICES_VIEW_MODEL) ) return MODEL_CLASS_WEB_SERVICE;
+    		if( mmURI.equals(URI_XML_SCHEMA_MODEL) ) return MODEL_CLASS_XML_SCHEMA;
+    	}
+    	
+    	return null;
     }
 
     /**

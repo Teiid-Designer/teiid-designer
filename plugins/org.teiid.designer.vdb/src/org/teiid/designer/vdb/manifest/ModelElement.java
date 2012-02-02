@@ -24,6 +24,11 @@ import org.teiid.designer.vdb.VdbModelEntry.Problem;
 @XmlType( name = "" )
 public class ModelElement extends EntryElement {
 
+	/**
+	 * model class property key
+     */
+    public static final String MODEL_CLASS = "modelClass"; //$NON-NLS-1$
+    
     /**
      */
     public static final String BUILT_IN = "builtIn"; //$NON-NLS-1$
@@ -75,6 +80,10 @@ public class ModelElement extends EntryElement {
         for (final Problem problem : entry.getProblems())
             getProblems().add(new ProblemElement(problem));
         final List<PropertyElement> props = getProperties();
+        String modelClass = entry.getModelClass();
+        if( modelClass != null ) {
+        	props.add(new PropertyElement(MODEL_CLASS, entry.getModelClass()));
+        }
         props.add(new PropertyElement(BUILT_IN, Boolean.toString(entry.isBuiltIn())));
         props.add(new PropertyElement(INDEX_NAME, entry.getIndexName()));
         for (final VdbModelEntry importedEntry : entry.getImports())

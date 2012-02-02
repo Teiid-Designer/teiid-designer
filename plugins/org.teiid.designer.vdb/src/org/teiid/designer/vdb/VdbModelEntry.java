@@ -49,6 +49,7 @@ import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.container.ResourceFinder;
 import com.metamatrix.modeler.core.workspace.ModelResource;
+import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.internal.core.index.IndexUtil;
 import com.metamatrix.modeler.internal.core.resource.EmfResource;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
@@ -75,6 +76,7 @@ public final class VdbModelEntry extends VdbEntry {
     private final AtomicBoolean visible = new AtomicBoolean(true);
     private final CopyOnWriteArraySet<VdbModelEntry> imports = new CopyOnWriteArraySet<VdbModelEntry>();
     private final CopyOnWriteArraySet<VdbModelEntry> importedBy = new CopyOnWriteArraySet<VdbModelEntry>();
+    private final String modelClass;
     private final boolean builtIn;
     private final ModelType type;
     private final AtomicReference<String> translator = new AtomicReference<String>();
@@ -97,6 +99,7 @@ public final class VdbModelEntry extends VdbEntry {
         indexName = IndexUtil.getRuntimeIndexFileName(findFileInWorkspace());
         final Resource model = findModel();
         builtIn = getFinder().isBuiltInResource(model);
+        modelClass = findModelClass(model);
         if (ModelUtil.isXmiFile(model)) {
             final EmfResource emfModel = (EmfResource)model;
             type = emfModel.getModelType();
@@ -156,13 +159,16 @@ public final class VdbModelEntry extends VdbEntry {
             problems.add(new Problem(problem));
         boolean builtIn = false;
         String indexName = null;
+        String modelClass = null;
         for (final PropertyElement property : element.getProperties()) {
             final String name = property.getName();
             if (ModelElement.BUILT_IN.equals(name)) builtIn = Boolean.parseBoolean(property.getValue());
             else if (ModelElement.INDEX_NAME.equals(name)) indexName = property.getValue();
+            else if (ModelElement.MODEL_CLASS.equals(name)) modelClass = property.getValue();
         }
         this.builtIn = builtIn;
         this.indexName = indexName;
+        this.modelClass = modelClass;
     }
 
     private void clean() {
@@ -217,6 +223,14 @@ public final class VdbModelEntry extends VdbEntry {
         }
 
         return emfResource;
+    }
+    
+    private String findModelClass(Resource resource) {
+    	try {
+			return ModelUtil.getModelClass(resource);
+		} catch (ModelWorkspaceException e) {
+			throw CoreModelerPlugin.toRuntimeException(e);
+		}
     }
 
     private ResourceFinder getFinder() {
@@ -296,6 +310,13 @@ public final class VdbModelEntry extends VdbEntry {
                     break;
                 }
         element = null;
+    }
+    
+    /**
+     * @return <code>true</code> if the associated model is a hidden built-in model.
+     */
+    public final String getModelClass() {
+        return modelClass;
     }
 
     /**

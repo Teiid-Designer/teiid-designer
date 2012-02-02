@@ -51,6 +51,7 @@ import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.metamodel.MetamodelDescriptor;
+import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.ui.PluginConstants;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelProjectSelectionStatusValidator;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
@@ -80,15 +81,8 @@ public class NewModelWizardMetamodelPage extends WizardPage
 
     // jh Defect 21886: These strings must agree with the corresponding metamodel names
     // I put them in the i18n because they'll need to be internationalized.
-    protected final static String DEFAULT_CLASS = UiConstants.Util.getString("NewModelWizardMetamodelPage.defaultClass"); //$NON-NLS-1$
+    protected final static String DEFAULT_CLASS = ModelUtil.MODEL_CLASS_RELATIONAL;
     protected final static String DEFAULT_TYPE = UiConstants.Util.getString("NewModelWizardMetamodelPage.defaultType"); //$NON-NLS-1$
-
-    protected final static String RELATIONAL_NAME = UiConstants.Util.getString("NewModelWizardMetamodelPage.classRelationalName"); //$NON-NLS-1$
-    protected final static String XML_NAME = UiConstants.Util.getString("NewModelWizardMetamodelPage.classXmlName"); //$NON-NLS-1$
-    protected final static String XML_SCHEMA_NAME = UiConstants.Util.getString("NewModelWizardMetamodelPage.classXmlSchemaName"); //$NON-NLS-1$
-    protected final static String WEB_SERVICE_NAME = UiConstants.Util.getString("NewModelWizardMetamodelPage.classWebServiceName"); //$NON-NLS-1$
-    protected final static String MODEL_EXTENSION_NAME = UiConstants.Util.getString("NewModelWizardMetamodelPage.classModelExtensionName"); //$NON-NLS-1$
-    protected final static String FUNCTION_NAME = UiConstants.Util.getString("NewModelWizardMetamodelPage.classFunctionName"); //$NON-NLS-1$
 
     final static List ORDERED_METAMODELS_LIST;
 
@@ -99,8 +93,8 @@ public class NewModelWizardMetamodelPage extends WizardPage
          * Add to or adjust as needed.
          */
 
-        String[] ORDERED_METAMODELS = new String[] {RELATIONAL_NAME, XML_NAME, XML_SCHEMA_NAME, WEB_SERVICE_NAME,
-            FUNCTION_NAME, MODEL_EXTENSION_NAME};
+        String[] ORDERED_METAMODELS = new String[] {ModelUtil.MODEL_CLASS_RELATIONAL, ModelUtil.MODEL_CLASS_XML, ModelUtil.MODEL_CLASS_XML_SCHEMA, 
+        		ModelUtil.MODEL_CLASS_WEB_SERVICE, ModelUtil.MODEL_CLASS_FUNCTION, ModelUtil.MODEL_CLASS_MODEL_EXTENSION };
 
         ORDERED_METAMODELS_LIST = Arrays.asList(ORDERED_METAMODELS);
     }
