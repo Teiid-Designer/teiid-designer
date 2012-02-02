@@ -57,8 +57,19 @@
             Consume a SOAP Web Service by creating source and view models based on target WSDL file definition
          </description>
       </cheatsheet>
+      <cheatsheet
+            category="org.teiid.designer.ui.category"
+            composite="false"
+            contentFile="$nl$/cheatsheets/Join 2 Sources.xml"
+            id="org.teiid.designer.ui.cheatsheet_advisor_03"
+            name="Join Two Sources">
+         <description>
+            Model and join two data sources
+         </description>
+      </cheatsheet>
    </extension>
 <!-- CHEAT SHEET ACTION COMMANDS -->
+<!-- 
    <extension
          point="org.eclipse.ui.commands">
       <command
@@ -118,7 +129,7 @@
             name="%command.name.6">
       </command>
       <command
-            categoryId="org.eclipse.ui.category.file"
+            categoryId="org.eclorg.teiid.designer.dsp.ui.views.advisor.relationalipse.ui.category.file"
             defaultHandler="org.teiid.designer.advisor.ui.commands.ImportWsdlToWebServiceCommandHandler"
             description="%command.description.7"
             id="org.teiid.designer.advisor.ui.commands.importWsdlToWebServiceCommandHandler"
@@ -167,12 +178,13 @@
             name="%command.name.13">
       </command>
    </extension>
+ -->
    <extension
         id="RelationalModelingSupplier"
         name="%relationalModelingSupplier.extension.name"
         point="org.teiid.designer.advisor.ui.advisorStatusProvider">
       <advisorStatusProvider
-         name="org.teiid.designer.dsp.ui.views.advisor.relational.RelationalModelingSupplier"
+         name="org.teiid.designer.advisor.ui.suppliers.relational.RelationalModelingSupplier"
          label="%relationalModelingSupplier.extension.label">
       </advisorStatusProvider>
    </extension>
@@ -182,7 +194,7 @@
          point="org.teiid.designer.advisor.ui.advisorStatusProvider">
       <advisorStatusProvider
             label="%xmlModelingSupplier.extension.label"
-            name="org.teiid.designer.dsp.ui.views.advisor.relational.XmlModelingSupplier">
+            name="org.teiid.designer.advisor.ui.suppliers.xml.XmlModelingSupplier">
       </advisorStatusProvider>
    </extension>
 </plugin>
