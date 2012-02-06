@@ -40,8 +40,8 @@ public class VirtualGroupTutorialTest extends TeiidDesignerTest {
 		prepareOracleDatabase();
 		addSQLServerDriver(Properties.PROJECT_NAME);
 		prepareSQLServerDatabase();
-		addTeiidDriver(Properties.PROJECT_NAME);
-		prepareTeiidDatabase();
+//		addTeiidDriver(Properties.PROJECT_NAME);
+//		prepareTeiidDatabase();
 		
 		openPerspective("Teiid Designer");
 	}
@@ -255,8 +255,8 @@ public class VirtualGroupTutorialTest extends TeiidDesignerTest {
 		shell.bot().textWithLabelInGroup("Password:", "Teiid Admin Connection Info").setText("admin");
 		
 		shell.bot().textWithLabelInGroup("Port number:", "Teiid JDBC Connection Info").setText(Properties.TEIID_JDBC_PORT);
-		shell.bot().textWithLabelInGroup("User name:", "Teiid JDBC Connection Info",1).setText("admin");
-		shell.bot().textWithLabelInGroup("Password:", "Teiid JDBC Connection Info",2).setText("teiid");
+		shell.bot().textWithLabelInGroup("User name:", "Teiid JDBC Connection Info",1).setText("user");
+		shell.bot().textWithLabelInGroup("Password:", "Teiid JDBC Connection Info",2).setText("user");
 		
 		shell.bot().button("Test").click();
 		shell = bot.shell("Test Teiid Connection");
@@ -398,10 +398,11 @@ public class VirtualGroupTutorialTest extends TeiidDesignerTest {
 																	   Properties.PROJECT_NAME, 
 																	   Properties.VDB_NAME + ".vdb");
 		ContextMenuHelper.prepareTreeItemForContextMenu(viewBot.tree(), vdb_node);
-		ContextMenuHelper.clickContextMenu(viewBot.tree(), "Modeling", "Deploy");
+		ContextMenuHelper.clickContextMenu(viewBot.tree(), "Modeling", "Execute VDB");
 		
 		bot.sleep(TIME_5S);
 		
+		openPerspective("Teiid Designer");
 		SWTBot teiidBot = bot.viewByTitle("Teiid").bot();
 		assertTrue("VDB deployment error!", 
 				          teiidBot.tree(0).expandNode(Properties.TEIID_URL, "VDBs")
