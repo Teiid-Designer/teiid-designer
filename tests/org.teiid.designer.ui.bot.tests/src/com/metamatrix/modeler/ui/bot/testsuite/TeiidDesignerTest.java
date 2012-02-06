@@ -24,7 +24,6 @@ import org.jboss.tools.ui.bot.ext.types.DriverEntity;
 import org.jboss.tools.ui.bot.ext.types.IDELabel;
 import org.jboss.tools.ui.bot.ext.types.ViewType;
 
-
 import com.metamatrix.modeler.ui.bot.testcase.Activator;
 
 public class TeiidDesignerTest extends SWTTestExt {
@@ -61,18 +60,29 @@ public class TeiidDesignerTest extends SWTTestExt {
 		
 		SWTBot viewBot = bot.viewByTitle("Data Source Explorer").bot();
 		
-		viewBot.tree().expandNode("Database Connections").getNode(Properties.TEIID_CONNPROFILE_NAME)
-		                                                 .doubleClick();
+//		viewBot.tree().expandNode("Database Connections").getNode(Properties.TEIID_CONNPROFILE_NAME)
+//		                                                 .doubleClick();
 		
-		SWTBotTreeItem db_node =  SWTEclipseExt.selectTreeLocation(viewBot, 
-				                                                  "Database Connections", 
-				                                                   Properties.TEIID_CONNPROFILE_NAME);
+		SWTBotTreeItem db_node = findVDB(viewBot);
 		ContextMenuHelper.prepareTreeItemForContextMenu(viewBot.tree(), db_node);
 		ContextMenuHelper.clickContextMenu(viewBot.tree(), "Open SQL Scrapbook");	
 		
 		bot.editorByTitle("SQL Scrapbook 0").bot().comboBoxWithLabel("Database:").setSelection(Properties.VDB_NAME);
 	}
 	
+	private static SWTBotTreeItem findVDB(SWTBot viewBot) {
+		SWTBotTreeItem root =  SWTEclipseExt.selectTreeLocation(viewBot, 
+                "Database Connections");
+		
+		for (SWTBotTreeItem item : root.getItems()){
+			if (item.getText().startsWith(Properties.VDB_NAME)){
+				return item;
+			}
+		}
+		throw new IllegalStateException("The VCB was not found in connection profiles");
+	}
+
+
 	private static void connectDB(final String profile_name){
 		
 		SWTBot viewBot = bot.viewByTitle("Data Source Explorer").bot();
@@ -85,7 +95,7 @@ public class TeiidDesignerTest extends SWTTestExt {
 	
 	public static void prepareWorkspaceForQueries(){
 		openPerspective("Database Development");
-		connectDB(Properties.TEIID_CONNPROFILE_NAME);
+//		connectDB(Properties.TEIID_CONNPROFILE_NAME);
 		openSqlScrapbook();
 	}
 	
