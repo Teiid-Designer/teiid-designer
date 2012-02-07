@@ -17,12 +17,12 @@ import org.jboss.tools.ui.bot.ext.config.Annotations.ServerType;
 import org.jboss.tools.ui.bot.ext.helper.ContextMenuHelper;
 import org.jboss.tools.ui.bot.ext.helper.StyledTextHelper;
 import org.jboss.tools.ui.bot.ext.types.IDELabel;
-
-import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.teiid.designer.ui.bot.ext.teiid.SWTBotTeiidCanvas;
 import org.teiid.designer.ui.bot.ext.teiid.SWTTeiidBot;
+import org.teiid.designer.ui.bot.ext.teiid.perspective.TeiidPerspective;
+import org.teiid.designer.ui.bot.ext.teiid.wizard.ImportJDBCDatabaseWizard;
 
 import com.metamatrix.modeler.ui.bot.testsuite.Properties;
 import com.metamatrix.modeler.ui.bot.testsuite.TeiidDesignerTest;
@@ -40,42 +40,16 @@ public class VirtualGroupTutorialTest extends TeiidDesignerTest {
 		prepareOracleDatabase();
 		addSQLServerDriver(Properties.PROJECT_NAME);
 		prepareSQLServerDatabase();
-//		addTeiidDriver(Properties.PROJECT_NAME);
-//		prepareTeiidDatabase();
-		
-		openPerspective("Teiid Designer");
 	}
 	
 	
 	@Test
 	public void oracleDataSource(){
-		
-		bot.menu(IDELabel.Menu.IMPORT).click();
-		
-		SWTBotShell shell = bot.shell("Import");
-		shell.activate();
-		shell.bot().tree(0).expandNode("Teiid Designer").select("JDBC Database >> Source Model");
-		shell.bot().button(IDELabel.Button.NEXT).click();
-		shell.bot().comboBox(0).setSelection(Properties.ORACLE_CONNPROFILE_NAME);
-		shell.bot().button(IDELabel.Button.NEXT).click();
-		shell.bot().button("Deselect All").click();
-		shell.bot().tableInGroup("Table Types").click(1, 0);
-		shell.bot().button(IDELabel.Button.NEXT).click();
-		
-		assertTrue(shell.bot().tree(0).getTreeItem("PARTSSUPPLIER").isSelected());
-		
-		shell.bot().button(IDELabel.Button.NEXT).click();
-		/*shell.bot().checkBoxInGroup("Include In Model").deselect();*/
-		log.info("Uncheck Fully Qualified Names");
-		shell.bot().checkBoxInGroup ("Model Object Names (Tables, Procedures, Columns, etc...)", 0).deselect();
-		shell.bot().textWithLabel("Model Name:").setText(Properties.ORACLE_MODEL_NAME);
-		shell.bot().button(1).click();
-		
-		SWTBotShell select_shell = bot.shell("Select a Folder");
-		select_shell.bot().tree(0).select(Properties.PROJECT_NAME);
-		select_shell.bot().button(IDELabel.Button.OK).click();
-		
-		open.finish(shell.bot());
+		ImportJDBCDatabaseWizard wizard = new ImportJDBCDatabaseWizard();
+		wizard.setConnectionProfile(Properties.ORACLE_CONNPROFILE_NAME);
+		wizard.setProjectName(Properties.PROJECT_NAME);
+		wizard.setModelName(Properties.ORACLE_MODEL_NAME);
+		wizard.execute();
 		
 		assertTrue(Properties.ORACLE_MODEL_NAME + " not created!", 
 					projectExplorer.existsResource(Properties.PROJECT_NAME, 
@@ -85,35 +59,11 @@ public class VirtualGroupTutorialTest extends TeiidDesignerTest {
 	
 	@Test
 	public void sqlserverDataSource(){
-		
-		bot.menu(IDELabel.Menu.IMPORT).click();
-		
-		SWTBotShell shell = bot.shell("Import");
-		shell.activate();
-		shell.bot().tree(0).expandNode("Teiid Designer").select("JDBC Database >> Source Model");
-		shell.bot().button(IDELabel.Button.NEXT).click();
-		shell.bot().comboBoxInGroup("Connection Profile").setSelection(Properties.SQLSERVER_CONNPROFILE_NAME);
-		shell.bot().button(IDELabel.Button.NEXT).click();
-		shell.bot().button("Deselect All").click();
-		shell.bot().tableInGroup("Table Types").click(1, 0);
-		shell.bot().button(IDELabel.Button.NEXT).click();
-		
-		assertTrue(shell.bot().tree(0).getTreeItem("partssupplier").isSelected());
-		
-		shell.bot().button(IDELabel.Button.NEXT).click();
-		
-		/*shell.bot().checkBoxInGroup("Database", "Include In Model").deselect();*/
-		/*shell.bot().checkBoxInGroup("Schema", "Include In Model").deselect();*/
-		log.info("Uncheck Fully Qualified Names");
-		shell.bot().checkBoxInGroup ("Model Object Names (Tables, Procedures, Columns, etc...)", 0).deselect();
-		shell.bot().textWithLabel("Model Name:").setText(Properties.SQLSERVER_MODEL_NAME);
-		shell.bot().button(1).click();
-		
-		SWTBotShell select_shell = bot.shell("Select a Folder");
-		select_shell.bot().tree(0).select(Properties.PROJECT_NAME);
-		select_shell.bot().button(IDELabel.Button.OK).click();
-		
-		open.finish(shell.bot());
+		ImportJDBCDatabaseWizard wizard = new ImportJDBCDatabaseWizard();
+		wizard.setConnectionProfile(Properties.SQLSERVER_CONNPROFILE_NAME);
+		wizard.setProjectName(Properties.PROJECT_NAME);
+		wizard.setModelName(Properties.SQLSERVER_MODEL_NAME);
+		wizard.execute();
 		
 		assertTrue(Properties.SQLSERVER_MODEL_NAME + " not created!", 
 					projectExplorer.existsResource(Properties.PROJECT_NAME, 
@@ -402,7 +352,7 @@ public class VirtualGroupTutorialTest extends TeiidDesignerTest {
 		
 		bot.sleep(TIME_5S);
 		
-		openPerspective("Teiid Designer");
+		new TeiidPerspective().open();
 		SWTBot teiidBot = bot.viewByTitle("Teiid").bot();
 		assertTrue("VDB deployment error!", 
 				          teiidBot.tree(0).expandNode(Properties.TEIID_URL, "VDBs")
@@ -413,7 +363,7 @@ public class VirtualGroupTutorialTest extends TeiidDesignerTest {
 	
 	//@Test
 	public void procedureDefinition(){
-		openPerspective("Teiid Designer");
+		new TeiidPerspective().open();
 		
 		SWTBot viewBot = bot.viewByTitle("Model Explorer").bot();
 		//create procedure
@@ -656,7 +606,7 @@ public class VirtualGroupTutorialTest extends TeiidDesignerTest {
 	
 	@Test
 	public void removeResourcesTest(){
-		openPerspective("Teiid Designer");
+		new TeiidPerspective().open();
 		
 		bot.viewByTitle("Teiid").show();
 		bot.viewByTitle("Teiid").setFocus();

@@ -12,5 +12,14 @@ Require-Bundle: org.apache.log4j,
  org.eclipse.ui,
  org.teiid.designer.transformation.ui,
  org.teiid.designer.diagram.ui,
- org.junit4
-Export-Package: org.teiid.designer.ui.bot.ext.teiid
+ org.junit4,
+ org.jboss.tools.ui.bot.ext
+Export-Package: org.teiid.designer.ui.bot.ext.teiid;
+  uses:="com.metamatrix.modeler.transformation.ui.figure,
+   org.apache.log4j,
+   com.metamatrix.modeler.diagram.ui.notation.uml.figure,
+   org.eclipse.swtbot.swt.finder.widgets,
+   org.eclipse.swtbot.eclipse.finder,
+   org.eclipse.draw2d",
+ org.teiid.designer.ui.bot.ext.teiid.perspective,
+ org.teiid.designer.ui.bot.ext.teiid.wizard
