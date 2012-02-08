@@ -9,7 +9,6 @@ package org.teiid.designer.runtime.ui.server;
 
 import static com.metamatrix.modeler.dqp.ui.DqpUiConstants.PLUGIN_ID;
 import static com.metamatrix.modeler.dqp.ui.DqpUiConstants.UTIL;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -39,7 +38,6 @@ import org.teiid.designer.runtime.Server;
 import org.teiid.designer.runtime.ServerManager;
 import org.teiid.designer.runtime.TeiidAdminInfo;
 import org.teiid.designer.runtime.TeiidJdbcInfo;
-
 import com.metamatrix.core.util.StringUtilities;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
@@ -856,7 +854,8 @@ public final class ServerPage extends WizardPage implements HostProvider {
 
     /**
      * Tests the connection of the server specified by the properties entered on this page. Precondition is that server properties
-     * are valid.
+     * are valid. If the Admin ping fails, the JDBC test is skipped (the JDBC test gets the Admin api, so if Admin ping fails - it
+     * is guaranteed to fail). On success, only a single dialog is shown
      */
     void handleTestConnection() {
         final Server server = getServer();
@@ -876,14 +875,14 @@ public final class ServerPage extends WizardPage implements HostProvider {
                 }
             });
 
-            if (success[0]) {
-                MessageDialog.openInformation(getShell(), UTIL.getString("serverPageTestConnectionDialogTitle"), //$NON-NLS-1$
-                                              UTIL.getString("serverPageTestConnectionDialogSuccessMsg")); //$NON-NLS-1$
-            } else {
-                MessageDialog.openError(getShell(), UTIL.getString("serverPageTestConnectionDialogTitle"), //$NON-NLS-1$
-                                        UTIL.getString("serverPageTestConnectionDialogFailureMsg")); //$NON-NLS-1$
+            // If Admin Connection Fails, show the fail dialog - then return.
+            if (!success[0]) {
+                MessageDialog.openError(getShell(), UTIL.getString("serverPageTestConnectionsDialogTitle"), //$NON-NLS-1$
+                                        UTIL.getString("serverPageTestAdminConnectionDialogFailureMsg")); //$NON-NLS-1$
+                return;
             }
             
+            // If Admin Connection is Successful, do a JDBC test ping.
             final boolean[] jdbcSuccess = new boolean[1];
 
             BusyIndicator.showWhile(null, new Runnable() {
@@ -899,10 +898,10 @@ public final class ServerPage extends WizardPage implements HostProvider {
             });
 
             if (jdbcSuccess[0]) {
-                MessageDialog.openInformation(getShell(), UTIL.getString("serverPageTestJdbcConnectionDialogTitle"), //$NON-NLS-1$
-                                              UTIL.getString("serverPageTestJdbcConnectionDialogSuccessMsg")); //$NON-NLS-1$
+                MessageDialog.openInformation(getShell(), UTIL.getString("serverPageTestConnectionsDialogTitle"), //$NON-NLS-1$
+                                              UTIL.getString("serverPageTestConnectionsDialogSuccessMsg")); //$NON-NLS-1$
             } else {
-                MessageDialog.openError(getShell(), UTIL.getString("serverPageTestJdbcConnectionDialogTitle"), //$NON-NLS-1$
+                MessageDialog.openError(getShell(), UTIL.getString("serverPageTestConnectionsDialogTitle"), //$NON-NLS-1$
                                         UTIL.getString("serverPageTestJdbcConnectionDialogFailureMsg")); //$NON-NLS-1$
             }
         }
