@@ -42,7 +42,7 @@
             composite="false"
             contentFile="$nl$/cheatsheets/New Model From JDBC Import.xml"
             id="org.teiid.designer.ui.cheatsheet_advisor_01"
-            name="Sample Actions Cheatsheet">
+            name="Create Relational Model From JDBC">
          <description>
             Create Relational Model from JDBC Import
          </description>
@@ -65,6 +65,16 @@
             name="Join Two Sources">
          <description>
             Model and join two data sources
+         </description>
+      </cheatsheet>
+            <cheatsheet
+            category="org.teiid.designer.ui.category"
+            composite="true"
+            contentFile="$nl$/cheatsheets/Multi-source VDB.xml"
+            id="org.teiid.designer.ui.cheatsheet_advisor_04"
+            name="Multi-source VDB">
+         <description>
+            Create and test a VDB joining two data sources
          </description>
       </cheatsheet>
    </extension>
