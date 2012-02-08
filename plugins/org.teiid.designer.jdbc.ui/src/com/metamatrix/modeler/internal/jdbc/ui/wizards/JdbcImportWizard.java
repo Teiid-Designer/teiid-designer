@@ -14,6 +14,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Properties;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -76,6 +78,7 @@ import com.metamatrix.modeler.jdbc.ui.wizards.IJdbcImportInfoProvider;
 import com.metamatrix.modeler.jdbc.ui.wizards.IJdbcImportPostProcessor;
 import com.metamatrix.modeler.ui.UiPlugin;
 import com.metamatrix.modeler.ui.editors.ModelEditorManager;
+import com.metamatrix.modeler.ui.viewsupport.IPropertiesContext;
 import com.metamatrix.ui.internal.product.ProductCustomizerMgr;
 import com.metamatrix.ui.internal.util.WidgetUtil;
 import com.metamatrix.ui.internal.wizard.AbstractWizard;
@@ -84,7 +87,7 @@ import com.metamatrix.ui.internal.wizard.AbstractWizard;
  * @since 4.0
  */
 public class JdbcImportWizard extends AbstractWizard
-    implements IDifferencingWizard, IJdbcImportInfoProvider, ModelerJdbcUiConstants, ModelerJdbcUiConstants.Images {
+    implements IPropertiesContext, IDifferencingWizard, IJdbcImportInfoProvider, ModelerJdbcUiConstants, ModelerJdbcUiConstants.Images {
 
     private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(JdbcImportWizard.class);
 
@@ -114,6 +117,8 @@ public class JdbcImportWizard extends AbstractWizard
     private ShowDifferencesPage diffsPg;
     DifferenceReport drDifferenceReport;
     ProcessorPack ppProcessorPack;
+    
+    private Properties designerProperties;
 
     boolean controlsHaveBeenCreated = false;
     private boolean isVirtual;
@@ -862,6 +867,26 @@ public class JdbcImportWizard extends AbstractWizard
     JdbcNode findNode( final IPath path,
                        final JdbcNode parent ) throws JdbcException {
         return this.importer.findNode(path, parent);
+    }
+    
+    @Override
+    public void setProperties(Properties props) {
+    	this.designerProperties = props;
+    	if( this.folder == null ) {
+    		// check for project property and if sources folder property exists
+    		String projectName = this.designerProperties.getProperty(IPropertiesContext.KEY_PROJECT_NAME);
+    		if( projectName != null && !projectName.isEmpty() ) {
+    			String folderName = projectName;
+    			String sourcesFolder = this.designerProperties.getProperty(IPropertiesContext.KEY_HAS_SOURCES_FOLDER);
+    			if( sourcesFolder != null && !sourcesFolder.isEmpty() ) {
+    				folderName = new Path(projectName).append(sourcesFolder).toString();
+    			}
+    			final IResource resrc = ResourcesPlugin.getWorkspace().getRoot().findMember(folderName);
+    			if( resrc != null ) {
+    				setFolder((IContainer)resrc);
+    			}
+    		}
+    	}
     }
 
     // ===========================================================================================================================

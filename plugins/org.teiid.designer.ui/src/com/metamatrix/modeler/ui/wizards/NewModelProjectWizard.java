@@ -8,6 +8,7 @@
 package com.metamatrix.modeler.ui.wizards;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Properties;
 
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.operations.AbstractOperation;
@@ -52,6 +53,7 @@ import com.metamatrix.modeler.internal.core.validation.ValidationProblemImpl;
 import com.metamatrix.modeler.internal.core.validation.ValidationResultImpl;
 import com.metamatrix.modeler.internal.ui.explorer.ModelExplorerResourceNavigator;
 import com.metamatrix.modeler.ui.UiConstants;
+import com.metamatrix.modeler.ui.viewsupport.IPropertiesContext;
 import com.metamatrix.ui.internal.product.ProductCustomizerMgr;
 import com.metamatrix.ui.internal.util.UiUtil;
 import com.metamatrix.ui.internal.util.WidgetFactory;
@@ -60,7 +62,7 @@ import com.metamatrix.ui.internal.wizard.AbstractWizardPage;
 /**
  * @since 4.0
  */
-public class NewModelProjectWizard extends BasicNewProjectResourceWizard implements UiConstants {
+public class NewModelProjectWizard extends BasicNewProjectResourceWizard implements IPropertiesContext, UiConstants {
     private static String SOURCES = getString("sources"); //$NON-NLS-1$
     private static String VIEWS = getString("views"); //$NON-NLS-1$
     private static String SCHEMAS = getString("schemas"); //$NON-NLS-1$
@@ -78,6 +80,8 @@ public class NewModelProjectWizard extends BasicNewProjectResourceWizard impleme
                                      String parameter ) {
         return UiConstants.Util.getString(THIS_CLASS + '.' + key, parameter);
     }
+    
+    private Properties designerProperties;
     
     private ProjectTemplateOptionsPage optionsPage;
     
@@ -152,6 +156,8 @@ public class NewModelProjectWizard extends BasicNewProjectResourceWizard impleme
             // Defect 11480 - closing and opening the project sets the overlay icon properly
             project.close(null);
             project.open(null);
+            
+            designerProperties.put(IPropertiesContext.KEY_PROJECT_NAME, project.getName());
             
             createFolders(project);
             
@@ -300,6 +306,11 @@ public class NewModelProjectWizard extends BasicNewProjectResourceWizard impleme
 
     }
     
+    @Override
+    public void setProperties(Properties props) {
+    	this.designerProperties = props;
+    }
+    
     class ProjectTemplateOptionsPage extends AbstractWizardPage {
         private String NO_FOLDERS_MESSAGE = getString("noFoldersMessage"); //$NON-NLS-1$
         private String CREATE_FOLDER = getString("createFolderOperationLabel"); //$NON-NLS-1$
@@ -308,8 +319,8 @@ public class NewModelProjectWizard extends BasicNewProjectResourceWizard impleme
 		public boolean createViews = true;
 		public boolean createSchema = true;
 		public boolean createWebServices = true;
-		public boolean createFunctions = true;
-		public boolean createExtensions = true;
+		public boolean createFunctions = false;
+		public boolean createExtensions = false;
         
         private Button sourcesCB;
         private Button viewsCB;

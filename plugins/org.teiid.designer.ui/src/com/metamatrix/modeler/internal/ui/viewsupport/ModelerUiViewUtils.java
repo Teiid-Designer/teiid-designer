@@ -7,6 +7,8 @@
  */
 package com.metamatrix.modeler.internal.ui.viewsupport;
 
+import java.util.Properties;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.viewers.ISelection;
@@ -26,6 +28,7 @@ import org.eclipse.ui.wizards.IWizardDescriptor;
 import com.metamatrix.modeler.internal.ui.explorer.ModelExplorerResourceNavigator;
 import com.metamatrix.modeler.ui.UiConstants;
 import com.metamatrix.modeler.ui.UiConstants.Extensions;
+import com.metamatrix.modeler.ui.viewsupport.IPropertiesContext;
 import com.metamatrix.modeler.ui.UiPlugin;
 import com.metamatrix.ui.internal.product.ProductCustomizerMgr;
 import com.metamatrix.ui.internal.util.UiUtil;
@@ -108,6 +111,16 @@ public class ModelerUiViewUtils {
      * @param selection
      */
 	public static void launchWizard(String id, IStructuredSelection selection) {
+		ModelerUiViewUtils.launchWizard(id, selection, null);
+	}
+	
+    /**
+     * Launches new or import type wizard given a wizard ID and an initial selection
+     * 
+     * @param id
+     * @param selection
+     */
+	public static void launchWizard(String id, IStructuredSelection selection, Properties properties) {
 		// First see if this is a "new wizard".
 		IWizardDescriptor descriptor = PlatformUI.getWorkbench().getNewWizardRegistry().findWizard(id);
 		// If not check if it is an "import wizard".
@@ -122,7 +135,7 @@ public class ModelerUiViewUtils {
 			// Then if we have a wizard, open it.
 			if (descriptor != null) {
 				IWorkbenchWizard wizard = descriptor.createWizard();
-				ModelerUiViewUtils.launchWizard(wizard, selection);
+				ModelerUiViewUtils.launchWizard(wizard, selection, properties);
 			}
 		} catch (CoreException e) {
 			e.printStackTrace();
@@ -136,7 +149,20 @@ public class ModelerUiViewUtils {
 	 * @param selection
 	 */
 	public static void launchWizard(IWorkbenchWizard wizard, IStructuredSelection selection) {
+		ModelerUiViewUtils.launchWizard(wizard, selection, null);
+	}
+	
+	/**
+	 * Launches the given wizard and initializes with the given selection
+	 * 
+	 * @param wizard
+	 * @param selection
+	 */
+	public static void launchWizard(IWorkbenchWizard wizard, IStructuredSelection selection, Properties properties) {
 		wizard.init(PlatformUI.getWorkbench(), selection);
+		if( properties != null && wizard instanceof IPropertiesContext ) {
+			((IPropertiesContext)wizard).setProperties(properties);
+		}
 
 		WizardDialog wd = new WizardDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), wizard);
 		wd.create();
