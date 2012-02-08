@@ -10,6 +10,7 @@ package com.metamatrix.modeler.internal.vdb.ui.wizards;
 import java.io.ByteArrayInputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -23,13 +24,18 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -59,6 +65,7 @@ import com.metamatrix.modeler.core.validation.rules.StringNameValidator;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.ui.PluginConstants;
 import com.metamatrix.modeler.internal.ui.explorer.ModelExplorerLabelProvider;
+import com.metamatrix.modeler.internal.ui.viewsupport.ModelLabelProvider;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelProjectSelectionStatusValidator;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.internal.vdb.ui.editor.VdbEditor;
@@ -73,6 +80,7 @@ import com.metamatrix.ui.internal.util.WidgetUtil;
 import com.metamatrix.ui.internal.util.WizardUtil;
 import com.metamatrix.ui.internal.viewsupport.ListContentProvider;
 import com.metamatrix.ui.internal.wizard.AbstractWizard;
+import com.metamatrix.ui.text.StyledTextEditor;
 
 /**
  * @since 4.0
@@ -99,25 +107,49 @@ public final class NewVdbWizard extends AbstractWizard
     private static final StringNameValidator nameValidator = new StringNameValidator(StringNameValidator.DEFAULT_MINIMUM_LENGTH,
                                                                                      StringNameValidator.DEFAULT_MAXIMUM_LENGTH);
 
-    private static String getString( final String id ) {
+    static String getString( final String id ) {
         return VdbUiConstants.Util.getString(I18N_PREFIX + id);
     }
 
     String name;
     IContainer folder;
 
-    private WizardPage pg;
-    private Text nameText, folderText;
-    private Button btnBrowse;
+    private WizardPage mainPage;
+    Text nameText, folderText;
+    TableViewer modelsViewer;
+    StyledTextEditor descriptionTextEditor;
+    Button btnBrowse;
+    Button addModelsButton;
+
+	Button removeModelsButton;
     private ISelectionStatusValidator projectValidator = new ModelProjectSelectionStatusValidator();
+    final ModelLabelProvider modelLabelProvider = new ModelLabelProvider();
 
     IStructuredSelection initialSelection;
+    
+    List<IResource> modelsForVdb;
+    
+    final ISelectionStatusValidator validator = new ISelectionStatusValidator() {
+        /**
+         * {@inheritDoc}
+         * 
+         * @see org.eclipse.ui.dialogs.ISelectionStatusValidator#validate(java.lang.Object[])
+         */
+        @Override
+        public IStatus validate( final Object[] selection ) {
+            for (int ndx = selection.length; --ndx >= 0;)
+                if (selection[ndx] instanceof IContainer) 
+                	return new Status(IStatus.ERROR, VdbUiConstants.PLUGIN_ID, 0, getString("invalidModelSelected"), null); //$NON-NLS-1$
+            return new Status(IStatus.OK, VdbUiConstants.PLUGIN_ID, 0, EMPTY_STRING, null);
+        }
+    };
 
     /**
      * @since 4.0
      */
     public NewVdbWizard() {
         super(UiPlugin.getDefault(), TITLE, null);
+        this.modelsForVdb = new ArrayList<IResource>();
     }
 
     /**
@@ -133,7 +165,7 @@ public final class NewVdbWizard extends AbstractWizard
 
         // create VDB resource
         final IRunnableWithProgress op = new IRunnableWithProgress() {
-            @Override
+			@Override
             public void run( final IProgressMonitor monitor ) throws InvocationTargetException {
                 try {
                     final IFile vdbFile = NewVdbWizard.this.folder.getFile(new Path(NewVdbWizard.this.name));
@@ -148,25 +180,20 @@ public final class NewVdbWizard extends AbstractWizard
                     IDE.openEditor(page, vdbFile);
                     
                     //Thread.sleep(200);
-                    
-                    
-                    
-                    if (initialSelection != null && !initialSelection.isEmpty()) {
-                    	if( isAllModelsSelected(initialSelection) ) {
-                    		VdbEditor editor = getVdbEditor(vdbFile);
+
+                    if (modelsForVdb != null && !modelsForVdb.isEmpty()) {
+                		VdbEditor editor = getVdbEditor(vdbFile);
+                		
+                		if( editor != null ) {
+                    		List<IFile> models = new ArrayList<IFile>();
                     		
-                    		if( editor != null ) {
-	                    		List selectedModels = SelectionUtilities.getSelectedIResourceObjects(initialSelection);
-	                    		List<IFile> models = new ArrayList<IFile>();
-	                    		
-	                    		for (Iterator iter = selectedModels.iterator(); iter.hasNext();) {
-	                    			models.add((IFile)iter.next());
-	                    		}
-	                    		
-	                    		editor.addModels(models);
-	                    		editor.doSave(new NullProgressMonitor());
+                    		for( IResource nextModel : modelsForVdb) {
+                    			models.add((IFile)nextModel);
                     		}
-                    	}
+                    		
+                    		editor.addModels(models);
+                    		editor.doSave(new NullProgressMonitor());
+                		}
                     }
                     
                 } catch (final Exception err) {
@@ -193,7 +220,8 @@ public final class NewVdbWizard extends AbstractWizard
      * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench, org.eclipse.jface.viewers.IStructuredSelection)
      * @since 4.0
      */
-    public void init( final IWorkbench workbench,
+    @Override
+	public void init( final IWorkbench workbench,
                       final IStructuredSelection selection ) {
 
         if (isAllModelsSelected(selection)) {
@@ -205,21 +233,23 @@ public final class NewVdbWizard extends AbstractWizard
 
         if (folder != null && !folderInModelProject()) {
             // Create empty page
-            this.pg = new WizardPage(NewVdbWizard.class.getSimpleName(), PAGE_TITLE, null) {
-                public void createControl( final Composite parent ) {
+            this.mainPage = new WizardPage(NewVdbWizard.class.getSimpleName(), PAGE_TITLE, null) {
+                @Override
+				public void createControl( final Composite parent ) {
                     setControl(createEmptyPageControl(parent));
                 }
             };
-            this.pg.setMessage(NOT_MODEL_PROJECT_MSG, IMessageProvider.ERROR);
+            this.mainPage.setMessage(NOT_MODEL_PROJECT_MSG, IMessageProvider.ERROR);
         } else {
 
             // Create and add page
-            this.pg = new WizardPage(NewVdbWizard.class.getSimpleName(), PAGE_TITLE, null) {
-                public void createControl( final Composite parent ) {
+            this.mainPage = new WizardPage(NewVdbWizard.class.getSimpleName(), PAGE_TITLE, null) {
+                @Override
+				public void createControl( final Composite parent ) {
                     setControl(createPageControl(parent));
                 }
             };
-            this.pg.setMessage(INITIAL_MESSAGE);
+            this.mainPage.setMessage(INITIAL_MESSAGE);
 
             // If current selection not null, set folder to selection if a folder, or to containing folder if not
             if (this.folder != null) {
@@ -227,12 +257,12 @@ public final class NewVdbWizard extends AbstractWizard
                     this.folder = null;
                 }
             } else { // folder == null
-                this.pg.setMessage(SELECT_FOLDER_MESSAGE, IMessageProvider.ERROR);
+                this.mainPage.setMessage(SELECT_FOLDER_MESSAGE, IMessageProvider.ERROR);
             }
         }
 
-        this.pg.setPageComplete(false);
-        addPage(pg);
+        this.mainPage.setPageComplete(false);
+        addPage(mainPage);
     }
 
     private boolean folderInModelProject() {
@@ -258,12 +288,17 @@ public final class NewVdbWizard extends AbstractWizard
      * @param theSelection the selection being checked
      * @return <code>true</code> if all selected objects are <code>EObject</code>; <code>false</code> otherwise.
      */
-    @SuppressWarnings( "unchecked" ) boolean isAllModelsSelected( ISelection theSelection ) {
-        boolean result = ((theSelection != null) && !theSelection.isEmpty() && (theSelection instanceof IStructuredSelection) && SelectionUtilities.isAllIResourceObjects(theSelection));
+    boolean isAllModelsSelected( ISelection theSelection ) {
+    	if( (theSelection == null) ||  theSelection.isEmpty()) {
+    		return true;
+    	}
+        boolean result = (theSelection instanceof IStructuredSelection) && SelectionUtilities.isAllIResourceObjects(theSelection);
 
         if (result) {
-            List selectedObjects = SelectionUtilities.getSelectedObjects(theSelection);
-            for (Iterator iter = selectedObjects.iterator(); iter.hasNext();) {
+            @SuppressWarnings("rawtypes")
+			List selectedObjects = SelectionUtilities.getSelectedObjects(theSelection);
+            for (@SuppressWarnings("rawtypes")
+			Iterator iter = selectedObjects.iterator(); iter.hasNext();) {
                 IResource res = (IResource)iter.next();
                 if (!ModelUtilities.isModelFile(res)) {
                     result = false;
@@ -274,10 +309,6 @@ public final class NewVdbWizard extends AbstractWizard
         }
 
         return result;
-    }
-    
-    private boolean isAllModelsSelected() {
-    	return isAllModelsSelected(this.initialSelection);
     }
 
     /**
@@ -300,31 +331,33 @@ public final class NewVdbWizard extends AbstractWizard
      * @return composite the page
      * @since 4.0
      */
-    @SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unused", "unchecked" })
 	Composite createPageControl( final Composite parent ) {
         // Create page
-        final Composite pg = new Composite(parent, SWT.NONE);
-        pg.setLayout(new GridLayout(COLUMN_COUNT, false));
+        final Composite mainPanel = new Composite(parent, SWT.NONE);
+        mainPanel.setLayout(new GridLayout(COLUMN_COUNT, false));
         // Add widgets to page
-        WidgetFactory.createLabel(pg, FOLDER_LABEL);
+        WidgetFactory.createLabel(mainPanel, FOLDER_LABEL);
         final String name = (this.folder == null ? null : this.folder.getFullPath().makeRelative().toString());
-        this.folderText = WidgetFactory.createTextField(pg, GridData.FILL_HORIZONTAL, 1, name, SWT.READ_ONLY);
+        this.folderText = WidgetFactory.createTextField(mainPanel, GridData.FILL_HORIZONTAL, 1, name, SWT.READ_ONLY);
         this.folderText.addModifyListener(new ModifyListener() {
-            public void modifyText( final ModifyEvent event ) {
+            @Override
+			public void modifyText( final ModifyEvent event ) {
                 folderModified();
             }
         });
-        btnBrowse = WidgetFactory.createButton(pg, BROWSE_BUTTON);
+        btnBrowse = WidgetFactory.createButton(mainPanel, BROWSE_BUTTON);
         btnBrowse.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected( final SelectionEvent event ) {
                 browseButtonSelected();
             }
         });
-        WidgetFactory.createLabel(pg, NAME_LABEL);
-        this.nameText = WidgetFactory.createTextField(pg, GridData.HORIZONTAL_ALIGN_FILL, COLUMN_COUNT - 1);
+        WidgetFactory.createLabel(mainPanel, NAME_LABEL);
+        this.nameText = WidgetFactory.createTextField(mainPanel, GridData.HORIZONTAL_ALIGN_FILL, COLUMN_COUNT - 1);
         this.nameText.addModifyListener(new ModifyListener() {
-            public void modifyText( final ModifyEvent event ) {
+            @Override
+			public void modifyText( final ModifyEvent event ) {
                 nameModified();
             }
         });
@@ -336,19 +369,141 @@ public final class NewVdbWizard extends AbstractWizard
             nameText.setFocus();
         }
         
-        if( isAllModelsSelected() ) {
-	        Group group = WidgetFactory.createGroup(pg, getString("selectedModelsGroupTitle"), GridData.FILL_BOTH, COLUMN_COUNT, COLUMN_COUNT); //$NON-NLS-1$
-	        TableViewer viewer = new TableViewer(group);
+        DESCRIPTION_GROUP: {
+            final Group descGroup = WidgetFactory.createGroup(mainPanel, getString("description"), GridData.FILL_HORIZONTAL, 3); //$NON-NLS-1$
+            descriptionTextEditor = new StyledTextEditor(descGroup, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.WRAP | SWT.BORDER);
+            final GridData descGridData = new GridData(GridData.FILL_BOTH);
+            descGridData.horizontalSpan = 1;
+            descGridData.heightHint = 50;
+            descGridData.minimumHeight = 30;
+            descGridData.grabExcessVerticalSpace = true;
+            descriptionTextEditor.setLayoutData(descGridData);
+            descriptionTextEditor.setText(""); //$NON-NLS-1$
+        }
+        
+        MODELS_GROUP : {
+	        Group group = WidgetFactory.createGroup(mainPanel, getString("selectedModelsGroupTitle"), GridData.FILL_BOTH, COLUMN_COUNT, COLUMN_COUNT); //$NON-NLS-1$
+	        group.setLayout(new GridLayout(2, false));
+	    	GridData gd = new GridData(GridData.FILL_BOTH);
+	    	gd.heightHint = 200;
+	    	gd.horizontalSpan = 3;
+	    	group.setLayoutData(gd);
+	    	
+	    	Composite leftToolbarPanel = new Composite(group, SWT.NONE);
+	    	leftToolbarPanel.setLayout(new GridLayout());
+		  	GridData ltpGD = new GridData(GridData.FILL_VERTICAL);
+		  	ltpGD.heightHint=120;
+		  	leftToolbarPanel.setLayoutData(ltpGD);
+	    	
+	    	addModelsButton = new Button(leftToolbarPanel, SWT.PUSH);
+	    	addModelsButton.setText(getString("add")); //$NON-NLS-1$
+	    	addModelsButton.setToolTipText(getString("addModelsTooltip")); //$NON-NLS-1$
+	    	addModelsButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+	    	addModelsButton.addSelectionListener(new SelectionAdapter() {
+
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					handleAddModelsSelected();
+					if( !modelsViewer.getSelection().isEmpty() ) {
+						removeModelsButton.setEnabled(true);
+					}
+				}
+	    		
+			});
+	    	
+	    	removeModelsButton = new Button(leftToolbarPanel, SWT.PUSH);
+	    	removeModelsButton.setText(getString("remove")); //$NON-NLS-1$
+	    	removeModelsButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+	    	removeModelsButton.setEnabled(false);
+	    	removeModelsButton.addSelectionListener(new SelectionAdapter() {
+
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					Collection<IResource> models = new ArrayList<IResource>();
+					
+					IStructuredSelection selection = (IStructuredSelection)modelsViewer.getSelection();
+					for( Object obj : selection.toArray()) {
+						if( obj instanceof IResource ) {
+							models.add((IResource)obj);
+						}
+					}
+					removeModels(models);
+					removeModelsButton.setEnabled(false);
+				}
+	    		
+			});
+	    	
+	    	
+	        this.modelsViewer = new TableViewer(group);
 	        GridData gdv = new GridData(GridData.FILL_BOTH);
 	        //gdv.horizontalSpan = COLUMN_COUNT;
-	        viewer.getControl().setLayoutData(gdv);
-	        viewer.setContentProvider(new ListContentProvider());
-	        viewer.setLabelProvider(new ModelExplorerLabelProvider());
-	        List selectedModels = SelectionUtilities.getSelectedIResourceObjects(initialSelection);
-	        viewer.setInput(selectedModels);
+	        modelsViewer.getControl().setLayoutData(gdv);
+	        modelsViewer.setContentProvider(new ListContentProvider());
+	        modelsViewer.setLabelProvider(new ModelExplorerLabelProvider());
+	        this.modelsForVdb.addAll(SelectionUtilities.getSelectedIResourceObjects(initialSelection));
+	        modelsViewer.setInput(this.modelsForVdb);
+	        modelsViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+				
+				@Override
+				public void selectionChanged(SelectionChangedEvent event) {
+					removeModelsButton.setEnabled(!event.getSelection().isEmpty());
+				}
+			});
         }
-        return pg;
+        return mainPanel;
     }
+	
+	void handleAddModelsSelected() {
+		final ViewerFilter filter = new ViewerFilter() {
+            /**
+             * {@inheritDoc}
+             * 
+             * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object,
+             *      java.lang.Object)
+             */
+            @Override
+            public boolean select( final Viewer viewer,
+                                   final Object parent,
+                                   final Object element ) {
+                if (element instanceof IContainer) 
+                	return true;
+                
+                final IFile file = (IFile)element;
+                
+                if (ModelUtilities.isModelFile(file) || ModelUtil.isXsdFile(file)) 
+                	return true;
+
+                return false;
+            }
+        };
+        ModelingResourceFilter wsFilter = new ModelingResourceFilter(filter);
+        wsFilter.setShowHiddenProjects(true);
+        final Object[] models = WidgetUtil.showWorkspaceObjectSelectionDialog(
+        		getString("selectModelsTitle"), //$NON-NLS-1$
+                getString("selectModelsMessage"), //$NON-NLS-1$
+                true, null, wsFilter, validator, modelLabelProvider);
+        
+        addModels(models);
+        
+        
+	}
+	
+	void addModels(Object[] models) {
+		for( Object model : models) {
+			if( !modelsForVdb.contains(model) ) {
+				modelsForVdb.add((IResource)model);
+			}
+		}
+		
+		this.modelsViewer.refresh();
+	}
+	
+	void removeModels(Collection<IResource> models) {
+		for( IResource model : models) {
+			modelsForVdb.remove(model);
+		}
+		this.modelsViewer.refresh();
+	}
 
     /**
      * @since 4.0
@@ -389,10 +544,10 @@ public final class NewVdbWizard extends AbstractWizard
         try {
             folder = WizardUtil.validateFileAndFolder(this.nameText,
                                                       this.folderText,
-                                                      this.pg,
+                                                      this.mainPage,
                                                       ModelerCore.VDB_FILE_EXTENSION,
                                                       false);
-            if (this.pg.getMessageType() == IMessageProvider.ERROR) {
+            if (this.mainPage.getMessageType() == IMessageProvider.ERROR) {
                 // WizardUtil.validateFileAndFolder can set error message and message type so no need to do further
                 // validation if an error was already found (JBEDSP-588)
                 return;
@@ -407,27 +562,27 @@ public final class NewVdbWizard extends AbstractWizard
                 // this corrects the case where the wrong message shows for
                 // a bad filename.
                 if (folder != null) {
-                    this.pg.setErrorMessage(status.getMessage());
-                    this.pg.setPageComplete(false);
+                    this.mainPage.setErrorMessage(status.getMessage());
+                    this.mainPage.setPageComplete(false);
                 } // endif
             } else if (!nameValidator.isValidName(proposedName)) {
-                this.pg.setErrorMessage(VDB_NAME_ERROR);
-                this.pg.setPageComplete(false);
+                this.mainPage.setErrorMessage(VDB_NAME_ERROR);
+                this.mainPage.setPageComplete(false);
             } else if (ModelUtilities.vdbNameReservedValidation(proposedName) != null) {
-                this.pg.setErrorMessage(ModelUtilities.vdbNameReservedValidation(proposedName));
-                this.pg.setPageComplete(false);
+                this.mainPage.setErrorMessage(ModelUtilities.vdbNameReservedValidation(proposedName));
+                this.mainPage.setPageComplete(false);
             } else {
-                this.pg.setErrorMessage(null);
-                this.pg.setPageComplete(true);
+                this.mainPage.setErrorMessage(null);
+                this.mainPage.setPageComplete(true);
             }
 
-            if (this.pg.isPageComplete()) {
+            if (this.mainPage.isPageComplete()) {
                 this.name = proposedName;
                 this.folder = folder;
             }
         } catch (final CoreException err) {
             VdbUiConstants.Util.log(err);
-            WizardUtil.setPageComplete(this.pg, err.getLocalizedMessage(), IMessageProvider.ERROR);
+            WizardUtil.setPageComplete(this.mainPage, err.getLocalizedMessage(), IMessageProvider.ERROR);
         }
     }
     
