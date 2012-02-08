@@ -65,6 +65,8 @@ public class DSPStatusSection implements AdvisorUiConstants.Groups {
     LabelLabelLinkRow testRow;
 
     private static final int MAX_NAME_CHARS = 20;
+    
+    private static final int SEPARATOR_HEIGHT = 3;
 
     // ------------ TEXT ----------------------------
     //private static final String NO_PROJECT_TEXT = "NO PROJECT SELECTED          "; //$NON-NLS-1$
@@ -115,22 +117,25 @@ public class DSPStatusSection implements AdvisorUiConstants.Groups {
 
         // projectRow = new LabelLabelLinkRow(GROUP_PROJECT, toolkit, sectionBody, NO_PROJECT_TEXT, this.linkListener);
         // Add Separator
-        createSeparator(sectionBody, nColumns, 5);
+        createSeparator(sectionBody, nColumns, SEPARATOR_HEIGHT);
 
-        validationRow = new LabelLabelLinkRow(GROUP_MODEL_VALIDATION, toolkit, sectionBody, DSPAdvisorI18n.ModelValidationLabel,
-                                              this.linkListener);
+        
         connectorsRow = new LabelLabelLinkRow(GROUP_CONNECTIONS, toolkit, sectionBody, DSPAdvisorI18n.ConnectionFactoriesLabel
                                                                                     + TWENTY_FIVE_SPACES, this.linkListener);
         sourcesRow = new LabelLabelLinkRow(GROUP_SOURCES, toolkit, sectionBody, DSPAdvisorI18n.SourcesLabel, this.linkListener);
         schemasRow = new LabelLabelLinkRow(GROUP_XML_SCHEMAS, toolkit, sectionBody, DSPAdvisorI18n.XmlSchemaLabel, this.linkListener);
         viewsRow = new LabelLabelLinkRow(GROUP_VIEWS, toolkit, sectionBody, DSPAdvisorI18n.ViewsLabel, this.linkListener);
         vdbsRow = new LabelLabelLinkRow(GROUP_VDBS, toolkit, sectionBody, DSPAdvisorI18n.VDBsLabel, this.linkListener);
-        testRow = new LabelLabelLinkRow(GROUP_TEST, toolkit, sectionBody, DSPAdvisorI18n.TestLabel, this.linkListener);
 
         // Add Separator
-        createSeparator(sectionBody, nColumns, 5);
+        createSeparator(sectionBody, nColumns, SEPARATOR_HEIGHT);
+        
+        validationRow = new LabelLabelLinkRow(GROUP_MODEL_VALIDATION, toolkit, sectionBody, DSPAdvisorI18n.ModelValidationLabel, this.linkListener);
+        testRow = new LabelLabelLinkRow(GROUP_TEST, toolkit, sectionBody, DSPAdvisorI18n.TestLabel, this.linkListener);
+        
+        createSeparator(sectionBody, nColumns, SEPARATOR_HEIGHT);
 
-        // Need a placeholder for the third column
+        // Need a place holder for the third column
         // toolkit.createLabel(sectionBody, null);
 
         addStatusSectionButtons(section);

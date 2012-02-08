@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cheatsheet
+      title="Join Two Sources Example">
+   <intro>
+   		<description>This cheat sheet shows you how to create a view that joins data from 2 sources.
+   			<br/>
+			<br/>
+			<b>Note:</b> These steps are sequential and require you to complete or
+			skip each step before being allowed to <b>Perform</b>, <b>Complete</b> or <b>Skip</b> the next step.<br/>
+			<br/>
+			To learn more about using cheat sheets click the help icon above.
+			<br/>
+			<br/>Press "<b>Click to Begin</b>" button below to start.
+		</description>
+   </intro>
+
+   <item
+         title="Create View Model" skip="true">
+      <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
+			pluginId="org.teiid.designer.advisor.ui" param1="org.teiid.designer.newModelRelationalViewCommand"/>
+      <description>
+         <b> This following action creates an empty view model.</b>
+			<br/> ============================================================
+			<br/> -- > Press "<b>Click to Perform</b>" button below to create a view model.
+			<br/> -- >  
+			<br/> -- > You may skip this step if you have already created your view model.
+			<br/> ============================================================
+      </description>
+   </item>
+   <item
+         title="Create View Table" skip="true">
+      <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
+			pluginId="org.teiid.designer.advisor.ui" 
+			param1="org.teiid.designer.new.relational.basetable"/>
+      <description>
+         <b> This following action creates</b>
+			<br/> ============================================================
+			<br/> -- > Press "<b>Click to Perform</b>" button below to create a view table.
+			<br/> -- >  
+			<br/> -- > You may skip this step if you have already created a view table.
+			<br/> ============================================================
+      </description>
+   </item>
+   <item
+         title="Add Source Tables To Transformation" skip="true">
+      <description>
+         <b> This following action ........</b>
+			<br/> ============================================================
+			<br/> -- > Press "<b>Click to Perform</b>" button below to xxxxxxxxxxx.
+			<br/> -- >  
+			<br/> -- > You may skip this step if you have already xxxxxxxxxx.
+			<br/> ============================================================
+      </description>
+   </item>
+</cheatsheet>

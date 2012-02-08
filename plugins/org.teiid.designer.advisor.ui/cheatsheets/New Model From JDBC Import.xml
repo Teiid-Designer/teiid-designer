@@ -2,53 +2,60 @@
 <cheatsheet
       title="Create Relational Model From JDBC">
    <intro>
-      <description>
-         <b>Import JDBC Metadata to create relational models of your data.</b>
-      </description>
+   		<description>This cheat sheet shows you how to model two different sources and create a view that joins data from both sources.
+   			In this example, a JDBC source table and Flat File source table are used.
+   			<br/>
+			<br/>
+			<b>Note:</b> These steps are sequential and require you to complete or
+			skip each step before being allowed to <b>Perform</b>, <b>Complete</b> or <b>Skip</b> the next step.<br/>
+			<br/>
+			To learn more about using cheat sheets click the help icon above.
+			<br/>
+			<br/>Press "<b>Click to Begin</b>" button below to start.
+		</description>
    </intro>
    <item
-         title="Select Import &gt; Metadata Modeling">
+         title="Create New Teiid Model Project" skip="true">
+      <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
+			pluginId="org.teiid.designer.advisor.ui" param1="org.teiid.designer.newProjectCommand"/>
       <description>
-         <b>Select: File &gt; Import &gt; Metadata Modeling option.</b>
+         <b> This following action creates a new Teiid Model Project.</b>
+			<br/> ============================================================
+			<br/> -- > Press "<b>Click to Perform</b>" button below to launch the connection profile wizard.
+			<br/> -- >   1) Specify unique project name
+			<br/> -- >   2) <b>Click Next ></b> twice to get to <b>Model Project Options</b> page
+			<br/> -- >   3) Check folders you wish the wizard to create in your project
+			<br/> -- >          Note: These folders are not required but recommended for projects that will
+			<br/> -- >                contain a large number of models
+			<br/> -- >   4) Click <b>Finish</b>
+			<br/> -- > You may skip this step if you have already created a model project.
+			<br/> ============================================================
       </description>
-      <command
-            required="false"
-            serialization="org.eclipse.ui.file.import"/>
    </item>
    <item
-         title="Select New &gt; Metadata Model">
+         title="Create JDBC Source Connection" skip="true">
+      <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
+			pluginId="org.teiid.designer.advisor.ui" param1="org.teiid.designer.connection.new.jdbc"/>
       <description>
-         <b>Select: File &gt; New &gt; Metadata Model option.</b>
+         <b> This following action creates a JDBC Connection profile.</b>
+			<br/> ============================================================
+			<br/> -- > Press "<b>Click to Perform</b>" button below to launch the connection profile wizard.
+			<br/> -- > 
+			<br/> -- > You may skip this step if you have already created this connection profile.
+			<br/> ============================================================
       </description>
-      <command
-            required="false"
-            serialization="org.teiid.designer.advisor.ui.commands.importJdbcCommandHandler"/>
    </item>
    <item
-         title="Create Relational Model">
+         title="Create Source From JDBC Connection" skip="true">
+      <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
+			pluginId="org.teiid.designer.advisor.ui" param1="org.teiid.designer.importJdbcCommand"/>
       <description>
-         <b>Create Relational Model</b>
+         <b> This following action creates a relational model from importing table data via your JDBC connection profile.</b>
+			<br/> ============================================================
+			<br/> -- > Press "<b>Click to Perform</b>" button below to launch the JDBC import wizard.
+			<br/> -- >  
+			<br/> -- > You may skip this step if you have already imported this model.
+			<br/> ============================================================
       </description>
-      <command
-            required="false"
-            serialization="org.teiid.designer.advisor.ui.commands.newRelationalModelCommandHandler"/>
    </item>
-      <item
-         title="Create Relational View Model">
-      <description>
-         <b>Create Relational View Model</b>
-      </description>
-      <command
-            required="false"
-            serialization="org.teiid.designer.advisor.ui.commands.newRelationalViewModelCommandHandler"/>
-      </item>
-      <item
-         title="Create XML View Model">
-      <description>
-         <b>Create XML View Model</b>
-      </description>
-      <command
-            required="false"
-            serialization="org.teiid.designer.advisor.ui.commands.newXmlViewModelCommandHandler"/>
-      </item>
 </cheatsheet>

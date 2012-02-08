@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<compositeCheatsheet name="Create multi-source VDB">
+
+	<!-- Task Group -->
+
+	<taskGroup kind="set" name="Create a VDB accessing 2 data sources">
+		<intro>
+			This cheat sheet will guide you through the individual steps to
+			create a Teiid VDB containing queryable views joining 2 different data sources.
+			<br />
+			<br />
+			To assist you along the way, wizards and commands
+			will be available for you to launch automatically.
+		</intro>
+
+		<!-- Task -->
+
+		<task kind="cheatsheet" name="Create a Teiid Model Project">
+			<intro>
+				This cheat sheet will demonstrate how to create and set up your <b>Teiid model project</b>.
+			</intro>
+			<param name="path" value="subsheets/create-model-project.xml" />
+		</task>
+
+		<!-- Task -->
+
+		<task kind="cheatsheet" name="Model tables from a flat file data source">
+			<intro>
+				This cheat sheet will demonstrate how create a view table from flat file table data stored
+				in CSV format.
+			</intro>
+			<param name="path" value="subsheets/import-from-flat-file.xml" />
+		</task>
+
+		<!-- Task -->
+
+		<task kind="cheatsheet" name="Model tables from a JDBC data source">
+			<intro>
+				This cheat sheet will demonstrate how to create source tables from your JDBC data source 
+			</intro>
+			<param name="path" value="subsheets/import-from-jdbc.xml" />
+		</task>
+
+		<!-- Task -->
+
+		<task kind="cheatsheet" name="Create joined view of data sources">
+			<intro>
+				This cheat sheet will demonstrate how to create a view table which joins data from
+				both of your data sources..
+			</intro>
+			<param name="path" value="subsheets/join-two-sources.xml" />
+		</task>
+
+		<!-- Task -->
+
+		<task kind="cheatsheet" name="Create and test your VDB">
+			<intro>
+				This cheat sheet will demonstrate how to create a VDB as well as how to quickly deploy
+				and test queries against the VDB.
+			</intro>
+			<param name="path" value="subsheets/create-and-test-vdb.xml" />
+			<onCompletion>
+				Congratulations! You just defined a feature-based product!
+			</onCompletion>
+		</task>
+
+		<onCompletion>
+			Congratulations! blah, blah, bla
+		</onCompletion>
+
+	</taskGroup>
+
+
+</compositeCheatsheet>

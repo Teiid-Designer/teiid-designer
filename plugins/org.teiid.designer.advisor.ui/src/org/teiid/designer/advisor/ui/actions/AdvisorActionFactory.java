@@ -9,8 +9,11 @@ package org.teiid.designer.advisor.ui.actions;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 import org.eclipse.core.commands.AbstractHandler;
+import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
+import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.datatools.connectivity.db.generic.ui.wizard.NewJDBCFilteredCPWizard;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -32,7 +35,7 @@ import com.metamatrix.ui.internal.util.WidgetUtil;
 /**
  * Factory intended to provide high-level access to actions and their handlers for Teiid Designer Advisor framework
  */
-public class AdvisorActionFactory implements AdvisorUiConstants {
+public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChangeListener {
 	
 	static Map<String, AdvisorActionInfo> actionInfos;
 
@@ -107,93 +110,97 @@ public class AdvisorActionFactory implements AdvisorUiConstants {
 	}
 	
 	public static void executeAction(String id) {
+		AdvisorActionFactory.executeAction(id, null);
+	}
+	
+	public static void executeAction(String id, Properties properties) {
 		
 		
 		// IMPORT OPTIONS
 		if( id.equalsIgnoreCase(COMMAND_IDS.IMPORT_DDL)) {
-			 launchWizard(ImportMetadataAction.DDL_TO_RELATIONAL);
+			 launchWizard(ImportMetadataAction.DDL_TO_RELATIONAL, properties);
 			 return;
 		}
 		if( id.equalsIgnoreCase(COMMAND_IDS.IMPORT_FLAT_FILE)) {
-			 launchWizard(ImportMetadataAction.TEIID_FLAT_FILE);
+			 launchWizard(ImportMetadataAction.TEIID_FLAT_FILE, properties);
 			 return;
 		}
 		if( id.equalsIgnoreCase(COMMAND_IDS.IMPORT_JDBC)) {
-			 launchWizard(ImportMetadataAction.JDBC);
+			 launchWizard(ImportMetadataAction.JDBC, properties);
 			 return;
 		}
 		if( id.equalsIgnoreCase(COMMAND_IDS.IMPORT_SALESFORCE)) {
-			 launchWizard(ImportMetadataAction.SALESFORCE_TO_RELATIONAL);
+			 launchWizard(ImportMetadataAction.SALESFORCE_TO_RELATIONAL, properties);
 			 return;
 		}
 		if( id.equalsIgnoreCase(COMMAND_IDS.IMPORT_XML_FILE)) {
-			 launchWizard(ImportMetadataAction.TEIID_XML_FILE);
+			 launchWizard(ImportMetadataAction.TEIID_XML_FILE, properties);
 			 return;
 		}
 		if( id.equalsIgnoreCase(COMMAND_IDS.IMPORT_WSDL_TO_SOURCE)) {
-			 launchWizard(ImportMetadataAction.WSDL_TO_RELATIONAL);
+			 launchWizard(ImportMetadataAction.WSDL_TO_RELATIONAL, properties);
 			 return;
 		}
 		if( id.equalsIgnoreCase(COMMAND_IDS.IMPORT_WSDL_TO_WS)) {
-			launchWizard(ImportMetadataAction.WSDL_TO_WEB_SERVICE);
+			launchWizard(ImportMetadataAction.WSDL_TO_WEB_SERVICE, properties);
 			 return;
 		}
 		
 		// NEW MODEL OPTIONS
 		if( id.equalsIgnoreCase(COMMAND_IDS.NEW_MODEL_RELATIONAL_SOURCE)) {
-			createNewModel(ModelType.PHYSICAL_LITERAL, MODEL_CLASSES.RELATIONAL);
+			createNewModel(ModelType.PHYSICAL_LITERAL, MODEL_CLASSES.RELATIONAL, properties);
 	        return;
 		}
 		
 		if( id.equalsIgnoreCase(COMMAND_IDS.NEW_MODEL_RELATIONAL_VIEW)) {
-			createNewModel(ModelType.VIRTUAL_LITERAL, MODEL_CLASSES.RELATIONAL);
+			createNewModel(ModelType.VIRTUAL_LITERAL, MODEL_CLASSES.RELATIONAL, properties);
 	        return;
 		}
 		
 		if( id.equalsIgnoreCase(COMMAND_IDS.NEW_MODEL_WS)) {
-			createNewModel(ModelType.VIRTUAL_LITERAL, MODEL_CLASSES.WEB_SERVICE);
+			createNewModel(ModelType.VIRTUAL_LITERAL, MODEL_CLASSES.WEB_SERVICE, properties);
 	        return;
 		}
 		
 		// CONNECTIONPROFILE OPTIONS
 		if( id.equalsIgnoreCase(COMMAND_IDS.CREATE_CONNECTION_JDBC)) {
-			createConnection(CONNECTION_PROFILE_IDS.CATEGORY_JDBC);
+			createConnection(CONNECTION_PROFILE_IDS.CATEGORY_JDBC, properties);
 	        return;
 		}
 		if( id.equalsIgnoreCase(COMMAND_IDS.CREATE_CONNECTION_FLAT_FILE)) {
-			createConnection(CONNECTION_PROFILE_IDS.CATEGORY_ODA_FLAT_FILE_ID);
+			createConnection(CONNECTION_PROFILE_IDS.CATEGORY_ODA_FLAT_FILE_ID, properties);
 	        return;
 		}
 		if( id.equalsIgnoreCase(COMMAND_IDS.CREATE_CONNECTION_LDAP)) {
-			createConnection(CONNECTION_PROFILE_IDS.CATEGORY_LDAP_CONNECTION);
+			createConnection(CONNECTION_PROFILE_IDS.CATEGORY_LDAP_CONNECTION, properties);
 	        return;
 		}
 		if( id.equalsIgnoreCase(COMMAND_IDS.CREATE_CONNECTION_MODESHAPE)) {
-			createConnection(CONNECTION_PROFILE_IDS.CATEGORY_MODESHAPE);
+			createConnection(CONNECTION_PROFILE_IDS.CATEGORY_MODESHAPE, properties);
 	        return;
 		}
 		if( id.equalsIgnoreCase(COMMAND_IDS.CREATE_CONNECTION_SALESFORCE)) {
-			createConnection(CONNECTION_PROFILE_IDS.CATEGORY_SALESFORCE_CONNECTION);
+			createConnection(CONNECTION_PROFILE_IDS.CATEGORY_SALESFORCE_CONNECTION, properties);
 	        return;
 		}
 		if( id.equalsIgnoreCase(COMMAND_IDS.CREATE_CONNECTION_WEB_SERVICE)) {
-			createConnection(CONNECTION_PROFILE_IDS.CATEGORY_WS_CONNECTION);
+			createConnection(CONNECTION_PROFILE_IDS.CATEGORY_WS_CONNECTION, properties);
 	        return;
 		}
 		if( id.equalsIgnoreCase(COMMAND_IDS.CREATE_CONNECTION_WEB_SERVICE_ODA)) {
-			createConnection(CONNECTION_PROFILE_IDS.CATEGORY_ODA_WS_ID);
+			createConnection(CONNECTION_PROFILE_IDS.CATEGORY_ODA_WS_ID, properties);
 	        return;
 		}
 		if( id.equalsIgnoreCase(COMMAND_IDS.CREATE_CONNECTION_XML_FILE_LOCAL)) {
-			createConnection(CONNECTION_PROFILE_IDS.CATEGORY_XML_FILE_LOCAL);
+			createConnection(CONNECTION_PROFILE_IDS.CATEGORY_XML_FILE_LOCAL, properties);
 	        return;
 		}
 		if( id.equalsIgnoreCase(COMMAND_IDS.CREATE_CONNECTION_XML_FILE_URL)) {
-			createConnection(CONNECTION_PROFILE_IDS.CATEGORY_XML_FILE_URL);
+			createConnection(CONNECTION_PROFILE_IDS.CATEGORY_XML_FILE_URL, properties);
 	        return;
 		}
 		if( id.equalsIgnoreCase(COMMAND_IDS.GENERATE_WS_MODELS_FROM_WSDL)) {
-			 launchWizard(ImportMetadataAction.WSDL_TO_RELATIONAL);
+			 launchWizard(ImportMetadataAction.WSDL_TO_RELATIONAL, properties);
 			 return;
 		}
 		
@@ -215,7 +222,7 @@ public class AdvisorActionFactory implements AdvisorUiConstants {
 		}
 		
 		if( id.equalsIgnoreCase(COMMAND_IDS.NEW_TEIID_MODEL_PROJECT)) {
-			ModelerUiViewUtils.launchWizard("newModelProject", new StructuredSelection()); //$NON-NLS-1$
+			ModelerUiViewUtils.launchWizard("newModelProject", new StructuredSelection(), properties); //$NON-NLS-1$
 	        return;
 		}
 		
@@ -352,16 +359,16 @@ public class AdvisorActionFactory implements AdvisorUiConstants {
 		return null;
 	}
 	
-	private static void createNewModel(ModelType type, String modelClass) {
+	private static void createNewModel(ModelType type, String modelClass, Properties properties) {
         NewModelAction nma = new NewModelAction(type, modelClass, null);
         nma.run();
 	}
 	
-	private static void launchWizard(String id) {
-		ModelerUiViewUtils.launchWizard(id, new StructuredSelection());
+	private static void launchWizard(String id, Properties properties) {
+		ModelerUiViewUtils.launchWizard(id, new StructuredSelection(), properties);
 	}
 	
-	private static void createConnection(String id) {
+	private static void createConnection(String id, Properties properties) {
 		if( id.equalsIgnoreCase(CONNECTION_PROFILE_IDS.CATEGORY_JDBC) ) {
 			NewJDBCFilteredCPWizard wiz = new NewJDBCFilteredCPWizard();
 			ModelerUiViewUtils.launchWizard(wiz, new StructuredSelection());
@@ -369,6 +376,12 @@ public class AdvisorActionFactory implements AdvisorUiConstants {
 			INewWizard wiz = (INewWizard) new NewTeiidFilteredCPWizard(id);
 			ModelerUiViewUtils.launchWizard(wiz, new StructuredSelection());
 		}
+	}
+
+	@Override
+	public void propertyChange(PropertyChangeEvent event) {
+		
+		
 	}
 	
 }

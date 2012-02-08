@@ -7,9 +7,13 @@
 */
 package org.teiid.designer.advisor.ui.actions;
 
+import java.util.Properties;
+
 import org.eclipse.jface.action.Action;
 import org.eclipse.ui.cheatsheets.ICheatSheetAction;
 import org.eclipse.ui.cheatsheets.ICheatSheetManager;
+
+import com.metamatrix.modeler.ui.viewsupport.PropertiesContextManager;
 
 
 /** This action can be used to launch an action defined in the product
@@ -28,6 +32,8 @@ public class LaunchDesignerCommandAction extends Action implements ICheatSheetAc
     // Class constants:
     //
     //private static final String REQUIRES_PROJECT = "requiresProject"; //$NON-NLS-1$
+	
+	private static final PropertiesContextManager propertiesManager = new PropertiesContextManager();
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
     // CONSTRUCTORS
@@ -46,32 +52,10 @@ public class LaunchDesignerCommandAction extends Action implements ICheatSheetAc
         final boolean[] result = {true};
         if (params != null && params.length > 0) {
             String pActionID = params[0];
-            
-            AdvisorActionFactory.executeAction(pActionID);
+            Properties props = propertiesManager.getProperties(manager.getCheatSheetID());
+            AdvisorActionFactory.executeAction(pActionID, props);
         }
         
         notifyResult(result[0]);
-            
-//            IProductCharacteristics productCharacteristics = ProductCustomizerMgr.getInstance()
-//                    .getProductCharacteristics();
-//            IAction productAction = productCharacteristics.getProductAction(pActionID);
-//            if (productAction != null) {
-//                if (params.length > 1 && REQUIRES_PROJECT.equals(params[1])) {
-//                    productCharacteristics.getHiddenProject();
-//                } // endif
-//
-//                IPropertyChangeListener pcl = new IPropertyChangeListener() {
-//                    public void propertyChange(PropertyChangeEvent event) {
-//                        if (RESULT.equals(event.getProperty())) {
-//                            result[0] = ((Boolean) event.getNewValue()).booleanValue();
-//                        } // endif
-//                    }
-//                };
-//                productAction.addPropertyChangeListener(pcl);
-//                productAction.run();
-//                productAction.removePropertyChangeListener(pcl);
-//            } // endif
-//        } // endif
-//        notifyResult(result[0]);
     }
 }

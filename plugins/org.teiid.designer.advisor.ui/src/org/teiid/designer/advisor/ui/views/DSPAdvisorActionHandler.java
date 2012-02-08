@@ -327,7 +327,7 @@ public class DSPAdvisorActionHandler implements IAdvisorActionHandler, AdvisorUi
 	        delegatePreviewDataAction.setText(DSPAdvisorI18n.Action_PreviewData_text);
 	        delegatePreviewDataAction.setToolTipText(DSPAdvisorI18n.Action_PreviewData_tooltip);
 	        delegatePreviewDataAction.setImageDescriptor(AdvisorUiPlugin.getDefault().getImageDescriptor(AdvisorUiConstants.Images.PREVIEW_DATA));
-	        previewDataIPAction = new InfoPopAction(delegatePreviewDataAction, InfoPopAction.TYPE_FIX,
+	        previewDataIPAction = new InfoPopAction(delegatePreviewDataAction, InfoPopAction.TYPE_OTHER,
                                            DSPAdvisorI18n.Options_Action_PreviewData_description, imageHelper.PREVIEW_DATA_IMAGE);
 
         }

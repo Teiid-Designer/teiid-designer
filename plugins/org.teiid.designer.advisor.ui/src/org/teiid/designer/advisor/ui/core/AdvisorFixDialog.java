@@ -223,12 +223,16 @@ public class AdvisorFixDialog {
         // find out if any actions are TYPE_FIX, and/or TYPE_DO
         boolean hasFixes = false;
         boolean hasDos = false;
+        boolean hasOthers = false;
         for (int i = 0; i < actions.length; i++) {
             if (!hasFixes && actions[i].getType() == InfoPopAction.TYPE_FIX) {
                 hasFixes = true;
             }
             if (!hasDos && actions[i].getType() == InfoPopAction.TYPE_DO) {
                 hasDos = true;
+            }
+            if (!hasOthers && actions[i].getType() == InfoPopAction.TYPE_OTHER) {
+            	hasOthers = true;
             }
         }
 
@@ -244,6 +248,9 @@ public class AdvisorFixDialog {
         GridData data = new GridData(GridData.FILL_BOTH | GridData.HORIZONTAL_ALIGN_BEGINNING | GridData.VERTICAL_ALIGN_CENTER);
         composite.setLayoutData(data);
         if (hasFixes) {
+        	
+        	addActions(composite, actions, InfoPopAction.TYPE_FIX);
+        	
             // Create separator.
             // Label label = new Label(composite, SWT.SEPARATOR | SWT.HORIZONTAL);
             // label.setBackground(backgroundColour);
@@ -253,43 +260,43 @@ public class AdvisorFixDialog {
             // data.horizontalSpan = 3;
             // label.setLayoutData(data);
 
-            for (int i = 0; i < actions.length; i++) {
-                if (actions[i].getType() == InfoPopAction.TYPE_FIX) {
-                    if (actions[i].getDescription() != null) {
-                        // Add description here
-                        Label desc = new Label(composite, SWT.FILL);
-                        desc.setBackground(backgroundColour);
-                        desc.setForeground(foregroundColour);
-                        desc.setText(actions[i].getDescription());
-                        GridData gData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING | GridData.VERTICAL_ALIGN_BEGINNING
-                                                      | GridData.FILL_HORIZONTAL);
-                        gData.horizontalSpan = 3;
-                        desc.setLayoutData(gData);
-                    }
-                    // Indent the action.
-                    Label spacerLabel = new Label(composite, SWT.NONE);
-                    spacerLabel.setText(FIVE_SPACES);
-
-                    Label imageLabel = new Label(composite, SWT.NONE);
-                    imageLabel.setBackground(backgroundColour);
-                    imageLabel.setForeground(foregroundColour);
-                    if (actions[i].getImage() != null) {
-                        imageLabel.setImage(actions[i].getImage());
-                    }
-                    final Hyperlink actionLink = toolkit.createHyperlink(composite, actions[i].getAction().getText(), SWT.WRAP);
-                    toolkit.adapt(actionLink, true, true);
-                    actionLink.setBackground(backgroundColour);
-                    final IAction nextAction = actions[i].getAction();
-                    actionLink.setToolTipText(actions[i].getDescription());
-                    actionLink.addHyperlinkListener(new HyperlinkAdapter() {
-                        @Override
-                        public void linkActivated( HyperlinkEvent e ) {
-                            nextAction.run();
-                            close();
-                        }
-                    });
-                }
-            }
+//            for (int i = 0; i < actions.length; i++) {
+//                if (actions[i].getType() == InfoPopAction.TYPE_FIX) {
+//                    if (actions[i].getDescription() != null) {
+//                        // Add description here
+//                        Label desc = new Label(composite, SWT.FILL);
+//                        desc.setBackground(backgroundColour);
+//                        desc.setForeground(foregroundColour);
+//                        desc.setText(actions[i].getDescription());
+//                        GridData gData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING | GridData.VERTICAL_ALIGN_BEGINNING
+//                                                      | GridData.FILL_HORIZONTAL);
+//                        gData.horizontalSpan = 3;
+//                        desc.setLayoutData(gData);
+//                    }
+//                    // Indent the action.
+//                    Label spacerLabel = new Label(composite, SWT.NONE);
+//                    spacerLabel.setText(FIVE_SPACES);
+//
+//                    Label imageLabel = new Label(composite, SWT.NONE);
+//                    imageLabel.setBackground(backgroundColour);
+//                    imageLabel.setForeground(foregroundColour);
+//                    if (actions[i].getImage() != null) {
+//                        imageLabel.setImage(actions[i].getImage());
+//                    }
+//                    final Hyperlink actionLink = toolkit.createHyperlink(composite, actions[i].getAction().getText(), SWT.WRAP);
+//                    toolkit.adapt(actionLink, true, true);
+//                    actionLink.setBackground(backgroundColour);
+//                    final IAction nextAction = actions[i].getAction();
+//                    actionLink.setToolTipText(actions[i].getDescription());
+//                    actionLink.addHyperlinkListener(new HyperlinkAdapter() {
+//                        @Override
+//                        public void linkActivated( HyperlinkEvent e ) {
+//                            nextAction.run();
+//                            close();
+//                        }
+//                    });
+//                }
+//            }
         }
         if (hasDos) {
             // Create separator.
@@ -302,45 +309,101 @@ public class AdvisorFixDialog {
                 data.horizontalSpan = 3;
                 label.setLayoutData(data);
             }
+            
+            addActions(composite, actions, InfoPopAction.TYPE_DO);
 
-            for (int i = 0; i < actions.length; i++) {
-                if (actions[i].getType() == InfoPopAction.TYPE_DO) {
-                    if (actions[i].getDescription() != null) {
-                        // Add description here
-                        Label desc = new Label(composite, SWT.FILL);
-                        desc.setBackground(backgroundColour);
-                        desc.setForeground(foregroundColour);
-                        desc.setText(actions[i].getDescription());
-                        GridData gData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING | GridData.VERTICAL_ALIGN_BEGINNING
-                                                      | GridData.FILL_HORIZONTAL);
-                        gData.horizontalSpan = 3;
-                        desc.setLayoutData(gData);
-                    }
-                    // Indent the action.
-                    Label spacerLabel = new Label(composite, SWT.NONE);
-                    spacerLabel.setText(FIVE_SPACES);
-
-                    Label imageLabel = new Label(composite, SWT.NONE);
-                    imageLabel.setBackground(backgroundColour);
-                    imageLabel.setForeground(foregroundColour);
-                    if (actions[i].getImage() != null) {
-
-                        imageLabel.setImage(actions[i].getImage());
-                    }
-                    final Hyperlink actionLink = toolkit.createHyperlink(composite, actions[i].getAction().getText(), SWT.WRAP);
-                    toolkit.adapt(actionLink, true, true);
-                    actionLink.setBackground(backgroundColour);
-                    final IAction nextAction = actions[i].getAction();
-                    actionLink.setToolTipText(actions[i].getDescription());
-                    actionLink.addHyperlinkListener(new HyperlinkAdapter() {
-                        @Override
-                        public void linkActivated( HyperlinkEvent e ) {
-                            nextAction.run();
-                            close();
-                        }
-                    });
-                }
+//            for (int i = 0; i < actions.length; i++) {
+//                if (actions[i].getType() == InfoPopAction.TYPE_DO) {
+//                    if (actions[i].getDescription() != null) {
+//                        // Add description here
+//                        Label desc = new Label(composite, SWT.FILL);
+//                        desc.setBackground(backgroundColour);
+//                        desc.setForeground(foregroundColour);
+//                        desc.setText(actions[i].getDescription());
+//                        GridData gData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING | GridData.VERTICAL_ALIGN_BEGINNING
+//                                                      | GridData.FILL_HORIZONTAL);
+//                        gData.horizontalSpan = 3;
+//                        desc.setLayoutData(gData);
+//                    }
+//                    // Indent the action.
+//                    Label spacerLabel = new Label(composite, SWT.NONE);
+//                    spacerLabel.setText(FIVE_SPACES);
+//
+//                    Label imageLabel = new Label(composite, SWT.NONE);
+//                    imageLabel.setBackground(backgroundColour);
+//                    imageLabel.setForeground(foregroundColour);
+//                    if (actions[i].getImage() != null) {
+//
+//                        imageLabel.setImage(actions[i].getImage());
+//                    }
+//                    final Hyperlink actionLink = toolkit.createHyperlink(composite, actions[i].getAction().getText(), SWT.WRAP);
+//                    toolkit.adapt(actionLink, true, true);
+//                    actionLink.setBackground(backgroundColour);
+//                    final IAction nextAction = actions[i].getAction();
+//                    actionLink.setToolTipText(actions[i].getDescription());
+//                    actionLink.addHyperlinkListener(new HyperlinkAdapter() {
+//                        @Override
+//                        public void linkActivated( HyperlinkEvent e ) {
+//                            nextAction.run();
+//                            close();
+//                        }
+//                    });
+//                }
+//            }
+        }
+        
+        if (hasOthers) {
+            // Create separator.
+            if (hasDos || hasFixes) {
+                Label label = new Label(composite, SWT.SEPARATOR | SWT.HORIZONTAL);
+                label.setBackground(backgroundColour);
+                label.setForeground(foregroundColour);
+                data = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING | GridData.VERTICAL_ALIGN_BEGINNING
+                                    | GridData.FILL_HORIZONTAL);
+                data.horizontalSpan = 3;
+                label.setLayoutData(data);
             }
+            
+            addActions(composite, actions, InfoPopAction.TYPE_OTHER);
+
+//            for (int i = 0; i < actions.length; i++) {
+//                if (actions[i].getType() == InfoPopAction.TYPE_OTHER) {
+//                    if (actions[i].getDescription() != null) {
+//                        // Add description here
+//                        Label desc = new Label(composite, SWT.FILL);
+//                        desc.setBackground(backgroundColour);
+//                        desc.setForeground(foregroundColour);
+//                        desc.setText(actions[i].getDescription());
+//                        GridData gData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING | GridData.VERTICAL_ALIGN_BEGINNING
+//                                                      | GridData.FILL_HORIZONTAL);
+//                        gData.horizontalSpan = 3;
+//                        desc.setLayoutData(gData);
+//                    }
+//                    // Indent the action.
+//                    Label spacerLabel = new Label(composite, SWT.NONE);
+//                    spacerLabel.setText(FIVE_SPACES);
+//
+//                    Label imageLabel = new Label(composite, SWT.NONE);
+//                    imageLabel.setBackground(backgroundColour);
+//                    imageLabel.setForeground(foregroundColour);
+//                    if (actions[i].getImage() != null) {
+//
+//                        imageLabel.setImage(actions[i].getImage());
+//                    }
+//                    final Hyperlink actionLink = toolkit.createHyperlink(composite, actions[i].getAction().getText(), SWT.WRAP);
+//                    toolkit.adapt(actionLink, true, true);
+//                    actionLink.setBackground(backgroundColour);
+//                    final IAction nextAction = actions[i].getAction();
+//                    actionLink.setToolTipText(actions[i].getDescription());
+//                    actionLink.addHyperlinkListener(new HyperlinkAdapter() {
+//                        @Override
+//                        public void linkActivated( HyperlinkEvent e ) {
+//                            nextAction.run();
+//                            close();
+//                        }
+//                    });
+//                }
+//            }
         }
 
         // Create separator.
@@ -355,6 +418,47 @@ public class AdvisorFixDialog {
         // createDynamicHelpLink(composite);
 
         return composite;
+    }
+    
+    private void addActions(Composite parent, InfoPopAction[] actions, int actionType) {
+        for (int i = 0; i < actions.length; i++) {
+            if (actions[i].getType() == actionType) {
+                if (actions[i].getDescription() != null) {
+                    // Add description here
+                    Label desc = new Label(parent, SWT.FILL);
+                    desc.setBackground(backgroundColour);
+                    desc.setForeground(foregroundColour);
+                    desc.setText(actions[i].getDescription());
+                    GridData gData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING | GridData.VERTICAL_ALIGN_BEGINNING
+                                                  | GridData.FILL_HORIZONTAL);
+                    gData.horizontalSpan = 3;
+                    desc.setLayoutData(gData);
+                }
+                // Indent the action.
+                Label spacerLabel = new Label(parent, SWT.NONE);
+                spacerLabel.setText(FIVE_SPACES);
+
+                Label imageLabel = new Label(parent, SWT.NONE);
+                imageLabel.setBackground(backgroundColour);
+                imageLabel.setForeground(foregroundColour);
+                if (actions[i].getImage() != null) {
+
+                    imageLabel.setImage(actions[i].getImage());
+                }
+                final Hyperlink actionLink = toolkit.createHyperlink(parent, actions[i].getAction().getText(), SWT.WRAP);
+                toolkit.adapt(actionLink, true, true);
+                actionLink.setBackground(backgroundColour);
+                final IAction nextAction = actions[i].getAction();
+                actionLink.setToolTipText(actions[i].getDescription());
+                actionLink.addHyperlinkListener(new HyperlinkAdapter() {
+                    @Override
+                    public void linkActivated( HyperlinkEvent e ) {
+                        nextAction.run();
+                        close();
+                    }
+                });
+            }
+        }
     }
 
     public synchronized void open() {
