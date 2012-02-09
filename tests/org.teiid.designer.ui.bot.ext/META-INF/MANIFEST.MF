@@ -21,5 +21,9 @@ Export-Package: org.teiid.designer.ui.bot.ext.teiid;
    org.eclipse.swtbot.swt.finder.widgets,
    org.eclipse.swtbot.eclipse.finder,
    org.eclipse.draw2d",
+ org.teiid.designer.ui.bot.ext.teiid.database,
+ org.teiid.designer.ui.bot.ext.teiid.editor,
+ org.teiid.designer.ui.bot.ext.teiid.instance,
  org.teiid.designer.ui.bot.ext.teiid.perspective,
+ org.teiid.designer.ui.bot.ext.teiid.view,
  org.teiid.designer.ui.bot.ext.teiid.wizard
