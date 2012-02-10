@@ -1,6 +1,12 @@
 package org.teiid.designer.ui.bot.ext.teiid.view;
 
+import static org.eclipse.swtbot.swt.finder.matchers.WidgetMatcherFactory.allOf;
+import static org.eclipse.swtbot.swt.finder.matchers.WidgetMatcherFactory.widgetOfType;
+import static org.eclipse.swtbot.swt.finder.matchers.WidgetMatcherFactory.withText;
+
+import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.swtbot.swt.finder.SWTBot;
+import org.eclipse.swtbot.swt.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 import org.jboss.tools.ui.bot.ext.SWTEclipseExt;
@@ -33,6 +39,20 @@ public class ModelExplorerView extends View {
 
 		bot.text("NewBaseTable").setText(tableName);
 		bot.tree().setFocus();
+	}
+	
+	public Procedure newProcedure(String project, String model, String procedure){
+		SWTBot bot = getBot();
+		SWTBotTreeItem model_node =  SWTEclipseExt.selectTreeLocation(bot, project, model);
+
+		ContextMenuHelper.prepareTreeItemForContextMenu(bot.tree(), model_node);
+		ContextMenuHelper.clickContextMenu(bot.tree(), "New Child", "Procedure");
+
+		bot.text("NewProcedure").setText(procedure);
+		bot.tree().setFocus();
+		
+		bot.waitWhile(Conditions.waitForWidget(allOf(widgetOfType(TreeItem.class), withText(procedure))), TaskDuration.NORMAL.getTimeout());
+		return new Procedure(project, model, procedure, bot);
 	}
 
 	public void addTransformationSource(String project, String model, String tableName){
