@@ -29,27 +29,35 @@ import org.teiid.designer.ui.bot.ext.teiid.instance.NewTeiidInstance;
 import org.teiid.designer.ui.bot.ext.teiid.perspective.DatabaseDevelopmentPerspective;
 import org.teiid.designer.ui.bot.ext.teiid.perspective.TeiidPerspective;
 import org.teiid.designer.ui.bot.ext.teiid.view.ModelExplorerView;
+import org.teiid.designer.ui.bot.ext.teiid.view.Procedure;
 import org.teiid.designer.ui.bot.ext.teiid.view.SQLResult;
 import org.teiid.designer.ui.bot.ext.teiid.view.TeiidInstanceView;
 import org.teiid.designer.ui.bot.ext.teiid.wizard.CreateMetadataModel;
 import org.teiid.designer.ui.bot.ext.teiid.wizard.CreateVDB;
 import org.teiid.designer.ui.bot.ext.teiid.wizard.ImportJDBCDatabaseWizard;
+import org.teiid.designer.ui.bot.ext.teiid.wizard.NewTeiidModelProjectWizard;
 
 import com.metamatrix.modeler.ui.bot.testsuite.Properties;
-import com.metamatrix.modeler.ui.bot.testsuite.TeiidDesignerTest;
+import com.metamatrix.modeler.ui.bot.testsuite.TeiidDesignerTestCase;
 
 @Require(server=@Server(type=ServerType.SOA,version="5.1", state=ServerState.Running), perspective="Teiid Designer")
-public class VirtualGroupTutorialTest extends TeiidDesignerTest {
+public class VirtualGroupTutorialTest extends TeiidDesignerTestCase {
 
 	@BeforeClass
 	public static void beforeClass(){
 		createProject();
+		
 		addOracleDriver(Properties.PROJECT_NAME);
 		prepareOracleDatabase();
 		addSQLServerDriver(Properties.PROJECT_NAME);
 		prepareSQLServerDatabase();
 	}
 
+	private static void createProject(){
+		NewTeiidModelProjectWizard wizard = new NewTeiidModelProjectWizard();
+		wizard.setProjectName(Properties.PROJECT_NAME);
+		wizard.execute();
+	}
 
 	@Test
 	public void createOracleModel(){
@@ -84,7 +92,8 @@ public class VirtualGroupTutorialTest extends TeiidDesignerTest {
 		CreateMetadataModel newModel = new CreateMetadataModel();
 		newModel.setLocation(Properties.PROJECT_NAME);
 		newModel.setName(Properties.PARTSVIRTUAL_MODEL_NAME);
-		newModel.setType("View Model");
+		newModel.setClass(CreateMetadataModel.ModelClass.RELATIONAL);
+		newModel.setType(CreateMetadataModel.ModelType.VIEW);
 		newModel.execute();
 
 		assertTrue(Properties.PARTSVIRTUAL_MODEL_NAME + " not created!", 
@@ -207,44 +216,39 @@ public class VirtualGroupTutorialTest extends TeiidDesignerTest {
 	}
 
 
-	//@Test
+//	@Test
 	public void procedureDefinition(){
-		TeiidPerspective.getInstance().open();
-
 		SWTBot viewBot = bot.viewByTitle("Model Explorer").bot();
-		//create procedure
+//		//create procedure
 		SWTBotTreeItem node =  SWTEclipseExt.selectTreeLocation(viewBot, 
 				Properties.PROJECT_NAME, 
 				Properties.PARTSVIRTUAL_MODEL_NAME,
 				"OnHand");
-		ContextMenuHelper.prepareTreeItemForContextMenu(viewBot.tree(), node);
-		ContextMenuHelper.clickContextMenu(viewBot.tree(), "New Sibling", "Procedure");
 
-		viewBot.text("NewProcedure").setText("getOnHandByQuantity");
-		viewBot.tree().setFocus();
-
-		bot.sleep(TIME_1S);
-
+		ModelExplorerView view = TeiidPerspective.getInstance().getModelExplorerView();
+		Procedure procedure = view.newProcedure(Properties.PROJECT_NAME, Properties.PARTSVIRTUAL_MODEL_NAME, "getOnHandByQuantity");
+		procedure.addParameter("qtyIn", "short : xs:int");
+		
 		//create procedure parameter
-		node =  SWTEclipseExt.selectTreeLocation(viewBot, 
-				Properties.PROJECT_NAME, 
-				Properties.PARTSVIRTUAL_MODEL_NAME,
-				"getOnHandByQuantity");
-		ContextMenuHelper.prepareTreeItemForContextMenu(viewBot.tree(), node);
-		ContextMenuHelper.clickContextMenu(viewBot.tree(), "New Child", "Procedure Parameter");
-
-		viewBot.text("NewProcedureParameter").setText("qtyIn");        
-		viewBot.tree().setFocus();
-		bot.sleep(TIME_1S);
-
-		node =  SWTEclipseExt.selectTreeLocation(viewBot, 
-				Properties.PROJECT_NAME, 
-				Properties.PARTSVIRTUAL_MODEL_NAME,
-				"getOnHandByQuantity",
-				"qtyIn");
-		ContextMenuHelper.prepareTreeItemForContextMenu(viewBot.tree(), node);
-		ContextMenuHelper.clickContextMenu(viewBot.tree(), "Modeling", "Set Datatype");
-
+//		node =  SWTEclipseExt.selectTreeLocation(viewBot, 
+//				Properties.PROJECT_NAME, 
+//				Properties.PARTSVIRTUAL_MODEL_NAME,
+//				"getOnHandByQuantity");
+//		ContextMenuHelper.prepareTreeItemForContextMenu(viewBot.tree(), node);
+//		ContextMenuHelper.clickContextMenu(viewBot.tree(), "New Child", "Procedure Parameter");
+//
+//		viewBot.text("NewProcedureParameter").setText("qtyIn");        
+//		viewBot.tree().setFocus();
+//		bot.sleep(TIME_1S);
+//
+//		node =  SWTEclipseExt.selectTreeLocation(viewBot, 
+//				Properties.PROJECT_NAME, 
+//				Properties.PARTSVIRTUAL_MODEL_NAME,
+//				"getOnHandByQuantity",
+//				"qtyIn");
+//		ContextMenuHelper.prepareTreeItemForContextMenu(viewBot.tree(), node);
+//		ContextMenuHelper.clickContextMenu(viewBot.tree(), "Modeling", "Set Datatype");
+//
 		SWTBotShell shell = bot.shell("Select a Datatype");
 		shell.bot().table().getTableItem("short : xs:int").select();
 		open.finish(shell.bot(), IDELabel.Button.OK);
@@ -391,9 +395,36 @@ public class VirtualGroupTutorialTest extends TeiidDesignerTest {
 
 	@AfterClass
 	public static void closeScrapbookEditor(){
+		closeScrapbook();
+		closeVDBEditor();
+		closeModelEditor(Properties.PARTSVIRTUAL_MODEL_NAME);
+		closeModelEditor(Properties.ORACLE_MODEL_NAME);
+		closeModelEditor(Properties.SQLSERVER_MODEL_NAME);
+	}
+
+
+	private static void closeScrapbook() {
 		try {
 			SQLScrapbookEditor editor = new SQLScrapbookEditor("SQL Scrapbook 0");
 			editor.show();
+			editor.close();
+		} catch (WidgetNotFoundException e){
+			
+		}
+	}
+	
+	private static void closeVDBEditor() {
+		try {
+			VDBEditor editor = VDBEditor.getInstance(Properties.VDB_NAME + ".vdb");
+			editor.close();
+		} catch (WidgetNotFoundException e){
+			
+		}
+	}
+	
+	private static void closeModelEditor(String name) {
+		try {
+			ModelEditor editor = ModelEditor.getInstance(name);
 			editor.close();
 		} catch (WidgetNotFoundException e){
 			

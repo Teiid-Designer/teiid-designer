@@ -14,8 +14,6 @@ import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
-import org.jboss.tools.ui.bot.ext.SWTEclipseExt;
 import org.jboss.tools.ui.bot.ext.SWTTestExt;
 import org.jboss.tools.ui.bot.ext.SWTUtilExt;
 import org.jboss.tools.ui.bot.ext.helper.ContextMenuHelper;
@@ -27,14 +25,19 @@ import org.teiid.designer.ui.bot.ext.teiid.wizard.NewTeiidModelProjectWizard;
 
 import com.metamatrix.modeler.ui.bot.testcase.Activator;
 
-public class TeiidDesignerTest extends SWTTestExt {
+/**
+ * Common ancestor for Teiid tests. 
+ * 
+ * @author Lucia Jelinkova
+ *
+ */
+public class TeiidDesignerTestCase extends SWTTestExt {
 	
-	public static void createProject(){
+	public static void createProject(String name){
 		NewTeiidModelProjectWizard wizard = new NewTeiidModelProjectWizard();
-		wizard.setProjectName(Properties.PROJECT_NAME);
+		wizard.setProjectName(name);
 		wizard.execute();
 	}
-	
 	
 	public static void openPerspective(final String name){
 		
@@ -47,50 +50,6 @@ public class TeiidDesignerTest extends SWTTestExt {
 		open.finish(shell.bot(), IDELabel.Button.OK);
 		
 	}
-	
-	private static void openSqlScrapbook(){
-		
-		SWTBot viewBot = bot.viewByTitle("Data Source Explorer").bot();
-		
-//		viewBot.tree().expandNode("Database Connections").getNode(Properties.TEIID_CONNPROFILE_NAME)
-//		                                                 .doubleClick();
-		
-		SWTBotTreeItem db_node = findVDB(viewBot);
-		ContextMenuHelper.prepareTreeItemForContextMenu(viewBot.tree(), db_node);
-		ContextMenuHelper.clickContextMenu(viewBot.tree(), "Open SQL Scrapbook");	
-		
-		bot.editorByTitle("SQL Scrapbook 0").bot().comboBoxWithLabel("Database:").setSelection(Properties.VDB_NAME);
-	}
-	
-	private static SWTBotTreeItem findVDB(SWTBot viewBot) {
-		SWTBotTreeItem root =  SWTEclipseExt.selectTreeLocation(viewBot, 
-                "Database Connections");
-		
-		for (SWTBotTreeItem item : root.getItems()){
-			if (item.getText().startsWith(Properties.VDB_NAME)){
-				return item;
-			}
-		}
-		throw new IllegalStateException("The VCB was not found in connection profiles");
-	}
-
-
-	private static void connectDB(final String profile_name){
-		
-		SWTBot viewBot = bot.viewByTitle("Data Source Explorer").bot();
-		SWTBotTreeItem node = viewBot.tree(0).expandNode("Database Connections").getNode(profile_name);
-		ContextMenuHelper.prepareTreeItemForContextMenu(viewBot.tree(0), node);
-		ContextMenuHelper.clickContextMenu(viewBot.tree(0), "Connect");
-		
-	}
-	
-	
-	public static void prepareWorkspaceForQueries(){
-		openPerspective("Database Development");
-//		connectDB(Properties.TEIID_CONNPROFILE_NAME);
-		openSqlScrapbook();
-	}
-	
 	
 	/**
 	 * Copy driver into project

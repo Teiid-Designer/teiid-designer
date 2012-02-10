@@ -19,7 +19,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.metamatrix.modeler.ui.bot.testsuite.Properties;
-import com.metamatrix.modeler.ui.bot.testsuite.TeiidDesignerTest;
+import com.metamatrix.modeler.ui.bot.testsuite.TeiidDesignerTestCase;
 
 /**
  * 
@@ -27,7 +27,7 @@ import com.metamatrix.modeler.ui.bot.testsuite.TeiidDesignerTest;
  *
  */
 @Require(server=@Server(type=ServerType.SOA,version="5.1"), seam=@Seam())
-public class TeiidSourceInSeamTest extends TeiidDesignerTest {
+public class TeiidSourceInSeamTest extends TeiidDesignerTestCase {
 	
 	private static final String TEMP_PROJECT = "temp";
 	
