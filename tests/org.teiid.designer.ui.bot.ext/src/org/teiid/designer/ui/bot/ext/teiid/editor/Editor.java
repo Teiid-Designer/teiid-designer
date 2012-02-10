@@ -31,6 +31,10 @@ public class Editor {
 		getEditor().save();
 	}
 	
+	public void close(){
+		getEditor().close();
+	}
+	
 	protected SWTBotEditor getEditor(){
 		return getBot().editorByTitle(name);
 	}
