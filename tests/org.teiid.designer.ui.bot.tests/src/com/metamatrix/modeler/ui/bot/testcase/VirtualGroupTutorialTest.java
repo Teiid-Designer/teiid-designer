@@ -3,6 +3,7 @@ package com.metamatrix.modeler.ui.bot.testcase;
 
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swtbot.swt.finder.SWTBot;
+import org.eclipse.swtbot.swt.finder.exceptions.WidgetNotFoundException;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 import org.jboss.tools.ui.bot.ext.SWTEclipseExt;
@@ -13,6 +14,7 @@ import org.jboss.tools.ui.bot.ext.config.Annotations.ServerType;
 import org.jboss.tools.ui.bot.ext.helper.ContextMenuHelper;
 import org.jboss.tools.ui.bot.ext.helper.StyledTextHelper;
 import org.jboss.tools.ui.bot.ext.types.IDELabel;
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.teiid.designer.ui.bot.ext.teiid.SWTBotTeiidCanvas;
@@ -27,6 +29,7 @@ import org.teiid.designer.ui.bot.ext.teiid.instance.NewTeiidInstance;
 import org.teiid.designer.ui.bot.ext.teiid.perspective.DatabaseDevelopmentPerspective;
 import org.teiid.designer.ui.bot.ext.teiid.perspective.TeiidPerspective;
 import org.teiid.designer.ui.bot.ext.teiid.view.ModelExplorerView;
+import org.teiid.designer.ui.bot.ext.teiid.view.SQLResult;
 import org.teiid.designer.ui.bot.ext.teiid.view.TeiidInstanceView;
 import org.teiid.designer.ui.bot.ext.teiid.wizard.CreateMetadataModel;
 import org.teiid.designer.ui.bot.ext.teiid.wizard.CreateVDB;
@@ -342,35 +345,35 @@ public class VirtualGroupTutorialTest extends TeiidDesignerTest {
 		// TESTSQL_1  
 		editor.setText(Properties.TESTSQL_1);
 		editor.executeAll();
-		QueryResult res = getQueryResult(Properties.TESTSQL_1);
-		assertTrue("SQL query status:" + res.getStatus(), res.getStatus().equals("Succeeded"));
-
+		
+		SQLResult result = DatabaseDevelopmentPerspective.getInstance().getSqlResultsView().getByOperation(Properties.TESTSQL_1);
+		assertEquals(SQLResult.STATUS_SUCCEEDED, result.getStatus());
 
 		// TESTSQL_2 
 		editor.show();
 		editor.setText(Properties.TESTSQL_2);
 		editor.executeAll();
 
-		res = getQueryResult(Properties.TESTSQL_2);
-		assertTrue("SQL query status:" + res.getStatus(), res.getStatus().equals("Succeeded"));
+		result = DatabaseDevelopmentPerspective.getInstance().getSqlResultsView().getByOperation(Properties.TESTSQL_2);
+		assertEquals(SQLResult.STATUS_SUCCEEDED, result.getStatus());
 
 		// TESTSQL_3 
 		editor.show();
 		editor.setText(Properties.TESTSQL_3);
 		editor.executeAll();
 
-		res = getQueryResult(Properties.TESTSQL_3);
-		assertTrue("SQL query status:" + res.getStatus(), res.getStatus().equals("Succeeded"));
-		assertTrue("SQL result rows:" + res.getRows(), res.getRows() == Properties.TESTSQL3_ROW_COUNT);
+		result = DatabaseDevelopmentPerspective.getInstance().getSqlResultsView().getByOperation(Properties.TESTSQL_3);
+		assertEquals(SQLResult.STATUS_SUCCEEDED, result.getStatus());
+		assertEquals(Properties.TESTSQL3_ROW_COUNT, result.getCount());
 
 		// TESTSQL_4
 		editor.show();
 		editor.setText(Properties.TESTSQL_4);
 		editor.executeAll();
 
-		res = getQueryResult(Properties.TESTSQL_4);
-		assertTrue("SQL query status:" + res.getStatus(), res.getStatus().equals("Succeeded"));
-		assertTrue("SQL result rows:" + res.getRows(), res.getRows() == Properties.TESTSQL4_ROW_COUNT);
+		result = DatabaseDevelopmentPerspective.getInstance().getSqlResultsView().getByOperation(Properties.TESTSQL_4);
+		assertEquals(SQLResult.STATUS_SUCCEEDED, result.getStatus());
+		assertEquals(Properties.TESTSQL4_ROW_COUNT, result.getCount());
 
 		/*
 		// TESTSQL_5
@@ -381,63 +384,19 @@ public class VirtualGroupTutorialTest extends TeiidDesignerTest {
 		shell.activate();
 		scrapbookBot.waitUntil(Conditions.shellCloses(shell));
 		res = getQueryResult(Properties.TESTSQL_5);
-		assertTrue("SQL query status:" + res.getStatus(), res.getStatus().equals("Succeeded"));
+		assertTrue("SQL query status:" + res.getStatus(), res.getStatus().equals(SQLResult.STATUS_SUCCEEDED));
 		assertTrue("SQL result rows:" + res.getRows(), res.getRows() == Properties.TESTSQL5_ROW_COUNT);
 		 */
-		bot.editorByTitle("SQL Scrapbook 0").close();
 	}
 
-	private QueryResult  getQueryResult(final String sql){
-
-		QueryResult result = new QueryResult();
-		SWTBot resultsBot = bot.viewByTitle("SQL Results").bot();
-		SWTBotTreeItem found = null;
-
-		SWTBotTreeItem[] items = resultsBot.tree(0).getAllItems();
-		for(SWTBotTreeItem item : items){
-
-			if(item.cell(1).trim().equals(sql)){
-				found = item;
-				break;
-			}
-		}
-		if(found == null){
-			return result;
-		}
-
-		found.click();
-		resultsBot.cTabItem("Result1").activate();
-
-		result.setStatus(found.cell(0));		
-		result.setRows(resultsBot.table().rowCount());
-		return result;
-	}
-
-
-
-
-	private class QueryResult {
-
-		private int rows = 0;
-		private String status = "Not Found";
-
-		public QueryResult() {
-		}
-
-		public String getStatus(){
-			return this.status;
-		}
-
-		public void setStatus(String status){
-			this.status = status;
-		}
-
-		public int getRows(){
-			return this.rows;
-		}
-
-		public void setRows(int rows){
-			this.rows = rows;
+	@AfterClass
+	public static void closeScrapbookEditor(){
+		try {
+			SQLScrapbookEditor editor = new SQLScrapbookEditor("SQL Scrapbook 0");
+			editor.show();
+			editor.close();
+		} catch (WidgetNotFoundException e){
+			
 		}
 	}
 }

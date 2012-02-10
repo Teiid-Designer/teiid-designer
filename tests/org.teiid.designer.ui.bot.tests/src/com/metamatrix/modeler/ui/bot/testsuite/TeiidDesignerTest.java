@@ -23,24 +23,16 @@ import org.jboss.tools.ui.bot.ext.helper.DatabaseHelper;
 import org.jboss.tools.ui.bot.ext.types.DriverEntity;
 import org.jboss.tools.ui.bot.ext.types.IDELabel;
 import org.jboss.tools.ui.bot.ext.types.ViewType;
+import org.teiid.designer.ui.bot.ext.teiid.wizard.NewTeiidModelProjectWizard;
 
 import com.metamatrix.modeler.ui.bot.testcase.Activator;
 
 public class TeiidDesignerTest extends SWTTestExt {
 	
 	public static void createProject(){
-		
-		eclipse.maximizeActiveShell();
-		bot.menu(IDELabel.Menu.FILE).menu(IDELabel.Menu.NEW).menu(IDELabel.Menu.OTHER).click();
-		
-		SWTBotShell shell = bot.shell("New");
-		shell.bot().tree(0).expandNode("Teiid Designer").select("Teiid Model Project");
-		shell.bot().button(IDELabel.Button.NEXT).click();
-		shell.bot().textWithLabel("Project name:").setText(Properties.PROJECT_NAME);
-		
-		open.finish(shell.bot());
-		
-		//assertTrue("Teiid Model Project creation failure", projectExplorer.existsResource(Properties.PROJECT_NAME));
+		NewTeiidModelProjectWizard wizard = new NewTeiidModelProjectWizard();
+		wizard.setProjectName(Properties.PROJECT_NAME);
+		wizard.execute();
 	}
 	
 	
