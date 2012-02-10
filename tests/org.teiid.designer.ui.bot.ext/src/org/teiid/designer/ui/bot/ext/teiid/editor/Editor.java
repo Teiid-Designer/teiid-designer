@@ -35,6 +35,10 @@ public class Editor {
 		getEditor().close();
 	}
 	
+	public boolean isActive(){
+		return getEditor().isActive();
+	}
+	
 	protected SWTBotEditor getEditor(){
 		return getBot().editorByTitle(name);
 	}
