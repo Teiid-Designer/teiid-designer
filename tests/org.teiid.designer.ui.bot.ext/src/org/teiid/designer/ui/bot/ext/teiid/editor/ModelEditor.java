@@ -12,7 +12,9 @@ public class ModelEditor extends Editor {
 	}
 	
 	public static ModelEditor getInstance(String name){
-		return new ModelEditor(name);
+		ModelEditor editor = new ModelEditor(name);
+		editor.show();
+		return editor;
 	}
 	
 	public void showTransformation(){

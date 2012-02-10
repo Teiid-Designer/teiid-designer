@@ -12,7 +12,9 @@ public class VDBEditor extends Editor{
 	}
 	
 	public static VDBEditor getInstance(String name){
-		return new VDBEditor(name);
+		VDBEditor editor = new VDBEditor(name);
+		editor.show();
+		return editor;
 	}
 	
 	public void addModel(String projectName, String model){
