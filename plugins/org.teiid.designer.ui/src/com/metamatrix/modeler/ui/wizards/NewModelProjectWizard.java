@@ -157,7 +157,9 @@ public class NewModelProjectWizard extends BasicNewProjectResourceWizard impleme
             project.close(null);
             project.open(null);
             
-            designerProperties.put(IPropertiesContext.KEY_PROJECT_NAME, project.getName());
+            if( designerProperties != null ) {
+            	designerProperties.put(IPropertiesContext.KEY_PROJECT_NAME, project.getName());
+            }
             
             createFolders(project);
             
