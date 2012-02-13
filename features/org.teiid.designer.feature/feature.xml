@@ -12,17 +12,17 @@
       version="7.7.0.qualifier"
       provider-name="%providerName"
       plugin="org.teiid.designer"
-      image="feature.gif">
+      image="designer32.png">
 
    <description url="www.jboss.org/projects/teiiddesigner">
       %description
    </description>
 
-   <copyright url="www.jboss.org/projects/teiiddesigner">
+   <copyright>
       %copyright
    </copyright>
 
-   <license url="http://www.eclipse.org/legal/epl-v10.html">
+   <license url="%licenseURL">
       %license
    </license>
 
