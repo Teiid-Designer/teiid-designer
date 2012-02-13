@@ -14,6 +14,8 @@ import java.util.Properties;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
 import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
+import org.eclipse.datatools.connectivity.IProfileListener;
+import org.eclipse.datatools.connectivity.ProfileManager;
 import org.eclipse.datatools.connectivity.db.generic.ui.wizard.NewJDBCFilteredCPWizard;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -368,14 +370,20 @@ public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChange
 		ModelerUiViewUtils.launchWizard(id, new StructuredSelection(), properties);
 	}
 	
-	private static void createConnection(String id, Properties properties) {
+	private static void createConnection(final String id, final Properties properties) {
+		// Add then remove profile changed listener so new CP name can be set in properties
+		IProfileListener listener = new PropertiesProfileChangedListener(properties);
+		ProfileManager.getInstance().addProfileListener(listener);
+		
 		if( id.equalsIgnoreCase(CONNECTION_PROFILE_IDS.CATEGORY_JDBC) ) {
 			NewJDBCFilteredCPWizard wiz = new NewJDBCFilteredCPWizard();
-			ModelerUiViewUtils.launchWizard(wiz, new StructuredSelection());
+			ModelerUiViewUtils.launchWizard(wiz, new StructuredSelection(), properties);
 		} else {
 			INewWizard wiz = (INewWizard) new NewTeiidFilteredCPWizard(id);
-			ModelerUiViewUtils.launchWizard(wiz, new StructuredSelection());
+			ModelerUiViewUtils.launchWizard(wiz, new StructuredSelection(), properties);
 		}
+		
+		ProfileManager.getInstance().removeProfileListener(listener);
 	}
 
 	@Override
@@ -383,5 +391,6 @@ public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChange
 		
 		
 	}
-	
+
+
 }
