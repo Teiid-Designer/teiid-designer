@@ -50,15 +50,15 @@ public class TeiidSourceInHibernateToolsTest extends TeiidDesignerTestCase{
 	public static void setupConnection(){
 
 		addTeiidDriver(Properties.HIB_PROJECT_NAME);
-		addDriverClassPath(Properties.TEIID_HIBDIALECT_DRIVER, Properties.HIB_PROJECT_NAME);
-		addDriverClassPath(Properties.TEIID_DRIVER, Properties.HIB_PROJECT_NAME);
+		addDriverClassPath("teiid-hibernate-dialect-7.2.0.Final.jar", Properties.HIB_PROJECT_NAME);
+		addDriverClassPath("teiid-7.2.0.Final-client.jar", Properties.HIB_PROJECT_NAME);
 		
 		StringBuilder stringBuilder = new StringBuilder();
 		stringBuilder.append(Platform.getLocation());
 		stringBuilder.append(File.separator);
 		stringBuilder.append(Properties.HIB_PROJECT_NAME);
 		stringBuilder.append(File.separator);
-		stringBuilder.append(Properties.TEIID_DRIVER);
+		stringBuilder.append("teiid-7.2.0.Final-client.jar");
 		
 		DriverEntity entity = new DriverEntity();
 		entity.setDrvPath(stringBuilder.toString());

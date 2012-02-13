@@ -84,8 +84,8 @@ public class TeiidDesignerTestCase extends SWTTestExt {
 	 */
 	public static void addTeiidDriver(final String projectName) {
 		try {
-			addDriver(Properties.TEIID_DRIVER, projectName);
-			addDriver(Properties.TEIID_HIBDIALECT_DRIVER, projectName);
+			addDriver("teiid-7.2.0.Final-client.jar", projectName);
+			addDriver("teiid-hibernate-dialect-7.2.0.Final.jar", projectName);
 		}catch (FileNotFoundException e) {
 			fail(e.getMessage());
 		} catch (IOException e) {
@@ -125,88 +125,6 @@ public class TeiidDesignerTestCase extends SWTTestExt {
 	    bot.sleep(TIME_1S);
 	    bot.button(IDELabel.Button.OK).click();
 	    bot.sleep(TIME_1S);
-	}
-	
-	/**
-	 * Prepares database 
-	 */
-	public static void prepareOracleDatabase()  {
-
-		StringBuilder stringBuilder = new StringBuilder();
-		stringBuilder.append(Platform.getLocation());
-		stringBuilder.append(File.separator);
-		stringBuilder.append(Properties.PROJECT_NAME);
-		stringBuilder.append(File.separator);
-		stringBuilder.append(Properties.ORACLE_DRIVER);
-		
-		DriverEntity entity = new DriverEntity();
-		entity.setDrvPath(stringBuilder.toString());
-		entity.setDatabaseName("ORCL");
-		entity.setInstanceName("Oracle Thin Driver");
-		entity.setProfileName(Properties.ORACLE_CONNPROFILE_NAME);
-		entity.setProfileDescription("PartsSupplier Oracle database");
-		entity.setJdbcString("jdbc:oracle:thin:@englxdbs11.mw.lab.eng.bos.redhat.com:1521:ORCL");
-		entity.setDriverTemplateDescId("org.eclipse.datatools.enablement.oracle.10.driverTemplate");
-		entity.setDriverDefId("Oracle DB");
-		entity.setUser("partssupplier");
-		entity.setPassword("mm");
-			
-		prepareDatabase(entity, Properties.ORACLE_CONNPROFILE_NAME);	
-			
-	}
-	
-	/**
-	 * Prepares database 
-	 */
-	public static void prepareSQLServerDatabase()  {
-
-		StringBuilder stringBuilder = new StringBuilder();
-		stringBuilder.append(Platform.getLocation());
-		stringBuilder.append(File.separator);
-		stringBuilder.append(Properties.PROJECT_NAME);
-		stringBuilder.append(File.separator);
-		stringBuilder.append(Properties.SQLSERVER_DRIVER);
-		
-		DriverEntity entity = new DriverEntity();
-		entity.setDrvPath(stringBuilder.toString());
-		entity.setDatabaseName("PartsSupplier");
-		entity.setInstanceName("Microsoft SQL Server 2008 JDBC Driver");
-		entity.setProfileName(Properties.SQLSERVER_CONNPROFILE_NAME);
-		entity.setProfileDescription("PartsSupplier SQL Server database");
-		entity.setJdbcString("jdbc:sqlserver://slntdb02.mw.lab.eng.bos.redhat.com:1433;databaseName=PartsSupplier");
-		entity.setDriverTemplateDescId("org.eclipse.datatools.enablement.msft.sqlserver.2008.driverTemplate");
-		entity.setDriverDefId("SQL Server DB");
-		entity.setUser("PartsSupplier");
-		entity.setPassword("mm");
-		
-		prepareDatabase(entity, Properties.SQLSERVER_CONNPROFILE_NAME);
-	}
-	
-	/**
-	 * Prepares database
-	 */
-	public static void prepareTeiidDatabase(){
-
-		StringBuilder stringBuilder = new StringBuilder();
-		stringBuilder.append(Platform.getLocation());
-		stringBuilder.append(File.separator);
-		stringBuilder.append(Properties.PROJECT_NAME);
-		stringBuilder.append(File.separator);
-		stringBuilder.append(Properties.TEIID_DRIVER);
-		
-		DriverEntity entity = new DriverEntity();
-		entity.setDrvPath(stringBuilder.toString());
-		entity.setDatabaseName(Properties.VDB_NAME);
-		entity.setInstanceName("Teiid Server JDBC Driver");
-		entity.setProfileName(Properties.TEIID_CONNPROFILE_NAME);
-		entity.setProfileDescription("PartsSupplier Teiid Server database");
-		entity.setJdbcString("jdbc:teiid:MyFirstVDB@mm://localhost:31000");
-		entity.setDriverTemplateDescId(DatabaseHelper.getDriverTemplate(DatabaseHelper.DBType.teiid));
-		entity.setDriverDefId("Teiid Server DB");
-		entity.setUser("admin");
-		entity.setPassword("teiid");
-
-		prepareDatabase(entity, Properties.TEIID_CONNPROFILE_NAME);
 	}
 	
 	public static void prepareDatabase(DriverEntity entity, final String profileName){

@@ -54,7 +54,7 @@ public class TeiidSourceInSeamTest extends TeiidDesignerTestCase {
 		stringBuilder.append(File.separator);
 		stringBuilder.append(TEMP_PROJECT);
 		stringBuilder.append(File.separator);
-		stringBuilder.append(Properties.TEIID_DRIVER);
+		stringBuilder.append("teiid-7.2.0.Final-client.jar");
 		
 		DriverEntity entity = new DriverEntity();
 		entity.setDrvPath(stringBuilder.toString());
