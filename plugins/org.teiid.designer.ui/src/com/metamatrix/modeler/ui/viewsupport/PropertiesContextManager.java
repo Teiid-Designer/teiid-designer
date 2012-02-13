@@ -11,6 +11,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import org.eclipse.ui.cheatsheets.CheatSheetListener;
+import org.eclipse.ui.cheatsheets.ICheatSheetEvent;
+
 import com.metamatrix.core.util.CoreArgCheck;
 
 /**
@@ -20,7 +23,7 @@ import com.metamatrix.core.util.CoreArgCheck;
  * cheat sheet id.
  * 
  */
-public class PropertiesContextManager {
+public class PropertiesContextManager extends CheatSheetListener {
 
 	Map<String, Properties> cachedPropertiesMap;
 	
@@ -77,6 +80,17 @@ public class PropertiesContextManager {
 			cachedPropertiesMap.put(id, sheetProperties);
 		}
 		return sheetProperties;
+	}
+	
+	@Override
+	public void cheatSheetEvent(ICheatSheetEvent event) {
+		if( event.getEventType() == ICheatSheetEvent.CHEATSHEET_RESTARTED) {
+			Properties sheetProperties = cachedPropertiesMap.get(event.getCheatSheetID());
+			if( sheetProperties != null ) {
+				sheetProperties.clear();
+			}
+		}
+		
 	}
 	
 	
