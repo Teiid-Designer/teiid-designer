@@ -30,4 +30,10 @@ public class VDBEditor extends Editor{
 	public String getModel(int index){
 		return getBot().table(0).cell(index, 0);
 	}
+
+	public void synchronizeAll() {
+		getEditor().bot().button("Synchronize All").click();
+		getBot().shell("Confirm").activate();
+		SWTBotFactory.getOpen().finish(getBot(), IDELabel.Button.OK);
+	}
 }
