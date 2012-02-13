@@ -12,6 +12,7 @@ import java.util.Properties;
 import org.eclipse.jface.action.Action;
 import org.eclipse.ui.cheatsheets.ICheatSheetAction;
 import org.eclipse.ui.cheatsheets.ICheatSheetManager;
+import org.eclipse.ui.internal.cheatsheets.views.CheatSheetManager;
 
 import com.metamatrix.modeler.ui.viewsupport.PropertiesContextManager;
 
@@ -35,6 +36,8 @@ public class LaunchDesignerCommandAction extends Action implements ICheatSheetAc
 	
 	private static final PropertiesContextManager propertiesManager = new PropertiesContextManager();
 
+	private static boolean addedAsListener = false;
+
     ///////////////////////////////////////////////////////////////////////////////////////////////
     // CONSTRUCTORS
     ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -50,6 +53,10 @@ public class LaunchDesignerCommandAction extends Action implements ICheatSheetAc
 
     public void run(String[] params, ICheatSheetManager manager) {
         final boolean[] result = {true};
+        
+        // Wire up the cheat sheet listener so it can be notified of restart
+        addCheatSheetListener(manager);
+        
         if (params != null && params.length > 0) {
             String pActionID = params[0];
             Properties props = propertiesManager.getProperties(manager.getCheatSheetID());
@@ -57,5 +64,12 @@ public class LaunchDesignerCommandAction extends Action implements ICheatSheetAc
         }
         
         notifyResult(result[0]);
+    }
+    
+    private void addCheatSheetListener(ICheatSheetManager manager) {
+    	if( !addedAsListener && manager instanceof CheatSheetManager ) {
+    		((CheatSheetManager)manager).addListener(propertiesManager);
+    		addedAsListener = true;
+    	}
     }
 }
