@@ -8,6 +8,10 @@ import org.jboss.tools.ui.bot.ext.condition.TaskDuration;
 
 public class SQLScrapbookEditor extends Editor {
 
+	public SQLScrapbookEditor() {
+		this("SQL Scrapbook 0");
+	}
+	
 	public SQLScrapbookEditor(String name) {
 		super(name);
 	}
