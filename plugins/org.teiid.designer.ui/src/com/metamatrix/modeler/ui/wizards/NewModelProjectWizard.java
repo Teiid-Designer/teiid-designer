@@ -185,15 +185,27 @@ public class NewModelProjectWizard extends BasicNewProjectResourceWizard impleme
     	}
     	
         if( optionsPage.createSources) {
+            if( designerProperties != null ) {
+            	designerProperties.put(IPropertiesContext.KEY_HAS_SOURCES_FOLDER, optionsPage.sourcesStr);
+            }
     		createFolder(project, optionsPage.sourcesStr);
     	}
     	if( optionsPage.createViews ) {
+            if( designerProperties != null ) {
+            	designerProperties.put(IPropertiesContext.KEY_HAS_VIEWS_FOLDER, optionsPage.viewsStr);
+            }
     		createFolder(project, optionsPage.viewsStr);
     	}
     	if( optionsPage.createSchema ) {
+            if( designerProperties != null ) {
+            	designerProperties.put(IPropertiesContext.KEY_HAS_SCHEMA_FOLDER, optionsPage.schemaStr);
+            }
     		createFolder(project, optionsPage.schemaStr);
     	}
     	if( optionsPage.createWebServices ) {
+            if( designerProperties != null ) {
+            	designerProperties.put(IPropertiesContext.KEY_HAS_WS_FOLDER, optionsPage.webServicesStr);
+            }
     		createFolder(project, optionsPage.webServicesStr);
     	}
     	if( optionsPage.createFunctions ) {

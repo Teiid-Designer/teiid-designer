@@ -13,11 +13,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Properties;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -71,6 +73,7 @@ import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.internal.vdb.ui.editor.VdbEditor;
 import com.metamatrix.modeler.ui.UiConstants;
 import com.metamatrix.modeler.ui.UiPlugin;
+import com.metamatrix.modeler.ui.viewsupport.IPropertiesContext;
 import com.metamatrix.modeler.ui.viewsupport.ModelingResourceFilter;
 import com.metamatrix.modeler.vdb.ui.VdbUiConstants;
 import com.metamatrix.ui.internal.InternalUiConstants;
@@ -86,7 +89,7 @@ import com.metamatrix.ui.text.StyledTextEditor;
  * @since 4.0
  */
 public final class NewVdbWizard extends AbstractWizard
-    implements INewWizard, InternalUiConstants.Widgets, CoreStringUtil.Constants, UiConstants {
+    implements IPropertiesContext, INewWizard, InternalUiConstants.Widgets, CoreStringUtil.Constants, UiConstants {
 
     private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(NewVdbWizard.class);
 
@@ -129,6 +132,8 @@ public final class NewVdbWizard extends AbstractWizard
     
     List<IResource> modelsForVdb;
     
+    Properties designerProperties;
+    
     final ISelectionStatusValidator validator = new ISelectionStatusValidator() {
         /**
          * {@inheritDoc}
@@ -161,6 +166,10 @@ public final class NewVdbWizard extends AbstractWizard
         // append VDB file extension if needed
         if (!name.endsWith(ModelerCore.VDB_FILE_EXTENSION)) {
             name += ModelerCore.VDB_FILE_EXTENSION;
+        }
+        
+        if( designerProperties != null ) {
+        	designerProperties.put(IPropertiesContext.KEY_LAST_VDB_NAME, name);
         }
 
         // create VDB resource
@@ -629,4 +638,38 @@ public final class NewVdbWizard extends AbstractWizard
 
 		return null;
 	}
+
+	/**
+	 * 
+	 */
+	@Override
+	public void setProperties(Properties properties) {
+		this.designerProperties = properties;
+    	if( this.folder == null ) {
+    		// check for project property and if sources folder property exists
+    		String projectName = this.designerProperties.getProperty(IPropertiesContext.KEY_PROJECT_NAME);
+    		if( projectName != null && !projectName.isEmpty() ) {
+    			String folderName = projectName;
+    			String sourcesFolder = this.designerProperties.getProperty(IPropertiesContext.KEY_HAS_SOURCES_FOLDER);
+    			if( sourcesFolder != null && !sourcesFolder.isEmpty() ) {
+    				folderName = new Path(projectName).append(sourcesFolder).toString();
+    			}
+    			final IResource resrc = ResourcesPlugin.getWorkspace().getRoot().findMember(folderName);
+    			if( resrc != null ) {
+    		        this.folder = (IContainer)resrc;
+
+    		        if (folder != null) {
+    		            this.folderText.setText(folder.getFullPath().makeRelative().toString());
+
+    		            if (CoreStringUtil.isEmpty(nameText.getText())) {
+    		                nameText.setFocus();
+    		            }
+    		        }
+    			}
+    		}
+    	}
+		
+	}
+	
+	
 }

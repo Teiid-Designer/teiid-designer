@@ -7,6 +7,8 @@
 */
 package org.teiid.designer.runtime.ui.vdb;
 
+import java.util.Properties;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.window.Window;
@@ -19,6 +21,8 @@ public class ExecuteVdbAction extends Action {
 	public static final String THIS_CLASS = I18nUtil.getPropertyPrefix(ExecuteVdbAction.class);
 	
 	ExecuteVdbWorker worker;
+	
+	Properties designerProperties;
 
 	/**
 	 * @since 5.0
@@ -29,11 +33,19 @@ public class ExecuteVdbAction extends Action {
 		setToolTipText(DqpUiConstants.UTIL.getString(THIS_CLASS + "tooltip")); //$NON-NLS-1$
 		worker = new ExecuteVdbWorker();
 	}
+	
+	/**
+	 * @since 5.0
+	 */
+	public ExecuteVdbAction(Properties properties) {
+		this();
+		designerProperties = properties;
+	}
 
 	@Override
 	public void run() {
 
-		ExecuteVdbDialog dialog = new ExecuteVdbDialog(worker.getShell());
+		ExecuteVdbDialog dialog = new ExecuteVdbDialog(worker.getShell(), designerProperties);
 
 		dialog.open();
 

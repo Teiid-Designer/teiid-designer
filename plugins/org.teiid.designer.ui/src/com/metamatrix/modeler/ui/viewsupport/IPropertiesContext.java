@@ -29,6 +29,7 @@ public interface IPropertiesContext {
 	public static final String KEY_LAST_SOURCE_MODEL_NAME = "lastSourceModelName"; //$NON-NLS-1$
 	public static final String KEY_LAST_VIEW_MODEL_NAME = "lastViewModelName"; //$NON-NLS-1$
 	public static final String KEY_LAST_CONNECTION_PROFILE_ID = "lastConnectionProfileId"; //$NON-NLS-1$
+	public static final String KEY_LAST_VDB_NAME = "lastVdbName"; //$NON-NLS-1$
 
 	/**
 	 * Sets the properties context object

@@ -84,7 +84,7 @@ public class ExecuteVDBAction extends SortableSelectionAction implements VdbCons
     	IFile vdb = selectedVDB;
     	
     	if (vdb == null) {
-    		ExecuteVdbDialog dialog = new ExecuteVdbDialog(worker.getShell());
+    		ExecuteVdbDialog dialog = new ExecuteVdbDialog(worker.getShell(), null);
 
     		dialog.open();
 
