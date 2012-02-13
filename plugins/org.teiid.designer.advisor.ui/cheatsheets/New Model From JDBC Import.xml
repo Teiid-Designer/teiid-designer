@@ -25,8 +25,7 @@
 			<br/> -- >   1) Specify unique project name
 			<br/> -- >   2) <b>Click Next ></b> twice to get to <b>Model Project Options</b> page
 			<br/> -- >   3) Check folders you wish the wizard to create in your project
-			<br/> -- >          Note: These folders are not required but recommended for projects that will
-			<br/> -- >                contain a large number of models
+			<br/> - - - - - - - <b>Note:</b> Folders recommended for projects with many models
 			<br/> -- >   4) Click <b>Finish</b>
 			<br/> -- > You may skip this step if you have already created a model project.
 			<br/> ============================================================

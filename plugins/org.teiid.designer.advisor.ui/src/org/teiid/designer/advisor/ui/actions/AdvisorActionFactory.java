@@ -207,7 +207,7 @@ public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChange
 		}
 		
 		if( id.equalsIgnoreCase(COMMAND_IDS.CREATE_VDB)) {
-			ModelerUiViewUtils.launchWizard("newVdbWizard", new StructuredSelection()); //$NON-NLS-1$
+			ModelerUiViewUtils.launchWizard("newVdbWizard", new StructuredSelection(), properties); //$NON-NLS-1$
 	        return;
 		}
 		
@@ -218,7 +218,7 @@ public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChange
 		}
 		
 		if( id.equalsIgnoreCase(COMMAND_IDS.EXECUTE_VDB)) {
-			ExecuteVdbAction action = new ExecuteVdbAction();
+			ExecuteVdbAction action = new ExecuteVdbAction(properties);
 			action.run();
 	        return;
 		}

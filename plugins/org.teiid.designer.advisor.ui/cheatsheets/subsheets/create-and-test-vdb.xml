@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <cheatsheet
-      title="Join Two Sources Example">
+      title="Create and test your VDB">
    <intro>
    		<description>This cheat sheet shows you how to model two different sources and create a view that joins data from both sources.
    			In this example, a JDBC source table and Flat File source table are used.
@@ -14,155 +14,38 @@
 			<br/>Press "<b>Click to Begin</b>" button below to start.
 		</description>
    </intro>
-
-   <item
-         title="Create JDBC Source Connection" skip="true">
-      <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
-			pluginId="org.teiid.designer.advisor.ui" param1="org.teiid.designer.connection.new.jdbc"/>
-      <description>
-         <b> This following action creates a JDBC Connection profile.</b>
-			<br/> ============================================================
-			<br/> -- > Press "<b>Click to Perform</b>" button below to launch the connection profile wizard.
-			<br/> -- > 
-			<br/> -- > You may skip this step if you have already created this connection profile.
-			<br/> ============================================================
-      </description>
-   </item>
-   <item
-         title="Create Source From JDBC Connection" skip="true">
-      <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
-			pluginId="org.teiid.designer.advisor.ui" param1="org.teiid.designer.importJdbcCommand"/>
-      <description>
-         <b> This following action creates a relational model from importing table data via your JDBC connection profile.</b>
-			<br/> ============================================================
-			<br/> -- > Press "<b>Click to Perform</b>" button below to launch the JDBC import wizard.
-			<br/> -- >  
-			<br/> -- > You may skip this step if you have already imported this model.
-			<br/> ============================================================
-      </description>
-   </item>
-   <item
-         title="Test JDBC Table Data" skip="true">
-      <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
-			pluginId="org.teiid.designer.advisor.ui" param1="org.teiid.designer.previewData"/>
-      <description>
-         <b> This following action allows you to preview data from your newly modeled JDBC source.</b>
-			<br/> ============================================================
-			<br/> -- > Press "<b>Click to Perform</b>" button below to preview data from your source table.
-			<br/> -- > Click the browse "..." button to select the newly created source table
-			<br/> -- > Click OK to execute the query
-			<br/> -- > Results of the query will displayed in the SQL Results view
-			<br/> -- > You may skip this step.
-			<br/> ============================================================
-      </description>
-   </item>
-   <item
-         title="Create Flat File Connection" skip="true">
-      <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
-			pluginId="org.teiid.designer.advisor.ui" param1="org.teiid.designer.connection.new.flatfile"/>
-      <description>
-         <b> This following action creates an ODA Flat File connection profile.</b>
-			<br/> ============================================================
-			<br/> -- > Press "<b>Click to Perform</b>" button below to create a Flat File connection profile.
-			<br/> -- >  
-			<br/> -- > You may skip this step if you have already created this connection profile.
-			<br/> ============================================================
-      </description>
-   </item>
-   <item
-         title="Create Source From Flat File Connection" skip="true">
-      <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
-			pluginId="org.teiid.designer.advisor.ui" param1="org.teiid.designer.importFlatFileCommand"/>
-      <description>
-         <b> This following action creates a relational model from importing table data via your Flat File connection profile.
-         	This action results in the creation of both a source and a view model. The source model will contain a generated 
-         	text file procedure which will be used in the definition of the view table containing a generated SQL statement
-         	designed to query your flat file.</b>
-			<br/> ============================================================
-			<br/> -- > Press "<b>Click to Perform</b>" button below to launch the Flat File import wizard..
-			<br/> -- >  
-			<br/> -- > You may skip this step if you have already imported this model.
-			<br/> ============================================================
-      </description>
-   </item>
-	<item
-         title="Test Flat File Table Data" skip="true">
-      <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
-			pluginId="org.teiid.designer.advisor.ui" param1="org.teiid.designer.previewData"/>
-      <description>
-         <b> This following action allows you to preview data from your newly generated Flat File view table.</b>
-			<br/> ============================================================
-			<br/> -- > Press "<b>Click to Perform</b>" button below to preview data from your flat file.
-			<br/> -- > Click the browse "..." button to select the newly created view table
-			<br/> -- > Click OK to execute the query
-			<br/> -- > Results of the query will displayed in the SQL Results view
-			<br/> -- > You may skip this step.
-			<br/> ============================================================
-      </description>
-   </item>
-   <item
-         title="Create View Model" skip="true">
-      <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
-			pluginId="org.teiid.designer.advisor.ui" param1="org.teiid.designer.newModelRelationalViewCommand"/>
-      <description>
-         <b> This following action creates an empty view model.</b>
-			<br/> ============================================================
-			<br/> -- > Press "<b>Click to Perform</b>" button below to create a view model.
-			<br/> -- >  
-			<br/> -- > You may skip this step if you have already created your view model.
-			<br/> ============================================================
-      </description>
-   </item>
-   <item
-         title="Create View Table" skip="true">
-      <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
-			pluginId="org.teiid.designer.advisor.ui" 
-			param1="org.teiid.designer.new.relational.basetable"/>
-      <description>
-         <b> This following action creates</b>
-			<br/> ============================================================
-			<br/> -- > Press "<b>Click to Perform</b>" button below to create a view table.
-			<br/> -- >  
-			<br/> -- > You may skip this step if you have already created a view table.
-			<br/> ============================================================
-      </description>
-   </item>
-   <item
-         title="Add Source Tables To Transformation" skip="true">
-      <description>
-         <b> This following action ........</b>
-			<br/> ============================================================
-			<br/> -- > Press "<b>Click to Perform</b>" button below to xxxxxxxxxxx.
-			<br/> -- >  
-			<br/> -- > You may skip this step if you have already xxxxxxxxxx.
-			<br/> ============================================================
-      </description>
-   </item>
    <item
          title="Create VDB" skip="true">
       <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
 			pluginId="org.teiid.designer.advisor.ui" 
 			param1="org.teiid.designer.new.vdb"/>
       <description>
-         <b> This following action ........</b>
+         <b> This action will launch the New VDB wizard.</b>
 			<br/> ============================================================
-			<br/> -- > Press "<b>Click to Perform</b>" button below to xxxxxxxxxxx.
-			<br/> -- >  
-			<br/> -- > You may skip this step if you have already xxxxxxxxxx.
+			<br/> -- > Press "<b>Click to Perform</b>" button below to create a new VDB.
+			<br/> -- >   1) Select <b>"..."</b> button to browse and select project or folder location.
+			<br/> -- >   2) Enter a unique name for your VDB
+			<br/> -- >   3) Enter an optional description for your VDB
+			<br/> -- >   4) Select the <b>Add</b> button to choose models to go in your VDB
+			<br/> -- > You may skip this step if you have already created your VDB.
 			<br/> ============================================================
       </description>
    </item>
    <item
-         title="Execute VDB" skip="true">
+         title="Test VDB" skip="true">
       <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
 			pluginId="org.teiid.designer.advisor.ui" 
 			param1="org.teiid.designer.execute.vdb"/>
       <description>
-         <b> This following action ........</b>
+         <b> This action will launch the Execute VDB wizard which will validate your VDB,
+         	insure you have a running Teiid server, deploy your VDB, open a JDBC connection
+         	to your VDB and open a SQL Scrapbook editor.</b>
 			<br/> ============================================================
-			<br/> -- > Press "<b>Click to Perform</b>" button below to xxxxxxxxxxx.
-			<br/> -- >  
-			<br/> -- > You may skip this step if you have already xxxxxxxxxx.
+			<br/> -- > Press "<b>Click to Perform</b>" button below to test your VDB.
+			<br/> -- >   1) Select <b>"..."</b> button to browse and select a VDB.
+			<br/> -- >   2) Click OK to deploy VDB and open connection in Data Source Explorer
+			<br/> -- >   3) Follow instructions in open SQL Scrapbook Editor
+			<br/> -- > You may skip this step if you have already tested your VDB.
 			<br/> ============================================================
       </description>
    </item>
