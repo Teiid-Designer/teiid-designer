@@ -1,18 +1,13 @@
 package org.teiid.designer.ui.bot.ext.teiid.view;
 
-import static org.eclipse.swtbot.swt.finder.matchers.WidgetMatcherFactory.allOf;
-import static org.eclipse.swtbot.swt.finder.matchers.WidgetMatcherFactory.widgetOfType;
-import static org.eclipse.swtbot.swt.finder.matchers.WidgetMatcherFactory.withText;
-
-import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.swtbot.swt.finder.SWTBot;
-import org.eclipse.swtbot.swt.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 import org.jboss.tools.ui.bot.ext.SWTEclipseExt;
 import org.jboss.tools.ui.bot.ext.condition.NonSystemJobRunsCondition;
 import org.jboss.tools.ui.bot.ext.condition.ProgressInformationShellIsActiveCondition;
 import org.jboss.tools.ui.bot.ext.condition.TaskDuration;
+import org.jboss.tools.ui.bot.ext.condition.TreeContainsNode;
 import org.jboss.tools.ui.bot.ext.helper.ContextMenuHelper;
 import org.teiid.designer.ui.bot.ext.teiid.database.DatasourceDialog;
 
@@ -51,7 +46,7 @@ public class ModelExplorerView extends View {
 		bot.text("NewProcedure").setText(procedure);
 		bot.tree().setFocus();
 		
-		bot.waitWhile(Conditions.waitForWidget(allOf(widgetOfType(TreeItem.class), withText(procedure))), TaskDuration.NORMAL.getTimeout());
+		bot.waitUntil(new TreeContainsNode(bot.tree(), project, model, procedure), TaskDuration.NORMAL.getTimeout());
 		return new Procedure(project, model, procedure, bot);
 	}
 
@@ -85,5 +80,29 @@ public class ModelExplorerView extends View {
 		
 		bot.waitWhile(new ProgressInformationShellIsActiveCondition(), TaskDuration.LONG.getTimeout());
 		bot.waitWhile(new NonSystemJobRunsCondition(), TaskDuration.LONG.getTimeout());
+	}
+	
+	public void deployVDB(String project, String vdb){
+		SWTBot bot = getBot();
+		
+		SWTBotTreeItem vdb_node =  SWTEclipseExt.selectTreeLocation(bot, project, vdb);
+		
+		ContextMenuHelper.prepareTreeItemForContextMenu(bot.tree(), vdb_node);
+		ContextMenuHelper.clickContextMenu(bot.tree(), MODELING_MENU_ITEM, "Deploy");
+		
+		bot.waitWhile(new ProgressInformationShellIsActiveCondition(), TaskDuration.LONG.getTimeout());
+		bot.waitWhile(new NonSystemJobRunsCondition(), TaskDuration.LONG.getTimeout());
+	}
+	
+	public void open(String... filePath){
+		getBot().tree(0).expandNode(filePath).doubleClick();
+	}
+	
+	public void openTransformationDiagram(String... filePath){
+		SWTBot bot = getBot();
+		SWTBotTreeItem item = bot.tree(0).expandNode(filePath);
+		
+		item.expand();
+		item.getNode("Transformation Diagram").doubleClick();
 	}
 }

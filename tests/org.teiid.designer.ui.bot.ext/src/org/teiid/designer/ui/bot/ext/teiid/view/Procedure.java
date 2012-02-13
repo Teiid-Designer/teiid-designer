@@ -1,17 +1,12 @@
 package org.teiid.designer.ui.bot.ext.teiid.view;
 
-import static org.eclipse.swtbot.swt.finder.matchers.WidgetMatcherFactory.allOf;
-import static org.eclipse.swtbot.swt.finder.matchers.WidgetMatcherFactory.widgetOfType;
-import static org.eclipse.swtbot.swt.finder.matchers.WidgetMatcherFactory.withText;
-
-import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.swtbot.swt.finder.SWTBot;
-import org.eclipse.swtbot.swt.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 import org.jboss.tools.ui.bot.ext.SWTBotFactory;
 import org.jboss.tools.ui.bot.ext.SWTEclipseExt;
 import org.jboss.tools.ui.bot.ext.condition.TaskDuration;
+import org.jboss.tools.ui.bot.ext.condition.TreeContainsNode;
 import org.jboss.tools.ui.bot.ext.helper.ContextMenuHelper;
 import org.jboss.tools.ui.bot.ext.types.IDELabel;
 
@@ -46,7 +41,7 @@ public class Procedure {
 		bot.text("NewProcedureParameter").setText(parameter);        
 		bot.tree().setFocus();
 		
-		bot.waitWhile(Conditions.waitForWidget(allOf(widgetOfType(TreeItem.class), withText(parameter))), TaskDuration.NORMAL.getTimeout());
+		bot.waitUntil(new TreeContainsNode(bot.tree(), project, model, procedure, parameter), TaskDuration.NORMAL.getTimeout());
 	}
 	
 	private void addParameterType(String parameter, String type){
