@@ -887,6 +887,15 @@ public class JdbcImportWizard extends AbstractWizard
     			}
     		}
     	}
+    	
+    	if( this.connectionProfile == null ) {
+    		// check for project property and if sources folder property exists
+    		String profileName = this.designerProperties.getProperty(IPropertiesContext.KEY_LAST_CONNECTION_PROFILE_ID);
+    		if( profileName != null && !profileName.isEmpty() ) {
+    			// Select profile
+    			srcPg.selectConnectionProfile(profileName);
+    		}
+    	}
     }
 
     // ===========================================================================================================================

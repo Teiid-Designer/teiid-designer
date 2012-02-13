@@ -120,6 +120,8 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage
     // Need to cash the profile when connection is selected so we can use it in Finish method to 
     // inject the connection info into model.
     private IConnectionProfile connectionProfile;
+    
+    private String initialProfileName;
 
     // ===========================================================================================================================
     // Constructors
@@ -301,6 +303,10 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage
         
         sourceModified();
         
+        if( this.initialProfileName != null ) {
+        	selectConnectionProfile(this.initialProfileName);
+        }
+        
         if (validatePage()) {
             setMessage(INITIAL_MESSAGE);
         }
@@ -441,24 +447,28 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage
         this.notifier.remove(listener);
     }
     
-    void selectConnectionProfile(String name) {
+    public void selectConnectionProfile(String name) {
     	if( name == null ) {
     		return;
     	}
     	
+    	this.initialProfileName = name;
+    	
     	int cpIndex = -1;
     	int i = 0;
-    	for( String item : srcCombo.getItems()) { 
-    		if( item != null && item.length() > 0 ) {
-    			if( item.toUpperCase().equalsIgnoreCase(name.toUpperCase())) {
-    				cpIndex = i;
-    				break;
-    			}
-    		}
-    		i++;
-    	}
-    	if( cpIndex > -1 ) {
-    		srcCombo.select(cpIndex);
+    	if( srcCombo != null && !srcCombo.isDisposed() ) {
+	    	for( String item : srcCombo.getItems()) { 
+	    		if( item != null && item.length() > 0 ) {
+	    			if( item.toUpperCase().equalsIgnoreCase(name.toUpperCase())) {
+	    				cpIndex = i;
+	    				break;
+	    			}
+	    		}
+	    		i++;
+	    	}
+	    	if( cpIndex > -1 ) {
+	    		srcCombo.select(cpIndex);
+	    	}
     	}
     }
 
