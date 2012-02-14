@@ -26,6 +26,7 @@
 		<module>org.teiid.datatools.connectivity.ui</module>
 		<module>org.teiid.core.designer</module>
 		<module>org.teiid.designer</module>
+		<module>org.teiid.designer.advisor.ui</module>
 		<module>org.teiid.designer.compare</module>
 		<module>org.teiid.designer.compare.ui</module>
 		<module>org.teiid.designer.core</module>
