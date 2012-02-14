@@ -351,7 +351,6 @@ public interface AdvisorUiConstants {
 	    // Perspectives
 	
 	    // content supplier's IDs must match their class name
-	
 	    String ADVISOR_VIEW_ID = PLUGIN_ID + ".views.DSPAdvisorView"; //$NON-NLS-1$
 	    String JDBC_IMPORT_POST_PROCESSSOR = PLUGIN_ID + ".wizards.vdbViewImportPostProcessor"; //$NON-NLS-1$
 	}

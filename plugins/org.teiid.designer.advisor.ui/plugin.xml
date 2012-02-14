@@ -20,6 +20,15 @@
             name="%dspadvisorview.name">
       </view>
    </extension>
+    <!-- Extension to allow plugins to contribute to the Modeler Perspective. -->
+   <extension
+         id="advisorPerspectiveContributor"
+         name="%advisorPerspectiveContributor.name"
+         point="org.teiid.designer.ui.modelerPerspectiveContributor">
+      <class
+        name="org.teiid.designer.advisor.ui.views.AdvisorPerspectiveContributor">
+      </class>
+   </extension>
    <extension
          point="org.eclipse.ui.views">
       <view
