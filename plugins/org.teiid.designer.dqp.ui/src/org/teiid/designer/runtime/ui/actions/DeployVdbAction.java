@@ -35,7 +35,6 @@ import org.teiid.designer.runtime.ServerManager;
 import org.teiid.designer.runtime.ui.server.RuntimeAssistant;
 import org.teiid.designer.runtime.ui.vdb.VdbDeployer;
 import org.teiid.designer.runtime.ui.vdb.VdbRequiresSaveChecker;
-import org.teiid.designer.runtime.ui.vdb.VdbDeployer.DeployStatus;
 import org.teiid.designer.vdb.Vdb;
 
 import com.metamatrix.core.util.I18nUtil;
