@@ -97,6 +97,7 @@ public class Messages  extends NLS {
     public static String NewModelWizardErrorTitle;
     public static String NewTeiidServer;
     public static String NewTeiidServer_Short;
+    public static String CreateDataSource;
     
     public static String OpenDatatoolsDataSourceExplorer;
     

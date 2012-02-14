@@ -368,6 +368,7 @@ public class ActionsSection implements AdvisorUiConstants{
         addHyperlink(group, COMMAND_IDS.NEW_TEIID_SERVER, true);
         addHyperlink(group, COMMAND_IDS.EDIT_TEIID_SERVER, true);
         
+        addHyperlink(panel, Messages.CreateDataSource, COMMAND_IDS.CREATE_DATA_SOURCE);
         addHyperlink(panel, Messages.ExecuteVdb, COMMAND_IDS.EXECUTE_VDB);
         
         return panel;

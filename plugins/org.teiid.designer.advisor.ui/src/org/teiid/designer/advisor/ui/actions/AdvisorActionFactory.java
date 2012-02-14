@@ -24,12 +24,15 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.teiid.designer.advisor.ui.AdvisorUiConstants;
 import org.teiid.designer.datatools.ui.dialogs.NewTeiidFilteredCPWizard;
+import org.teiid.designer.runtime.Server;
 import org.teiid.designer.runtime.ui.actions.EditVdbAction;
+import org.teiid.designer.runtime.ui.connection.CreateDataSourceAction;
 import org.teiid.designer.runtime.ui.preview.PreviewDataAction;
 import org.teiid.designer.runtime.ui.server.RuntimeAssistant;
 import org.teiid.designer.runtime.ui.vdb.ExecuteVdbAction;
 
 import com.metamatrix.metamodels.core.ModelType;
+import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelerUiViewUtils;
 import com.metamatrix.ui.internal.util.UiUtil;
 import com.metamatrix.ui.internal.util.WidgetUtil;
@@ -73,6 +76,7 @@ public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChange
         addActionHandler(COMMAND_IDS.GENERATE_WS_MODELS_FROM_WSDL, COMMAND_LABELS.GENERATE_WS_MODELS_FROM_WSDL, COMMAND_LABELS.GENERATE_WS_MODELS_FROM_WSDL);
         addActionHandler(COMMAND_IDS.NEW_TEIID_SERVER, COMMAND_LABELS.NEW_TEIID_SERVER, COMMAND_LABELS_SHORT.NEW_TEIID_SERVER);
         addActionHandler(COMMAND_IDS.EDIT_TEIID_SERVER, COMMAND_LABELS.EDIT_TEIID_SERVER, COMMAND_LABELS_SHORT.EDIT_TEIID_SERVER);
+        addActionHandler(COMMAND_IDS.CREATE_DATA_SOURCE, COMMAND_LABELS.CREATE_DATA_SOURCE, COMMAND_LABELS_SHORT.CREATE_DATA_SOURCE);
         addActionHandler(COMMAND_IDS.NEW_TEIID_MODEL_PROJECT, COMMAND_LABELS.NEW_TEIID_MODEL_PROJECT, COMMAND_LABELS_SHORT.NEW_TEIID_MODEL_PROJECT);
 
 	}
@@ -251,6 +255,27 @@ public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChange
 		
 		if( id.equalsIgnoreCase(COMMAND_IDS.EDIT_TEIID_SERVER)) {
 			RuntimeAssistant.runEditServerAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
+	        return;
+		}
+		
+		if( id.equalsIgnoreCase(COMMAND_IDS.CREATE_DATA_SOURCE)) {
+            // make sure there is a Teiid connection
+            if (RuntimeAssistant.ensureServerConnection(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "No Teiid Server Defined")) { //$NON-NLS-1$
+            	try {
+					Server server = DqpPlugin.getInstance().getServerManager().getDefaultServer();
+					
+					CreateDataSourceAction action = new CreateDataSourceAction();
+					action.setAdmin(server.getAdmin());
+
+					action.setSelection(new StructuredSelection());
+
+					action.setEnabled(true);
+					action.run();
+				} catch (Exception ex) {
+					AdvisorUiConstants.UTIL.log(ex);
+				}
+            }
+
 	        return;
 		}
 		

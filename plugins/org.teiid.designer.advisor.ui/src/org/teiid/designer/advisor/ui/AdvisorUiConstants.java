@@ -106,6 +106,7 @@ public interface AdvisorUiConstants {
 		
 		String NEW_TEIID_SERVER = "org.teiid.designer.runtime.newTeiidServer"; //$NON-NLS-1$
 		String EDIT_TEIID_SERVER = "org.teiid.designer.runtime.editTeiidServer"; //$NON-NLS-1$
+		String CREATE_DATA_SOURCE = "org.teiid.designer.runtime.createDataSource"; //$NON-NLS-1$
 	}
 	
 	interface COMMAND_LABELS {
@@ -149,6 +150,7 @@ public interface AdvisorUiConstants {
 		
 		String NEW_TEIID_SERVER = Messages.NewTeiidServer;
 		String EDIT_TEIID_SERVER = Messages.EditTeiidServer;
+		String CREATE_DATA_SOURCE = Messages.CreateDataSource;
 	}
 	
 	interface COMMAND_LABELS_SHORT {
@@ -191,6 +193,7 @@ public interface AdvisorUiConstants {
 		
 		String NEW_TEIID_SERVER = Messages.NewTeiidServer_Short;
 		String EDIT_TEIID_SERVER = Messages.EditTeiidServer_Short;
+		String CREATE_DATA_SOURCE = Messages.CreateDataSource;
 	}
 
 	interface MODEL_IDS {
