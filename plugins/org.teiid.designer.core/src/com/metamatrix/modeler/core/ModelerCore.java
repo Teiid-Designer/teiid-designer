@@ -1141,11 +1141,15 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
         if (Platform.isRunning()) {
             final Bundle bundle = Platform.getBundle(FEATURE_ID);
             final Object version = bundle.getHeaders().get("Bundle-Version"); //$NON-NLS-1$
-            return version.toString();
+            String versionStr = version.toString();
+            if( versionStr.endsWith(".qualifier")) { //$NON-NLS-1$
+            	versionStr = versionStr.substring(0, versionStr.length()-10);
+            }
+            return versionStr;
         }
 
         // must be testing
-        return "6.1.0"; //$NON-NLS-1$
+        return "7.7.0"; //$NON-NLS-1$
     }
 
     /**
