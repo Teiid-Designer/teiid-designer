@@ -25,6 +25,7 @@ import org.eclipse.ui.PlatformUI;
 import org.teiid.designer.advisor.ui.AdvisorUiConstants;
 import org.teiid.designer.datatools.ui.dialogs.NewTeiidFilteredCPWizard;
 import org.teiid.designer.runtime.Server;
+import org.teiid.designer.runtime.ui.actions.DeployVdbAction;
 import org.teiid.designer.runtime.ui.actions.EditVdbAction;
 import org.teiid.designer.runtime.ui.connection.CreateDataSourceAction;
 import org.teiid.designer.runtime.ui.preview.PreviewDataAction;
@@ -69,7 +70,8 @@ public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChange
         addActionHandler(COMMAND_IDS.NEW_MODEL_XML_DOC, COMMAND_LABELS.NEW_MODEL_XML_DOC, COMMAND_LABELS_SHORT.NEW_MODEL_XML_DOC);
         addActionHandler(COMMAND_IDS.CREATE_VDB, COMMAND_LABELS.CREATE_VDB, COMMAND_LABELS_SHORT.CREATE_VDB);
         addActionHandler(COMMAND_IDS.EXECUTE_VDB, COMMAND_LABELS.EXECUTE_VDB, COMMAND_LABELS.EXECUTE_VDB);
-        addActionHandler(COMMAND_IDS.EDIT_VDB, COMMAND_LABELS.EDIT_VDB, COMMAND_LABELS.EDIT_VDB);
+        addActionHandler(COMMAND_IDS.EDIT_VDB, COMMAND_LABELS.EDIT_VDB, COMMAND_LABELS_SHORT.EDIT_VDB);
+        addActionHandler(COMMAND_IDS.DEPLOY_VDB, COMMAND_LABELS.DEPLOY_VDB, COMMAND_LABELS_SHORT.DEPLOY_VDB);
         addActionHandler(COMMAND_IDS.PREVIEW_DATA, COMMAND_LABELS.PREVIEW_DATA, COMMAND_LABELS.PREVIEW_DATA);
         addActionHandler(COMMAND_IDS.OPEN_DATA_SOURCE_EXPLORER_VIEW, COMMAND_LABELS.OPEN_DATA_SOURCE_EXPLORER_VIEW, COMMAND_LABELS.OPEN_DATA_SOURCE_EXPLORER_VIEW);
         addActionHandler(COMMAND_IDS.CREATE_WEB_SRVICES_DATA_FILE, COMMAND_LABELS.CREATE_WEB_SRVICES_DATA_FILE, COMMAND_LABELS.CREATE_WEB_SRVICES_DATA_FILE);
@@ -227,6 +229,12 @@ public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChange
 	        return;
 		}
 		
+		if( id.equalsIgnoreCase(COMMAND_IDS.DEPLOY_VDB)) {
+			DeployVdbAction action = new DeployVdbAction(properties);
+			action.queryUserAndRun();
+	        return;
+		}
+		
 		if( id.equalsIgnoreCase(COMMAND_IDS.NEW_TEIID_MODEL_PROJECT)) {
 			ModelerUiViewUtils.launchWizard("newModelProject", new StructuredSelection(), properties); //$NON-NLS-1$
 	        return;
@@ -371,9 +379,16 @@ public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChange
 		if( id.equalsIgnoreCase(COMMAND_IDS.PREVIEW_DATA)) {
 			return Images.PREVIEW_DATA;
 		}
+		if( id.equalsIgnoreCase(COMMAND_IDS.CREATE_DATA_SOURCE)) {
+			return Images.CREATE_DATA_SOURCE_ACTION;
+		}
 		
 		if( id.equalsIgnoreCase(COMMAND_IDS.EDIT_VDB)) {
 			return Images.EDIT_VDB_ACTION;
+		}
+		
+		if( id.equalsIgnoreCase(COMMAND_IDS.DEPLOY_VDB)) {
+			return Images.DEPLOY_VDB_ACTION;
 		}
 		
 		if( id.equalsIgnoreCase(COMMAND_IDS.NEW_TEIID_MODEL_PROJECT)) {

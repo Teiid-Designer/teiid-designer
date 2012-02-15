@@ -92,7 +92,7 @@
       <description>
          <b> This following action allows you to preview data from your newly generated Flat File view table.</b>
 			<br/> ============================================================
-			<br/> -- > Press "<b>Click to Perform</b>" button below to preview data from your flat file.
+			<br/> -- > Press "<b>Click to Perform</bexecute.vdb>" button below to preview data from your flat file.
 			<br/> -- > Click the browse "..." button to select the newly created view table
 			<br/> -- > Click OK to execute the query
 			<br/> -- > Results of the query will displayed in the SQL Results view
@@ -142,7 +142,7 @@
          title="Create VDB" skip="true">
       <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
 			pluginId="org.teiid.designer.advisor.ui" 
-			param1="org.teiid.designer.new.vdb"/>
+			param1="org.teiid.designer.vdb.create"/>
       <description>
          <b> This following action ........</b>
 			<br/> ============================================================
@@ -156,7 +156,7 @@
          title="Execute VDB" skip="true">
       <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
 			pluginId="org.teiid.designer.advisor.ui" 
-			param1="org.teiid.designer.execute.vdb"/>
+			param1="org.teiid.designer.vdb.execute"/>
       <description>
          <b> This following action ........</b>
 			<br/> ============================================================

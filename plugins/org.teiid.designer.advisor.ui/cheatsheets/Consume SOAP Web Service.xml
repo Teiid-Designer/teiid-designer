@@ -48,7 +48,7 @@
    <item
          title="Create a VDB" skip="true">
       <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
-			   pluginId="org.teiid.designer.advisor.ui" param1="org.teiid.designer.new.vdb"/>
+			   pluginId="org.teiid.designer.advisor.ui" param1="org.teiid.designer.vdb.create"/>
       <description>
          <b> Create a VDB containing your generated models.</b>
          	<br/> ============================================================
@@ -62,7 +62,7 @@
    <item
          title="Test your VDB" skip="true">
       <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
-			   pluginId="org.teiid.designer.advisor.ui" param1="org.teiid.designer.execute.vdb"/>
+			   pluginId="org.teiid.designer.advisor.ui" param1="org.teiid.designer.vdb.execute"/>
       <description>
          <b> Execute your VDB by deploying to a running Teiid server, creating a JDBC connection to that VDB, opening
          a SQL Scrapbook Editor and executing queries against your VDB.</b>

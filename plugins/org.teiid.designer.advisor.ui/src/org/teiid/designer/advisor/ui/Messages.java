@@ -10,11 +10,11 @@ package org.teiid.designer.advisor.ui;
 import org.eclipse.osgi.util.NLS;
 
 public class Messages  extends NLS {
-    public static String ActionsLibrary;
+    public static String ActionLibrary;
     
 	public static String Create;
     public static String ConsumeLocalFlatFileDataSource;
-    public static String ConsumeWebSercieWsdl;
+    public static String ConsumeWebServiceWsdl;
     public static String ConsumeXmlFileSource;
     public static String ConsumeARESTWebService;
     public static String ConsumeASOAPWebService;
@@ -53,6 +53,7 @@ public class Messages  extends NLS {
     public static String ConsumeARESTWebService_Short;
     public static String ConsumeASOAPWebService_Short;
     
+    public static String CreateDataSource;
     public static String CreateJdbcConnection_Short;
     public static String CreateLDAPConnection_Short;
     public static String CreateModeshapeConnection_Short;
@@ -80,13 +81,16 @@ public class Messages  extends NLS {
     public static String GenerateWSModelsFromWsdl_Short;
     
     public static String DefineModels;
+    public static String DeployVdb;
+    public static String DeployVdb_Short;
+    
     public static String EditTeiidServer;
     public static String EditTeiidServer_Short;
     public static String ExecuteVdb;
     public static String EditVdb;
     public static String EditVdb_Short;
     
-    public static String ActionLibrary;
+
     public static String ManageModelProjects;
     public static String ModelDataSources;
     public static String ManageConnections;
@@ -97,8 +101,7 @@ public class Messages  extends NLS {
     public static String NewModelWizardErrorTitle;
     public static String NewTeiidServer;
     public static String NewTeiidServer_Short;
-    public static String CreateDataSource;
-    
+
     public static String OpenDatatoolsDataSourceExplorer;
     
     public static String PreviewData;

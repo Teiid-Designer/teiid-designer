@@ -18,7 +18,7 @@
          title="Create VDB" skip="true">
       <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
 			pluginId="org.teiid.designer.advisor.ui" 
-			param1="org.teiid.designer.new.vdb"/>
+			param1="org.teiid.designer.vdb.create"/>
       <description>
          <b> This action will launch the New VDB wizard.</b>
 			<br/> ============================================================
@@ -35,7 +35,7 @@
          title="Test VDB" skip="true">
       <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
 			pluginId="org.teiid.designer.advisor.ui" 
-			param1="org.teiid.designer.execute.vdb"/>
+			param1="org.teiid.designer.vdb.execute"/>
       <description>
          <b> This action will launch the Execute VDB wizard which will validate your VDB,
          	insure you have a running Teiid server, deploy your VDB, open a JDBC connection

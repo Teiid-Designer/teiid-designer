@@ -99,14 +99,16 @@ public interface AdvisorUiConstants {
 		
 		String NEW_TEIID_MODEL_PROJECT = "org.teiid.designer.newProjectCommand"; //$NON-NLS-1$
 		
-		String CREATE_VDB = "org.teiid.designer.new.vdb"; //$NON-NLS-1$
-		String EXECUTE_VDB = "org.teiid.designer.execute.vdb"; //$NON-NLS-1$
+		String CREATE_VDB = "org.teiid.designer.vdb.create"; //$NON-NLS-1$
+		String EXECUTE_VDB = "org.teiid.designer.vdb.execute"; //$NON-NLS-1$
 		String PREVIEW_DATA = "org.teiid.designer.previewData"; //$NON-NLS-1$
-		String EDIT_VDB = "org.teiid.designer.edit.vdb"; //$NON-NLS-1$
+		String EDIT_VDB = "org.teiid.designer.vdb.edit"; //$NON-NLS-1$
+		String DEPLOY_VDB = "org.teiid.designer.vdb.deploy"; //$NON-NLS-1$
 		
 		String NEW_TEIID_SERVER = "org.teiid.designer.runtime.newTeiidServer"; //$NON-NLS-1$
 		String EDIT_TEIID_SERVER = "org.teiid.designer.runtime.editTeiidServer"; //$NON-NLS-1$
 		String CREATE_DATA_SOURCE = "org.teiid.designer.runtime.createDataSource"; //$NON-NLS-1$
+		
 	}
 	
 	interface COMMAND_LABELS {
@@ -116,7 +118,7 @@ public interface AdvisorUiConstants {
 		String IMPORT_FLAT_FILE = Messages.ConsumeLocalFlatFileDataSource;
 		String IMPORT_XML_FILE = Messages.ConsumeXmlFileSource;
 		String IMPORT_WSDL_TO_SOURCE = Messages.CreateSourceModelFromWsdlSource;
-		String IMPORT_WSDL_TO_WS = "Consume Web Service WSDL";  //$NON-NLS-1$
+		String IMPORT_WSDL_TO_WS = Messages.ConsumeWebServiceWsdl;
 		
 		String NEW_MODEL_RELATIONAL_SOURCE = Messages.CreateNewRelationalSourceModel;
 		String NEW_MODEL_RELATIONAL_VIEW = Messages.CreateNewRelationalViewModel;
@@ -147,6 +149,7 @@ public interface AdvisorUiConstants {
 		String EXECUTE_VDB = Messages.ExecuteVdb;
 		String EDIT_VDB = Messages.EditVdb;
 		String PREVIEW_DATA = Messages.PreviewData;
+		String DEPLOY_VDB = Messages.DeployVdb;
 		
 		String NEW_TEIID_SERVER = Messages.NewTeiidServer;
 		String EDIT_TEIID_SERVER = Messages.EditTeiidServer;
@@ -156,7 +159,7 @@ public interface AdvisorUiConstants {
 	interface COMMAND_LABELS_SHORT {
 		String IMPORT_JDBC = Messages.CreateSourceModelFromJdbcSource_Short;
 		String IMPORT_DDL = Messages.CreateSourceModelFromDdlFile_Short;
-		String IMPORT_SALESFORCE = Messages.CreateSourceModelFromSalesforceDataSource_Short;
+		String IMPORT_SALESFORCE = Messages.CreateSourceModelFromSalesforceDataSource_Short; 
 		String IMPORT_FLAT_FILE = Messages.ConsumeLocalFlatFileDataSource_Short;
 		String IMPORT_XML_FILE = Messages.ConsumeXmlFileSource_Short;
 		String IMPORT_WSDL_TO_SOURCE = Messages.CreateSourceModelFromWsdlSource_Short;
@@ -190,6 +193,7 @@ public interface AdvisorUiConstants {
 		String CREATE_VDB = Messages.CreateVdb_Short;
 		String EXECUTE_VDB = Messages.ExecuteVdb;
 		String EDIT_VDB = Messages.EditVdb_Short;
+		String DEPLOY_VDB = Messages.DeployVdb_Short;
 		
 		String NEW_TEIID_SERVER = Messages.NewTeiidServer_Short;
 		String EDIT_TEIID_SERVER = Messages.EditTeiidServer_Short;
@@ -260,7 +264,9 @@ public interface AdvisorUiConstants {
 	    String NEW_PROJECT_ACTION = CTOOL16 + "new-project-wiz.gif";  //$NON-NLS-1$
 	    String EXECUTE_VDB_ACTION = CTOOL16 + "execute-vdb.gif"; //$NON-NLS-1$
 	    String EDIT_VDB_ACTION = CTOOL16 + "edit-vdb.png"; //$NON-NLS-1$
+	    String DEPLOY_VDB_ACTION = CTOOL16 + "deploy-vdb.png"; //$NON-NLS-1$
 	    String PREVIEW_DATA = CTOOL16 + "preview-data.gif"; //$NON-NLS-1$
+	    String CREATE_DATA_SOURCE_ACTION = CTOOL16 + "create-data-source.gif"; //$NON-NLS-1$
 	    
 	    String DATA_SOURCE_EXPLORER_VIEW = CTOOL16 + "data-source-explorer-view.gif";  //$NON-NLS-1$
 	    String NEW_CONNECTION_PROFILE = CTOOL16 + "new-connection-profile.gif";  //$NON-NLS-1$

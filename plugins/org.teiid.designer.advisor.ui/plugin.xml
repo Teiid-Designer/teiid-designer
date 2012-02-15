@@ -51,7 +51,7 @@
             composite="false"
             contentFile="$nl$/cheatsheets/New Model From JDBC Import.xml"
             id="org.teiid.designer.ui.cheatsheet_advisor_01"
-            name="Create Relational Model From JDBC">
+            name="Model From JDBC Source">
          <description>
             Create Relational Model from JDBC Import
          </description>
@@ -59,23 +59,24 @@
       <cheatsheet
             category="org.teiid.designer.ui.category"
             composite="false"
-            contentFile="$nl$/cheatsheets/Consume SOAP Web Service.xml"
+            contentFile="$nl$/cheatsheets/subsheets/import-from-flat-file.xml"
             id="org.teiid.designer.ui.cheatsheet_advisor_02"
-            name="Consume a SOAP Web Service">
+            name="Model Flat File Source">
          <description>
-            Consume a SOAP Web Service by creating source and view models based on target WSDL file definition
+            Model and join two data sources
          </description>
       </cheatsheet>
       <cheatsheet
             category="org.teiid.designer.ui.category"
             composite="false"
-            contentFile="$nl$/cheatsheets/Join 2 Sources.xml"
+            contentFile="$nl$/cheatsheets/Consume SOAP Web Service.xml"
             id="org.teiid.designer.ui.cheatsheet_advisor_03"
-            name="Join Two Sources">
+            name="Consume a SOAP Web Service">
          <description>
-            Model and join two data sources
+            Consume a SOAP Web Service by creating source and view models based on target WSDL file definition
          </description>
       </cheatsheet>
+
             <cheatsheet
             category="org.teiid.designer.ui.category"
             composite="true"

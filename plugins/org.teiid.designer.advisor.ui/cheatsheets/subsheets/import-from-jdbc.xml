@@ -142,7 +142,7 @@
          title="Create VDB" skip="true">
       <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
 			pluginId="org.teiid.designer.advisor.ui" 
-			param1="org.teiid.designer.new.vdb"/>
+			param1="org.teiid.designer.vdb.create"/>
       <description>
          <b> This following action ........</b>
 			<br/> ============================================================
@@ -156,7 +156,7 @@
          title="Execute VDB" skip="true">
       <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
 			pluginId="org.teiid.designer.advisor.ui" 
-			param1="org.teiid.designer.execute.vdb"/>
+			param1="org.teiid.designer.vdb.execute"/>
       <description>
          <b> This following action ........</b>
 			<br/> ============================================================

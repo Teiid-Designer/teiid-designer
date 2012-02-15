@@ -82,7 +82,7 @@ public class ActionsSection implements AdvisorUiConstants{
         Section generalSection = this.toolkit.createSection(theParent, Section.TITLE_BAR | ExpandableComposite.TWISTIE );
 
         Color bkgdColor = this.toolkit.getColors().getBackground();
-        generalSection.setText(Messages.ActionsLibrary);
+        generalSection.setText(Messages.ActionLibrary);
 
 //        generalSection.setDescription("Aspect Description....");
         
@@ -253,6 +253,7 @@ public class ActionsSection implements AdvisorUiConstants{
         
         addHyperlink(panel, Messages.CreateVdb, COMMAND_IDS.CREATE_VDB);
         addHyperlink(panel, Messages.EditVdb, COMMAND_IDS.EDIT_VDB);
+        addHyperlink(panel, Messages.DeployVdb, COMMAND_IDS.DEPLOY_VDB);
         addHyperlink(panel, Messages.ExecuteVdb, COMMAND_IDS.EXECUTE_VDB);
         
         return panel;
@@ -369,6 +370,7 @@ public class ActionsSection implements AdvisorUiConstants{
         addHyperlink(group, COMMAND_IDS.EDIT_TEIID_SERVER, true);
         
         addHyperlink(panel, Messages.CreateDataSource, COMMAND_IDS.CREATE_DATA_SOURCE);
+        addHyperlink(panel, Messages.DeployVdb, COMMAND_IDS.DEPLOY_VDB);
         addHyperlink(panel, Messages.ExecuteVdb, COMMAND_IDS.EXECUTE_VDB);
         
         return panel;
