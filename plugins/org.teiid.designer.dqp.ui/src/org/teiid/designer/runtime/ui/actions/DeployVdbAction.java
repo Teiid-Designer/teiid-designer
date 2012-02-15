@@ -14,6 +14,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Properties;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -25,6 +26,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
@@ -33,6 +35,7 @@ import org.teiid.designer.runtime.PreferenceConstants;
 import org.teiid.designer.runtime.Server;
 import org.teiid.designer.runtime.ServerManager;
 import org.teiid.designer.runtime.ui.server.RuntimeAssistant;
+import org.teiid.designer.runtime.ui.vdb.DeployVdbDialog;
 import org.teiid.designer.runtime.ui.vdb.VdbDeployer;
 import org.teiid.designer.runtime.ui.vdb.VdbRequiresSaveChecker;
 import org.teiid.designer.vdb.Vdb;
@@ -49,10 +52,18 @@ public class DeployVdbAction extends Action implements ISelectionListener, Compa
     static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(DeployVdbAction.class);
 
     private final Collection<IFile> selectedVDBs = new ArrayList<IFile>();
+    
+    Properties designerProperties;
 
     public DeployVdbAction() {
         super();
         setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(DqpUiConstants.Images.DEPLOY_VDB));
+    }
+    
+    public DeployVdbAction(Properties properties) {
+        super();
+        setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(DqpUiConstants.Images.DEPLOY_VDB));
+        designerProperties = properties;
     }
 
     @Override
@@ -116,6 +127,28 @@ public class DeployVdbAction extends Action implements ISelectionListener, Compa
             }
         }
     }
+    
+    public void queryUserAndRun() {
+        Server server = getServerManager().getDefaultServer();
+        
+        DeployVdbDialog dialog = new DeployVdbDialog(DqpUiPlugin.getDefault().getCurrentWorkbenchWindow().getShell(), designerProperties);
+
+		dialog.open();
+
+		if (dialog.getReturnCode() == Window.OK) {
+			IFile vdb = dialog.getSelectedVdb();
+			if (vdb != null) {
+		        boolean doDeploy = VdbRequiresSaveChecker.insureOpenVdbSaved(vdb);
+		        if (doDeploy) {
+		            deployVdb(server, vdb);
+		        }
+			}
+		}
+
+
+    }
+    
+    
 
     /**
      * {@inheritDoc}

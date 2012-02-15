@@ -912,7 +912,7 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
     	return false;
     }
 
-	void selectConnectionProfile(String name) {
+	public void selectConnectionProfile(String name) {
 		if (name == null) {
 			return;
 		}

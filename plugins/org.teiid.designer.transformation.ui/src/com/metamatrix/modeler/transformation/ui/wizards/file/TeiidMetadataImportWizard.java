@@ -7,11 +7,17 @@
  */
 package com.metamatrix.modeler.transformation.ui.wizards.file;
 
+import java.util.Properties;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IImportWizard;
 import org.eclipse.ui.IWorkbench;
 
@@ -22,6 +28,7 @@ import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelIdentifier;
 import com.metamatrix.modeler.transformation.ui.UiConstants;
 import com.metamatrix.modeler.transformation.ui.UiPlugin;
+import com.metamatrix.modeler.ui.viewsupport.IPropertiesContext;
 import com.metamatrix.ui.internal.util.UiUtil;
 import com.metamatrix.ui.internal.util.WidgetUtil;
 import com.metamatrix.ui.internal.wizard.AbstractWizard;
@@ -33,7 +40,7 @@ import com.metamatrix.ui.internal.wizard.AbstractWizard;
  * the SQL containing the function call which will return the data from the file in relational table format
  */
 public class TeiidMetadataImportWizard extends AbstractWizard implements
-		IImportWizard, UiConstants {
+		IPropertiesContext, IImportWizard, UiConstants {
 
 	private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(TeiidMetadataImportWizard.class);
 
@@ -47,6 +54,12 @@ public class TeiidMetadataImportWizard extends AbstractWizard implements
 
     private TeiidMetadataImportInfo filesInfo;
     
+    private TeiidMetadataImportSourcePage sourcePage;
+    
+    IContainer folder = null;
+    
+    private Properties designerProperties;
+    
 	/**
 	 * @since 4.0
 	 */
@@ -59,7 +72,7 @@ public class TeiidMetadataImportWizard extends AbstractWizard implements
         IStructuredSelection selection = inputSelection;
 
         Object seletedObj = selection.getFirstElement();
-        IContainer folder = null;
+        folder = null;
         boolean isViewRelationalModel = false;
         
         try {
@@ -99,12 +112,8 @@ public class TeiidMetadataImportWizard extends AbstractWizard implements
         	this.filesInfo.setSourceModelLocation(folder.getFullPath());
         	this.filesInfo.setViewModelLocation(folder.getFullPath());
         }
-	}
-	
-
-	@Override
-	public void addPages() {
-		TeiidMetadataImportSourcePage sourcePage = new TeiidMetadataImportSourcePage(getFileInfo());
+        
+		this.sourcePage = new TeiidMetadataImportSourcePage(getFileInfo());
         addPage(sourcePage);
         
         TeiidMetadataImportFormatPage formatSelectionPage = new TeiidMetadataImportFormatPage(getFileInfo());
@@ -115,6 +124,19 @@ public class TeiidMetadataImportWizard extends AbstractWizard implements
         
         TeiidMetadataImportViewModelPage viewModelPage = new TeiidMetadataImportViewModelPage(getFileInfo());
         addPage(viewModelPage);
+	}
+	
+
+	@Override
+	public void addPages() {
+		// Already created
+	}
+
+	@Override
+	public void createPageControls(Composite pageContainer) {
+		// TODO Auto-generated method stub
+		super.createPageControls(pageContainer);
+		updateForProperties();
 	}
 
 	@Override
@@ -133,5 +155,42 @@ public class TeiidMetadataImportWizard extends AbstractWizard implements
 
 	public TeiidMetadataImportInfo getFileInfo() {
 		return this.filesInfo;
+	}
+
+	@Override
+	public void setProperties(Properties properties) {
+    	this.designerProperties = properties;
+		
+	}
+	
+	protected void updateForProperties() {
+		if( this.designerProperties == null || this.designerProperties.isEmpty() ) {
+			return;
+		}
+		
+    	if( this.folder == null ) {
+    		// check for project property and if sources folder property exists
+    		String projectName = this.designerProperties.getProperty(IPropertiesContext.KEY_PROJECT_NAME);
+    		if( projectName != null && !projectName.isEmpty() ) {
+    			String folderName = projectName;
+    			String sourcesFolder = this.designerProperties.getProperty(IPropertiesContext.KEY_HAS_SOURCES_FOLDER);
+    			if( sourcesFolder != null && !sourcesFolder.isEmpty() ) {
+    				folderName = new Path(projectName).append(sourcesFolder).toString();
+    			}
+    			final IResource resrc = ResourcesPlugin.getWorkspace().getRoot().findMember(folderName);
+    			if( resrc != null ) {
+    				this.folder = (IContainer)resrc;
+    	        	this.filesInfo.setSourceModelLocation(folder.getFullPath());
+    	        	this.filesInfo.setViewModelLocation(folder.getFullPath());
+    			}
+    		}
+    	}
+    	
+		// check for project property and if sources folder property exists
+		String profileName = this.designerProperties.getProperty(IPropertiesContext.KEY_LAST_CONNECTION_PROFILE_ID);
+		if( profileName != null && !profileName.isEmpty() ) {
+			// Select profile
+			sourcePage.selectConnectionProfile(profileName);
+		}
 	}
 }
