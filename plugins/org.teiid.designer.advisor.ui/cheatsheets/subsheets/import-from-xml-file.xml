@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cheatsheet
+      title="Import XML file source">
+   <intro>
+   		<description>This cheat sheet shows you how to model an XML file source.
+   			<br/>
+			<br/>
+			<b>Note:</b> These steps are sequential and require you to complete or
+			skip each step before being allowed to <b>Perform</b>, <b>Complete</b> or <b>Skip</b> the next step.<br/>
+			<br/>
+			To learn more about using cheat sheets click the help icon above.
+			<br/>
+			<br/>Press "<b>Click to Begin</b>" button below to start.
+		</description>
+   </intro>
+
+   <item
+         title="Create Local XML File Source Connection" skip="true">
+      <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
+			pluginId="org.teiid.designer.advisor.ui" param1="org.teiid.designer.connection.new.xmlfilelocal"/>
+      <description>
+         <b> This following action creates a Teiid Local XML File Connection profile.</b>
+			<br/> ============================================================
+			<br/> -- > Press "<b>Click to Perform</b>" button below to launch the connection profile wizard.
+			<br/> -- >   1) Specify unique name
+			<br/> -- >   2) Enter optional description
+			<br/> -- >   3) Click <b>Next &gt;</b>
+			<br/> -- >   4) Browse to select local XML file
+			<br/> -- >   5) Click <b>Finish</b>
+			<br/> -- > You may skip this step if you have already created this connection profile.
+			<br/> ============================================================
+      </description>
+   </item>
+   <item
+         title="or ... Create Remote XML File Source Connection" skip="true">
+      <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
+			pluginId="org.teiid.designer.advisor.ui" param1="org.teiid.designer.connection.new.xmlfileurl"/>
+      <description>
+         <b> This following action creates a Teiid Remote XML File Connection profile.</b>
+			<br/> ============================================================
+			<br/> -- > Press "<b>Click to Perform</b>" button below to launch the connection profile wizard.
+			<br/> -- >   1) Specify unique name
+			<br/> -- >   2) Enter optional description
+			<br/> -- >   3) Click <b>Next &gt;</b>
+			<br/> -- >   4) Enter a valid URL to your remove XML file
+			<br/> -- >   5) Click <b>Finish</b>
+			<br/> -- > You may skip this step if you have already created this connection profile.
+			<br/> ============================================================
+      </description>
+   </item>
+   <item
+         title="Create Source From XML File Source" skip="true">
+      <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
+			pluginId="org.teiid.designer.advisor.ui" param1="org.teiid.designer.importXmlFileCommand"/>
+      <description>
+         <b> This following action creates a relational model from importing table data via your Flat File connection profile.</b>
+			<br/> ============================================================
+			<br/> -- > Press "<b>Click to Perform</b>" button below to launch the Flat File import wizard.
+			<br/> -- >   1) Select an XML file import mode:  Local File System or Remote URL and click <b>Next &gt;</b>
+			<br/> -- >   2) Select XML <b>Data File Source</b> connection profile
+			<br/> -- >   3) Check the XML source file in the <b>Available XML Data Files</b> list
+			<br/> -- >   4) Browse to select target source model location
+			<br/> -- >   5) Enter valid unique source model name and click <b>Next &gt;</b>
+			<br/> -- >   6) View the contents of your XML file in the top panel
+			<br/> -- >   7) Select a primary or root element and right-click <b>Set As Root Path</b>
+			<br/> -- >   8) Select elements and click <b>Add selection as new column</b> to customize the generated data transformation
+			<br/> -- >   9) Click <b>Next &gt;</b> to enter view model name, location and view table name.
+			<br/> -- >   3) Click <b>Finish</b>
+			<br/> -- > You may skip this step if you have already imported this model.
+			<br/> ============================================================
+      </description>
+   </item>
+	<item
+         title="Test XML Table Data" skip="true">
+      <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
+			pluginId="org.teiid.designer.advisor.ui" param1="org.teiid.designer.previewData"/>
+      <description>
+         <b> This following action allows you to preview data from your newly generated Flat File view table.</b>
+			<br/> ============================================================
+			<br/> -- > Press "<b>Click to Perform</b>" button below to preview data from your flat file.
+			<br/> -- > Click the browse "..." button to select the newly created view table
+			<br/> -- > Click OK to execute the query
+			<br/> -- > Results of the query will displayed in the SQL Results view
+			<br/> -- > You may skip this step.
+			<br/> ============================================================
+      </description>
+   </item>
+   <item
+         title="Create VDB" skip="true">
+      <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
+			pluginId="org.teiid.designer.advisor.ui" 
+			param1="org.teiid.designer.vdb.create"/>
+      <description>
+         <b> This action will launch the New VDB wizard.</b>
+			<br/> ============================================================
+			<br/> -- > Press "<b>Click to Perform</b>" button below to create a new VDB.
+			<br/> -- >   1) Select <b>"..."</b> button to browse and select project or folder location.
+			<br/> -- >   2) Enter a unique name for your VDB
+			<br/> -- >   3) Enter an optional description for your VDB
+			<br/> -- >   4) Select the <b>Add</b> button to choose models to go in your VDB
+			<br/> -- > You may skip this step if you have already created your VDB.
+			<br/> ============================================================
+      </description>
+   </item>
+   <item
+         title="Test VDB" skip="true">
+      <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
+			pluginId="org.teiid.designer.advisor.ui" 
+			param1="org.teiid.designer.vdb.execute"/>
+      <description>
+         <b> This action will launch the Execute VDB wizard which will validate your VDB,
+         	insure you have a running Teiid server, deploy your VDB, open a JDBC connection
+         	to your VDB and open a SQL Scrapbook editor.</b>
+			<br/> ============================================================
+			<br/> -- > Press "<b>Click to Perform</b>" button below to test your VDB.
+			<br/> -- >   1) Select <b>"..."</b> button to browse and select a VDB.
+			<br/> -- >   2) Click OK to deploy VDB and open connection in Data Source Explorer
+			<br/> -- >   3) Follow instructions in open SQL Scrapbook Editor
+			<br/> -- > You may skip this step if you have already tested your VDB.
+			<br/> ============================================================
+      </description>
+   </item>
+</cheatsheet>

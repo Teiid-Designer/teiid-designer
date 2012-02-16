@@ -79,7 +79,7 @@ public class ActionsSection implements AdvisorUiConstants{
 	@SuppressWarnings("unused")
 	private void createSection(Composite theParent) {
 
-        Section generalSection = this.toolkit.createSection(theParent, Section.TITLE_BAR | ExpandableComposite.TWISTIE );
+        Section generalSection = this.toolkit.createSection(theParent, Section.TITLE_BAR | ExpandableComposite.TWISTIE | ExpandableComposite.EXPANDED );
 
         Color bkgdColor = this.toolkit.getColors().getBackground();
         generalSection.setText(Messages.ActionLibrary);

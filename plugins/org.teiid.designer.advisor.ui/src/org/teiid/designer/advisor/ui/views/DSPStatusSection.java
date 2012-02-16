@@ -7,7 +7,10 @@
  */
 package org.teiid.designer.advisor.ui.views;
 
+import java.util.Properties;
+
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -27,7 +30,9 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
 import org.teiid.designer.advisor.ui.AdvisorUiConstants;
+import org.teiid.designer.advisor.ui.AdvisorUiConstants.COMMAND_IDS;
 import org.teiid.designer.advisor.ui.AdvisorUiPlugin;
+import org.teiid.designer.advisor.ui.actions.AdvisorActionFactory;
 import org.teiid.designer.advisor.ui.core.AdvisorHyperLinkListener;
 import org.teiid.designer.advisor.ui.scope.VdbNature;
 import org.teiid.designer.advisor.ui.util.DSPPluginImageHelper;
@@ -36,6 +41,7 @@ import org.teiid.designer.advisor.ui.util.LabelLabelLinkRow;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelProjectSelectionStatusValidator;
+import com.metamatrix.modeler.ui.viewsupport.IPropertiesContext;
 import com.metamatrix.modeler.ui.viewsupport.ModelingResourceFilter;
 import com.metamatrix.ui.internal.util.WidgetUtil;
 
@@ -50,6 +56,7 @@ public class DSPStatusSection implements AdvisorUiConstants.Groups {
     private final DSPPluginImageHelper imageHelper = AdvisorUiPlugin.getImageHelper();
     private final AdvisorHyperLinkListener linkListener;
     private ImageHyperlink projectSelectionLink;
+    private ImageHyperlink newProjectLink;
     private Label statusSummaryImage;
     private ImageHyperlink statusSummaryHelpLink;
 
@@ -152,7 +159,7 @@ public class DSPStatusSection implements AdvisorUiConstants.Groups {
     private void addStatusSectionButtons( Section section ) {
         Composite buttonArea = toolkit.createComposite(section);
         // FillLayout buttonLayout = new FillLayout(SWT.HORIZONTAL);
-        GridLayout buttonLayout = new GridLayout(3, false);
+        GridLayout buttonLayout = new GridLayout(4, false);
         buttonArea.setLayout(buttonLayout);
         buttonLayout.horizontalSpacing = 10;
         // buttonLayout.spacing = 5;
@@ -180,6 +187,29 @@ public class DSPStatusSection implements AdvisorUiConstants.Groups {
                 if (projects.length > 0 && AdvisorUiPlugin.getStatusManager().setCurrentProject(((IProject)projects[0]))) {
                     AdvisorUiPlugin.getStatusManager().updateStatus(true);
                 }
+            }
+        });
+        
+        newProjectLink = toolkit.createImageHyperlink(buttonArea, SWT.WRAP);
+        newProjectLink.setLayoutData(new GridData(SWT.NONE, SWT.NONE, false, false, 1, 1));
+        newProjectLink.setBackground(section.getTitleBarBackground());
+
+        newProjectLink.setImage(imageHelper.NEW_MODEL_PROJECT_IMAGE);
+        newProjectLink.setToolTipText("New Project"); // DSPAdvisorI18n.StatusSectionHelpTooltip); //$NON-NLS-1$
+        newProjectLink.addHyperlinkListener(new HyperlinkAdapter() {
+            @Override
+            public void linkActivated( HyperlinkEvent e ) {
+            	Properties props = new Properties();
+                AdvisorActionFactory.executeAction(COMMAND_IDS.NEW_TEIID_MODEL_PROJECT, props);
+        		String projectName = props.getProperty(IPropertiesContext.KEY_PROJECT_NAME);
+        		if( projectName != null && !projectName.isEmpty() ) {
+        			final IResource resrc = ResourcesPlugin.getWorkspace().getRoot().findMember(projectName);
+        			if( resrc != null && resrc instanceof IProject) {
+        				if (AdvisorUiPlugin.getStatusManager().setCurrentProject((IProject)resrc)) {
+        					AdvisorUiPlugin.getStatusManager().updateStatus(true);
+        				}
+        			}
+        		}
             }
         });
 
