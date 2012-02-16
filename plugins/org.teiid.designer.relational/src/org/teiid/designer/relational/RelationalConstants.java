@@ -17,7 +17,7 @@ public interface RelationalConstants {
         public static final int UNDEFINED = -1;
         public static final int MODEL = 0;
         public static final int SCHEMA = 1;
-        public static final int CATELOG = 2;
+        public static final int CATALOG = 2;
         public static final int TABLE = 3;
         public static final int VIEW = 4;
         public static final int PROCEDURE = 5;
@@ -51,7 +51,7 @@ public interface RelationalConstants {
         public static final String UNDEFINED = "UNDEFINED"; //$NON-NLS-1$
         public static final String MODEL = "MODEL"; //$NON-NLS-1$
         public static final String SCHEMA = "SCHEMA"; //$NON-NLS-1$
-        public static final String CATELOG = "CATALOG"; //$NON-NLS-1$
+        public static final String CATALOG = "CATALOG"; //$NON-NLS-1$
         public static final String TABLE = "TABLE"; //$NON-NLS-1$
         public static final String VIEW = "VIEW"; //$NON-NLS-1$
         public static final String PROCEDURE = "PROCEDURE"; //$NON-NLS-1$

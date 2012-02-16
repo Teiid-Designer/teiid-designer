@@ -13,7 +13,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -22,7 +21,6 @@ import org.eclipse.osgi.util.NLS;
 import org.teiid.designer.relational.Messages;
 import org.teiid.designer.relational.RelationalConstants;
 import org.teiid.designer.relational.RelationalPlugin;
-
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.core.Annotation;
 import com.metamatrix.metamodels.core.AnnotationContainer;
@@ -149,7 +147,7 @@ public class RelationalModelFactory implements RelationalConstants {
             case TYPES.SCHEMA: {
              // NOOP. Shouldn't get here
             } break;
-            case TYPES.CATELOG: {
+            case TYPES.CATALOG: {
              // NOOP. Shouldn't get here
             } break;
             case TYPES.TABLE: {
