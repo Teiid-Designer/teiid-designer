@@ -13,7 +13,6 @@ import java.util.Collections;
 import java.util.EventObject;
 import java.util.Iterator;
 import java.util.List;
-
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
@@ -1186,9 +1185,6 @@ public class TransformationObjectEditorPage
     		if( displayStatus != null ) {
 	    		displayImage = getSeverityImage(insertResult.getMaxSeverity());
 	    		toolTipText = displayStatus.getMessage();
-    		} else {
-    			displayImage = null;
-    			toolTipText = null;
     		}
     	}
     	
@@ -1228,10 +1224,7 @@ public class TransformationObjectEditorPage
     		if( displayStatus != null ) {
 	    		displayImage = getSeverityImage(updateResult.getMaxSeverity());
 	    		toolTipText = displayStatus.getMessage();
-    		} else {
-    			displayImage = null;
-    			toolTipText = null;
-    		}
+            }
     	}
     	
     	this.updateTab.setImage(displayImage);
@@ -1269,9 +1262,6 @@ public class TransformationObjectEditorPage
     		if( displayStatus != null ) {
 	    		displayImage = getSeverityImage(deleteResult.getMaxSeverity());
 	    		toolTipText = displayStatus.getMessage();
-    		} else {
-    			displayImage = null;
-    			toolTipText = null;
     		}
     	}
     	

@@ -15,6 +15,7 @@ Export-Package: com.metamatrix.modeler.internal.transformation.util,
  com.metamatrix.modeler.transformation.compare,
  com.metamatrix.modeler.transformation.materialization,
  com.metamatrix.modeler.transformation.metadata,
+ com.metamatrix.modeler.transformation.model,
  com.metamatrix.modeler.transformation.search,
  com.metamatrix.modeler.transformation.validation
 Require-Bundle: org.teiid.designer.core,
@@ -35,6 +36,7 @@ Require-Bundle: org.teiid.designer.core,
  org.teiid.designer.legacy,
  teiid_embedded_query,
  org.eclipse.emf.ecore.xmi,
- org.teiid.designer.metamodels.function
+ org.teiid.designer.metamodels.function,
+ org.teiid.designer.relational
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

@@ -302,4 +302,23 @@
          </description>
       </wizard>
   </extension>
+  
+   <extension
+         id="newChildViewTableAction"
+         name="%newChildViewTableAction"
+         point="org.teiid.designer.ui.newChildAction">
+      <class
+            name="com.metamatrix.modeler.transformation.ui.actions.CreateViewTableAction">
+      </class>
+   </extension>
+
+   <extension
+         id="newSiblingViewTableAction"
+         name="%newSiblingViewTableAction"
+         point="org.teiid.designer.ui.newSiblingAction">
+      <class
+            name="com.metamatrix.modeler.transformation.ui.actions.CreateViewTableAction">
+      </class>
+   </extension>
+  
 </plugin>

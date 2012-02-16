@@ -523,8 +523,8 @@ public class RelationalModelXmlTextFileProcessor extends AbstractObjectProcessor
         if( objType.trim().equalsIgnoreCase(TYPES_LITERAL.ACCESSPATTERN) ) {
             return TYPES.AP;
         }
-        if( objType.trim().equalsIgnoreCase(TYPES_LITERAL.CATELOG) ) {
-            return TYPES.CATELOG;
+        if (objType.trim().equalsIgnoreCase(TYPES_LITERAL.CATALOG)) {
+            return TYPES.CATALOG;
         }
         if( objType.trim().equalsIgnoreCase(TYPES_LITERAL.COLUMN) ) {
             return TYPES.COLUMN;
