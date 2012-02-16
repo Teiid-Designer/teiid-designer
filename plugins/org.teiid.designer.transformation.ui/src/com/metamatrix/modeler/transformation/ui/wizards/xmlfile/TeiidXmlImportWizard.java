@@ -8,14 +8,15 @@
 package com.metamatrix.modeler.transformation.ui.wizards.xmlfile;
 
 import java.util.Properties;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbench;
-
+import com.metamatrix.core.util.I18nUtil;
+import com.metamatrix.modeler.transformation.ui.UiPlugin;
 import com.metamatrix.modeler.transformation.ui.wizards.file.TeiidMetadataImportInfo;
 import com.metamatrix.modeler.transformation.ui.wizards.file.TeiidMetadataImportViewModelPage;
 import com.metamatrix.modeler.transformation.ui.wizards.file.TeiidMetadataImportWizard;
@@ -24,6 +25,15 @@ import com.metamatrix.ui.internal.util.UiUtil;
 
 public class TeiidXmlImportWizard extends TeiidMetadataImportWizard {
     
+    private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(TeiidXmlImportWizard.class);
+
+    private static final String TITLE = getString("title"); //$NON-NLS-1$
+    private static final ImageDescriptor IMAGE = UiPlugin.getDefault().getImageDescriptor(Images.IMPORT_TEIID_METADATA);
+
+    private static String getString( final String id ) {
+        return Util.getString(I18N_PREFIX + id);
+    }
+
     IContainer folder = null;
     
     TeiidXmlImportSourcePage sourcePage;
@@ -31,7 +41,7 @@ public class TeiidXmlImportWizard extends TeiidMetadataImportWizard {
     private Properties designerProperties;
     
 	public TeiidXmlImportWizard() {
-		super();
+        super(UiPlugin.getDefault(), TITLE, IMAGE);
 	}
 	
 	@Override

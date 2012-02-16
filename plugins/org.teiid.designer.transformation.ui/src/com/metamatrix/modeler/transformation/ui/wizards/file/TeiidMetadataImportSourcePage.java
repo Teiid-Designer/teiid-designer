@@ -14,7 +14,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Properties;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -41,7 +40,6 @@ import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.window.Window;
-import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -67,7 +65,6 @@ import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
 import org.teiid.designer.datatools.connection.IConnectionInfoHelper;
 import org.teiid.designer.datatools.ui.actions.EditConnectionProfileAction;
 import org.teiid.designer.datatools.ui.dialogs.NewTeiidFilteredCPWizard;
-
 import com.metamatrix.common.protocol.URLHelper;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.core.util.I18nUtil;
@@ -721,12 +718,12 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 		INewWizard wiz = null;
 		
 		if( this.info.isFlatFileMode() ) {
-			wiz = (INewWizard) new NewTeiidFilteredCPWizard(ODA_FLAT_FILE_ID);
+            wiz = new NewTeiidFilteredCPWizard(ODA_FLAT_FILE_ID);
 		} else {
-			wiz = (INewWizard) new NewTeiidFilteredCPWizard(ODA_XML_FILE_ID);
+            wiz = new NewTeiidFilteredCPWizard(ODA_XML_FILE_ID);
 		}
 
-		WizardDialog wizardDialog = new WizardDialog(Display.getCurrent().getActiveShell(), (Wizard) wiz);
+        WizardDialog wizardDialog = new WizardDialog(Display.getCurrent().getActiveShell(), wiz);
 		wizardDialog.setBlockOnOpen(true);
 
 		CPListener listener = new CPListener();
@@ -966,7 +963,11 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 			}
 		}
 		if( !fileSelected ) {
-			setThisPageComplete(getString("noXmlDataFilesSelected"), ERROR);//$NON-NLS-1$
+            if (info.isFlatFileMode()) {
+                setThisPageComplete(getString("noDataFilesSelected"), ERROR);//$NON-NLS-1$
+            } else {
+                setThisPageComplete(getString("noXmlDataFilesSelected"), ERROR);//$NON-NLS-1$
+            }
 			return false;
 		}
 		

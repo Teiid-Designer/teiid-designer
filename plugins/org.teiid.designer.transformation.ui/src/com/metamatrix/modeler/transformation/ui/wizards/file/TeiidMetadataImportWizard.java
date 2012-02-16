@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.transformation.ui.wizards.file;
 
 import java.util.Properties;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -20,7 +19,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IImportWizard;
 import org.eclipse.ui.IWorkbench;
-
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelResource;
@@ -64,8 +63,14 @@ public class TeiidMetadataImportWizard extends AbstractWizard implements
 	 * @since 4.0
 	 */
 	public TeiidMetadataImportWizard() {
-		super(UiPlugin.getDefault(), TITLE, IMAGE);
+        super(UiPlugin.getDefault(), TITLE, IMAGE);
 	}
+
+    public TeiidMetadataImportWizard( final AbstractUIPlugin plugin,
+                                      final String title,
+                                      final ImageDescriptor image ) {
+        super(plugin, title, image);
+    }
 
 	@Override
 	public void init(IWorkbench workbench, IStructuredSelection inputSelection) {
