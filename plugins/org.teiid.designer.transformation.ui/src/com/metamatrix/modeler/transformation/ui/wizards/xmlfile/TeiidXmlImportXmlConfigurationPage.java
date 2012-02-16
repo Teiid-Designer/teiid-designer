@@ -371,7 +371,7 @@ public class TeiidXmlImportXmlConfigurationPage extends AbstractWizardPage imple
 
     	Composite leftToolbarPanel = new Composite(columnInfoGroup, SWT.NONE);
     	leftToolbarPanel.setLayout(new GridLayout());
-	  	GridData ltpGD = new GridData(GridData.VERTICAL_ALIGN_BEGINNING);
+	  	GridData ltpGD = new GridData(GridData.FILL_VERTICAL);
 	  	ltpGD.heightHint=120;
 	  	leftToolbarPanel.setLayoutData(ltpGD);
     	

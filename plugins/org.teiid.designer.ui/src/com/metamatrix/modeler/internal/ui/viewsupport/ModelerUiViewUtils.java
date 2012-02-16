@@ -120,26 +120,33 @@ public class ModelerUiViewUtils {
      * @param id
      * @param selection
      */
-	public static void launchWizard(String id, IStructuredSelection selection, Properties properties) {
-		// First see if this is a "new wizard".
-		IWizardDescriptor descriptor = PlatformUI.getWorkbench().getNewWizardRegistry().findWizard(id);
-		// If not check if it is an "import wizard".
-		if (descriptor == null) {
-			descriptor = PlatformUI.getWorkbench().getImportWizardRegistry().findWizard(id);
-		}
-		// Or maybe an export wizard
-		if (descriptor == null) {
-			descriptor = PlatformUI.getWorkbench().getExportWizardRegistry().findWizard(id);
-		}
-		try {
-			// Then if we have a wizard, open it.
-			if (descriptor != null) {
-				IWorkbenchWizard wizard = descriptor.createWizard();
-				ModelerUiViewUtils.launchWizard(wizard, selection, properties);
-			}
-		} catch (CoreException e) {
-			e.printStackTrace();
-		}
+	public static void launchWizard(final String id, final IStructuredSelection selection, final Properties properties) {
+		
+        Display.getDefault().asyncExec(new Runnable() {
+
+            public void run() {
+        		// First see if this is a "new wizard".
+        		IWizardDescriptor descriptor = PlatformUI.getWorkbench().getNewWizardRegistry().findWizard(id);
+        		// If not check if it is an "import wizard".
+        		if (descriptor == null) {
+        			descriptor = PlatformUI.getWorkbench().getImportWizardRegistry().findWizard(id);
+        		}
+        		// Or maybe an export wizard
+        		if (descriptor == null) {
+        			descriptor = PlatformUI.getWorkbench().getExportWizardRegistry().findWizard(id);
+        		}
+        		try {
+        			// Then if we have a wizard, open it.
+        			if (descriptor != null) {
+        				IWorkbenchWizard wizard = descriptor.createWizard();
+        				ModelerUiViewUtils.launchWizard(wizard, selection, properties);
+        			}
+        		} catch (CoreException e) {
+        			e.printStackTrace();
+        		}
+            }
+        });
+
 	}
 
 	/**
@@ -158,16 +165,22 @@ public class ModelerUiViewUtils {
 	 * @param wizard
 	 * @param selection
 	 */
-	public static void launchWizard(IWorkbenchWizard wizard, IStructuredSelection selection, Properties properties) {
-		wizard.init(PlatformUI.getWorkbench(), selection);
-		if( properties != null && wizard instanceof IPropertiesContext ) {
-			((IPropertiesContext)wizard).setProperties(properties);
-		}
+	public static void launchWizard(final IWorkbenchWizard wizard, final IStructuredSelection selection, final Properties properties) {
+        Display.getDefault().asyncExec(new Runnable() {
 
-		WizardDialog wd = new WizardDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), wizard);
-		wd.create();
-		wd.setTitle(wizard.getWindowTitle());
-		wd.open();
+            public void run() {
+        		wizard.init(PlatformUI.getWorkbench(), selection);
+        		if( properties != null && wizard instanceof IPropertiesContext ) {
+        			((IPropertiesContext)wizard).setProperties(properties);
+        		}
+
+        		WizardDialog wd = new WizardDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), wizard);
+        		wd.create();
+        		wd.setTitle(wizard.getWindowTitle());
+        		wd.open();
+            }
+        });
+
 	}
 
 }

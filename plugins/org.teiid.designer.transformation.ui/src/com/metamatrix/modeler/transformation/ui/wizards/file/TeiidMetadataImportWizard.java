@@ -112,7 +112,11 @@ public class TeiidMetadataImportWizard extends AbstractWizard implements
         	this.filesInfo.setSourceModelLocation(folder.getFullPath());
         	this.filesInfo.setViewModelLocation(folder.getFullPath());
         }
-        
+
+	}
+
+	@Override
+	public void addPages() {
 		this.sourcePage = new TeiidMetadataImportSourcePage(getFileInfo());
         addPage(sourcePage);
         
@@ -124,12 +128,6 @@ public class TeiidMetadataImportWizard extends AbstractWizard implements
         
         TeiidMetadataImportViewModelPage viewModelPage = new TeiidMetadataImportViewModelPage(getFileInfo());
         addPage(viewModelPage);
-	}
-	
-
-	@Override
-	public void addPages() {
-		// Already created
 	}
 
 	@Override

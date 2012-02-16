@@ -234,13 +234,20 @@ public class TeiidMetadataImportProcessor implements UiConstants {
 
     protected ModelResource createViewsInExistingModel(String relationalModelName) throws ModelerCoreException  {
     	if( info.getViewModelLocation() != null && info.getViewModelName() != null ) {
-    		IPath modelPath = info.getViewModelLocation().append(info.getViewModelName());
-    		if( !modelPath.toString().toUpperCase().endsWith(".XMI")) { //$NON-NLS-1$
-    			modelPath = modelPath.addFileExtension(".xmi"); //$NON-NLS-1$
-    		}
+    		IFile viewIFile = null;
     		
-    		ModelWorkspaceItem item = ModelWorkspaceManager.getModelWorkspaceManager().findModelWorkspaceItem(modelPath, IResource.FILE);
-            ModelEditor editor = ModelEditorManager.getModelEditorForFile( (IFile)item.getCorrespondingResource(), true);
+    		if( this.viewModel != null ) {
+    			viewIFile = (IFile)this.viewModel.getCorrespondingResource();
+    		} else {
+	    		IPath modelPath = info.getViewModelLocation().append(info.getViewModelName());
+	    		if( !modelPath.toString().toUpperCase().endsWith(".XMI")) { //$NON-NLS-1$
+	    			modelPath = modelPath.addFileExtension(".xmi"); //$NON-NLS-1$
+	    		}
+	    		
+	    		ModelWorkspaceItem item = ModelWorkspaceManager.getModelWorkspaceManager().findModelWorkspaceItem(modelPath, IResource.FILE);
+	    		viewIFile = (IFile)item.getCorrespondingResource();
+    		}
+            ModelEditor editor = ModelEditorManager.getModelEditorForFile( viewIFile, true);
             if (editor != null) {
                 boolean isDirty = editor.isDirty();
                 FlatFileViewModelFactory factory = new FlatFileViewModelFactory();
@@ -326,13 +333,21 @@ public class TeiidMetadataImportProcessor implements UiConstants {
  
     protected ModelResource addProcedureToRelationalSourceModel() throws ModelerCoreException {
     	if( info.getSourceModelLocation() != null && info.getSourceModelName() != null ) {
-    		IPath modelPath = info.getSourceModelLocation().append(info.getSourceModelName());
-    		if( !modelPath.toString().toUpperCase().endsWith(".XMI")) { //$NON-NLS-1$
-    			modelPath = modelPath.addFileExtension("xmi"); //$NON-NLS-1$
-    		}
     		
-    		ModelWorkspaceItem item = ModelWorkspaceManager.getModelWorkspaceManager().findModelWorkspaceItem(modelPath, IResource.FILE);
-            ModelEditor editor = ModelEditorManager.getModelEditorForFile( (IFile)item.getCorrespondingResource(), true);
+    		IFile sourceIFile = null;
+    		
+    		if( this.sourceModel != null ) {
+    			sourceIFile = (IFile)this.sourceModel.getCorrespondingResource();
+    		} else {
+	    		IPath modelPath = info.getSourceModelLocation().append(info.getSourceModelName());
+	    		if( !modelPath.toString().toUpperCase().endsWith(".XMI")) { //$NON-NLS-1$
+	    			modelPath = modelPath.addFileExtension("xmi"); //$NON-NLS-1$
+	    		}
+	    		
+	    		ModelWorkspaceItem item = ModelWorkspaceManager.getModelWorkspaceManager().findModelWorkspaceItem(modelPath, IResource.FILE);
+	    		sourceIFile = (IFile)item.getCorrespondingResource();
+    		}
+            ModelEditor editor = ModelEditorManager.getModelEditorForFile( sourceIFile, true);
             if (editor != null) {
             	ModelResource mr = editor.getModelResource();
                 boolean isDirty = editor.isDirty();

@@ -7,17 +7,29 @@
 */
 package com.metamatrix.modeler.transformation.ui.wizards.xmlfile;
 
+import java.util.Properties;
+
+import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbench;
 
 import com.metamatrix.modeler.transformation.ui.wizards.file.TeiidMetadataImportInfo;
-import com.metamatrix.modeler.transformation.ui.wizards.file.TeiidMetadataImportSourcePage;
 import com.metamatrix.modeler.transformation.ui.wizards.file.TeiidMetadataImportViewModelPage;
 import com.metamatrix.modeler.transformation.ui.wizards.file.TeiidMetadataImportWizard;
+import com.metamatrix.modeler.ui.viewsupport.IPropertiesContext;
 import com.metamatrix.ui.internal.util.UiUtil;
 
 public class TeiidXmlImportWizard extends TeiidMetadataImportWizard {
-
+    
+    IContainer folder = null;
+    
+    TeiidXmlImportSourcePage sourcePage;
+    
+    private Properties designerProperties;
+    
 	public TeiidXmlImportWizard() {
 		super();
 	}
@@ -31,11 +43,10 @@ public class TeiidXmlImportWizard extends TeiidMetadataImportWizard {
 	
 	@Override
 	public void addPages() {
-		
 		TeiidXmlImportOptionsPage optionsPage = new TeiidXmlImportOptionsPage(getFileInfo());
 		addPage(optionsPage);
 		
-		TeiidXmlImportSourcePage sourcePage = new TeiidXmlImportSourcePage(getFileInfo());
+		this.sourcePage = new TeiidXmlImportSourcePage(getFileInfo());
         addPage(sourcePage);
         
         TeiidXmlImportXmlConfigurationPage sqlPage = new TeiidXmlImportXmlConfigurationPage(getFileInfo());
@@ -61,5 +72,40 @@ public class TeiidXmlImportWizard extends TeiidMetadataImportWizard {
 	
 	public void setFileOption(int option) {
 		getFileInfo().setFileMode(option);
+	}
+	
+	@Override
+	public void setProperties(Properties properties) {
+    	this.designerProperties = properties;
+	}
+	
+	protected void updateForProperties() {
+		if( this.designerProperties == null || this.designerProperties.isEmpty() ) {
+			return;
+		}
+    	if( this.folder == null ) {
+    		// check for project property and if sources folder property exists
+    		String projectName = this.designerProperties.getProperty(IPropertiesContext.KEY_PROJECT_NAME);
+    		if( projectName != null && !projectName.isEmpty() ) {
+    			String folderName = projectName;
+    			String sourcesFolder = this.designerProperties.getProperty(IPropertiesContext.KEY_HAS_SOURCES_FOLDER);
+    			if( sourcesFolder != null && !sourcesFolder.isEmpty() ) {
+    				folderName = new Path(projectName).append(sourcesFolder).toString();
+    			}
+    			final IResource resrc = ResourcesPlugin.getWorkspace().getRoot().findMember(folderName);
+    			if( resrc != null ) {
+    				IContainer folder = (IContainer)resrc;
+    				getFileInfo().setSourceModelLocation(folder.getFullPath());
+    				getFileInfo().setViewModelLocation(folder.getFullPath());
+    			}
+    		}
+    	}
+    	
+		// check for project property and if sources folder property exists
+		String profileName = this.designerProperties.getProperty(IPropertiesContext.KEY_LAST_CONNECTION_PROFILE_ID);
+		if( profileName != null && !profileName.isEmpty() ) {
+			// Select profile
+			sourcePage.selectConnectionProfile(profileName);
+		}
 	}
 }

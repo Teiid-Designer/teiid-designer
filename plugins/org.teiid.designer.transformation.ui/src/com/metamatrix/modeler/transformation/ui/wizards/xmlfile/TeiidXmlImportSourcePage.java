@@ -791,7 +791,16 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 		synchronizeUI();
 		validatePage();
 	}
-
+	
+	void initializeUI() {
+		synchronizeUI();
+		if (this.info.getSourceModelName() != null) {
+			this.sourceModelFileText.setText(this.info.getSourceModelName());
+		} else {
+			this.sourceModelFileText.setText(StringUtilities.EMPTY_STRING);
+		}
+	}
+	
 	void synchronizeUI() {
 		synchronizing = true;
 
@@ -803,7 +812,6 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 
 		if (this.info.getSourceModelName() != null) {
 			this.sourceModelFilePath = this.info.getSourceModelLocation();
-			this.sourceModelFileText.setText(this.info.getSourceModelName());
 		} else {
 			this.sourceModelFileText.setText(StringUtilities.EMPTY_STRING);
 		}
@@ -838,7 +846,7 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 		return false;
 	}
 
-	void selectConnectionProfile(String name) {
+	public void selectConnectionProfile(String name) {
 		if (name == null) {
 			return;
 		}
@@ -1291,7 +1299,7 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 			
 			fileNameColumn.getColumn().pack();
 			
-			synchronizeUI();
+			initializeUI();
 		}
 	}
 }
