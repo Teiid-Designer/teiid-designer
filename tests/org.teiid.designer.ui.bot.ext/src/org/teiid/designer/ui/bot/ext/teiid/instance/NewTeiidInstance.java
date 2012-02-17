@@ -1,5 +1,6 @@
 package org.teiid.designer.ui.bot.ext.teiid.instance;
 
+import org.jboss.tools.ui.bot.ext.logging.WidgetsLogger;
 import org.teiid.designer.ui.bot.ext.teiid.perspective.TeiidPerspective;
 import org.teiid.designer.ui.bot.ext.teiid.view.TeiidInstanceView;
 
@@ -10,6 +11,8 @@ import org.teiid.designer.ui.bot.ext.teiid.view.TeiidInstanceView;
  *
  */
 public class NewTeiidInstance {
+	
+	private String name;
 
 	private String host;
 
@@ -29,6 +32,8 @@ public class NewTeiidInstance {
 		TeiidInstanceView view = TeiidPerspective.getInstance().getTeiidInstanceView();
 		
 		TeiidInstanceDialog dialog = view.newTeiidInstance();
+		WidgetsLogger.log();
+		dialog.setName(name);
 		dialog.setHost(host);
 		dialog.setAdminPort(adminPort);
 		dialog.setAdminUser(adminUser);
@@ -37,6 +42,10 @@ public class NewTeiidInstance {
 		dialog.setUserName(userName);
 		dialog.setUserPassword(userPassword);
 		dialog.finish();
+	}
+	
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public void setHost(String host) {
