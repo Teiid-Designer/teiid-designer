@@ -24,7 +24,7 @@ public class CreateMetadataModel {
 
 		public static final String WEBSERVICE = "Web Service";
 
-		public static final String MODEL_EXTENSION = "Model Extension";
+		public static final String MODEL_EXTENSION = "Model Extension (Deprecated)";
 
 		public static final String FUNCTION = "Function";
 
