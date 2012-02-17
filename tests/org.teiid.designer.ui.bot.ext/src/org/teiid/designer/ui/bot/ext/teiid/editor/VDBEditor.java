@@ -33,7 +33,5 @@ public class VDBEditor extends Editor{
 
 	public void synchronizeAll() {
 		getEditor().bot().button("Synchronize All").click();
-		getBot().shell("Confirm").activate();
-		SWTBotFactory.getOpen().finish(getBot(), IDELabel.Button.OK);
 	}
 }
