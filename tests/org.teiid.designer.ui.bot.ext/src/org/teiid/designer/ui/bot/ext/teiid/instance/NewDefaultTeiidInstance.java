@@ -21,6 +21,7 @@ public class NewDefaultTeiidInstance extends NewTeiidInstance {
 	
 	public NewDefaultTeiidInstance() {
 		super();
+		setName(TEIID_URL);
 		setHost(TEIID_HOST);
 		setAdminPort(TEIID_ADMIN_PORT);
 		setAdminUser(TEIID_ADMIN_USER);
