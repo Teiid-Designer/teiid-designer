@@ -14,67 +14,66 @@
 			<br/>Press "<b>Click to Begin</b>" button below to start.
 		</description>
    </intro>
-   <item
-         title=">>> Launch New Teiid Model Project Wizard" skip="true" dialog="true">
+   <item title="Create New Teiid Model Project" skip="true">
+     <description>
+         <b>Follow steps below to create Teiid Model Project</b>
+      </description>
+      <subitem label="Launch New Teiid Model Project Wizard" skip="true">
+            <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
+			pluginId="org.teiid.designer.advisor.ui" param1="org.teiid.designer.newProjectCommand"/> 
+      </subitem>
+      <subitem skip="true" dialog="false">
+	      <description>
+				      = = = = = = = = = = = = = = = = = = =
+				<br/> <b>1)</b> Specify unique project name
+				<br/> <b>2)</b> Click <b>Next ></b> twice to get to <b>Model Project Options</b> page
+				<br/> <b>3)</b> Check folders you wish the wizard to create in your project
+				<br/> <b>4)</b> Click <b>Finish</b>
+				<br/> = = = = = = = = = = = = = = = = = = =
+      	  </description>
+   	  </subitem>
+   </item>
 
-      <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
-			pluginId="org.teiid.designer.advisor.ui" param1="org.teiid.designer.newProjectCommand"/>  
-<!--      <command serialization="org.teiid.designer.advisor.ui.commands.DesignerCheatSheetActionHandler(commandId=org.teiid.designer.newProjectCommand)" required="true" translate="" />
- -->
-    <description>
-         <b> Press 'Click to Perform' to create a new Teiid Model Project.</b>
-      </description>
-   </item>
-   <item
-         title="Define New Teiid Model Project" skip="false" dialog="false">
-      <description>
-			============================================================
-			<br/> 1) Specify unique project name
-			<br/> 2) <b>Click Next ></b> twice to get to <b>Model Project Options</b> page
-			<br/> 3) Check folders you wish the wizard to create in your project
-			<br/> 4) Click <b>Finish</b>
-			<br/> ============================================================
-      </description>
-   </item>
-   <item
-         title=">>> Launch New JDBC Source Connection Wizard" skip="true" dialog="true">
-      <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
+   <item title="Create New JDBC Source Connection" skip="true">
+      	<description>
+         	<b> Follow steps below to create a JDBC Connection profile.</b>
+      	</description>
+         <subitem label="Launch New JDBC Source Connection Wizard" skip="true">
+      			<action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
 			pluginId="org.teiid.designer.advisor.ui" param1="org.teiid.designer.connection.new.jdbc"/>
-      <description>
-         <b> Press 'Click to Perform' to create a JDBC Connection profile.</b>
-      </description>
+   		</subitem>
+   		<subitem skip="true" dialog="false">
+	      <description>
+	                  = = = = = = = = = = = = = = = = = = =
+				<br/> <b>1)</b> Select Connection Profile Type (Driver type)
+				<br/> <b>2)</b> Enter unique profile name (example: Products Oracle 11)
+				<br/> <b>3)</b> Select applicable Driver (or create/edit)
+				<br/> <b>4)</b> Enter required driver into (Host, Port number, username, etc...)
+				<br/> <b>5)</b> Test connection to verify properties and driver selection
+				<br/> <b>6)</b> Click <b>Finish</b>
+				<br/> = = = = = = = = = = = = = = = = = = =
+	      </description>
+   	  </subitem>
    </item>
-   <item
-         title="Define JDBC Source Connection" skip="false" dialog="true">
-      <description>
-         ============================================================
-			<br/> 1) Select Connection Profile Type (Driver type)
-			<br/> 2) Enter unique profile name (example: Products Oracle 11)
-			<br/> 3) Select applicable Driver (or create/edit)
-			<br/> 4) Enter required driver into (Host, Port number, username, etc...)
-			<br/> 5) Test connection to verify properties and driver selection
-			<br/> 6) Click <b>Finish</b>
-			<br/> ============================================================
-      </description>
-   </item>
-   <item
-         title=">>> Launch Create Source From JDBC Connection" skip="true" dialog="true">
-      <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
+   
+   <item title="Create Source Model From JDBC Connection" skip="true">
+      	<description>
+         	<b> Follow steps below to create a relational model from importing table data via your JDBC connection profile.</b>
+      	</description>
+         <subitem label="Launch Import from JDBC Source Wizard" skip="true">
+      			<action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
 			pluginId="org.teiid.designer.advisor.ui" param1="org.teiid.designer.importJdbcCommand"/>
-      <description> 
-         <b> Press 'Click to Perform' to create a relational model from importing table data via your JDBC connection profile.</b>
-      </description>
-   </item>
-   <item
-         title="Create Source From JDBC Connection" skip="false" dialog="true">
-      <description> 
-         ============================================================
-			<br/> 1) Select your JDBC source connection profile
-			<br/> 2) Verify password and click <b>Next &gt;</b>
-			<br/> 3) Select designer import <b>Table Types</b> , check desired options and click <b>Next &gt;</b>
-			<br/> 4) Select desired database objects you wish to model (tables, columns, procedures, etc. and click <b>Next &gt;</b> 
-			<br/> 5) Specify unique model name, folder and  naming options and click <b>Finish</b> 
-			<br/> ============================================================
-      </description>
+   		</subitem>
+   		<subitem skip="true" dialog="false">
+	      <description>
+                  = = = = = = = = = = = = = = = = = = =
+			<br/> <b>1)</b> Select your JDBC source connection profile
+			<br/> <b>2)</b> Verify password and click <b>Next &gt;</b>
+			<br/> <b>3)</b> Select designer import <b>Table Types</b> , check desired options and click <b>Next &gt;</b>
+			<br/> <b>4)</b> Select desired database objects you wish to model (tables, columns, procedures, etc. and click <b>Next &gt;</b> 
+			<br/> <b>5)</b> Specify unique model name, folder and  naming options and click <b>Finish</b> 
+			<br/> = = = = = = = = = = = = = = = = = = =
+	      </description>
+   	  </subitem>
    </item>
 </cheatsheet>
