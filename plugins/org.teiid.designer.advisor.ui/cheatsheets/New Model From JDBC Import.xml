@@ -4,14 +4,6 @@
    <intro>
    		<description>This cheat sheet shows you how to model two different sources and create a view that joins data from both sources.
    			In this example, a JDBC source table and Flat File source table are used.
-   			<br/>
-			<br/>
-			<b>Note:</b> These steps are sequential and require you to complete or
-			skip each step before being allowed to <b>Perform</b>, <b>Complete</b> or <b>Skip</b> the next step.<br/>
-			<br/>
-			To learn more about using cheat sheets click the help icon above.
-			<br/>
-			<br/>Press "<b>Click to Begin</b>" button below to start.
 		</description>
    </intro>
    <item title="Create New Teiid Model Project" skip="true">
@@ -20,16 +12,15 @@
       </description>
       <subitem label="Launch New Teiid Model Project Wizard" skip="true">
             <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
-			pluginId="org.teiid.designer.advisor.ui" param1="org.teiid.designer.newProjectCommand"/> 
+			pluginId="org.teiid.designer.advisor.ui" 
+			param1="org.teiid.designer.newProjectCommand"/> 
       </subitem>
       <subitem skip="true" dialog="false">
 	      <description>
-				      = = = = = = = = = = = = = = = = = = =
-				<br/> <b>1)</b> Specify unique project name
+				      <b>1)</b> Specify unique project name
 				<br/> <b>2)</b> Click <b>Next ></b> twice to get to <b>Model Project Options</b> page
 				<br/> <b>3)</b> Check folders you wish the wizard to create in your project
 				<br/> <b>4)</b> Click <b>Finish</b>
-				<br/> = = = = = = = = = = = = = = = = = = =
       	  </description>
    	  </subitem>
    </item>
@@ -40,18 +31,17 @@
       	</description>
          <subitem label="Launch New JDBC Source Connection Wizard" skip="true">
       			<action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
-			pluginId="org.teiid.designer.advisor.ui" param1="org.teiid.designer.connection.new.jdbc"/>
+			pluginId="org.teiid.designer.advisor.ui" 
+			param1="org.teiid.designer.connection.new.jdbc"/>
    		</subitem>
    		<subitem skip="true" dialog="false">
 	      <description>
-	                  = = = = = = = = = = = = = = = = = = =
-				<br/> <b>1)</b> Select Connection Profile Type (Driver type)
+	                  <b>1)</b> Select Connection Profile Type (Driver type)
 				<br/> <b>2)</b> Enter unique profile name (example: Products Oracle 11)
 				<br/> <b>3)</b> Select applicable Driver (or create/edit)
 				<br/> <b>4)</b> Enter required driver into (Host, Port number, username, etc...)
 				<br/> <b>5)</b> Test connection to verify properties and driver selection
 				<br/> <b>6)</b> Click <b>Finish</b>
-				<br/> = = = = = = = = = = = = = = = = = = =
 	      </description>
    	  </subitem>
    </item>
@@ -62,17 +52,16 @@
       	</description>
          <subitem label="Launch Import from JDBC Source Wizard" skip="true">
       			<action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
-			pluginId="org.teiid.designer.advisor.ui" param1="org.teiid.designer.importJdbcCommand"/>
+			pluginId="org.teiid.designer.advisor.ui" 
+			param1="org.teiid.designer.importJdbcCommand"/>
    		</subitem>
    		<subitem skip="true" dialog="false">
 	      <description>
-                  = = = = = = = = = = = = = = = = = = =
-			<br/> <b>1)</b> Select your JDBC source connection profile
+                  <b>1)</b> Select your JDBC source connection profile
 			<br/> <b>2)</b> Verify password and click <b>Next &gt;</b>
 			<br/> <b>3)</b> Select designer import <b>Table Types</b> , check desired options and click <b>Next &gt;</b>
 			<br/> <b>4)</b> Select desired database objects you wish to model (tables, columns, procedures, etc. and click <b>Next &gt;</b> 
 			<br/> <b>5)</b> Specify unique model name, folder and  naming options and click <b>Finish</b> 
-			<br/> = = = = = = = = = = = = = = = = = = =
 	      </description>
    	  </subitem>
    </item>

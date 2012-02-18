@@ -3,33 +3,25 @@
       title="Create Teiid Model Project">
    <intro>
    		<description>This cheat sheet shows you how to create and set-up your Teiid model project.
-   			<br/>
-			<br/>
-			<b>Note:</b> These steps are sequential and require you to complete or
-			skip each step before being allowed to <b>Perform</b>, <b>Complete</b> or <b>Skip</b> the next step.<br/>
-			<br/>
-			To learn more about using cheat sheets click the help icon above.
-			<br/>
-			<br/>Press "<b>Click to Begin</b>" button below to start.
 		</description>
    </intro>
 
-   <item
-         title="Create New Teiid Model Project" skip="true">
-      <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
-			pluginId="org.teiid.designer.advisor.ui" param1="org.teiid.designer.newProjectCommand"/>
-      <description>
-         <b> This following action creates a new Teiid Model Project.</b>
-			<br/> ============================================================
-			<br/> -- > Press "<b>Click to Perform</b>" button below to launch the connection profile wizard.
-			<br/> -- >   1) Specify unique project name
-			<br/> -- >   2) <b>Click Next ></b> twice to get to <b>Model Project Options</b> page
-			<br/> -- >   3) Check folders you wish the wizard to create in your project
-			<br/> -- >          Note: These folders are not required but recommended for projects that will
-			<br/> -- >                contain a large number of models
-			<br/> -- >   4) Click <b>Finish</b>
-			<br/> -- > You may skip this step if you have already created a model project.
-			<br/> ============================================================
+   <item title="Create New Teiid Model Project" skip="true">
+     <description>
+         <b>Follow steps below to create Teiid Model Project</b>
       </description>
+      <subitem label="Launch New Teiid Model Project Wizard" skip="true">
+            <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
+			pluginId="org.teiid.designer.advisor.ui" param1="org.teiid.designer.newProjectCommand"/> 
+      </subitem>
+      <subitem skip="true" dialog="false">
+	      <description>
+				      <b>1)</b> Specify unique project name
+				<br/> <b>2)</b> Click <b>Next ></b> twice to get to <b>Model Project Options</b> page
+				<br/> <b>3)</b> Check folders you wish the wizard to create in your project
+				<br/> - - - NOTE: Folders are recommended if this project will contain a large number of models
+				<br/> <b>4)</b> Click <b>Finish</b>
+      	  </description>
+   	  </subitem>
    </item>
 </cheatsheet>

@@ -4,49 +4,47 @@
    <intro>
    		<description>This cheat sheet shows you how to model two different sources and create a view that joins data from both sources.
    			In this example, a JDBC source table and Flat File source table are used.
-   			<br/>
-			<br/>
-			<b>Note:</b> These steps are sequential and require you to complete or
-			skip each step before being allowed to <b>Perform</b>, <b>Complete</b> or <b>Skip</b> the next step.<br/>
-			<br/>
-			To learn more about using cheat sheets click the help icon above.
-			<br/>
-			<br/>Press "<b>Click to Begin</b>" button below to start.
 		</description>
    </intro>
-   <item
-         title="Create VDB" skip="true">
-      <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
-			pluginId="org.teiid.designer.advisor.ui" 
-			param1="org.teiid.designer.vdb.create"/>
-      <description>
-         <b> This action will launch the New VDB wizard.</b>
-			<br/> ============================================================
-			<br/> -- > Press "<b>Click to Perform</b>" button below to create a new VDB.
-			<br/> -- >   1) Select <b>"..."</b> button to browse and select project or folder location.
-			<br/> -- >   2) Enter a unique name for your VDB
-			<br/> -- >   3) Enter an optional description for your VDB
-			<br/> -- >   4) Select the <b>Add</b> button to choose models to go in your VDB
-			<br/> -- > You may skip this step if you have already created your VDB.
-			<br/> ============================================================
+   
+   
+   <item title="Create VDB" skip="true">
+     <description>
+         <b>Follow steps below to create a new VDB</b>
       </description>
+      <subitem label="Launch New VDB Wizard" skip="true">
+            <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
+			pluginId="org.teiid.designer.advisor.ui" 
+			param1="org.teiid.designer.vdb.create"/> 
+      </subitem>
+      <subitem skip="true" dialog="false">
+	      <description>
+				      <b>1)</b> Select <b>"..."</b> button to browse and select project or folder location.
+				<br/> <b>2)</b> Enter a unique name for your VDB
+				<br/> <b>3)</b> Enter an optional description for your VDB
+				<br/> <b>4)</b> Select the <b>Add</b> button to choose models to go in your VDB
+				<br/> <b>5)</b> Click <b>Finish</b>
+      	  </description>
+   	  </subitem>
    </item>
-   <item
-         title="Test VDB" skip="true">
-      <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
-			pluginId="org.teiid.designer.advisor.ui" 
-			param1="org.teiid.designer.vdb.execute"/>
-      <description>
-         <b> This action will launch the Execute VDB wizard which will validate your VDB,
-         	insure you have a running Teiid server, deploy your VDB, open a JDBC connection
-         	to your VDB and open a SQL Scrapbook editor.</b>
-			<br/> ============================================================
-			<br/> -- > Press "<b>Click to Perform</b>" button below to test your VDB.
-			<br/> -- >   1) Select <b>"..."</b> button to browse and select a VDB.
-			<br/> -- >   2) Click OK to deploy VDB and open connection in Data Source Explorer
-			<br/> -- >   3) Follow instructions in open SQL Scrapbook Editor
-			<br/> -- > You may skip this step if you have already tested your VDB.
-			<br/> ============================================================
+   
+   
+   <item title="Test VDB" skip="true">
+     <description>
+         <b>Follow steps below to create a new VDB</b>
       </description>
+      <subitem label="Launch Execute VDB Dialog" skip="true">
+            <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
+			pluginId="org.teiid.designer.advisor.ui" 
+			param1="org.teiid.designer.vdb.execute"/> 
+      </subitem>
+      <subitem skip="true" dialog="false">
+	      <description>
+				      <b>1)</b> Select <b>"..."</b> button to browse and select a VDB.
+				<br/> <b>2)</b> Click OK to deploy VDB and open connection in Data Source Explorer
+				<br/> <b>3)</b> Follow instructions in open SQL Scrapbook Editor
+				<br/> <b>4)</b> View your query results in the SQL Results view
+      	  </description>
+   	  </subitem>
    </item>
 </cheatsheet>

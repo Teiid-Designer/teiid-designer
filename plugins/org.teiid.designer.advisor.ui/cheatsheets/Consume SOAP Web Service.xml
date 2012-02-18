@@ -2,78 +2,92 @@
 <cheatsheet
       title="Consume a SOAP Web Service">
    <intro>
-   		<description>Consume a SOAP Web Service by creating source and view models based on target WSDL file definition.<br/>
-			<br/>
-			<b>Note:</b> These steps are sequential and require you to complete or
-			skip each step before being allowed to <b>Perform</b>, <b>Complete</b> or <b>Skip</b> the next step.<br/>
-			<br/>
-			To learn more about using cheat sheets click the help icon above.
-			<br/>
-			<br/>Press "<b>Click to Begin</b>" button below to start.
+   		<description>Consume a SOAP Web Service by creating source and view models based on target WSDL file definition.
 		</description>
    </intro>
-   <item
-         title="Create SOAP Connection Profile" skip="true">
-      <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
-			pluginId="org.teiid.designer.advisor.ui" param1="org.teiid.designer.connection.new.ws"/>
-      <description>
-         <b> This following action creates an ODA Web Service connection profile using the WSDL URL
+   
+   <item title="Create SOAP Web Service Connection" skip="true">
+     <description>
+         <b>Follow steps below to create an ODA Web Service connection profile using the WSDL URL
          	 and end-point information.</b>
-			<br/> ============================================================
-			<br/> -- > Press "<b>Click to Perform</b>" button below to launch the wizard.
-			<br/> -- > Inputs include: <b>WSDL URL</b> and sample <b>request/response document XML files</b> 
-			<br/> -- > You may skip this step if you have already created a SOAP connection profile.
-			<br/> ============================================================
       </description>
+      <subitem label="Launch Create SOAP Connection Profile Wizard" skip="true">
+            <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
+			pluginId="org.teiid.designer.advisor.ui" 
+			param1="org.teiid.designer.connection.new.ws"/> 
+      </subitem>
+      <subitem skip="true" dialog="false">
+	      <description>
+				      <b>1)</b> Enter WSDL URL (Local or remote)
+				<br/> <b>2)</b> Select <b>Extract...</b>, choose an end-point from your WSDL and click <b>Next ></b>
+				<br/> <b>3)</b> Choose one or more operations you wish to extract data from
+				<br/> <b>4)</b> Specify URL's to sample request and/or response documents 
+				<br/> ---- NOTE: These will be used later to help define your return data structure
+				extract Inputs include: <b>WSDL URL</b> and sample <b>request/response document XML files</b> 
+      	  </description>
+   	  </subitem>
    </item>
-   <item
-         title="Generate Models" skip="true">
-      <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
-			   pluginId="org.teiid.designer.advisor.ui" param1="org.teiid.designer.generatewsmodelsfromwsdl"/>
-      <description>
-         <b> This action utilizes the previously defined connection profile by interpreting the WSDL, 
+   
+   <item title="Generate Models" skip="true">
+     <description>
+         <b>This action utilizes the previously defined connection profile by interpreting the WSDL, 
          	locating any associated or dependent XML schema files, generating a physical model containing the required
          	invoke procedures for the service, and generating virtual models containing procedures which will build and 
-         	parse the XML declared as the service messages.</b>
-			<br/> ============================================================
-			<br/> -- > Press "<b>Click to Perform</b>" button below to launch the model generator wizard.
-			<br/> -- > Select your connection profile and press <b>Validate WSDL</b>.
-			<br/> -- > Set the target folder or project location for your generated models and click <b>Next ></b>.
-			<br/> -- > Select/de-select operations you wish to generate procedures for and click <b>Finish</b>.
-			<br/> -- > Press "<b>Click to Complete</b>" button below when finished.
-			<br/> -- > You may skip this step if you have already generated your models.
-			<br/> ============================================================
+         	parse the XML declared as the service messages</b>
       </description>
+      <subitem label="Launch the Consume SOAP Web Service Wizard" skip="true">
+            <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
+			pluginId="org.teiid.designer.advisor.ui" 
+			param1="org.teiid.designer.generatewsmodelsfromwsdl"/> 
+      </subitem>
+      <subitem skip="true" dialog="false">
+	      <description>
+				      <b>1)</b> Select your connection profile and press <b>Validate WSDL</b>.
+				<br/> <b>2)</b> Set the target folder or project location and unique name for your generated source model. Click <b>Next ></b>. 
+				<br/> <b>3)</b> For each operation, use your sample request or response XML document to 
+					define your view tables and corresponding generated SQL. Then click <b>Next ></b>.
+				<br/> <b>4)</b> Specify target location and unique name for your view model and click <b>Finish</b>.
+      	  </description>
+   	  </subitem>
    </item>
-   <item
-         title="Create a VDB" skip="true">
-      <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
-			   pluginId="org.teiid.designer.advisor.ui" param1="org.teiid.designer.vdb.create"/>
-      <description>
-         <b> Create a VDB containing your generated models.</b>
-         	<br/> ============================================================
-			<br/> -- > Press "<b>Click to Perform</b>" button below to launch <b>New VDB</b> wizard.
-			<br/> -- > Enter a name for your VDB and click <b>Finish</b> to create the VDB and open in editor.
-			<br/> -- > In the VDB editor, use the add models button to add models from your workspace.
-			<br/> -- > You may skip this step if you have already created a VDB.
-			<br/> ============================================================
+   
+   <item title="Create VDB" skip="true">
+     <description>
+         <b>Follow steps below to create a new VDB</b>
       </description>
-   </item>   
-   <item
-         title="Test your VDB" skip="true">
-      <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
-			   pluginId="org.teiid.designer.advisor.ui" param1="org.teiid.designer.vdb.execute"/>
-      <description>
-         <b> Execute your VDB by deploying to a running Teiid server, creating a JDBC connection to that VDB, opening
-         a SQL Scrapbook Editor and executing queries against your VDB.</b>
-            <br/> ============================================================
-			<br/> -- > Press "<b>Click to Perform</b>" button below to launch the wizard.
-			<br/> -- > Browse and select your VDB from your workspace and click <b>OK</b>.
-			<br/> -- > The Data Source Explorer perspective will be activated.
-			<br/> -- > A SQL Scrapbook editor will be opened using the generated VDB's JDBC connection.
-			<br/> -- > Follow the instructions in the scrapbook to perform ad-hoc queries.
-			<br/> -- > You may skip this step if you have already created a VDB.
-			<br/> ============================================================
+      <subitem label="Launch New VDB Wizard" skip="true">
+            <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
+			pluginId="org.teiid.designer.advisor.ui" 
+			param1="org.teiid.designer.vdb.create"/> 
+      </subitem>
+      <subitem skip="true" dialog="false">
+	      <description>
+				      <b>1)</b> Select <b>"..."</b> button to browse and select project or folder location.
+				<br/> <b>2)</b> Enter a unique name for your VDB
+				<br/> <b>3)</b> Enter an optional description for your VDB
+				<br/> <b>4)</b> Select the <b>Add</b> button to choose models to go in your VDB
+				<br/> <b>5)</b> Click <b>Finish</b>
+      	  </description>
+   	  </subitem>
+   </item>
+   
+   
+   <item title="Test VDB" skip="true">
+     <description>
+         <b>Follow steps below to create a new VDB</b>
       </description>
+      <subitem label="Launch Execute VDB Dialog" skip="true">
+            <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
+			pluginId="org.teiid.designer.advisor.ui" 
+			param1="org.teiid.designer.vdb.execute"/> 
+      </subitem>
+      <subitem skip="true" dialog="false">
+	      <description>
+				      <b>1)</b> Select <b>"..."</b> button to browse and select a VDB.
+				<br/> <b>2)</b> Click OK to deploy VDB and open connection in Data Source Explorer
+				<br/> <b>3)</b> Follow instructions in open SQL Scrapbook Editor
+				<br/> <b>4)</b> View your query results in the SQL Results view
+      	  </description>
+   	  </subitem>
    </item>
 </cheatsheet>

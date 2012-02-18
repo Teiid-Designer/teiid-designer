@@ -3,96 +3,147 @@
       title="Import flat file source">
    <intro>
    		<description>This cheat sheet shows you how to model a flat file source.
-   			<br/>
-			<br/>
-			<b>Note:</b> These steps are sequential and require you to complete or
-			skip each step before being allowed to <b>Perform</b>, <b>Complete</b> or <b>Skip</b> the next step.<br/>
-			<br/>
-			To learn more about using cheat sheets click the help icon above.
-			<br/>
-			<br/>Press "<b>Click to Begin</b>" button below to start.
 		</description>
    </intro>
 
-   <item
-         title="Create Flat File Source Connection" skip="true">
-      <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
-			pluginId="org.teiid.designer.advisor.ui" param1="org.teiid.designer.connection.new.flatfile"/>
-      <description>
-         <b> This following action creates a Teiid Flat File Connection profile.</b>
-			<br/> ============================================================
-			<br/> -- > Press "<b>Click to Perform</b>" button below to launch the connection profile wizard.
-			<br/> -- >   1) Specify unique name
-			<br/> -- >   2) Enter optional description
-			<br/> -- >   3) Click <b>Next &gt;</b>
-			<br/> -- >   4) Browse to select local file or enter file URL
-			<br/> -- >   5) Select desired options and click <b>Finish</b>
-			<br/> -- > You may skip this step if you have already created this connection profile.
-			<br/> ============================================================
-      </description>
-   </item>
-   <item
-         title="Create Source From Flat File Connection" skip="true">
-      <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
-			pluginId="org.teiid.designer.advisor.ui" param1="org.teiid.designer.importFlatFileCommand"/>
-      <description>
-         <b> This following action creates a relational model from importing table data via your Flat File connection profile.</b>
-			<br/> ============================================================
-			<br/> -- > Press "<b>Click to Perform</b>" button below to launch the Flat File import wizard.
-			<br/> -- >   1) Select <b>Data File Source</b> connection profile
-			<br/> -- >   2) Enter optional description
-			<br/> -- > You may skip this step if you have already imported this model.
-			<br/> ============================================================
-      </description>
-   </item>
-	<item
-         title="Test Flat File Table Data" skip="true">
-      <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
-			pluginId="org.teiid.designer.advisor.ui" param1="org.teiid.designer.previewData"/>
-      <description>
-         <b> This following action allows you to preview data from your newly generated Flat File view table.</b>
-			<br/> ============================================================
-			<br/> -- > Press "<b>Click to Perform</b>" button below to preview data from your flat file.
-			<br/> -- > Click the browse "..." button to select the newly created view table
-			<br/> -- > Click OK to execute the query
-			<br/> -- > Results of the query will displayed in the SQL Results view
-			<br/> -- > You may skip this step.
-			<br/> ============================================================
-      </description>
-   </item>
-   <item
-         title="Create VDB" skip="true">
-      <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
+   <item title="Create New Flat File Source Connection" skip="true">
+      	<description>
+         	<b> Follow steps below to create a Teiid Flat File Connection profile</b>
+      	</description>
+         <subitem label="Launch New Flat File Source Connection Wizard" skip="true">
+      			<action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
 			pluginId="org.teiid.designer.advisor.ui" 
-			param1="org.teiid.designer.vdb.create"/>
-      <description>
-         <b> This action will launch the New VDB wizard.</b>
-			<br/> ============================================================
-			<br/> -- > Press "<b>Click to Perform</b>" button below to create a new VDB.
-			<br/> -- >   1) Select <b>"..."</b> button to browse and select project or folder location.
-			<br/> -- >   2) Enter a unique name for your VDB
-			<br/> -- >   3) Enter an optional description for your VDB
-			<br/> -- >   4) Select the <b>Add</b> button to choose models to go in your VDB
-			<br/> -- > You may skip this step if you have already created your VDB.
-			<br/> ============================================================
-      </description>
+			param1="org.teiid.designer.connection.new.flatfile"/>
+   		</subitem>
+   		<subitem skip="true" dialog="false">
+	      <description>
+	                  <b>1)</b> Specify unique name and optional description and click <b>Next &gt;</b>
+				<br/> <b>2)</b> Browse to select local file folder or enter file folder URL
+				<br/> <b>3)</b> Select desired options and click <b>Finish</b>
+	      </description>
+   	  </subitem>
    </item>
-   <item
-         title="Test VDB" skip="true">
-      <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
+   
+   <item title="Create Source From Flat File Connection" skip="true">
+      	<description>
+         	<b> Follow steps below to create a relational model from importing table data via your Flat File connection profile</b>
+      	</description>
+         <subitem label="Launch Import Flat File Source Wizard" skip="true">
+      			<action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
 			pluginId="org.teiid.designer.advisor.ui" 
-			param1="org.teiid.designer.vdb.execute"/>
-      <description>
-         <b> This action will launch the Execute VDB wizard which will validate your VDB,
-         	insure you have a running Teiid server, deploy your VDB, open a JDBC connection
-         	to your VDB and open a SQL Scrapbook editor.</b>
-			<br/> ============================================================
-			<br/> -- > Press "<b>Click to Perform</b>" button below to test your VDB.
-			<br/> -- >   1) Select <b>"..."</b> button to browse and select a VDB.
-			<br/> -- >   2) Click OK to deploy VDB and open connection in Data Source Explorer
-			<br/> -- >   3) Follow instructions in open SQL Scrapbook Editor
-			<br/> -- > You may skip this step if you have already tested your VDB.
-			<br/> ============================================================
+			param1="org.teiid.designer.importFlatFileCommand"/>
+   		</subitem>
+   		<subitem skip="true" dialog="false">
+	      <description>
+	                  <b>1)</b> Select your <b>Data File Source</b> (connection profile)
+				<br/> <b>2)</b> The <b>Available Data Files</b> section will show your source file location and list
+				    your source text files
+				<br/> <b>3)</b> Select a file as your source
+				<br/> <b>4)</b> Browse to select your target source model location and enter unique name. Click <b>Next &gt;</b>
+				<br/> <b>5)</b> Specify your file data format as <b>Character delimited</b> or <b>Fixed width</b>. <b>Next &gt;</b>
+	      </description>
+   	   </subitem>
+   	   <subitem skip="true" dialog="false">
+	      <description>
+	      		<b>Character Delimited Parser Settings Option</b>
+	      		<br/> The primary purpose of this importer is to help you create a view table containing the 
+	      			transformation required to query the user-defined data file. This page presents a number 
+	      			of options you can use to customize the <b>Generated SQL Statement</b>
+	            <br/> <b>1)</b> Specify header options (Column names in header, header line number and first data line number)
+				<br/> <b>2)</b> Parse selected row, changed character delimiter and edit the TEXTTABLE() function options.
+				<br/> <b>3)</b> If columns names are not defined in a file header or if you wish to modify or 
+					create custom columns, you can use the <b>ADD, DELETE, UP, DOWN</b> to manage the column info 
+					in your SQL.
+				<br/> --- NOTE: To aid in determining if your parser settings are correct you can select a data row 
+					in your File Contents Preview section and click the <b>Parse Selected Row button</b>. A dialog will
+					 be displayed showing the list of columns and the resulting column data. If your column data 
+					 is not what you expected, you'll need to adjust your settings accordingly.
+				<br/> <b>4)</b> Click <b>Next &gt;</b>
+	      </description>
+   	   </subitem>
+   	   <subitem skip="true" dialog="false">
+	      <description>
+	      		<b>Fixed Column Width Parser Settings Option</b>
+	      		<br/> <b>1)</b> Use the <b>File Contents Preview</b> to analyze your column data format
+				<br/> <b>2)</b> Enter your first data line number in the <b>Format Options</b> section.
+				<br/> <b>3)</b> Use the <b>Cursor Position</b> and <b>Text Length</b> value (for selected text) to assist in determing
+					the data column width values in the <b>Column Information</b> in the lower right. 
+				<br/> <b>4)</b> If columns names are not defined in a file header or if you wish to modify or create custom columns, 
+					you can use the ADD, DELETE, UP, DOWN to manage the column info in your SQL.
+				<br/> <b>5)</b> Set appropriate <b>TEXTTABLE()</b> function options
+				<br/> <b>6)</b> Click <b>Next &gt;</b>
+	      </description>
+   	   </subitem>
+   		<subitem skip="true" dialog="false">
+	      <description>
+	      		<b>View Model Definition</b>
+	            <br/> <b>1)</b> Select the target folder location where your new view model will be created
+				<br/> <b>2)</b> Enter unique view model name
+				<br/> --- Note the Model Status section which will indicate the validity of the model name, 
+					whether the model exists or not. Lastly, enter a unique, valid view table name.
+				<br/> <b>4)</b> Click <b>Finish</b> to generate your models
+	      </description>
+   	   </subitem>
+   	   
+   	   
+   </item>
+   
+   
+   <item title="Test Flat File Table Data" skip="true">
+      	<description>
+         	<b> This following action allows you to preview data from your newly generated Flat File view table.</b>
+      	</description>
+         <subitem label="Launch Preview Data Dialog" skip="true">
+      			<action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
+			pluginId="org.teiid.designer.advisor.ui" 
+			param1="org.teiid.designer.previewData"/>
+   		</subitem>
+   		<subitem skip="true" dialog="false">
+	      <description>
+	                  <b>1)</b> Click the browse <b>"..."</b> button to select the newly created view table
+				<br/> <b>2)</b> Click OK to execute the query
+				<br/> <b>3)</b> Results of the query will displayed in the SQL Results view
+	      </description>
+   	  </subitem>
+   </item>
+   
+   <item title="Create VDB" skip="true">
+     <description>
+         <b>Follow steps below to create a new VDB</b>
       </description>
+      <subitem label="Launch New VDB Wizard" skip="true">
+            <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
+			pluginId="org.teiid.designer.advisor.ui" 
+			param1="org.teiid.designer.vdb.create"/> 
+      </subitem>
+      <subitem skip="true" dialog="false">
+	      <description>
+				      <b>1)</b> Select <b>"..."</b> button to browse and select project or folder location.
+				<br/> <b>2)</b> Enter a unique name for your VDB
+				<br/> <b>3)</b> Enter an optional description for your VDB
+				<br/> <b>4)</b> Select the <b>Add</b> button to choose models to go in your VDB
+				<br/> <b>5)</b> Click <b>Finish</b>
+      	  </description>
+   	  </subitem>
+   </item>
+   
+   
+   <item title="Test VDB" skip="true">
+     <description>
+         <b>Follow steps below to create a new VDB</b>
+      </description>
+      <subitem label="Launch Execute VDB Dialog" skip="true">
+            <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
+			pluginId="org.teiid.designer.advisor.ui" 
+			param1="org.teiid.designer.vdb.execute"/> 
+      </subitem>
+      <subitem skip="true" dialog="false">
+	      <description>
+				      <b>1)</b> Select <b>"..."</b> button to browse and select a VDB.
+				<br/> <b>2)</b> Click OK to deploy VDB and open connection in Data Source Explorer
+				<br/> <b>3)</b> Follow instructions in open SQL Scrapbook Editor
+				<br/> <b>4)</b> View your query results in the SQL Results view
+      	  </description>
+   	  </subitem>
    </item>
 </cheatsheet>
