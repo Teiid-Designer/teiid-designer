@@ -18,7 +18,7 @@
 		<jbosstools.test.teiid-7>teiid-7.6.0.Final</jbosstools.test.teiid-7>
 		<jbosstools.test.jboss-as-5>jboss-5.1.0.GA</jbosstools.test.jboss-as-5>
 		<jbosstools.test.jboss-as-5.home>${requirement.build.root}/${jbosstools.test.jboss-as-5}</jbosstools.test.jboss-as-5.home>
-		<configurations.dir>resources</configurations.dir>
+		<configurations.dir>resources/project_config_files</configurations.dir>
 		<additionalSystemProperties></additionalSystemProperties>
 		<systemProperties>${additionalSystemProperties} -Djbosstools.test.jboss-as-5.home=${jbosstools.test.jboss-as-5.home} -Dtest.configurations.dir=${configurations.dir} -Dorg.eclipse.swtbot.screenshots.dir=${project.build.directory}/screenshots</systemProperties>
 		<test.class>com.metamatrix.modeler.ui.bot.testsuite.TeiidDesignerAllTests</test.class>
