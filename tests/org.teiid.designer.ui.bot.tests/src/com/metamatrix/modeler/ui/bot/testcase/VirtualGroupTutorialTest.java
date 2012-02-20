@@ -5,6 +5,8 @@ import java.io.File;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.swtbot.swt.finder.exceptions.WidgetNotFoundException;
+import org.jboss.tools.ui.bot.ext.SWTBotExt;
+import org.jboss.tools.ui.bot.ext.SWTBotFactory;
 import org.jboss.tools.ui.bot.ext.config.Annotations.Require;
 import org.jboss.tools.ui.bot.ext.config.Annotations.Server;
 import org.jboss.tools.ui.bot.ext.config.Annotations.ServerState;
@@ -379,6 +381,7 @@ public class VirtualGroupTutorialTest extends TeiidDesignerTestCase {
 		closeModelEditor(VIRTUAL_MODEL_NAME);
 		closeModelEditor(ORACLE_MODEL_NAME);
 		closeModelEditor(SQLSERVER_MODEL_NAME);
+		closeAutoConnectToTeiidInstance();
 	}
 
 	/**
@@ -459,6 +462,16 @@ public class VirtualGroupTutorialTest extends TeiidDesignerTestCase {
 		try {
 			ModelEditor editor = ModelEditor.getInstance(name);
 			editor.close();
+		} catch (WidgetNotFoundException e){
+			
+		}
+	}
+	
+	private static void closeAutoConnectToTeiidInstance() {
+		SWTBotExt bot = SWTBotFactory.getBot();
+		
+		try {
+			bot.shell("Auto Connect to New Teiid Instance").close();
 		} catch (WidgetNotFoundException e){
 			
 		}
