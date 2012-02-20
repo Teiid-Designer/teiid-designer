@@ -1,13 +1,104 @@
 <project
-xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-	<modelVersion>4.0.0</modelVersion> 
-	<parent>
-	  <groupId>org.jboss.tools.teiid</groupId>
-	  <artifactId>tests</artifactId>
-	  <version>0.0.3-SNAPSHOT</version>
-	</parent>
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+
 	<groupId>org.jboss.tools</groupId>
-	<artifactId>org.teiid.designer.ui.bot.tests</artifactId> 
+	<artifactId>org.teiid.designer.ui.bot.tests</artifactId>
 	<version>7.6.0-SNAPSHOT</version>
-	<packaging>eclipse-plugin</packaging>
+	<packaging>eclipse-test-plugin</packaging>
+
+	<parent>
+		<groupId>org.jboss.tools.teiid</groupId>
+		<artifactId>tests</artifactId>
+		<version>0.0.3-SNAPSHOT</version>
+	</parent>
+
+	<properties>
+		<jbosstools.test.teiid-7>teiid-7.6.0.Final</jbosstools.test.teiid-7>
+		<jbosstools.test.jboss-as-5>jboss-5.1.0.GA</jbosstools.test.jboss-as-5>
+		<jbosstools.test.jboss-as-5.home>${requirement.build.root}/${jbosstools.test.jboss-as-5}</jbosstools.test.jboss-as-5.home>
+		<configurations.dir>resources</configurations.dir>
+		<additionalSystemProperties></additionalSystemProperties>
+		<systemProperties>${additionalSystemProperties} -Djbosstools.test.jboss-as-5.home=${jbosstools.test.jboss-as-5.home} -Dtest.configurations.dir=${configurations.dir} -Dorg.eclipse.swtbot.screenshots.dir=${project.build.directory}/screenshots</systemProperties>
+		<test.class>com.metamatrix.modeler.ui.bot.testsuite.TeiidDesignerAllTests</test.class>
+	</properties>
+
+	<profiles>
+		<profile>
+			<id>debug</id>
+			<properties>
+				<additionalSystemProperties>-Xdebug -Xrunjdwp:transport=dt_socket,address=8001,server=y,suspend=y </additionalSystemProperties>
+			</properties>
+		</profile>
+	</profiles>
+	
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-surefire-plugin</artifactId>
+				<configuration>
+					<useUIThread>false</useUIThread>
+					<testSuite>org.teiid.designer.ui.bot.tests</testSuite>
+					<testClass>${test.class}</testClass>
+					<skip>${swtbot.test.skip}</skip>
+					<dependencies combine.children="append">
+						<dependency>
+							<type>p2-installable-unit</type>
+							<artifactId>org.eclipse.datatools.enablement.hsqldb.feature.feature.group</artifactId>
+							<version>0.0.0</version>
+						</dependency>
+						<dependency>
+							<type>p2-installable-unit</type>
+							<artifactId>org.teiid.designer.runtime.feature.feature.group</artifactId>
+							<version>0.0.0</version>
+						</dependency>
+						<dependency>
+							<type>p2-installable-unit</type>
+							<artifactId>org.teiid.datatools.connectivity.feature.feature.group</artifactId>
+							<version>0.0.0</version>
+						</dependency>
+						<dependency>
+							<type>p2-installable-unit</type>
+							<artifactId>org.jboss.ide.eclipse.as.feature.feature.group</artifactId>
+							<version>0.0.0</version>
+						</dependency>
+					</dependencies>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>${maven.antrun.plugin.version}</version>
+				<executions>
+					<execution>
+						<id>prepare-teiid</id>
+						<phase>generate-test-resources</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<tasks>
+								 <echo message="Installing Teiid..."/>
+								 <copy todir="${requirement.build.root}/${jbosstools.test.jboss-as-5}/server/default">
+    								<fileset dir="${requirement.build.root}/${jbosstools.test.teiid-7}" />
+  								 </copy>
+  								 <echo message="Teiid installed"/>
+  								 
+  								 <echo message="Copying drivers..."/>
+								 <copy todir="${requirement.build.root}/${jbosstools.test.jboss-as-5}/server/default/lib">
+    								<fileset dir="${basedir}/lib">
+    									  <include name="ojdbc*.jar"/>
+    									  <include name="sqljdbc*.jar"/>
+    								</fileset>
+  								 </copy>
+  								 <echo message="Drivers copied"/>
+							</tasks>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 </project>
