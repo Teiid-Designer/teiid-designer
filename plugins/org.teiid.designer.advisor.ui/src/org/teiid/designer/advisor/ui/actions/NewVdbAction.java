@@ -76,7 +76,7 @@ public final class NewVdbAction extends Action implements IWorkbenchWindowAction
      * @since 4.4
      */
     public void run() {
-        ModelerUiViewUtils.launchWizard("newVdbWizard", new StructuredSelection()); //$NON-NLS-1$
+        ModelerUiViewUtils.launchWizard("newVdbWizard", new StructuredSelection(), true); //$NON-NLS-1$
     }
 
 }

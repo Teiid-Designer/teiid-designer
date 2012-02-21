@@ -113,44 +113,44 @@ public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChange
 		return info;
 	}
 	
-	public static void executeAction(TeiidDesignerActionHandler actionHandler) {
-		AdvisorActionFactory.executeAction(actionHandler.getId());
+	public static void executeAction(TeiidDesignerActionHandler actionHandler, boolean synchronous) {
+		AdvisorActionFactory.executeAction(actionHandler.getId(), synchronous);
 	}
 	
-	public static void executeAction(String id) {
-		AdvisorActionFactory.executeAction(id, null);
+	public static void executeAction(String id, boolean synchronous) {
+		AdvisorActionFactory.executeAction(id, null, synchronous);
 	}
 	
-	public static void executeAction(String id, Properties properties) {
+	public static void executeAction(String id, Properties properties, boolean synchronous) {
 		
 		
 		// IMPORT OPTIONS
 		if( id.equalsIgnoreCase(COMMAND_IDS.IMPORT_DDL)) {
-			 launchWizard(ImportMetadataAction.DDL_TO_RELATIONAL, properties);
+			 launchWizard(ImportMetadataAction.DDL_TO_RELATIONAL, properties, synchronous);
 			 return;
 		}
 		if( id.equalsIgnoreCase(COMMAND_IDS.IMPORT_FLAT_FILE)) {
-			 launchWizard(ImportMetadataAction.TEIID_FLAT_FILE, properties);
+			 launchWizard(ImportMetadataAction.TEIID_FLAT_FILE, properties, synchronous);
 			 return;
 		}
 		if( id.equalsIgnoreCase(COMMAND_IDS.IMPORT_JDBC)) {
-			 launchWizard(ImportMetadataAction.JDBC, properties);
+			 launchWizard(ImportMetadataAction.JDBC, properties, synchronous);
 			 return;
 		}
 		if( id.equalsIgnoreCase(COMMAND_IDS.IMPORT_SALESFORCE)) {
-			 launchWizard(ImportMetadataAction.SALESFORCE_TO_RELATIONAL, properties);
+			 launchWizard(ImportMetadataAction.SALESFORCE_TO_RELATIONAL, properties, synchronous);
 			 return;
 		}
 		if( id.equalsIgnoreCase(COMMAND_IDS.IMPORT_XML_FILE)) {
-			 launchWizard(ImportMetadataAction.TEIID_XML_FILE, properties);
+			 launchWizard(ImportMetadataAction.TEIID_XML_FILE, properties, synchronous);
 			 return;
 		}
 		if( id.equalsIgnoreCase(COMMAND_IDS.IMPORT_WSDL_TO_SOURCE)) {
-			 launchWizard(ImportMetadataAction.WSDL_TO_RELATIONAL, properties);
+			 launchWizard(ImportMetadataAction.WSDL_TO_RELATIONAL, properties, synchronous);
 			 return;
 		}
 		if( id.equalsIgnoreCase(COMMAND_IDS.IMPORT_WSDL_TO_WS)) {
-			launchWizard(ImportMetadataAction.WSDL_TO_WEB_SERVICE, properties);
+			launchWizard(ImportMetadataAction.WSDL_TO_WEB_SERVICE, properties, synchronous);
 			 return;
 		}
 		
@@ -208,12 +208,12 @@ public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChange
 	        return;
 		}
 		if( id.equalsIgnoreCase(COMMAND_IDS.GENERATE_WS_MODELS_FROM_WSDL)) {
-			 launchWizard(ImportMetadataAction.WSDL_TO_RELATIONAL, properties);
+			 launchWizard(ImportMetadataAction.WSDL_TO_RELATIONAL, properties, synchronous);
 			 return;
 		}
 		
 		if( id.equalsIgnoreCase(COMMAND_IDS.CREATE_VDB)) {
-			ModelerUiViewUtils.launchWizard("newVdbWizard", new StructuredSelection(), properties); //$NON-NLS-1$
+			ModelerUiViewUtils.launchWizard("newVdbWizard", new StructuredSelection(), properties, synchronous); //$NON-NLS-1$
 	        return;
 		}
 		
@@ -236,7 +236,7 @@ public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChange
 		}
 		
 		if( id.equalsIgnoreCase(COMMAND_IDS.NEW_TEIID_MODEL_PROJECT)) {
-			ModelerUiViewUtils.launchWizard("newModelProject", new StructuredSelection(), properties); //$NON-NLS-1$
+			ModelerUiViewUtils.launchWizard("newModelProject", new StructuredSelection(), properties, synchronous); //$NON-NLS-1$
 	        return;
 		}
 		
@@ -406,8 +406,8 @@ public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChange
         nma.run();
 	}
 	
-	private static void launchWizard(String id, Properties properties) {
-		ModelerUiViewUtils.launchWizard(id, new StructuredSelection(), properties);
+	private static void launchWizard(String id, Properties properties, boolean synchronous) {
+		ModelerUiViewUtils.launchWizard(id, new StructuredSelection(), properties, synchronous);
 	}
 	
 	private static void createConnection(final String id, final Properties properties) {
@@ -417,10 +417,10 @@ public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChange
 		
 		if( id.equalsIgnoreCase(CONNECTION_PROFILE_IDS.CATEGORY_JDBC) ) {
 			NewJDBCFilteredCPWizard wiz = new NewJDBCFilteredCPWizard();
-			ModelerUiViewUtils.launchWizard(wiz, new StructuredSelection(), properties);
+			ModelerUiViewUtils.launchWizard(wiz, new StructuredSelection(), properties, true);
 		} else {
 			INewWizard wiz = (INewWizard) new NewTeiidFilteredCPWizard(id);
-			ModelerUiViewUtils.launchWizard(wiz, new StructuredSelection(), properties);
+			ModelerUiViewUtils.launchWizard(wiz, new StructuredSelection(), properties, true);
 		}
 		
 		ProfileManager.getInstance().removeProfileListener(listener);

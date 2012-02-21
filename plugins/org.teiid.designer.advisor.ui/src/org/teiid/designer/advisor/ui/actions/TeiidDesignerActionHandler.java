@@ -24,7 +24,7 @@ public class TeiidDesignerActionHandler extends AbstractHandler {
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		AdvisorActionFactory.executeAction(this);
+		AdvisorActionFactory.executeAction(this, true);
 		return null;
 	}
 

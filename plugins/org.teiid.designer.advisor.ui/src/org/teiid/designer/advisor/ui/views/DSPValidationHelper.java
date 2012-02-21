@@ -287,6 +287,7 @@ public class DSPValidationHelper implements DSPValidationConstants {
         webServiceModelCount = 0;
         xmlServiceModelCount = 0;
         schemaFileCount = 0;
+        vdbCount = 0;
         modelErrorsExist = false;
         sourceModelErrors = false;
         viewModelErrors = false;
@@ -418,7 +419,7 @@ public class DSPValidationHelper implements DSPValidationConstants {
                 }
             }
             
-            if( ModelUtil.isVdbArchiveFile(resource) ) {
+            if( ModelUtil.isVdbArchiveFile(resource) && !resource.getName().toUpperCase().startsWith("PREVIEW_") ) { //$NON-NLS-1$
             	vdbCount++;
             	if( resourceHasErrors && !vdbErrors ) {
             		vdbErrors = true;

@@ -42,7 +42,8 @@ public class OpenScrapbookEditorAction extends OpenScrapbookAction {
 		
 		editorStorageEditorInput.setStorage(new SQLEditorStorage("SQL " + vdbName,  //$NON-NLS-1$
 				"// 1) Enter valid SQL query (i.e. SELECT * FROM FOO)\n" + //$NON-NLS-1$
-				"// 2) Highlight query and right-click select \"Execute Selected Test\"\n\nSELECT * FROM <table-name>")); //$NON-NLS-1$
+				"// 2) Highlight query and right-click select \"Execute Selected Text\"" +  //$NON-NLS-1$ 
+				"\n\nSELECT * FROM <table-name>")); //$NON-NLS-1$
 		
 		editorStorageEditorInput.setConnectionInfo(SQLFileUtil.getConnectionInfo4Scrapbook(editorConnectionInfo));
 

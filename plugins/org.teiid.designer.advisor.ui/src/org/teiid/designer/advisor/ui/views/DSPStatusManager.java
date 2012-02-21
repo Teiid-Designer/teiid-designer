@@ -448,6 +448,9 @@ public class DSPStatusManager implements IChangeListener {
      * @return currentProject
      */
     public IProject getCurrentProject() {
+    	if( this.currentProject != null && !this.currentProject.exists() ) {
+    		this.currentProject = null;
+    	}
         return this.currentProject;
     }
 

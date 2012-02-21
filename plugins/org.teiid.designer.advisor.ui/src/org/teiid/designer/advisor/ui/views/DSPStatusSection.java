@@ -14,12 +14,15 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.forms.IFormColors;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
@@ -41,6 +44,7 @@ import org.teiid.designer.advisor.ui.util.LabelLabelLinkRow;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelProjectSelectionStatusValidator;
+import com.metamatrix.modeler.internal.ui.viewsupport.ModelerUiViewUtils;
 import com.metamatrix.modeler.ui.viewsupport.IPropertiesContext;
 import com.metamatrix.modeler.ui.viewsupport.ModelingResourceFilter;
 import com.metamatrix.ui.internal.util.WidgetUtil;
@@ -200,13 +204,23 @@ public class DSPStatusSection implements AdvisorUiConstants.Groups {
             @Override
             public void linkActivated( HyperlinkEvent e ) {
             	Properties props = new Properties();
-                AdvisorActionFactory.executeAction(COMMAND_IDS.NEW_TEIID_MODEL_PROJECT, props);
+                AdvisorActionFactory.executeAction(COMMAND_IDS.NEW_TEIID_MODEL_PROJECT, props, true);
         		String projectName = props.getProperty(IPropertiesContext.KEY_PROJECT_NAME);
         		if( projectName != null && !projectName.isEmpty() ) {
         			final IResource resrc = ResourcesPlugin.getWorkspace().getRoot().findMember(projectName);
         			if( resrc != null && resrc instanceof IProject) {
         				if (AdvisorUiPlugin.getStatusManager().setCurrentProject((IProject)resrc)) {
         					AdvisorUiPlugin.getStatusManager().updateStatus(true);
+//        					final IViewPart view = ModelerUiViewUtils.openView(AdvisorUiConstants.Extensions.ADVISOR_VIEW_ID, new StructuredSelection(), true);
+//        					if( view !=  null ) {
+//        		                Display.getDefault().asyncExec(new Runnable() {
+//
+//        		                    public void run() {
+//        		                    	view.setFocus();
+//        		                    }
+//        		                });
+//        						
+//        					}
         				}
         			}
         		}

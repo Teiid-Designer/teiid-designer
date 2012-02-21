@@ -60,7 +60,7 @@ public class LaunchDesignerCommandAction extends Action implements ICheatSheetAc
         if (params != null && params.length > 0) {
             String pActionID = params[0];
             Properties props = propertiesManager.getProperties(manager.getCheatSheetID());
-            AdvisorActionFactory.executeAction(pActionID, props);
+            AdvisorActionFactory.executeAction(pActionID, props, true);
         }
         
         notifyResult(result[0]);

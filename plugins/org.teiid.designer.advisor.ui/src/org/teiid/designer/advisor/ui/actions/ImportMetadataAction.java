@@ -42,7 +42,7 @@ public class ImportMetadataAction extends Action implements AdvisorUiConstants {
     // /////////////////////////////////////////////////////////////////////////////////////////////
 
     public void launchWizard(String wizardID) {
-        ModelerUiViewUtils.launchWizard(wizardID, new StructuredSelection());
+        ModelerUiViewUtils.launchWizard(wizardID, new StructuredSelection(), true);
     }
 
 }

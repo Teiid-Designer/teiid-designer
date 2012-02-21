@@ -48,7 +48,7 @@ public class Messages  extends NLS {
     
     
     public static String ConsumeLocalFlatFileDataSource_Short;
-    public static String ConsumeWebSercieWsdl_Short;
+    public static String ConsumeWebServiceWsdl_Short;
     public static String ConsumeXmlFileSource_Short;
     public static String ConsumeARESTWebService_Short;
     public static String ConsumeASOAPWebService_Short;

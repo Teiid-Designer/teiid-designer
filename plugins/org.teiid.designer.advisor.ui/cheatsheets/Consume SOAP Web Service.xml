@@ -14,7 +14,7 @@
       <subitem label="Launch Create SOAP Connection Profile Wizard" skip="true">
             <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
 			pluginId="org.teiid.designer.advisor.ui" 
-			param1="org.teiid.designer.connection.new.ws"/> 
+			param1="org.teiid.designer.connection.new.odaws"/> 
       </subitem>
       <subitem skip="true" dialog="false">
 	      <description>

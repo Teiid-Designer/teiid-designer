@@ -163,7 +163,7 @@ public interface AdvisorUiConstants {
 		String IMPORT_FLAT_FILE = Messages.ConsumeLocalFlatFileDataSource_Short;
 		String IMPORT_XML_FILE = Messages.ConsumeXmlFileSource_Short;
 		String IMPORT_WSDL_TO_SOURCE = Messages.CreateSourceModelFromWsdlSource_Short;
-		String IMPORT_WSDL_TO_WS = Messages.ConsumeWebSercieWsdl_Short;
+		String IMPORT_WSDL_TO_WS = Messages.ConsumeWebServiceWsdl_Short;
 		
 		String NEW_MODEL_RELATIONAL_SOURCE = Messages.CreateNewRelationalSourceModel_Short;
 		String NEW_MODEL_RELATIONAL_VIEW = Messages.CreateNewRelationalViewModel_Short;
@@ -239,6 +239,7 @@ public interface AdvisorUiConstants {
 	interface VIEW_IDS {
 		String DATA_SOURCE_EXPLORER = "org.eclipse.datatools.connectivity.DataSourceExplorerNavigator"; //$NON-NLS-1$
 		String PROBLEMS_VIEW = "org.eclipse.ui.views.ProblemView"; //$NON-NLS-1$
+		String ADVISOR_VIEW = "org.teiid.designer.advisor.ui.views.DSPAdvisorView";  //$NON-NLS-1$
 	}
 
 	interface Images {

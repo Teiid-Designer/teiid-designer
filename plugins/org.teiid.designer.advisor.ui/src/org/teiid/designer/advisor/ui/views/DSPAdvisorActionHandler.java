@@ -115,7 +115,7 @@ public class DSPAdvisorActionHandler implements IAdvisorActionHandler, AdvisorUi
 	        IAction newJdbcCPAction = new Action() {
 	            @Override
 	            public void run() {
-	            	AdvisorActionFactory.executeAction(COMMAND_IDS.CREATE_CONNECTION_JDBC);
+	            	AdvisorActionFactory.executeAction(COMMAND_IDS.CREATE_CONNECTION_JDBC, true);
 //	    			INewWizard wiz = (INewWizard) new NewTeiidFilteredCPWizard(CONNECTION_PROFILE_IDS.CATEGORY_JDBC);
 	    			
 //	    			WizardDialog wizardDialog = new WizardDialog(Display.getCurrent().getActiveShell(), (Wizard) wiz);
@@ -132,7 +132,7 @@ public class DSPAdvisorActionHandler implements IAdvisorActionHandler, AdvisorUi
 	        IAction newSalesforceCPAction = new Action() {
 	            @Override
 	            public void run() {
-	            	AdvisorActionFactory.executeAction(COMMAND_IDS.CREATE_CONNECTION_JDBC);
+	            	AdvisorActionFactory.executeAction(COMMAND_IDS.CREATE_CONNECTION_JDBC, true);
 	            }
 	        };
 	        newSalesforceCPAction.setText("Create Salesforce Connection Profile");
@@ -144,7 +144,7 @@ public class DSPAdvisorActionHandler implements IAdvisorActionHandler, AdvisorUi
 	        IAction newWSSoapCPAction = new Action() {
 	            @Override
 	            public void run() {
-	            	AdvisorActionFactory.executeAction(COMMAND_IDS.CREATE_CONNECTION_WEB_SERVICE_ODA);
+	            	AdvisorActionFactory.executeAction(COMMAND_IDS.CREATE_CONNECTION_WEB_SERVICE_ODA, true);
 	            }
 	        };
 	        newWSSoapCPAction.setText("Create SOAP Web Service Connection Profile");
@@ -177,7 +177,7 @@ public class DSPAdvisorActionHandler implements IAdvisorActionHandler, AdvisorUi
 	        IAction delegateImportJdbcAction = new Action() {
 	            @Override
 	            public void run() {
-	            	AdvisorActionFactory.executeAction(COMMAND_IDS.IMPORT_JDBC);
+	            	AdvisorActionFactory.executeAction(COMMAND_IDS.IMPORT_JDBC, true);
 	            }
 	        };
 	        delegateImportJdbcAction.setText(DSPAdvisorI18n.Action_ImportJdbc_text);
@@ -193,7 +193,7 @@ public class DSPAdvisorActionHandler implements IAdvisorActionHandler, AdvisorUi
 	        IAction delegateImportDdlAction = new Action() {
 	            @Override
 	            public void run() {
-	                AdvisorActionFactory.executeAction(COMMAND_IDS.IMPORT_SALESFORCE);
+	                AdvisorActionFactory.executeAction(COMMAND_IDS.IMPORT_SALESFORCE, true);
 	            }
 	        };
 	        delegateImportDdlAction.setText(DSPAdvisorI18n.Action_ImportDdl_text);
@@ -209,7 +209,7 @@ public class DSPAdvisorActionHandler implements IAdvisorActionHandler, AdvisorUi
 	        IAction delegateImportFlatFileAction = new Action() {
 	            @Override
 	            public void run() {
-	                AdvisorActionFactory.executeAction(COMMAND_IDS.IMPORT_SALESFORCE);
+	                AdvisorActionFactory.executeAction(COMMAND_IDS.IMPORT_SALESFORCE, true);
 	            }
 	        };
 	        delegateImportFlatFileAction.setText(DSPAdvisorI18n.Action_ImportFlatFile_text);
@@ -226,7 +226,7 @@ public class DSPAdvisorActionHandler implements IAdvisorActionHandler, AdvisorUi
 	        IAction delegateImportXmlFileAction = new Action() {
 	            @Override
 	            public void run() {
-	                AdvisorActionFactory.executeAction(COMMAND_IDS.IMPORT_SALESFORCE);
+	                AdvisorActionFactory.executeAction(COMMAND_IDS.IMPORT_SALESFORCE, true);
 	            }
 	        };
 	        delegateImportXmlFileAction.setText(DSPAdvisorI18n.Action_ImportXmlFile_text);
@@ -242,7 +242,7 @@ public class DSPAdvisorActionHandler implements IAdvisorActionHandler, AdvisorUi
 	        IAction delegateImportSalesforceAction = new Action() {
 	            @Override
 	            public void run() {
-	                AdvisorActionFactory.executeAction(COMMAND_IDS.IMPORT_SALESFORCE);
+	                AdvisorActionFactory.executeAction(COMMAND_IDS.IMPORT_SALESFORCE, true);
 	            }
 	        };
 	        delegateImportSalesforceAction.setText(DSPAdvisorI18n.Action_ImportSalesforce_text);
@@ -259,7 +259,7 @@ public class DSPAdvisorActionHandler implements IAdvisorActionHandler, AdvisorUi
         IAction delegateImportXsdAction = new Action() {
             @Override
             public void run() {
-                ModelerUiViewUtils.launchWizard("xsdFileSystemImportWizard", new StructuredSelection()); //$NON-NLS-1$
+                ModelerUiViewUtils.launchWizard("xsdFileSystemImportWizard", new StructuredSelection(), true); //$NON-NLS-1$
             }
         };
         delegateImportXsdAction.setText(DSPAdvisorI18n.Action_ImportXsd_text);
@@ -276,7 +276,7 @@ public class DSPAdvisorActionHandler implements IAdvisorActionHandler, AdvisorUi
 	        IAction delegateNewVdbAction = new Action() {
 	            @Override
 	            public void run() {
-	            	AdvisorActionFactory.executeAction(COMMAND_IDS.CREATE_VDB);
+	            	AdvisorActionFactory.executeAction(COMMAND_IDS.CREATE_VDB, true);
 	            }
 	        };
 	        delegateNewVdbAction.setText(DSPAdvisorI18n.Action_NewVdb_text);
@@ -291,7 +291,7 @@ public class DSPAdvisorActionHandler implements IAdvisorActionHandler, AdvisorUi
 	        IAction delegateEditVdbAction = new Action() {
 	            @Override
 	            public void run() {
-	            	AdvisorActionFactory.executeAction(COMMAND_IDS.EDIT_VDB);
+	            	AdvisorActionFactory.executeAction(COMMAND_IDS.EDIT_VDB, true);
 	            }
 	        };
 	        delegateEditVdbAction.setText(DSPAdvisorI18n.Action_EditVdb_text);
@@ -306,7 +306,7 @@ public class DSPAdvisorActionHandler implements IAdvisorActionHandler, AdvisorUi
 	        IAction delegateExecuteVdbAction = new Action() {
 	            @Override
 	            public void run() {
-	            	AdvisorActionFactory.executeAction(COMMAND_IDS.EXECUTE_VDB);
+	            	AdvisorActionFactory.executeAction(COMMAND_IDS.EXECUTE_VDB, true);
 	            }
 	        };
 	        delegateExecuteVdbAction.setText(DSPAdvisorI18n.Action_ExecuteVdb_text);
@@ -321,7 +321,7 @@ public class DSPAdvisorActionHandler implements IAdvisorActionHandler, AdvisorUi
 	        IAction delegatePreviewDataAction = new Action() {
 	            @Override
 	            public void run() {
-	            	AdvisorActionFactory.executeAction(COMMAND_IDS.PREVIEW_DATA);
+	            	AdvisorActionFactory.executeAction(COMMAND_IDS.PREVIEW_DATA, true);
 	            }
 	        };
 	        delegatePreviewDataAction.setText(DSPAdvisorI18n.Action_PreviewData_text);

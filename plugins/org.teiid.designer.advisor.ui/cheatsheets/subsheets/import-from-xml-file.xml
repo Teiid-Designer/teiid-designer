@@ -3,19 +3,29 @@
       title="Import XML file source">
    <intro>
    		<description>This cheat sheet shows you how to model an XML file source.
-   			<br/>
-			<br/>
-			<b>Note:</b> These steps are sequential and require you to complete or
-			skip each step before being allowed to <b>Perform</b>, <b>Complete</b> or <b>Skip</b> the next step.<br/>
-			<br/>
-			To learn more about using cheat sheets click the help icon above.
-			<br/>
-			<br/>Press "<b>Click to Begin</b>" button below to start.
 		</description>
    </intro>
 
-   <item
-         title="Create Local XML File Source Connection" skip="true">
+
+  <item title="Create Local XML File Source Connection" skip="true">
+      	<description>
+         	<b> Follow steps below to create a Teiid Flat File Connection profile</b>
+      	</description>
+         <subitem label="Launch New Flat File Source Connection Wizard" skip="true">
+      			<action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
+			pluginId="org.teiid.designer.advisor.ui" 
+			param1="org.teiid.designer.connection.new.xmlfilelocal"/>
+   		</subitem>
+   		<subitem skip="true" dialog="false">
+	      <description>
+	                  <b>1)</b> Specify unique name and optional description and click <b>Next &gt;</b>
+				<br/> <b>2)</b> Browse to select local file folder or enter file folder URL
+				<br/> <b>3)</b> Select desired options and click <b>Finish</b>
+	      </description>
+   	  </subitem>
+   </item>
+
+   <item title="Create Local XML File Source Connection" skip="true">
       <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
 			pluginId="org.teiid.designer.advisor.ui" param1="org.teiid.designer.connection.new.xmlfilelocal"/>
       <description>
