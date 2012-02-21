@@ -13,16 +13,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPart;
-import com.metamatrix.metamodels.diagram.Diagram;
-import com.metamatrix.metamodels.transformation.SqlTransformationMappingRoot;
-import com.metamatrix.modeler.internal.transformation.util.SqlAspectHelper;
-import com.metamatrix.modeler.internal.transformation.util.TransformationHelper;
-import com.metamatrix.modeler.internal.ui.editors.MultiPageModelEditor;
-import com.metamatrix.modeler.internal.ui.viewsupport.ModelObjectUtilities;
-import com.metamatrix.modeler.transformation.ui.UiPlugin;
-import com.metamatrix.modeler.transformation.ui.editors.TransformationObjectEditorPage;
-import com.metamatrix.modeler.transformation.ui.editors.sqleditor.SqlEditorPanel;
-import com.metamatrix.modeler.ui.editors.ModelObjectEditorPage;
 import org.teiid.query.sql.lang.Command;
 import org.teiid.query.sql.lang.Criteria;
 import org.teiid.query.sql.lang.From;
@@ -34,6 +24,16 @@ import org.teiid.query.sql.lang.OrderBy;
 import org.teiid.query.sql.lang.Query;
 import org.teiid.query.sql.lang.Select;
 import org.teiid.query.sql.lang.UnaryFromClause;
+import com.metamatrix.metamodels.diagram.Diagram;
+import com.metamatrix.metamodels.transformation.SqlTransformationMappingRoot;
+import com.metamatrix.modeler.internal.transformation.util.SqlAspectHelper;
+import com.metamatrix.modeler.internal.transformation.util.TransformationHelper;
+import com.metamatrix.modeler.internal.ui.editors.MultiPageModelEditor;
+import com.metamatrix.modeler.internal.ui.viewsupport.ModelObjectUtilities;
+import com.metamatrix.modeler.transformation.ui.UiPlugin;
+import com.metamatrix.modeler.transformation.ui.editors.TransformationObjectEditorPage;
+import com.metamatrix.modeler.transformation.ui.editors.sqleditor.SqlEditorPanel;
+import com.metamatrix.modeler.ui.editors.ModelObjectEditorPage;
 import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
 
 /**
@@ -99,7 +99,7 @@ public class AddJoinExpressionAction extends TransformationAction {
                     if (command instanceof Query) {
                         Query query = (Query)command;
                         Select select = query.getSelect();
-                        String newQuery = select.toString() + joinClause;
+                        String newQuery = "SELECT " + select.toString() + joinClause; //$NON-NLS-1$
                         sqlEditor.setText(newQuery);
                     }
                 }

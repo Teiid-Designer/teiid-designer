@@ -16,14 +16,16 @@ import org.eclipse.jface.text.source.VerticalRuler;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.TabFolder;
+import org.eclipse.swt.widgets.TabItem;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.transformation.ui.Messages;
 import com.metamatrix.modeler.transformation.ui.UiConstants.Images;
@@ -48,9 +50,13 @@ public class SQLTemplateDialog  extends TitleAreaDialog {
     TextViewer sqlTextViewer;
     IDocument sqlDocument;
     int templatesToShow = -1;
+    TabFolder tabFolder;
+    TabItem selectTemplatesTab;
+    TabItem procedureTemplatesTab;
     
     Button selectRB, selectJoinRB, unionRB, flatFileSourceRB;
-    Button xmlFileLocalSourceRB, xmlFileUrlSourceRB, soapCreateProcRB, soapExtractProcRB;
+    Button xmlFileLocalSourceRB, xmlFileUrlSourceRB;
+    Button insertDefaultProcRB, updateDefaultProcRB, deleteDefaultProcRB, soapCreateProcRB, soapExtractProcRB;
 
     //=============================================================
     // Constructors
@@ -127,120 +133,213 @@ public class SQLTemplateDialog  extends TitleAreaDialog {
         // **********************************
         // SQL Template Options
         // **********************************
+        tabFolder = new TabFolder(theGroup, SWT.TOP);
+        tabFolder.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-        // -----------------------------------
-        // Templates for Table or View Target
-        // -----------------------------------
-        if (this.templatesToShow == TABLE_TEMPLATES || this.templatesToShow == ALL_TEMPLATES) {
-            // Simple SELECT Query
-            this.selectRB = WidgetFactory.createRadioButton(theGroup, Messages.sqlTemplateDialogSelectLabel, SWT.NONE, 2, true);
-            this.selectRB.addSelectionListener(new SelectionAdapter() {
-                @Override
-                public void widgetSelected( final SelectionEvent event ) {
-                    setSQLTemplateArea();
-                }
-            });
-
-    	    // SELECT With Join Criteria
-            this.selectJoinRB = WidgetFactory.createRadioButton(theGroup,
-                                                                Messages.sqlTemplateDialogSelectJoinLabel,
-                                                                SWT.NONE,
-                                                                2,
-                                                                false);
-            this.selectJoinRB.addSelectionListener(new SelectionAdapter() {
-                @Override
-                public void widgetSelected( final SelectionEvent event ) {
-                    setSQLTemplateArea();
-                }
-            });
-
-    	    // UNION Query
-            this.unionRB = WidgetFactory.createRadioButton(theGroup, Messages.sqlTemplateDialogUnionLabel, SWT.NONE, 2, false);
-            this.unionRB.addSelectionListener(new SelectionAdapter() {
-                @Override
-                public void widgetSelected( final SelectionEvent event ) {
-                    setSQLTemplateArea();
-                }
-            });
-
-    	    // Flat File Source Query
-            this.flatFileSourceRB = WidgetFactory.createRadioButton(theGroup,
-                                                                    Messages.sqlTemplateDialogFlatFileSrcLabel,
-                                                                    SWT.NONE,
-                                                                    2,
-                                                                    false);
-            this.flatFileSourceRB.addSelectionListener(new SelectionAdapter() {
-                @Override
-                public void widgetSelected( final SelectionEvent event ) {
-                    setSQLTemplateArea();
-                }
-            });
-
-    	    // XML File Local Source Query
-            this.xmlFileLocalSourceRB = WidgetFactory.createRadioButton(theGroup,
-                                                                        Messages.sqlTemplateDialogXmlFileLocalSrcLabel,
-                                                                        SWT.NONE,
-                                                                        2,
-                                                                        false);
-            this.xmlFileLocalSourceRB.addSelectionListener(new SelectionAdapter() {
-                @Override
-                public void widgetSelected( final SelectionEvent event ) {
-                    setSQLTemplateArea();
-                }
-            });
-
-    	    // XML File URL Source Query
-            this.xmlFileUrlSourceRB = WidgetFactory.createRadioButton(theGroup,
-                                                                      Messages.sqlTemplateDialogXmlFileUrlSrcLabel,
-                                                                      SWT.NONE,
-                                                                      2,
-                                                                      false);
-            this.xmlFileUrlSourceRB.addSelectionListener(new SelectionAdapter() {
-                @Override
-                public void widgetSelected( final SelectionEvent event ) {
-                    setSQLTemplateArea();
-                }
-            });
+        if (templatesToShow == TABLE_TEMPLATES || templatesToShow == ALL_TEMPLATES) {
+            createSelectTemplatesTab(tabFolder);
         }
 
-        // -----------------------------------
-        // Templates for Procedures
-        // -----------------------------------
-        if (this.templatesToShow == PROC_TEMPLATES || this.templatesToShow == ALL_TEMPLATES) {
-            // SOAP WebService "Create" Procedure SQL
-            this.soapCreateProcRB = WidgetFactory.createRadioButton(theGroup,
-                                                                    Messages.sqlTemplateDialogSoapCreateProcLabel,
-                                                                    SWT.NONE,
-                                                                    2,
-                                                                    false);
-            this.soapCreateProcRB.addSelectionListener(new SelectionAdapter() {
-                @Override
-                public void widgetSelected( final SelectionEvent event ) {
-                    setSQLTemplateArea();
-                }
-            });
-
-    	    // SOAP WebService Extract Procedure SQL
-            this.soapExtractProcRB = WidgetFactory.createRadioButton(theGroup,
-                                                                     Messages.sqlTemplateDialogSoapExtractProcLabel,
-                                                                     SWT.NONE,
-                                                                     2,
-                                                                     false);
-            this.soapExtractProcRB.addSelectionListener(new SelectionAdapter() {
-                @Override
-                public void widgetSelected( final SelectionEvent event ) {
-                    setSQLTemplateArea();
-                }
-            });
+        if (templatesToShow == PROC_TEMPLATES || templatesToShow == ALL_TEMPLATES) {
+            createProcedureTemplatesTab(tabFolder);
         }
+
+        tabFolder.addSelectionListener(new SelectionListener() {
+            public void widgetSelected( SelectionEvent e ) {
+                setSQLTemplateArea();
+            }
+
+            public void widgetDefaultSelected( SelectionEvent e ) {
+                widgetSelected(e);
+            }
+        });
     }
-    
+
+    /*
+     * Create the Select Templates Tab
+     */
+    void createSelectTemplatesTab( TabFolder folderParent ) {
+        // build the SELECT tab
+        Composite thePanel = createSelectTemplatesPanel(folderParent);
+
+        this.selectTemplatesTab = new TabItem(folderParent, SWT.NONE);
+        this.selectTemplatesTab.setControl(thePanel);
+        this.selectTemplatesTab.setText(Messages.sqlTemplateDialogSelectTabTitle);
+    }
+
+    /*
+     * Create the Select Templates Tab
+     */
+    void createProcedureTemplatesTab( TabFolder folderParent ) {
+        // build the SELECT tab
+        Composite thePanel = createProcedureTemplatesPanel(folderParent);
+
+        this.procedureTemplatesTab = new TabItem(folderParent, SWT.NONE);
+        this.procedureTemplatesTab.setControl(thePanel);
+        this.procedureTemplatesTab.setText(Messages.sqlTemplateDialogProceduresTabTitle);
+    }
+
+    private Composite createSelectTemplatesPanel( Composite parent ) {
+        Composite thePanel = WidgetFactory.createPanel(parent, SWT.NONE, 1, 1);
+        thePanel.setLayout(new GridLayout(1, false));
+        GridData panelGD = new GridData(GridData.FILL_BOTH);
+        panelGD.heightHint = 200;
+        thePanel.setLayoutData(panelGD);
+
+        // Simple SELECT Query
+        this.selectRB = WidgetFactory.createRadioButton(thePanel, Messages.sqlTemplateDialogSelectLabel, SWT.NONE, 1, true);
+        this.selectRB.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected( final SelectionEvent event ) {
+                setSQLTemplateArea();
+            }
+        });
+
+        // SELECT With Join Criteria
+        this.selectJoinRB = WidgetFactory.createRadioButton(thePanel,
+                                                            Messages.sqlTemplateDialogSelectJoinLabel,
+                                                            SWT.NONE,
+                                                            2,
+                                                            false);
+        this.selectJoinRB.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected( final SelectionEvent event ) {
+                setSQLTemplateArea();
+            }
+        });
+
+        // UNION Query
+        this.unionRB = WidgetFactory.createRadioButton(thePanel, Messages.sqlTemplateDialogUnionLabel, SWT.NONE, 1, false);
+        this.unionRB.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected( final SelectionEvent event ) {
+                setSQLTemplateArea();
+            }
+        });
+
+        // Flat File Source Query
+        this.flatFileSourceRB = WidgetFactory.createRadioButton(thePanel,
+                                                                Messages.sqlTemplateDialogFlatFileSrcLabel,
+                                                                SWT.NONE,
+                                                                1,
+                                                                false);
+        this.flatFileSourceRB.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected( final SelectionEvent event ) {
+                setSQLTemplateArea();
+            }
+        });
+
+        // XML File Local Source Query
+        this.xmlFileLocalSourceRB = WidgetFactory.createRadioButton(thePanel,
+                                                                    Messages.sqlTemplateDialogXmlFileLocalSrcLabel,
+                                                                    SWT.NONE,
+                                                                    1,
+                                                                    false);
+        this.xmlFileLocalSourceRB.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected( final SelectionEvent event ) {
+                setSQLTemplateArea();
+            }
+        });
+
+        // XML File URL Source Query
+        this.xmlFileUrlSourceRB = WidgetFactory.createRadioButton(thePanel,
+                                                                  Messages.sqlTemplateDialogXmlFileUrlSrcLabel,
+                                                                  SWT.NONE,
+                                                                  1,
+                                                                  false);
+        this.xmlFileUrlSourceRB.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected( final SelectionEvent event ) {
+                setSQLTemplateArea();
+            }
+        });
+
+        return thePanel;
+    }
+
+    private Composite createProcedureTemplatesPanel( Composite parent ) {
+        Composite thePanel = WidgetFactory.createPanel(parent, SWT.NONE, 1, 1);
+        thePanel.setLayout(new GridLayout(1, false));
+        GridData panelGD = new GridData(GridData.FILL_BOTH);
+        panelGD.heightHint = 200;
+        thePanel.setLayoutData(panelGD);
+
+        // Default Insert Procedure SQL
+        this.insertDefaultProcRB = WidgetFactory.createRadioButton(thePanel,
+                                                                   Messages.sqlTemplateDialogInsDefaultProcLabel,
+                                                                   SWT.NONE,
+                                                                   1,
+                                                                   true);
+        this.insertDefaultProcRB.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected( final SelectionEvent event ) {
+                setSQLTemplateArea();
+            }
+        });
+
+        // Default Update Procedure SQL
+        this.updateDefaultProcRB = WidgetFactory.createRadioButton(thePanel,
+                                                                   Messages.sqlTemplateDialogUpdDefaultProcLabel,
+                                                                   SWT.NONE,
+                                                                   1,
+                                                                   false);
+        this.updateDefaultProcRB.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected( final SelectionEvent event ) {
+                setSQLTemplateArea();
+            }
+        });
+
+        // Default Delete Procedure SQL
+        this.deleteDefaultProcRB = WidgetFactory.createRadioButton(thePanel,
+                                                                   Messages.sqlTemplateDialogDelDefaultProcLabel,
+                                                                   SWT.NONE,
+                                                                   1,
+                                                                   false);
+        this.deleteDefaultProcRB.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected( final SelectionEvent event ) {
+                setSQLTemplateArea();
+            }
+        });
+
+        // SOAP WebService "Create" Procedure SQL
+        this.soapCreateProcRB = WidgetFactory.createRadioButton(thePanel,
+                                                                Messages.sqlTemplateDialogSoapCreateProcLabel,
+                                                                SWT.NONE,
+                                                                1,
+                                                                false);
+        this.soapCreateProcRB.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected( final SelectionEvent event ) {
+                setSQLTemplateArea();
+            }
+        });
+
+        // SOAP WebService Extract Procedure SQL
+        this.soapExtractProcRB = WidgetFactory.createRadioButton(thePanel,
+                                                                 Messages.sqlTemplateDialogSoapExtractProcLabel,
+                                                                 SWT.NONE,
+                                                                 1,
+                                                                 false);
+        this.soapExtractProcRB.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected( final SelectionEvent event ) {
+                setSQLTemplateArea();
+            }
+        });
+
+        return thePanel;
+    }
+
     /*
      * Set the SQL Display Area, based on the selected Template type
      */
     private void setSQLTemplateArea() {
         // Table Template buttons
-        if (this.templatesToShow == TABLE_TEMPLATES || this.templatesToShow == ALL_TEMPLATES) {
+        if (this.tabFolder.getSelection()[0] == selectTemplatesTab) {
             if (this.selectRB.getSelection()) {
                 sqlTextViewer.getDocument().set(SQLTemplates.SELECT_SIMPLE);
             } else if (this.selectJoinRB.getSelection()) {
@@ -257,8 +356,14 @@ public class SQLTemplateDialog  extends TitleAreaDialog {
         }
 
         // Procedure Template buttons
-        if (this.templatesToShow == PROC_TEMPLATES || this.templatesToShow == ALL_TEMPLATES) {
-            if (this.soapCreateProcRB.getSelection()) {
+        if (this.tabFolder.getSelection()[0] == procedureTemplatesTab) {
+            if (this.insertDefaultProcRB.getSelection()) {
+                sqlTextViewer.getDocument().set(SQLTemplates.PROC_INSERT_DEFAULT);
+            } else if (this.updateDefaultProcRB.getSelection()) {
+                sqlTextViewer.getDocument().set(SQLTemplates.PROC_UPDATE_DEFAULT);
+            } else if (this.deleteDefaultProcRB.getSelection()) {
+                sqlTextViewer.getDocument().set(SQLTemplates.PROC_DELETE_DEFAULT);
+            } else if (this.soapCreateProcRB.getSelection()) {
                 sqlTextViewer.getDocument().set(SQLTemplates.PROC_SOAP_WS_CREATE);
             } else if (this.soapExtractProcRB.getSelection()) {
                 sqlTextViewer.getDocument().set(SQLTemplates.PROC_SOAP_WS_EXTRACT);
@@ -284,8 +389,8 @@ public class SQLTemplateDialog  extends TitleAreaDialog {
         sqlTextViewer = new SqlTextViewer(textTableOptionsGroup, new VerticalRuler(0), styles, colorManager);
         sqlDocument = new Document();
         sqlTextViewer.setInput(sqlDocument);
-        sqlTextViewer.setEditable(false);
-        sqlTextViewer.getTextWidget().setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
+        sqlTextViewer.setEditable(true);
+        // sqlTextViewer.getTextWidget().setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
         sqlDocument.set(CoreStringUtil.Constants.EMPTY_STRING);
         sqlTextViewer.getControl().setLayoutData(new GridData(GridData.FILL_BOTH));
     }

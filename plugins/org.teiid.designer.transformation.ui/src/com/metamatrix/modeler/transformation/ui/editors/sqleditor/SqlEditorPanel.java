@@ -23,7 +23,11 @@ import java.util.List;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.action.IMenuListener;
+import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -90,6 +94,7 @@ import com.metamatrix.modeler.transformation.ui.editors.sqleditor.actions.Toggle
 import com.metamatrix.modeler.transformation.ui.editors.sqleditor.actions.ToggleOptimizer;
 import com.metamatrix.modeler.transformation.ui.editors.sqleditor.actions.UpFont;
 import com.metamatrix.modeler.transformation.ui.editors.sqleditor.actions.Validate;
+import com.metamatrix.modeler.transformation.ui.wizards.sqlbuilder.SQLTemplateDialog;
 import com.metamatrix.query.internal.ui.builder.util.ElementViewerFactory;
 import com.metamatrix.query.internal.ui.sqleditor.component.AliasSymbolDisplayNode;
 import com.metamatrix.query.internal.ui.sqleditor.component.DeleteDisplayNode;
@@ -105,13 +110,14 @@ import com.metamatrix.query.internal.ui.sqleditor.component.SqlIndexLocator;
 import com.metamatrix.query.internal.ui.sqleditor.component.UpdateDisplayNode;
 import com.metamatrix.query.internal.ui.sqleditor.component.WhereDisplayNode;
 import com.metamatrix.ui.graphics.ColorManager;
+import com.metamatrix.ui.internal.util.UiUtil;
 import com.metamatrix.ui.text.ScaledFontManager;
 import com.metamatrix.ui.text.StyledTextEditor;
 import com.metamatrix.ui.text.TextFontManager;
 
 public class SqlEditorPanel extends SashForm
     implements UiConstants, DisplayNodeConstants, SelectionListener, ISelectionChangedListener, IPropertyChangeListener,
-    KeyListener, MouseListener {
+    KeyListener, MouseListener, IMenuListener {
 
     /** Changes Pending Message */
     private static final String QUERY_CHANGES_PENDING_MESSAGE = Util.getString("SqlEditorPanel.changesPendingMsg"); //$NON-NLS-1$
@@ -134,6 +140,9 @@ public class SqlEditorPanel extends SashForm
     public static final String ACTION_ID_DOWN_FONT = "DownFont"; //$NON-NLS-1$   // DownFont downFontAction;
     public static final String ACTION_ID_IMPORT_FROM_FILE = "ImportFromFile"; //$NON-NLS-1$   // ImportFromFile importFromFileAction;
     public static final String ACTION_ID_EXPORT_TO_FILE = "ExportToFile"; //$NON-NLS-1$   // ExportToFile exportToFileAction;
+
+    public static final String APPLY_TEMPLATE_ACTION_TEXT = "SqlEditorPanel.applyTemplateActionText"; //$NON-NLS-1$
+    public static final String APPLY_TEMPLATE_ACTION_TOOLTIP = "SqlEditorPanel.applyTemplateActionTooltip"; //$NON-NLS-1$
 
     public static final String[] DEFAULT_INCLUDED_ACTIONS = new String[] {ACTION_ID_VALIDATE, ACTION_ID_LAUNCH_CRITERIA_BUILDER,
         ACTION_ID_LAUNCH_EXPRESSION_BUILDER, ACTION_ID_EXPAND_SELECT, ACTION_ID_TOGGLE_MESSAGE, ACTION_ID_TOGGLE_OPTIMIZER,
@@ -185,6 +194,7 @@ public class SqlEditorPanel extends SashForm
     DownFont downFontAction;
     ImportFromFile importFromFileAction;
     ExportToFile exportToFileAction;
+    private Action applyTemplateAction;
 
     List includedActionsList;
 
@@ -292,6 +302,8 @@ public class SqlEditorPanel extends SashForm
         });
 
         this.textEditor = new StyledTextEditor(this.sqlTextViewer);
+        this.textEditor.addMenuListener(this);
+
         // sqlDocument.set("SELECT * FROM TABLE");
         sqlDocument = textEditor.getDocument();
         sqlTextViewer.setEditable(true);
@@ -341,6 +353,29 @@ public class SqlEditorPanel extends SashForm
 
         // Add Document Listener to for notification of text changes
         sqlDocument.addDocumentListener(new DocumentChangeListener());
+    }
+
+    @Override
+    public void menuAboutToShow( IMenuManager manager ) {
+        manager.add(new Separator());
+        this.applyTemplateAction = new Action(null) {
+            @Override
+            public void run() {
+                handleApplyTemplate();
+            }
+        };
+        this.applyTemplateAction.setToolTipText(Util.getString(APPLY_TEMPLATE_ACTION_TOOLTIP));
+        this.applyTemplateAction.setText(Util.getString(APPLY_TEMPLATE_ACTION_TEXT));
+
+        manager.add(this.applyTemplateAction);
+    }
+
+    private void handleApplyTemplate() {
+        SQLTemplateDialog templateDialog = new SQLTemplateDialog(UiUtil.getWorkbenchShellOnlyIfUiThread(),
+                                                                 SQLTemplateDialog.ALL_TEMPLATES);
+        if (templateDialog.open() == Window.OK) {
+            setText(templateDialog.getSQL());
+        }
     }
 
     /**

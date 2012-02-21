@@ -50,9 +50,14 @@ public class Messages extends NLS {
     public static String sqlTemplateDialogFlatFileSrcLabel;
     public static String sqlTemplateDialogXmlFileLocalSrcLabel;
     public static String sqlTemplateDialogXmlFileUrlSrcLabel;
+    public static String sqlTemplateDialogInsDefaultProcLabel;
+    public static String sqlTemplateDialogUpdDefaultProcLabel;
+    public static String sqlTemplateDialogDelDefaultProcLabel;
     public static String sqlTemplateDialogSoapCreateProcLabel;
     public static String sqlTemplateDialogSoapExtractProcLabel;
     public static String sqlTemplateDialogSqlAreaGroup;
+    public static String sqlTemplateDialogSelectTabTitle;
+    public static String sqlTemplateDialogProceduresTabTitle;
     
     static {
         NLS.initializeMessages("com.metamatrix.modeler.transformation.ui.messages", Messages.class); //$NON-NLS-1$
