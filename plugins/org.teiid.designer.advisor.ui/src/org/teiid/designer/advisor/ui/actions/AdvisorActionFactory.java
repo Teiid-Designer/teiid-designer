@@ -502,93 +502,39 @@ public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChange
 		if( !actionsLoaded ) {
 			initActions();
 		}
-		IMenuManager subManager = null;
 		
-		subManager = new MenuManager(MODELING_ASPECT_LABELS.DEFINE_MODELS);
-		for(String commandId :  ASPECT_DEFINE_MODELS) {
-			IAction action = getAction(commandId);
-			if( action != null ) {
-				subManager.add(action);
-			}
-		}
-		manager.add(subManager);
+		addMenuForAspect(manager, MODELING_ASPECT_LABELS.MODEL_PROJECT_MANAGEMENT, ASPECT_MODEL_PROJECT_MANAGEMENT);
+		addMenuForAspect(manager, MODELING_ASPECT_LABELS.DEFINE_MODELS, ASPECT_DEFINE_MODELS);
+		addMenuForAspect(manager, MODELING_ASPECT_LABELS.MANAGE_CONNECTIONS, ASPECT_MANAGE_CONNECTIONS);
+		addMenuForAspect(manager, MODELING_ASPECT_LABELS.MODEL_DATA_SOURCES, ASPECT_MODEL_DATA_SOURCES);
+		addMenuForAspect(manager, MODELING_ASPECT_LABELS.CONSUME_REST_WS, ASPECT_CONSUME_REST_WS);
+		addMenuForAspect(manager, MODELING_ASPECT_LABELS.CONSUME_SOAP_WS, ASPECT_CONSUME_SOAP_WS);
+		addMenuForAspect(manager, MODELING_ASPECT_LABELS.MANAGE_VDBS, ASPECT_MANAGE_VDBS);
+		addMenuForAspect(manager, MODELING_ASPECT_LABELS.TEIID_SERVER, ASPECT_TEIID_SERVER);
+		addMenuForAspect(manager, MODELING_ASPECT_LABELS.TEST, ASPECT_TEST);
 		
-		subManager = new MenuManager(MODELING_ASPECT_LABELS.MANAGE_CONNECTIONS);
-		for(String commandId :  ASPECT_MANAGE_CONNECTIONS ) {
-			IAction action = getAction(commandId);
-			if( action != null ) {
-				subManager.add(action);
-			}
-		}
-		manager.add(subManager);
-		
-		subManager = new MenuManager(MODELING_ASPECT_LABELS.MODEL_DATA_SOURCES);
-		for(String commandId :  ASPECT_MODEL_DATA_SOURCES ) {
-			IAction action = getAction(commandId);
-			if( action != null ) {
-				subManager.add(action);
-			}
-		}
-		manager.add(subManager);
-		
-		
-		subManager = new MenuManager(MODELING_ASPECT_LABELS.CONSUME_REST_WS);
-		for(String commandId :  ASPECT_CONSUME_REST_WS ) {
-			IAction action = getAction(commandId);
-			if( action != null ) {
-				subManager.add(action);
-			}
-		}
-		manager.add(subManager);
-		
-		subManager = new MenuManager(MODELING_ASPECT_LABELS.CONSUME_SOAP_WS);
-		for(String commandId :  ASPECT_CONSUME_SOAP_WS ) {
-			IAction action = getAction(commandId);
-			if( action != null ) {
-				subManager.add(action);
-			}
-		}
-		manager.add(subManager);
-		
-		subManager = new MenuManager(MODELING_ASPECT_LABELS.MANAGE_VDBS);
-		for(String commandId :  ASPECT_MANAGE_VDBS ) {
-			IAction action = getAction(commandId);
-			if( action != null ) {
-				subManager.add(action);
-			}
-		}
-		manager.add(subManager);
 
-		manager.add( new Separator());
-		
-		subManager = new MenuManager(MODELING_ASPECT_LABELS.TEIID_SERVER);
-		for(String commandId :  ASPECT_TEIID_SERVER ) {
-			IAction action = getAction(commandId);
-			if( action != null ) {
-				subManager.add(action);
-			}
-		}
-		manager.add(subManager);
-		
-		manager.add( new Separator());
-		
-		subManager = new MenuManager(MODELING_ASPECT_LABELS.TEST);
-		for(String commandId :  ASPECT_TEST ) {
-			IAction action = getAction(commandId);
-			if( action != null ) {
-				subManager.add(action);
-			}
-		}
-		manager.add(subManager);
-		
 		if( !cheatSheetActions.isEmpty() ) {
 			manager.add( new Separator());
-			subManager = new MenuManager("Teiid Cheat Sheets"); //$NON-NLS-1$
+			MenuManager subManager = new MenuManager("Teiid Cheat Sheets"); //$NON-NLS-1$
 			for(IAction action : cheatSheetActions) {
 				subManager.add(action);
 			}
 			manager.add(subManager);
 		}
+	}
+	
+	private static void addMenuForAspect(final IMenuManager manager, final String aspectId, final String[] aspectCommandsIds ) {
+		if( aspectCommandsIds.length == 0 ) return;
+		
+		MenuManager subManager = new MenuManager(aspectId);
+		for(String commandId :  aspectCommandsIds) {
+			IAction action = getAction(commandId);
+			if( action != null ) {
+				subManager.add(action);
+			}
+		}
+		manager.add(subManager);
 	}
 	
 	private static IAction getAction(final String commandId) {
