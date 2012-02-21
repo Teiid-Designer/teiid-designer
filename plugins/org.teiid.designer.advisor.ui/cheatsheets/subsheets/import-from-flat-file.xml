@@ -15,7 +15,7 @@
 			pluginId="org.teiid.designer.advisor.ui" 
 			param1="org.teiid.designer.connection.new.flatfile"/>
    		</subitem>
-   		<subitem skip="true" dialog="false">
+   		<subitem skip="true" >
 	      <description>
 	                  <b>1)</b> Specify unique name and optional description and click <b>Next &gt;</b>
 				<br/> <b>2)</b> Browse to select local file folder or enter file folder URL
@@ -33,7 +33,7 @@
 			pluginId="org.teiid.designer.advisor.ui" 
 			param1="org.teiid.designer.importFlatFileCommand"/>
    		</subitem>
-   		<subitem skip="true" dialog="false">
+   		<subitem skip="true" >
 	      <description>
 	                  <b>1)</b> Select your <b>Data File Source</b> (connection profile)
 				<br/> <b>2)</b> The <b>Available Data Files</b> section will show your source file location and list
@@ -43,7 +43,7 @@
 				<br/> <b>5)</b> Specify your file data format as <b>Character delimited</b> or <b>Fixed width</b>. <b>Next &gt;</b>
 	      </description>
    	   </subitem>
-   	   <subitem skip="true" dialog="false">
+   	   <subitem skip="true" >
 	      <description>
 	      		<b>Character Delimited Parser Settings Option</b>
 	      		<br/> The primary purpose of this importer is to help you create a view table containing the 
@@ -61,7 +61,7 @@
 				<br/> <b>4)</b> Click <b>Next &gt;</b>
 	      </description>
    	   </subitem>
-   	   <subitem skip="true" dialog="false">
+   	   <subitem skip="true" >
 	      <description>
 	      		<b>Fixed Column Width Parser Settings Option</b>
 	      		<br/> <b>1)</b> Use the <b>File Contents Preview</b> to analyze your column data format
@@ -74,7 +74,7 @@
 				<br/> <b>6)</b> Click <b>Next &gt;</b>
 	      </description>
    	   </subitem>
-   		<subitem skip="true" dialog="false">
+   		<subitem skip="true" >
 	      <description>
 	      		<b>View Model Definition</b>
 	            <br/> <b>1)</b> Select the target folder location where your new view model will be created
@@ -98,7 +98,7 @@
 			pluginId="org.teiid.designer.advisor.ui" 
 			param1="org.teiid.designer.previewData"/>
    		</subitem>
-   		<subitem skip="true" dialog="false">
+   		<subitem skip="true" >
 	      <description>
 	                  <b>1)</b> Click the browse <b>"..."</b> button to select the newly created view table
 				<br/> <b>2)</b> Click OK to execute the query
@@ -116,7 +116,7 @@
 			pluginId="org.teiid.designer.advisor.ui" 
 			param1="org.teiid.designer.vdb.create"/> 
       </subitem>
-      <subitem skip="true" dialog="false">
+      <subitem skip="true" >
 	      <description>
 				      <b>1)</b> Select <b>"..."</b> button to browse and select project or folder location.
 				<br/> <b>2)</b> Enter a unique name for your VDB
@@ -137,7 +137,7 @@
 			pluginId="org.teiid.designer.advisor.ui" 
 			param1="org.teiid.designer.vdb.execute"/> 
       </subitem>
-      <subitem skip="true" dialog="false">
+      <subitem skip="true" >
 	      <description>
 				      <b>1)</b> Select <b>"..."</b> button to browse and select a VDB.
 				<br/> <b>2)</b> Click OK to deploy VDB and open connection in Data Source Explorer

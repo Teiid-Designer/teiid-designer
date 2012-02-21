@@ -17,7 +17,7 @@
 			pluginId="org.teiid.designer.advisor.ui" 
 			param1="org.teiid.designer.vdb.create"/> 
       </subitem>
-      <subitem skip="true" dialog="false">
+      <subitem skip="true">
 	      <description>
 				      <b>1)</b> Select <b>"..."</b> button to browse and select project or folder location.
 				<br/> <b>2)</b> Enter a unique name for your VDB
@@ -38,7 +38,7 @@
 			pluginId="org.teiid.designer.advisor.ui" 
 			param1="org.teiid.designer.vdb.execute"/> 
       </subitem>
-      <subitem skip="true" dialog="false">
+      <subitem skip="true">
 	      <description>
 				      <b>1)</b> Select <b>"..."</b> button to browse and select a VDB.
 				<br/> <b>2)</b> Click OK to deploy VDB and open connection in Data Source Explorer

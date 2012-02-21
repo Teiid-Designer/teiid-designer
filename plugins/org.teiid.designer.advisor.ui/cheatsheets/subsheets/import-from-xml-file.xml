@@ -16,7 +16,7 @@
 			pluginId="org.teiid.designer.advisor.ui" 
 			param1="org.teiid.designer.connection.new.xmlfilelocal"/>
    		</subitem>
-   		<subitem skip="true" dialog="false">
+   		<subitem skip="true" >
 	      <description>
 	                  <b>1)</b> Specify unique name and optional description and click <b>Next &gt;</b>
 				<br/> <b>2)</b> Browse to select local file folder or enter file folder URL

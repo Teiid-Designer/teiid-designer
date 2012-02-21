@@ -16,7 +16,7 @@
 			pluginId="org.teiid.designer.advisor.ui" 
 			param1="org.teiid.designer.connection.new.odaws"/> 
       </subitem>
-      <subitem skip="true" dialog="false">
+      <subitem skip="true" >
 	      <description>
 				      <b>1)</b> Enter WSDL URL (Local or remote)
 				<br/> <b>2)</b> Select <b>Extract...</b>, choose an end-point from your WSDL and click <b>Next ></b>
@@ -40,7 +40,7 @@
 			pluginId="org.teiid.designer.advisor.ui" 
 			param1="org.teiid.designer.generatewsmodelsfromwsdl"/> 
       </subitem>
-      <subitem skip="true" dialog="false">
+      <subitem skip="true" >
 	      <description>
 				      <b>1)</b> Select your connection profile and press <b>Validate WSDL</b>.
 				<br/> <b>2)</b> Set the target folder or project location and unique name for your generated source model. Click <b>Next ></b>. 
@@ -60,7 +60,7 @@
 			pluginId="org.teiid.designer.advisor.ui" 
 			param1="org.teiid.designer.vdb.create"/> 
       </subitem>
-      <subitem skip="true" dialog="false">
+      <subitem skip="true" >
 	      <description>
 				      <b>1)</b> Select <b>"..."</b> button to browse and select project or folder location.
 				<br/> <b>2)</b> Enter a unique name for your VDB
@@ -81,7 +81,7 @@
 			pluginId="org.teiid.designer.advisor.ui" 
 			param1="org.teiid.designer.vdb.execute"/> 
       </subitem>
-      <subitem skip="true" dialog="false">
+      <subitem skip="true" >
 	      <description>
 				      <b>1)</b> Select <b>"..."</b> button to browse and select a VDB.
 				<br/> <b>2)</b> Click OK to deploy VDB and open connection in Data Source Explorer

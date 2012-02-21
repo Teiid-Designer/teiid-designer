@@ -15,7 +15,7 @@
 			pluginId="org.teiid.designer.advisor.ui" 
 			param1="org.teiid.designer.newProjectCommand"/> 
       </subitem>
-      <subitem skip="true" dialog="false">
+      <subitem skip="true">
 	      <description>
 				      <b>1)</b> Specify unique project name
 				<br/> <b>2)</b> Click <b>Next ></b> twice to get to <b>Model Project Options</b> page
@@ -34,7 +34,7 @@
 			pluginId="org.teiid.designer.advisor.ui" 
 			param1="org.teiid.designer.connection.new.jdbc"/>
    		</subitem>
-   		<subitem skip="true" dialog="false">
+   		<subitem skip="true">
 	      <description>
 	                  <b>1)</b> Select Connection Profile Type (Driver type)
 				<br/> <b>2)</b> Enter unique profile name (example: Products Oracle 11)
@@ -55,7 +55,7 @@
 			pluginId="org.teiid.designer.advisor.ui" 
 			param1="org.teiid.designer.importJdbcCommand"/>
    		</subitem>
-   		<subitem skip="true" dialog="false">
+   		<subitem skip="true">
 	      <description>
                   <b>1)</b> Select your JDBC source connection profile
 			<br/> <b>2)</b> Verify password and click <b>Next &gt;</b>

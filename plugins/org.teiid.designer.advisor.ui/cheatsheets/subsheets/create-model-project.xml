@@ -14,7 +14,7 @@
             <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
 			pluginId="org.teiid.designer.advisor.ui" param1="org.teiid.designer.newProjectCommand"/> 
       </subitem>
-      <subitem skip="true" dialog="false">
+      <subitem skip="true">
 	      <description>
 				      <b>1)</b> Specify unique project name
 				<br/> <b>2)</b> Click <b>Next ></b> twice to get to <b>Model Project Options</b> page
