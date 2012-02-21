@@ -7,22 +7,37 @@
 */
 package org.teiid.designer.advisor.ui.actions;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
 import org.eclipse.core.commands.AbstractHandler;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExtension;
+import org.eclipse.core.runtime.IExtensionPoint;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
 import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.datatools.connectivity.IProfileListener;
 import org.eclipse.datatools.connectivity.ProfileManager;
 import org.eclipse.datatools.connectivity.db.generic.ui.wizard.NewJDBCFilteredCPWizard;
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.cheatsheets.OpenCheatSheetAction;
 import org.teiid.designer.advisor.ui.AdvisorUiConstants;
+import org.teiid.designer.advisor.ui.AdvisorUiPlugin;
 import org.teiid.designer.datatools.ui.dialogs.NewTeiidFilteredCPWizard;
 import org.teiid.designer.runtime.Server;
 import org.teiid.designer.runtime.ui.actions.DeployVdbAction;
@@ -42,8 +57,51 @@ import com.metamatrix.ui.internal.util.WidgetUtil;
  * Factory intended to provide high-level access to actions and their handlers for Teiid Designer Advisor framework
  */
 public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChangeListener {
+	static boolean actionsLoaded = false;
+	
+    static final String EXT_PT = "cheatSheetContent"; //$NON-NLS-1$
+    static final String ID_ATTR = "id"; //$NON-NLS-1$
+    static final String NAME_ATTR = "name"; //$NON-NLS-1$
+    static final String CHEATSHEET_ELEMENT = "cheatsheet"; //$NON-NLS-1$
+    static final String CHEAT_SHEET_PLUGIN_ID = "org.eclipse.ui.cheatsheets"; //$NON-NLS-1$
 	
 	static Map<String, AdvisorActionInfo> actionInfos;
+	
+	static IConfigurationElement[] cheatsheets;
+	static Collection<IAction> cheatSheetActions;
+	
+	static IAction ACTION_IMPORT_DDL;
+	static IAction ACTION_IMPORT_FLAT_FILE;
+	static IAction ACTION_IMPORT_JDBC;
+	static IAction ACTION_IMPORT_SALESFORCE;
+	static IAction ACTION_IMPORT_WSDL_TO_SOURCE;
+	static IAction ACTION_IMPORT_WSDL_TO_WS;
+	static IAction ACTION_IMPORT_XML_FILE;
+	static IAction ACTION_CREATE_CONNECTION_FLAT_FILE;
+	static IAction ACTION_CREATE_CONNECTION_JDBC;
+	static IAction ACTION_CREATE_CONNECTION_LDAP;
+	static IAction ACTION_CREATE_CONNECTION_MODESHAPE;
+	static IAction ACTION_CREATE_CONNECTION_SALESFORCE;
+	static IAction ACTION_CREATE_CONNECTION_WEB_SERVICE;
+	static IAction ACTION_CREATE_CONNECTION_WEB_SERVICE_ODA;
+	static IAction ACTION_CREATE_CONNECTION_XML_FILE_LOCAL;
+	static IAction ACTION_CREATE_CONNECTION_XML_FILE_URL;
+	static IAction ACTION_NEW_MODEL_RELATIONAL_SOURCE;
+	static IAction ACTION_NEW_MODEL_RELATIONAL_VIEW;
+	static IAction ACTION_NEW_MODEL_WS;
+	static IAction ACTION_NEW_MODEL_XML_DOC;
+	static IAction ACTION_CREATE_VDB;
+	static IAction ACTION_EXECUTE_VDB;
+	static IAction ACTION_EDIT_VDB;
+	static IAction ACTION_DEPLOY_VDB;
+	static IAction ACTION_PREVIEW_DATA;
+	static IAction ACTION_OPEN_DATA_SOURCE_EXPLORER_VIEW;
+	static IAction ACTION_CREATE_WEB_SRVICES_DATA_FILE;
+	static IAction ACTION_GENERATE_WS_MODELS_FROM_WSDL;
+	static IAction ACTION_NEW_TEIID_SERVER;
+	static IAction ACTION_EDIT_TEIID_SERVER;
+	static IAction ACTION_CREATE_DATA_SOURCE;
+	static IAction ACTION_NEW_TEIID_MODEL_PROJECT;
 
 	static void loadHandlers() {
 
@@ -291,6 +349,15 @@ public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChange
 					"Action for ID [" + id + "] is not yet implemented"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 	
+	public static ImageDescriptor getImageDesciptor(String commandId) {
+		String id = getImageId(commandId);
+		if( id != null ) {
+			return AdvisorUiPlugin.getDefault().getImageDescriptor(getImageId(commandId));
+		}
+		
+		return null;
+	}
+	
 	public static String getImageId(String id) {
 		// IMPORT OPTIONS
 		if( id.equalsIgnoreCase(COMMAND_IDS.IMPORT_DDL)) {
@@ -429,8 +496,333 @@ public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChange
 	@Override
 	public void propertyChange(PropertyChangeEvent event) {
 		
-		
 	}
 
+	public static void addActionsLibraryToMenu(IMenuManager manager) {
+		if( !actionsLoaded ) {
+			initActions();
+		}
+		IMenuManager subManager = null;
+		
+		subManager = new MenuManager(MODELING_ASPECT_LABELS.DEFINE_MODELS);
+		for(String commandId :  ASPECT_DEFINE_MODELS) {
+			IAction action = getAction(commandId);
+			if( action != null ) {
+				subManager.add(action);
+			}
+		}
+		manager.add(subManager);
+		
+		subManager = new MenuManager(MODELING_ASPECT_LABELS.MANAGE_CONNECTIONS);
+		for(String commandId :  ASPECT_MANAGE_CONNECTIONS ) {
+			IAction action = getAction(commandId);
+			if( action != null ) {
+				subManager.add(action);
+			}
+		}
+		manager.add(subManager);
+		
+		subManager = new MenuManager(MODELING_ASPECT_LABELS.MODEL_DATA_SOURCES);
+		for(String commandId :  ASPECT_MODEL_DATA_SOURCES ) {
+			IAction action = getAction(commandId);
+			if( action != null ) {
+				subManager.add(action);
+			}
+		}
+		manager.add(subManager);
+		
+		
+		subManager = new MenuManager(MODELING_ASPECT_LABELS.CONSUME_REST_WS);
+		for(String commandId :  ASPECT_CONSUME_REST_WS ) {
+			IAction action = getAction(commandId);
+			if( action != null ) {
+				subManager.add(action);
+			}
+		}
+		manager.add(subManager);
+		
+		subManager = new MenuManager(MODELING_ASPECT_LABELS.CONSUME_SOAP_WS);
+		for(String commandId :  ASPECT_CONSUME_SOAP_WS ) {
+			IAction action = getAction(commandId);
+			if( action != null ) {
+				subManager.add(action);
+			}
+		}
+		manager.add(subManager);
+		
+		subManager = new MenuManager(MODELING_ASPECT_LABELS.MANAGE_VDBS);
+		for(String commandId :  ASPECT_MANAGE_VDBS ) {
+			IAction action = getAction(commandId);
+			if( action != null ) {
+				subManager.add(action);
+			}
+		}
+		manager.add(subManager);
 
+		manager.add( new Separator());
+		
+		subManager = new MenuManager(MODELING_ASPECT_LABELS.TEIID_SERVER);
+		for(String commandId :  ASPECT_TEIID_SERVER ) {
+			IAction action = getAction(commandId);
+			if( action != null ) {
+				subManager.add(action);
+			}
+		}
+		manager.add(subManager);
+		
+		manager.add( new Separator());
+		
+		subManager = new MenuManager(MODELING_ASPECT_LABELS.TEST);
+		for(String commandId :  ASPECT_TEST ) {
+			IAction action = getAction(commandId);
+			if( action != null ) {
+				subManager.add(action);
+			}
+		}
+		manager.add(subManager);
+		
+		if( !cheatSheetActions.isEmpty() ) {
+			manager.add( new Separator());
+			subManager = new MenuManager("Teiid Cheat Sheets"); //$NON-NLS-1$
+			for(IAction action : cheatSheetActions) {
+				subManager.add(action);
+			}
+			manager.add(subManager);
+		}
+	}
+	
+	private static IAction getAction(final String commandId) {
+		// IMPORT OPTIONS
+		if( commandId.equalsIgnoreCase(COMMAND_IDS.IMPORT_DDL)) {
+			 return ACTION_IMPORT_DDL;
+		}
+		if( commandId.equalsIgnoreCase(COMMAND_IDS.IMPORT_FLAT_FILE)) {
+			return ACTION_IMPORT_FLAT_FILE;
+		}
+		if( commandId.equalsIgnoreCase(COMMAND_IDS.IMPORT_JDBC)) {
+			return ACTION_IMPORT_JDBC;
+		}
+		if( commandId.equalsIgnoreCase(COMMAND_IDS.IMPORT_SALESFORCE)) {
+			return ACTION_IMPORT_SALESFORCE;
+		}
+		if( commandId.equalsIgnoreCase(COMMAND_IDS.IMPORT_XML_FILE)) {
+			return ACTION_IMPORT_WSDL_TO_SOURCE;
+		}
+		if( commandId.equalsIgnoreCase(COMMAND_IDS.IMPORT_WSDL_TO_SOURCE)) {
+			return ACTION_IMPORT_WSDL_TO_WS;
+		}
+		if( commandId.equalsIgnoreCase(COMMAND_IDS.IMPORT_WSDL_TO_WS)) {
+			return ACTION_IMPORT_XML_FILE;
+		}
+		
+		// NEW MODEL OPTIONS
+		if( commandId.equalsIgnoreCase(COMMAND_IDS.NEW_MODEL_RELATIONAL_SOURCE)) {
+			return ACTION_NEW_MODEL_RELATIONAL_SOURCE;
+		}
+		
+		if( commandId.equalsIgnoreCase(COMMAND_IDS.NEW_MODEL_RELATIONAL_VIEW)) {
+			return ACTION_NEW_MODEL_RELATIONAL_VIEW;
+		}
+		
+		if( commandId.equalsIgnoreCase(COMMAND_IDS.NEW_MODEL_WS)) {
+			return ACTION_NEW_MODEL_WS;
+		}
+		
+		if( commandId.equalsIgnoreCase(COMMAND_IDS.NEW_MODEL_XML_DOC)) {
+			return ACTION_NEW_MODEL_XML_DOC;
+		}
+		
+		// CONNECTIONPROFILE OPTIONS
+		if( commandId.equalsIgnoreCase(COMMAND_IDS.CREATE_CONNECTION_JDBC)) {
+			return ACTION_CREATE_CONNECTION_FLAT_FILE;
+		}
+		if( commandId.equalsIgnoreCase(COMMAND_IDS.CREATE_CONNECTION_FLAT_FILE)) {
+			return ACTION_CREATE_CONNECTION_JDBC;
+		}
+		if( commandId.equalsIgnoreCase(COMMAND_IDS.CREATE_CONNECTION_LDAP)) {
+			return ACTION_CREATE_CONNECTION_LDAP;
+		}
+		if( commandId.equalsIgnoreCase(COMMAND_IDS.CREATE_CONNECTION_MODESHAPE)) {
+			return ACTION_CREATE_CONNECTION_MODESHAPE;
+		}
+		if( commandId.equalsIgnoreCase(COMMAND_IDS.CREATE_CONNECTION_SALESFORCE)) {
+			return ACTION_CREATE_CONNECTION_SALESFORCE;
+		}
+		if( commandId.equalsIgnoreCase(COMMAND_IDS.CREATE_CONNECTION_WEB_SERVICE)) {
+			return ACTION_CREATE_CONNECTION_WEB_SERVICE;
+		}
+		if( commandId.equalsIgnoreCase(COMMAND_IDS.CREATE_CONNECTION_WEB_SERVICE_ODA)) {
+			return ACTION_CREATE_CONNECTION_WEB_SERVICE_ODA;
+		}
+		if( commandId.equalsIgnoreCase(COMMAND_IDS.CREATE_CONNECTION_XML_FILE_LOCAL)) {
+			return ACTION_CREATE_CONNECTION_XML_FILE_LOCAL;
+		}
+		if( commandId.equalsIgnoreCase(COMMAND_IDS.CREATE_CONNECTION_XML_FILE_URL)) {
+			return ACTION_CREATE_CONNECTION_XML_FILE_URL;
+		}
+		if( commandId.equalsIgnoreCase(COMMAND_IDS.GENERATE_WS_MODELS_FROM_WSDL)) {
+			return ACTION_GENERATE_WS_MODELS_FROM_WSDL;
+		}
+		
+		if( commandId.equalsIgnoreCase(COMMAND_IDS.CREATE_WEB_SRVICES_DATA_FILE)) {
+			return ACTION_CREATE_WEB_SRVICES_DATA_FILE;
+		}
+		
+		if( commandId.equalsIgnoreCase(COMMAND_IDS.CREATE_VDB)) {
+			return ACTION_CREATE_VDB;
+		}
+		
+		if( commandId.equalsIgnoreCase(COMMAND_IDS.EXECUTE_VDB)) {
+			return ACTION_EXECUTE_VDB;
+		}
+		
+		if( commandId.equalsIgnoreCase(COMMAND_IDS.PREVIEW_DATA)) {
+			return ACTION_PREVIEW_DATA;
+		}
+		if( commandId.equalsIgnoreCase(COMMAND_IDS.CREATE_DATA_SOURCE)) {
+			return ACTION_CREATE_DATA_SOURCE;
+		}
+		
+		if( commandId.equalsIgnoreCase(COMMAND_IDS.EDIT_VDB)) {
+			return ACTION_EDIT_VDB;
+		}
+		
+		if( commandId.equalsIgnoreCase(COMMAND_IDS.DEPLOY_VDB)) {
+			return ACTION_DEPLOY_VDB;
+		}
+		
+		if( commandId.equalsIgnoreCase(COMMAND_IDS.NEW_TEIID_MODEL_PROJECT)) {
+			return ACTION_NEW_TEIID_MODEL_PROJECT;
+		}
+		
+		if( commandId.equalsIgnoreCase(COMMAND_IDS.OPEN_DATA_SOURCE_EXPLORER_VIEW)) {
+			return ACTION_OPEN_DATA_SOURCE_EXPLORER_VIEW;
+		}
+		return null;
+	}
+	
+	private static void initActions() {
+		actionsLoaded = true;
+		loadCheatSheetExtensions();
+
+		cheatSheetActions = new ArrayList<IAction>();
+
+        for (IConfigurationElement cheatSheet : cheatsheets) {
+            String id = cheatSheet.getAttribute(ID_ATTR);
+            // Only includes metamatrix cheat sheets for now
+            if (id.indexOf("teiid") > -1) { //$NON-NLS-1$
+                String sheetName = cheatSheet.getAttribute(NAME_ATTR);
+
+                IAction action = createCheatSheetAction(id, sheetName);
+                if( action != null ) {
+                	cheatSheetActions.add(action);
+                }
+            }
+        }
+		
+		ACTION_IMPORT_DDL = createAction(COMMAND_IDS.IMPORT_DDL);
+		ACTION_IMPORT_FLAT_FILE = createAction(COMMAND_IDS.IMPORT_FLAT_FILE);
+		ACTION_IMPORT_JDBC = createAction(COMMAND_IDS.IMPORT_JDBC);
+		ACTION_IMPORT_SALESFORCE = createAction(COMMAND_IDS.IMPORT_SALESFORCE);
+		ACTION_IMPORT_WSDL_TO_SOURCE = createAction(COMMAND_IDS.IMPORT_WSDL_TO_SOURCE);
+		ACTION_IMPORT_WSDL_TO_WS = createAction(COMMAND_IDS.IMPORT_WSDL_TO_WS);
+		ACTION_IMPORT_XML_FILE = createAction(COMMAND_IDS.IMPORT_XML_FILE);
+		ACTION_CREATE_CONNECTION_FLAT_FILE = createAction(COMMAND_IDS.CREATE_CONNECTION_FLAT_FILE);
+		ACTION_CREATE_CONNECTION_JDBC = createAction(COMMAND_IDS.CREATE_CONNECTION_JDBC);
+		ACTION_CREATE_CONNECTION_LDAP = createAction(COMMAND_IDS.CREATE_CONNECTION_LDAP);
+		ACTION_CREATE_CONNECTION_MODESHAPE = createAction(COMMAND_IDS.CREATE_CONNECTION_MODESHAPE);
+		ACTION_CREATE_CONNECTION_SALESFORCE = createAction(COMMAND_IDS.CREATE_CONNECTION_SALESFORCE);
+		ACTION_CREATE_CONNECTION_WEB_SERVICE = createAction(COMMAND_IDS.CREATE_CONNECTION_WEB_SERVICE);
+		ACTION_CREATE_CONNECTION_WEB_SERVICE_ODA = createAction(COMMAND_IDS.CREATE_CONNECTION_WEB_SERVICE_ODA);
+		ACTION_CREATE_CONNECTION_XML_FILE_LOCAL = createAction(COMMAND_IDS.CREATE_CONNECTION_XML_FILE_LOCAL);
+		ACTION_CREATE_CONNECTION_XML_FILE_URL = createAction(COMMAND_IDS.CREATE_CONNECTION_XML_FILE_URL);
+		ACTION_NEW_MODEL_RELATIONAL_SOURCE = createAction(COMMAND_IDS.NEW_MODEL_RELATIONAL_SOURCE);
+		ACTION_NEW_MODEL_RELATIONAL_VIEW = createAction(COMMAND_IDS.NEW_MODEL_RELATIONAL_VIEW);
+		ACTION_NEW_MODEL_WS = createAction(COMMAND_IDS.NEW_MODEL_WS);
+		ACTION_NEW_MODEL_XML_DOC = createAction(COMMAND_IDS.NEW_MODEL_XML_DOC);
+		ACTION_CREATE_VDB = createAction(COMMAND_IDS.CREATE_VDB);
+		ACTION_EXECUTE_VDB = createAction(COMMAND_IDS.EXECUTE_VDB);
+		ACTION_EDIT_VDB = createAction(COMMAND_IDS.EDIT_VDB);
+		ACTION_DEPLOY_VDB = createAction(COMMAND_IDS.DEPLOY_VDB);
+		ACTION_PREVIEW_DATA = createAction(COMMAND_IDS.PREVIEW_DATA);
+		ACTION_OPEN_DATA_SOURCE_EXPLORER_VIEW = createAction(COMMAND_IDS.OPEN_DATA_SOURCE_EXPLORER_VIEW);
+		ACTION_CREATE_WEB_SRVICES_DATA_FILE = createAction(COMMAND_IDS.CREATE_WEB_SRVICES_DATA_FILE);
+		ACTION_GENERATE_WS_MODELS_FROM_WSDL = createAction(COMMAND_IDS.GENERATE_WS_MODELS_FROM_WSDL);
+		ACTION_NEW_TEIID_SERVER = createAction(COMMAND_IDS.NEW_TEIID_SERVER);
+		ACTION_EDIT_TEIID_SERVER = createAction(COMMAND_IDS.EDIT_TEIID_SERVER);
+		ACTION_CREATE_DATA_SOURCE = createAction(COMMAND_IDS.CREATE_DATA_SOURCE);
+		ACTION_NEW_TEIID_MODEL_PROJECT = createAction(COMMAND_IDS.NEW_TEIID_MODEL_PROJECT);
+		
+	}
+	
+	private static IAction createAction(final String commandId) {
+		final AdvisorActionInfo info = getActionInfo(commandId);
+		if( info != null ) {
+			final IAction action = new Action(info.getDisplayName()) {
+	            @Override
+	            public void run() {
+	            	AdvisorActionFactory.executeAction(info.getId(), true);
+	            }
+	        };
+	
+			ImageDescriptor desc = AdvisorActionFactory.getImageDesciptor(info.getId());
+			if( desc != null ) {
+				action.setImageDescriptor(desc);
+			}
+			
+			return action;
+		}
+		
+		return null;
+	}
+	
+	private static IAction createCheatSheetAction(final String sheetId, final String name) {
+
+		if( sheetId != null ) {
+			final IAction action = new Action(name) {
+	            @Override
+	            public void run() {
+	            	OpenCheatSheetAction action = new OpenCheatSheetAction(sheetId);
+	                action.run();
+	            }
+	        };
+
+			return action;
+		}
+		
+		return null;
+	}
+	
+	private static void loadCheatSheetExtensions() {
+        IExtensionPoint extensionPoint = Platform.getExtensionRegistry().getExtensionPoint(CHEAT_SHEET_PLUGIN_ID, EXT_PT);
+
+        if (extensionPoint != null) {
+            IExtension[] extensions = extensionPoint.getExtensions();
+
+            if (extensions.length != 0) {
+                List temp = new ArrayList();
+
+                for (int i = 0; i < extensions.length; ++i) {
+                    IConfigurationElement[] elements = extensions[i].getConfigurationElements();
+
+                    // only care about cheatsheet configuration elements. don't care about category elements.
+                    for (int j = 0; j < elements.length; ++j) {
+                        if (elements[j].getName().equals(CHEATSHEET_ELEMENT)) {
+                            temp.add(elements[j]);
+                        }
+                    }
+                }
+
+                if (!temp.isEmpty()) {
+                    temp.toArray(cheatsheets = new IConfigurationElement[temp.size()]);
+                } else {
+                    cheatsheets = new IConfigurationElement[0];
+                }
+            }
+        }
+
+        if (cheatsheets == null) {
+            cheatsheets = new IConfigurationElement[0];
+        }
+    }
 }

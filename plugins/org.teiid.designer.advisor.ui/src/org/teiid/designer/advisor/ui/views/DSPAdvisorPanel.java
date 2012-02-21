@@ -10,6 +10,9 @@ package org.teiid.designer.advisor.ui.views;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
@@ -17,10 +20,12 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.forms.ManagedForm;
+import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.teiid.designer.advisor.ui.AdvisorUiConstants;
 import org.teiid.designer.advisor.ui.AdvisorUiPlugin;
+import org.teiid.designer.advisor.ui.actions.AdvisorActionFactory;
 import org.teiid.designer.advisor.ui.core.AdvisorHyperLinkListener;
 import org.teiid.designer.advisor.ui.core.InfoPopAction;
 import org.teiid.designer.advisor.ui.core.status.AdvisorStatus;
@@ -28,6 +33,9 @@ import org.teiid.designer.advisor.ui.core.status.AdvisorStatus;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.internal.ui.forms.FormUtil;
+import com.metamatrix.modeler.internal.ui.viewsupport.ModelProjectSelectionStatusValidator;
+import com.metamatrix.modeler.ui.viewsupport.ModelingResourceFilter;
+import com.metamatrix.ui.internal.util.WidgetUtil;
 
 /**
  * 
@@ -94,6 +102,10 @@ public class DSPAdvisorPanel extends ManagedForm
 
         FormUtil.tweakColors(toolkit, parentForm.getDisplay());
         this.parentForm.setBackground(bkgdColor);
+        
+        Form form = this.parentForm.getForm();
+        contributeToToolBar(form.getToolBarManager());
+        contributeToMenu(form.getMenuManager());
 
         // statusSection = createStatusSection(parentForm.getBody());
         this.statusSection = new DSPStatusSection(toolkit, parentForm.getBody(), this.linkListener);
@@ -107,9 +119,9 @@ public class DSPAdvisorPanel extends ManagedForm
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 		body.setLayoutData(gd);
 		
-		new ActionsSection(toolkit, body);
+//		new ActionsSection(toolkit, body);
 		
-        new DSPCheatSheetSection(toolkit, parentForm.getBody());
+//        new DSPCheatSheetSection(toolkit, parentForm.getBody());
 
         AdvisorUiPlugin.getStatusManager().updateStatus(true);
 
@@ -177,4 +189,31 @@ public class DSPAdvisorPanel extends ManagedForm
     public void updateStatus( AdvisorStatus status ) {
     }
 
+    private void contributeToMenu( IMenuManager menuMgr ) {
+    	AdvisorActionFactory.addActionsLibraryToMenu(menuMgr);
+        menuMgr.update(true);
+    }
+
+    private void contributeToToolBar( IToolBarManager toolBarMgr ) {
+        Action selectProjectAction = new Action() {
+            @Override
+            public void run() {
+                Object[] projects = WidgetUtil.showWorkspaceObjectSelectionDialog("Change Model Project", //$NON-NLS-1$
+                        "Select Model Project for Advisor", //$NON-NLS-1$
+                        false,
+                        null,
+                        new ModelingResourceFilter(
+                                                   new ModelProjectViewFilter()),
+                        new ModelProjectSelectionStatusValidator());
+				if (projects.length > 0 && AdvisorUiPlugin.getStatusManager().setCurrentProject(((IProject)projects[0]))) {
+					AdvisorUiPlugin.getStatusManager().updateStatus(true);
+				}
+            }
+        };
+        selectProjectAction.setToolTipText("Change Model Project"); //$NON-NLS-1$
+        selectProjectAction.setImageDescriptor(AdvisorUiPlugin.getDefault().getImageDescriptor(AdvisorUiConstants.Images.MODEL_PROJECT));
+        toolBarMgr.add(selectProjectAction);
+        toolBarMgr.update(true);
+    }
+    
 }

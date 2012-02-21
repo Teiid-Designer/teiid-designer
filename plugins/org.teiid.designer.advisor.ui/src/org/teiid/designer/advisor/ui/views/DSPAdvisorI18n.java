@@ -70,6 +70,7 @@ public class DSPAdvisorI18n extends NLS {
     public static String Action_ImportXsd_tooltip;
     public static String Action_PreviewData_text;
     public static String Action_PreviewData_tooltip;
+    public static String Action_NewProjectTooltip;
 
     public static String Options_Action_OpenProblemsView_description;
     public static String Options_Action_ImportJDBC_description;
