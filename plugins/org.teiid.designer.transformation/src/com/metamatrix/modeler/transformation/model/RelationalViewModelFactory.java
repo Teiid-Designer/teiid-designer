@@ -19,9 +19,7 @@ import org.teiid.designer.relational.model.RelationalModelFactory;
 import org.teiid.designer.relational.model.RelationalReference;
 import com.metamatrix.metamodels.relational.RelationalFactory;
 import com.metamatrix.metamodels.relational.RelationalPackage;
-import com.metamatrix.metamodels.transformation.SqlTransformationMappingRoot;
 import com.metamatrix.modeler.core.ModelerCoreException;
-import com.metamatrix.modeler.core.query.QueryValidator;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.internal.transformation.util.TransformationHelper;
@@ -81,14 +79,7 @@ public class RelationalViewModelFactory extends RelationalModelFactory {
 
                 // Set the transformation SQL
                 RelationalViewTable viewTable = (RelationalViewTable)obj;
-                SqlTransformationMappingRoot root = (SqlTransformationMappingRoot)TransformationHelper.getTransformationMappingRoot(baseTable);
-                if (root != null) {
-                    TransformationHelper.setSqlString(root,
-                                                      viewTable.getTransformationSQL(),
-                                                      QueryValidator.SELECT_TRNS,
-                                                      false,
-                                                      this);
-                }
+                TransformationHelper.createTransformation(baseTable, viewTable.getTransformationSQL());
             }
                 break;
             case TYPES.VIEW: {
@@ -98,14 +89,7 @@ public class RelationalViewModelFactory extends RelationalModelFactory {
 
                 // Set the transformation SQL
                 RelationalViewView viewView = (RelationalViewView)obj;
-                SqlTransformationMappingRoot root = (SqlTransformationMappingRoot)TransformationHelper.getTransformationMappingRoot(view);
-                if (root != null) {
-                    TransformationHelper.setSqlString(root,
-                                                      viewView.getTransformationSQL(),
-                                                      QueryValidator.SELECT_TRNS,
-                                                      false,
-                                                      this);
-                }
+                TransformationHelper.createTransformation(view, viewView.getTransformationSQL());
             }
                 break;
             case TYPES.PROCEDURE: {
@@ -114,14 +98,7 @@ public class RelationalViewModelFactory extends RelationalModelFactory {
 
                 // Set the transformation SQL
                 RelationalViewProcedure viewProc = (RelationalViewProcedure)obj;
-                SqlTransformationMappingRoot root = (SqlTransformationMappingRoot)TransformationHelper.getTransformationMappingRoot(procedure);
-                if (root != null) {
-                    TransformationHelper.setSqlString(root,
-                                                      viewProc.getTransformationSQL(),
-                                                      QueryValidator.SELECT_TRNS,
-                                                      false,
-                                                      this);
-                }
+                TransformationHelper.createTransformation(procedure, viewProc.getTransformationSQL());
             }
                 break;
             case TYPES.INDEX: {
