@@ -27,6 +27,15 @@ public class TeiidInstanceView extends View {
 		SWTBotShell shell = bot.shell("New Teiid Instance").activate();
 		return new TeiidInstanceDialog(shell);
 	}
+	
+	public void reconnect(String teiidInstance){
+		SWTBot bot = SWTBotFactory.getBot();
+
+		SWTBotTreeItem node = SWTEclipseExt.selectTreeLocation(bot, teiidInstance);
+
+		ContextMenuHelper.prepareTreeItemForContextMenu(bot.tree(), node);
+		ContextMenuHelper.clickContextMenu(bot.tree(), "Reconnect");
+	}
 
 	public void deleteDataSource(String teiidInstance, String dataSource){
 		SWTBot bot = SWTBotFactory.getBot();
@@ -47,9 +56,11 @@ public class TeiidInstanceView extends View {
 	}
 
 	public boolean containsDataSource(String teiidInstance, String datasource){
+		reconnect(teiidInstance);
+		
 		SWTBot bot = SWTBotFactory.getBot();
-		SWTBotTreeItem item = bot.tree().expandNode(teiidInstance, "Data Sources");
 		try {
+			SWTBotTreeItem item = bot.tree().expandNode(teiidInstance, "Data Sources");
 			item.getNode(datasource);
 			return true;
 		} catch (WidgetNotFoundException e){
@@ -58,9 +69,11 @@ public class TeiidInstanceView extends View {
 	}
 	
 	public boolean containsVDB(String teiidInstance, String vdb){
+		reconnect(teiidInstance);
+		
 		SWTBot bot = SWTBotFactory.getBot();
-		SWTBotTreeItem item = bot.tree().expandNode(teiidInstance, "VDBs");
 		try {
+			SWTBotTreeItem item = bot.tree().expandNode(teiidInstance, "VDBs");
 			item.getNode(vdb);
 			return true;
 		} catch (WidgetNotFoundException e){
