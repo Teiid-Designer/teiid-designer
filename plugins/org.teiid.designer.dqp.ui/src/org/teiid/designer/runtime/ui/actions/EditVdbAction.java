@@ -36,7 +36,7 @@ public class EditVdbAction  extends Action implements VdbConstants {
     public EditVdbAction() {
         super();
         setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(DqpUiConstants.Images.EDIT_VDB));
-        setToolTipText(DqpUiConstants.UTIL.getString("tooltip")); //$NON-NLS-1$
+        setToolTipText(DqpUiConstants.UTIL.getString(PREFIX + "tooltip")); //$NON-NLS-1$
     }
 
     @Override
