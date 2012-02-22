@@ -56,8 +56,6 @@ public class TeiidInstanceView extends View {
 	}
 
 	public boolean containsDataSource(String teiidInstance, String datasource){
-		reconnect(teiidInstance);
-		
 		SWTBot bot = SWTBotFactory.getBot();
 		try {
 			SWTBotTreeItem item = bot.tree().expandNode(teiidInstance, "Data Sources");
@@ -69,8 +67,6 @@ public class TeiidInstanceView extends View {
 	}
 	
 	public boolean containsVDB(String teiidInstance, String vdb){
-		reconnect(teiidInstance);
-		
 		SWTBot bot = SWTBotFactory.getBot();
 		try {
 			SWTBotTreeItem item = bot.tree().expandNode(teiidInstance, "VDBs");

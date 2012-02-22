@@ -223,6 +223,8 @@ public class VirtualGroupTutorialTest extends TeiidDesignerTestCase {
 		DatasourcePasswordDialog passwordDialog = dataSourceDialog.getPasswordDialog();
 		passwordDialog.setPassword("mm");
 		passwordDialog.finish();
+		
+		TeiidPerspective.getInstance().getTeiidInstanceView().reconnect(NewDefaultTeiidInstance.TEIID_URL);
 
 		assertTrue("Data Source not created!",
 				TeiidPerspective.getInstance().getTeiidInstanceView().containsDataSource(NewDefaultTeiidInstance.TEIID_URL, ORACLE_DATA_SOURCE));
@@ -265,6 +267,8 @@ public class VirtualGroupTutorialTest extends TeiidDesignerTestCase {
 	public void executeVDB(){
 		TeiidPerspective.getInstance().getModelExplorerView().executeVDB(PROJECT_NAME, VDB_FILE_NAME);
 
+		TeiidPerspective.getInstance().getTeiidInstanceView().reconnect(NewDefaultTeiidInstance.TEIID_URL);
+		
 		assertTrue("VDB not deployed!", TeiidPerspective.getInstance().getTeiidInstanceView().containsVDB(NewDefaultTeiidInstance.TEIID_URL, VDB_NAME));
 	}
 
