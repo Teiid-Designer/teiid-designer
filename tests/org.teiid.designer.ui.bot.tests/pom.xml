@@ -40,8 +40,8 @@
 				<artifactId>tycho-surefire-plugin</artifactId>
 				<configuration>
 					<useUIThread>false</useUIThread>
-					<surefire.timeout>6000</surefire.timeout>
-					<forkedProcessTimeoutInSeconds>6000</forkedProcessTimeoutInSeconds>
+					<surefire.timeout>1800</surefire.timeout>
+					<forkedProcessTimeoutInSeconds>1800</forkedProcessTimeoutInSeconds>
 					<testSuite>org.teiid.designer.ui.bot.tests</testSuite>
 					<testClass>${test.class}</testClass>
 					<skip>${swtbot.test.skip}</skip>
