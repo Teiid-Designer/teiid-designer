@@ -11,6 +11,7 @@ import static org.teiid.designer.vdb.Vdb.Event.MODEL_JNDI_NAME;
 import static org.teiid.designer.vdb.Vdb.Event.MODEL_SOURCE_NAME;
 import static org.teiid.designer.vdb.Vdb.Event.MODEL_TRANSLATOR;
 import static org.teiid.designer.vdb.Vdb.Event.MODEL_VISIBLE;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -23,7 +24,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+
 import net.jcip.annotations.ThreadSafe;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
@@ -41,8 +44,10 @@ import org.teiid.designer.vdb.manifest.ProblemElement;
 import org.teiid.designer.vdb.manifest.PropertyElement;
 import org.teiid.designer.vdb.manifest.Severity;
 import org.teiid.designer.vdb.manifest.SourceElement;
+
 import com.metamatrix.core.modeler.CoreModelerPlugin;
 import com.metamatrix.core.modeler.util.FileUtils;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.core.util.StringUtilities;
 import com.metamatrix.internal.core.index.Index;
 import com.metamatrix.metamodels.core.ModelType;
@@ -423,8 +428,11 @@ public final class VdbModelEntry extends VdbEntry {
             final Resource model = findModel();
             if (ModelUtil.isPhysical(model)) {
                 final ModelResource mr = ModelerCore.getModelEditor().findModelResource(workspaceFile);
-                final String translator = new ConnectionInfoHelper().getTranslatorName(mr);
-                this.translator.set(translator == null ? EMPTY_STR : translator);
+
+                if (CoreStringUtil.isEmpty(this.translator.get())) {
+                    final String translator = new ConnectionInfoHelper().getTranslatorName(mr);
+                    this.translator.set(translator == null ? EMPTY_STR : translator);
+                }
             }
 
             // Build model if necessary
