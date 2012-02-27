@@ -7,24 +7,34 @@
  */
 package org.teiid.designer.advisor.ui.views;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
-import org.eclipse.ui.forms.widgets.TableWrapData;
-import org.eclipse.ui.forms.widgets.TableWrapLayout;
 import org.teiid.designer.advisor.ui.AdvisorUiConstants;
 import org.teiid.designer.advisor.ui.AdvisorUiPlugin;
 import org.teiid.designer.advisor.ui.core.AdvisorHyperLinkListener;
 import org.teiid.designer.advisor.ui.util.DSPPluginImageHelper;
-import org.teiid.designer.advisor.ui.util.LabelLabelLinkRow;
+import org.teiid.designer.advisor.ui.util.HyperLinkLabelRow;
 
 import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.modeler.internal.ui.forms.FormUtil;
+import com.metamatrix.modeler.internal.ui.viewsupport.ModelProjectSelectionStatusValidator;
+import com.metamatrix.modeler.ui.viewsupport.ModelingResourceFilter;
+import com.metamatrix.ui.internal.util.WidgetUtil;
 
 /**
  * 
@@ -33,30 +43,32 @@ public class DSPStatusSection implements AdvisorUiConstants.Groups {
     private FormToolkit toolkit;
 
     private Section section;
+    private Composite sectionBody;
+    
+    private Button changeProjectButton;
+    private Label projectNameLabel;
 
     private final DSPPluginImageHelper imageHelper = AdvisorUiPlugin.getImageHelper();
     private final AdvisorHyperLinkListener linkListener;
 
-    private LabelLabelLinkRow sourcesRow;
-    private LabelLabelLinkRow viewsRow;
-    private LabelLabelLinkRow connectorsRow;
-    private LabelLabelLinkRow validationRow;
-    private LabelLabelLinkRow schemasRow;
-    private LabelLabelLinkRow vdbsRow;
-    LabelLabelLinkRow testRow;
+    private HyperLinkLabelRow sourcesRow;
+    private HyperLinkLabelRow viewsRow;
+    private HyperLinkLabelRow connectorsRow;
+    private HyperLinkLabelRow validationRow;
+    private HyperLinkLabelRow schemasRow;
+    private HyperLinkLabelRow vdbsRow;
+    private HyperLinkLabelRow testRow;
 
     private static final int MAX_NAME_CHARS = 20;
     
     private static final int SEPARATOR_HEIGHT = 3;
 
     // ------------ TEXT ----------------------------
-    //private static final String NO_PROJECT_TEXT = "NO PROJECT SELECTED          "; //$NON-NLS-1$
     private static final String CRETURN = "\n"; //$NON-NLS-1$
-    //private static final String NO_PROJECT_DEFINED = "No Project defined                  "; //$NON-NLS-1$
     private static final String TEN_SPACES = "          "; //$NON-NLS-1$
     private static final String TWENTY_FIVE_SPACES = "                         "; //$NON-NLS-1$
     private static final String ELIPSIS = "..."; //$NON-NLS-1$
-    private static final String AUTOVALIDATE_OFF_WARNING = DSPAdvisorI18n.AutovalidateOffMessage;
+    //private static final String AUTOVALIDATE_OFF_WARNING = DSPAdvisorI18n.AutovalidateOffMessage;
 
     /**
      * 
@@ -68,54 +80,78 @@ public class DSPStatusSection implements AdvisorUiConstants.Groups {
         this.toolkit = toolkit;
         this.linkListener = linkListener;
 
-        this.section = this.toolkit.createSection(parent, ExpandableComposite.TITLE_BAR);
-
-        initSection();
+        
+        createSection(parent);
     }
 
-    private void initSection() {
-        int nColumns = 3;
+    @SuppressWarnings("unused")
+	private void createSection(Composite parent) {
+        int nColumns = 2;
 
-        section.setText(DSPAdvisorI18n.StatusSectionTitle_NoProjectSelected);
+        SECTION : {
+	        this.section = this.toolkit.createSection(parent, Section.TITLE_BAR | ExpandableComposite.TWISTIE | ExpandableComposite.EXPANDED);
+	        
+	        section.setText(DSPAdvisorI18n.Status);
+	        section.setTitleBarForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
+	
+	        GridData gd = new GridData(GridData.FILL, GridData.FILL, true, true); //GridData.FILL_HORIZONTAL); // | GridData.HORIZONTAL_ALIGN_BEGINNING);
+	        gd.horizontalSpan = 2;
+	        section.setLayoutData(gd);
+	
+	        sectionBody = toolkit.createComposite(section);
+	
+	        GridLayout layout = new GridLayout(2, false);
+	        layout.numColumns = nColumns;
+	        layout.verticalSpacing = 3;
+	        layout.horizontalSpacing = 3;
+	        sectionBody.setLayout(layout);
 
-        GridData gd = new GridData(GridData.FILL_BOTH | GridData.HORIZONTAL_ALIGN_BEGINNING);
-        gd.horizontalSpan = 2;
-        section.setLayoutData(gd);
-
-        Composite sectionBody = toolkit.createComposite(section);
-        TableWrapLayout layout = new TableWrapLayout();
-        layout.numColumns = nColumns;
-        layout.verticalSpacing = 3;
-        layout.horizontalSpacing = 3;
-        sectionBody.setLayout(layout);
-        TableWrapData twd = new TableWrapData(TableWrapData.FILL_GRAB, TableWrapData.FILL);
-        twd.valign = TableWrapData.CENTER;
-        sectionBody.setLayoutData(twd);
-
-        // Add Separator
-        createSeparator(sectionBody, nColumns, SEPARATOR_HEIGHT);
-
+	        GridData bodyGD = new GridData(GridData.FILL_BOTH);
+	        bodyGD.verticalAlignment = GridData.CENTER;
+	        sectionBody.setLayoutData(bodyGD);
+        }
         
-        connectorsRow = new LabelLabelLinkRow(GROUP_CONNECTIONS, toolkit, sectionBody, DSPAdvisorI18n.ConnectionFactoriesLabel
-                                                                                    + TWENTY_FIVE_SPACES, this.linkListener);
-        sourcesRow = new LabelLabelLinkRow(GROUP_SOURCES, toolkit, sectionBody, DSPAdvisorI18n.SourcesLabel, this.linkListener);
-        schemasRow = new LabelLabelLinkRow(GROUP_XML_SCHEMAS, toolkit, sectionBody, DSPAdvisorI18n.XmlSchemaLabel, this.linkListener);
-        viewsRow = new LabelLabelLinkRow(GROUP_VIEWS, toolkit, sectionBody, DSPAdvisorI18n.ViewsLabel, this.linkListener);
-        vdbsRow = new LabelLabelLinkRow(GROUP_VDBS, toolkit, sectionBody, DSPAdvisorI18n.VDBsLabel, this.linkListener);
+    	
+		SECTION_TOOLBAR : {
+			addSectionToolbar();
+		}
 
-        // Add Separator
-        createSeparator(sectionBody, nColumns, SEPARATOR_HEIGHT);
-        
-        validationRow = new LabelLabelLinkRow(GROUP_MODEL_VALIDATION, toolkit, sectionBody, DSPAdvisorI18n.ModelValidationLabel, this.linkListener);
-        testRow = new LabelLabelLinkRow(GROUP_TEST, toolkit, sectionBody, DSPAdvisorI18n.TestLabel, this.linkListener);
-        
-        createSeparator(sectionBody, nColumns, SEPARATOR_HEIGHT);
+        PREJECT_LABEL : {
+	        
+	        Label projectLabel = new Label(sectionBody, SWT.NONE);
+	        projectLabel.setText(DSPAdvisorI18n.StatusSectionProjectPrefix);
+	        projectLabel.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
+	        
+	        projectNameLabel = new Label(sectionBody, SWT.NONE);
+	        projectNameLabel.setText(DSPAdvisorI18n.NoProjectMessage);
+	        projectNameLabel.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
 
+        }
+        
+        STATUS_ROWS : {
+	        createSeparator(sectionBody, nColumns, SEPARATOR_HEIGHT);
+	        
+	        connectorsRow = new HyperLinkLabelRow(GROUP_CONNECTIONS, toolkit, sectionBody, DSPAdvisorI18n.ConnectionFactoriesLabel
+	                                                                                    + TWENTY_FIVE_SPACES, this.linkListener);
+	        sourcesRow = new HyperLinkLabelRow(GROUP_SOURCES, toolkit, sectionBody, DSPAdvisorI18n.SourcesLabel, this.linkListener);
+	        schemasRow = new HyperLinkLabelRow(GROUP_XML_SCHEMAS, toolkit, sectionBody, DSPAdvisorI18n.XmlSchemaLabel, this.linkListener);
+	        viewsRow = new HyperLinkLabelRow(GROUP_VIEWS, toolkit, sectionBody, DSPAdvisorI18n.ViewsLabel, this.linkListener);
+	        vdbsRow = new HyperLinkLabelRow(GROUP_VDBS, toolkit, sectionBody, DSPAdvisorI18n.VDBsLabel, this.linkListener);
+	        
+	        createSeparator(sectionBody, nColumns, SEPARATOR_HEIGHT);
+	        
+	        validationRow = new HyperLinkLabelRow(GROUP_MODEL_VALIDATION, toolkit, sectionBody, DSPAdvisorI18n.ModelValidationLabel, this.linkListener);
+	        testRow = new HyperLinkLabelRow(GROUP_TEST, toolkit, sectionBody, DSPAdvisorI18n.TestLabel, this.linkListener);
+	        
+	        createSeparator(sectionBody, nColumns, SEPARATOR_HEIGHT);
+
+        }
+        
         updateStatus(DSPValidationConstants.STATUS_MSGS.NO_PROJECT_SELECTED);
 
         sectionBody.pack(true);
         section.setClient(sectionBody);
-        // newSection.pack(true);
+
         section.setExpanded(true);
 
     }
@@ -124,10 +160,46 @@ public class DSPStatusSection implements AdvisorUiConstants.Groups {
                                   int nColumns,
                                   int height ) {
         Composite bottomSep = toolkit.createCompositeSeparator(parent);
-        TableWrapData layoutData = new TableWrapData(TableWrapData.FILL_GRAB, TableWrapData.FILL_GRAB, 1, nColumns);
+        //TableWrapData layoutData = new TableWrapData(TableWrapData.FILL_GRAB, TableWrapData.FILL_GRAB, 1, nColumns);
+        GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
+        layoutData.horizontalSpan = nColumns;
         layoutData.heightHint = height;
         bottomSep.setLayoutData(layoutData);
     }
+    
+	
+	private void addSectionToolbar() {
+        // configure section toolbar
+        Button[] buttons = FormUtil.createSectionToolBar(this.section, toolkit,
+                                                         new String[] { DSPAdvisorI18n.StatusSectionChangeProject });
+
+        // configure add button
+        this.changeProjectButton = buttons[0];
+        this.changeProjectButton.setEnabled(true);
+        this.changeProjectButton.addSelectionListener(new SelectionAdapter() {
+
+            /**
+             * {@inheritDoc}
+             * 
+             * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+             */
+            @Override
+            public void widgetSelected( SelectionEvent e ) {
+                Object[] projects = WidgetUtil.showWorkspaceObjectSelectionDialog(DSPAdvisorI18n.StatusSectionChangeProjectTooltip,
+                        DSPAdvisorI18n.StatusSectionSelectProjectMessage,
+                        false,
+                        null,
+                        new ModelingResourceFilter(
+                                                   new ModelProjectViewFilter()),
+                        new ModelProjectSelectionStatusValidator());
+				if (projects.length > 0 && AdvisorUiPlugin.getStatusManager().setCurrentProject(((IProject)projects[0]))) {
+					AdvisorUiPlugin.getStatusManager().updateStatus(true);
+				}
+            }
+        });
+        this.changeProjectButton.setToolTipText(DSPAdvisorI18n.StatusSectionChangeProjectTooltip);
+
+	}
 
     public void updateStatus( Status theStatus ) {
         CoreArgCheck.isInstanceOf(ModelProjectStatus.class, theStatus);
@@ -138,27 +210,8 @@ public class DSPStatusSection implements AdvisorUiConstants.Groups {
 
         // =========================================================================================================================
 
-        // --------------------------------------------------
-        // IF VDB is EMPTY or NO VDB Context, treat this as an summary section
-        // error and decorate vdb as error and categories as
-        // EMPTY (i.e. not yet addressed)
-        // --------------------------------------------------
-
         if (status == null || status.getCurrentModelProject() == null) {
-            this.validationRow.setLinkTooltip(DSPAdvisorI18n.NoProjectMessage + CRETURN + DSPAdvisorI18n.Status_ClickForActions);
-            this.sourcesRow.setLinkTooltip(DSPAdvisorI18n.NoProjectMessage + CRETURN + DSPAdvisorI18n.Status_ClickForActions);
-            this.connectorsRow.setLinkTooltip(DSPAdvisorI18n.NoProjectMessage + CRETURN + DSPAdvisorI18n.Status_ClickForActions);
-            this.viewsRow.setLinkTooltip(DSPAdvisorI18n.NoProjectMessage + CRETURN + DSPAdvisorI18n.Status_ClickForActions);
-            this.vdbsRow.setLinkTooltip(DSPAdvisorI18n.NoProjectMessage + CRETURN + DSPAdvisorI18n.Status_ClickForActions);
-            this.testRow.setLinkTooltip(DSPAdvisorI18n.NoProjectMessage + CRETURN + DSPAdvisorI18n.Status_ClickForActions);
-
-            resetStatusFGColor(true);
-
-            this.validationRow.setImage(imageHelper.EMPTY_BOX_IMAGE);
-            this.validationRow.setText(DSPAdvisorI18n.ModelValidationLabel + TEN_SPACES);
-            this.sourcesRow.setImage(imageHelper.EMPTY_BOX_IMAGE);
-            this.connectorsRow.setImage(imageHelper.EMPTY_BOX_IMAGE);
-            
+        	setNoProjectStatus(status);
             // =========================================================================================================================
         } else {
         	boolean hasErrors = false;
@@ -199,12 +252,12 @@ public class DSPStatusSection implements AdvisorUiConstants.Groups {
             } else {
                 this.validationRow.setText(DSPAdvisorI18n.ModelValidationOffLabel);
             }
-            String imageMessage = status.getModelStatus().getMessage();
-            if (!autovalidateOn) {
-                imageMessage = AUTOVALIDATE_OFF_WARNING;
-            }
+
+            //String imageMessage = status.getModelStatus().getMessage();
+//            if (!autovalidateOn) {
+//                imageMessage = AUTOVALIDATE_OFF_WARNING;
+//            }
             this.validationRow.update(validationImage,
-                                      imageMessage,
                                       status.getModelStatus().getMessage(),
                                       status.getModelStatus().getMessage() + CRETURN + DSPAdvisorI18n.Status_ClickForActions);
             if (status.getModelStatus().getSeverity() == IStatus.ERROR) {
@@ -214,7 +267,6 @@ public class DSPStatusSection implements AdvisorUiConstants.Groups {
             // XML Schemas Status
             // --------------------------------------------------
             this.schemasRow.update(getButtonImage(GROUP_XML_SCHEMAS, status.getXmlSchemaFilesStatus().getSeverity()),
-                                   status.getXmlSchemaFilesStatus().getMessage(),
                                    status.getXmlSchemaFilesStatus().getMessage(),
                                    status.getXmlSchemaFilesStatus().getMessage() + CRETURN
                                    + DSPAdvisorI18n.Status_ClickForActions);
@@ -226,7 +278,6 @@ public class DSPStatusSection implements AdvisorUiConstants.Groups {
             // --------------------------------------------------
             this.sourcesRow.update(getButtonImage(GROUP_SOURCES, status.getSourceModelsStatus().getSeverity()),
                                    status.getSourceModelsStatus().getMessage(),
-                                   status.getSourceModelsStatus().getMessage(),
                                    status.getSourceModelsStatus().getMessage() + CRETURN + DSPAdvisorI18n.Status_ClickForActions);
             if (status.getSourceModelsStatus().getSeverity() == IStatus.ERROR) {
                 hasErrors = true;
@@ -235,7 +286,6 @@ public class DSPStatusSection implements AdvisorUiConstants.Groups {
             // Connector Bindings Status
             // --------------------------------------------------
             this.connectorsRow.update(getButtonImage(GROUP_CONNECTIONS, status.getConnectionFactoriesStatus().getSeverity()),
-                                      status.getConnectionFactoriesStatus().getMessage(),
                                       status.getConnectionFactoriesStatus().getMessage(),
                                       status.getConnectionFactoriesStatus().getMessage() + CRETURN
                                       + DSPAdvisorI18n.Status_ClickForActions);
@@ -248,7 +298,6 @@ public class DSPStatusSection implements AdvisorUiConstants.Groups {
 
             this.viewsRow.update(getButtonImage(GROUP_VIEWS, status.getViewModelsStatus().getSeverity()),
                                  status.getViewModelsStatus().getMessage(),
-                                 status.getViewModelsStatus().getMessage(),
                                  status.getViewModelsStatus().getMessage() + CRETURN + DSPAdvisorI18n.Status_ClickForActions);
             if (status.getViewModelsStatus().getSeverity() == IStatus.ERROR) {
                 hasErrors = true;
@@ -260,7 +309,6 @@ public class DSPStatusSection implements AdvisorUiConstants.Groups {
 
             this.vdbsRow.update(getButtonImage(GROUP_VDBS, status.getVdbsStatus().getSeverity()),
                                 status.getVdbsStatus().getMessage(),
-                                status.getVdbsStatus().getMessage(),
                                 status.getVdbsStatus().getMessage() + CRETURN + DSPAdvisorI18n.Status_ClickForActions);
             if (status.getVdbsStatus().getSeverity() == IStatus.ERROR) {
                 hasErrors = true;
@@ -271,7 +319,6 @@ public class DSPStatusSection implements AdvisorUiConstants.Groups {
             // --------------------------------------------------
             
             this.testRow.update(getButtonImage(GROUP_TEST, status.getTestStatus().getSeverity()),
-                    status.getTestStatus().getMessage(),
                     status.getTestStatus().getMessage(),
                     status.getTestStatus().getMessage() + CRETURN + DSPAdvisorI18n.Status_ClickForActions);
             
@@ -285,14 +332,54 @@ public class DSPStatusSection implements AdvisorUiConstants.Groups {
         }
 
         if (status.getCurrentModelProject() != null) {
-            section.setText(DSPAdvisorI18n.StatusSectionTitlePrefix + "  " + status.getCurrentModelProject().getName()); //$NON-NLS-1$
+        	projectNameLabel.setText( status.getCurrentModelProject().getName());
         } else {
-            section.setText(DSPAdvisorI18n.StatusSectionTitle_NoProjectSelected);
+        	projectNameLabel.setText(DSPAdvisorI18n.StatusSectionTitle_NoProjectSelected);
         }
 
         refreshIcons();
 
         section.getParent().redraw();
+    }
+    
+    private void setNoProjectStatus(ModelProjectStatus status) {
+    	String message = DSPAdvisorI18n.Status_Project_Not_Selected;
+    	int severity = IStatus.OK;
+    	this.validationRow.update(getButtonImage(GROUP_MODEL_VALIDATION, severity), message,
+    			message + CRETURN + DSPAdvisorI18n.Status_ClickForActions);
+    	this.sourcesRow.update(getButtonImage(GROUP_SOURCES, severity), message,
+    			message + CRETURN + DSPAdvisorI18n.Status_ClickForActions);
+    	this.connectorsRow.update(getButtonImage(GROUP_CONNECTIONS, severity), message,
+    			message + CRETURN + DSPAdvisorI18n.Status_ClickForActions);
+    	this.viewsRow.update(getButtonImage(GROUP_VIEWS, severity), message,
+    			message + CRETURN + DSPAdvisorI18n.Status_ClickForActions);
+    	this.testRow.update(getButtonImage(GROUP_TEST, severity), message,
+    			message + CRETURN + DSPAdvisorI18n.Status_ClickForActions);
+    	this.vdbsRow.update(getButtonImage(GROUP_VDBS, severity), message,
+    			message + CRETURN + DSPAdvisorI18n.Status_ClickForActions);
+        this.schemasRow.update(getButtonImage(GROUP_XML_SCHEMAS, severity), message,
+    			message + CRETURN + DSPAdvisorI18n.Status_ClickForActions);
+        
+        
+        this.validationRow.setLinkTooltip(DSPAdvisorI18n.NoProjectMessage + CRETURN + DSPAdvisorI18n.Status_ClickForActions);
+        this.sourcesRow.setLinkTooltip(DSPAdvisorI18n.NoProjectMessage + CRETURN + DSPAdvisorI18n.Status_ClickForActions);
+        this.connectorsRow.setLinkTooltip(DSPAdvisorI18n.NoProjectMessage + CRETURN + DSPAdvisorI18n.Status_ClickForActions);
+        this.viewsRow.setLinkTooltip(DSPAdvisorI18n.NoProjectMessage + CRETURN + DSPAdvisorI18n.Status_ClickForActions);
+        this.vdbsRow.setLinkTooltip(DSPAdvisorI18n.NoProjectMessage + CRETURN + DSPAdvisorI18n.Status_ClickForActions);
+        this.testRow.setLinkTooltip(DSPAdvisorI18n.NoProjectMessage + CRETURN + DSPAdvisorI18n.Status_ClickForActions);
+        this.schemasRow.setLinkTooltip(DSPAdvisorI18n.NoProjectMessage + CRETURN + DSPAdvisorI18n.Status_ClickForActions);
+
+        resetStatusFGColor(true);
+
+        this.validationRow.setImage(imageHelper.EMPTY_BOX_IMAGE);
+        this.validationRow.setText(DSPAdvisorI18n.ModelValidationLabel + TEN_SPACES);
+        this.sourcesRow.setImage(imageHelper.EMPTY_BOX_IMAGE);
+        this.connectorsRow.setImage(imageHelper.EMPTY_BOX_IMAGE);
+        this.viewsRow.setImage(imageHelper.EMPTY_BOX_IMAGE);
+        this.vdbsRow.setImage(imageHelper.EMPTY_BOX_IMAGE);
+        this.testRow.setImage(imageHelper.EMPTY_BOX_IMAGE);
+        this.schemasRow.setImage(imageHelper.EMPTY_BOX_IMAGE);
+
     }
 
     private Image getButtonImage( int category,
@@ -345,7 +432,6 @@ public class DSPStatusSection implements AdvisorUiConstants.Groups {
     }
 
     private void refreshIcons() {
-//        statusSummaryImage.redraw();
         validationRow.redraw();
         sourcesRow.redraw();
         schemasRow.redraw();

@@ -22,7 +22,11 @@ public class DSPAdvisorI18n extends NLS {
     // DSPAdvisorPanel
     // --------------------------------------------------------------------------------------------
 
-    public static String StatusSectionTitlePrefix;
+	public static String Status;
+    public static String StatusSectionProjectPrefix;
+    public static String StatusSectionChangeProject;
+    public static String StatusSectionSelectProjectMessage;
+    public static String StatusSectionChangeProjectTooltip;
     public static String StatusSectionTitle_NoProjectSelected;
     public static String StatusSectionDefaultDescription;
     public static String StatusSectionHelpTooltip;

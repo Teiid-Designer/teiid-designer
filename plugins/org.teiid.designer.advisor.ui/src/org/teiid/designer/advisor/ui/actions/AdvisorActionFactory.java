@@ -32,6 +32,7 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
@@ -138,7 +139,13 @@ public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChange
         addActionHandler(COMMAND_IDS.EDIT_TEIID_SERVER, COMMAND_LABELS.EDIT_TEIID_SERVER, COMMAND_LABELS_SHORT.EDIT_TEIID_SERVER);
         addActionHandler(COMMAND_IDS.CREATE_DATA_SOURCE, COMMAND_LABELS.CREATE_DATA_SOURCE, COMMAND_LABELS_SHORT.CREATE_DATA_SOURCE);
         addActionHandler(COMMAND_IDS.NEW_TEIID_MODEL_PROJECT, COMMAND_LABELS.NEW_TEIID_MODEL_PROJECT, COMMAND_LABELS_SHORT.NEW_TEIID_MODEL_PROJECT);
-
+        
+        addActionHandler(CHEAT_SHEET_IDS.MODEL_FROM_JDBC_SOURCE, CHEAT_SHEET_DISPLAY_NAMES.MODEL_FROM_JDBC_SOURCE, CHEAT_SHEET_DISPLAY_NAMES.MODEL_FROM_JDBC_SOURCE);
+        addActionHandler(CHEAT_SHEET_IDS.MULTI_SOURCE_VDB, CHEAT_SHEET_DISPLAY_NAMES.MULTI_SOURCE_VDB, CHEAT_SHEET_DISPLAY_NAMES.MULTI_SOURCE_VDB);
+        addActionHandler(CHEAT_SHEET_IDS.MODEL_LOCAL_XML_SOURCE, CHEAT_SHEET_DISPLAY_NAMES.MODEL_LOCAL_XML_SOURCE, CHEAT_SHEET_DISPLAY_NAMES.MODEL_LOCAL_XML_SOURCE);
+        addActionHandler(CHEAT_SHEET_IDS.MODEL_FLAT_FILE_SOURCE, CHEAT_SHEET_DISPLAY_NAMES.MODEL_FLAT_FILE_SOURCE, CHEAT_SHEET_DISPLAY_NAMES.MODEL_FLAT_FILE_SOURCE);
+        addActionHandler(CHEAT_SHEET_IDS.CREATE_AND_TEST_VDB, CHEAT_SHEET_DISPLAY_NAMES.CREATE_AND_TEST_VDB, CHEAT_SHEET_DISPLAY_NAMES.CREATE_AND_TEST_VDB);
+        addActionHandler(CHEAT_SHEET_IDS.CONSUME_SOAP_SERVICE, CHEAT_SHEET_DISPLAY_NAMES.CONSUME_SOAP_SERVICE, CHEAT_SHEET_DISPLAY_NAMES.CONSUME_SOAP_SERVICE);
 	}
 	
 	public static AbstractHandler getActionHandler(String id) {
@@ -345,6 +352,17 @@ public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChange
 	        return;
 		}
 		
+		if( id.equalsIgnoreCase(CHEAT_SHEET_IDS.CONSUME_SOAP_SERVICE) ||
+				id.equalsIgnoreCase(CHEAT_SHEET_IDS.CREATE_AND_TEST_VDB) ||
+				id.equalsIgnoreCase(CHEAT_SHEET_IDS.MODEL_FLAT_FILE_SOURCE) ||
+				id.equalsIgnoreCase(CHEAT_SHEET_IDS.MODEL_FROM_JDBC_SOURCE) ||
+				id.equalsIgnoreCase(CHEAT_SHEET_IDS.MODEL_LOCAL_XML_SOURCE) ||
+				id.equalsIgnoreCase(CHEAT_SHEET_IDS.MULTI_SOURCE_VDB) ) {
+			executeCheatSheet(id);
+			return;
+		}
+				
+		
 		MessageDialog.openWarning(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Unimplemented Action",  //$NON-NLS-1$
 					"Action for ID [" + id + "] is not yet implemented"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
@@ -465,7 +483,43 @@ public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChange
 		if( id.equalsIgnoreCase(COMMAND_IDS.OPEN_DATA_SOURCE_EXPLORER_VIEW)) {
 			return Images.DATA_SOURCE_EXPLORER_VIEW;
 		}
+		
+		if( id.equalsIgnoreCase(COMMAND_IDS.NEW_TEIID_SERVER)) {
+			return Images.NEW_TEIID_SERVER;
+		}
+		
+		if( id.equalsIgnoreCase(COMMAND_IDS.EDIT_TEIID_SERVER)) {
+			return Images.EDIT_TEIID_SERVER;
+		}
+		
+		if( id.equalsIgnoreCase(CHEAT_SHEET_IDS.CONSUME_SOAP_SERVICE) ) {
+			return CHEAT_SHEET_IMAGE_IDS.CONSUME_SOAP_SERVICE;
+		}
+		if(	id.equalsIgnoreCase(CHEAT_SHEET_IDS.CREATE_AND_TEST_VDB) ) {
+			return CHEAT_SHEET_IMAGE_IDS.CREATE_AND_TEST_VDB;
+		}
+		if( id.equalsIgnoreCase(CHEAT_SHEET_IDS.MODEL_FLAT_FILE_SOURCE) ) {
+			return CHEAT_SHEET_IMAGE_IDS.MODEL_FLAT_FILE_SOURCE;
+		}
+		if(	id.equalsIgnoreCase(CHEAT_SHEET_IDS.MODEL_FROM_JDBC_SOURCE) ) {
+			return CHEAT_SHEET_IMAGE_IDS.MODEL_FROM_JDBC_SOURCE;
+		}
+		if(	id.equalsIgnoreCase(CHEAT_SHEET_IDS.MODEL_LOCAL_XML_SOURCE) ) {
+			return CHEAT_SHEET_IMAGE_IDS.MODEL_LOCAL_XML_SOURCE;
+		}
+		if(	id.equalsIgnoreCase(CHEAT_SHEET_IDS.MULTI_SOURCE_VDB) ) {
+			return CHEAT_SHEET_IMAGE_IDS.MULTI_SOURCE_VDB;
+		}
+
 		return null;
+	}
+	
+	public static Image getImage(AdvisorActionInfo actionInfo) {
+		return getImage(getImageId(actionInfo.getId()));
+	}
+	
+	public static Image getImage(String imageId) {
+		return AdvisorUiPlugin.getDefault().getImage(imageId);
 	}
 	
 	private static void createNewModel(ModelType type, String modelClass, Properties properties) {
@@ -513,7 +567,6 @@ public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChange
 		addMenuForAspect(manager, MODELING_ASPECT_LABELS.TEIID_SERVER, ASPECT_TEIID_SERVER);
 		addMenuForAspect(manager, MODELING_ASPECT_LABELS.TEST, ASPECT_TEST);
 		
-
 		if( !cheatSheetActions.isEmpty() ) {
 			manager.add( new Separator());
 			MenuManager subManager = new MenuManager("Teiid Cheat Sheets"); //$NON-NLS-1$
@@ -535,6 +588,14 @@ public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChange
 			}
 		}
 		manager.add(subManager);
+	}
+	
+	public static void executeCheatSheet(String id) {
+		for(IAction action : cheatSheetActions) {
+			if( action.getId().equalsIgnoreCase(id)) {
+				action.run();
+			}
+		}
 	}
 	
 	private static IAction getAction(final String commandId) {
@@ -732,7 +793,7 @@ public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChange
 	                action.run();
 	            }
 	        };
-
+	        action.setId(sheetId);
 			return action;
 		}
 		

@@ -108,6 +108,33 @@ public class FormUtil {
 
         return buttons;
     }
+    
+	public static Button[] createSectionToolBar(Section section,
+			FormToolkit toolkit, String[] actions) {
+
+		Composite toolBar = toolkit.createComposite(section, SWT.NONE);
+		RowLayout layout = new RowLayout(SWT.HORIZONTAL);
+		layout.marginLeft = 0;
+		layout.marginRight = 0;
+		layout.spacing = 0;
+		layout.marginTop = 0;
+		layout.marginBottom = 0;
+		toolBar.setLayout(layout);
+		section.setTextClient(toolBar);
+
+		//final Image backgroundImage = section.getBackgroundImage();
+		final Button[] buttons = new Button[actions.length];
+		int i = 0;
+
+		for (String text : actions) {
+			Button button = toolkit.createButton(toolBar, null, SWT.FLAT);
+			//button.setBackgroundImage(backgroundImage);
+			button.setText(text);
+			buttons[i++] = button;
+		}
+
+		return buttons;
+	}
 
     public static boolean safeEquals( Object leftVal,
                                       Object rightVal ) {

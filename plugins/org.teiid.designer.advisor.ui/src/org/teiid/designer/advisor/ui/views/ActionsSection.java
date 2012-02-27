@@ -33,6 +33,7 @@ import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.forms.widgets.Section;
+import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.teiid.designer.advisor.ui.AdvisorUiConstants;
 import org.teiid.designer.advisor.ui.AdvisorUiPlugin;
 import org.teiid.designer.advisor.ui.Messages;
@@ -42,7 +43,7 @@ import org.teiid.designer.advisor.ui.actions.AdvisorActionInfo;
 import com.metamatrix.ui.internal.util.WidgetFactory;
 import com.metamatrix.ui.internal.util.WidgetUtil;
 
-public class ActionsSection implements AdvisorUiConstants{
+public class ActionsSection implements AdvisorUiConstants {
 	private FormToolkit toolkit;
 
 	private Section section;
@@ -66,13 +67,14 @@ public class ActionsSection implements AdvisorUiConstants{
 	
 	private void createStackLayout(Composite parent) {
     	stackBodyPanel = new Composite(parent, SWT.NONE | SWT.FILL);
-    	GridData gd = new GridData(GridData.FILL_HORIZONTAL);
-    	//gd.horizontalSpan = 2;
+    	stackBodyPanel.setData("ActionsSection.stackBodyPanel");
+    	TableWrapData trd = new TableWrapData();
+    	trd.colspan = 2;
     	stackLayout = new StackLayout();
     	stackLayout.marginWidth = 0;
     	stackLayout.marginHeight = 0;
     	stackBodyPanel.setLayout(stackLayout);
-    	stackBodyPanel.setLayoutData(gd);
+    	stackBodyPanel.setLayoutData(trd);
     	stackBodyPanel.setData("name", "stackBodyPanel");  //$NON-NLS-1$//$NON-NLS-2$
 	}
 
@@ -80,15 +82,15 @@ public class ActionsSection implements AdvisorUiConstants{
 	private void createSection(Composite theParent) {
 
         Section generalSection = this.toolkit.createSection(theParent, Section.TITLE_BAR | ExpandableComposite.TWISTIE | ExpandableComposite.EXPANDED );
-
+        generalSection.setData("ActionsSection.generalSection");
         Color bkgdColor = this.toolkit.getColors().getBackground();
         generalSection.setText(Messages.ActionLibrary);
 
 //        generalSection.setDescription("Aspect Description....");
         
-        GridData gd = new GridData(GridData.FILL_BOTH | GridData.HORIZONTAL_ALIGN_BEGINNING);
-        gd.horizontalSpan = 2;
-        generalSection.setLayoutData(gd);
+//        GridData gd = new GridData(GridData.FILL_BOTH | GridData.HORIZONTAL_ALIGN_BEGINNING);
+//        gd.horizontalSpan = 2;
+//        generalSection.setLayoutData(gd);
 
         Composite sectionBody = new Composite(generalSection, SWT.NONE);
         sectionBody.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -105,9 +107,9 @@ public class ActionsSection implements AdvisorUiConstants{
         //WidgetFactory.createLabel(comboPanel, "LABEL_1");
         
 		actionGroupCombo = new Combo(comboPanel, SWT.NONE | SWT.READ_ONLY);
-		gd = new GridData(GridData.FILL_HORIZONTAL);
-		gd.verticalAlignment = GridData.CENTER;
-		actionGroupCombo.setLayoutData(gd);
+//		gd = new GridData(GridData.FILL_HORIZONTAL);
+//		gd.verticalAlignment = GridData.CENTER;
+//		actionGroupCombo.setLayoutData(gd);
 		
 		WidgetUtil.setComboItems(actionGroupCombo, Arrays.asList(AdvisorUiConstants.MODELING_ASPECT_LABELS_LIST), null, true);
 		actionGroupCombo.addSelectionListener(new SelectionAdapter() {
@@ -159,6 +161,7 @@ public class ActionsSection implements AdvisorUiConstants{
 	private Composite createPanel_1(Composite parent) {
 		Color bkgdColor = this.toolkit.getColors().getBackground();
         Composite panel = new Composite(parent, SWT.NONE);
+        panel.setData("ActionsSection.panel_1");
         panel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
         panel.setLayout(new GridLayout());
@@ -187,6 +190,7 @@ public class ActionsSection implements AdvisorUiConstants{
 		// 
 		Color bkgdColor = this.toolkit.getColors().getBackground();
         Composite panel = new Composite(parent, SWT.NONE);
+        panel.setData("ActionsSection.panel_2");
         panel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
         panel.setLayout(new GridLayout());
@@ -219,6 +223,7 @@ public class ActionsSection implements AdvisorUiConstants{
 		// 
 		Color bkgdColor = this.toolkit.getColors().getBackground();
         Composite panel = new Composite(parent, SWT.NONE);
+        panel.setData("ActionsSection.panel_3");
         panel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
         panel.setLayout(new GridLayout());
@@ -240,6 +245,7 @@ public class ActionsSection implements AdvisorUiConstants{
 		// 
 		Color bkgdColor = this.toolkit.getColors().getBackground();
         Composite panel = new Composite(parent, SWT.NONE);
+        panel.setData("ActionsSection.panel_4");
         panel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
         panel.setLayout(new GridLayout());
@@ -263,6 +269,7 @@ public class ActionsSection implements AdvisorUiConstants{
 		// 
 		Color bkgdColor = this.toolkit.getColors().getBackground();
         Composite panel = new Composite(parent, SWT.NONE);
+        panel.setData("ActionsSection.panel_5");
         panel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
         panel.setLayout(new GridLayout());
@@ -289,6 +296,7 @@ public class ActionsSection implements AdvisorUiConstants{
 		// 
 		Color bkgdColor = this.toolkit.getColors().getBackground();
         Composite panel = new Composite(parent, SWT.NONE);
+        panel.setData("ActionsSection.panel_6");
         panel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
         panel.setLayout(new GridLayout());
@@ -311,6 +319,7 @@ public class ActionsSection implements AdvisorUiConstants{
 		// 
 		Color bkgdColor = this.toolkit.getColors().getBackground();
         Composite panel = new Composite(parent, SWT.NONE);
+        panel.setData("ActionsSection.panel_7");
         panel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
         panel.setLayout(new GridLayout());
@@ -333,6 +342,7 @@ public class ActionsSection implements AdvisorUiConstants{
 		// 
 		Color bkgdColor = this.toolkit.getColors().getBackground();
         Composite panel = new Composite(parent, SWT.NONE);
+        panel.setData("ActionsSection.panel_8");
         panel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
         panel.setLayout(new GridLayout());
@@ -354,6 +364,7 @@ public class ActionsSection implements AdvisorUiConstants{
 		// 
 		Color bkgdColor = this.toolkit.getColors().getBackground();
         Composite panel = new Composite(parent, SWT.NONE);
+        panel.setData("ActionsSection.panel_9");
         panel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
         panel.setLayout(new GridLayout());

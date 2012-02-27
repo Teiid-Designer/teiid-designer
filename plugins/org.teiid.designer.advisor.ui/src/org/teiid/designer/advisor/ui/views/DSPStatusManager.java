@@ -179,7 +179,8 @@ public class DSPStatusManager implements IChangeListener {
                 if (event.getType() == ModelResourceEvent.ADDED || event.getType() == ModelResourceEvent.CHANGED
                     || event.getType() == ModelResourceEvent.RELOADED || event.getType() == ModelResourceEvent.REMOVED) {
                     // System.out.println(" WebServicesValidationManager.processEvent() calling updateStatus()");
-                    updateStatus(false);
+                    
+                	updateStatus(false);
                 }
 
             }

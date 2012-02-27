@@ -335,6 +335,9 @@ public interface AdvisorUiConstants {
 	    String PREVIEW_DATA = CTOOL16 + "preview-data.gif"; //$NON-NLS-1$
 	    String CREATE_DATA_SOURCE_ACTION = CTOOL16 + "create-data-source.gif"; //$NON-NLS-1$
 	    
+	    String NEW_TEIID_SERVER = CTOOL16 + "new-teiid-server.png"; //$NON-NLS-1$
+	    String EDIT_TEIID_SERVER = CTOOL16 + "edit-teiid-server.png"; //$NON-NLS-1$
+	    
 	    String DATA_SOURCE_EXPLORER_VIEW = CTOOL16 + "data-source-explorer-view.gif";  //$NON-NLS-1$
 	    String NEW_CONNECTION_PROFILE = CTOOL16 + "new-connection-profile.gif";  //$NON-NLS-1$
 	    String IMPORT = CTOOL16 + "import.gif";  //$NON-NLS-1$
@@ -457,4 +460,30 @@ public interface AdvisorUiConstants {
 	    public static final int GROUP_TEST = 10;
 	}
 
+	interface CHEAT_SHEET_IDS {
+		String MODEL_FROM_JDBC_SOURCE = "org.teiid.designer.ui.cheatsheet_advisor_01"; //$NON-NLS-1$
+		String MODEL_FLAT_FILE_SOURCE = "org.teiid.designer.ui.cheatsheet_advisor_02"; //$NON-NLS-1$
+		String CONSUME_SOAP_SERVICE = "org.teiid.designer.ui.cheatsheet_advisor_03"; //$NON-NLS-1$
+		String MODEL_LOCAL_XML_SOURCE = "org.teiid.designer.ui.cheatsheet_advisor_04"; //$NON-NLS-1$
+		String MULTI_SOURCE_VDB = "org.teiid.designer.ui.cheatsheet_advisor_05"; //$NON-NLS-1$
+		String CREATE_AND_TEST_VDB = "org.teiid.designer.ui.cheatsheet_advisor_06"; //$NON-NLS-1$
+	}
+	
+	interface CHEAT_SHEET_DISPLAY_NAMES {
+		String MODEL_FROM_JDBC_SOURCE = "Model From JDBC Source"; //$NON-NLS-1$
+		String MODEL_FLAT_FILE_SOURCE = "Model Flat File Source"; //$NON-NLS-1$
+		String CONSUME_SOAP_SERVICE = "Consume a SOAP Web Service"; //$NON-NLS-1$
+		String MODEL_LOCAL_XML_SOURCE = "Model Local XML File Source"; //$NON-NLS-1$
+		String MULTI_SOURCE_VDB = "Create a Multi-source VDB"; //$NON-NLS-1$
+		String CREATE_AND_TEST_VDB = "Create and test a VDB"; //$NON-NLS-1$
+	}
+	
+	interface CHEAT_SHEET_IMAGE_IDS {
+		String MODEL_FROM_JDBC_SOURCE = Images.IMPORT_JDBC;
+		String MODEL_FLAT_FILE_SOURCE = Images.IMPORT_JDBC;
+		String CONSUME_SOAP_SERVICE = Images.CREATE_WEB_SRVICES_DATA_FILE;
+		String MODEL_LOCAL_XML_SOURCE = Images.IMPORT_WSDL;
+		String MULTI_SOURCE_VDB = Images.NEW_VDB;
+		String CREATE_AND_TEST_VDB = Images.EXECUTE_VDB_ACTION;
+	}
 }

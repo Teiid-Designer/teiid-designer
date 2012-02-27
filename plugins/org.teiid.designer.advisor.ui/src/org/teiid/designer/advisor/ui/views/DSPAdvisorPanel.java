@@ -10,9 +10,7 @@ package org.teiid.designer.advisor.ui.views;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
@@ -33,9 +31,6 @@ import org.teiid.designer.advisor.ui.core.status.AdvisorStatus;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.internal.ui.forms.FormUtil;
-import com.metamatrix.modeler.internal.ui.viewsupport.ModelProjectSelectionStatusValidator;
-import com.metamatrix.modeler.ui.viewsupport.ModelingResourceFilter;
-import com.metamatrix.ui.internal.util.WidgetUtil;
 
 /**
  * 
@@ -61,6 +56,7 @@ public class DSPAdvisorPanel extends ManagedForm
         this.actionHandler = new DSPAdvisorActionHandler();
         this.parentForm = this.getForm();
 
+        this.parentForm.setAlwaysShowScrollBars(true);
         initGUI();
 
         AdvisorUiPlugin.getStatusManager().addListener(this);
@@ -96,32 +92,25 @@ public class DSPAdvisorPanel extends ManagedForm
 
         this.parentForm.setLayout(new GridLayout());
         // parentForm.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-        GridData formGD = new GridData(SWT.FILL, SWT.FILL, false, true);
-        formGD.verticalAlignment = SWT.BEGINNING;
+        GridData formGD = new GridData(SWT.FILL, SWT.FILL, true, true);
+        //formGD.verticalAlignment = SWT.BEGINNING;
         this.parentForm.setLayoutData(formGD);
 
         FormUtil.tweakColors(toolkit, parentForm.getDisplay());
         this.parentForm.setBackground(bkgdColor);
         
         Form form = this.parentForm.getForm();
-        contributeToToolBar(form.getToolBarManager());
+        
         contributeToMenu(form.getMenuManager());
 
-        // statusSection = createStatusSection(parentForm.getBody());
+        new AdvisorGuidesSection(toolkit, parentForm.getBody());
         this.statusSection = new DSPStatusSection(toolkit, parentForm.getBody(), this.linkListener);
-
-        // Add Simple Separator using a blank label
-        //this.toolkit.createLabel(parentForm.getBody(), null);
 
         Composite body = parentForm.getBody();
 		GridLayout gl = new GridLayout(2, false);
 		body.setLayout(gl);
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 		body.setLayoutData(gd);
-		
-//		new ActionsSection(toolkit, body);
-		
-//        new DSPCheatSheetSection(toolkit, parentForm.getBody());
 
         AdvisorUiPlugin.getStatusManager().updateStatus(true);
 
@@ -192,28 +181,6 @@ public class DSPAdvisorPanel extends ManagedForm
     private void contributeToMenu( IMenuManager menuMgr ) {
     	AdvisorActionFactory.addActionsLibraryToMenu(menuMgr);
         menuMgr.update(true);
-    }
-
-    private void contributeToToolBar( IToolBarManager toolBarMgr ) {
-        Action selectProjectAction = new Action() {
-            @Override
-            public void run() {
-                Object[] projects = WidgetUtil.showWorkspaceObjectSelectionDialog("Change Model Project", //$NON-NLS-1$
-                        "Select Model Project for Advisor", //$NON-NLS-1$
-                        false,
-                        null,
-                        new ModelingResourceFilter(
-                                                   new ModelProjectViewFilter()),
-                        new ModelProjectSelectionStatusValidator());
-				if (projects.length > 0 && AdvisorUiPlugin.getStatusManager().setCurrentProject(((IProject)projects[0]))) {
-					AdvisorUiPlugin.getStatusManager().updateStatus(true);
-				}
-            }
-        };
-        selectProjectAction.setToolTipText("Change Model Project"); //$NON-NLS-1$
-        selectProjectAction.setImageDescriptor(AdvisorUiPlugin.getDefault().getImageDescriptor(AdvisorUiConstants.Images.MODEL_PROJECT));
-        toolBarMgr.add(selectProjectAction);
-        toolBarMgr.update(true);
     }
     
 }

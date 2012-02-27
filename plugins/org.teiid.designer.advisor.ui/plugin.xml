@@ -96,6 +96,16 @@
             Create and test a VDB joining two data sources
          </description>
       </cheatsheet>
+      <cheatsheet
+            category="org.teiid.designer.ui.category"
+            composite="false"
+            contentFile="$nl$/cheatsheets/subsheets/create-and-test-vdb.xml"
+            id="org.teiid.designer.ui.cheatsheet_advisor_06"
+            name="Create and test a VDB">
+         <description>
+            Create and test a VDB
+         </description>
+      </cheatsheet>
 
    </extension>
 <!-- CHEAT SHEET ACTION COMMANDS -->
