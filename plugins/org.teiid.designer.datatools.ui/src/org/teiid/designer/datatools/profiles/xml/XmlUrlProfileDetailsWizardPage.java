@@ -313,7 +313,7 @@ public class XmlUrlProfileDetailsWizardPage  extends ConnectionProfileDetailsPag
 			//InputStream not provided, check XML file
 			String xmlFile = connProperties == null ? null :(String) connProperties.get( IXmlProfileConstants.URL_PROP_ID );
 			try {
-				InputStream is = new XMLSourceFromPath(xmlFile).openInputStream();
+				InputStream is = new XMLSourceFromPath(xmlFile, null).openInputStream();
 				try
 				{
 					is.close( );
