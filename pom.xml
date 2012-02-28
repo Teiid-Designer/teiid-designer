@@ -5,13 +5,13 @@
 	<parent>
 		<groupId>org.jboss.tools</groupId>
 		<artifactId>org.jboss.tools.parent.pom</artifactId>
-		<version>0.0.3-SNAPSHOT</version>
+		<version>0.0.4-SNAPSHOT</version>
 		<relativePath>../build/parent/pom.xml</relativePath>
 	</parent>
 	<groupId>org.jboss.tools</groupId>
 	<artifactId>teiid</artifactId>
 	<name>teiid.all</name>
-	<version>0.0.3-SNAPSHOT</version>
+	<version>0.0.4-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<modules>
 		<!-- parent pom must be built before the rest of the reactor can proceed. 
