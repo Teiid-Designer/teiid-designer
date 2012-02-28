@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.jboss.tools.teiid</groupId>
 		<artifactId>features</artifactId>
-		<version>0.0.3-SNAPSHOT</version>
+		<version>0.0.4-SNAPSHOT</version>
 	</parent>
 	<groupId>org.jboss.tools</groupId>
 	<artifactId>org.teiid.datatools.connectivity.feature</artifactId>
