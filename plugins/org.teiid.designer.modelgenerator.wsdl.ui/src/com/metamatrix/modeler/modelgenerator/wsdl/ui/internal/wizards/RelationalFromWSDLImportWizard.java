@@ -58,6 +58,9 @@ public class RelationalFromWSDLImportWizard extends AbstractWizard implements II
 
     /** The page where the user selects which WSDL operations to build. */
     private WizardPage selectWsdlOperationsPage;
+    
+    /** The page where the user provides details to the generated create and extract procedures */
+    private WizardPage operationsDetailsPage;
 
     private IStructuredSelection selection;
 
@@ -105,16 +108,28 @@ public class RelationalFromWSDLImportWizard extends AbstractWizard implements II
      * 
      * @param theSelection the initial workspace selection
      */
-    public void createWizardPages( ISelection theSelection ) {
+    @SuppressWarnings("unused")
+	public void createWizardPages( ISelection theSelection ) {
         this.importManager = new WSDLImportWizardManager();
 
         // construct pages
-        this.selectWsdlPage = new SelectWsdlPage(this.importManager);
-        this.selectWsdlOperationsPage = new SelectWsdlOperationsPage(this.importManager);
-        this.selectWsdlPage.setPageComplete(false);
-        this.selectWsdlOperationsPage.setPageComplete(false);
-        addPage(this.selectWsdlPage);
-        addPage(this.selectWsdlOperationsPage);
+        SELECT_WSDL_PAGE : {
+	        this.selectWsdlPage = new SelectWsdlPage(this.importManager);
+	        this.selectWsdlPage.setPageComplete(false);
+	        addPage(this.selectWsdlPage);
+        }
+        
+        SELECT_OPERATIONS_PAGE : {
+        	this.selectWsdlOperationsPage = new SelectWsdlOperationsPage(this.importManager);
+        	this.selectWsdlOperationsPage.setPageComplete(false);
+        	addPage(this.selectWsdlOperationsPage);
+        }
+        
+        OPERATIONS_DETAILS_PAGE : {
+        	this.operationsDetailsPage = new OperationsDetailsPage(this.importManager);
+        	this.operationsDetailsPage.setPageComplete(false);
+        	addPage(this.operationsDetailsPage);
+        }
 
         // give the WSDL selection page the current workspace selection
         ((SelectWsdlPage)this.selectWsdlPage).setInitialSelection(theSelection);
