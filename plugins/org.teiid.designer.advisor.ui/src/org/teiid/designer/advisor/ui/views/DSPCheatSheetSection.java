@@ -21,6 +21,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.cheatsheets.OpenCheatSheetAction;
 import org.eclipse.ui.forms.IFormColors;
@@ -79,9 +80,10 @@ public class DSPCheatSheetSection {
 
     private void initSection() {
 
-        this.section.setText("Related Guides"); //VdbViewConstants.Util.getStringOrKey(PREFIX + "text")); //$NON-NLS-1$
-        this.section.setDescription("Cheat sheet section description"); //VdbViewConstants.Util.getStringOrKey(PREFIX + "description")); //$NON-NLS-1$
+        this.section.setText("Cheat Sheets");
+        this.section.setDescription("Cheat sheets related to Teiid Designer modeling use-cases");
         this.section.getDescriptionControl().setForeground(this.toolkit.getColors().getColor(IFormColors.TITLE));
+        section.setTitleBarForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
         GridData gd = new GridData(GridData.FILL_BOTH | GridData.HORIZONTAL_ALIGN_BEGINNING);
         gd.horizontalSpan = 2;
         this.section.setLayoutData(gd);

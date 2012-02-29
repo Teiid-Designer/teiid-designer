@@ -18,6 +18,7 @@ public class PerspectiveObject {
     public static final int BOTTOM_RIGHT= 2;
     public static final int TOP_RIGHT = 3;
     public static final int LEFT_CENTER = 4;
+    public static final int RIGHT_CENTER = 5;
     
     public int locationID = NO_LOCATION;
     public boolean primary = false;

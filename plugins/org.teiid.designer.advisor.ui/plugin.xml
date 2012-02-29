@@ -15,7 +15,7 @@
       <view
             category="com.metamatrix.modeler.ui"
             class="org.teiid.designer.advisor.ui.views.DSPAdvisorView"
-            icon="icons/full/cview16/DSPAdvisor.png"
+            icon="icons/full/ctool16/advisor-view.png"
             id="org.teiid.designer.advisor.ui.views.DSPAdvisorView"
             name="%dspadvisorview.name">
       </view>
@@ -33,10 +33,10 @@
          point="org.eclipse.ui.views">
       <view
             category="com.metamatrix.modeler.ui"
-            class="org.teiid.designer.advisor.ui.views.ActionLibraryView"
-            icon="icons/full/cview16/AdvisorIcon.png"
-            id="org.teiid.designer.advisor.ui.views.ActionLibraryViewID"
-            name="Action Library">
+            class="org.teiid.designer.advisor.ui.views.ProjectStatusView"
+            icon="icons/full/ctool16/status-view.png"
+            id="org.teiid.designer.advisor.ui.views.ProjectStatusViewID"
+            name="Status">
       </view>
    </extension>
    

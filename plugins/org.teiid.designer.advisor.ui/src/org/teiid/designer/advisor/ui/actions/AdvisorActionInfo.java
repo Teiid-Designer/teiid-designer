@@ -10,32 +10,35 @@ package org.teiid.designer.advisor.ui.actions;
 import org.eclipse.core.commands.AbstractHandler;
 
 public class AdvisorActionInfo {
+	private static final String NULL_STRING = null;
 	private String id;
 	private String displayName;
 	private String shortDisplayName;
+	private String description;
 	private String imageId;
 	private boolean isSubMenu;
 	
 	AbstractHandler actionHandler;
 	
-	protected AdvisorActionInfo(String id, String displayName, String shortDisplayName) {
+	protected AdvisorActionInfo(String id, String displayName, String shortDisplayName, String description) {
 		super();
 		this.id = id;
 		this.displayName = displayName;
 		this.shortDisplayName = shortDisplayName;
+		this.description = description;
 	}
 	
 	protected AdvisorActionInfo(String id, String displayName) {
-		this(id, displayName, displayName);
+		this(id, displayName, displayName, NULL_STRING);
 	}
 	
 	public AdvisorActionInfo(String id, String displayName, AbstractHandler actionHandler) {
-		this(id, displayName, displayName);
+		this(id, displayName, displayName, NULL_STRING);
 		this.actionHandler = actionHandler;
 	}
 	
 	public AdvisorActionInfo(String id, String displayName, String shortDisplayName, AbstractHandler actionHandler) {
-		this(id, displayName, shortDisplayName);
+		this(id, displayName, shortDisplayName, NULL_STRING);
 		this.actionHandler = actionHandler;
 	}
 
@@ -49,6 +52,14 @@ public class AdvisorActionInfo {
 
 	public String getShortDisplayName() {
 		return this.shortDisplayName;
+	}
+	
+	public String getDescription() {
+		return this.description;
+	}
+	
+	public void setDescription(String desc) {
+		this.description = desc;
 	}
 
 	public AbstractHandler getActionHandler() {

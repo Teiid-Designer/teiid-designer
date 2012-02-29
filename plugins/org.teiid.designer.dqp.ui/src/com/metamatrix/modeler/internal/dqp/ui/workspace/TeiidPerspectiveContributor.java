@@ -40,7 +40,7 @@ public class TeiidPerspectiveContributor implements IModelerPerspectiveContribut
             new PerspectiveObject(
                  DqpUiConstants.Extensions.CONNECTORS_VIEW_ID,
                  false,
-                 PerspectiveObject.LEFT_CENTER);
+                 PerspectiveObject.BOTTOM_RIGHT);
         contributions = new PerspectiveObject[1];
         contributions[0] = connectorsView;
 

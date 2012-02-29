@@ -16,7 +16,7 @@ import org.eclipse.ui.part.ViewPart;
 
 import com.metamatrix.ui.internal.util.UiUtil;
 
-public class ActionLibraryView  extends ViewPart {
+public class ProjectStatusView  extends ViewPart {
     private static final String ACTION_LIBRARY_VIEW_HELP_ID = "org.teiid.designer.advisor.ui.actionLibraryView"; //$NON-NLS-1$
 
     private Composite control;
@@ -27,7 +27,7 @@ public class ActionLibraryView  extends ViewPart {
     /**
      * The constructor.
      */
-    public ActionLibraryView() {
+    public ProjectStatusView() {
         super();
     }
 
@@ -42,7 +42,7 @@ public class ActionLibraryView  extends ViewPart {
         layout.marginWidth = 0;
         control.setLayout(layout);
         
-        new ActionsPanel(control);
+        new ProjectStatusPanel(control);
 
         IWorkbenchHelpSystem helpSystem = UiUtil.getWorkbench().getHelpSystem();
         helpSystem.setHelp(control, ACTION_LIBRARY_VIEW_HELP_ID);

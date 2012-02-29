@@ -59,6 +59,8 @@ public class DSPStatusManager implements IChangeListener {
     boolean isListeningForBuildComplete = false;
 
     private IProject currentProject;
+    
+    private static boolean enabled;
 
     /**
      * @since 4.3
@@ -66,6 +68,7 @@ public class DSPStatusManager implements IChangeListener {
     public DSPStatusManager() {
         super();
         init();
+        enabled = true;
     }
 
     private void init() {
@@ -234,7 +237,7 @@ public class DSPStatusManager implements IChangeListener {
     }
 
     private boolean shouldNotify() {
-        boolean result = true;
+        boolean result = DSPStatusManager.statusEnabled();
 
         // if (statusListeners != null && !statusListeners.isEmpty()) {
         // // Check the workbench state
@@ -474,6 +477,14 @@ public class DSPStatusManager implements IChangeListener {
         this.currentProject = nextCurrentProject;
 
         return projectChanged;
+    }
+    
+    public static void enable(boolean value) {
+    	enabled = value;
+    }
+    
+    public static boolean statusEnabled() {
+    	return enabled;
     }
 
 }

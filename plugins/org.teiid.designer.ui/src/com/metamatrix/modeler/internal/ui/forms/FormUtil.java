@@ -11,6 +11,7 @@ import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
@@ -108,6 +109,47 @@ public class FormUtil {
 
         return buttons;
     }
+    
+    public static Button[] createSectionToolBar( Section section,
+            FormToolkit toolkit,
+            Object[] buttonObjects, int[] buttonStyles) {
+
+		Composite toolBar = toolkit.createComposite(section, SWT.NONE);
+		GridLayout layout = new GridLayout(buttonObjects.length, false);
+		layout.marginLeft = 0;
+		layout.marginRight = 0;
+		layout.horizontalSpacing = 0;
+		layout.marginTop = 0;
+		layout.marginBottom = 0;
+		toolBar.setLayout(layout);
+		section.setTextClient(toolBar);
+
+		final Image backgroundImage = section.getBackgroundImage();
+		final Button[] buttons = new Button[buttonObjects.length];
+		int i = 0;
+		
+		for (Object obj : buttonObjects) {
+			if( obj instanceof Image ) {
+				Button button = toolkit.createButton(toolBar, null, buttonStyles[i]);
+				button.setBackgroundImage(backgroundImage);
+				button.setImage((Image)obj);
+				buttons[i++] = button;
+				GridData gd = new GridData(GridData.BEGINNING, GridData.CENTER, false, false);
+				gd.heightHint = 20;
+				button.setLayoutData(gd);
+			} else if( obj instanceof String ) {
+				Button button = toolkit.createButton(toolBar, null, buttonStyles[i]);
+				//button.setBackgroundImage(backgroundImage);
+				button.setText((String)obj);
+				buttons[i++] = button;
+				GridData gd = new GridData(GridData.BEGINNING, GridData.CENTER, false, false);
+				gd.heightHint = 20;
+				button.setLayoutData(gd);
+			}
+		}
+
+		return buttons;
+	}
     
 	public static Button[] createSectionToolBar(Section section,
 			FormToolkit toolkit, String[] actions) {

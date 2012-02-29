@@ -35,6 +35,7 @@ public class DSPAdvisorI18n extends NLS {
     //
     // Status Categories
     //
+    public static String Enable;
     public static String ProjectStatusLabel;
     public static String ModelValidationLabel;
     public static String ModelValidationOffLabel;

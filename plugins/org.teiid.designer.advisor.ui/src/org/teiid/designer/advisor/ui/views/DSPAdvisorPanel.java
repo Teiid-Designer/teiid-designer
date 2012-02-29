@@ -7,9 +7,6 @@
  */
 package org.teiid.designer.advisor.ui.views;
 
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
@@ -24,28 +21,20 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.teiid.designer.advisor.ui.AdvisorUiConstants;
 import org.teiid.designer.advisor.ui.AdvisorUiPlugin;
 import org.teiid.designer.advisor.ui.actions.AdvisorActionFactory;
-import org.teiid.designer.advisor.ui.core.AdvisorHyperLinkListener;
-import org.teiid.designer.advisor.ui.core.InfoPopAction;
-import org.teiid.designer.advisor.ui.core.status.AdvisorStatus;
 
-import com.metamatrix.core.util.CoreArgCheck;
-import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.internal.ui.forms.FormUtil;
 
 /**
  * 
  */
-public class DSPAdvisorPanel extends ManagedForm
-	implements DSPStatusListener, AdvisorUiConstants.Images, AdvisorUiConstants.Groups { // IPropertyChangeListener,
+public class DSPAdvisorPanel extends ManagedForm 
+	implements AdvisorUiConstants.Images, AdvisorUiConstants.Groups { // IPropertyChangeListener,
 
     FormToolkit toolkit;
 
     private ScrolledForm parentForm;
-    private DSPStatusSection statusSection;
+    //private DSPStatusSection statusSection;
 
-    private AdvisorHyperLinkListener linkListener;
-
-    private DSPAdvisorActionHandler actionHandler;
 
     /**
      * @since 4.3
@@ -53,23 +42,10 @@ public class DSPAdvisorPanel extends ManagedForm
     public DSPAdvisorPanel( Composite parent ) {
         super(parent);
 
-        this.actionHandler = new DSPAdvisorActionHandler();
         this.parentForm = this.getForm();
 
         this.parentForm.setAlwaysShowScrollBars(true);
         initGUI();
-
-        AdvisorUiPlugin.getStatusManager().addListener(this);
-
-        // ResourcesPlugin.getPlugin().getPluginPreferences().addPropertyChangeListener(this);
-
-        for (IProject proj : ResourcesPlugin.getWorkspace().getRoot().getProjects()) {
-            if (ModelerCore.hasModelNature(proj)) {
-                setCurrentProject(proj);
-                break;
-            }
-        }
-
     }
 
     private void initGUI() {
@@ -83,12 +59,10 @@ public class DSPAdvisorPanel extends ManagedForm
         
         Color bkgdColor = toolkit.getColors().getBackground();
 
-        this.linkListener = new AdvisorHyperLinkListener(this.getForm(), this.toolkit, this.actionHandler);
-
         parentForm.setBackground(bkgdColor);
         // parentForm = toolkit.createForm(this);
 
-        this.parentForm.setText(DSPAdvisorI18n.TeiidProjectAdvisor);
+        this.parentForm.setText("All Modeling Actions..."); //DSPAdvisorI18n.TeiidProjectAdvisor);
 
         this.parentForm.setLayout(new GridLayout());
         // parentForm.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -104,15 +78,14 @@ public class DSPAdvisorPanel extends ManagedForm
         contributeToMenu(form.getMenuManager());
 
         new AdvisorGuidesSection(toolkit, parentForm.getBody());
-        this.statusSection = new DSPStatusSection(toolkit, parentForm.getBody(), this.linkListener);
+        
+        new DSPCheatSheetSection(toolkit, parentForm.getBody());
 
         Composite body = parentForm.getBody();
 		GridLayout gl = new GridLayout(2, false);
 		body.setLayout(gl);
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 		body.setLayoutData(gd);
-
-        AdvisorUiPlugin.getStatusManager().updateStatus(true);
 
     }
 
@@ -128,54 +101,6 @@ public class DSPAdvisorPanel extends ManagedForm
         }
 
         return this.toolkit;
-    }
-
-    public InfoPopAction[] getInfoPopActions( int groupType ) {
-        return this.actionHandler.getActions(groupType);
-    }
-
-    public void notifyStatusChanged( final ModelProjectStatus theStatus ) {
-    	if( this.statusSection.getSection().isDisposed() ) {
-    		return;
-    	}
-        Display.getDefault().syncExec(new Runnable() {
-            public void run() {
-                updateStatus(theStatus);
-            }
-        });
-
-    }
-
-    /**
-     * This private method handles updating the various status widgets in the summary table Items with problems get an X checkbox,
-     * items without get a green checked checkbox. We also set the overall status for the summary section header and description.
-     * 
-     * @param status
-     * @since 4.3
-     */
-    public void updateStatus( Status theStatus ) {
-        CoreArgCheck.isInstanceOf(ModelProjectStatus.class, theStatus);
-
-        this.statusSection.updateStatus(theStatus);
-
-        this.actionHandler.setStatus((ModelProjectStatus)theStatus);
-    }
-
-    /**
-     * @param currentProject Sets currentProject to the specified value.
-     */
-    public void setCurrentProject( IProject nextCurrentProject ) {
-        if (AdvisorUiPlugin.getStatusManager().setCurrentProject(nextCurrentProject)) {
-            forceUpdateStatus();
-        }
-    }
-
-    private void forceUpdateStatus() {
-        AdvisorUiPlugin.getStatusManager().updateStatus(true);
-    }
-
-
-    public void updateStatus( AdvisorStatus status ) {
     }
 
     private void contributeToMenu( IMenuManager menuMgr ) {

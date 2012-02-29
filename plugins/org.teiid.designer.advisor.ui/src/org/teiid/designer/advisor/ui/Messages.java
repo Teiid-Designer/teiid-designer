@@ -80,11 +80,14 @@ public class Messages  extends NLS {
     public static String DefineModels;
     public static String DeployVdb;
     public static String DeployVdb_Short;
+    public static String DoubleClickToExecuteAction;
     
     public static String EditTeiidServer;
     public static String EditTeiidServer_Short;
     public static String EditVdb;
     public static String EditVdb_Short;
+    public static String ExecuteAction;
+    public static String ExecuteSelectedAction;
     public static String ExecuteVdb;
     
     public static String GenerateWSModelsFromWsdl;
@@ -107,6 +110,7 @@ public class Messages  extends NLS {
     public static String NewModelWizardErrorTitle;
     public static String NewTeiidServer;
     public static String NewTeiidServer_Short;
+    public static String NoActionSelected;
 
     public static String OpenDatatoolsDataSourceExplorer;
     

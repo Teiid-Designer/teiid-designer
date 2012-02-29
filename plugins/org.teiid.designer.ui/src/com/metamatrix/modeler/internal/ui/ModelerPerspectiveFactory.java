@@ -78,7 +78,7 @@ implements Extensions, IPerspectiveFactory, ModelerPerspectiveContributorExtensi
         //
         IFolderLayout topLeftFolder = theLayout.createFolder(TREE_FOLDER,
                                                          IPageLayout.LEFT,
-                                                         (float)0.30,
+                                                         (float)0.25,
                                                          editorArea);
         addView(Explorer.VIEW, topLeftFolder, theLayout);
         addView(OUTLINE_VIEW, topLeftFolder, theLayout);
@@ -128,7 +128,7 @@ implements Extensions, IPerspectiveFactory, ModelerPerspectiveContributorExtensi
 
         IFolderLayout bottomLeftFolder = theLayout.createFolder(PROPERTY_FOLDER,
                                                            IPageLayout.BOTTOM,
-                                                           (float)0.5,
+                                                           (float)0.65,
                                                            TREE_FOLDER);
         addView(PROPERTY_VIEW, bottomLeftFolder, theLayout);
 //REMOVED FROM APOLLO GA:
@@ -164,6 +164,22 @@ implements Extensions, IPerspectiveFactory, ModelerPerspectiveContributorExtensi
                     centerLeftFolder.addPlaceholder(po.getViewId());
                 else
                     addView(po.getViewId(), centerLeftFolder, theLayout);
+            }
+        }
+        
+        IFolderLayout topRightFolder;
+        otherViews = getViews(PerspectiveObject.TOP_RIGHT, false);
+        if( otherViews != null && !otherViews.isEmpty() ) {
+        	topRightFolder = theLayout.createFolder(TOP_RIGHT_FOLDER,
+                                                       IPageLayout.RIGHT,
+                                                       (float)0.65,
+                                                       editorArea);
+            for( Iterator<PerspectiveObject> iter = otherViews.iterator(); iter.hasNext(); ) {
+                po = iter.next();
+                if( po.isPlaceholder())
+                	topRightFolder.addPlaceholder(po.getViewId());
+                else
+                    addView(po.getViewId(), topRightFolder, theLayout);
             }
         }
         //

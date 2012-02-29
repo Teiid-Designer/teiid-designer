@@ -66,6 +66,7 @@ public interface UiConstants {
         String PROPERTY_FOLDER = PACKAGE_ID + ".propertyFolder"; //$NON-NLS-1$
         String TREE_FOLDER = PACKAGE_ID + ".treeFolder"; //$NON-NLS-1$
         String CENTER_LEFT_FOLDER = PACKAGE_ID + ".centerLeftFolder"; //$NON-NLS-1$
+        String TOP_RIGHT_FOLDER = PACKAGE_ID + ".topRightFolder"; //$NON-NLS-1$
 
         // Wizards
         String NEW_MODEL_WIZARD = "newModel"; //$NON-NLS-1$

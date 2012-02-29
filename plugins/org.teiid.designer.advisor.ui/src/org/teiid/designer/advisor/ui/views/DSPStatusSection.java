@@ -21,7 +21,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 import org.teiid.designer.advisor.ui.AdvisorUiConstants;
@@ -45,7 +44,9 @@ public class DSPStatusSection implements AdvisorUiConstants.Groups {
     private Section section;
     private Composite sectionBody;
     
+    private Button enableStatusButton;
     private Button changeProjectButton;
+    private Label projectLabel;
     private Label projectNameLabel;
 
     private final DSPPluginImageHelper imageHelper = AdvisorUiPlugin.getImageHelper();
@@ -87,10 +88,12 @@ public class DSPStatusSection implements AdvisorUiConstants.Groups {
     @SuppressWarnings("unused")
 	private void createSection(Composite parent) {
         int nColumns = 2;
-
+        
         SECTION : {
-	        this.section = this.toolkit.createSection(parent, Section.TITLE_BAR | ExpandableComposite.TWISTIE | ExpandableComposite.EXPANDED);
+	        this.section = this.toolkit.createSection(parent, 
+	        		Section.TITLE_BAR | Section.COMPACT ); //| Section.TWISTIE | Section.EXPANDED  );
 	        
+	        section.setExpanded(false);
 	        section.setText(DSPAdvisorI18n.Status);
 	        section.setTitleBarForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
 	
@@ -118,7 +121,7 @@ public class DSPStatusSection implements AdvisorUiConstants.Groups {
 
         PREJECT_LABEL : {
 	        
-	        Label projectLabel = new Label(sectionBody, SWT.NONE);
+	        projectLabel = new Label(sectionBody, SWT.NONE);
 	        projectLabel.setText(DSPAdvisorI18n.StatusSectionProjectPrefix);
 	        projectLabel.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
 	        
@@ -153,6 +156,8 @@ public class DSPStatusSection implements AdvisorUiConstants.Groups {
         section.setClient(sectionBody);
 
         section.setExpanded(true);
+        
+        setEnabledState();
 
     }
 
@@ -171,10 +176,35 @@ public class DSPStatusSection implements AdvisorUiConstants.Groups {
 	private void addSectionToolbar() {
         // configure section toolbar
         Button[] buttons = FormUtil.createSectionToolBar(this.section, toolkit,
-                                                         new String[] { DSPAdvisorI18n.StatusSectionChangeProject });
+                                                         new String[] { DSPAdvisorI18n.Enable, DSPAdvisorI18n.StatusSectionChangeProject },
+                                                         new int[] { SWT.CHECK, SWT.FLAT } );
 
+        this.enableStatusButton = buttons[0];
+        //this.enableStatusButton.setText("");
+        this.enableStatusButton.setSelection(DSPStatusManager.statusEnabled());
+        this.enableStatusButton.addSelectionListener(new SelectionAdapter() {
+
+            /**
+             * {@inheritDoc}
+             * 
+             * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+             */
+            @Override
+            public void widgetSelected( SelectionEvent e ) {
+                // TURN ON/OFF project status
+            	DSPStatusManager.enable(enableStatusButton.getSelection());
+            	setEnabledState();
+            	AdvisorUiPlugin.getStatusManager().setCurrentProject(null);
+            	projectNameLabel.setText(DSPAdvisorI18n.StatusSectionTitle_NoProjectSelected);
+            	if( DSPStatusManager.statusEnabled() ) {
+            		AdvisorUiPlugin.getStatusManager().updateStatus(true);
+            	}
+            }
+        });
+        this.enableStatusButton.setToolTipText(DSPAdvisorI18n.StatusSectionChangeProjectTooltip);
+        
         // configure add button
-        this.changeProjectButton = buttons[0];
+        this.changeProjectButton = buttons[1];
         this.changeProjectButton.setEnabled(true);
         this.changeProjectButton.addSelectionListener(new SelectionAdapter() {
 
@@ -333,10 +363,12 @@ public class DSPStatusSection implements AdvisorUiConstants.Groups {
 
         if (status.getCurrentModelProject() != null) {
         	projectNameLabel.setText( status.getCurrentModelProject().getName());
+        	resetStatusFGColor(false);
         } else {
         	projectNameLabel.setText(DSPAdvisorI18n.StatusSectionTitle_NoProjectSelected);
+        	resetStatusFGColor(true);
         }
-
+        
         refreshIcons();
 
         section.getParent().redraw();
@@ -380,6 +412,27 @@ public class DSPStatusSection implements AdvisorUiConstants.Groups {
         this.testRow.setImage(imageHelper.EMPTY_BOX_IMAGE);
         this.schemasRow.setImage(imageHelper.EMPTY_BOX_IMAGE);
 
+    }
+    
+    private void setEnabledState() {
+    	boolean doEnable = DSPStatusManager.statusEnabled();
+    	
+    	changeProjectButton.setEnabled(doEnable);
+    	projectLabel.setEnabled(doEnable);
+    	projectNameLabel.setEnabled(doEnable);
+    	
+    	resetStatusFGColor(!doEnable);
+    	if( !doEnable) {
+	        this.validationRow.setImage(imageHelper.EMPTY_BOX_IMAGE);
+	        this.validationRow.setText(DSPAdvisorI18n.ModelValidationLabel + TEN_SPACES);
+	        this.sourcesRow.setImage(imageHelper.EMPTY_BOX_IMAGE);
+	        this.connectorsRow.setImage(imageHelper.EMPTY_BOX_IMAGE);
+	        this.viewsRow.setImage(imageHelper.EMPTY_BOX_IMAGE);
+	        this.vdbsRow.setImage(imageHelper.EMPTY_BOX_IMAGE);
+	        this.testRow.setImage(imageHelper.EMPTY_BOX_IMAGE);
+	        this.schemasRow.setImage(imageHelper.EMPTY_BOX_IMAGE);
+    	}
+    	refreshIcons();
     }
 
     private Image getButtonImage( int category,

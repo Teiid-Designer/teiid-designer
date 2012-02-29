@@ -177,6 +177,56 @@ public interface AdvisorUiConstants {
 		
 	}
 	
+	interface COMMAND_DESC {
+		// These are not currently used by extension points (i.e AbstractHandler instances);
+		// When 
+		String IMPORT_JDBC = "Create relational source model from your JDBC source metadata";  //$NON-NLS-1$
+		String IMPORT_DDL = "Create relational source model from a local DDL file";  //$NON-NLS-1$
+		String IMPORT_SALESFORCE = "Create relational source model defined by your Salesforce metadata";  //$NON-NLS-1$
+		String IMPORT_FLAT_FILE = "Create view table to query a flat file source";  //$NON-NLS-1$
+		String IMPORT_XML_FILE = "Create view table to query your local or remote URL XML file source";  //$NON-NLS-1$
+		String IMPORT_WSDL_TO_SOURCE = "Create view tables to query your Web Services defined by WSDL source";  //$NON-NLS-1$
+		String IMPORT_WSDL_TO_WS = "Create web service operations defined by your WSDL source";  //$NON-NLS-1$
+		
+		String NEW_MODEL_RELATIONAL_SOURCE = "Create new relational model. Options include empty model or copy from existing source model";  //$NON-NLS-1$
+		String NEW_MODEL_RELATIONAL_VIEW = "Create new relational view model. Options include empty model, copy from existing or by transforming" + //$NON-NLS-1$
+				" from existing relational model";  //$NON-NLS-1$
+		String NEW_MODEL_WS = "org.teiid.designer.newModelWSCommand";  //$NON-NLS-1$
+		String NEW_MODEL_XML_DOC = "org.teiid.designer.newModelXmlDocCommand";  //$NON-NLS-1$
+		String NEW_MODEL_MED = "org.teiid.designer.newModelMEDCommand";  //$NON-NLS-1$
+		
+		String NEW_OBJECT_BASE_TABLE = "org.teiid.designer.newObjectBaseTable";  //$NON-NLS-1$
+		String NEW_OBJECT_SOURCE_FUNCTION = "org.teiid.designer.newObjectSourceFunction";  //$NON-NLS-1$
+		
+		String CREATE_CONNECTION_JDBC = "Create connection profile for JDBC source"; //$NON-NLS-1$
+		String CREATE_CONNECTION_FLAT_FILE = "Create connection profile for local flat file source"; //$NON-NLS-1$
+		String CREATE_CONNECTION_XML_FILE_URL = "Create connection profile for your remote URL XML file source"; //$NON-NLS-1$
+		String CREATE_CONNECTION_XML_FILE_LOCAL = "Create connection profile for your local XML file source"; //$NON-NLS-1$
+		String CREATE_CONNECTION_SALESFORCE = "Create connection profile for your Salesforce source"; //$NON-NLS-1$
+		String CREATE_CONNECTION_LDAP = "Create an LDAP connection profile"; //$NON-NLS-1$
+		String CREATE_CONNECTION_MODESHAPE = "Create a Modeshape connection profile"; //$NON-NLS-1$
+		String CREATE_CONNECTION_WEB_SERVICE = "Create a NON-SOAP Web Services connection profile"; //$NON-NLS-1$
+		String CREATE_CONNECTION_WEB_SERVICE_ODA = "Create an ODA Web Services connection profile"; //$NON-NLS-1$
+		
+		String CREATE_WEB_SRVICES_DATA_FILE= "org.teiid.designer.connection.new.wsdatafile"; //$NON-NLS-1$
+		
+		String GENERATE_WS_MODELS_FROM_WSDL = "org.teiid.designer.generatewsmodelsfromwsdl";  //$NON-NLS-1$
+		String OPEN_DATA_SOURCE_EXPLORER_VIEW = "Open Datatools' Data Source Explorer view"; //$NON-NLS-1$
+		
+		String NEW_TEIID_MODEL_PROJECT = "Create new Teiid Model Project"; //$NON-NLS-1$
+		
+		String CREATE_VDB = "Create a new VDB"; //$NON-NLS-1$
+		String EXECUTE_VDB = "Test a VDB by deploying to Teiid Server, connecting to it via JDBC and executing queries against it via Datatools' SQL Scrapbook"; //$NON-NLS-1$
+		String PREVIEW_DATA = "Perform a test query on a table or procedure"; //$NON-NLS-1$
+		String EDIT_VDB = "Select and open a VDB for editing"; //$NON-NLS-1$
+		String DEPLOY_VDB = "Deploy a VDB to your Teiid server"; //$NON-NLS-1$
+		
+		String NEW_TEIID_SERVER = "Create new Teiid server"; //$NON-NLS-1$
+		String EDIT_TEIID_SERVER = "Edit the properties of an existing Teiid server"; //$NON-NLS-1$
+		String CREATE_DATA_SOURCE = "Create a data source (i.e. -ds.xml) on your Teiid server from source models or source connections in your workspace"; //$NON-NLS-1$
+		
+	}
+	
 	interface COMMAND_LABELS {
 		String IMPORT_JDBC = Messages.CreateSourceModelFromJdbcSource;
 		String IMPORT_DDL = Messages.CreateSourceModelFromDdlFile;
@@ -345,6 +395,7 @@ public interface AdvisorUiConstants {
 	    
 	    String LINK_TO_HELP = CTOOL16 + "link-to-help.gif"; //$NON-NLS-1$
 	    String LIGHT_BULB = CTOOL16 + "light-bulb.gif"; //$NON-NLS-1$
+	    String EXECUTE_ACTION = CTOOL16 + "execute-action.gif"; //$NON-NLS-1$
 	    
 	    
         public static String VDB_PROJECT = CVIEW16 + "vdbproject.png"; //$NON-NLS-1$
@@ -431,6 +482,7 @@ public interface AdvisorUiConstants {
 	
 	    // content supplier's IDs must match their class name
 	    String ADVISOR_VIEW_ID = PLUGIN_ID + ".views.DSPAdvisorView"; //$NON-NLS-1$
+	    String STATUS_VIEW_ID = PLUGIN_ID + ".views.ProjectStatusViewID"; //$NON-NLS-1$
 	    String JDBC_IMPORT_POST_PROCESSSOR = PLUGIN_ID + ".wizards.vdbViewImportPostProcessor"; //$NON-NLS-1$
 	}
 
