@@ -38,7 +38,7 @@ import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.teiid.designer.advisor.ui.AdvisorUiConstants;
-import org.teiid.designer.advisor.ui.views.DSPAdvisorI18n;
+import org.teiid.designer.advisor.ui.Messages;
 
 /**
  * 
@@ -170,9 +170,9 @@ public class AdvisorFixDialog {
         // Create the text field.
         String styledText;
         if (nActions == 0) {
-            styledText = DSPAdvisorI18n.AdvisorFixDialog_Message_NoActions;
+            styledText = Messages.AdvisorFixDialog_Message_NoActions;
         } else {
-            styledText = DSPAdvisorI18n.AdvisorFixDialog_Message_AvailableActions;
+            styledText = Messages.AdvisorFixDialog_Message_AvailableActions;
         }
 
         Description text = new Description(parent, SWT.MULTI | SWT.READ_ONLY);

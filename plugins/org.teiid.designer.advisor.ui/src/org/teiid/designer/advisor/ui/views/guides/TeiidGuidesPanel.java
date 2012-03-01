@@ -5,7 +5,7 @@
  *
  * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
  */
-package org.teiid.designer.advisor.ui.views;
+package org.teiid.designer.advisor.ui.views.guides;
 
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.swt.SWT;
@@ -20,6 +20,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.teiid.designer.advisor.ui.AdvisorUiConstants;
 import org.teiid.designer.advisor.ui.AdvisorUiPlugin;
+import org.teiid.designer.advisor.ui.Messages;
 import org.teiid.designer.advisor.ui.actions.AdvisorActionFactory;
 
 import com.metamatrix.modeler.internal.ui.forms.FormUtil;
@@ -27,19 +28,17 @@ import com.metamatrix.modeler.internal.ui.forms.FormUtil;
 /**
  * 
  */
-public class DSPAdvisorPanel extends ManagedForm 
+public class TeiidGuidesPanel extends ManagedForm 
 	implements AdvisorUiConstants.Images, AdvisorUiConstants.Groups { // IPropertyChangeListener,
 
     FormToolkit toolkit;
 
     private ScrolledForm parentForm;
-    //private DSPStatusSection statusSection;
-
 
     /**
      * @since 4.3
      */
-    public DSPAdvisorPanel( Composite parent ) {
+    public TeiidGuidesPanel( Composite parent ) {
         super(parent);
 
         this.parentForm = this.getForm();
@@ -53,21 +52,17 @@ public class DSPAdvisorPanel extends ManagedForm
         GridData gd = new GridData(GridData.FILL_BOTH);
         this.parentForm.setLayoutData(gd);
 
-        // addProjectComboSelector(this);
-
         this.toolkit = getToolkit();
         
         Color bkgdColor = toolkit.getColors().getBackground();
 
         parentForm.setBackground(bkgdColor);
-        // parentForm = toolkit.createForm(this);
 
-        this.parentForm.setText("All Modeling Actions..."); //DSPAdvisorI18n.TeiidProjectAdvisor);
+        this.parentForm.setText(Messages.ModelingActions);
 
         this.parentForm.setLayout(new GridLayout());
-        // parentForm.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+
         GridData formGD = new GridData(SWT.FILL, SWT.FILL, true, true);
-        //formGD.verticalAlignment = SWT.BEGINNING;
         this.parentForm.setLayoutData(formGD);
 
         FormUtil.tweakColors(toolkit, parentForm.getDisplay());
@@ -77,9 +72,9 @@ public class DSPAdvisorPanel extends ManagedForm
         
         contributeToMenu(form.getMenuManager());
 
-        new AdvisorGuidesSection(toolkit, parentForm.getBody());
+        new TeiidGuidesSection(toolkit, parentForm.getBody());
         
-        new DSPCheatSheetSection(toolkit, parentForm.getBody());
+        new CheatSheetSection(toolkit, parentForm.getBody());
 
         Composite body = parentForm.getBody();
 		GridLayout gl = new GridLayout(2, false);

@@ -15,7 +15,7 @@ import org.teiid.designer.advisor.ui.core.status.AdvisorStatusManager;
 import org.teiid.designer.advisor.ui.core.status.IStatusContentProvider;
 import org.teiid.designer.advisor.ui.core.status.IStatusRowProvider;
 import org.teiid.designer.advisor.ui.suppliers.ModelValidationStatusRowProvider;
-import org.teiid.designer.advisor.ui.views.DSPValidationConstants;
+import org.teiid.designer.advisor.ui.views.status.StatusValidationConstants;
 
 /**
  * 
@@ -33,7 +33,7 @@ public class RelationalModelingStatusProvider implements IStatusContentProvider 
      */
     @Override
     public IStatus getDefaultStatus() {
-        return DSPValidationConstants.STATUS_MSGS.ADVISOR_NO_PROJECT_SELECTED;
+        return StatusValidationConstants.STATUS_MSGS.ADVISOR_NO_PROJECT_SELECTED;
     }
 
     /**

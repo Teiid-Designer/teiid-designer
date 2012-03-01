@@ -25,7 +25,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.swt.widgets.Display;
 import org.teiid.designer.advisor.ui.AdvisorUiConstants;
-import org.teiid.designer.advisor.ui.views.DSPStatusListener;
+import org.teiid.designer.advisor.ui.views.status.DSPStatusListener;
 
 import com.metamatrix.core.event.EventObjectListener;
 import com.metamatrix.core.event.EventSourceException;

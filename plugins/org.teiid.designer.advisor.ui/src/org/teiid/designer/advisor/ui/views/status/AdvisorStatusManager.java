@@ -5,7 +5,7 @@
  *
  * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
  */
-package org.teiid.designer.advisor.ui.views;
+package org.teiid.designer.advisor.ui.views.status;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -42,9 +42,9 @@ import com.metamatrix.ui.internal.viewsupport.JobUtils;
 /**
  * 
  */
-public class DSPStatusManager implements IChangeListener {
+public class AdvisorStatusManager implements IChangeListener {
 
-    private static DSPValidationHelper helper;
+    private static StatusValidationHelper helper;
 
     public static final Object FAMILY_MODEL_PROJECT_STATUS = new Object();
     private static final String JOB_NAME = "Data Services Project Advisor Validation"; //$NON-NLS-1$
@@ -65,14 +65,14 @@ public class DSPStatusManager implements IChangeListener {
     /**
      * @since 4.3
      */
-    public DSPStatusManager() {
+    public AdvisorStatusManager() {
         super();
         init();
         enabled = true;
     }
 
     private void init() {
-        this.helper = new DSPValidationHelper();
+        this.helper = new StatusValidationHelper();
         this.statusListeners = new ArrayList();
         this.autoBuildJobListener = new AutoBuildJobListener();
         // viewWorker = VdbViewUtil.getVdbViewWorker();
@@ -237,7 +237,7 @@ public class DSPStatusManager implements IChangeListener {
     }
 
     private boolean shouldNotify() {
-        boolean result = DSPStatusManager.statusEnabled();
+        boolean result = AdvisorStatusManager.statusEnabled();
 
         // if (statusListeners != null && !statusListeners.isEmpty()) {
         // // Check the workbench state

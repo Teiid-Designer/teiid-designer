@@ -14,7 +14,7 @@ import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.ui.IWorkbenchPage;
 import org.osgi.framework.BundleContext;
 import org.teiid.designer.advisor.ui.util.DSPPluginImageHelper;
-import org.teiid.designer.advisor.ui.views.DSPStatusManager;
+import org.teiid.designer.advisor.ui.views.status.AdvisorStatusManager;
 
 import com.metamatrix.core.PluginUtil;
 import com.metamatrix.core.util.PluginUtilImpl;
@@ -27,7 +27,7 @@ public class AdvisorUiPlugin extends AbstractUiPlugin implements AdvisorUiConsta
 
     private static DSPPluginImageHelper imageHelper;
 
-    private static DSPStatusManager manager;
+    private static AdvisorStatusManager manager;
     
 	/**
 	 * The shared instance of this class.
@@ -173,9 +173,9 @@ public class AdvisorUiPlugin extends AbstractUiPlugin implements AdvisorUiConsta
      * @return Returns the manager.
      * @since 4.3
      */
-    public static DSPStatusManager getStatusManager() {
+    public static AdvisorStatusManager getStatusManager() {
         if (manager == null) {
-            manager = new DSPStatusManager();
+            manager = new AdvisorStatusManager();
         }
         return manager;
     }

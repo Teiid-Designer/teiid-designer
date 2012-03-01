@@ -5,7 +5,7 @@
  *
  * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
  */
-package org.teiid.designer.advisor.ui.views;
+package org.teiid.designer.advisor.ui.views.status;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -35,7 +35,7 @@ import com.metamatrix.modeler.internal.ui.viewsupport.ModelIdentifier;
 /**
  * 
  */
-public class DSPValidationHelper implements DSPValidationConstants {
+public class StatusValidationHelper implements StatusValidationConstants {
     // private static final String XML_LITERAL_TYPE_URI_STRING =
     // URI.createURI(DatatypeConstants.BUILTIN_DATATYPES_URI).appendFragment(DatatypeConstants.BuiltInNames.XML_LITERAL).toString();
 
@@ -68,14 +68,14 @@ public class DSPValidationHelper implements DSPValidationConstants {
 
     private boolean validating = false;
 
-    public DSPValidationHelper() {
+    public StatusValidationHelper() {
         super();
     }
 
     /**
      * @since 4.3
      */
-    public DSPValidationHelper( IProject project ) {
+    public StatusValidationHelper( IProject project ) {
         super();
         this.currentProject = project;
     }
@@ -96,7 +96,7 @@ public class DSPValidationHelper implements DSPValidationConstants {
         boolean started = ModelerCore.startTxn(false,
                                                false,
                                                TRANSACTION_DESCRIPTION,
-                                               new DefaultIgnorableNotificationSource(DSPValidationHelper.this));
+                                               new DefaultIgnorableNotificationSource(StatusValidationHelper.this));
         boolean succeeded = false;
         try {
             status = createNewStatus();

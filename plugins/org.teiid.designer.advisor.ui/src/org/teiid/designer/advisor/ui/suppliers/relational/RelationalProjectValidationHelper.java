@@ -22,7 +22,7 @@ import org.eclipse.core.runtime.Status;
 import org.teiid.designer.advisor.ui.AdvisorUiConstants;
 import org.teiid.designer.advisor.ui.AdvisorUiPlugin;
 import org.teiid.designer.advisor.ui.core.status.AdvisorStatus;
-import org.teiid.designer.advisor.ui.views.DSPValidationConstants;
+import org.teiid.designer.advisor.ui.views.status.StatusValidationConstants;
 
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.notification.util.DefaultIgnorableNotificationSource;
@@ -34,7 +34,7 @@ import com.metamatrix.modeler.internal.ui.viewsupport.ModelIdentifier;
 /**
  * 
  */
-public class RelationalProjectValidationHelper implements DSPValidationConstants {
+public class RelationalProjectValidationHelper implements StatusValidationConstants {
 
     private static final String TRANSACTION_DESCRIPTION = "Creating new Data Services Project Status"; //$NON-NLS-1$
 

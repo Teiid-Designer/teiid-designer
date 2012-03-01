@@ -1,4 +1,4 @@
-package org.teiid.designer.advisor.ui.views;
+package org.teiid.designer.advisor.ui.views.guides;
 
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
@@ -20,12 +20,8 @@ import com.metamatrix.ui.internal.util.UiUtil;
  * <p>
  */
 
-public class DSPAdvisorView extends ViewPart {
+public class TeiidGuidesView extends ViewPart {
     private static final String ADVISOR_HELP_ID = "org.teiid.designer.dsp.ui.dspAdvisorOverview"; //$NON-NLS-1$
-//    private FormToolkit toolkit;
-    // private TasksPanel tasksPanel;
-//    private Form statusForm;
-    // private Form tasksForm;
     private Composite control;
 
     class NameSorter extends ViewerSorter {
@@ -34,7 +30,7 @@ public class DSPAdvisorView extends ViewPart {
     /**
      * The constructor.
      */
-    public DSPAdvisorView() {
+    public TeiidGuidesView() {
         super();
     }
 
@@ -49,14 +45,7 @@ public class DSPAdvisorView extends ViewPart {
         layout.marginWidth = 0;
         control.setLayout(layout);
 
-//        Display display = parent.getDisplay();
-//        if (AdvisorUiPlugin.getDefault() != null) {
-//            toolkit = AdvisorUiPlugin.getDefault().getFormToolkit(display);
-//        } else {
-//            toolkit = new FormToolkit(display);
-//        } // endif
-
-        new DSPAdvisorPanel(control);
+        new TeiidGuidesPanel(control);
 
         IWorkbenchHelpSystem helpSystem = UiUtil.getWorkbench().getHelpSystem();
         helpSystem.setHelp(control, ADVISOR_HELP_ID);

@@ -1,0 +1,28 @@
+Action Lists
+
+A) Simple Source and View Model VDB
+	1) Create Teiid Model Project
+	2) Model a Source
+		- New Wizard Dialog that contains a list of options?
+			Page 1: 
+				Enter Model Name/Location
+				Choose type
+					Option 1: New Empty Relational Model
+					Option 2: Create From Source (DDL, JDBC, FILE, SF, WS etc...)
+					
+				If Option 1: Finish only
+				If Option 2: go to second page (Next >)
+			Page 2:
+				Select Source:
+					1) JDBC Source
+					2) DDL File definition
+					3) Flat File source
+					4) Web Service (WSDL)
+					5) Salesforce source
+			Page 3:
+				Add pages/panels from various importers in succession
+	3) Create a View
+		- Add view to new model
+		- Add view to existing model
+		
+				

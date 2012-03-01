@@ -14,10 +14,10 @@
          point="org.eclipse.ui.views">
       <view
             category="com.metamatrix.modeler.ui"
-            class="org.teiid.designer.advisor.ui.views.DSPAdvisorView"
+            class="org.teiid.designer.advisor.ui.views.guides.TeiidGuidesView"
             icon="icons/full/ctool16/advisor-view.png"
-            id="org.teiid.designer.advisor.ui.views.DSPAdvisorView"
-            name="%dspadvisorview.name">
+            id="org.teiid.designer.advisor.ui.views.guides.TeiidGuidesViewID"
+            name="%teiidGuidesView.name">
       </view>
    </extension>
     <!-- Extension to allow plugins to contribute to the Modeler Perspective. -->
@@ -33,9 +33,9 @@
          point="org.eclipse.ui.views">
       <view
             category="com.metamatrix.modeler.ui"
-            class="org.teiid.designer.advisor.ui.views.ProjectStatusView"
+            class="org.teiid.designer.advisor.ui.views.status.ProjectStatusView"
             icon="icons/full/ctool16/status-view.png"
-            id="org.teiid.designer.advisor.ui.views.ProjectStatusViewID"
+            id="org.teiid.designer.advisor.ui.views.status.ProjectStatusViewID"
             name="Status">
       </view>
    </extension>

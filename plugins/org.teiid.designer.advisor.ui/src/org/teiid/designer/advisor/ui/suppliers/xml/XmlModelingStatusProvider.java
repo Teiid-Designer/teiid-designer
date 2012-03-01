@@ -17,7 +17,7 @@ import org.teiid.designer.advisor.ui.core.status.IStatusRowProvider;
 import org.teiid.designer.advisor.ui.suppliers.ModelValidationStatusRowProvider;
 import org.teiid.designer.advisor.ui.suppliers.relational.SourceModelStatusRowProvider;
 import org.teiid.designer.advisor.ui.suppliers.relational.ViewModelStatusRowProvider;
-import org.teiid.designer.advisor.ui.views.DSPValidationConstants;
+import org.teiid.designer.advisor.ui.views.status.StatusValidationConstants;
 
 public class XmlModelingStatusProvider  implements IStatusContentProvider {
     
@@ -32,7 +32,7 @@ public class XmlModelingStatusProvider  implements IStatusContentProvider {
      */
     @Override
     public IStatus getDefaultStatus() {
-        return DSPValidationConstants.STATUS_MSGS.ADVISOR_NO_PROJECT_SELECTED;
+        return StatusValidationConstants.STATUS_MSGS.ADVISOR_NO_PROJECT_SELECTED;
     }
 
     /**

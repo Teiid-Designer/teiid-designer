@@ -5,7 +5,7 @@
  *
  * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
  */
-package org.teiid.designer.advisor.ui.views;
+package org.teiid.designer.advisor.ui.views.guides;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +21,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.cheatsheets.OpenCheatSheetAction;
 import org.eclipse.ui.forms.IFormColors;
@@ -32,13 +33,13 @@ import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
-import org.teiid.designer.advisor.ui.AdvisorUiConstants;
 import org.teiid.designer.advisor.ui.AdvisorUiPlugin;
+import org.teiid.designer.advisor.ui.util.DSPPluginImageHelper;
 
 /**
  * 
  */
-public class ActionsCheatSheetSection {
+public class CheatSheetSection {
     private FormToolkit toolkit;
 
     private Section section;
@@ -52,11 +53,13 @@ public class ActionsCheatSheetSection {
     private static final String CHEATSHEET_ELEMENT = "cheatsheet"; //$NON-NLS-1$
     private static final String CHEAT_SHEET_PLUGIN_ID = "org.eclipse.ui.cheatsheets"; //$NON-NLS-1$
 
+    private final DSPPluginImageHelper imageHelper = AdvisorUiPlugin.getImageHelper();
+
     /**
      * @param parent
      * @param style
      */
-    public ActionsCheatSheetSection( FormToolkit toolkit,
+    public CheatSheetSection( FormToolkit toolkit,
                                  Composite parent ) {
         super();
         this.toolkit = toolkit;
@@ -68,6 +71,8 @@ public class ActionsCheatSheetSection {
 
         this.section = this.toolkit.createSection(parent, ExpandableComposite.TITLE_BAR | ExpandableComposite.EXPANDED
                                                           | Section.DESCRIPTION | ExpandableComposite.TWISTIE);
+        
+        
         loadCheatSheetExtensions();
 
         initSection();
@@ -75,11 +80,10 @@ public class ActionsCheatSheetSection {
 
     private void initSection() {
 
-        this.section.setText("Related Guides"); //VdbViewConstants.Util.getStringOrKey(PREFIX + "text")); //$NON-NLS-1$
-        this.section.setDescription("Cheat sheet section description"); //VdbViewConstants.Util.getStringOrKey(PREFIX + "description")); //$NON-NLS-1$
+        this.section.setText("Cheat Sheets");
+        this.section.setDescription("Cheat sheets related to Teiid Designer modeling use-cases");
         this.section.getDescriptionControl().setForeground(this.toolkit.getColors().getColor(IFormColors.TITLE));
-//        this.section.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-        
+        section.setTitleBarForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
         GridData gd = new GridData(GridData.FILL_BOTH | GridData.HORIZONTAL_ALIGN_BEGINNING);
         gd.horizontalSpan = 2;
         this.section.setLayoutData(gd);
@@ -94,14 +98,14 @@ public class ActionsCheatSheetSection {
         twd.valign = TableWrapData.CENTER;
         sectionBody.setLayoutData(twd);
 
-        Image image = AdvisorUiPlugin.getDefault().getImage(AdvisorUiConstants.Images.LINK_TO_HELP);
+        Image image = imageHelper.HELP_IMAGE;
         final IConfigurationElement[] cheatSheetExtensions = this.cheatsheets;
         Label lblImage = null;
         Hyperlink link = null;
 
         for (int i = 0; i < cheatSheetExtensions.length; ++i) {
             String id = cheatSheetExtensions[i].getAttribute(ID_ATTR);
-            // Only includes Teiid cheat sheets for now
+            // Only includes metamatrix cheat sheets for now
             if (id.indexOf("teiid") > -1) { //$NON-NLS-1$
                 lblImage = this.toolkit.createLabel(sectionBody, null);
                 lblImage.setImage(image);

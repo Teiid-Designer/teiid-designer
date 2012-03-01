@@ -1,6 +1,6 @@
 package org.teiid.designer.advisor.ui.core.status;
 
-import org.teiid.designer.advisor.ui.views.DSPValidationConstants;
+import org.teiid.designer.advisor.ui.views.status.StatusValidationConstants;
 
 public class DefaultStatusManager  extends AdvisorStatusManager {
     private static final String JOB_NAME = "Default Advisor"; //$NON-NLS-1$
@@ -44,7 +44,7 @@ public class DefaultStatusManager  extends AdvisorStatusManager {
     @Override
     protected void generateNewStatus() {
     	System.out.println("DefaultStatusProvider.generateNewStatus()");
-        setCurrentStatus(DSPValidationConstants.STATUS_MSGS.ADVISOR_NO_PROJECT_SELECTED);
+        setCurrentStatus(StatusValidationConstants.STATUS_MSGS.ADVISOR_NO_PROJECT_SELECTED);
     }
 
     /**
@@ -58,7 +58,7 @@ public class DefaultStatusManager  extends AdvisorStatusManager {
     @Override
     public AdvisorStatus getStatusSnapshot() {
         // TODO: Get helper and return current status
-        return DSPValidationConstants.STATUS_MSGS.ADVISOR_NO_PROJECT_SELECTED;
+        return StatusValidationConstants.STATUS_MSGS.ADVISOR_NO_PROJECT_SELECTED;
     }
     
     /**

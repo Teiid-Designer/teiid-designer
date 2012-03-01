@@ -5,7 +5,7 @@
 *
 * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
 */
-package org.teiid.designer.advisor.ui.views;
+package org.teiid.designer.advisor.ui.views.status;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -35,11 +35,11 @@ public class ProjectStatusPanel extends ManagedForm implements DSPStatusListener
     FormToolkit toolkit;
 
     private ScrolledForm parentForm;
-    private DSPStatusSection statusSection;
+    private ProjectStatusSection statusSection;
     
     private AdvisorHyperLinkListener linkListener;
 
-    private DSPAdvisorActionHandler actionHandler;
+    private StatusActionHandler actionHandler;
 
     /**
      * @since 4.3
@@ -47,7 +47,7 @@ public class ProjectStatusPanel extends ManagedForm implements DSPStatusListener
     public ProjectStatusPanel( Composite parent ) {
         super(parent);
 
-        this.actionHandler = new DSPAdvisorActionHandler();
+        this.actionHandler = new StatusActionHandler();
         AdvisorUiPlugin.getStatusManager().addListener(this);
         
         this.parentForm = this.getForm();
@@ -97,7 +97,7 @@ public class ProjectStatusPanel extends ManagedForm implements DSPStatusListener
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 		body.setLayoutData(gd);
 
-		statusSection = new DSPStatusSection(toolkit, body, linkListener);
+		statusSection = new ProjectStatusSection(toolkit, body, linkListener);
         
         
     }

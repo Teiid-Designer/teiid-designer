@@ -5,7 +5,7 @@
 *
 * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
 */
-package org.teiid.designer.advisor.ui.views;
+package org.teiid.designer.advisor.ui.views.status;
 
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;

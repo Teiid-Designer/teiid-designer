@@ -5,7 +5,7 @@
  *
  * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
  */
-package org.teiid.designer.advisor.ui.views;
+package org.teiid.designer.advisor.ui.views.status;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -21,6 +21,7 @@ import org.eclipse.swt.widgets.Display;
 import org.teiid.designer.advisor.ui.AdvisorUiConstants;
 import org.teiid.designer.advisor.ui.AdvisorUiConstants.COMMAND_IDS;
 import org.teiid.designer.advisor.ui.AdvisorUiPlugin;
+import org.teiid.designer.advisor.ui.Messages;
 import org.teiid.designer.advisor.ui.actions.AdvisorActionFactory;
 import org.teiid.designer.advisor.ui.actions.NewModelAction;
 import org.teiid.designer.advisor.ui.actions.ToggleAutoBuildAction;
@@ -36,7 +37,7 @@ import com.metamatrix.ui.internal.util.UiUtil;
 /**
  * 
  */
-public class DSPAdvisorActionHandler implements IAdvisorActionHandler, AdvisorUiConstants.Groups {
+public class StatusActionHandler implements IAdvisorActionHandler, AdvisorUiConstants.Groups {
 
     final DSPPluginImageHelper imageHelper = AdvisorUiPlugin.getImageHelper();
 
@@ -76,7 +77,7 @@ public class DSPAdvisorActionHandler implements IAdvisorActionHandler, AdvisorUi
     /**
      * 
      */
-    public DSPAdvisorActionHandler() {
+    public StatusActionHandler() {
         super();
 
         try {
@@ -109,7 +110,7 @@ public class DSPAdvisorActionHandler implements IAdvisorActionHandler, AdvisorUi
 	        openDSEAction.setImageDescriptor(AdvisorUiPlugin.getDefault().getImageDescriptor(AdvisorUiConstants.Images.DATA_SOURCE_EXPLORER_VIEW));
 	
 	        this.openDSEIPAction = new InfoPopAction(openDSEAction, InfoPopAction.TYPE_DO,
-	                                                           DSPAdvisorI18n.Options_Action_OpenDSEAction_description,
+	                                                           Messages.Options_Action_OpenDSEAction_description,
 	                                                           imageHelper.OPEN_DATA_SOURCE_EXPLORER_IMAGE);
 	 
 	        IAction newJdbcCPAction = new Action() {
@@ -168,7 +169,7 @@ public class DSPAdvisorActionHandler implements IAdvisorActionHandler, AdvisorUi
         delegateOpenProblemsViewAction.setImageDescriptor(AdvisorUiPlugin.getDefault().getImageDescriptor(AdvisorUiConstants.Images.CONFIGURATION_MANAGER_VIEW));
 
         this.showProblemsViewIPAction = new InfoPopAction(delegateOpenProblemsViewAction, InfoPopAction.TYPE_FIX,
-                                                          DSPAdvisorI18n.Options_Action_OpenProblemsView_description,
+                                                          Messages.Options_Action_OpenProblemsView_description,
                                                           imageHelper.PROBLEMS_VIEW_IMAGE);
         IMPORT_ACTIONS : {
 	        //        
@@ -180,12 +181,12 @@ public class DSPAdvisorActionHandler implements IAdvisorActionHandler, AdvisorUi
 	            	AdvisorActionFactory.executeAction(COMMAND_IDS.IMPORT_JDBC, true);
 	            }
 	        };
-	        delegateImportJdbcAction.setText(DSPAdvisorI18n.Action_ImportJdbc_text);
-	        delegateImportJdbcAction.setToolTipText(DSPAdvisorI18n.Action_ImportJdbc_tooltip);
+	        delegateImportJdbcAction.setText(Messages.Action_ImportJdbc_text);
+	        delegateImportJdbcAction.setToolTipText(Messages.Action_ImportJdbc_tooltip);
 	        delegateImportJdbcAction.setImageDescriptor(AdvisorUiPlugin.getDefault().getImageDescriptor(AdvisorUiConstants.Images.IMPORT_JDBC));
 	
 	        importJdbcIPAction = new InfoPopAction(delegateImportJdbcAction, InfoPopAction.TYPE_DO,
-	                                               DSPAdvisorI18n.Options_Action_ImportJDBC_description,
+	                                               Messages.Options_Action_ImportJDBC_description,
 	                                               imageHelper.IMPORT_JDBC_IMAGE);
 	        //        
 	        // =========>>>> DDL
@@ -196,12 +197,12 @@ public class DSPAdvisorActionHandler implements IAdvisorActionHandler, AdvisorUi
 	                AdvisorActionFactory.executeAction(COMMAND_IDS.IMPORT_SALESFORCE, true);
 	            }
 	        };
-	        delegateImportDdlAction.setText(DSPAdvisorI18n.Action_ImportDdl_text);
-	        delegateImportDdlAction.setToolTipText(DSPAdvisorI18n.Action_ImportDdl_tooltip);
+	        delegateImportDdlAction.setText(Messages.Action_ImportDdl_text);
+	        delegateImportDdlAction.setToolTipText(Messages.Action_ImportDdl_tooltip);
 	        delegateImportDdlAction.setImageDescriptor(AdvisorUiPlugin.getDefault().getImageDescriptor(AdvisorUiConstants.Images.IMPORT_JDBC));
 	
 	        importDdlIPAction = new InfoPopAction(delegateImportDdlAction, InfoPopAction.TYPE_DO,
-	                                               DSPAdvisorI18n.Options_Action_ImportDdl_description,
+	                                               Messages.Options_Action_ImportDdl_description,
 	                                               imageHelper.IMPORT_JDBC_IMAGE);
 	        //        
 	        // =========>>>> FLAT FILE
@@ -212,12 +213,12 @@ public class DSPAdvisorActionHandler implements IAdvisorActionHandler, AdvisorUi
 	                AdvisorActionFactory.executeAction(COMMAND_IDS.IMPORT_SALESFORCE, true);
 	            }
 	        };
-	        delegateImportFlatFileAction.setText(DSPAdvisorI18n.Action_ImportFlatFile_text);
-	        delegateImportFlatFileAction.setToolTipText(DSPAdvisorI18n.Action_ImportFlatFile_tooltip);
+	        delegateImportFlatFileAction.setText(Messages.Action_ImportFlatFile_text);
+	        delegateImportFlatFileAction.setToolTipText(Messages.Action_ImportFlatFile_tooltip);
 	        delegateImportFlatFileAction.setImageDescriptor(AdvisorUiPlugin.getDefault().getImageDescriptor(AdvisorUiConstants.Images.IMPORT_JDBC));
 	
 	        importFlatFileIPAction = new InfoPopAction(delegateImportFlatFileAction, InfoPopAction.TYPE_DO,
-	                                               DSPAdvisorI18n.Options_Action_ImportFlatFile_description,
+	                                               Messages.Options_Action_ImportFlatFile_description,
 	                                               imageHelper.IMPORT_JDBC_IMAGE);
 	        
         	//	        
@@ -229,12 +230,12 @@ public class DSPAdvisorActionHandler implements IAdvisorActionHandler, AdvisorUi
 	                AdvisorActionFactory.executeAction(COMMAND_IDS.IMPORT_SALESFORCE, true);
 	            }
 	        };
-	        delegateImportXmlFileAction.setText(DSPAdvisorI18n.Action_ImportXmlFile_text);
-	        delegateImportXmlFileAction.setToolTipText(DSPAdvisorI18n.Action_ImportXmlFile_tooltip);
+	        delegateImportXmlFileAction.setText(Messages.Action_ImportXmlFile_text);
+	        delegateImportXmlFileAction.setToolTipText(Messages.Action_ImportXmlFile_tooltip);
 	        delegateImportXmlFileAction.setImageDescriptor(AdvisorUiPlugin.getDefault().getImageDescriptor(AdvisorUiConstants.Images.IMPORT_JDBC));
 	
 	        importXmlFileIPAction = new InfoPopAction(delegateImportXmlFileAction, InfoPopAction.TYPE_DO,
-	                                               DSPAdvisorI18n.Options_Action_ImportXmlFile_description,
+	                                               Messages.Options_Action_ImportXmlFile_description,
 	                                               imageHelper.IMPORT_JDBC_IMAGE);
 	        //        
 	        // =========>>>> Salesforce
@@ -245,12 +246,12 @@ public class DSPAdvisorActionHandler implements IAdvisorActionHandler, AdvisorUi
 	                AdvisorActionFactory.executeAction(COMMAND_IDS.IMPORT_SALESFORCE, true);
 	            }
 	        };
-	        delegateImportSalesforceAction.setText(DSPAdvisorI18n.Action_ImportSalesforce_text);
-	        delegateImportSalesforceAction.setToolTipText(DSPAdvisorI18n.Action_ImportSalesforce_tooltip);
+	        delegateImportSalesforceAction.setText(Messages.Action_ImportSalesforce_text);
+	        delegateImportSalesforceAction.setToolTipText(Messages.Action_ImportSalesforce_tooltip);
 	        delegateImportSalesforceAction.setImageDescriptor(AdvisorUiPlugin.getDefault().getImageDescriptor(AdvisorUiConstants.Images.IMPORT_JDBC));
 	
 	        importSalesforceIPAction = new InfoPopAction(delegateImportSalesforceAction, InfoPopAction.TYPE_DO,
-	                                               DSPAdvisorI18n.Options_Action_ImportSalesforce_description,
+	                                               Messages.Options_Action_ImportSalesforce_description,
 	                                               imageHelper.IMPORT_JDBC_IMAGE);
 
         }
@@ -262,12 +263,12 @@ public class DSPAdvisorActionHandler implements IAdvisorActionHandler, AdvisorUi
                 ModelerUiViewUtils.launchWizard("xsdFileSystemImportWizard", new StructuredSelection(), true); //$NON-NLS-1$
             }
         };
-        delegateImportXsdAction.setText(DSPAdvisorI18n.Action_ImportXsd_text);
-        delegateImportXsdAction.setToolTipText(DSPAdvisorI18n.Action_ImportXsd_tooltip);
+        delegateImportXsdAction.setText(Messages.Action_ImportXsd_text);
+        delegateImportXsdAction.setToolTipText(Messages.Action_ImportXsd_tooltip);
         delegateImportXsdAction.setImageDescriptor(AdvisorUiPlugin.getDefault().getImageDescriptor(AdvisorUiConstants.Images.IMPORT_XSD));
 
         importXsdIPAction = new InfoPopAction(delegateImportXsdAction, InfoPopAction.TYPE_DO,
-                                              DSPAdvisorI18n.Options_Action_ImportXsd_description, imageHelper.IMPORT_XSD_IMAGE);
+                                              Messages.Options_Action_ImportXsd_description, imageHelper.IMPORT_XSD_IMAGE);
 
         VDB_AND_EXECUTION : {
 	        // --------------------------------------------------------------------------
@@ -279,11 +280,11 @@ public class DSPAdvisorActionHandler implements IAdvisorActionHandler, AdvisorUi
 	            	AdvisorActionFactory.executeAction(COMMAND_IDS.CREATE_VDB, true);
 	            }
 	        };
-	        delegateNewVdbAction.setText(DSPAdvisorI18n.Action_NewVdb_text);
-	        delegateNewVdbAction.setToolTipText(DSPAdvisorI18n.Action_NewVdb_tooltip);
+	        delegateNewVdbAction.setText(Messages.Action_NewVdb_text);
+	        delegateNewVdbAction.setToolTipText(Messages.Action_NewVdb_tooltip);
 	        delegateNewVdbAction.setImageDescriptor(AdvisorUiPlugin.getDefault().getImageDescriptor(AdvisorUiConstants.Images.NEW_VDB));
 	        newVdbIPAction = new InfoPopAction(delegateNewVdbAction, InfoPopAction.TYPE_DO,
-                                           DSPAdvisorI18n.Options_Action_NewVdb_description, imageHelper.NEW_VDB_IMAGE);
+                                           Messages.Options_Action_NewVdb_description, imageHelper.NEW_VDB_IMAGE);
 	        
 	        // --------------------------------------------------------------------------
 	        // Edit VDB
@@ -294,11 +295,11 @@ public class DSPAdvisorActionHandler implements IAdvisorActionHandler, AdvisorUi
 	            	AdvisorActionFactory.executeAction(COMMAND_IDS.EDIT_VDB, true);
 	            }
 	        };
-	        delegateEditVdbAction.setText(DSPAdvisorI18n.Action_EditVdb_text);
-	        delegateEditVdbAction.setToolTipText(DSPAdvisorI18n.Action_EditVdb_tooltip);
+	        delegateEditVdbAction.setText(Messages.Action_EditVdb_text);
+	        delegateEditVdbAction.setToolTipText(Messages.Action_EditVdb_tooltip);
 	        delegateEditVdbAction.setImageDescriptor(AdvisorUiPlugin.getDefault().getImageDescriptor(AdvisorUiConstants.Images.EDIT_VDB_ACTION));
 	        editVdbIPAction = new InfoPopAction(delegateEditVdbAction, InfoPopAction.TYPE_DO,
-                                           DSPAdvisorI18n.Options_Action_EditVdb_description, imageHelper.EDIT_VDB_IMAGE);
+                                           Messages.Options_Action_EditVdb_description, imageHelper.EDIT_VDB_IMAGE);
 	        
 	        // --------------------------------------------------------------------------
 	        // Execute VDB
@@ -309,11 +310,11 @@ public class DSPAdvisorActionHandler implements IAdvisorActionHandler, AdvisorUi
 	            	AdvisorActionFactory.executeAction(COMMAND_IDS.EXECUTE_VDB, true);
 	            }
 	        };
-	        delegateExecuteVdbAction.setText(DSPAdvisorI18n.Action_ExecuteVdb_text);
-	        delegateExecuteVdbAction.setToolTipText(DSPAdvisorI18n.Action_ExecuteVdb_tooltip);
+	        delegateExecuteVdbAction.setText(Messages.Action_ExecuteVdb_text);
+	        delegateExecuteVdbAction.setToolTipText(Messages.Action_ExecuteVdb_tooltip);
 	        delegateExecuteVdbAction.setImageDescriptor(AdvisorUiPlugin.getDefault().getImageDescriptor(AdvisorUiConstants.Images.EXECUTE_VDB_ACTION));
 	        executeVdbIPAction = new InfoPopAction(delegateExecuteVdbAction, InfoPopAction.TYPE_FIX,
-                                           DSPAdvisorI18n.Options_Action_ExecuteVdb_description, imageHelper.EXECUTE_VDB_IMAGE);
+                                           Messages.Options_Action_ExecuteVdb_description, imageHelper.EXECUTE_VDB_IMAGE);
 	        
 	        // --------------------------------------------------------------------------
 	        // Execute VDB
@@ -324,11 +325,11 @@ public class DSPAdvisorActionHandler implements IAdvisorActionHandler, AdvisorUi
 	            	AdvisorActionFactory.executeAction(COMMAND_IDS.PREVIEW_DATA, true);
 	            }
 	        };
-	        delegatePreviewDataAction.setText(DSPAdvisorI18n.Action_PreviewData_text);
-	        delegatePreviewDataAction.setToolTipText(DSPAdvisorI18n.Action_PreviewData_tooltip);
+	        delegatePreviewDataAction.setText(Messages.Action_PreviewData_text);
+	        delegatePreviewDataAction.setToolTipText(Messages.Action_PreviewData_tooltip);
 	        delegatePreviewDataAction.setImageDescriptor(AdvisorUiPlugin.getDefault().getImageDescriptor(AdvisorUiConstants.Images.PREVIEW_DATA));
 	        previewDataIPAction = new InfoPopAction(delegatePreviewDataAction, InfoPopAction.TYPE_OTHER,
-                                           DSPAdvisorI18n.Options_Action_PreviewData_description, imageHelper.PREVIEW_DATA_IMAGE);
+                                           Messages.Options_Action_PreviewData_description, imageHelper.PREVIEW_DATA_IMAGE);
 
         }
         // --------------------------------------------------------------------------
@@ -350,10 +351,10 @@ public class DSPAdvisorActionHandler implements IAdvisorActionHandler, AdvisorUi
 
             }
         };
-        delegateNewRelationalSourceModelAction.setText(DSPAdvisorI18n.Action_NewSourceModel_text);
-        delegateNewRelationalSourceModelAction.setToolTipText(DSPAdvisorI18n.Action_NewSourceModel_tooltip);
+        delegateNewRelationalSourceModelAction.setText(Messages.Action_NewSourceModel_text);
+        delegateNewRelationalSourceModelAction.setToolTipText(Messages.Action_NewSourceModel_tooltip);
         newRelationalSourceModelIPAction = new InfoPopAction(delegateNewRelationalSourceModelAction, InfoPopAction.TYPE_DO,
-                                                             DSPAdvisorI18n.Options_Action_NewRelationalSourceModel_description,
+                                                             Messages.Options_Action_NewRelationalSourceModel_description,
                                                              imageHelper.NEW_MODEL_IMAGE);
 
         // --------------------------------------------------------------------------
@@ -374,11 +375,11 @@ public class DSPAdvisorActionHandler implements IAdvisorActionHandler, AdvisorUi
 
             }
         };
-        delegateNewRelationalViewModelAction.setText(DSPAdvisorI18n.Action_NewViewModel_text);
-        delegateNewRelationalViewModelAction.setToolTipText(DSPAdvisorI18n.Action_NewViewModel_tooltip);
+        delegateNewRelationalViewModelAction.setText(Messages.Action_NewViewModel_text);
+        delegateNewRelationalViewModelAction.setToolTipText(Messages.Action_NewViewModel_tooltip);
 
         newRelationalViewModelIPAction = new InfoPopAction(delegateNewRelationalViewModelAction, InfoPopAction.TYPE_DO,
-                                                           DSPAdvisorI18n.Options_Action_NewRelationalViewModel_description,
+                                                           Messages.Options_Action_NewRelationalViewModel_description,
                                                            imageHelper.NEW_MODEL_IMAGE);
     }
 
@@ -402,9 +403,9 @@ public class DSPAdvisorActionHandler implements IAdvisorActionHandler, AdvisorUi
 //                if (hasErrors) {
                     actions.add(showProblemsViewIPAction);
 //                }
-                String desc = DSPAdvisorI18n.Options_Action_TurnAutobiuldOn_description;
+                String desc = Messages.Options_Action_TurnAutobiuldOn_description;
                 if (ResourcesPlugin.getWorkspace().isAutoBuilding()) {
-                    desc = DSPAdvisorI18n.Options_Action_TurnAutobiuldOff_description;
+                    desc = Messages.Options_Action_TurnAutobiuldOff_description;
                 }
                 toggleAutoBuildIPAction.setDescription(desc);
                 actions.add(toggleAutoBuildIPAction);

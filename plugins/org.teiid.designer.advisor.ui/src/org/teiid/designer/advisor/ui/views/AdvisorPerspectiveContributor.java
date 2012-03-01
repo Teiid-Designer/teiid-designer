@@ -37,7 +37,7 @@ public class AdvisorPerspectiveContributor implements IModelerPerspectiveContrib
     	
         PerspectiveObject connectorsView = 
             new PerspectiveObject(
-                 AdvisorUiConstants.Extensions.ADVISOR_VIEW_ID,
+                 AdvisorUiConstants.Extensions.GUIDES_VIEW_ID,
                  false,
                  PerspectiveObject.TOP_RIGHT);
         

@@ -5,7 +5,7 @@
 *
 * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
 */
-package org.teiid.designer.advisor.ui.views;
+package org.teiid.designer.advisor.ui.views.guides;
 
 import java.util.Properties;
 
@@ -23,18 +23,18 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.forms.events.HyperlinkAdapter;
+import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.forms.widgets.Section;
 import org.teiid.designer.advisor.ui.AdvisorUiConstants;
-import org.teiid.designer.advisor.ui.AdvisorUiPlugin;
 import org.teiid.designer.advisor.ui.Messages;
 import org.teiid.designer.advisor.ui.actions.AdvisorActionFactory;
 import org.teiid.designer.advisor.ui.actions.AdvisorActionInfo;
@@ -45,7 +45,7 @@ import com.metamatrix.modeler.ui.viewsupport.PropertiesContextManager;
 import com.metamatrix.ui.internal.util.WidgetFactory;
 import com.metamatrix.ui.internal.util.WidgetUtil;
 
-public class AdvisorGuidesSection  implements AdvisorUiConstants {
+public class TeiidGuidesSection  implements AdvisorUiConstants {
 	private FormToolkit toolkit;
 
 	private Section section;
@@ -54,7 +54,7 @@ public class AdvisorGuidesSection  implements AdvisorUiConstants {
 
 	private Combo actionGroupCombo;
     private TreeViewer guidesViewer;
-    private Button executeActionButton;
+    private Hyperlink executeLink;
     private Text descriptionText;
     private AdvisorActionProvider actionProvider;
     private AdvisorGuides guides;
@@ -65,7 +65,7 @@ public class AdvisorGuidesSection  implements AdvisorUiConstants {
 	 * @param parent
 	 * @param style
 	 */
-	public AdvisorGuidesSection(FormToolkit toolkit, Composite parent) {
+	public TeiidGuidesSection(FormToolkit toolkit, Composite parent) {
 		super();
 		this.toolkit = toolkit;
 
@@ -80,7 +80,7 @@ public class AdvisorGuidesSection  implements AdvisorUiConstants {
 		SECTION : {
 	        section = this.toolkit.createSection(theParent, Section.TITLE_BAR | ExpandableComposite.TWISTIE | ExpandableComposite.EXPANDED );
 	        Color bkgdColor = this.toolkit.getColors().getBackground();
-	        section.setText(Messages.Guides);
+	        section.setText(Messages.ActionSets);
 	        section.setTitleBarForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
 	        GridData gd = new GridData(GridData.FILL, GridData.FILL, true, true); //GridData.FILL_HORIZONTAL); // | GridData.HORIZONTAL_ALIGN_BEGINNING);
 	        gd.horizontalSpan = 2;
@@ -95,6 +95,26 @@ public class AdvisorGuidesSection  implements AdvisorUiConstants {
 	        layout.marginWidth = 1;
 	        sectionBody.setLayout(layout);
 		}
+
+		EXECUTE_LINK : {
+			
+			this.executeLink = this.toolkit.createHyperlink(sectionBody, Messages.ExecuteSelectedAction, SWT.WRAP);
+			this.toolkit.adapt(this.executeLink, true, true);
+			this.executeLink.setEnabled(false);
+			this.executeLink.setToolTipText(Messages.ExecuteSelectedAction_tooltip);
+			this.executeLink.addHyperlinkListener(new HyperlinkAdapter() {
+				@Override
+				public void linkActivated(HyperlinkEvent theEvent) {
+	            	IStructuredSelection selection = (IStructuredSelection)guidesViewer.getSelection();
+	            	if( selection != null && !selection.isEmpty() && selection.getFirstElement() instanceof AdvisorActionInfo ) {
+						String actionId = ((AdvisorActionInfo)selection.getFirstElement()).getId();
+						launchGuidesAction(actionId);
+	            	}
+				}
+			});
+			this.executeLink.setBackground(this.section.getBackground());
+		}
+	
 		
 		ACTION_COMBO : {
 			actionGroupCombo = new Combo(sectionBody, SWT.NONE | SWT.READ_ONLY);
@@ -116,7 +136,7 @@ public class AdvisorGuidesSection  implements AdvisorUiConstants {
 	        guidesViewer =  WidgetFactory.createTreeViewer(sectionBody, SWT.NONE | SWT.SINGLE );
 			GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 			gd.horizontalSpan = 2;
-			gd.heightHint = 150;
+			gd.heightHint = 120;
 			guidesViewer.getControl().setLayoutData(gd);
 			
 	        guidesViewer.addDoubleClickListener(new IDoubleClickListener() {
@@ -142,10 +162,10 @@ public class AdvisorGuidesSection  implements AdvisorUiConstants {
 						} else {
 							descriptionText.setText(Messages.NoActionSelected);
 						}
-						executeActionButton.setEnabled(true);
+						executeLink.setEnabled(true);
 					} else {
 						descriptionText.setText(Messages.NoActionSelected);
-						executeActionButton.setEnabled(false);
+						executeLink.setEnabled(false);
 					}
 					
 				}
@@ -170,33 +190,7 @@ public class AdvisorGuidesSection  implements AdvisorUiConstants {
 
 
 		}
-		
-		EXECUTE_ACTION : {
-	        Label label = new Label(sectionBody, SWT.NONE);
-	        label.setText(Messages.ExecuteSelectedAction);
 
-	        this.executeActionButton = new Button(sectionBody, SWT.PUSH);
-	        this.executeActionButton.setImage(AdvisorUiPlugin.getDefault().getImage(Images.EXECUTE_ACTION));
-	        this.executeActionButton.setEnabled(false);
-	        this.executeActionButton.addSelectionListener(new SelectionAdapter() {
-
-	            /**
-	             * {@inheritDoc}
-	             * 
-	             * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-	             */
-	            @Override
-	            public void widgetSelected( SelectionEvent e ) {
-	            	IStructuredSelection selection = (IStructuredSelection)guidesViewer.getSelection();
-	            	if( selection != null && !selection.isEmpty() && selection.getFirstElement() instanceof AdvisorActionInfo ) {
-						String actionId = ((AdvisorActionInfo)selection.getFirstElement()).getId();
-						launchGuidesAction(actionId);
-	            	}
-	            }
-	        });
-	        this.executeActionButton.setToolTipText(Messages.ExecuteSelectedAction);
-
-		}
 		
 		DESCRIPTION : {
 			// Add widgets to page
@@ -215,7 +209,7 @@ public class AdvisorGuidesSection  implements AdvisorUiConstants {
 
         section.setClient(sectionBody);
         
-        this.executeActionButton.setEnabled(!guidesViewer.getSelection().isEmpty());
+        this.executeLink.setEnabled(!guidesViewer.getSelection().isEmpty());
         selectComboItem(getInitialComboSelectionIndex());
         
 	}

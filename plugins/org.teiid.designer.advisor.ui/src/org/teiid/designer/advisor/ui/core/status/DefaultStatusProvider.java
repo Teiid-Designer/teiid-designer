@@ -4,7 +4,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swt.graphics.Image;
 import org.teiid.designer.advisor.ui.AdvisorUiPlugin;
-import org.teiid.designer.advisor.ui.views.DSPValidationConstants;
+import org.teiid.designer.advisor.ui.views.status.StatusValidationConstants;
 
 public class DefaultStatusProvider implements IStatusContentProvider {
 
@@ -19,7 +19,7 @@ public class DefaultStatusProvider implements IStatusContentProvider {
      */
     @Override
     public IStatus getDefaultStatus() {
-        return DSPValidationConstants.STATUS_MSGS.ADVISOR_NO_PROJECT_SELECTED;
+        return StatusValidationConstants.STATUS_MSGS.ADVISOR_NO_PROJECT_SELECTED;
     }
 
     /**
