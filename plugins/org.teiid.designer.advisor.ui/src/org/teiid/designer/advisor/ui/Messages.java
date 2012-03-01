@@ -116,6 +116,8 @@ public class Messages  extends NLS {
     public static String NoActionSelected;
 
     public static String OpenDatatoolsDataSourceExplorer;
+    public static String OpenDatatoolsDataSourceExplorer_tooltip;
+
     
     public static String PreviewData;
     public static String ProjectManagement;
@@ -129,6 +131,7 @@ public class Messages  extends NLS {
     public static String TeiidServer;
     public static String Test;
     public static String Testing;
+    public static String ToggleAutoBuild;
     
     public static String XML_Modeling;
     

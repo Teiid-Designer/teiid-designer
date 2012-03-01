@@ -94,8 +94,8 @@ public class StatusActionHandler implements IAdvisorActionHandler, AdvisorUiCons
         // --------------------------------------------------------------------------
         // autobuildAction:
         Action toggleAutoBuildAction = new ToggleAutoBuildAction(AdvisorUiPlugin.getDefault().getCurrentWorkbenchWindow());
-        toggleAutoBuildAction.setText("Toggle Auto-build");
-        this.toggleAutoBuildIPAction = new InfoPopAction(toggleAutoBuildAction,InfoPopAction.TYPE_DO, "Toggle Auto-build", imageHelper.BUILD_IMAGE);
+        toggleAutoBuildAction.setText(Messages.ToggleAutoBuild);
+        this.toggleAutoBuildIPAction = new InfoPopAction(toggleAutoBuildAction,InfoPopAction.TYPE_DO, Messages.ToggleAutoBuild, imageHelper.BUILD_IMAGE);
 
         CONNECTION_ACTIONS : {
 	        IAction openDSEAction = new Action() {
@@ -105,8 +105,8 @@ public class StatusActionHandler implements IAdvisorActionHandler, AdvisorUiCons
 	            }
 	        };
 	         
-	        openDSEAction.setText("Open Data Source Explorer");
-	        openDSEAction.setToolTipText("Open Datatools Data Source Explorer View");
+	        openDSEAction.setText(Messages.OpenDatatoolsDataSourceExplorer);
+	        openDSEAction.setToolTipText(Messages.OpenDatatoolsDataSourceExplorer_tooltip);
 	        openDSEAction.setImageDescriptor(AdvisorUiPlugin.getDefault().getImageDescriptor(AdvisorUiConstants.Images.DATA_SOURCE_EXPLORER_VIEW));
 	
 	        this.openDSEIPAction = new InfoPopAction(openDSEAction, InfoPopAction.TYPE_DO,
@@ -117,18 +117,13 @@ public class StatusActionHandler implements IAdvisorActionHandler, AdvisorUiCons
 	            @Override
 	            public void run() {
 	            	AdvisorActionFactory.executeAction(COMMAND_IDS.CREATE_CONNECTION_JDBC, true);
-//	    			INewWizard wiz = (INewWizard) new NewTeiidFilteredCPWizard(CONNECTION_PROFILE_IDS.CATEGORY_JDBC);
-	    			
-//	    			WizardDialog wizardDialog = new WizardDialog(Display.getCurrent().getActiveShell(), (Wizard) wiz);
-//	    			wizardDialog.setBlockOnOpen(false);
-//	    			wizardDialog.open();
 	            }
 	        };
-	        newJdbcCPAction.setText("Create JDBC Connection Profile");
-	        newJdbcCPAction.setToolTipText("Create JDBC Connection Profile");
+	        newJdbcCPAction.setText(Messages.CreateJdbcConnection);
+	        newJdbcCPAction.setToolTipText(Messages.CreateJdbcConnection);
 	        
 	        this.newJdbcCPIPAction = new InfoPopAction(newJdbcCPAction, 
-	        			InfoPopAction.TYPE_DO, "New JDBC Connection", imageHelper.NEW_CONNECTION_PROFILE_IMAGE);
+	        			InfoPopAction.TYPE_DO, Messages.CreateJdbcConnection, imageHelper.NEW_CONNECTION_PROFILE_IMAGE);
 	        
 	        IAction newSalesforceCPAction = new Action() {
 	            @Override
@@ -136,11 +131,11 @@ public class StatusActionHandler implements IAdvisorActionHandler, AdvisorUiCons
 	            	AdvisorActionFactory.executeAction(COMMAND_IDS.CREATE_CONNECTION_JDBC, true);
 	            }
 	        };
-	        newSalesforceCPAction.setText("Create Salesforce Connection Profile");
-	        newSalesforceCPAction.setToolTipText("Create Salesforce Connection Profile");
+	        newSalesforceCPAction.setText(Messages.CreateSalesforceConnection);
+	        newSalesforceCPAction.setToolTipText(Messages.CreateSalesforceConnection);
 	        
 	        this.newSFCPIPAction = new InfoPopAction(newSalesforceCPAction,
-	    			InfoPopAction.TYPE_DO, "New Salesforce Connection", imageHelper.NEW_CONNECTION_PROFILE_IMAGE);
+	    			InfoPopAction.TYPE_DO, Messages.CreateSalesforceConnection, imageHelper.NEW_CONNECTION_PROFILE_IMAGE);
 	        
 	        IAction newWSSoapCPAction = new Action() {
 	            @Override
@@ -148,11 +143,11 @@ public class StatusActionHandler implements IAdvisorActionHandler, AdvisorUiCons
 	            	AdvisorActionFactory.executeAction(COMMAND_IDS.CREATE_CONNECTION_WEB_SERVICE_ODA, true);
 	            }
 	        };
-	        newWSSoapCPAction.setText("Create SOAP Web Service Connection Profile");
-	        newWSSoapCPAction.setToolTipText("Create SOAP Web Service Connection Profile");
+	        newWSSoapCPAction.setText(Messages.CreateOdaWebServicesConnection);
+	        newWSSoapCPAction.setToolTipText(Messages.CreateOdaWebServicesConnection);
 	        
 	        this.newWSSoapIPAction = new InfoPopAction(newWSSoapCPAction,
-	    			InfoPopAction.TYPE_DO, "New SOAP WS Connection", imageHelper.NEW_CONNECTION_PROFILE_IMAGE);
+	    			InfoPopAction.TYPE_DO, Messages.CreateOdaWebServicesConnection, imageHelper.NEW_CONNECTION_PROFILE_IMAGE);
 
         }
         // --------------------------------------------------------------------------
@@ -164,8 +159,8 @@ public class StatusActionHandler implements IAdvisorActionHandler, AdvisorUiCons
             	UiUtil.showView(AdvisorUiConstants.VIEW_IDS.PROBLEMS_VIEW);
             }
         };
-        delegateOpenProblemsViewAction.setText("Open Problems View");
-        delegateOpenProblemsViewAction.setToolTipText("Open Problems View Tooltip");
+        delegateOpenProblemsViewAction.setText(Messages.Options_Action_OpenProblemsView_description);
+        delegateOpenProblemsViewAction.setToolTipText(Messages.Options_Action_OpenProblemsView_description);
         delegateOpenProblemsViewAction.setImageDescriptor(AdvisorUiPlugin.getDefault().getImageDescriptor(AdvisorUiConstants.Images.CONFIGURATION_MANAGER_VIEW));
 
         this.showProblemsViewIPAction = new InfoPopAction(delegateOpenProblemsViewAction, InfoPopAction.TYPE_FIX,

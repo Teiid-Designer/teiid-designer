@@ -31,7 +31,7 @@ import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.internal.ui.forms.FormUtil;
 
-public class ProjectStatusPanel extends ManagedForm implements DSPStatusListener {
+public class ProjectStatusPanel extends ManagedForm implements StatusListener {
     FormToolkit toolkit;
 
     private ScrolledForm parentForm;

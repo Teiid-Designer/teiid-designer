@@ -10,7 +10,7 @@ package org.teiid.designer.advisor.ui.views.status;
 /**
  * 
  */
-public interface DSPStatusListener {
+public interface StatusListener {
     /**
      * @param status the <code>WorkspaceStatus</code>
      */

@@ -206,7 +206,7 @@ public class AdvisorStatusManager implements IChangeListener {
 
     // Listener methods
 
-    public void addListener( DSPStatusListener listener ) {
+    public void addListener( StatusListener listener ) {
         if (statusListeners == null) {
             statusListeners = new ArrayList();
         }
@@ -215,7 +215,7 @@ public class AdvisorStatusManager implements IChangeListener {
         updateStatus(false);
     }
 
-    public void removeListener( DSPStatusListener listener ) {
+    public void removeListener( StatusListener listener ) {
         if (statusListeners == null) {
             statusListeners = new ArrayList();
         }
@@ -231,7 +231,7 @@ public class AdvisorStatusManager implements IChangeListener {
         this.currentStatus = status;
         if (shouldNotify()) {
             for (Iterator iter = statusListeners.iterator(); iter.hasNext();) {
-                ((DSPStatusListener)iter.next()).notifyStatusChanged(status);
+                ((StatusListener)iter.next()).notifyStatusChanged(status);
             }
         }
     }

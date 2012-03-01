@@ -25,7 +25,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.swt.widgets.Display;
 import org.teiid.designer.advisor.ui.AdvisorUiConstants;
-import org.teiid.designer.advisor.ui.views.status.DSPStatusListener;
+import org.teiid.designer.advisor.ui.views.status.StatusListener;
 
 import com.metamatrix.core.event.EventObjectListener;
 import com.metamatrix.core.event.EventSourceException;
@@ -199,7 +199,7 @@ public class AdvisorStatusManager implements IChangeListener, IStatusManager {
         ResourcesPlugin.getWorkspace().addResourceChangeListener(resourceListener);
     }
 
-    public void removeListener( DSPStatusListener listener ) {
+    public void removeListener( StatusListener listener ) {
         if (statusListeners == null) {
             statusListeners = new ArrayList();
         }
