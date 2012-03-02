@@ -21,9 +21,7 @@ import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-
 import javax.xml.transform.TransformerFactoryConfigurationError;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -31,8 +29,14 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.datatools.sqltools.core.DatabaseIdentifier;
 import org.eclipse.datatools.sqltools.core.EditorCorePlugin;
+import org.eclipse.datatools.sqltools.core.profile.ProfileUtil;
 import org.eclipse.datatools.sqltools.editor.core.connection.IConnectionTracker;
 import org.eclipse.datatools.sqltools.editor.core.result.Messages;
+import org.eclipse.datatools.sqltools.editor.ui.core.SQLToolsUIFacade;
+import org.eclipse.datatools.sqltools.plan.EPVFacade;
+import org.eclipse.datatools.sqltools.plan.IPlanOption;
+import org.eclipse.datatools.sqltools.plan.IPlanService;
+import org.eclipse.datatools.sqltools.plan.PlanRequest;
 import org.eclipse.datatools.sqltools.result.OperationCommand;
 import org.eclipse.datatools.sqltools.sqleditor.result.SimpleSQLResultRunnable;
 import org.eclipse.debug.core.ILaunchConfiguration;
@@ -47,7 +51,7 @@ public class TeiidAdHocScriptRunnable extends SimpleSQLResultRunnable {
     private static int    TASK_ITERATE       = 30;
     
 	private long _startTime = new Date().getTime(), _endTime = _startTime;
-	
+    private String sql;
 	
 	public TeiidAdHocScriptRunnable(Connection con, String sql,
 			boolean closeCon, IConnectionTracker tracker,
@@ -55,6 +59,7 @@ public class TeiidAdHocScriptRunnable extends SimpleSQLResultRunnable {
 			DatabaseIdentifier databaseIdentifier,
 			ILaunchConfiguration configuration, HashMap addInfo) {
 		super(con, sql, closeCon, tracker, parentMonitor, databaseIdentifier, configuration);
+        this.sql = sql;
 	}
 	
     /*
@@ -102,6 +107,7 @@ public class TeiidAdHocScriptRunnable extends SimpleSQLResultRunnable {
                 //try-catch block is used to catch exception considering some database (avaki) can't use this method.
                 try
                 {
+                    _stmt.execute("SET SHOWPLAN DEBUG"); //$NON-NLS-1$
                     _stmt.setMaxFieldSize(16384);
                 }
                 catch (Exception e)
@@ -204,6 +210,10 @@ public class TeiidAdHocScriptRunnable extends SimpleSQLResultRunnable {
             resultsViewAPI.saveElapseTime(_operationCommand, _endTime - _startTime);
             //save the results and parameters.
             resultsViewAPI.saveDetailResults(_operationCommand);
+
+            // Update the Execution Plan
+            handleShowExecutionPlan(_stmt);
+
             handleEnd(connection, _stmt);
             monitor.done();
         }
@@ -211,6 +221,46 @@ public class TeiidAdHocScriptRunnable extends SimpleSQLResultRunnable {
         return Status.OK_STATUS;
     }
     
+    /*
+     * Update the Execution Plan View
+     */
+    private void handleShowExecutionPlan( Statement stmt ) {
+        if (stmt != null) {
+            String queryPlan = "No Execution Plan Found"; //$NON-NLS-1$
+            boolean hasError = false;
+            ResultSet planRS = null;
+            try {
+                planRS = stmt.executeQuery("SHOW PLAN"); //$NON-NLS-1$
+                planRS.next();
+                queryPlan = planRS.getString("PLAN_XML"); //$NON-NLS-1$
+                // Any error will cause early exit
+            } catch (SQLException e) {
+                hasError = true;
+            }
+
+            // Update the Execution Plan Display
+            if (!hasError) {
+                // Get PlanType and Definition Id
+                int planType = 0;
+                IPlanService planService = SQLToolsUIFacade.getPlanService(this.getDatabaseIdentifier());
+                if (planService != null) {
+                    IPlanOption option = planService.getPlanOption();
+                    planType = option.getCurrentType();
+                }
+
+                String databaseDefinitionId = ProfileUtil.getDatabaseVendorDefinitionId(this.getDatabaseIdentifier().getProfileName()).toString();
+
+                // Create Plan Request
+                PlanRequest request = new PlanRequest(this.sql, databaseDefinitionId, planType, PlanRequest.VIEW_CREATE);
+
+                // Update the Execution Plan View
+                EPVFacade facade = EPVFacade.getInstance();
+                facade.createNewPlanInstance(request);
+                facade.planGenerated(request, queryPlan);
+            }
+        }
+    }
+
     private class MonitorRunnable implements Runnable
     {
         // Flag expresses whether this thread should be end.
