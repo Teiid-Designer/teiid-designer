@@ -11,7 +11,6 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.datatools.sqltools.core.SQLDevToolsConfiguration;
@@ -35,11 +34,13 @@ public class TeiidPlanSupportRunnable extends PlanSupportRunnable {
         String result;
         try {
             String sql = this._request.getSql();
+            stmt.execute("SET NOEXEC ON"); //$NON-NLS-1$
             stmt.execute("SET SHOWPLAN DEBUG"); //$NON-NLS-1$
             stmt.executeQuery(sql);
             ResultSet planRs = stmt.executeQuery("SHOW PLAN"); //$NON-NLS-1$
             planRs.next();
             result = planRs.getString("PLAN_XML");  //$NON-NLS-1$
+            stmt.execute("SET NOEXEC OFF"); //$NON-NLS-1$
         } catch (SQLException e) {
             result = ""; //$NON-NLS-1$
             IStatus status = new Status(IStatus.ERROR, Activator.PLUGIN_ID, 
