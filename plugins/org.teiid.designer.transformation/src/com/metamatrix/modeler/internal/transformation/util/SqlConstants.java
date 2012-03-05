@@ -22,6 +22,21 @@ public interface SqlConstants {
     public static final String SELECT = "SELECT"; //$NON-NLS-1$
     public static final String FROM = "FROM"; //$NON-NLS-1$
     public static final String WHERE = "WHERE"; //$NON-NLS-1$
+	public static final char DOT = '.';
+    public static final char L_PAREN = '(';
+    public static final char R_PAREN = ')';
+    public static final char S_QUOTE = '\'';
+    public static final String AS = "AS"; //$NON-NLS-1$
+    public static final String COLUMNS = "COLUMNS"; //$NON-NLS-1$
+    public static final String BEGIN = "BEGIN"; //$NON-NLS-1$
+    public static final String END = "END"; //$NON-NLS-1$
+    public static final String XMLELEMENT = "XMLELEMENT"; //$NON-NLS-1$
+    public static final String NAME = "NAME"; //$NON-NLS-1$
+    public static final String XMLNAMESPACES = "XMLNAMESPACES"; //$NON-NLS-1$
+    public static final String DEFAULT = "DEFAULT"; //$NON-NLS-1$
+    public static final String XMLTABLE = "XMLTABLE"; //$NON-NLS-1$
+    public static final String TEXTTABLE = "TEXTTABLE"; //$NON-NLS-1$
+
     
     public static final String SQL_TYPE_SELECT_STRING = "SELECT"; //$NON-NLS-1$
     public static final String SQL_TYPE_UPDATE_STRING = "UPDATE"; //$NON-NLS-1$

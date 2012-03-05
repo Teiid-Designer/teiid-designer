@@ -8,6 +8,7 @@
 package com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.wizards;
 
 import java.util.ArrayList;
+import java.util.Properties;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
@@ -16,23 +17,22 @@ import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.TextViewer;
 import org.eclipse.jface.text.source.VerticalRuler;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.ITreeViewerListener;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.TableLayout;
-import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.TreeExpansionEvent;
+import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
@@ -41,19 +41,21 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
-import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
+import org.eclipse.swt.widgets.TreeItem;
 
 import com.metamatrix.core.util.CoreStringUtil;
-import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.modeler.modelgenerator.wsdl.model.Model;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Operation;
-import com.metamatrix.modeler.modelgenerator.wsdl.model.WSDLElement;
+import com.metamatrix.modeler.modelgenerator.wsdl.ui.Messages;
 import com.metamatrix.modeler.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstants;
 import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.util.ModelGeneratorWsdlUiUtil;
+import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.wizards.panels.ColumnsInfoPanel;
+import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.wizards.panels.ElementsInfoPanel;
 import com.metamatrix.modeler.transformation.ui.editors.sqleditor.SqlTextViewer;
 import com.metamatrix.ui.graphics.ColorManager;
 import com.metamatrix.ui.internal.util.WidgetFactory;
@@ -62,8 +64,6 @@ import com.metamatrix.ui.internal.wizard.AbstractWizardPage;
 import com.metamatrix.ui.tree.AbstractTreeContentProvider;
 
 public class OperationsDetailsPage  extends AbstractWizardPage implements ModelGeneratorWsdlUiConstants {
-    /** Used as a prefix to properties file keys. */
-    private static final String PREFIX = I18nUtil.getPropertyPrefix(SelectWsdlOperationsPage.class);
 
     /** <code>IDialogSetting</code>s key for saved dialog height. */
     private static final String DIALOG_HEIGHT = "dialogHeight"; //$NON-NLS-1$
@@ -76,6 +76,10 @@ public class OperationsDetailsPage  extends AbstractWizardPage implements ModelG
 
     /** <code>IDialogSetting</code>s key for saved dialog Y position. */
     private static final String DIALOG_Y = "dialogY"; //$NON-NLS-1$
+    
+    private static final int REQUEST = ProcedureInfo.REQUEST;
+    private static final int RESPONSE = ProcedureInfo.RESPONSE;
+    private static final int BOTH = 2;
 
     /** The import manager. */
     WSDLImportWizardManager importManager;
@@ -86,28 +90,70 @@ public class OperationsDetailsPage  extends AbstractWizardPage implements ModelG
     private TreeViewer treeViewer;
     private Tree tree;
     
+    Button generateWrapperProcedure;
+    
     TabFolder tabFolder;
     
     TabItem requestTab;
+    Text selectedRequestOperationText;
+    Text requestProcedureNameText;
 	TreeViewer requestXmlTreeViewer;
 	TextViewer requestSqlTextViewer;
 	IDocument requestSqlDocument;
-	Action requestCreateColumnAction, requestSetRootPathAction;
-	Button requestAddColumnButton, requestDeleteButton, requestUpButton, requestDownButton;
+	Action requestCreateElementAction, requestSetRootPathAction;
+	Button requestAddElementButton;
+	ElementsInfoPanel requestElementsInfoPanel;
 	
     TabItem responseTab;
+    Text selectedResponseOperationText;
+    Text responseProcedureNameText;
     TreeViewer responseXmlTreeViewer;
 	TextViewer responseSqlTextViewer;
 	IDocument responseSqlDocument;
 	Action responseCreateColumnAction, responseSetRootPathAction;
-	Button responseAddColumnButton, responseDeleteButton, responseUpButton, responseDownButton;
+	Button responseAddColumnButton;
+	ColumnsInfoPanel responseColumnsInfoPanel;
+	
+	private ProcedureGenerator procedureGenerator;
     
     // ==================================================
     public OperationsDetailsPage( WSDLImportWizardManager theImportManager ) {
-        super(OperationsDetailsPage.class.getSimpleName(), "Operations Details Title");
+        super(OperationsDetailsPage.class.getSimpleName(), Messages.ProcedureDefinition);
         this.importManager = theImportManager;
         this.importManager.setSelectedOperations(new ArrayList());
         setImageDescriptor(ModelGeneratorWsdlUiUtil.getImageDescriptor(Images.NEW_MODEL_BANNER));
+    }
+    
+    public ProcedureGenerator getProcedureGenerator() {
+    	return this.procedureGenerator;
+    }
+    
+    private void notifyOperationChanged(Operation operation) {
+		this.procedureGenerator = importManager.getProcedureGenerator(operation);
+		
+		this.generateWrapperProcedure.setSelection(this.procedureGenerator.doGenerateWrapperProcedure());
+
+		if( this.selectedRequestOperationText != null ) {
+			this.selectedRequestOperationText.setText(this.procedureGenerator.getOperation().getName());
+		}
+		if( this.selectedResponseOperationText != null ) {
+			this.selectedResponseOperationText.setText(this.procedureGenerator.getOperation().getName());
+		}
+		
+		this.requestProcedureNameText.setText(this.procedureGenerator.getRequestProcedureName());
+		this.responseProcedureNameText.setText(this.procedureGenerator.getResponseProcedureName());
+		
+		// Now update the two column info panels
+		this.requestElementsInfoPanel.setProcedureInfo(this.procedureGenerator.getRequestInfo());
+		this.responseColumnsInfoPanel.setProcedureInfo(this.procedureGenerator.getResponseInfo());
+		
+		updateSqlText(BOTH);
+    }
+    
+    public void notifyColumnDataChanged() {
+    	this.requestElementsInfoPanel.refresh();
+    	this.responseColumnsInfoPanel.refresh();
+    	updateSqlText(BOTH);
     }
     
     /**
@@ -145,12 +191,12 @@ public class OperationsDetailsPage  extends AbstractWizardPage implements ModelG
         // --------------------------
         // Group for checkbox tree
         // --------------------------
-        Group operationsGroup = WidgetFactory.createGroup(panel, "Operations", GridData.FILL_BOTH, 1, 1);
+        Group operationsGroup = WidgetFactory.createGroup(panel, Messages.Operations, GridData.FILL_BOTH, 1, 1);
 
         // ----------------------------
         // TreeViewer
         // ----------------------------
-        this.treeViewer = WidgetFactory.createTreeViewer(operationsGroup, SWT.SINGLE | SWT.CHECK, GridData.FILL_BOTH);
+        this.treeViewer = WidgetFactory.createTreeViewer(operationsGroup, SWT.SINGLE , GridData.FILL_BOTH);
 
         this.tree = this.treeViewer.getTree();
 
@@ -161,15 +207,44 @@ public class OperationsDetailsPage  extends AbstractWizardPage implements ModelG
 
         this.treeViewer.setInput(null);
         
+        this.treeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+			
+			@Override
+			public void selectionChanged(SelectionChangedEvent event) {
+				updateForTreeSelection();
+			}
+		});
+        
         // --------------------------
         // Group for checkbox tree
         // --------------------------
-        Group optionsGroup = WidgetFactory.createGroup(panel, "Options", GridData.FILL_BOTH, 1, 2);
+        Group optionsGroup = WidgetFactory.createGroup(panel, Messages.Options, GridData.FILL_BOTH, 1, 2);
+        
+        this.generateWrapperProcedure = WidgetFactory.createCheckBox(optionsGroup, Messages.GenerateWrapperProcedure);
+        this.generateWrapperProcedure.addSelectionListener(new SelectionListener() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				procedureGenerator.setGenerateWrapperProcedure(generateWrapperProcedure.getSelection());
+			}
+			
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+		});
+        
         
     }
     
+    private void updateForTreeSelection() {
+		TreeSelection selection = (TreeSelection)this.treeViewer.getSelection();
+		if( selection != null && !selection.isEmpty() ) {
+			Operation operation = (Operation)selection.getFirstElement();
+			notifyOperationChanged(operation);
+		}
+    }
+    
     private void createTabbedDetailsPanel( Composite parent) {
-    	//Composite panel = WidgetFactory.createPanel(parent);
         tabFolder = new TabFolder(parent, SWT.TOP | SWT.BORDER);
         tabFolder.setLayoutData(new GridData(GridData.FILL_BOTH));
 
@@ -181,18 +256,41 @@ public class OperationsDetailsPage  extends AbstractWizardPage implements ModelG
     	Composite panel = WidgetFactory.createPanel(tabFolder);
         this.requestTab = new TabItem(tabFolder, SWT.NONE);
         this.requestTab.setControl(panel);
-        this.requestTab.setText("Request Procedure Details");
+        this.requestTab.setText(Messages.Request);
+
+        panel.setLayout(new GridLayout(2, false));
+        
+        
+		Label selectedOperationLabel = new Label(panel, SWT.NONE);
+		selectedOperationLabel.setText(Messages.SelectedOperation);
+		
+        selectedRequestOperationText = new Text(panel, SWT.BORDER | SWT.SINGLE);
+        selectedRequestOperationText.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
+        selectedRequestOperationText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
+        selectedRequestOperationText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        selectedRequestOperationText.setEditable(false);
+        
+		Label procedureNameLabel = new Label(panel, SWT.NONE);
+		procedureNameLabel.setText(Messages.GeneratedProcedureName);
+		
+		requestProcedureNameText = new Text(panel, SWT.BORDER | SWT.SINGLE);
+		requestProcedureNameText.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
+		requestProcedureNameText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
+		requestProcedureNameText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		requestProcedureNameText.setEditable(false);
+        
         
         createRequestSchemaContentsGroup(panel);
-        createRequestColumnInfoGroup(panel);
+        createRequestElementsInfoGroup(panel);
         createRequestSqlGroup(panel);
     }
     
     private void createRequestSchemaContentsGroup(Composite parent) {
-    	Group schemaContentsGroup = WidgetFactory.createGroup(parent, "Schema Contents", SWT.NONE, 1, 4); //$NON-NLS-1$
+    	Group schemaContentsGroup = WidgetFactory.createGroup(parent, "Schema Contents", SWT.NONE, 2, 4); //$NON-NLS-1$
     	schemaContentsGroup.setLayout(new GridLayout(4, false));
     	GridData gd = new GridData(GridData.FILL_BOTH);
-    	gd.heightHint = 160;
+    	gd.horizontalSpan = 2;
+    	gd.heightHint = 140;
     	schemaContentsGroup.setLayoutData(gd);
 		
     	
@@ -245,11 +343,11 @@ public class OperationsDetailsPage  extends AbstractWizardPage implements ModelG
             	columnMenuManager.removeAll();
                 IStructuredSelection sel = (IStructuredSelection)requestXmlTreeViewer.getSelection();
                 if (sel.size() == 1) {
-                	requestAddColumnButton.setEnabled(true);
-					columnMenuManager.add(requestCreateColumnAction);
+                	requestAddElementButton.setEnabled(true);
+					columnMenuManager.add(requestCreateElementAction);
 					columnMenuManager.add(requestSetRootPathAction);
                 } else {
-                	requestAddColumnButton.setEnabled(false);
+                	requestAddElementButton.setEnabled(false);
                 }
 
             }
@@ -260,36 +358,36 @@ public class OperationsDetailsPage  extends AbstractWizardPage implements ModelG
 			@Override
 			public void treeExpanded(TreeExpansionEvent e) {
                 IStructuredSelection sel = (IStructuredSelection)requestXmlTreeViewer.getSelection();
-                requestAddColumnButton.setEnabled(sel.size() == 1);
+                requestAddElementButton.setEnabled(sel.size() == 1);
 			}
 			
 			@Override
 			public void treeCollapsed(TreeExpansionEvent e) {
                 IStructuredSelection sel = (IStructuredSelection)requestXmlTreeViewer.getSelection();
-                requestAddColumnButton.setEnabled(sel.size() == 1);
+                requestAddElementButton.setEnabled(sel.size() == 1);
 			}
 		} );
         
-        this.requestCreateColumnAction = new Action("Add new column") { //$NON-NLS-1$
+        this.requestCreateElementAction = new Action(Messages.AddAsNewElement) {
             @Override
             public void run() {
             	createRequestColumn();
             }
 		};
 		
-        this.requestSetRootPathAction = new Action("Set as root path") { //$NON-NLS-1$
+        this.requestSetRootPathAction = new Action(Messages.SetAsRootPath) {
             @Override
             public void run() {
             	setRequestRootPath();
             }
 		};
 		
-		requestAddColumnButton = new Button(schemaContentsGroup, SWT.PUSH);
-		requestAddColumnButton.setText("Add selection as new column"); //$NON-NLS-1$
+		requestAddElementButton = new Button(schemaContentsGroup, SWT.PUSH);
+		requestAddElementButton.setText(Messages.AddSelectionAsNewElement);
     	gd = new GridData();
     	gd.horizontalSpan = 1;
-    	requestAddColumnButton.setLayoutData(gd);
-    	requestAddColumnButton.addSelectionListener(new SelectionAdapter() {
+    	requestAddElementButton.setLayoutData(gd);
+    	requestAddElementButton.addSelectionListener(new SelectionAdapter() {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -306,22 +404,18 @@ public class OperationsDetailsPage  extends AbstractWizardPage implements ModelG
 			}
     		
 		});
-    	requestAddColumnButton.setEnabled(false);
+    	requestAddElementButton.setEnabled(false);
     }
     
-    private void createRequestColumnInfoGroup(Composite parent) {
-    	Group columnInfoGroup = WidgetFactory.createGroup(parent, "Column Info", SWT.NONE, 1);
-    	columnInfoGroup.setLayout(new GridLayout(2, false));
-    	GridData gd = new GridData(GridData.FILL_BOTH);
-    	gd.heightHint = 150;
-    	columnInfoGroup.setLayoutData(gd);
+    private void createRequestElementsInfoGroup(Composite parent) {
+    	requestElementsInfoPanel = new ElementsInfoPanel(parent, SWT.NONE, REQUEST, this);
     }
     
     private void createRequestSqlGroup(Composite parent) {
-    	Group group = WidgetFactory.createGroup(parent, "Generated SQL Statement", SWT.NONE, 1); //$NON-NLS-1$
+    	Group group = WidgetFactory.createGroup(parent, Messages.GeneratedSQLStatement, SWT.NONE, 2);
     	group.setLayout(new GridLayout(1, false));
     	GridData gd = new GridData(GridData.FILL_BOTH);
-    	gd.heightHint = 100;
+    	gd.horizontalSpan = 2;
     	group.setLayoutData(gd);
     	
     	ColorManager colorManager = new ColorManager();
@@ -334,15 +428,33 @@ public class OperationsDetailsPage  extends AbstractWizardPage implements ModelG
         requestSqlTextViewer.getTextWidget().setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
         requestSqlDocument.set(CoreStringUtil.Constants.EMPTY_STRING);
         requestSqlTextViewer.getControl().setLayoutData(new GridData(GridData.FILL_BOTH));
-
-        //updateSqlText();
     }
     
     private void createResponseTab(TabFolder tabFolder) {
     	Composite panel = WidgetFactory.createPanel(tabFolder);
         this.responseTab = new TabItem(tabFolder, SWT.NONE);
         this.responseTab.setControl(panel);
-        this.responseTab.setText("Request Procedure Details");
+        this.responseTab.setText(Messages.Response);
+        
+        panel.setLayout(new GridLayout(2, false));
+        
+		Label selectedOperationLabel = new Label(panel, SWT.NONE);
+		selectedOperationLabel.setText(Messages.SelectedOperation);
+		
+        selectedResponseOperationText = new Text(panel, SWT.BORDER | SWT.SINGLE);
+        selectedResponseOperationText.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
+        selectedResponseOperationText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
+        selectedResponseOperationText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        selectedResponseOperationText.setEditable(false);
+        
+		Label procedureNameLabel = new Label(panel, SWT.NONE);
+		procedureNameLabel.setText(Messages.GeneratedProcedureName);
+		
+		responseProcedureNameText = new Text(panel, SWT.BORDER | SWT.SINGLE);
+		responseProcedureNameText.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
+		responseProcedureNameText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
+		responseProcedureNameText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		responseProcedureNameText.setEditable(false);
         
         createResponseSchemaContentsGroup(panel);
         createResponseColumnInfoGroup(panel);
@@ -350,10 +462,11 @@ public class OperationsDetailsPage  extends AbstractWizardPage implements ModelG
     }
     
     private void createResponseSchemaContentsGroup(Composite parent) {
-    	Group schemaContentsGroup = WidgetFactory.createGroup(parent, "Schema Contents", SWT.NONE, 1, 4); //$NON-NLS-1$
+    	Group schemaContentsGroup = WidgetFactory.createGroup(parent, "Schema Contents", SWT.NONE, 2, 4); //$NON-NLS-1$
     	schemaContentsGroup.setLayout(new GridLayout(4, false));
     	GridData gd = new GridData(GridData.FILL_BOTH);
-    	gd.heightHint = 160;
+    	gd.heightHint = 140;
+    	gd.horizontalSpan = 2;
     	schemaContentsGroup.setLayoutData(gd);
 		
     	
@@ -431,26 +544,26 @@ public class OperationsDetailsPage  extends AbstractWizardPage implements ModelG
 			}
 		} );
         
-        this.responseCreateColumnAction = new Action("Add as new column") {
+        this.responseCreateColumnAction = new Action(Messages.AddAsNewColumn) {
             @Override
             public void run() {
             	createResponseColumn();
             }
 		};
 		
-        this.responseSetRootPathAction = new Action("Set as root path") {
+        this.responseSetRootPathAction = new Action(Messages.SetAsRootPath) {
             @Override
             public void run() {
-            	setRequestRootPath();
+            	setResponseRootPath();
             }
 		};
 		
-		requestAddColumnButton = new Button(schemaContentsGroup, SWT.PUSH);
-		requestAddColumnButton.setText("Add Selection As New Column");
+		requestAddElementButton = new Button(schemaContentsGroup, SWT.PUSH);
+		requestAddElementButton.setText(Messages.AddSelectionAsNewColumn);
     	gd = new GridData();
     	gd.horizontalSpan = 1;
-    	requestAddColumnButton.setLayoutData(gd);
-    	requestAddColumnButton.addSelectionListener(new SelectionAdapter() {
+    	requestAddElementButton.setLayoutData(gd);
+    	requestAddElementButton.addSelectionListener(new SelectionAdapter() {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -467,22 +580,18 @@ public class OperationsDetailsPage  extends AbstractWizardPage implements ModelG
 			}
     		
 		});
-    	requestAddColumnButton.setEnabled(false);
+    	requestAddElementButton.setEnabled(false);
     }
     
     private void createResponseColumnInfoGroup(Composite parent) {
-    	Group columnInfoGroup = WidgetFactory.createGroup(parent, "Column Info", SWT.NONE, 1);
-    	columnInfoGroup.setLayout(new GridLayout(2, false));
-    	GridData gd = new GridData(GridData.FILL_BOTH);
-    	gd.heightHint = 150;
-    	columnInfoGroup.setLayoutData(gd);
+    	responseColumnsInfoPanel = new ColumnsInfoPanel(parent, SWT.NONE, RESPONSE, this);
     }
     
     private void createResponseSqlGroup(Composite parent) {
-    	Group group = WidgetFactory.createGroup(parent, "Generated SQL Statement", SWT.NONE, 1); //$NON-NLS-1$
+    	Group group = WidgetFactory.createGroup(parent, Messages.GeneratedSQLStatement, SWT.NONE, 2);
     	group.setLayout(new GridLayout(1, false));
     	GridData gd = new GridData(GridData.FILL_BOTH);
-    	gd.heightHint = 100;
+    	gd.horizontalSpan = 2;
     	group.setLayoutData(gd);
     	
     	ColorManager colorManager = new ColorManager();
@@ -495,8 +604,16 @@ public class OperationsDetailsPage  extends AbstractWizardPage implements ModelG
         responseSqlTextViewer.getTextWidget().setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
         responseSqlDocument.set(CoreStringUtil.Constants.EMPTY_STRING);
         responseSqlTextViewer.getControl().setLayoutData(new GridData(GridData.FILL_BOTH));
-
-        //updateSqlText();
+    }
+    
+    void updateSqlText(int type) {
+    	if( this.procedureGenerator != null ) {
+    		if( type == REQUEST || type == BOTH ) {
+    			requestSqlTextViewer.getDocument().set(this.procedureGenerator.getRequestInfo().getSqlString(new Properties()));
+    		} else if( type == RESPONSE || type == BOTH ) {
+    			responseSqlTextViewer.getDocument().set(this.procedureGenerator.getResponseInfo().getSqlString(new Properties()));
+    		}
+    	}
     }
     
     /**
@@ -595,35 +712,25 @@ public class OperationsDetailsPage  extends AbstractWizardPage implements ModelG
     @Override
     public void setVisible( boolean isVisible ) {
         if (isVisible) {
-        	// TODO: 
+        	this.treeViewer.setInput(this.importManager.getSelectedOperations());
+            
+        	TreeItem firstItem = this.treeViewer.getTree().getItem(0);
+        	if( firstItem != null ) {
+        		this.treeViewer.getTree().select(firstItem);
+        		
+        		updateForTreeSelection();
+        	}
+            
             setPageStatus();
         }
         super.setVisible(isVisible);
     }
 
-    /**
-     * Utility to get localized text from properties file.
-     * 
-     * @param theKey the key whose localized value is being requested
-     * @return the localized text
-     */
-    private static String getString( String theKey ) {
-        return UTIL.getString(new StringBuffer().append(PREFIX).append(theKey).toString());
-    }
-
     Object[] getNodeChildren( Object element ) {
-//        if (element instanceof TeiidXmlFileInfo) {
-//            return new Object[] {this.fileInfo.getRootNode()};
-//        }
-//        return ((XmlElement)element).getChildrenDTDElements();
     	return new Object[0];
     }
 
     boolean getNodeHasChildren( Object element ) {
-//        XmlElement node = (XmlElement)element;
-//        Object[] children = node.getChildrenDTDElements();
-//
-//        return (children.length > 0);
     	return false;
     }
     Image getNodeImage( Object element ) {
@@ -639,19 +746,19 @@ public class OperationsDetailsPage  extends AbstractWizardPage implements ModelG
     }
     
     private void createRequestColumn() {
-    	
+    	// TODO:
     }
     
     private void setRequestRootPath() {
-    	
+    	// TODO:
     }
     
     private void createResponseColumn() {
-    	
+    	// TODO:
     }
     
-    private void setResponsetRootPath() {
-    	
+    private void setResponseRootPath() {
+    	// TODO:
     }
     
     class OperationsListProvider extends LabelProvider implements ITreeContentProvider {
@@ -661,17 +768,11 @@ public class OperationsDetailsPage  extends AbstractWizardPage implements ModelG
         }
 
         public Object[] getChildren( final Object node ) {
-//            if (wsdlModel != null) {
-//                if (node instanceof Model) {
-//                    return ((Model)node).getServices();
-//                } else if (node instanceof Service) {
-//                    return ((Service)node).getPorts();
-//                } else if (node instanceof Port) {
-//                    return new Object[] {((Port)node).getBinding()};
-//                } else if (node instanceof Binding) {
-//                    return ((Binding)node).getOperations();
-//                }
-//            }
+        	if( node instanceof ArrayList) {
+        		ArrayList theList = ((ArrayList)node);
+        		
+        		return theList.toArray();
+        	}
             return CoreStringUtil.Constants.EMPTY_STRING_ARRAY;
         }
 
@@ -680,34 +781,10 @@ public class OperationsDetailsPage  extends AbstractWizardPage implements ModelG
         }
 
         public Object getParent( final Object node ) {
-//            if (wsdlModel != null) {
-//                if (node instanceof Model) {
-//                    return null;
-//                } else if (node instanceof Service) {
-//                    return null;
-//                } else if (node instanceof Port) {
-//                    return ((Port)node).getService();
-//                } else if (node instanceof Binding) {
-//                    return ((Binding)node).getPort();
-//                } else if (node instanceof Operation) {
-//                    return ((Operation)node).getBinding();
-//                }
-//            }
             return null;
         }
 
         public boolean hasChildren( final Object node ) {
-//            if (wsdlModel != null) {
-//                if (node instanceof Model) {
-//                    return (((Model)node).getServices().length > 0);
-//                } else if (node instanceof Service) {
-//                    return (((Service)node).getPorts().length > 0);
-//                } else if (node instanceof Port) {
-//                    return ((Port)node).getBinding() != null;
-//                } else if (node instanceof Binding) {
-//                    return (((Binding)node).getOperations().length > 0);
-//                }
-//            }
             return false;
         }
 
@@ -726,101 +803,10 @@ public class OperationsDetailsPage  extends AbstractWizardPage implements ModelG
 
         @Override
         public String getText( final Object node ) {
-            if (node instanceof Model) {
-                return "theModel"; //$NON-NLS-1$
-            } else if (node instanceof WSDLElement) {
-                return ((WSDLElement)node).getName();
+            if (node instanceof Operation) {
+                return ((Operation)node).getName();
             }
             return "unknownElement"; //$NON-NLS-1$
         }
-    }
-    
-    class EditColumnsPanel  {
-    	TableViewer columnsViewer;
-    	
-		public EditColumnsPanel(Composite parent, int style) {
-			super();
-			createPanel(parent);
-		}
-		
-		private void createPanel(Composite parent) {	      
-	    	Table table = new Table(parent, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER );
-	        table.setHeaderVisible(true);
-	        table.setLinesVisible(true);
-	        table.setLayout(new TableLayout());
-	    	GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
-	    	gd.heightHint = 80;
-	    	table.setLayoutData(gd);
-
-	        this.columnsViewer = new TableViewer(table);
-	        this.columnsViewer.getControl().setLayoutData(gd);
-	        
-	        // create columns
-	        TableViewerColumn column = new TableViewerColumn(this.columnsViewer, SWT.LEFT);
-	        column.getColumn().setText("Column name");
-//	        column.setEditingSupport(new ColumnInfoTextEditingSupport(this.columnsViewer, NAME_PROP));
-//	        column.setLabelProvider(new ColumnDataLabelProvider(0));
-	        column.getColumn().pack();
-	        
-
-	        column = new TableViewerColumn(this.columnsViewer, SWT.LEFT);
-	        column.getColumn().setText("Datatype");
-//	        column.setLabelProvider(new ColumnDataLabelProvider(2));
-//	        column.setEditingSupport(new DatatypeComboEditingSupport(this.columnsViewer));
-	        column.getColumn().pack();
-	        
-	        column = new TableViewerColumn(this.columnsViewer, SWT.LEFT);
-	        column.getColumn().setText("Path");
-//	        column.getColumn().setToolTipText(getString("pathTooltip")); //$NON-NLS-1$
-//	        column.setLabelProvider(new ColumnDataLabelProvider(4));
-//	        column.setEditingSupport(new ColumnInfoTextEditingSupport(this.columnsViewer, XML_PATH_PROP));
-	        column.getColumn().pack();
-	        
-//	        if( fileInfo != null ) {
-//		        for( TeiidColumnInfo row : fileInfo.getColumnInfoList() ) {
-//		        	this.columnsViewer.add(row);
-//		        }
-//	        }
-		}
-        
-		public void refresh() {
-	    	this.columnsViewer.getTable().removeAll();
-//	        for( TeiidColumnInfo row : fileInfo.getColumnInfoList() ) {
-//	        	this.columnsViewer.add(row);
-//	        }
-		}
-		
-		public void refresh(Object element) {
-			this.columnsViewer.refresh(element);
-		}
-		
-		public void addSelectionListener(ISelectionChangedListener listener) {
-			this.columnsViewer.addSelectionChangedListener(listener);
-		}
-		
-		public Object getSelectedColumn() {
-			
-//			IStructuredSelection selection = (IStructuredSelection)this.columnsViewer.getSelection();
-//			for( Object obj : selection.toArray()) {
-//				if( obj instanceof TeiidColumnInfo ) {
-//					return (TeiidColumnInfo) obj;
-//				}
-//			}
-			
-			return null;
-		}
-		
-		public int getSelectedIndex() {
-			return columnsViewer.getTable().getSelectionIndex();
-		}
-		
-		public void selectRow(int index) {
-			if( index > -1 ) {
-				columnsViewer.getTable().select(index);
-			} else {
-				columnsViewer.setSelection(new StructuredSelection());
-			}
-		}
-    	
     }
 }

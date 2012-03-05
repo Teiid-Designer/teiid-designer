@@ -8,7 +8,10 @@
 package com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.wizards;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -40,12 +43,15 @@ public class WSDLImportWizardManager {
     private int uriSource = URL_SOURCE;
     private IConnectionProfile connectionProfile;
 
+    private Map<Operation, ProcedureGenerator> procedureGenerators;
+
     // /////////////////////////////////////////////////////////////////////////////////////////////
     // CONSTRUCTOR
     // /////////////////////////////////////////////////////////////////////////////////////////////
     public WSDLImportWizardManager() {
         this.wsdlReader = new WSDLReader();
         this.selectedOperations = new ArrayList();
+        this.procedureGenerators = new HashMap<Operation, ProcedureGenerator>();
     }
 
     // /////////////////////////////////////////////////////////////////////////////////////////////
@@ -132,6 +138,7 @@ public class WSDLImportWizardManager {
      */
     public void setSelectedOperations( List<Operation> operations ) {
         this.selectedOperations = operations;
+        synchronizeProcedureGenerators();
     }
 
     /**
@@ -174,5 +181,26 @@ public class WSDLImportWizardManager {
 	public void setConnectionProfile(IConnectionProfile connectionProfile) {
 		this.connectionProfile = connectionProfile;
 	}
+	
+	public ProcedureGenerator getProcedureGenerator(Operation operation) {
+		return this.procedureGenerators.get(operation);
+	}
 
+	private void synchronizeProcedureGenerators() {
+		for( Operation operation : getSelectedOperations()) {
+			if( !this.procedureGenerators.containsKey(operation) ) {
+				this.procedureGenerators.put(operation, new ProcedureGenerator(operation, this));
+			}
+		}
+		Collection<Operation> staleOperations = new ArrayList<Operation>();
+		for(ProcedureGenerator generator : this.procedureGenerators.values() ) {
+			if( !this.selectedOperations.contains(generator.getOperation() ) ) {
+				staleOperations.add(generator.getOperation());
+			}
+		}
+		
+		for( Operation operation : staleOperations) {
+			this.procedureGenerators.remove(operation);
+		}
+	}
 }
