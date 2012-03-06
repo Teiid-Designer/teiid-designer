@@ -5,17 +5,20 @@
 *
 * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
 */
-package com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.wizards;
+package org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
+import com.metamatrix.modeler.modelgenerator.wsdl.model.ModelGenerationException;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Operation;
 
-public class ResponseInfo extends ProcedureInfo {
+public class RequestInfo extends ProcedureInfo {
 
-	public ResponseInfo(Operation operation, ProcedureGenerator generator) {
-		super(operation, RESPONSE, generator);
-		setProcedureName("extract_" + operation.getName());
+	public RequestInfo(Operation operation, ProcedureGenerator generator) {
+		super(operation, REQUEST, generator);
+		setProcedureName("create_" + operation.getName()); //$NON-NLS-1$
 	}
 
 	@Override
@@ -51,7 +54,7 @@ public class ResponseInfo extends ProcedureInfo {
     	StringBuffer sb = new StringBuffer();
     	int i=0;
     	sb.append(SQL_BEGIN);
-    	sb.append(TAB).append(SELECT);
+    	sb.append(TAB).append(SELECT).append(RETURN);
     	sb.append(TAB).append(TAB).append(XMLELEMENT);
     	sb.append(L_PAREN);
     	
@@ -59,7 +62,7 @@ public class ResponseInfo extends ProcedureInfo {
 	    	sb.append(NAME).append(SPACE);
 	    	sb.append(getOperation().getName()).append(COMMA).append(SPACE);
 	    	String nsString = getNamespaceString();
-	    	if( nsString != null && nsString.isEmpty() ) {
+	    	if( nsString != null && !nsString.isEmpty() ) {
 	    		sb.append(nsString).append(COMMA).append(SPACE);
 	    	}
 	    	sb.append(RETURN);
@@ -68,7 +71,7 @@ public class ResponseInfo extends ProcedureInfo {
 	    		String name = columnInfo.getName();
 	    		sb.append(TAB).append(TAB).append(TAB).append(XMLELEMENT);
 	    		sb.append(L_PAREN);
-	    		sb.append(NAME).append(SPACE).append(name).append(COMMA).append(columnInfo.getRelativePath());
+	    		sb.append(NAME).append(SPACE).append(name).append(COMMA).append(SPACE).append(getViewColumnName(name));
 	    		
 	    		if(i < (nColumns-1)) {
 	    			sb.append(COMMA).append(SPACE).append(RETURN);
@@ -89,7 +92,16 @@ public class ResponseInfo extends ProcedureInfo {
     	// EXAMPLE:  XMLNAMESPACES('http://www.kaptest.com/schema/1.0/party' AS pty)
     	//
     	
-    	if( getNamespaceMap().isEmpty() ) {
+    	Map namespaces = new HashMap();
+    	
+    	try {
+			namespaces = getGenerator().getImportManager().getWSDLModel().getNamespaces();
+		} catch (ModelGenerationException ex) {
+			// TODO Auto-generated catch block
+			ex.printStackTrace();
+		}
+    	
+    	if( namespaces.isEmpty() ) {
     		return null;
     	}
     	
@@ -97,15 +109,18 @@ public class ResponseInfo extends ProcedureInfo {
     	
     	sb.append(XMLNAMESPACES).append(L_PAREN);
     	int i=0;
-    	for( String prefix : getNamespaceMap().keySet() ) {
-    		if( prefix.equalsIgnoreCase(XSI_NAMESPACE_PREFIX)) {
-    			continue;
+    	for( Object obj : namespaces.keySet() ) {
+    		if( obj instanceof String) {
+    			String prefix = (String)obj;
+	    		if( prefix.equalsIgnoreCase(XSI_NAMESPACE_PREFIX)) {
+	    			continue;
+	    		}
+	    		if( i > 0 ) {
+	    			sb.append(COMMA).append(SPACE);
+	    		}
+	    		String uri = (String)namespaces.get(obj);
+	    		sb.append(S_QUOTE).append(uri).append(S_QUOTE).append(SPACE).append(AS).append(SPACE).append(prefix);
     		}
-    		if( i > 0 ) {
-    			sb.append(COMMA).append(SPACE);
-    		}
-    		String uri = getNamespaceMap().get(prefix);
-    		sb.append(S_QUOTE).append(uri).append(S_QUOTE).append(SPACE).append(AS).append(SPACE).append(prefix);
     		i++;
     	}
     	sb.append(R_PAREN).append(SPACE).append(COMMA).append(SPACE);

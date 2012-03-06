@@ -5,7 +5,7 @@
 *
 * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
 */
-package com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.wizards;
+package org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -16,6 +16,7 @@ import java.util.Properties;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 
+import com.metamatrix.core.util.StringUtilities;
 import com.metamatrix.modeler.internal.transformation.util.SqlConstants;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Operation;
 
@@ -45,6 +46,16 @@ public abstract class ProcedureInfo implements SqlConstants {
      * The unique procedureName defining a procedure containing the generated SELECT SQL statement
      */
 	private String procedureName;
+	
+    /**
+     * An initial xquery root path expression
+     * 
+     * XMLTABLE([<NSP>,] xquery-expression [<PASSING>] [COLUMNS <COLUMN>, ... )] AS name
+     * 
+     * Usually of the form '$d/MedlineCitationSet/MedlineCitation'. In this case, the expression defines the initial path
+     * inside the XML structure that the COLUMN PATH's are relative to
+     */
+	private String rootPath = StringUtilities.EMPTY_STRING;
 	
 	private int type;
 	
@@ -190,6 +201,29 @@ public abstract class ProcedureInfo implements SqlConstants {
 	
     public String getProcedureName() {
 		return this.procedureName;
+	}
+    
+	/**
+	 * 
+	 * @return rootPath the root path xquery expression
+	 */
+	public String getRootPath() {
+		return this.rootPath;
+	}
+
+	/**
+	 * 
+	 * @param rootPath
+	 */
+	public void setRootPath(String path) {
+		this.rootPath = path;
+		
+		// Need to walk through the ColumnInfo objects and have them re-set their paths
+		for( ColumnInfo colInfo : getColumnInfoList() ) {
+			colInfo.setRootPath(this.rootPath);
+		}
+		
+		validate();
 	}
 
 	public void setProcedureName(String procedureName) {

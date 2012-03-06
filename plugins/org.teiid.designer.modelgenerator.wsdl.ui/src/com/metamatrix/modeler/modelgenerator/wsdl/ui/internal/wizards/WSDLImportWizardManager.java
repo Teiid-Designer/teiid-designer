@@ -14,9 +14,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
+import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.ProcedureGenerator;
 
 import com.metamatrix.modeler.modelgenerator.wsdl.WSDLReader;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Model;
@@ -37,13 +39,21 @@ public class WSDLImportWizardManager {
     // /////////////////////////////////////////////////////////////////////////////////////////////
     private WSDLReader wsdlReader;
 
-    private String targetModelName;
     private IContainer targetModelLocation;
+    
+	private String sourceModelName;
+	private IPath sourceModelLocation;
+	private boolean sourceModelExists;
+	
+	private String viewModelName;
+	
     private List selectedOperations;
     private int uriSource = URL_SOURCE;
     private IConnectionProfile connectionProfile;
 
     private Map<Operation, ProcedureGenerator> procedureGenerators;
+    
+    private Model wsdlModel;
 
     // /////////////////////////////////////////////////////////////////////////////////////////////
     // CONSTRUCTOR
@@ -65,6 +75,7 @@ public class WSDLImportWizardManager {
      */
     public void setWSDLFileUri( String fileUri ) {
         this.wsdlReader.setWSDLUri(fileUri);
+        this.wsdlModel = null;
     }
 
     /**
@@ -92,7 +103,10 @@ public class WSDLImportWizardManager {
      * @throws ModelGenerationException
      */
     public Model getWSDLModel() throws ModelGenerationException {
-        return this.wsdlReader.getModel();
+    	if( this.wsdlModel == null ) {
+    		this.wsdlModel = this.wsdlReader.getModel();
+    	}
+        return this.wsdlModel;
     }
 
     /**
@@ -114,21 +128,21 @@ public class WSDLImportWizardManager {
     }
 
     /**
-     * Get the name of the target relational model to be generated.
+     * Get the name of the target view relational model to be generated.
      * 
-     * @return the target Model Name
+     * @return the target View Model Name
      */
-    public String getTargetModelName() {
-        return this.targetModelName;
+    public String getTargetViewModelName() {
+        return this.viewModelName;
     }
 
     /**
-     * Set the name of the target relational Model.
+     * Set the name of the target view relational Model.
      * 
-     * @param targetModelName the target Model Name
+     * @param targetModelName the target view Model Name
      */
-    public void setTargetModelName( String targetModelName ) {
-        this.targetModelName = targetModelName;
+    public void setTargetViewModelName( String targetModelName ) {
+        this.viewModelName = targetModelName;
     }
 
     /**
@@ -202,5 +216,45 @@ public class WSDLImportWizardManager {
 		for( Operation operation : staleOperations) {
 			this.procedureGenerators.remove(operation);
 		}
+	}
+	
+	/**
+	 * 
+	 * @return sourceModelName the source relational model name
+	 */
+	public String getSourceModelName() {
+        return this.sourceModelName;
+	}
+	
+	/**
+	 * 
+	 * @param sourceModelName (never <code>null</code> or empty).
+	 */
+	public void setSourceModelName(String sourceModelName) {
+		this.sourceModelName = sourceModelName;
+	}
+	
+	/**
+	 * 
+	 * @return sourceModelLocation the target location where the source model is going to be created
+	 */
+	public IPath getSourceModelLocation() {
+		return this.sourceModelLocation;
+	}
+	
+	/**
+	 * 
+	 * @return location the target location where the view model either exists or is going to be created
+	 */
+	public void setSourceModelLocation(IPath location) {
+		this.sourceModelLocation = location;
+	}
+	
+	public void setSourceModelExists(boolean sourceModelExists) {
+		this.sourceModelExists = sourceModelExists;
+	}
+	
+	public boolean sourceModelExists() {
+		return this.sourceModelExists;
 	}
 }

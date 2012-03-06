@@ -5,7 +5,7 @@
 *
 * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
 */
-package com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.wizards.panels;
+package org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.panels;
 
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -22,22 +22,22 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
+import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.ColumnInfo;
+import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.OperationsDetailsPage;
+import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.ProcedureInfo;
 
-import com.metamatrix.modeler.modelgenerator.wsdl.ui.Messages;
-import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.wizards.ColumnInfo;
-import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.wizards.OperationsDetailsPage;
-import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.wizards.ProcedureInfo;
 import com.metamatrix.ui.internal.util.WidgetFactory;
 
-public class ColumnsInfoPanel {
+public class ElementsInfoPanel{
 	private ProcedureInfo procedureInfo;
 	private Button addButton, deleteButton, upButton, downButton;
-	EditColumnsPanel editColumnsPanel;
+	EditElementsPanel editElementsPanel;
 	private int type = -1;
 	
 	final OperationsDetailsPage detailsPage;
 	
-	public ColumnsInfoPanel(Composite parent, int style, int type, OperationsDetailsPage detailsPage) {
+	public ElementsInfoPanel(Composite parent, int style, int type, OperationsDetailsPage detailsPage) {
 		super();
 		this.type = type;
 		this.detailsPage = detailsPage;
@@ -50,17 +50,17 @@ public class ColumnsInfoPanel {
 	
 	public void setProcedureInfo(ProcedureInfo info) {
 		this.procedureInfo = info;
-		editColumnsPanel.setProcedureInfo(info);
-		editColumnsPanel.refresh();
+		editElementsPanel.setProcedureInfo(info);
+		editElementsPanel.refresh();
 		this.addButton.setEnabled(info != null);
 	}
 	
 	public void refresh() {
-		this.editColumnsPanel.refresh();
+		this.editElementsPanel.refresh();
 	}
 	
 	private void init(Composite parent) {
-    	Group columnInfoGroup = WidgetFactory.createGroup(parent, Messages.ColumnInfo, SWT.NONE, 2);
+    	Group columnInfoGroup = WidgetFactory.createGroup(parent, Messages.ElementInfo, SWT.NONE, 2);
     	columnInfoGroup.setLayout(new GridLayout(2, false));
     	GridData gd = new GridData(GridData.FILL_HORIZONTAL);
     	gd.heightHint = 180;
@@ -96,9 +96,9 @@ public class ColumnsInfoPanel {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-					String newName = "column_" + (detailsPage.getProcedureGenerator().getResponseInfo().getColumnInfoList().length + 1); //$NON-NLS-1$
-					detailsPage.getProcedureGenerator().getResponseInfo().addColumn(newName, false, ColumnInfo.DEFAULT_DATATYPE, null, null);
-					editColumnsPanel.refresh();
+					String newName = "column_" + (detailsPage.getProcedureGenerator().getRequestInfo().getColumnInfoList().length + 1); //$NON-NLS-1$
+					detailsPage.getProcedureGenerator().getRequestInfo().addColumn(newName, false, ColumnInfo.DEFAULT_DATATYPE, null, null);
+					editElementsPanel.refresh();
 					notifyColumnDataChanged();
 			}
     		
@@ -112,13 +112,13 @@ public class ColumnsInfoPanel {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				ColumnInfo info = editColumnsPanel.getSelectedColumn();
+				ColumnInfo info = editElementsPanel.getSelectedColumn();
 				if( info != null ) {
-					detailsPage.getProcedureGenerator().getResponseInfo().removeColumn(info);
+					detailsPage.getProcedureGenerator().getRequestInfo().removeColumn(info);
 					
 					deleteButton.setEnabled(false);
-					editColumnsPanel.selectRow(-1);
-					editColumnsPanel.refresh();
+					editElementsPanel.selectRow(-1);
+					editElementsPanel.refresh();
 					notifyColumnDataChanged();
 				}
 			}
@@ -133,17 +133,16 @@ public class ColumnsInfoPanel {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				ColumnInfo info = editColumnsPanel.getSelectedColumn();
+				ColumnInfo info = editElementsPanel.getSelectedColumn();
 				if( info != null ) {
-					int selectedIndex = editColumnsPanel.getSelectedIndex();
-					detailsPage.getProcedureGenerator().getResponseInfo().moveColumnUp(info);
-					
-					downButton.setEnabled(detailsPage.getProcedureGenerator().getResponseInfo().canMoveDown(info));
-					upButton.setEnabled(detailsPage.getProcedureGenerator().getResponseInfo().canMoveUp(info));
-					editColumnsPanel.refresh();
+					int selectedIndex = editElementsPanel.getSelectedIndex();
+					detailsPage.getProcedureGenerator().getRequestInfo().moveColumnUp(info);
+					downButton.setEnabled(detailsPage.getProcedureGenerator().getRequestInfo().canMoveDown(info));
+					upButton.setEnabled(detailsPage.getProcedureGenerator().getRequestInfo().canMoveUp(info));
+					editElementsPanel.refresh();
 					notifyColumnDataChanged();
 					
-					editColumnsPanel.selectRow(selectedIndex-1);
+					editElementsPanel.selectRow(selectedIndex-1);
 				}
 			}
     		
@@ -157,24 +156,24 @@ public class ColumnsInfoPanel {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				ColumnInfo info = editColumnsPanel.getSelectedColumn();
+				ColumnInfo info = editElementsPanel.getSelectedColumn();
 				if( info != null ) {
-					int selectedIndex = editColumnsPanel.getSelectedIndex();
-					detailsPage.getProcedureGenerator().getResponseInfo().moveColumnDown(info);
-					downButton.setEnabled(detailsPage.getProcedureGenerator().getResponseInfo().canMoveDown(info));
-					upButton.setEnabled(detailsPage.getProcedureGenerator().getResponseInfo().canMoveUp(info));
-					editColumnsPanel.refresh();
+					int selectedIndex = editElementsPanel.getSelectedIndex();
+					detailsPage.getProcedureGenerator().getRequestInfo().moveColumnDown(info);
+					downButton.setEnabled(detailsPage.getProcedureGenerator().getRequestInfo().canMoveDown(info));
+					upButton.setEnabled(detailsPage.getProcedureGenerator().getRequestInfo().canMoveUp(info));
+					editElementsPanel.refresh();
 					notifyColumnDataChanged();
 					
-					editColumnsPanel.selectRow(selectedIndex+1);
+					editElementsPanel.selectRow(selectedIndex+1);
 				}
 			}
     		
 		});
     	
-    	editColumnsPanel = new EditColumnsPanel(columnInfoGroup, SWT.NONE, this.type, this.detailsPage);
+    	editElementsPanel = new EditElementsPanel(columnInfoGroup, SWT.NONE, this.type, this.detailsPage);
     	
-    	editColumnsPanel.addSelectionListener(new ISelectionChangedListener() {
+    	editElementsPanel.addSelectionListener(new ISelectionChangedListener() {
 			
 			@Override
 			public void selectionChanged(SelectionChangedEvent event) {

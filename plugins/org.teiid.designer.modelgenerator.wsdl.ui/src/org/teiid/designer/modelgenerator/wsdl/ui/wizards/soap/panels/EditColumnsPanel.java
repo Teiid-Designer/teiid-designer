@@ -5,7 +5,7 @@
  *
  * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
  */
-package com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.wizards.panels;
+package org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.panels;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,12 +29,13 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.teiid.core.types.DataTypeManager;
+import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
+import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.ColumnInfo;
+import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.OperationsDetailsPage;
+import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.ProcedureInfo;
 
 import com.metamatrix.core.util.StringUtilities;
-import com.metamatrix.modeler.modelgenerator.wsdl.ui.Messages;
-import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.wizards.ColumnInfo;
-import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.wizards.OperationsDetailsPage;
-import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.wizards.ProcedureInfo;
+import com.metamatrix.modeler.transformation.ui.PluginConstants;
 import com.metamatrix.modeler.transformation.ui.UiConstants;
 import com.metamatrix.modeler.transformation.ui.UiPlugin;
 import com.metamatrix.ui.table.CheckBoxEditingSupport;
@@ -224,6 +225,15 @@ public class EditColumnsPanel {
 			if (this.columnNumber == 0) {
 				return UiPlugin.getDefault().getImage(
 						UiConstants.Images.COLUMN_ICON);
+			} else if( this.columnNumber == 1 ) {
+				if(element instanceof ColumnInfo) {
+					if( ((ColumnInfo)element).getOrdinality() ) {
+						return UiPlugin.getDefault().getImage(PluginConstants.Images.CHECKED_BOX_ICON);
+					} else {
+						return UiPlugin.getDefault().getImage(PluginConstants.Images.UNCHECKED_BOX_ICON);
+					}
+				}
+				return null;
 			}
 			return null;
 		}

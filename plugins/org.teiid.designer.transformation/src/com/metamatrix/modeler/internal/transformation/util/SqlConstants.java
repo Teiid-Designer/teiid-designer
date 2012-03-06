@@ -23,6 +23,7 @@ public interface SqlConstants {
     public static final String FROM = "FROM"; //$NON-NLS-1$
     public static final String WHERE = "WHERE"; //$NON-NLS-1$
 	public static final char DOT = '.';
+	public static final char STAR = '*';
     public static final char L_PAREN = '(';
     public static final char R_PAREN = ')';
     public static final char S_QUOTE = '\'';
@@ -36,6 +37,12 @@ public interface SqlConstants {
     public static final String DEFAULT = "DEFAULT"; //$NON-NLS-1$
     public static final String XMLTABLE = "XMLTABLE"; //$NON-NLS-1$
     public static final String TEXTTABLE = "TEXTTABLE"; //$NON-NLS-1$
+    
+    public static final String PATH = "PATH"; //$NON-NLS-1$
+    public static final String FOR_ORDINALITY = "FOR ORDINALITY"; //$NON-NLS-1$
+    public static final String DEFAULT_XQUERY = "/"; //$NON-NLS-1$
+    public static final String GET = "GET"; //$NON-NLS-1$
+    public static final String PASSING = "PASSING"; //$NON-NLS-1$
 
     
     public static final String SQL_TYPE_SELECT_STRING = "SELECT"; //$NON-NLS-1$

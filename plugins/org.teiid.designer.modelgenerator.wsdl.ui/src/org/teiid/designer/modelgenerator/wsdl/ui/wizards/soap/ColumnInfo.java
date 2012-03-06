@@ -5,18 +5,18 @@
 *
 * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
 */
-package com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.wizards;
+package org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
+import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
 
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.StringUtilities;
 import com.metamatrix.metamodels.relational.aspects.validation.RelationalStringNameValidator;
 import com.metamatrix.modeler.core.validation.rules.StringNameValidator;
-import com.metamatrix.modeler.modelgenerator.wsdl.ui.Messages;
 import com.metamatrix.modeler.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstants;
 
 public class ColumnInfo implements ModelGeneratorWsdlUiConstants {

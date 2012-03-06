@@ -80,6 +80,7 @@ public interface ModelGeneratorWsdlUiConstants {
         String OPERATION_ICON = OBJ16   + "operation_obj.gif"; //$NON-NLS-1$
         String PORT_ICON = OBJ16   + "port_obj.gif"; //$NON-NLS-1$
         String BINDING_ICON = OBJ16   + "binding_obj.gif"; //$NON-NLS-1$
+        String COLUMN_ICON = OBJ16   + "column.gif"; //$NON-NLS-1$
     }
     
     /**

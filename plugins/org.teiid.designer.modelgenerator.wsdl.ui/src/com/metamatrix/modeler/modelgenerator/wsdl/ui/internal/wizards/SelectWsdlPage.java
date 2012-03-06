@@ -19,9 +19,11 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.IDialogSettings;
@@ -52,6 +54,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
@@ -65,9 +68,18 @@ import org.teiid.designer.datatools.ui.dialogs.IProfileChangedListener;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.core.util.I18nUtil;
+import com.metamatrix.core.util.StringUtilities;
 import com.metamatrix.modeler.core.ModelerCore;
+import com.metamatrix.modeler.core.workspace.ModelResource;
+import com.metamatrix.modeler.core.workspace.ModelWorkspaceItem;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
+import com.metamatrix.modeler.internal.core.workspace.ModelWorkspaceManager;
+import com.metamatrix.modeler.internal.ui.explorer.ModelExplorerContentProvider;
+import com.metamatrix.modeler.internal.ui.explorer.ModelExplorerLabelProvider;
+import com.metamatrix.modeler.internal.ui.viewsupport.ModelIdentifier;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelProjectSelectionStatusValidator;
+import com.metamatrix.modeler.internal.ui.viewsupport.ModelResourceSelectionValidator;
+import com.metamatrix.modeler.internal.ui.viewsupport.ModelWorkspaceViewerFilter;
 import com.metamatrix.modeler.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstants;
 import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.util.ModelGeneratorWsdlUiUtil;
 import com.metamatrix.modeler.ui.viewsupport.ModelingResourceFilter;
@@ -121,6 +133,12 @@ public class SelectWsdlPage extends WizardPage
     private WSDLImportWizardManager importManager;
 
     private MultiStatus wsdlStatus;
+    
+	private Text sourceModelContainerText;
+	private Text sourceModelFileText;
+	private Text sourceHelpText;
+	private IPath sourceModelFilePath;
+    
     private IContainer targetModelLocation;
     private boolean initializing = false;
 
@@ -128,6 +146,8 @@ public class SelectWsdlPage extends WizardPage
     private ILabelProvider profileLabelProvider;
     
     private ConnectionProfileWorker profileWorker;
+    
+    boolean synchronizing = false;
 
     /**
      * Constructs the page with the provided import manager
@@ -212,12 +232,14 @@ public class SelectWsdlPage extends WizardPage
 
         // Controls for Selection of WSDL
         createSourceSelectionComposite(pnlMain);
+        
+        createSourceModelGroup(pnlMain);
 
         // Controls for Selection of Relational target model
         createTargetSelectionComposite(pnlMain);
 
         // Refresh Controls from manager
-        refreshUiFromManager();
+        //refreshUiFromManager();
 
         // Set the initial page status
         setPageStatus();
@@ -254,6 +276,7 @@ public class SelectWsdlPage extends WizardPage
                                                                  profileWorker.getProfiles(),
                                                                  profileLabelProvider,
                                                                  true);
+        this.connectionProfilesCombo.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
         this.connectionProfilesCombo.addSelectionListener(new SelectionListener() {
 			
 			@Override
@@ -295,6 +318,7 @@ public class SelectWsdlPage extends WizardPage
         // Workspace textfield
         wsdlURIText = WidgetFactory.createLabel(optionsGroup, GridData.FILL_HORIZONTAL);
         wsdlURIText.setToolTipText(getString("workspaceTextField.tooltip")); //$NON-NLS-1$
+        wsdlURIText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
         // --------------------------------------------
         // WSDL Validation Button
         // --------------------------------------------
@@ -306,11 +330,6 @@ public class SelectWsdlPage extends WizardPage
         // Add Listener to handle selection events
         // --------------------------------------------
         buttonValidateWSDL.addListener(SWT.Selection, this);
-        
-        if( this.connectionProfilesCombo.getItemCount() > 0 ) {
-        	this.connectionProfilesCombo.select(0);
-        	handleConnectionProfileSelected();
-        }
         
         updateWidgetEnablements();
     }
@@ -378,6 +397,76 @@ public class SelectWsdlPage extends WizardPage
         buttonSelectTargetModelLocation.addListener(SWT.Selection, this);
 
     }
+    
+	private void createSourceModelGroup(Composite parent) {
+		Group sourceGroup = WidgetFactory.createGroup(parent,"Source Model Definition", SWT.NONE, 1);
+		sourceGroup.setLayout(new GridLayout(3, false));
+		sourceGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+
+		Label locationLabel = new Label(sourceGroup, SWT.NULL);
+		locationLabel.setText("Location");
+
+		sourceModelContainerText = new Text(sourceGroup, SWT.BORDER | SWT.SINGLE);
+
+		GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
+		sourceModelContainerText.setLayoutData(gridData);
+		sourceModelContainerText.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
+		sourceModelContainerText.setForeground(WidgetUtil.getDarkBlueColor());
+		sourceModelContainerText.setEditable(false);
+
+		Button browseButton = new Button(sourceGroup, SWT.PUSH);
+		gridData = new GridData();
+		browseButton.setLayoutData(gridData);
+		browseButton.setText("Browse...");
+		browseButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				handleSourceModelLocationBrowse();
+			}
+		});
+
+		Label fileLabel = new Label(sourceGroup, SWT.NULL);
+		fileLabel.setText("Name :");
+
+		sourceModelFileText = new Text(sourceGroup, SWT.BORDER | SWT.SINGLE);
+		gridData = new GridData(GridData.FILL_HORIZONTAL);
+		sourceModelFileText.setLayoutData(gridData);
+		sourceModelFileText.setForeground(WidgetUtil.getDarkBlueColor());
+		sourceModelFileText.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				handleSourceModelTextChanged();
+			}
+		});
+
+		browseButton = new Button(sourceGroup, SWT.PUSH);
+		gridData = new GridData();
+		browseButton.setLayoutData(gridData);
+		browseButton.setText("Browse...");
+		browseButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				handleSourceModelBrowse();
+			}
+		});
+
+		new Label(sourceGroup, SWT.NONE);
+
+		Group helpGroup = WidgetFactory.createGroup(sourceGroup,
+				"Model Status", SWT.NONE | SWT.BORDER_DASH, 2);
+		helpGroup.setLayout(new GridLayout(1, false));
+		helpGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+
+		{
+			sourceHelpText = new Text(helpGroup, SWT.WRAP | SWT.READ_ONLY);
+			sourceHelpText.setBackground(WidgetUtil.getReadOnlyBackgroundColor());
+			sourceHelpText.setForeground(WidgetUtil.getDarkBlueColor());
+			GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+			gd.heightHint = 40;
+			gd.horizontalSpan = 3;
+			sourceHelpText.setLayoutData(gd);
+		}
+
+	}
 
     /**
      * @see org.eclipse.jface.dialogs.IDialogPage#dispose()
@@ -460,6 +549,67 @@ public class SelectWsdlPage extends WizardPage
             setPageStatus();
         }
     }
+    
+	/**
+	 * Uses the standard container selection dialog to choose the new value for
+	 * the container field.
+	 */
+	void handleSourceModelLocationBrowse() {
+		final IContainer folder = WidgetUtil.showFolderSelectionDialog(
+				ResourcesPlugin.getWorkspace().getRoot(),
+				new ModelingResourceFilter(),
+				new ModelProjectSelectionStatusValidator());
+
+		if (folder != null && sourceModelContainerText != null) {
+			this.importManager.setSourceModelLocation(folder.getFullPath().makeRelative());
+		}
+
+		refreshUiFromManager();
+
+		setPageStatus();
+	}
+
+	void handleSourceModelBrowse() {
+		final Object[] selections = WidgetUtil
+				.showWorkspaceObjectSelectionDialog(
+						getString("selectSourceModelTitle"), //$NON-NLS-1$
+						getString("selectSourceModelMessage"), //$NON-NLS-1$
+						false, null, sourceModelFilter,
+						new ModelResourceSelectionValidator(false),
+						new ModelExplorerLabelProvider(),
+						new ModelExplorerContentProvider());
+
+		if (selections != null && selections.length == 1
+				&& sourceModelFileText != null) {
+			if (selections[0] instanceof IFile) {
+				IFile modelFile = (IFile) selections[0];
+				IPath folderPath = modelFile.getFullPath().removeLastSegments(1);
+				String modelName = modelFile.getFullPath().lastSegment();
+				importManager.setSourceModelExists(true);
+				importManager.setSourceModelLocation(folderPath);
+				importManager.setSourceModelName(modelName);
+			}
+		}
+
+		refreshUiFromManager();
+
+		setPageStatus();
+	}
+
+	void handleSourceModelTextChanged() {
+		if (synchronizing)
+			return;
+
+		String newName = ""; //$NON-NLS-1$
+		if (this.sourceModelFileText.getText() != null && this.sourceModelFileText.getText().length() > -1) {
+			newName = this.sourceModelFileText.getText();
+			this.importManager.setSourceModelName(newName);
+			this.importManager.setSourceModelExists(sourceModelExists());
+
+		}
+		refreshUiFromManager();
+		setPageStatus();
+	}
 
     /**
      * Handler for Validate WSDL Button pressed
@@ -553,12 +703,31 @@ public class SelectWsdlPage extends WizardPage
      * Refresh the ui state from the manager
      */
     private void refreshUiFromManager() {
+    	synchronizing = true;
+    	
         if (this.importManager != null) {
+    		if (this.importManager.getSourceModelLocation() != null) {
+    			this.sourceModelContainerText.setText(this.importManager.getSourceModelLocation().makeRelative().toString());
+    		} else {
+    			this.sourceModelContainerText.setText(StringUtilities.EMPTY_STRING);
+    		}
+
+    		if (this.importManager.getSourceModelName() != null) {
+    			this.sourceModelFilePath = this.importManager.getSourceModelLocation();
+    			this.sourceModelFileText.setText(this.importManager.getSourceModelName());
+    		} else {
+    			this.sourceModelFileText.setText(StringUtilities.EMPTY_STRING);
+    		}
             
         	IContainer tgtModelLocation = this.importManager.getTargetModelLocation();
-            if (this.textFieldTargetModelLocation != null && tgtModelLocation != null) {
-                this.textFieldTargetModelLocation.setText(tgtModelLocation.getFullPath().makeRelative().toString());
-            }
+        	if( tgtModelLocation != null ) {
+	        	String targetFolder = tgtModelLocation.getFullPath().makeRelative().toString();
+	            if (this.textFieldTargetModelLocation != null ) {
+	                this.textFieldTargetModelLocation.setText(targetFolder);
+	            }
+	            
+	            this.sourceModelContainerText.setText(targetFolder);
+        	}
 
             if (null == connectionProfilesCombo.getItems() || 0 == connectionProfilesCombo.getItems().length) {
                 if (profileWorker.getProfiles().isEmpty()) {
@@ -591,6 +760,8 @@ public class SelectWsdlPage extends WizardPage
             importManager.setWSDLFileUri(props.getProperty(WSDL_URI_PROP_KEY));
             updateWidgetEnablements();
         }
+        
+        synchronizing = false;
     }
     
     public void profileChanged(IConnectionProfile profile) {
@@ -665,7 +836,7 @@ public class SelectWsdlPage extends WizardPage
                                 this.importManager.setWSDLFileUri(uriStr);
                                 break;
                             } else if (ModelGeneratorWsdlUiUtil.isModelFile((IFile)selectedObjects[i])) {
-                                this.importManager.setTargetModelName(uriStr.substring(uriStr.lastIndexOf('/') + 1));
+                                this.importManager.setTargetViewModelName(uriStr.substring(uriStr.lastIndexOf('/') + 1));
                                 break;
                             }
                         }
@@ -807,6 +978,37 @@ public class SelectWsdlPage extends WizardPage
     	
     	refreshUiFromManager();
     }
+	
+	private boolean sourceModelExists() {
+		if (this.sourceModelFilePath == null) {
+			return false;
+		}
+
+		IPath modelPath = new Path(sourceModelFilePath.toOSString()).append(this.sourceModelFileText.getText());
+		if (!modelPath.toString().toUpperCase().endsWith(".XMI")) { //$NON-NLS-1$
+			modelPath = modelPath.addFileExtension("xmi"); //$NON-NLS-1$
+		}
+
+		ModelWorkspaceItem item = ModelWorkspaceManager.getModelWorkspaceManager().findModelWorkspaceItem(modelPath,IResource.FILE);
+		if (item != null) {
+			return true;
+		}
+
+		return false;
+	}
+	
+	public void setVisible(boolean visible) {
+		super.setVisible(visible);
+
+		if (visible) {
+	        if( this.connectionProfilesCombo.getItemCount() > 0 ) {
+	        	this.connectionProfilesCombo.select(0);
+	        	handleConnectionProfileSelected();
+	        }
+	        
+	        refreshUiFromManager();
+		}
+	}
     
     /** Filter for selecting target location. */
     private ViewerFilter targetLocationFilter = new ViewerFilter() {
@@ -833,4 +1035,42 @@ public class SelectWsdlPage extends WizardPage
             return result;
         }
     };
+    
+	final ViewerFilter sourceModelFilter = new ModelWorkspaceViewerFilter(true) {
+
+		@Override
+		public boolean select(final Viewer viewer, final Object parent,
+				final Object element) {
+			boolean doSelect = false;
+			if (element instanceof IResource) {
+				// If the project is closed, dont show
+				boolean projectOpen = ((IResource) element).getProject()
+						.isOpen();
+				if (projectOpen) {
+					// Show open projects
+					if (element instanceof IProject) {
+						doSelect = true;
+					} else if (element instanceof IContainer) {
+						doSelect = true;
+						// Show webservice model files, and not .xsd files
+					} else if (element instanceof IFile && ModelUtil.isModelFile((IFile) element)) {
+						ModelResource theModel = null;
+						try {
+							theModel = ModelUtil.getModelResource((IFile) element, true);
+						} catch (Exception ex) {
+							ModelerCore.Util.log(ex);
+						}
+						if (theModel != null
+								&& ModelIdentifier.isRelationalSourceModel(theModel)) {
+							doSelect = true;
+						}
+					}
+				}
+			} else if (element instanceof IContainer) {
+				doSelect = true;
+			}
+
+			return doSelect;
+		}
+	};
 }

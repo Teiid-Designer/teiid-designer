@@ -1,11 +1,11 @@
 /*
  * JBoss, Home of Professional Open Source.
- *
- * See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
- *
- * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
- */
-package com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.wizards;
+*
+* See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+*
+* See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+*/
+package org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
@@ -26,9 +26,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IImportWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.ide.IDE;
-import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.OperationsDetailsPage;
+import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
 
-import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.ModelerCoreException;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
@@ -37,18 +36,15 @@ import com.metamatrix.modeler.modelgenerator.wsdl.RelationalModelBuilder;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Model;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.ModelGenerationException;
 import com.metamatrix.modeler.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstants;
+import com.metamatrix.modeler.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstants.Images;
 import com.metamatrix.modeler.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiPlugin;
+import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.wizards.WSDLImportWizardManager;
 import com.metamatrix.modeler.schema.tools.processing.SchemaProcessingException;
 import com.metamatrix.ui.internal.wizard.AbstractWizard;
 
-/**
- * Wizard for import of WSDL Source and generation of Relational Model from it.
- */
-public class RelationalFromWSDLImportWizard extends AbstractWizard implements IImportWizard, ModelGeneratorWsdlUiConstants {
+public class ImportWsdlSoapWizard extends AbstractWizard implements IImportWizard {
 
-    private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(RelationalFromWSDLImportWizard.class);
-
-    private static final String TITLE = getString("title"); //$NON-NLS-1$
+    private static final String TITLE = Messages.ImportWsdlSoapWizard_title;
     private static final ImageDescriptor IMAGE = ModelGeneratorWsdlUiPlugin.getDefault().getImageDescriptor(Images.IMPORT_WSDL_ICON);
 
     /** This manager interfaces with the relational from wsdl generator */
@@ -68,15 +64,8 @@ public class RelationalFromWSDLImportWizard extends AbstractWizard implements II
     /**
      * Creates a wizard for generating relational entities from WSDL source.
      */
-    public RelationalFromWSDLImportWizard() {
+    public ImportWsdlSoapWizard() {
         super(ModelGeneratorWsdlUiPlugin.getDefault(), TITLE, IMAGE);
-    }
-
-    /**
-     * Get the localized string text for the provided id
-     */
-    private static String getString( final String id ) {
-        return UTIL.getString(I18N_PREFIX + id);
     }
 
     /**
@@ -115,13 +104,13 @@ public class RelationalFromWSDLImportWizard extends AbstractWizard implements II
 
         // construct pages
         SELECT_WSDL_PAGE : {
-	        this.selectWsdlPage = new SelectWsdlPage(this.importManager);
+	        this.selectWsdlPage = new WsdlDefinitionPage(this.importManager);
 	        this.selectWsdlPage.setPageComplete(false);
 	        addPage(this.selectWsdlPage);
         }
         
         SELECT_OPERATIONS_PAGE : {
-        	this.selectWsdlOperationsPage = new SelectWsdlOperationsPage(this.importManager);
+        	this.selectWsdlOperationsPage = new WsdlOperationsPage(this.importManager);
         	this.selectWsdlOperationsPage.setPageComplete(false);
         	addPage(this.selectWsdlOperationsPage);
         }
@@ -133,7 +122,7 @@ public class RelationalFromWSDLImportWizard extends AbstractWizard implements II
         }
 
         // give the WSDL selection page the current workspace selection
-        ((SelectWsdlPage)this.selectWsdlPage).setInitialSelection(theSelection);
+        ((WsdlDefinitionPage)this.selectWsdlPage).setInitialSelection(theSelection);
     }
 
     /**
@@ -179,12 +168,16 @@ public class RelationalFromWSDLImportWizard extends AbstractWizard implements II
         } catch (Throwable err) {
             if (err instanceof InvocationTargetException) {
                 Throwable t = ((InvocationTargetException)err).getTargetException();
-                final IStatus iteStatus = new Status(IStatus.ERROR, PLUGIN_ID, IStatus.ERROR, getString("importError.msg"), t); //$NON-NLS-1$
-                ErrorDialog.openError(this.getShell(), getString("importError.title"), getString("importError.msg"), iteStatus); //$NON-NLS-1$  //$NON-NLS-2$
+                final IStatus iteStatus = new Status(IStatus.ERROR, ModelGeneratorWsdlUiConstants.PLUGIN_ID, IStatus.ERROR, Messages.ImportWsdlSoapWizard_importError_msg, t);
+                ErrorDialog.openError(this.getShell(), 
+                		Messages.ImportWsdlSoapWizard_importError_title, 
+                		Messages.ImportWsdlSoapWizard_importError_msg, iteStatus);
                 t.printStackTrace(System.err);
             } else {
-                final IStatus status = new Status(IStatus.ERROR, PLUGIN_ID, IStatus.ERROR, getString("importError.msg"), err); //$NON-NLS-1$);
-                ErrorDialog.openError(this.getShell(), getString("importError.title"), getString("importError.msg"), status); //$NON-NLS-1$  //$NON-NLS-2$
+                final IStatus status = new Status(IStatus.ERROR, ModelGeneratorWsdlUiConstants.PLUGIN_ID, IStatus.ERROR, Messages.ImportWsdlSoapWizard_importError_msg, err); 
+                ErrorDialog.openError(this.getShell(),
+                		Messages.ImportWsdlSoapWizard_importError_title, 
+                		Messages.ImportWsdlSoapWizard_importError_msg, status);
                 err.printStackTrace(System.err);
             }
         } finally {

@@ -5,7 +5,7 @@
 *
 * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
 */
-package com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.wizards;
+package org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap;
 
 import java.util.ArrayList;
 import java.util.Properties;
@@ -17,7 +17,6 @@ import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.TextViewer;
 import org.eclipse.jface.text.source.VerticalRuler;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
@@ -48,14 +47,15 @@ import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
+import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
+import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.panels.ColumnsInfoPanel;
+import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.panels.ElementsInfoPanel;
 
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Operation;
-import com.metamatrix.modeler.modelgenerator.wsdl.ui.Messages;
 import com.metamatrix.modeler.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstants;
 import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.util.ModelGeneratorWsdlUiUtil;
-import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.wizards.panels.ColumnsInfoPanel;
-import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.wizards.panels.ElementsInfoPanel;
+import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.wizards.WSDLImportWizardManager;
 import com.metamatrix.modeler.transformation.ui.editors.sqleditor.SqlTextViewer;
 import com.metamatrix.ui.graphics.ColorManager;
 import com.metamatrix.ui.internal.util.WidgetFactory;
@@ -608,9 +608,12 @@ public class OperationsDetailsPage  extends AbstractWizardPage implements ModelG
     
     void updateSqlText(int type) {
     	if( this.procedureGenerator != null ) {
-    		if( type == REQUEST || type == BOTH ) {
+    		if( type == REQUEST ) {
     			requestSqlTextViewer.getDocument().set(this.procedureGenerator.getRequestInfo().getSqlString(new Properties()));
-    		} else if( type == RESPONSE || type == BOTH ) {
+    		} else if( type == RESPONSE ) {
+    			responseSqlTextViewer.getDocument().set(this.procedureGenerator.getResponseInfo().getSqlString(new Properties()));
+    		} else if( type == BOTH ) {
+    			requestSqlTextViewer.getDocument().set(this.procedureGenerator.getRequestInfo().getSqlString(new Properties()));
     			responseSqlTextViewer.getDocument().set(this.procedureGenerator.getResponseInfo().getSqlString(new Properties()));
     		}
     	}

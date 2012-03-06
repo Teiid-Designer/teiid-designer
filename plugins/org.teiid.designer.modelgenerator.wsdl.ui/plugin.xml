@@ -22,5 +22,15 @@
             %relationalFromWSDLImportWizard.description
          </description>
       </wizard>
+      <wizard
+            icon="icons/full/ctool16/import_wsdl.gif"
+            category="com.metamatrix.modeler.ui"
+            class="org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.ImportWsdlSoapWizard"
+            name="%importWsdlSoapWizard.name"
+            id="org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.ImportWsdlSoapWizardID">
+         <description>
+            %relationalFromWSDLImportWizard.description
+         </description>
+      </wizard>
    </extension>
 </plugin>

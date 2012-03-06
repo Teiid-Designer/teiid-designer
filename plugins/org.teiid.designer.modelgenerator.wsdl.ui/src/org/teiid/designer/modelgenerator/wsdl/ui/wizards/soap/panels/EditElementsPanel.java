@@ -5,7 +5,7 @@
 *
 * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
 */
-package com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.wizards.panels;
+package org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.panels;
 
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
@@ -23,11 +23,11 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
+import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
+import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.ColumnInfo;
+import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.OperationsDetailsPage;
+import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.ProcedureInfo;
 
-import com.metamatrix.modeler.modelgenerator.wsdl.ui.Messages;
-import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.wizards.ColumnInfo;
-import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.wizards.OperationsDetailsPage;
-import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.wizards.ProcedureInfo;
 import com.metamatrix.modeler.transformation.ui.UiConstants;
 import com.metamatrix.modeler.transformation.ui.UiPlugin;
 
