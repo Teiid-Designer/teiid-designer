@@ -366,6 +366,12 @@ public class SqlEditorPanel extends SashForm
         };
         this.applyTemplateAction.setToolTipText(Util.getString(APPLY_TEMPLATE_ACTION_TOOLTIP));
         this.applyTemplateAction.setText(Util.getString(APPLY_TEMPLATE_ACTION_TEXT));
+        String existingText = getText();
+        if (existingText != null && !existingText.isEmpty()) {
+            this.applyTemplateAction.setEnabled(false);
+        } else {
+            this.applyTemplateAction.setEnabled(true);
+        }
 
         manager.add(this.applyTemplateAction);
     }

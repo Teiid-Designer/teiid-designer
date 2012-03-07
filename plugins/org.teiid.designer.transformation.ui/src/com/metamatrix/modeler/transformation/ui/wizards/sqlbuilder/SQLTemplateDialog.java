@@ -22,6 +22,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TabFolder;
@@ -389,8 +390,8 @@ public class SQLTemplateDialog  extends TitleAreaDialog {
         sqlTextViewer = new SqlTextViewer(textTableOptionsGroup, new VerticalRuler(0), styles, colorManager);
         sqlDocument = new Document();
         sqlTextViewer.setInput(sqlDocument);
-        sqlTextViewer.setEditable(true);
-        // sqlTextViewer.getTextWidget().setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
+        sqlTextViewer.setEditable(false);
+        sqlTextViewer.getTextWidget().setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
         sqlDocument.set(CoreStringUtil.Constants.EMPTY_STRING);
         sqlTextViewer.getControl().setLayoutData(new GridData(GridData.FILL_BOTH));
     }

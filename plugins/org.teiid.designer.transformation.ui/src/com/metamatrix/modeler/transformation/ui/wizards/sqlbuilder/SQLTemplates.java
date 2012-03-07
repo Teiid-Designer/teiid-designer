@@ -17,15 +17,15 @@ public class SQLTemplates {
     // Templates valid for Table/View Targets
     // ----------------------------------------
 
-    public static String SELECT_SIMPLE = "SELECT * FROM TABLEA"; //$NON-NLS-1$
+    public static String SELECT_SIMPLE = "SELECT * FROM [TABLEA]"; //$NON-NLS-1$
 
-    public static String SELECT_JOIN = "SELECT TABLEA.COL1, TABLEA.COL2, TABLEB.COL1 FROM TABLEA, TABLEB " //$NON-NLS-1$
-                                       + "WHERE TABLEA.COL1 = TABLEB.COL1"; //$NON-NLS-1$
+    public static String SELECT_JOIN = "SELECT [TABLEA.COL1], [TABLEA.COL2], [TABLEB.COL1] FROM [TABLEA], [TABLEB] " //$NON-NLS-1$
+                                       + "WHERE [TABLEA.COL1] = [TABLEB.COL1]"; //$NON-NLS-1$
 
-    public static String SELECT_UNION = "SELECT COL1, COL2 FROM TABLEA UNION SELECT COL1, COL2 FROM TABLEB"; //$NON-NLS-1$
+    public static String SELECT_UNION = "SELECT [COL1], [COL2] FROM [TABLEA] UNION SELECT [COL1], [COL2] FROM [TABLEB]"; //$NON-NLS-1$
 
-    public static String SELECT_FLATFILE_SRC = "SELECT A.Name, A.Sport, A.Position, A.City FROM " //$NON-NLS-1$
-                                               + "(EXEC EmployeeFileProcedures.getTextFiles('PlayerData.txt')) AS f, " //$NON-NLS-1$
+    public static String SELECT_FLATFILE_SRC = "SELECT A.[Name], A.[Sport], A.[Position], A.[City] FROM " //$NON-NLS-1$
+                                               + "(EXEC [EmployeeFileProcedures].getTextFiles('PlayerData.txt')) AS f, " //$NON-NLS-1$
                                                + " TEXTTABLE(f.file COLUMNS Name string, Sport string, Position string, City string HEADER 2 SKIP 3) AS A"; //$NON-NLS-1$
 
     public static String SELECT_XMLFILE_LOCAL_SRC = "SELECT A.PMID AS PMID, A.Journal AS Journal, A.Title AS Title FROM " //$NON-NLS-1$
@@ -43,13 +43,13 @@ public class SQLTemplates {
     // Templates valid for Procedure Targets
     // ----------------------------------------
     public static String PROC_INSERT_DEFAULT = "CREATE VIRTUAL PROCEDURE BEGIN " //$NON-NLS-1$
-                                               + "INSERT INTO TABLEA (COL1, COL2, COL3) VALUES (val1, val2, val3); END"; //$NON-NLS-1$
+                                               + "INSERT INTO [TABLEA] ([COL1], [COL2], [COL3]) VALUES ([val1], [val2], [val3]); END"; //$NON-NLS-1$
 
     public static String PROC_UPDATE_DEFAULT = "CREATE VIRTUAL PROCEDURE BEGIN " //$NON-NLS-1$
-                                               + "UPDATE TABLEA SET COL1=val1, COL2=val2, COL3=val3 WHERE (PK-KEY COL)=value; END"; //$NON-NLS-1$
+                                               + "UPDATE [TABLEA] SET [COL1]=[val1], [COL2]=[val2], [COL3]=[val3] WHERE ([PK-KEY-COL])=[value]; END"; //$NON-NLS-1$
 
     public static String PROC_DELETE_DEFAULT = "CREATE VIRTUAL PROCEDURE BEGIN " //$NON-NLS-1$
-                                               + "DELETE FROM TABLEA WHERE (PK-KEY COL) = value; END"; //$NON-NLS-1$
+                                               + "DELETE FROM [TABLEA] WHERE ([PK-KEY COL]) = [value]; END"; //$NON-NLS-1$
 
     public static String PROC_SOAP_WS_CREATE = "CREATE VIRTUAL PROCEDURE BEGIN " //$NON-NLS-1$
                                                + "SELECT XMLELEMENT(NAME CapitalCity, XMLNAMESPACES(DEFAULT 'http://www.oorsprong.org/websamples.countryinfo'), " //$NON-NLS-1$
