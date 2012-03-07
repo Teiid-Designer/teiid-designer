@@ -10,6 +10,11 @@ package org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap;
 import java.util.ArrayList;
 import java.util.Properties;
 
+import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.edit.provider.ItemProvider;
+import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
+import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.IDialogSettings;
@@ -27,6 +32,7 @@ import org.eclipse.jface.viewers.TreeExpansionEvent;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -52,6 +58,8 @@ import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.panels.ColumnsInfo
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.panels.ElementsInfoPanel;
 
 import com.metamatrix.core.util.CoreStringUtil;
+import com.metamatrix.modeler.modelgenerator.wsdl.model.Model;
+import com.metamatrix.modeler.modelgenerator.wsdl.model.ModelGenerationException;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Operation;
 import com.metamatrix.modeler.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstants;
 import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.util.ModelGeneratorWsdlUiUtil;
@@ -62,6 +70,11 @@ import com.metamatrix.ui.internal.util.WidgetFactory;
 import com.metamatrix.ui.internal.util.WizardUtil;
 import com.metamatrix.ui.internal.wizard.AbstractWizardPage;
 import com.metamatrix.ui.tree.AbstractTreeContentProvider;
+import org.eclipse.xsd.XSDElementDeclaration;
+import org.eclipse.xsd.XSDSchema;
+import org.eclipse.xsd.XSDSimpleTypeDefinition;
+import org.eclipse.xsd.provider.XSDSemanticItemProviderAdapterFactory;
+import org.eclipse.xsd.util.XSDParser;
 
 public class OperationsDetailsPage  extends AbstractWizardPage implements ModelGeneratorWsdlUiConstants {
 
@@ -89,6 +102,12 @@ public class OperationsDetailsPage  extends AbstractWizardPage implements ModelG
     /** The checkbox treeViewer */
     private TreeViewer treeViewer;
     private Tree tree;
+    
+    private XSDSemanticItemProviderAdapterFactory semanticAdapterFactory;
+    
+    /** This keeps track of the root object of the model. */
+    protected XSDSchema xsdSchema;
+   // protected XSD xsdSchema1;
     
     Button generateWrapperProcedure;
     
@@ -148,6 +167,7 @@ public class OperationsDetailsPage  extends AbstractWizardPage implements ModelG
 		this.responseColumnsInfoPanel.setProcedureInfo(this.procedureGenerator.getResponseInfo());
 		
 		updateSqlText(BOTH);
+		updateSchemaTree(BOTH);
     }
     
     public void notifyColumnDataChanged() {
@@ -293,41 +313,30 @@ public class OperationsDetailsPage  extends AbstractWizardPage implements ModelG
     	gd.heightHint = 140;
     	schemaContentsGroup.setLayoutData(gd);
 		
-    	
-    	this.requestXmlTreeViewer = new TreeViewer(schemaContentsGroup, SWT.BORDER | SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL);
+    	this.requestXmlTreeViewer = new TreeViewer(schemaContentsGroup);
+        semanticAdapterFactory = new XSDSemanticItemProviderAdapterFactory();
+        this.requestXmlTreeViewer.setContentProvider(new AdapterFactoryContentProvider(semanticAdapterFactory));
+        this.requestXmlTreeViewer.setLabelProvider(new AdapterFactoryLabelProvider(semanticAdapterFactory));
+        this.requestXmlTreeViewer.setAutoExpandLevel(2);
         GridData data = new GridData(GridData.FILL_BOTH);
         data.horizontalSpan=4;
         this.requestXmlTreeViewer.getControl().setLayoutData(data);
-        this.requestXmlTreeViewer.setContentProvider(new AbstractTreeContentProvider() {
-        	
+        this.requestXmlTreeViewer.addFilter(new ViewerFilter() {
             @Override
-            public Object[] getChildren( Object element ) {
-                return getNodeChildren(element);
-            }
+            public boolean select( Viewer viewer,
+                                   Object parentElement,
+                                   Object element ) {
+                // filter built-ins if needed:
+                if (!(parentElement instanceof EObject) && element instanceof XSDSimpleTypeDefinition) {
+                    // parent is not an EObject, and kid is a STD; need to filter out built-ins.
+                    XSDSimpleTypeDefinition std = (XSDSimpleTypeDefinition)element;
+                    return std.getSchema() == xsdSchema;
+                } // endif
 
-            public Object getParent( Object element ) {
-                return getNodeParent(element);
-            }
-
-            @Override
-            public boolean hasChildren( Object element ) {
-                return getNodeHasChildren(element);
-            }
-
-        });
-    	
-        this.requestXmlTreeViewer.setLabelProvider(new LabelProvider() {
-
-            @Override
-            public Image getImage( Object element ) {
-                return getNodeImage(element);
-            }
-
-            @Override
-            public String getText( Object element ) {
-                return getNodeName(element);
+                return true;
             }
         });
+        this.requestXmlTreeViewer.setInput(null);
         
      // Add a Context Menu
         final MenuManager columnMenuManager = new MenuManager();
@@ -394,13 +403,13 @@ public class OperationsDetailsPage  extends AbstractWizardPage implements ModelG
 				IStructuredSelection sel = (IStructuredSelection)requestXmlTreeViewer.getSelection();
 		    	Object obj = sel.getFirstElement();
 		    	// TODO:
-//		    	if( obj instanceof XmlElement ) {
-//		    		createRequestColumn();
-//		    	} else {
+		    	if( obj instanceof XSDElementDeclaration ) {
+		    		createRequestColumn();
+		    	} else {
 //					String newName = "column_" + (fileInfo.getColumnInfoList().length + 1); //$NON-NLS-1$
 //					fileInfo.addColumn(newName, false, TeiidColumnInfo.DEFAULT_DATATYPE, null, null);
-//		    	}
-//				handleInfoChanged(false);
+		    	}
+				//handleInfoChanged(false);
 			}
     		
 		});
@@ -505,7 +514,7 @@ public class OperationsDetailsPage  extends AbstractWizardPage implements ModelG
             }
         });
         
-     // Add a Context Menu
+         // Add a Context Menu
         final MenuManager columnMenuManager = new MenuManager();
         this.responseXmlTreeViewer.getControl().setMenu(columnMenuManager.createContextMenu(parent));
         this.responseXmlTreeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
@@ -617,6 +626,50 @@ public class OperationsDetailsPage  extends AbstractWizardPage implements ModelG
     			responseSqlTextViewer.getDocument().set(this.procedureGenerator.getResponseInfo().getSqlString(new Properties()));
     		}
     	}
+    }
+    
+    void updateSchemaTree(int type) {
+		if( type == REQUEST || type == BOTH ) {
+			requestXmlTreeViewer.setInput(getSchemaForSelectedOperation(type));
+		
+		} else if( type == RESPONSE || type == BOTH ) {
+			responseSqlTextViewer.getDocument().set(this.procedureGenerator.getResponseInfo().getSqlString(new Properties()));
+		}
+    }
+    
+    /**
+     * @return
+     */
+    public XSDElementDeclaration getSchemaForSelectedOperation(final int type) {
+    	
+    	Model wsdlModel = null;
+    	XSDElementDeclaration elementDeclaration = null;
+    	
+    	try {
+    		wsdlModel = importManager.getWSDLModel();
+		} catch (ModelGenerationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	
+    	XSDSchema[] schemas = wsdlModel.getSchemas();
+    	
+    	Operation selectedOperation = procedureGenerator.getOperation();
+    	
+    	String partElementName = selectedOperation.getInputMessage().getParts()[0].getElementName();
+    	
+    	for (XSDSchema schema: schemas){
+    		xsdSchema = schema;
+    		EList<XSDElementDeclaration> elements = schema.getElementDeclarations();
+    		for (XSDElementDeclaration element:elements){
+    			String elementName = element.getName();
+    			if (element.getName().equals(partElementName)){
+    				elementDeclaration = element;
+    			}
+    		}
+    	}
+    	
+        return elementDeclaration;
     }
     
     /**
