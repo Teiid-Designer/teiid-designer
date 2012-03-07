@@ -1,10 +1,10 @@
 /*
  * JBoss, Home of Professional Open Source.
-*
-* See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
-*
-* See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
-*/
+ *
+ * See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+ *
+ * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+ */
 package org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap;
 
 import java.util.ArrayList;
@@ -72,797 +72,924 @@ import com.metamatrix.ui.internal.wizard.AbstractWizardPage;
 import com.metamatrix.ui.tree.AbstractTreeContentProvider;
 import org.eclipse.xsd.XSDElementDeclaration;
 import org.eclipse.xsd.XSDSchema;
+import org.eclipse.xsd.XSDSchemaContent;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
+import org.eclipse.xsd.XSDTypeDefinition;
+import org.eclipse.xsd.impl.XSDElementDeclarationImpl;
+import org.eclipse.xsd.impl.XSDParticleImpl;
 import org.eclipse.xsd.provider.XSDSemanticItemProviderAdapterFactory;
 import org.eclipse.xsd.util.XSDParser;
 
-public class OperationsDetailsPage  extends AbstractWizardPage implements ModelGeneratorWsdlUiConstants {
+public class OperationsDetailsPage extends AbstractWizardPage implements
+		ModelGeneratorWsdlUiConstants {
 
-    /** <code>IDialogSetting</code>s key for saved dialog height. */
-    private static final String DIALOG_HEIGHT = "dialogHeight"; //$NON-NLS-1$
+	/** <code>IDialogSetting</code>s key for saved dialog height. */
+	private static final String DIALOG_HEIGHT = "dialogHeight"; //$NON-NLS-1$
 
-    /** <code>IDialogSetting</code>s key for saved dialog width. */
-    private static final String DIALOG_WIDTH = "dialogWidth"; //$NON-NLS-1$
+	/** <code>IDialogSetting</code>s key for saved dialog width. */
+	private static final String DIALOG_WIDTH = "dialogWidth"; //$NON-NLS-1$
 
-    /** <code>IDialogSetting</code>s key for saved dialog X position. */
-    private static final String DIALOG_X = "dialogX"; //$NON-NLS-1$
+	/** <code>IDialogSetting</code>s key for saved dialog X position. */
+	private static final String DIALOG_X = "dialogX"; //$NON-NLS-1$
 
-    /** <code>IDialogSetting</code>s key for saved dialog Y position. */
-    private static final String DIALOG_Y = "dialogY"; //$NON-NLS-1$
-    
-    private static final int REQUEST = ProcedureInfo.REQUEST;
-    private static final int RESPONSE = ProcedureInfo.RESPONSE;
-    private static final int BOTH = 2;
+	/** <code>IDialogSetting</code>s key for saved dialog Y position. */
+	private static final String DIALOG_Y = "dialogY"; //$NON-NLS-1$
 
-    /** The import manager. */
-    WSDLImportWizardManager importManager;
-    
-    // ========== UI COMPONENTS =========================
-    
-    /** The checkbox treeViewer */
-    private TreeViewer treeViewer;
-    private Tree tree;
-    
-    private XSDSemanticItemProviderAdapterFactory semanticAdapterFactory;
-    
-    /** This keeps track of the root object of the model. */
-    protected XSDSchema xsdSchema;
-   // protected XSD xsdSchema1;
-    
-    Button generateWrapperProcedure;
-    
-    TabFolder tabFolder;
-    
-    TabItem requestTab;
-    Text selectedRequestOperationText;
-    Text requestProcedureNameText;
+	private static final int REQUEST = ProcedureInfo.REQUEST;
+	private static final int RESPONSE = ProcedureInfo.RESPONSE;
+	private static final int BOTH = 2;
+
+	/** The import manager. */
+	WSDLImportWizardManager importManager;
+
+	// ========== UI COMPONENTS =========================
+
+	/** The checkbox treeViewer */
+	private TreeViewer treeViewer;
+	private Tree tree;
+
+	private XSDSemanticItemProviderAdapterFactory semanticAdapterFactory;
+
+	/** This keeps track of the root object of the model. */
+	protected XSDSchema xsdSchema;
+	// protected XSD xsdSchema1;
+
+	Button generateWrapperProcedure;
+
+	TabFolder tabFolder;
+
+	TabItem requestTab;
+	Text selectedRequestOperationText;
+	Text requestProcedureNameText;
 	TreeViewer requestXmlTreeViewer;
 	TextViewer requestSqlTextViewer;
 	IDocument requestSqlDocument;
 	Action requestCreateElementAction, requestSetRootPathAction;
 	Button requestAddElementButton;
 	ElementsInfoPanel requestElementsInfoPanel;
-	
-    TabItem responseTab;
-    Text selectedResponseOperationText;
-    Text responseProcedureNameText;
-    TreeViewer responseXmlTreeViewer;
+
+	TabItem responseTab;
+	Text selectedResponseOperationText;
+	Text responseProcedureNameText;
+	TreeViewer responseXmlTreeViewer;
 	TextViewer responseSqlTextViewer;
 	IDocument responseSqlDocument;
-	Action responseCreateColumnAction, responseSetRootPathAction;
-	Button responseAddColumnButton;
-	ColumnsInfoPanel responseColumnsInfoPanel;
-	
-	private ProcedureGenerator procedureGenerator;
-    
-    // ==================================================
-    public OperationsDetailsPage( WSDLImportWizardManager theImportManager ) {
-        super(OperationsDetailsPage.class.getSimpleName(), Messages.ProcedureDefinition);
-        this.importManager = theImportManager;
-        this.importManager.setSelectedOperations(new ArrayList());
-        setImageDescriptor(ModelGeneratorWsdlUiUtil.getImageDescriptor(Images.NEW_MODEL_BANNER));
-    }
-    
-    public ProcedureGenerator getProcedureGenerator() {
-    	return this.procedureGenerator;
-    }
-    
-    private void notifyOperationChanged(Operation operation) {
-		this.procedureGenerator = importManager.getProcedureGenerator(operation);
-		
-		this.generateWrapperProcedure.setSelection(this.procedureGenerator.doGenerateWrapperProcedure());
+	Action responseCreateElementAction, responseSetRootPathAction;
+	Button responseAddElementButton;
+	ColumnsInfoPanel responseElementsInfoPanel;
 
-		if( this.selectedRequestOperationText != null ) {
-			this.selectedRequestOperationText.setText(this.procedureGenerator.getOperation().getName());
+	private ProcedureGenerator procedureGenerator;
+
+	// ==================================================
+	public OperationsDetailsPage(WSDLImportWizardManager theImportManager) {
+		super(OperationsDetailsPage.class.getSimpleName(),
+				Messages.ProcedureDefinition);
+		this.importManager = theImportManager;
+		this.importManager.setSelectedOperations(new ArrayList());
+		setImageDescriptor(ModelGeneratorWsdlUiUtil
+				.getImageDescriptor(Images.NEW_MODEL_BANNER));
+	}
+
+	public ProcedureGenerator getProcedureGenerator() {
+		return this.procedureGenerator;
+	}
+
+	private void notifyOperationChanged(Operation operation) {
+		this.procedureGenerator = importManager
+				.getProcedureGenerator(operation);
+
+		this.generateWrapperProcedure.setSelection(this.procedureGenerator
+				.doGenerateWrapperProcedure());
+
+		if (this.selectedRequestOperationText != null) {
+			this.selectedRequestOperationText.setText(this.procedureGenerator
+					.getOperation().getName());
 		}
-		if( this.selectedResponseOperationText != null ) {
-			this.selectedResponseOperationText.setText(this.procedureGenerator.getOperation().getName());
+		if (this.selectedResponseOperationText != null) {
+			this.selectedResponseOperationText.setText(this.procedureGenerator
+					.getOperation().getName());
 		}
-		
-		this.requestProcedureNameText.setText(this.procedureGenerator.getRequestProcedureName());
-		this.responseProcedureNameText.setText(this.procedureGenerator.getResponseProcedureName());
-		
+
+		this.requestProcedureNameText.setText(this.procedureGenerator
+				.getRequestProcedureName());
+		this.responseProcedureNameText.setText(this.procedureGenerator
+				.getResponseProcedureName());
+
 		// Now update the two column info panels
-		this.requestElementsInfoPanel.setProcedureInfo(this.procedureGenerator.getRequestInfo());
-		this.responseColumnsInfoPanel.setProcedureInfo(this.procedureGenerator.getResponseInfo());
-		
+		this.requestElementsInfoPanel.setProcedureInfo(this.procedureGenerator
+				.getRequestInfo());
+		this.responseElementsInfoPanel.setProcedureInfo(this.procedureGenerator
+				.getResponseInfo());
+
 		updateSqlText(BOTH);
 		updateSchemaTree(BOTH);
-    }
-    
-    public void notifyColumnDataChanged() {
-    	this.requestElementsInfoPanel.refresh();
-    	this.responseColumnsInfoPanel.refresh();
-    	updateSqlText(BOTH);
-    }
-    
-    /**
-     * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
-     * @since 4.2
-     */
-    public void createControl( Composite theParent ) {
-        final int COLUMNS = 1;
-        Composite pnlMain = WidgetFactory.createPanel(theParent, SWT.NONE, GridData.FILL_BOTH);
-        GridLayout layout = new GridLayout(COLUMNS, false);
-        pnlMain.setLayout(layout);
-        setControl(pnlMain);
+	}
 
-        SashForm splitter = new SashForm(pnlMain, SWT.HORIZONTAL);
-        GridData gid = new GridData();
-        gid.grabExcessHorizontalSpace = gid.grabExcessVerticalSpace = true;
-        gid.horizontalAlignment = gid.verticalAlignment = GridData.FILL;
-        splitter.setLayoutData(gid);
+	public void notifyColumnDataChanged() {
+		this.requestElementsInfoPanel.refresh();
+		this.responseElementsInfoPanel.refresh();
+		updateSqlText(BOTH);
+	}
 
-        createOperationsListPanel(splitter);
+	/**
+	 * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
+	 * @since 4.2
+	 */
+	public void createControl(Composite theParent) {
+		final int COLUMNS = 1;
+		Composite pnlMain = WidgetFactory.createPanel(theParent, SWT.NONE,
+				GridData.FILL_BOTH);
+		GridLayout layout = new GridLayout(COLUMNS, false);
+		pnlMain.setLayout(layout);
+		setControl(pnlMain);
 
-        createTabbedDetailsPanel(splitter);
+		SashForm splitter = new SashForm(pnlMain, SWT.HORIZONTAL);
+		GridData gid = new GridData();
+		gid.grabExcessHorizontalSpace = gid.grabExcessVerticalSpace = true;
+		gid.horizontalAlignment = gid.verticalAlignment = GridData.FILL;
+		splitter.setLayoutData(gid);
 
-        splitter.setWeights(new int[] {30, 70});
+		createOperationsListPanel(splitter);
 
-        restoreState();
-    }
-    
-    private void createOperationsListPanel( Composite parent) {
-    	Composite panel = WidgetFactory.createPanel(parent);
-    	
-        GridLayout layout = new GridLayout(1, false);
-        panel.setLayout(layout);
+		createTabbedDetailsPanel(splitter);
 
-        // --------------------------
-        // Group for checkbox tree
-        // --------------------------
-        Group operationsGroup = WidgetFactory.createGroup(panel, Messages.Operations, GridData.FILL_BOTH, 1, 1);
+		splitter.setWeights(new int[] { 30, 70 });
 
-        // ----------------------------
-        // TreeViewer
-        // ----------------------------
-        this.treeViewer = WidgetFactory.createTreeViewer(operationsGroup, SWT.SINGLE , GridData.FILL_BOTH);
+		restoreState();
+	}
 
-        this.tree = this.treeViewer.getTree();
+	private void createOperationsListPanel(Composite parent) {
+		Composite panel = WidgetFactory.createPanel(parent);
 
-        tree.setLayoutData(new GridData(GridData.FILL_BOTH));
-        OperationsListProvider provider = new OperationsListProvider();
-        this.treeViewer.setContentProvider(provider);
-        this.treeViewer.setLabelProvider(provider);
+		GridLayout layout = new GridLayout(1, false);
+		panel.setLayout(layout);
 
-        this.treeViewer.setInput(null);
-        
-        this.treeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
-			
-			@Override
-			public void selectionChanged(SelectionChangedEvent event) {
-				updateForTreeSelection();
-			}
-		});
-        
-        // --------------------------
-        // Group for checkbox tree
-        // --------------------------
-        Group optionsGroup = WidgetFactory.createGroup(panel, Messages.Options, GridData.FILL_BOTH, 1, 2);
-        
-        this.generateWrapperProcedure = WidgetFactory.createCheckBox(optionsGroup, Messages.GenerateWrapperProcedure);
-        this.generateWrapperProcedure.addSelectionListener(new SelectionListener() {
-			
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				procedureGenerator.setGenerateWrapperProcedure(generateWrapperProcedure.getSelection());
-			}
-			
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
-			}
-		});
-        
-        
-    }
-    
-    private void updateForTreeSelection() {
-		TreeSelection selection = (TreeSelection)this.treeViewer.getSelection();
-		if( selection != null && !selection.isEmpty() ) {
-			Operation operation = (Operation)selection.getFirstElement();
+		// --------------------------
+		// Group for checkbox tree
+		// --------------------------
+		Group operationsGroup = WidgetFactory.createGroup(panel,
+				Messages.Operations, GridData.FILL_BOTH, 1, 1);
+
+		// ----------------------------
+		// TreeViewer
+		// ----------------------------
+		this.treeViewer = WidgetFactory.createTreeViewer(operationsGroup,
+				SWT.SINGLE, GridData.FILL_BOTH);
+
+		this.tree = this.treeViewer.getTree();
+
+		tree.setLayoutData(new GridData(GridData.FILL_BOTH));
+		OperationsListProvider provider = new OperationsListProvider();
+		this.treeViewer.setContentProvider(provider);
+		this.treeViewer.setLabelProvider(provider);
+
+		this.treeViewer.setInput(null);
+
+		this.treeViewer
+				.addSelectionChangedListener(new ISelectionChangedListener() {
+
+					@Override
+					public void selectionChanged(SelectionChangedEvent event) {
+						updateForTreeSelection();
+					}
+				});
+
+		// --------------------------
+		// Group for checkbox tree
+		// --------------------------
+		Group optionsGroup = WidgetFactory.createGroup(panel, Messages.Options,
+				GridData.FILL_BOTH, 1, 2);
+
+		this.generateWrapperProcedure = WidgetFactory.createCheckBox(
+				optionsGroup, Messages.GenerateWrapperProcedure);
+		this.generateWrapperProcedure
+				.addSelectionListener(new SelectionListener() {
+
+					@Override
+					public void widgetSelected(SelectionEvent e) {
+						procedureGenerator
+								.setGenerateWrapperProcedure(generateWrapperProcedure
+										.getSelection());
+					}
+
+					@Override
+					public void widgetDefaultSelected(SelectionEvent e) {
+					}
+				});
+
+	}
+
+	private void updateForTreeSelection() {
+		TreeSelection selection = (TreeSelection) this.treeViewer
+				.getSelection();
+		if (selection != null && !selection.isEmpty()) {
+			Operation operation = (Operation) selection.getFirstElement();
 			notifyOperationChanged(operation);
 		}
-    }
-    
-    private void createTabbedDetailsPanel( Composite parent) {
-        tabFolder = new TabFolder(parent, SWT.TOP | SWT.BORDER);
-        tabFolder.setLayoutData(new GridData(GridData.FILL_BOTH));
+	}
 
-        createRequestTab(tabFolder);
-        createResponseTab(tabFolder);
-    }
-    
-    private void createRequestTab(TabFolder tabFolder) {
-    	Composite panel = WidgetFactory.createPanel(tabFolder);
-        this.requestTab = new TabItem(tabFolder, SWT.NONE);
-        this.requestTab.setControl(panel);
-        this.requestTab.setText(Messages.Request);
+	private void createTabbedDetailsPanel(Composite parent) {
+		tabFolder = new TabFolder(parent, SWT.TOP | SWT.BORDER);
+		tabFolder.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-        panel.setLayout(new GridLayout(2, false));
-        
-        
+		createRequestTab(tabFolder);
+		createResponseTab(tabFolder);
+	}
+
+	private void createRequestTab(TabFolder tabFolder) {
+		Composite panel = WidgetFactory.createPanel(tabFolder);
+		this.requestTab = new TabItem(tabFolder, SWT.NONE);
+		this.requestTab.setControl(panel);
+		this.requestTab.setText(Messages.Request);
+
+		panel.setLayout(new GridLayout(2, false));
+
 		Label selectedOperationLabel = new Label(panel, SWT.NONE);
 		selectedOperationLabel.setText(Messages.SelectedOperation);
-		
-        selectedRequestOperationText = new Text(panel, SWT.BORDER | SWT.SINGLE);
-        selectedRequestOperationText.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
-        selectedRequestOperationText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
-        selectedRequestOperationText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-        selectedRequestOperationText.setEditable(false);
-        
+
+		selectedRequestOperationText = new Text(panel, SWT.BORDER | SWT.SINGLE);
+		selectedRequestOperationText.setBackground(Display.getCurrent()
+				.getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
+		selectedRequestOperationText.setForeground(Display.getCurrent()
+				.getSystemColor(SWT.COLOR_DARK_BLUE));
+		selectedRequestOperationText.setLayoutData(new GridData(
+				GridData.FILL_HORIZONTAL));
+		selectedRequestOperationText.setEditable(false);
+
 		Label procedureNameLabel = new Label(panel, SWT.NONE);
 		procedureNameLabel.setText(Messages.GeneratedProcedureName);
-		
+
 		requestProcedureNameText = new Text(panel, SWT.BORDER | SWT.SINGLE);
-		requestProcedureNameText.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
-		requestProcedureNameText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
-		requestProcedureNameText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		requestProcedureNameText.setBackground(Display.getCurrent()
+				.getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
+		requestProcedureNameText.setForeground(Display.getCurrent()
+				.getSystemColor(SWT.COLOR_DARK_BLUE));
+		requestProcedureNameText.setLayoutData(new GridData(
+				GridData.FILL_HORIZONTAL));
 		requestProcedureNameText.setEditable(false);
-        
-        
-        createRequestSchemaContentsGroup(panel);
-        createRequestElementsInfoGroup(panel);
-        createRequestSqlGroup(panel);
-    }
-    
-    private void createRequestSchemaContentsGroup(Composite parent) {
-    	Group schemaContentsGroup = WidgetFactory.createGroup(parent, "Schema Contents", SWT.NONE, 2, 4); //$NON-NLS-1$
-    	schemaContentsGroup.setLayout(new GridLayout(4, false));
-    	GridData gd = new GridData(GridData.FILL_BOTH);
-    	gd.horizontalSpan = 2;
-    	gd.heightHint = 140;
-    	schemaContentsGroup.setLayoutData(gd);
-		
-    	this.requestXmlTreeViewer = new TreeViewer(schemaContentsGroup);
-        semanticAdapterFactory = new XSDSemanticItemProviderAdapterFactory();
-        this.requestXmlTreeViewer.setContentProvider(new AdapterFactoryContentProvider(semanticAdapterFactory));
-        this.requestXmlTreeViewer.setLabelProvider(new AdapterFactoryLabelProvider(semanticAdapterFactory));
-        this.requestXmlTreeViewer.setAutoExpandLevel(2);
-        GridData data = new GridData(GridData.FILL_BOTH);
-        data.horizontalSpan=4;
-        this.requestXmlTreeViewer.getControl().setLayoutData(data);
-        this.requestXmlTreeViewer.addFilter(new ViewerFilter() {
-            @Override
-            public boolean select( Viewer viewer,
-                                   Object parentElement,
-                                   Object element ) {
-                // filter built-ins if needed:
-                if (!(parentElement instanceof EObject) && element instanceof XSDSimpleTypeDefinition) {
-                    // parent is not an EObject, and kid is a STD; need to filter out built-ins.
-                    XSDSimpleTypeDefinition std = (XSDSimpleTypeDefinition)element;
-                    return std.getSchema() == xsdSchema;
-                } // endif
 
-                return true;
-            }
-        });
-        this.requestXmlTreeViewer.setInput(null);
-        
-     // Add a Context Menu
-        final MenuManager columnMenuManager = new MenuManager();
-        this.requestXmlTreeViewer.getControl().setMenu(columnMenuManager.createContextMenu(parent));
-        this.requestXmlTreeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
-            /**
-             * {@inheritDoc}
-             * 
-             * @see oblafond@redhat.comrg.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
-             */
-            @Override
-            public void selectionChanged( final SelectionChangedEvent event ) {
-            	columnMenuManager.removeAll();
-                IStructuredSelection sel = (IStructuredSelection)requestXmlTreeViewer.getSelection();
-                if (sel.size() == 1) {
-                	requestAddElementButton.setEnabled(true);
-					columnMenuManager.add(requestCreateElementAction);
-					columnMenuManager.add(requestSetRootPathAction);
-                } else {
-                	requestAddElementButton.setEnabled(false);
-                }
+		createRequestSchemaContentsGroup(panel);
+		createRequestElementsInfoGroup(panel);
+		createRequestSqlGroup(panel);
+	}
 
-            }
-        });
-        
-        this.requestXmlTreeViewer.addTreeListener(new ITreeViewerListener() {
-			
+	private void createRequestSchemaContentsGroup(Composite parent) {
+		Group schemaContentsGroup = WidgetFactory.createGroup(parent,
+				"Schema Contents", SWT.NONE, 2, 4); //$NON-NLS-1$
+		schemaContentsGroup.setLayout(new GridLayout(4, false));
+		GridData gd = new GridData(GridData.FILL_BOTH);
+		gd.horizontalSpan = 2;
+		gd.heightHint = 140;
+		schemaContentsGroup.setLayoutData(gd);
+
+		this.requestXmlTreeViewer = new TreeViewer(schemaContentsGroup);
+		semanticAdapterFactory = new XSDSemanticItemProviderAdapterFactory();
+		this.requestXmlTreeViewer
+				.setContentProvider(new AdapterFactoryContentProvider(
+						semanticAdapterFactory));
+		this.requestXmlTreeViewer
+				.setLabelProvider(new AdapterFactoryLabelProvider(
+						semanticAdapterFactory));
+		this.requestXmlTreeViewer.setAutoExpandLevel(2);
+		GridData data = new GridData(GridData.FILL_BOTH);
+		data.horizontalSpan = 4;
+		this.requestXmlTreeViewer.getControl().setLayoutData(data);
+		this.requestXmlTreeViewer.addFilter(new ViewerFilter() {
+			@Override
+			public boolean select(Viewer viewer, Object parentElement,
+					Object element) {
+				// filter built-ins if needed:
+				if (!(parentElement instanceof EObject)
+						&& element instanceof XSDSimpleTypeDefinition) {
+					// parent is not an EObject, and kid is a STD; need to
+					// filter out built-ins.
+					XSDSimpleTypeDefinition std = (XSDSimpleTypeDefinition) element;
+					return std.getSchema() == xsdSchema;
+				} // endif
+
+				return true;
+			}
+		});
+		this.requestXmlTreeViewer.setInput(null);
+
+		// Add a Context Menu
+		final MenuManager columnMenuManager = new MenuManager();
+		this.requestXmlTreeViewer.getControl().setMenu(
+				columnMenuManager.createContextMenu(parent));
+		this.requestXmlTreeViewer
+				.addSelectionChangedListener(new ISelectionChangedListener() {
+					/**
+					 * {@inheritDoc}
+					 * 
+					 * @see oblafond@redhat.comrg.eclipse.jface.viewers.
+					 *      ISelectionChangedListener
+					 *      #selectionChanged(org.eclipse
+					 *      .jface.viewers.SelectionChangedEvent)
+					 */
+					@Override
+					public void selectionChanged(
+							final SelectionChangedEvent event) {
+						columnMenuManager.removeAll();
+						IStructuredSelection sel = (IStructuredSelection) requestXmlTreeViewer
+								.getSelection();
+						if (sel.size() == 1 && sel.getFirstElement() instanceof XSDParticleImpl) {
+							requestAddElementButton.setEnabled(true);
+							columnMenuManager.add(requestCreateElementAction);
+							columnMenuManager.add(requestSetRootPathAction);
+						} else {
+							requestAddElementButton.setEnabled(false);
+						}
+
+					}
+				});
+
+		this.requestXmlTreeViewer.addTreeListener(new ITreeViewerListener() {
+
 			@Override
 			public void treeExpanded(TreeExpansionEvent e) {
-                IStructuredSelection sel = (IStructuredSelection)requestXmlTreeViewer.getSelection();
-                requestAddElementButton.setEnabled(sel.size() == 1);
+				IStructuredSelection sel = (IStructuredSelection) requestXmlTreeViewer
+						.getSelection();
+				requestAddElementButton.setEnabled(sel.size() == 1);
 			}
-			
+
 			@Override
 			public void treeCollapsed(TreeExpansionEvent e) {
-                IStructuredSelection sel = (IStructuredSelection)requestXmlTreeViewer.getSelection();
-                requestAddElementButton.setEnabled(sel.size() == 1);
+				IStructuredSelection sel = (IStructuredSelection) requestXmlTreeViewer
+						.getSelection();
+				requestAddElementButton.setEnabled(sel.size() == 1);
 			}
-		} );
-        
-        this.requestCreateElementAction = new Action(Messages.AddAsNewElement) {
-            @Override
-            public void run() {
-            	createRequestColumn();
-            }
+		});
+
+		this.requestCreateElementAction = new Action(Messages.AddAsNewElement) {
+			@Override
+			public void run() {
+				createRequestColumn();
+			}
 		};
-		
-        this.requestSetRootPathAction = new Action(Messages.SetAsRootPath) {
-            @Override
-            public void run() {
-            	setRequestRootPath();
-            }
+
+		this.requestSetRootPathAction = new Action(Messages.SetAsRootPath) {
+			@Override
+			public void run() {
+				setRequestRootPath();
+			}
 		};
-		
+
 		requestAddElementButton = new Button(schemaContentsGroup, SWT.PUSH);
 		requestAddElementButton.setText(Messages.AddSelectionAsNewElement);
-    	gd = new GridData();
-    	gd.horizontalSpan = 1;
-    	requestAddElementButton.setLayoutData(gd);
-    	requestAddElementButton.addSelectionListener(new SelectionAdapter() {
+		gd = new GridData();
+		gd.horizontalSpan = 1;
+		requestAddElementButton.setLayoutData(gd);
+		requestAddElementButton.addSelectionListener(new SelectionAdapter() {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				IStructuredSelection sel = (IStructuredSelection)requestXmlTreeViewer.getSelection();
-		    	Object obj = sel.getFirstElement();
-		    	// TODO:
-		    	if( obj instanceof XSDElementDeclaration ) {
-		    		createRequestColumn();
-		    	} else {
-//					String newName = "column_" + (fileInfo.getColumnInfoList().length + 1); //$NON-NLS-1$
-//					fileInfo.addColumn(newName, false, TeiidColumnInfo.DEFAULT_DATATYPE, null, null);
-		    	}
-				//handleInfoChanged(false);
+				IStructuredSelection sel = (IStructuredSelection) requestXmlTreeViewer
+						.getSelection();
+				Object obj = sel.getFirstElement();
+				// TODO:
+				if (obj instanceof XSDParticleImpl) {
+					createRequestColumn();
+				} else {
+					String newName = "column_" + (getProcedureGenerator().getRequestInfo().getColumnInfoList().length + 1); //$NON-NLS-1$
+					getProcedureGenerator().getRequestInfo().addColumn(newName, false,
+					null, null, null);
+				}
+				 notifyColumnDataChanged();
 			}
-    		
-		});
-    	requestAddElementButton.setEnabled(false);
-    }
-    
-    private void createRequestElementsInfoGroup(Composite parent) {
-    	requestElementsInfoPanel = new ElementsInfoPanel(parent, SWT.NONE, REQUEST, this);
-    }
-    
-    private void createRequestSqlGroup(Composite parent) {
-    	Group group = WidgetFactory.createGroup(parent, Messages.GeneratedSQLStatement, SWT.NONE, 2);
-    	group.setLayout(new GridLayout(1, false));
-    	GridData gd = new GridData(GridData.FILL_BOTH);
-    	gd.horizontalSpan = 2;
-    	group.setLayoutData(gd);
-    	
-    	ColorManager colorManager = new ColorManager();
-        int styles = SWT.V_SCROLL | SWT.MULTI | SWT.BORDER | SWT.WRAP | SWT.FULL_SELECTION;
 
-        requestSqlTextViewer = new SqlTextViewer(group, new VerticalRuler(0), styles, colorManager);
-        requestSqlDocument = new Document();
-        requestSqlTextViewer.setInput(requestSqlDocument);
-        requestSqlTextViewer.setEditable(false);
-        requestSqlTextViewer.getTextWidget().setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
-        requestSqlDocument.set(CoreStringUtil.Constants.EMPTY_STRING);
-        requestSqlTextViewer.getControl().setLayoutData(new GridData(GridData.FILL_BOTH));
-    }
-    
-    private void createResponseTab(TabFolder tabFolder) {
-    	Composite panel = WidgetFactory.createPanel(tabFolder);
-        this.responseTab = new TabItem(tabFolder, SWT.NONE);
-        this.responseTab.setControl(panel);
-        this.responseTab.setText(Messages.Response);
-        
-        panel.setLayout(new GridLayout(2, false));
-        
+		});
+		requestAddElementButton.setEnabled(false);
+	}
+
+	private void createRequestElementsInfoGroup(Composite parent) {
+		requestElementsInfoPanel = new ElementsInfoPanel(parent, SWT.NONE,
+				REQUEST, this);
+	}
+
+	private void createRequestSqlGroup(Composite parent) {
+		Group group = WidgetFactory.createGroup(parent,
+				Messages.GeneratedSQLStatement, SWT.NONE, 2);
+		group.setLayout(new GridLayout(1, false));
+		GridData gd = new GridData(GridData.FILL_BOTH);
+		gd.horizontalSpan = 2;
+		group.setLayoutData(gd);
+
+		ColorManager colorManager = new ColorManager();
+		int styles = SWT.V_SCROLL | SWT.MULTI | SWT.BORDER | SWT.WRAP
+				| SWT.FULL_SELECTION;
+
+		requestSqlTextViewer = new SqlTextViewer(group, new VerticalRuler(0),
+				styles, colorManager);
+		requestSqlDocument = new Document();
+		requestSqlTextViewer.setInput(requestSqlDocument);
+		requestSqlTextViewer.setEditable(false);
+		requestSqlTextViewer.getTextWidget().setBackground(
+				Display.getCurrent().getSystemColor(
+						SWT.COLOR_WIDGET_LIGHT_SHADOW));
+		requestSqlDocument.set(CoreStringUtil.Constants.EMPTY_STRING);
+		requestSqlTextViewer.getControl().setLayoutData(
+				new GridData(GridData.FILL_BOTH));
+	}
+
+	private void createResponseTab(TabFolder tabFolder) {
+		Composite panel = WidgetFactory.createPanel(tabFolder);
+		this.responseTab = new TabItem(tabFolder, SWT.NONE);
+		this.responseTab.setControl(panel);
+		this.responseTab.setText(Messages.Response);
+
+		panel.setLayout(new GridLayout(2, false));
+
 		Label selectedOperationLabel = new Label(panel, SWT.NONE);
 		selectedOperationLabel.setText(Messages.SelectedOperation);
-		
-        selectedResponseOperationText = new Text(panel, SWT.BORDER | SWT.SINGLE);
-        selectedResponseOperationText.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
-        selectedResponseOperationText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
-        selectedResponseOperationText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-        selectedResponseOperationText.setEditable(false);
-        
+
+		selectedResponseOperationText = new Text(panel, SWT.BORDER | SWT.SINGLE);
+		selectedResponseOperationText.setBackground(Display.getCurrent()
+				.getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
+		selectedResponseOperationText.setForeground(Display.getCurrent()
+				.getSystemColor(SWT.COLOR_DARK_BLUE));
+		selectedResponseOperationText.setLayoutData(new GridData(
+				GridData.FILL_HORIZONTAL));
+		selectedResponseOperationText.setEditable(false);
+
 		Label procedureNameLabel = new Label(panel, SWT.NONE);
 		procedureNameLabel.setText(Messages.GeneratedProcedureName);
-		
+
 		responseProcedureNameText = new Text(panel, SWT.BORDER | SWT.SINGLE);
-		responseProcedureNameText.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
-		responseProcedureNameText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
-		responseProcedureNameText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		responseProcedureNameText.setBackground(Display.getCurrent()
+				.getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
+		responseProcedureNameText.setForeground(Display.getCurrent()
+				.getSystemColor(SWT.COLOR_DARK_BLUE));
+		responseProcedureNameText.setLayoutData(new GridData(
+				GridData.FILL_HORIZONTAL));
 		responseProcedureNameText.setEditable(false);
-        
-        createResponseSchemaContentsGroup(panel);
-        createResponseColumnInfoGroup(panel);
-        createResponseSqlGroup(panel);
-    }
-    
-    private void createResponseSchemaContentsGroup(Composite parent) {
-    	Group schemaContentsGroup = WidgetFactory.createGroup(parent, "Schema Contents", SWT.NONE, 2, 4); //$NON-NLS-1$
-    	schemaContentsGroup.setLayout(new GridLayout(4, false));
-    	GridData gd = new GridData(GridData.FILL_BOTH);
-    	gd.heightHint = 140;
-    	gd.horizontalSpan = 2;
-    	schemaContentsGroup.setLayoutData(gd);
-		
-    	
-    	this.responseXmlTreeViewer = new TreeViewer(schemaContentsGroup, SWT.BORDER | SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL);
-        GridData data = new GridData(GridData.FILL_BOTH);
-        data.horizontalSpan=4;
-        this.responseXmlTreeViewer.getControl().setLayoutData(data);
-        this.responseXmlTreeViewer.setContentProvider(new AbstractTreeContentProvider() {
-        	
-            @Override
-            public Object[] getChildren( Object element ) {
-                return getNodeChildren(element);
-            }
 
-            public Object getParent( Object element ) {
-                return getNodeParent(element);
-            }
+		createResponseSchemaContentsGroup(panel);
+		createResponseColumnInfoGroup(panel);
+		createResponseSqlGroup(panel);
+	}
 
-            @Override
-            public boolean hasChildren( Object element ) {
-                return getNodeHasChildren(element);
-            }
+	private void createResponseSchemaContentsGroup(Composite parent) {
+		Group schemaContentsGroup = WidgetFactory.createGroup(parent,
+				"Schema Contents", SWT.NONE, 2, 4); //$NON-NLS-1$
+		schemaContentsGroup.setLayout(new GridLayout(4, false));
+		GridData gd = new GridData(GridData.FILL_BOTH);
+		gd.heightHint = 140;
+		gd.horizontalSpan = 2;
+		schemaContentsGroup.setLayoutData(gd);
 
-        });
-    	
-        this.responseXmlTreeViewer.setLabelProvider(new LabelProvider() {
+		responseXmlTreeViewer = new TreeViewer(schemaContentsGroup);
+		semanticAdapterFactory = new XSDSemanticItemProviderAdapterFactory();
+		this.responseXmlTreeViewer
+				.setContentProvider(new AdapterFactoryContentProvider(
+						semanticAdapterFactory));
+		this.responseXmlTreeViewer
+				.setLabelProvider(new AdapterFactoryLabelProvider(
+						semanticAdapterFactory));
+		this.responseXmlTreeViewer.setAutoExpandLevel(2);
+		GridData data = new GridData(GridData.FILL_BOTH);
+		data.horizontalSpan = 4;
+		this.responseXmlTreeViewer.getControl().setLayoutData(data);
+		this.responseXmlTreeViewer.addFilter(new ViewerFilter() {
+			@Override
+			public boolean select(Viewer viewer, Object parentElement,
+					Object element) {
+				// filter built-ins if needed:
+				if (!(parentElement instanceof EObject)
+						&& element instanceof XSDSimpleTypeDefinition) {
+					// parent is not an EObject, and kid is a STD; need to
+					// filter out built-ins.
+					XSDSimpleTypeDefinition std = (XSDSimpleTypeDefinition) element;
+					return std.getSchema() == xsdSchema;
+				} // endif
 
-            @Override
-            public Image getImage( Object element ) {
-                return getNodeImage(element);
-            }
+				return true;
+			}
+		});
+		this.responseXmlTreeViewer.setInput(null);
 
-            @Override
-            public String getText( Object element ) {
-                return getNodeName(element);
-            }
-        });
-        
-         // Add a Context Menu
-        final MenuManager columnMenuManager = new MenuManager();
-        this.responseXmlTreeViewer.getControl().setMenu(columnMenuManager.createContextMenu(parent));
-        this.responseXmlTreeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
-            /**
-             * {@inheritDoc}
-             * 
-             * @see oblafond@redhat.comrg.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
-             */
-            @Override
-            public void selectionChanged( final SelectionChangedEvent event ) {
-            	columnMenuManager.removeAll();
-                IStructuredSelection sel = (IStructuredSelection)responseXmlTreeViewer.getSelection();
-                if (sel.size() == 1) {
-                	responseAddColumnButton.setEnabled(true);
-					columnMenuManager.add(responseCreateColumnAction);
-					columnMenuManager.add(responseSetRootPathAction);
-                } else {
-                	responseAddColumnButton.setEnabled(false);
-                }
+		// Add a Context Menu
+		final MenuManager columnMenuManager = new MenuManager();
+		this.responseXmlTreeViewer.getControl().setMenu(
+				columnMenuManager.createContextMenu(parent));
+		this.responseXmlTreeViewer
+				.addSelectionChangedListener(new ISelectionChangedListener() {
+					/**
+					 * {@inheritDoc}
+					 * 
+					 * @see oblafond@redhat.comrg.eclipse.jface.viewers.
+					 *      ISelectionChangedListener
+					 *      #selectionChanged(org.eclipse
+					 *      .jface.viewers.SelectionChangedEvent)
+					 */
+					@Override
+					public void selectionChanged(
+							final SelectionChangedEvent event) {
+						columnMenuManager.removeAll();
+						IStructuredSelection sel = (IStructuredSelection) responseXmlTreeViewer
+								.getSelection();
+						if (sel.size() == 1 && sel.getFirstElement() instanceof XSDParticleImpl) {
+							responseAddElementButton.setEnabled(true);
+							columnMenuManager.add(responseCreateElementAction);
+							columnMenuManager.add(requestSetRootPathAction);
+						} else {
+							responseAddElementButton.setEnabled(false);
+						}
 
-            }
-        });
-        
-        this.responseXmlTreeViewer.addTreeListener(new ITreeViewerListener() {
-			
+					}
+				});
+
+		this.responseXmlTreeViewer.addTreeListener(new ITreeViewerListener() {
+
 			@Override
 			public void treeExpanded(TreeExpansionEvent e) {
-                IStructuredSelection sel = (IStructuredSelection)responseXmlTreeViewer.getSelection();
-                responseAddColumnButton.setEnabled(sel.size() == 1);
+				IStructuredSelection sel = (IStructuredSelection) responseXmlTreeViewer
+						.getSelection();
+				responseAddElementButton.setEnabled(sel.size() == 1);
 			}
-			
+
 			@Override
 			public void treeCollapsed(TreeExpansionEvent e) {
-                IStructuredSelection sel = (IStructuredSelection)responseXmlTreeViewer.getSelection();
-                responseAddColumnButton.setEnabled(sel.size() == 1);
+				IStructuredSelection sel = (IStructuredSelection) responseXmlTreeViewer
+						.getSelection();
+				responseAddElementButton.setEnabled(sel.size() == 1);
 			}
-		} );
-        
-        this.responseCreateColumnAction = new Action(Messages.AddAsNewColumn) {
-            @Override
-            public void run() {
-            	createResponseColumn();
-            }
+		});
+
+		this.responseCreateElementAction = new Action(Messages.AddAsNewElement) {
+			@Override
+			public void run() {
+				createResponseColumn();
+			}
 		};
-		
-        this.responseSetRootPathAction = new Action(Messages.SetAsRootPath) {
-            @Override
-            public void run() {
-            	setResponseRootPath();
-            }
+
+		this.responseSetRootPathAction = new Action(Messages.SetAsRootPath) {
+			@Override
+			public void run() {
+				setRequestRootPath();
+			}
 		};
-		
-		responseAddColumnButton = new Button(schemaContentsGroup, SWT.PUSH);
-		responseAddColumnButton.setText(Messages.AddSelectionAsNewColumn);
-    	gd = new GridData();
-    	gd.horizontalSpan = 1;
-    	responseAddColumnButton.setLayoutData(gd);
-    	responseAddColumnButton.addSelectionListener(new SelectionAdapter() {
+
+		responseAddElementButton = new Button(schemaContentsGroup, SWT.PUSH);
+		responseAddElementButton.setText(Messages.AddSelectionAsNewElement);
+		gd = new GridData();
+		gd.horizontalSpan = 1;
+		responseAddElementButton.setLayoutData(gd);
+		responseAddElementButton.addSelectionListener(new SelectionAdapter() {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				IStructuredSelection sel = (IStructuredSelection)requestXmlTreeViewer.getSelection();
-		    	Object obj = sel.getFirstElement();
-		    	// TODO:
-//		    	if( obj instanceof XmlElement ) {
-//		    		createRequestColumn();
-//		    	} else {
-//					String newName = "column_" + (fileInfo.getColumnInfoList().length + 1); //$NON-NLS-1$
-//					fileInfo.addColumn(newName, false, TeiidColumnInfo.DEFAULT_DATATYPE, null, null);
-//		    	}
-//				handleInfoChanged(false);
+				IStructuredSelection sel = (IStructuredSelection) responseXmlTreeViewer
+						.getSelection();
+				Object obj = sel.getFirstElement();
+				// TODO:
+				if (obj instanceof XSDParticleImpl) {
+					createResponseColumn();
+				} else {
+					String newName = "column_" + (getProcedureGenerator().getRequestInfo().getColumnInfoList().length + 1); //$NON-NLS-1$
+					getProcedureGenerator().getRequestInfo().addColumn(newName, false,
+					null, null, null);
+				}
+				 notifyColumnDataChanged();
 			}
-    		
-		});
-    	responseAddColumnButton.setEnabled(false);
-    }
-    
-    private void createResponseColumnInfoGroup(Composite parent) {
-    	responseColumnsInfoPanel = new ColumnsInfoPanel(parent, SWT.NONE, RESPONSE, this);
-    }
-    
-    private void createResponseSqlGroup(Composite parent) {
-    	Group group = WidgetFactory.createGroup(parent, Messages.GeneratedSQLStatement, SWT.NONE, 2);
-    	group.setLayout(new GridLayout(1, false));
-    	GridData gd = new GridData(GridData.FILL_BOTH);
-    	gd.horizontalSpan = 2;
-    	group.setLayoutData(gd);
-    	
-    	ColorManager colorManager = new ColorManager();
-        int styles = SWT.V_SCROLL | SWT.MULTI | SWT.BORDER | SWT.WRAP | SWT.FULL_SELECTION;
 
-        responseSqlTextViewer = new SqlTextViewer(group, new VerticalRuler(0), styles, colorManager);
-        responseSqlDocument = new Document();
-        responseSqlTextViewer.setInput(responseSqlDocument);
-        responseSqlTextViewer.setEditable(false);
-        responseSqlTextViewer.getTextWidget().setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
-        responseSqlDocument.set(CoreStringUtil.Constants.EMPTY_STRING);
-        responseSqlTextViewer.getControl().setLayoutData(new GridData(GridData.FILL_BOTH));
-    }
-    
-    void updateSqlText(int type) {
-    	if( this.procedureGenerator != null ) {
-    		if( type == REQUEST ) {
-    			requestSqlTextViewer.getDocument().set(this.procedureGenerator.getRequestInfo().getSqlString(new Properties()));
-    		} else if( type == RESPONSE ) {
-    			responseSqlTextViewer.getDocument().set(this.procedureGenerator.getResponseInfo().getSqlString(new Properties()));
-    		} else if( type == BOTH ) {
-    			requestSqlTextViewer.getDocument().set(this.procedureGenerator.getRequestInfo().getSqlString(new Properties()));
-    			responseSqlTextViewer.getDocument().set(this.procedureGenerator.getResponseInfo().getSqlString(new Properties()));
-    		}
-    	}
-    }
-    
-    void updateSchemaTree(int type) {
-		if( type == REQUEST || type == BOTH ) {
-			requestXmlTreeViewer.setInput(getSchemaForSelectedOperation(type));
-		
-		} else if( type == RESPONSE || type == BOTH ) {
-			responseSqlTextViewer.getDocument().set(this.procedureGenerator.getResponseInfo().getSqlString(new Properties()));
+		});
+		responseAddElementButton.setEnabled(false);
+	}
+
+	private void createResponseColumnInfoGroup(Composite parent) {
+		responseElementsInfoPanel = new ColumnsInfoPanel(parent, SWT.NONE,
+				RESPONSE, this);
+	}
+
+	private void createResponseSqlGroup(Composite parent) {
+		Group group = WidgetFactory.createGroup(parent,
+				Messages.GeneratedSQLStatement, SWT.NONE, 2);
+		group.setLayout(new GridLayout(1, false));
+		GridData gd = new GridData(GridData.FILL_BOTH);
+		gd.horizontalSpan = 2;
+		group.setLayoutData(gd);
+
+		ColorManager colorManager = new ColorManager();
+		int styles = SWT.V_SCROLL | SWT.MULTI | SWT.BORDER | SWT.WRAP
+				| SWT.FULL_SELECTION;
+
+		responseSqlTextViewer = new SqlTextViewer(group, new VerticalRuler(0),
+				styles, colorManager);
+		responseSqlDocument = new Document();
+		responseSqlTextViewer.setInput(responseSqlDocument);
+		responseSqlTextViewer.setEditable(false);
+		responseSqlTextViewer.getTextWidget().setBackground(
+				Display.getCurrent().getSystemColor(
+						SWT.COLOR_WIDGET_LIGHT_SHADOW));
+		responseSqlDocument.set(CoreStringUtil.Constants.EMPTY_STRING);
+		responseSqlTextViewer.getControl().setLayoutData(
+				new GridData(GridData.FILL_BOTH));
+	}
+
+	void updateSqlText(int type) {
+		if (this.procedureGenerator != null) {
+			if (type == REQUEST) {
+				requestSqlTextViewer.getDocument().set(
+						this.procedureGenerator.getRequestInfo().getSqlString(
+								new Properties()));
+			} else if (type == RESPONSE) {
+				responseSqlTextViewer.getDocument().set(
+						this.procedureGenerator.getResponseInfo().getSqlString(
+								new Properties()));
+			} else if (type == BOTH) {
+				requestSqlTextViewer.getDocument().set(
+						this.procedureGenerator.getRequestInfo().getSqlString(
+								new Properties()));
+				responseSqlTextViewer.getDocument().set(
+						this.procedureGenerator.getResponseInfo().getSqlString(
+								new Properties()));
+			}
 		}
-    }
-    
-    /**
-     * @return
-     */
-    public XSDElementDeclaration getSchemaForSelectedOperation(final int type) {
-    	
-    	Model wsdlModel = null;
-    	XSDElementDeclaration elementDeclaration = null;
-    	
-    	try {
-    		wsdlModel = importManager.getWSDLModel();
+	}
+
+	void updateSchemaTree(int type) {
+		if (type == REQUEST) {
+			requestXmlTreeViewer.setInput(getSchemaForSelectedOperation(type));
+		} else if (type == RESPONSE) {
+			responseXmlTreeViewer.setInput(getSchemaForSelectedOperation(type));
+		} else {
+			requestXmlTreeViewer.setInput(getSchemaForSelectedOperation(REQUEST));
+			responseXmlTreeViewer.setInput(getSchemaForSelectedOperation(RESPONSE));
+		}
+	}
+
+	/**
+	 * @return
+	 */
+	public XSDTypeDefinition getSchemaForSelectedOperation(final int type) {
+
+		Model wsdlModel = null;
+		XSDTypeDefinition elementDeclaration = null;
+
+		try {
+			wsdlModel = importManager.getWSDLModel();
 		} catch (ModelGenerationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-    	
-    	XSDSchema[] schemas = wsdlModel.getSchemas();
-    	
-    	Operation selectedOperation = procedureGenerator.getOperation();
-    	
-    	String partElementName = selectedOperation.getInputMessage().getParts()[0].getElementName();
-    	
-    	for (XSDSchema schema: schemas){
-    		xsdSchema = schema;
-    		EList<XSDElementDeclaration> elements = schema.getElementDeclarations();
-    		for (XSDElementDeclaration element:elements){
-    			String elementName = element.getName();
-    			if (element.getName().equals(partElementName)){
-    				elementDeclaration = element;
-    			}
-    		}
-    	}
-    	
-        return elementDeclaration;
-    }
-    
-    /**
-     * @see org.eclipse.jface.dialogs.IDialogPage#dispose()
-     * @since 4.2
-     */
-    @Override
-    public void dispose() {
-        saveState();
-    }
 
-    /**
-     * Override to replace the NewModelWizard settings with the section devoted to the Web Service Model Wizard.
-     * 
-     * @see org.eclipse.jface.wizard.WizardPage#getDialogSettings()
-     * @since 4.2
-     */
-    @Override
-    protected IDialogSettings getDialogSettings() {
-        IDialogSettings settings = super.getDialogSettings();
+		XSDSchema[] schemas = wsdlModel.getSchemas();
 
-        if (settings != null) {
-            // get the right section of the NewModelWizard settings
-            IDialogSettings temp = settings.getSection(DIALOG_SETTINGS_SECTION);
+		Operation selectedOperation = procedureGenerator.getOperation();
+		String partElementName = null;
 
-            if (temp == null) {
-                settings = settings.addNewSection(DIALOG_SETTINGS_SECTION);
-            } else {
-                settings = temp;
-            }
-        }
+		if (type == REQUEST) {
+			partElementName = selectedOperation.getInputMessage().getParts()[0].getTypeName();
+			if (partElementName == null){
+				partElementName = selectedOperation.getInputMessage().getParts()[0].getElementName();
+			}
+		}else{
+			partElementName = selectedOperation.getOutputMessage().getParts()[0].getTypeName();
+			if (partElementName == null){
+				partElementName = selectedOperation.getOutputMessage().getParts()[0].getElementName();
+			}
+		}
 
-        return settings;
-    }
-    
-    /**
-     * Restores dialog size and position of the last time wizard ran.
-     * 
-     * @since 4.2
-     */
-    private void restoreState() {
-        IDialogSettings settings = getDialogSettings();
+		for (XSDSchema schema : schemas) {
+			xsdSchema = schema;
+			EList<XSDTypeDefinition> types = schema.getTypeDefinitions();
+			for (XSDTypeDefinition xsdType : types) {
+				String elementName = xsdType.getName();
+				if (xsdType.getName().equals(partElementName)) {
+					elementDeclaration = xsdType;
+					break;
+				}
+			}
+			
+			if (elementDeclaration == null) {
+				
+			EList<XSDElementDeclaration> elements = schema
+					.getElementDeclarations();
+			for (XSDElementDeclaration element : elements) {
+				String elementName = element.getName();
+				if (element.getName().equals(partElementName)) {
+					elementDeclaration = element.getTypeDefinition();
+					break;
+				}
+			}
+			}
+			
+		}
 
-        if (settings != null) {
-            Shell shell = getContainer().getShell();
+		return elementDeclaration;
+	}
 
-            if (shell != null) {
-                try {
-                    int x = settings.getInt(DIALOG_X);
-                    int y = settings.getInt(DIALOG_Y);
-                    int width = settings.getInt(DIALOG_WIDTH);
-                    int height = settings.getInt(DIALOG_HEIGHT);
-                    shell.setBounds(x, y, width, height);
-                } catch (NumberFormatException theException) {
-                    // getInt(String) throws exception if not found.
-                    // just means no settings exist yet.
-                }
-            }
-        }
-    }
+	/**
+	 * @see org.eclipse.jface.dialogs.IDialogPage#dispose()
+	 * @since 4.2
+	 */
+	@Override
+	public void dispose() {
+		saveState();
+	}
 
-    /**
-     * Persists dialog size and position.
-     * 
-     * @since 4.2
-     */
-    private void saveState() {
-        IDialogSettings settings = getDialogSettings();
+	/**
+	 * Override to replace the NewModelWizard settings with the section devoted
+	 * to the Web Service Model Wizard.
+	 * 
+	 * @see org.eclipse.jface.wizard.WizardPage#getDialogSettings()
+	 * @since 4.2
+	 */
+	@Override
+	protected IDialogSettings getDialogSettings() {
+		IDialogSettings settings = super.getDialogSettings();
 
-        if (settings != null) {
-            Shell shell = getContainer().getShell();
+		if (settings != null) {
+			// get the right section of the NewModelWizard settings
+			IDialogSettings temp = settings.getSection(DIALOG_SETTINGS_SECTION);
 
-            if (shell != null) {
-                Rectangle r = shell.getBounds();
-                settings.put(DIALOG_X, r.x);
-                settings.put(DIALOG_Y, r.y);
-                settings.put(DIALOG_WIDTH, r.width);
-                settings.put(DIALOG_HEIGHT, r.height);
-            }
-        }
-    }
+			if (temp == null) {
+				settings = settings.addNewSection(DIALOG_SETTINGS_SECTION);
+			} else {
+				settings = temp;
+			}
+		}
 
-    /**
-     * Sets the wizard page status message.
-     * 
-     * @since 4.2
-     */
-    void setPageStatus() {
-    	// TODO:
+		return settings;
+	}
 
-        WizardUtil.setPageComplete(this);
+	/**
+	 * Restores dialog size and position of the last time wizard ran.
+	 * 
+	 * @since 4.2
+	 */
+	private void restoreState() {
+		IDialogSettings settings = getDialogSettings();
 
-        getContainer().updateButtons();
-    }
+		if (settings != null) {
+			Shell shell = getContainer().getShell();
 
-    @Override
-    public void setVisible( boolean isVisible ) {
-        if (isVisible) {
-        	this.treeViewer.setInput(this.importManager.getSelectedOperations());
-            
-        	TreeItem firstItem = this.treeViewer.getTree().getItem(0);
-        	if( firstItem != null ) {
-        		this.treeViewer.getTree().select(firstItem);
-        		
-        		updateForTreeSelection();
-        	}
-            
-            setPageStatus();
-        }
-        super.setVisible(isVisible);
-    }
+			if (shell != null) {
+				try {
+					int x = settings.getInt(DIALOG_X);
+					int y = settings.getInt(DIALOG_Y);
+					int width = settings.getInt(DIALOG_WIDTH);
+					int height = settings.getInt(DIALOG_HEIGHT);
+					shell.setBounds(x, y, width, height);
+				} catch (NumberFormatException theException) {
+					// getInt(String) throws exception if not found.
+					// just means no settings exist yet.
+				}
+			}
+		}
+	}
 
-    Object[] getNodeChildren( Object element ) {
-    	return new Object[0];
-    }
+	/**
+	 * Persists dialog size and position.
+	 * 
+	 * @since 4.2
+	 */
+	private void saveState() {
+		IDialogSettings settings = getDialogSettings();
 
-    boolean getNodeHasChildren( Object element ) {
-    	return false;
-    }
-    Image getNodeImage( Object element ) {
-    	return null;
-    }
-    
-    String getNodeName( Object element ) {
-        return "<name>";
-    }
+		if (settings != null) {
+			Shell shell = getContainer().getShell();
 
-    Object getNodeParent( Object element ) {
-        return null;
-    }
-    
-    private void createRequestColumn() {
-    	// TODO:
-    }
-    
-    private void setRequestRootPath() {
-    	// TODO:
-    }
-    
-    private void createResponseColumn() {
-    	// TODO:
-    }
-    
-    private void setResponseRootPath() {
-    	// TODO:
-    }
-    
-    class OperationsListProvider extends LabelProvider implements ITreeContentProvider {
-    	private final Image OPERATION_ICON_IMG = ModelGeneratorWsdlUiUtil.getImage(Images.OPERATION_ICON);
-    	
-        public void dispose() {
-        }
+			if (shell != null) {
+				Rectangle r = shell.getBounds();
+				settings.put(DIALOG_X, r.x);
+				settings.put(DIALOG_Y, r.y);
+				settings.put(DIALOG_WIDTH, r.width);
+				settings.put(DIALOG_HEIGHT, r.height);
+			}
+		}
+	}
 
-        public Object[] getChildren( final Object node ) {
-        	if( node instanceof ArrayList) {
-        		ArrayList theList = ((ArrayList)node);
-        		
-        		return theList.toArray();
-        	}
-            return CoreStringUtil.Constants.EMPTY_STRING_ARRAY;
-        }
+	/**
+	 * Sets the wizard page status message.
+	 * 
+	 * @since 4.2
+	 */
+	void setPageStatus() {
+		// TODO:
 
-        public Object[] getElements( final Object inputElement ) {
-            return getChildren(inputElement);
-        }
+		WizardUtil.setPageComplete(this);
 
-        public Object getParent( final Object node ) {
-            return null;
-        }
+		getContainer().updateButtons();
+	}
 
-        public boolean hasChildren( final Object node ) {
-            return false;
-        }
+	@Override
+	public void setVisible(boolean isVisible) {
+		if (isVisible) {
+			this.treeViewer
+					.setInput(this.importManager.getSelectedOperations());
 
-        public void inputChanged( final Viewer viewer,
-                                  final Object oldInput,
-                                  final Object newInput ) {
-        }
-        
-        @Override
-        public Image getImage( final Object node ) {
-            if (node instanceof Operation) {
-                return OPERATION_ICON_IMG;
-            } 
-            return null;
-        }
+			TreeItem firstItem = this.treeViewer.getTree().getItem(0);
+			if (firstItem != null) {
+				this.treeViewer.getTree().select(firstItem);
 
-        @Override
-        public String getText( final Object node ) {
-            if (node instanceof Operation) {
-                return ((Operation)node).getName();
-            }
-            return "unknownElement"; //$NON-NLS-1$
-        }
-    }
+				updateForTreeSelection();
+			}
+
+			setPageStatus();
+		}
+		super.setVisible(isVisible);
+	}
+
+	Object[] getNodeChildren(Object element) {
+		return new Object[0];
+	}
+
+	boolean getNodeHasChildren(Object element) {
+		return false;
+	}
+
+	Image getNodeImage(Object element) {
+		return null;
+	}
+
+	String getNodeName(Object element) {
+		return "<name>";
+	}
+
+	Object getNodeParent(Object element) {
+		return null;
+	}
+
+	private void createRequestColumn() {
+		IStructuredSelection sel = (IStructuredSelection) requestXmlTreeViewer
+				.getSelection();
+		Object obj = sel.getFirstElement();
+		if (obj instanceof XSDParticleImpl) {
+		    String name = ((XSDElementDeclarationImpl)((XSDParticleImpl) obj).getContent()).getName();
+		    String ns = ((XSDElementDeclarationImpl)((XSDParticleImpl) obj).getContent()).getTargetNamespace();
+			this.procedureGenerator.getRequestInfo().addColumn(name, false, "String", null, ns);
+			notifyColumnDataChanged();
+		}
+	}
+
+	private void setRequestRootPath() {
+		// TODO:
+	}
+
+	private void createResponseColumn() {
+		IStructuredSelection sel = (IStructuredSelection) responseXmlTreeViewer
+				.getSelection();
+		Object obj = sel.getFirstElement();
+		if (obj instanceof XSDParticleImpl) {
+		    String name = ((XSDElementDeclarationImpl)((XSDParticleImpl) obj).getContent()).getName();
+		    String ns = ((XSDElementDeclarationImpl)((XSDParticleImpl) obj).getContent()).getTargetNamespace();
+			this.procedureGenerator.getResponseInfo().addColumn(name, false, "String", null, ns);
+			notifyColumnDataChanged();
+		}
+	}
+
+	private void setResponseRootPath() {
+		// TODO:
+	}
+
+	class OperationsListProvider extends LabelProvider implements
+			ITreeContentProvider {
+		private final Image OPERATION_ICON_IMG = ModelGeneratorWsdlUiUtil
+				.getImage(Images.OPERATION_ICON);
+
+		public void dispose() {
+		}
+
+		public Object[] getChildren(final Object node) {
+			if (node instanceof ArrayList) {
+				ArrayList theList = ((ArrayList) node);
+
+				return theList.toArray();
+			}
+			return CoreStringUtil.Constants.EMPTY_STRING_ARRAY;
+		}
+
+		public Object[] getElements(final Object inputElement) {
+			return getChildren(inputElement);
+		}
+
+		public Object getParent(final Object node) {
+			return null;
+		}
+
+		public boolean hasChildren(final Object node) {
+			return false;
+		}
+
+		public void inputChanged(final Viewer viewer, final Object oldInput,
+				final Object newInput) {
+		}
+
+		@Override
+		public Image getImage(final Object node) {
+			if (node instanceof Operation) {
+				return OPERATION_ICON_IMG;
+			}
+			return null;
+		}
+
+		@Override
+		public String getText(final Object node) {
+			if (node instanceof Operation) {
+				return ((Operation) node).getName();
+			}
+			return "unknownElement"; //$NON-NLS-1$
+		}
+	}
 }
