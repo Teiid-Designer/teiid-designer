@@ -567,12 +567,12 @@ public class OperationsDetailsPage  extends AbstractWizardPage implements ModelG
             }
 		};
 		
-		requestAddElementButton = new Button(schemaContentsGroup, SWT.PUSH);
-		requestAddElementButton.setText(Messages.AddSelectionAsNewColumn);
+		responseAddColumnButton = new Button(schemaContentsGroup, SWT.PUSH);
+		responseAddColumnButton.setText(Messages.AddSelectionAsNewColumn);
     	gd = new GridData();
     	gd.horizontalSpan = 1;
-    	requestAddElementButton.setLayoutData(gd);
-    	requestAddElementButton.addSelectionListener(new SelectionAdapter() {
+    	responseAddColumnButton.setLayoutData(gd);
+    	responseAddColumnButton.addSelectionListener(new SelectionAdapter() {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -589,7 +589,7 @@ public class OperationsDetailsPage  extends AbstractWizardPage implements ModelG
 			}
     		
 		});
-    	requestAddElementButton.setEnabled(false);
+    	responseAddColumnButton.setEnabled(false);
     }
     
     private void createResponseColumnInfoGroup(Composite parent) {
