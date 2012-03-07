@@ -20,7 +20,6 @@ import java.sql.Statement;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import javax.xml.transform.TransformerFactoryConfigurationError;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -29,17 +28,16 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.datatools.sqltools.core.DatabaseIdentifier;
 import org.eclipse.datatools.sqltools.core.EditorCorePlugin;
-import org.eclipse.datatools.sqltools.core.profile.ProfileUtil;
 import org.eclipse.datatools.sqltools.editor.core.connection.IConnectionTracker;
 import org.eclipse.datatools.sqltools.editor.core.result.Messages;
-import org.eclipse.datatools.sqltools.editor.ui.core.SQLToolsUIFacade;
-import org.eclipse.datatools.sqltools.plan.EPVFacade;
-import org.eclipse.datatools.sqltools.plan.IPlanOption;
-import org.eclipse.datatools.sqltools.plan.IPlanService;
-import org.eclipse.datatools.sqltools.plan.PlanRequest;
 import org.eclipse.datatools.sqltools.result.OperationCommand;
 import org.eclipse.datatools.sqltools.sqleditor.result.SimpleSQLResultRunnable;
 import org.eclipse.debug.core.ILaunchConfiguration;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PartInitException;
+import org.teiid.datatools.views.ExecutionPlanView;
 
 public class TeiidAdHocScriptRunnable extends SimpleSQLResultRunnable {
 
@@ -52,14 +50,18 @@ public class TeiidAdHocScriptRunnable extends SimpleSQLResultRunnable {
     
 	private long _startTime = new Date().getTime(), _endTime = _startTime;
     private String sql;
+    private String description;
 	
-	public TeiidAdHocScriptRunnable(Connection con, String sql,
+	public TeiidAdHocScriptRunnable( Connection con,
+                                     String description,
+                                     String sql,
 			boolean closeCon, IConnectionTracker tracker,
 			IProgressMonitor parentMonitor,
 			DatabaseIdentifier databaseIdentifier,
-			ILaunchConfiguration configuration, HashMap addInfo) {
+                                     ILaunchConfiguration configuration ) {
 		super(con, sql, closeCon, tracker, parentMonitor, databaseIdentifier, configuration);
         this.sql = sql;
+        this.description = description;
 	}
 	
     /*
@@ -211,8 +213,17 @@ public class TeiidAdHocScriptRunnable extends SimpleSQLResultRunnable {
             //save the results and parameters.
             resultsViewAPI.saveDetailResults(_operationCommand);
 
-            // Update the Execution Plan
-            handleShowExecutionPlan(_stmt);
+            UpdatePlanViewRunnable upvRunnable = new UpdatePlanViewRunnable(_stmt);
+            Display display = (Display.getCurrent() == null ? Display.getDefault() : Display.getCurrent());
+            if (Thread.currentThread() != display.getThread()) {
+                display.syncExec(upvRunnable);
+            } else {
+                // Update the Execution Plan
+                handleShowExecutionPlan(_stmt);
+
+                // Need to land on the ResultsView
+                handleShowResultsView();
+            }
 
             handleEnd(connection, _stmt);
             monitor.done();
@@ -225,39 +236,48 @@ public class TeiidAdHocScriptRunnable extends SimpleSQLResultRunnable {
      * Update the Execution Plan View
      */
     private void handleShowExecutionPlan( Statement stmt ) {
-        if (stmt != null) {
-            String queryPlan = "No Execution Plan Found"; //$NON-NLS-1$
-            boolean hasError = false;
-            ResultSet planRS = null;
-            try {
-                planRS = stmt.executeQuery("SHOW PLAN"); //$NON-NLS-1$
-                planRS.next();
-                queryPlan = planRS.getString("PLAN_XML"); //$NON-NLS-1$
-                // Any error will cause early exit
-            } catch (SQLException e) {
-                hasError = true;
-            }
-
-            // Update the Execution Plan Display
-            if (!hasError) {
-                // Get PlanType and Definition Id
-                int planType = 0;
-                IPlanService planService = SQLToolsUIFacade.getPlanService(this.getDatabaseIdentifier());
-                if (planService != null) {
-                    IPlanOption option = planService.getPlanOption();
-                    planType = option.getCurrentType();
+        String planStr = getExecutionPlan(stmt);
+        IWorkbenchWindow window = Activator.getDefault().getWorkbench().getActiveWorkbenchWindow();
+        IViewPart viewPart = null;
+        try {
+            if (window != null) {
+                viewPart = window.getActivePage().showView(ExecutionPlanView.VIEW_ID);
+                if (viewPart instanceof ExecutionPlanView) {
+                    ((ExecutionPlanView)viewPart).updateContents(this.description, this.sql, planStr);
                 }
-
-                String databaseDefinitionId = ProfileUtil.getDatabaseVendorDefinitionId(this.getDatabaseIdentifier().getProfileName()).toString();
-
-                // Create Plan Request
-                PlanRequest request = new PlanRequest(this.sql, databaseDefinitionId, planType, PlanRequest.VIEW_CREATE);
-
-                // Update the Execution Plan View
-                EPVFacade facade = EPVFacade.getInstance();
-                facade.createNewPlanInstance(request);
-                facade.planGenerated(request, queryPlan);
             }
+        } catch (PartInitException e) {
+            String message = org.teiid.datatools.connectivity.ui.Messages.getString("TeiidAdHocScriptRunnable.initViewError"); //$NON-NLS-1$
+            IStatus status = new Status(IStatus.ERROR, Activator.PLUGIN_ID, message, e);
+            Activator.getDefault().getLog().log(status);
+        }
+    }
+
+    private void handleShowResultsView() {
+        String RESULTS_VIEW = "org.eclipse.datatools.sqltools.result.resultView"; //$NON-NLS-1$
+        IWorkbenchWindow window = Activator.getDefault().getWorkbench().getActiveWorkbenchWindow();
+        try {
+            if (window != null) {
+                window.getActivePage().showView(RESULTS_VIEW);
+            }
+        } catch (PartInitException e) {
+            String message = org.teiid.datatools.connectivity.ui.Messages.getString("TeiidAdHocScriptRunnable.initViewError"); //$NON-NLS-1$
+            IStatus status = new Status(IStatus.ERROR, Activator.PLUGIN_ID, message, e);
+            Activator.getDefault().getLog().log(status);
+        }
+    }
+
+    private class UpdatePlanViewRunnable implements Runnable {
+
+        Statement statement;
+
+        public UpdatePlanViewRunnable( Statement stmt ) {
+            this.statement = stmt;
+        }
+
+        public void run() {
+            handleShowExecutionPlan(this.statement);
+            handleShowResultsView();
         }
     }
 
@@ -293,6 +313,22 @@ public class TeiidAdHocScriptRunnable extends SimpleSQLResultRunnable {
         }
     }
     
+    private String getExecutionPlan( Statement stmt ) {
+        String executionPlan = null;
+        if (stmt != null) {
+            try {
+                ResultSet planRs = stmt.executeQuery("SHOW PLAN"); //$NON-NLS-1$
+                planRs.next();
+                executionPlan = planRs.getString("PLAN_XML"); //$NON-NLS-1$
+            } catch (SQLException e) {
+                String message = org.teiid.datatools.connectivity.ui.Messages.getString("TeiidAdHocScriptRunnable.getPlanError"); //$NON-NLS-1$
+                 IStatus status = new Status(IStatus.ERROR, Activator.PLUGIN_ID, message, e);
+                 Activator.getDefault().getLog().log(status);
+            }
+        }
+        return executionPlan;
+    }
+
     private class HandleSuccessJob extends Job
     {
         boolean _moreResult;

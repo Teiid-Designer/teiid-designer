@@ -8,6 +8,21 @@
   See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
 -->
 <plugin>
+  <extension
+    point="org.eclipse.ui.views">
+      <category
+            name="%category.name.0"
+            id="com.metamatrix.modeler.runtime.ui">
+      </category>
+      <view
+            name="%ExecutionPlanView.name"
+            icon="icons/explain.gif"
+            category="com.metamatrix.modeler.ui"
+            class="org.teiid.datatools.views.ExecutionPlanView"
+            id="views.executionPlanView">
+      </view>
+  </extension>
+
    <extension
          point="org.eclipse.datatools.connectivity.connectionProfile">
    <newWizard
@@ -51,14 +66,6 @@
             driverTemplateID="org.teiid.datatools.connectivity.driver.serverDriverTemplate"
             id="org.eclipse.datatools.connectivity.teiid.ui.propertyEditor.password">
       </propertyEditor>
-   </extension>
-   
-   <extension
-         point="org.eclipse.datatools.sqltools.plan.planService">
-      <planService
-            databaseVendorDefinitionId="Teiid_7.x"
-            serviceClass="org.teiid.datatools.connectivity.ui.plan.TeiidPlanService">
-      </planService>
    </extension>
    
    <extension

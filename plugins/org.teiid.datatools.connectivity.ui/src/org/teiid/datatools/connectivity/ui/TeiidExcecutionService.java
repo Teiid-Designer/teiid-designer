@@ -9,7 +9,6 @@ package org.teiid.datatools.connectivity.ui;
 
 import java.sql.Connection;
 import java.util.HashMap;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.datatools.sqltools.core.DatabaseIdentifier;
 import org.eclipse.datatools.sqltools.core.services.ExecutionService;
@@ -39,10 +38,10 @@ public class TeiidExcecutionService extends ExecutionService {
 			IProgressMonitor parentMonitor,
 			DatabaseIdentifier databaseIdentifier,
 			ILaunchConfiguration configuration, HashMap addInfo) {
-		return new TeiidAdHocScriptRunnable(con, sql, closeCon, tracker,
-				parentMonitor, databaseIdentifier, configuration, addInfo);
+
+        return new TeiidAdHocScriptRunnable(con,
+                                            Messages.getString("TeiidExecutionService.panelDescription"), sql, closeCon, tracker, //$NON-NLS-1$
+ parentMonitor, databaseIdentifier, configuration);
 	}
 	
-	
-
 }

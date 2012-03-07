@@ -63,6 +63,15 @@
   </extension>
 <!-- Actions contributed to the object/model generation -->
    <extension
+        id="GetExecutionPlanContextAction"
+        name="%getExecutionPlanContextAction.name"
+        point="org.teiid.designer.ui.modelObjectSpecialAction">
+      <specialAction
+         name="org.teiid.designer.runtime.ui.actions.GetExecutionPlanContextAction"
+         label="%getExecutionPlanContextAction.label">
+      </specialAction>
+   </extension>
+   <extension
         id="PreviewTableDataContextAction"
         name="%previewTableDataContextAction.name"
         point="org.teiid.designer.ui.modelObjectSpecialAction">

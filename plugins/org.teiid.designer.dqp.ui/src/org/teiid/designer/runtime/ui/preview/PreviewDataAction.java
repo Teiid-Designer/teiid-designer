@@ -10,7 +10,6 @@ package org.teiid.designer.runtime.ui.preview;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.window.Window;
-
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
@@ -43,7 +42,7 @@ public class PreviewDataAction extends Action {
 		if (dialog.getReturnCode() == Window.OK) {
 			EObject eObj = dialog.getPreviewableEObject();
 			if (eObj != null) {
-				worker.run(eObj);
+                worker.run(eObj, false);
 			}
 		}
 	}

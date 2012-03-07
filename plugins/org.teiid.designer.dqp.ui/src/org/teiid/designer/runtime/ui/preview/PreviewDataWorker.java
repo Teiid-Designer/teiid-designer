@@ -9,12 +9,13 @@ package org.teiid.designer.runtime.ui.preview;
 
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -49,13 +50,16 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressConstants;
 import org.teiid.adminapi.Admin;
 import org.teiid.datatools.connectivity.ConnectivityUtil;
 import org.teiid.datatools.connectivity.ui.TeiidAdHocScriptRunnable;
+import org.teiid.datatools.views.ExecutionPlanView;
 import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
 import org.teiid.designer.datatools.connection.IConnectionInfoHelper;
 import org.teiid.designer.runtime.ServerManager;
@@ -66,9 +70,9 @@ import org.teiid.designer.runtime.preview.PreviewManager;
 import org.teiid.designer.runtime.preview.jobs.TeiidPreviewVdbJob;
 import org.teiid.designer.runtime.preview.jobs.WorkspacePreviewVdbJob;
 import org.teiid.designer.runtime.ui.server.RuntimeAssistant;
-
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.metamodels.webservice.Operation;
+import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlAspectHelper;
 import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlProcedureAspect;
 import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlTableAspect;
@@ -84,6 +88,7 @@ import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.ui.editors.ModelEditorManager;
 import com.metamatrix.modeler.webservice.util.WebServiceUtil;
 import com.metamatrix.ui.internal.util.UiUtil;
+import com.metamatrix.ui.internal.util.WidgetUtil;
 
 public class PreviewDataWorker {
 	public static final String THIS_CLASS = I18nUtil.getPropertyPrefix(PreviewDataWorker.class);
@@ -145,7 +150,8 @@ public class PreviewDataWorker {
      * @since 5.0
      */
 
-    public void run(final EObject eObject) {
+    public void run( final EObject eObject,
+                     final boolean planOnly ) {
 
     	// if we get here we know preview is enabled and a server exists and can be connected to
     	
@@ -241,7 +247,7 @@ public class PreviewDataWorker {
         if (dialog.getReturnCode() == Window.OK) {
             // setup successful so run preview
             try {
-                internalRun(eObject);
+                internalRun(eObject, planOnly);
             } catch (Exception e) {
                 DqpUiConstants.UTIL.log(e);
                 MessageDialog.openError(getShell(),
@@ -256,7 +262,8 @@ public class PreviewDataWorker {
      * 
      * @throws ModelWorkspaceException
      */
-    private void internalRun(final EObject eObject) throws ModelWorkspaceException {
+    private void internalRun( final EObject eObject,
+                              final boolean planOnly ) throws ModelWorkspaceException {
         String sql = null;
         List<String> paramValues = null;
         final Shell shell = getShell();
@@ -389,13 +396,37 @@ public class PreviewDataWorker {
     			// This runnable executes the SQL and displays the results
 				// in the DTP 'SQL Results' view.
 				SimpleSQLResultRunnable runnable = null;
-				
-				if( isXML ) {
-					runnable = new TeiidAdHocScriptRunnable(sqlConnection, sql, true, null, new NullProgressMonitor(), ID, config, null);
-				} else {
-					runnable = new SimpleSQLResultRunnable(sqlConnection, sql, true, null, new NullProgressMonitor(), ID, config);
-				}
-				BusyIndicator.showWhile(null, runnable);
+
+                if (planOnly) {
+                    String planStr = getExecutionPlan(sqlConnection, sql);
+                    IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+                    IViewPart viewPart = null;
+                    try {
+                        if (window != null) {
+                            viewPart = window.getActivePage().showView(ExecutionPlanView.VIEW_ID);
+                            if (viewPart instanceof ExecutionPlanView) {
+                                String labelStr = getString("planOnlyFetchFor.label") + " " + ModelerCore.getModelEditor().getName(eObject); //$NON-NLS-1$ //$NON-NLS-2$                               
+                                ((ExecutionPlanView)viewPart).updateContents(labelStr, sql, planStr);
+                            }
+                        }
+                    } catch (PartInitException e) {
+                        DqpUiConstants.UTIL.log(e);
+                        WidgetUtil.showError(e.getLocalizedMessage());
+                    }
+                } else if (isXML) {
+                    String labelStr = getString("previewWithPlanFor.label") + " " + ModelerCore.getModelEditor().getName(eObject); //$NON-NLS-1$ //$NON-NLS-2$                               
+                    runnable = new TeiidAdHocScriptRunnable(sqlConnection, labelStr, sql, true, null, new NullProgressMonitor(),
+                                                            ID, config);
+                    BusyIndicator.showWhile(null, runnable);
+                } else {
+                    String labelStr = getString("previewWithPlanFor.label") + " " + ModelerCore.getModelEditor().getName(eObject); //$NON-NLS-1$ //$NON-NLS-2$                               
+                    runnable = new TeiidAdHocScriptRunnable(sqlConnection, labelStr, sql, true, null, new NullProgressMonitor(),
+                                                            ID, config);
+                    // runnable = new SimpleSQLResultRunnable(sqlConnection, sql, true, null, new NullProgressMonitor(), ID,
+                    // config);
+                    BusyIndicator.showWhile(null, runnable);
+                }
+
 				sqlConnection.close();
 				ConnectivityUtil.deleteTransientTeiidProfile(profile);
     		} catch (CoreException e) {
@@ -409,6 +440,25 @@ public class PreviewDataWorker {
     	}
     }
     
+    private String getExecutionPlan( Connection sqlConnection,
+                                     String sql ) {
+        String executionPlan = null;
+        try {
+            Statement stmt = sqlConnection.createStatement();
+            stmt.execute("SET SHOWPLAN DEBUG"); //$NON-NLS-1$
+            stmt.executeQuery(sql);
+            ResultSet planRs = stmt.executeQuery("SHOW PLAN"); //$NON-NLS-1$
+            planRs.next();
+            executionPlan = planRs.getString("PLAN_XML"); //$NON-NLS-1$
+        } catch (SQLException e) {
+            // Error Generating the plan. Log the error and display dialog.
+            DqpUiConstants.UTIL.log(e);
+            MessageDialog.openError(getShell(), getString("errorGeneratingExecutionPlan.title"), //$NON-NLS-1$
+                                    getString("errorGeneratingExecutionPlan.message")); //$NON-NLS-1$
+        }
+        return executionPlan;
+    }
+
     private ParameterInputDialog getInputDialog( List<EObject> params ) {
         ParameterInputDialog dialog = new ParameterInputDialog(getShell(), params);
         return dialog;
@@ -471,7 +521,7 @@ public class PreviewDataWorker {
 		}
 	    return true;
 	}
-    
+
     class PreviewUnavailableDialog extends MessageDialog {
         boolean openProgressView = false;
 

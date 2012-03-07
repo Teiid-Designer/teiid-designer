@@ -29,7 +29,9 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.datatools.sqltools.routineeditor
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
-Import-Package: org.eclipse.datatools.sqltools.core,
+Import-Package: org.apache.xerces.parsers;version="2.9.0",
+ org.eclipse.datatools.sqltools.core,
  org.eclipse.datatools.sqltools.sql.parser
 Bundle-Localization: plugin
-Export-Package: org.teiid.datatools.connectivity.ui
+Export-Package: org.teiid.datatools.connectivity.ui,
+ org.teiid.datatools.views
