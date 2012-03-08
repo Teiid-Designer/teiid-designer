@@ -56,6 +56,8 @@ import org.eclipse.swt.widgets.TreeItem;
 import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.panels.ColumnsInfoPanel;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.panels.ElementsInfoPanel;
+import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.panels.ImportOptionsPanel;
+import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.panels.OptionsPanel;
 
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Model;
@@ -114,8 +116,6 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 	protected XSDSchema xsdSchema;
 	// protected XSD xsdSchema1;
 
-	Button generateWrapperProcedure;
-
 	TabFolder tabFolder;
 
 	TabItem requestTab;
@@ -138,6 +138,9 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 	Button responseAddElementButton;
 	ColumnsInfoPanel responseElementsInfoPanel;
 
+	ImportOptionsPanel importOptionsPanel;
+	OptionsPanel optionsPanel;
+	
 	private ProcedureGenerator procedureGenerator;
 
 	// ==================================================
@@ -146,8 +149,7 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 				Messages.ProcedureDefinition);
 		this.importManager = theImportManager;
 		this.importManager.setSelectedOperations(new ArrayList());
-		setImageDescriptor(ModelGeneratorWsdlUiUtil
-				.getImageDescriptor(Images.NEW_MODEL_BANNER));
+		setImageDescriptor(ModelGeneratorWsdlUiUtil.getImageDescriptor(Images.NEW_MODEL_BANNER));
 	}
 
 	public ProcedureGenerator getProcedureGenerator() {
@@ -155,31 +157,23 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 	}
 
 	private void notifyOperationChanged(Operation operation) {
-		this.procedureGenerator = importManager
-				.getProcedureGenerator(operation);
-
-		this.generateWrapperProcedure.setSelection(this.procedureGenerator
-				.doGenerateWrapperProcedure());
+		this.procedureGenerator = importManager.getProcedureGenerator(operation);
+		
+		this.optionsPanel.notifyOperationChanged(operation);
 
 		if (this.selectedRequestOperationText != null) {
-			this.selectedRequestOperationText.setText(this.procedureGenerator
-					.getOperation().getName());
+			this.selectedRequestOperationText.setText(this.procedureGenerator.getOperation().getName());
 		}
 		if (this.selectedResponseOperationText != null) {
-			this.selectedResponseOperationText.setText(this.procedureGenerator
-					.getOperation().getName());
+			this.selectedResponseOperationText.setText(this.procedureGenerator.getOperation().getName());
 		}
 
-		this.requestProcedureNameText.setText(this.procedureGenerator
-				.getRequestProcedureName());
-		this.responseProcedureNameText.setText(this.procedureGenerator
-				.getResponseProcedureName());
+		this.requestProcedureNameText.setText(this.procedureGenerator.getRequestProcedureName());
+		this.responseProcedureNameText.setText(this.procedureGenerator.getResponseProcedureName());
 
 		// Now update the two column info panels
-		this.requestElementsInfoPanel.setProcedureInfo(this.procedureGenerator
-				.getRequestInfo());
-		this.responseElementsInfoPanel.setProcedureInfo(this.procedureGenerator
-				.getResponseInfo());
+		this.requestElementsInfoPanel.setProcedureInfo(this.procedureGenerator.getRequestInfo());
+		this.responseElementsInfoPanel.setProcedureInfo(this.procedureGenerator.getResponseInfo());
 
 		updateSqlText(BOTH);
 		updateSchemaTree(BOTH);
@@ -190,6 +184,10 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 		this.responseElementsInfoPanel.refresh();
 		updateSqlText(BOTH);
 	}
+	
+    public WSDLImportWizardManager getImportManager() {
+    	return this.importManager;
+    }
 
 	/**
 	 * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
@@ -197,8 +195,7 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 	 */
 	public void createControl(Composite theParent) {
 		final int COLUMNS = 1;
-		Composite pnlMain = WidgetFactory.createPanel(theParent, SWT.NONE,
-				GridData.FILL_BOTH);
+		Composite pnlMain = WidgetFactory.createPanel(theParent, SWT.NONE,GridData.FILL_BOTH);
 		GridLayout layout = new GridLayout(COLUMNS, false);
 		pnlMain.setLayout(layout);
 		setControl(pnlMain);
@@ -213,7 +210,7 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 
 		createTabbedDetailsPanel(splitter);
 
-		splitter.setWeights(new int[] { 30, 70 });
+		splitter.setWeights(new int[] { 35, 65 });
 
 		restoreState();
 	}
@@ -224,11 +221,13 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 		GridLayout layout = new GridLayout(1, false);
 		panel.setLayout(layout);
 
+        
+        importOptionsPanel = new ImportOptionsPanel(panel, this);
+		
 		// --------------------------
 		// Group for checkbox tree
 		// --------------------------
-		Group operationsGroup = WidgetFactory.createGroup(panel,
-				Messages.Operations, GridData.FILL_BOTH, 1, 1);
+		Group operationsGroup = WidgetFactory.createGroup(panel,Messages.Operations, GridData.FILL_BOTH, 1, 1);
 
 		// ----------------------------
 		// TreeViewer
@@ -254,29 +253,7 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 					}
 				});
 
-		// --------------------------
-		// Group for checkbox tree
-		// --------------------------
-		Group optionsGroup = WidgetFactory.createGroup(panel, Messages.Options,
-				GridData.FILL_BOTH, 1, 2);
-
-		this.generateWrapperProcedure = WidgetFactory.createCheckBox(
-				optionsGroup, Messages.GenerateWrapperProcedure);
-		this.generateWrapperProcedure
-				.addSelectionListener(new SelectionListener() {
-
-					@Override
-					public void widgetSelected(SelectionEvent e) {
-						procedureGenerator
-								.setGenerateWrapperProcedure(generateWrapperProcedure
-										.getSelection());
-					}
-
-					@Override
-					public void widgetDefaultSelected(SelectionEvent e) {
-					}
-				});
-
+		this.optionsPanel = new OptionsPanel(panel, this);
 	}
 
 	private void updateForTreeSelection() {
@@ -339,7 +316,7 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 		schemaContentsGroup.setLayout(new GridLayout(4, false));
 		GridData gd = new GridData(GridData.FILL_BOTH);
 		gd.horizontalSpan = 2;
-		gd.heightHint = 140;
+		gd.heightHint = 120;
 		schemaContentsGroup.setLayoutData(gd);
 
 		this.requestXmlTreeViewer = new TreeViewer(schemaContentsGroup);
@@ -533,7 +510,7 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 				"Schema Contents", SWT.NONE, 2, 4); //$NON-NLS-1$
 		schemaContentsGroup.setLayout(new GridLayout(4, false));
 		GridData gd = new GridData(GridData.FILL_BOTH);
-		gd.heightHint = 140;
+		gd.heightHint = 120;
 		gd.horizontalSpan = 2;
 		schemaContentsGroup.setLayoutData(gd);
 
@@ -876,8 +853,9 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 	@Override
 	public void setVisible(boolean isVisible) {
 		if (isVisible) {
-			this.treeViewer
-					.setInput(this.importManager.getSelectedOperations());
+        	this.importOptionsPanel.setVisible();
+        	
+			this.treeViewer.setInput(this.importManager.getSelectedOperations());
 
 			TreeItem firstItem = this.treeViewer.getTree().getItem(0);
 			if (firstItem != null) {

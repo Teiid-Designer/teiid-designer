@@ -24,6 +24,7 @@ import com.metamatrix.modeler.modelgenerator.wsdl.WSDLReader;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Model;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.ModelGenerationException;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Operation;
+import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.util.ModelGeneratorWsdlUiUtil;
 
 /**
  * WSDL Import Manager - Business Object for interacting with GUI
@@ -46,6 +47,11 @@ public class WSDLImportWizardManager {
 	private boolean sourceModelExists;
 	
 	private String viewModelName;
+	private boolean viewModelExists;
+	
+	private boolean generateDefaultProcedures;
+	
+	private boolean isMessage;
 	
     private List selectedOperations;
     private int uriSource = URL_SOURCE;
@@ -182,7 +188,7 @@ public class WSDLImportWizardManager {
         this.uriSource = uriSource;
     }
 
-	/**
+	/**ModelGeneratorWsdlUiUtil.modelExists(modelFileContainerPath.toOSString(), this.viewModelFileText.getText())
 	 * @return connectionProfile
 	 */
 	public IConnectionProfile getConnectionProfile() {
@@ -215,6 +221,23 @@ public class WSDLImportWizardManager {
 		
 		for( Operation operation : staleOperations) {
 			this.procedureGenerators.remove(operation);
+		}
+		
+		// Now set source and target model names if generate == FALSE
+		
+		if( !generateDefaultProcedures && !getSelectedOperations().isEmpty() ) {
+			// get one operation and then 
+			Operation firstOperation = getSelectedOperations().get(0);
+			String serviceName = firstOperation.getBinding().getPort().getService().getName();
+			this.sourceModelName = serviceName + ".xmi"; //$NON-NLS-1$
+			this.viewModelName = serviceName + "View.xmi";  //$NON-NLS-1$
+			this.sourceModelExists = ModelGeneratorWsdlUiUtil.modelExists(this.targetModelLocation.getFullPath().toOSString(), this.sourceModelName);
+			this.viewModelExists = ModelGeneratorWsdlUiUtil.modelExists(this.targetModelLocation.getFullPath().toOSString(), this.viewModelName);
+		} else {
+			this.sourceModelName = null;
+			this.sourceModelExists = false;
+			this.viewModelName = null;
+			this.viewModelExists = false;
 		}
 	}
 	
@@ -250,11 +273,35 @@ public class WSDLImportWizardManager {
 		this.sourceModelLocation = location;
 	}
 	
+	public void setViewModelExists(boolean viewModelExists) {
+		this.viewModelExists = viewModelExists;
+	}
+	
+	public boolean viewModelExists() {
+		return this.viewModelExists;
+	}
+	
 	public void setSourceModelExists(boolean sourceModelExists) {
 		this.sourceModelExists = sourceModelExists;
 	}
 	
 	public boolean sourceModelExists() {
 		return this.sourceModelExists;
+	}
+
+	public boolean doGenerateDefaultProcedures() {
+		return this.generateDefaultProcedures;
+	}
+
+	public void setGenerateDefaultProcedures(boolean generateDefaultProcedures) {
+		this.generateDefaultProcedures = generateDefaultProcedures;
+	}
+
+	public boolean isMessage() {
+		return this.isMessage;
+	}
+
+	public void setIsMessage(boolean isMessage) {
+		this.isMessage = isMessage;
 	}
 }

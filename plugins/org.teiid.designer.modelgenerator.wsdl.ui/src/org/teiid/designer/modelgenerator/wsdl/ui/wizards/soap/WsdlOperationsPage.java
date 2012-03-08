@@ -733,12 +733,14 @@ public class WsdlOperationsPage extends AbstractWizardPage implements Listener,
 			if (treeExpanded) {
 				super.itemExpanded(event);
 			} else {
-				final TreeItem item = ((TreeViewer) event.getTreeViewer())
-						.getTree().getSelection()[0];
-				if (item.getData() != null) {
-					updateChildren(item, false);
+				TreeItem[] selectedItems = ((TreeViewer) event.getTreeViewer()).getTree().getSelection();
+				if( selectedItems.length > 0 ) {
+					final TreeItem item = selectedItems[0];
+					if (item.getData() != null) {
+						updateChildren(item, false);
+					}
+					treeExpanded = true;
 				}
-				treeExpanded = true;
 			}
 			updateTreeSelectionDetails();
 		}

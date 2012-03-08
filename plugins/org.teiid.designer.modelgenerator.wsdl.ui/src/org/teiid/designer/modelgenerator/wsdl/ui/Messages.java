@@ -19,6 +19,8 @@ public class Messages  extends NLS {
     public static String AddSelectionAsNewElement;
     
     public static String Browse;
+    public static String BrowseElipsis;
+    public static String BrowseToSelect_0_Model;
     
     public static String ColumnInfo;
     public static String ColumnName;
@@ -40,12 +42,15 @@ public class Messages  extends NLS {
     
     public static String Location;
     
+    public static String ModelsDefinition;
+    
     public static String Name;
     public static String New;
     
     public static String Operations;
     public static String Options;
     public static String Ordinality;
+    public static String OverwriteExistingProcedures;
     
     public static String Path;
     public static String ProcedureDefinition;
@@ -55,9 +60,23 @@ public class Messages  extends NLS {
     public static String RootPath;
     
     public static String SelectedOperation;
+    
+    public static String SelectSourceModel_title;
+    public static String SelectSourceModel_message;
+    public static String SelectViewModel_title;
+    public static String SelectViewModel_message;
     public static String SetAsRootPath;
+    public static String Source;
+    public static String Source_lower;
+    public static String SourceNameTooltip;
     
     public static String Up;
+    
+    public static String View;
+    public static String View_lower;
+    public static String ViewNameTooltip;
+    
+    public static String WrapperProcedure;
     
     public static String ImportWsdlSoapWizard_title;
     public static String ImportWsdlSoapWizard_importErrorMessage;
@@ -65,8 +84,7 @@ public class Messages  extends NLS {
     public static String ImportWsdlSoapWizard_notLicensedMessage;
     public static String ImportWsdlSoapWizard_importError_title;
     public static String ImportWsdlSoapWizard_importError_msg;
-   		//=================================================================================================================================
-  		// SelectWsdlPage
+
     public static String WsdlDefinitionPage_title;
     public static String WsdlDefinitionPage_profileLabel_text;
     public static String WsdlDefinitionPage_properties_label;
@@ -84,7 +102,6 @@ public class Messages  extends NLS {
     public static String WsdlDefinitionPage_invalidURLString_msg;
     public static String WsdlDefinitionPage_noURLString_msg;
     public static String WsdlDefinitionPage_urlValidNotReadable_msg;
-    public static String WsdlDefinitionPage_sourceOptionsGroup_text;
     public static String WsdlDefinitionPage_wsdlLabel_text;
     public static String WsdlDefinitionPage_workspaceRadio_text;
     public static String WsdlDefinitionPage_workspaceTextField_tooltip;
@@ -97,15 +114,10 @@ public class Messages  extends NLS {
     public static String WsdlDefinitionPage_no_profile_match;
 
     public static String WsdlDefinitionPage_targetLocationGroup_text;
-    public static String WsdlDefinitionPage_targetModelLabel_text;
-    public static String WsdlDefinitionPage_targetModelTextField_tooltip;
-    public static String WsdlDefinitionPage_targetModelBrowseButton_tooltip;
     public static String WsdlDefinitionPage_targetModelLocationTextField_tooltip;
     public static String WsdlDefinitionPage_targetModelLocationBrowseButton_tooltip;
     public static String WsdlDefinitionPage_validateWsdlButton_text;
     public static String WsdlDefinitionPage_validateWsdlButton_tooltip;
-    public static String WsdlDefinitionPage_dialog_browseTargetModel_msg;
-    public static String WsdlDefinitionPage_dialog_browseTargetModel_title;
     public static String WsdlDefinitionPage_dialog_wsdlValidationError_title;
     public static String WsdlDefinitionPage_dialog_wsdlValidationError_msg;
 
@@ -116,23 +128,13 @@ public class Messages  extends NLS {
     public static String WsdlDefinitionPage_missingFolderMessage;
     public static String WsdlDefinitionPage_validateWsdl_msg;
     public static String WsdlDefinitionPage_wsdlErrorContinuation_msg;
-    public static String WsdlDefinitionPage_notRelationalModelMessage;
     public static String WsdlDefinitionPage_notModelProjectMessage;
-    public static String WsdlDefinitionPage_readOnlyModelMessage;
-    public static String WsdlDefinitionPage_virtualModelMessage;
-    public static String WsdlDefinitionPage_noModelToUpdateMessage;
     public static String WsdlDefinitionPage_select_profile;
-    public static String WsdlDefinitionPage_selectSourceModelTitle;
-    public static String WsdlDefinitionPage_selectSourceModelMessage;
-    public static String WsdlDefinitionPage_modelStatus;
-    public static String WsdlDefinitionPage_sourceModelDefinition;
 
-    //=================================================================================================================================
-    // SelectWsdlOperationsPage
     public static String WsdlOperationsPage_title;
 
     public static String WsdlOperationsPage_pageComplete_msg;
-    public static String  WsdlOperationsPage_noSelections_msg;
+    public static String WsdlOperationsPage_noSelections_msg;
 
     public static String WsdlOperationsPage_checkboxTreeGroup_title;
     public static String WsdlOperationsPage_detailsTextbox_title;
@@ -140,7 +142,7 @@ public class Messages  extends NLS {
     public static String WsdlOperationsPage_selectAllButton_text;
     public static String WsdlOperationsPage_deselectAllButton_text;
     public static String WsdlOperationsPage_selectAllButton_tipText;
-    public static String  WsdlOperationsPage_deselectAllButton_tipText;
+    public static String WsdlOperationsPage_deselectAllButton_tipText;
     public static String WsdlOperationsPage_dialog_wsdlParseError_title;
     public static String WsdlOperationsPage_dialog_wsdlParseError_msg;
     

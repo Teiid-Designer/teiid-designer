@@ -24,6 +24,10 @@ public class ProcedureGenerator {
 	
 	private boolean generateWrapperProcedure;
 	
+	private String wrapperProcedureName;
+	
+	private boolean overwriteExistingProcedures;
+	
 	private Operation operation;
 	
 	private String viewModelName;
@@ -37,6 +41,7 @@ public class ProcedureGenerator {
 		this.responseInfo = new ResponseInfo(operation, this);
 		this.viewModelName = operation.getBinding().getPort().getService().getName() + "View"; //$NON-NLS-1$
 		this.importManager = importManager;
+		this.generateWrapperProcedure = true;
 	}
 
 	public WSDLImportWizardManager getImportManager() {
@@ -81,5 +86,25 @@ public class ProcedureGenerator {
 	
 	public boolean doGenerateWrapperProcedure() {
 		return this.generateWrapperProcedure;
+	}
+	
+	public void setWrapperProcedureName(String name ) {
+		this.wrapperProcedureName = name;
+	}
+	
+	public String getWrappedProcedureName() {
+		if( this.wrapperProcedureName == null ) {
+			this.wrapperProcedureName = getOperation().getName() + "Procedure"; //$NON-NLS-1$
+		}
+		return this.wrapperProcedureName;
+	}
+	
+	
+	public void setOverwriteExistingProcedures(boolean value) {
+		this.overwriteExistingProcedures = value;
+	}
+	
+	public boolean doOverwriteExistingProcedures() {
+		return this.overwriteExistingProcedures;
 	}
 }

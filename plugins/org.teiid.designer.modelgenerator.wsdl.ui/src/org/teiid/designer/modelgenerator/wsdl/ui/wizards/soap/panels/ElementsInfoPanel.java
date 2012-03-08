@@ -63,7 +63,7 @@ public class ElementsInfoPanel{
     	Group columnInfoGroup = WidgetFactory.createGroup(parent, Messages.ElementInfo, SWT.NONE, 2);
     	columnInfoGroup.setLayout(new GridLayout(2, false));
     	GridData gd = new GridData(GridData.FILL_HORIZONTAL);
-    	gd.heightHint = 180;
+    	gd.heightHint = 160;
     	gd.horizontalSpan = 2;
     	columnInfoGroup.setLayoutData(gd);
     	
@@ -83,10 +83,15 @@ public class ElementsInfoPanel{
     	});
 
     	Composite leftToolbarPanel = new Composite(columnInfoGroup, SWT.NONE);
-    	leftToolbarPanel.setLayout(new GridLayout());
-	  	GridData ltpGD = new GridData(GridData.FILL_VERTICAL);
-	  	ltpGD.heightHint=120;
-	  	leftToolbarPanel.setLayoutData(ltpGD);
+    	GridLayout tbGL = new GridLayout();
+    	tbGL.marginHeight = 0;
+    	tbGL.marginWidth = 0;
+    	tbGL.verticalSpacing = 2;
+    	leftToolbarPanel.setLayout(tbGL);
+	GridData ltpGD = new GridData(GridData.FILL_VERTICAL);
+	ltpGD.heightHint=120;
+	  	
+	leftToolbarPanel.setLayoutData(ltpGD);
     	
     	addButton = new Button(leftToolbarPanel, SWT.PUSH);
     	addButton.setText(Messages.Add);

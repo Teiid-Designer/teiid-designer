@@ -9,9 +9,15 @@ package com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.util;
 
 import java.io.File;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
 import org.teiid.core.util.FileUtils;
+
+import com.metamatrix.modeler.core.workspace.ModelWorkspaceItem;
+import com.metamatrix.modeler.internal.core.workspace.ModelWorkspaceManager;
 import com.metamatrix.modeler.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiPlugin;
 
 
@@ -169,5 +175,23 @@ public class ModelGeneratorWsdlUiUtil implements FileUtils.Constants {
                                  .append(theExtension)
                                  .toString();
     }
+    
+	public static boolean modelExists(String containerPath, String modelName) {
+		if (containerPath == null) {
+			return false;
+		}
+
+		IPath modelPath = new Path(containerPath).append(modelName);
+		if (!modelPath.toString().toUpperCase().endsWith(".XMI")) { //$NON-NLS-1$
+			modelPath = modelPath.addFileExtension("xmi"); //$NON-NLS-1$
+		}
+
+		ModelWorkspaceItem item = ModelWorkspaceManager.getModelWorkspaceManager().findModelWorkspaceItem(modelPath, IResource.FILE);
+		if (item != null) {
+			return true;
+		}
+
+		return false;
+	}
     
 }
