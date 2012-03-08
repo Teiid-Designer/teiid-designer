@@ -21,6 +21,7 @@ public class Messages  extends NLS {
     public static String Browse;
     public static String BrowseElipsis;
     public static String BrowseToSelect_0_Model;
+    public static String BrowseToSelectModelsLocation;
     
     public static String ColumnInfo;
     public static String ColumnName;
