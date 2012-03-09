@@ -24,6 +24,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IImportWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.ide.IDE;
@@ -226,7 +227,7 @@ public class ImportWsdlSoapWizard extends AbstractWizard implements IImportWizar
     }
     
     private void runFinishWithDetails() {
-    	MessageDialog.openInformation(this.getShell(), "Unfinished Wizard", "WSDL Procedure generation not yet finished");
+    	MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "Unfinished Wizard", "WSDL Procedure generation not yet finished");
     }
     
     public void notifyManagerChanged() {

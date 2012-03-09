@@ -8,11 +8,11 @@
 package org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.edit.provider.ItemProvider;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.action.Action;
@@ -29,20 +29,18 @@ import org.eclipse.jface.viewers.ITreeViewerListener;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeExpansionEvent;
-import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
@@ -51,13 +49,16 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.widgets.Tree;
-import org.eclipse.swt.widgets.TreeItem;
+import org.eclipse.xsd.XSDElementDeclaration;
+import org.eclipse.xsd.XSDSchema;
+import org.eclipse.xsd.XSDSimpleTypeDefinition;
+import org.eclipse.xsd.XSDTypeDefinition;
+import org.eclipse.xsd.impl.XSDElementDeclarationImpl;
+import org.eclipse.xsd.impl.XSDParticleImpl;
+import org.eclipse.xsd.provider.XSDSemanticItemProviderAdapterFactory;
 import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.panels.ColumnsInfoPanel;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.panels.ElementsInfoPanel;
-import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.panels.ImportOptionsPanel;
-import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.panels.OptionsPanel;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.panels.WrapperProcedurePanel;
 
 import com.metamatrix.core.util.CoreStringUtil;
@@ -70,18 +71,9 @@ import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.wizards.WSDLImport
 import com.metamatrix.modeler.transformation.ui.editors.sqleditor.SqlTextViewer;
 import com.metamatrix.ui.graphics.ColorManager;
 import com.metamatrix.ui.internal.util.WidgetFactory;
+import com.metamatrix.ui.internal.util.WidgetUtil;
 import com.metamatrix.ui.internal.util.WizardUtil;
 import com.metamatrix.ui.internal.wizard.AbstractWizardPage;
-import com.metamatrix.ui.tree.AbstractTreeContentProvider;
-import org.eclipse.xsd.XSDElementDeclaration;
-import org.eclipse.xsd.XSDSchema;
-import org.eclipse.xsd.XSDSchemaContent;
-import org.eclipse.xsd.XSDSimpleTypeDefinition;
-import org.eclipse.xsd.XSDTypeDefinition;
-import org.eclipse.xsd.impl.XSDElementDeclarationImpl;
-import org.eclipse.xsd.impl.XSDParticleImpl;
-import org.eclipse.xsd.provider.XSDSemanticItemProviderAdapterFactory;
-import org.eclipse.xsd.util.XSDParser;
 
 public class OperationsDetailsPage extends AbstractWizardPage implements
 		ModelGeneratorWsdlUiConstants {
@@ -107,9 +99,8 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 
 	// ========== UI COMPONENTS =========================
 
-	/** The checkbox treeViewer */
-	private TreeViewer treeViewer;
-	private Tree tree;
+	/** The Operations Combo Selector */
+	private Combo operationsCombo;
 
 	private XSDSemanticItemProviderAdapterFactory semanticAdapterFactory;
 
@@ -141,8 +132,6 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 	
 	TabFolder wrapperTab;
 	WrapperProcedurePanel wrapperPanel;
-
-	OptionsPanel optionsPanel;
 	
 	private ProcedureGenerator procedureGenerator;
 
@@ -163,7 +152,7 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 		this.procedureGenerator = importManager.getProcedureGenerator(operation);
 		
 		this.wrapperPanel.notifyOperationChanged(operation);
-		this.optionsPanel.notifyOperationChanged(operation);
+		//this.optionsPanel.notifyOperationChanged(operation);
 
 		if (this.selectedRequestOperationText != null) {
 			this.selectedRequestOperationText.setText(this.procedureGenerator.getOperation().getName());
@@ -199,72 +188,44 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 	 * @since 4.2
 	 */
 	public void createControl(Composite theParent) {
-		final int COLUMNS = 1;
 		Composite pnlMain = WidgetFactory.createPanel(theParent, SWT.NONE,GridData.FILL_BOTH);
-		GridLayout layout = new GridLayout(COLUMNS, false);
+		GridLayout layout = new GridLayout(1, false);
 		pnlMain.setLayout(layout);
 		setControl(pnlMain);
+		
+		createOperationsSelectionPanel(pnlMain);
 
-		SashForm splitter = new SashForm(pnlMain, SWT.HORIZONTAL);
-		GridData gid = new GridData();
-		gid.grabExcessHorizontalSpace = gid.grabExcessVerticalSpace = true;
-		gid.horizontalAlignment = gid.verticalAlignment = GridData.FILL;
-		splitter.setLayoutData(gid);
-
-		createOperationsListPanel(splitter);
-
-		createTabbedDetailsPanel(splitter);
-
-		splitter.setWeights(new int[] { 35, 65 });
+		createTabbedDetailsPanel(pnlMain);
 
 		restoreState();
 	}
-
-	private void createOperationsListPanel(Composite parent) {
-		Composite panel = WidgetFactory.createPanel(parent);
-
-		GridLayout layout = new GridLayout(1, false);
-		panel.setLayout(layout);
+	
+	@SuppressWarnings("unused")
+	private void createOperationsSelectionPanel(Composite parent) {
+		Group operationsGroup = WidgetFactory.createGroup(parent, Messages.Operations, GridData.FILL_BOTH, 1, 1);
 		
-		// --------------------------
-		// Group for checkbox tree
-		// --------------------------
-		Group operationsGroup = WidgetFactory.createGroup(panel,Messages.Operations, GridData.FILL_BOTH, 1, 1);
-
-		// ----------------------------
-		// TreeViewerrequestTab
-		// ----------------------------
-		this.treeViewer = WidgetFactory.createTreeViewer(operationsGroup,
-				SWT.SINGLE, GridData.FILL_BOTH);
-
-		this.tree = this.treeViewer.getTree();
-
-		tree.setLayoutData(new GridData(GridData.FILL_BOTH));
-		OperationsListProvider provider = new OperationsListProvider();
-		this.treeViewer.setContentProvider(provider);
-		this.treeViewer.setLabelProvider(provider);
-
-		this.treeViewer.setInput(null);
-
-		this.treeViewer
-				.addSelectionChangedListener(new ISelectionChangedListener() {
-
-					@Override
-					public void selectionChanged(SelectionChangedEvent event) {
-						updateForTreeSelection();
-					}
-				});
-
-		this.optionsPanel = new OptionsPanel(panel, this);
+		ACTION_COMBO : {
+			operationsCombo = new Combo(operationsGroup, SWT.NONE | SWT.READ_ONLY);
+    		GridData gd = new GridData(GridData.FILL_BOTH);
+    		gd.verticalAlignment = GridData.CENTER;
+    		gd.horizontalSpan = 1;
+    		operationsCombo.setLayoutData(gd);
+    		
+    		operationsCombo.addSelectionListener(new SelectionAdapter() {
+                @Override
+                public void widgetSelected( SelectionEvent ev ) {
+                	selectComboItem(operationsCombo.getSelectionIndex());
+                }
+            });
+    	}
 	}
-
-	private void updateForTreeSelection() {
-		TreeSelection selection = (TreeSelection) this.treeViewer
-				.getSelection();
-		if (selection != null && !selection.isEmpty()) {
-			Operation operation = (Operation) selection.getFirstElement();
-			notifyOperationChanged(operation);
+	
+	private List<String> getOperationsNameList() {
+		List<String> nameList = new ArrayList<String>();
+		for( Operation op : this.importManager.getSelectedOperations()) {
+			nameList.add(op.getName());
 		}
+		return nameList;
 	}
 
 	private void createTabbedDetailsPanel(Composite parent) {
@@ -675,6 +636,20 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 			
 		wrapperPanel = new WrapperProcedurePanel(panel, this);
 	}
+	
+    private void selectComboItem(int selectionIndex) {
+    	if( selectionIndex >=0 ) {
+    		operationsCombo.select(selectionIndex);
+    		String operationName = operationsCombo.getItem(selectionIndex);
+    		
+			for( Operation op : this.importManager.getSelectedOperations()) {
+				if( op.getName().equalsIgnoreCase(operationName)) {
+					notifyOperationChanged(op);
+					break;
+				}
+			}
+    	}
+    }
 
 	void updateSqlText(int type) {
 		if (this.procedureGenerator != null) {
@@ -866,15 +841,9 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 	@Override
 	public void setVisible(boolean isVisible) {
 		if (isVisible) {
-        	
-			this.treeViewer.setInput(this.importManager.getSelectedOperations());
-
-			TreeItem firstItem = this.treeViewer.getTree().getItem(0);
-			if (firstItem != null) {
-				this.treeViewer.getTree().select(firstItem);
-
-				updateForTreeSelection();
-			}
+			WidgetUtil.setComboItems(operationsCombo, getOperationsNameList(), null, true);
+			
+			selectComboItem(0);
 
 			setPageStatus();
 		}
