@@ -15,7 +15,7 @@ public class ResponseInfo extends ProcedureInfo {
 
 	public ResponseInfo(Operation operation, ProcedureGenerator generator) {
 		super(operation, RESPONSE, generator);
-		setProcedureName("extract_" + operation.getName()); //$NON-NLS-1$
+		setProcedureName("response_" + operation.getName()); //$NON-NLS-1$
 	}
 
 	@Override

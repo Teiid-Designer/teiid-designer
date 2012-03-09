@@ -8,136 +8,76 @@
 package org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.panels;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Text;
 import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.OperationsDetailsPage;
 
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Operation;
 import com.metamatrix.ui.internal.util.WidgetFactory;
-import com.metamatrix.ui.internal.util.WidgetUtil;
 
 public class OptionsPanel {
 
-    Button generateButton;
+	Button overwriteButton;
 
-    Button overwriteButton;
+	IStatus status;
 
-    Label wrapperLabel;
-    Text wrapperProcedureText;
+	final OperationsDetailsPage detailsPage;
 
-    IStatus status;
+	public OptionsPanel(Composite parent, OperationsDetailsPage detailsPage) {
+		super();
+		this.detailsPage = detailsPage;
+		init(parent);
+	}
 
-    final OperationsDetailsPage detailsPage;
+	@SuppressWarnings("unused")
+	private void init(Composite parent) {
+		Group optionsGroup = WidgetFactory.createGroup(parent, Messages.Options, GridData.FILL_BOTH, 1, 2);
 
-    public OptionsPanel(Composite parent, OperationsDetailsPage detailsPage) {
-	super();
-	this.detailsPage = detailsPage;
-	init(parent);
-    }
+		this.overwriteButton = WidgetFactory.createCheckBox(optionsGroup, Messages.OverwriteExistingProcedures);
+		this.overwriteButton.addSelectionListener(new SelectionListener() {
 
-    @SuppressWarnings("unused")
-    private void init(Composite parent) {
-	Group optionsGroup = WidgetFactory.createGroup(parent, Messages.Options, GridData.FILL_BOTH, 1, 2);
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				detailsPage.getProcedureGenerator().setOverwriteExistingProcedures(overwriteButton.getSelection());
+				validate();
+			}
 
-	this.overwriteButton = WidgetFactory.createCheckBox(optionsGroup, Messages.OverwriteExistingProcedures);
-	this.overwriteButton.addSelectionListener(new SelectionListener() {
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+		});
 
-	    @Override
-	    public void widgetSelected(SelectionEvent e) {
-		detailsPage.getProcedureGenerator().setOverwriteExistingProcedures(overwriteButton.getSelection());
+		GridData gd = new GridData();
+		gd.horizontalSpan = 2;
+		overwriteButton.setLayoutData(gd);
+
+	}
+
+	public void notifyOperationChanged(Operation operation) {
+		this.overwriteButton.setSelection(this.detailsPage.getProcedureGenerator().doOverwriteExistingProcedures());
+
+		updateUi();
+
 		validate();
-	    }
-
-	    @Override
-	    public void widgetDefaultSelected(SelectionEvent e) {
-	    }
-	});
-
-	GridData gd = new GridData();
-	gd.horizontalSpan = 2;
-	overwriteButton.setLayoutData(gd);
-
-	WRAPPER_GROUP: {
-	    Group wrapperGroup = WidgetFactory.createGroup(optionsGroup, Messages.WrapperProcedure, GridData.FILL_HORIZONTAL,
-		1, 2);
-
-	    this.generateButton = WidgetFactory.createCheckBox(wrapperGroup, Messages.GenerateWrapperProcedure);
-	    this.generateButton.addSelectionListener(new SelectionListener() {
-
-		@Override
-		public void widgetSelected(SelectionEvent e) {
-		    detailsPage.getProcedureGenerator().setGenerateWrapperProcedure(generateButton.getSelection());
-		    updateUi();
-		    validate();
-		}
-
-		@Override
-		public void widgetDefaultSelected(SelectionEvent e) {
-		}
-	    });
-
-	    gd = new GridData();
-	    gd.horizontalSpan = 2;
-	    generateButton.setLayoutData(gd);
-
-	    wrapperLabel = new Label(wrapperGroup, SWT.NONE);
-	    wrapperLabel.setText(Messages.Name);
-	    this.wrapperProcedureText = new Text(wrapperGroup, SWT.BORDER | SWT.SINGLE);
-	    GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
-	    wrapperProcedureText.setLayoutData(gridData);
-	    wrapperProcedureText.setForeground(WidgetUtil.getDarkBlueColor());
-	    wrapperProcedureText.setEditable(true);
-	    wrapperProcedureText.addModifyListener(new ModifyListener() {
-		public void modifyText(ModifyEvent e) {
-		    handleWrapperProcedureNameChanged();
-		}
-	    });
-	    wrapperLabel.setEnabled(false);
-	    wrapperProcedureText.setEnabled(false);
 	}
-    }
 
-    public void notifyOperationChanged(Operation operation) {
-	this.generateButton.setSelection(this.detailsPage.getProcedureGenerator().doGenerateWrapperProcedure());
-	this.overwriteButton.setSelection(this.detailsPage.getProcedureGenerator().doOverwriteExistingProcedures());
-
-	updateUi();
-
-	validate();
-    }
-
-    private void updateUi() {
-	if (this.detailsPage.getProcedureGenerator() != null) {
-
+	private void updateUi() {
+		if (this.detailsPage.getProcedureGenerator() != null) {
+			// TODO: Set check-box state?
+		}
 	}
-	if (this.generateButton.getSelection()) {
-	    this.wrapperProcedureText.setText(detailsPage.getProcedureGenerator().getWrappedProcedureName());
+
+	private void validate() {
+		// TODO:
 	}
-	this.wrapperLabel.setEnabled(this.generateButton.getSelection());
-	this.wrapperProcedureText.setEnabled(this.generateButton.getSelection());
-    }
 
-    private void handleWrapperProcedureNameChanged() {
-	this.detailsPage.getProcedureGenerator().setWrapperProcedureName(this.wrapperProcedureText.getText());
-	validate();
-    }
-
-    private void validate() {
-	// TODO:
-    }
-
-    public IStatus getStatus() {
-	return this.status;
-    }
+	public IStatus getStatus() {
+		return this.status;
+	}
 
 }

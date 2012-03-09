@@ -15,7 +15,7 @@ public class RequestInfo extends ProcedureInfo {
 
 	public RequestInfo(Operation operation, ProcedureGenerator generator) {
 		super(operation, REQUEST, generator);
-		setProcedureName("create_" + operation.getName()); //$NON-NLS-1$
+		setProcedureName("request_" + operation.getName()); //$NON-NLS-1$
 	}
 
 	@Override
@@ -35,7 +35,7 @@ public class RequestInfo extends ProcedureInfo {
 //					) AS xml_out;
 //		END
 //		
-//		CREATE VIRTUAL PROCEDURE
+//		CREATE VIRTUAL PROCEDUREthis.operation.getName()
 //		BEGIN
 //			SELECT 								   | ------------- element-namespace------------------|
 //				XMLELEMENT(NAME "<operation-name>", XMLNAMESPACES(DEFAULT 'http://<schema-namespace>'),

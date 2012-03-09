@@ -37,6 +37,8 @@ public interface SqlConstants {
     public static final String DEFAULT = "DEFAULT"; //$NON-NLS-1$
     public static final String XMLTABLE = "XMLTABLE"; //$NON-NLS-1$
     public static final String TEXTTABLE = "TEXTTABLE"; //$NON-NLS-1$
+    public static final String TABLE = "TABLE"; //$NON-NLS-1$
+    public static final String EXEC = "EXEC"; //$NON-NLS-1$
     
     public static final String PATH = "PATH"; //$NON-NLS-1$
     public static final String FOR_ORDINALITY = "FOR ORDINALITY"; //$NON-NLS-1$

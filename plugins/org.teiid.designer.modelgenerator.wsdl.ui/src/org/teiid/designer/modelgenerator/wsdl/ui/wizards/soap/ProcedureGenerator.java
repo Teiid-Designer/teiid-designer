@@ -7,6 +7,7 @@
 */
 package org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap;
 
+import com.metamatrix.modeler.internal.transformation.util.SqlConstants;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Operation;
 import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.wizards.WSDLImportWizardManager;
 
@@ -17,8 +18,20 @@ import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.wizards.WSDLImport
  * 
  * 
  */
-public class ProcedureGenerator {
-	
+public class ProcedureGenerator implements SqlConstants {
+	private static final char 	SEMI_COLON_CHAR = ';';
+	private static final String SQL_BEGIN = "CREATE VIRTUAL PROCEDURE\nBEGIN\n"; //$NON-NLS-1$
+	private static final String SQL_END = "\nEND"; //$NON-NLS-1$
+	//private static final String REQUEST = "REQUEST"; //$NON-NLS-1$
+	private static final String RESPONSE = "RESPONSE"; //$NON-NLS-1$
+	private static final String REQUEST_LOWER = "request"; //$NON-NLS-1$
+	private static final String RESPONSE_LOWER = "response"; //$NON-NLS-1$
+	private static final String TABLE_EXEC = "TABLE(EXEC "; //$NON-NLS-1$
+	//private static final String INVOKE_LOWER = "invoke"; //$NON-NLS-1$
+	private static final String XMI_EXTENSION = ".xmi";  //$NON-NLS-1$
+	private static final String RESULT_LOWER = "result";  //$NON-NLS-1$
+	private static final String INVOKE_SEGMENT = "invoke('SOAP11', null, REQUEST.xml_out, null))"; //$NON-NLS-1$
+
 	private ProcedureInfo requestInfo;
 	private ProcedureInfo responseInfo;
 	
@@ -113,5 +126,103 @@ public class ProcedureGenerator {
 	
 	public String getNamespaceURI() {
 		return this.namespaceURI;
+	}
+	
+	public String getWrapperSqlString() {
+		/**
+            CREATE VIRTUAL PROCEDURE
+            BEGIN
+                 SELECT t.* FROM 
+                      TABLE(EXEC CountryInfoServiceXML.CapitalCity.create_CapitalCity(OPS.GETCAPITALCITY.countryISOCode)) 
+                 AS request, 
+                 TABLE(EXEC CountryInfoService.invoke('SOAP11', null, REQUEST.xml_out, null)) 
+                 AS response, 
+                 TABLE(EXEC CountryInfoServiceXML.CapitalCity.extract_CapitalCityResponse(RESPONSE.result)) 
+                 AS t;
+             END
+                 
+             CREATE VIRTUAL PROCEDURE
+             BEGIN
+                 SELECT t.* FROM 
+                    TABLE(EXEC <view-model-name>.<request_procedure>(OPS.GETCAPITALCITY.countryISOCode)) 
+                 AS request, 
+                 	TABLE(EXEC <source-model-name>.invoke('SOAP11', null, REQUEST.xml_out, null)) 
+                 AS response, 
+                 	TABLE(EXEC <view-model-name>.<response_procedure>(RESPONSE.result)) 
+                 AS t;
+             END
+		 */
+		
+		StringBuilder sb = new StringBuilder();
+		
+    	String tableAlias = "t"; //$NON-NLS-1$
+
+    	sb.append(SQL_BEGIN);
+    	// SELECT t.* FROM 
+    	sb.append(TAB).append(SELECT).append(SPACE).append(tableAlias).append(DOT).append(STAR).append(SPACE).append(FROM).append(RETURN);
+    	// TABLE(EXEC 
+    	sb.append(TAB).append(TAB).append(TABLE_EXEC);
+    	// <view-model-name>.<request_procedure>
+    	sb.append(getModelNameWithoutExtension(importManager.getSourceModelName()));
+    	sb.append(DOT).append(getRequestProcedureName());
+    	
+    	// (OPS.GETCAPITALCITY.countryISOCode))
+    	sb.append(L_PAREN);
+    	int nColumns = this.requestInfo.getColumnInfoList().length;
+    	int i=0;
+    	for( ColumnInfo columnInfo : this.requestInfo.getColumnInfoList()) {
+    		String name = columnInfo.getName();
+    		sb.append(getParamaterFullName(name));
+    		
+    		if(i < (nColumns-1)) {
+    			sb.append(COMMA).append(SPACE);
+    		}
+    		i++;
+    	}
+    	sb.append(R_PAREN).append(RETURN);
+    	
+    	// AS request,
+    	sb.append(TAB).append(AS).append(SPACE).append(REQUEST_LOWER).append(COMMA).append(RETURN);
+    	
+    	// TABLE(EXEC <source-model-name>.invoke('SOAP11', null, REQUEST.xml_out, null))
+    	sb.append(TAB).append(TAB)
+    		.append(TABLE_EXEC)
+    		.append(getModelNameWithoutExtension(importManager.getSourceModelName())).append(DOT)
+    		.append(INVOKE_SEGMENT).append(RETURN);
+    	
+    	// AS response,
+    	sb.append(TAB).append(AS).append(SPACE).append(RESPONSE_LOWER).append(COMMA).append(RETURN);
+    	
+    	// TABLE(EXEC <view-model-name>.<response_procedure>(RESPONSE.result))  
+    	sb.append(TAB).append(TAB)
+    		.append(TABLE_EXEC)
+    		.append(getModelNameWithoutExtension(importManager.getViewModelName()))
+    		.append(DOT).append(getResponseProcedureName())
+    		.append(L_PAREN).append(RESPONSE).append(DOT).append(RESULT_LOWER)
+    		.append(R_PAREN).append(R_PAREN).append(RETURN);
+    	
+    	// AS t;
+    	sb.append(TAB).append(AS).append(SPACE).append(tableAlias).append(SEMI_COLON_CHAR).append(RETURN);
+    	
+    	sb.append(SQL_END);
+
+    	
+		return sb.toString();
+	}
+	
+	private String getModelNameWithoutExtension(String modelName) {
+		String name = modelName;
+        if (name.endsWith(XMI_EXTENSION)) {
+        	name = name.substring(0, name.lastIndexOf(XMI_EXTENSION));
+        }
+        return name;
+	}
+	
+	public String getParamaterFullName(String name) {
+		StringBuilder builder = new StringBuilder();
+		builder.append(this.getViewModelName());
+		builder.append('.').append(this.operation.getName()).append('.').append(name);
+		
+		return builder.toString();
 	}
 }

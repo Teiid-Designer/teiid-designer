@@ -58,6 +58,7 @@ import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.panels.ColumnsInfo
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.panels.ElementsInfoPanel;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.panels.ImportOptionsPanel;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.panels.OptionsPanel;
+import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.panels.WrapperProcedurePanel;
 
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Model;
@@ -137,6 +138,9 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 	Action responseCreateElementAction, responseSetRootPathAction;
 	Button responseAddElementButton;
 	ColumnsInfoPanel responseElementsInfoPanel;
+	
+	TabFolder wrapperTab;
+	WrapperProcedurePanel wrapperPanel;
 
 	OptionsPanel optionsPanel;
 	
@@ -158,6 +162,7 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 	private void notifyOperationChanged(Operation operation) {
 		this.procedureGenerator = importManager.getProcedureGenerator(operation);
 		
+		this.wrapperPanel.notifyOperationChanged(operation);
 		this.optionsPanel.notifyOperationChanged(operation);
 
 		if (this.selectedRequestOperationText != null) {
@@ -182,6 +187,7 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 		this.requestElementsInfoPanel.refresh();
 		this.responseElementsInfoPanel.refresh();
 		updateSqlText(BOTH);
+		this.wrapperPanel.notifyOperationChanged(this.getProcedureGenerator().getOperation());
 	}
 	
     public WSDLImportWizardManager getImportManager() {
@@ -226,7 +232,7 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 		Group operationsGroup = WidgetFactory.createGroup(panel,Messages.Operations, GridData.FILL_BOTH, 1, 1);
 
 		// ----------------------------
-		// TreeViewer
+		// TreeViewerrequestTab
 		// ----------------------------
 		this.treeViewer = WidgetFactory.createTreeViewer(operationsGroup,
 				SWT.SINGLE, GridData.FILL_BOTH);
@@ -267,6 +273,7 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 
 		createRequestTab(tabFolder);
 		createResponseTab(tabFolder);
+		createWrapperTab(tabFolder);
 	}
 
 	private void createRequestTab(TabFolder tabFolder) {
@@ -440,8 +447,7 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 	}
 
 	private void createRequestSqlGroup(Composite parent) {
-		Group group = WidgetFactory.createGroup(parent,
-				Messages.GeneratedSQLStatement, SWT.NONE, 2);
+		Group group = WidgetFactory.createGroup(parent,Messages.GeneratedSQLStatement, SWT.NONE, 2);
 		group.setLayout(new GridLayout(1, false));
 		GridData gd = new GridData(GridData.FILL_BOTH);
 		gd.horizontalSpan = 2;
@@ -657,6 +663,17 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 		responseSqlDocument.set(CoreStringUtil.Constants.EMPTY_STRING);
 		responseSqlTextViewer.getControl().setLayoutData(
 				new GridData(GridData.FILL_BOTH));
+	}
+	
+	private void createWrapperTab(TabFolder tabFolder) {
+		Composite panel = WidgetFactory.createPanel(tabFolder);
+		this.responseTab = new TabItem(tabFolder, SWT.NONE);
+		this.responseTab.setControl(panel);
+		this.responseTab.setText(Messages.WrapperProcedure);
+
+		panel.setLayout(new GridLayout(1, false));
+			
+		wrapperPanel = new WrapperProcedurePanel(panel, this);
 	}
 
 	void updateSqlText(int type) {
