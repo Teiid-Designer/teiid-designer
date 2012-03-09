@@ -111,7 +111,6 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 	TabFolder tabFolder;
 
 	TabItem requestTab;
-	Text selectedRequestOperationText;
 	Text requestProcedureNameText;
 	TreeViewer requestXmlTreeViewer;
 	TextViewer requestSqlTextViewer;
@@ -121,7 +120,6 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 	ElementsInfoPanel requestElementsInfoPanel;
 
 	TabItem responseTab;
-	Text selectedResponseOperationText;
 	Text responseProcedureNameText;
 	TreeViewer responseXmlTreeViewer;
 	TextViewer responseSqlTextViewer;
@@ -152,14 +150,6 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 		this.procedureGenerator = importManager.getProcedureGenerator(operation);
 		
 		this.wrapperPanel.notifyOperationChanged(operation);
-		//this.optionsPanel.notifyOperationChanged(operation);
-
-		if (this.selectedRequestOperationText != null) {
-			this.selectedRequestOperationText.setText(this.procedureGenerator.getOperation().getName());
-		}
-		if (this.selectedResponseOperationText != null) {
-			this.selectedResponseOperationText.setText(this.procedureGenerator.getOperation().getName());
-		}
 
 		this.requestProcedureNameText.setText(this.procedureGenerator.getRequestProcedureName());
 		this.responseProcedureNameText.setText(this.procedureGenerator.getResponseProcedureName());
@@ -244,18 +234,6 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 		this.requestTab.setText(Messages.Request);
 
 		panel.setLayout(new GridLayout(2, false));
-
-		Label selectedOperationLabel = new Label(panel, SWT.NONE);
-		selectedOperationLabel.setText(Messages.SelectedOperation);
-
-		selectedRequestOperationText = new Text(panel, SWT.BORDER | SWT.SINGLE);
-		selectedRequestOperationText.setBackground(Display.getCurrent()
-				.getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
-		selectedRequestOperationText.setForeground(Display.getCurrent()
-				.getSystemColor(SWT.COLOR_DARK_BLUE));
-		selectedRequestOperationText.setLayoutData(new GridData(
-				GridData.FILL_HORIZONTAL));
-		selectedRequestOperationText.setEditable(false);
 
 		Label procedureNameLabel = new Label(panel, SWT.NONE);
 		procedureNameLabel.setText(Messages.GeneratedProcedureName);
@@ -438,19 +416,7 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 		this.responseTab.setText(Messages.Response);
 
 		panel.setLayout(new GridLayout(2, false));
-
-		Label selectedOperationLabel = new Label(panel, SWT.NONE);
-		selectedOperationLabel.setText(Messages.SelectedOperation);
-
-		selectedResponseOperationText = new Text(panel, SWT.BORDER | SWT.SINGLE);
-		selectedResponseOperationText.setBackground(Display.getCurrent()
-				.getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
-		selectedResponseOperationText.setForeground(Display.getCurrent()
-				.getSystemColor(SWT.COLOR_DARK_BLUE));
-		selectedResponseOperationText.setLayoutData(new GridData(
-				GridData.FILL_HORIZONTAL));
-		selectedResponseOperationText.setEditable(false);
-
+		
 		Label procedureNameLabel = new Label(panel, SWT.NONE);
 		procedureNameLabel.setText(Messages.GeneratedProcedureName);
 

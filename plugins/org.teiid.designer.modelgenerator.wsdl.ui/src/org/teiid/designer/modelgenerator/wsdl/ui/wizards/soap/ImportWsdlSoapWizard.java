@@ -42,6 +42,7 @@ import com.metamatrix.modeler.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstan
 import com.metamatrix.modeler.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiPlugin;
 import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.wizards.WSDLImportWizardManager;
 import com.metamatrix.modeler.schema.tools.processing.SchemaProcessingException;
+import com.metamatrix.ui.internal.util.UiUtil;
 import com.metamatrix.ui.internal.wizard.AbstractWizard;
 
 public class ImportWsdlSoapWizard extends AbstractWizard implements IImportWizard {
@@ -227,7 +228,13 @@ public class ImportWsdlSoapWizard extends AbstractWizard implements IImportWizar
     }
     
     private void runFinishWithDetails() {
-    	MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "Unfinished Wizard", "WSDL Procedure generation not yet finished");
+    	UiUtil.runInSwtThread(new Runnable() {
+			@Override
+			public void run() {
+				MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "Unfinished Wizard", "WSDL Procedure generation not yet finished");
+			}
+		}, false);
+    	
     }
     
     public void notifyManagerChanged() {

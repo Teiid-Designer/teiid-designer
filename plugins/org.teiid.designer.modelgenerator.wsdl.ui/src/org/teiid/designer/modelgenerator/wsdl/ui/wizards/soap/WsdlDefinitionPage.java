@@ -171,6 +171,9 @@ public class WsdlDefinitionPage extends WizardPage implements Listener, IProfile
 				this.buttonValidateWSDL.setEnabled(false);
 			}
 		}
+		if( this.operationsPanel != null ) {
+			this.operationsPanel.notifyWsdlChanged();
+		}
 	}
 
 	/**
@@ -633,10 +636,10 @@ public class WsdlDefinitionPage extends WizardPage implements Listener, IProfile
 		super.setVisible(visible);
 
 		if (visible) {
-			if (this.connectionProfilesCombo.getItemCount() > 0) {
-				this.connectionProfilesCombo.select(0);
-				handleConnectionProfileSelected();
-			}
+//			if (this.connectionProfilesCombo.getItemCount() > 0) {
+//				this.connectionProfilesCombo.select(0);
+//				handleConnectionProfileSelected();
+//			}
 
 			refreshUiFromManager();
 		}

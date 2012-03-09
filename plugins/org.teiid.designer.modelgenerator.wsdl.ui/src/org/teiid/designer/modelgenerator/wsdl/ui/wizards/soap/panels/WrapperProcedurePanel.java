@@ -33,7 +33,6 @@ import com.metamatrix.ui.internal.util.WidgetUtil;
 
 public class WrapperProcedurePanel {
 
-	Label wrapperLabel;
 	Text wrapperProcedureText;
 	SqlTextViewer sqlTextViewer;
 	IDocument sqlDocument;
@@ -50,14 +49,13 @@ public class WrapperProcedurePanel {
 
 	@SuppressWarnings("unused")
 	private void init(Composite parent) {
-		// Cr
-		WRAPPER_GROUP: {
-			Group wrapperGroup = WidgetFactory.createGroup(parent, Messages.WrapperProcedure, GridData.FILL_HORIZONTAL,
-				1, 2);
 
-			wrapperLabel = new Label(wrapperGroup, SWT.NONE);
-			wrapperLabel.setText(Messages.Name);
-			this.wrapperProcedureText = new Text(wrapperGroup, SWT.BORDER | SWT.SINGLE);
+		WRAPPER_GROUP: {
+
+			Label procedureNameLabel = new Label(parent, SWT.NONE);
+			procedureNameLabel.setText(Messages.GeneratedProcedureName);
+			
+			this.wrapperProcedureText = new Text(parent, SWT.BORDER | SWT.SINGLE);
 			GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
 			wrapperProcedureText.setLayoutData(gridData);
 			wrapperProcedureText.setForeground(WidgetUtil.getDarkBlueColor());
@@ -67,7 +65,6 @@ public class WrapperProcedurePanel {
 					handleWrapperProcedureNameChanged();
 				}
 			});
-			wrapperLabel.setEnabled(false);
 			wrapperProcedureText.setEnabled(true);
 		}
 
