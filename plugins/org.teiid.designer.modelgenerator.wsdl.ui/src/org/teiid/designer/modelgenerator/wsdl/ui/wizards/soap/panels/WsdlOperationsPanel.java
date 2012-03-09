@@ -5,7 +5,7 @@
  *
  * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
  */
-package org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap;
+package org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.panels;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,8 +13,6 @@ import java.util.List;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
-import org.eclipse.jface.dialogs.IDialogSettings;
-import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TreeExpansionEvent;
@@ -24,7 +22,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -52,30 +49,13 @@ import com.metamatrix.modeler.modelgenerator.wsdl.model.Service;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.WSDLElement;
 import com.metamatrix.modeler.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstants;
 import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.util.ModelGeneratorWsdlUiUtil;
-import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.wizards.SelectWsdlOperationsPage;
 import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.wizards.WSDLImportWizardManager;
 import com.metamatrix.ui.internal.util.WidgetFactory;
 import com.metamatrix.ui.internal.util.WidgetUtil;
-import com.metamatrix.ui.internal.util.WizardUtil;
 import com.metamatrix.ui.internal.widget.DefaultTreeViewerController;
-import com.metamatrix.ui.internal.wizard.AbstractWizardPage;
 
-public class WsdlOperationsPage extends AbstractWizardPage implements Listener,
-		FileUtils.Constants, CoreStringUtil.Constants,
-		ModelGeneratorWsdlUiConstants, ModelGeneratorWsdlUiConstants.Images {
-
-	/** <code>IDialogSetting</code>s key for saved dialog height. */
-	private static final String DIALOG_HEIGHT = "dialogHeight"; //$NON-NLS-1$
-
-	/** <code>IDialogSetting</code>s key for saved dialog width. */
-	private static final String DIALOG_WIDTH = "dialogWidth"; //$NON-NLS-1$
-
-	/** <code>IDialogSetting</code>s key for saved dialog X position. */
-	private static final String DIALOG_X = "dialogX"; //$NON-NLS-1$
-
-	/** <code>IDialogSetting</code>s key for saved dialog Y position. */
-	private static final String DIALOG_Y = "dialogY"; //$NON-NLS-1$
-
+public class WsdlOperationsPanel implements Listener, FileUtils.Constants, CoreStringUtil.Constants,
+	ModelGeneratorWsdlUiConstants, ModelGeneratorWsdlUiConstants.Images {
 	/** The checkbox treeViewer */
 	private TreeViewer treeViewer;
 	private Tree tree;
@@ -89,57 +69,45 @@ public class WsdlOperationsPage extends AbstractWizardPage implements Listener,
 	/** Text area for display of selection details */
 	private Text detailsTextBox;
 
+	private Composite parentComposite;
+
 	/** The import manager. */
 	WSDLImportWizardManager importManager;
 
 	/** The WSDL model representation */
 	Model wsdlModel = null;
 
-	private boolean initializing = false;
+	private IStatus panelStatus;
 
-	/**
-	 * Constructs the page with the provided import manager
-	 * 
-	 * @param theImportManager
-	 *            the import manager object
-	 */
-	public WsdlOperationsPage(WSDLImportWizardManager theImportManager) {
-		super(SelectWsdlOperationsPage.class.getSimpleName(),
-				Messages.WsdlOperationsPage_title);
+	public WsdlOperationsPanel(Composite parent, WSDLImportWizardManager theImportManager) {
+		super();
+		this.parentComposite = parent;
 		this.importManager = theImportManager;
 		this.importManager.setSelectedOperations(new ArrayList());
-		setImageDescriptor(ModelGeneratorWsdlUiUtil
-				.getImageDescriptor(NEW_MODEL_BANNER));
+
+		createPanel(parent);
 	}
 
-	/**
-	 * Event handler
-	 * 
-	 * @param event
-	 *            the Event
-	 */
 	public void handleEvent(Event event) {
-		if (!initializing) {
-			boolean validate = false;
+		boolean validate = false;
 
-			// Tree node selected
-			if (event.widget == this.tree) {
-				updateTreeSelectionDetails();
-			}
+		// Tree node selected
+		if (event.widget == this.tree) {
+			updateTreeSelectionDetails();
+		}
 
-			// SelectAll button selected
-			if (event.widget == this.selectAllButton) {
-				setAllNodesSelected(true);
-			}
+		// SelectAll button selected
+		if (event.widget == this.selectAllButton) {
+			setAllNodesSelected(true);
+		}
 
-			// DeselectAll button selected
-			if (event.widget == this.deselectAllButton) {
-				setAllNodesSelected(false);
-			}
+		// DeselectAll button selected
+		if (event.widget == this.deselectAllButton) {
+			setAllNodesSelected(false);
+		}
 
-			if (validate) {
-				setPageStatus();
-			}
+		if (validate) {
+			setPageStatus();
 		}
 	}
 
@@ -155,13 +123,11 @@ public class WsdlOperationsPage extends AbstractWizardPage implements Listener,
 	 * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
 	 * @since 4.2
 	 */
-	public void createControl(Composite theParent) {
+	public void createPanel(Composite theParent) {
 		final int COLUMNS = 1;
-		Composite pnlMain = WidgetFactory.createPanel(theParent, SWT.NONE,
-				GridData.FILL_BOTH);
+		Composite pnlMain = WidgetFactory.createPanel(theParent, SWT.NONE, GridData.FILL_BOTH);
 		GridLayout layout = new GridLayout(COLUMNS, false);
 		pnlMain.setLayout(layout);
-		setControl(pnlMain);
 
 		SashForm splitter = new SashForm(pnlMain, SWT.VERTICAL);
 		GridData gid = new GridData();
@@ -169,14 +135,11 @@ public class WsdlOperationsPage extends AbstractWizardPage implements Listener,
 		gid.horizontalAlignment = gid.verticalAlignment = GridData.FILL;
 		splitter.setLayoutData(gid);
 
-		createCheckboxTreeComposite(splitter,
-				Messages.WsdlOperationsPage_checkboxTreeGroup_title);
+		createCheckboxTreeComposite(splitter, Messages.WsdlOperationsPage_checkboxTreeGroup_title);
 
 		createDetailsComposite(splitter);
 
 		splitter.setWeights(new int[] { 70, 30 });
-
-		restoreState();
 	}
 
 	/**
@@ -188,27 +151,24 @@ public class WsdlOperationsPage extends AbstractWizardPage implements Listener,
 	 *            the group title
 	 */
 	private void createCheckboxTreeComposite(Composite parent, String title) {
-		Composite checkBoxTreeComposite = WidgetFactory.createPanel(parent,
-				SWT.NONE, GridData.FILL_BOTH);
+		Composite checkBoxTreeComposite = WidgetFactory.createPanel(parent, SWT.NONE, GridData.FILL_BOTH);
 		GridLayout layout = new GridLayout(1, false);
 		checkBoxTreeComposite.setLayout(layout);
 
 		// --------------------------
 		// Group for checkbox tree
 		// --------------------------
-		Group group = WidgetFactory.createGroup(checkBoxTreeComposite, title,
-				GridData.FILL_BOTH, 1, 2);
+		Group group = WidgetFactory.createGroup(checkBoxTreeComposite, title, GridData.FILL_BOTH, 1, 2);
 
 		// ----------------------------
 		// TreeViewer
 		// ----------------------------
 		this.controller = new CheckboxTreeController();
-		this.treeViewer = WidgetFactory.createTreeViewer(group, SWT.SINGLE
-				| SWT.CHECK, GridData.FILL_BOTH, controller);
+		this.treeViewer = WidgetFactory.createTreeViewer(group, SWT.SINGLE | SWT.CHECK, GridData.FILL_BOTH, controller);
 
 		this.tree = this.treeViewer.getTree();
 		tree.addListener(SWT.Selection, this);
-
+		
 		tree.setLayoutData(new GridData(GridData.FILL_BOTH));
 
 		this.treeViewer.setContentProvider(new CheckboxTreeContentProvider());
@@ -219,20 +179,15 @@ public class WsdlOperationsPage extends AbstractWizardPage implements Listener,
 		// ----------------------------
 		// Select/DeSelect Buttons
 		// ----------------------------
-		Composite buttonComposite = WidgetFactory.createPanel(group, SWT.NONE,
-				GridData.FILL_VERTICAL);
+		Composite buttonComposite = WidgetFactory.createPanel(group, SWT.NONE, GridData.FILL_VERTICAL);
 		layout = new GridLayout(1, false);
 		buttonComposite.setLayout(layout);
 		this.selectAllButton = WidgetFactory.createButton(buttonComposite,
-				Messages.WsdlOperationsPage_selectAllButton_text,
-				GridData.FILL_HORIZONTAL);
-		this.selectAllButton
-				.setToolTipText(Messages.WsdlOperationsPage_selectAllButton_tipText);
+			Messages.WsdlOperationsPage_selectAllButton_text, GridData.FILL_HORIZONTAL);
+		this.selectAllButton.setToolTipText(Messages.WsdlOperationsPage_selectAllButton_tipText);
 		this.deselectAllButton = WidgetFactory.createButton(buttonComposite,
-				Messages.WsdlOperationsPage_deselectAllButton_text,
-				GridData.FILL_HORIZONTAL);
-		this.deselectAllButton
-				.setToolTipText(Messages.WsdlOperationsPage_deselectAllButton_tipText);
+			Messages.WsdlOperationsPage_deselectAllButton_text, GridData.FILL_HORIZONTAL);
+		this.deselectAllButton.setToolTipText(Messages.WsdlOperationsPage_deselectAllButton_tipText);
 
 		this.selectAllButton.addListener(SWT.Selection, this);
 		this.deselectAllButton.addListener(SWT.Selection, this);
@@ -245,9 +200,8 @@ public class WsdlOperationsPage extends AbstractWizardPage implements Listener,
 	 * @param parent
 	 *            the parent composite
 	 */
-	private void createDetailsComposite(Composite parent) {
-		Composite detailsComposite = WidgetFactory.createPanel(parent,
-				SWT.NONE, GridData.FILL_BOTH);
+	private void createDetailsComposite(Composite parent) {					
+		Composite detailsComposite = WidgetFactory.createPanel(parent, SWT.NONE, GridData.FILL_BOTH);
 		GridLayout layout = new GridLayout(1, false);
 		detailsComposite.setLayout(layout);
 
@@ -261,8 +215,7 @@ public class WsdlOperationsPage extends AbstractWizardPage implements Listener,
 		gridData.horizontalSpan = 1;
 		theLabel.setLayoutData(gridData);
 
-		this.detailsTextBox = WidgetFactory.createTextBox(detailsComposite,
-				SWT.NONE, GridData.FILL_BOTH);
+		this.detailsTextBox = WidgetFactory.createTextBox(detailsComposite, SWT.NONE, GridData.FILL_BOTH);
 		detailsTextBox.setEditable(false);
 	}
 
@@ -283,7 +236,7 @@ public class WsdlOperationsPage extends AbstractWizardPage implements Listener,
 			addBindingDetails((Binding) selectedObject, sb);
 		} else if (selectedObject instanceof Operation) {
 			addOperationDetails((Operation) selectedObject, sb);
-		} else if (selectedObject instanceof Message) {
+		} else if (selectedObject instanceof Message) {					
 			Message theMessage = (Message) selectedObject;
 			sb.append(theMessage.getName() + " [Message]\n"); //$NON-NLS-1$
 			sb.append("id: " + theMessage.getId()); //$NON-NLS-1$
@@ -332,133 +285,30 @@ public class WsdlOperationsPage extends AbstractWizardPage implements Listener,
 		}
 	}
 
-	/**
-	 * @see org.eclipse.jface.dialogs.IDialogPage#dispose()
-	 * @since 4.2
-	 */
-	@Override
-	public void dispose() {
-		saveState();
+	public void notifyWsdlChanged() {
+		try {
+			this.wsdlModel = this.importManager.getWSDLModel();
+		} catch (ModelGenerationException e) {
+			this.wsdlModel = null;
+			Status exStatus = new Status(IStatus.ERROR, PLUGIN_ID, 0,
+				Messages.WsdlOperationsPage_dialog_wsdlParseError_msg, e);
+			Shell shell = this.parentComposite.getShell();
+			ErrorDialog.openError(shell, null, Messages.WsdlOperationsPage_dialog_wsdlParseError_title, exStatus);
+		}
+		this.treeViewer.setInput(this.wsdlModel);
+		this.importManager.setSelectedOperations(new ArrayList());
+		this.treeViewer.expandToLevel(4);
+		setAllNodesSelected(true);
+		setPageStatus();
 	}
 
-	/**
-	 * Override to replace the NewModelWizard settings with the section devoted
-	 * to the Web Service Model Wizard.
-	 * 
-	 * @see org.eclipse.jface.wizard.WizardPage#getDialogSettings()
-	 * @since 4.2
-	 */
-	@Override
-	protected IDialogSettings getDialogSettings() {
-		IDialogSettings settings = super.getDialogSettings();
-
-		if (settings != null) {
-			// get the right section of the NewModelWizard settings
-			IDialogSettings temp = settings.getSection(DIALOG_SETTINGS_SECTION);
-
-			if (temp == null) {
-				settings = settings.addNewSection(DIALOG_SETTINGS_SECTION);
-			} else {
-				settings = temp;
-			}
-		}
-
-		return settings;
+	private void setPageStatus() {
+		// TODO: set an IStatus on this panel
+		panelStatus = Status.OK_STATUS;
 	}
 
-	/**
-	 * Restores dialog size and position of the last time wizard ran.
-	 * 
-	 * @since 4.2
-	 */
-	private void restoreState() {
-		IDialogSettings settings = getDialogSettings();
-
-		if (settings != null) {
-			Shell shell = getContainer().getShell();
-
-			if (shell != null) {
-				try {
-					int x = settings.getInt(DIALOG_X);
-					int y = settings.getInt(DIALOG_Y);
-					int width = settings.getInt(DIALOG_WIDTH);
-					int height = settings.getInt(DIALOG_HEIGHT);
-					shell.setBounds(x, y, width, height);
-				} catch (NumberFormatException theException) {
-					// getInt(String) throws exception if not found.
-					// just means no settings exist yet.
-				}
-			}
-		}
-	}
-
-	/**
-	 * Persists dialog size and position.
-	 * 
-	 * @since 4.2
-	 */
-	private void saveState() {
-		IDialogSettings settings = getDialogSettings();
-
-		if (settings != null) {
-			Shell shell = getContainer().getShell();
-
-			if (shell != null) {
-				Rectangle r = shell.getBounds();
-				settings.put(DIALOG_X, r.x);
-				settings.put(DIALOG_Y, r.y);
-				settings.put(DIALOG_WIDTH, r.width);
-				settings.put(DIALOG_HEIGHT, r.height);
-			}
-		}
-	}
-
-	/**
-	 * Sets the wizard page status message.
-	 * 
-	 * @since 4.2
-	 */
-	void setPageStatus() {
-		// Determine if any of the operations are checked
-		boolean hasSelections = this.importManager.getSelectedOperations()
-				.size() > 0;
-		if (!hasSelections) {
-			WizardUtil.setPageComplete(this,
-					Messages.WsdlOperationsPage_noSelections_msg,
-					IMessageProvider.ERROR);
-			return;
-		}
-
-		WizardUtil.setPageComplete(this);
-
-		getContainer().updateButtons();
-	}
-
-	@Override
-	public void setVisible(boolean isVisible) {
-		if (isVisible) {
-			try {
-				this.wsdlModel = this.importManager.getWSDLModel();
-			} catch (ModelGenerationException e) {
-				this.wsdlModel = null;
-				Status exStatus = new Status(IStatus.ERROR, PLUGIN_ID, 0,
-						Messages.WsdlOperationsPage_dialog_wsdlParseError_msg,
-						e);
-				Shell shell = this.getShell();
-				ErrorDialog
-						.openError(
-								shell,
-								null,
-								Messages.WsdlOperationsPage_dialog_wsdlParseError_title,
-								exStatus);
-			}
-			this.treeViewer.setInput(this.wsdlModel);
-			this.importManager.setSelectedOperations(new ArrayList());
-			this.treeViewer.expandToLevel(4);
-			setAllNodesSelected(true);
-			setPageStatus();
-		}
-		super.setVisible(isVisible);
+	public IStatus getStatus() {
+		return panelStatus;
 	}
 
 	private void setAllNodesSelected(boolean bSelected) {
@@ -522,14 +372,10 @@ public class WsdlOperationsPage extends AbstractWizardPage implements Listener,
 	}
 
 	class CheckboxTreeLabelProvider extends LabelProvider {
-		private final Image SERVICE_ICON_IMG = ModelGeneratorWsdlUiUtil
-				.getImage(SERVICE_ICON);
-		private final Image PORT_ICON_IMG = ModelGeneratorWsdlUiUtil
-				.getImage(PORT_ICON);
-		private final Image OPERATION_ICON_IMG = ModelGeneratorWsdlUiUtil
-				.getImage(OPERATION_ICON);
-		private final Image BINDING_ICON_IMG = ModelGeneratorWsdlUiUtil
-				.getImage(BINDING_ICON);
+		private final Image SERVICE_ICON_IMG = ModelGeneratorWsdlUiUtil.getImage(SERVICE_ICON);
+		private final Image PORT_ICON_IMG = ModelGeneratorWsdlUiUtil.getImage(PORT_ICON);
+		private final Image OPERATION_ICON_IMG = ModelGeneratorWsdlUiUtil.getImage(OPERATION_ICON);
+		private final Image BINDING_ICON_IMG = ModelGeneratorWsdlUiUtil.getImage(BINDING_ICON);
 
 		final WorkbenchLabelProvider workbenchProvider = new WorkbenchLabelProvider();
 
@@ -614,8 +460,7 @@ public class WsdlOperationsPage extends AbstractWizardPage implements Listener,
 			return false;
 		}
 
-		public void inputChanged(final Viewer viewer, final Object oldInput,
-				final Object newInput) {
+		public void inputChanged(final Viewer viewer, final Object oldInput, final Object newInput) {
 		}
 	}
 
@@ -633,8 +478,7 @@ public class WsdlOperationsPage extends AbstractWizardPage implements Listener,
 		@Override
 		public boolean isItemCheckable(final TreeItem item) {
 			final Object node = item.getData();
-			if (node instanceof Service || node instanceof Binding
-					|| node instanceof Port || node instanceof Operation) {
+			if (node instanceof Service || node instanceof Binding || node instanceof Port || node instanceof Operation) {
 				return hasValidOperation(node);
 			}
 			return false;
@@ -657,8 +501,7 @@ public class WsdlOperationsPage extends AbstractWizardPage implements Listener,
 
 				if (selected) {
 					updateChildren(item, checked);
-					for (TreeItem parent = item.getParentItem(); parent != null; parent = parent
-							.getParentItem()) {
+					for (TreeItem parent = item.getParentItem(); parent != null; parent = parent.getParentItem()) {
 						int state = PARTIALLY_CHECKED;
 						final TreeItem[] children = parent.getItems();
 						for (int ndx = children.length; --ndx >= 0;) {
@@ -667,8 +510,7 @@ public class WsdlOperationsPage extends AbstractWizardPage implements Listener,
 								state = PARTIALLY_CHECKED;
 								break;
 							}
-							final int childState = WidgetUtil
-									.getCheckedState(child);
+							final int childState = WidgetUtil.getCheckedState(child);
 							if (state == PARTIALLY_CHECKED) {
 								state = childState;
 							} else if (state != childState) {
@@ -677,8 +519,7 @@ public class WsdlOperationsPage extends AbstractWizardPage implements Listener,
 							}
 						}
 						if (state != WidgetUtil.getCheckedState(parent)) {
-							WidgetUtil.setCheckedState(parent, state, false,
-									this);
+							WidgetUtil.setCheckedState(parent, state, false, this);
 						}
 					}
 				}
@@ -694,12 +535,9 @@ public class WsdlOperationsPage extends AbstractWizardPage implements Listener,
 			}
 		}
 
-		private void updateCheckedOperations(Operation operation,
-				boolean checked) {
-			List<Operation> selectedOperations = importManager
-					.getSelectedOperations();
-			if (checked && operation.canModel()
-					&& !selectedOperations.contains(operation)) {
+		private void updateCheckedOperations(Operation operation, boolean checked) {
+			List<Operation> selectedOperations = importManager.getSelectedOperations();
+			if (checked && operation.canModel() && !selectedOperations.contains(operation)) {
 				selectedOperations.add(operation);
 				importManager.setSelectedOperations(selectedOperations);
 				setPageStatus();
@@ -734,7 +572,7 @@ public class WsdlOperationsPage extends AbstractWizardPage implements Listener,
 				super.itemExpanded(event);
 			} else {
 				TreeItem[] selectedItems = ((TreeViewer) event.getTreeViewer()).getTree().getSelection();
-				if( selectedItems.length > 0 ) {
+				if (selectedItems.length > 0) {
 					final TreeItem item = selectedItems[0];
 					if (item.getData() != null) {
 						updateChildren(item, false);

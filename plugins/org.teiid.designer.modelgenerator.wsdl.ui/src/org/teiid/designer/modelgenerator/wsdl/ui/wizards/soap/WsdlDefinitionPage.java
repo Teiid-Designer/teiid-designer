@@ -14,11 +14,6 @@ import java.util.Properties;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
@@ -32,15 +27,10 @@ import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerFilter;
-import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -55,25 +45,17 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
-import org.eclipse.ui.model.WorkbenchContentProvider;
-import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.teiid.core.util.FileUtils;
 import org.teiid.designer.datatools.ui.dialogs.ConnectionProfileWorker;
 import org.teiid.designer.datatools.ui.dialogs.IProfileChangedListener;
 import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
+import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.panels.WsdlOperationsPanel;
 
-import com.metamatrix.core.util.CoreArgCheck;
-import com.metamatrix.core.util.CoreStringUtil;
-import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
-import com.metamatrix.modeler.internal.ui.viewsupport.ModelProjectSelectionStatusValidator;
 import com.metamatrix.modeler.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstants;
 import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.util.ModelGeneratorWsdlUiUtil;
 import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.wizards.WSDLImportWizardManager;
-import com.metamatrix.modeler.ui.viewsupport.ModelingResourceFilter;
-import com.metamatrix.ui.internal.dialog.FolderSelectionDialog;
 import com.metamatrix.ui.internal.util.UiUtil;
 import com.metamatrix.ui.internal.util.WidgetFactory;
 import com.metamatrix.ui.internal.util.WidgetUtil;
@@ -82,765 +64,581 @@ import com.metamatrix.ui.internal.util.WizardUtil;
 public class WsdlDefinitionPage extends WizardPage implements Listener, IProfileChangedListener, FileUtils.Constants,
 	ModelGeneratorWsdlUiConstants, ModelGeneratorWsdlUiConstants.Images, ModelGeneratorWsdlUiConstants.HelpContexts {
 
-    /** <code>IDialogSetting</code>s key for saved dialog height. */
-    private static final String DIALOG_HEIGHT = "dialogHeight"; //$NON-NLS-1$
+	/** <code>IDialogSetting</code>s key for saved dialog height. */
+	private static final String DIALOG_HEIGHT = "dialogHeight"; //$NON-NLS-1$
 
-    /** <code>IDialogSetting</code>s key for saved dialog width. */
-    private static final String DIALOG_WIDTH = "dialogWidth"; //$NON-NLS-1$
+	/** <code>IDialogSetting</code>s key for saved dialog width. */
+	private static final String DIALOG_WIDTH = "dialogWidth"; //$NON-NLS-1$
 
-    /** <code>IDialogSetting</code>s key for saved dialog X position. */
-    private static final String DIALOG_X = "dialogX"; //$NON-NLS-1$
+	/** <code>IDialogSetting</code>s key for saved dialog X position. */
+	private static final String DIALOG_X = "dialogX"; //$NON-NLS-1$
 
-    /** <code>IDialogSetting</code>s key for saved dialog Y position. */
-    private static final String DIALOG_Y = "dialogY"; //$NON-NLS-1$
+	/** <code>IDialogSetting</code>s key for saved dialog Y position. */
+	private static final String DIALOG_Y = "dialogY"; //$NON-NLS-1$
 
-    private static final String WSDL_URI_PROP_KEY = "wsdlURI"; //$NON-NLS-1$
+	private static final String WSDL_URI_PROP_KEY = "wsdlURI"; //$NON-NLS-1$
 
-    private static final String EMPTY_STR = ""; //$NON-NLS-1$
+	private static final String EMPTY_STR = ""; //$NON-NLS-1$
 
-    /** Source radio buttons and validate button */
-    private Button buttonValidateWSDL;
+	/** Source radio buttons and validate button */
+	private Button buttonValidateWSDL;
 
-    /** Source and target text fields */
-    CLabel wsdlURIText;
-    Text textFieldTargetModelLocation;
+	/** Source and target text fields */
+	CLabel wsdlURIText;
+//	Text textFieldTargetModelLocation;
+//
+//	Button buttonSelectTargetModelLocation;
+//	Button buttonDoGenerateDefaultProcedures;
 
-    /** selection buttons */
-    Button buttonSelectTargetModelLocation;
+	private Button newCPButton;
+	private Button editCPButton;
 
-    private Button newCPButton;
-    private Button editCPButton;
+	/** The import manager. */
+	private WSDLImportWizardManager importManager;
 
-    /** The import manager. */
-    private WSDLImportWizardManager importManager;
+	private MultiStatus wsdlStatus;
 
-    private MultiStatus wsdlStatus;
+//	private IContainer targetModelLocation;
+	private boolean initializing = false;
 
-    private IContainer targetModelLocation;
-    private boolean initializing = false;
+	private Combo connectionProfilesCombo;
+	private ILabelProvider profileLabelProvider;
 
-    private Combo connectionProfilesCombo;
-    private ILabelProvider profileLabelProvider;
+	private ConnectionProfileWorker profileWorker;
 
-    private ConnectionProfileWorker profileWorker;
+	boolean synchronizing = false;
+	
+	WsdlOperationsPanel operationsPanel;
+	
+	ImportWsdlSoapWizard wizard;
 
-    boolean synchronizing = false;
-
-    /**
-     * Constructs the page with the provided import manager
-     * 
-     * @param theImportManager
-     *            the import manager object
-     */
-    public WsdlDefinitionPage(WSDLImportWizardManager theImportManager) {
-	super(WsdlDefinitionPage.class.getSimpleName(), Messages.WsdlDefinitionPage_title, null);
-	this.importManager = theImportManager;
-	setImageDescriptor(ModelGeneratorWsdlUiUtil.getImageDescriptor(NEW_MODEL_BANNER));
-    }
-
-    /**
-     * widget event handler
-     * 
-     * @param event
-     *            the widget event
-     */
-    public void handleEvent(Event event) {
-	if (!initializing) {
-	    boolean validate = false;
-
-	    if (event.widget == this.buttonSelectTargetModelLocation) {
-		handleBrowseWorkspaceForTargetModelLocation();
-		validate = true;
-		// Handle wsdl validate button pressed
-	    } else if (event.widget == this.buttonValidateWSDL) {
-		handleValidateWSDLButtonPressed();
-		validate = true;
-	    }
-
-	    // Update the page status
-	    if (validate) {
-		setPageStatus();
-	    }
-	}
-    }
-
-    /**
-     * Updates the enabled state of source selection controls
-     */
-    private void updateWidgetEnablements() {
-	// Workspace control enablement
-
-	updateValidateWSDLButtonEnablement();
-    }
-
-    /**
-     * Updates the enabled state of the WSDL validation button.
-     */
-    private void updateValidateWSDLButtonEnablement() {
-	// if wsdl already has valid status, disable
-	if (this.wsdlStatus != null && this.wsdlStatus.isOK()) {
-	    this.buttonValidateWSDL.setEnabled(false);
-	} else {
-	    // if there is a wsdl selection, enable validation button
-	    if (this.importManager.getWSDLFileUri() != null) {
-		this.buttonValidateWSDL.setEnabled(true);
-	    } else {
-		this.buttonValidateWSDL.setEnabled(false);
-	    }
-	}
-    }
-
-    /**
-     * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
-     */
-    public void createControl(Composite theParent) {
-	//
-	// create main container
-	//
-
-	this.profileWorker = new ConnectionProfileWorker(this.getShell(), ConnectionProfileWorker.CATEGORY_WS, this);
-
-	final int COLUMNS = 1;
-	Composite pnlMain = WidgetFactory.createPanel(theParent, SWT.NONE, GridData.FILL_BOTH);
-	GridLayout layout = new GridLayout(COLUMNS, false);
-	pnlMain.setLayout(layout);
-	setControl(pnlMain);
-
-	IWorkbenchHelpSystem helpSystem = UiUtil.getWorkbench().getHelpSystem();
-	helpSystem.setHelp(pnlMain, WSDL_SELECTION_PAGE);
-
-	// Controls for Selection of WSDL
-	createSourceSelectionComposite(pnlMain);
-
-	// Controls for Selection of Relational target model
-	createTargetSelectionComposite(pnlMain);
-
-	// Refresh Controls from manager
-	// refreshUiFromManager();
-
-	// Set the initial page status
-	setPageStatus();
-
-	restoreState();
-    }
-
-    /**
-     * Constructs the source WSDL selection component panel.
-     * 
-     * @param theParent
-     *            the parent container
-     */
-    private void createSourceSelectionComposite(Composite theParent) {
-	final int COLUMNS = 1;
-
-	Composite pnl = WidgetFactory.createPanel(theParent, SWT.FILL, GridData.FILL_HORIZONTAL);
-	pnl.setLayout(new GridLayout(COLUMNS, false));
-
-	// ================================================================================
-	Group profileGroup = WidgetFactory.createGroup(pnl, Messages.WsdlDefinitionPage_profileLabel_text, SWT.NONE, 2);
-	profileGroup.setLayout(new GridLayout(3, false));
-	profileGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-
-	profileLabelProvider = new LabelProvider() {
-
-	    @Override
-	    public String getText(final Object source) {
-		return ((IConnectionProfile) source).getName();
-	    }
-	};
-	this.connectionProfilesCombo = WidgetFactory.createCombo(profileGroup, SWT.READ_ONLY, GridData.FILL_HORIZONTAL,
-		profileWorker.getProfiles(), profileLabelProvider, true);
-	this.connectionProfilesCombo.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
-	this.connectionProfilesCombo.addSelectionListener(new SelectionListener() {
-
-	    @Override
-	    public void widgetSelected(SelectionEvent e) {
-		// Need to sync the worker with the current profile
-		handleConnectionProfileSelected();
-	    }
-
-	    @Override
-	    public void widgetDefaultSelected(SelectionEvent e) {
-	    }
-	});
-
-	connectionProfilesCombo.setVisibleItemCount(10);
-
-	newCPButton = WidgetFactory.createButton(profileGroup, Messages.New);
-	newCPButton.addSelectionListener(new SelectionAdapter() {
-
-	    @Override
-	    public void widgetSelected(final SelectionEvent event) {
-		profileWorker.create();
-	    }
-	});
-
-	editCPButton = WidgetFactory.createButton(profileGroup, Messages.Edit);
-	editCPButton.addSelectionListener(new SelectionAdapter() {
-
-	    @Override
-	    public void widgetSelected(final SelectionEvent event) {
-		profileWorker.edit();
-	    }
-	});
-
-	// options group
-	Group optionsGroup = WidgetFactory.createGroup(pnl, Messages.WsdlDefinitionPage_wsdlLabel_text, SWT.FILL, 2);
-	optionsGroup.setLayout(new GridLayout(2, false));
-	optionsGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-
-	// Workspace textfield
-	wsdlURIText = WidgetFactory.createLabel(optionsGroup, GridData.FILL_HORIZONTAL);
-	wsdlURIText.setToolTipText(Messages.WsdlDefinitionPage_workspaceTextField_tooltip);
-	wsdlURIText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
-	// --------------------------------------------
-	// WSDL Validation Button
-	// --------------------------------------------
-	buttonValidateWSDL = WidgetFactory.createButton(optionsGroup,
-		Messages.WsdlDefinitionPage_validateWsdlButton_text, GridData.HORIZONTAL_ALIGN_END, 1);
-	buttonValidateWSDL.setToolTipText(Messages.WsdlDefinitionPage_validateWsdlButton_tooltip);
-
-	// --------------------------------------------
-	// Add Listener to handle selection events
-	// --------------------------------------------
-	buttonValidateWSDL.addListener(SWT.Selection, this);
-
-	updateWidgetEnablements();
-    }
-
-    private void handleConnectionProfileSelected() {
-	int selIndex = connectionProfilesCombo.getSelectionIndex();
-
-	if (selIndex >= 0) {
-	    String name = connectionProfilesCombo.getItem(selIndex);
-	    if (name != null) {
-		IConnectionProfile currentProfile = importManager.getConnectionProfile();
-		IConnectionProfile profile = profileWorker.getProfile(name);
-		boolean profileChanged = true;
-		if( currentProfile != null && (currentProfile.getName() == profile.getName()) ) {
-		    profileChanged = false;
-		}
-		
-		profileWorker.setSelection(profile);
-		importManager.setConnectionProfile(profile);
-		refreshUiFromManager();
-		
-		if( profileChanged ) {
-		    this.wsdlStatus = null;
-		    updateValidateWSDLButtonEnablement();
-		}
-	    }
-	}
-    }
-
-    /**
-     * Constructs the target Relational Model selection component panel.
-     * 
-     * @param theParent
-     *            the parent container
-     */
-    private void createTargetSelectionComposite(Composite theParent) {
-
-	final int COLUMNS = 1;
-
-	Composite pnl = WidgetFactory.createPanel(theParent, SWT.FILL, GridData.FILL_HORIZONTAL);
-	pnl.setLayout(new GridLayout(COLUMNS, false));
-
-	// options group
-	Group optionsGroup = WidgetFactory.createGroup(pnl, Messages.WsdlDefinitionPage_targetLocationGroup_text,
-		SWT.NONE);
-
-	GridData gdRadioGroup = new GridData(GridData.FILL_HORIZONTAL);
-	optionsGroup.setLayoutData(gdRadioGroup);
-
-	optionsGroup.setLayout(new GridLayout(2, false));
-
-	// --------------------------------------------
-	// Composite for Model Location Selection
-	// --------------------------------------------
-	// Select Target Location Label
-
-	final IContainer location = this.importManager.getTargetModelLocation();
-	final String name = (location == null ? null : location.getFullPath().makeRelative().toString());
-
-	// FileSystem textfield
-	textFieldTargetModelLocation = WidgetFactory.createTextField(optionsGroup, GridData.FILL_HORIZONTAL);
-	String text = Messages.WsdlDefinitionPage_targetModelLocationTextField_tooltip;
-	textFieldTargetModelLocation.setToolTipText(text);
-
-	if (name != null) {
-	    textFieldTargetModelLocation.setText(name);
-	}
-	this.textFieldTargetModelLocation.addModifyListener(new ModifyListener() {
-	    public void modifyText(final ModifyEvent event) {
-		setPageStatus();
-	    }
-	});
-
-	// Model Location Browse Button
-	buttonSelectTargetModelLocation = WidgetFactory.createButton(optionsGroup, Messages.Browse, GridData.FILL);
-	buttonSelectTargetModelLocation
-		.setToolTipText(Messages.WsdlDefinitionPage_targetModelLocationBrowseButton_tooltip);
-	buttonSelectTargetModelLocation.addListener(SWT.Selection, this);
-
-    }
-
-    /**
-     * @see org.eclipse.jface.dialogs.IDialogPage#dispose()
-     */
-    @Override
-    public void dispose() {
-	saveState();
-    }
-
-    /**
-     * Override to replace the ImportWizard settings with the section devoted to
-     * the WSDL import Wizard.
-     * 
-     * @see org.eclipse.jface.wizard.WizardPage#getDialogSettings()
-     */
-    @Override
-    protected IDialogSettings getDialogSettings() {
-	IDialogSettings settings = super.getDialogSettings();
-
-	if (settings != null) {
-	    // get the right section of the NewModelWizard settings
-	    IDialogSettings temp = settings.getSection(DIALOG_SETTINGS_SECTION);
-
-	    if (temp == null) {
-		settings = settings.addNewSection(DIALOG_SETTINGS_SECTION);
-	    } else {
-		settings = temp;
-	    }
+	/**
+	 * Constructs the page with the provided import manager
+	 * 
+	 * @param theImportManager
+	 *            the import manager object
+	 */
+	public WsdlDefinitionPage(WSDLImportWizardManager theImportManager, ImportWsdlSoapWizard wizard) {
+		super(WsdlDefinitionPage.class.getSimpleName(), Messages.WsdlDefinitionPage_title, null);
+		this.importManager = theImportManager;
+		this.wizard = wizard;
+		setImageDescriptor(ModelGeneratorWsdlUiUtil.getImageDescriptor(NEW_MODEL_BANNER));
 	}
 
-	return settings;
-    }
+	/**
+	 * widget event handler
+	 * 
+	 * @param event
+	 *            the widget event
+	 */
+	public void handleEvent(Event event) {
+		if (!initializing) {
+			boolean validate = false;
 
-    /**
-     * Handler for Workspace Target Model Location Browse button.
-     */
-    void handleBrowseWorkspaceForTargetModelLocation() {
-	// create the dialog for target location
-	FolderSelectionDialog dlg = new FolderSelectionDialog(Display.getCurrent().getActiveShell(),
-		new WorkbenchLabelProvider(), new WorkbenchContentProvider());
-
-	dlg.setInitialSelection(this.importManager.getTargetModelLocation());
-	dlg.addFilter(new ModelingResourceFilter(this.targetLocationFilter));
-	dlg.setValidator(new ModelProjectSelectionStatusValidator());
-	dlg.setAllowMultiple(false);
-	dlg.setInput(ResourcesPlugin.getWorkspace().getRoot());
-
-	// display the dialog
-	Object[] objs = new Object[1];
-	if (dlg.open() == Window.OK) {
-	    objs = dlg.getResult();
-	}
-
-	IContainer location = (objs.length == 0 ? null : (IContainer) objs[0]);
-
-	// Update the controls with the target location selection
-	if (location != null) {
-	    this.textFieldTargetModelLocation.setText(location.getFullPath().makeRelative().toString());
-	    setPageStatus();
-	}
-    }
-
-    /**
-     * Handler for Validate WSDL Button pressed
-     */
-    private void handleValidateWSDLButtonPressed() {
-	final IRunnableWithProgress op = new IRunnableWithProgress() {
-	    public void run(final IProgressMonitor monitor) {
-		validateWSDL(monitor);
-	    }
-	};
-
-	try {
-	    final ProgressMonitorDialog dlg = new ProgressMonitorDialog(Display.getCurrent().getActiveShell());
-	    dlg.run(false, false, op);
-	} catch (final InterruptedException ignored) {
-	} catch (final Exception err) {
-	    err.printStackTrace(System.err);
-	}
-	if (!this.wsdlStatus.isOK()) {
-	    Shell shell = this.getShell();
-	    ErrorDialog.openError(shell, Messages.WsdlDefinitionPage_dialog_wsdlValidationError_title,
-		    Messages.WsdlDefinitionPage_dialog_wsdlValidationError_msg, this.wsdlStatus);
-	}
-	updateValidateWSDLButtonEnablement();
-	setPageStatus();
-    }
-
-    void validateWSDL(IProgressMonitor monitor) {
-	this.wsdlStatus = this.importManager.validateWSDL(monitor);
-    }
-
-    /**
-     * Determines if the supplied string is a valid formatted URI
-     * 
-     * @param str
-     *            the supplied uri string
-     * @return 'true' if the string is a valid format, 'false' if not.
-     */
-    public boolean isValidUri(String str) {
-	try {
-	    new org.apache.xerces.util.URI(str);
-	} catch (org.apache.xerces.util.URI.MalformedURIException e) {
-	    return false;
-	}
-	return true;
-    }
-
-    /**
-     * Restores dialog size and position of the last time wizard ran.
-     */
-    private void restoreState() {
-	IDialogSettings settings = getDialogSettings();
-
-	if (settings != null && getContainer() != null) {
-	    Shell shell = getContainer().getShell();
-
-	    if (shell != null) {
-		try {
-		    int x = settings.getInt(DIALOG_X);
-		    int y = settings.getInt(DIALOG_Y);
-		    int width = settings.getInt(DIALOG_WIDTH);
-		    int height = settings.getInt(DIALOG_HEIGHT);
-		    shell.setBounds(x, y, width, height);
-		} catch (NumberFormatException theException) {
-		    // getInt(String) throws exception if not found.
-		    // just means no settings exist yet.
-		}
-	    }
-	}
-    }
-
-    /**
-     * Persists dialog size and position.
-     */
-    private void saveState() {
-	IDialogSettings settings = getDialogSettings();
-
-	if (settings != null && getContainer() != null) {
-	    Shell shell = getContainer().getShell();
-
-	    if (shell != null) {
-		Rectangle r = shell.getBounds();
-		settings.put(DIALOG_X, r.x);
-		settings.put(DIALOG_Y, r.y);
-		settings.put(DIALOG_WIDTH, r.width);
-		settings.put(DIALOG_HEIGHT, r.height);
-	    }
-	}
-    }
-
-    /**
-     * Refresh the ui state from the manager
-     */
-    private void refreshUiFromManager() {
-	synchronizing = true;
-
-	if (this.importManager != null) {
-	    IContainer tgtModelLocation = this.importManager.getTargetModelLocation();
-	    if (tgtModelLocation != null) {
-		String targetFolder = tgtModelLocation.getFullPath().makeRelative().toString();
-		if (this.textFieldTargetModelLocation != null) {
-		    this.textFieldTargetModelLocation.setText(targetFolder);
-		}
-	    }
-
-	    if (null == connectionProfilesCombo.getItems() || 0 == connectionProfilesCombo.getItems().length) {
-		if (profileWorker.getProfiles().isEmpty()) {
-		    setErrorMessage(Messages.WsdlDefinitionPage_no_profile_match);
-		    wsdlURIText.setText(EMPTY_STR);
-		    buttonValidateWSDL.setEnabled(false);
-		    return;
-		}
-
-		setErrorMessage(null);
-		setMessage(Messages.WsdlDefinitionPage_select_profile);
-		return;
-	    }
-
-	    if (connectionProfilesCombo.getSelectionIndex() < 0) {
-		return;
-	    }
-
-	    String profileName = connectionProfilesCombo.getText();
-	    IConnectionProfile profile = profileWorker.getConnectionProfile();
-	    if (null == profile) {
-		// this should really never happen
-		setMessage(null);
-		setErrorMessage(NLS.bind(Messages.WsdlDefinitionPage_no_profile_match, new Object[] { profileName }));
-		buttonValidateWSDL.setEnabled(false);
-		return;
-	    }
-	    Properties props = profile.getBaseProperties();
-	    wsdlURIText.setText(props.getProperty(WSDL_URI_PROP_KEY));
-	    importManager.setWSDLFileUri(props.getProperty(WSDL_URI_PROP_KEY));
-	    updateWidgetEnablements();
-	}
-
-	synchronizing = false;
-    }
-
-    public void profileChanged(IConnectionProfile profile) {
-	resetCPComboItems();
-
-	selectConnectionProfile(profile.getName());
-
-	importManager.setConnectionProfile(profile);
-
-	setPageStatus();
-    }
-
-    /**
-     * Performs validation and sets the page status.
-     */
-    void setPageStatus() {
-	// Validate the source WSDL Selection
-	boolean sourceValid = validateSourceSelection();
-	if (!sourceValid) {
-	    return;
-	}
-
-	// Validate the target relational model name and location
-	boolean targetValid = validateTargetModelNameAndLocation();
-	if (!targetValid) {
-	    return;
-	}
-
-	// Finally, display a warning message if there were WSDL validation
-	// errors.
-	if (this.wsdlStatus.getSeverity() > IStatus.WARNING) {
-	    WizardUtil.setPageComplete(this, Messages.WsdlDefinitionPage_wsdlErrorContinuation_msg, IMessageProvider.WARNING);
-	} else {
-	    WizardUtil.setPageComplete(this);
-	}
-
-	getContainer().updateButtons();
-    }
-
-    /**
-     * Sets the initial workspace selection.
-     * 
-     * @param theSelection
-     *            the current workspace selection
-     */
-    public void setInitialSelection(ISelection theSelection) {
-	this.importManager.setWSDLFileUri(null);
-	if (!theSelection.isEmpty() && (theSelection instanceof IStructuredSelection)) {
-	    Object[] selectedObjects = ((IStructuredSelection) theSelection).toArray();
-
-	    // Set the selected container as the target location
-	    if (selectedObjects.length == 1) {
-		final IContainer container = ModelUtil.getContainer(selectedObjects[0]);
-		if (container != null) {
-		    this.importManager.setTargetModelLocation(container);
-		}
-	    }
-
-	    for (int i = 0; i < selectedObjects.length; i++) {
-		if (selectedObjects[i] instanceof IFile) {
-		    if (ModelGeneratorWsdlUiUtil.isWsdlFile((IFile) selectedObjects[i])
-			    || ModelGeneratorWsdlUiUtil.isModelFile((IFile) selectedObjects[i])) {
-			// Convert the IFile object to a File object
-			File fNew = ((IFile) selectedObjects[i]).getLocation().toFile();
-			if (fNew != null) {
-			    String uriStr = null;
-			    try {
-				uriStr = fNew.toURI().toURL().toExternalForm();
-			    } catch (MalformedURLException err) {
-				// exception will leave uri null
-			    }
-			    if (ModelGeneratorWsdlUiUtil.isWsdlFile((IFile) selectedObjects[i])) {
-				this.importManager.setUriSource(WSDLImportWizardManager.WORKSPACE_SOURCE);
-				this.importManager.setWSDLFileUri(uriStr);
-				break;
-			    } else if (ModelGeneratorWsdlUiUtil.isModelFile((IFile) selectedObjects[i])) {
-				this.importManager.setTargetViewModelName(uriStr.substring(uriStr.lastIndexOf('/') + 1));
-				break;
-			    }
+			if (event.widget == this.buttonValidateWSDL) {
+				handleValidateWSDLButtonPressed();
+				validate = true;
 			}
-		    }
+
+			// Update the page status
+			if (validate) {
+				setPageStatus();
+			}
 		}
-	    }
-	}
-    }
-
-    /**
-     * validate the selected source WSDL. Returns 'true' if the validation is
-     * successful, 'false' if not.
-     * 
-     * @return 'true' if the WSDL selection is valid, 'false' if not.
-     */
-    private boolean validateSourceSelection() {
-	String msg = Messages.WsdlDefinitionPage_pageComplete_msg;
-	String sourceWsdl = this.importManager.getWSDLFileUri();
-
-	// If no WSDL is specified, set message and return
-	if (sourceWsdl == null) {
-	    // No WSDL selected message
-	    msg = Messages.WsdlDefinitionPage_noWsdlSelected_msg;
-	    // If URL radio is selected, check URL validity
-	    WizardUtil.setPageComplete(this, msg, IMessageProvider.ERROR);
-	    return false;
 	}
 
-	// If WSDL is specified, see if it's been validated
-	if (this.wsdlStatus == null) {
-	    msg = Messages.WsdlDefinitionPage_validateWsdl_msg;
-	    WizardUtil.setPageComplete(this, msg, IMessageProvider.ERROR);
-	    return false;
+	/**
+	 * Updates the enabled state of source selection controls
+	 */
+	private void updateWidgetEnablements() {
+		// Workspace control enablement
+
+		updateValidateWSDLButtonEnablement();
 	}
 
-	WizardUtil.setPageComplete(this);
-
-	return true;
-    }
-
-    /**
-     * validate the selected target relational model name and location. Returns
-     * 'true' if the validation is successful, 'false' if not.
-     * 
-     * @return 'true' if the WSDL selection is valid, 'false' if not.
-     */
-    private boolean validateTargetModelNameAndLocation() {
-	// Hardcode the updating flag to false for now.
-	// Plan to implement in the future.
-	// final boolean updating = this.updateCheckBox.getSelection();
-
-	try {
-	    // Validate the target Model Name and location
-	    targetModelLocation = validateFileAndFolder(this.textFieldTargetModelLocation,
-		    ModelerCore.MODEL_FILE_EXTENSION);
-
-	    // If null location was returned, error was found
-	    if (targetModelLocation == null) {
-		return false;
-		// Check if locations project is a model project
-	    } else if (targetModelLocation.getProject().getNature(ModelerCore.NATURE_ID) == null) {
-		setErrorMessage(Messages.WsdlDefinitionPage_notModelProjectMessage);
-		setPageComplete(false);
-		targetModelLocation = null;
-		return false;
-	    }
-
-	    this.importManager.setTargetModelLocation(targetModelLocation);
-	    // this.importManager.setUpdatedModel(model);
-	    getContainer().updateButtons();
-	} catch (final CoreException err) {
-	    UTIL.log(err);
-	    WizardUtil.setPageComplete(this, err.getLocalizedMessage(), IMessageProvider.ERROR);
-	    return false;
-	}
-	WizardUtil.setPageComplete(this);
-	return true;
-    }
-
-    /**
-     * validate the file name and location name. if the file is valid and the
-     * location is found, return the location container. If not valid, return a
-     * null value.
-     * 
-     * @param fileText
-     *            the Text entry widget for the file name.
-     * @param locationText
-     *            the Text entry widget for the model location.
-     * @return the location container, null if invalid or not found.
-     */
-    private IContainer validateFileAndFolder(final Text folderText, final String fileExtension) {
-	CoreArgCheck.isNotNull(folderText);
-	CoreArgCheck.isNotNull(fileExtension);
-	final String folderName = folderText.getText();
-	if (CoreStringUtil.isEmpty(folderName)) {
-	    WizardUtil.setPageComplete(this, Messages.WsdlDefinitionPage_missingFolderMessage, IMessageProvider.ERROR);
-	} else {
-	    final IResource resrc = ResourcesPlugin.getWorkspace().getRoot().findMember(folderName);
-	    if (resrc == null || !(resrc instanceof IContainer) || resrc.getProject() == null) {
-		WizardUtil.setPageComplete(this, Messages.WsdlDefinitionPage_invalidFolderMessage,
-			IMessageProvider.ERROR);
-	    } else if (!resrc.getProject().isOpen()) {
-		WizardUtil.setPageComplete(this, Messages.WsdlDefinitionPage_closedProjectMessage,
-			IMessageProvider.ERROR);
-	    } else {
-		final IContainer folder = (IContainer) resrc;
-		WizardUtil.setPageComplete(this);
-		return folder;
-	    }
-	}
-	return null;
-    }
-
-    void resetCPComboItems() {
-	if (connectionProfilesCombo != null) {
-	    ArrayList profileList = new ArrayList();
-	    for (IConnectionProfile prof : profileWorker.getProfiles()) {
-		profileList.add(prof);
-	    }
-
-	    WidgetUtil.setComboItems(connectionProfilesCombo, profileList, profileLabelProvider, true);
-	}
-    }
-
-    void selectConnectionProfile(String name) {
-	if (name == null) {
-	    return;
-	}
-
-	int cpIndex = -1;
-	int i = 0;
-	for (String item : connectionProfilesCombo.getItems()) {
-	    if (item != null && item.length() > 0) {
-		if (item.toUpperCase().equalsIgnoreCase(name.toUpperCase())) {
-		    cpIndex = i;
-		    break;
+	/**
+	 * Updates the enabled state of the WSDL validation button.
+	 */
+	private void updateValidateWSDLButtonEnablement() {
+		// if wsdl already has valid status, disable
+		if (this.wsdlStatus != null && this.wsdlStatus.isOK()) {
+			this.buttonValidateWSDL.setEnabled(false);
+		} else {
+			// if there is a wsdl selection, enable validation button
+			if (this.importManager.getWSDLFileUri() != null) {
+				this.buttonValidateWSDL.setEnabled(true);
+			} else {
+				this.buttonValidateWSDL.setEnabled(false);
+			}
 		}
-	    }
-	    i++;
-	}
-	if (cpIndex > -1) {
-	    connectionProfilesCombo.select(cpIndex);
 	}
 
-	refreshUiFromManager();
-    }
+	/**
+	 * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
+	 */
+	public void createControl(Composite theParent) {
+		//
+		// create main container
+		//
 
-    public void setVisible(boolean visible) {
-	super.setVisible(visible);
+		this.profileWorker = new ConnectionProfileWorker(this.getShell(), ConnectionProfileWorker.CATEGORY_WS, this);
 
-	if (visible) {
-	    if (this.connectionProfilesCombo.getItemCount() > 0) {
-		this.connectionProfilesCombo.select(0);
-		handleConnectionProfileSelected();
-	    }
+		final int COLUMNS = 1;
+		Composite pnlMain = WidgetFactory.createPanel(theParent, SWT.NONE, GridData.FILL_BOTH);
+		GridLayout layout = new GridLayout(COLUMNS, false);
+		pnlMain.setLayout(layout);
+		setControl(pnlMain);
 
-	    refreshUiFromManager();
+		IWorkbenchHelpSystem helpSystem = UiUtil.getWorkbench().getHelpSystem();
+		helpSystem.setHelp(pnlMain, WSDL_SELECTION_PAGE);
+
+		// Controls for Selection of WSDL
+		createSourceSelectionComposite(pnlMain);
+		
+		createWsdlOperationsPanel(pnlMain);
+
+		// Set the initial page status
+		setPageStatus();
+
+		restoreState();
 	}
-    }
 
-    /** Filter for selecting target location. */
-    private ViewerFilter targetLocationFilter = new ViewerFilter() {
+	/**
+	 * Constructs the source WSDL selection component panel.
+	 * 
+	 * @param theParent
+	 *            the parent container
+	 */
+	private void createSourceSelectionComposite(Composite theParent) {
+		final int COLUMNS = 1;
+
+		Composite pnl = WidgetFactory.createPanel(theParent, SWT.FILL, GridData.FILL_HORIZONTAL);
+		pnl.setLayout(new GridLayout(COLUMNS, false));
+
+		// ================================================================================
+		Group profileGroup = WidgetFactory.createGroup(pnl, Messages.WsdlDefinitionPage_profileLabel_text, SWT.NONE, 2);
+		profileGroup.setLayout(new GridLayout(3, false));
+		profileGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+
+		profileLabelProvider = new LabelProvider() {
+
+			@Override
+			public String getText(final Object source) {
+				return ((IConnectionProfile) source).getName();
+			}
+		};
+		this.connectionProfilesCombo = WidgetFactory.createCombo(profileGroup, SWT.READ_ONLY, GridData.FILL_HORIZONTAL,
+			profileWorker.getProfiles(), profileLabelProvider, true);
+		this.connectionProfilesCombo.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
+		this.connectionProfilesCombo.addSelectionListener(new SelectionListener() {
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				// Need to sync the worker with the current profile
+				handleConnectionProfileSelected();
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+		});
+
+		connectionProfilesCombo.setVisibleItemCount(10);
+
+		newCPButton = WidgetFactory.createButton(profileGroup, Messages.New);
+		newCPButton.addSelectionListener(new SelectionAdapter() {
+
+			@Override
+			public void widgetSelected(final SelectionEvent event) {
+				profileWorker.create();
+			}
+		});
+
+		editCPButton = WidgetFactory.createButton(profileGroup, Messages.Edit);
+		editCPButton.addSelectionListener(new SelectionAdapter() {
+
+			@Override
+			public void widgetSelected(final SelectionEvent event) {
+				profileWorker.edit();
+			}
+		});
+
+		// options group
+		Group optionsGroup = WidgetFactory.createGroup(pnl, Messages.WsdlDefinitionPage_wsdlLabel_text, SWT.FILL, 2);
+		optionsGroup.setLayout(new GridLayout(2, false));
+		optionsGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+
+		// Workspace textfield
+		wsdlURIText = WidgetFactory.createLabel(optionsGroup, GridData.FILL_HORIZONTAL);
+		wsdlURIText.setToolTipText(Messages.WsdlDefinitionPage_workspaceTextField_tooltip);
+		wsdlURIText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
+		// --------------------------------------------
+		// WSDL Validation Button
+		// --------------------------------------------
+		buttonValidateWSDL = WidgetFactory.createButton(optionsGroup,
+			Messages.WsdlDefinitionPage_validateWsdlButton_text, GridData.HORIZONTAL_ALIGN_END, 1);
+		buttonValidateWSDL.setToolTipText(Messages.WsdlDefinitionPage_validateWsdlButton_tooltip);
+
+		// --------------------------------------------
+		// Add Listener to handle selection events
+		// --------------------------------------------
+		buttonValidateWSDL.addListener(SWT.Selection, this);
+
+		updateWidgetEnablements();
+	}
+
+	private void handleConnectionProfileSelected() {
+		int selIndex = connectionProfilesCombo.getSelectionIndex();
+
+		if (selIndex >= 0) {
+			String name = connectionProfilesCombo.getItem(selIndex);
+			if (name != null) {
+				IConnectionProfile currentProfile = importManager.getConnectionProfile();
+				IConnectionProfile profile = profileWorker.getProfile(name);
+				boolean profileChanged = true;
+				if (currentProfile != null && (currentProfile.getName() == profile.getName())) {
+					profileChanged = false;
+				}
+
+				profileWorker.setSelection(profile);
+				importManager.setConnectionProfile(profile);
+				refreshUiFromManager();
+
+				if (profileChanged) {
+					this.wsdlStatus = null;
+					updateValidateWSDLButtonEnablement();
+				}
+			}
+		}
+	}
+	
+	private void createWsdlOperationsPanel(Composite theParent) {
+		this.operationsPanel = new WsdlOperationsPanel(theParent, this.importManager);
+	}
+	
+	/**
+	 * @see org.eclipse.jface.dialogs.IDialogPage#dispose()
+	 */
 	@Override
-	public boolean select(final Viewer viewer, final Object parent, final Object element) {
-
-	    boolean result = false;
-
-	    if (element instanceof IResource) {
-		// If the project is closed, dont show
-		boolean projectOpen = ((IResource) element).getProject().isOpen();
-		if (projectOpen) {
-		    // Show projects
-		    if (element instanceof IProject) {
-			result = true;
-			// Show folders
-		    } else if (element instanceof IFolder) {
-			result = true;
-		    }
-		}
-	    }
-	    return result;
+	public void dispose() {
+		saveState();
 	}
-    };
+
+	/**
+	 * Override to replace the ImportWizard settings with the section devoted to
+	 * the WSDL import Wizard.
+	 * 
+	 * @see org.eclipse.jface.wizard.WizardPage#getDialogSettings()
+	 */
+	@Override
+	protected IDialogSettings getDialogSettings() {
+		IDialogSettings settings = super.getDialogSettings();
+
+		if (settings != null) {
+			// get the right section of the NewModelWizard settings
+			IDialogSettings temp = settings.getSection(DIALOG_SETTINGS_SECTION);
+
+			if (temp == null) {
+				settings = settings.addNewSection(DIALOG_SETTINGS_SECTION);
+			} else {
+				settings = temp;
+			}
+		}
+
+		return settings;
+	}
+
+	/**
+	 * Handler for Validate WSDL Button pressed
+	 */
+	private void handleValidateWSDLButtonPressed() {
+		final IRunnableWithProgress op = new IRunnableWithProgress() {
+			public void run(final IProgressMonitor monitor) {
+				validateWSDL(monitor);
+			}
+		};
+
+		try {
+			final ProgressMonitorDialog dlg = new ProgressMonitorDialog(Display.getCurrent().getActiveShell());
+			dlg.run(false, false, op);
+		} catch (final InterruptedException ignored) {
+		} catch (final Exception err) {
+			err.printStackTrace(System.err);
+		}
+		if (!this.wsdlStatus.isOK()) {
+			Shell shell = this.getShell();
+			ErrorDialog.openError(shell, Messages.WsdlDefinitionPage_dialog_wsdlValidationError_title,
+				Messages.WsdlDefinitionPage_dialog_wsdlValidationError_msg, this.wsdlStatus);
+			this.operationsPanel.notifyWsdlChanged();
+		} else {
+			this.operationsPanel.notifyWsdlChanged();
+		}
+		
+		updateValidateWSDLButtonEnablement();
+		setPageStatus();
+	}
+
+	void validateWSDL(IProgressMonitor monitor) {
+		this.wsdlStatus = this.importManager.validateWSDL(monitor);
+	}
+
+	/**
+	 * Determines if the supplied string is a valid formatted URI
+	 * 
+	 * @param str
+	 *            the supplied uri string
+	 * @return 'true' if the string is a valid format, 'false' if not.
+	 */
+	public boolean isValidUri(String str) {
+		try {
+			new org.apache.xerces.util.URI(str);
+		} catch (org.apache.xerces.util.URI.MalformedURIException e) {
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Restores dialog size and position of the last time wizard ran.
+	 */
+	private void restoreState() {
+		IDialogSettings settings = getDialogSettings();
+
+		if (settings != null && getContainer() != null) {
+			Shell shell = getContainer().getShell();
+
+			if (shell != null) {
+				try {
+					int x = settings.getInt(DIALOG_X);
+					int y = settings.getInt(DIALOG_Y);
+					int width = settings.getInt(DIALOG_WIDTH);
+					int height = settings.getInt(DIALOG_HEIGHT);
+					shell.setBounds(x, y, width, height);
+				} catch (NumberFormatException theException) {
+					// getInt(String) throws exception if not found.
+					// just means no settings exist yet.
+				}
+			}
+		}
+	}
+
+	/**
+	 * Persists dialog size and position.
+	 */
+	private void saveState() {
+		IDialogSettings settings = getDialogSettings();
+
+		if (settings != null && getContainer() != null) {
+			Shell shell = getContainer().getShell();
+
+			if (shell != null) {
+				Rectangle r = shell.getBounds();
+				settings.put(DIALOG_X, r.x);
+				settings.put(DIALOG_Y, r.y);
+				settings.put(DIALOG_WIDTH, r.width);
+				settings.put(DIALOG_HEIGHT, r.height);
+			}
+		}
+	}
+
+	/**
+	 * Refresh the ui state from the manager
+	 */
+	private void refreshUiFromManager() {
+		synchronizing = true;
+
+		if (this.importManager != null) {
+
+			if (null == connectionProfilesCombo.getItems() || 0 == connectionProfilesCombo.getItems().length) {
+				if (profileWorker.getProfiles().isEmpty()) {
+					setErrorMessage(Messages.WsdlDefinitionPage_no_profile_match);
+					wsdlURIText.setText(EMPTY_STR);
+					buttonValidateWSDL.setEnabled(false);
+					return;
+				}
+
+				setErrorMessage(null);
+				setMessage(Messages.WsdlDefinitionPage_select_profile);
+				return;
+			}
+
+			if (connectionProfilesCombo.getSelectionIndex() < 0) {
+				return;
+			}
+
+			String profileName = connectionProfilesCombo.getText();
+			IConnectionProfile profile = profileWorker.getConnectionProfile();
+			if (null == profile) {
+				// this should really never happen
+				setMessage(null);
+				setErrorMessage(NLS.bind(Messages.WsdlDefinitionPage_no_profile_match, new Object[] { profileName }));
+				buttonValidateWSDL.setEnabled(false);
+				return;
+			}
+			Properties props = profile.getBaseProperties();
+			wsdlURIText.setText(props.getProperty(WSDL_URI_PROP_KEY));
+			importManager.setWSDLFileUri(props.getProperty(WSDL_URI_PROP_KEY));
+			updateWidgetEnablements();
+		}
+
+		synchronizing = false;
+	}
+
+	public void profileChanged(IConnectionProfile profile) {
+		resetCPComboItems();
+
+		selectConnectionProfile(profile.getName());
+
+		importManager.setConnectionProfile(profile);
+
+		setPageStatus();
+	}
+
+	/**
+	 * Performs validation and sets the page status.
+	 */
+	void setPageStatus() {
+		// Validate the source WSDL Selection
+		boolean sourceValid = validateSourceSelection();
+		if (!sourceValid) {
+			return;
+		}
+
+		// Finally, display a warning message if there were WSDL validation
+		// errors.
+		if (this.wsdlStatus.getSeverity() > IStatus.WARNING) {
+			WizardUtil.setPageComplete(this, Messages.WsdlDefinitionPage_wsdlErrorContinuation_msg,
+				IMessageProvider.WARNING);
+		} else {
+			WizardUtil.setPageComplete(this);
+		}
+
+		getContainer().updateButtons();
+	}
+
+	/**
+	 * Sets the initial workspace selection.
+	 * 
+	 * @param theSelection
+	 *            the current workspace selection
+	 */
+	public void setInitialSelection(ISelection theSelection) {
+		this.importManager.setWSDLFileUri(null);
+		if (!theSelection.isEmpty() && (theSelection instanceof IStructuredSelection)) {
+			Object[] selectedObjects = ((IStructuredSelection) theSelection).toArray();
+
+			// Set the selected container as the target location
+			if (selectedObjects.length == 1) {
+				final IContainer container = ModelUtil.getContainer(selectedObjects[0]);
+				if (container != null) {
+					this.importManager.setViewModelLocation(container);
+					this.importManager.setSourceModelLocation(container);
+				}
+			}
+
+			for (int i = 0; i < selectedObjects.length; i++) {
+				if (selectedObjects[i] instanceof IFile) {
+					if (ModelGeneratorWsdlUiUtil.isWsdlFile((IFile) selectedObjects[i])
+						|| ModelGeneratorWsdlUiUtil.isModelFile((IFile) selectedObjects[i])) {
+						// Convert the IFile object to a File object
+						File fNew = ((IFile) selectedObjects[i]).getLocation().toFile();
+						if (fNew != null) {
+							String uriStr = null;
+							try {
+								uriStr = fNew.toURI().toURL().toExternalForm();
+							} catch (MalformedURLException err) {
+								// exception will leave uri null
+							}
+							if (ModelGeneratorWsdlUiUtil.isWsdlFile((IFile) selectedObjects[i])) {
+								this.importManager.setUriSource(WSDLImportWizardManager.WORKSPACE_SOURCE);
+								this.importManager.setWSDLFileUri(uriStr);
+								break;
+							} else if (ModelGeneratorWsdlUiUtil.isModelFile((IFile) selectedObjects[i])) {
+								this.importManager.setViewModelName(uriStr.substring(uriStr.lastIndexOf('/') + 1));
+								break;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * validate the selected source WSDL. Returns 'true' if the validation is
+	 * successful, 'false' if not.
+	 * 
+	 * @return 'true' if the WSDL selection is valid, 'false' if not.
+	 */
+	private boolean validateSourceSelection() {
+		String msg = Messages.WsdlDefinitionPage_pageComplete_msg;
+		String sourceWsdl = this.importManager.getWSDLFileUri();
+
+		// If no WSDL is specified, set message and return
+		if (sourceWsdl == null) {
+			// No WSDL selected message
+			msg = Messages.WsdlDefinitionPage_noWsdlSelected_msg;
+			// If URL radio is selected, check URL validity
+			WizardUtil.setPageComplete(this, msg, IMessageProvider.ERROR);
+			return false;
+		}
+
+		// If WSDL is specified, see if it's been validated
+		if (this.wsdlStatus == null) {
+			msg = Messages.WsdlDefinitionPage_validateWsdl_msg;
+			WizardUtil.setPageComplete(this, msg, IMessageProvider.ERROR);
+			return false;
+		}
+
+		WizardUtil.setPageComplete(this);
+
+		return true;
+	}
+
+	void resetCPComboItems() {
+		if (connectionProfilesCombo != null) {
+			ArrayList profileList = new ArrayList();
+			for (IConnectionProfile prof : profileWorker.getProfiles()) {
+				profileList.add(prof);
+			}
+
+			WidgetUtil.setComboItems(connectionProfilesCombo, profileList, profileLabelProvider, true);
+		}
+	}
+
+	void selectConnectionProfile(String name) {
+		if (name == null) {
+			return;
+		}
+
+		int cpIndex = -1;
+		int i = 0;
+		for (String item : connectionProfilesCombo.getItems()) {
+			if (item != null && item.length() > 0) {
+				if (item.toUpperCase().equalsIgnoreCase(name.toUpperCase())) {
+					cpIndex = i;
+					break;
+				}
+			}
+			i++;
+		}
+		if (cpIndex > -1) {
+			connectionProfilesCombo.select(cpIndex);
+		}
+
+		refreshUiFromManager();
+	}
+
+	public void setVisible(boolean visible) {
+		super.setVisible(visible);
+
+		if (visible) {
+			if (this.connectionProfilesCombo.getItemCount() > 0) {
+				this.connectionProfilesCombo.select(0);
+				handleConnectionProfileSelected();
+			}
+
+			refreshUiFromManager();
+		}
+	}
 }

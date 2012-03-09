@@ -373,7 +373,7 @@ public class SelectWsdlPage extends WizardPage
         // --------------------------------------------
         // Select Target Location Label
 
-        final IContainer location = this.importManager.getTargetModelLocation();
+        final IContainer location = this.importManager.getViewModelLocation();
         final String name = (location == null ? null : location.getFullPath().makeRelative().toString());
 
         // FileSystem textfield
@@ -529,7 +529,7 @@ public class SelectWsdlPage extends WizardPage
         FolderSelectionDialog dlg = new FolderSelectionDialog(Display.getCurrent().getActiveShell(),
                                                               new WorkbenchLabelProvider(), new WorkbenchContentProvider());
 
-        dlg.setInitialSelection(this.importManager.getTargetModelLocation());
+        dlg.setInitialSelection(this.importManager.getViewModelLocation());
         dlg.addFilter(new ModelingResourceFilter(this.targetLocationFilter));
         dlg.setValidator(new ModelProjectSelectionStatusValidator());
         dlg.setAllowMultiple(false);
@@ -561,7 +561,7 @@ public class SelectWsdlPage extends WizardPage
 				new ModelProjectSelectionStatusValidator());
 
 		if (folder != null && sourceModelContainerText != null) {
-			this.importManager.setSourceModelLocation(folder.getFullPath().makeRelative());
+			this.importManager.setSourceModelLocation(folder);
 		}
 
 		refreshUiFromManager();
@@ -586,7 +586,7 @@ public class SelectWsdlPage extends WizardPage
 				IPath folderPath = modelFile.getFullPath().removeLastSegments(1);
 				String modelName = modelFile.getFullPath().lastSegment();
 				importManager.setSourceModelExists(true);
-				importManager.setSourceModelLocation(folderPath);
+				importManager.setSourceModelLocation(modelFile.getParent());
 				importManager.setSourceModelName(modelName);
 			}
 		}
@@ -707,19 +707,19 @@ public class SelectWsdlPage extends WizardPage
     	
         if (this.importManager != null) {
     		if (this.importManager.getSourceModelLocation() != null) {
-    			this.sourceModelContainerText.setText(this.importManager.getSourceModelLocation().makeRelative().toString());
+    			this.sourceModelContainerText.setText(this.importManager.getSourceModelLocation().getFullPath().makeRelative().toString());
     		} else {
     			this.sourceModelContainerText.setText(StringUtilities.EMPTY_STRING);
     		}
 
     		if (this.importManager.getSourceModelName() != null) {
-    			this.sourceModelFilePath = this.importManager.getSourceModelLocation();
+    			this.sourceModelFilePath = this.importManager.getSourceModelLocation().getFullPath().makeRelative();
     			this.sourceModelFileText.setText(this.importManager.getSourceModelName());
     		} else {
     			this.sourceModelFileText.setText(StringUtilities.EMPTY_STRING);
     		}
             
-        	IContainer tgtModelLocation = this.importManager.getTargetModelLocation();
+        	IContainer tgtModelLocation = this.importManager.getViewModelLocation();
         	if( tgtModelLocation != null ) {
 	        	String targetFolder = tgtModelLocation.getFullPath().makeRelative().toString();
 	            if (this.textFieldTargetModelLocation != null ) {
@@ -814,7 +814,7 @@ public class SelectWsdlPage extends WizardPage
             if (selectedObjects.length == 1) {
                 final IContainer container = ModelUtil.getContainer(selectedObjects[0]);
                 if (container != null) {
-                    this.importManager.setTargetModelLocation(container);
+                    this.importManager.setViewModelLocation(container);
                 }
             }
 
@@ -836,7 +836,7 @@ public class SelectWsdlPage extends WizardPage
                                 this.importManager.setWSDLFileUri(uriStr);
                                 break;
                             } else if (ModelGeneratorWsdlUiUtil.isModelFile((IFile)selectedObjects[i])) {
-                                this.importManager.setTargetViewModelName(uriStr.substring(uriStr.lastIndexOf('/') + 1));
+                                this.importManager.setViewModelName(uriStr.substring(uriStr.lastIndexOf('/') + 1));
                                 break;
                             }
                         }
@@ -903,7 +903,7 @@ public class SelectWsdlPage extends WizardPage
                 return false;
             }
             
-            this.importManager.setTargetModelLocation(targetModelLocation);
+            this.importManager.setViewModelLocation(targetModelLocation);
             // this.importManager.setUpdatedModel(model);
             getContainer().updateButtons();
         } catch (final CoreException err) {

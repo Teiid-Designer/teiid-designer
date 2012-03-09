@@ -32,6 +32,8 @@ public class ProcedureGenerator {
 	
 	private String viewModelName;
 	
+	private String namespaceURI;
+	
 	private WSDLImportWizardManager importManager;
 
 	public ProcedureGenerator(Operation operation, WSDLImportWizardManager importManager) {
@@ -42,6 +44,7 @@ public class ProcedureGenerator {
 		this.viewModelName = operation.getBinding().getPort().getService().getName() + "View"; //$NON-NLS-1$
 		this.importManager = importManager;
 		this.generateWrapperProcedure = true;
+		this.namespaceURI = operation.getBinding().getPort().getNamespaceURI();
 	}
 
 	public WSDLImportWizardManager getImportManager() {
@@ -106,5 +109,9 @@ public class ProcedureGenerator {
 	
 	public boolean doOverwriteExistingProcedures() {
 		return this.overwriteExistingProcedures;
+	}
+	
+	public String getNamespaceURI() {
+		return this.namespaceURI;
 	}
 }

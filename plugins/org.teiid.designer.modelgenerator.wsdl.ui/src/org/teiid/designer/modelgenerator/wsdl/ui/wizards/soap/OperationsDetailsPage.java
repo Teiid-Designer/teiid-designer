@@ -138,7 +138,6 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 	Button responseAddElementButton;
 	ColumnsInfoPanel responseElementsInfoPanel;
 
-	ImportOptionsPanel importOptionsPanel;
 	OptionsPanel optionsPanel;
 	
 	private ProcedureGenerator procedureGenerator;
@@ -220,9 +219,6 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 
 		GridLayout layout = new GridLayout(1, false);
 		panel.setLayout(layout);
-
-        
-        importOptionsPanel = new ImportOptionsPanel(panel, this);
 		
 		// --------------------------
 		// Group for checkbox tree
@@ -853,7 +849,6 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 	@Override
 	public void setVisible(boolean isVisible) {
 		if (isVisible) {
-        	this.importOptionsPanel.setVisible();
         	
 			this.treeViewer.setInput(this.importManager.getSelectedOperations());
 

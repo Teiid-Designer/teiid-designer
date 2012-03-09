@@ -15,6 +15,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -52,12 +53,14 @@ public class ImportWsdlSoapWizard extends AbstractWizard implements IImportWizar
 
     /** The page where the WSDL source file and Relational target model are selected. */
     private WizardPage selectWsdlPage;
-
-    /** The page where the user selects which WSDL operations to build. */
-    private WizardPage selectWsdlOperationsPage;
     
     /** The page where the user provides details to the generated create and extract procedures */
     private WizardPage operationsDetailsPage;
+    
+    private WizardPage modelDefinitionPage;
+    
+//    /** The page where the user provides simple details to the default generated procedures */
+//    private WizardPage defaultProceduresDetailsPage;
 
     private IStructuredSelection selection;
 
@@ -104,15 +107,15 @@ public class ImportWsdlSoapWizard extends AbstractWizard implements IImportWizar
 
         // construct pages
         SELECT_WSDL_PAGE : {
-	        this.selectWsdlPage = new WsdlDefinitionPage(this.importManager);
+	        this.selectWsdlPage = new WsdlDefinitionPage(this.importManager, this);
 	        this.selectWsdlPage.setPageComplete(false);
 	        addPage(this.selectWsdlPage);
         }
         
         SELECT_OPERATIONS_PAGE : {
-        	this.selectWsdlOperationsPage = new WsdlOperationsPage(this.importManager);
-        	this.selectWsdlOperationsPage.setPageComplete(false);
-        	addPage(this.selectWsdlOperationsPage);
+        	this.modelDefinitionPage = new ModelDefinitionPage(this.importManager, this);
+        	this.modelDefinitionPage.setPageComplete(false);
+        	addPage(this.modelDefinitionPage);
         }
         
         OPERATIONS_DETAILS_PAGE : {
@@ -120,6 +123,11 @@ public class ImportWsdlSoapWizard extends AbstractWizard implements IImportWizar
         	this.operationsDetailsPage.setPageComplete(false);
         	addPage(this.operationsDetailsPage);
         }
+        
+//        OPERATIONS_DETAILS_PAGE : {
+//        	this.defaultProceduresDetailsPage = new DefaultProceduresDetailsPage(this.importManager);
+//        	this.defaultProceduresDetailsPage.setPageComplete(false);
+//        }
 
         // give the WSDL selection page the current workspace selection
         ((WsdlDefinitionPage)this.selectWsdlPage).setInitialSelection(theSelection);
@@ -188,11 +196,20 @@ public class ImportWsdlSoapWizard extends AbstractWizard implements IImportWizar
     }
 
     public void runFinish( IProgressMonitor theMonitor ) throws ModelBuildingException, SchemaProcessingException, ModelGenerationException {
+
+        if( this.importManager.doGenerateDefaultProcedures() ) {
+        	runFinishAsDefault();
+        } else {
+        	runFinishWithDetails();
+        }
+        
+    }
+    
+    private void runFinishAsDefault() throws ModelGenerationException, SchemaProcessingException, ModelBuildingException {
         // Target Model Name
-//        String modelName = this.importManager.getTargetModelName();
 
         // Target location for the new model
-        IContainer container = this.importManager.getTargetModelLocation();
+        IContainer container = this.importManager.getViewModelLocation();
 
         // The Selected Operations
         Model model = importManager.getWSDLModel();
@@ -205,6 +222,22 @@ public class ImportWsdlSoapWizard extends AbstractWizard implements IImportWizar
 		} catch (ModelerCoreException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} 
+		}
+    }
+    
+    private void runFinishWithDetails() {
+    	MessageDialog.openInformation(this.getShell(), "Unfinished Wizard", "WSDL Procedure generation not yet finished");
+    }
+    
+    public void notifyManagerChanged() {
+    	// First, check the importManager's doGenerateDefaultProcedures() method.
+    	
+    	boolean doGenerate = this.importManager.doGenerateDefaultProcedures();
+    	if( doGenerate ) {
+    		// Remove page 3
+    		removePage(this.operationsDetailsPage);
+    	} else {
+    		addPage(this.operationsDetailsPage);
+    	}
     }
 }

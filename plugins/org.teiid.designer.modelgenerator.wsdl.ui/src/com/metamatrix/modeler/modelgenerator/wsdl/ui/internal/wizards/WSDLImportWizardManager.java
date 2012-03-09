@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.resources.IContainer;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
@@ -40,14 +39,15 @@ public class WSDLImportWizardManager {
     // /////////////////////////////////////////////////////////////////////////////////////////////
     private WSDLReader wsdlReader;
 
-    private IContainer targetModelLocation;
+
     
 	private String sourceModelName;
-	private IPath sourceModelLocation;
 	private boolean sourceModelExists;
+    private IContainer sourceModelLocation;
 	
 	private String viewModelName;
 	private boolean viewModelExists;
+    private IContainer viewModelLocation;
 	
 	private boolean generateDefaultProcedures;
 	
@@ -118,19 +118,19 @@ public class WSDLImportWizardManager {
     /**
      * Get the currently specified location where the target Model is to be generated.
      * 
-     * @return the target Model location
+     * @return the view Model location
      */
-    public IContainer getTargetModelLocation() {
-        return this.targetModelLocation;
+    public IContainer getViewModelLocation() {
+        return this.viewModelLocation;
     }
 
     /**
      * Set the location where the target Model is to be generated.
      * 
-     * @param targetModelLocation the target Model location
+     * @param viewModelLocation the target Model location
      */
-    public void setTargetModelLocation( IContainer targetModelLocation ) {
-        this.targetModelLocation = targetModelLocation;
+    public void setViewModelLocation( IContainer viewModelLocation ) {
+        this.viewModelLocation = viewModelLocation;
     }
 
     /**
@@ -138,7 +138,7 @@ public class WSDLImportWizardManager {
      * 
      * @return the target View Model Name
      */
-    public String getTargetViewModelName() {
+    public String getViewModelName() {
         return this.viewModelName;
     }
 
@@ -147,7 +147,7 @@ public class WSDLImportWizardManager {
      * 
      * @param targetModelName the target view Model Name
      */
-    public void setTargetViewModelName( String targetModelName ) {
+    public void setViewModelName( String targetModelName ) {
         this.viewModelName = targetModelName;
     }
 
@@ -229,10 +229,10 @@ public class WSDLImportWizardManager {
 			// get one operation and then 
 			Operation firstOperation = getSelectedOperations().get(0);
 			String serviceName = firstOperation.getBinding().getPort().getService().getName();
-			this.sourceModelName = serviceName + ".xmi"; //$NON-NLS-1$
-			this.viewModelName = serviceName + "View.xmi";  //$NON-NLS-1$
-			this.sourceModelExists = ModelGeneratorWsdlUiUtil.modelExists(this.targetModelLocation.getFullPath().toOSString(), this.sourceModelName);
-			this.viewModelExists = ModelGeneratorWsdlUiUtil.modelExists(this.targetModelLocation.getFullPath().toOSString(), this.viewModelName);
+			setSourceModelName(serviceName + ".xmi"); //$NON-NLS-1$
+			setViewModelName(serviceName + "View.xmi");  //$NON-NLS-1$
+			this.sourceModelExists = ModelGeneratorWsdlUiUtil.modelExists(this.viewModelLocation.getFullPath().toOSString(), this.sourceModelName);
+			this.viewModelExists = ModelGeneratorWsdlUiUtil.modelExists(this.viewModelLocation.getFullPath().toOSString(), this.viewModelName);
 		} else {
 			this.sourceModelName = null;
 			this.sourceModelExists = false;
@@ -261,7 +261,7 @@ public class WSDLImportWizardManager {
 	 * 
 	 * @return sourceModelLocation the target location where the source model is going to be created
 	 */
-	public IPath getSourceModelLocation() {
+	public IContainer getSourceModelLocation() {
 		return this.sourceModelLocation;
 	}
 	
@@ -269,7 +269,7 @@ public class WSDLImportWizardManager {
 	 * 
 	 * @return location the target location where the view model either exists or is going to be created
 	 */
-	public void setSourceModelLocation(IPath location) {
+	public void setSourceModelLocation(IContainer location) {
 		this.sourceModelLocation = location;
 	}
 	

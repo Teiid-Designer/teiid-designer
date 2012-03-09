@@ -7,11 +7,8 @@
 */
 package org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Properties;
 
-import com.metamatrix.modeler.modelgenerator.wsdl.model.ModelGenerationException;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Operation;
 
 public class RequestInfo extends ProcedureInfo {
@@ -88,42 +85,16 @@ public class RequestInfo extends ProcedureInfo {
 	}
 	
     private String getNamespaceString() {
-    	//
-    	// EXAMPLE:  XMLNAMESPACES('http://www.kaptest.com/schema/1.0/party' AS pty)
-    	//
     	
-    	Map namespaces = new HashMap();
-    	
-    	try {
-			namespaces = getGenerator().getImportManager().getWSDLModel().getNamespaces();
-		} catch (ModelGenerationException ex) {
-			// TODO Auto-generated catch block
-			ex.printStackTrace();
-		}
-    	
-    	if( namespaces.isEmpty() ) {
+    	if( getGenerator().getNamespaceURI() == null ) {
     		return null;
     	}
     	
     	StringBuffer sb = new StringBuffer();
     	
     	sb.append(XMLNAMESPACES).append(L_PAREN);
-    	int i=0;
-    	for( Object obj : namespaces.keySet() ) {
-    		if( obj instanceof String) {
-    			String prefix = (String)obj;
-	    		if( prefix.equalsIgnoreCase(XSI_NAMESPACE_PREFIX)) {
-	    			continue;
-	    		}
-	    		if( i > 0 ) {
-	    			sb.append(COMMA).append(SPACE);
-	    		}
-	    		String uri = (String)namespaces.get(obj);
-	    		sb.append(S_QUOTE).append(uri).append(S_QUOTE).append(SPACE).append(AS).append(SPACE).append(prefix);
-    		}
-    		i++;
-    	}
-    	sb.append(R_PAREN).append(SPACE).append(COMMA).append(SPACE);
+    	sb.append(DEFAULT).append(SPACE).append(S_QUOTE).append(getGenerator().getNamespaceURI()).append(S_QUOTE);
+    	sb.append(R_PAREN);
     	
     	return sb.toString();
     }

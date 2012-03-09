@@ -25,8 +25,10 @@ public class Messages  extends NLS {
     
     public static String ColumnInfo;
     public static String ColumnName;
+    public static String CustomProcedures;
     
     public static String DataType;
+    public static String DefaultProcedures;
     public static String DefaultValue;
     public static String Delete;
     public static String Down;
@@ -35,10 +37,12 @@ public class Messages  extends NLS {
     public static String ElementName;
     public static String ElementInfo;
     
+    public static String GenerateDefaultProcedures;
     public static String GeneratedProcedureName;
     public static String GeneratedSQLStatement;
     public static String GenerateWrapperProcedure;
     
+    public static String ImportOptions;
     public static String InvalidColumnName;
     
     public static String Location;
@@ -50,11 +54,14 @@ public class Messages  extends NLS {
     
     public static String Operations;
     public static String Options;
+    public static String OptionDefineCustomProcures;
+    public static String OptionDefineDefaultProcedures;
     public static String Ordinality;
     public static String OverwriteExistingProcedures;
     
     public static String Path;
     public static String ProcedureDefinition;
+    public static String ProcedureGenerationOptions;
     
     public static String Request;
     public static String Response;
@@ -69,15 +76,37 @@ public class Messages  extends NLS {
     public static String SetAsRootPath;
     public static String Source;
     public static String Source_lower;
+    public static String SourceModelDefinition;
     public static String SourceNameTooltip;
+    public static String Status;
     
     public static String Up;
     
     public static String View;
     public static String View_lower;
+    public static String ViewModelDefinition;
     public static String ViewNameTooltip;
     
     public static String WrapperProcedure;
+    
+    // STATUS MESSAGES
+    public static String Status_SourceModelLocationUndefined;
+    public static String Status_SourceModelNameUndefined;
+    public static String Status_ViewModelLocationUndefined;
+    public static String Status_ViewModelNameUndefined;
+    public static String Status_AllOkClickFinishToGenerateProcedures;
+    public static String Status_AllOkClickNextToDefineProcedures;
+    public static String Status_SourceModelDoesNotExistAndWillBeCreated;
+    public static String Status_ExistingSourceModelHasWrongProfile;
+    public static String Status_ExistingSourceModelAlreadyContainsInvoke;
+    public static String Status_ExistingSourceModelMissingInvoke;
+    public static String Status_SourceModelNameCannotBeNullOrEmpty;
+    public static String Status_ViewModelNameCannotBeNullOrEmpty;
+    public static String Statis_ViewModelAlreadyExists;
+    public static String Status_ViewModelDoesNotExistAndWillBeCreated;
+    
+    public static String Error_DeterminingSourceModelHas_0_Procedure;
+    public static String Error_DeterminingSourceModelHasMatchingProfile;
     
     public static String ImportWsdlSoapWizard_title;
     public static String ImportWsdlSoapWizard_importErrorMessage;

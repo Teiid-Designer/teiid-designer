@@ -199,7 +199,7 @@ public class RelationalFromWSDLImportWizard extends AbstractWizard implements II
 //        String modelName = this.importManager.getTargetModelName();
 
         // Target location for the new model
-        IContainer container = this.importManager.getTargetModelLocation();
+        IContainer container = this.importManager.getViewModelLocation();
 
         // The Selected Operations
         Model model = importManager.getWSDLModel();
