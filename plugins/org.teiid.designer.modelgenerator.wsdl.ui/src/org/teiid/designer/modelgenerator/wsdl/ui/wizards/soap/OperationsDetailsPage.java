@@ -33,6 +33,7 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
@@ -116,7 +117,7 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 	TextViewer requestSqlTextViewer;
 	IDocument requestSqlDocument;
 	Action requestCreateElementAction, requestSetRootPathAction;
-	Button requestAddElementButton;
+	//Button requestAddElementButton;
 	ElementsInfoPanel requestElementsInfoPanel;
 
 	TabItem responseTab;
@@ -125,7 +126,7 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 	TextViewer responseSqlTextViewer;
 	IDocument responseSqlDocument;
 	Action responseCreateElementAction, responseSetRootPathAction;
-	Button responseAddElementButton;
+	//Button responseAddElementButton;
 	ColumnsInfoPanel responseElementsInfoPanel;
 	
 	TabFolder wrapperTab;
@@ -179,7 +180,7 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 	 */
 	public void createControl(Composite theParent) {
 		Composite pnlMain = WidgetFactory.createPanel(theParent, SWT.NONE,GridData.FILL_BOTH);
-		GridLayout layout = new GridLayout(1, false);
+		GridLayout layout = new GridLayout(2, false);
 		pnlMain.setLayout(layout);
 		setControl(pnlMain);
 		
@@ -192,14 +193,14 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 	
 	@SuppressWarnings("unused")
 	private void createOperationsSelectionPanel(Composite parent) {
-		Group operationsGroup = WidgetFactory.createGroup(parent, Messages.Operations, GridData.FILL_BOTH, 1, 1);
+		Group operationsGroup = WidgetFactory.createGroup(parent, Messages.Operations, GridData.FILL_BOTH, 2, 1);
+		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+		gd.horizontalSpan = 2;
+		operationsGroup.setLayoutData(gd);
 		
 		ACTION_COMBO : {
 			operationsCombo = new Combo(operationsGroup, SWT.NONE | SWT.READ_ONLY);
-    		GridData gd = new GridData(GridData.FILL_BOTH);
-    		gd.verticalAlignment = GridData.CENTER;
-    		gd.horizontalSpan = 1;
-    		operationsCombo.setLayoutData(gd);
+			operationsCombo.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
     		
     		operationsCombo.addSelectionListener(new SelectionAdapter() {
                 @Override
@@ -235,10 +236,16 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 
 		panel.setLayout(new GridLayout(2, false));
 
-		Label procedureNameLabel = new Label(panel, SWT.NONE);
+		Composite namePanel = WidgetFactory.createPanel(panel);
+		namePanel.setLayout(new GridLayout(2, false));
+		GridData namePanelGD = new GridData(GridData.FILL_HORIZONTAL);
+		namePanelGD.horizontalSpan = 2;
+		namePanel.setLayoutData(namePanelGD);
+		
+		Label procedureNameLabel = new Label(namePanel, SWT.NONE);
 		procedureNameLabel.setText(Messages.GeneratedProcedureName);
 
-		requestProcedureNameText = new Text(panel, SWT.BORDER | SWT.SINGLE);
+		requestProcedureNameText = new Text(namePanel, SWT.BORDER | SWT.SINGLE);
 		requestProcedureNameText.setBackground(Display.getCurrent()
 				.getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
 		requestProcedureNameText.setForeground(Display.getCurrent()
@@ -247,17 +254,29 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 				GridData.FILL_HORIZONTAL));
 		requestProcedureNameText.setEditable(false);
 
-		createRequestSchemaContentsGroup(panel);
-		createRequestElementsInfoGroup(panel);
+		createRequestSplitter(panel);
+
 		createRequestSqlGroup(panel);
+	}
+	
+	private void createRequestSplitter(Composite parent) {
+        SashForm splitter = new SashForm(parent, SWT.HORIZONTAL);
+        GridData gid = new GridData();
+        gid.grabExcessHorizontalSpace = gid.grabExcessVerticalSpace = true;
+        gid.horizontalAlignment = gid.verticalAlignment = GridData.FILL;
+        splitter.setLayoutData(gid);
+
+		createRequestSchemaContentsGroup(splitter);
+		createRequestElementsInfoGroup(splitter);
+
+        splitter.setWeights(new int[] {40, 60});
 	}
 
 	private void createRequestSchemaContentsGroup(Composite parent) {
-		Group schemaContentsGroup = WidgetFactory.createGroup(parent,
-				"Schema Contents", SWT.NONE, 2, 4); //$NON-NLS-1$
+		Group schemaContentsGroup = WidgetFactory.createGroup(parent,Messages.SchemaContents, SWT.NONE, 1, 4);
 		schemaContentsGroup.setLayout(new GridLayout(4, false));
 		GridData gd = new GridData(GridData.FILL_BOTH);
-		gd.horizontalSpan = 2;
+		gd.horizontalSpan = 1;
 		gd.heightHint = 120;
 		schemaContentsGroup.setLayoutData(gd);
 
@@ -312,32 +331,12 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 						IStructuredSelection sel = (IStructuredSelection) requestXmlTreeViewer
 								.getSelection();
 						if (sel.size() == 1 && sel.getFirstElement() instanceof XSDParticleImpl) {
-							requestAddElementButton.setEnabled(true);
 							columnMenuManager.add(requestCreateElementAction);
 							columnMenuManager.add(requestSetRootPathAction);
-						} else {
-							requestAddElementButton.setEnabled(false);
 						}
 
 					}
 				});
-
-		this.requestXmlTreeViewer.addTreeListener(new ITreeViewerListener() {
-
-			@Override
-			public void treeExpanded(TreeExpansionEvent e) {
-				IStructuredSelection sel = (IStructuredSelection) requestXmlTreeViewer
-						.getSelection();
-				requestAddElementButton.setEnabled(sel.size() == 1);
-			}
-
-			@Override
-			public void treeCollapsed(TreeExpansionEvent e) {
-				IStructuredSelection sel = (IStructuredSelection) requestXmlTreeViewer
-						.getSelection();
-				requestAddElementButton.setEnabled(sel.size() == 1);
-			}
-		});
 
 		this.requestCreateElementAction = new Action(Messages.AddAsNewElement) {
 			@Override
@@ -352,37 +351,10 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 				setRequestRootPath();
 			}
 		};
-
-		requestAddElementButton = new Button(schemaContentsGroup, SWT.PUSH);
-		requestAddElementButton.setText(Messages.AddSelectionAsNewElement);
-		gd = new GridData();
-		gd.horizontalSpan = 1;
-		requestAddElementButton.setLayoutData(gd);
-		requestAddElementButton.addSelectionListener(new SelectionAdapter() {
-
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				IStructuredSelection sel = (IStructuredSelection) requestXmlTreeViewer
-						.getSelection();
-				Object obj = sel.getFirstElement();
-				// TODO:
-				if (obj instanceof XSDParticleImpl) {
-					createRequestColumn();
-				} else {
-					String newName = "column_" + (getProcedureGenerator().getRequestInfo().getColumnInfoList().length + 1); //$NON-NLS-1$
-					getProcedureGenerator().getRequestInfo().addColumn(newName, false,
-					null, null, null);
-				}
-				 notifyColumnDataChanged();
-			}
-
-		});
-		requestAddElementButton.setEnabled(false);
 	}
 
 	private void createRequestElementsInfoGroup(Composite parent) {
-		requestElementsInfoPanel = new ElementsInfoPanel(parent, SWT.NONE,
-				REQUEST, this);
+		requestElementsInfoPanel = new ElementsInfoPanel(parent, SWT.NONE, REQUEST, this);
 	}
 
 	private void createRequestSqlGroup(Composite parent) {
@@ -417,10 +389,17 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 
 		panel.setLayout(new GridLayout(2, false));
 		
-		Label procedureNameLabel = new Label(panel, SWT.NONE);
+		Composite namePanel = WidgetFactory.createPanel(panel);
+		namePanel.setLayout(new GridLayout(2, false));
+		GridData namePanelGD = new GridData(GridData.FILL_HORIZONTAL);
+		namePanelGD.horizontalSpan = 2;
+		namePanel.setLayoutData(namePanelGD);
+		
+		
+		Label procedureNameLabel = new Label(namePanel, SWT.NONE);
 		procedureNameLabel.setText(Messages.GeneratedProcedureName);
 
-		responseProcedureNameText = new Text(panel, SWT.BORDER | SWT.SINGLE);
+		responseProcedureNameText = new Text(namePanel, SWT.BORDER | SWT.SINGLE);
 		responseProcedureNameText.setBackground(Display.getCurrent()
 				.getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
 		responseProcedureNameText.setForeground(Display.getCurrent()
@@ -429,18 +408,30 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 				GridData.FILL_HORIZONTAL));
 		responseProcedureNameText.setEditable(false);
 
-		createResponseSchemaContentsGroup(panel);
-		createResponseColumnInfoGroup(panel);
+		createResponseSplitter(panel);
+		
 		createResponseSqlGroup(panel);
+	}
+	
+	private void createResponseSplitter(Composite parent) {
+        SashForm splitter = new SashForm(parent, SWT.HORIZONTAL);
+        GridData gid = new GridData();
+        gid.grabExcessHorizontalSpace = gid.grabExcessVerticalSpace = true;
+        gid.horizontalAlignment = gid.verticalAlignment = GridData.FILL;
+        splitter.setLayoutData(gid);
+
+		createResponseSchemaContentsGroup(splitter);
+		createResponseColumnInfoGroup(splitter);
+
+        splitter.setWeights(new int[] {40, 60});
 	}
 
 	private void createResponseSchemaContentsGroup(Composite parent) {
-		Group schemaContentsGroup = WidgetFactory.createGroup(parent,
-				"Schema Contents", SWT.NONE, 2, 4); //$NON-NLS-1$
+		Group schemaContentsGroup = WidgetFactory.createGroup(parent, Messages.SchemaContents, SWT.NONE, 2, 4);
 		schemaContentsGroup.setLayout(new GridLayout(4, false));
 		GridData gd = new GridData(GridData.FILL_BOTH);
 		gd.heightHint = 120;
-		gd.horizontalSpan = 2;
+		gd.horizontalSpan = 1;
 		schemaContentsGroup.setLayoutData(gd);
 
 		responseXmlTreeViewer = new TreeViewer(schemaContentsGroup);
@@ -491,35 +482,15 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 					public void selectionChanged(
 							final SelectionChangedEvent event) {
 						columnMenuManager.removeAll();
-						IStructuredSelection sel = (IStructuredSelection) responseXmlTreeViewer
-								.getSelection();
+						IStructuredSelection sel = (IStructuredSelection) responseXmlTreeViewer.getSelection();
 						if (sel.size() == 1 && sel.getFirstElement() instanceof XSDParticleImpl) {
-							responseAddElementButton.setEnabled(true);
 							columnMenuManager.add(responseCreateElementAction);
 							columnMenuManager.add(requestSetRootPathAction);
-						} else {
-							responseAddElementButton.setEnabled(false);
 						}
 
 					}
 				});
 
-		this.responseXmlTreeViewer.addTreeListener(new ITreeViewerListener() {
-
-			@Override
-			public void treeExpanded(TreeExpansionEvent e) {
-				IStructuredSelection sel = (IStructuredSelection) responseXmlTreeViewer
-						.getSelection();
-				responseAddElementButton.setEnabled(sel.size() == 1);
-			}
-
-			@Override
-			public void treeCollapsed(TreeExpansionEvent e) {
-				IStructuredSelection sel = (IStructuredSelection) responseXmlTreeViewer
-						.getSelection();
-				responseAddElementButton.setEnabled(sel.size() == 1);
-			}
-		});
 
 		this.responseCreateElementAction = new Action(Messages.AddAsNewElement) {
 			@Override
@@ -534,32 +505,6 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 				setRequestRootPath();
 			}
 		};
-
-		responseAddElementButton = new Button(schemaContentsGroup, SWT.PUSH);
-		responseAddElementButton.setText(Messages.AddSelectionAsNewElement);
-		gd = new GridData();
-		gd.horizontalSpan = 1;
-		responseAddElementButton.setLayoutData(gd);
-		responseAddElementButton.addSelectionListener(new SelectionAdapter() {
-
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				IStructuredSelection sel = (IStructuredSelection) responseXmlTreeViewer
-						.getSelection();
-				Object obj = sel.getFirstElement();
-				// TODO:
-				if (obj instanceof XSDParticleImpl) {
-					createResponseColumn();
-				} else {
-					String newName = "column_" + (getProcedureGenerator().getRequestInfo().getColumnInfoList().length + 1); //$NON-NLS-1$
-					getProcedureGenerator().getRequestInfo().addColumn(newName, false,
-					null, null, null);
-				}
-				 notifyColumnDataChanged();
-			}
-
-		});
-		responseAddElementButton.setEnabled(false);
 	}
 
 	private void createResponseColumnInfoGroup(Composite parent) {
@@ -836,7 +781,7 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 		return null;
 	}
 
-	private void createRequestColumn() {
+	public boolean createRequestColumn() {
 		IStructuredSelection sel = (IStructuredSelection) requestXmlTreeViewer
 				.getSelection();
 		Object obj = sel.getFirstElement();
@@ -845,14 +790,17 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 		    String ns = ((XSDElementDeclarationImpl)((XSDParticleImpl) obj).getContent()).getTargetNamespace();
 			this.procedureGenerator.getRequestInfo().addColumn(name, false, "String", null, ns);
 			notifyColumnDataChanged();
+			return true;
 		}
+		
+		return false;
 	}
 
 	private void setRequestRootPath() {
 		// TODO:
 	}
 
-	private void createResponseColumn() {
+	public boolean createResponseColumn() {
 		IStructuredSelection sel = (IStructuredSelection) responseXmlTreeViewer
 				.getSelection();
 		Object obj = sel.getFirstElement();
@@ -861,7 +809,10 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 		    String ns = ((XSDElementDeclarationImpl)((XSDParticleImpl) obj).getContent()).getTargetNamespace();
 			this.procedureGenerator.getResponseInfo().addColumn(name, false, "String", null, ns);
 			notifyColumnDataChanged();
+			return true;
 		}
+		
+		return false;
 	}
 
 	private void setResponseRootPath() {

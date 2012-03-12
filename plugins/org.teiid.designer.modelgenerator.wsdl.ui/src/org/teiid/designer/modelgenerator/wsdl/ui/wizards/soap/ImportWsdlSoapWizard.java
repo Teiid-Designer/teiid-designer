@@ -15,7 +15,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -141,6 +140,11 @@ public class ImportWsdlSoapWizard extends AbstractWizard implements IImportWizar
      */
     @Override
     public boolean finish() {
+    	if( !this.importManager.doGenerateDefaultProcedures() ) {
+    		runFinishWithDetails();
+    		return true;
+    	}
+    	
         boolean result = false;
 
         // Save object selections from previous page
@@ -148,11 +152,11 @@ public class ImportWsdlSoapWizard extends AbstractWizard implements IImportWizar
 
             public void run( final IProgressMonitor monitor ) throws InvocationTargetException {
                 // Wrap in transaction so it doesn't result in Significant Undoable
-                boolean started = ModelerCore.startTxn(false, false, "Changing Sql Connections", //$NON-NLS-1$
+                boolean started = ModelerCore.startTxn(false, false, "Generate Models From WSDL", //$NON-NLS-1$
                                                        new Object());
                 boolean succeeded = false;
                 try {
-                    runFinish(monitor);
+                	runFinishAsDefault(monitor);
                     succeeded = true;
                 } catch (ModelBuildingException mbe) {
                     mbe.printStackTrace(System.err);
@@ -197,17 +201,7 @@ public class ImportWsdlSoapWizard extends AbstractWizard implements IImportWizar
         return result;
     }
 
-    public void runFinish( IProgressMonitor theMonitor ) throws ModelBuildingException, SchemaProcessingException, ModelGenerationException {
-
-        if( this.importManager.doGenerateDefaultProcedures() ) {
-        	runFinishAsDefault();
-        } else {
-        	runFinishWithDetails();
-        }
-        
-    }
-    
-    private void runFinishAsDefault() throws ModelGenerationException, SchemaProcessingException, ModelBuildingException {
+    private void runFinishAsDefault(final IProgressMonitor theMonitor ) throws ModelGenerationException, SchemaProcessingException, ModelBuildingException {
         // Target Model Name
 
         // Target location for the new model
@@ -227,14 +221,14 @@ public class ImportWsdlSoapWizard extends AbstractWizard implements IImportWizar
 		}
     }
     
-    private void runFinishWithDetails() {
+    private void runFinishWithDetails( ) {
     	UiUtil.runInSwtThread(new Runnable() {
 			@Override
 			public void run() {
-				MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "Unfinished Wizard", "WSDL Procedure generation not yet finished");
+				ImportWsdlProcessor processor = new ImportWsdlProcessor(importManager, Display.getCurrent().getActiveShell());
+				processor.execute();
 			}
 		}, false);
-    	
     }
     
     public void notifyManagerChanged() {

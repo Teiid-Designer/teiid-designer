@@ -60,7 +60,7 @@ public class ResponseInfo extends ProcedureInfo {
     	sb.append(getXmlTableString());
     	
     	sb.append(R_PAREN);
-    	sb.append(SPACE).append(AS).append(SPACE).append(alias);
+    	sb.append(SPACE).append(AS).append(SPACE).append(alias).append(SEMI_COLON);
     	sb.append(SQL_END);
 
 		
@@ -81,9 +81,9 @@ public class ResponseInfo extends ProcedureInfo {
     	}
     	sb.append(S_QUOTE).append(xQueryExp).append(S_QUOTE).append(SPACE);
     	
-    	sb.append(PASSING).append(SPACE).append(getResponseProcedureParameter());
+    	sb.append(PASSING).append(SPACE).append(getResponseProcedureParameter()).append(RETURN);
 		
-    	sb.append(COLUMNS).append(SPACE);
+    	sb.append(TAB).append(COLUMNS).append(SPACE).append(RETURN);
 		
 		
 		int i=0;
@@ -93,7 +93,7 @@ public class ResponseInfo extends ProcedureInfo {
     		if( columnInfo.getOrdinality() ) {
     			sb.append(columnInfo.getName()).append(SPACE).append(FOR_ORDINALITY);
     		} else {
-	    		sb.append(columnInfo.getName()).append(SPACE).append(columnInfo.getDatatype());
+	    		sb.append(TAB).append(TAB).append(columnInfo.getName()).append(SPACE).append(columnInfo.getDatatype());
 	    		
 	    		String defValue = columnInfo.getDefaultValue();
 	    		if( defValue != null && defValue.length() > 0) {

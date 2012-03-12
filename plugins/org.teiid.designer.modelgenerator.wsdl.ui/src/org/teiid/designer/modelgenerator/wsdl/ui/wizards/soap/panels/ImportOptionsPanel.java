@@ -110,7 +110,7 @@ public class ImportOptionsPanel implements ModelGeneratorWsdlUiConstants {
     		gridData.widthHint = 200;
     		this.sourceModelFileText.setLayoutData(gridData);
     		this.sourceModelFileText.setToolTipText(Messages.SourceNameTooltip);
-    		this.sourceModelFileText.setBackground(WidgetUtil.getReadOnlyBackgroundColor());
+    		//this.sourceModelFileText.setBackground(WidgetUtil.getReadOnlyBackgroundColor());
     		this.sourceModelFileText.setForeground(WidgetUtil.getDarkBlueColor());
     		this.sourceModelFileText.addModifyListener(new ModifyListener() {
     			public void modifyText(ModifyEvent e) {
@@ -188,7 +188,7 @@ public class ImportOptionsPanel implements ModelGeneratorWsdlUiConstants {
     		gridData = new GridData(GridData.FILL_HORIZONTAL);
     		this.viewModelFileText.setLayoutData(gridData);
     		this.viewModelFileText.setToolTipText(Messages.ViewNameTooltip);
-    		this.viewModelFileText.setBackground(WidgetUtil.getReadOnlyBackgroundColor());
+    		//this.viewModelFileText.setBackground(WidgetUtil.getReadOnlyBackgroundColor());
     		this.viewModelFileText.setForeground(WidgetUtil.getDarkBlueColor());
     		this.viewModelFileText.addModifyListener(new ModifyListener() {
     			public void modifyText(ModifyEvent e) {

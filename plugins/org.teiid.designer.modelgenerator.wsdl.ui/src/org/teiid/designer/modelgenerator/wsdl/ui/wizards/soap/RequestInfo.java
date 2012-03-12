@@ -17,6 +17,15 @@ public class RequestInfo extends ProcedureInfo {
 		super(operation, REQUEST, generator);
 		setProcedureName("request_" + operation.getName()); //$NON-NLS-1$
 	}
+	
+	
+	public String getFullParamaterName(String name) {
+		StringBuilder builder = new StringBuilder();
+		builder.append(getGenerator().getViewModelName());
+		builder.append('.').append(getProcedureName()).append('.').append(name);
+		
+		return builder.toString();
+	}
 
 	@Override
 	String getSqlStringTemplate() {
@@ -63,13 +72,14 @@ public class RequestInfo extends ProcedureInfo {
 	    		sb.append(nsString).append(COMMA).append(SPACE);
 	    	}
 	    	sb.append(RETURN);
+	    	// EXAMPLE:       XMLELEMENT(NAME FromCurrency, CurrencyConvertorView.request_ConversionRate.FromCurrency)
 	    	int nColumns = getColumnInfoList().length;
 	    	for( ColumnInfo columnInfo : getColumnInfoList()) {
 	    		String name = columnInfo.getName();
 	    		sb.append(TAB).append(TAB).append(TAB).append(XMLELEMENT);
 	    		sb.append(L_PAREN);
-	    		sb.append(NAME).append(SPACE).append(name).append(COMMA).append(SPACE).append(getViewColumnName(name));
-	    		
+	    		sb.append(NAME).append(SPACE).append(name).append(COMMA).append(SPACE).append(getFullParamaterName(name));
+	    		sb.append(R_PAREN);
 	    		if(i < (nColumns-1)) {
 	    			sb.append(COMMA).append(SPACE).append(RETURN);
 	    		}
@@ -77,7 +87,7 @@ public class RequestInfo extends ProcedureInfo {
 	    	}
     	}
     	sb.append(R_PAREN);
-    	sb.append(SPACE).append(AS).append(SPACE).append(alias);
+    	sb.append(SPACE).append(AS).append(SPACE).append(alias).append(SEMI_COLON);
     	sb.append(SQL_END);
 
 		

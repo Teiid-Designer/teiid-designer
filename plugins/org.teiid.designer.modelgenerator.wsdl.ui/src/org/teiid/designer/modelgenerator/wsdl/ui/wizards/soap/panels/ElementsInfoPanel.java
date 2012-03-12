@@ -62,9 +62,8 @@ public class ElementsInfoPanel{
 	private void init(Composite parent) {
     	Group columnInfoGroup = WidgetFactory.createGroup(parent, Messages.ElementInfo, SWT.NONE, 2);
     	columnInfoGroup.setLayout(new GridLayout(2, false));
-    	GridData gd = new GridData(GridData.FILL_HORIZONTAL);
-    	gd.heightHint = 160;
-    	gd.horizontalSpan = 2;
+    	GridData gd = new GridData(GridData.FILL_BOTH);
+    	gd.horizontalSpan = 1;
     	columnInfoGroup.setLayoutData(gd);
     	
     	Label prefixLabel = new Label(columnInfoGroup, SWT.NONE);
@@ -101,10 +100,13 @@ public class ElementsInfoPanel{
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				// Check Selection from tree
+				if( ! detailsPage.createRequestColumn() ) {
 					String newName = "column_" + (detailsPage.getProcedureGenerator().getRequestInfo().getColumnInfoList().length + 1); //$NON-NLS-1$
 					detailsPage.getProcedureGenerator().getRequestInfo().addColumn(newName, false, ColumnInfo.DEFAULT_DATATYPE, null, null);
 					editElementsPanel.refresh();
 					notifyColumnDataChanged();
+    			}	
 			}
     		
 		});

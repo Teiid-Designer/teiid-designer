@@ -67,8 +67,8 @@ public class Messages  extends NLS {
     public static String Response;
     public static String RootPath;
     
+    public static String SchemaContents;
     public static String SelectedOperation;
-    
     public static String SelectSourceModel_title;
     public static String SelectSourceModel_message;
     public static String SelectViewModel_title;
@@ -105,6 +105,7 @@ public class Messages  extends NLS {
     public static String Statis_ViewModelAlreadyExists;
     public static String Status_ViewModelDoesNotExistAndWillBeCreated;
     
+    public static String Error_Creating_0_Model_1_FromWsdl;
     public static String Error_DeterminingSourceModelHas_0_Procedure;
     public static String Error_DeterminingSourceModelHasMatchingProfile;
     

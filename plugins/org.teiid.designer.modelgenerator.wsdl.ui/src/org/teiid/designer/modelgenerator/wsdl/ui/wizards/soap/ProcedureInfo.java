@@ -234,14 +234,6 @@ public abstract class ProcedureInfo implements SqlConstants {
 		return this.operation;
 	}
 	
-	public String getViewColumnName(String name) {
-		StringBuilder builder = new StringBuilder();
-		builder.append(this.generator.getViewModelName());
-		builder.append('.').append(this.operation.getName()).append('.').append(name);
-		
-		return builder.toString();
-	}
-	
 	public void validate() {
 		// TODO:
 		
