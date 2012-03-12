@@ -13,6 +13,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -25,6 +31,7 @@ import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.core.Annotation;
 import com.metamatrix.metamodels.core.AnnotationContainer;
 import com.metamatrix.metamodels.core.CoreFactory;
+import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.metamodels.relational.AccessPattern;
 import com.metamatrix.metamodels.relational.BaseTable;
 import com.metamatrix.metamodels.relational.Column;
@@ -48,6 +55,8 @@ import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.ModelerCoreException;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
+import com.metamatrix.modeler.core.workspace.ModelWorkspaceItem;
+import com.metamatrix.modeler.internal.core.workspace.ModelWorkspaceManager;
 
 /**
  * Class provides building EMF Relational Metamodel objects from Relational Model objects
@@ -65,6 +74,55 @@ public class RelationalModelFactory implements RelationalConstants {
         super();
         this.datatypeProcessor = new DatatypeProcessor();
     }
+    
+    /**
+     * Creates a relational model given a <code>IPath</code> location and a model name
+     * 
+     * @param location
+     * @param modelName
+     * @return
+     * @throws ModelWorkspaceException
+     */
+    public ModelResource createRelationalModel( IPath location, String modelName) throws ModelWorkspaceException {
+        ModelWorkspaceItem mwItem = null;
+        if( location.segmentCount() == 1 ) {
+        	// Project for ONE segment
+        	mwItem = ModelWorkspaceManager.getModelWorkspaceManager().findModelWorkspaceItem(location.makeAbsolute(), IResource.PROJECT);
+        } else {
+        	mwItem = ModelWorkspaceManager.getModelWorkspaceManager().findModelWorkspaceItem(location.makeAbsolute(), IResource.FOLDER);
+        }
+        
+        IProject project = mwItem.getResource().getProject();
+        IPath relativeModelPath = mwItem.getPath().removeFirstSegments(1).append(modelName);
+        final IFile modelFile = project.getFile( relativeModelPath );
+        final ModelResource resrc = ModelerCore.create( modelFile );
+        resrc.getModelAnnotation().setPrimaryMetamodelUri( RELATIONAL_PACKAGE_URI );
+        resrc.getModelAnnotation().setModelType(ModelType.PHYSICAL_LITERAL);
+        ModelerCore.getModelEditor().getAllContainers(resrc.getEmfResource());
+        
+        return resrc;
+    }
+    
+    /**
+     * Creates a relational model given a <code>IContainer</code> location (Project or Folder) and a model name
+     * 
+     * @param container
+     * @param modelName
+     * @return
+     * @throws ModelWorkspaceException
+     */
+    public ModelResource createRelationalModel( IContainer container, String modelName) throws ModelWorkspaceException {
+        IProject project = container.getProject();
+        IPath relativeModelPath = container.getFullPath().removeFirstSegments(1).append(modelName);
+        final IFile modelFile = project.getFile( relativeModelPath );
+        final ModelResource resrc = ModelerCore.create( modelFile );
+        resrc.getModelAnnotation().setPrimaryMetamodelUri( RELATIONAL_PACKAGE_URI );
+        resrc.getModelAnnotation().setModelType(ModelType.PHYSICAL_LITERAL);
+        ModelerCore.getModelEditor().getAllContainers(resrc.getEmfResource());
+        
+        return resrc;
+    }
+    
     
     public void build(ModelResource modelResource, RelationalModel model, IProgressMonitor progressMonitor) {
 
