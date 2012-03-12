@@ -51,6 +51,7 @@ public class Messages  extends NLS {
     
     public static String Name;
     public static String New;
+    public static String NoOperationsSelected;
     
     public static String Operations;
     public static String Options;

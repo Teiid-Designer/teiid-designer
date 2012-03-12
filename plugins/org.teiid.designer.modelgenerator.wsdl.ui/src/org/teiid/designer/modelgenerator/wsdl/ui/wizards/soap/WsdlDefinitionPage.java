@@ -313,10 +313,16 @@ public class WsdlDefinitionPage extends WizardPage implements Listener, IProfile
 				}
 			}
 		}
+		
+		setPageStatus();
 	}
 	
 	private void createWsdlOperationsPanel(Composite theParent) {
-		this.operationsPanel = new WsdlOperationsPanel(theParent, this.importManager);
+		this.operationsPanel = new WsdlOperationsPanel(theParent, this, this.importManager);
+	}
+	
+	public void handleOperationsChanged() {
+		setPageStatus();
 	}
 	
 	/**
@@ -507,11 +513,10 @@ public class WsdlDefinitionPage extends WizardPage implements Listener, IProfile
 			return;
 		}
 
-		// Finally, display a warning message if there were WSDL validation
-		// errors.
-		if (this.wsdlStatus.getSeverity() > IStatus.WARNING) {
-			WizardUtil.setPageComplete(this, Messages.WsdlDefinitionPage_wsdlErrorContinuation_msg,
-				IMessageProvider.WARNING);
+		if( this.importManager.getSelectedOperations().size() == 0 ) {
+			WizardUtil.setPageComplete(this, Messages.NoOperationsSelected, IMessageProvider.ERROR);
+		} else if (this.wsdlStatus != null && this.wsdlStatus.getSeverity() > IStatus.WARNING) {
+			WizardUtil.setPageComplete(this, Messages.WsdlDefinitionPage_wsdlErrorContinuation_msg, IMessageProvider.WARNING);
 		} else {
 			WizardUtil.setPageComplete(this);
 		}
@@ -587,8 +592,8 @@ public class WsdlDefinitionPage extends WizardPage implements Listener, IProfile
 		}
 
 		// If WSDL is specified, see if it's been validated
-		if (this.wsdlStatus == null) {
-			msg = Messages.WsdlDefinitionPage_validateWsdl_msg;
+		if (this.wsdlStatus != null && this.wsdlStatus.getSeverity() > IStatus.WARNING) {
+			msg = this.wsdlStatus.getMessage();
 			WizardUtil.setPageComplete(this, msg, IMessageProvider.ERROR);
 			return false;
 		}

@@ -13,6 +13,9 @@ package com.metamatrix.modeler.internal.transformation.util;
 public interface SqlConstants {
 
     public static final String TAB = "\t"; //$NON-NLS-1$
+    public static final String TAB2 = "\t\t"; //$NON-NLS-1$
+    public static final String TAB3 = "\t\t\t"; //$NON-NLS-1$
+    public static final String TAB4 = "\t\t\t\t"; //$NON-NLS-1$
     public static final String CR = "\n"; //$NON-NLS-1$
     public static final String BLANK = ""; //$NON-NLS-1$
     public static final String DBL_SPACE = "  "; //$NON-NLS-1$
@@ -53,4 +56,11 @@ public interface SqlConstants {
     public static final String SQL_TYPE_INSERT_STRING = "INSERT"; //$NON-NLS-1$
     public static final String SQL_TYPE_DELETE_STRING = "DELETE"; //$NON-NLS-1$
     public static final String SQL_TYPE_UNKNOWN_STRING = "UNKNOWN"; //$NON-NLS-1$
+    
+    public static final String FUNCTION_GET_FILES = "getFiles"; //$NON-NLS-1$
+    public static final String FUNCTION_GET_TEXT_FILES = "getTextFiles"; //$NON-NLS-1$
+    public static final String FUNCTION_SAVE_FILE = "saveFile"; //$NON-NLS-1$
+    
+    public static final String FUNCTION_INVOKE = "invoke"; //$NON-NLS-1$
+    public static final String FUNCTION_INVOKE_HTTP = "invokeHttp"; //$NON-NLS-1$
 }

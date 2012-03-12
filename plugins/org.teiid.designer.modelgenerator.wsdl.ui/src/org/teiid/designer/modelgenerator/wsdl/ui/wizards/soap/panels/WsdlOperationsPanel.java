@@ -36,6 +36,7 @@ import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.teiid.core.util.FileUtils;
 import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
+import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.WsdlDefinitionPage;
 
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Binding;
@@ -73,15 +74,18 @@ public class WsdlOperationsPanel implements Listener, FileUtils.Constants, CoreS
 
 	/** The import manager. */
 	WSDLImportWizardManager importManager;
+	
+	WsdlDefinitionPage wsdlPage;
 
 	/** The WSDL model representation */
 	Model wsdlModel = null;
 
 	private IStatus panelStatus;
 
-	public WsdlOperationsPanel(Composite parent, WSDLImportWizardManager theImportManager) {
+	public WsdlOperationsPanel(Composite parent, WsdlDefinitionPage wsdlPage, WSDLImportWizardManager theImportManager) {
 		super();
 		this.parentComposite = parent;
+		this.wsdlPage = wsdlPage;
 		this.importManager = theImportManager;
 		this.importManager.setSelectedOperations(new ArrayList());
 
@@ -109,6 +113,8 @@ public class WsdlOperationsPanel implements Listener, FileUtils.Constants, CoreS
 		if (validate) {
 			setPageStatus();
 		}
+		
+		wsdlPage.handleOperationsChanged();
 	}
 
 	void updateTreeSelectionDetails() {
@@ -286,6 +292,7 @@ public class WsdlOperationsPanel implements Listener, FileUtils.Constants, CoreS
 	}
 
 	public void notifyWsdlChanged() {
+		this.panelStatus = Status.OK_STATUS;
 		try {
 			this.wsdlModel = this.importManager.getWSDLModel();
 		} catch (ModelGenerationException e) {
@@ -294,17 +301,18 @@ public class WsdlOperationsPanel implements Listener, FileUtils.Constants, CoreS
 				Messages.WsdlOperationsPage_dialog_wsdlParseError_msg, e);
 			Shell shell = this.parentComposite.getShell();
 			ErrorDialog.openError(shell, null, Messages.WsdlOperationsPage_dialog_wsdlParseError_title, exStatus);
+			this.panelStatus = exStatus;
 		}
 		this.treeViewer.setInput(this.wsdlModel);
 		this.importManager.setSelectedOperations(new ArrayList());
 		this.treeViewer.expandToLevel(4);
 		setAllNodesSelected(true);
-		setPageStatus();
 	}
 
 	private void setPageStatus() {
-		// TODO: set an IStatus on this panel
-		panelStatus = Status.OK_STATUS;
+		if( panelStatus.isOK() ) {
+			panelStatus = Status.OK_STATUS;
+		}
 	}
 
 	public IStatus getStatus() {

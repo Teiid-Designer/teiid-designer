@@ -15,7 +15,7 @@ public class RequestInfo extends ProcedureInfo {
 
 	public RequestInfo(Operation operation, ProcedureGenerator generator) {
 		super(operation, REQUEST, generator);
-		setProcedureName("request_" + operation.getName()); //$NON-NLS-1$
+		setProcedureName(operation.getName() + "_request"); //$NON-NLS-1$
 	}
 	
 	

@@ -56,7 +56,6 @@ import com.metamatrix.modeler.ui.editors.ModelEditorManager;
 import com.metamatrix.ui.internal.util.WidgetUtil;
 
 public class ImportWsdlProcessor {
-	private static final String DEFAULT_EXTENSION_LCASE = ".xmi"; //$NON-NLS-1$
 	public static final RelationalFactory factory = RelationalFactory.eINSTANCE;
 	public static final DatatypeManager datatypeManager = ModelerCore.getWorkspaceDatatypeManager();
 	
@@ -129,7 +128,7 @@ public class ImportWsdlProcessor {
 			if( importManager.sourceModelExists() ) {
 				// find and set source model resource
 				IPath modelPath = this.importManager.getSourceModelLocation().getFullPath()
-					.append(this.importManager.getSourceModelName()).append(DEFAULT_EXTENSION_LCASE);
+					.append(this.importManager.getSourceModelName());
 				ModelWorkspaceItem item = ModelWorkspaceManager.getModelWorkspaceManager().findModelWorkspaceItem(modelPath, IResource.FILE);
 				IFile modelFile = (IFile)item.getCorrespondingResource();
 				this.sourceModel = ModelUtilities.getModelResourceForIFile(modelFile, false);
@@ -141,7 +140,7 @@ public class ImportWsdlProcessor {
 			if( importManager.viewModelExists() ) {
 				// Find and set view model resource
 				IPath modelPath = this.importManager.getViewModelLocation().getFullPath()
-					.append(this.importManager.getViewModelName()).append(DEFAULT_EXTENSION_LCASE);
+					.append(this.importManager.getViewModelName());
 				ModelWorkspaceItem item = ModelWorkspaceManager.getModelWorkspaceManager().findModelWorkspaceItem(modelPath, IResource.FILE);
 				IFile modelFile = (IFile)item.getCorrespondingResource();
 				this.viewModel = ModelUtilities.getModelResourceForIFile(modelFile, false);
@@ -277,9 +276,11 @@ public class ImportWsdlProcessor {
     	try {
 			// Create the Request Procedure
 			createViewRequestProcedure(this.viewModel, (RequestInfo)generator.getRequestInfo() );
-			// Create the Response Procedure
+			// Create the Response ProceduregetWrapperProcedureSqlString
 			createViewResponseProcedure(this.viewModel, (ResponseInfo)generator.getResponseInfo() );
 			// Create the wrapper procedure
+			createViewWrapperProcedure(this.viewModel, generator);
+			
 		} catch (ModelerCoreException ex) {
 			// TODO Auto-generated catch block
 			ex.printStackTrace();
@@ -302,6 +303,9 @@ public class ImportWsdlProcessor {
     		EObject type = datatypeManager.findDatatype(columnInfo.getDatatype());
     		if( type != null ) {
     			parameter.setType(type);
+    		}
+    		if( columnInfo.getDatatype().equalsIgnoreCase("string")) { //$NON-NLS-1$
+    			parameter.setLength(255);
     		}
     		parameter.setProcedure(procedure);
     	}
@@ -372,6 +376,58 @@ public class ImportWsdlProcessor {
         
         validator.validateSql(sqlString, QueryValidator.SELECT_TRNS, true);
     	
+    }
+    
+    private void createViewWrapperProcedure(ModelResource modelResource, ProcedureGenerator generator) throws ModelerCoreException {
+    	// Create a Procedure using the text file name
+    	Procedure procedure = factory.createProcedure();
+    	procedure.setName(generator.getWrappedProcedureName());
+    	
+    	addValue(modelResource, procedure, modelResource.getEmfResource().getContents());
+    	
+    	for(ColumnInfo columnInfo : generator.getRequestInfo().getColumnInfoList() ) {
+    		ProcedureParameter parameter = factory.createProcedureParameter();
+    		parameter.setName(columnInfo.getName());
+    		EObject type = datatypeManager.findDatatype(columnInfo.getDatatype());
+    		if( type != null ) {
+    			parameter.setType(type);
+    		}
+    		if( columnInfo.getDatatype().equalsIgnoreCase("string")) { //$NON-NLS-1$
+    			parameter.setLength(255);
+    		}
+    		parameter.setProcedure(procedure);
+    	}
+    	
+    	
+    	// Create Result set with same columns and types as Response procedure
+    	ProcedureResult result = factory.createProcedureResult();
+    	result.setName("Result"); //$NON-NLS-1$
+    	result.setProcedure(procedure);
+    	
+    	for(ColumnInfo columnInfo : generator.getResponseInfo().getColumnInfoList() ) {
+        	Column column = factory.createColumn();
+        	column.setName(columnInfo.getName());
+        	EObject type = datatypeManager.findDatatype(columnInfo.getDatatype());
+        	if( type != null) {
+        		column.setType(type);
+        	}
+        	addValue(result, column, result.getColumns());
+    	}
+    	
+    	NewModelObjectHelperManager.helpCreate(procedure, null);
+    	
+    	String sqlString = generator.getWrapperProcedureSqlString();
+    	
+    	SqlTransformationMappingRoot tRoot = (SqlTransformationMappingRoot)TransformationHelper.getTransformationMappingRoot(procedure);
+    	
+    	TransformationHelper.setSelectSqlString(tRoot, sqlString, false, this);
+
+        TransformationMappingHelper.reconcileMappingsOnSqlChange(tRoot, this);
+        
+        QueryValidator validator = new TransformationValidator(tRoot);
+        
+        validator.validateSql(sqlString, QueryValidator.SELECT_TRNS, true);
+        
     }
     
     protected void addValue(final Object owner, final Object value, EList feature) throws ModelerCoreException {
