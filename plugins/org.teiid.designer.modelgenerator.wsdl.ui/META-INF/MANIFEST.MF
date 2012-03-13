@@ -34,8 +34,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.emf.edit.ui,
  org.teiid.designer.xsd.ui,
  org.teiid.designer.datatools,
- org.eclipse.emf.mapping,
- org.teiid.designer.relational
+ org.teiid.designer.schema.tools
 Bundle-ActivationPolicy: lazy
 Export-Package: com.metamatrix.modeler.modelgenerator.wsdl.ui
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

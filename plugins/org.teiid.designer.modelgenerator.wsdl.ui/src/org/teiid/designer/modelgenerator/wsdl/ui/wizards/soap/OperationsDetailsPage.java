@@ -25,10 +25,8 @@ import org.eclipse.jface.text.source.VerticalRuler;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
-import org.eclipse.jface.viewers.ITreeViewerListener;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.TreeExpansionEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
@@ -40,7 +38,6 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -66,9 +63,14 @@ import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Model;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.ModelGenerationException;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Operation;
+import com.metamatrix.modeler.modelgenerator.wsdl.schema.extensions.SOAPSchemaProcessor;
 import com.metamatrix.modeler.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstants;
 import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.util.ModelGeneratorWsdlUiUtil;
 import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.wizards.WSDLImportWizardManager;
+import com.metamatrix.modeler.schema.tools.model.schema.SchemaModel;
+import com.metamatrix.modeler.schema.tools.model.schema.SchemaObject;
+import com.metamatrix.modeler.schema.tools.processing.SchemaProcessingException;
+import com.metamatrix.modeler.schema.tools.processing.SchemaProcessor;
 import com.metamatrix.modeler.transformation.ui.editors.sqleditor.SqlTextViewer;
 import com.metamatrix.ui.graphics.ColorManager;
 import com.metamatrix.ui.internal.util.WidgetFactory;
@@ -805,9 +807,44 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 				.getSelection();
 		Object obj = sel.getFirstElement();
 		if (obj instanceof XSDParticleImpl) {
-		    String name = ((XSDElementDeclarationImpl)((XSDParticleImpl) obj).getContent()).getName();
-		    String ns = ((XSDElementDeclarationImpl)((XSDParticleImpl) obj).getContent()).getTargetNamespace();
-			this.procedureGenerator.getResponseInfo().addColumn(name, false, "String", null, ns);
+			
+			Model wsdlModel = null;
+			SchemaModel schemaModel;
+			XSDSchema[] schemas;
+			
+			try {
+				wsdlModel = importManager.getWSDLModel();
+			} catch (ModelGenerationException e) {
+				throw new RuntimeException(e);
+			}
+			
+			SchemaProcessor processor = new SOAPSchemaProcessor(null);
+			processor.representTypes(true);
+			processor.setNamespaces(wsdlModel.getNamespaces());
+			schemas = wsdlModel.getSchemas();
+			try {
+				processor.processSchemas(schemas);
+			} catch (SchemaProcessingException e) {
+				throw new RuntimeException(e);
+			}
+			schemaModel = processor.getSchemaModel();
+			
+			List<SchemaObject> elements = schemaModel.getElements();
+			String name = ((XSDElementDeclarationImpl) ((XSDParticleImpl) obj)
+					.getContent()).getName();
+			StringBuilder xpath = new StringBuilder();
+			for (SchemaObject schemaObject : elements) {
+				  if (schemaObject.getName().equals(name)){
+					  xpath.append(schemaObject.getOutputXPath());
+				  }
+			}
+			
+			//TODO: Do I need this?
+			String ns = ((XSDElementDeclarationImpl) ((XSDParticleImpl) obj)
+					.getContent()).getTargetNamespace();
+			
+			this.procedureGenerator.getResponseInfo().addColumn(name, false,
+					"String", null, "/" + xpath);
 			notifyColumnDataChanged();
 			return true;
 		}
