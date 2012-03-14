@@ -855,14 +855,14 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 			StringBuilder xpath = new StringBuilder();
 			for (SchemaObject schemaObject : elements) {
 				  if (schemaObject.getName().equals(name)){
-					  xpath.append(schemaObject.getOutputXPath());
+					  xpath.append("/").append(schemaObject.getRelativeXpath());
 				  }
 			}
 			
 			//TODO: Do I need this?
 			String ns = ((XSDElementDeclarationImpl) ((XSDParticleImpl) obj).getContent()).getTargetNamespace();
 			
-			this.procedureGenerator.getResponseInfo().addColumn(name, false,"String", null, "/" + xpath);
+			this.procedureGenerator.getResponseInfo().addColumn(name, false,"String", null, xpath.toString());
 			notifyColumnDataChanged();
 			return true;
 		}
