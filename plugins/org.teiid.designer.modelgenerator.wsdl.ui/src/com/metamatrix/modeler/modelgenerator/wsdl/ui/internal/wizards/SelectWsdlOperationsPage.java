@@ -712,11 +712,13 @@ public class SelectWsdlOperationsPage extends AbstractWizardPage
             if (treeExpanded) {
                 super.itemExpanded(event);
             } else {
-                final TreeItem item = ((TreeViewer)event.getTreeViewer()).getTree().getSelection()[0];
-                if (item.getData() != null) {
-                    updateChildren(item, false);
-                }
-                treeExpanded = true;
+            	if( ((TreeViewer)event.getTreeViewer()).getTree().getSelection().length > 0 ) {
+                    final TreeItem item = ((TreeViewer)event.getTreeViewer()).getTree().getSelection()[0];
+                    if (item.getData() != null) {
+                        updateChildren(item, false);
+                    }
+                    treeExpanded = true;
+            	}
             }
             updateTreeSelectionDetails();
         }

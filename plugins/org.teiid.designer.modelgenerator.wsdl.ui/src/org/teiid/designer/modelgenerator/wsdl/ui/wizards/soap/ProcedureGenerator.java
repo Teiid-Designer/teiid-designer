@@ -164,7 +164,7 @@ public class ProcedureGenerator implements SqlConstants {
     	// TABLE(EXEC 
     	sb.append(TAB).append(TAB).append(TABLE_EXEC);
     	// <view-model-name>.<request_procedure>
-    	sb.append(getModelNameWithoutExtension(importManager.getSourceModelName()));
+    	sb.append(getModelNameWithoutExtension(importManager.getViewModelName()));
     	sb.append(DOT).append(getRequestProcedureName());
     	
     	// (OPS.GETCAPITALCITY.countryISOCode))
@@ -222,7 +222,7 @@ public class ProcedureGenerator implements SqlConstants {
 	public String getParamaterFullName(String name) {
 		StringBuilder builder = new StringBuilder();
 		builder.append(this.getViewModelName());
-		builder.append('.').append(this.operation.getName()).append('.').append(name);
+		builder.append('.').append(getWrappedProcedureName()).append('.').append(name);
 		
 		return builder.toString();
 	}

@@ -102,6 +102,7 @@ public class WrapperProcedurePanel {
 
 	private void handleWrapperProcedureNameChanged() {
 		this.detailsPage.getProcedureGenerator().setWrapperProcedureName(this.wrapperProcedureText.getText());
+		this.sqlTextViewer.getDocument().set(detailsPage.getProcedureGenerator().getWrapperSqlString());
 		validate();
 	}
 

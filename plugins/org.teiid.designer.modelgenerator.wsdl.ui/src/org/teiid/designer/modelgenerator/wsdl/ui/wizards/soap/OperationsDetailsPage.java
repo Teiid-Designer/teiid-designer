@@ -617,14 +617,18 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 		String partElementName = null;
 
 		if (type == REQUEST) {
-			partElementName = selectedOperation.getInputMessage().getParts()[0].getTypeName();
-			if (partElementName == null){
-				partElementName = selectedOperation.getInputMessage().getParts()[0].getElementName();
+			if( selectedOperation.getInputMessage() != null ) {
+    			partElementName = selectedOperation.getInputMessage().getParts()[0].getTypeName();
+    			if (partElementName == null){
+    				partElementName = selectedOperation.getInputMessage().getParts()[0].getElementName();
+    			}
 			}
-		}else{
-			partElementName = selectedOperation.getOutputMessage().getParts()[0].getTypeName();
-			if (partElementName == null){
-				partElementName = selectedOperation.getOutputMessage().getParts()[0].getElementName();
+		} else {
+			if( selectedOperation.getOutputMessage() != null ) {
+				partElementName = selectedOperation.getOutputMessage().getParts()[0].getTypeName();
+    			if (partElementName == null){
+    				partElementName = selectedOperation.getOutputMessage().getParts()[0].getElementName();
+    			}
 			}
 		}
 
@@ -633,7 +637,7 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 			EList<XSDTypeDefinition> types = schema.getTypeDefinitions();
 			for (XSDTypeDefinition xsdType : types) {
 				String elementName = xsdType.getName();
-				if (xsdType.getName().equals(partElementName)) {
+				if (elementName.equals(partElementName)) {
 					elementDeclaration = xsdType;
 					break;
 				}
@@ -645,7 +649,7 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 					.getElementDeclarations();
 			for (XSDElementDeclaration element : elements) {
 				String elementName = element.getName();
-				if (element.getName().equals(partElementName)) {
+				if (elementName.equals(partElementName)) {
 					elementDeclaration = element.getTypeDefinition();
 					break;
 				}
@@ -830,8 +834,7 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 			schemaModel = processor.getSchemaModel();
 			
 			List<SchemaObject> elements = schemaModel.getElements();
-			String name = ((XSDElementDeclarationImpl) ((XSDParticleImpl) obj)
-					.getContent()).getName();
+			String name = ((XSDElementDeclarationImpl) ((XSDParticleImpl) obj).getContent()).getName();
 			StringBuilder xpath = new StringBuilder();
 			for (SchemaObject schemaObject : elements) {
 				  if (schemaObject.getName().equals(name)){
@@ -840,11 +843,9 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 			}
 			
 			//TODO: Do I need this?
-			String ns = ((XSDElementDeclarationImpl) ((XSDParticleImpl) obj)
-					.getContent()).getTargetNamespace();
+			String ns = ((XSDElementDeclarationImpl) ((XSDParticleImpl) obj).getContent()).getTargetNamespace();
 			
-			this.procedureGenerator.getResponseInfo().addColumn(name, false,
-					"String", null, "/" + xpath);
+			this.procedureGenerator.getResponseInfo().addColumn(name, false,"String", null, "/" + xpath);
 			notifyColumnDataChanged();
 			return true;
 		}
@@ -858,8 +859,7 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 
 	class OperationsListProvider extends LabelProvider implements
 			ITreeContentProvider {
-		private final Image OPERATION_ICON_IMG = ModelGeneratorWsdlUiUtil
-				.getImage(Images.OPERATION_ICON);
+		private final Image OPERATION_ICON_IMG = ModelGeneratorWsdlUiUtil.getImage(Images.OPERATION_ICON);
 
 		public void dispose() {
 		}
