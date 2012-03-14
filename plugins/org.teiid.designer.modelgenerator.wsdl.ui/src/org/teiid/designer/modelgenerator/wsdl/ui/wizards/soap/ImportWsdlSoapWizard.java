@@ -50,7 +50,7 @@ public class ImportWsdlSoapWizard extends AbstractWizard implements IImportWizar
     private static final ImageDescriptor IMAGE = ModelGeneratorWsdlUiPlugin.getDefault().getImageDescriptor(Images.IMPORT_WSDL_ICON);
 
     /** This manager interfaces with the relational from wsdl generator */
-    private WSDLImportWizardManager importManager;
+    private WSDLImportWizardManager importManager = new WSDLImportWizardManager();;
 
     /** The page where the WSDL source file and Relational target model are selected. */
     private WizardPage selectWsdlPage;
@@ -85,7 +85,7 @@ public class ImportWsdlSoapWizard extends AbstractWizard implements IImportWizar
      */
     public void init( IWorkbench workbench,
                       IStructuredSelection currentSelection ) {
-        this.importManager = new WSDLImportWizardManager();
+        
         this.selection = currentSelection;
 
         List selectedResources = IDE.computeSelectedResources(currentSelection);
@@ -104,7 +104,6 @@ public class ImportWsdlSoapWizard extends AbstractWizard implements IImportWizar
      */
     @SuppressWarnings("unused")
 	public void createWizardPages( ISelection theSelection ) {
-        this.importManager = new WSDLImportWizardManager();
 
         // construct pages
         SELECT_WSDL_PAGE : {

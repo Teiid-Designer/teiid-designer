@@ -544,14 +544,18 @@ public class WsdlOperationsPanel implements Listener, FileUtils.Constants, CoreS
 		}
 
 		private void updateCheckedOperations(Operation operation, boolean checked) {
-			List<Operation> selectedOperations = importManager.getSelectedOperations();
-			if (checked && operation.canModel() && !selectedOperations.contains(operation)) {
-				selectedOperations.add(operation);
-				importManager.setSelectedOperations(selectedOperations);
-				setPageStatus();
-			} else if (!checked && selectedOperations.contains(operation)) {
-				selectedOperations.remove(operation);
-				importManager.setSelectedOperations(selectedOperations);
+			List<Operation> selectedOperations = new ArrayList(importManager.getSelectedOperations());
+			if (checked ) {
+				if( operation.canModel() && !selectedOperations.contains(operation) ) {
+    				selectedOperations.add(operation);
+    				importManager.setSelectedOperations(selectedOperations);
+				}
+    			setPageStatus();
+			} else {
+				if( selectedOperations.contains(operation) ) {
+    				selectedOperations.remove(operation);
+    				importManager.setSelectedOperations(selectedOperations);
+				}
 				setPageStatus();
 			}
 		}

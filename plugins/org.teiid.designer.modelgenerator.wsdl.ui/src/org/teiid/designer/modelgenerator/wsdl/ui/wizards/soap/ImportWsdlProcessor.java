@@ -160,8 +160,7 @@ public class ImportWsdlProcessor {
         boolean requiredStart = ModelerCore.startTxn(true, true, "Import Teiid Metadata Create Source Model", this); //$NON-NLS-1$
         boolean succeeded = false;
         try {
-        	sourceModel = relationalFactory.createRelationalModel(
-        		this.importManager.getSourceModelLocation(), 
+         	sourceModel = relationalFactory.createRelationalModel( this.importManager.getSourceModelLocation(), 
         		this.importManager.getSourceModelName() );
         	monitor.worked(10);
         	
