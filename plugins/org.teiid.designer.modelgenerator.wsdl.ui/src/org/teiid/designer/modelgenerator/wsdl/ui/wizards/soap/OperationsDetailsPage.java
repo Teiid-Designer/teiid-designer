@@ -291,10 +291,10 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 		gd.heightHint = 120;
 		schemaContentsGroup.setLayoutData(gd);
 
-		this.requestXmlTreeViewer = new TreeViewer(schemaContentsGroup);
+		this.requestXmlTreeViewer = new TreeViewer(schemaContentsGroup, SWT.SINGLE);
 		semanticAdapterFactory = new XSDSemanticItemProviderAdapterFactory();
 		this.requestXmlTreeViewer
-				.setContentProvider(new AdapterFactoryContentProvider(
+				.setContentProvider(new SchemaTreeContentProvider(
 						semanticAdapterFactory));
 		this.requestXmlTreeViewer
 				.setLabelProvider(new AdapterFactoryLabelProvider(
@@ -445,10 +445,10 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 		gd.horizontalSpan = 1;
 		schemaContentsGroup.setLayoutData(gd);
 
-		responseXmlTreeViewer = new TreeViewer(schemaContentsGroup);
+		responseXmlTreeViewer = new TreeViewer(schemaContentsGroup, SWT.SINGLE);
 		semanticAdapterFactory = new XSDSemanticItemProviderAdapterFactory();
 		this.responseXmlTreeViewer
-				.setContentProvider(new AdapterFactoryContentProvider(
+				.setContentProvider(new SchemaTreeContentProvider(
 						semanticAdapterFactory));
 		this.responseXmlTreeViewer
 				.setLabelProvider(new AdapterFactoryLabelProvider(
