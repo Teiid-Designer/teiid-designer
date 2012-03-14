@@ -107,7 +107,7 @@ public class WrapperProcedurePanel {
 	}
 
 	private void validate() {
-		// TODO:
+		this.detailsPage.updateStatus();
 	}
 
 	public IStatus getStatus() {

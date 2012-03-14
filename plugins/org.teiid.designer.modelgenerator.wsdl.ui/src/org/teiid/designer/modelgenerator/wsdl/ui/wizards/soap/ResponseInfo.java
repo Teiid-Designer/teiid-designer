@@ -9,6 +9,9 @@ package org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap;
 
 import java.util.Properties;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Operation;
 
 public class ResponseInfo extends ProcedureInfo {
@@ -18,6 +21,38 @@ public class ResponseInfo extends ProcedureInfo {
 		setProcedureName(operation.getName() + "_response"); //$NON-NLS-1$
 	}
 
+	@Override
+	public IStatus validate() {
+		IStatus status = Status.OK_STATUS;
+		// Go through objects and look for problems
+		if( getProcedureName() == null) {	
+			return new Status(IStatus.ERROR, ProcedureGenerator.PLUGIN_ID, "Request procedure name cannot be null or empty");
+		}
+		
+		IStatus nameStatus = getGenerator().getNameStatus(getProcedureName());
+		if( nameStatus.getSeverity() > IStatus.INFO) {
+			return nameStatus;
+		}
+		
+		// Look at all element names
+		for( ColumnInfo info : getColumnInfoList() ) {
+			IStatus colNameStatus = getGenerator().getNameStatus(info.getName());
+			if( colNameStatus.getSeverity() > IStatus.INFO) {
+				return colNameStatus;
+			}
+		}
+		
+		// Look at all element xpaths
+//		for( ColumnInfo info : getColumnInfoList() ) {
+//			info.getRelativePath()
+//			if( colNameStatus.getSeverity() > IStatus.INFO) {
+//				return colNameStatus;
+//			}
+//		}
+		
+		return status;
+	}
+	
 	@Override
 	String getSqlStringTemplate() {
 		return getSqlString(new Properties());
@@ -81,7 +116,7 @@ public class ResponseInfo extends ProcedureInfo {
     	}
     	sb.append(S_QUOTE).append(xQueryExp).append(S_QUOTE).append(SPACE);
     	
-    	sb.append(PASSING).append(SPACE).append(getResponseProcedureParameter()).append(RETURN);
+    	sb.append(PASSING).append(SPACE).append(getGenerator().convertSqlNameSegment(getResponseProcedureParameter())).append(RETURN);
 		
     	sb.append(TAB).append(COLUMNS).append(SPACE).append(RETURN);
 		
@@ -93,7 +128,7 @@ public class ResponseInfo extends ProcedureInfo {
     		if( columnInfo.getOrdinality() ) {
     			sb.append(columnInfo.getName()).append(SPACE).append(FOR_ORDINALITY);
     		} else {
-	    		sb.append(TAB).append(TAB).append(columnInfo.getName()).append(SPACE).append(columnInfo.getDatatype());
+	    		sb.append(TAB).append(TAB).append(getGenerator().convertSqlNameSegment(columnInfo.getName())).append(SPACE).append(columnInfo.getDatatype());
 	    		
 	    		String defValue = columnInfo.getDefaultValue();
 	    		if( defValue != null && defValue.length() > 0) {

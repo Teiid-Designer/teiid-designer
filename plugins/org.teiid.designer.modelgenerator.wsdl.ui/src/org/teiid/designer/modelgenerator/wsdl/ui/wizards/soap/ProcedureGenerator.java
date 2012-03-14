@@ -9,9 +9,17 @@ package org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap;
 
 import java.io.ObjectInputStream.GetField;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.teiid.language.SQLConstants;
+
+import com.metamatrix.metamodels.relational.aspects.validation.RelationalStringNameValidator;
+import com.metamatrix.modeler.core.validation.rules.StringNameValidator;
 import com.metamatrix.modeler.internal.transformation.util.SqlConstants;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Operation;
+import com.metamatrix.modeler.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstants;
 import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.wizards.WSDLImportWizardManager;
+import com.metamatrix.modeler.transformation.ui.UiConstants;
 
 /** This class provides state information for the create and extract procedures that will be generated during
  * WSDL import and model/procedure generation
@@ -21,6 +29,10 @@ import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.wizards.WSDLImport
  * 
  */
 public class ProcedureGenerator implements SqlConstants {
+	public static final String PLUGIN_ID = ModelGeneratorWsdlUiConstants.PLUGIN_ID;
+	
+	private static final StringNameValidator nameValidator = new RelationalStringNameValidator(false, true);
+	
 	private static final String SQL_BEGIN = "CREATE VIRTUAL PROCEDURE\nBEGIN\n"; //$NON-NLS-1$
 	private static final String SQL_END = "\nEND"; //$NON-NLS-1$
 	private static final String REQUEST = "REQUEST"; //$NON-NLS-1$
@@ -49,6 +61,8 @@ public class ProcedureGenerator implements SqlConstants {
 	private String namespaceURI;
 	
 	private WSDLImportWizardManager importManager;
+	
+	
 
 	public ProcedureGenerator(Operation operation, WSDLImportWizardManager importManager) {
 		super();
@@ -173,7 +187,7 @@ public class ProcedureGenerator implements SqlConstants {
     	int i=0;
     	for( ColumnInfo columnInfo : this.requestInfo.getColumnInfoList()) {
     		String name = columnInfo.getName();
-    		sb.append(getParamaterFullName(name));
+    		sb.append(getParameterFullName(name));
     		
     		if(i < (nColumns-1)) {
     			sb.append(COMMA).append(SPACE);
@@ -219,10 +233,10 @@ public class ProcedureGenerator implements SqlConstants {
         return name;
 	}
 	
-	public String getParamaterFullName(String name) {
+	private String getParameterFullName(String name) {
 		StringBuilder builder = new StringBuilder();
 		builder.append(this.getViewModelName());
-		builder.append('.').append(getWrappedProcedureName()).append('.').append(name);
+		builder.append('.').append(getWrappedProcedureName()).append('.').append(convertSqlNameSegment(name));
 		
 		return builder.toString();
 	}
@@ -241,6 +255,55 @@ public class ProcedureGenerator implements SqlConstants {
 		builder.append(DOT).append(getWrappedProcedureName()).append(DOT).append(parameterName);
 		
 		return builder.toString();
+	}
+	
+	public IStatus getNameStatus(String name) {
+		String result = nameValidator.checkValidName(name);
+		if( result != null ) {
+			return new Status(IStatus.ERROR, PLUGIN_ID, "Invalid name: [" + name + "] Reason: " + result );
+		}
+		
+		return Status.OK_STATUS;
+	}
+	
+	public IStatus validate() {
+		IStatus status = Status.OK_STATUS;
+		// Go through objects and look for problems
+		if( getWrappedProcedureName() == null) {	
+			return new Status(IStatus.ERROR, PLUGIN_ID, "Wrapper procedure name cannot be null or empty");
+		}
+		
+		IStatus nameStatus = getNameStatus(getWrappedProcedureName());
+		if( nameStatus.getSeverity() > IStatus.INFO) {
+			return nameStatus;
+		}
+		
+		IStatus requestStatus = getRequestInfo().validate();
+		if( requestStatus.getSeverity() > IStatus.INFO ) {
+			return requestStatus;
+		}
+
+		IStatus responseStatus = getResponseInfo().validate();
+		if( responseStatus.getSeverity() > IStatus.INFO ) {
+			return responseStatus;
+		}
+		
+		return status;
+	}
+	
+	/**
+	 * Converts any name string to a valid SQL symbol segment
+	 * Basically looks to see if name is a reserved word and if so, returns the name in double-quotes
+	 * 
+	 * @param name
+	 * @return
+	 */
+	public String convertSqlNameSegment(String name) {
+		if( SQLConstants.isReservedWord(name) ) {
+			return '\"' + name + '\"';
+		}
+		
+		return name;
 	}
 	
 	@SuppressWarnings("unused")
@@ -276,7 +339,7 @@ public class ProcedureGenerator implements SqlConstants {
     		int nColumns = getRequestInfo().getColumnInfoList().length;
     		
     		for ( ColumnInfo columnInfo : getRequestInfo().getColumnInfoList() ) {
-    			sb.append(TAB4).append(getWrapperProcedureParameterName(columnInfo.getName()));
+    			sb.append(TAB4).append(getWrapperProcedureParameterName(convertSqlNameSegment(columnInfo.getName())));
         		if(i < (nColumns-1)) {
         			sb.append(COMMA).append(SPACE).append(RETURN);
         		}

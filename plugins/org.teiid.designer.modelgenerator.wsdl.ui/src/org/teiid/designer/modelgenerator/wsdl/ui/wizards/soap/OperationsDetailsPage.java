@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
@@ -163,6 +164,8 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 
 		updateSqlText(BOTH);
 		updateSchemaTree(BOTH);
+		
+		updateStatus();
 	}
 
 	public void notifyColumnDataChanged() {
@@ -170,6 +173,12 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 		this.responseElementsInfoPanel.refresh();
 		updateSqlText(BOTH);
 		this.wrapperPanel.notifyOperationChanged(this.getProcedureGenerator().getOperation());
+		
+		updateStatus();
+	}
+	
+	public void updateStatus() {
+		setPageStatus();
 	}
 	
     public WSDLImportWizardManager getImportManager() {
@@ -749,8 +758,16 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 	 */
 	void setPageStatus() {
 		// TODO:
-
-		WizardUtil.setPageComplete(this);
+		
+		IStatus generatorStatus = procedureGenerator.validate();
+		if( generatorStatus.isOK() || generatorStatus.getSeverity() == IStatus.INFO ) {
+			this.setErrorMessage(null);
+			WizardUtil.setPageComplete(this);
+		} else {
+			WizardUtil.setPageComplete(this, generatorStatus.getMessage(), generatorStatus.getSeverity());
+			this.setErrorMessage(generatorStatus.getMessage());
+			this.setPageComplete(false);
+		}
 
 		getContainer().updateButtons();
 	}

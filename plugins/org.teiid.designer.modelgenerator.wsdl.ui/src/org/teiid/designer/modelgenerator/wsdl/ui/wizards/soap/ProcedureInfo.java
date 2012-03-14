@@ -234,12 +234,8 @@ public abstract class ProcedureInfo implements SqlConstants {
 		return this.operation;
 	}
 	
-	public void validate() {
-		// TODO:
-		
-		// Validate Paths
-		
-		setStatus(Status.OK_STATUS);
+	public IStatus validate() {
+		return Status.OK_STATUS;
 	}
 	
 	/**
