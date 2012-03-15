@@ -18,6 +18,7 @@ import java.util.Properties;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -66,6 +67,7 @@ import com.metamatrix.modeler.internal.jdbc.relational.util.JdbcModelProcessorMa
 import com.metamatrix.modeler.internal.jdbc.relational.util.JdbcRelationalUtil;
 import com.metamatrix.modeler.internal.jdbc.ui.util.JdbcUiUtil;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
+import com.metamatrix.modeler.internal.ui.viewsupport.ModelerUiViewUtils;
 import com.metamatrix.modeler.jdbc.JdbcException;
 import com.metamatrix.modeler.jdbc.JdbcPlugin;
 import com.metamatrix.modeler.jdbc.JdbcSource;
@@ -100,6 +102,8 @@ public class JdbcImportWizard extends AbstractWizard
 
     private static final String UNDERSCORE_ONE = "_"; //$NON-NLS-1$
     private static final String UNDERSCORE_TWO = "__"; //$NON-NLS-1$
+    
+    private boolean doNotFinish = false;
 
     /**
      * @since 4.0
@@ -245,6 +249,10 @@ public class JdbcImportWizard extends AbstractWizard
      */
     @Override
     public boolean finish() {
+        if( this.doNotFinish ) {
+        	return false;
+        }
+        
         if (!this.srcPg.connect()) {
             return false;
         }
@@ -562,7 +570,8 @@ public class JdbcImportWizard extends AbstractWizard
         this.importer = new JdbcImporter();
 
         // If not null, set folder to current selection if a folder or to containing folder if a model object
-        if (!selection.isEmpty()) {
+        if (!selection.isEmpty() && 
+        	(selection.getFirstElement() instanceof IProject && ((IProject)selection.getFirstElement()).isOpen() ) ) {
             final Object obj = selection.getFirstElement();
             final IContainer folder = ModelUtil.getContainer(obj);
             try {
@@ -601,6 +610,14 @@ public class JdbcImportWizard extends AbstractWizard
                     Util.log(err);
                 }
                 WidgetUtil.showError(err);
+            }
+        } else {
+            if( !ModelerUiViewUtils.workspaceHasOpenModelProjects() ) {
+            	IProject newProject = ModelerUiViewUtils.queryUserToCreateModelProject();
+            	
+            	if( newProject != null ) {
+            		selection = new StructuredSelection(newProject);
+            	}
             }
         }
 

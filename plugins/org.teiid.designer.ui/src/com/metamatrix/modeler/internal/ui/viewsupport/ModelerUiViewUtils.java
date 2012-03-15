@@ -9,6 +9,9 @@ package com.metamatrix.modeler.internal.ui.viewsupport;
 
 import java.util.Properties;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.viewers.ISelection;
@@ -25,11 +28,14 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.RefreshAction;
 import org.eclipse.ui.wizards.IWizardDescriptor;
 
+import com.metamatrix.modeler.core.workspace.ModelProject;
+import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
+import com.metamatrix.modeler.internal.core.workspace.ModelWorkspaceManager;
 import com.metamatrix.modeler.internal.ui.explorer.ModelExplorerResourceNavigator;
 import com.metamatrix.modeler.ui.UiConstants;
 import com.metamatrix.modeler.ui.UiConstants.Extensions;
-import com.metamatrix.modeler.ui.viewsupport.IPropertiesContext;
 import com.metamatrix.modeler.ui.UiPlugin;
+import com.metamatrix.modeler.ui.viewsupport.IPropertiesContext;
 import com.metamatrix.ui.internal.product.ProductCustomizerMgr;
 import com.metamatrix.ui.internal.util.UiUtil;
 import com.metamatrix.ui.internal.util.WidgetUtil;
@@ -254,6 +260,46 @@ public class ModelerUiViewUtils {
 	        });
 		}
 
+	}
+	
+	/**
+	 * Method to check if the uer's workspace has any Open Teiid Model Projects
+	 * @return true if one or more projects exists and are open
+	 */
+	public static boolean workspaceHasOpenModelProjects() {
+		try {
+			ModelProject[] mProjects = ModelWorkspaceManager.getModelWorkspaceManager().getModelWorkspace().getModelProjects();
+			
+			for( ModelProject proj : mProjects) {
+				if( proj.isOpen() ) {
+					return true;
+				}
+			}
+		} catch (ModelWorkspaceException ex) {
+			// TODO Auto-generated catch block
+			ex.printStackTrace();
+		}
+		
+		return false;
+	}
+	
+	/**
+	 * Simple method to query user for a new Teiid Model Project
+	 * 
+	 * @return the new IProject if created or null if user canceled the dialog.
+	 */
+	public static IProject queryUserToCreateModelProject() {
+		Properties newProps = new Properties();
+		ModelerUiViewUtils.launchWizard("newModelProject", new StructuredSelection(), newProps, true); //$NON-NLS-1$
+		String projectName = newProps.getProperty(IPropertiesContext.KEY_PROJECT_NAME);
+		if( projectName != null ) {
+    		final IResource resrc = ResourcesPlugin.getWorkspace().getRoot().findMember(projectName);
+    		if( resrc != null && resrc instanceof IProject) {
+    			return (IProject)resrc;
+    		}
+		}
+		
+		return null;
 	}
 
 }

@@ -14,6 +14,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -50,6 +51,7 @@ import com.metamatrix.modeler.core.notification.util.DefaultIgnorableNotificatio
 import com.metamatrix.modeler.internal.core.transaction.UnitOfWorkImpl;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.ui.actions.DeleteResourceAction;
+import com.metamatrix.modeler.internal.ui.viewsupport.ModelerUiViewUtils;
 import com.metamatrix.modeler.internal.webservice.WebServiceModelProducer;
 import com.metamatrix.modeler.internal.webservice.ui.IInternalUiConstants;
 import com.metamatrix.modeler.ui.UiPlugin;
@@ -153,6 +155,14 @@ public class WsdlFileSystemImportWizard extends AbstractWizard implements IImpor
             if (!selectedResources.isEmpty()) {
                 this.selection = new StructuredSelection(selectedResources);
             }
+        }
+        
+    	if( !ModelerUiViewUtils.workspaceHasOpenModelProjects() ) {
+        	IProject newProject = ModelerUiViewUtils.queryUserToCreateModelProject();
+        	
+        	if( newProject != null ) {
+        		this.selection = new StructuredSelection(newProject);
+        	}
         }
 
         if (importLicensed) {

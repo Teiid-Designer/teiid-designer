@@ -14,6 +14,7 @@ import java.util.Iterator;
 import java.util.List;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -51,6 +52,7 @@ import com.metamatrix.modeler.internal.core.transaction.UnitOfWorkImpl;
 import com.metamatrix.modeler.internal.ui.actions.DeleteResourceAction;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelInitializerSelectionDialog;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
+import com.metamatrix.modeler.internal.ui.viewsupport.ModelerUiViewUtils;
 import com.metamatrix.modeler.ui.UiConstants;
 import com.metamatrix.modeler.ui.UiPlugin;
 import com.metamatrix.modeler.ui.editors.ModelEditorManager;
@@ -436,6 +438,14 @@ public class NewModelWizard extends AbstractWizard
     public void init( IWorkbench workbench,
                       IStructuredSelection selection ) {
         this.selection = selection;
+
+    	if( !ModelerUiViewUtils.workspaceHasOpenModelProjects() ) {
+        	IProject newProject = ModelerUiViewUtils.queryUserToCreateModelProject();
+        	
+        	if( newProject != null ) {
+        		this.selection = new StructuredSelection(newProject);
+        	}
+        }
     }
 
     public ModelType getModelType() {

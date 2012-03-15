@@ -12,6 +12,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
@@ -25,6 +26,7 @@ import com.metamatrix.modeler.compare.DifferenceReport;
 import com.metamatrix.modeler.compare.ui.wizard.IDifferencingWizard;
 import com.metamatrix.modeler.compare.ui.wizard.ShowDifferencesPage;
 import com.metamatrix.modeler.internal.core.workspace.DotProjectUtils;
+import com.metamatrix.modeler.internal.ui.viewsupport.ModelerUiViewUtils;
 import com.metamatrix.ui.internal.util.WidgetUtil;
 import com.metamatrix.ui.internal.wizard.IPersistentWizardPage;
 
@@ -112,9 +114,19 @@ public class DdlImporterWizard extends Wizard implements IDifferencingWizard {
     @Override
     public void init( final IWorkbench workbench,
                       final IStructuredSelection selection ) {
+        
+        IStructuredSelection finalSelection = selection;
+        if( (finalSelection == null | finalSelection.isEmpty()) && !ModelerUiViewUtils.workspaceHasOpenModelProjects() ) {
+        	IProject newProject = ModelerUiViewUtils.queryUserToCreateModelProject();
+        	
+        	if( newProject != null ) {
+        		finalSelection = new StructuredSelection(newProject);
+        	}
+        }
         final IProject[] projects = DotProjectUtils.getOpenModelProjects();
+        
         importer = new DdlImporter(projects);
-        srcPg = new DdlImporterPage(importer, projects, selection);
+        srcPg = new DdlImporterPage(importer, projects, finalSelection);
     }
 
     @Override

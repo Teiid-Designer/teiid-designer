@@ -10,6 +10,7 @@ package com.metamatrix.modeler.modelgenerator.salesforce.ui.wizards;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -28,6 +29,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.core.ModelerCore;
+import com.metamatrix.modeler.internal.ui.viewsupport.ModelerUiViewUtils;
 import com.metamatrix.modeler.modelgenerator.salesforce.SalesforceImportWizardManager;
 import com.metamatrix.modeler.modelgenerator.salesforce.ui.Activator;
 import com.metamatrix.modeler.modelgenerator.salesforce.ui.ModelGeneratorSalesforceUiConstants;
@@ -85,6 +87,14 @@ public class SalesforceToRelationalImportWizard extends AbstractWizard
         List selectedResources = IDE.computeSelectedResources(currentSelection);
         if (!selectedResources.isEmpty()) {
             this.selection = new StructuredSelection(selectedResources);
+        }
+        
+    	if( !ModelerUiViewUtils.workspaceHasOpenModelProjects() ) {
+        	IProject newProject = ModelerUiViewUtils.queryUserToCreateModelProject();
+        	
+        	if( newProject != null ) {
+        		this.selection = new StructuredSelection(newProject);
+        	}
         }
 
         createWizardPages(this.selection);

@@ -7,10 +7,12 @@
  */
 package com.metamatrix.modeler.tools.textimport.ui.wizards;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
@@ -20,6 +22,7 @@ import org.eclipse.ui.IWorkbench;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.core.util.I18nUtil;
+import com.metamatrix.modeler.internal.ui.viewsupport.ModelerUiViewUtils;
 import com.metamatrix.modeler.tools.textimport.ui.PluginConstants;
 import com.metamatrix.modeler.tools.textimport.ui.TextImportContributionManager;
 import com.metamatrix.modeler.tools.textimport.ui.TextImportPlugin;
@@ -112,8 +115,18 @@ public class ImportTextWizard extends AbstractWizard
      */
     public void init( final IWorkbench workbench,
                       final IStructuredSelection selection ) {
+    	
+    	IStructuredSelection finalSelection = selection;
+    	if( !ModelerUiViewUtils.workspaceHasOpenModelProjects() ) {
+        	IProject newProject = ModelerUiViewUtils.queryUserToCreateModelProject();
+        	
+        	if( newProject != null ) {
+        		finalSelection = new StructuredSelection(newProject);
+        	}
+        }
+    	
         if (importLicensed) {
-            importTextMainPage = new ImportTextMainPage(selection);
+            importTextMainPage = new ImportTextMainPage(finalSelection);
             addPage(importTextMainPage);
             //
             for (int i = 0; i < importers.length; i++) {

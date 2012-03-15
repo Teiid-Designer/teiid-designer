@@ -70,6 +70,7 @@ import com.metamatrix.modeler.internal.ui.explorer.ModelExplorerLabelProvider;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelLabelProvider;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelProjectSelectionStatusValidator;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
+import com.metamatrix.modeler.internal.ui.viewsupport.ModelerUiViewUtils;
 import com.metamatrix.modeler.internal.vdb.ui.editor.VdbEditor;
 import com.metamatrix.modeler.ui.UiConstants;
 import com.metamatrix.modeler.ui.UiPlugin;
@@ -231,8 +232,17 @@ public final class NewVdbWizard extends AbstractWizard
      */
     @Override
 	public void init( final IWorkbench workbench,
-                      final IStructuredSelection selection ) {
+                      final IStructuredSelection originalSelection ) {
 
+    	IStructuredSelection selection = originalSelection;
+    	if( !ModelerUiViewUtils.workspaceHasOpenModelProjects() ) {
+        	IProject newProject = ModelerUiViewUtils.queryUserToCreateModelProject();
+        	
+        	if( newProject != null ) {
+        		selection = new StructuredSelection(newProject);
+        	}
+        }
+    	
         if (isAllModelsSelected(selection)) {
             initialSelection = new StructuredSelection(selection.toArray());
         }

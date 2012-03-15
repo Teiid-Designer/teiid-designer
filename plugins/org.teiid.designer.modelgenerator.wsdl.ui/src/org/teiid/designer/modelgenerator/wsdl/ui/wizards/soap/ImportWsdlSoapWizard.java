@@ -11,6 +11,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -32,6 +33,7 @@ import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.ModelerCoreException;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
+import com.metamatrix.modeler.internal.ui.viewsupport.ModelerUiViewUtils;
 import com.metamatrix.modeler.modelgenerator.wsdl.ModelBuildingException;
 import com.metamatrix.modeler.modelgenerator.wsdl.RelationalModelBuilder;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Model;
@@ -91,6 +93,14 @@ public class ImportWsdlSoapWizard extends AbstractWizard implements IImportWizar
         List selectedResources = IDE.computeSelectedResources(currentSelection);
         if (!selectedResources.isEmpty()) {
             this.selection = new StructuredSelection(selectedResources);
+        }
+        
+        if( !ModelerUiViewUtils.workspaceHasOpenModelProjects() ) {
+        	IProject newProject = ModelerUiViewUtils.queryUserToCreateModelProject();
+        	
+        	if( newProject != null ) {
+        		this.selection = new StructuredSelection(newProject);
+        	}
         }
 
         createWizardPages(this.selection);

@@ -10,12 +10,14 @@ package com.metamatrix.modeler.transformation.ui.wizards.file;
 import java.util.Properties;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IImportWizard;
 import org.eclipse.ui.IWorkbench;
@@ -25,6 +27,7 @@ import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelIdentifier;
+import com.metamatrix.modeler.internal.ui.viewsupport.ModelerUiViewUtils;
 import com.metamatrix.modeler.transformation.ui.UiConstants;
 import com.metamatrix.modeler.transformation.ui.UiPlugin;
 import com.metamatrix.modeler.ui.viewsupport.IPropertiesContext;
@@ -74,9 +77,17 @@ public class TeiidMetadataImportWizard extends AbstractWizard implements
 
 	@Override
 	public void init(IWorkbench workbench, IStructuredSelection inputSelection) {
-        IStructuredSelection selection = inputSelection;
-
-        Object seletedObj = selection.getFirstElement();
+        
+		IStructuredSelection finalSelection = inputSelection;
+        if( (finalSelection == null | finalSelection.isEmpty()) || !ModelerUiViewUtils.workspaceHasOpenModelProjects() ) {
+        	IProject newProject = ModelerUiViewUtils.queryUserToCreateModelProject();
+        	
+        	if( newProject != null ) {
+        		finalSelection = new StructuredSelection(newProject);
+        	}
+        }
+		
+        Object seletedObj = finalSelection.getFirstElement();
         folder = null;
         boolean isViewRelationalModel = false;
         
@@ -89,8 +100,8 @@ public class TeiidMetadataImportWizard extends AbstractWizard implements
             Util.log(e);
         }
         // If not null, set folder to current selection if a folder or to containing folder if a model object
-        if (!selection.isEmpty()) {
-            final Object obj = selection.getFirstElement();
+        if (!finalSelection.isEmpty()) {
+            final Object obj = finalSelection.getFirstElement();
             folder = ModelUtil.getContainer(obj);
             try {
                 if (folder != null && folder.getProject().getNature(ModelerCore.NATURE_ID) == null) {

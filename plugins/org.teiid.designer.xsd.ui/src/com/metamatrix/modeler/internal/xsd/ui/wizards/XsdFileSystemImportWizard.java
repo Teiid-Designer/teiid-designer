@@ -8,6 +8,8 @@
 package com.metamatrix.modeler.internal.xsd.ui.wizards;
 
 import java.util.List;
+
+import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -20,6 +22,7 @@ import org.eclipse.ui.IImportWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.ide.IDE;
 import com.metamatrix.core.util.I18nUtil;
+import com.metamatrix.modeler.internal.ui.viewsupport.ModelerUiViewUtils;
 import com.metamatrix.modeler.xsd.ui.ModelerXsdUiConstants;
 import com.metamatrix.modeler.xsd.ui.ModelerXsdUiPlugin;
 import com.metamatrix.ui.internal.wizard.AbstractWizard;
@@ -84,6 +87,14 @@ public class XsdFileSystemImportWizard extends AbstractWizard implements IImport
         List selectedResources = IDE.computeSelectedResources(currentSelection);
         if (!selectedResources.isEmpty()) {
             this.selection = new StructuredSelection(selectedResources);
+        }
+        
+    	if( !ModelerUiViewUtils.workspaceHasOpenModelProjects() ) {
+        	IProject newProject = ModelerUiViewUtils.queryUserToCreateModelProject();
+        	
+        	if( newProject != null ) {
+        		this.selection = new StructuredSelection(newProject);
+        	}
         }
 
         if (importLicensed) {

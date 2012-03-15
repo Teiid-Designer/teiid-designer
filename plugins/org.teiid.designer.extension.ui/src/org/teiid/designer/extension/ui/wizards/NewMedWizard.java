@@ -10,6 +10,7 @@ package org.teiid.designer.extension.ui.wizards;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -35,10 +36,12 @@ import org.teiid.designer.extension.definition.ModelExtensionAssistant;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.definition.ModelExtensionDefinitionWriter;
 import org.teiid.designer.extension.ui.Messages;
+
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.ui.PluginConstants;
+import com.metamatrix.modeler.internal.ui.viewsupport.ModelerUiViewUtils;
 import com.metamatrix.modeler.ui.UiConstants;
 import com.metamatrix.modeler.ui.UiPlugin;
 import com.metamatrix.ui.internal.util.WidgetUtil;
@@ -191,6 +194,15 @@ public final class NewMedWizard extends AbstractWizard
             // If no container was selected, set to the first open project found. user can re-select if desired.
         } else {
             folderLocation = getWorkspaceOpenProject();
+        }
+        
+
+    	if( !ModelerUiViewUtils.workspaceHasOpenModelProjects() ) {
+        	IProject newProject = ModelerUiViewUtils.queryUserToCreateModelProject();
+        	
+        	if( newProject != null ) {
+        		folderLocation = newProject;
+        	}
         }
 
         if (folderLocation != null && !folderInModelProject(folderLocation)) {
