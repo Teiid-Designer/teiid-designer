@@ -70,6 +70,7 @@ import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.util.ModelGenerato
 import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.wizards.WSDLImportWizardManager;
 import com.metamatrix.modeler.schema.tools.model.schema.SchemaModel;
 import com.metamatrix.modeler.schema.tools.model.schema.SchemaObject;
+import com.metamatrix.modeler.schema.tools.model.schema.impl.BaseSchemaObject;
 import com.metamatrix.modeler.schema.tools.processing.SchemaProcessingException;
 import com.metamatrix.modeler.schema.tools.processing.SchemaProcessor;
 import com.metamatrix.modeler.transformation.ui.editors.sqleditor.SqlTextViewer;
@@ -496,7 +497,6 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 						IStructuredSelection sel = (IStructuredSelection) responseXmlTreeViewer.getSelection();
 						if (sel.size() == 1 && sel.getFirstElement() instanceof XSDParticleImpl) {
 							columnMenuManager.add(responseCreateElementAction);
-							columnMenuManager.add(requestSetRootPathAction);
 						}
 
 					}
@@ -513,7 +513,7 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 		this.responseSetRootPathAction = new Action(Messages.SetAsRootPath) {
 			@Override
 			public void run() {
-				setRequestRootPath();
+				setResponseRootPath();
 			}
 		};
 	}
@@ -853,14 +853,21 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 			List<SchemaObject> elements = schemaModel.getElements();
 			String name = ((XSDElementDeclarationImpl) ((XSDParticleImpl) obj).getContent()).getName();
 			StringBuilder xpath = new StringBuilder();
+			String namespace = null;
+			String prefix = null;
 			for (SchemaObject schemaObject : elements) {
 				  if (schemaObject.getName().equals(name)){
 					  xpath.append("/").append(schemaObject.getRelativeXpath());
+					  namespace = schemaObject.getNamespace();
+					  prefix = ((BaseSchemaObject)schemaObject).getNamespacePrefix();
+					  if(namespace!=null){
+						  this.procedureGenerator.getResponseInfo().addNamespace(prefix, namespace);
+					  }
 				  }
 			}
 			
 			//TODO: Do I need this?
-			String ns = ((XSDElementDeclarationImpl) ((XSDParticleImpl) obj).getContent()).getTargetNamespace();
+			
 			
 			this.procedureGenerator.getResponseInfo().addColumn(name, false,"String", null, xpath.toString());
 			notifyColumnDataChanged();
@@ -871,7 +878,7 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 	}
 
 	private void setResponseRootPath() {
-		// TODO:
+	//	this.procedureGenerator.getResponseInfo().setRootPath();
 	}
 
 	class OperationsListProvider extends LabelProvider implements
