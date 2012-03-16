@@ -44,6 +44,9 @@ public class Messages  extends NLS {
     
     public static String ImportOptions;
     public static String InvalidColumnName;
+    public static String InvalidSelectedSchemaObject;
+    public static String InvalidSelectedSchemaObject_column_msg;
+    public static String InvalidSelectedSchemaObject_element_msg;
     
     public static String Location;
     
@@ -70,6 +73,7 @@ public class Messages  extends NLS {
     
     public static String SchemaContents;
     public static String SelectedOperation;
+    public static String SelectPort;
     public static String SelectSourceModel_title;
     public static String SelectSourceModel_message;
     public static String SelectViewModel_title;

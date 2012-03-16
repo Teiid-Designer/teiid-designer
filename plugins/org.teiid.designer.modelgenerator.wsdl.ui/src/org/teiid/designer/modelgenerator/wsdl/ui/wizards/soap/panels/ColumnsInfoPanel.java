@@ -7,9 +7,11 @@
 */
 package org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.panels;
 
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -99,11 +101,16 @@ public class ColumnsInfoPanel {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if( ! detailsPage.createResponseColumn() ) {
-					String newName = "column_" + (detailsPage.getProcedureGenerator().getResponseInfo().getColumnInfoList().length + 1); //$NON-NLS-1$
-					detailsPage.getProcedureGenerator().getResponseInfo().addColumn(newName, false, ColumnInfo.DEFAULT_DATATYPE, null, null);
-					editColumnsPanel.refresh();
-					notifyColumnDataChanged();
+				String name = detailsPage.createResponseColumn();
+				if (name != null) {
+					boolean ok = MessageDialog.openQuestion(detailsPage.getShell(), 
+						Messages.InvalidSelectedSchemaObject,
+						NLS.bind(Messages.InvalidSelectedSchemaObject_column_msg, name));
+					if( ok ) {
+    					detailsPage.getProcedureGenerator().getResponseInfo().addColumn(name, false, ColumnInfo.DEFAULT_DATATYPE, null, null);
+    					editColumnsPanel.refresh();
+    					notifyColumnDataChanged();
+					}
 				}
 			}
     		

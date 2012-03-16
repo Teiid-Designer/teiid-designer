@@ -53,4 +53,8 @@ public interface Model {
     public Port getPort( String name );
 
     public Operation getOperation( String name );
+    
+    public Operation[] getModelableOperations(String portName);
+    
+    public String[] getModelablePortNames();
 }

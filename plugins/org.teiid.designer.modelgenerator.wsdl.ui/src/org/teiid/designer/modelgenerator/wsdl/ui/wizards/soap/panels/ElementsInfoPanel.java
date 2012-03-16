@@ -7,9 +7,11 @@
  */
 package org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.panels;
 
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -82,11 +84,17 @@ public class ElementsInfoPanel {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				// Check Selection from tree
-				if (!detailsPage.createRequestColumn()) {
-					String newName = "column_" + (detailsPage.getProcedureGenerator().getRequestInfo().getColumnInfoList().length + 1); //$NON-NLS-1$
-					detailsPage.getProcedureGenerator().getRequestInfo().addColumn(newName, false, ColumnInfo.DEFAULT_DATATYPE, null, null);
-					editElementsPanel.refresh();
-					notifyColumnDataChanged();
+				String name = detailsPage.createRequestColumn();
+				if (name != null) {
+					boolean ok = MessageDialog.openQuestion(detailsPage.getShell(),
+						Messages.InvalidSelectedSchemaObject,
+						NLS.bind(Messages.InvalidSelectedSchemaObject_element_msg, name));
+					
+					if( ok ) {
+    					detailsPage.getProcedureGenerator().getRequestInfo().addColumn(name, false, ColumnInfo.DEFAULT_DATATYPE, null, null);
+    					editElementsPanel.refresh();
+    					notifyColumnDataChanged();
+					}
 				}
 			}
 

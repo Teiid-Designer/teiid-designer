@@ -33,13 +33,16 @@ public class WSDLImportWizardManager {
     public static final int WORKSPACE_SOURCE = 0;
     public static final int FILESYSTEM_SOURCE = 1;
     public static final int URL_SOURCE = 2;
+    
+    public static final String PAYLOAD = "PAYLOAD"; //$NON-NLS-1$
+    public static final String MESSAGE = "MESSAGE"; //$NON-NLS-1$
+    public static final String SOAP11 = "SOAP11"; //$NON-NLS-1$
+    public static final String SOAP12 = "SOAP12"; //$NON-NLS-1$
 
     // /////////////////////////////////////////////////////////////////////////////////////////////
     // FIELDS
     // /////////////////////////////////////////////////////////////////////////////////////////////
     private WSDLReader wsdlReader;
-
-
     
 	private String sourceModelName;
 	private boolean sourceModelExists;
@@ -51,8 +54,6 @@ public class WSDLImportWizardManager {
 	
 	private boolean generateDefaultProcedures;
 	
-	private boolean isMessage;
-	
     private List selectedOperations;
     private int uriSource = URL_SOURCE;
     private IConnectionProfile connectionProfile;
@@ -60,6 +61,9 @@ public class WSDLImportWizardManager {
     private Map<Operation, ProcedureGenerator> procedureGenerators;
     
     private Model wsdlModel;
+    
+    private String translatorDefaultBinding = SOAP11;
+    private String translatorDefaultServiceMode = PAYLOAD; 
 
     // /////////////////////////////////////////////////////////////////////////////////////////////
     // CONSTRUCTOR
@@ -297,11 +301,33 @@ public class WSDLImportWizardManager {
 		this.generateDefaultProcedures = generateDefaultProcedures;
 	}
 
-	public boolean isMessage() {
-		return this.isMessage;
+	/**
+	 * @return the translatorDefaultBinding
+	 */
+	public String getTranslatorDefaultBinding() {
+		return this.translatorDefaultBinding;
 	}
 
-	public void setIsMessage(boolean isMessage) {
-		this.isMessage = isMessage;
+	/**
+	 * @param translatorDefaultBinding the translatorDefaultBinding to set
+	 */
+	public void setTranslatorDefaultBinding(String translatorDefaultBinding) {
+		this.translatorDefaultBinding = translatorDefaultBinding;
 	}
+
+	/**
+	 * @return the translatorDefaultServiceMode
+	 */
+	public String getTranslatorDefaultServiceMode() {
+		return this.translatorDefaultServiceMode;
+	}
+
+	/**
+	 * @param translatorDefaultServiceMode the translatorDefaultServiceMode to set
+	 */
+	public void setTranslatorDefaultServiceMode(String translatorDefaultServiceMode) {
+		this.translatorDefaultServiceMode = translatorDefaultServiceMode;
+	}
+
+	
 }

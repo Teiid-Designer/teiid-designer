@@ -413,7 +413,7 @@ public abstract class BaseSchemaObject implements SchemaObject {
         return result;
     }
 
-    protected String getNamespacePrefix() {
+    public String getNamespacePrefix() {
         return prefix;
     }
 

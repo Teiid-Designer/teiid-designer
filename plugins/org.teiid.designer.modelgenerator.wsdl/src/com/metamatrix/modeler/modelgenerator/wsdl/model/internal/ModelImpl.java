@@ -7,13 +7,18 @@
  */
 package com.metamatrix.modeler.modelgenerator.wsdl.model.internal;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.xsd.XSDSchema;
 import org.jdom.Namespace;
 
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Model;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Operation;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Port;
@@ -28,11 +33,14 @@ public class ModelImpl implements Model {
     private Map<String, Port> portNameToPort;
     private Map<String, Operation> operationNameToOperation;
     private XSDSchema[] m_schemas;
+    
+    private Map<String, Map<String, Operation>> modelableOperationsMaps;
 
     public ModelImpl() {
         serviceNameToService = new HashMap<String, Service>();
         portNameToPort = new HashMap<String, Port>();
         operationNameToOperation = new HashMap<String, Operation>();
+        modelableOperationsMaps = new HashMap<String, Map<String, Operation>>(); 
     }
 
     public Service[] getServices() {
@@ -57,9 +65,36 @@ public class ModelImpl implements Model {
                 for (int k = 0; k < operations.length; k++) {
                     Operation operation = operations[k];
                     operationNameToOperation.put(operation.getName(), operation);
+                    addOperationToMap(operation);
                 }
             }
         }
+    }
+    
+    private void addOperationToMap(Operation operation) {
+    	if( operation.canModel() ) {
+    		Map<String, Operation> existingMap = modelableOperationsMaps.get(operation.getBinding().getPort().getName());
+    		if( existingMap == null ) {
+    			existingMap = new HashMap<String, Operation>();
+    			modelableOperationsMaps.put(operation.getBinding().getPort().getName(), existingMap);
+    		}
+    		existingMap.put(operation.getName(), operation);
+    	}
+    }
+    
+    public Operation[] getModelableOperations(String portName) {
+    	Map<String, Operation> existingMap = modelableOperationsMaps.get(portName);
+    	
+    	int nValues = existingMap.values().size();
+    	List<Operation> ops = new ArrayList<Operation>(existingMap.values());
+    	Collections.sort(ops, new OperationComparator());
+    	return ops.toArray(new Operation[nValues]);
+    }
+    
+    public String[] getModelablePortNames() {
+    	int nPorts = modelableOperationsMaps.keySet().size();
+    	
+    	return modelableOperationsMaps.keySet().toArray(new String[nPorts]);
     }
 
     @Override
@@ -147,6 +182,34 @@ public class ModelImpl implements Model {
     @Override
     public Operation getOperation( String name ) {
         return operationNameToOperation.get(name);
+    }
+    
+    /**
+     * Compare IResources in a collection and order them as IRoot, IProject, IFolder and IFile.
+     */
+    private class OperationComparator implements Comparator {
+
+        public OperationComparator() {
+            super();
+        }
+
+        public int compare( final Object oper1,
+                            final Object oper2 ) {
+            CoreArgCheck.isInstanceOf(Operation.class, oper1);
+            CoreArgCheck.isInstanceOf(Operation.class, oper2);
+
+            final Operation op1 = (Operation)oper1;
+            final Operation op2 = (Operation)oper2;
+            return op1.getName().compareTo(op2.getName());
+        }
+
+        @Override
+        public boolean equals( final Object anObject ) {
+            if (this == anObject) return true;
+            if (anObject == this) return true;
+            if (anObject == null || anObject.getClass() != this.getClass()) return false;
+            return true;
+        }
     }
 
 }

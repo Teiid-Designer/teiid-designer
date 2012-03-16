@@ -14,7 +14,6 @@ import java.util.Properties;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
@@ -61,6 +60,7 @@ import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.panels.ElementsInf
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.panels.WrapperProcedurePanel;
 
 import com.metamatrix.core.util.CoreStringUtil;
+import com.metamatrix.modeler.core.types.DatatypeConstants;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Model;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.ModelGenerationException;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Operation;
@@ -108,6 +108,8 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 	private Combo operationsCombo;
 
 	private XSDSemanticItemProviderAdapterFactory semanticAdapterFactory;
+	private AdapterFactoryLabelProvider schemaLabelProvider;
+	private SchemaTreeContentProvider schemaContentProvider;
 
 	/** This keeps track of the root object of the model. */
 	protected XSDSchema xsdSchema;
@@ -145,6 +147,10 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 		this.importManager = theImportManager;
 		this.importManager.setSelectedOperations(new ArrayList());
 		setImageDescriptor(ModelGeneratorWsdlUiUtil.getImageDescriptor(Images.NEW_MODEL_BANNER));
+		
+		semanticAdapterFactory = new XSDSemanticItemProviderAdapterFactory();
+		schemaLabelProvider = new AdapterFactoryLabelProvider(semanticAdapterFactory);
+		schemaContentProvider = new SchemaTreeContentProvider(semanticAdapterFactory);
 	}
 
 	public ProcedureGenerator getProcedureGenerator() {
@@ -281,7 +287,7 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 		createRequestSchemaContentsGroup(splitter);
 		createRequestElementsInfoGroup(splitter);
 
-        splitter.setWeights(new int[] {40, 60});
+        splitter.setWeights(new int[] {60, 40});
 	}
 
 	private void createRequestSchemaContentsGroup(Composite parent) {
@@ -293,13 +299,9 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 		schemaContentsGroup.setLayoutData(gd);
 
 		this.requestXmlTreeViewer = new TreeViewer(schemaContentsGroup, SWT.SINGLE);
-		semanticAdapterFactory = new XSDSemanticItemProviderAdapterFactory();
-		this.requestXmlTreeViewer
-				.setContentProvider(new SchemaTreeContentProvider(
-						semanticAdapterFactory));
-		this.requestXmlTreeViewer
-				.setLabelProvider(new AdapterFactoryLabelProvider(
-						semanticAdapterFactory));
+		
+		this.requestXmlTreeViewer.setContentProvider(schemaContentProvider);
+		this.requestXmlTreeViewer.setLabelProvider(schemaLabelProvider);
 		this.requestXmlTreeViewer.setAutoExpandLevel(2);
 		GridData data = new GridData(GridData.FILL_BOTH);
 		data.horizontalSpan = 4;
@@ -448,12 +450,8 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 
 		responseXmlTreeViewer = new TreeViewer(schemaContentsGroup, SWT.SINGLE);
 		semanticAdapterFactory = new XSDSemanticItemProviderAdapterFactory();
-		this.responseXmlTreeViewer
-				.setContentProvider(new SchemaTreeContentProvider(
-						semanticAdapterFactory));
-		this.responseXmlTreeViewer
-				.setLabelProvider(new AdapterFactoryLabelProvider(
-						semanticAdapterFactory));
+		this.responseXmlTreeViewer.setContentProvider(schemaContentProvider);
+		this.responseXmlTreeViewer.setLabelProvider(schemaLabelProvider);
 		this.responseXmlTreeViewer.setAutoExpandLevel(2);
 		GridData data = new GridData(GridData.FILL_BOTH);
 		data.horizontalSpan = 4;
@@ -519,8 +517,7 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 	}
 
 	private void createResponseColumnInfoGroup(Composite parent) {
-		responseElementsInfoPanel = new ColumnsInfoPanel(parent, SWT.NONE,
-				RESPONSE, this);
+		responseElementsInfoPanel = new ColumnsInfoPanel(parent, SWT.NONE, RESPONSE, this);
 	}
 
 	private void createResponseSqlGroup(Composite parent) {
@@ -797,35 +794,35 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 	}
 
 	String getNodeName(Object element) {
-		return "<name>";
+		return "<name>"; //$NON-NLS-1$
 	}
 
 	Object getNodeParent(Object element) {
 		return null;
 	}
 
-	public boolean createRequestColumn() {
-		IStructuredSelection sel = (IStructuredSelection) requestXmlTreeViewer
-				.getSelection();
+	public String createRequestColumn() {
+		IStructuredSelection sel = (IStructuredSelection) requestXmlTreeViewer.getSelection();
+		
 		Object obj = sel.getFirstElement();
-		if (obj instanceof XSDParticleImpl) {
+		if (obj instanceof XSDParticleImpl && ((XSDParticleImpl) obj).getContent() instanceof XSDElementDeclarationImpl) {
 		    String name = ((XSDElementDeclarationImpl)((XSDParticleImpl) obj).getContent()).getName();
 		    String ns = ((XSDElementDeclarationImpl)((XSDParticleImpl) obj).getContent()).getTargetNamespace();
-			this.procedureGenerator.getRequestInfo().addColumn(name, false, "String", null, ns);
+			this.procedureGenerator.getRequestInfo().addColumn(name, false, DatatypeConstants.RuntimeTypeNames.STRING, null, ns);
 			notifyColumnDataChanged();
-			return true;
+			return null;
 		}
 		
-		return false;
+		return schemaLabelProvider.getText(obj);
 	}
 
 	private void setRequestRootPath() {
 		// TODO:
 	}
 
-	public boolean createResponseColumn() {
-		IStructuredSelection sel = (IStructuredSelection) responseXmlTreeViewer
-				.getSelection();
+	public String createResponseColumn() {
+		IStructuredSelection sel = (IStructuredSelection) responseXmlTreeViewer.getSelection();
+		
 		Object obj = sel.getFirstElement();
 		if (obj instanceof XSDParticleImpl) {
 			
@@ -857,7 +854,7 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 			String prefix = null;
 			for (SchemaObject schemaObject : elements) {
 				  if (schemaObject.getName().equals(name)){
-					  xpath.append("/").append(schemaObject.getRelativeXpath());
+					  xpath.append("/").append(schemaObject.getRelativeXpath()); //$NON-NLS-1$
 					  namespace = schemaObject.getNamespace();
 					  prefix = ((BaseSchemaObject)schemaObject).getNamespacePrefix();
 					  if(namespace!=null){
@@ -869,12 +866,13 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 			//TODO: Do I need this?
 			
 			
-			this.procedureGenerator.getResponseInfo().addColumn(name, false,"String", null, xpath.toString());
+			this.procedureGenerator.getResponseInfo().addColumn(name, false,DatatypeConstants.RuntimeTypeNames.STRING, null, xpath.toString());
+
 			notifyColumnDataChanged();
-			return true;
-		}
+			return null;
+		} 
 		
-		return false;
+		return schemaLabelProvider.getText(obj);
 	}
 
 	private void setResponseRootPath() {

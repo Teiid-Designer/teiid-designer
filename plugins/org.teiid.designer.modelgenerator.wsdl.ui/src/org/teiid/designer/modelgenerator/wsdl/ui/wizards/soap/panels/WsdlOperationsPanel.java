@@ -13,55 +13,55 @@ import java.util.List;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.viewers.TreeExpansionEvent;
-import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.TableLayout;
+import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.widgets.Tree;
-import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.teiid.core.util.FileUtils;
 import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.WsdlDefinitionPage;
 
 import com.metamatrix.core.util.CoreStringUtil;
-import com.metamatrix.modeler.modelgenerator.wsdl.model.Binding;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Fault;
-import com.metamatrix.modeler.modelgenerator.wsdl.model.Message;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Model;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.ModelGenerationException;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Operation;
-import com.metamatrix.modeler.modelgenerator.wsdl.model.Port;
-import com.metamatrix.modeler.modelgenerator.wsdl.model.Service;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.WSDLElement;
 import com.metamatrix.modeler.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstants;
 import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.util.ModelGeneratorWsdlUiUtil;
 import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.wizards.WSDLImportWizardManager;
 import com.metamatrix.ui.internal.util.WidgetFactory;
-import com.metamatrix.ui.internal.util.WidgetUtil;
-import com.metamatrix.ui.internal.widget.DefaultTreeViewerController;
+import com.metamatrix.ui.internal.widget.Label;
 
-public class WsdlOperationsPanel implements Listener, FileUtils.Constants, CoreStringUtil.Constants,
+public class WsdlOperationsPanel implements FileUtils.Constants, CoreStringUtil.Constants,
 	ModelGeneratorWsdlUiConstants, ModelGeneratorWsdlUiConstants.Images {
-	/** The checkbox treeViewer */
-	private TreeViewer treeViewer;
-	private Tree tree;
-	boolean treeExpanded = false;
-	private CheckboxTreeController controller;
+	
+	private Combo portNameCombo;
+	
+	/** The checkbox table viewer */
+	private TableViewer operationsViewer;
+	private TableViewerColumn operationNameColumn;
 
 	/** Buttons for tree selection */
 	private Button selectAllButton;
@@ -74,7 +74,7 @@ public class WsdlOperationsPanel implements Listener, FileUtils.Constants, CoreS
 
 	/** The import manager. */
 	WSDLImportWizardManager importManager;
-	
+
 	WsdlDefinitionPage wsdlPage;
 
 	/** The WSDL model representation */
@@ -82,45 +82,49 @@ public class WsdlOperationsPanel implements Listener, FileUtils.Constants, CoreS
 
 	private IStatus panelStatus;
 
-	public WsdlOperationsPanel(Composite parent, WsdlDefinitionPage wsdlPage, WSDLImportWizardManager theImportManager) {
+	public WsdlOperationsPanel(Composite parent, WsdlDefinitionPage wsdlPage,
+		WSDLImportWizardManager theImportManager) {
 		super();
 		this.parentComposite = parent;
 		this.wsdlPage = wsdlPage;
 		this.importManager = theImportManager;
 		this.importManager.setSelectedOperations(new ArrayList());
 
+		Composite comboPanel = WidgetFactory.createPanel(parent, SWT.NONE, GridData.FILL_HORIZONTAL);
+		GridLayout layout = new GridLayout(2, false);
+		comboPanel.setLayout(layout);
+		
+		Label label = WidgetFactory.createLabel(comboPanel, Messages.SelectPort);
+		GridData gd = new GridData();
+		gd.verticalAlignment=SWT.CENTER;
+		label.setLayoutData(gd);
+		
+		
+		this.portNameCombo = WidgetFactory.createCombo(comboPanel, SWT.READ_ONLY, GridData.FILL_HORIZONTAL, new String[0], true);
+		this.portNameCombo.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
+		this.portNameCombo.addSelectionListener(new SelectionListener() {
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				// Need to sync the worker with the current profile
+				handlePortNameSelected();
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+		});
+
+		this.portNameCombo.setVisibleItemCount(10);
+		
 		createPanel(parent);
 	}
 
-	public void handleEvent(Event event) {
-		boolean validate = false;
-
-		// Tree node selected
-		if (event.widget == this.tree) {
-			updateTreeSelectionDetails();
-		}
-
-		// SelectAll button selected
-		if (event.widget == this.selectAllButton) {
-			setAllNodesSelected(true);
-		}
-
-		// DeselectAll button selected
-		if (event.widget == this.deselectAllButton) {
-			setAllNodesSelected(false);
-		}
-
-		if (validate) {
-			setPageStatus();
-		}
-		
-		wsdlPage.handleOperationsChanged();
-	}
 
 	void updateTreeSelectionDetails() {
-		TreeItem[] selections = this.tree.getSelection();
+		TableItem[] selections = this.operationsViewer.getTable().getSelection();
 		if (selections != null && selections.length > 0) {
-			TreeItem selectedItem = selections[0];
+			TableItem selectedItem = selections[0];
 			updateSelectionDetailsArea(selectedItem.getData());
 		}
 	}
@@ -131,17 +135,18 @@ public class WsdlOperationsPanel implements Listener, FileUtils.Constants, CoreS
 	 */
 	public void createPanel(Composite theParent) {
 		final int COLUMNS = 1;
+		
 		Composite pnlMain = WidgetFactory.createPanel(theParent, SWT.NONE, GridData.FILL_BOTH);
 		GridLayout layout = new GridLayout(COLUMNS, false);
 		pnlMain.setLayout(layout);
-
+		
 		SashForm splitter = new SashForm(pnlMain, SWT.VERTICAL);
 		GridData gid = new GridData();
 		gid.grabExcessHorizontalSpace = gid.grabExcessVerticalSpace = true;
 		gid.horizontalAlignment = gid.verticalAlignment = GridData.FILL;
 		splitter.setLayoutData(gid);
-
-		createCheckboxTreeComposite(splitter, Messages.WsdlOperationsPage_checkboxTreeGroup_title);
+		
+		createCheckboxTableComposite(splitter, Messages.WsdlOperationsPage_checkboxTreeGroup_title);
 
 		createDetailsComposite(splitter);
 
@@ -156,37 +161,54 @@ public class WsdlOperationsPanel implements Listener, FileUtils.Constants, CoreS
 	 * @param title
 	 *            the group title
 	 */
-	private void createCheckboxTreeComposite(Composite parent, String title) {
-		Composite checkBoxTreeComposite = WidgetFactory.createPanel(parent, SWT.NONE, GridData.FILL_BOTH);
-		GridLayout layout = new GridLayout(1, false);
-		checkBoxTreeComposite.setLayout(layout);
+	private void createCheckboxTableComposite(Composite parent, String title) {
 
 		// --------------------------
-		// Group for checkbox tree
+		// Group for checkbox table
 		// --------------------------
-		Group group = WidgetFactory.createGroup(checkBoxTreeComposite, title, GridData.FILL_BOTH, 1, 2);
-
-		// ----------------------------
-		// TreeViewer
-		// ----------------------------
-		this.controller = new CheckboxTreeController();
-		this.treeViewer = WidgetFactory.createTreeViewer(group, SWT.SINGLE | SWT.CHECK, GridData.FILL_BOTH, controller);
-
-		this.tree = this.treeViewer.getTree();
-		tree.addListener(SWT.Selection, this);
+		Group group = WidgetFactory.createGroup(parent, title, GridData.FILL_BOTH, 1, 2);
+		GridLayout gridLayout = new GridLayout(2, false);
+		group.setLayout(gridLayout);
 		
-		tree.setLayoutData(new GridData(GridData.FILL_BOTH));
+		// ----------------------------
+		// TableViewer
+		// ----------------------------
+		Table table = new Table(group, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.CHECK );
+		table.setHeaderVisible(true);
+		table.setLinesVisible(true);
+		table.setLayout(new TableLayout());
+		GridData gd = new GridData(GridData.FILL_BOTH);
+		gd.grabExcessVerticalSpace = true;
+		table.setLayoutData(gd);
+		
+		this.operationsViewer = new TableViewer(table);
 
-		this.treeViewer.setContentProvider(new CheckboxTreeContentProvider());
-		this.treeViewer.setLabelProvider(new CheckboxTreeLabelProvider());
 
-		this.treeViewer.setInput(null);
+		this.operationsViewer.setContentProvider(new CheckboxTreeContentProvider());
+		this.operationsViewer.setLabelProvider(new CheckboxTreeLabelProvider());
+
+		// Check events can occur separate from selection events.
+		// In this case move the selected node.
+		// Also trigger selection of node in model.
+		this.operationsViewer.getTable().addSelectionListener(
+			new SelectionListener() {
+
+				public void widgetSelected(SelectionEvent e) {
+					updateTreeSelectionDetails();
+					if (e.detail == SWT.CHECK) {
+						updateImportManager();
+					}
+				}
+				
+				public void widgetDefaultSelected(SelectionEvent e) {
+				}
+			});
 
 		// ----------------------------
 		// Select/DeSelect Buttons
 		// ----------------------------
 		Composite buttonComposite = WidgetFactory.createPanel(group, SWT.NONE, GridData.FILL_VERTICAL);
-		layout = new GridLayout(1, false);
+		GridLayout layout = new GridLayout(1, false);
 		buttonComposite.setLayout(layout);
 		this.selectAllButton = WidgetFactory.createButton(buttonComposite,
 			Messages.WsdlOperationsPage_selectAllButton_text, GridData.FILL_HORIZONTAL);
@@ -195,9 +217,37 @@ public class WsdlOperationsPanel implements Listener, FileUtils.Constants, CoreS
 			Messages.WsdlOperationsPage_deselectAllButton_text, GridData.FILL_HORIZONTAL);
 		this.deselectAllButton.setToolTipText(Messages.WsdlOperationsPage_deselectAllButton_tipText);
 
-		this.selectAllButton.addListener(SWT.Selection, this);
-		this.deselectAllButton.addListener(SWT.Selection, this);
-
+		this.selectAllButton.addSelectionListener(new SelectionListener() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				setAllNodesSelected(true);
+				setPageStatus();
+			}
+			
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+		});
+		
+		this.deselectAllButton.addSelectionListener(new SelectionListener() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				setAllNodesSelected(false);
+				setPageStatus();
+			}
+			
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+		});
+		
+		// create columns
+		operationNameColumn = new TableViewerColumn(this.operationsViewer, SWT.LEFT);
+		operationNameColumn.getColumn().setText("Operation"); //$NON-NLS-1$
+		operationNameColumn.setLabelProvider(new OperationsColumnLabelProvider());
+		operationNameColumn.getColumn().pack();
 	}
 
 	/**
@@ -206,7 +256,7 @@ public class WsdlOperationsPanel implements Listener, FileUtils.Constants, CoreS
 	 * @param parent
 	 *            the parent composite
 	 */
-	private void createDetailsComposite(Composite parent) {					
+	private void createDetailsComposite(Composite parent) {
 		Composite detailsComposite = WidgetFactory.createPanel(parent, SWT.NONE, GridData.FILL_BOTH);
 		GridLayout layout = new GridLayout(1, false);
 		detailsComposite.setLayout(layout);
@@ -230,44 +280,26 @@ public class WsdlOperationsPanel implements Listener, FileUtils.Constants, CoreS
 	 */
 	private void updateSelectionDetailsArea(Object selectedObject) {
 		StringBuffer sb = new StringBuffer();
-		if (selectedObject instanceof Service) {
-			Service theService = (Service) selectedObject;
-			sb.append(theService.getName() + " [Service]\n"); //$NON-NLS-1$
-			sb.append("id: " + theService.getId()); //$NON-NLS-1$
-		} else if (selectedObject instanceof Port) {
-			Port thePort = (Port) selectedObject;
-			sb.append(thePort.getName() + " [Port]\n"); //$NON-NLS-1$
-			sb.append("id: " + thePort.getId()); //$NON-NLS-1$
-		} else if (selectedObject instanceof Binding) {
-			addBindingDetails((Binding) selectedObject, sb);
-		} else if (selectedObject instanceof Operation) {
+		if (selectedObject instanceof Operation) {
 			addOperationDetails((Operation) selectedObject, sb);
-		} else if (selectedObject instanceof Message) {					
-			Message theMessage = (Message) selectedObject;
-			sb.append(theMessage.getName() + " [Message]\n"); //$NON-NLS-1$
-			sb.append("id: " + theMessage.getId()); //$NON-NLS-1$
 		}
 		this.detailsTextBox.setText(sb.toString());
 	}
 
-	private void addBindingDetails(Binding binding, StringBuffer sb) {
-		sb.append(binding.getName() + " [Binding]\n"); //$NON-NLS-1$
-		sb.append("id: \t\t" + binding.getId() + '\n'); //$NON-NLS-1$
-		sb.append("uri: \t" + binding.getTransportURI() + '\n'); //$NON-NLS-1$
-		sb.append("style: \t" + binding.getStyle()); //$NON-NLS-1$
-	}
-
 	private void addOperationDetails(Operation operation, StringBuffer sb) {
-		sb.append(operation.getName() + " [Operation]\n"); //$NON-NLS-1$
-		sb.append("id: \t\t\t\t\t" + operation.getId() + '\n'); //$NON-NLS-1$
-		sb.append("input message: \t" + operation.getInputMessage().getName() + '\n'); //$NON-NLS-1$
+		sb.append("Operation: " + operation.getName() + '\n'); //$NON-NLS-1$
+		sb.append("\tbinding: \t\t" + operation.getBinding().getName() + '\n'); //$NON-NLS-1$
+		sb.append("\tport: \t\t\t" + operation.getBinding().getPort().getName() + '\n'); //$NON-NLS-1$
+		sb.append("\tservice: \t\t\t" + operation.getBinding().getPort().getService().getName() + '\n'); //$NON-NLS-1$
+		sb.append("\tid: \t\t\t\t" + operation.getId() + '\n'); //$NON-NLS-1$
+		sb.append("\tinput message: \t" + operation.getInputMessage().getName() + '\n'); //$NON-NLS-1$
 		String outputMsg = "<none>"; //$NON-NLS-1$
 		if (operation.getOutputMessage() != null) {
 			outputMsg = operation.getOutputMessage().getName();
 		}
-		sb.append("output message: \t" + outputMsg + '\n'); //$NON-NLS-1$
+		sb.append("\toutput message: \t" + outputMsg + '\n'); //$NON-NLS-1$
 		Fault[] faults = operation.getFaults();
-		sb.append("fault names: \t\t"); //$NON-NLS-1$
+		sb.append("\tfault names: \t\t"); //$NON-NLS-1$
 		if (faults == null || faults.length == 0) {
 			sb.append("none"); //$NON-NLS-1$
 		} else {
@@ -290,6 +322,35 @@ public class WsdlOperationsPanel implements Listener, FileUtils.Constants, CoreS
 			}
 		}
 	}
+	
+	private void refreshPortNames() {
+		portNameCombo.setItems(this.wsdlModel.getModelablePortNames());
+	}
+	
+	private void updateImportManager() {
+		this.importManager.setSelectedOperations(getSelectedOperations());
+	}
+	
+	private List<Operation> getSelectedOperations() {
+		List<Operation> ops = new ArrayList<Operation>();
+		for( TableItem item : operationsViewer.getTable().getItems()) {
+			if( item.getChecked() ) {
+				ops.add((Operation)item.getData());
+			}
+		}
+		
+		return ops;
+	}
+	
+	private void handlePortNameSelected() {
+		// TODO: 
+		String portName = portNameCombo.getText();
+		
+		Operation[] operations = this.wsdlModel.getModelableOperations(portName);
+		this.operationsViewer.setInput(new OperationsContainer(operations));
+		this.operationsViewer.refresh(true);
+		updateImportManager();
+	}
 
 	public void notifyWsdlChanged() {
 		this.panelStatus = Status.OK_STATUS;
@@ -303,14 +364,23 @@ public class WsdlOperationsPanel implements Listener, FileUtils.Constants, CoreS
 			ErrorDialog.openError(shell, null, Messages.WsdlOperationsPage_dialog_wsdlParseError_title, exStatus);
 			this.panelStatus = exStatus;
 		}
-		this.treeViewer.setInput(this.wsdlModel);
+		
+		// Set Port Combo Items
+		refreshPortNames();
+		// Now set operations contents with First Port name
+		
+		if( portNameCombo.getItemCount() > 0 ) {
+			portNameCombo.select(0);
+			handlePortNameSelected();
+		}
+
 		this.importManager.setSelectedOperations(new ArrayList());
-		this.treeViewer.expandToLevel(4);
 		setAllNodesSelected(true);
+		updateImportManager();
 	}
 
 	private void setPageStatus() {
-		if( panelStatus.isOK() ) {
+		if (panelStatus.isOK()) {
 			panelStatus = Status.OK_STATUS;
 		}
 	}
@@ -320,83 +390,28 @@ public class WsdlOperationsPanel implements Listener, FileUtils.Constants, CoreS
 	}
 
 	private void setAllNodesSelected(boolean bSelected) {
-		// System.out.println("[CompareTreePanel.setAllNodesSelected] bSelected: " + bSelected ); //$NON-NLS-1$
-
-		TreeItem[] items = tree.getItems();
-		for (int i = 0; i < items.length; i++) {
-			setAllSelected(items[i], bSelected);
+		if( bSelected ) {
+			for( TableItem item : operationsViewer.getTable().getItems()) {
+				item.setChecked(true);
+			}
+		} else {
+			for( TableItem item : operationsViewer.getTable().getItems()) {
+				item.setChecked(false);
+			}
 		}
-	}
-
-	private void setAllSelected(final TreeItem item, final boolean checked) {
-		WidgetUtil.setChecked(item, checked, false, this.controller);
-
-		// Apply same checked state to any children
-		final TreeItem[] children = item.getItems();
-		for (int ndx = 0; ndx < children.length; ndx++) {
-			setAllSelected(children[ndx], checked);
-		}
-	}
-
-	/**
-	 * Determine if the object has a 'valid' operation underneath it's
-	 * heirarchy. Valid operation has 'canModel' set to true.
-	 */
-	boolean hasValidOperation(Object object) {
-		boolean hasValid = false;
-		if (object instanceof Model) {
-			Object[] services = ((Model) object).getServices();
-			for (int i = 0; i < services.length; i++) {
-				if (hasValidOperation(services[i])) {
-					hasValid = true;
-					break;
-				}
-			}
-		} else if (object instanceof Service) {
-			Object[] ports = ((Service) object).getPorts();
-			for (int i = 0; i < ports.length; i++) {
-				if (hasValidOperation(ports[i])) {
-					hasValid = true;
-					break;
-				}
-			}
-		} else if (object instanceof Port) {
-			Object binding = ((Port) object).getBinding();
-			if (hasValidOperation(binding)) {
-				hasValid = true;
-			}
-		} else if (object instanceof Binding) {
-			Object[] operations = ((Binding) object).getOperations();
-			for (int i = 0; i < operations.length; i++) {
-				if (hasValidOperation(operations[i])) {
-					hasValid = true;
-					break;
-				}
-			}
-		} else if (object instanceof Operation) {
-			hasValid = ((Operation) object).canModel();
-		}
-		return hasValid;
+		
+		this.operationsViewer.refresh();
 	}
 
 	class CheckboxTreeLabelProvider extends LabelProvider {
-		private final Image SERVICE_ICON_IMG = ModelGeneratorWsdlUiUtil.getImage(SERVICE_ICON);
-		private final Image PORT_ICON_IMG = ModelGeneratorWsdlUiUtil.getImage(PORT_ICON);
 		private final Image OPERATION_ICON_IMG = ModelGeneratorWsdlUiUtil.getImage(OPERATION_ICON);
-		private final Image BINDING_ICON_IMG = ModelGeneratorWsdlUiUtil.getImage(BINDING_ICON);
 
 		final WorkbenchLabelProvider workbenchProvider = new WorkbenchLabelProvider();
 
 		@Override
 		public Image getImage(final Object node) {
-			if (node instanceof Service) {
-				return SERVICE_ICON_IMG;
-			} else if (node instanceof Port) {
-				return PORT_ICON_IMG;
-			} else if (node instanceof Operation) {
+			if (node instanceof Operation) {
 				return OPERATION_ICON_IMG;
-			} else if (node instanceof Binding) {
-				return BINDING_ICON_IMG;
 			}
 			return null;
 		}
@@ -419,50 +434,28 @@ public class WsdlOperationsPanel implements Listener, FileUtils.Constants, CoreS
 
 		public Object[] getChildren(final Object node) {
 			if (wsdlModel != null) {
-				if (node instanceof Model) {
-					return ((Model) node).getServices();
-				} else if (node instanceof Service) {
-					return ((Service) node).getPorts();
-				} else if (node instanceof Port) {
-					return new Object[] { ((Port) node).getBinding() };
-				} else if (node instanceof Binding) {
-					return ((Binding) node).getOperations();
+				if( node instanceof OperationsContainer ) {
+					return ((OperationsContainer)node).getOperations();
 				}
 			}
 			return EMPTY_STRING_ARRAY;
 		}
 
 		public Object[] getElements(final Object inputElement) {
-			return getChildren(inputElement);
+			if( inputElement instanceof OperationsContainer ) {
+				return ((OperationsContainer)inputElement).getOperations();
+			}
+			return new Object[0];
 		}
 
 		public Object getParent(final Object node) {
-			if (wsdlModel != null) {
-				if (node instanceof Model) {
-					return null;
-				} else if (node instanceof Service) {
-					return null;
-				} else if (node instanceof Port) {
-					return ((Port) node).getService();
-				} else if (node instanceof Binding) {
-					return ((Binding) node).getPort();
-				} else if (node instanceof Operation) {
-					return ((Operation) node).getBinding();
-				}
-			}
 			return null;
 		}
 
 		public boolean hasChildren(final Object node) {
 			if (wsdlModel != null) {
-				if (node instanceof Model) {
-					return (((Model) node).getServices().length > 0);
-				} else if (node instanceof Service) {
-					return (((Service) node).getPorts().length > 0);
-				} else if (node instanceof Port) {
-					return ((Port) node).getBinding() != null;
-				} else if (node instanceof Binding) {
-					return (((Binding) node).getOperations().length > 0);
+				if (node instanceof OperationsContainer) {
+					return ((OperationsContainer)node).getOperations().length > 0;
 				}
 			}
 			return false;
@@ -471,135 +464,57 @@ public class WsdlOperationsPanel implements Listener, FileUtils.Constants, CoreS
 		public void inputChanged(final Viewer viewer, final Object oldInput, final Object newInput) {
 		}
 	}
-
-	class CheckboxTreeController extends DefaultTreeViewerController {
-		/**
-		 * @see com.metamatrix.ui.internal.widget.DefaultTreeViewerController#checkedStateToggled(org.eclipse.swt.widgets.TreeItem)
-		 */
-		@Override
-		public void checkedStateToggled(TreeItem item) {
+	
+	class OperationsColumnLabelProvider extends ColumnLabelProvider {
+		private final Image PORT_ICON_IMG = ModelGeneratorWsdlUiUtil.getImage(PORT_ICON);
+		
+		public OperationsColumnLabelProvider() {
+			super();
 		}
 
 		/**
-		 * @see com.metamatrix.ui.internal.widget.ITreeViewerController#isItemCheckable(org.eclipse.swt.widgets.TreeItem)
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.jface.viewers.ColumnLabelProvider#getText(java.lang.Object)
 		 */
 		@Override
-		public boolean isItemCheckable(final TreeItem item) {
-			final Object node = item.getData();
-			if (node instanceof Service || node instanceof Binding || node instanceof Port || node instanceof Operation) {
-				return hasValidOperation(node);
+		public String getText(Object element) {
+			// Element should be a "File"
+			if( element instanceof Operation) {
+				Operation op = ((Operation) element);
+				StringBuilder sb = new StringBuilder(op.getName());
+				//sb.append(" < Binding : ").append(op.getBinding().getName()).append(" < Service : ").append(op.getBinding().getPort().getService().getName());
+				return sb.toString();
 			}
-			return false;
+			return EMPTY_STRING;
 		}
 
 		/**
-		 * @see com.metamatrix.ui.internal.widget.ITreeViewerController#update(org.eclipse.swt.widgets.TreeItem,
-		 *      boolean)
-		 * @since 4.0
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.jface.viewers.CellLabelProvider#getToolTipText(java.lang.Object)
 		 */
 		@Override
-		public void update(final TreeItem item, final boolean selected) {
-			Object dataObj = item.getData();
-			if (dataObj != null) {
-				final boolean checked = !WidgetUtil.isUnchecked(item);
-				if (isItemCheckable(item)) {
-					item.setChecked(checked);
-				}
-				item.setGrayed(WidgetUtil.isPartiallyChecked(item));
-
-				if (selected) {
-					updateChildren(item, checked);
-					for (TreeItem parent = item.getParentItem(); parent != null; parent = parent.getParentItem()) {
-						int state = PARTIALLY_CHECKED;
-						final TreeItem[] children = parent.getItems();
-						for (int ndx = children.length; --ndx >= 0;) {
-							final TreeItem child = children[ndx];
-							if (WidgetUtil.isPartiallyChecked(child)) {
-								state = PARTIALLY_CHECKED;
-								break;
-							}
-							final int childState = WidgetUtil.getCheckedState(child);
-							if (state == PARTIALLY_CHECKED) {
-								state = childState;
-							} else if (state != childState) {
-								state = PARTIALLY_CHECKED;
-								break;
-							}
-						}
-						if (state != WidgetUtil.getCheckedState(parent)) {
-							WidgetUtil.setCheckedState(parent, state, false, this);
-						}
-					}
-				}
-				if (dataObj instanceof Operation && hasValidOperation(dataObj)) {
-					updateCheckedOperations((Operation) dataObj, checked);
-				}
-				if (!isItemCheckable(item)) {
-					item.setGrayed(true);
-					item.setChecked(false);
-				} else {
-					item.setGrayed(false);
-				}
-			}
-		}
-
-		private void updateCheckedOperations(Operation operation, boolean checked) {
-			List<Operation> selectedOperations = new ArrayList(importManager.getSelectedOperations());
-			if (checked ) {
-				if( operation.canModel() && !selectedOperations.contains(operation) ) {
-    				selectedOperations.add(operation);
-    				importManager.setSelectedOperations(selectedOperations);
-				}
-    			setPageStatus();
-			} else {
-				if( selectedOperations.contains(operation) ) {
-    				selectedOperations.remove(operation);
-    				importManager.setSelectedOperations(selectedOperations);
-				}
-				setPageStatus();
-			}
-		}
-
-		/**
-		 * @since 4.0
-		 */
-		private void updateChildren(final TreeItem item, final boolean checked) {
-			final TreeItem[] children = item.getItems();
-			for (int ndx = children.length; --ndx >= 0;) {
-				final TreeItem child = children[ndx];
-				if (child.getData() != null) {
-					updateChildren(child, checked);
-					WidgetUtil.setChecked(child, checked, false, this);
-				}
-			}
-		}
-
-		/**
-		 * @see com.metamatrix.ui.internal.widget.ITreeViewerController#itemExpanded(org.eclipse.jface.viewers.TreeExpansionEvent)
-		 * @since 4.0
-		 */
-		@Override
-		public void itemExpanded(final TreeExpansionEvent event) {
-			if (treeExpanded) {
-				super.itemExpanded(event);
-			} else {
-				TreeItem[] selectedItems = ((TreeViewer) event.getTreeViewer()).getTree().getSelection();
-				if (selectedItems.length > 0) {
-					final TreeItem item = selectedItems[0];
-					if (item.getData() != null) {
-						updateChildren(item, false);
-					}
-					treeExpanded = true;
-				}
-			}
-			updateTreeSelectionDetails();
+		public String getToolTipText(Object element) {
+			return ""; //$NON-NLS-1$
 		}
 
 		@Override
-		public void itemCollapsed(final TreeExpansionEvent event) {
-			super.itemCollapsed(event);
-			updateTreeSelectionDetails();
+		public Image getImage(Object element) {
+			return PORT_ICON_IMG;
 		}
 
+	}
+	
+	class OperationsContainer {
+		Operation[] operations;
+		public OperationsContainer(Operation[] ops) {
+			super();
+			operations = ops;
+		}
+		
+		public Operation[] getOperations() {
+			return this.operations;
+		}
 	}
 }
