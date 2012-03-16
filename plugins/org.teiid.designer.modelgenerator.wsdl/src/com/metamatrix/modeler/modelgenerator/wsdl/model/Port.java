@@ -39,6 +39,21 @@ public interface Port extends WSDLElement {
      * @param uri - the location attribute of the <soap:address> element. The endpoint URL for the port.
      */
     public void setLocationURI( String uri );
+    
+    /**
+     * @param uri - the binding namespace URI attribute of the <soap:address> element. 
+     */
+    public void setBindingTypeURI( String uri );
+    
+    /**
+     * @param uri - the binding type (SOAP11, SOAP12 or HTTP). 
+     */
+    public String getBindingType( );
+    
+    /**
+     * @param uri - the binding namespace URI attribute of the <soap:address> element. 
+     */
+    public String getBindingTypeURI();
 
     /**
      * @return the location attribute of the <soap:address> element. The endpoint URL for the port.

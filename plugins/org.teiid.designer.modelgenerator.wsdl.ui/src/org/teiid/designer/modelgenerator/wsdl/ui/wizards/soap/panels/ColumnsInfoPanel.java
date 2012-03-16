@@ -34,6 +34,9 @@ import com.metamatrix.ui.internal.util.WidgetFactory;
 public class ColumnsInfoPanel {
 	private ProcedureInfo procedureInfo;
 	private Button addButton, deleteButton, upButton, downButton;
+	private Text rootPathText;
+	
+
 	EditColumnsPanel editColumnsPanel;
 	private int type = -1;
 	
@@ -61,6 +64,10 @@ public class ColumnsInfoPanel {
 		this.editColumnsPanel.refresh();
 	}
 	
+	public Text getRootPathText() {
+		return rootPathText;
+	}
+	
 	private void init(Composite parent) {
     	Group columnInfoGroup = WidgetFactory.createGroup(parent, Messages.ColumnInfo, SWT.NONE, 2);
     	columnInfoGroup.setLayout(new GridLayout(2, false));
@@ -71,7 +78,7 @@ public class ColumnsInfoPanel {
     	Label prefixLabel = new Label(columnInfoGroup, SWT.NONE);
     	prefixLabel.setText(Messages.RootPath);
         
-    	final Text rootPathText = WidgetFactory.createTextField(columnInfoGroup, SWT.NONE);
+    	rootPathText = WidgetFactory.createTextField(columnInfoGroup, SWT.NONE);
     	gd = new GridData(GridData.FILL_HORIZONTAL);
     	gd.minimumWidth = 50;
     	gd.horizontalSpan=1;

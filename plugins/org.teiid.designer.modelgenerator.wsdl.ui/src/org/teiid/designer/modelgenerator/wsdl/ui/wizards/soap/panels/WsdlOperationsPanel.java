@@ -381,8 +381,7 @@ public class WsdlOperationsPanel implements FileUtils.Constants, CoreStringUtil.
 		// TODO: Find the Port from "wsdlModel" and determine it's Binding type (SOAP11 or SOAP12)
 		// Set the value 
 		Port port = this.wsdlModel.getPort(this.portNameCombo.getText());
-		String transport = port.getBinding().getTransportURI();
-		this.importManager.setTranslatorDefaultBinding("SOAP11");
+		this.importManager.setTranslatorDefaultBinding(port.getBindingType());
 	}
 	
 	private List<Operation> getSelectedOperations() {

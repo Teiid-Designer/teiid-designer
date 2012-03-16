@@ -23,10 +23,14 @@ import javax.wsdl.Input;
 import javax.wsdl.OperationType;
 import javax.wsdl.Output;
 import javax.wsdl.WSDLException;
+import javax.wsdl.extensions.http.HTTPAddress;
+import javax.wsdl.extensions.http.HTTPOperation;
 import javax.wsdl.extensions.soap.SOAPAddress;
 import javax.wsdl.extensions.soap.SOAPBinding;
 import javax.wsdl.extensions.soap.SOAPBody;
 import javax.wsdl.extensions.soap.SOAPOperation;
+import javax.wsdl.extensions.soap12.SOAP12Address;
+import javax.wsdl.extensions.soap12.SOAP12Operation;
 import javax.wsdl.xml.WSDLReader;
 import javax.xml.namespace.QName;
 
@@ -184,6 +188,7 @@ public class ModelBuilder {
                                        Map ports ) {
         Port[] retVal = new Port[ports.size()];
         int arrayCtr = 0;
+        String bindingTypeURI = null;
         Iterator qnameIter = ports.keySet().iterator();
         while (qnameIter.hasNext()) {
             String name = (String)qnameIter.next();
@@ -198,10 +203,26 @@ public class ModelBuilder {
                 Object pe_next = p_iter.next();
                 if (pe_next instanceof SOAPAddress) {
                     SOAPAddress address = (SOAPAddress)pe_next;
+                    bindingTypeURI = address.getElementType().getNamespaceURI();
+                    port.setBindingTypeURI(bindingTypeURI);
                     port.setLocationURI(address.getLocationURI());
+                } else {
+                	if (pe_next instanceof SOAP12Address) {
+                		SOAP12Address address = (SOAP12Address)pe_next;
+                        bindingTypeURI = address.getElementType().getNamespaceURI();
+                        port.setBindingTypeURI(bindingTypeURI);
+                        port.setLocationURI(address.getLocationURI());
+                } else {
+                	if (pe_next instanceof HTTPAddress) {
+                		HTTPAddress address = (HTTPAddress)pe_next;
+                        bindingTypeURI = address.getElementType().getNamespaceURI();
+                        port.setBindingTypeURI(bindingTypeURI);
+                        port.setLocationURI(address.getLocationURI()); 
+                	}
+                }
                 }
             }
-
+            
             Binding binding = new BindingImpl(port);
             javax.wsdl.Binding bind = pt.getBinding();
             binding.setId(bind.getQName().toString());
@@ -256,7 +277,17 @@ public class ModelBuilder {
                             binding.setStyle(soapStyle);
                         }
                     }
-                }
+                } else if (next instanceof SOAP12Operation) {
+                	SOAP12Operation soapO = (SOAP12Operation)next;
+                    operation.setSOAPAction(soapO.getSoapActionURI());
+                    // sometimes the style is specified on the soap operation
+                    if (binding.getStyle() == null) {
+                        String soapStyle = soapO.getStyle();
+                        if (soapStyle != null) {
+                            binding.setStyle(soapStyle);
+                        }
+                    }
+                } 
             }
             if (operation.getBinding().getStyle() == null) {
                 operation.setCanModel(false);

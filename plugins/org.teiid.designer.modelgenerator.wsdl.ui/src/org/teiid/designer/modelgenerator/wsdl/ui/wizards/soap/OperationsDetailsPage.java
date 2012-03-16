@@ -868,43 +868,6 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 		}
 	}
 
-	private void setResponseRootPath() {
-		IStructuredSelection sel = (IStructuredSelection) responseXmlTreeViewer
-		.getSelection();
-		Object obj = sel.getFirstElement();
-		StringBuilder xpath = new StringBuilder();
-		if (obj instanceof XSDParticleImpl) {
-
-			Model wsdlModel = null;
-			SchemaModel schemaModel;
-			XSDSchema[] schemas;
-
-			try {
-				wsdlModel = importManager.getWSDLModel();
-			} catch (ModelGenerationException e) {
-				throw new RuntimeException(e);
-			}
-
-			SchemaProcessor processor = new SOAPSchemaProcessor(null);
-			processor.representTypes(true);
-			processor.setNamespaces(wsdlModel.getNamespaces());
-			schemas = wsdlModel.getSchemas();
-			try {
-				processor.processSchemas(schemas);
-			} catch (SchemaProcessingException e) {
-				throw new RuntimeException(e);
-			}
-			schemaModel = processor.getSchemaModel();
-			
-			List<SchemaObject> elements = schemaModel.getElements();
-	
-		}
-		
-		String selectedColumnPath = xpath.toString();
-		this.procedureGenerator.getResponseInfo().setRootPath(selectedColumnPath);
-	}
-
-
 	class OperationsListProvider extends LabelProvider implements
 			ITreeContentProvider {
 		private final Image OPERATION_ICON_IMG = ModelGeneratorWsdlUiUtil.getImage(Images.OPERATION_ICON);
