@@ -28,7 +28,11 @@ public class Messages  extends NLS {
     public static String CustomProcedures;
     
     public static String DataType;
+    public static String DefaultBinding;
+    public static String DefaultBinding_tooltip;
     public static String DefaultProcedures;
+    public static String DefaultServiceMode;
+    public static String DefaultServiceMode_tooltip;
     public static String DefaultValue;
     public static String Delete;
     public static String Down;

@@ -472,7 +472,7 @@ public class ImportOptionsPanel implements ModelGeneratorWsdlUiConstants {
 
 		try {
 			IResource sourceModel = ModelGeneratorWsdlUiUtil.getModelFile(
-				this.importManager.getViewModelLocation().getFullPath().toOSString(), this.viewModelFileText.getText());
+				this.importManager.getSourceModelLocation().getFullPath().toOSString(), this.sourceModelFileText.getText());
 
 			ModelResource smr = ModelUtilities.getModelResourceForIFile((IFile) sourceModel, false);
 			if (smr != null) {

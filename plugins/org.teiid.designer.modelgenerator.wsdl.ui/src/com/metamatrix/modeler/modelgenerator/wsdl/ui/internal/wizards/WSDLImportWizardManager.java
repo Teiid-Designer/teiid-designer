@@ -38,6 +38,8 @@ public class WSDLImportWizardManager {
     public static final String MESSAGE = "MESSAGE"; //$NON-NLS-1$
     public static final String SOAP11 = "SOAP11"; //$NON-NLS-1$
     public static final String SOAP12 = "SOAP12"; //$NON-NLS-1$
+    
+    public static final String[] SERVICE_MODES = {PAYLOAD, MESSAGE};
 
     // /////////////////////////////////////////////////////////////////////////////////////////////
     // FIELDS
@@ -236,7 +238,7 @@ public class WSDLImportWizardManager {
 			setSourceModelName(serviceName + ".xmi"); //$NON-NLS-1$
 			setViewModelName(serviceName + "View.xmi");  //$NON-NLS-1$
 			if( this.viewModelLocation != null ) {
-    			this.sourceModelExists = ModelGeneratorWsdlUiUtil.modelExists(this.viewModelLocation.getFullPath().toOSString(), this.sourceModelName);
+    			this.sourceModelExists = ModelGeneratorWsdlUiUtil.modelExists(this.sourceModelLocation.getFullPath().toOSString(), this.sourceModelName);
     			this.viewModelExists = ModelGeneratorWsdlUiUtil.modelExists(this.viewModelLocation.getFullPath().toOSString(), this.viewModelName);
 			}
 		} else {

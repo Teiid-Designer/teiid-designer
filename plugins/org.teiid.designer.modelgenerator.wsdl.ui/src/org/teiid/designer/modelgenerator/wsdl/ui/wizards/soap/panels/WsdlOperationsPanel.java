@@ -57,20 +57,22 @@ import com.metamatrix.ui.internal.widget.Label;
 public class WsdlOperationsPanel implements FileUtils.Constants, CoreStringUtil.Constants,
 	ModelGeneratorWsdlUiConstants, ModelGeneratorWsdlUiConstants.Images {
 	
-	private Combo portNameCombo;
+	Combo portNameCombo;
+	Text defaultBindingText;
+	Combo defaultServiceModeCombo;
 	
 	/** The checkbox table viewer */
-	private TableViewer operationsViewer;
-	private TableViewerColumn operationNameColumn;
+	TableViewer operationsViewer;
+	TableViewerColumn operationNameColumn;
 
 	/** Buttons for tree selection */
-	private Button selectAllButton;
-	private Button deselectAllButton;
+	Button selectAllButton;
+	Button deselectAllButton;
 
 	/** Text area for display of selection details */
-	private Text detailsTextBox;
+	Text detailsTextBox;
 
-	private Composite parentComposite;
+	Composite parentComposite;
 
 	/** The import manager. */
 	WSDLImportWizardManager importManager;
@@ -90,23 +92,24 @@ public class WsdlOperationsPanel implements FileUtils.Constants, CoreStringUtil.
 		this.importManager = theImportManager;
 		this.importManager.setSelectedOperations(new ArrayList());
 
-		Composite comboPanel = WidgetFactory.createPanel(parent, SWT.NONE, GridData.FILL_HORIZONTAL);
-		GridLayout layout = new GridLayout(2, false);
-		comboPanel.setLayout(layout);
+		Composite portPanel = WidgetFactory.createPanel(parent, SWT.NONE, GridData.FILL_HORIZONTAL);
+		GridLayout layout = new GridLayout(4, false);
+		portPanel.setLayout(layout);
 		
-		Label label = WidgetFactory.createLabel(comboPanel, Messages.SelectPort);
+		Label label = WidgetFactory.createLabel(portPanel, Messages.SelectPort);
 		GridData gd = new GridData();
 		gd.verticalAlignment=SWT.CENTER;
 		label.setLayoutData(gd);
 		
-		
-		this.portNameCombo = WidgetFactory.createCombo(comboPanel, SWT.READ_ONLY, GridData.FILL_HORIZONTAL, new String[0], true);
+		this.portNameCombo = WidgetFactory.createCombo(portPanel, SWT.READ_ONLY, GridData.FILL_HORIZONTAL, new String[0], true);
 		this.portNameCombo.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
+		gd = new GridData(GridData.FILL_BOTH);
+		gd.horizontalSpan=3;
+		this.portNameCombo.setLayoutData(gd);
 		this.portNameCombo.addSelectionListener(new SelectionListener() {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				// Need to sync the worker with the current profile
 				handlePortNameSelected();
 			}
 
@@ -116,6 +119,48 @@ public class WsdlOperationsPanel implements FileUtils.Constants, CoreStringUtil.
 		});
 
 		this.portNameCombo.setVisibleItemCount(10);
+		
+		label = WidgetFactory.createLabel(portPanel, Messages.DefaultBinding);
+		gd = new GridData();
+		gd.verticalAlignment=SWT.CENTER;
+		label.setLayoutData(gd);
+		label.setToolTipText(Messages.DefaultBinding_tooltip);
+		
+		defaultBindingText = new Text(portPanel, SWT.BORDER | SWT.SINGLE);
+		defaultBindingText.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
+		defaultBindingText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
+		gd = new GridData();
+		gd.verticalAlignment=SWT.CENTER;
+		gd.widthHint = 200;
+		defaultBindingText.setLayoutData(gd);
+		defaultBindingText.setToolTipText(Messages.DefaultBinding_tooltip);
+		
+		label = WidgetFactory.createLabel(portPanel, Messages.DefaultServiceMode);
+		gd = new GridData();
+		gd.verticalAlignment=SWT.CENTER;
+		label.setLayoutData(gd);
+		label.setToolTipText(Messages.DefaultServiceMode_tooltip);
+		
+		this.defaultServiceModeCombo = WidgetFactory.createCombo(portPanel, SWT.READ_ONLY, 
+			GridData.FILL_HORIZONTAL, WSDLImportWizardManager.SERVICE_MODES, true);
+		this.defaultServiceModeCombo.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
+		gd = new GridData();
+		gd.grabExcessHorizontalSpace = true;
+		gd.horizontalSpan=1;
+		this.defaultServiceModeCombo.setToolTipText(Messages.DefaultServiceMode_tooltip);
+		this.defaultServiceModeCombo.addSelectionListener(new SelectionListener() {
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				// Need to sync the worker with the current profile
+				handleDefaultServiceModeSelected();
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+		});
+		this.defaultServiceModeCombo.select(1);
 		
 		createPanel(parent);
 	}
@@ -329,6 +374,10 @@ public class WsdlOperationsPanel implements FileUtils.Constants, CoreStringUtil.
 	
 	private void updateImportManager() {
 		this.importManager.setSelectedOperations(getSelectedOperations());
+		
+		// TODO: Find the Port from "wsdlModel" and determine it's Binding type (SOAP11 or SOAP12)
+		// Set the value 
+		this.importManager.setTranslatorDefaultBinding("SOAP11");
 	}
 	
 	private List<Operation> getSelectedOperations() {
@@ -349,7 +398,10 @@ public class WsdlOperationsPanel implements FileUtils.Constants, CoreStringUtil.
 		Operation[] operations = this.wsdlModel.getModelableOperations(portName);
 		this.operationsViewer.setInput(new OperationsContainer(operations));
 		this.operationsViewer.refresh(true);
+		
 		updateImportManager();
+		
+		this.defaultBindingText.setText(importManager.getTranslatorDefaultBinding());
 	}
 
 	public void notifyWsdlChanged() {
@@ -377,6 +429,10 @@ public class WsdlOperationsPanel implements FileUtils.Constants, CoreStringUtil.
 		this.importManager.setSelectedOperations(new ArrayList());
 		setAllNodesSelected(true);
 		updateImportManager();
+	}
+	
+	private void handleDefaultServiceModeSelected() {
+		this.importManager.setTranslatorDefaultServiceMode(this.defaultServiceModeCombo.getText());
 	}
 
 	private void setPageStatus() {
