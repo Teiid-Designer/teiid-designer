@@ -42,7 +42,8 @@ public class ProcedureGenerator implements SqlConstants {
 	private static final String TABLE_EXEC = "TABLE(EXEC "; //$NON-NLS-1$
 	private static final String XMI_EXTENSION = ".xmi";  //$NON-NLS-1$
 	private static final String RESULT_LOWER = "result";  //$NON-NLS-1$
-	private static final String INVOKE_SEGMENT = "invoke('SOAP11', null, REQUEST.xml_out, null))"; //$NON-NLS-1$
+	private static final String INVOKE_SEGMENT_1 = "invoke()"; //$NON-NLS-1$
+	private static final String INVOKE_SEGMENT_2 = ", null, REQUEST.xml_out, null))"; //$NON-NLS-1$
 	private static final String NULL_LOWER = "null";  //$NON-NLS-1$
 
 	private ProcedureInfo requestInfo;
@@ -60,6 +61,8 @@ public class ProcedureGenerator implements SqlConstants {
 	
 	private String namespaceURI;
 	
+	private String bindingType;
+	
 	private WSDLImportWizardManager importManager;
 	
 	
@@ -73,6 +76,7 @@ public class ProcedureGenerator implements SqlConstants {
 		this.importManager = importManager;
 		this.generateWrapperProcedure = true;
 		this.namespaceURI = operation.getBinding().getPort().getNamespaceURI();
+		this.bindingType = operation.getBinding().getPort().getBindingType();
 	}
 
 	public WSDLImportWizardManager getImportManager() {
@@ -203,7 +207,7 @@ public class ProcedureGenerator implements SqlConstants {
     	sb.append(TAB).append(TAB)
     		.append(TABLE_EXEC)
     		.append(getModelNameWithoutExtension(importManager.getSourceModelName())).append(DOT)
-    		.append(INVOKE_SEGMENT).append(RETURN);
+    		.append(INVOKE_SEGMENT_1).append(this.bindingType).append(INVOKE_SEGMENT_2).append(RETURN);
     	
     	// AS response,
     	sb.append(TAB).append(AS).append(SPACE).append(RESPONSE_LOWER).append(COMMA).append(RETURN);
