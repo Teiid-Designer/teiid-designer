@@ -71,6 +71,7 @@ import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.wizards.WSDLImport
 import com.metamatrix.modeler.schema.tools.model.schema.SchemaModel;
 import com.metamatrix.modeler.schema.tools.model.schema.SchemaObject;
 import com.metamatrix.modeler.schema.tools.model.schema.impl.BaseSchemaObject;
+import com.metamatrix.modeler.schema.tools.model.schema.impl.SimpleRelationship;
 import com.metamatrix.modeler.schema.tools.processing.SchemaProcessingException;
 import com.metamatrix.modeler.schema.tools.processing.SchemaProcessor;
 import com.metamatrix.modeler.transformation.ui.editors.sqleditor.SqlTextViewer;
@@ -122,7 +123,7 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 	TreeViewer requestXmlTreeViewer;
 	TextViewer requestSqlTextViewer;
 	IDocument requestSqlDocument;
-	Action requestCreateElementAction, requestSetRootPathAction;
+	Action requestCreateElementAction;
 	//Button requestAddElementButton;
 	ElementsInfoPanel requestElementsInfoPanel;
 
@@ -131,7 +132,7 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 	TreeViewer responseXmlTreeViewer;
 	TextViewer responseSqlTextViewer;
 	IDocument responseSqlDocument;
-	Action responseCreateElementAction, responseSetRootPathAction;
+	Action responseCreateElementAction;
 	//Button responseAddElementButton;
 	ColumnsInfoPanel responseElementsInfoPanel;
 	
@@ -346,7 +347,6 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 								.getSelection();
 						if (sel.size() == 1 && sel.getFirstElement() instanceof XSDParticleImpl) {
 							columnMenuManager.add(requestCreateElementAction);
-							columnMenuManager.add(requestSetRootPathAction);
 						}
 
 					}
@@ -356,13 +356,6 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 			@Override
 			public void run() {
 				createRequestColumn();
-			}
-		};
-
-		this.requestSetRootPathAction = new Action(Messages.SetAsRootPath) {
-			@Override
-			public void run() {
-				setRequestRootPath();
 			}
 		};
 	}
@@ -505,13 +498,6 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 			@Override
 			public void run() {
 				createResponseColumn();
-			}
-		};
-
-		this.responseSetRootPathAction = new Action(Messages.SetAsRootPath) {
-			@Override
-			public void run() {
-				setResponseRootPath();
 			}
 		};
 	}
@@ -852,20 +838,20 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 			StringBuilder xpath = new StringBuilder();
 			String namespace = null;
 			String prefix = null;
+			StringBuilder parentXpath = new StringBuilder();
 			for (SchemaObject schemaObject : elements) {
 				  if (schemaObject.getName().equals(name)){
+					  getParentXpath(schemaObject, parentXpath);
 					  xpath.append("/").append(schemaObject.getRelativeXpath()); //$NON-NLS-1$
 					  namespace = schemaObject.getNamespace();
 					  prefix = ((BaseSchemaObject)schemaObject).getNamespacePrefix();
 					  if(namespace!=null){
 						  this.procedureGenerator.getResponseInfo().addNamespace(prefix, namespace);
 					  }
+					  this.procedureGenerator.getResponseInfo().setRootPath(parentXpath.toString());
+					  responseElementsInfoPanel.getRootPathText().setText(parentXpath.toString());
 				  }
 			}
-			
-			//TODO: Do I need this?
-			
-			
 			this.procedureGenerator.getResponseInfo().addColumn(name, false,DatatypeConstants.RuntimeTypeNames.STRING, null, xpath.toString());
 
 			notifyColumnDataChanged();
@@ -874,10 +860,50 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 		
 		return schemaLabelProvider.getText(obj);
 	}
+	
+	private void getParentXpath(SchemaObject child, StringBuilder parentXpath) {
+		List<SimpleRelationship> parents = child.getParents();
+		for (SimpleRelationship parent:parents){
+			parentXpath.append("/").append(parent.getParent().getSimpleName());
+		}
+	}
 
 	private void setResponseRootPath() {
-	//	this.procedureGenerator.getResponseInfo().setRootPath();
+		IStructuredSelection sel = (IStructuredSelection) responseXmlTreeViewer
+		.getSelection();
+		Object obj = sel.getFirstElement();
+		StringBuilder xpath = new StringBuilder();
+		if (obj instanceof XSDParticleImpl) {
+
+			Model wsdlModel = null;
+			SchemaModel schemaModel;
+			XSDSchema[] schemas;
+
+			try {
+				wsdlModel = importManager.getWSDLModel();
+			} catch (ModelGenerationException e) {
+				throw new RuntimeException(e);
+			}
+
+			SchemaProcessor processor = new SOAPSchemaProcessor(null);
+			processor.representTypes(true);
+			processor.setNamespaces(wsdlModel.getNamespaces());
+			schemas = wsdlModel.getSchemas();
+			try {
+				processor.processSchemas(schemas);
+			} catch (SchemaProcessingException e) {
+				throw new RuntimeException(e);
+			}
+			schemaModel = processor.getSchemaModel();
+			
+			List<SchemaObject> elements = schemaModel.getElements();
+	
+		}
+		
+		String selectedColumnPath = xpath.toString();
+		this.procedureGenerator.getResponseInfo().setRootPath(selectedColumnPath);
 	}
+
 
 	class OperationsListProvider extends LabelProvider implements
 			ITreeContentProvider {
