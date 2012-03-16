@@ -42,7 +42,7 @@ public class ProcedureGenerator implements SqlConstants {
 	private static final String TABLE_EXEC = "TABLE(EXEC "; //$NON-NLS-1$
 	private static final String XMI_EXTENSION = ".xmi";  //$NON-NLS-1$
 	private static final String RESULT_LOWER = "result";  //$NON-NLS-1$
-	private static final String INVOKE_SEGMENT_1 = "invoke()"; //$NON-NLS-1$
+	private static final String INVOKE_SEGMENT_1 = "invoke("; //$NON-NLS-1$
 	private static final String INVOKE_SEGMENT_2 = ", null, REQUEST.xml_out, null))"; //$NON-NLS-1$
 	private static final String NULL_LOWER = "null";  //$NON-NLS-1$
 
