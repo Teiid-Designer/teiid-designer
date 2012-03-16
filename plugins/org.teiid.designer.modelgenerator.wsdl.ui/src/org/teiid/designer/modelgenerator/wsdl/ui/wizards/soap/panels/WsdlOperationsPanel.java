@@ -47,6 +47,7 @@ import com.metamatrix.modeler.modelgenerator.wsdl.model.Fault;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Model;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.ModelGenerationException;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Operation;
+import com.metamatrix.modeler.modelgenerator.wsdl.model.Port;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.WSDLElement;
 import com.metamatrix.modeler.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstants;
 import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.util.ModelGeneratorWsdlUiUtil;
@@ -369,7 +370,9 @@ public class WsdlOperationsPanel implements FileUtils.Constants, CoreStringUtil.
 	}
 	
 	private void refreshPortNames() {
-		portNameCombo.setItems(this.wsdlModel.getModelablePortNames());
+		if( this.wsdlModel != null ) {
+			portNameCombo.setItems(this.wsdlModel.getModelablePortNames());
+		}
 	}
 	
 	private void updateImportManager() {
@@ -377,6 +380,8 @@ public class WsdlOperationsPanel implements FileUtils.Constants, CoreStringUtil.
 		
 		// TODO: Find the Port from "wsdlModel" and determine it's Binding type (SOAP11 or SOAP12)
 		// Set the value 
+		Port port = this.wsdlModel.getPort(this.portNameCombo.getText());
+		String transport = port.getBinding().getTransportURI();
 		this.importManager.setTranslatorDefaultBinding("SOAP11");
 	}
 	

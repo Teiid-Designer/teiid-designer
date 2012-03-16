@@ -11,6 +11,14 @@ package com.metamatrix.modeler.modelgenerator.wsdl.model;
  * This class represents a port as defined in a WSDL
  */
 public interface Port extends WSDLElement {
+	
+	public static final String HTTP = "HTTP"; //$NON-NLS-1$
+    public static final String SOAP11 = "SOAP11"; //$NON-NLS-1$
+    public static final String SOAP12 = "SOAP12"; //$NON-NLS-1$
+	
+	public static final String HTTP_TRANSPORT_URI = "http://schemas.xmlsoap.org/wsdl/http/"; //$NON-NLS-1$
+	public static final String SOAP11_TRANSPORT_URI = "http://schemas.xmlsoap.org/wsdl/soap/"; //$NON-NLS-1$
+	public static final String SOAP12_TRANSPORT_URI = "http://schemas.xmlsoap.org/wsdl/soap12/"; //$NON-NLS-1$
 
     /**
      * @return a binding defined in this port

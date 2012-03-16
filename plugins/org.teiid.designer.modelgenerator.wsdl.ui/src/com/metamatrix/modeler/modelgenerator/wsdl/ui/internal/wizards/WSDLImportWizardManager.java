@@ -23,6 +23,7 @@ import com.metamatrix.modeler.modelgenerator.wsdl.WSDLReader;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Model;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.ModelGenerationException;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Operation;
+import com.metamatrix.modeler.modelgenerator.wsdl.model.Port;
 import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.util.ModelGeneratorWsdlUiUtil;
 
 /**
@@ -36,8 +37,6 @@ public class WSDLImportWizardManager {
     
     public static final String PAYLOAD = "PAYLOAD"; //$NON-NLS-1$
     public static final String MESSAGE = "MESSAGE"; //$NON-NLS-1$
-    public static final String SOAP11 = "SOAP11"; //$NON-NLS-1$
-    public static final String SOAP12 = "SOAP12"; //$NON-NLS-1$
     
     public static final String[] SERVICE_MODES = {PAYLOAD, MESSAGE};
 
@@ -64,7 +63,7 @@ public class WSDLImportWizardManager {
     
     private Model wsdlModel;
     
-    private String translatorDefaultBinding = SOAP11;
+    private String translatorDefaultBinding = Port.SOAP11;
     private String translatorDefaultServiceMode = PAYLOAD; 
 
     // /////////////////////////////////////////////////////////////////////////////////////////////
