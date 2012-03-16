@@ -235,8 +235,10 @@ public class WSDLImportWizardManager {
 			String serviceName = firstOperation.getBinding().getPort().getService().getName();
 			setSourceModelName(serviceName + ".xmi"); //$NON-NLS-1$
 			setViewModelName(serviceName + "View.xmi");  //$NON-NLS-1$
-			this.sourceModelExists = ModelGeneratorWsdlUiUtil.modelExists(this.viewModelLocation.getFullPath().toOSString(), this.sourceModelName);
-			this.viewModelExists = ModelGeneratorWsdlUiUtil.modelExists(this.viewModelLocation.getFullPath().toOSString(), this.viewModelName);
+			if( this.viewModelLocation != null ) {
+    			this.sourceModelExists = ModelGeneratorWsdlUiUtil.modelExists(this.viewModelLocation.getFullPath().toOSString(), this.sourceModelName);
+    			this.viewModelExists = ModelGeneratorWsdlUiUtil.modelExists(this.viewModelLocation.getFullPath().toOSString(), this.viewModelName);
+			}
 		} else {
 			this.sourceModelName = null;
 			this.sourceModelExists = false;
