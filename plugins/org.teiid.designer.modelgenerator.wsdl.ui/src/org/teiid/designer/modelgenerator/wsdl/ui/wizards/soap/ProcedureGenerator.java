@@ -42,8 +42,8 @@ public class ProcedureGenerator implements SqlConstants {
 	private static final String TABLE_EXEC = "TABLE(EXEC "; //$NON-NLS-1$
 	private static final String XMI_EXTENSION = ".xmi";  //$NON-NLS-1$
 	private static final String RESULT_LOWER = "result";  //$NON-NLS-1$
-	private static final String INVOKE_SEGMENT_1 = "invoke("; //$NON-NLS-1$
-	private static final String INVOKE_SEGMENT_2 = ", null, REQUEST.xml_out, null))"; //$NON-NLS-1$
+	private static final String INVOKE_SEGMENT_1 = "invoke('"; //$NON-NLS-1$
+	private static final String INVOKE_SEGMENT_2 = "', null, REQUEST.xml_out, null))"; //$NON-NLS-1$
 	private static final String NULL_LOWER = "null";  //$NON-NLS-1$
 
 	private ProcedureInfo requestInfo;
@@ -358,7 +358,7 @@ public class ProcedureGenerator implements SqlConstants {
     	sb.append(getModelNameWithoutExtension(this.importManager.getSourceModelName())).append(DOT);
     	INVOKE_CALL : { 
     		sb.append(FUNCTION_INVOKE);
-    		sb.append(L_PAREN).append("'SOAP11'").append(COMMA).append(SPACE).append(NULL_LOWER).append(COMMA).append(SPACE); //$NON-NLS-1$
+    		sb.append(L_PAREN).append("'").append(this.bindingType).append("'").append(COMMA).append(SPACE).append(NULL_LOWER).append(COMMA).append(SPACE); //$NON-NLS-1$
     		sb.append(REQUEST).append(DOT).append("xml_out").append(COMMA).append(SPACE).append(NULL_LOWER); //$NON-NLS-1$
     		sb.append(R_PAREN);
     	}
