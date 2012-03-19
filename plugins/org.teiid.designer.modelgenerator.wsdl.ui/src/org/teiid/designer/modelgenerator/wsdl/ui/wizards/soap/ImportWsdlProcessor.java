@@ -42,6 +42,7 @@ import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceItem;
 import com.metamatrix.modeler.internal.core.workspace.ModelWorkspaceManager;
+import com.metamatrix.modeler.internal.transformation.util.SqlMappingRootCache;
 import com.metamatrix.modeler.internal.transformation.util.TransformationHelper;
 import com.metamatrix.modeler.internal.transformation.util.TransformationMappingHelper;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
@@ -436,6 +437,8 @@ public class ImportWsdlProcessor {
     	SqlTransformationMappingRoot tRoot = (SqlTransformationMappingRoot)TransformationHelper.getTransformationMappingRoot(procedure);
     	
     	TransformationHelper.setSelectSqlString(tRoot, sqlString, false, this);
+    	
+    	SqlMappingRootCache.setStatus(tRoot, QueryValidator.SELECT_TRNS, null);
 
         TransformationMappingHelper.reconcileMappingsOnSqlChange(tRoot, this);
         

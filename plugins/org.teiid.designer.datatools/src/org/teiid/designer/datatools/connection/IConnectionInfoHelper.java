@@ -47,6 +47,8 @@ public interface IConnectionInfoHelper {
     public abstract Properties getCommonProfileProperties( IConnectionProfile profile );
 
     public abstract Properties getConnectionProperties( ModelResource modelResource ) throws ModelWorkspaceException;
+    
+    public abstract Properties getTranslatorProperties( ModelResource modelResource );
 
     public abstract String getTranslatorName( ModelResource modelResource );
 

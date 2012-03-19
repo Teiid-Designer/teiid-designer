@@ -802,10 +802,6 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 		return schemaLabelProvider.getText(obj);
 	}
 
-	private void setRequestRootPath() {
-		// TODO:
-	}
-
 	public String createResponseColumn() {
 		IStructuredSelection sel = (IStructuredSelection) responseXmlTreeViewer.getSelection();
 		
@@ -864,7 +860,7 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 	private void getParentXpath(SchemaObject child, StringBuilder parentXpath) {
 		List<SimpleRelationship> parents = child.getParents();
 		for (SimpleRelationship parent:parents){
-			parentXpath.append("/").append(parent.getParent().getSimpleName());
+			parentXpath.append("/").append(parent.getParent().getSimpleName()); //$NON-NLS-1$
 		}
 	}
 

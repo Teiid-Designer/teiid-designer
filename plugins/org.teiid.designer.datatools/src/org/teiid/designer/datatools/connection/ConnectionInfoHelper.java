@@ -207,6 +207,27 @@ public class ConnectionInfoHelper implements IConnectionInfoHelper {
     public Properties getProfileProperties( ModelResource modelResource ) throws ModelWorkspaceException {
         return removeNamespaces(getHelper().getProperties(modelResource, CONNECTION_PROFILE_NAMESPACE));
     }
+    
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.teiid.designer.datatools.connection.IConnectionInfoHelper#getTranslatorProperties(com.metamatrix.modeler.core.workspace.ModelResource)
+     */
+    @Override
+    public Properties getTranslatorProperties( ModelResource modelResource ) {
+    	Properties props = null;
+    	
+        try {
+            props = removeNamespaces(getHelper().getProperties(modelResource, TRANSLATOR_NAMESPACE));
+        } catch (Exception e) {
+            DatatoolsPlugin.Util.log(IStatus.ERROR,
+                                     e,
+                                     DatatoolsPlugin.Util.getString("errorFindingConnectionProfilePropertiesForModelResource", //$NON-NLS-1$
+                                                                    modelResource.getItemName()));
+        }
+    	
+        return props;
+    }
 
     @Override
     public String getTranslatorName( ModelResource modelResource ) {

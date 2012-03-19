@@ -18,6 +18,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -34,6 +35,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.URIUtil;
 import org.eclipse.emf.common.util.URI;
@@ -122,9 +124,14 @@ public final class VdbModelEntry extends VdbEntry {
                 final String defaultName = createDefaultJndiName(name);
                 source.set(defaultName);
                 final ModelResource mr = ModelerCore.getModelEditor().findModelResource(model);
-                final String translator = new ConnectionInfoHelper().getTranslatorName(mr);
+                final ConnectionInfoHelper helper = new ConnectionInfoHelper();
+                final String translator = helper.getTranslatorName(mr);
                 this.translator.set(translator == null ? EMPTY_STR : translator);
                 jndiName.set(defaultName);
+                Properties translatorProps = helper.getTranslatorProperties(mr);
+                if( !translatorProps.isEmpty() ) {
+                	updateTranslatorOverrides(translatorProps);
+                }
             }
             // TODO: Backing out the auto-set visibility to FALSE for physical models (Preview won't work)
             // if( ModelUtil.isVirtual(emfModel) ) {
@@ -397,6 +404,65 @@ public final class VdbModelEntry extends VdbEntry {
         this.translator.set(translator);
         getVdb().setModified(this, MODEL_TRANSLATOR, oldTranslator, translator);
     }
+    
+    /**
+     * Returns the current <code>TranslatorOverride</code> for this model
+     * @return translator override. May be null.
+     */
+    public final TranslatorOverride getTranslatorOverride() {
+    	if( this.translator != null ) {
+        	Set<TranslatorOverride> overrides = getVdb().getTranslators();
+        	for( TranslatorOverride to : overrides) {
+        		if( this.translator.toString().equalsIgnoreCase(to.getName()) ) {
+        			return to;
+        		}
+        	}
+    	}
+    	
+    	return null;
+    }
+    
+    
+    /*
+     * Only called by synchronize method or vdb creation. Intent is to update the TO for a given model based on 
+     * injected translator properties.
+     * 
+     * 1) if matching property found, set the new value
+     * 2) if no matching property found, add a new one
+     * 3) No way to tell if an OLD property needs to get removed though
+     */
+    void updateTranslatorOverrides(Properties props) {
+    	TranslatorOverride to = getTranslatorOverride();
+    	String oldTranslator = getTranslator();
+    	if( to == null ) {
+    		String toName = getSourceName() + '_' + getTranslator();
+    		to = new TranslatorOverride(getVdb(), toName, getTranslator(), null);
+    		setTranslator(toName);
+    		getVdb().addTranslator(to, new NullProgressMonitor());
+    	}
+    	
+    	TranslatorOverrideProperty[] toProps = to.getProperties();
+    	
+        Set<Object> keys = props.keySet();
+        for (Object nextKey : keys) {
+        	boolean existing = "name".equals((String)nextKey); //$NON-NLS-1$
+        	// Look through current TO props to see if already defined
+    		for( TranslatorOverrideProperty toProp : toProps ) {
+    			if( toProp.getDefinition().getId().equals((String)nextKey) ) {
+
+    				// This is an override case
+    				toProp.setValue(props.getProperty((String)nextKey));
+    				existing = true;
+    				break;
+    			}
+    		}
+
+    		if( !existing ) {
+    			to.addProperty(new TranslatorOverrideProperty(new TranslatorPropertyDefinition((String) nextKey, "dummy"), props.getProperty((String)nextKey))); //$NON-NLS-1$
+    		}
+    	}
+        getVdb().setModified(this, MODEL_TRANSLATOR, oldTranslator, translator);
+    }
 
     /**
      * @param visible <code>true</code> if the associated model will be directly accessible to users.
@@ -430,8 +496,13 @@ public final class VdbModelEntry extends VdbEntry {
                 final ModelResource mr = ModelerCore.getModelEditor().findModelResource(workspaceFile);
 
                 if (CoreStringUtil.isEmpty(this.translator.get())) {
-                    final String translator = new ConnectionInfoHelper().getTranslatorName(mr);
+                    final ConnectionInfoHelper helper = new ConnectionInfoHelper();
+                    final String translator = helper.getTranslatorName(mr);
                     this.translator.set(translator == null ? EMPTY_STR : translator);
+                    Properties translatorProps = helper.getTranslatorProperties(mr);
+                    if( !translatorProps.isEmpty() ) {
+                    	updateTranslatorOverrides(translatorProps);
+                    }
                 }
             }
 

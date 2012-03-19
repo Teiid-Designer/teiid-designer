@@ -372,6 +372,8 @@ public class WsdlOperationsPanel implements FileUtils.Constants, CoreStringUtil.
 	private void refreshPortNames() {
 		if( this.wsdlModel != null ) {
 			portNameCombo.setItems(this.wsdlModel.getModelablePortNames());
+		} else {
+			portNameCombo.removeAll();
 		}
 	}
 	
@@ -380,9 +382,14 @@ public class WsdlOperationsPanel implements FileUtils.Constants, CoreStringUtil.
 		
 		// TODO: Find the Port from "wsdlModel" and determine it's Binding type (SOAP11 or SOAP12)
 		// Set the value 
-		Port port = this.wsdlModel.getPort(this.portNameCombo.getText());
-		this.importManager.setTranslatorDefaultBinding(port.getBindingType());
-		this.importManager.setEndPoint(port.getLocationURI());
+		if( this.wsdlModel != null ) {
+    		Port port = this.wsdlModel.getPort(this.portNameCombo.getText());
+    		this.importManager.setTranslatorDefaultBinding(port.getBindingType());
+    		this.importManager.setEndPoint(port.getLocationURI());
+		} else {
+    		this.importManager.setTranslatorDefaultBinding(Port.SOAP11);
+    		this.importManager.setEndPoint(null);
+		}
 	}
 	
 	private List<Operation> getSelectedOperations() {
@@ -400,13 +407,17 @@ public class WsdlOperationsPanel implements FileUtils.Constants, CoreStringUtil.
 		// TODO: 
 		String portName = portNameCombo.getText();
 		
-		Operation[] operations = this.wsdlModel.getModelableOperations(portName);
-		this.operationsViewer.setInput(new OperationsContainer(operations));
-		this.operationsViewer.refresh(true);
-		
-		updateImportManager();
-		
-		this.defaultBindingText.setText(importManager.getTranslatorDefaultBinding());
+		if( this.wsdlModel != null ) {
+    		Operation[] operations = this.wsdlModel.getModelableOperations(portName);
+    		this.operationsViewer.setInput(new OperationsContainer(operations));
+    		this.operationsViewer.refresh(true);
+    		
+    		updateImportManager();
+    		
+    		this.defaultBindingText.setText(importManager.getTranslatorDefaultBinding());
+		} else {
+			this.operationsViewer.getTable().clearAll();
+		}
 	}
 
 	public void notifyWsdlChanged() {
@@ -420,6 +431,8 @@ public class WsdlOperationsPanel implements FileUtils.Constants, CoreStringUtil.
 			Shell shell = this.parentComposite.getShell();
 			ErrorDialog.openError(shell, null, Messages.WsdlOperationsPage_dialog_wsdlParseError_title, exStatus);
 			this.panelStatus = exStatus;
+			this.operationsViewer.getTable().clearAll();
+			this.operationsViewer.setInput(new Object());
 		}
 		
 		// Set Port Combo Items

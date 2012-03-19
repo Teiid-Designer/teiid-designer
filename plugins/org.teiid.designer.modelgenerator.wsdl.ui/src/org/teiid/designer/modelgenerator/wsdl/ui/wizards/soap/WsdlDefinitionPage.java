@@ -305,12 +305,10 @@ public class WsdlDefinitionPage extends WizardPage implements Listener, IProfile
 
 				profileWorker.setSelection(profile);
 				importManager.setConnectionProfile(profile);
-				refreshUiFromManager();
-
 				if (profileChanged) {
 					this.wsdlStatus = null;
-					updateValidateWSDLButtonEnablement();
 				}
+				refreshUiFromManager();
 			}
 		}
 		
