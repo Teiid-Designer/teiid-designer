@@ -42,14 +42,14 @@ public class SQLTemplates {
     // ----------------------------------------
     // Templates valid for Procedure Targets
     // ----------------------------------------
-    public static String PROC_INSERT_DEFAULT = "CREATE VIRTUAL PROCEDURE BEGIN " //$NON-NLS-1$
-                                               + "INSERT INTO [TABLEA] ([COL1], [COL2], [COL3]) VALUES ([val1], [val2], [val3]); END"; //$NON-NLS-1$
+    public static String PROC_INSERT_DEFAULT = "FOR EACH ROW BEGIN ATOMIC " //$NON-NLS-1$
+                                               + "INSERT INTO [TABLEA] ([COL1], [COL2], [COL3]) VALUES (NEW.[COL1], NEW.[COL2], NEW.[COL3]); END"; //$NON-NLS-1$
 
-    public static String PROC_UPDATE_DEFAULT = "CREATE VIRTUAL PROCEDURE BEGIN " //$NON-NLS-1$
-                                               + "UPDATE [TABLEA] SET [COL1]=[val1], [COL2]=[val2], [COL3]=[val3] WHERE ([PK-KEY-COL])=[value]; END"; //$NON-NLS-1$
+    public static String PROC_UPDATE_DEFAULT = "FOR EACH ROW BEGIN " //$NON-NLS-1$
+                                               + "UPDATE [TABLEA] SET [COL1]=NEW.[COL1], [COL2]=NEW.[COL2], [COL3]=NEW.[COL3] WHERE [PK-KEY-COL]=OLD.[PK-KEY-COL]; END"; //$NON-NLS-1$
 
-    public static String PROC_DELETE_DEFAULT = "CREATE VIRTUAL PROCEDURE BEGIN " //$NON-NLS-1$
-                                               + "DELETE FROM [TABLEA] WHERE ([PK-KEY COL]) = [value]; END"; //$NON-NLS-1$
+    public static String PROC_DELETE_DEFAULT = "FOR EACH ROW BEGIN " //$NON-NLS-1$
+                                               + "DELETE FROM [TABLEA] WHERE [PK-KEY COL] = OLD.[PK-KEY-COL]; END"; //$NON-NLS-1$
 
     public static String PROC_SOAP_WS_CREATE = "CREATE VIRTUAL PROCEDURE BEGIN " //$NON-NLS-1$
                                                + "SELECT XMLELEMENT(NAME CapitalCity, XMLNAMESPACES(DEFAULT 'http://www.oorsprong.org/websamples.countryinfo'), " //$NON-NLS-1$
