@@ -52,6 +52,7 @@ public class PortImpl extends WSDLElementImpl implements Port {
 		impl.setBinding(getBinding());
 		impl.setBindingTypeURI(getBindingTypeURI());
 		impl.setNamespaceURI(getNamespaceURI());
+		impl.setLocationURI(getLocationURI());
 		return impl;
 	}
 
