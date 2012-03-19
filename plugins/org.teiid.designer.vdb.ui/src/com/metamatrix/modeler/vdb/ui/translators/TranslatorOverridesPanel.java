@@ -810,6 +810,15 @@ public final class TranslatorOverridesPanel extends Composite {
         this.propertiesViewer.refresh();
         WidgetUtil.pack(this.propertiesViewer);
     }
+    
+    /**
+     * Public access to refresh the contents of this panel based on external changes to the translator override
+     * properties
+     */
+    public void refresh() {
+        this.translatorsViewer.setInput(this);
+        this.propertiesViewer.setInput(this);
+    }
 
     class PropertyLabelProvider extends ColumnLabelProvider {
 

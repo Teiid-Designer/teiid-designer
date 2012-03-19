@@ -191,7 +191,8 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
     Action cloneDataRoleAction;
     VdbDataRole selectedDataRole;
     VdbDataRoleResolver dataRoleResolver;
-
+    TranslatorOverridesPanel pnlTranslatorOverrides;
+    
     boolean disposed = false;
 
     private final TextColumnProvider<VdbEntry> descriptionColumnProvider = new TextColumnProvider<VdbEntry>() {
@@ -442,6 +443,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
         }
 
         modelsGroup.getTable().getViewer().refresh();
+        pnlTranslatorOverrides.refresh();
         packModelsGroup();
     }
     
@@ -999,7 +1001,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
             CTabItem translatorOverridesTab = new CTabItem(tabFolder, SWT.NONE);
             translatorOverridesTab.setText(i18n("translatorOverridesTab")); //$NON-NLS-1$
             translatorOverridesTab.setToolTipText(i18n("translatorOverridesTabToolTip")); //$NON-NLS-1$
-            Composite pnlTranslatorOverrides = new TranslatorOverridesPanel(tabFolder, this.vdb);
+            pnlTranslatorOverrides = new TranslatorOverridesPanel(tabFolder, this.vdb);
             translatorOverridesTab.setControl(pnlTranslatorOverrides);
         }
 
@@ -1816,6 +1818,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
 
                 // refresh table from model
                 modelsGroup.getTable().getViewer().refresh();
+                pnlTranslatorOverrides.refresh();
 
                 // pack columns if first time a model is added
                 if (firstTime) {
