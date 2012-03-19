@@ -494,15 +494,16 @@ public final class VdbModelEntry extends VdbEntry {
             final Resource model = findModel();
             if (ModelUtil.isPhysical(model)) {
                 final ModelResource mr = ModelerCore.getModelEditor().findModelResource(workspaceFile);
-
+                final ConnectionInfoHelper helper = new ConnectionInfoHelper();
+                
                 if (CoreStringUtil.isEmpty(this.translator.get())) {
-                    final ConnectionInfoHelper helper = new ConnectionInfoHelper();
                     final String translator = helper.getTranslatorName(mr);
                     this.translator.set(translator == null ? EMPTY_STR : translator);
-                    Properties translatorProps = helper.getTranslatorProperties(mr);
-                    if( !translatorProps.isEmpty() ) {
-                    	updateTranslatorOverrides(translatorProps);
-                    }
+                }
+                
+                Properties translatorProps = helper.getTranslatorProperties(mr);
+                if( !translatorProps.isEmpty() ) {
+                	updateTranslatorOverrides(translatorProps);
                 }
             }
 
