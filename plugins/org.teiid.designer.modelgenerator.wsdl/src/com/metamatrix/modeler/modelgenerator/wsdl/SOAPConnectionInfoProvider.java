@@ -33,6 +33,8 @@ public class SOAPConnectionInfoProvider extends ConnectionInfoHelper implements 
     public static final String DS_WS_SECURITY_CONFIG_NAME = "WsSecurityConfigName"; //$NON-NLS-1$
 
     public static final String SOURCE_ENDPOINT = "EndPoint"; //$NON-NLS-1$
+    public static final String SOAP_SERVICE_MODE = "DefaultServiceMode";  //$NON-NLS-1$
+    public static final String SOAP_BINDING = "DefaultBinding";  //$NON-NLS-1$
 
     /*
      * The Web Services Data Source object contains the following properties
@@ -87,6 +89,12 @@ public class SOAPConnectionInfoProvider extends ConnectionInfoHelper implements 
         getHelper().removeProperties(modelResource, CONNECTION_NAMESPACE);
 
         connectionProps.put(TRANSLATOR_NAMESPACE + TRANSLATOR_NAME_KEY, DataSourceConnectionConstants.Translators.WS);
+        if( props.getProperty(SOAP_SERVICE_MODE) != null) {
+        	connectionProps.put(TRANSLATOR_NAMESPACE + SOAP_SERVICE_MODE, props.getProperty(SOAP_SERVICE_MODE));
+        }
+        if( props.getProperty(SOAP_BINDING) != null) {
+        	connectionProps.put(TRANSLATOR_NAMESPACE + SOAP_BINDING, props.getProperty(SOAP_BINDING));
+        }
         getHelper().setProperties(modelResource, connectionProps);
     }
 

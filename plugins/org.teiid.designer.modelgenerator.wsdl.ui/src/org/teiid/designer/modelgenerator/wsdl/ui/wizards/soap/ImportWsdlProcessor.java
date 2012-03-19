@@ -25,7 +25,6 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
-import org.teiid.designer.datatools.profiles.flatfile.FlatFileConnectionInfoProvider;
 import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
 
 import com.metamatrix.metamodels.relational.Column;
@@ -46,7 +45,9 @@ import com.metamatrix.modeler.internal.core.workspace.ModelWorkspaceManager;
 import com.metamatrix.modeler.internal.transformation.util.TransformationHelper;
 import com.metamatrix.modeler.internal.transformation.util.TransformationMappingHelper;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
+import com.metamatrix.modeler.modelgenerator.wsdl.SOAPConnectionInfoProvider;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Operation;
+import com.metamatrix.modeler.modelgenerator.wsdl.model.Port;
 import com.metamatrix.modeler.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstants;
 import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.wizards.WSDLImportWizardManager;
 import com.metamatrix.modeler.transformation.model.RelationalViewModelFactory;
@@ -203,8 +204,23 @@ public class ImportWsdlProcessor {
     protected void addConnectionProfileInfoToModel(ModelResource sourceModel, IConnectionProfile profile) throws ModelWorkspaceException {
     	// Inject the connection profile info into the model
     	if (profile != null) {
-            IConnectionInfoProvider provider = new FlatFileConnectionInfoProvider();
-            provider.setConnectionInfo(sourceModel, profile);
+    		// Need to add the "EndPoint" property to the connection profile from the Import Manager
+    		String endpoint = this.importManager.getEndPoint();
+    		if( endpoint != null ) {
+    			Properties props = profile.getBaseProperties();
+    			props.put(SOAPConnectionInfoProvider.WSDL_URI_KEY, endpoint);
+    			String defaultServiceMode = this.importManager.getTranslatorDefaultServiceMode();
+    			if( defaultServiceMode.equalsIgnoreCase(WSDLImportWizardManager.MESSAGE ) ) {
+    				props.put(SOAPConnectionInfoProvider.SOAP_SERVICE_MODE, WSDLImportWizardManager.MESSAGE);
+    			}
+    			String defaultBinding = this.importManager.getTranslatorDefaultBinding();
+    			if( defaultBinding.equalsIgnoreCase(Port.SOAP12) ) {
+    				props.put(SOAPConnectionInfoProvider.SOAP_BINDING, Port.SOAP12);
+    			}
+    			profile.setBaseProperties(props);
+                IConnectionInfoProvider provider = new SOAPConnectionInfoProvider();
+                provider.setConnectionInfo(sourceModel, profile);
+    		}
         }
     }
     
