@@ -29,6 +29,10 @@ import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.util.ModelGenerato
 /**
  * WSDL Import Manager - Business Object for interacting with GUI
  */
+/**
+ * @author tejones
+ *
+ */
 public class WSDLImportWizardManager {
 
     public static final int WORKSPACE_SOURCE = 0;
@@ -62,6 +66,8 @@ public class WSDLImportWizardManager {
     private Map<Operation, ProcedureGenerator> procedureGenerators;
     
     private Model wsdlModel;
+    
+    private String endPoint;
     
     private String translatorDefaultBinding = Port.SOAP11;
     private String translatorDefaultServiceMode = PAYLOAD; 
@@ -97,6 +103,24 @@ public class WSDLImportWizardManager {
     public String getWSDLFileUri() {
         return this.wsdlReader.getWSDLUri();
     }
+    
+    /**
+     * Get the endpoint for the selected port
+     * 
+     * @return
+     */
+    public String getEndPoint() {
+		return endPoint;
+	}
+
+	/**
+	 * Set the endpoint for the selected port
+	 * 
+	 * @param endPoint
+	 */
+	public void setEndPoint(String endPoint) {
+		this.endPoint = endPoint;
+	}
 
     /**
      * Validate the current WSDL file
