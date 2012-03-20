@@ -60,6 +60,7 @@ import com.metamatrix.ui.internal.util.WidgetUtil;
 public class ImportWsdlProcessor {
 	public static final RelationalFactory factory = RelationalFactory.eINSTANCE;
 	public static final DatatypeManager datatypeManager = ModelerCore.getWorkspaceDatatypeManager();
+	public static final int DEFAULT_STRING_LENGTH = 4000;
 	
 	WSDLImportWizardManager importManager;
 	ModelResource sourceModel;
@@ -321,7 +322,7 @@ public class ImportWsdlProcessor {
     			parameter.setType(type);
     		}
     		if( columnInfo.getDatatype().equalsIgnoreCase("string")) { //$NON-NLS-1$
-    			parameter.setLength(255);
+    			parameter.setLength(DEFAULT_STRING_LENGTH);
     		}
     		parameter.setProcedure(procedure);
     	}
@@ -375,6 +376,9 @@ public class ImportWsdlProcessor {
         	EObject type = datatypeManager.findDatatype(columnInfo.getDatatype());
         	if( type != null) {
         		column.setType(type);
+        		if( columnInfo.getDatatype().equalsIgnoreCase("string")) { //$NON-NLS-1$
+        			column.setLength(DEFAULT_STRING_LENGTH);
+        		}
         	}
         	addValue(result, column, result.getColumns());
     	}
@@ -407,9 +411,9 @@ public class ImportWsdlProcessor {
     		EObject type = datatypeManager.findDatatype(columnInfo.getDatatype());
     		if( type != null ) {
     			parameter.setType(type);
-    		}
-    		if( columnInfo.getDatatype().equalsIgnoreCase("string")) { //$NON-NLS-1$
-    			parameter.setLength(255);
+        		if( columnInfo.getDatatype().equalsIgnoreCase("string")) { //$NON-NLS-1$
+        			parameter.setLength(DEFAULT_STRING_LENGTH);
+        		}
     		}
     		parameter.setProcedure(procedure);
     	}
@@ -426,6 +430,9 @@ public class ImportWsdlProcessor {
         	EObject type = datatypeManager.findDatatype(columnInfo.getDatatype());
         	if( type != null) {
         		column.setType(type);
+        		if( columnInfo.getDatatype().equalsIgnoreCase("string")) { //$NON-NLS-1$
+        			column.setLength(DEFAULT_STRING_LENGTH);
+        		}
         	}
         	addValue(result, column, result.getColumns());
     	}
