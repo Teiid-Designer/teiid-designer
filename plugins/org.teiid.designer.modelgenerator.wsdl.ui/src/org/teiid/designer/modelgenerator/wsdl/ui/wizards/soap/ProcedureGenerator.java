@@ -7,10 +7,10 @@
 */
 package org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap;
 
-import java.io.ObjectInputStream.GetField;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.osgi.util.NLS;
+import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
 import org.teiid.language.SQLConstants;
 
 import com.metamatrix.metamodels.relational.aspects.validation.RelationalStringNameValidator;
@@ -19,7 +19,6 @@ import com.metamatrix.modeler.internal.transformation.util.SqlConstants;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Operation;
 import com.metamatrix.modeler.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstants;
 import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.wizards.WSDLImportWizardManager;
-import com.metamatrix.modeler.transformation.ui.UiConstants;
 
 /** This class provides state information for the create and extract procedures that will be generated during
  * WSDL import and model/procedure generation
@@ -43,7 +42,7 @@ public class ProcedureGenerator implements SqlConstants {
 	private static final String XMI_EXTENSION = ".xmi";  //$NON-NLS-1$
 	private static final String RESULT_LOWER = "result";  //$NON-NLS-1$
 	private static final String INVOKE_SEGMENT_1 = "invoke('"; //$NON-NLS-1$
-	private static final String INVOKE_SEGMENT_2 = "', null, REQUEST.xml_out, null))"; //$NON-NLS-1$
+	private static final String INVOKE_SEGMENT_2 =  "', null, REQUEST.xml_out, null))"; //$NON-NLS-1$
 	private static final String NULL_LOWER = "null";  //$NON-NLS-1$
 
 	private ProcedureInfo requestInfo;
@@ -56,6 +55,8 @@ public class ProcedureGenerator implements SqlConstants {
 	private boolean overwriteExistingProcedures;
 	
 	private Operation operation;
+	
+	private String soapAction;
 	
 	private String viewModelName;
 	
@@ -77,6 +78,7 @@ public class ProcedureGenerator implements SqlConstants {
 		this.generateWrapperProcedure = true;
 		this.namespaceURI = operation.getBinding().getPort().getNamespaceURI();
 		this.bindingType = operation.getBinding().getPort().getBindingType();
+		this.soapAction = operation.getSOAPAction();
 	}
 
 	public WSDLImportWizardManager getImportManager() {
@@ -129,7 +131,7 @@ public class ProcedureGenerator implements SqlConstants {
 	
 	public String getWrappedProcedureName() {
 		if( this.wrapperProcedureName == null ) {
-			this.wrapperProcedureName = getOperation().getName(); //$NON-NLS-1$
+			this.wrapperProcedureName = getOperation().getName();
 		}
 		return this.wrapperProcedureName;
 	}
@@ -141,6 +143,10 @@ public class ProcedureGenerator implements SqlConstants {
 	
 	public boolean doOverwriteExistingProcedures() {
 		return this.overwriteExistingProcedures;
+	}
+	
+	public String getSoapAction() {
+		return this.soapAction;
 	}
 	
 	public String getNamespaceURI() {
@@ -264,7 +270,7 @@ public class ProcedureGenerator implements SqlConstants {
 	public IStatus getNameStatus(String name) {
 		String result = nameValidator.checkValidName(name);
 		if( result != null ) {
-			return new Status(IStatus.ERROR, PLUGIN_ID, "Invalid name: [" + name + "] Reason: " + result );
+			return new Status(IStatus.ERROR, PLUGIN_ID, NLS.bind(Messages.Error_InvalidName_0_Reason_1, name, result));
 		}
 		
 		return Status.OK_STATUS;
@@ -274,7 +280,7 @@ public class ProcedureGenerator implements SqlConstants {
 		IStatus status = Status.OK_STATUS;
 		// Go through objects and look for problems
 		if( getWrappedProcedureName() == null) {	
-			return new Status(IStatus.ERROR, PLUGIN_ID, "Wrapper procedure name cannot be null or empty");
+			return new Status(IStatus.ERROR, PLUGIN_ID, Messages.Error_WrapperProcedureCannotBeNullOrEmpty);
 		}
 		
 		IStatus nameStatus = getNameStatus(getWrappedProcedureName());
@@ -357,8 +363,12 @@ public class ProcedureGenerator implements SqlConstants {
     	sb.append(TAB2).append(TABLE).append(L_PAREN).append(EXEC).append(SPACE);
     	sb.append(getModelNameWithoutExtension(this.importManager.getSourceModelName())).append(DOT);
     	INVOKE_CALL : { 
+    		String actionStr = NULL_LOWER;
+    		if( actionStr != null ) {
+    			actionStr = S_QUOTE + this.soapAction + S_QUOTE;
+    		}
     		sb.append(FUNCTION_INVOKE);
-    		sb.append(L_PAREN).append("'").append(this.bindingType).append("'").append(COMMA).append(SPACE).append(NULL_LOWER).append(COMMA).append(SPACE); //$NON-NLS-1$
+    		sb.append(L_PAREN).append(S_QUOTE).append(this.bindingType).append(S_QUOTE).append(COMMA).append(SPACE).append(actionStr).append(COMMA).append(SPACE); 
     		sb.append(REQUEST).append(DOT).append("xml_out").append(COMMA).append(SPACE).append(NULL_LOWER); //$NON-NLS-1$
     		sb.append(R_PAREN);
     	}

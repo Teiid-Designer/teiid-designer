@@ -117,6 +117,8 @@ public class Messages  extends NLS {
     public static String Error_Creating_0_Model_1_FromWsdl;
     public static String Error_DeterminingSourceModelHas_0_Procedure;
     public static String Error_DeterminingSourceModelHasMatchingProfile;
+    public static String Error_InvalidName_0_Reason_1;
+    public static String Error_WrapperProcedureCannotBeNullOrEmpty;
     
     public static String ImportWsdlSoapWizard_title;
     public static String ImportWsdlSoapWizard_importErrorMessage;
