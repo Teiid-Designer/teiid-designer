@@ -654,4 +654,8 @@ public class WsdlDefinitionPage extends WizardPage implements Listener, IProfile
 			setPageStatus();
 		}
 	}
+    
+    public void updateDesignerProperties() {
+    	
+    }
 }

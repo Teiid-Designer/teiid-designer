@@ -827,7 +827,12 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 			setPageStatus();
 		}
 		super.setVisible(isVisible);
+		this.wrapperPanel.setVisible();
 	}
+    
+    public void updateDesignerProperties() {
+
+    }
 
 	Object[] getNodeChildren(Object element) {
 		return new Object[0];

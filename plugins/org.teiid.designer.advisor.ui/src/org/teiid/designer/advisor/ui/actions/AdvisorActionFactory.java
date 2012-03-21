@@ -470,7 +470,7 @@ public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChange
 		}
 		
 		if( id.equalsIgnoreCase(COMMAND_IDS.PREVIEW_DATA)) {
-			PreviewDataAction action = new PreviewDataAction();
+			PreviewDataAction action = new PreviewDataAction(properties);
 			action.run();
 	        return;
 		}

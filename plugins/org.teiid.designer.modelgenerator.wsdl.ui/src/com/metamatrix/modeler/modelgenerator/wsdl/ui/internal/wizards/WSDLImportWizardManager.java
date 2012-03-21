@@ -12,6 +12,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -71,6 +72,8 @@ public class WSDLImportWizardManager {
     
     private String translatorDefaultBinding = Port.SOAP11;
     private String translatorDefaultServiceMode = PAYLOAD; 
+    
+    private Properties designerProperties;
 
     // /////////////////////////////////////////////////////////////////////////////////////////////
     // CONSTRUCTOR
@@ -356,5 +359,15 @@ public class WSDLImportWizardManager {
 		this.translatorDefaultServiceMode = translatorDefaultServiceMode;
 	}
 
-	
+    public void setDesignerProperties(Properties props) {
+    	this.designerProperties = props;
+    }
+    
+    public Properties getDesignerProperties() {
+    	return this.designerProperties;
+    }
+    
+    public void setDesignerProperty(String key, String value) {
+    	this.designerProperties.put(key, value);
+    }
 }

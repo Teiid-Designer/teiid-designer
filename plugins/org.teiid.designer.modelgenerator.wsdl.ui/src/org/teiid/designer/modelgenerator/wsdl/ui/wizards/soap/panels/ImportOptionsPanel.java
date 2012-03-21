@@ -41,6 +41,7 @@ import com.metamatrix.modeler.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstan
 import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.util.ModelGeneratorWsdlUiUtil;
 import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.wizards.WSDLImportWizardManager;
 import com.metamatrix.modeler.transformation.ui.wizards.file.FlatFileRelationalModelFactory;
+import com.metamatrix.modeler.ui.viewsupport.IPropertiesContext;
 import com.metamatrix.modeler.ui.viewsupport.ModelingResourceFilter;
 import com.metamatrix.ui.internal.util.WidgetFactory;
 import com.metamatrix.ui.internal.util.WidgetUtil;
@@ -423,6 +424,7 @@ public class ImportOptionsPanel implements ModelGeneratorWsdlUiConstants {
 			setCurrentStatus(IStatus.OK, Messages.Status_AllOkClickNextToDefineProcedures);
 		}
 		
+		updateDesignerProperties();
 	}
 	
 	public void setCurrentStatus(int severity, String message) {
@@ -510,4 +512,18 @@ public class ImportOptionsPanel implements ModelGeneratorWsdlUiConstants {
 
 		return false;
 	}
+	
+    private void updateDesignerProperties() {
+    	if( this.currentStatus.isOK() ) {
+    		if( this.sourceModelFileText.getText() != null ) {
+    			this.importManager.setDesignerProperty(IPropertiesContext.KEY_LAST_SOURCE_MODEL_NAME, this.sourceModelFileText.getText());
+    		}
+    		if( this.importManager.getSourceModelLocation() != null ) {
+    			this.importManager.setDesignerProperty(IPropertiesContext.KEY_PROJECT_NAME, this.importManager.getSourceModelLocation().getProject().getName());
+    		}
+    		if( this.viewModelFileText.getText() != null ) {
+    			this.importManager.setDesignerProperty(IPropertiesContext.KEY_LAST_VIEW_MODEL_NAME, this.viewModelFileText.getText());
+    		}
+    	}
+    }
 }

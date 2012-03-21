@@ -27,6 +27,7 @@ import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.OperationsDetailsP
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Operation;
 import com.metamatrix.modeler.transformation.ui.editors.sqleditor.SqlTextViewer;
+import com.metamatrix.modeler.ui.viewsupport.IPropertiesContext;
 import com.metamatrix.ui.graphics.ColorManager;
 import com.metamatrix.ui.internal.util.WidgetFactory;
 import com.metamatrix.ui.internal.util.WidgetUtil;
@@ -108,9 +109,24 @@ public class WrapperProcedurePanel {
 
 	private void validate() {
 		this.detailsPage.updateStatus();
+		updateDesignerProperties();
 	}
 
 	public IStatus getStatus() {
 		return this.status;
+	}
+	
+	private void updateDesignerProperties() {
+    	
+		if( this.detailsPage.getProcedureGenerator().getWrappedProcedureName() != null ) {
+			this.detailsPage.getImportManager().setDesignerProperty(IPropertiesContext.KEY_PREVIEW_TARGET_OBJECT, 
+				this.detailsPage.getProcedureGenerator().getWrappedProcedureName());
+			this.detailsPage.getImportManager().setDesignerProperty(IPropertiesContext.KEY_PREVIEW_TARGET_MODEL, 
+				this.detailsPage.getImportManager().getViewModelName());
+		}
+	}
+	
+	public void setVisible() {
+		validate();
 	}
 }

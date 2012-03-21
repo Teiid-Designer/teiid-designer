@@ -10,6 +10,8 @@ package org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Rectangle;
@@ -82,6 +84,20 @@ public class ModelDefinitionPage extends AbstractWizardPage implements
 		GridLayout layout = new GridLayout(COLUMNS, false);
 		pnlMain.setLayout(layout);
 		setControl(pnlMain);
+		pnlMain.addControlListener(new ControlListener() {
+			
+			@Override
+			public void controlResized(ControlEvent e) {
+				System.out.println("XXXXX"); //$NON-NLS-1$
+				
+			}
+			
+			@Override
+			public void controlMoved(ControlEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
 
 		MODEL_DEFINITION: {
 			// Defines Location and Name values for source and view models
@@ -262,7 +278,11 @@ public class ModelDefinitionPage extends AbstractWizardPage implements
 			this.generateDefaultProceduresButton.setSelection(this.importManager.doGenerateDefaultProcedures());
 			this.generateCustomProceduresButton.setSelection(! this.importManager.doGenerateDefaultProcedures());
 			setPageStatus();
+			//getControl().pack(true);
 		}
-		
 	}
+
+    public void updateDesignerProperties() {
+    	
+    }
 }

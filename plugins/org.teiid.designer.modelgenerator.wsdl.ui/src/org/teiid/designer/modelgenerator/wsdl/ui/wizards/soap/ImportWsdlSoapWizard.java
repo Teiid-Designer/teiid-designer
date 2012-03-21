@@ -68,9 +68,6 @@ public class ImportWsdlSoapWizard extends AbstractWizard implements IImportWizar
     private WizardPage modelDefinitionPage;
 
     private IStructuredSelection selection;
-    
-    // Cheat-sheet and action set properties
-    private Properties designerProperties;
 
     /**
      * Creates a wizard for generating relational entities from WSDL source.
@@ -255,20 +252,20 @@ public class ImportWsdlSoapWizard extends AbstractWizard implements IImportWizar
     
     @Override
     public void setProperties(Properties props) {
-    	this.designerProperties = props;
+    	this.importManager.setDesignerProperties(props);
     }
 
     protected void updateForProperties() {
-    	if( this.designerProperties == null ) {
+    	if( this.importManager.getDesignerProperties() == null ) {
     		return;
     	}
     	
     	if( this.importManager.getSourceModelLocation() == null) {
     		// check for project property and if sources folder property exists
-    		String projectName = this.designerProperties.getProperty(IPropertiesContext.KEY_PROJECT_NAME);
+    		String projectName = this.importManager.getDesignerProperties().getProperty(IPropertiesContext.KEY_PROJECT_NAME);
     		if( projectName != null && !projectName.isEmpty() ) {
     			String folderName = projectName;
-    			String sourcesFolder = this.designerProperties.getProperty(IPropertiesContext.KEY_HAS_SOURCES_FOLDER);
+    			String sourcesFolder = this.importManager.getDesignerProperties().getProperty(IPropertiesContext.KEY_HAS_SOURCES_FOLDER);
     			if( sourcesFolder != null && !sourcesFolder.isEmpty() ) {
     				folderName = new Path(projectName).append(sourcesFolder).toString();
     			}
@@ -277,7 +274,7 @@ public class ImportWsdlSoapWizard extends AbstractWizard implements IImportWizar
     				this.importManager.setSourceModelLocation((IContainer)srcResource);
     			}
     			
-    			String viewsFolder = this.designerProperties.getProperty(IPropertiesContext.KEY_HAS_VIEWS_FOLDER);
+    			String viewsFolder = this.importManager.getDesignerProperties().getProperty(IPropertiesContext.KEY_HAS_VIEWS_FOLDER);
     			if( viewsFolder != null && !viewsFolder.isEmpty() ) {
     				folderName = new Path(projectName).append(viewsFolder).toString();
     			}
@@ -290,7 +287,7 @@ public class ImportWsdlSoapWizard extends AbstractWizard implements IImportWizar
     	
     	if( this.importManager.getConnectionProfile() == null ) {
     		// check for project property and if sources folder property exists
-    		String profileName = this.designerProperties.getProperty(IPropertiesContext.KEY_LAST_CONNECTION_PROFILE_ID);
+    		String profileName = this.importManager.getDesignerProperties().getProperty(IPropertiesContext.KEY_LAST_CONNECTION_PROFILE_ID);
     		if( profileName != null && !profileName.isEmpty() ) {
     			// Select profile
     			selectWsdlPage.selectConnectionProfile(profileName);
