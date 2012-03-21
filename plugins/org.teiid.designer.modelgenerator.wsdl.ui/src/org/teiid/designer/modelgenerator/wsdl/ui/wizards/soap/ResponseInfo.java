@@ -11,6 +11,7 @@ import java.util.Properties;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
 
 import com.metamatrix.core.util.StringUtilities;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Operation;
@@ -30,7 +31,7 @@ public class ResponseInfo extends ProcedureInfo {
 		// Go through objects and look for problems
 		if (getProcedureName() == null) {
 			return new Status(IStatus.ERROR, ProcedureGenerator.PLUGIN_ID,
-					"Request procedure name cannot be null or empty");
+					Messages.Error_ResponseProcedureNameCannotBeNullOrEmpty);
 		}
 
 		IStatus nameStatus = getGenerator().getNameStatus(getProcedureName());
@@ -156,7 +157,7 @@ public class ResponseInfo extends ProcedureInfo {
 				String relPath = columnInfo.getRelativePath();
 				if (relPath != null && relPath.length() > 1) {
 					//Strip out default namespace prefix
-					relPath = relPath.replace(this.defaultNSPrefix+":", StringUtilities.EMPTY_STRING);
+					relPath = relPath.replace(this.defaultNSPrefix + COLON, StringUtilities.EMPTY_STRING);
 					sb.append(SPACE).append(PATH).append(SPACE).append(S_QUOTE)
 							.append(relPath).append(S_QUOTE);
 				}

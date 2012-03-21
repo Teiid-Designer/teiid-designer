@@ -11,6 +11,7 @@ import java.util.Properties;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
 
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Operation;
 
@@ -35,7 +36,8 @@ public class RequestInfo extends ProcedureInfo {
 		IStatus status = Status.OK_STATUS;
 		// Go through objects and look for problems
 		if( getProcedureName() == null) {	
-			return new Status(IStatus.ERROR, ProcedureGenerator.PLUGIN_ID, "Request procedure name cannot be null or empty");
+			return new Status(IStatus.ERROR, ProcedureGenerator.PLUGIN_ID, 
+				Messages.Error_RequestProcedureNameCannotBeNullOrEmpty);
 		}
 		
 		IStatus nameStatus = getGenerator().getNameStatus(getProcedureName());
@@ -97,11 +99,15 @@ public class RequestInfo extends ProcedureInfo {
 	    	sb.append(getGenerator().convertSqlNameSegment(getOperation().getName())).append(COMMA).append(SPACE);
 	    	String nsString = getNamespaceString();
 	    	if( nsString != null && !nsString.isEmpty() ) {
-	    		sb.append(nsString).append(COMMA).append(SPACE);
+	    		sb.append(nsString);
 	    	}
-	    	sb.append(RETURN);
-	    	// EXAMPLE:       XMLELEMENT(NAME FromCurrency, CurrencyConvertorView.request_ConversionRate.FromCurrency)
 	    	int nColumns = getColumnInfoList().length;
+	    	if( nColumns > 0 ) {
+	    		sb.append(COMMA);
+	    	}
+	    	sb.append(SPACE).append(RETURN);
+	    	// EXAMPLE:       XMLELEMENT(NAME FromCurrency, CurrencyConvertorView.request_ConversionRate.FromCurrency)
+	    	
 	    	for( ColumnInfo columnInfo : getColumnInfoList()) {
 	    		String name = columnInfo.getName();
 	    		sb.append(TAB).append(TAB).append(TAB).append(XMLELEMENT);

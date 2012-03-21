@@ -435,7 +435,10 @@ public final class VdbModelEntry extends VdbEntry {
     	TranslatorOverride to = getTranslatorOverride();
     	String oldTranslator = getTranslator();
     	if( to == null ) {
-    		String toName = getSourceName() + '_' + getTranslator();
+    		String toName = null;
+    		if( !getTranslator().startsWith(getSourceName()) ) {
+    			toName = getSourceName() + '_' + getTranslator();
+    		}
     		to = new TranslatorOverride(getVdb(), toName, getTranslator(), null);
     		setTranslator(toName);
     		getVdb().addTranslator(to, new NullProgressMonitor());

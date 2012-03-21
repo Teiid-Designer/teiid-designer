@@ -9,11 +9,15 @@ package org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
+import java.util.Properties;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
@@ -43,10 +47,11 @@ import com.metamatrix.modeler.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstan
 import com.metamatrix.modeler.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiPlugin;
 import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.wizards.WSDLImportWizardManager;
 import com.metamatrix.modeler.schema.tools.processing.SchemaProcessingException;
+import com.metamatrix.modeler.ui.viewsupport.IPropertiesContext;
 import com.metamatrix.ui.internal.util.UiUtil;
 import com.metamatrix.ui.internal.wizard.AbstractWizard;
 
-public class ImportWsdlSoapWizard extends AbstractWizard implements IImportWizard {
+public class ImportWsdlSoapWizard extends AbstractWizard implements IImportWizard, IPropertiesContext {
 
     private static final String TITLE = Messages.ImportWsdlSoapWizard_title;
     private static final ImageDescriptor IMAGE = ModelGeneratorWsdlUiPlugin.getDefault().getImageDescriptor(Images.IMPORT_WSDL_ICON);
@@ -55,17 +60,17 @@ public class ImportWsdlSoapWizard extends AbstractWizard implements IImportWizar
     private WSDLImportWizardManager importManager = new WSDLImportWizardManager();;
 
     /** The page where the WSDL source file and Relational target model are selected. */
-    private WizardPage selectWsdlPage;
+    private WsdlDefinitionPage selectWsdlPage;
     
     /** The page where the user provides details to the generated create and extract procedures */
     private WizardPage operationsDetailsPage;
     
     private WizardPage modelDefinitionPage;
-    
-//    /** The page where the user provides simple details to the default generated procedures */
-//    private WizardPage defaultProceduresDetailsPage;
 
     private IStructuredSelection selection;
+    
+    // Cheat-sheet and action set properties
+    private Properties designerProperties;
 
     /**
      * Creates a wizard for generating relational entities from WSDL source.
@@ -80,6 +85,7 @@ public class ImportWsdlSoapWizard extends AbstractWizard implements IImportWizar
     @Override
     public void createPageControls( Composite pageContainer ) {
         super.createPageControls(pageContainer);
+        updateForProperties();
     }
 
     /**
@@ -133,11 +139,6 @@ public class ImportWsdlSoapWizard extends AbstractWizard implements IImportWizar
         	this.operationsDetailsPage.setPageComplete(false);
         	addPage(this.operationsDetailsPage);
         }
-        
-//        OPERATIONS_DETAILS_PAGE : {
-//        	this.defaultProceduresDetailsPage = new DefaultProceduresDetailsPage(this.importManager);
-//        	this.defaultProceduresDetailsPage.setPageComplete(false);
-//        }
 
         // give the WSDL selection page the current workspace selection
         ((WsdlDefinitionPage)this.selectWsdlPage).setInitialSelection(theSelection);
@@ -249,6 +250,51 @@ public class ImportWsdlSoapWizard extends AbstractWizard implements IImportWizar
     		removePage(this.operationsDetailsPage);
     	} else {
     		addPage(this.operationsDetailsPage);
+    	}
+    }
+    
+    @Override
+    public void setProperties(Properties props) {
+    	this.designerProperties = props;
+    }
+
+    protected void updateForProperties() {
+    	if( this.designerProperties == null ) {
+    		return;
+    	}
+    	
+    	if( this.importManager.getSourceModelLocation() == null) {
+    		// check for project property and if sources folder property exists
+    		String projectName = this.designerProperties.getProperty(IPropertiesContext.KEY_PROJECT_NAME);
+    		if( projectName != null && !projectName.isEmpty() ) {
+    			String folderName = projectName;
+    			String sourcesFolder = this.designerProperties.getProperty(IPropertiesContext.KEY_HAS_SOURCES_FOLDER);
+    			if( sourcesFolder != null && !sourcesFolder.isEmpty() ) {
+    				folderName = new Path(projectName).append(sourcesFolder).toString();
+    			}
+    			final IResource srcResource = ResourcesPlugin.getWorkspace().getRoot().findMember(folderName);
+    			if( srcResource != null ) {
+    				this.importManager.setSourceModelLocation((IContainer)srcResource);
+    			}
+    			
+    			String viewsFolder = this.designerProperties.getProperty(IPropertiesContext.KEY_HAS_VIEWS_FOLDER);
+    			if( viewsFolder != null && !viewsFolder.isEmpty() ) {
+    				folderName = new Path(projectName).append(viewsFolder).toString();
+    			}
+    			final IResource viewResource = ResourcesPlugin.getWorkspace().getRoot().findMember(folderName);
+    			if( viewResource != null ) {
+    				this.importManager.setViewModelLocation((IContainer)viewResource);
+    			}
+    		}
+    	}
+    	
+    	if( this.importManager.getConnectionProfile() == null ) {
+    		// check for project property and if sources folder property exists
+    		String profileName = this.designerProperties.getProperty(IPropertiesContext.KEY_LAST_CONNECTION_PROFILE_ID);
+    		if( profileName != null && !profileName.isEmpty() ) {
+    			// Select profile
+    			selectWsdlPage.selectConnectionProfile(profileName);
+    		}
     	}
     }
 }

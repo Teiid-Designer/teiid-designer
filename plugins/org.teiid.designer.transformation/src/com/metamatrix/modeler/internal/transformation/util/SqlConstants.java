@@ -31,6 +31,7 @@ public interface SqlConstants {
     public static final char R_PAREN = ')';
     public static final char S_QUOTE = '\'';
     public static final char SEMI_COLON = ';';
+    public static final char COLON = ':';
     public static final String AS = "AS"; //$NON-NLS-1$
     public static final String COLUMNS = "COLUMNS"; //$NON-NLS-1$
     public static final String BEGIN = "BEGIN"; //$NON-NLS-1$

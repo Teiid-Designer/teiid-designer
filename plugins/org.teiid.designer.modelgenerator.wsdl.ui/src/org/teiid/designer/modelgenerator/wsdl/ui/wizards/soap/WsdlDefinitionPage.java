@@ -495,7 +495,7 @@ public class WsdlDefinitionPage extends WizardPage implements Listener, IProfile
 		resetCPComboItems();
 
 		selectConnectionProfile(profile.getName());
-
+		
 		importManager.setConnectionProfile(profile);
 
 		setPageStatus();
@@ -612,7 +612,7 @@ public class WsdlDefinitionPage extends WizardPage implements Listener, IProfile
 		}
 	}
 
-	void selectConnectionProfile(String name) {
+	public void selectConnectionProfile(String name) {
 		if (name == null) {
 			return;
 		}
@@ -630,6 +630,9 @@ public class WsdlDefinitionPage extends WizardPage implements Listener, IProfile
 		}
 		if (cpIndex > -1) {
 			connectionProfilesCombo.select(cpIndex);
+			IConnectionProfile profile = profileWorker.getProfile(connectionProfilesCombo.getText());
+			this.profileWorker.setSelection(profile);
+			this.importManager.setConnectionProfile(profile);
 		}
 
 		refreshUiFromManager();
@@ -639,12 +642,16 @@ public class WsdlDefinitionPage extends WizardPage implements Listener, IProfile
 		super.setVisible(visible);
 
 		if (visible) {
-//			if (this.connectionProfilesCombo.getItemCount() > 0) {
-//				this.connectionProfilesCombo.select(0);
-//				handleConnectionProfileSelected();
-//			}
+			if (this.connectionProfilesCombo.getItemCount() > 0 ) {
+				if(this.connectionProfilesCombo.getSelectionIndex() < 0 ) {
+					this.connectionProfilesCombo.select(0);
+				}
+				handleConnectionProfileSelected();
+			} 
 
 			refreshUiFromManager();
+			
+			setPageStatus();
 		}
 	}
 }

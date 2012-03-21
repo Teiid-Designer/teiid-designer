@@ -280,7 +280,7 @@ public class ProcedureGenerator implements SqlConstants {
 		IStatus status = Status.OK_STATUS;
 		// Go through objects and look for problems
 		if( getWrappedProcedureName() == null) {	
-			return new Status(IStatus.ERROR, PLUGIN_ID, Messages.Error_WrapperProcedureCannotBeNullOrEmpty);
+			return new Status(IStatus.ERROR, PLUGIN_ID, Messages.Error_WrapperProcedureNameCannotBeNullOrEmpty);
 		}
 		
 		IStatus nameStatus = getNameStatus(getWrappedProcedureName());
