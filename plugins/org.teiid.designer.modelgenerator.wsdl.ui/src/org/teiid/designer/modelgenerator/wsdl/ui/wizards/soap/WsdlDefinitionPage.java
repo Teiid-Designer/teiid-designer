@@ -171,9 +171,9 @@ public class WsdlDefinitionPage extends WizardPage implements Listener, IProfile
 				this.buttonValidateWSDL.setEnabled(false);
 			}
 		}
-		if( this.operationsPanel != null ) {
-			this.operationsPanel.notifyWsdlChanged();
-		}
+//		if( this.operationsPanel != null ) {
+//			this.operationsPanel.notifyWsdlChanged();
+//		}
 	}
 
 	/**
@@ -309,6 +309,8 @@ public class WsdlDefinitionPage extends WizardPage implements Listener, IProfile
 					this.wsdlStatus = null;
 				}
 				refreshUiFromManager();
+				
+				this.operationsPanel.notifyWsdlChanged();
 			}
 		}
 		
@@ -486,6 +488,7 @@ public class WsdlDefinitionPage extends WizardPage implements Listener, IProfile
 			wsdlURIText.setText(props.getProperty(WSDL_URI_PROP_KEY));
 			importManager.setWSDLFileUri(props.getProperty(WSDL_URI_PROP_KEY));
 			updateWidgetEnablements();
+			
 		}
 
 		synchronizing = false;
@@ -636,6 +639,8 @@ public class WsdlDefinitionPage extends WizardPage implements Listener, IProfile
 		}
 
 		refreshUiFromManager();
+		
+		this.operationsPanel.notifyWsdlChanged();
 	}
 
 	public void setVisible(boolean visible) {
@@ -643,8 +648,12 @@ public class WsdlDefinitionPage extends WizardPage implements Listener, IProfile
 
 		if (visible) {
 			if (this.connectionProfilesCombo.getItemCount() > 0 ) {
-				if(this.connectionProfilesCombo.getSelectionIndex() < 0 ) {
-					this.connectionProfilesCombo.select(0);
+				if( this.importManager.getConnectionProfile() != null ) {
+					selectConnectionProfile(this.importManager.getConnectionProfile().getName());
+				} else {
+    				if(this.connectionProfilesCombo.getSelectionIndex() < 0 ) {
+    					this.connectionProfilesCombo.select(0);
+    				}
 				}
 				handleConnectionProfileSelected();
 			} 
@@ -654,8 +663,4 @@ public class WsdlDefinitionPage extends WizardPage implements Listener, IProfile
 			setPageStatus();
 		}
 	}
-    
-    public void updateDesignerProperties() {
-    	
-    }
 }
