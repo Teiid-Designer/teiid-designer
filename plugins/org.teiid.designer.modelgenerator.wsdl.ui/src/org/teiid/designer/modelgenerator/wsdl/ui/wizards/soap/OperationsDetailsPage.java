@@ -8,9 +8,7 @@
 package org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 
 import org.eclipse.core.runtime.IStatus;
@@ -24,6 +22,8 @@ import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.TextViewer;
 import org.eclipse.jface.text.source.VerticalRuler;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
@@ -63,7 +63,6 @@ import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.panels.WrapperProc
 
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.core.types.DatatypeConstants;
-import com.metamatrix.modeler.modelgenerator.wsdl.model.Message;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Model;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.ModelGenerationException;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Operation;
@@ -371,11 +370,22 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 
 					}
 				});
+		
+		this.requestXmlTreeViewer.addDoubleClickListener(new IDoubleClickListener() {
+			
+			@Override
+			public void doubleClick(DoubleClickEvent event) {
+				IStructuredSelection selection = (IStructuredSelection)event.getSelection();
+				if( selection != null && !selection.isEmpty() && selection.getFirstElement() instanceof XSDParticleImpl ) {
+					createRequestColumn();
+				}
+			}
+		});
 
 		this.requestCreateElementAction = new Action(Messages.AddAsNewElement) {
 			@Override
 			public void run() {
-				createRequestColumn();
+				
 			}
 		};
 	}
@@ -516,6 +526,16 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 
 					}
 				});
+		this.responseXmlTreeViewer.addDoubleClickListener(new IDoubleClickListener() {
+			
+			@Override
+			public void doubleClick(DoubleClickEvent event) {
+				IStructuredSelection selection = (IStructuredSelection)event.getSelection();
+				if( selection != null && !selection.isEmpty() && selection.getFirstElement() instanceof XSDParticleImpl ) {
+					createResponseColumn();
+				}
+			}
+		});
 
 		this.responseCreateElementAction = new Action(Messages.AddAsNewElement) {
 			@Override
