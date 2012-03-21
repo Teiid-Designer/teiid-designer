@@ -65,6 +65,7 @@ public interface UiConstants {
         String TABLE_WARNING_ICON = OBJ16 + "relational-table-warning.png"; //$NON-NLS-1$
         String NEW_TABLE_ICON = OBJ16 + "new-relational-table.png"; //$NON-NLS-1$
         String VIRTUAL_TABLE_ICON = OBJ16 + "virtual-relational-table.png"; //$NON-NLS-1$
+        String NEW_VIRTUAL_TABLE_ICON = OBJ16 + "new-view-table.png"; //$NON-NLS-1$
         String VIRTUAL_TABLE_ERROR_ICON = OBJ16 + "virtual-relational-table-error.png"; //$NON-NLS-1$
         String VIRTUAL_TABLE_WARNING_ICON = OBJ16 + "virtual-relational-table-warning.png"; //$NON-NLS-1$
         String PROCEDURE_ICON = OBJ16 + "relational-procedure.png"; //$NON-NLS-1$
