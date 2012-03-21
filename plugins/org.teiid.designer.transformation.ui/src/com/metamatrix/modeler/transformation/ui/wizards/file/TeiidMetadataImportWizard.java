@@ -78,13 +78,14 @@ public class TeiidMetadataImportWizard extends AbstractWizard implements
 	@Override
 	public void init(IWorkbench workbench, IStructuredSelection inputSelection) {
         
-		IStructuredSelection finalSelection = inputSelection;
-        if( (finalSelection == null | finalSelection.isEmpty()) || !ModelerUiViewUtils.workspaceHasOpenModelProjects() ) {
-        	IProject newProject = ModelerUiViewUtils.queryUserToCreateModelProject();
-        	
-        	if( newProject != null ) {
-        		finalSelection = new StructuredSelection(newProject);
-        	}
+        IStructuredSelection finalSelection = inputSelection;
+        // Request User to Create a Model Project - if none open in the workspace.
+        if (!ModelerUiViewUtils.workspaceHasOpenModelProjects()) {
+            IProject newProject = ModelerUiViewUtils.queryUserToCreateModelProject();
+
+            if (newProject != null) {
+                finalSelection = new StructuredSelection(newProject);
+            }
         }
 		
         Object seletedObj = finalSelection.getFirstElement();
