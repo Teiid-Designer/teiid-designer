@@ -9,13 +9,19 @@ package org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
+import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.xsd.XSDComplexTypeDefinition;
 import org.eclipse.xsd.XSDParticle;
 
 public class SchemaTreeContentProvider extends AdapterFactoryContentProvider {
+	
+	private static final Class<?> IStructuredItemContentProviderClass = IStructuredItemContentProvider.class;
 
 	public SchemaTreeContentProvider(AdapterFactory adapterFactory) {
 		super(adapterFactory);
@@ -40,7 +46,13 @@ public class SchemaTreeContentProvider extends AdapterFactoryContentProvider {
 
 	@Override
 	  public Object [] getElements(Object object) {
-		Object[] result = super.getElements(object);
+		List elementList = (ArrayList)object;
+		Object[] result = new Object[elementList.size()];
+		int i = 0;
+		for (Object obj:elementList){
+			result[i++]=obj;
+		}
+		
 		Collection<Object> filteredElements = new ArrayList<Object>();
 		
 		for( Object child : result ) {
@@ -53,9 +65,12 @@ public class SchemaTreeContentProvider extends AdapterFactoryContentProvider {
 	  }
 	
 	
+	
+	
 	private boolean showObject(Object object) {
 		if( object instanceof XSDComplexTypeDefinition ) {
-			if( ((XSDComplexTypeDefinition)object).getName().toUpperCase().equals("ANYTYPE") ) { //$NON-NLS-1$
+			String name = ((XSDComplexTypeDefinition)object).getName();
+			if(name !=null && "ANYTYPE".equals(name.toUpperCase())) { //$NON-NLS-1$
 				return false;
 			}
 		}
