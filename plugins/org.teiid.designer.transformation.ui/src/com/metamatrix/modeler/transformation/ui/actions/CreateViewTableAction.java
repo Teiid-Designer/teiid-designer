@@ -51,7 +51,7 @@ public class CreateViewTableAction extends Action implements INewChildAction, IN
 	 
 	public CreateViewTableAction() {
 		super(TITLE);
-		setImageDescriptor(UiPlugin.getDefault().getImageDescriptor( UiConstants.Images.NEW_TABLE_ICON));
+		setImageDescriptor(UiPlugin.getDefault().getImageDescriptor( UiConstants.Images.NEW_VIRTUAL_TABLE_ICON));
 		
 		Set<String> unsortedDatatypes = DataTypeManager.getAllDataTypeNames();
 		datatypes = new ArrayList<String>();
