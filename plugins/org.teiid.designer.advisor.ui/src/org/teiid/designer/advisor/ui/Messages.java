@@ -41,6 +41,8 @@ public class Messages  extends NLS {
     public static String CreateNewModelExtensionDefinition_Short;
     public static String CreateNewRelationalBaseTable;
     public static String CreateNewRelationalBaseTable_Short;
+    public static String CreateNewRelationalViewTable;
+    public static String CreateNewRelationalViewTable_Short;
     public static String CreateNewRelationalSourceFunction;
     public static String CreateNewRelationalSourceFunction_Short;
     public static String CreateNewRelationalSourceModel;

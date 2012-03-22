@@ -14,42 +14,55 @@
 		</description>
    </intro>
 
-   <item
-         title="Create View Model" skip="true">
-      <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
-			pluginId="org.teiid.designer.advisor.ui" param1="org.teiid.designer.newModelRelationalViewCommand"/>
-      <description>
-         <b> This following action creates an empty view model.</b>
-			<br/> ============================================================
-			<br/> -- > Press "<b>Click to Perform</b>" button below to create a view model.
-			<br/> -- >  
-			<br/> -- > You may skip this step if you have already created your view model.
-			<br/> ============================================================
-      </description>
+   <item title="Create Relational View Model" skip="true">
+        <description>
+            <b> The following action creates a new Relational View Model.</b>
+        </description>
+         <subitem label="Launch New Model Wizard" skip="true">
+                <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
+            pluginId="org.teiid.designer.advisor.ui" 
+            param1="org.teiid.designer.newModelRelationalViewCommand"/>
+        </subitem>
+        <subitem skip="true" >
+          <description>
+                      <b>1)</b> Specify a unique model name.
+                <br/> <b>2)</b> Click <b>Finish</b> 
+          </description>
+      </subitem>
    </item>
-   <item
-         title="Create View Table" skip="true">
-      <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
-			pluginId="org.teiid.designer.advisor.ui" 
-			param1="org.teiid.designer.new.relational.basetable"/>
-      <description>
-         <b> This following action creates</b>
-			<br/> ============================================================
-			<br/> -- > Press "<b>Click to Perform</b>" button below to create a view table.
-			<br/> -- >  
-			<br/> -- > You may skip this step if you have already created a view table.
-			<br/> ============================================================
-      </description>
+   
+   <item title="Create View Table" skip="true">
+        <description>
+            <b> The following action creates a new View Table in the Relational View Model.</b>
+        </description>
+         <subitem label="Create View Table" skip="true">
+                <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
+            pluginId="org.teiid.designer.advisor.ui" 
+            param1="org.teiid.designer.newObjectViewTable"/>
+        </subitem>
+        <subitem skip="true" >
+          <description>
+                      <b>1)</b> Specify a unique table <b>Name</b>
+                <br/> <b>2)</b> Click <b>OK</b> 
+          </description>
+      </subitem>
    </item>
-   <item
-         title="Add Source Tables To Transformation" skip="true">
-      <description>
-         <b> This following action ........</b>
-			<br/> ============================================================
-			<br/> -- > Press "<b>Click to Perform</b>" button below to xxxxxxxxxxx.
-			<br/> -- >  
-			<br/> -- > You may skip this step if you have already xxxxxxxxxx.
-			<br/> ============================================================
-      </description>
+   
+   <item title="Add Source Tables to View Transformation" skip="true">
+        <description>
+            <b> The following steps describe the process of defining the View Transformation.</b>
+        </description>
+        <subitem label="Add Transformation Sources" skip="true">
+        </subitem>
+        <subitem skip="true" >
+          <description>
+                      <b>1)</b> Double-click the View Table in the <b>ModelExplorer View</b> to open Transformation Diagram.
+                <br/> <b>2)</b> Double-click the <b>"T"</b> Transformation Icon on the Diagram to open Transformation Editor.
+                <br/> <b>3)</b> Utilize the Transformation Diagram Toolbar Icons and Transformation Editor to define the desired transformation, including
+                the desired tables from the previously-defined sources.
+                <br/> <b>4)</b> Click <b>Save/Validate</b> on the Transformation Editor to validate the transformation.
+          </description>
+      </subitem>
    </item>
+      
 </cheatsheet>

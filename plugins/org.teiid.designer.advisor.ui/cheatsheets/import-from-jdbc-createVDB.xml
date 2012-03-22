@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cheatsheet
+      title="Create Model from JDBC Source">
+   <intro>
+   		<description>This cheat sheet shows you how to create a model from a JDBC source.
+		</description>
+   </intro>
+   <item title="Create New Teiid Model Project" skip="true">
+     <description>
+         <b>Follow steps below to create Teiid Model Project</b>
+      </description>
+      <subitem label="Launch New Teiid Model Project Wizard" skip="true">
+            <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
+			pluginId="org.teiid.designer.advisor.ui" 
+			param1="org.teiid.designer.newProjectCommand"/> 
+      </subitem>
+      <subitem skip="true">
+	      <description>
+				      <b>1)</b> Specify unique project name
+				<br/> <b>2)</b> Click <b>Next ></b> twice to get to <b>Model Project Options</b> page
+				<br/> <b>3)</b> Check folders you wish the wizard to create in your project
+				<br/> <b>4)</b> Click <b>Finish</b>
+      	  </description>
+   	  </subitem>
+   </item>
+
+   <item title="Create New JDBC Source Connection" skip="true">
+      	<description>
+         	<b> Follow steps below to create a JDBC Connection profile.</b>
+      	</description>
+         <subitem label="Launch New JDBC Source Connection Wizard" skip="true">
+      			<action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
+			pluginId="org.teiid.designer.advisor.ui" 
+			param1="org.teiid.designer.connection.new.jdbc"/>
+   		</subitem>
+   		<subitem skip="true">
+	      <description>
+	                  <b>1)</b> Select Connection Profile Type (Driver type)
+				<br/> <b>2)</b> Enter unique profile name (example: Products Oracle 11)
+				<br/> <b>3)</b> Select applicable Driver (or create/edit)
+				<br/> <b>4)</b> Enter required driver into (Host, Port number, username, etc...)
+				<br/> <b>5)</b> Test connection to verify properties and driver selection
+				<br/> <b>6)</b> Click <b>Finish</b>
+	      </description>
+   	  </subitem>
+   </item>
+   
+   <item title="Create Source Model From JDBC Connection" skip="true">
+      	<description>
+         	<b> Follow steps below to create a relational model by importing table data via your JDBC connection profile.</b>
+      	</description>
+         <subitem label="Launch Import from JDBC Source Wizard" skip="true">
+      			<action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
+			pluginId="org.teiid.designer.advisor.ui" 
+			param1="org.teiid.designer.importJdbcCommand"/>
+   		</subitem>
+   		<subitem skip="true">
+	      <description>
+                  <b>1)</b> Select your JDBC source connection profile
+			<br/> <b>2)</b> Verify password and click <b>Next &gt;</b>
+			<br/> <b>3)</b> Select designer import <b>Table Types</b> , check desired options and click <b>Next &gt;</b>
+			<br/> <b>4)</b> Select desired database objects you wish to model (tables, columns, procedures, etc. and click <b>Next &gt;</b> 
+			<br/> <b>5)</b> Specify unique model name, folder and  naming options and click <b>Finish</b> 
+	      </description>
+   	  </subitem>
+   </item>
+   
+   <item title="Test JDBC Source Data" skip="true">
+        <description>
+            <b> This following action allows you to preview data from your newly generated JDBC view table.</b>
+        </description>
+         <subitem label="Launch Preview Data Dialog" skip="true">
+                <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
+            pluginId="org.teiid.designer.advisor.ui" 
+            param1="org.teiid.designer.previewData"/>
+        </subitem>
+        <subitem skip="true" >
+          <description>
+                      <b>1)</b> Click the browse <b>"..."</b> button to select the newly created view table
+                <br/> <b>2)</b> Click OK to execute the query
+                <br/> <b>3)</b> Results of the query will displayed in the SQL Results view
+          </description>
+      </subitem>
+   </item>
+   
+   <item title="Create VDB" skip="true">
+     <description>
+         <b>Follow steps below to create a new VDB</b>
+      </description>
+      <subitem label="Launch New VDB Wizard" skip="true">
+            <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
+            pluginId="org.teiid.designer.advisor.ui" 
+            param1="org.teiid.designer.vdb.create"/> 
+      </subitem>
+      <subitem skip="true" >
+          <description>
+                      <b>1)</b> Select <b>"..."</b> button to browse and select project or folder location.
+                <br/> <b>2)</b> Enter a unique name for your VDB
+                <br/> <b>3)</b> Enter an optional description for your VDB
+                <br/> <b>4)</b> Select the <b>Add</b> button to choose models to go in your VDB
+                <br/> <b>5)</b> Click <b>Finish</b>
+          </description>
+      </subitem>
+   </item>
+      
+   <item title="Test VDB" skip="true">
+     <description>
+         <b>Follow steps below to create a new VDB</b>
+      </description>
+      <subitem label="Launch Execute VDB Dialog" skip="true">
+            <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
+            pluginId="org.teiid.designer.advisor.ui" 
+            param1="org.teiid.designer.vdb.execute"/> 
+      </subitem>
+      <subitem skip="true" >
+          <description>
+                      <b>1)</b> Select <b>"..."</b> button to browse and select a VDB.
+                <br/> <b>2)</b> Click OK to deploy VDB and open connection in Data Source Explorer
+                <br/> <b>3)</b> Follow instructions in open SQL Scrapbook Editor
+                <br/> <b>4)</b> View your query results in the SQL Results view
+          </description>
+      </subitem>
+   </item>
+   
+</cheatsheet>

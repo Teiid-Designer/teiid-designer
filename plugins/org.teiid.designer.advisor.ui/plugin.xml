@@ -49,51 +49,51 @@
       <cheatsheet
             category="org.teiid.designer.ui.category"
             composite="false"
-            contentFile="$nl$/cheatsheets/New Model From JDBC Import.xml"
+            contentFile="$nl$/cheatsheets/import-from-jdbc-createVDB.xml"
             id="org.teiid.designer.ui.cheatsheet_advisor_01"
-            name="Model From JDBC Source">
+            name="Create Model from JDBC Source">
          <description>
-            Create Relational Model from JDBC Import
+            Create Model from JDBC Source 
          </description>
       </cheatsheet>
       <cheatsheet
             category="org.teiid.designer.ui.category"
             composite="false"
-            contentFile="$nl$/cheatsheets/subsheets/import-from-flat-file.xml"
+            contentFile="$nl$/cheatsheets/import-from-flat-file-createVDB.xml"
             id="org.teiid.designer.ui.cheatsheet_advisor_02"
-            name="Model Flat File Source">
+            name="Create Model from Flat File Source">
          <description>
-            Model and join two data sources
+            Create Model from a Flat File Source
          </description>
       </cheatsheet>
       <cheatsheet
             category="org.teiid.designer.ui.category"
             composite="false"
-            contentFile="$nl$/cheatsheets/Consume SOAP Web Service.xml"
+            contentFile="$nl$/cheatsheets/consume-SOAP-web-service.xml"
             id="org.teiid.designer.ui.cheatsheet_advisor_03"
             name="Consume a SOAP Web Service">
          <description>
-            Consume a SOAP Web Service by creating source and view models based on target WSDL file definition
+            Consume a SOAP Web Service by creating source and view models based on target WSDL file
          </description>
       </cheatsheet>
       <cheatsheet
             category="org.teiid.designer.ui.category"
             composite="false"
-            contentFile="$nl$/cheatsheets/subsheets/import-from-xml-file.xml"
+            contentFile="$nl$/cheatsheets/import-from-xml-file-createVDB.xml"
             id="org.teiid.designer.ui.cheatsheet_advisor_04"
-            name="Model Local XML File Source">
+            name="Create Model from XML Source">
          <description>
-            Model data from your XML local or remote URL file source
+            Create Model from a local or remote XML source
          </description>
       </cheatsheet>
       <cheatsheet
             category="org.teiid.designer.ui.category"
             composite="true"
-            contentFile="$nl$/cheatsheets/Multi-source VDB.xml"
+            contentFile="$nl$/cheatsheets/create-multi-source-VDB.xml"
             id="org.teiid.designer.ui.cheatsheet_advisor_05"
-            name="Multi-source VDB">
+            name="Create multi-source VDB">
          <description>
-            Create and test a VDB joining two data sources
+            Create and test a VDB which joins two sources
          </description>
       </cheatsheet>
       <cheatsheet

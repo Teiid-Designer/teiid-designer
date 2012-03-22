@@ -13,7 +13,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
@@ -47,10 +46,10 @@ import org.teiid.designer.runtime.ui.connection.CreateDataSourceAction;
 import org.teiid.designer.runtime.ui.preview.PreviewDataAction;
 import org.teiid.designer.runtime.ui.server.RuntimeAssistant;
 import org.teiid.designer.runtime.ui.vdb.ExecuteVdbAction;
-
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelerUiViewUtils;
+import com.metamatrix.modeler.transformation.ui.actions.CreateViewTableAction;
 import com.metamatrix.ui.internal.util.UiUtil;
 import com.metamatrix.ui.internal.util.WidgetUtil;
 
@@ -267,6 +266,10 @@ public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChange
         		COMMAND_LABELS.NEW_TEIID_MODEL_PROJECT, 
         		COMMAND_LABELS_SHORT.NEW_TEIID_MODEL_PROJECT,
         		COMMAND_DESC.NEW_TEIID_MODEL_PROJECT);
+        addActionHandler(COMMAND_IDS.NEW_OBJECT_VIEW_TABLE,
+                         COMMAND_LABELS.NEW_OBJECT_VIEW_TABLE,
+                         COMMAND_LABELS_SHORT.NEW_OBJECT_VIEW_TABLE,
+                         COMMAND_DESC.NEW_OBJECT_VIEW_TABLE);
         
         addActionHandler(
         		CHEAT_SHEET_IDS.MODEL_FROM_JDBC_SOURCE, 
@@ -292,6 +295,7 @@ public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChange
         		CHEAT_SHEET_IDS.CONSUME_SOAP_SERVICE, 
         		CHEAT_SHEET_DISPLAY_NAMES.CONSUME_SOAP_SERVICE, 
         		CHEAT_SHEET_DISPLAY_NAMES.CONSUME_SOAP_SERVICE);
+
 	}
 	
 	public static AbstractHandler getActionHandler(String id) {
@@ -389,7 +393,14 @@ public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChange
 	        return;
 		}
 		
-		// CONNECTIONPROFILE OPTIONS
+        // NEW OBJECT OPTIONS
+        if (id.equalsIgnoreCase(COMMAND_IDS.NEW_OBJECT_VIEW_TABLE)) {
+            CreateViewTableAction action = new CreateViewTableAction(properties);
+            action.run();
+            return;
+        }
+
+        // CONNECTIONPROFILE OPTIONS
 		if( id.equalsIgnoreCase(COMMAND_IDS.CREATE_CONNECTION_JDBC)) {
 			createConnection(CONNECTION_PROFILE_IDS.CATEGORY_JDBC, properties);
 	        return;
@@ -470,7 +481,7 @@ public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChange
 		}
 		
 		if( id.equalsIgnoreCase(COMMAND_IDS.PREVIEW_DATA)) {
-			PreviewDataAction action = new PreviewDataAction(properties);
+            PreviewDataAction action = new PreviewDataAction(properties);
 			action.run();
 	        return;
 		}
@@ -677,7 +688,7 @@ public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChange
 	}
 	
 	private static void createNewModel(ModelType type, String modelClass, Properties properties) {
-        NewModelAction nma = new NewModelAction(type, modelClass, null);
+        NewModelAction nma = new NewModelAction(type, modelClass, null, properties);
         nma.run();
 	}
 	
@@ -694,7 +705,7 @@ public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChange
 			NewJDBCFilteredCPWizard wiz = new NewJDBCFilteredCPWizard();
 			ModelerUiViewUtils.launchWizard(wiz, new StructuredSelection(), properties, true);
 		} else {
-			INewWizard wiz = (INewWizard) new NewTeiidFilteredCPWizard(id);
+            INewWizard wiz = new NewTeiidFilteredCPWizard(id);
 			ModelerUiViewUtils.launchWizard(wiz, new StructuredSelection(), properties, true);
 		}
 		
@@ -927,7 +938,7 @@ public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChange
 	        };
 	
 			ImageDescriptor desc = AdvisorActionFactory.getImageDesciptor(info.getId());
-			if( desc != null ) {
+            if (desc != null) {
 				action.setImageDescriptor(desc);
 			}
 			

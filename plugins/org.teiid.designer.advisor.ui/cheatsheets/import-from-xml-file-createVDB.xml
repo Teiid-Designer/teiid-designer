@@ -5,6 +5,25 @@
    		<description>This cheat sheet shows you how to create a model from an XML file source.
 		</description>
    </intro>
+   
+   <item title="Create New Teiid Model Project" skip="true">
+     <description>
+         <b>Follow steps below to create Teiid Model Project</b>
+      </description>
+      <subitem label="Launch New Teiid Model Project Wizard" skip="true">
+            <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
+            pluginId="org.teiid.designer.advisor.ui" 
+            param1="org.teiid.designer.newProjectCommand"/> 
+      </subitem>
+      <subitem skip="true">
+          <description>
+                      <b>1)</b> Specify unique project name
+                <br/> <b>2)</b> Click <b>Next ></b> twice to get to <b>Model Project Options</b> page
+                <br/> <b>3)</b> Check folders you wish the wizard to create in your project
+                <br/> <b>4)</b> Click <b>Finish</b>
+          </description>
+      </subitem>
+   </item>
 
    <item title="Create XML Local File Source Connection" skip="true">
       	<description>

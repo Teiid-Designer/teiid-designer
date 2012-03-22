@@ -8,7 +8,6 @@
 package org.teiid.designer.advisor.ui;
 
 import java.util.ResourceBundle;
-
 import com.metamatrix.core.PluginUtil;
 import com.metamatrix.core.util.PluginUtilImpl;
 
@@ -145,7 +144,8 @@ public interface AdvisorUiConstants {
 		String NEW_MODEL_XML_DOC = "org.teiid.designer.newModelXmlDocCommand";  //$NON-NLS-1$
 		String NEW_MODEL_MED = "org.teiid.designer.newModelMEDCommand";  //$NON-NLS-1$
 		
-		String NEW_OBJECT_BASE_TABLE = "org.teiid.designer.newObjectBaseTable";  //$NON-NLS-1$
+        String NEW_OBJECT_BASE_TABLE = "org.teiid.designer.newObjectBaseTable"; //$NON-NLS-1$
+        String NEW_OBJECT_VIEW_TABLE = "org.teiid.designer.newObjectViewTable"; //$NON-NLS-1$
 		String NEW_OBJECT_SOURCE_FUNCTION = "org.teiid.designer.newObjectSourceFunction";  //$NON-NLS-1$
 		
 		String CREATE_CONNECTION_JDBC = "org.teiid.designer.connection.new.jdbc"; //$NON-NLS-1$
@@ -195,7 +195,8 @@ public interface AdvisorUiConstants {
 		String NEW_MODEL_XML_DOC = "org.teiid.designer.newModelXmlDocCommand";  //$NON-NLS-1$
 		String NEW_MODEL_MED = "org.teiid.designer.newModelMEDCommand";  //$NON-NLS-1$
 		
-		String NEW_OBJECT_BASE_TABLE = "org.teiid.designer.newObjectBaseTable";  //$NON-NLS-1$
+        String NEW_OBJECT_BASE_TABLE = "org.teiid.designer.newObjectBaseTable"; //$NON-NLS-1$
+        String NEW_OBJECT_VIEW_TABLE = "org.teiid.designer.newObjectViewTable"; //$NON-NLS-1$
 		String NEW_OBJECT_SOURCE_FUNCTION = "org.teiid.designer.newObjectSourceFunction";  //$NON-NLS-1$
 		
 		String CREATE_CONNECTION_JDBC = "Create connection profile for JDBC source"; //$NON-NLS-1$
@@ -242,7 +243,8 @@ public interface AdvisorUiConstants {
 		String NEW_MODEL_XML_DOC = Messages.CreateNewXmlDocumentViewModel;
 		String NEW_MODEL_MED = Messages.CreateNewModelExtensionDefinition;
 		
-		String NEW_OBJECT_BASE_TABLE = Messages.CreateNewRelationalBaseTable;
+        String NEW_OBJECT_BASE_TABLE = Messages.CreateNewRelationalBaseTable;
+        String NEW_OBJECT_VIEW_TABLE = Messages.CreateNewRelationalViewTable;
 		String NEW_OBJECT_SOURCE_FUNCTION = Messages.CreateNewRelationalSourceFunction;
 		
 		String CREATE_CONNECTION_JDBC = Messages.CreateJdbcConnection;
@@ -287,7 +289,8 @@ public interface AdvisorUiConstants {
 		String NEW_MODEL_XML_DOC = Messages.CreateNewXmlDocumentViewModel_Short;
 		String NEW_MODEL_MED = Messages.CreateNewModelExtensionDefinition_Short;
 		
-		String NEW_OBJECT_BASE_TABLE = Messages.CreateNewRelationalBaseTable_Short;
+        String NEW_OBJECT_BASE_TABLE = Messages.CreateNewRelationalBaseTable_Short;
+        String NEW_OBJECT_VIEW_TABLE = Messages.CreateNewRelationalViewTable_Short;
 		String NEW_OBJECT_SOURCE_FUNCTION = Messages.CreateNewRelationalSourceFunction_Short;
 		
 		String CREATE_CONNECTION_JDBC = Messages.CreateJdbcConnection_Short;

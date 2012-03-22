@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <cheatsheet
-      title="Create and test your VDB">
+      title="Create and test a VDB">
    <intro>
-   		<description>This cheat sheet shows you how to model two different sources and create a view that joins data from both sources.
-   			In this example, a JDBC source table and Flat File source table are used.
+   		<description>This cheat sheet shows you how to create a VDB and test it.
 		</description>
    </intro>
    

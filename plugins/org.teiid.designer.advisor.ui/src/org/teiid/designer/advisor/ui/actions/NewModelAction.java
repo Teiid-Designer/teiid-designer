@@ -7,6 +7,7 @@
 */
 package org.teiid.designer.advisor.ui.actions;
 
+import java.util.Properties;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.Dialog;
@@ -18,7 +19,6 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.teiid.designer.advisor.ui.AdvisorUiConstants;
 import org.teiid.designer.advisor.ui.AdvisorUiPlugin;
 import org.teiid.designer.advisor.ui.Messages;
-
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.modeler.internal.ui.wizards.NewModelWizard;
 import com.metamatrix.modeler.ui.wizards.NewModelWizardInput;
@@ -31,6 +31,7 @@ import com.metamatrix.ui.internal.product.ProductCustomizerMgr;
 public final class NewModelAction extends Action implements AdvisorUiConstants {
 
     private NewModelWizardInput newModelInput;
+    private Properties designerProperties;
 
     /**
      * Construct an instance of NewModelAction.
@@ -43,11 +44,15 @@ public final class NewModelAction extends Action implements AdvisorUiConstants {
 
     }
     
-    public NewModelAction(ModelType modelType, String metamodelClass, String builderType) {
+    public NewModelAction( ModelType modelType,
+                           String metamodelClass,
+                           String builderType,
+                           Properties properties ) {
         this();
         setModelType(modelType);
         setMetamodelClass(metamodelClass);
         setBuilderType(builderType);
+        this.designerProperties = properties;
     }
 
     /*
@@ -70,7 +75,7 @@ public final class NewModelAction extends Action implements AdvisorUiConstants {
         boolean successful = false;
         try {
 
-            NewModelWizard wizard = new NewModelWizard(newModelInput);
+            NewModelWizard wizard = new NewModelWizard(newModelInput, this.designerProperties);
 
             String viewId = ProductCustomizerMgr.getInstance().getProductCharacteristics().getPrimaryNavigationViewId();
             ISelection theSelection = iww.getSelectionService().getSelection(viewId);

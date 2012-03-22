@@ -12,7 +12,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.teiid.designer.advisor.ui.AdvisorUiConstants;
 import org.teiid.designer.advisor.ui.Messages;
 
@@ -41,7 +40,7 @@ public class AdvisorGuides implements AdvisorUiConstants {
 		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.CREATE_VDB));
 		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.EXECUTE_VDB));
 		
-		AdvisorActionInfo[] infoArray = (AdvisorActionInfo[])infoList.toArray(new AdvisorActionInfo[infoList.size()]);
+        AdvisorActionInfo[] infoArray = infoList.toArray(new AdvisorActionInfo[infoList.size()]);
 		actionInfoMap.put(MODEL_JDBC_SOURCE, infoArray);
 		
 		infoList = new ArrayList<AdvisorActionInfo>();
@@ -52,7 +51,7 @@ public class AdvisorGuides implements AdvisorUiConstants {
 		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.CREATE_VDB));
 		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.EXECUTE_VDB));
 
-		infoArray = (AdvisorActionInfo[])infoList.toArray(new AdvisorActionInfo[infoList.size()]);
+        infoArray = infoList.toArray(new AdvisorActionInfo[infoList.size()]);
 		actionInfoMap.put(MODEL_FLAT_FILE_SOURCE, infoArray);
 
 		infoList = new ArrayList<AdvisorActionInfo>();
@@ -63,7 +62,7 @@ public class AdvisorGuides implements AdvisorUiConstants {
 		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.CREATE_VDB));
 		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.EXECUTE_VDB));
 
-		infoArray = (AdvisorActionInfo[])infoList.toArray(new AdvisorActionInfo[infoList.size()]);
+        infoArray = infoList.toArray(new AdvisorActionInfo[infoList.size()]);
 		actionInfoMap.put(MODEL_REMOTE_XML_SOURCE, infoArray);
 		
 		infoList = new ArrayList<AdvisorActionInfo>();
@@ -74,14 +73,14 @@ public class AdvisorGuides implements AdvisorUiConstants {
 		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.CREATE_VDB));
 		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.EXECUTE_VDB));
 
-		infoArray = (AdvisorActionInfo[])infoList.toArray(new AdvisorActionInfo[infoList.size()]);
+        infoArray = infoList.toArray(new AdvisorActionInfo[infoList.size()]);
 		actionInfoMap.put(CONSUME_SOAP_WEB_SERVICE, infoArray);
 		
 		infoList = new ArrayList<AdvisorActionInfo>();
 		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.NEW_TEIID_SERVER));
 		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.EDIT_TEIID_SERVER));
 
-		infoArray = (AdvisorActionInfo[])infoList.toArray(new AdvisorActionInfo[infoList.size()]);
+        infoArray = infoList.toArray(new AdvisorActionInfo[infoList.size()]);
 		actionInfoMap.put(TEIID_SERVER_ACTIONS, infoArray);
 		
 	}

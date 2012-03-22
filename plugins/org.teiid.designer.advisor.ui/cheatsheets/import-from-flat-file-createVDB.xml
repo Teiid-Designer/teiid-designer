@@ -5,6 +5,25 @@
    		<description>This cheat sheet shows you to create a model from a flat file source.
 		</description>
    </intro>
+   
+   <item title="Create New Teiid Model Project" skip="true">
+     <description>
+         <b>Follow steps below to create Teiid Model Project</b>
+      </description>
+      <subitem label="Launch New Teiid Model Project Wizard" skip="true">
+            <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
+            pluginId="org.teiid.designer.advisor.ui" 
+            param1="org.teiid.designer.newProjectCommand"/> 
+      </subitem>
+      <subitem skip="true">
+          <description>
+                      <b>1)</b> Specify unique project name
+                <br/> <b>2)</b> Click <b>Next ></b> twice to get to <b>Model Project Options</b> page
+                <br/> <b>3)</b> Check folders you wish the wizard to create in your project
+                <br/> <b>4)</b> Click <b>Finish</b>
+          </description>
+      </subitem>
+   </item>
 
    <item title="Create New Flat File Source Connection" skip="true">
       	<description>
@@ -107,4 +126,43 @@
    	  </subitem>
    </item>
    
+   <item title="Create VDB" skip="true">
+     <description>
+         <b>Follow steps below to create a new VDB</b>
+      </description>
+      <subitem label="Launch New VDB Wizard" skip="true">
+            <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
+			pluginId="org.teiid.designer.advisor.ui" 
+			param1="org.teiid.designer.vdb.create"/> 
+      </subitem>
+      <subitem skip="true" >
+	      <description>
+				      <b>1)</b> Select <b>"..."</b> button to browse and select project or folder location.
+				<br/> <b>2)</b> Enter a unique name for your VDB
+				<br/> <b>3)</b> Enter an optional description for your VDB
+				<br/> <b>4)</b> Select the <b>Add</b> button to choose models to go in your VDB
+				<br/> <b>5)</b> Click <b>Finish</b>
+      	  </description>
+   	  </subitem>
+   </item>
+   
+   
+   <item title="Test VDB" skip="true">
+     <description>
+         <b>Follow steps below to create a new VDB</b>
+      </description>
+      <subitem label="Launch Execute VDB Dialog" skip="true">
+            <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
+			pluginId="org.teiid.designer.advisor.ui" 
+			param1="org.teiid.designer.vdb.execute"/> 
+      </subitem>
+      <subitem skip="true" >
+	      <description>
+				      <b>1)</b> Select <b>"..."</b> button to browse and select a VDB.
+				<br/> <b>2)</b> Click OK to deploy VDB and open connection in Data Source Explorer
+				<br/> <b>3)</b> Follow instructions in open SQL Scrapbook Editor
+				<br/> <b>4)</b> View your query results in the SQL Results view
+      	  </description>
+   	  </subitem>
+   </item>
 </cheatsheet>
