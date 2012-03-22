@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Properties;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -49,6 +50,7 @@ import com.metamatrix.modeler.core.metamodel.MetamodelDescriptor;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.internal.core.transaction.UnitOfWorkImpl;
+import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.ui.actions.DeleteResourceAction;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelInitializerSelectionDialog;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
@@ -56,6 +58,7 @@ import com.metamatrix.modeler.internal.ui.viewsupport.ModelerUiViewUtils;
 import com.metamatrix.modeler.ui.UiConstants;
 import com.metamatrix.modeler.ui.UiPlugin;
 import com.metamatrix.modeler.ui.editors.ModelEditorManager;
+import com.metamatrix.modeler.ui.viewsupport.DesignerPropertiesUtil;
 import com.metamatrix.modeler.ui.wizards.INewModelWizardContributor;
 import com.metamatrix.modeler.ui.wizards.INewModelWizardContributor2;
 import com.metamatrix.modeler.ui.wizards.NewModelWizardInput;
@@ -80,6 +83,7 @@ public class NewModelWizard extends AbstractWizard
     private boolean exceptionOccurred = false;
 
     private NewModelWizardInput defaultNewModelInput;
+    private Properties designerProperties;
 
     /** key = wizardPageContributor title, value = IWizardPage[] */
     private HashMap contributorPageMap = new HashMap();
@@ -97,16 +101,18 @@ public class NewModelWizard extends AbstractWizard
         super(UiPlugin.getDefault(), Util.getString("NewModelWizard.title"), null); //$NON-NLS-1$
         setNeedsProgressMonitor(true);
         setForcePreviousAndNextButtons(true);
-        newModelResource = null;
+        this.newModelResource = null;
     }
 
     /**
      * Constructor for NewModelWizard.
      */
-    public NewModelWizard( NewModelWizardInput newModelInput ) {
+    public NewModelWizard( NewModelWizardInput newModelInput,
+                           Properties properties ) {
         this();
         this.defaultNewModelInput = newModelInput;
-        newModelResource = null;
+        this.newModelResource = null;
+        this.designerProperties = properties;
     }
 
     /**
@@ -317,6 +323,18 @@ public class NewModelWizard extends AbstractWizard
             }
 
         }
+
+        // Update Designer Properties if it was provided
+        if (this.designerProperties != null && modelResource != null && ModelUtil.isModelFile(modelResource.getEmfResource())) {
+            if (ModelUtil.isVirtual(modelResource.getEmfResource())) {
+                String viewModelName = ((IFile)modelResource.getCorrespondingResource()).getName();
+                DesignerPropertiesUtil.setViewModelName(this.designerProperties, viewModelName);
+            } else if (ModelUtil.isPhysical(modelResource.getEmfResource())) {
+                String sourceModelName = ((IFile)modelResource.getCorrespondingResource()).getName();
+                DesignerPropertiesUtil.setViewModelName(this.designerProperties, sourceModelName);
+            }
+        }
+
 
         monitor.worked(1);
         // Only open the new file for editing if we know we were successful in creating it.

@@ -10,6 +10,7 @@ package com.metamatrix.modeler.transformation.ui.actions;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Properties;
 import java.util.Set;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -41,6 +42,7 @@ import com.metamatrix.modeler.transformation.ui.editors.EditViewTableDialog;
 import com.metamatrix.modeler.ui.actions.INewChildAction;
 import com.metamatrix.modeler.ui.actions.INewSiblingAction;
 import com.metamatrix.modeler.ui.editors.ModelEditorManager;
+import com.metamatrix.modeler.ui.viewsupport.DesignerPropertiesUtil;
 import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
 
 public class CreateViewTableAction extends Action implements INewChildAction, INewSiblingAction {
@@ -48,6 +50,7 @@ public class CreateViewTableAction extends Action implements INewChildAction, IN
     public static final String TITLE = Messages.createRelationalViewActionText;
 	 
 	private Collection<String> datatypes;
+    private Properties designerProperties;
 	 
 	public CreateViewTableAction() {
 		super(TITLE);
@@ -63,6 +66,11 @@ public class CreateViewTableAction extends Action implements INewChildAction, IN
 		}
 	}
 	
+    public CreateViewTableAction( Properties properties ) {
+        this();
+        this.designerProperties = properties;
+    }
+
     /* (non-Javadoc)
      * @see com.metamatrix.modeler.ui.actions.INewChildAction#canCreateChild(org.eclipse.emf.ecore.EObject)
      */
@@ -117,6 +125,11 @@ public class CreateViewTableAction extends Action implements INewChildAction, IN
 
 	@Override
    public void run() {
+        // If properties were passed in, use it's model as the selection - if available
+        if (this.designerProperties != null) {
+            IFile propsViewModel = DesignerPropertiesUtil.getViewModel(this.designerProperties);
+            if (propsViewModel != null) this.selectedModel = propsViewModel;
+        }
 		if( selectedModel != null ) {
 	        ModelResource mr = ModelUtilities.getModelResource(selectedModel);
 	        final Shell shell = UiPlugin.getDefault().getCurrentWorkbenchWindow().getShell();
