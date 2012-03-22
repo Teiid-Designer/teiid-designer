@@ -149,7 +149,7 @@ public class ModelDefinitionPage extends AbstractWizardPage implements
 			Text defaultProceduresHelpText = new Text(group, SWT.WRAP | SWT.READ_ONLY);
 			defaultProceduresHelpText.setBackground(WidgetUtil.getReadOnlyBackgroundColor());
 			defaultProceduresHelpText.setForeground(WidgetUtil.getDarkBlueColor());
-			gd = new GridData(GridData.FILL_HORIZONTAL);
+			gd = new GridData(GridData.FILL_VERTICAL);
 			gd.heightHint = 40;
 			defaultProceduresHelpText.setLayoutData(gd);
 			defaultProceduresHelpText.setText(Messages.OptionDefineDefaultProcedures);

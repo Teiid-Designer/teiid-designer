@@ -8,6 +8,8 @@
 package org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Properties;
 
 import org.eclipse.core.resources.IFile;
@@ -50,6 +52,7 @@ import com.metamatrix.modeler.modelgenerator.wsdl.SOAPConnectionInfoProvider;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Operation;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Port;
 import com.metamatrix.modeler.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstants;
+import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.util.ModelGeneratorWsdlUiUtil;
 import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.wizards.WSDLImportWizardManager;
 import com.metamatrix.modeler.transformation.model.RelationalViewModelFactory;
 import com.metamatrix.modeler.transformation.ui.wizards.file.FlatFileRelationalModelFactory;
@@ -142,8 +145,7 @@ public class ImportWsdlProcessor {
 			
 			if( importManager.viewModelExists() ) {
 				// Find and set view model resource
-				IPath modelPath = this.importManager.getViewModelLocation().getFullPath()
-					.append(this.importManager.getViewModelName());
+				IPath modelPath = this.importManager.getViewModelLocation().getFullPath().append(this.importManager.getViewModelName());
 				ModelWorkspaceItem item = ModelWorkspaceManager.getModelWorkspaceManager().findModelWorkspaceItem(modelPath, IResource.FILE);
 				IFile modelFile = (IFile)item.getCorrespondingResource();
 				this.viewModel = ModelUtilities.getModelResourceForIFile(modelFile, false);
@@ -282,26 +284,72 @@ public class ImportWsdlProcessor {
     private void createViewProcedures(IProgressMonitor monitor) {
     	// Assume the source and view models are created
     	
+    	removeOverriddenProcedures();
+    	
     	for( Operation operation : this.importManager.getSelectedOperations()) {
     		ProcedureGenerator generator = this.importManager.getProcedureGenerator(operation);
     		processGenerator(generator);
     	}
     }
     
+    /*
+     * Deletes all existing procedures tagged for being overridden
+     */
+    private void removeOverriddenProcedures() {
+    	for( Operation operation : this.importManager.getSelectedOperations()) {
+    		ProcedureGenerator generator = this.importManager.getProcedureGenerator(operation);
+    
+    		if( generator.doOverwriteExistingProcedures() ) {
+    			Collection<EObject> deleteList = new ArrayList<EObject>();
+    			if( generator.wrapperExists() ) {
+    				EObject wrapper = ModelGeneratorWsdlUiUtil.getExistingEObject(
+    					this.importManager.getViewModelLocation().getFullPath().toString(), 
+    					this.importManager.getViewModelName(), 
+    					generator.getWrapperProcedureName());
+    				if( wrapper != null ) {
+    					deleteList.add(wrapper);
+    				}
+    			}
+    			EObject request = ModelGeneratorWsdlUiUtil.getExistingEObject(
+    				this.importManager.getViewModelLocation().getFullPath().toString(), 
+    				this.importManager.getViewModelName(), 
+    				generator.getRequestProcedureName());
+    			if( request != null ) {
+    				deleteList.add(request);
+    			}
+    			EObject response = ModelGeneratorWsdlUiUtil.getExistingEObject(
+    				this.importManager.getViewModelLocation().getFullPath().toString(), 
+    				this.importManager.getViewModelName(), 
+    				generator.getResponseProcedureName());
+    			if( response != null ) {
+    				deleteList.add(response);
+    			}
+    			if( !deleteList.isEmpty() ) {
+    				try {
+						ModelerCore.getModelEditor().delete(deleteList);
+					} catch (ModelerCoreException ex) {
+						ModelGeneratorWsdlUiConstants.UTIL.log(ex);
+					}
+    			}
+    		}
+    	}
+    }
+    
     private void processGenerator(ProcedureGenerator generator) {
-		
-    	try {
+
+		try {
 			// Create the Request Procedure
-			createViewRequestProcedure(this.viewModel, (RequestInfo)generator.getRequestInfo() );
+			createViewRequestProcedure(this.viewModel, (RequestInfo)generator.getRequestInfo());
 			// Create the Response ProceduregetWrapperProcedureSqlString
-			createViewResponseProcedure(this.viewModel, (ResponseInfo)generator.getResponseInfo() );
+			createViewResponseProcedure(this.viewModel, (ResponseInfo)generator.getResponseInfo());
 			// Create the wrapper procedure
 			createViewWrapperProcedure(this.viewModel, generator);
-			
+		} catch (ModelWorkspaceException ex) {
+			ModelGeneratorWsdlUiConstants.UTIL.log(ex);
 		} catch (ModelerCoreException ex) {
-			// TODO Auto-generated catch block
-			ex.printStackTrace();
+			ModelGeneratorWsdlUiConstants.UTIL.log(ex);
 		}
+			
     }
     
     public void createViewRequestProcedure(ModelResource modelResource, RequestInfo info) throws ModelerCoreException {
@@ -401,7 +449,7 @@ public class ImportWsdlProcessor {
     private void createViewWrapperProcedure(ModelResource modelResource, ProcedureGenerator generator) throws ModelerCoreException {
     	// Create a Procedure using the text file name
     	Procedure procedure = factory.createProcedure();
-    	procedure.setName(generator.getWrappedProcedureName());
+    	procedure.setName(generator.getWrapperProcedureName());
     	
     	addValue(modelResource, procedure, modelResource.getEmfResource().getContents());
     	
@@ -439,7 +487,7 @@ public class ImportWsdlProcessor {
     	
     	NewModelObjectHelperManager.helpCreate(procedure, null);
     	
-    	String sqlString = generator.getWrapperProcedureSqlString();
+    	String sqlString = generator.getWrapperProcedureSqlString(new Properties());
     	
     	SqlTransformationMappingRoot tRoot = (SqlTransformationMappingRoot)TransformationHelper.getTransformationMappingRoot(procedure);
     	

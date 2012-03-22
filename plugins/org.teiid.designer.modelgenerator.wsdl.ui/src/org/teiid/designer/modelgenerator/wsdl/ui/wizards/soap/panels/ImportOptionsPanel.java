@@ -145,8 +145,9 @@ public class ImportOptionsPanel implements ModelGeneratorWsdlUiConstants {
     			sourceModelHelpText = new Text(helpGroup, SWT.WRAP | SWT.READ_ONLY);
     			sourceModelHelpText.setBackground(WidgetUtil.getReadOnlyBackgroundColor());
     			sourceModelHelpText.setForeground(WidgetUtil.getDarkBlueColor());
-    			gd = new GridData(GridData.FILL_HORIZONTAL);
+    			gd = new GridData(GridData.FILL_BOTH);
     			gd.heightHint = 40;
+    			gd.widthHint = 600;
     			sourceModelHelpText.setLayoutData(gd);
     		}
 		
@@ -223,8 +224,9 @@ public class ImportOptionsPanel implements ModelGeneratorWsdlUiConstants {
     			viewModelHelpText = new Text(helpGroup, SWT.WRAP | SWT.READ_ONLY);
     			viewModelHelpText.setBackground(WidgetUtil.getReadOnlyBackgroundColor());
     			viewModelHelpText.setForeground(WidgetUtil.getDarkBlueColor());
-    			gd = new GridData(GridData.FILL_HORIZONTAL);
+    			gd = new GridData(GridData.FILL_BOTH);
     			gd.heightHint = 40;
+    			gd.widthHint = 600;
     			viewModelHelpText.setLayoutData(gd);
     		}
 		}

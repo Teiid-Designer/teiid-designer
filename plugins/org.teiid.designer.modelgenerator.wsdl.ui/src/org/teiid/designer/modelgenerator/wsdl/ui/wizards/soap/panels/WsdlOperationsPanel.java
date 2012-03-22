@@ -215,40 +215,6 @@ public class WsdlOperationsPanel implements FileUtils.Constants, CoreStringUtil.
 		Group group = WidgetFactory.createGroup(parent, title, GridData.FILL_BOTH, 1, 2);
 		GridLayout gridLayout = new GridLayout(2, false);
 		group.setLayout(gridLayout);
-		
-		// ----------------------------
-		// TableViewer
-		// ----------------------------
-		Table table = new Table(group, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.CHECK );
-		table.setHeaderVisible(true);
-		table.setLinesVisible(true);
-		table.setLayout(new TableLayout());
-		GridData gd = new GridData(GridData.FILL_BOTH);
-		gd.grabExcessVerticalSpace = true;
-		table.setLayoutData(gd);
-		
-		this.operationsViewer = new TableViewer(table);
-
-
-		this.operationsViewer.setContentProvider(new CheckboxTreeContentProvider());
-		this.operationsViewer.setLabelProvider(new CheckboxTreeLabelProvider());
-
-		// Check events can occur separate from selection events.
-		// In this case move the selected node.
-		// Also trigger selection of node in model.
-		this.operationsViewer.getTable().addSelectionListener(
-			new SelectionListener() {
-
-				public void widgetSelected(SelectionEvent e) {
-					updateTreeSelectionDetails();
-					if (e.detail == SWT.CHECK) {
-						updateImportManager();
-					}
-				}
-				
-				public void widgetDefaultSelected(SelectionEvent e) {
-				}
-			});
 
 		// ----------------------------
 		// Select/DeSelect Buttons
@@ -288,10 +254,45 @@ public class WsdlOperationsPanel implements FileUtils.Constants, CoreStringUtil.
 			public void widgetDefaultSelected(SelectionEvent e) {
 			}
 		});
+
 		
+		// ----------------------------
+		// TableViewer
+		// ----------------------------
+		Table table = new Table(group, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.CHECK );
+		table.setHeaderVisible(true);
+		table.setLinesVisible(true);
+		table.setLayout(new TableLayout());
+		GridData gd = new GridData(GridData.FILL_BOTH);
+		gd.grabExcessVerticalSpace = true;
+		table.setLayoutData(gd);
+		
+		this.operationsViewer = new TableViewer(table);
+
+
+		this.operationsViewer.setContentProvider(new CheckboxTreeContentProvider());
+		this.operationsViewer.setLabelProvider(new CheckboxTreeLabelProvider());
+
+		// Check events can occur separate from selection events.
+		// In this case move the selected node.
+		// Also trigger selection of node in model.
+		this.operationsViewer.getTable().addSelectionListener(
+			new SelectionListener() {
+
+				public void widgetSelected(SelectionEvent e) {
+					updateTreeSelectionDetails();
+					if (e.detail == SWT.CHECK) {
+						updateImportManager();
+					}
+				}
+				
+				public void widgetDefaultSelected(SelectionEvent e) {
+				}
+			});
+
 		// create columns
 		operationNameColumn = new TableViewerColumn(this.operationsViewer, SWT.LEFT);
-		operationNameColumn.getColumn().setText("Operation"); //$NON-NLS-1$
+		operationNameColumn.getColumn().setText(Messages.Operation);
 		operationNameColumn.setLabelProvider(new OperationsColumnLabelProvider());
 		operationNameColumn.getColumn().pack();
 	}

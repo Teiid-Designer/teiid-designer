@@ -649,7 +649,10 @@ public class WsdlDefinitionPage extends WizardPage implements Listener, IProfile
 		if (visible) {
 			if (this.connectionProfilesCombo.getItemCount() > 0 ) {
 				if( this.importManager.getConnectionProfile() != null ) {
-					selectConnectionProfile(this.importManager.getConnectionProfile().getName());
+					if( this.connectionProfilesCombo.getText() != null &&
+						this.connectionProfilesCombo.getText().equals(this.importManager.getConnectionProfile().getName()) ) {
+						selectConnectionProfile(this.importManager.getConnectionProfile().getName());
+					}
 				} else {
     				if(this.connectionProfilesCombo.getSelectionIndex() < 0 ) {
     					this.connectionProfilesCombo.select(0);

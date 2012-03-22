@@ -469,6 +469,8 @@ public final class NewVdbWizard extends AbstractWizard
 				}
 			});
         }
+        
+        updateForProperties();
         return mainPanel;
     }
 	
@@ -640,7 +642,7 @@ public final class NewVdbWizard extends AbstractWizard
 			if (editor instanceof VdbEditor) {
 				final VdbEditor vdbEditor = (VdbEditor) editor;
 				final IPath editorVdbPath = vdbEditor.getVdb().getName();
-				if (vdbFile.getFullPath().equals(editorVdbPath))
+				if (vdbFile.getFullPath().equals(editorVdbPath)) 
 					return vdbEditor;
 
 			}
@@ -655,6 +657,9 @@ public final class NewVdbWizard extends AbstractWizard
 	@Override
 	public void setProperties(Properties properties) {
 		this.designerProperties = properties;
+	}
+	
+	private void updateForProperties() {
     	if( this.folder == null ) {
     		// check for project property and if sources folder property exists
     		String projectName = this.designerProperties.getProperty(IPropertiesContext.KEY_PROJECT_NAME);

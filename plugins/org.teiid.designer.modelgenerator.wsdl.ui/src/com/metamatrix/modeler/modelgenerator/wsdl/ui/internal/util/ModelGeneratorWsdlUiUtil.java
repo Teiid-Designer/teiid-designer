@@ -12,13 +12,19 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
 import org.teiid.core.util.FileUtils;
 
+import com.metamatrix.metamodels.relational.aspects.validation.RelationalStringNameValidator;
+import com.metamatrix.modeler.core.ModelerCore;
+import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceItem;
 import com.metamatrix.modeler.internal.core.workspace.ModelWorkspaceManager;
+import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
+import com.metamatrix.modeler.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstants;
 import com.metamatrix.modeler.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiPlugin;
 
 
@@ -212,4 +218,84 @@ public class ModelGeneratorWsdlUiUtil implements FileUtils.Constants {
 
 		return null;
 	}
+	
+	public static boolean eObjectExists(String containerPath, String modelName, String childName) {
+		try {
+    		IFile modelFile = getModelFile(containerPath, modelName);
+    		if( modelFile != null ) {
+    			ModelResource mr = ModelUtilities.getModelResourceForIFile(modelFile, false);
+    			if( mr != null ) {
+    				for( Object eObj : mr.getEObjects() ) {
+    					String name = ModelerCore.getModelEditor().getName((EObject)eObj);
+    					if( name.equals(childName) ) {
+    						return true;
+    					}
+    				}
+    			}
+    		}
+		} catch (ModelWorkspaceException ex ) {
+			ModelGeneratorWsdlUiConstants.UTIL.log(ex);
+		}
+		return false;
+	}
+	
+	public static EObject getExistingEObject(String containerPath, String modelName, String childName) {
+		try {
+    		IFile modelFile = getModelFile(containerPath, modelName);
+    		if( modelFile != null ) {
+    			ModelResource mr = ModelUtilities.getModelResourceForIFile(modelFile, false);
+    			if( mr != null ) {
+    				for( Object eObj : mr.getEObjects() ) {
+    					String name = ModelerCore.getModelEditor().getName((EObject)eObj);
+    					if( name.equals(childName) ) {
+    						return (EObject)eObj;
+    					}
+    				}
+    			}
+    		}
+		} catch (ModelWorkspaceException ex ) {
+			ModelGeneratorWsdlUiConstants.UTIL.log(ex);
+		}
+		return null;
+	}
+	
+	public static String getUniqueName(String containerPath, String modelName, String targetName, boolean isTable, boolean overwrite) {
+		String uniqueName = targetName;
+		
+		try {
+    		IFile modelFile = getModelFile(containerPath, modelName);
+    		if( modelFile != null ) {
+    			ModelResource mr = ModelUtilities.getModelResourceForIFile(modelFile, false);
+    			if( mr != null ) {
+    				uniqueName = getUniqueName(mr, targetName, isTable, overwrite);
+    			}
+    		}
+		} catch (ModelWorkspaceException ex ) {
+			ModelGeneratorWsdlUiConstants.UTIL.log(ex);
+		}
+    	
+    	return uniqueName;
+    }
+	
+	public static String getUniqueName(ModelResource mr, String targetName, boolean isTable, boolean overwrite) {
+		String uniqueName = targetName;
+		
+		if( mr != null && !overwrite ) {
+    		RelationalStringNameValidator nameValidator = new RelationalStringNameValidator(isTable, true);
+    		try {
+    			// Load the name validator with EObject names
+    			for( Object eObj : mr.getEObjects() ) {
+    				String name = ModelerCore.getModelEditor().getName((EObject)eObj);
+    				nameValidator.addExistingName(name);
+    			}
+    
+    			uniqueName = nameValidator.createValidUniqueName(targetName);
+    		} catch (ModelWorkspaceException ex) {
+    			ModelGeneratorWsdlUiConstants.UTIL.log(ex);
+    		}
+		}
+    	
+    	return uniqueName;
+    }
+    
 }

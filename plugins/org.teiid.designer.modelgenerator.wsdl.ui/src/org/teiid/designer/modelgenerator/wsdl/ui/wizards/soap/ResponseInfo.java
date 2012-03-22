@@ -22,7 +22,11 @@ public class ResponseInfo extends ProcedureInfo {
 
 	public ResponseInfo(Operation operation, ProcedureGenerator generator) {
 		super(operation, RESPONSE, generator);
-		setProcedureName(operation.getName() + "_response"); //$NON-NLS-1$
+		setProcedureName(getDefaultProcedureName());
+	}
+	
+	public String getDefaultProcedureName() {
+		return getOperation().getName() + "_response";//$NON-NLS-1$
 	}
 
 	@Override
@@ -103,7 +107,7 @@ public class ResponseInfo extends ProcedureInfo {
 				.append(STAR).append(SPACE).append(FROM).append(RETURN);
 		sb.append(TAB).append(TAB).append(XMLTABLE).append(L_PAREN);
 
-		sb.append(getXmlTableString());
+		sb.append(getXmlTableString(properties));
 
 		sb.append(R_PAREN);
 		sb.append(SPACE).append(AS).append(SPACE).append(alias)
@@ -113,7 +117,14 @@ public class ResponseInfo extends ProcedureInfo {
 		return sb.toString();
 	}
 
-	private String getXmlTableString() {
+	private String getXmlTableString(Properties properties) {
+		
+		// Response procedure name may have been overridden
+		String responseProcedureName = properties.getProperty(ProcedureGenerator.KEY_RESPONSE_PROCEDURE_NAME);
+		if( responseProcedureName == null ) {
+			responseProcedureName = this.getProcedureName();
+		}
+		
 		StringBuilder sb = new StringBuilder();
 		String namespaceStr = getNamespaceString();
 
@@ -130,7 +141,7 @@ public class ResponseInfo extends ProcedureInfo {
 		sb.append(PASSING)
 				.append(SPACE)
 				.append(getGenerator().convertSqlNameSegment(
-						getResponseProcedureParameter())).append(RETURN);
+						getResponseProcedureParameter(responseProcedureName))).append(RETURN);
 
 		sb.append(TAB).append(COLUMNS).append(SPACE).append(RETURN);
 
@@ -210,10 +221,10 @@ public class ResponseInfo extends ProcedureInfo {
 		return sb.toString();
 	}
 
-	private String getResponseProcedureParameter() {
+	private String getResponseProcedureParameter(String procedureName) {
 		StringBuilder sb = new StringBuilder();
 		sb.append(getGenerator().getViewModelName()).append(DOT)
-				.append(getProcedureName()).append(DOT)
+				.append(procedureName).append(DOT)
 				.append("xml_in").append(SPACE); //$NON-NLS-1$
 		return sb.toString();
 	}

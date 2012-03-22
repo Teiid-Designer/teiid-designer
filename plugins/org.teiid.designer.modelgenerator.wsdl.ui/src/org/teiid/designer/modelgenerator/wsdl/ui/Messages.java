@@ -60,6 +60,7 @@ public class Messages  extends NLS {
     public static String New;
     public static String NoOperationsSelected;
     
+    public static String Operation;
     public static String Operations;
     public static String Options;
     public static String OptionDefineCustomProcures;

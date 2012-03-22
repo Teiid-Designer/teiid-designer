@@ -74,6 +74,8 @@ public abstract class ProcedureInfo implements SqlConstants {
 		this.generator = generator;
 	}
 	
+	public abstract String getDefaultProcedureName();
+	
 	protected ProcedureGenerator getGenerator() {
 		return this.generator;
 	}

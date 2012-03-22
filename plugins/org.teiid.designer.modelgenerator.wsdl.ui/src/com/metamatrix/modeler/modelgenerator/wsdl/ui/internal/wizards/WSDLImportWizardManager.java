@@ -94,8 +94,12 @@ public class WSDLImportWizardManager {
      * @param fileUri the specified file uri
      */
     public void setWSDLFileUri( String fileUri ) {
-        this.wsdlReader.setWSDLUri(fileUri);
-        this.wsdlModel = null;
+    	if( this.wsdlReader.getWSDLUri() == null ) {
+            this.wsdlReader.setWSDLUri(fileUri);
+    	} else if( !(this.wsdlReader.getWSDLUri().equals(fileUri)) ) {
+            this.wsdlReader.setWSDLUri(fileUri);
+            this.wsdlModel = null;
+    	}
     }
 
     /**
@@ -308,7 +312,47 @@ public class WSDLImportWizardManager {
 	}
 	
 	public void setViewModelExists(boolean viewModelExists) {
+//		if( this.viewModelExists == viewModelExists) {
+//			return;
+//		}
+		
 		this.viewModelExists = viewModelExists;
+		// Need to update the request and response procedure names if view model exists
+		// and the generator has DO OVERWRITE == FALSE
+		if( this.viewModelExists) {
+    		for( ProcedureGenerator generator : this.procedureGenerators.values() ) {
+    			if( !generator.doOverwriteExistingProcedures()  ) {
+    				String validRequestName = ModelGeneratorWsdlUiUtil.getUniqueName(
+    					getViewModelLocation().getFullPath().toString(), 
+    					getViewModelName(), 
+    					generator.getRequestInfo().getDefaultProcedureName(),
+    					false, false);
+    				generator.getRequestInfo().setProcedureName(validRequestName);
+    				String validResponseName = ModelGeneratorWsdlUiUtil.getUniqueName(
+    					getViewModelLocation().getFullPath().toString(), 
+    					getViewModelName(), 
+    					generator.getResponseInfo().getDefaultProcedureName(),
+    					false, false);
+    				generator.getResponseInfo().setProcedureName(validResponseName);
+    				String validWrapperName = ModelGeneratorWsdlUiUtil.getUniqueName(
+    					getViewModelLocation().getFullPath().toString(), 
+    					getViewModelName(), 
+    					generator.getDefaultWrapperProcedureName(),
+    					false, false);
+    				generator.setWrapperProcedureName(validWrapperName);
+    			}
+    		}
+		} else {
+			for( ProcedureGenerator generator : this.procedureGenerators.values() ) {
+				generator.getRequestInfo().setProcedureName(generator.getRequestInfo().getDefaultProcedureName());
+				generator.getResponseInfo().setProcedureName(generator.getResponseInfo().getDefaultProcedureName());
+				String validWrapperName = generator.getWrapperProcedureName();
+				if( validWrapperName.startsWith(generator.getDefaultWrapperProcedureName()) ) {
+					generator.setWrapperProcedureName(generator.getWrapperProcedureName());
+				}
+				
+			}
+		}
 	}
 	
 	public boolean viewModelExists() {
@@ -368,6 +412,8 @@ public class WSDLImportWizardManager {
     }
     
     public void setDesignerProperty(String key, String value) {
-    	this.designerProperties.put(key, value);
+    	if( this.designerProperties != null ) {
+    		this.designerProperties.put(key, value);
+    	}
     }
 }

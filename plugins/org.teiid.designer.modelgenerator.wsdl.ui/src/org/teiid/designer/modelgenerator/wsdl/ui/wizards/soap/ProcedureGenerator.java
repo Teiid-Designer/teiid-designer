@@ -7,6 +7,8 @@
 */
 package org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap;
 
+import java.util.Properties;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.osgi.util.NLS;
@@ -18,6 +20,7 @@ import com.metamatrix.modeler.core.validation.rules.StringNameValidator;
 import com.metamatrix.modeler.internal.transformation.util.SqlConstants;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Operation;
 import com.metamatrix.modeler.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstants;
+import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.util.ModelGeneratorWsdlUiUtil;
 import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.wizards.WSDLImportWizardManager;
 
 /** This class provides state information for the create and extract procedures that will be generated during
@@ -31,6 +34,10 @@ public class ProcedureGenerator implements SqlConstants {
 	public static final String PLUGIN_ID = ModelGeneratorWsdlUiConstants.PLUGIN_ID;
 	
 	private static final StringNameValidator nameValidator = new RelationalStringNameValidator(false, true);
+	
+	public static final String KEY_REQUEST_PROCEDURE_NAME = "requestProcedureName"; //$NON-NLS-1$
+	public static final String KEY_RESPONSE_PROCEDURE_NAME = "responseProcedureName"; //$NON-NLS-1$
+	public static final String KEY_WRAPPER_PROCEDURE_NAME = "wrapperProcedureName"; //$NON-NLS-1$
 	
 	private static final String SQL_BEGIN = "CREATE VIRTUAL PROCEDURE\nBEGIN\n"; //$NON-NLS-1$
 	private static final String SQL_END = "\nEND"; //$NON-NLS-1$
@@ -66,6 +73,7 @@ public class ProcedureGenerator implements SqlConstants {
 	
 	private WSDLImportWizardManager importManager;
 	
+	private boolean wrapperExists = false;
 	
 
 	public ProcedureGenerator(Operation operation, WSDLImportWizardManager importManager) {
@@ -129,16 +137,46 @@ public class ProcedureGenerator implements SqlConstants {
 		this.wrapperProcedureName = name;
 	}
 	
-	public String getWrappedProcedureName() {
+	public String getDefaultWrapperProcedureName() {
+		return getOperation().getName();
+	}
+	
+	public String getWrapperProcedureName() {
 		if( this.wrapperProcedureName == null ) {
-			this.wrapperProcedureName = getOperation().getName();
+			this.wrapperProcedureName = getDefaultWrapperProcedureName();
 		}
 		return this.wrapperProcedureName;
 	}
 	
 	
 	public void setOverwriteExistingProcedures(boolean value) {
+		if( value == this.overwriteExistingProcedures ) {
+			return;
+		}
 		this.overwriteExistingProcedures = value;
+		// Update procedures for this operation
+		String validRequestName = getRequestInfo().getDefaultProcedureName();
+		String validResponseName = getResponseInfo().getDefaultProcedureName();
+		
+		if( !overwriteExistingProcedures ) {
+			validRequestName = ModelGeneratorWsdlUiUtil.getUniqueName(
+				this.importManager.getViewModelLocation().getFullPath().toString(), 
+				getViewModelName(), validRequestName,false, false);
+			
+			validResponseName = ModelGeneratorWsdlUiUtil.getUniqueName(
+				this.importManager.getViewModelLocation().getFullPath().toString(), 
+				getViewModelName(), validResponseName,false, false);
+		}
+		getRequestInfo().setProcedureName(validRequestName);
+		getResponseInfo().setProcedureName(validResponseName);
+		
+		String validWrapperName = getWrapperProcedureName();
+		if( !overwriteExistingProcedures && validWrapperName.equals(getDefaultWrapperProcedureName()) ) {
+			validWrapperName = ModelGeneratorWsdlUiUtil.getUniqueName(
+				this.importManager.getViewModelLocation().getFullPath().toString(), 
+				getViewModelName(), validWrapperName,false, false);
+		}
+		setWrapperProcedureName(validWrapperName);
 	}
 	
 	public boolean doOverwriteExistingProcedures() {
@@ -246,7 +284,7 @@ public class ProcedureGenerator implements SqlConstants {
 	private String getParameterFullName(String name) {
 		StringBuilder builder = new StringBuilder();
 		builder.append(this.getViewModelName());
-		builder.append('.').append(getWrappedProcedureName()).append('.').append(convertSqlNameSegment(name));
+		builder.append('.').append(getWrapperProcedureName()).append('.').append(convertSqlNameSegment(name));
 		
 		return builder.toString();
 	}
@@ -262,7 +300,7 @@ public class ProcedureGenerator implements SqlConstants {
 	private String getWrapperProcedureParameterName(String parameterName) {
 		StringBuilder builder = new StringBuilder();
 		builder.append(this.getViewModelName());
-		builder.append(DOT).append(getWrappedProcedureName()).append(DOT).append(parameterName);
+		builder.append(DOT).append(getWrapperProcedureName()).append(DOT).append(parameterName);
 		
 		return builder.toString();
 	}
@@ -276,14 +314,29 @@ public class ProcedureGenerator implements SqlConstants {
 		return Status.OK_STATUS;
 	}
 	
+	public boolean wrapperExists() {
+		return this.wrapperExists;
+	}
+	
 	public IStatus validate() {
 		IStatus status = Status.OK_STATUS;
+		
+		// Check for existing wrapper procedure
+		if( this.importManager.viewModelExists() ) {
+			this.wrapperExists = ModelGeneratorWsdlUiUtil.eObjectExists(
+				this.importManager.getViewModelLocation().getFullPath().toString(), 
+				this.importManager.getViewModelName(), 
+				this.wrapperProcedureName);
+		} else {
+			this.wrapperExists = false;
+		}
+		
 		// Go through objects and look for problems
-		if( getWrappedProcedureName() == null) {	
+		if( getWrapperProcedureName() == null) {	
 			return new Status(IStatus.ERROR, PLUGIN_ID, Messages.Error_WrapperProcedureNameCannotBeNullOrEmpty);
 		}
 		
-		IStatus nameStatus = getNameStatus(getWrappedProcedureName());
+		IStatus nameStatus = getNameStatus(getWrapperProcedureName());
 		if( nameStatus.getSeverity() > IStatus.INFO) {
 			return nameStatus;
 		}
@@ -317,7 +370,7 @@ public class ProcedureGenerator implements SqlConstants {
 	}
 	
 	@SuppressWarnings("unused")
-	public String getWrapperProcedureSqlString() {
+	public String getWrapperProcedureSqlString(Properties properties) {
 		/*
     	CREATE VIRTUAL PROCEDURE
     	BEGIN
@@ -332,6 +385,23 @@ public class ProcedureGenerator implements SqlConstants {
     				AS t;
     	END
     	*/
+		
+		// Request procedure name may have been overridden
+		String requestProcedureName = properties.getProperty(ProcedureGenerator.KEY_REQUEST_PROCEDURE_NAME);
+		if( requestProcedureName == null ) {
+			requestProcedureName = this.getRequestProcedureName();
+		}
+		// Request procedure name may have been overridden
+		String responseProcedureName = properties.getProperty(ProcedureGenerator.KEY_RESPONSE_PROCEDURE_NAME);
+		if( responseProcedureName == null ) {
+			responseProcedureName = this.getResponseProcedureName();
+		}
+		// Request procedure name may have been overridden
+		String wrapperProcedureName = properties.getProperty(ProcedureGenerator.KEY_WRAPPER_PROCEDURE_NAME);
+		if( wrapperProcedureName == null ) {
+			wrapperProcedureName = this.getRequestProcedureName();
+		}
+		
 		StringBuilder sb = new StringBuilder();
 		
     	String tableAlias = "t"; //$NON-NLS-1$

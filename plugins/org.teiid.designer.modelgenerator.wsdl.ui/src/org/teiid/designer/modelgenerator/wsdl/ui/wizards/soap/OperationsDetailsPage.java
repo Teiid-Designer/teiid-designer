@@ -36,10 +36,12 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -141,23 +143,20 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 
 	TabFolder wrapperTab;
 	WrapperProcedurePanel wrapperPanel;
+	Button overwriteExistingCB;
 
 	private ProcedureGenerator procedureGenerator;
 
 	// ==================================================
 	public OperationsDetailsPage(WSDLImportWizardManager theImportManager) {
-		super(OperationsDetailsPage.class.getSimpleName(),
-				Messages.ProcedureDefinition);
+		super(OperationsDetailsPage.class.getSimpleName(), Messages.ProcedureDefinition);
 		this.importManager = theImportManager;
 		this.importManager.setSelectedOperations(new ArrayList());
-		setImageDescriptor(ModelGeneratorWsdlUiUtil
-				.getImageDescriptor(Images.NEW_MODEL_BANNER));
+		setImageDescriptor(ModelGeneratorWsdlUiUtil.getImageDescriptor(Images.NEW_MODEL_BANNER));
 
 		semanticAdapterFactory = new XSDSemanticItemProviderAdapterFactory();
-		schemaLabelProvider = new AdapterFactoryLabelProvider(
-				semanticAdapterFactory);
-		schemaContentProvider = new SchemaTreeContentProvider(
-				semanticAdapterFactory);
+		schemaLabelProvider = new AdapterFactoryLabelProvider(semanticAdapterFactory);
+		schemaContentProvider = new SchemaTreeContentProvider(semanticAdapterFactory);
 	}
 
 	public ProcedureGenerator getProcedureGenerator() {
@@ -165,21 +164,19 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 	}
 
 	private void notifyOperationChanged(Operation operation) {
-		this.procedureGenerator = importManager
-				.getProcedureGenerator(operation);
+		this.procedureGenerator = importManager.getProcedureGenerator(operation);
 
 		this.wrapperPanel.notifyOperationChanged(operation);
 
-		this.requestProcedureNameText.setText(this.procedureGenerator
-				.getRequestProcedureName());
-		this.responseProcedureNameText.setText(this.procedureGenerator
-				.getResponseProcedureName());
+		this.requestProcedureNameText.setText(this.procedureGenerator.getRequestProcedureName());
+		this.responseProcedureNameText.setText(this.procedureGenerator.getResponseProcedureName());
 
 		// Now update the two column info panels
-		this.requestElementsInfoPanel.setProcedureInfo(this.procedureGenerator
-				.getRequestInfo());
-		this.responseElementsInfoPanel.setProcedureInfo(this.procedureGenerator
-				.getResponseInfo());
+		this.requestElementsInfoPanel.setProcedureInfo(this.procedureGenerator.getRequestInfo());
+		this.responseElementsInfoPanel.setProcedureInfo(this.procedureGenerator.getResponseInfo());
+		
+		this.overwriteExistingCB.setSelection(this.procedureGenerator.doOverwriteExistingProcedures());
+		this.overwriteExistingCB.setEnabled(this.importManager.viewModelExists());
 
 		updateSqlText(BOTH);
 		updateSchemaTree(BOTH);
@@ -225,17 +222,16 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 
 	@SuppressWarnings("unused")
 	private void createOperationsSelectionPanel(Composite parent) {
-		Group operationsGroup = WidgetFactory.createGroup(parent,
-				Messages.Operations, GridData.FILL_BOTH, 2, 1);
+		Group operationsGroup = WidgetFactory.createGroup(parent, Messages.Operations, GridData.FILL_BOTH, 2, 2);
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 		gd.horizontalSpan = 2;
 		operationsGroup.setLayoutData(gd);
 
 		ACTION_COMBO: {
-			operationsCombo = new Combo(operationsGroup, SWT.NONE
-					| SWT.READ_ONLY);
-			operationsCombo
-					.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+			operationsCombo = new Combo(operationsGroup, SWT.NONE | SWT.READ_ONLY);
+			operationsCombo.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+			gd.horizontalSpan = 2;
+			operationsCombo.setLayoutData(gd);
 
 			operationsCombo.addSelectionListener(new SelectionAdapter() {
 				@Override
@@ -244,6 +240,24 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 				}
 			});
 		}
+
+		overwriteExistingCB = new Button(operationsGroup, SWT.CHECK);
+		overwriteExistingCB.setText(Messages.OverwriteExistingProcedures);
+		gd.horizontalSpan = 2;
+		overwriteExistingCB.setLayoutData(gd);
+		overwriteExistingCB.addSelectionListener(new SelectionListener() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				handleOverwriteSelected();
+			}
+			
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+		});
+		this.overwriteExistingCB.setEnabled(this.importManager.viewModelExists());
+		
 	}
 
 	private List<String> getOperationsNameList() {
@@ -321,7 +335,7 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 
 		this.requestXmlTreeViewer.setContentProvider(schemaContentProvider);
 		this.requestXmlTreeViewer.setLabelProvider(schemaLabelProvider);
-		this.requestXmlTreeViewer.setAutoExpandLevel(2);
+		this.requestXmlTreeViewer.setAutoExpandLevel(3);
 		GridData data = new GridData(GridData.FILL_BOTH);
 		data.horizontalSpan = 4;
 		this.requestXmlTreeViewer.getControl().setLayoutData(data);
@@ -477,7 +491,7 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 		semanticAdapterFactory = new XSDSemanticItemProviderAdapterFactory();
 		this.responseXmlTreeViewer.setContentProvider(schemaContentProvider);
 		this.responseXmlTreeViewer.setLabelProvider(schemaLabelProvider);
-		this.responseXmlTreeViewer.setAutoExpandLevel(2);
+		this.responseXmlTreeViewer.setAutoExpandLevel(3);
 		GridData data = new GridData(GridData.FILL_BOTH);
 		data.horizontalSpan = 4;
 		this.responseXmlTreeViewer.getControl().setLayoutData(data);
@@ -597,6 +611,14 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 					break;
 				}
 			}
+		}
+	}
+	
+	private void handleOverwriteSelected() {
+		// For the selected operation, set the procedure generator's value
+		if( this.getProcedureGenerator() != null ) {
+			this.getProcedureGenerator().setOverwriteExistingProcedures(this.overwriteExistingCB.getSelection());
+			notifyOperationChanged(this.getProcedureGenerator().getOperation());
 		}
 	}
 
@@ -828,6 +850,7 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 		}
 		super.setVisible(isVisible);
 		this.wrapperPanel.setVisible();
+		this.overwriteExistingCB.setEnabled(this.importManager.viewModelExists());
 	}
     
     public void updateDesignerProperties() {
@@ -879,7 +902,7 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 				.getSelection();
 
 		Object obj = sel.getFirstElement();
-		if (obj instanceof XSDParticleImpl) {
+		if (obj instanceof XSDParticleImpl && ((XSDParticleImpl) obj).getContent() instanceof XSDElementDeclarationImpl) {
 
 			Model wsdlModel = null;
 			SchemaModel schemaModel;

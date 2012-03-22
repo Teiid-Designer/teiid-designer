@@ -97,7 +97,7 @@ public class WrapperProcedurePanel {
 	}
 
 	private void updateUi() {
-		this.wrapperProcedureText.setText(detailsPage.getProcedureGenerator().getWrappedProcedureName());
+		this.wrapperProcedureText.setText(detailsPage.getProcedureGenerator().getWrapperProcedureName());
 		this.sqlTextViewer.getDocument().set(detailsPage.getProcedureGenerator().getWrapperSqlString());
 	}
 
@@ -118,9 +118,9 @@ public class WrapperProcedurePanel {
 	
 	private void updateDesignerProperties() {
     	
-		if( this.detailsPage.getProcedureGenerator().getWrappedProcedureName() != null ) {
+		if( this.detailsPage.getProcedureGenerator().getWrapperProcedureName() != null ) {
 			this.detailsPage.getImportManager().setDesignerProperty(IPropertiesContext.KEY_PREVIEW_TARGET_OBJECT, 
-				this.detailsPage.getProcedureGenerator().getWrappedProcedureName());
+				this.detailsPage.getProcedureGenerator().getWrapperProcedureName());
 			this.detailsPage.getImportManager().setDesignerProperty(IPropertiesContext.KEY_PREVIEW_TARGET_MODEL, 
 				this.detailsPage.getImportManager().getViewModelName());
 		}

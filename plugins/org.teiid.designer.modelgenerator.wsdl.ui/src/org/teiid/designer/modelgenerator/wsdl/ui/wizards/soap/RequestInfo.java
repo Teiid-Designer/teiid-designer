@@ -19,16 +19,20 @@ public class RequestInfo extends ProcedureInfo {
 
 	public RequestInfo(Operation operation, ProcedureGenerator generator) {
 		super(operation, REQUEST, generator);
-		setProcedureName(operation.getName() + "_request"); //$NON-NLS-1$
+		setProcedureName(getDefaultProcedureName());
 	}
 	
 	
-	private String getFullParameterName(String name) {
+	private String getFullParameterName(String procedureName, String name) {
 		StringBuilder builder = new StringBuilder();
 		builder.append(getGenerator().getViewModelName());
-		builder.append('.').append(getProcedureName()).append('.').append(getGenerator().convertSqlNameSegment(name));
+		builder.append('.').append(procedureName).append('.').append(getGenerator().convertSqlNameSegment(name));
 		
 		return builder.toString();
+	}
+	
+	public String getDefaultProcedureName() {
+		return getOperation().getName() + "_request";//$NON-NLS-1$
 	}
 	
 	@Override
@@ -86,6 +90,12 @@ public class RequestInfo extends ProcedureInfo {
 //		END
 //	
 		
+		// Request procedure name may have been overridden
+		String requestProcedureName = properties.getProperty(ProcedureGenerator.KEY_REQUEST_PROCEDURE_NAME);
+		if( requestProcedureName == null ) {
+			requestProcedureName = this.getProcedureName();
+		}
+		
     	String alias = "xml_out"; //$NON-NLS-1$
     	StringBuffer sb = new StringBuffer();
     	int i=0;
@@ -112,7 +122,8 @@ public class RequestInfo extends ProcedureInfo {
 	    		String name = columnInfo.getName();
 	    		sb.append(TAB).append(TAB).append(TAB).append(XMLELEMENT);
 	    		sb.append(L_PAREN);
-	    		sb.append(NAME).append(SPACE).append(getGenerator().convertSqlNameSegment(name)).append(COMMA).append(SPACE).append(getFullParameterName(name));
+	    		sb.append(NAME).append(SPACE).append(getGenerator().convertSqlNameSegment(name));
+	    		sb.append(COMMA).append(SPACE).append(getFullParameterName(requestProcedureName, name));
 	    		sb.append(R_PAREN);
 	    		if(i < (nColumns-1)) {
 	    			sb.append(COMMA).append(SPACE).append(RETURN);
