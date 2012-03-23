@@ -8,11 +8,9 @@
 package org.teiid.designer.advisor.ui.actions;
 
 import java.util.Properties;
-
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.datatools.connectivity.IProfileListener;
-
-import com.metamatrix.modeler.ui.viewsupport.IPropertiesContext;
+import com.metamatrix.modeler.ui.viewsupport.DesignerPropertiesUtil;
 
 public class PropertiesProfileChangedListener implements IProfileListener {
 	Properties designerProperties;
@@ -38,9 +36,7 @@ public class PropertiesProfileChangedListener implements IProfileListener {
     
 	private void handleProfileAdded(IConnectionProfile newProfile) {
 		if( this.designerProperties != null ) {
-			this.designerProperties.put(
-					IPropertiesContext.KEY_LAST_CONNECTION_PROFILE_ID, 
-					newProfile.getName());
+            DesignerPropertiesUtil.setConnectionProfileName(this.designerProperties, newProfile.getName());
 		}
 	}
 }

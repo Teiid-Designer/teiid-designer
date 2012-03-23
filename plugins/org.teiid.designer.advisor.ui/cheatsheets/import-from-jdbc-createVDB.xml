@@ -67,7 +67,7 @@
    
    <item title="Test JDBC Source Data" skip="true">
         <description>
-            <b> This following action allows you to preview data from your newly generated JDBC view table.</b>
+            <b> This following action allows you to preview data from your newly generated JDBC source table.</b>
         </description>
          <subitem label="Launch Preview Data Dialog" skip="true">
                 <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
@@ -76,7 +76,7 @@
         </subitem>
         <subitem skip="true" >
           <description>
-                      <b>1)</b> Click the browse <b>"..."</b> button to select the newly created view table
+                      <b>1)</b> Click the browse <b>"..."</b> button to locate and select the newly created source table.
                 <br/> <b>2)</b> Click OK to execute the query
                 <br/> <b>3)</b> Results of the query will displayed in the SQL Results view
           </description>
