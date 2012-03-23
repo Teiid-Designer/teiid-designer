@@ -7,10 +7,7 @@
  */
 package org.teiid.designer.runtime.ui.vdb;
 
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.Properties;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -30,16 +27,14 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
-
 import com.metamatrix.core.event.IChangeListener;
 import com.metamatrix.core.event.IChangeNotifier;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
-import com.metamatrix.modeler.internal.core.workspace.WorkspaceResourceFinderUtil;
 import com.metamatrix.modeler.internal.ui.explorer.ModelExplorerContentProvider;
 import com.metamatrix.modeler.internal.ui.explorer.ModelExplorerLabelProvider;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelWorkspaceDialog;
-import com.metamatrix.modeler.ui.viewsupport.IPropertiesContext;
+import com.metamatrix.modeler.ui.viewsupport.DesignerPropertiesUtil;
 import com.metamatrix.ui.internal.util.WidgetFactory;
 import com.metamatrix.ui.internal.viewsupport.ClosedProjectFilter;
 import com.metamatrix.ui.internal.viewsupport.StatusInfo;
@@ -237,34 +232,16 @@ public class DeployVdbDialog extends TitleAreaDialog implements DqpUiConstants,
 	protected Control createContents(Composite parent) {
 		Control control = super.createContents(parent);
 
+        // Check for VDB in property definitions
 		if (this.designerProperties != null) {
-			// check for vdb name property
-			String vdbName = this.designerProperties.getProperty(IPropertiesContext.KEY_LAST_VDB_NAME);
-			if (vdbName != null) {
-				// Try to find VDB in workspace
-				final IResource vdbResource = getVdb(vdbName);
-				if (vdbResource != null) {
-					selectedVdb = (IFile) vdbResource;
-					this.selectedVdbText.setText(selectedVdb.getName());
-					updateState();
-				}
-			}
+            IResource vdbResource = DesignerPropertiesUtil.getVDB(this.designerProperties);
+            if (vdbResource != null) {
+                selectedVdb = (IFile)vdbResource;
+                this.selectedVdbText.setText(selectedVdb.getName());
+                updateState();
+            }
 		}
 		return control;
-	}
-
-	private IFile getVdb(String name) {
-		// Collect only vdb archive resources from the workspace
-		final Collection vdbResources = WorkspaceResourceFinderUtil.getAllWorkspaceResources(WorkspaceResourceFinderUtil.VDB_RESOURCE_FILTER);
-		for (final Iterator iter = vdbResources.iterator(); iter.hasNext();) {
-			final IResource vdb = (IResource) iter.next();
-			if (vdb.getFullPath().lastSegment().equalsIgnoreCase(name)) {
-				return (IFile) vdb;
-			}
-		}
-
-		return null;
-
 	}
 
 }

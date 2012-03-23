@@ -8,10 +8,7 @@
 package com.metamatrix.modeler.internal.ui.viewsupport;
 
 import java.util.Properties;
-
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.viewers.ISelection;
@@ -27,7 +24,6 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.RefreshAction;
 import org.eclipse.ui.wizards.IWizardDescriptor;
-
 import com.metamatrix.modeler.core.workspace.ModelProject;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.internal.core.workspace.ModelWorkspaceManager;
@@ -35,6 +31,7 @@ import com.metamatrix.modeler.internal.ui.explorer.ModelExplorerResourceNavigato
 import com.metamatrix.modeler.ui.UiConstants;
 import com.metamatrix.modeler.ui.UiConstants.Extensions;
 import com.metamatrix.modeler.ui.UiPlugin;
+import com.metamatrix.modeler.ui.viewsupport.DesignerPropertiesUtil;
 import com.metamatrix.modeler.ui.viewsupport.IPropertiesContext;
 import com.metamatrix.ui.internal.product.ProductCustomizerMgr;
 import com.metamatrix.ui.internal.util.UiUtil;
@@ -291,15 +288,9 @@ public class ModelerUiViewUtils {
 	public static IProject queryUserToCreateModelProject() {
 		Properties newProps = new Properties();
 		ModelerUiViewUtils.launchWizard("newModelProject", new StructuredSelection(), newProps, true); //$NON-NLS-1$
-		String projectName = newProps.getProperty(IPropertiesContext.KEY_PROJECT_NAME);
-		if( projectName != null ) {
-    		final IResource resrc = ResourcesPlugin.getWorkspace().getRoot().findMember(projectName);
-    		if( resrc != null && resrc instanceof IProject) {
-    			return (IProject)resrc;
-    		}
-		}
 		
-		return null;
+        IProject project = DesignerPropertiesUtil.getProject(newProps);
+        return project;
 	}
 
 }

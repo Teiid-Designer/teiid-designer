@@ -7,6 +7,7 @@
  */
 package org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.panels;
 
+import java.util.Properties;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -30,7 +31,6 @@ import org.eclipse.swt.widgets.Text;
 import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
 import org.teiid.designer.datatools.connection.IConnectionInfoHelper;
 import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
-
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
@@ -41,7 +41,7 @@ import com.metamatrix.modeler.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstan
 import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.util.ModelGeneratorWsdlUiUtil;
 import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.wizards.WSDLImportWizardManager;
 import com.metamatrix.modeler.transformation.ui.wizards.file.FlatFileRelationalModelFactory;
-import com.metamatrix.modeler.ui.viewsupport.IPropertiesContext;
+import com.metamatrix.modeler.ui.viewsupport.DesignerPropertiesUtil;
 import com.metamatrix.modeler.ui.viewsupport.ModelingResourceFilter;
 import com.metamatrix.ui.internal.util.WidgetFactory;
 import com.metamatrix.ui.internal.util.WidgetUtil;
@@ -517,15 +517,19 @@ public class ImportOptionsPanel implements ModelGeneratorWsdlUiConstants {
 	
     private void updateDesignerProperties() {
     	if( this.currentStatus.isOK() ) {
-    		if( this.sourceModelFileText.getText() != null ) {
-    			this.importManager.setDesignerProperty(IPropertiesContext.KEY_LAST_SOURCE_MODEL_NAME, this.sourceModelFileText.getText());
-    		}
-    		if( this.importManager.getSourceModelLocation() != null ) {
-    			this.importManager.setDesignerProperty(IPropertiesContext.KEY_PROJECT_NAME, this.importManager.getSourceModelLocation().getProject().getName());
-    		}
-    		if( this.viewModelFileText.getText() != null ) {
-    			this.importManager.setDesignerProperty(IPropertiesContext.KEY_LAST_VIEW_MODEL_NAME, this.viewModelFileText.getText());
-    		}
+            Properties designerProperties = this.importManager.getDesignerProperties();
+            if (designerProperties != null) {
+                if (this.sourceModelFileText.getText() != null) {
+                    DesignerPropertiesUtil.setSourceModelName(designerProperties, this.sourceModelFileText.getText());
+                }
+                if (this.importManager.getSourceModelLocation() != null) {
+                    DesignerPropertiesUtil.setProjectName(designerProperties,
+                                                          this.importManager.getSourceModelLocation().getProject().getName());
+                }
+                if (this.viewModelFileText.getText() != null) {
+                    DesignerPropertiesUtil.setViewModelName(designerProperties, this.viewModelFileText.getText());
+                }
+            }
     	}
     }
 }

@@ -7,15 +7,9 @@
  */
 package org.teiid.designer.runtime.ui.preview;
 
-import java.util.List;
 import java.util.Properties;
-
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
@@ -32,24 +26,17 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
-
 import com.metamatrix.core.event.IChangeListener;
 import com.metamatrix.core.event.IChangeNotifier;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.metamodels.relational.Procedure;
 import com.metamatrix.metamodels.relational.Table;
-import com.metamatrix.modeler.core.ModelEditor;
 import com.metamatrix.modeler.core.ModelerCore;
-import com.metamatrix.modeler.core.workspace.ModelResource;
-import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
-import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
-import com.metamatrix.modeler.internal.core.workspace.DotProjectUtils;
 import com.metamatrix.modeler.internal.ui.explorer.ModelExplorerContentProvider;
 import com.metamatrix.modeler.internal.ui.explorer.ModelExplorerLabelProvider;
-import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelWorkspaceDialog;
-import com.metamatrix.modeler.ui.viewsupport.IPropertiesContext;
+import com.metamatrix.modeler.ui.viewsupport.DesignerPropertiesUtil;
 import com.metamatrix.ui.internal.util.WidgetFactory;
 import com.metamatrix.ui.internal.viewsupport.ClosedProjectFilter;
 import com.metamatrix.ui.internal.viewsupport.StatusInfo;
@@ -178,50 +165,13 @@ public class PreviewDataDialog extends TitleAreaDialog implements
 		Control control = super.createContents(parent);
 
 		if( this.designerProperties != null ) {
-			// check for vdb name property
-			String targetName = this.designerProperties.getProperty(IPropertiesContext.KEY_PREVIEW_TARGET_OBJECT);
-			String targetModel = this.designerProperties.getProperty(IPropertiesContext.KEY_PREVIEW_TARGET_MODEL);
-			String targetProject = this.designerProperties.getProperty(IPropertiesContext.KEY_PROJECT_NAME);
-			String viewsFolder = this.designerProperties.getProperty(IPropertiesContext.KEY_HAS_VIEWS_FOLDER);
-			IPath targetModelPath = new Path("").makeAbsolute();
-			if( viewsFolder != null && !viewsFolder.isEmpty() ) {
-				targetModelPath = targetModelPath.append(viewsFolder);
-			}
-			targetModelPath = targetModelPath.append(targetModel);
-			
-			if( targetName != null && targetModel != null && targetProject != null ) {
-				// Try to find VDB in workspace
-				IProject[] openProjects = DotProjectUtils.getOpenModelProjects();
-				IProject project = null;
-				for( IProject openProject : openProjects ) {
-					if( openProject.getName().equals(targetProject)) {
-						project = openProject;
-						break;
-					}
-				}
-				try {
-					if( project != null ) {
-						IFile targetFile = project.getFile(targetModelPath);
-						if( targetFile != null ) {
-							ModelEditor editor = ModelerCore.getModelEditor();
-							ModelResource mr = ModelUtilities.getModelResourceForIFile(targetFile, true);
-							if( mr != null ) {
-								List<EObject> eObjects = mr.getEObjects();
-								for( EObject eObj : eObjects ) {
-									if( targetName.equals(editor.getName(eObj)) ) {
-							            previewableEObject = eObj;
-							            this.selectedEobjectText.setText(ModelerCore.getModelEditor().getName(previewableEObject));
-							            break;
-									}
-								}
-							}
-						}
-					}
-				} catch (ModelWorkspaceException ex) {
-					DqpUiPlugin.UTIL.log(ex);
-				}
-				updateState();
-			}
+            // Get the Preview Target Object (null if not found)
+            EObject targetPreviewEObj = DesignerPropertiesUtil.getPreviewTargetObject(this.designerProperties);
+            if (targetPreviewEObj != null) {
+                this.previewableEObject = targetPreviewEObj;
+                this.selectedEobjectText.setText(ModelerCore.getModelEditor().getName(previewableEObject));
+            }
+            updateState();
 		}
 		return control;
 	}

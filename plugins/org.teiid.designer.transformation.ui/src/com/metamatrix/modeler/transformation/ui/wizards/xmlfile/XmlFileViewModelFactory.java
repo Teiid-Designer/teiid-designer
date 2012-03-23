@@ -11,7 +11,6 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
-
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.metamodels.relational.BaseTable;
 import com.metamatrix.metamodels.relational.RelationalFactory;
@@ -49,23 +48,25 @@ public class XmlFileViewModelFactory  extends FlatFileRelationalModelFactory {
     
     public ModelResource createViewRelationalModel( IPath location, String modelName) throws ModelWorkspaceException {
         ModelWorkspaceItem mwItem = null;
+
+        // One Segment -- Project
         if( location.segmentCount() == 1 ) {
-        	// Project for ONE segment
         	mwItem = ModelWorkspaceManager.getModelWorkspaceManager().findModelWorkspaceItem(location.makeAbsolute(), IResource.PROJECT);
         } else {
+            // Multiple Segments -- Folder
         	mwItem = ModelWorkspaceManager.getModelWorkspaceManager().findModelWorkspaceItem(location.makeAbsolute(), IResource.FOLDER);
         }
         
+        // Get the Project
         IProject project = mwItem.getResource().getProject();
-        IPath relativeModelPath = project.getProjectRelativePath().append(modelName);
+
+        // Create the model at the specified relative path
+        IPath relativeModelPath = mwItem.getPath().removeFirstSegments(1).append(modelName);
         final IFile modelFile = project.getFile( relativeModelPath );
         final ModelResource resrc = ModelerCore.create( modelFile );
         resrc.getModelAnnotation().setPrimaryMetamodelUri( RELATIONAL_PACKAGE_URI );
         resrc.getModelAnnotation().setModelType(ModelType.VIRTUAL_LITERAL);
         ModelUtilities.initializeModelContainers(resrc, "Create Model Containers", this); //$NON-NLS-1$ 
-//    	if( resrc !=null ) {
-//    		resrc.save(null, true);
-//    	}
 
         return resrc;
     }

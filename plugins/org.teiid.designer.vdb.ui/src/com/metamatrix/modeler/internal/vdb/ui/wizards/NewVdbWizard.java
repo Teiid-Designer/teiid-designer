@@ -14,12 +14,10 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -59,7 +57,6 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.eclipse.ui.ide.IDE;
 import org.teiid.designer.vdb.Vdb;
-
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.core.ModelerCore;
@@ -74,6 +71,7 @@ import com.metamatrix.modeler.internal.ui.viewsupport.ModelerUiViewUtils;
 import com.metamatrix.modeler.internal.vdb.ui.editor.VdbEditor;
 import com.metamatrix.modeler.ui.UiConstants;
 import com.metamatrix.modeler.ui.UiPlugin;
+import com.metamatrix.modeler.ui.viewsupport.DesignerPropertiesUtil;
 import com.metamatrix.modeler.ui.viewsupport.IPropertiesContext;
 import com.metamatrix.modeler.ui.viewsupport.ModelingResourceFilter;
 import com.metamatrix.modeler.vdb.ui.VdbUiConstants;
@@ -170,7 +168,7 @@ public final class NewVdbWizard extends AbstractWizard
         }
         
         if( designerProperties != null ) {
-        	designerProperties.put(IPropertiesContext.KEY_LAST_VDB_NAME, name);
+            DesignerPropertiesUtil.setVdbName(designerProperties, name);
         }
 
         // create VDB resource
@@ -661,30 +659,17 @@ public final class NewVdbWizard extends AbstractWizard
 	
 	private void updateForProperties() {
     	if( this.folder == null ) {
-    		// check for project property and if sources folder property exists
-    		String projectName = this.designerProperties.getProperty(IPropertiesContext.KEY_PROJECT_NAME);
-    		if( projectName != null && !projectName.isEmpty() ) {
-    			String folderName = projectName;
-    			String sourcesFolder = this.designerProperties.getProperty(IPropertiesContext.KEY_HAS_SOURCES_FOLDER);
-    			if( sourcesFolder != null && !sourcesFolder.isEmpty() ) {
-    				folderName = new Path(projectName).append(sourcesFolder).toString();
-    			}
-    			final IResource resrc = ResourcesPlugin.getWorkspace().getRoot().findMember(folderName);
-    			if( resrc != null ) {
-    		        this.folder = (IContainer)resrc;
-
-    		        if (folder != null) {
-    		            this.folderText.setText(folder.getFullPath().makeRelative().toString());
-
-    		            if (CoreStringUtil.isEmpty(nameText.getText())) {
-    		                nameText.setFocus();
-    		            }
-    		        }
-    			}
-    		}
+            // Get Project from Properties - if it exists.
+            IProject project = DesignerPropertiesUtil.getProject(this.designerProperties);
+            if (project != null) {
+                this.folder = project;
+                this.folderText.setText(this.folder.getFullPath().makeRelative().toString());
+                if (CoreStringUtil.isEmpty(nameText.getText())) {
+                    nameText.setFocus();
+                }
+            }
     	}
 		
 	}
-	
-	
+
 }

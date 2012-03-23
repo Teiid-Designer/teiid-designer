@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -80,6 +79,7 @@ import com.metamatrix.modeler.jdbc.ui.wizards.IJdbcImportInfoProvider;
 import com.metamatrix.modeler.jdbc.ui.wizards.IJdbcImportPostProcessor;
 import com.metamatrix.modeler.ui.UiPlugin;
 import com.metamatrix.modeler.ui.editors.ModelEditorManager;
+import com.metamatrix.modeler.ui.viewsupport.DesignerPropertiesUtil;
 import com.metamatrix.modeler.ui.viewsupport.IPropertiesContext;
 import com.metamatrix.ui.internal.product.ProductCustomizerMgr;
 import com.metamatrix.ui.internal.util.WidgetUtil;
@@ -888,26 +888,17 @@ public class JdbcImportWizard extends AbstractWizard
     
     @Override
     public void setProperties(Properties props) {
-    	this.designerProperties = props;
-    	if( this.folder == null ) {
-    		// check for project property and if sources folder property exists
-    		String projectName = this.designerProperties.getProperty(IPropertiesContext.KEY_PROJECT_NAME);
-    		if( projectName != null && !projectName.isEmpty() ) {
-    			String folderName = projectName;
-    			String sourcesFolder = this.designerProperties.getProperty(IPropertiesContext.KEY_HAS_SOURCES_FOLDER);
-    			if( sourcesFolder != null && !sourcesFolder.isEmpty() ) {
-    				folderName = new Path(projectName).append(sourcesFolder).toString();
-    			}
-    			final IResource resrc = ResourcesPlugin.getWorkspace().getRoot().findMember(folderName);
-    			if( resrc != null ) {
-    				setFolder((IContainer)resrc);
-    			}
-    		}
-    	}
+        this.designerProperties = props;
+        if (this.folder == null) {
+            IContainer srcFolder = DesignerPropertiesUtil.getSourcesFolder(this.designerProperties);
+            if (srcFolder != null) {
+                setFolder(srcFolder);
+            }
+        }
     	
     	if( this.connectionProfile == null ) {
     		// check for project property and if sources folder property exists
-    		String profileName = this.designerProperties.getProperty(IPropertiesContext.KEY_LAST_CONNECTION_PROFILE_ID);
+            String profileName = DesignerPropertiesUtil.getConnectionProfileName(this.designerProperties);
     		if( profileName != null && !profileName.isEmpty() ) {
     			// Select profile
     			srcPg.selectConnectionProfile(profileName);

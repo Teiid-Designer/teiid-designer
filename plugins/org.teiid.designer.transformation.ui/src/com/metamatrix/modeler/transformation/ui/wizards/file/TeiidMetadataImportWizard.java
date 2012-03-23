@@ -11,10 +11,7 @@ import java.util.Properties;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -30,6 +27,7 @@ import com.metamatrix.modeler.internal.ui.viewsupport.ModelIdentifier;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelerUiViewUtils;
 import com.metamatrix.modeler.transformation.ui.UiConstants;
 import com.metamatrix.modeler.transformation.ui.UiPlugin;
+import com.metamatrix.modeler.ui.viewsupport.DesignerPropertiesUtil;
 import com.metamatrix.modeler.ui.viewsupport.IPropertiesContext;
 import com.metamatrix.ui.internal.util.UiUtil;
 import com.metamatrix.ui.internal.util.WidgetUtil;
@@ -178,31 +176,25 @@ public class TeiidMetadataImportWizard extends AbstractWizard implements
 		
 	}
 	
-	protected void updateForProperties() {
+    protected void updateForProperties() {
 		if( this.designerProperties == null || this.designerProperties.isEmpty() ) {
 			return;
 		}
 		
-    	if( this.folder == null ) {
-    		// check for project property and if sources folder property exists
-    		String projectName = this.designerProperties.getProperty(IPropertiesContext.KEY_PROJECT_NAME);
-    		if( projectName != null && !projectName.isEmpty() ) {
-    			String folderName = projectName;
-    			String sourcesFolder = this.designerProperties.getProperty(IPropertiesContext.KEY_HAS_SOURCES_FOLDER);
-    			if( sourcesFolder != null && !sourcesFolder.isEmpty() ) {
-    				folderName = new Path(projectName).append(sourcesFolder).toString();
-    			}
-    			final IResource resrc = ResourcesPlugin.getWorkspace().getRoot().findMember(folderName);
-    			if( resrc != null ) {
-    				this.folder = (IContainer)resrc;
-    	        	this.filesInfo.setSourceModelLocation(folder.getFullPath());
-    	        	this.filesInfo.setViewModelLocation(folder.getFullPath());
-    			}
-    		}
-    	}
+        if (this.folder == null) {
+            // Check for Sources and View Folder from property definitions
+            IContainer srcFolderResrc = DesignerPropertiesUtil.getSourcesFolder(this.designerProperties);
+            IContainer viewFolderResrc = DesignerPropertiesUtil.getViewsFolder(this.designerProperties);
+            if (srcFolderResrc != null) {
+                getFileInfo().setSourceModelLocation(srcFolderResrc.getFullPath());
+            }
+            if (viewFolderResrc != null) {
+                getFileInfo().setViewModelLocation(viewFolderResrc.getFullPath());
+            }
+        }
     	
-		// check for project property and if sources folder property exists
-		String profileName = this.designerProperties.getProperty(IPropertiesContext.KEY_LAST_CONNECTION_PROFILE_ID);
+        // Check for Connection Profile in properties
+        String profileName = DesignerPropertiesUtil.getConnectionProfileName(this.designerProperties);
 		if( profileName != null && !profileName.isEmpty() ) {
 			// Select profile
 			sourcePage.selectConnectionProfile(profileName);

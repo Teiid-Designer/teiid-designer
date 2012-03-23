@@ -16,7 +16,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
 import org.teiid.designer.datatools.profiles.xml.XmlFileConnectionInfoProvider;
 import org.teiid.designer.datatools.profiles.xml.XmlUrlConnectionInfoProvider;
-
 import com.metamatrix.modeler.core.ModelerCoreException;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
@@ -67,17 +66,26 @@ public class TeiidXmlFileImportProcessor extends TeiidMetadataImportProcessor im
     	return null;
     }
     
+    /**
+     * Create Views. The source Model Name is passed in for use in the transformation SQL
+     * 
+     * @param sourceModelName the name of the source model {@inheritDoc}
+     * @see com.metamatrix.modeler.transformation.ui.wizards.file.TeiidMetadataImportProcessor#createViewsInNewModel(java.lang.String)
+     */
     protected ModelResource createViewsInNewModel(String sourceModelName) throws ModelerCoreException {
     	XmlFileViewModelFactory factory = new XmlFileViewModelFactory();
     	
-    	String modelName = this.getInfo().getViewModelName();
+        // View Model Name
+        String viewModelName = this.getInfo().getViewModelName();
     	
-    	if (!modelName.toLowerCase().endsWith(DEFAULT_EXTENSION_LCASE)) {
-    		modelName = modelName + DEFAULT_EXTENSION_LCASE;
+    	if (!viewModelName.toLowerCase().endsWith(DEFAULT_EXTENSION_LCASE)) {
+            viewModelName = viewModelName + DEFAULT_EXTENSION_LCASE;
         }
     	
+        // Create the View Model, at the specified location
+        ModelResource modelResource = factory.createViewRelationalModel(this.getInfo().getViewModelLocation(), viewModelName);
     	
-    	ModelResource modelResource = factory.createViewRelationalModel(this.getInfo().getViewModelLocation(), modelName);
+    	// Create View Tables in the model
         for( TeiidXmlFileInfo info : this.getInfo().getXmlFileInfos()) {
         	if( info.doProcess() ) {
         		factory.createViewTable(modelResource, info, sourceModelName);

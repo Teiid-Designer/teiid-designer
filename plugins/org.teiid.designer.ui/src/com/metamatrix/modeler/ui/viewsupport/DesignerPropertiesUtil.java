@@ -9,17 +9,26 @@ package com.metamatrix.modeler.ui.viewsupport;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Properties;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.emf.ecore.EObject;
+import com.metamatrix.modeler.core.ModelEditor;
+import com.metamatrix.modeler.core.ModelerCore;
+import com.metamatrix.modeler.core.workspace.ModelResource;
+import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
+import com.metamatrix.modeler.internal.core.workspace.DotProjectUtils;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.core.workspace.WorkspaceResourceFinderUtil;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelIdentifier;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
+import com.metamatrix.modeler.ui.UiPlugin;
 
 /**
  * Contains static helper methods for working with IPropertiesContext properties
@@ -53,12 +62,24 @@ public class DesignerPropertiesUtil {
         return properties.getProperty(IPropertiesContext.KEY_LAST_VIEW_MODEL_NAME);
     }
 
+    public static String getConnectionProfileName( Properties properties ) {
+        return properties.getProperty(IPropertiesContext.KEY_LAST_CONNECTION_PROFILE_ID);
+    }
+
     public static String getSourcesFolderName( Properties properties ) {
         return properties.getProperty(IPropertiesContext.KEY_HAS_SOURCES_FOLDER);
     }
 
     public static String getViewsFolderName( Properties properties ) {
         return properties.getProperty(IPropertiesContext.KEY_HAS_VIEWS_FOLDER);
+    }
+
+    public static String getSchemaFolderName( Properties properties ) {
+        return properties.getProperty(IPropertiesContext.KEY_HAS_SCHEMA_FOLDER);
+    }
+
+    public static String getWebServiceFolderName( Properties properties ) {
+        return properties.getProperty(IPropertiesContext.KEY_HAS_WS_FOLDER);
     }
 
     public static String getPreviewTargetObjectName( Properties properties ) {
@@ -89,6 +110,11 @@ public class DesignerPropertiesUtil {
         properties.put(IPropertiesContext.KEY_LAST_VIEW_MODEL_NAME, viewModelName);
     }
 
+    public static void setConnectionProfileName( Properties properties,
+                                                 String connProfileName ) {
+        properties.put(IPropertiesContext.KEY_LAST_CONNECTION_PROFILE_ID, connProfileName);
+    }
+
     public static void setSourcesFolderName( Properties properties,
                                              String sourcesFolderName ) {
         properties.put(IPropertiesContext.KEY_HAS_SOURCES_FOLDER, sourcesFolderName);
@@ -97,6 +123,16 @@ public class DesignerPropertiesUtil {
     public static void setViewsFolderName( Properties properties,
                                            String sourcesFolderName ) {
         properties.put(IPropertiesContext.KEY_HAS_VIEWS_FOLDER, sourcesFolderName);
+    }
+
+    public static void setSchemaFolderName( Properties properties,
+                                            String schemaFolderName ) {
+        properties.put(IPropertiesContext.KEY_HAS_SCHEMA_FOLDER, schemaFolderName);
+    }
+
+    public static void setWebServiceFolderName( Properties properties,
+                                                String webServiceFolderName ) {
+        properties.put(IPropertiesContext.KEY_HAS_WS_FOLDER, webServiceFolderName);
     }
 
     public static void setPreviewTargetObjectName( Properties properties,
@@ -158,7 +194,8 @@ public class DesignerPropertiesUtil {
     }
 
     /**
-     * Get the Project, if the properties are defined and project can be found
+     * Get the Project, if the properties are defined and project can be found. Also, the Project must be OPEN - or will return
+     * null.
      * 
      * @param properties the Designer properties
      * @return the IProject, null if not defined or found
@@ -167,9 +204,12 @@ public class DesignerPropertiesUtil {
         IProject project = null;
         String projectName = properties.getProperty(IPropertiesContext.KEY_PROJECT_NAME);
         if (projectName != null) {
-            final IResource resrc = ResourcesPlugin.getWorkspace().getRoot().findMember(projectName);
-            if (resrc != null && resrc instanceof IProject) {
-                project = (IProject)resrc;
+            IProject[] openProjects = DotProjectUtils.getOpenModelProjects();
+            for (IProject openProject : openProjects) {
+                if (openProject.getName().equals(projectName)) {
+                    project = openProject;
+                    break;
+                }
             }
         }
         return project;
@@ -234,6 +274,69 @@ public class DesignerPropertiesUtil {
             }
         }
         return vdbResource;
+    }
+
+    /**
+     * Get the Preview Target Model, if the properties are defined and model can be found. The preview model must be located in
+     * the defined 'views' folder
+     * 
+     * @param properties the Designer properties
+     * @return the IFile, null if not defined or found
+     */
+    public static IFile getPreviewTargetModel( Properties properties ) {
+        String targetModelName = DesignerPropertiesUtil.getPreviewTargetModelName(properties);
+        String viewsFolder = DesignerPropertiesUtil.getViewsFolderName(properties);
+
+        IFile targetPreviewModel = null;
+
+        // Get the target Project (must be open)
+        IProject project = DesignerPropertiesUtil.getProject(properties);
+        if (project != null) {
+            // Construct path to target model
+            IPath targetModelPath = new Path("").makeAbsolute(); //$NON-NLS-1$
+            if (viewsFolder != null && targetModelName != null && !viewsFolder.isEmpty() && !targetModelName.isEmpty()) {
+                targetModelPath = targetModelPath.append(viewsFolder).append(targetModelName);
+                targetPreviewModel = project.getFile(targetModelPath);
+            }
+        }
+        return targetPreviewModel;
+    }
+
+    /**
+     * Get the Preview Target Object, if the properties are defined and it can be found. The preview object model must be located
+     * in the defined 'views' folder
+     * 
+     * @param properties the Designer properties
+     * @return the IFile, null if not defined or found
+     */
+    public static EObject getPreviewTargetObject( Properties properties ) {
+        EObject targetEObj = null;
+
+        IFile targetModel = getPreviewTargetModel(properties);
+        if (targetModel != null) {
+            String targetObjName = DesignerPropertiesUtil.getPreviewTargetObjectName(properties);
+            // Locate the Target Preview Object in the Preview Model
+            if (targetObjName != null && !targetObjName.isEmpty()) {
+                ModelEditor editor = ModelerCore.getModelEditor();
+                ModelResource resource = ModelUtilities.getModelResourceForIFile(targetModel, true);
+                if (resource != null) {
+                    try {
+                        List<EObject> eObjects = resource.getEObjects();
+                        for (EObject eObj : eObjects) {
+                            // If Target Preview Object is found, update the UI
+                            if (targetObjName.equals(editor.getName(eObj))) {
+                                targetEObj = eObj;
+                                break;
+                            }
+                        }
+                    } catch (ModelWorkspaceException ex) {
+                        UiPlugin.getDefault().getPluginUtil().log(ex);
+                    }
+                }
+            }
+        }
+
+        return targetEObj;
     }
 
 }

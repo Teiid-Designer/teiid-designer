@@ -9,7 +9,6 @@ package com.metamatrix.modeler.ui.wizards;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Properties;
-
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.operations.AbstractOperation;
 import org.eclipse.core.resources.IFolder;
@@ -42,7 +41,6 @@ import org.eclipse.ui.dialogs.WizardNewProjectCreationPage;
 import org.eclipse.ui.ide.undo.CreateFolderOperation;
 import org.eclipse.ui.ide.undo.WorkspaceUndoUtil;
 import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
-
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.core.ModelerCore;
@@ -53,6 +51,7 @@ import com.metamatrix.modeler.internal.core.validation.ValidationProblemImpl;
 import com.metamatrix.modeler.internal.core.validation.ValidationResultImpl;
 import com.metamatrix.modeler.internal.ui.explorer.ModelExplorerResourceNavigator;
 import com.metamatrix.modeler.ui.UiConstants;
+import com.metamatrix.modeler.ui.viewsupport.DesignerPropertiesUtil;
 import com.metamatrix.modeler.ui.viewsupport.IPropertiesContext;
 import com.metamatrix.ui.internal.product.ProductCustomizerMgr;
 import com.metamatrix.ui.internal.util.UiUtil;
@@ -158,7 +157,7 @@ public class NewModelProjectWizard extends BasicNewProjectResourceWizard impleme
             project.open(null);
             
             if( designerProperties != null ) {
-            	designerProperties.put(IPropertiesContext.KEY_PROJECT_NAME, project.getName());
+                DesignerPropertiesUtil.setProjectName(designerProperties, project.getName());
             }
             
             createFolders(project);
@@ -186,25 +185,25 @@ public class NewModelProjectWizard extends BasicNewProjectResourceWizard impleme
     	
         if( optionsPage.createSources) {
             if( designerProperties != null ) {
-            	designerProperties.put(IPropertiesContext.KEY_HAS_SOURCES_FOLDER, optionsPage.sourcesStr);
+                DesignerPropertiesUtil.setSourcesFolderName(designerProperties, optionsPage.sourcesStr);
             }
     		createFolder(project, optionsPage.sourcesStr);
     	}
     	if( optionsPage.createViews ) {
             if( designerProperties != null ) {
-            	designerProperties.put(IPropertiesContext.KEY_HAS_VIEWS_FOLDER, optionsPage.viewsStr);
+                DesignerPropertiesUtil.setViewsFolderName(designerProperties, optionsPage.viewsStr);
             }
     		createFolder(project, optionsPage.viewsStr);
     	}
     	if( optionsPage.createSchema ) {
             if( designerProperties != null ) {
-            	designerProperties.put(IPropertiesContext.KEY_HAS_SCHEMA_FOLDER, optionsPage.schemaStr);
+                DesignerPropertiesUtil.setSchemaFolderName(designerProperties, optionsPage.schemaStr);
             }
     		createFolder(project, optionsPage.schemaStr);
     	}
     	if( optionsPage.createWebServices ) {
             if( designerProperties != null ) {
-            	designerProperties.put(IPropertiesContext.KEY_HAS_WS_FOLDER, optionsPage.webServicesStr);
+                DesignerPropertiesUtil.setWebServiceFolderName(designerProperties, optionsPage.webServicesStr);
             }
     		createFolder(project, optionsPage.webServicesStr);
     	}

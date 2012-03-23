@@ -7,6 +7,7 @@
  */
 package org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.panels;
 
+import java.util.Properties;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
@@ -23,11 +24,10 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.OperationsDetailsPage;
-
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Operation;
 import com.metamatrix.modeler.transformation.ui.editors.sqleditor.SqlTextViewer;
-import com.metamatrix.modeler.ui.viewsupport.IPropertiesContext;
+import com.metamatrix.modeler.ui.viewsupport.DesignerPropertiesUtil;
 import com.metamatrix.ui.graphics.ColorManager;
 import com.metamatrix.ui.internal.util.WidgetFactory;
 import com.metamatrix.ui.internal.util.WidgetUtil;
@@ -119,10 +119,13 @@ public class WrapperProcedurePanel {
 	private void updateDesignerProperties() {
     	
 		if( this.detailsPage.getProcedureGenerator().getWrapperProcedureName() != null ) {
-			this.detailsPage.getImportManager().setDesignerProperty(IPropertiesContext.KEY_PREVIEW_TARGET_OBJECT, 
-				this.detailsPage.getProcedureGenerator().getWrapperProcedureName());
-			this.detailsPage.getImportManager().setDesignerProperty(IPropertiesContext.KEY_PREVIEW_TARGET_MODEL, 
-				this.detailsPage.getImportManager().getViewModelName());
+            Properties designerProperties = this.detailsPage.getImportManager().getDesignerProperties();
+            if (designerProperties != null) {
+                DesignerPropertiesUtil.setPreviewTargetObjectName(designerProperties,
+                                                                  this.detailsPage.getProcedureGenerator().getWrapperProcedureName());
+                DesignerPropertiesUtil.setPreviewTargetModelName(designerProperties,
+                                                                 this.detailsPage.getImportManager().getViewModelName());
+            }
 		}
 	}
 	

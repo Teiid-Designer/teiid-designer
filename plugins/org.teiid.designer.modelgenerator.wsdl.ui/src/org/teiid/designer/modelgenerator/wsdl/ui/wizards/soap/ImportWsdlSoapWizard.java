@@ -10,14 +10,10 @@ package org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Properties;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
@@ -33,7 +29,6 @@ import org.eclipse.ui.IImportWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.ide.IDE;
 import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
-
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.ModelerCoreException;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
@@ -47,6 +42,7 @@ import com.metamatrix.modeler.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstan
 import com.metamatrix.modeler.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiPlugin;
 import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.wizards.WSDLImportWizardManager;
 import com.metamatrix.modeler.schema.tools.processing.SchemaProcessingException;
+import com.metamatrix.modeler.ui.viewsupport.DesignerPropertiesUtil;
 import com.metamatrix.modeler.ui.viewsupport.IPropertiesContext;
 import com.metamatrix.ui.internal.util.UiUtil;
 import com.metamatrix.ui.internal.wizard.AbstractWizard;
@@ -57,7 +53,7 @@ public class ImportWsdlSoapWizard extends AbstractWizard implements IImportWizar
     private static final ImageDescriptor IMAGE = ModelGeneratorWsdlUiPlugin.getDefault().getImageDescriptor(Images.IMPORT_WSDL_ICON);
 
     /** This manager interfaces with the relational from wsdl generator */
-    private WSDLImportWizardManager importManager = new WSDLImportWizardManager();;
+    private WSDLImportWizardManager importManager = new WSDLImportWizardManager();
 
     /** The page where the WSDL source file and Relational target model are selected. */
     private WsdlDefinitionPage selectWsdlPage;
@@ -256,38 +252,26 @@ public class ImportWsdlSoapWizard extends AbstractWizard implements IImportWizar
     }
 
     protected void updateForProperties() {
-    	if( this.importManager.getDesignerProperties() == null ) {
+        Properties designerProperties = this.importManager.getDesignerProperties();
+        if (designerProperties == null) {
     		return;
     	}
     	
+        // Check for sources and views folders in Property Definitions
     	if( this.importManager.getSourceModelLocation() == null) {
-    		// check for project property and if sources folder property exists
-    		String projectName = this.importManager.getDesignerProperties().getProperty(IPropertiesContext.KEY_PROJECT_NAME);
-    		if( projectName != null && !projectName.isEmpty() ) {
-    			String folderName = projectName;
-    			String sourcesFolder = this.importManager.getDesignerProperties().getProperty(IPropertiesContext.KEY_HAS_SOURCES_FOLDER);
-    			if( sourcesFolder != null && !sourcesFolder.isEmpty() ) {
-    				folderName = new Path(projectName).append(sourcesFolder).toString();
-    			}
-    			final IResource srcResource = ResourcesPlugin.getWorkspace().getRoot().findMember(folderName);
-    			if( srcResource != null ) {
-    				this.importManager.setSourceModelLocation((IContainer)srcResource);
-    			}
-    			
-    			String viewsFolder = this.importManager.getDesignerProperties().getProperty(IPropertiesContext.KEY_HAS_VIEWS_FOLDER);
-    			if( viewsFolder != null && !viewsFolder.isEmpty() ) {
-    				folderName = new Path(projectName).append(viewsFolder).toString();
-    			}
-    			final IResource viewResource = ResourcesPlugin.getWorkspace().getRoot().findMember(folderName);
-    			if( viewResource != null ) {
-    				this.importManager.setViewModelLocation((IContainer)viewResource);
-    			}
-    		}
+            IContainer srcResource = DesignerPropertiesUtil.getSourcesFolder(designerProperties);
+            IContainer viewResource = DesignerPropertiesUtil.getSourcesFolder(designerProperties);
+            if (srcResource != null) {
+                this.importManager.setSourceModelLocation(srcResource);
+            }
+            if (viewResource != null) {
+                this.importManager.setViewModelLocation(viewResource);
+            }
     	}
     	
     	if( this.importManager.getConnectionProfile() == null ) {
-    		// check for project property and if sources folder property exists
-    		String profileName = this.importManager.getDesignerProperties().getProperty(IPropertiesContext.KEY_LAST_CONNECTION_PROFILE_ID);
+            // check for Connection Profile in property definitions
+            String profileName = DesignerPropertiesUtil.getConnectionProfileName(designerProperties);
     		if( profileName != null && !profileName.isEmpty() ) {
     			// Select profile
     			selectWsdlPage.selectConnectionProfile(profileName);
