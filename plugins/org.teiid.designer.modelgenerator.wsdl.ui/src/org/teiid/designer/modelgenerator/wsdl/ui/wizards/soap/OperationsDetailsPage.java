@@ -12,8 +12,6 @@ import java.util.List;
 import java.util.Properties;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
@@ -31,7 +29,6 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -51,10 +48,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.xsd.XSDElementDeclaration;
 import org.eclipse.xsd.XSDSchema;
-import org.eclipse.xsd.XSDSimpleTypeDefinition;
-import org.eclipse.xsd.XSDTypeDefinition;
 import org.eclipse.xsd.impl.XSDElementDeclarationImpl;
 import org.eclipse.xsd.impl.XSDParticleImpl;
 import org.eclipse.xsd.provider.XSDSemanticItemProviderAdapterFactory;
@@ -68,7 +62,6 @@ import com.metamatrix.modeler.core.types.DatatypeConstants;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Model;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.ModelGenerationException;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Operation;
-import com.metamatrix.modeler.modelgenerator.wsdl.model.Part;
 import com.metamatrix.modeler.modelgenerator.wsdl.schema.extensions.SOAPSchemaProcessor;
 import com.metamatrix.modeler.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstants;
 import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.util.ModelGeneratorWsdlUiUtil;
@@ -146,6 +139,8 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 	Button overwriteExistingCB;
 
 	private ProcedureGenerator procedureGenerator;
+	
+	ImportWsdlSchemaHandler schemaHandler;
 
 	// ==================================================
 	public OperationsDetailsPage(WSDLImportWizardManager theImportManager) {
@@ -157,6 +152,7 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 		semanticAdapterFactory = new XSDSemanticItemProviderAdapterFactory();
 		schemaLabelProvider = new AdapterFactoryLabelProvider(semanticAdapterFactory);
 		schemaContentProvider = new SchemaTreeContentProvider(semanticAdapterFactory);
+		schemaHandler = new ImportWsdlSchemaHandler(theImportManager);
 	}
 
 	public ProcedureGenerator getProcedureGenerator() {
@@ -618,110 +614,13 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 		} else if (type == RESPONSE) {
 			responseXmlTreeViewer.setInput(getSchemaForSelectedOperation(type));
 		} else {
-			requestXmlTreeViewer
-					.setInput(getSchemaForSelectedOperation(REQUEST));
-			responseXmlTreeViewer
-					.setInput(getSchemaForSelectedOperation(RESPONSE));
+			requestXmlTreeViewer.setInput(getSchemaForSelectedOperation(REQUEST));
+			responseXmlTreeViewer.setInput(getSchemaForSelectedOperation(RESPONSE));
 		}
 	}
-
-	/**
-	 * @return
-	 */
-	public List getSchemaForSelectedOperation(final int type) {
-
-		Model wsdlModel = null;
-		Object elementDeclaration = null;
-		
-		try {
-			wsdlModel = importManager.getWSDLModel();
-		} catch (ModelGenerationException e) {
-			throw new RuntimeException(e);
-		}
-
-		XSDSchema[] schemas = wsdlModel.getSchemas();
-
-		Operation selectedOperation = procedureGenerator.getOperation();
-		String partElementName = null;
-		Part[] partArray = null;
-
-		if (type == REQUEST) {
-			if (selectedOperation.getInputMessage() != null) {
-				partArray = selectedOperation.getInputMessage().getParts();
-			}
-		} else {
-			if (selectedOperation.getOutputMessage() != null) {
-				partArray = selectedOperation.getOutputMessage().getParts();
-			}
-		}
-
-		List elementArrayList = new ArrayList();
-
-		for (Part part : partArray) {
-			partElementName = getPartElementName(part);
-			elementDeclaration = null;
-
-			boolean foundElement = false;
-
-			for (XSDSchema schema : schemas) {
-				xsdSchema = schema;
-				EList<XSDTypeDefinition> types = schema.getTypeDefinitions();
-				for (XSDTypeDefinition xsdType : types) {
-					String elementName = xsdType.getName();
-					if (elementName.equals(partElementName)) {
-						elementDeclaration = xsdType;
-						foundElement = true;
-						elementArrayList.add(elementDeclaration);
-						break;
-					}
-				}
-
-				if (foundElement == true)
-					continue;
-
-				if (elementDeclaration == null) {
-
-					EList<XSDElementDeclaration> elements = schema
-							.getElementDeclarations();
-					for (XSDElementDeclaration element : elements) {
-						String elementName = element.getName();
-						if (elementName.equals(partElementName)) {
-							if (element.getTypeDefinition() instanceof XSDSimpleTypeDefinition) {
-								elementDeclaration = element;
-							} else {
-								elementDeclaration = element
-										.getTypeDefinition();
-							}
-
-							foundElement = true;
-							elementArrayList.add(elementDeclaration);
-							break;
-						}
-					}
-				}
-
-				// We already found our element. No need to look through anymore
-				// schemas
-				if (foundElement) {
-					foundElement = false;
-					break;
-				}
-			}
-
-		}
-
-		return elementArrayList;
-	}
-
-	private String getPartElementName(Part part) {
-		String partElementName = null;
-		
-		partElementName = part.getTypeName();
-	    if (partElementName == null){
-			partElementName = part.getElementName();
-	    }
-		
-		return partElementName;
+	
+	List<Object> getSchemaForSelectedOperation(int type) {
+		return this.schemaHandler.getSchemaForSelectedOperation(type, this.procedureGenerator);
 	}
 
 	/**
