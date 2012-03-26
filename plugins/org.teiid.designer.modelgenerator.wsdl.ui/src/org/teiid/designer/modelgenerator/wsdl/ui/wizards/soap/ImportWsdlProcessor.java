@@ -138,6 +138,7 @@ public class ImportWsdlProcessor {
 				ModelWorkspaceItem item = ModelWorkspaceManager.getModelWorkspaceManager().findModelWorkspaceItem(modelPath, IResource.FILE);
 				IFile modelFile = (IFile)item.getCorrespondingResource();
 				this.sourceModel = ModelUtilities.getModelResourceForIFile(modelFile, false);
+				addConnectionProfileInfoToSourceModel(theMonitor, true);
 			} else {
 				// Create Source Model
 				createSourceModelInTxn(theMonitor);
@@ -155,31 +156,31 @@ public class ImportWsdlProcessor {
 			}
 		} catch (ModelWorkspaceException ex) {
 			return new Status(IStatus.ERROR, ModelGeneratorWsdlUiConstants.PLUGIN_ID, ex.getMessage());
+		} catch (InvocationTargetException ex) {
+			return new Status(IStatus.ERROR, ModelGeneratorWsdlUiConstants.PLUGIN_ID, ex.getMessage());
 		}
 		
 		return Status.OK_STATUS;
 	}
 	
-    private IStatus createSourceModelInTxn(IProgressMonitor monitor) {
+    private IStatus createSourceModelInTxn(IProgressMonitor theMonitor) {
     	
         boolean requiredStart = ModelerCore.startTxn(true, true, "Import Teiid Metadata Create Source Model", this); //$NON-NLS-1$
         boolean succeeded = false;
         try {
          	sourceModel = relationalFactory.createRelationalModel( this.importManager.getSourceModelLocation(), 
         		this.importManager.getSourceModelName() );
-        	monitor.worked(10);
+         	theMonitor.worked(10);
         	
-        	// Inject the connection profile info into the model
-        	if (this.importManager.getConnectionProfile() != null) {
-        		addConnectionProfileInfoToModel(sourceModel, this.importManager.getConnectionProfile());
-            }
-        	monitor.subTask("Saving Source Model" + sourceModel.getItemName()); //$NON-NLS-1$
+        	addConnectionProfileInfoToSourceModel(theMonitor, false);
+        	
+        	theMonitor.subTask("Saving Source Model" + sourceModel.getItemName()); //$NON-NLS-1$
             try {
-                ModelUtilities.saveModelResource(sourceModel, monitor, false, this);
+                ModelUtilities.saveModelResource(sourceModel, theMonitor, false, this);
             } catch (Exception e) {
                 throw new InvocationTargetException(e);
             }
-            monitor.worked(10);
+            theMonitor.worked(10);
             if( createStatus.isOK() && sourceModel != null ) {
             	ModelEditorManager.openInEditMode(sourceModel, true, com.metamatrix.modeler.ui.UiConstants.ObjectEditor.IGNORE_OPEN_EDITOR);
             }
@@ -200,34 +201,64 @@ public class ImportWsdlProcessor {
                 }
             }
         }
-        monitor.worked(10);
+        theMonitor.worked(10);
         
         return Status.OK_STATUS;
     }
     
-    protected void addConnectionProfileInfoToModel(ModelResource sourceModel, IConnectionProfile profile) throws ModelWorkspaceException {
+    protected void addConnectionProfileInfoToSourceModel(IProgressMonitor monitor, boolean doSave) throws InvocationTargetException {
+    	IConnectionProfile profile = this.importManager.getConnectionProfile();
+    	if( monitor == null ) {
+    		return;
+    	}
     	// Inject the connection profile info into the model
     	if (profile != null) {
-    		// Need to add the "EndPoint" property to the connection profile from the Import Manager
-    		String endpoint = this.importManager.getEndPoint();
-    		if( endpoint != null ) {
-    			Properties props = profile.getBaseProperties();
-    			props.put(SOAPConnectionInfoProvider.WSDL_URI_KEY, endpoint);
-    			String defaultServiceMode = this.importManager.getTranslatorDefaultServiceMode();
-    			if( defaultServiceMode.equalsIgnoreCase(WSDLImportWizardManager.MESSAGE ) ) {
-    				props.put(SOAPConnectionInfoProvider.SOAP_SERVICE_MODE, WSDLImportWizardManager.MESSAGE);
-    			}
-    			String defaultBinding = this.importManager.getTranslatorDefaultBinding();
-    			if( defaultBinding.equalsIgnoreCase(Port.SOAP12) ) {
-    				props.put(SOAPConnectionInfoProvider.SOAP_BINDING, Port.SOAP12);
-    			}
-    			profile.setBaseProperties(props);
-                IConnectionInfoProvider provider = new SOAPConnectionInfoProvider();
-                provider.setConnectionInfo(sourceModel, profile);
+    		try {
+        		// Need to add the "EndPoint" property to the connection profile from the Import Manager
+        		String endpoint = this.importManager.getEndPoint();
+        		if( endpoint != null ) {
+        			Properties props = profile.getBaseProperties();
+        			props.put(SOAPConnectionInfoProvider.WSDL_URI_KEY, endpoint);
+        			String defaultServiceMode = this.importManager.getTranslatorDefaultServiceMode();
+        			if( defaultServiceMode.equalsIgnoreCase(WSDLImportWizardManager.MESSAGE ) ) {
+        				props.put(SOAPConnectionInfoProvider.SOAP_SERVICE_MODE, WSDLImportWizardManager.MESSAGE);
+        			} else {
+        				// remove MESSAGE property if it exists
+        				String theProp = props.getProperty(SOAPConnectionInfoProvider.SOAP_SERVICE_MODE);
+        				if( theProp != null ) {
+        					props.remove(SOAPConnectionInfoProvider.SOAP_SERVICE_MODE);
+        				}
+        				
+        			}
+        			String defaultBinding = this.importManager.getTranslatorDefaultBinding();
+        			if( defaultBinding.equalsIgnoreCase(Port.SOAP12) ) {
+        				props.put(SOAPConnectionInfoProvider.SOAP_BINDING, Port.SOAP12);
+        			} else {
+        				// remove MESSAGE property if it exists
+        				String theProp = props.getProperty(SOAPConnectionInfoProvider.SOAP_BINDING);
+        				if( theProp != null ) {
+        					props.remove(SOAPConnectionInfoProvider.SOAP_BINDING);
+        				}
+        				
+        			}
+        			profile.setBaseProperties(props);
+                    IConnectionInfoProvider provider = new SOAPConnectionInfoProvider();
+                    provider.setConnectionInfo(sourceModel, profile);
+        		}
+    		
+    		} catch (ModelerCoreException ex) {
+    				log(new Status(IStatus.ERROR, ModelGeneratorWsdlUiConstants.PLUGIN_ID, ex.getMessage(), ex));
+    		}
+    		if( doSave ) {
+                try {
+                    ModelUtilities.saveModelResource(sourceModel, monitor, false, this);
+                } catch (Exception e) {
+                    throw new InvocationTargetException(e);
+                }
     		}
         }
     }
-    
+
     private void createSourceProcedures(IProgressMonitor monitor) {
     	try {
 			relationalProcedureFactory.addMissingProcedure(this.sourceModel, FlatFileRelationalModelFactory.INVOKE);
