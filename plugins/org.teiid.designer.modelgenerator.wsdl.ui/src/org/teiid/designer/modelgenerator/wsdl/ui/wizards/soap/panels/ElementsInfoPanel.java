@@ -84,7 +84,7 @@ public class ElementsInfoPanel {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				// Check Selection from tree
-				String name = detailsPage.createRequestColumn();
+				String name = detailsPage.schemaHandler.createRequestColumn();
 				if (name != null) {
 					boolean ok = MessageDialog.openQuestion(detailsPage.getShell(),
 						Messages.InvalidSelectedSchemaObject,

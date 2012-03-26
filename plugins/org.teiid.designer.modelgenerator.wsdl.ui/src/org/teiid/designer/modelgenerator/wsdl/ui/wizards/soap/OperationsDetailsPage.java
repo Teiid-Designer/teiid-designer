@@ -58,20 +58,12 @@ import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.panels.ElementsInf
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.panels.WrapperProcedurePanel;
 
 import com.metamatrix.core.util.CoreStringUtil;
-import com.metamatrix.modeler.core.types.DatatypeConstants;
-import com.metamatrix.modeler.modelgenerator.wsdl.model.Model;
-import com.metamatrix.modeler.modelgenerator.wsdl.model.ModelGenerationException;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Operation;
-import com.metamatrix.modeler.modelgenerator.wsdl.schema.extensions.SOAPSchemaProcessor;
 import com.metamatrix.modeler.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstants;
 import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.util.ModelGeneratorWsdlUiUtil;
 import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.wizards.WSDLImportWizardManager;
-import com.metamatrix.modeler.schema.tools.model.schema.SchemaModel;
 import com.metamatrix.modeler.schema.tools.model.schema.SchemaObject;
-import com.metamatrix.modeler.schema.tools.model.schema.impl.BaseSchemaObject;
 import com.metamatrix.modeler.schema.tools.model.schema.impl.SimpleRelationship;
-import com.metamatrix.modeler.schema.tools.processing.SchemaProcessingException;
-import com.metamatrix.modeler.schema.tools.processing.SchemaProcessor;
 import com.metamatrix.modeler.transformation.ui.editors.sqleditor.SqlTextViewer;
 import com.metamatrix.ui.graphics.ColorManager;
 import com.metamatrix.ui.internal.util.WidgetFactory;
@@ -107,7 +99,7 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 	private Combo operationsCombo;
 
 	private XSDSemanticItemProviderAdapterFactory semanticAdapterFactory;
-	private AdapterFactoryLabelProvider schemaLabelProvider;
+	AdapterFactoryLabelProvider schemaLabelProvider;
 	private SchemaTreeContentProvider schemaContentProvider;
 
 	/** This keeps track of the root object of the model. */
@@ -138,9 +130,9 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 	WrapperProcedurePanel wrapperPanel;
 	Button overwriteExistingCB;
 
-	private ProcedureGenerator procedureGenerator;
+	ProcedureGenerator procedureGenerator;
 	
-	ImportWsdlSchemaHandler schemaHandler;
+	public ImportWsdlSchemaHandler schemaHandler;
 
 	// ==================================================
 	public OperationsDetailsPage(WSDLImportWizardManager theImportManager) {
@@ -152,7 +144,7 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 		semanticAdapterFactory = new XSDSemanticItemProviderAdapterFactory();
 		schemaLabelProvider = new AdapterFactoryLabelProvider(semanticAdapterFactory);
 		schemaContentProvider = new SchemaTreeContentProvider(semanticAdapterFactory);
-		schemaHandler = new ImportWsdlSchemaHandler(theImportManager);
+		schemaHandler = new ImportWsdlSchemaHandler(theImportManager, this);
 	}
 
 	public ProcedureGenerator getProcedureGenerator() {
@@ -372,7 +364,7 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 			public void doubleClick(DoubleClickEvent event) {
 				IStructuredSelection selection = (IStructuredSelection)event.getSelection();
 				if( selection != null && !selection.isEmpty() && selection.getFirstElement() instanceof XSDParticleImpl ) {
-					createRequestColumn();
+					schemaHandler.createRequestColumn();
 				}
 			}
 		});
@@ -380,7 +372,7 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 		this.requestCreateElementAction = new Action(Messages.AddAsNewElement) {
 			@Override
 			public void run() {
-				createRequestColumn();
+				schemaHandler.createRequestColumn();
 			}
 		};
 	}
@@ -511,7 +503,7 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 			public void doubleClick(DoubleClickEvent event) {
 				IStructuredSelection selection = (IStructuredSelection)event.getSelection();
 				if( selection != null && !selection.isEmpty() && selection.getFirstElement() instanceof XSDParticleImpl ) {
-					createResponseColumn();
+					schemaHandler.createRequestColumn();
 				}
 			}
 		});
@@ -519,7 +511,7 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 		this.responseCreateElementAction = new Action(Messages.AddAsNewElement) {
 			@Override
 			public void run() {
-				createResponseColumn();
+				schemaHandler.createRequestColumn();
 			}
 		};
 	}
@@ -766,102 +758,7 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 		return null;
 	}
 
-	public String createRequestColumn() {
-		IStructuredSelection sel = (IStructuredSelection) requestXmlTreeViewer
-				.getSelection();
-
-		Object obj = sel.getFirstElement();
-		String name = null;
-		String ns = null;
-		
-		if (obj instanceof XSDParticleImpl
-				&& ((XSDParticleImpl) obj).getContent() instanceof XSDElementDeclarationImpl) {
-			name = ((XSDElementDeclarationImpl) ((XSDParticleImpl) obj)
-					.getContent()).getName();
-			ns = ((XSDElementDeclarationImpl) ((XSDParticleImpl) obj)
-					.getContent()).getTargetNamespace();
-			   this.procedureGenerator.getRequestInfo().addColumn(name, false,
-						DatatypeConstants.RuntimeTypeNames.STRING, null, ns);
-				notifyColumnDataChanged();
-				return null;
-			
-		}else if (obj instanceof XSDElementDeclarationImpl){
-			name = ((XSDElementDeclarationImpl)obj)
-					.getName();
-			ns = ((XSDElementDeclarationImpl)obj).getTargetNamespace();
-			   this.procedureGenerator.getRequestInfo().addColumn(name, false,
-						DatatypeConstants.RuntimeTypeNames.STRING, null, ns);
-				notifyColumnDataChanged();
-				return null;
-		}
-		
-		return schemaLabelProvider.getText(obj);
-	}
-
-	public String createResponseColumn() {
-		IStructuredSelection sel = (IStructuredSelection) responseXmlTreeViewer
-				.getSelection();
-
-		Object obj = sel.getFirstElement();
-		if (obj instanceof XSDParticleImpl && ((XSDParticleImpl) obj).getContent() instanceof XSDElementDeclarationImpl) {
-
-			Model wsdlModel = null;
-			SchemaModel schemaModel;
-			XSDSchema[] schemas;
-
-			try {
-				wsdlModel = importManager.getWSDLModel();
-			} catch (ModelGenerationException e) {
-				throw new RuntimeException(e);
-			}
-
-			SchemaProcessor processor = new SOAPSchemaProcessor(null);
-			processor.representTypes(true);
-			processor.setNamespaces(wsdlModel.getNamespaces());
-			schemas = wsdlModel.getSchemas();
-			try {
-				processor.processSchemas(schemas);
-			} catch (SchemaProcessingException e) {
-				throw new RuntimeException(e);
-			}
-			schemaModel = processor.getSchemaModel();
-
-			List<SchemaObject> elements = schemaModel.getElements();
-			String name = ((XSDElementDeclarationImpl) ((XSDParticleImpl) obj)
-					.getContent()).getName();
-			StringBuilder xpath = new StringBuilder();
-			String namespace = null;
-			String prefix = null;
-			StringBuilder parentXpath = new StringBuilder();
-			for (SchemaObject schemaObject : elements) {
-				if (schemaObject.getName().equals(name)) {
-					getParentXpath(schemaObject, parentXpath);
-					xpath.append("/").append(schemaObject.getRelativeXpath()); //$NON-NLS-1$
-					namespace = schemaObject.getNamespace();
-					prefix = ((BaseSchemaObject) schemaObject)
-							.getNamespacePrefix();
-					if (namespace != null) {
-						this.procedureGenerator.getResponseInfo().addNamespace(
-								prefix, namespace);
-					}
-					this.procedureGenerator.getResponseInfo().setRootPath(
-							parentXpath.toString());
-					responseElementsInfoPanel.getRootPathText().setText(
-							parentXpath.toString());
-				}
-			}
-			this.procedureGenerator.getResponseInfo().addColumn(name, false,
-					DatatypeConstants.RuntimeTypeNames.STRING, null,
-					xpath.toString());
-
-			notifyColumnDataChanged();
-			return null;
-		}
-
-		return schemaLabelProvider.getText(obj);
-	}
-
-	private void getParentXpath(SchemaObject child, StringBuilder parentXpath) {
+	void getParentXpath(SchemaObject child, StringBuilder parentXpath) {
 		List<SimpleRelationship> parents = child.getParents();
 		for (SimpleRelationship parent : parents) {
 			parentXpath.append("/").append(parent.getParent().getSimpleName()); //$NON-NLS-1$

@@ -108,7 +108,7 @@ public class ColumnsInfoPanel {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				String name = detailsPage.createResponseColumn();
+				String name = detailsPage.schemaHandler.createResponseColumn(detailsPage);
 				if (name != null) {
 					boolean ok = MessageDialog.openQuestion(detailsPage.getShell(), 
 						Messages.InvalidSelectedSchemaObject,
