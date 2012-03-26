@@ -339,22 +339,6 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 		GridData data = new GridData(GridData.FILL_BOTH);
 		data.horizontalSpan = 4;
 		this.requestXmlTreeViewer.getControl().setLayoutData(data);
-		this.requestXmlTreeViewer.addFilter(new ViewerFilter() {
-			@Override
-			public boolean select(Viewer viewer, Object parentElement,
-					Object element) {
-				// filter built-ins if needed:
-				if (!(parentElement instanceof EObject)
-						&& element instanceof XSDSimpleTypeDefinition) {
-					// parent is not an EObject, and kid is a STD; need to
-					// filter out built-ins.
-					XSDSimpleTypeDefinition std = (XSDSimpleTypeDefinition) element;
-					return std.getSchema() == xsdSchema;
-				} // endif
-
-				return true;
-			}
-		});
 		this.requestXmlTreeViewer.setInput(null);
 
 		// Add a Context Menu
@@ -378,7 +362,8 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 						IStructuredSelection sel = (IStructuredSelection) requestXmlTreeViewer
 								.getSelection();
 						if (sel.size() == 1
-								&& sel.getFirstElement() instanceof XSDParticleImpl) {
+								&& (sel.getFirstElement() instanceof XSDParticleImpl || sel
+										.getFirstElement() instanceof XSDElementDeclarationImpl)) {
 							columnMenuManager.add(requestCreateElementAction);
 						}
 
@@ -399,7 +384,7 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 		this.requestCreateElementAction = new Action(Messages.AddAsNewElement) {
 			@Override
 			public void run() {
-				
+				createRequestColumn();
 			}
 		};
 	}
@@ -494,24 +479,7 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 		this.responseXmlTreeViewer.setAutoExpandLevel(3);
 		GridData data = new GridData(GridData.FILL_BOTH);
 		data.horizontalSpan = 4;
-		this.responseXmlTreeViewer.getControl().setLayoutData(data);
-		this.responseXmlTreeViewer.addFilter(new ViewerFilter() {
-			@Override
-			public boolean select(Viewer viewer, Object parentElement,
-					Object element) {
-				// filter built-ins if needed:
-				if (!(parentElement instanceof EObject)
-						&& element instanceof XSDSimpleTypeDefinition) {
-					// parent is not an EObject, and kid is a STD; need to
-					// filter out built-ins.
-					XSDSimpleTypeDefinition std = (XSDSimpleTypeDefinition) element;
-					return std.getSchema() == xsdSchema;
-				} // endif
-
-				return true;
-			}
-		});
-		this.responseXmlTreeViewer.setInput(null);
+		this.responseXmlTreeViewer.getControl().setLayoutData(data);		this.responseXmlTreeViewer.setInput(null);
 
 		// Add a Context Menu
 		final MenuManager columnMenuManager = new MenuManager();
@@ -534,7 +502,8 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 						IStructuredSelection sel = (IStructuredSelection) responseXmlTreeViewer
 								.getSelection();
 						if (sel.size() == 1
-								&& sel.getFirstElement() instanceof XSDParticleImpl) {
+								&& (sel.getFirstElement() instanceof XSDParticleImpl || sel
+										.getFirstElement() instanceof XSDElementDeclarationImpl)) {
 							columnMenuManager.add(responseCreateElementAction);
 						}
 
@@ -662,8 +631,8 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 	public List getSchemaForSelectedOperation(final int type) {
 
 		Model wsdlModel = null;
-		XSDTypeDefinition elementDeclaration = null;
-
+		Object elementDeclaration = null;
+		
 		try {
 			wsdlModel = importManager.getWSDLModel();
 		} catch (ModelGenerationException e) {
@@ -675,50 +644,71 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 		Operation selectedOperation = procedureGenerator.getOperation();
 		String partElementName = null;
 		Part[] partArray = null;
-       
-		
-		
+
 		if (type == REQUEST) {
-			if( selectedOperation.getInputMessage() != null ) {
+			if (selectedOperation.getInputMessage() != null) {
 				partArray = selectedOperation.getInputMessage().getParts();
-    		}
+			}
 		} else {
-			if( selectedOperation.getOutputMessage() != null ) {
+			if (selectedOperation.getOutputMessage() != null) {
 				partArray = selectedOperation.getOutputMessage().getParts();
 			}
 		}
-		
-	    List elementArrayList = new ArrayList();
-        
-        for (Part part:partArray) {
-        	partElementName = getPartElementName(part);
-        
-	        for (XSDSchema schema : schemas) {
+
+		List elementArrayList = new ArrayList();
+
+		for (Part part : partArray) {
+			partElementName = getPartElementName(part);
+			elementDeclaration = null;
+
+			boolean foundElement = false;
+
+			for (XSDSchema schema : schemas) {
 				xsdSchema = schema;
 				EList<XSDTypeDefinition> types = schema.getTypeDefinitions();
 				for (XSDTypeDefinition xsdType : types) {
 					String elementName = xsdType.getName();
 					if (elementName.equals(partElementName)) {
 						elementDeclaration = xsdType;
+						foundElement = true;
+						elementArrayList.add(elementDeclaration);
 						break;
 					}
 				}
-				
+
+				if (foundElement == true)
+					continue;
+
 				if (elementDeclaration == null) {
-					
-				EList<XSDElementDeclaration> elements = schema
-						.getElementDeclarations();
-				for (XSDElementDeclaration element : elements) {
-					String elementName = element.getName();
-					if (elementName.equals(partElementName)) {
-						elementDeclaration = element.getTypeDefinition();
-						break;
+
+					EList<XSDElementDeclaration> elements = schema
+							.getElementDeclarations();
+					for (XSDElementDeclaration element : elements) {
+						String elementName = element.getName();
+						if (elementName.equals(partElementName)) {
+							if (element.getTypeDefinition() instanceof XSDSimpleTypeDefinition) {
+								elementDeclaration = element;
+							} else {
+								elementDeclaration = element
+										.getTypeDefinition();
+							}
+
+							foundElement = true;
+							elementArrayList.add(elementDeclaration);
+							break;
+						}
 					}
 				}
+
+				// We already found our element. No need to look through anymore
+				// schemas
+				if (foundElement) {
+					foundElement = false;
+					break;
 				}
-				elementArrayList.add(elementDeclaration);
 			}
-	    }
+
+		}
 
 		return elementArrayList;
 	}
@@ -882,18 +872,30 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 				.getSelection();
 
 		Object obj = sel.getFirstElement();
+		String name = null;
+		String ns = null;
+		
 		if (obj instanceof XSDParticleImpl
 				&& ((XSDParticleImpl) obj).getContent() instanceof XSDElementDeclarationImpl) {
-			String name = ((XSDElementDeclarationImpl) ((XSDParticleImpl) obj)
+			name = ((XSDElementDeclarationImpl) ((XSDParticleImpl) obj)
 					.getContent()).getName();
-			String ns = ((XSDElementDeclarationImpl) ((XSDParticleImpl) obj)
+			ns = ((XSDElementDeclarationImpl) ((XSDParticleImpl) obj)
 					.getContent()).getTargetNamespace();
-			this.procedureGenerator.getRequestInfo().addColumn(name, false,
-					DatatypeConstants.RuntimeTypeNames.STRING, null, ns);
-			notifyColumnDataChanged();
-			return null;
+			   this.procedureGenerator.getRequestInfo().addColumn(name, false,
+						DatatypeConstants.RuntimeTypeNames.STRING, null, ns);
+				notifyColumnDataChanged();
+				return null;
+			
+		}else if (obj instanceof XSDElementDeclarationImpl){
+			name = ((XSDElementDeclarationImpl)obj)
+					.getName();
+			ns = ((XSDElementDeclarationImpl)obj).getTargetNamespace();
+			   this.procedureGenerator.getRequestInfo().addColumn(name, false,
+						DatatypeConstants.RuntimeTypeNames.STRING, null, ns);
+				notifyColumnDataChanged();
+				return null;
 		}
-
+		
 		return schemaLabelProvider.getText(obj);
 	}
 
