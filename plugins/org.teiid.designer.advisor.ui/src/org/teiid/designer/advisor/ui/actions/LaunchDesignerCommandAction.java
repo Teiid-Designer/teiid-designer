@@ -8,12 +8,10 @@
 package org.teiid.designer.advisor.ui.actions;
 
 import java.util.Properties;
-
 import org.eclipse.jface.action.Action;
 import org.eclipse.ui.cheatsheets.ICheatSheetAction;
 import org.eclipse.ui.cheatsheets.ICheatSheetManager;
 import org.eclipse.ui.internal.cheatsheets.views.CheatSheetManager;
-
 import com.metamatrix.modeler.ui.viewsupport.PropertiesContextManager;
 
 
@@ -59,7 +57,15 @@ public class LaunchDesignerCommandAction extends Action implements ICheatSheetAc
         
         if (params != null && params.length > 0) {
             String pActionID = params[0];
-            Properties props = propertiesManager.getProperties(manager.getCheatSheetID());
+            // Get designer properties to pass to action.
+            // Get CheatSheetMgr parent - non-null means this is a composite sheet subItem - and use the top-level properties...
+            Properties props = null;
+            ICheatSheetManager parentMgr = manager.getParent();
+            if (parentMgr != null) {
+                props = propertiesManager.getProperties(parentMgr.getCheatSheetID());
+            } else {
+                props = propertiesManager.getProperties(manager.getCheatSheetID());
+            }
             AdvisorActionFactory.executeAction(pActionID, props, true);
         }
         
