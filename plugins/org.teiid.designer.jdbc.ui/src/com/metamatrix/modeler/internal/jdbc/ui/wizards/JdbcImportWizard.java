@@ -273,7 +273,9 @@ public class JdbcImportWizard extends AbstractWizard
                 boolean succeeded = false;
                 try {
                     runFinish(monitor);
-                    DesignerPropertiesUtil.setSourceModelName(getDesignerProperties(), modelName);
+                    if (getDesignerProperties() != null) {
+                        DesignerPropertiesUtil.setSourceModelName(getDesignerProperties(), modelName);
+                    }
                     succeeded = true;
                 } finally {
                     if (started) {
