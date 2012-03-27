@@ -149,9 +149,9 @@ public class ImportWsdlSchemaHandler {
 			name = ((XSDElementDeclarationImpl) ((XSDParticleImpl) obj).getContent()).getName();
 			ns = ((XSDElementDeclarationImpl) ((XSDParticleImpl) obj).getContent()).getTargetNamespace();
 			if( type == ProcedureInfo.TYPE_BODY ) {
-				requestInfo.addBodyColumn(name, false,RuntimeTypeNames.STRING, null, ns);
+				requestInfo.addBodyColumn(requestInfo.getUniqueBodyColumnName(name), false,RuntimeTypeNames.STRING, null, ns);
 			} else {
-				requestInfo.addHeaderColumn(name, false,RuntimeTypeNames.STRING, null, ns);
+				requestInfo.addHeaderColumn(requestInfo.getUniqueHeaderColumnName(name), false,RuntimeTypeNames.STRING, null, ns);
 			}
 			operationsDetailsPage.notifyColumnDataChanged();
 			return null;
@@ -160,9 +160,9 @@ public class ImportWsdlSchemaHandler {
 			name = ((XSDElementDeclarationImpl)obj).getName();
 			ns = ((XSDElementDeclarationImpl)obj).getTargetNamespace();
 			if( type == ProcedureInfo.TYPE_BODY ) {
-				requestInfo.addBodyColumn(name, false,RuntimeTypeNames.STRING, null, ns);
+				requestInfo.addBodyColumn(requestInfo.getUniqueBodyColumnName(name), false,RuntimeTypeNames.STRING, null, ns);
 			} else {
-				requestInfo.addHeaderColumn(name, false,RuntimeTypeNames.STRING, null, ns);
+				requestInfo.addHeaderColumn(requestInfo.getUniqueHeaderColumnName(name), false,RuntimeTypeNames.STRING, null, ns);
 			}
 			operationsDetailsPage.notifyColumnDataChanged();
 			return null;
@@ -222,9 +222,9 @@ public class ImportWsdlSchemaHandler {
 				}
 			}
 			if( type == ProcedureInfo.TYPE_BODY ) {
-				responseInfo.addBodyColumn(name, false,RuntimeTypeNames.STRING, null,xpath.toString());
+				responseInfo.addBodyColumn(responseInfo.getUniqueBodyColumnName(name), false,RuntimeTypeNames.STRING, null,xpath.toString());
 			} else {
-				responseInfo.addHeaderColumn(name, false,RuntimeTypeNames.STRING, null,xpath.toString());
+				responseInfo.addHeaderColumn(responseInfo.getUniqueHeaderColumnName(name), false,RuntimeTypeNames.STRING, null,xpath.toString());
 			}
 			operationsDetailsPage.notifyColumnDataChanged();
 			return null;

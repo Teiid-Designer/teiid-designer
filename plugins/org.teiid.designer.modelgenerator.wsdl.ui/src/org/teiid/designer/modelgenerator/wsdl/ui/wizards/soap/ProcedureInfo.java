@@ -17,6 +17,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 
 import com.metamatrix.core.util.StringUtilities;
+import com.metamatrix.modeler.core.validation.rules.StringNameValidator;
 import com.metamatrix.modeler.internal.transformation.util.SqlConstants;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Operation;
 
@@ -31,6 +32,8 @@ public abstract class ProcedureInfo implements SqlConstants {
     public static final int RESPONSE = 1;
     public static final int TYPE_BODY = 0;
     public static final int TYPE_HEADER = 1;
+    
+    private StringNameValidator nameValidator;
     
 //	CREATE VIRTUAL PROCEDURE
 //	BEGIN
@@ -77,6 +80,7 @@ public abstract class ProcedureInfo implements SqlConstants {
 		this.namespaceMap = new HashMap<String, String>();
 		this.type = type;
 		this.generator = generator;
+		this.nameValidator = new StringNameValidator(true);
 	}
 	
 	public abstract String getDefaultProcedureName();
@@ -329,6 +333,27 @@ public abstract class ProcedureInfo implements SqlConstants {
 	 */
 	public void setStatus(IStatus status) {
 		this.status = status;
+	}
+	
+	public String getUniqueBodyColumnName(String proposedName) {
+		for( ColumnInfo info : getBodyColumnInfoList()) {
+			this.nameValidator.addExistingName(info.getName());
+		}
+		String changedName = this.nameValidator.createUniqueName(proposedName);
+		String finalName = changedName == null ? proposedName : changedName;
+		this.nameValidator.clearExistingNames();
+		return finalName;
+		
+	}
+	
+	public String getUniqueHeaderColumnName(String proposedName) {
+		for( ColumnInfo info : getHeaderColumnInfoList()) {
+			this.nameValidator.addExistingName(info.getName());
+		}
+		String changedName = this.nameValidator.createUniqueName(proposedName);
+		String finalName = changedName == null ? proposedName : changedName;
+		this.nameValidator.clearExistingNames();
+		return finalName;
 	}
 	
 	abstract String getSqlStringTemplate();
