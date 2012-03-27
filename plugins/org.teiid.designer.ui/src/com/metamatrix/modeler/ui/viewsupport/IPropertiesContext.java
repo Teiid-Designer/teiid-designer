@@ -22,10 +22,10 @@ import java.util.Properties;
  */
 public interface IPropertiesContext {
 	public static final String KEY_PROJECT_NAME = "projectName"; //$NON-NLS-1$
-	public static final String KEY_HAS_SOURCES_FOLDER = "hasSourcesFolder"; //$NON-NLS-1$
-	public static final String KEY_HAS_VIEWS_FOLDER = "hasViewsFolder"; //$NON-NLS-1$
-	public static final String KEY_HAS_SCHEMA_FOLDER = "hasSchemaFolder"; //$NON-NLS-1$
-	public static final String KEY_HAS_WS_FOLDER = "hasWSFolder"; //$NON-NLS-1$
+    public static final String KEY_SOURCES_FOLDER = "sourcesFolder"; //$NON-NLS-1$
+    public static final String KEY_VIEWS_FOLDER = "viewsFolder"; //$NON-NLS-1$
+    public static final String KEY_SCHEMA_FOLDER = "schemaFolder"; //$NON-NLS-1$
+    public static final String KEY_WS_FOLDER = "wsFolder"; //$NON-NLS-1$
 	public static final String KEY_LAST_SOURCE_MODEL_NAME = "lastSourceModelName"; //$NON-NLS-1$
 	public static final String KEY_LAST_VIEW_MODEL_NAME = "lastViewModelName"; //$NON-NLS-1$
 	public static final String KEY_LAST_CONNECTION_PROFILE_ID = "lastConnectionProfileId"; //$NON-NLS-1$

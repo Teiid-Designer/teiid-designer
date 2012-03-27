@@ -14,7 +14,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Properties;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -65,7 +64,6 @@ import org.teiid.designer.datatools.connection.IConnectionInfoHelper;
 import org.teiid.designer.datatools.profiles.xml.IXmlProfileConstants;
 import org.teiid.designer.datatools.ui.actions.EditConnectionProfileAction;
 import org.teiid.designer.datatools.ui.dialogs.NewTeiidFilteredCPWizard;
-
 import com.metamatrix.common.protocol.URLHelper;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.core.util.I18nUtil;
@@ -87,6 +85,7 @@ import com.metamatrix.modeler.transformation.ui.UiPlugin;
 import com.metamatrix.modeler.transformation.ui.wizards.file.FlatFileRelationalModelFactory;
 import com.metamatrix.modeler.transformation.ui.wizards.file.TeiidMetadataImportInfo;
 import com.metamatrix.modeler.transformation.ui.wizards.file.TeiidMetadataImportSourcePage;
+import com.metamatrix.modeler.ui.viewsupport.DesignerPropertiesUtil;
 import com.metamatrix.modeler.ui.viewsupport.ModelingResourceFilter;
 import com.metamatrix.ui.internal.InternalUiConstants;
 import com.metamatrix.ui.internal.product.ProductCustomizerMgr;
@@ -163,6 +162,8 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 	IStatus fileParsingStatus;
 
 	IConnectionInfoHelper connectionInfoHelper;
+
+    Properties designerProperties;
 
 	/**
 	 * @since 4.0
@@ -495,6 +496,10 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 
 		this.editCPButton.setEnabled(getConnectionProfile() != null);
 	}
+
+    public void setDesignerProperties( Properties properties ) {
+        this.designerProperties = properties;
+    }
 
 	private void setConnectionProfile(IConnectionProfile profile) {
 		this.info.setConnectionProfile(profile);
@@ -864,8 +869,18 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 		}
 		if (cpIndex > -1) {
 			srcCombo.select(cpIndex);
+            profileModified();
 		}
 	}
+
+    private void setProfileFromProperties() {
+        // Check for Connection Profile in properties
+        String profileName = DesignerPropertiesUtil.getConnectionProfileName(this.designerProperties);
+        if (profileName != null && !profileName.isEmpty()) {
+            // Select profile
+            selectConnectionProfile(profileName);
+        }
+    }
 
 	private void refreshConnectionProfiles() {
 		this.connectionProfiles = new ArrayList<IConnectionProfile>();
@@ -879,6 +894,7 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 					connectionProfiles.add(profile);
 				}
 			}
+
 			return;
 //		}
 	
@@ -1300,6 +1316,8 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 			fileNameColumn.getColumn().pack();
 			
 			initializeUI();
+
+            setProfileFromProperties();
 		}
 	}
 }

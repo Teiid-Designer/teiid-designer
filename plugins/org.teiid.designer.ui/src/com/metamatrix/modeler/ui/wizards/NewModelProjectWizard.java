@@ -416,6 +416,7 @@ public class NewModelProjectWizard extends BasicNewProjectResourceWizard impleme
                     validate();
                 }
             });
+            sourcesText.setEnabled(createSources);
             
             // ============ VIEWS FOLDER ====================================================================
             viewsCB = WidgetFactory.createCheckBox(folderOptionsGroup);
@@ -444,6 +445,7 @@ public class NewModelProjectWizard extends BasicNewProjectResourceWizard impleme
                     validate();
                 }
             });
+            viewsText.setEnabled(createViews);
             
             // ============ SCHEMAS FOLDER ====================================================================
             schemaCB = WidgetFactory.createCheckBox(folderOptionsGroup);
@@ -471,6 +473,7 @@ public class NewModelProjectWizard extends BasicNewProjectResourceWizard impleme
                     validate();
                 }
             });
+            schemaText.setEnabled(createSchema);
             
             // ============ WEB SERVICES FOLDER ====================================================================
             webServicesCB = WidgetFactory.createCheckBox(folderOptionsGroup);
@@ -498,6 +501,7 @@ public class NewModelProjectWizard extends BasicNewProjectResourceWizard impleme
                     validate();
                 }
             });
+            webServicesText.setEnabled(createWebServices);
             
             // ============ FUNCTIONS FOLDER ====================================================================
             functionsCB = WidgetFactory.createCheckBox(folderOptionsGroup);
@@ -525,6 +529,7 @@ public class NewModelProjectWizard extends BasicNewProjectResourceWizard impleme
                     validate();
                 }
             });
+            functionsText.setEnabled(createFunctions);
             
             // ============ EXTENSIONS FOLDER ====================================================================
             extensionsCB = WidgetFactory.createCheckBox(folderOptionsGroup);
@@ -552,6 +557,7 @@ public class NewModelProjectWizard extends BasicNewProjectResourceWizard impleme
                     validate();
                 }
             });
+            extensionsText.setEnabled(createExtensions);
             
         }
         

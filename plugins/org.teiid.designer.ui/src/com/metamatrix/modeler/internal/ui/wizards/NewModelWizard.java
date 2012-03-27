@@ -331,7 +331,7 @@ public class NewModelWizard extends AbstractWizard
                 DesignerPropertiesUtil.setViewModelName(this.designerProperties, viewModelName);
             } else if (ModelUtil.isPhysical(modelResource.getEmfResource())) {
                 String sourceModelName = ((IFile)modelResource.getCorrespondingResource()).getName();
-                DesignerPropertiesUtil.setViewModelName(this.designerProperties, sourceModelName);
+                DesignerPropertiesUtil.setSourceModelName(this.designerProperties, sourceModelName);
             }
         }
 

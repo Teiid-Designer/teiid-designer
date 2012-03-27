@@ -67,19 +67,19 @@ public class DesignerPropertiesUtil {
     }
 
     public static String getSourcesFolderName( Properties properties ) {
-        return properties.getProperty(IPropertiesContext.KEY_HAS_SOURCES_FOLDER);
+        return properties.getProperty(IPropertiesContext.KEY_SOURCES_FOLDER);
     }
 
     public static String getViewsFolderName( Properties properties ) {
-        return properties.getProperty(IPropertiesContext.KEY_HAS_VIEWS_FOLDER);
+        return properties.getProperty(IPropertiesContext.KEY_VIEWS_FOLDER);
     }
 
     public static String getSchemaFolderName( Properties properties ) {
-        return properties.getProperty(IPropertiesContext.KEY_HAS_SCHEMA_FOLDER);
+        return properties.getProperty(IPropertiesContext.KEY_SCHEMA_FOLDER);
     }
 
     public static String getWebServiceFolderName( Properties properties ) {
-        return properties.getProperty(IPropertiesContext.KEY_HAS_WS_FOLDER);
+        return properties.getProperty(IPropertiesContext.KEY_WS_FOLDER);
     }
 
     public static String getPreviewTargetObjectName( Properties properties ) {
@@ -117,22 +117,22 @@ public class DesignerPropertiesUtil {
 
     public static void setSourcesFolderName( Properties properties,
                                              String sourcesFolderName ) {
-        properties.put(IPropertiesContext.KEY_HAS_SOURCES_FOLDER, sourcesFolderName);
+        properties.put(IPropertiesContext.KEY_SOURCES_FOLDER, sourcesFolderName);
     }
 
     public static void setViewsFolderName( Properties properties,
                                            String sourcesFolderName ) {
-        properties.put(IPropertiesContext.KEY_HAS_VIEWS_FOLDER, sourcesFolderName);
+        properties.put(IPropertiesContext.KEY_VIEWS_FOLDER, sourcesFolderName);
     }
 
     public static void setSchemaFolderName( Properties properties,
                                             String schemaFolderName ) {
-        properties.put(IPropertiesContext.KEY_HAS_SCHEMA_FOLDER, schemaFolderName);
+        properties.put(IPropertiesContext.KEY_SCHEMA_FOLDER, schemaFolderName);
     }
 
     public static void setWebServiceFolderName( Properties properties,
                                                 String webServiceFolderName ) {
-        properties.put(IPropertiesContext.KEY_HAS_WS_FOLDER, webServiceFolderName);
+        properties.put(IPropertiesContext.KEY_WS_FOLDER, webServiceFolderName);
     }
 
     public static void setPreviewTargetObjectName( Properties properties,
@@ -157,7 +157,7 @@ public class DesignerPropertiesUtil {
         String projectName = properties.getProperty(IPropertiesContext.KEY_PROJECT_NAME);
         if (projectName != null && !projectName.isEmpty()) {
             String folderName = projectName;
-            String sourcesFolder = properties.getProperty(IPropertiesContext.KEY_HAS_SOURCES_FOLDER);
+            String sourcesFolder = properties.getProperty(IPropertiesContext.KEY_SOURCES_FOLDER);
             if (sourcesFolder != null && !sourcesFolder.isEmpty()) {
                 folderName = new Path(projectName).append(sourcesFolder).toString();
             }
@@ -181,7 +181,7 @@ public class DesignerPropertiesUtil {
         String projectName = properties.getProperty(IPropertiesContext.KEY_PROJECT_NAME);
         if (projectName != null && !projectName.isEmpty()) {
             String folderName = projectName;
-            String viewsFolder = properties.getProperty(IPropertiesContext.KEY_HAS_VIEWS_FOLDER);
+            String viewsFolder = properties.getProperty(IPropertiesContext.KEY_VIEWS_FOLDER);
             if (viewsFolder != null && !viewsFolder.isEmpty()) {
                 folderName = new Path(projectName).append(viewsFolder).toString();
             }
@@ -225,6 +225,9 @@ public class DesignerPropertiesUtil {
         IFile viewModel = null;
         String modelName = properties.getProperty(IPropertiesContext.KEY_LAST_VIEW_MODEL_NAME);
         if (modelName != null) {
+            // Expect ModelName to end with extension
+            if (!modelName.endsWith(ModelUtil.DOT_EXTENSION_XMI)) modelName = modelName + ModelUtil.DOT_EXTENSION_XMI;
+
             final IResource resrc = ModelUtilities.findModelByName(modelName);
             if (resrc != null && ModelUtil.isModelFile(resrc) && ModelIdentifier.isVirtualModelType(resrc)) {
                 viewModel = (IFile)resrc;
@@ -243,6 +246,9 @@ public class DesignerPropertiesUtil {
         IFile sourceModel = null;
         String modelName = properties.getProperty(IPropertiesContext.KEY_LAST_SOURCE_MODEL_NAME);
         if (modelName != null) {
+            // Expect ModelName to end with extension
+            if (!modelName.endsWith(ModelUtil.DOT_EXTENSION_XMI)) modelName = modelName + ModelUtil.DOT_EXTENSION_XMI;
+
             final IResource resrc = ModelUtilities.findModelByName(modelName);
             if (resrc != null && ModelUtil.isModelFile(resrc) && ModelIdentifier.isPhysicalModelType(resrc)) {
                 sourceModel = (IFile)resrc;

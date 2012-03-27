@@ -163,7 +163,11 @@ public class TeiidMetadataImportWizard extends AbstractWizard implements
 			}
 		}, false);
 		
-		return true;
+        // Update Properties to include the created source and view Models
+        DesignerPropertiesUtil.setSourceModelName(this.designerProperties, getFileInfo().getSourceModelName());
+        DesignerPropertiesUtil.setViewModelName(this.designerProperties, getFileInfo().getViewModelName());
+
+        return true;
 	}
 
 	public TeiidMetadataImportInfo getFileInfo() {

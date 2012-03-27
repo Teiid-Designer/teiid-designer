@@ -273,6 +273,7 @@ public class JdbcImportWizard extends AbstractWizard
                 boolean succeeded = false;
                 try {
                     runFinish(monitor);
+                    DesignerPropertiesUtil.setSourceModelName(getDesignerProperties(), modelName);
                     succeeded = true;
                 } finally {
                     if (started) {
@@ -904,6 +905,10 @@ public class JdbcImportWizard extends AbstractWizard
     			srcPg.selectConnectionProfile(profileName);
     		}
     	}
+    }
+
+    public Properties getDesignerProperties() {
+        return this.designerProperties;
     }
 
     // ===========================================================================================================================

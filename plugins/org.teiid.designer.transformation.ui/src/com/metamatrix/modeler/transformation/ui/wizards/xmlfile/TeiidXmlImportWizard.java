@@ -51,7 +51,7 @@ public class TeiidXmlImportWizard extends TeiidMetadataImportWizard {
 		TeiidXmlImportOptionsPage optionsPage = new TeiidXmlImportOptionsPage(getFileInfo());
 		addPage(optionsPage);
 		
-		this.sourcePage = new TeiidXmlImportSourcePage(getFileInfo());
+        this.sourcePage = new TeiidXmlImportSourcePage(getFileInfo());
         addPage(sourcePage);
         
         TeiidXmlImportXmlConfigurationPage sqlPage = new TeiidXmlImportXmlConfigurationPage(getFileInfo());
@@ -72,6 +72,10 @@ public class TeiidXmlImportWizard extends TeiidMetadataImportWizard {
 			}
 		}, false);
 		
+        // Update Properties to include the created source and view Models
+        DesignerPropertiesUtil.setSourceModelName(this.designerProperties, getFileInfo().getSourceModelName());
+        DesignerPropertiesUtil.setViewModelName(this.designerProperties, getFileInfo().getViewModelName());
+
 		return true;
 	}
 	
@@ -102,8 +106,8 @@ public class TeiidXmlImportWizard extends TeiidMetadataImportWizard {
         // Get Connection Profile from property definitions
         String profileName = DesignerPropertiesUtil.getConnectionProfileName(this.designerProperties);
 		if( profileName != null && !profileName.isEmpty() ) {
-			// Select profile
-			sourcePage.selectConnectionProfile(profileName);
+            // Set properties - needs later to determine the connection profile
+            sourcePage.setDesignerProperties(this.designerProperties);
 		}
 	}
 }

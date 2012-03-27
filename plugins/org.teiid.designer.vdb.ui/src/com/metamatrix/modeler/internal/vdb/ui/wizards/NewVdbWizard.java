@@ -457,7 +457,15 @@ public final class NewVdbWizard extends AbstractWizard
 	        modelsViewer.getControl().setLayoutData(gdv);
 	        modelsViewer.setContentProvider(new ListContentProvider());
 	        modelsViewer.setLabelProvider(new ModelExplorerLabelProvider());
-	        this.modelsForVdb.addAll(SelectionUtilities.getSelectedIResourceObjects(initialSelection));
+            // Add Models from properties if available
+            if (this.designerProperties != null && !this.designerProperties.isEmpty()) {
+                IFile sourceMdl = DesignerPropertiesUtil.getSourceModel(this.designerProperties);
+                IFile viewMdl = DesignerPropertiesUtil.getViewModel(this.designerProperties);
+                if (sourceMdl != null) this.modelsForVdb.add(sourceMdl);
+                if (viewMdl != null) this.modelsForVdb.add(viewMdl);
+            } else {
+                this.modelsForVdb.addAll(SelectionUtilities.getSelectedIResourceObjects(initialSelection));
+            }
 	        modelsViewer.setInput(this.modelsForVdb);
 	        modelsViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 				

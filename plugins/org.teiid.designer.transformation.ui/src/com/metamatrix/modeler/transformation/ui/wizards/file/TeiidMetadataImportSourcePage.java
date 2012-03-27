@@ -927,6 +927,7 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 		}
 		if (cpIndex > -1) {
 			srcCombo.select(cpIndex);
+            profileModified();
 		}
 	}
 
