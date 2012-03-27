@@ -9,7 +9,7 @@
    
    <item title="Create New Teiid Model Project" skip="true">
      <description>
-         <b>Follow steps below to create Teiid Model Project</b>
+         <b>Follow the steps below to create a Teiid Model Project</b>
       </description>
       <subitem label="Launch New Teiid Model Project Wizard" skip="true">
             <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
@@ -28,7 +28,7 @@
    
    <item title="Create SOAP Web Service Connection" skip="true">
      <description>
-         <b>Follow steps below to create an ODA Web Service connection profile using the WSDL URL
+         <b>Follow the steps below to create an ODA Web Service connection profile using the WSDL URL
          	 and end-point information.</b>
       </description>
       <subitem label="Launch Create SOAP Connection Profile Wizard" skip="true">
@@ -38,22 +38,19 @@
       </subitem>
       <subitem skip="true" >
 	      <description>
-				      <b>1)</b> Enter WSDL URL (Local or remote)
-				<br/> <b>2)</b> Select <b>Extract...</b>, choose an end-point from your WSDL and click <b>Next ></b>
-				<br/> <b>3)</b> Choose one or more operations you wish to extract data from
-				<br/> <b>4)</b> Specify URL's to sample request and/or response documents 
-				<br/> ---- NOTE: These will be used later to help define your return data structure
-				extract Inputs include: <b>WSDL URL</b> and sample <b>request/response document XML files</b> 
+                      <b>1)</b> Specify unique name and optional description and click <b>Next &gt;</b>
+                <br/> <b>2)</b> Enter a WSDL URL or 'Browse...' to select a local WSDL.
+                <br/> <b>3)</b> Click <b>Test Connection</b> to verify connectivity.
+                <br/> <b>4)</b> Click <b>Finish</b>
+                <br/> <b>NOTE: </b> You may optionally enter a <b>SOAP End Point</b>, if the end point in the WSDL
+                                    is not to be used.  A custom driver class may also be specified, using the optional parameters.
       	  </description>
    	  </subitem>
    </item>
    
-   <item title="Generate Models" skip="true">
+   <item title="Create Models From SOAP Connection" skip="true">
      <description>
-         <b>This action utilizes the previously defined connection profile by interpreting the WSDL, 
-         	locating any associated or dependent XML schema files, generating a physical model containing the required
-         	invoke procedures for the service, and generating virtual models containing procedures which will build and 
-         	parse the XML declared as the service messages</b>
+         <b>Follow the steps below to create models using the previously defined connection profile.</b>
       </description>
       <subitem label="Launch the Consume SOAP Web Service Wizard" skip="true">
             <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
@@ -62,18 +59,23 @@
       </subitem>
       <subitem skip="true" >
 	      <description>
-				      <b>1)</b> Select your connection profile and press <b>Validate WSDL</b>.
-				<br/> <b>2)</b> Set the target folder or project location and unique name for your generated source model. Click <b>Next ></b>. 
-				<br/> <b>3)</b> For each operation, use your sample request or response XML document to 
-					define your view tables and corresponding generated SQL. Then click <b>Next ></b>.
-				<br/> <b>4)</b> Specify target location and unique name for your view model and click <b>Finish</b>.
+				      <b>1)</b> Select the connection profile, then press <b>Validate WSDL</b>.
+				<br/> <b>2)</b> Select the <b>Port</b> and <b>Service Mode</b> as desired.
+				<br/> <b>3)</b> Select one or more operations under <b>Select the desired WSDL Operations</b>.  Click <b>Next &gt;</b>.
+				<br/> <b>4)</b> Select the location and name for the Source and View Models to be created.  Click <b>Next &gt;</b>. 
+				<br/> <b>5)</b> For each operation, define the request and response XML documents:
+				<br/> <b>--</b>Select the Operation
+				<br/> <b>--</b>Select the <b>Request</b> tab, then select desired element(s) under schema contents and <b>Add</b> to Element Info.
+				<br/> <b>--</b>Select the <b>Response</b> tab, then select desired element(s) under schema contents and <b>Add</b> to Column Info.
+				<br/> <b>--</b>Select the <b>Wrapper Procedure</b> tab to view the generated procedure SQL.
+                <br/> <b>6)</b> When all operation(s) have been defined, click <b>Finish</b>.
       	  </description>
    	  </subitem>
    </item>
    
    <item title="Create VDB" skip="true">
      <description>
-         <b>Follow steps below to create a new VDB</b>
+         <b>Follow the steps below to create a new VDB</b>
       </description>
       <subitem label="Launch New VDB Wizard" skip="true">
             <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
@@ -91,10 +93,9 @@
    	  </subitem>
    </item>
    
-   
    <item title="Test VDB" skip="true">
      <description>
-         <b>Follow steps below to create a new VDB</b>
+         <b>Follow the steps below to test the VDB</b>
       </description>
       <subitem label="Launch Execute VDB Dialog" skip="true">
             <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
