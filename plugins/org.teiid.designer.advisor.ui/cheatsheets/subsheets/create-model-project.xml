@@ -8,7 +8,7 @@
 
    <item title="Create New Teiid Model Project" skip="true">
      <description>
-         <b>Follow steps below to create Teiid Model Project</b>
+         <b>Follow the steps below to create a Teiid Model Project</b>
       </description>
       <subitem label="Launch New Teiid Model Project Wizard" skip="true">
             <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 

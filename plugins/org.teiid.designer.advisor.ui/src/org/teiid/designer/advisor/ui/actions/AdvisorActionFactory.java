@@ -280,9 +280,12 @@ public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChange
         		CHEAT_SHEET_DISPLAY_NAMES.MULTI_SOURCE_VDB, 
         		CHEAT_SHEET_DISPLAY_NAMES.MULTI_SOURCE_VDB);
         addActionHandler(
-        		CHEAT_SHEET_IDS.MODEL_LOCAL_XML_SOURCE, 
-        		CHEAT_SHEET_DISPLAY_NAMES.MODEL_LOCAL_XML_SOURCE, 
-        		CHEAT_SHEET_DISPLAY_NAMES.MODEL_LOCAL_XML_SOURCE);
+CHEAT_SHEET_IDS.MODEL_XML_LOCAL_SOURCE,
+                         CHEAT_SHEET_DISPLAY_NAMES.MODEL_XML_LOCAL_SOURCE,
+                         CHEAT_SHEET_DISPLAY_NAMES.MODEL_XML_LOCAL_SOURCE);
+        addActionHandler(CHEAT_SHEET_IDS.MODEL_XML_REMOTE_SOURCE,
+                         CHEAT_SHEET_DISPLAY_NAMES.MODEL_XML_REMOTE_SOURCE,
+                         CHEAT_SHEET_DISPLAY_NAMES.MODEL_XML_REMOTE_SOURCE);
         addActionHandler(
         		CHEAT_SHEET_IDS.MODEL_FLAT_FILE_SOURCE, 
         		CHEAT_SHEET_DISPLAY_NAMES.MODEL_FLAT_FILE_SOURCE, 
@@ -521,7 +524,9 @@ public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChange
 				id.equalsIgnoreCase(CHEAT_SHEET_IDS.CREATE_AND_TEST_VDB) ||
 				id.equalsIgnoreCase(CHEAT_SHEET_IDS.MODEL_FLAT_FILE_SOURCE) ||
 				id.equalsIgnoreCase(CHEAT_SHEET_IDS.MODEL_FROM_JDBC_SOURCE) ||
-				id.equalsIgnoreCase(CHEAT_SHEET_IDS.MODEL_LOCAL_XML_SOURCE) ||
+ id.equalsIgnoreCase(CHEAT_SHEET_IDS.MODEL_XML_LOCAL_SOURCE)
+            || id.equalsIgnoreCase(CHEAT_SHEET_IDS.MODEL_XML_REMOTE_SOURCE)
+            ||
 				id.equalsIgnoreCase(CHEAT_SHEET_IDS.MULTI_SOURCE_VDB) ) {
 			executeCheatSheet(id);
 			return;
@@ -669,9 +674,12 @@ public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChange
 		if(	id.equalsIgnoreCase(CHEAT_SHEET_IDS.MODEL_FROM_JDBC_SOURCE) ) {
 			return CHEAT_SHEET_IMAGE_IDS.MODEL_FROM_JDBC_SOURCE;
 		}
-		if(	id.equalsIgnoreCase(CHEAT_SHEET_IDS.MODEL_LOCAL_XML_SOURCE) ) {
-			return CHEAT_SHEET_IMAGE_IDS.MODEL_LOCAL_XML_SOURCE;
+        if (id.equalsIgnoreCase(CHEAT_SHEET_IDS.MODEL_XML_LOCAL_SOURCE)) {
+            return CHEAT_SHEET_IMAGE_IDS.MODEL_XML_LOCAL_SOURCE;
 		}
+        if (id.equalsIgnoreCase(CHEAT_SHEET_IDS.MODEL_XML_REMOTE_SOURCE)) {
+            return CHEAT_SHEET_IMAGE_IDS.MODEL_XML_REMOTE_SOURCE;
+        }
 		if(	id.equalsIgnoreCase(CHEAT_SHEET_IDS.MULTI_SOURCE_VDB) ) {
 			return CHEAT_SHEET_IMAGE_IDS.MULTI_SOURCE_VDB;
 		}

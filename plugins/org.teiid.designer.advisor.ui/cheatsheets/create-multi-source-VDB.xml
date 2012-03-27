@@ -2,50 +2,43 @@
 <compositeCheatsheet name="Create multi-source VDB">
    <taskGroup kind="set" name="Create a VDB to access two different sources" skip="false">
       <intro>
-         This cheat sheet will guide you through the steps to create a Teiid VDB which contains 
+         This cheat sheet shows you how to create a Teiid VDB which contains 
 			queryable views which access and join two different data sources.
-			<br/>
-			<br/>
-			To assist you along the way, wizards and commands
-			will be available for you to launch automatically.
       </intro>
       <onCompletion>
          Congratulations, you have successfully created and tested your VDB!
       </onCompletion>
       <task id="create_multi_source_vdb.create_model_project" kind="cheatsheet" name="Create a Teiid Model Project" skip="false">
          <intro>
-            This cheat sheet will demonstrate how to create and set up your <b>Teiid model project</b>.
+            This cheat sheet shows you how to create and set up a <b>Teiid Model Project</b>.
          </intro>
          <param name="path" value="subsheets/create-model-project.xml">
          </param>
       </task>
       <task id="create_multi_source_vdb.model_flat_file_tables" kind="cheatsheet" name="Create a Model from a Flat File Source" skip="false">
          <intro>
-            This cheat sheet will demonstrate how create a view table from flat file table data stored
-				in CSV format.
+            This cheat sheet shows you how to create a view table from a local CSV flat file.
          </intro>
          <param name="path" value="subsheets/import-from-flat-file.xml">
          </param>
       </task>
       <task id="create_multi_source_vdb.model_jdbc_tables" kind="cheatsheet" name="Create a Model from a JDBC Source" skip="false">
          <intro>
-            This cheat sheet will demonstrate how to create source tables from your JDBC data source
+            This cheat sheet shows you how to create source tables from a JDBC data source
          </intro>
          <param name="path" value="subsheets/import-from-jdbc.xml">
          </param>
       </task>
       <task id="create_multi_source_vdb.create_join_view" kind="cheatsheet" name="Create joined view of the data sources" skip="false">
          <intro>
-            This cheat sheet will demonstrate how to create a view table which joins data from
-				both of your data sources..
+            This cheat sheet shows you how to create a view table which joins data from two data sources..
          </intro>
          <param name="path" value="subsheets/join-two-sources.xml">
          </param>
       </task>
-      <task id="create_multi_source_vdb.create_test_vdb" kind="cheatsheet" name="Create and test your VDB" skip="false">
+      <task id="create_multi_source_vdb.create_test_vdb" kind="cheatsheet" name="Create and test the VDB" skip="false">
          <intro>
-            This cheat sheet will demonstrate how to create a VDB as well as how to quickly deploy
-				and test queries against the VDB.
+            This cheat sheet shows you how to create a VDB, then deploy and run test queries against it.
          </intro>
          <onCompletion>
             Congratulations! You just created and tested your VDB!

@@ -277,6 +277,13 @@ public class Messages  extends NLS {
 
     public static String AdvisorFixDialog_Message_NoActions;
     public static String AdvisorFixDialog_Message_AvailableActions;
+
+    // --------------------------------------------------------------------------------------------
+    // CheatSheetSection constants
+    // --------------------------------------------------------------------------------------------
+
+    public static String CheatSheetSection_title;
+    public static String CheatSheetSection_description;
     
     static {
         NLS.initializeMessages("org.teiid.designer.advisor.ui.messages", Messages.class); //$NON-NLS-1$

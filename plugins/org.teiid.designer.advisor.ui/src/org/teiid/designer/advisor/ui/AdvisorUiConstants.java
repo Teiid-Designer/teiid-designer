@@ -519,16 +519,18 @@ public interface AdvisorUiConstants {
 		String MODEL_FROM_JDBC_SOURCE = "org.teiid.designer.ui.cheatsheet_advisor_01"; //$NON-NLS-1$
 		String MODEL_FLAT_FILE_SOURCE = "org.teiid.designer.ui.cheatsheet_advisor_02"; //$NON-NLS-1$
 		String CONSUME_SOAP_SERVICE = "org.teiid.designer.ui.cheatsheet_advisor_03"; //$NON-NLS-1$
-		String MODEL_LOCAL_XML_SOURCE = "org.teiid.designer.ui.cheatsheet_advisor_04"; //$NON-NLS-1$
-		String MULTI_SOURCE_VDB = "org.teiid.designer.ui.cheatsheet_advisor_05"; //$NON-NLS-1$
-		String CREATE_AND_TEST_VDB = "org.teiid.designer.ui.cheatsheet_advisor_06"; //$NON-NLS-1$
+        String MODEL_XML_LOCAL_SOURCE = "org.teiid.designer.ui.cheatsheet_advisor_04"; //$NON-NLS-1$
+        String MODEL_XML_REMOTE_SOURCE = "org.teiid.designer.ui.cheatsheet_advisor_05"; //$NON-NLS-1$
+        String MULTI_SOURCE_VDB = "org.teiid.designer.ui.cheatsheet_advisor_06"; //$NON-NLS-1$
+        String CREATE_AND_TEST_VDB = "org.teiid.designer.ui.cheatsheet_advisor_07"; //$NON-NLS-1$
 	}
 	
 	interface CHEAT_SHEET_DISPLAY_NAMES {
 		String MODEL_FROM_JDBC_SOURCE = "Model From JDBC Source"; //$NON-NLS-1$
 		String MODEL_FLAT_FILE_SOURCE = "Model Flat File Source"; //$NON-NLS-1$
 		String CONSUME_SOAP_SERVICE = "Consume a SOAP Web Service"; //$NON-NLS-1$
-		String MODEL_LOCAL_XML_SOURCE = "Model Local XML File Source"; //$NON-NLS-1$
+        String MODEL_XML_LOCAL_SOURCE = "Model XML Local File Source"; //$NON-NLS-1$
+        String MODEL_XML_REMOTE_SOURCE = "Model XML Remote Source"; //$NON-NLS-1$
 		String MULTI_SOURCE_VDB = "Create a Multi-source VDB"; //$NON-NLS-1$
 		String CREATE_AND_TEST_VDB = "Create and test a VDB"; //$NON-NLS-1$
 	}
@@ -537,7 +539,8 @@ public interface AdvisorUiConstants {
 		String MODEL_FROM_JDBC_SOURCE = Images.IMPORT_JDBC;
 		String MODEL_FLAT_FILE_SOURCE = Images.IMPORT_JDBC;
 		String CONSUME_SOAP_SERVICE = Images.CREATE_WEB_SRVICES_DATA_FILE;
-		String MODEL_LOCAL_XML_SOURCE = Images.IMPORT_WSDL;
+        String MODEL_XML_LOCAL_SOURCE = Images.IMPORT_WSDL;
+        String MODEL_XML_REMOTE_SOURCE = Images.IMPORT_WSDL;
 		String MULTI_SOURCE_VDB = Images.NEW_VDB;
 		String CREATE_AND_TEST_VDB = Images.EXECUTE_VDB_ACTION;
 	}

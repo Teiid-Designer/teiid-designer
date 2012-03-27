@@ -2,13 +2,13 @@
 <cheatsheet
       title="Create Model from Flat File Source">
    <intro>
-   		<description>This cheat sheet shows you to create a model from a flat file source.
+   		<description>This cheat sheet shows you how to create a model from a flat file source.
 		</description>
    </intro>
    
    <item title="Create New Teiid Model Project" skip="true">
      <description>
-         <b>Follow steps below to create Teiid Model Project</b>
+         <b> Follow the steps below to create a Teiid Model Project</b>
       </description>
       <subitem label="Launch New Teiid Model Project Wizard" skip="true">
             <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
@@ -27,7 +27,7 @@
 
    <item title="Create New Flat File Source Connection" skip="true">
       	<description>
-         	<b> Follow steps below to create a Teiid Flat File Connection profile</b>
+         	<b> Follow the steps below to create a Teiid Flat File Connection profile</b>
       	</description>
          <subitem label="Launch New Flat File Source Connection Wizard" skip="true">
       			<action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
@@ -45,7 +45,7 @@
    
    <item title="Create Source From Flat File Connection" skip="true">
       	<description>
-         	<b> Follow steps below to create a relational model by importing table data via your Flat File connection profile</b>
+         	<b> Follow the steps below to create a relational model by importing table data via a Flat File connection profile</b>
       	</description>
          <subitem label="Launch Import Flat File Source Wizard" skip="true">
       			<action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
@@ -110,7 +110,7 @@
    
    <item title="Test Flat File Data" skip="true">
       	<description>
-         	<b> This following action allows you to preview data from your newly generated Flat File view table.</b>
+         	<b> Follow the steps below to preview data from your newly generated Flat File view table.</b>
       	</description>
          <subitem label="Launch Preview Data Dialog" skip="true">
       			<action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
@@ -128,7 +128,7 @@
    
    <item title="Create VDB" skip="true">
      <description>
-         <b>Follow steps below to create a new VDB</b>
+         <b>Follow the steps below to create a new VDB</b>
       </description>
       <subitem label="Launch New VDB Wizard" skip="true">
             <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
@@ -149,7 +149,7 @@
    
    <item title="Test VDB" skip="true">
      <description>
-         <b>Follow steps below to create a new VDB</b>
+         <b>Follow the steps below to test the VDB</b>
       </description>
       <subitem label="Launch Execute VDB Dialog" skip="true">
             <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 

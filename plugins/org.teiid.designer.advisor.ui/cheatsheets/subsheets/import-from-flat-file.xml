@@ -8,7 +8,7 @@
 
    <item title="Create New Flat File Source Connection" skip="true">
       	<description>
-         	<b> Follow steps below to create a Teiid Flat File Connection profile</b>
+         	<b> Follow the steps below to create a Teiid Flat File Connection profile</b>
       	</description>
          <subitem label="Launch New Flat File Source Connection Wizard" skip="true">
       			<action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
@@ -26,7 +26,7 @@
    
    <item title="Create Source From Flat File Connection" skip="true">
       	<description>
-         	<b> Follow steps below to create a relational model by importing table data via your Flat File connection profile</b>
+         	<b> Follow the steps below to create a relational model by importing table data via your Flat File connection profile</b>
       	</description>
          <subitem label="Launch Import Flat File Source Wizard" skip="true">
       			<action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
@@ -39,7 +39,7 @@
 				<br/> <b>2)</b> The <b>Available Data Files</b> section will show your source file location and list
 				    your source text files
 				<br/> <b>3)</b> Select a file as your source
-				<br/> <b>4)</b> Browse to select your target source model location and enter unique name. Click <b>Next &gt;</b>
+				<br/> <b>4)</b> Browse to select the location for the source model and enter unique name. Click <b>Next &gt;</b>
 				<br/> <b>5)</b> Specify your file data format as <b>Character delimited</b> or <b>Fixed width</b>. <b>Next &gt;</b>
 	      </description>
    	   </subitem>
@@ -84,14 +84,12 @@
 				<br/> <b>4)</b> Click <b>Finish</b> to generate your models
 	      </description>
    	   </subitem>
-   	   
-   	   
    </item>
    
    
    <item title="Test Flat File Data" skip="true">
       	<description>
-         	<b> This following action allows you to preview data from your newly generated Flat File view table.</b>
+         	<b> Follow the steps below to preview data from your newly generated Flat File view table.</b>
       	</description>
          <subitem label="Launch Preview Data Dialog" skip="true">
       			<action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 

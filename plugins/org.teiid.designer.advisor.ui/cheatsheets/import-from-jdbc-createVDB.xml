@@ -7,7 +7,7 @@
    </intro>
    <item title="Create New Teiid Model Project" skip="true">
      <description>
-         <b>Follow steps below to create Teiid Model Project</b>
+         <b>Follow the steps below to create a Teiid Model Project</b>
       </description>
       <subitem label="Launch New Teiid Model Project Wizard" skip="true">
             <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
@@ -26,7 +26,7 @@
 
    <item title="Create New JDBC Source Connection" skip="true">
       	<description>
-         	<b> Follow steps below to create a JDBC Connection profile.</b>
+         	<b> Follow the steps below to create a JDBC Connection profile.</b>
       	</description>
          <subitem label="Launch New JDBC Source Connection Wizard" skip="true">
       			<action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
@@ -47,7 +47,7 @@
    
    <item title="Create Source Model From JDBC Connection" skip="true">
       	<description>
-         	<b> Follow steps below to create a relational model by importing table data via your JDBC connection profile.</b>
+         	<b> Follow the steps below to create a relational model by importing table data via your JDBC connection profile.</b>
       	</description>
          <subitem label="Launch Import from JDBC Source Wizard" skip="true">
       			<action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
@@ -67,7 +67,7 @@
    
    <item title="Test JDBC Source Data" skip="true">
         <description>
-            <b> This following action allows you to preview data from your newly generated JDBC source table.</b>
+            <b> Follow the steps below to preview data from your newly generated JDBC source table.</b>
         </description>
          <subitem label="Launch Preview Data Dialog" skip="true">
                 <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
@@ -85,7 +85,7 @@
    
    <item title="Create VDB" skip="true">
      <description>
-         <b>Follow steps below to create a new VDB</b>
+         <b>Follow the steps below to create a new VDB</b>
       </description>
       <subitem label="Launch New VDB Wizard" skip="true">
             <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
@@ -105,7 +105,7 @@
       
    <item title="Test VDB" skip="true">
      <description>
-         <b>Follow steps below to create a new VDB</b>
+         <b>Follow the steps below to test the VDB</b>
       </description>
       <subitem label="Launch Execute VDB Dialog" skip="true">
             <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 

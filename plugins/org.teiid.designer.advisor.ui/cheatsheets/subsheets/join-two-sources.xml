@@ -16,7 +16,7 @@
 
    <item title="Create Relational View Model" skip="true">
         <description>
-            <b> The following action creates a new Relational View Model.</b>
+            <b> Follow the steps below to create a new Relational View Model.</b>
         </description>
          <subitem label="Launch New Model Wizard" skip="true">
                 <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
@@ -33,7 +33,7 @@
    
    <item title="Create View Table" skip="true">
         <description>
-            <b> The following action creates a new View Table in the Relational View Model.</b>
+            <b> Follow the steps below to create a new View Table in the Relational View Model.</b>
         </description>
          <subitem label="Create View Table" skip="true">
                 <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
@@ -50,7 +50,7 @@
    
    <item title="Add Source Tables to View Transformation" skip="true">
         <description>
-            <b> The following steps describe the process of defining the View Transformation.</b>
+            <b> Follow the steps below to define the View Transformation.</b>
         </description>
         <subitem label="Add Transformation Sources" skip="true">
         </subitem>

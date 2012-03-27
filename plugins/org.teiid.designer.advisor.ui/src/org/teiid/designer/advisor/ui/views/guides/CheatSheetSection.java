@@ -9,7 +9,6 @@ package org.teiid.designer.advisor.ui.views.guides;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
@@ -34,6 +33,7 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
 import org.teiid.designer.advisor.ui.AdvisorUiPlugin;
+import org.teiid.designer.advisor.ui.Messages;
 import org.teiid.designer.advisor.ui.util.DSPPluginImageHelper;
 
 /**
@@ -80,8 +80,8 @@ public class CheatSheetSection {
 
     private void initSection() {
 
-        this.section.setText("Cheat Sheets");
-        this.section.setDescription("Cheat sheets related to Teiid Designer modeling use-cases");
+        this.section.setText(Messages.CheatSheetSection_title);
+        this.section.setDescription(Messages.CheatSheetSection_description);
         this.section.getDescriptionControl().setForeground(this.toolkit.getColors().getColor(IFormColors.TITLE));
         section.setTitleBarForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
         GridData gd = new GridData(GridData.FILL_BOTH | GridData.HORIZONTAL_ALIGN_BEGINNING);
@@ -126,7 +126,7 @@ public class CheatSheetSection {
 
         sectionBody.pack(true);
         section.setClient(sectionBody);
-        section.setExpanded(false);
+        section.setExpanded(true);
     }
 
     /**

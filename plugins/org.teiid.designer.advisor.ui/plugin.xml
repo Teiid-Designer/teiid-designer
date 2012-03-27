@@ -79,9 +79,19 @@
       <cheatsheet
             category="org.teiid.designer.ui.category"
             composite="false"
-            contentFile="$nl$/cheatsheets/import-from-xml-file-createVDB.xml"
+            contentFile="$nl$/cheatsheets/import-from-xml-local-createVDB.xml"
             id="org.teiid.designer.ui.cheatsheet_advisor_04"
-            name="Create Model from XML Source">
+            name="Create Model from XML Local File Source">
+         <description>
+            Create Model from a local or remote XML source
+         </description>
+      </cheatsheet>
+      <cheatsheet
+            category="org.teiid.designer.ui.category"
+            composite="false"
+            contentFile="$nl$/cheatsheets/import-from-xml-remote-createVDB.xml"
+            id="org.teiid.designer.ui.cheatsheet_advisor_05"
+            name="Create Model from XML Remote Source">
          <description>
             Create Model from a local or remote XML source
          </description>
@@ -90,7 +100,7 @@
             category="org.teiid.designer.ui.category"
             composite="true"
             contentFile="$nl$/cheatsheets/create-multi-source-VDB.xml"
-            id="org.teiid.designer.ui.cheatsheet_advisor_05"
+            id="org.teiid.designer.ui.cheatsheet_advisor_06"
             name="Create multi-source VDB">
          <description>
             Create and test a VDB which joins two sources
@@ -100,7 +110,7 @@
             category="org.teiid.designer.ui.category"
             composite="false"
             contentFile="$nl$/cheatsheets/subsheets/create-and-test-vdb.xml"
-            id="org.teiid.designer.ui.cheatsheet_advisor_06"
+            id="org.teiid.designer.ui.cheatsheet_advisor_07"
             name="Create and test a VDB">
          <description>
             Create and test a VDB

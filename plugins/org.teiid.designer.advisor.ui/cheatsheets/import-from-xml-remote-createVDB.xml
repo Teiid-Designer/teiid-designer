@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <cheatsheet
-      title="Create Model from XML Source">
+      title="Create Model from XML Remote Source">
    <intro>
-   		<description>This cheat sheet shows you how to create a model from an XML file source.
+   		<description>This cheat sheet shows you how to create a model from an XML remote source.
 		</description>
    </intro>
    
    <item title="Create New Teiid Model Project" skip="true">
      <description>
-         <b>Follow steps below to create Teiid Model Project</b>
+         <b>Follow the steps below to create a Teiid Model Project</b>
       </description>
       <subitem label="Launch New Teiid Model Project Wizard" skip="true">
             <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
@@ -25,27 +25,9 @@
       </subitem>
    </item>
 
-   <item title="Create XML Local File Source Connection" skip="true">
-      	<description>
-         	<b> Follow steps below to create a Teiid XML File Connection profile</b>
-      	</description>
-         <subitem label="Launch New XML Local File Source Connection Wizard" skip="true">
-      			<action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
-			pluginId="org.teiid.designer.advisor.ui" 
-			param1="org.teiid.designer.connection.new.xmlfilelocal"/>
-   		</subitem>
-   		<subitem skip="true" >
-	      <description>
-	                  <b>1)</b> Specify unique name and optional description and click <b>Next &gt;</b>
-				<br/> <b>2)</b> Browse to select a local file or enter a file path
-				<br/> <b>3)</b> Click <b>Finish</b>
-	      </description>
-   	  </subitem>
-   </item>
-   
-   <item title="or ... Create XML Remote File Source Connection" skip="true">
+   <item title="Create XML Remote Source Connection" skip="true">
         <description>
-            <b> Follow steps below to create a Teiid Remote XML File Connection profile</b>
+            <b> Follow the steps below to create a Teiid Remote XML File Connection profile</b>
         </description>
          <subitem label="Launch New XML File URL Source Connection Wizard" skip="true">
                 <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
@@ -61,9 +43,9 @@
       </subitem>
    </item>
                 
-   <item title="Create Model From XML File Source" skip="true">
+   <item title="Create Model From XML Remote Source" skip="true">
         <description>
-            <b> The following action creates a relational model by importing data via your XML connection profile.</b>
+            <b> Follow the steps below to create a relational model by importing data via your XML connection profile.</b>
         </description>
          <subitem label="Launch Import XML Source Wizard" skip="true">
                 <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
@@ -72,7 +54,7 @@
         </subitem>
         <subitem skip="true" >
           <description>
-                      <b> 1)</b> Select the <b>XML Import Mode</b>: (Local File System or Remote URL) and click <b>Next &gt;</b>
+                      <b> 1)</b> Select the <b>XML Import Mode</b>: Remote URL, then click <b>Next &gt;</b>
                 <br/> <b> 2)</b> Select XML <b>Data File Source</b> connection profile
                 <br/> <b> 3)</b> Check the XML source file in the <b>Available XML Data Files</b> list
                 <br/> <b> 4)</b> Browse to select the location for <b>Source Model Definition</b>
@@ -81,15 +63,15 @@
                 <br/> <b> 7)</b> Select a primary or root element and right-click <b>Set As Root Path</b>
                 <br/> <b> 8)</b> Select elements and click <b>Add selection as new column</b> to customize the generated data transformation
                 <br/> <b> 9)</b> Click <b>Next &gt;</b>
-                <br/> <b>10/</b> Browse to select the view model location.  Browse to select or enter the view model name and view table name.
+                <br/> <b>10)</b> Browse to select the view model location.  Browse to select or enter the view model name and view table name.
                 <br/> <b>11)</b> Click <b>Finish</b>
           </description>
       </subitem>
    </item>
 
-   <item title="Test XML File Data" skip="true">
+   <item title="Test XML Remote File View" skip="true">
         <description>
-            <b> This following action allows you to preview data from your newly generated XML view table.</b>
+            <b> Follow the steps below to preview data from your newly generated XML view table.</b>
         </description>
          <subitem label="Launch Preview Data Dialog" skip="true">
                 <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
@@ -107,7 +89,7 @@
    
    <item title="Create VDB" skip="true">
      <description>
-         <b>Follow steps below to create a new VDB</b>
+         <b>Follow the steps below to create a new VDB</b>
       </description>
       <subitem label="Launch New VDB Wizard" skip="true">
             <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
@@ -128,7 +110,7 @@
    
    <item title="Test VDB" skip="true">
      <description>
-         <b>Follow steps below to create a new VDB</b>
+         <b>Follow the steps below to test the VDB</b>
       </description>
       <subitem label="Launch Execute VDB Dialog" skip="true">
             <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
