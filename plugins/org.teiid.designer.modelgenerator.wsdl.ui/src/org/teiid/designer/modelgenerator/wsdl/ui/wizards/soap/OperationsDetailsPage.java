@@ -13,24 +13,19 @@ import java.util.Properties;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
-import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.TextViewer;
 import org.eclipse.jface.text.source.VerticalRuler;
-import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.IDoubleClickListener;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.IContentProvider;
+import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -49,12 +44,12 @@ import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.xsd.XSDSchema;
-import org.eclipse.xsd.impl.XSDElementDeclarationImpl;
-import org.eclipse.xsd.impl.XSDParticleImpl;
 import org.eclipse.xsd.provider.XSDSemanticItemProviderAdapterFactory;
 import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.panels.ColumnsInfoPanel;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.panels.ElementsInfoPanel;
+import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.panels.RequestSchemaContentsGroup;
+import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.panels.ResponseSchemaContentsGroup;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.panels.WrapperProcedurePanel;
 
 import com.metamatrix.core.util.CoreStringUtil;
@@ -62,8 +57,6 @@ import com.metamatrix.modeler.modelgenerator.wsdl.model.Operation;
 import com.metamatrix.modeler.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstants;
 import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.util.ModelGeneratorWsdlUiUtil;
 import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.wizards.WSDLImportWizardManager;
-import com.metamatrix.modeler.schema.tools.model.schema.SchemaObject;
-import com.metamatrix.modeler.schema.tools.model.schema.impl.SimpleRelationship;
 import com.metamatrix.modeler.transformation.ui.editors.sqleditor.SqlTextViewer;
 import com.metamatrix.ui.graphics.ColorManager;
 import com.metamatrix.ui.internal.util.WidgetFactory;
@@ -99,7 +92,7 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 	private Combo operationsCombo;
 
 	private XSDSemanticItemProviderAdapterFactory semanticAdapterFactory;
-	AdapterFactoryLabelProvider schemaLabelProvider;
+	private AdapterFactoryLabelProvider schemaLabelProvider;
 	private SchemaTreeContentProvider schemaContentProvider;
 
 	/** This keeps track of the root object of the model. */
@@ -110,29 +103,41 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 
 	TabItem requestTab;
 	Text requestProcedureNameText;
-	TreeViewer requestXmlTreeViewer;
 	TextViewer requestSqlTextViewer;
 	IDocument requestSqlDocument;
-	Action requestCreateElementAction;
-	// Button requestAddElementButton;
-	ElementsInfoPanel requestElementsInfoPanel;
+	
+	RequestSchemaContentsGroup requestBodySchemaContentsGroup;
+	ElementsInfoPanel requestBodyElementsInfoPanel;
+	RequestSchemaContentsGroup requestHeaderSchemaContentsGroup;
+	ElementsInfoPanel requestHeaderElementsInfoPanel;
+	TabItem requestHeaderTab;
+	Composite requestHeaderStackPanel;
+	StackLayout requestHeaderStackLayout;
+	Composite disabledRequestHeaderPanel;
+	SashForm requestHeaderSplitter;
 
 	TabItem responseTab;
 	Text responseProcedureNameText;
-	TreeViewer responseXmlTreeViewer;
 	TextViewer responseSqlTextViewer;
 	IDocument responseSqlDocument;
-	Action responseCreateElementAction;
-	// Button responseAddElementButton;
-	ColumnsInfoPanel responseElementsInfoPanel;
+	
+	ResponseSchemaContentsGroup responseBodySchemaContentsGroup;
+	ColumnsInfoPanel responseBodyColumnsInfoPanel;
+	ResponseSchemaContentsGroup responseHeaderSchemaContentsGroup;
+	ColumnsInfoPanel responseHeaderColumnsInfoPanel;
+	TabItem responseHeaderTab;
+	Composite responseHeaderStackPanel;
+	StackLayout responseHeaderStackLayout;
+	Composite disabledResponseHeaderPanel;
+	SashForm responseHeaderSplitter;
 
 	TabFolder wrapperTab;
 	WrapperProcedurePanel wrapperPanel;
 	Button overwriteExistingCB;
 
-	ProcedureGenerator procedureGenerator;
+	private ProcedureGenerator procedureGenerator;
 	
-	public ImportWsdlSchemaHandler schemaHandler;
+	ImportWsdlSchemaHandler schemaHandler;
 
 	// ==================================================
 	public OperationsDetailsPage(WSDLImportWizardManager theImportManager) {
@@ -159,9 +164,12 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 		this.requestProcedureNameText.setText(this.procedureGenerator.getRequestProcedureName());
 		this.responseProcedureNameText.setText(this.procedureGenerator.getResponseProcedureName());
 
-		// Now update the two column info panels
-		this.requestElementsInfoPanel.setProcedureInfo(this.procedureGenerator.getRequestInfo());
-		this.responseElementsInfoPanel.setProcedureInfo(this.procedureGenerator.getResponseInfo());
+		// Now update the column info panels
+		this.requestBodyElementsInfoPanel.setProcedureInfo(this.procedureGenerator.getRequestInfo());
+		this.responseBodyColumnsInfoPanel.setProcedureInfo(this.procedureGenerator.getResponseInfo());
+
+		this.requestHeaderElementsInfoPanel.setProcedureInfo(this.procedureGenerator.getRequestInfo());
+		this.responseHeaderColumnsInfoPanel.setProcedureInfo(this.procedureGenerator.getResponseInfo());
 		
 		this.overwriteExistingCB.setSelection(this.procedureGenerator.doOverwriteExistingProcedures());
 		this.overwriteExistingCB.setEnabled(this.importManager.viewModelExists());
@@ -173,8 +181,10 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 	}
 
 	public void notifyColumnDataChanged() {
-		this.requestElementsInfoPanel.refresh();
-		this.responseElementsInfoPanel.refresh();
+		this.requestBodyElementsInfoPanel.refresh();
+		this.requestHeaderElementsInfoPanel.refresh();
+		this.responseBodyColumnsInfoPanel.refresh();
+		this.responseHeaderColumnsInfoPanel.refresh();
 		updateSqlText(BOTH);
 		this.wrapperPanel.notifyOperationChanged(this.getProcedureGenerator()
 				.getOperation());
@@ -188,6 +198,18 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 
 	public WSDLImportWizardManager getImportManager() {
 		return this.importManager;
+	}
+	
+	public IContentProvider getSchemaContentProvider() {
+		return this.schemaContentProvider;
+	}
+	
+	public ILabelProvider getSchemaLabelProvider() {
+		return this.schemaLabelProvider;
+	}
+	
+	public ImportWsdlSchemaHandler getSchemaHandler() {
+		return this.schemaHandler;
 	}
 
 	/**
@@ -291,120 +313,102 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 				GridData.FILL_HORIZONTAL));
 		requestProcedureNameText.setEditable(false);
 
-		createRequestSplitter(panel);
+		createTabbedRequestPanel(panel);
 
 		createRequestSqlGroup(panel);
 	}
 
-	private void createRequestSplitter(Composite parent) {
+	private void createRequestBodySplitter(Composite parent) {
 		SashForm splitter = new SashForm(parent, SWT.HORIZONTAL);
 		GridData gid = new GridData();
 		gid.grabExcessHorizontalSpace = gid.grabExcessVerticalSpace = true;
 		gid.horizontalAlignment = gid.verticalAlignment = GridData.FILL;
 		splitter.setLayoutData(gid);
 
-		createRequestSchemaContentsGroup(splitter);
-		createRequestElementsInfoGroup(splitter);
+		requestBodySchemaContentsGroup = new RequestSchemaContentsGroup(splitter, ProcedureInfo.TYPE_BODY, this);
+		requestBodyElementsInfoPanel = new ElementsInfoPanel(splitter, SWT.NONE,ProcedureInfo.TYPE_BODY, this);
+		requestBodySchemaContentsGroup.setElementsInfoPanel(requestBodyElementsInfoPanel);
 
 		splitter.setWeights(new int[] { 60, 40 });
 	}
+	
+	private void createTabbedRequestPanel(Composite parent) {
+		TabFolder requestTabFolder = new TabFolder(parent, SWT.LEFT | SWT.BORDER);
+		requestTabFolder.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-	private void createRequestSchemaContentsGroup(Composite parent) {
-		Group schemaContentsGroup = WidgetFactory.createGroup(parent,
-				Messages.SchemaContents, SWT.NONE, 1, 4);
-		schemaContentsGroup.setLayout(new GridLayout(4, false));
-		GridData gd = new GridData(GridData.FILL_BOTH);
-		gd.horizontalSpan = 1;
-		gd.heightHint = 120;
-		schemaContentsGroup.setLayoutData(gd);
-
-		this.requestXmlTreeViewer = new TreeViewer(schemaContentsGroup,
-				SWT.SINGLE);
-
-		this.requestXmlTreeViewer.setContentProvider(schemaContentProvider);
-		this.requestXmlTreeViewer.setLabelProvider(schemaLabelProvider);
-		this.requestXmlTreeViewer.setAutoExpandLevel(3);
-		GridData data = new GridData(GridData.FILL_BOTH);
-		data.horizontalSpan = 4;
-		this.requestXmlTreeViewer.getControl().setLayoutData(data);
-		this.requestXmlTreeViewer.setInput(null);
-
-		// Add a Context Menu
-		final MenuManager columnMenuManager = new MenuManager();
-		this.requestXmlTreeViewer.getControl().setMenu(
-				columnMenuManager.createContextMenu(parent));
-		this.requestXmlTreeViewer
-				.addSelectionChangedListener(new ISelectionChangedListener() {
-					/**
-					 * {@inheritDoc}
-					 * 
-					 * @see oblafond@redhat.comrg.eclipse.jface.viewers.
-					 *      ISelectionChangedListener
-					 *      #selectionChanged(org.eclipse
-					 *      .jface.viewers.SelectionChangedEvent)
-					 */
-					@Override
-					public void selectionChanged(
-							final SelectionChangedEvent event) {
-						columnMenuManager.removeAll();
-						IStructuredSelection sel = (IStructuredSelection) requestXmlTreeViewer
-								.getSelection();
-						if (sel.size() == 1
-								&& (sel.getFirstElement() instanceof XSDParticleImpl || sel
-										.getFirstElement() instanceof XSDElementDeclarationImpl)) {
-							columnMenuManager.add(requestCreateElementAction);
-						}
-
-					}
-				});
-		
-		this.requestXmlTreeViewer.addDoubleClickListener(new IDoubleClickListener() {
-			
-			@Override
-			public void doubleClick(DoubleClickEvent event) {
-				IStructuredSelection selection = (IStructuredSelection)event.getSelection();
-				if( selection != null && !selection.isEmpty() && selection.getFirstElement() instanceof XSDParticleImpl ) {
-					schemaHandler.createRequestColumn();
-				}
-			}
-		});
-
-		this.requestCreateElementAction = new Action(Messages.AddAsNewElement) {
-			@Override
-			public void run() {
-				schemaHandler.createRequestColumn();
-			}
-		};
+		createRequestBodyTab(requestTabFolder);
+		createRequestHeaderTab(requestTabFolder);
 	}
+	
+	private void createRequestBodyTab(TabFolder tabFolder) {
+		Composite panel = WidgetFactory.createPanel(tabFolder);
+		TabItem requestBodyTab = new TabItem(tabFolder, SWT.NONE);
+		requestBodyTab.setControl(panel);
+		requestBodyTab.setText(Messages.Body_upper_case);
+		
+		createRequestBodySplitter(panel);
+	}
+	
+	private void createRequestHeaderTab(TabFolder tabFolder) {
+		Composite panel = WidgetFactory.createPanel(tabFolder);
+		requestHeaderTab = new TabItem(tabFolder, SWT.NONE);
+		requestHeaderTab.setControl(panel);
+		requestHeaderTab.setText(Messages.Header_upper_case);
 
-	private void createRequestElementsInfoGroup(Composite parent) {
-		requestElementsInfoPanel = new ElementsInfoPanel(parent, SWT.NONE,
-				REQUEST, this);
+    	requestHeaderStackPanel = new Composite(panel, SWT.NONE | SWT.FILL);
+    	requestHeaderStackLayout = new StackLayout();
+    	requestHeaderStackLayout.marginWidth = 0;
+    	requestHeaderStackLayout.marginHeight = 0;
+    	requestHeaderStackPanel.setLayout(requestHeaderStackLayout);
+    	requestHeaderStackPanel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		
+		createRequestHeaderSplitter(requestHeaderStackPanel);
+		createRequestHeaderDisabledPanel(requestHeaderStackPanel);
+		
+		this.requestHeaderStackLayout.topControl = requestHeaderStackPanel;
+	}
+	
+	private void createRequestHeaderDisabledPanel(Composite parent) {
+		disabledRequestHeaderPanel = WidgetFactory.createPanel(parent, SWT.NONE);
+		disabledRequestHeaderPanel.setLayout(new GridLayout(1, false));
+		GridData gd = new GridData(GridData.FILL_BOTH);
+		gd.horizontalSpan = 2;
+		disabledRequestHeaderPanel.setLayoutData(gd);
+		Label label = new Label(disabledRequestHeaderPanel, SWT.NONE);
+		label.setText(Messages.NoHeaderMessage);
+	}
+	
+	private void createRequestHeaderSplitter(Composite parent) {
+		requestHeaderSplitter = new SashForm(parent, SWT.HORIZONTAL);
+		GridData gid = new GridData();
+		gid.grabExcessHorizontalSpace = gid.grabExcessVerticalSpace = true;
+		gid.horizontalAlignment = gid.verticalAlignment = GridData.FILL;
+		requestHeaderSplitter.setLayoutData(gid);
+
+		requestHeaderSchemaContentsGroup = new RequestSchemaContentsGroup(requestHeaderSplitter, ProcedureInfo.TYPE_HEADER, this);
+		requestHeaderElementsInfoPanel = new ElementsInfoPanel(requestHeaderSplitter, SWT.NONE,ProcedureInfo.TYPE_HEADER, this);
+		requestHeaderSchemaContentsGroup.setElementsInfoPanel(requestHeaderElementsInfoPanel);
+
+		requestHeaderSplitter.setWeights(new int[] { 60, 40 });
 	}
 
 	private void createRequestSqlGroup(Composite parent) {
-		Group group = WidgetFactory.createGroup(parent,
-				Messages.GeneratedSQLStatement, SWT.NONE, 2);
+		Group group = WidgetFactory.createGroup(parent,Messages.GeneratedSQLStatement, SWT.NONE, 2);
 		group.setLayout(new GridLayout(1, false));
 		GridData gd = new GridData(GridData.FILL_BOTH);
 		gd.horizontalSpan = 2;
 		group.setLayoutData(gd);
 
 		ColorManager colorManager = new ColorManager();
-		int styles = SWT.V_SCROLL | SWT.MULTI | SWT.BORDER | SWT.WRAP
-				| SWT.FULL_SELECTION;
+		int styles = SWT.V_SCROLL | SWT.MULTI | SWT.BORDER | SWT.WRAP | SWT.FULL_SELECTION;
 
-		requestSqlTextViewer = new SqlTextViewer(group, new VerticalRuler(0),
-				styles, colorManager);
+		requestSqlTextViewer = new SqlTextViewer(group, new VerticalRuler(0), styles, colorManager);
 		requestSqlDocument = new Document();
 		requestSqlTextViewer.setInput(requestSqlDocument);
 		requestSqlTextViewer.setEditable(false);
-		requestSqlTextViewer.getTextWidget().setBackground(
-				Display.getCurrent().getSystemColor(
-						SWT.COLOR_WIDGET_LIGHT_SHADOW));
+		requestSqlTextViewer.getTextWidget().setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
 		requestSqlDocument.set(CoreStringUtil.Constants.EMPTY_STRING);
-		requestSqlTextViewer.getControl().setLayoutData(
-				new GridData(GridData.FILL_BOTH));
+		requestSqlTextViewer.getControl().setLayoutData(new GridData(GridData.FILL_BOTH));
 	}
 
 	private void createResponseTab(TabFolder tabFolder) {
@@ -433,97 +437,88 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 				GridData.FILL_HORIZONTAL));
 		responseProcedureNameText.setEditable(false);
 
-		createResponseSplitter(panel);
+		createTabbedReponsePanel(panel);
 
 		createResponseSqlGroup(panel);
 	}
 
-	private void createResponseSplitter(Composite parent) {
+	private void createResponseBodySplitter(Composite parent) {
 		SashForm splitter = new SashForm(parent, SWT.HORIZONTAL);
 		GridData gid = new GridData();
 		gid.grabExcessHorizontalSpace = gid.grabExcessVerticalSpace = true;
 		gid.horizontalAlignment = gid.verticalAlignment = GridData.FILL;
 		splitter.setLayoutData(gid);
 
-		createResponseSchemaContentsGroup(splitter);
-		createResponseColumnInfoGroup(splitter);
+		responseBodySchemaContentsGroup = new ResponseSchemaContentsGroup(splitter, ProcedureInfo.TYPE_BODY, this);
+		responseBodyColumnsInfoPanel = new ColumnsInfoPanel(splitter, SWT.NONE, ProcedureInfo.TYPE_BODY, this);
+		responseBodySchemaContentsGroup.setColumnsInfoPanel(responseBodyColumnsInfoPanel);
 
 		splitter.setWeights(new int[] { 40, 60 });
 	}
+	
+	private void createResponseHeaderSplitter(Composite parent) {
+		responseHeaderSplitter = new SashForm(parent, SWT.HORIZONTAL);
+		GridData gid = new GridData();
+		gid.grabExcessHorizontalSpace = gid.grabExcessVerticalSpace = true;
+		gid.horizontalAlignment = gid.verticalAlignment = GridData.FILL;
+		responseHeaderSplitter.setLayoutData(gid);
 
-	private void createResponseSchemaContentsGroup(Composite parent) {
-		Group schemaContentsGroup = WidgetFactory.createGroup(parent,
-				Messages.SchemaContents, SWT.NONE, 2, 4);
-		schemaContentsGroup.setLayout(new GridLayout(4, false));
+		responseHeaderSchemaContentsGroup = new ResponseSchemaContentsGroup(responseHeaderSplitter, ProcedureInfo.TYPE_HEADER, this);
+		responseHeaderColumnsInfoPanel = new ColumnsInfoPanel(responseHeaderSplitter, SWT.NONE, ProcedureInfo.TYPE_HEADER, this);
+		responseHeaderSchemaContentsGroup.setColumnsInfoPanel(responseHeaderColumnsInfoPanel);
+
+		responseHeaderSplitter.setWeights(new int[] { 40, 60 });
+	}
+	
+	
+	private void createTabbedReponsePanel(Composite parent) {
+		TabFolder responseTabFolder = new TabFolder(parent, SWT.LEFT | SWT.BORDER);
+		responseTabFolder.setLayoutData(new GridData(GridData.FILL_BOTH));
+
+		createResponseBodyTab(responseTabFolder);
+		createResponseHeaderTab(responseTabFolder);
+	}
+	
+	private void createResponseBodyTab(TabFolder tabFolder) {
+		Composite panel = WidgetFactory.createPanel(tabFolder);
+		TabItem requestBodyTab = new TabItem(tabFolder, SWT.NONE);
+		requestBodyTab.setControl(panel);
+		requestBodyTab.setText(Messages.Body_upper_case);
+		
+		createResponseBodySplitter(panel);
+	}
+	
+	private void createResponseHeaderTab(TabFolder tabFolder) {
+		Composite panel = WidgetFactory.createPanel(tabFolder);
+		responseHeaderTab = new TabItem(tabFolder, SWT.NONE);
+		responseHeaderTab.setControl(panel);
+		responseHeaderTab.setText(Messages.Header_upper_case);
+
+    	responseHeaderStackPanel = new Composite(panel, SWT.NONE | SWT.FILL);
+    	responseHeaderStackLayout = new StackLayout();
+    	responseHeaderStackLayout.marginWidth = 0;
+    	responseHeaderStackLayout.marginHeight = 0;
+    	responseHeaderStackPanel.setLayout(responseHeaderStackLayout);
+    	responseHeaderStackPanel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		
+		createResponseHeaderSplitter(responseHeaderStackPanel);
+		createResponseHeaderDisabledPanel(responseHeaderStackPanel);
+		
+		this.responseHeaderStackLayout.topControl = responseHeaderStackPanel;
+	}
+
+	private void createResponseHeaderDisabledPanel(Composite parent) {
+		disabledResponseHeaderPanel = WidgetFactory.createPanel(parent, SWT.NONE);
+		disabledResponseHeaderPanel.setLayout(new GridLayout(1, false));
 		GridData gd = new GridData(GridData.FILL_BOTH);
-		gd.heightHint = 120;
-		gd.horizontalSpan = 1;
-		schemaContentsGroup.setLayoutData(gd);
-
-		responseXmlTreeViewer = new TreeViewer(schemaContentsGroup, SWT.SINGLE);
-		semanticAdapterFactory = new XSDSemanticItemProviderAdapterFactory();
-		this.responseXmlTreeViewer.setContentProvider(schemaContentProvider);
-		this.responseXmlTreeViewer.setLabelProvider(schemaLabelProvider);
-		this.responseXmlTreeViewer.setAutoExpandLevel(3);
-		GridData data = new GridData(GridData.FILL_BOTH);
-		data.horizontalSpan = 4;
-		this.responseXmlTreeViewer.getControl().setLayoutData(data);		this.responseXmlTreeViewer.setInput(null);
-
-		// Add a Context Menu
-		final MenuManager columnMenuManager = new MenuManager();
-		this.responseXmlTreeViewer.getControl().setMenu(
-				columnMenuManager.createContextMenu(parent));
-		this.responseXmlTreeViewer
-				.addSelectionChangedListener(new ISelectionChangedListener() {
-					/**
-					 * {@inheritDoc}
-					 * 
-					 * @see oblafond@redhat.comrg.eclipse.jface.viewers.
-					 *      ISelectionChangedListener
-					 *      #selectionChanged(org.eclipse
-					 *      .jface.viewers.SelectionChangedEvent)
-					 */
-					@Override
-					public void selectionChanged(
-							final SelectionChangedEvent event) {
-						columnMenuManager.removeAll();
-						IStructuredSelection sel = (IStructuredSelection) responseXmlTreeViewer
-								.getSelection();
-						if (sel.size() == 1
-								&& (sel.getFirstElement() instanceof XSDParticleImpl || sel
-										.getFirstElement() instanceof XSDElementDeclarationImpl)) {
-							columnMenuManager.add(responseCreateElementAction);
-						}
-
-					}
-				});
-		this.responseXmlTreeViewer.addDoubleClickListener(new IDoubleClickListener() {
-			
-			@Override
-			public void doubleClick(DoubleClickEvent event) {
-				IStructuredSelection selection = (IStructuredSelection)event.getSelection();
-				if( selection != null && !selection.isEmpty() && selection.getFirstElement() instanceof XSDParticleImpl ) {
-					schemaHandler.createRequestColumn();
-				}
-			}
-		});
-
-		this.responseCreateElementAction = new Action(Messages.AddAsNewElement) {
-			@Override
-			public void run() {
-				schemaHandler.createRequestColumn();
-			}
-		};
+		gd.horizontalSpan = 2;
+		disabledResponseHeaderPanel.setLayoutData(gd);
+		Label label = new Label(disabledResponseHeaderPanel, SWT.NONE);
+		label.setText(Messages.NoHeaderMessage);
 	}
-
-	private void createResponseColumnInfoGroup(Composite parent) {
-		responseElementsInfoPanel = new ColumnsInfoPanel(parent, SWT.NONE,
-				RESPONSE, this);
-	}
-
+	
 	private void createResponseSqlGroup(Composite parent) {
-		Group group = WidgetFactory.createGroup(parent,
-				Messages.GeneratedSQLStatement, SWT.NONE, 2);
+		Group group = WidgetFactory.createGroup(parent, Messages.GeneratedSQLStatement, SWT.NONE, 2);
 		group.setLayout(new GridLayout(1, false));
 		GridData gd = new GridData(GridData.FILL_BOTH);
 		gd.horizontalSpan = 2;
@@ -582,32 +577,28 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 	void updateSqlText(int type) {
 		if (this.procedureGenerator != null) {
 			if (type == REQUEST) {
-				requestSqlTextViewer.getDocument().set(
-						this.procedureGenerator.getRequestInfo().getSqlString(
-								new Properties()));
+				requestSqlTextViewer.getDocument().set(this.procedureGenerator.getRequestInfo().getSqlString(new Properties()));
 			} else if (type == RESPONSE) {
-				responseSqlTextViewer.getDocument().set(
-						this.procedureGenerator.getResponseInfo().getSqlString(
-								new Properties()));
+				responseSqlTextViewer.getDocument().set(this.procedureGenerator.getResponseInfo().getSqlString(new Properties()));
 			} else if (type == BOTH) {
-				requestSqlTextViewer.getDocument().set(
-						this.procedureGenerator.getRequestInfo().getSqlString(
-								new Properties()));
-				responseSqlTextViewer.getDocument().set(
-						this.procedureGenerator.getResponseInfo().getSqlString(
-								new Properties()));
+				requestSqlTextViewer.getDocument().set(this.procedureGenerator.getRequestInfo().getSqlString(new Properties()));
+				responseSqlTextViewer.getDocument().set(this.procedureGenerator.getResponseInfo().getSqlString(new Properties()));
 			}
 		}
 	}
 
 	void updateSchemaTree(int type) {
 		if (type == REQUEST) {
-			requestXmlTreeViewer.setInput(getSchemaForSelectedOperation(type));
+			requestBodySchemaContentsGroup.setInput(getSchemaForSelectedOperation(type));
+			requestHeaderSchemaContentsGroup.setInput(getSchemaForSelectedOperation(type));
 		} else if (type == RESPONSE) {
-			responseXmlTreeViewer.setInput(getSchemaForSelectedOperation(type));
+			responseBodySchemaContentsGroup.setInput(getSchemaForSelectedOperation(type));
+			responseHeaderSchemaContentsGroup.setInput(getSchemaForSelectedOperation(type));
 		} else {
-			requestXmlTreeViewer.setInput(getSchemaForSelectedOperation(REQUEST));
-			responseXmlTreeViewer.setInput(getSchemaForSelectedOperation(RESPONSE));
+			requestBodySchemaContentsGroup.setInput(getSchemaForSelectedOperation(REQUEST));
+			requestHeaderSchemaContentsGroup.setInput(getSchemaForSelectedOperation(REQUEST));
+			responseBodySchemaContentsGroup.setInput(getSchemaForSelectedOperation(RESPONSE));
+			responseHeaderSchemaContentsGroup.setInput(getSchemaForSelectedOperation(RESPONSE));
 		}
 	}
 	
@@ -732,6 +723,20 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 		super.setVisible(isVisible);
 		this.wrapperPanel.setVisible();
 		this.overwriteExistingCB.setEnabled(this.importManager.viewModelExists());
+		
+		boolean includeHeader = this.importManager.isMessageServiceMode();
+		if( includeHeader ) {
+			this.requestHeaderStackLayout.topControl = requestHeaderSplitter;
+			this.responseHeaderStackLayout.topControl = responseHeaderSplitter;
+		} else {
+			this.requestHeaderStackLayout.topControl = disabledRequestHeaderPanel;
+			this.responseHeaderStackLayout.topControl = disabledResponseHeaderPanel;
+		}
+		this.requestHeaderStackPanel.layout();
+		this.responseHeaderStackPanel.layout();
+		this.requestHeaderTab.getControl().setEnabled(includeHeader);
+		this.responseHeaderTab.getControl().setEnabled(includeHeader);
+		
 	}
     
     public void updateDesignerProperties() {
@@ -758,10 +763,19 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 		return null;
 	}
 
-	void getParentXpath(SchemaObject child, StringBuilder parentXpath) {
-		List<SimpleRelationship> parents = child.getParents();
-		for (SimpleRelationship parent : parents) {
-			parentXpath.append("/").append(parent.getParent().getSimpleName()); //$NON-NLS-1$
+	public String createRequestColumn(int requestType) {
+		if( requestType == ProcedureInfo.TYPE_BODY ) {
+			return this.requestBodySchemaContentsGroup.createRequestColumn();
+		} else {
+			return this.requestHeaderSchemaContentsGroup.createRequestColumn();
+		}
+	}
+
+	public String createResponseColumn(int responseType) {
+		if( responseType == ProcedureInfo.TYPE_BODY ) {
+			return this.responseBodySchemaContentsGroup.createResponseColumn();
+		} else {
+			return this.responseHeaderSchemaContentsGroup.createResponseColumn();
 		}
 	}
 

@@ -18,6 +18,7 @@ public class Messages  extends NLS {
     public static String AddSelectionAsNewColumn;
     public static String AddSelectionAsNewElement;
     
+    public static String Body_upper_case;
     public static String Browse;
     public static String BrowseElipsis;
     public static String BrowseToSelect_0_Model;
@@ -46,6 +47,8 @@ public class Messages  extends NLS {
     public static String GeneratedSQLStatement;
     public static String GenerateWrapperProcedure;
     
+    public static String Header_upper_case;
+    
     public static String ImportOptions;
     public static String InvalidColumnName;
     public static String InvalidSelectedSchemaObject;
@@ -58,6 +61,7 @@ public class Messages  extends NLS {
     
     public static String Name;
     public static String New;
+    public static String NoHeaderMessage;
     public static String NoOperationsSelected;
     
     public static String Operation;

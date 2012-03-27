@@ -44,7 +44,7 @@ public class ResponseInfo extends ProcedureInfo {
 		}
 
 		// Look at all element names
-		for (ColumnInfo info : getColumnInfoList()) {
+		for (ColumnInfo info : getBodyColumnInfoList()) {
 			IStatus colNameStatus = getGenerator()
 					.getNameStatus(info.getName());
 			if (colNameStatus.getSeverity() > IStatus.INFO) {
@@ -146,9 +146,9 @@ public class ResponseInfo extends ProcedureInfo {
 		sb.append(TAB).append(COLUMNS).append(SPACE).append(RETURN);
 
 		int i = 0;
-		int nColumns = getColumnInfoList().length;
+		int nColumns = getBodyColumnInfoList().length;
 
-		for (ColumnInfo columnInfo : getColumnInfoList()) {
+		for (ColumnInfo columnInfo : getBodyColumnInfoList()) {
 			if (columnInfo.getOrdinality()) {
 				sb.append(columnInfo.getName()).append(SPACE)
 						.append(FOR_ORDINALITY);

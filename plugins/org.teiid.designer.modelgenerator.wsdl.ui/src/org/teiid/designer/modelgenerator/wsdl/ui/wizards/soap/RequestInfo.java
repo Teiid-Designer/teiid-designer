@@ -50,7 +50,7 @@ public class RequestInfo extends ProcedureInfo {
 		}
 		
 		// Look at all element names
-		for( ColumnInfo info : getColumnInfoList() ) {
+		for( ColumnInfo info : getBodyColumnInfoList() ) {
 			IStatus colNameStatus = getGenerator().getNameStatus(info.getName());
 			if( colNameStatus.getSeverity() > IStatus.INFO) {
 				return colNameStatus;
@@ -101,6 +101,10 @@ public class RequestInfo extends ProcedureInfo {
     	int i=0;
     	sb.append(SQL_BEGIN);
     	sb.append(TAB).append(SELECT).append(RETURN);
+    	String header = getHeaderString();
+    	if( header.length() > 0 ) {
+    		sb.append(TAB).append(TAB).append(header).append(RETURN);
+    	}
     	sb.append(TAB).append(TAB).append(XMLELEMENT);
     	sb.append(L_PAREN);
     	
@@ -111,14 +115,14 @@ public class RequestInfo extends ProcedureInfo {
 	    	if( nsString != null && !nsString.isEmpty() ) {
 	    		sb.append(nsString);
 	    	}
-	    	int nColumns = getColumnInfoList().length;
+	    	int nColumns = getBodyColumnInfoList().length;
 	    	if( nColumns > 0 ) {
 	    		sb.append(COMMA);
 	    	}
 	    	sb.append(SPACE).append(RETURN);
 	    	// EXAMPLE:       XMLELEMENT(NAME FromCurrency, CurrencyConvertorView.request_ConversionRate.FromCurrency)
 	    	
-	    	for( ColumnInfo columnInfo : getColumnInfoList()) {
+	    	for( ColumnInfo columnInfo : getBodyColumnInfoList()) {
 	    		String name = columnInfo.getName();
 	    		sb.append(TAB).append(TAB).append(TAB).append(XMLELEMENT);
 	    		sb.append(L_PAREN);
@@ -152,6 +156,20 @@ public class RequestInfo extends ProcedureInfo {
     	sb.append(R_PAREN);
     	
     	return sb.toString();
+    }
+    
+    private String getHeaderString() {
+    	/* EXAMPLE
+    	 XMLELEMENT(NAME "soapenv:Envelope", 
+    	 	XMLNAMESPACES('http://schemas.xmlsoap.org/soap/envelope/' AS soapenv), 
+    	 	XMLELEMENT(NAME "soapenv:Header", XMLELEMENT(NAME quote_timestamp, StockServiceServiceView.getLastSellPrice_request.quote_timestamp)), 
+    	 */
+    	if( this.getGenerator().getImportManager().isMessageServiceMode()) {
+    		return "XMLELEMENT(NAME \"soapenv:Envelope\", " + 
+    	 	"XMLNAMESPACES('http://schemas.xmlsoap.org/soap/envelope/' AS soapenv), " +
+    	 	"XMLELEMENT(NAME \"soapenv:Header\", XMLELEMENT(NAME quote_timestamp, StockServiceServiceView.getLastSellPrice_request.quote_timestamp)), ";
+    	}
+    	return "";
     }
 
 }

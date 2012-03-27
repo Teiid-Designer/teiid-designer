@@ -395,6 +395,10 @@ public class WSDLImportWizardManager {
 	public String getTranslatorDefaultServiceMode() {
 		return this.translatorDefaultServiceMode;
 	}
+	
+	public boolean isMessageServiceMode() {
+		return this.translatorDefaultServiceMode.equalsIgnoreCase(MESSAGE); 
+	}
 
 	/**
 	 * @param translatorDefaultServiceMode the translatorDefaultServiceMode to set

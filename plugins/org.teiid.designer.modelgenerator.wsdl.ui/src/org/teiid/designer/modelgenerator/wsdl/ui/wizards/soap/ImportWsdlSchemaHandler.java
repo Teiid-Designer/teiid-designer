@@ -29,6 +29,7 @@ import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.wizards.WSDLImport
 import com.metamatrix.modeler.schema.tools.model.schema.SchemaModel;
 import com.metamatrix.modeler.schema.tools.model.schema.SchemaObject;
 import com.metamatrix.modeler.schema.tools.model.schema.impl.BaseSchemaObject;
+import com.metamatrix.modeler.schema.tools.model.schema.impl.SimpleRelationship;
 import com.metamatrix.modeler.schema.tools.processing.SchemaProcessingException;
 import com.metamatrix.modeler.schema.tools.processing.SchemaProcessor;
 
@@ -137,43 +138,42 @@ public class ImportWsdlSchemaHandler {
 		return partElementName;
 	}
 
-	public String createRequestColumn() {
-		IStructuredSelection sel = (IStructuredSelection) operationsDetailsPage.requestXmlTreeViewer
-				.getSelection();
+	public String createRequestColumn(int type, IStructuredSelection selection, ProcedureInfo requestInfo) {
 	
-		Object obj = sel.getFirstElement();
+		Object obj = selection.getFirstElement();
 		String name = null;
 		String ns = null;
 		
 		if (obj instanceof XSDParticleImpl
 				&& ((XSDParticleImpl) obj).getContent() instanceof XSDElementDeclarationImpl) {
-			name = ((XSDElementDeclarationImpl) ((XSDParticleImpl) obj)
-					.getContent()).getName();
-			ns = ((XSDElementDeclarationImpl) ((XSDParticleImpl) obj)
-					.getContent()).getTargetNamespace();
-			   operationsDetailsPage.procedureGenerator.getRequestInfo().addColumn(name, false,
-						RuntimeTypeNames.STRING, null, ns);
-				operationsDetailsPage.notifyColumnDataChanged();
-				return null;
+			name = ((XSDElementDeclarationImpl) ((XSDParticleImpl) obj).getContent()).getName();
+			ns = ((XSDElementDeclarationImpl) ((XSDParticleImpl) obj).getContent()).getTargetNamespace();
+			if( type == ProcedureInfo.TYPE_BODY ) {
+				requestInfo.addBodyColumn(name, false,RuntimeTypeNames.STRING, null, ns);
+			} else {
+				requestInfo.addHeaderColumn(name, false,RuntimeTypeNames.STRING, null, ns);
+			}
+			operationsDetailsPage.notifyColumnDataChanged();
+			return null;
 			
-		}else if (obj instanceof XSDElementDeclarationImpl){
-			name = ((XSDElementDeclarationImpl)obj)
-					.getName();
+		} else if (obj instanceof XSDElementDeclarationImpl){
+			name = ((XSDElementDeclarationImpl)obj).getName();
 			ns = ((XSDElementDeclarationImpl)obj).getTargetNamespace();
-			   operationsDetailsPage.procedureGenerator.getRequestInfo().addColumn(name, false,
-						RuntimeTypeNames.STRING, null, ns);
-				operationsDetailsPage.notifyColumnDataChanged();
-				return null;
+			if( type == ProcedureInfo.TYPE_BODY ) {
+				requestInfo.addBodyColumn(name, false,RuntimeTypeNames.STRING, null, ns);
+			} else {
+				requestInfo.addHeaderColumn(name, false,RuntimeTypeNames.STRING, null, ns);
+			}
+			operationsDetailsPage.notifyColumnDataChanged();
+			return null;
 		}
 		
-		return operationsDetailsPage.schemaLabelProvider.getText(obj);
+		return operationsDetailsPage.getSchemaLabelProvider().getText(obj);
 	}
 
-	public String createResponseColumn(OperationsDetailsPage operationsDetailsPage) {
-		IStructuredSelection sel = (IStructuredSelection) operationsDetailsPage.responseXmlTreeViewer
-				.getSelection();
+	public String createResponseColumn(int type, IStructuredSelection selection, ProcedureInfo responseInfo) {
 	
-		Object obj = sel.getFirstElement();
+		Object obj = selection.getFirstElement();
 		if (obj instanceof XSDParticleImpl && ((XSDParticleImpl) obj).getContent() instanceof XSDElementDeclarationImpl) {
 	
 			Model wsdlModel = null;
@@ -181,7 +181,7 @@ public class ImportWsdlSchemaHandler {
 			XSDSchema[] schemas;
 	
 			try {
-				wsdlModel = operationsDetailsPage.importManager.getWSDLModel();
+				wsdlModel = operationsDetailsPage.getImportManager().getWSDLModel();
 			} catch (ModelGenerationException e) {
 				throw new RuntimeException(e);
 			}
@@ -206,30 +206,38 @@ public class ImportWsdlSchemaHandler {
 			StringBuilder parentXpath = new StringBuilder();
 			for (SchemaObject schemaObject : elements) {
 				if (schemaObject.getName().equals(name)) {
-					operationsDetailsPage.getParentXpath(schemaObject, parentXpath);
+					getParentXpath(schemaObject, parentXpath);
 					xpath.append("/").append(schemaObject.getRelativeXpath()); //$NON-NLS-1$
 					namespace = schemaObject.getNamespace();
 					prefix = ((BaseSchemaObject) schemaObject)
 							.getNamespacePrefix();
 					if (namespace != null) {
-						operationsDetailsPage.procedureGenerator.getResponseInfo().addNamespace(
+						responseInfo.addNamespace(
 								prefix, namespace);
 					}
-					operationsDetailsPage.procedureGenerator.getResponseInfo().setRootPath(
-							parentXpath.toString());
-					operationsDetailsPage.responseElementsInfoPanel.getRootPathText().setText(
-							parentXpath.toString());
+					responseInfo.setRootPath(parentXpath.toString());
+					
+					// TODO: Make sure Root Path is set in the responseElementsInfoPanel on Refresh
+					//operationsDetailsPage.responseElementsInfoPanel.getRootPathText().setText(parentXpath.toString());
 				}
 			}
-			operationsDetailsPage.procedureGenerator.getResponseInfo().addColumn(name, false,
-					RuntimeTypeNames.STRING, null,
-					xpath.toString());
-	
+			if( type == ProcedureInfo.TYPE_BODY ) {
+				responseInfo.addBodyColumn(name, false,RuntimeTypeNames.STRING, null,xpath.toString());
+			} else {
+				responseInfo.addHeaderColumn(name, false,RuntimeTypeNames.STRING, null,xpath.toString());
+			}
 			operationsDetailsPage.notifyColumnDataChanged();
 			return null;
 		}
 	
-		return operationsDetailsPage.schemaLabelProvider.getText(obj);
+		return operationsDetailsPage.getSchemaLabelProvider().getText(obj);
 	}
 
+	
+	private void getParentXpath(SchemaObject child, StringBuilder parentXpath) {
+		List<SimpleRelationship> parents = child.getParents();
+		for (SimpleRelationship parent : parents) {
+			parentXpath.append("/").append(parent.getParent().getSimpleName()); //$NON-NLS-1$
+		}
+	}
 }

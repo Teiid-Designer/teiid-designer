@@ -393,7 +393,7 @@ public class ImportWsdlProcessor {
     	
     	NewModelObjectHelperManager.helpCreate(procedure, null);
     	
-    	for(ColumnInfo columnInfo : info.getColumnInfoList() ) {
+    	for(ColumnInfo columnInfo : info.getBodyColumnInfoList() ) {
     		ProcedureParameter parameter = factory.createProcedureParameter();
     		parameter.setName(columnInfo.getName());
     		EObject type = datatypeManager.findDatatype(columnInfo.getDatatype());
@@ -449,7 +449,7 @@ public class ImportWsdlProcessor {
     	result.setName("Result"); //$NON-NLS-1$
     	result.setProcedure(procedure);
     	
-    	for(ColumnInfo columnInfo : info.getColumnInfoList() ) {
+    	for(ColumnInfo columnInfo : info.getBodyColumnInfoList() ) {
         	Column column = factory.createColumn();
         	column.setName(columnInfo.getName());
         	EObject type = datatypeManager.findDatatype(columnInfo.getDatatype());
@@ -484,7 +484,7 @@ public class ImportWsdlProcessor {
     	
     	addValue(modelResource, procedure, modelResource.getEmfResource().getContents());
     	
-    	for(ColumnInfo columnInfo : generator.getRequestInfo().getColumnInfoList() ) {
+    	for(ColumnInfo columnInfo : generator.getRequestInfo().getBodyColumnInfoList() ) {
     		ProcedureParameter parameter = factory.createProcedureParameter();
     		parameter.setName(columnInfo.getName());
     		EObject type = datatypeManager.findDatatype(columnInfo.getDatatype());
@@ -503,7 +503,7 @@ public class ImportWsdlProcessor {
     	result.setName("Result"); //$NON-NLS-1$
     	result.setProcedure(procedure);
     	
-    	for(ColumnInfo columnInfo : generator.getResponseInfo().getColumnInfoList() ) {
+    	for(ColumnInfo columnInfo : generator.getResponseInfo().getBodyColumnInfoList() ) {
         	Column column = factory.createColumn();
         	column.setName(columnInfo.getName());
         	EObject type = datatypeManager.findDatatype(columnInfo.getDatatype());

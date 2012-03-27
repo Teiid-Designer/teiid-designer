@@ -31,7 +31,7 @@ public class ElementsInfoPanel {
 	private ProcedureInfo procedureInfo;
 	private Button addButton, deleteButton, upButton, downButton;
 	EditElementsPanel editElementsPanel;
-	private int type = -1;
+	private int type = -1; 
 
 	final OperationsDetailsPage detailsPage;
 
@@ -84,14 +84,14 @@ public class ElementsInfoPanel {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				// Check Selection from tree
-				String name = detailsPage.schemaHandler.createRequestColumn();
+				String name = detailsPage.createRequestColumn(type);
 				if (name != null) {
 					boolean ok = MessageDialog.openQuestion(detailsPage.getShell(),
 						Messages.InvalidSelectedSchemaObject,
 						NLS.bind(Messages.InvalidSelectedSchemaObject_element_msg, name));
 					
 					if( ok ) {
-    					detailsPage.getProcedureGenerator().getRequestInfo().addColumn(name, false, ColumnInfo.DEFAULT_DATATYPE, null, null);
+    					detailsPage.getProcedureGenerator().getRequestInfo().addBodyColumn(name, false, ColumnInfo.DEFAULT_DATATYPE, null, null);
     					editElementsPanel.refresh();
     					notifyColumnDataChanged();
 					}
@@ -110,7 +110,7 @@ public class ElementsInfoPanel {
 			public void widgetSelected(SelectionEvent e) {
 				ColumnInfo info = editElementsPanel.getSelectedColumn();
 				if (info != null) {
-					detailsPage.getProcedureGenerator().getRequestInfo().removeColumn(info);
+					detailsPage.getProcedureGenerator().getRequestInfo().removeBodyColumn(info);
 
 					deleteButton.setEnabled(false);
 					editElementsPanel.selectRow(-1);
@@ -132,9 +132,9 @@ public class ElementsInfoPanel {
 				ColumnInfo info = editElementsPanel.getSelectedColumn();
 				if (info != null) {
 					int selectedIndex = editElementsPanel.getSelectedIndex();
-					detailsPage.getProcedureGenerator().getRequestInfo().moveColumnUp(info);
-					downButton.setEnabled(detailsPage.getProcedureGenerator().getRequestInfo().canMoveDown(info));
-					upButton.setEnabled(detailsPage.getProcedureGenerator().getRequestInfo().canMoveUp(info));
+					detailsPage.getProcedureGenerator().getRequestInfo().moveBodyColumnUp(info);
+					downButton.setEnabled(detailsPage.getProcedureGenerator().getRequestInfo().canMoveBodyColumnDown(info));
+					upButton.setEnabled(detailsPage.getProcedureGenerator().getRequestInfo().canMoveBodyColumnUp(info));
 					editElementsPanel.refresh();
 					notifyColumnDataChanged();
 
@@ -155,9 +155,9 @@ public class ElementsInfoPanel {
 				ColumnInfo info = editElementsPanel.getSelectedColumn();
 				if (info != null) {
 					int selectedIndex = editElementsPanel.getSelectedIndex();
-					detailsPage.getProcedureGenerator().getRequestInfo().moveColumnDown(info);
-					downButton.setEnabled(detailsPage.getProcedureGenerator().getRequestInfo().canMoveDown(info));
-					upButton.setEnabled(detailsPage.getProcedureGenerator().getRequestInfo().canMoveUp(info));
+					detailsPage.getProcedureGenerator().getRequestInfo().moveBodyColumnDown(info);
+					downButton.setEnabled(detailsPage.getProcedureGenerator().getRequestInfo().canMoveBodyColumnDown(info));
+					upButton.setEnabled(detailsPage.getProcedureGenerator().getRequestInfo().canMoveBodyColumnUp(info));
 					editElementsPanel.refresh();
 					notifyColumnDataChanged();
 
@@ -196,8 +196,8 @@ public class ElementsInfoPanel {
 					}
 					deleteButton.setEnabled(enable);
 					if (enable) {
-						upButton.setEnabled(procedureInfo.canMoveUp(columnInfo));
-						downButton.setEnabled(procedureInfo.canMoveDown(columnInfo));
+						upButton.setEnabled(procedureInfo.canMoveBodyColumnUp(columnInfo));
+						downButton.setEnabled(procedureInfo.canMoveBodyColumnDown(columnInfo));
 					}
 
 				}
@@ -208,6 +208,15 @@ public class ElementsInfoPanel {
 
 	private void notifyColumnDataChanged() {
 		this.detailsPage.notifyColumnDataChanged();
+	}
+	
+	
+	public void setEnabled(boolean enable ) {
+		addButton.setEnabled(enable);
+		deleteButton.setEnabled(false);
+		upButton.setEnabled(false);
+		downButton.setEnabled(false);
+		editElementsPanel.setEnabled(enable);
 	}
 
 }

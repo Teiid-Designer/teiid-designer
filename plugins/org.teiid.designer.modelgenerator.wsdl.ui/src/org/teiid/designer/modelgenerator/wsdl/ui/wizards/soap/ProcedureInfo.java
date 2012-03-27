@@ -29,12 +29,16 @@ public abstract class ProcedureInfo implements SqlConstants {
     
     public static final int REQUEST = 0;
     public static final int RESPONSE = 1;
+    public static final int TYPE_BODY = 0;
+    public static final int TYPE_HEADER = 1;
     
 //	CREATE VIRTUAL PROCEDURE
 //	BEGIN
 //	    SELECT XMLELEMENT(NAME getPrice, XMLNAMESPACES(DEFAULT 'http://quickstart.samples/xsd'), XMLELEMENT(NAME symbol, StockQuoteServiceXML.getPrice.create_getPrice.symbol)) AS xml_out;
 //	END
-	private Collection<ColumnInfo> columnInfoList;
+	private Collection<ColumnInfo> bodyColumnInfoList;
+	
+	private Collection<ColumnInfo> headerColumnInfoList;
 	
 	private Map<String, String> namespaceMap;
 	
@@ -68,7 +72,8 @@ public abstract class ProcedureInfo implements SqlConstants {
 	public ProcedureInfo(Operation operation, int type, ProcedureGenerator generator) {
 		super();
 		this.operation = operation;
-		this.columnInfoList = new ArrayList<ColumnInfo>();
+		this.bodyColumnInfoList = new ArrayList<ColumnInfo>();
+		this.headerColumnInfoList = new ArrayList<ColumnInfo>();
 		this.namespaceMap = new HashMap<String, String>();
 		this.type = type;
 		this.generator = generator;
@@ -96,32 +101,29 @@ public abstract class ProcedureInfo implements SqlConstants {
 		return this.type;
 	}
 	
-	/**
-	 * 
-	 * @return columnInfoList the <code>TeiidColumnInfo[]</code> array parsed from the header in the data file
-	 */
-	public ColumnInfo[] getColumnInfoList() {
-		return this.columnInfoList.toArray(new ColumnInfo[this.columnInfoList.size()]);
+
+	public ColumnInfo[] getBodyColumnInfoList() {
+		return this.bodyColumnInfoList.toArray(new ColumnInfo[this.bodyColumnInfoList.size()]);
 	}
 	
-	public void addColumn(String name, boolean ordinality, String datatype, String defaultValue, String path) {
-		this.columnInfoList.add(new ColumnInfo(name, ordinality, datatype, defaultValue, path));
+	public void addBodyColumn(String name, boolean ordinality, String datatype, String defaultValue, String path) {
+		this.bodyColumnInfoList.add(new ColumnInfo(name, ordinality, datatype, defaultValue, path));
 		validate();
 	}
 	
-	public void removeColumn(ColumnInfo theInfo) {
-		this.columnInfoList.remove(theInfo);
+	public void removeBodyColumn(ColumnInfo theInfo) {
+		this.bodyColumnInfoList.remove(theInfo);
 		validate();
 	}
 	
-	public void moveColumnUp(ColumnInfo columnInfo) {
-		int startIndex = getColumnIndex(columnInfo);
+	public void moveBodyColumnUp(ColumnInfo columnInfo) {
+		int startIndex = getBodyColumnIndex(columnInfo);
 		
 		// 
 		if( startIndex > 0 ) {
 			// Make Copy of List & get columnInfo of startIndex-1
-			ColumnInfo priorInfo = getColumnInfoList()[startIndex-1];
-			ColumnInfo[] infos = getColumnInfoList();
+			ColumnInfo priorInfo = getBodyColumnInfoList()[startIndex-1];
+			ColumnInfo[] infos = getBodyColumnInfoList();
 			infos[startIndex-1] = columnInfo;
 			infos[startIndex] = priorInfo;
 			
@@ -130,16 +132,16 @@ public abstract class ProcedureInfo implements SqlConstants {
 				colInfos.add(info);
 			}
 			
-			this.columnInfoList = colInfos;
+			this.bodyColumnInfoList = colInfos;
 		}
 	}
 	
-	public void moveColumnDown(ColumnInfo columnInfo) {
-		int startIndex = getColumnIndex(columnInfo);
-		if( startIndex < (getColumnInfoList().length-1) ) {
+	public void moveBodyColumnDown(ColumnInfo columnInfo) {
+		int startIndex = getBodyColumnIndex(columnInfo);
+		if( startIndex < (getBodyColumnInfoList().length-1) ) {
 			// Make Copy of List & get columnInfo of startIndex-1
-			ColumnInfo afterInfo = getColumnInfoList()[startIndex+1];
-			ColumnInfo[] infos = getColumnInfoList();
+			ColumnInfo afterInfo = getBodyColumnInfoList()[startIndex+1];
+			ColumnInfo[] infos = getBodyColumnInfoList();
 			infos[startIndex+1] = columnInfo;
 			infos[startIndex] = afterInfo;
 			
@@ -148,21 +150,94 @@ public abstract class ProcedureInfo implements SqlConstants {
 				colInfos.add(info);
 			}
 			
-			this.columnInfoList = colInfos;
+			this.bodyColumnInfoList = colInfos;
 		}
 	}
 	
-	public boolean canMoveUp(ColumnInfo columnInfo) {
-		return getColumnIndex(columnInfo) > 0;
+	public boolean canMoveBodyColumnUp(ColumnInfo columnInfo) {
+		return getBodyColumnIndex(columnInfo) > 0;
 	}
 	
-	public boolean canMoveDown(ColumnInfo columnInfo) {
-		return getColumnIndex(columnInfo) < getColumnInfoList().length-1;
+	public boolean canMoveBodyColumnDown(ColumnInfo columnInfo) {
+		return getBodyColumnIndex(columnInfo) < getBodyColumnInfoList().length-1;
 	}
 	
-	private int getColumnIndex(ColumnInfo columnInfo) {
+	private int getBodyColumnIndex(ColumnInfo columnInfo) {
 		int i=0;
-		for( ColumnInfo colInfo : getColumnInfoList() ) {
+		for( ColumnInfo colInfo : getBodyColumnInfoList() ) {
+			if( colInfo == columnInfo) {
+				return i;
+			}
+			i++;
+		}
+		
+		// Shouldn't ever get here!
+		return -1;
+	}
+	
+	public ColumnInfo[] getHeaderColumnInfoList() {
+		return this.headerColumnInfoList.toArray(new ColumnInfo[this.headerColumnInfoList.size()]);
+	}
+	
+	public void addHeaderColumn(String name, boolean ordinality, String datatype, String defaultValue, String path) {
+		this.headerColumnInfoList.add(new ColumnInfo(name, ordinality, datatype, defaultValue, path));
+		validate();
+	}
+	
+	public void removeHeaderColumn(ColumnInfo theInfo) {
+		this.headerColumnInfoList.remove(theInfo);
+		validate();
+	}
+	
+	public void moveHeaderColumnUp(ColumnInfo columnInfo) {
+		int startIndex = getBodyColumnIndex(columnInfo);
+		
+		// 
+		if( startIndex > 0 ) {
+			// Make Copy of List & get columnInfo of startIndex-1
+			ColumnInfo priorInfo = getBodyColumnInfoList()[startIndex-1];
+			ColumnInfo[] infos = getBodyColumnInfoList();
+			infos[startIndex-1] = columnInfo;
+			infos[startIndex] = priorInfo;
+			
+			Collection<ColumnInfo> colInfos = new ArrayList<ColumnInfo>(infos.length);
+			for( ColumnInfo info : infos) {
+				colInfos.add(info);
+			}
+			
+			this.headerColumnInfoList = colInfos;
+		}
+	}
+	
+	public void moveHeaderColumnDown(ColumnInfo columnInfo) {
+		int startIndex = getBodyColumnIndex(columnInfo);
+		if( startIndex < (getBodyColumnInfoList().length-1) ) {
+			// Make Copy of List & get columnInfo of startIndex-1
+			ColumnInfo afterInfo = getBodyColumnInfoList()[startIndex+1];
+			ColumnInfo[] infos = getBodyColumnInfoList();
+			infos[startIndex+1] = columnInfo;
+			infos[startIndex] = afterInfo;
+			
+			Collection<ColumnInfo> colInfos = new ArrayList<ColumnInfo>(infos.length);
+			for( ColumnInfo info : infos) {
+				colInfos.add(info);
+			}
+			
+			this.headerColumnInfoList = colInfos;
+		}
+	}
+	
+	public boolean canMoveHeaderColumnUp(ColumnInfo columnInfo) {
+		return getHeaderColumnIndex(columnInfo) > 0;
+	}
+	
+	public boolean canMoveHeaderColumnDown(ColumnInfo columnInfo) {
+		return getHeaderColumnIndex(columnInfo) < getHeaderColumnInfoList().length-1;
+	}
+	
+	private int getHeaderColumnIndex(ColumnInfo columnInfo) {
+		int i=0;
+		for( ColumnInfo colInfo : getBodyColumnInfoList() ) {
 			if( colInfo == columnInfo) {
 				return i;
 			}
@@ -185,7 +260,7 @@ public abstract class ProcedureInfo implements SqlConstants {
 			// Only need to set the columnInfo value
 			columnInfo.setOrdinality(false);
 		} else  {
-			for( ColumnInfo info : this.columnInfoList) {
+			for( ColumnInfo info : this.bodyColumnInfoList) {
 				if( !(info == columnInfo) ) {
 					if( info.getOrdinality() ) {
 						info.setOrdinality(false);
@@ -221,7 +296,7 @@ public abstract class ProcedureInfo implements SqlConstants {
 		this.rootPath = path;
 		
 		// Need to walk through the ColumnInfo objects and have them re-set their paths
-		for( ColumnInfo colInfo : getColumnInfoList() ) {
+		for( ColumnInfo colInfo : getBodyColumnInfoList() ) {
 			colInfo.setRootPath(this.rootPath);
 		}
 		

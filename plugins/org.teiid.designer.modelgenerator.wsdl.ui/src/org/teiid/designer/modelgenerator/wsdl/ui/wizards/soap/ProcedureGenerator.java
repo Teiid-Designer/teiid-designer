@@ -231,9 +231,9 @@ public class ProcedureGenerator implements SqlConstants {
     	
     	// (OPS.GETCAPITALCITY.countryISOCode))
     	sb.append(L_PAREN);
-    	int nColumns = this.requestInfo.getColumnInfoList().length;
+    	int nColumns = this.requestInfo.getBodyColumnInfoList().length;
     	int i=0;
-    	for( ColumnInfo columnInfo : this.requestInfo.getColumnInfoList()) {
+    	for( ColumnInfo columnInfo : this.requestInfo.getBodyColumnInfoList()) {
     		String name = columnInfo.getName();
     		sb.append(getParameterFullName(name));
     		
@@ -416,9 +416,9 @@ public class ProcedureGenerator implements SqlConstants {
     	sb.append(L_PAREN);
     	REQUEST_PARAMETERS : {
     		int i=0;
-    		int nColumns = getRequestInfo().getColumnInfoList().length;
+    		int nColumns = getRequestInfo().getBodyColumnInfoList().length;
     		
-    		for ( ColumnInfo columnInfo : getRequestInfo().getColumnInfoList() ) {
+    		for ( ColumnInfo columnInfo : getRequestInfo().getBodyColumnInfoList() ) {
     			sb.append(TAB4).append(getWrapperProcedureParameterName(convertSqlNameSegment(columnInfo.getName())));
         		if(i < (nColumns-1)) {
         			sb.append(COMMA).append(SPACE).append(RETURN);

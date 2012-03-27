@@ -115,8 +115,14 @@ public class EditColumnsPanel {
 
 	public void refresh() {
 		this.columnsViewer.getTable().removeAll();
-		for (ColumnInfo row : procedureInfo.getColumnInfoList()) {
-			this.columnsViewer.add(row);
+		if( this.type == ProcedureInfo.TYPE_BODY ) {
+    		for (ColumnInfo row : procedureInfo.getBodyColumnInfoList()) {
+    			this.columnsViewer.add(row);
+    		}
+		} else {
+    		for (ColumnInfo row : procedureInfo.getHeaderColumnInfoList()) {
+    			this.columnsViewer.add(row);
+    		}
 		}
 	}
 
@@ -163,6 +169,10 @@ public class EditColumnsPanel {
     		sb.append(StringUtilities.SPACE);
     	}
     	return sb.toString();
+    }
+    
+    public void setEnabled(boolean enable) {
+    	columnsViewer.getTable().setEnabled(enable);
     }
 	
 	class ColumnDataLabelProvider extends ColumnLabelProvider {
@@ -242,7 +252,7 @@ public class EditColumnsPanel {
 	class ColumnInfoTextEditingSupport extends EditingSupport {
 
 		private TextCellEditor editor;
-		private int type;
+		private int columnNumber;
 
 		/**
 		 * Create a new instance of the receiver.
@@ -251,7 +261,7 @@ public class EditColumnsPanel {
 		 */
 		public ColumnInfoTextEditingSupport(ColumnViewer viewer, int type) {
 			super(viewer);
-			this.type = type;
+			this.columnNumber = type;
 			this.editor = new TextCellEditor((Composite) viewer.getControl());
 		}
 
@@ -284,7 +294,7 @@ public class EditColumnsPanel {
 		 */
 		protected Object getValue(Object element) {
 			if (element instanceof ColumnInfo) {
-				switch (this.type) {
+				switch (this.columnNumber) {
 				case NAME_PROP: {
 					return ((ColumnInfo) element).getName();
 				}
@@ -309,7 +319,7 @@ public class EditColumnsPanel {
 		 */
 		protected void setValue(Object element, Object value) {
 			if (element instanceof ColumnInfo) {
-				switch (this.type) {
+				switch (this.columnNumber) {
 				case NAME_PROP: {
 					String oldValue = ((ColumnInfo) element).getName();
 					String newValue = (String) value;

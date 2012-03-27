@@ -11,6 +11,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -35,6 +36,8 @@ public class ColumnsInfoPanel {
 	private ProcedureInfo procedureInfo;
 	private Button addButton, deleteButton, upButton, downButton;
 	private Text rootPathText;
+	
+	TreeViewer schemaTreeViewer;
 	
 
 	EditColumnsPanel editColumnsPanel;
@@ -108,13 +111,13 @@ public class ColumnsInfoPanel {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				String name = detailsPage.schemaHandler.createResponseColumn(detailsPage);
+				String name = detailsPage.createResponseColumn(type);
 				if (name != null) {
 					boolean ok = MessageDialog.openQuestion(detailsPage.getShell(), 
 						Messages.InvalidSelectedSchemaObject,
 						NLS.bind(Messages.InvalidSelectedSchemaObject_column_msg, name));
 					if( ok ) {
-    					detailsPage.getProcedureGenerator().getResponseInfo().addColumn(name, false, ColumnInfo.DEFAULT_DATATYPE, null, null);
+    					detailsPage.getProcedureGenerator().getResponseInfo().addBodyColumn(name, false, ColumnInfo.DEFAULT_DATATYPE, null, null);
     					editColumnsPanel.refresh();
     					notifyColumnDataChanged();
 					}
@@ -133,7 +136,7 @@ public class ColumnsInfoPanel {
 			public void widgetSelected(SelectionEvent e) {
 				ColumnInfo info = editColumnsPanel.getSelectedColumn();
 				if( info != null ) {
-					detailsPage.getProcedureGenerator().getResponseInfo().removeColumn(info);
+					detailsPage.getProcedureGenerator().getResponseInfo().removeBodyColumn(info);
 					
 					deleteButton.setEnabled(false);
 					editColumnsPanel.selectRow(-1);
@@ -155,10 +158,10 @@ public class ColumnsInfoPanel {
 				ColumnInfo info = editColumnsPanel.getSelectedColumn();
 				if( info != null ) {
 					int selectedIndex = editColumnsPanel.getSelectedIndex();
-					detailsPage.getProcedureGenerator().getResponseInfo().moveColumnUp(info);
+					detailsPage.getProcedureGenerator().getResponseInfo().moveBodyColumnUp(info);
 					
-					downButton.setEnabled(detailsPage.getProcedureGenerator().getResponseInfo().canMoveDown(info));
-					upButton.setEnabled(detailsPage.getProcedureGenerator().getResponseInfo().canMoveUp(info));
+					downButton.setEnabled(detailsPage.getProcedureGenerator().getResponseInfo().canMoveBodyColumnDown(info));
+					upButton.setEnabled(detailsPage.getProcedureGenerator().getResponseInfo().canMoveBodyColumnUp(info));
 					editColumnsPanel.refresh();
 					notifyColumnDataChanged();
 					
@@ -179,9 +182,9 @@ public class ColumnsInfoPanel {
 				ColumnInfo info = editColumnsPanel.getSelectedColumn();
 				if( info != null ) {
 					int selectedIndex = editColumnsPanel.getSelectedIndex();
-					detailsPage.getProcedureGenerator().getResponseInfo().moveColumnDown(info);
-					downButton.setEnabled(detailsPage.getProcedureGenerator().getResponseInfo().canMoveDown(info));
-					upButton.setEnabled(detailsPage.getProcedureGenerator().getResponseInfo().canMoveUp(info));
+					detailsPage.getProcedureGenerator().getResponseInfo().moveBodyColumnDown(info);
+					downButton.setEnabled(detailsPage.getProcedureGenerator().getResponseInfo().canMoveBodyColumnDown(info));
+					upButton.setEnabled(detailsPage.getProcedureGenerator().getResponseInfo().canMoveBodyColumnUp(info));
 					editColumnsPanel.refresh();
 					notifyColumnDataChanged();
 					
@@ -220,8 +223,8 @@ public class ColumnsInfoPanel {
 					}
 					deleteButton.setEnabled(enable);
 					if( enable ) {
-						upButton.setEnabled(procedureInfo.canMoveUp(columnInfo));
-						downButton.setEnabled(procedureInfo.canMoveDown(columnInfo));
+						upButton.setEnabled(procedureInfo.canMoveBodyColumnUp(columnInfo));
+						downButton.setEnabled(procedureInfo.canMoveBodyColumnDown(columnInfo));
 					}
 					
 				}
@@ -232,6 +235,15 @@ public class ColumnsInfoPanel {
 	
 	private void notifyColumnDataChanged() {
 		this.detailsPage.notifyColumnDataChanged();
+	}
+	
+	public void setEnabled(boolean enable ) {
+		addButton.setEnabled(enable);
+		deleteButton.setEnabled(false);
+		upButton.setEnabled(false);
+		downButton.setEnabled(false);
+		rootPathText.setEnabled(enable);
+		editColumnsPanel.setEnabled(enable);
 	}
 
 }
