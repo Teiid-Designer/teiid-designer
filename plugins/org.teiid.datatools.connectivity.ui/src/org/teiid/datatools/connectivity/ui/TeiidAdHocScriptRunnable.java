@@ -31,6 +31,7 @@ import org.eclipse.datatools.sqltools.core.EditorCorePlugin;
 import org.eclipse.datatools.sqltools.editor.core.connection.IConnectionTracker;
 import org.eclipse.datatools.sqltools.editor.core.result.Messages;
 import org.eclipse.datatools.sqltools.result.OperationCommand;
+import org.eclipse.datatools.sqltools.result.ui.ResultsViewUIAccessor;
 import org.eclipse.datatools.sqltools.sqleditor.result.SimpleSQLResultRunnable;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.swt.widgets.Display;
@@ -224,6 +225,9 @@ public class TeiidAdHocScriptRunnable extends SimpleSQLResultRunnable {
                 // Need to land on the ResultsView
                 handleShowResultsView();
             }
+
+            // Request to land on Result Tab
+            ResultsViewUIAccessor.getInstance().showTab(_operationCommand, ResultsViewUIAccessor.RESULT_TAB);
 
             handleEnd(connection, _stmt);
             monitor.done();
