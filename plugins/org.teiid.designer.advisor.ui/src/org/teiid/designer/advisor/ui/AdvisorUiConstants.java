@@ -466,7 +466,8 @@ public interface AdvisorUiConstants {
 	interface CONNECTION_PROFILE_IDS {
 		String CATEGORY_JDBC = "org.eclipse.datatools.connectivity.db.category"; //$NON-NLS-1$
 		String CATEGORY_ODA_FLAT_FILE_ID = "org.eclipse.datatools.connectivity.oda.flatfile"; //$NON-NLS-1$
-		String CATEGORY_ODA_WS_ID = "org.eclipse.datatools.enablement.oda.ws"; //$NON-NLS-1$
+		//String CATEGORY_ODA_WS_ID = "org.eclipse.datatools.enablement.oda.ws"; //$NON-NLS-1$
+		String CATEGORY_ODA_WS_ID = "org.teiid.designer.datatools.profiles.ws.WSSoapConnectionProfile"; //$NON-NLS-1$
 		String CATEGORY_MODESHAPE = "org.teiid.designer.datatools.profiles.modeshape.ModeShapeConnectionProfile"; //$NON-NLS-1$
 		String CATEGORY_XML_FILE_LOCAL = "org.teiid.designer.datatools.profiles.xml.localfile"; //$NON-NLS-1$
 		String CATEGORY_XML_FILE_URL = "org.teiid.designer.datatools.profiles.xml.fileurl"; //$NON-NLS-1$

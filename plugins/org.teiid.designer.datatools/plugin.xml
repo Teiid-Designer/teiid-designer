@@ -17,7 +17,7 @@
          point="org.eclipse.datatools.connectivity.connectionProfile">
       <category
             id="org.teiid.designer.import.category"
-            name="Teiid Importer Connections"/>
+            name="%teiidImporterConnectionsCategory"/>
       <connectionProfile
             category="org.teiid.designer.import.category"
             id="org.teiid.designer.datatools.profiles.ldap.LDAPConnectionProfile"
@@ -44,7 +44,7 @@
          point="org.eclipse.datatools.connectivity.connectionProfile">
       <category
             id="org.teiid.designer.import.category"
-            name="Teiid Importer Connections"/>
+            name="%teiidImporterConnectionsCategory"/>
       <connectionProfile
             category="org.teiid.designer.import.category"
             id="org.teiid.designer.datatools.profiles.ws.WSConnectionProfile"
@@ -55,7 +55,18 @@
          point="org.eclipse.datatools.connectivity.connectionProfile">
       <category
             id="org.teiid.designer.import.category"
-            name="Teiid Importer Connections"/>
+            name="%teiidImporterConnectionsCategory"/>
+      <connectionProfile
+            category="org.teiid.designer.import.category"
+            id="org.teiid.designer.datatools.profiles.ws.WSSoapConnectionProfile"
+            name="Web Service"/>
+   </extension>
+   
+   <extension
+         point="org.eclipse.datatools.connectivity.connectionProfile">
+      <category
+            id="org.teiid.designer.import.category"
+            name="%teiidImporterConnectionsCategory"/>
       <connectionProfile
             category="org.teiid.designer.import.category"
             id="org.teiid.designer.datatools.profiles.xml.fileurl"
@@ -66,7 +77,7 @@
          point="org.eclipse.datatools.connectivity.connectionProfile">
       <category
             id="org.teiid.designer.import.category"
-            name="Teiid Importer Connections"/>
+            name="%teiidImporterConnectionsCategory"/>
       <connectionProfile
             category="org.teiid.designer.import.category"
             id="org.teiid.designer.datatools.profiles.xml.localfile"

@@ -12,6 +12,7 @@
 <!-- Modeler Relational from WSDL Import Wizard -->
    <extension
          point="org.eclipse.ui.importWizards">
+<!-- 
       <wizard
             icon="icons/full/ctool16/import_wsdl.gif"
             category="com.metamatrix.modeler.ui"
@@ -22,6 +23,7 @@
             %relationalFromWSDLImportWizard.description
          </description>
       </wizard>
+ -->
       <wizard
             icon="icons/full/ctool16/import_wsdl.gif"
             category="com.metamatrix.modeler.ui"

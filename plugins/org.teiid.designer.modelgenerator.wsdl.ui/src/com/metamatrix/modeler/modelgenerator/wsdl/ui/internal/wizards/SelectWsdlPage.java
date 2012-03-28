@@ -219,7 +219,7 @@ public class SelectWsdlPage extends WizardPage
         // create main container
         //
 
-    	this.profileWorker = new ConnectionProfileWorker(this.getShell(), ConnectionProfileWorker.CATEGORY_WS, this);
+    	this.profileWorker = new ConnectionProfileWorker(this.getShell(), ConnectionProfileWorker.CATEGORY_WS_ODA, this);
     	
         final int COLUMNS = 1;
         Composite pnlMain = WidgetFactory.createPanel(theParent, SWT.NONE, GridData.FILL_BOTH);

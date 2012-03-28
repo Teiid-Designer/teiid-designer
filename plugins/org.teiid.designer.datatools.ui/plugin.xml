@@ -86,6 +86,35 @@
          </enabledWhen>
       </page>
    </extension>
+   
+   <extension
+         point="org.eclipse.datatools.connectivity.connectionProfile">
+   		<newWizard
+         class="org.teiid.designer.datatools.profiles.ws.WSSoapConnectionProfileWizard"
+         description="Create an SOAP Web Service connection profile."
+         icon="icons/full/obj16/web-service-cp.png"
+         id="org.teiid.designer.datatools.profiles.ws.WSSoapConnectionProfileWizard"
+         name="Web Services Data Source (SOAP)"
+         profile="org.teiid.designer.datatools.profiles.ws.WSSoapConnectionProfile"/>
+   </extension>
+
+   <extension
+         point="org.eclipse.ui.propertyPages">
+      <page
+            class="org.teiid.designer.datatools.profiles.ws.WSSoapPropertyPage"
+            icon="icons/full/obj16/web-service-cp.png"
+            id="org.teiid.designer.datatools.profiles.ws.wsSoapProfileProperties"
+            name="%connectionProperties.name">
+         <filter
+               name="org.eclipse.datatools.profile.property.id"
+               value="org.teiid.designer.datatools.profiles.ws.WSSoapConnectionProfile"/>
+         <enabledWhen>
+            <instanceof
+                  value="org.eclipse.datatools.connectivity.IConnectionProfile">
+            </instanceof>
+         </enabledWhen>
+      </page>
+   </extension>
 
    <extension
          point="org.eclipse.datatools.connectivity.connectionProfile">

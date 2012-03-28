@@ -35,7 +35,8 @@ import org.teiid.designer.datatools.ui.actions.EditConnectionProfileAction;
 public class ConnectionProfileWorker {
 
 	public final static String CATEGORY_JDBC = "org.eclipse.datatools.connectivity.db.category"; //$NON-NLS-1$
-	public final static String CATEGORY_WS = "org.eclipse.datatools.enablement.oda.ws"; //$NON-NLS-1$
+	public final static String CATEGORY_WS_ODA = "org.eclipse.datatools.enablement.oda.ws"; //$NON-NLS-1$
+	public final static String CATEGORY_WS = "org.teiid.designer.datatools.profiles.ws.WSSoapConnectionProfile";
 	public static final String CATEGORY_TEIID_IMPORT = "org.teiid.designer.import.category"; //$NON-NLS-1$
 
 	private String categoryID;
