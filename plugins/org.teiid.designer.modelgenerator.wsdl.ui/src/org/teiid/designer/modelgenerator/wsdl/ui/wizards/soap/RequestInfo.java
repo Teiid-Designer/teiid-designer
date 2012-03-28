@@ -164,12 +164,31 @@ public class RequestInfo extends ProcedureInfo {
     	 	XMLNAMESPACES('http://schemas.xmlsoap.org/soap/envelope/' AS soapenv), 
     	 	XMLELEMENT(NAME "soapenv:Header", XMLELEMENT(NAME quote_timestamp, StockServiceServiceView.getLastSellPrice_request.quote_timestamp)), 
     	 */
+    	
+    	StringBuilder headerString = new StringBuilder();
+    	
     	if( this.getGenerator().getImportManager().isMessageServiceMode()) {
-    		return "XMLELEMENT(NAME \"soapenv:Envelope\", " + 
-    	 	"XMLNAMESPACES('http://schemas.xmlsoap.org/soap/envelope/' AS soapenv), " +
-    	 	"XMLELEMENT(NAME \"soapenv:Header\", XMLELEMENT(NAME quote_timestamp, StockServiceServiceView.getLastSellPrice_request.quote_timestamp)), ";
-    	}
-    	return "";
+    		
+    		//Initial Envelope Element. 
+	    	// XMLELEMENT(NAME "soapenv:Envelope, 
+	    	headerString.append(XMLELEMENT).append(L_PAREN).append(NAME).append(SPACE).append(D_QUOTE).append(ENVELOPE_NAME).append(D_QUOTE).append(COMMA);
+	    	// XMLNAMESPACES('http://schemas.xmlsoap.org/soap/envelope/' AS 
+	    	headerString.append(SPACE).append(XMLNAMESPACES).append(L_PAREN).append(S_QUOTE).append(ENVELOPE_NS).append(S_QUOTE).append(SPACE).append(AS).append(SPACE);
+	    	// soapenv), XMLELEMENT(NAME 
+	    	headerString.append(ENVELOPE_NS_ALIAS).append(R_PAREN).append(COMMA).append(SPACE).append(XMLELEMENT).append(L_PAREN).append(NAME).append(SPACE);
+	        // "soapenv:Header",
+	    	headerString.append(D_QUOTE).append(HEADER_NAME).append(D_QUOTE);
+    	
+	    	for (ColumnInfo columnInfo:this.getHeaderColumnInfoList()){
+	    		headerString.append(COMMA).append(SPACE).append(XMLELEMENT).append(L_PAREN).append(NAME).append(SPACE).append(columnInfo.getName());
+	    		headerString.append(COMMA).append(SPACE).append(getFullParameterName(this.getProcedureName(), columnInfo.getName()));
+	    		headerString.append(R_PAREN);
+	    	}
+	    	
+	    	headerString.append(R_PAREN).append(R_PAREN).append(COMMA);
+	   }
+    	
+    	return headerString.toString();
     }
 
 }
