@@ -30,6 +30,7 @@ public interface SqlConstants {
     public static final char L_PAREN = '(';
     public static final char R_PAREN = ')';
     public static final char S_QUOTE = '\'';
+    public static final char D_QUOTE = '\"';
     public static final char SEMI_COLON = ';';
     public static final char COLON = ':';
     public static final String AS = "AS"; //$NON-NLS-1$
@@ -44,6 +45,14 @@ public interface SqlConstants {
     public static final String TEXTTABLE = "TEXTTABLE"; //$NON-NLS-1$
     public static final String TABLE = "TABLE"; //$NON-NLS-1$
     public static final String EXEC = "EXEC"; //$NON-NLS-1$
+    
+    public static final String ENVELOPE_NAME = "soapenv:Envelope"; //$NON-NLS-1$
+    public static final String HEADER_NAME = "soapenv:Header"; //$NON-NLS-1$
+    public static final String ENVELOPE_NS = "http://schemas.xmlsoap.org/soap/envelope/"; //$NON-NLS-1$
+    public static final String ENVELOPE_NS_ALIAS = "soapenv"; //$NON-NLS-1$
+    
+    
+    
     
     public static final String PATH = "PATH"; //$NON-NLS-1$
     public static final String FOR_ORDINALITY = "FOR ORDINALITY"; //$NON-NLS-1$
