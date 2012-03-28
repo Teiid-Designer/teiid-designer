@@ -112,12 +112,16 @@ public class RequestInfo extends ProcedureInfo {
 	    	sb.append(NAME).append(SPACE);
 	    	sb.append(getGenerator().convertSqlNameSegment(getOperation().getName())).append(COMMA).append(SPACE);
 	    	String nsString = getNamespaceString();
-	    	if( nsString != null && !nsString.isEmpty() ) {
-	    		sb.append(nsString);
+	    	//If this is MESSAGE mode, no need to add NS since we did that at the Envelope level
+	    	if (!(this.getGenerator().getImportManager().isMessageServiceMode())) {
+		    	if( nsString != null && !nsString.isEmpty() ) {
+		    		sb.append(nsString);
+		    	}
 	    	}
 	    	int nColumns = getBodyColumnInfoList().length;
 	    	if( nColumns > 0 ) {
-	    		sb.append(COMMA);
+	    		//If this is MESSAGE mode, we don't need this extra comma
+	    		if (!(this.getGenerator().getImportManager().isMessageServiceMode())) sb.append(COMMA);
 	    	}
 	    	sb.append(SPACE).append(RETURN);
 	    	// EXAMPLE:       XMLELEMENT(NAME FromCurrency, CurrencyConvertorView.request_ConversionRate.FromCurrency)
@@ -136,6 +140,8 @@ public class RequestInfo extends ProcedureInfo {
 	    	}
     	}
     	sb.append(R_PAREN);
+    	//Need two extra parenthesis for MESSAGE mode to wrap everything in the SOAP Envelope and Body
+    	if (this.getGenerator().getImportManager().isMessageServiceMode()) sb.append(R_PAREN).append(R_PAREN);
     	sb.append(SPACE).append(AS).append(SPACE).append(alias).append(SEMI_COLON);
     	sb.append(SQL_END);
 
@@ -160,9 +166,12 @@ public class RequestInfo extends ProcedureInfo {
     
     private String getHeaderString() {
     	/* EXAMPLE
-    	 XMLELEMENT(NAME "soapenv:Envelope", 
-    	 	XMLNAMESPACES('http://schemas.xmlsoap.org/soap/envelope/' AS soapenv), 
-    	 	XMLELEMENT(NAME "soapenv:Header", XMLELEMENT(NAME quote_timestamp, StockServiceServiceView.getLastSellPrice_request.quote_timestamp)), 
+    	XMLELEMENT(NAME "soapenv:Envelope", 
+    	XMLNAMESPACES('http://schemas.xmlsoap.org/soap/envelope/' AS soapenv, DEFAULT 'http://soapheader.ibm.com'), 
+    	XMLELEMENT(NAME "soapenv:Header", 
+    	XMLELEMENT(NAME quote_timestamp, StockServiceServiceView.getLastSellPrice_request.quote_timestamp)), 
+    	XMLELEMENT(NAME "soapenv:Body", XMLELEMENT(NAME getLastSellPrice, 
+    	XMLELEMENT(NAME ticker, StockServiceServiceView.getLastSellPrice_request.ticker)))) AS xml_out;
     	 */
     	
     	StringBuilder headerString = new StringBuilder();
@@ -170,13 +179,22 @@ public class RequestInfo extends ProcedureInfo {
     	if( this.getGenerator().getImportManager().isMessageServiceMode()) {
     		
     		//Initial Envelope Element. 
-	    	// XMLELEMENT(NAME "soapenv:Envelope, 
 	    	headerString.append(XMLELEMENT).append(L_PAREN).append(NAME).append(SPACE).append(D_QUOTE).append(ENVELOPE_NAME).append(D_QUOTE).append(COMMA);
-	    	// XMLNAMESPACES('http://schemas.xmlsoap.org/soap/envelope/' AS 
 	    	headerString.append(SPACE).append(XMLNAMESPACES).append(L_PAREN).append(S_QUOTE).append(ENVELOPE_NS).append(S_QUOTE).append(SPACE).append(AS).append(SPACE);
-	    	// soapenv), XMLELEMENT(NAME 
-	    	headerString.append(ENVELOPE_NS_ALIAS).append(R_PAREN).append(COMMA).append(SPACE).append(XMLELEMENT).append(L_PAREN).append(NAME).append(SPACE);
-	        // "soapenv:Header",
+	    	headerString.append(ENVELOPE_NS_ALIAS);
+	    	
+	    	if (this.getNamespaceMap().size()>0 || (getGenerator().getNamespaceURI() != null &! getGenerator().getNamespaceURI().isEmpty())){
+	    		headerString.append(COMMA).append(SPACE).append(DEFAULT).append(SPACE).append(S_QUOTE).append(getGenerator().getNamespaceURI());
+    			headerString.append(S_QUOTE);
+	    		for (String key: this.getNamespaceMap().keySet()){
+	    			//If this is the default NS, skip it
+	    			if (this.getNamespaceMap().get(key).equals(getGenerator().getNamespaceURI())) break;
+	    			headerString.append(COMMA).append(SPACE).append(DEFAULT).append(SPACE).append(S_QUOTE).append(this.getNamespaceMap().get(key));
+	    			headerString.append(S_QUOTE);
+	    		}
+	    	}
+	    	
+	    	headerString.append(R_PAREN).append(COMMA).append(SPACE).append(XMLELEMENT).append(L_PAREN).append(NAME).append(SPACE);
 	    	headerString.append(D_QUOTE).append(HEADER_NAME).append(D_QUOTE);
     	
 	    	for (ColumnInfo columnInfo:this.getHeaderColumnInfoList()){
@@ -185,7 +203,8 @@ public class RequestInfo extends ProcedureInfo {
 	    		headerString.append(R_PAREN);
 	    	}
 	    	
-	    	headerString.append(R_PAREN).append(R_PAREN).append(COMMA);
+	    	headerString.append(R_PAREN).append(COMMA).append(SPACE);
+	    	headerString.append(XMLELEMENT).append(L_PAREN).append(NAME).append(SPACE).append(D_QUOTE).append(BODY_NAME).append(D_QUOTE).append(COMMA);
 	   }
     	
     	return headerString.toString();

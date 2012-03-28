@@ -48,6 +48,7 @@ public interface SqlConstants {
     
     public static final String ENVELOPE_NAME = "soapenv:Envelope"; //$NON-NLS-1$
     public static final String HEADER_NAME = "soapenv:Header"; //$NON-NLS-1$
+    public static final String BODY_NAME = "soapenv:Body"; //$NON-NLS-1$
     public static final String ENVELOPE_NS = "http://schemas.xmlsoap.org/soap/envelope/"; //$NON-NLS-1$
     public static final String ENVELOPE_NS_ALIAS = "soapenv"; //$NON-NLS-1$
     

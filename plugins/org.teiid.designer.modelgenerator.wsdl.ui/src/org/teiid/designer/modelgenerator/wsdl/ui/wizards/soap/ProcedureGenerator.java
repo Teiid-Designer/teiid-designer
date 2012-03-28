@@ -417,10 +417,11 @@ public class ProcedureGenerator implements SqlConstants {
     	REQUEST_PARAMETERS : {
     		int i=0;
     		int nColumns = getRequestInfo().getBodyColumnInfoList().length;
+    		int hColumns = getRequestInfo().getHeaderColumnInfoList().length;
     		
     		for ( ColumnInfo columnInfo : getRequestInfo().getHeaderColumnInfoList() ) {
     			sb.append(TAB4).append(getWrapperProcedureParameterName(convertSqlNameSegment(columnInfo.getName())));
-        		if(i < (nColumns-1)) {
+        		if(i < (hColumns-1)) {
         			sb.append(COMMA).append(SPACE).append(RETURN);
         		}
         		i++;
@@ -428,7 +429,7 @@ public class ProcedureGenerator implements SqlConstants {
     		
     		i=0;
     		nColumns = getRequestInfo().getBodyColumnInfoList().length;
-    		if (nColumns>0) sb.append(COMMA);
+    		if (hColumns>0) sb.append(COMMA);
     		for ( ColumnInfo columnInfo : getRequestInfo().getBodyColumnInfoList() ) {
     			sb.append(TAB4).append(getWrapperProcedureParameterName(convertSqlNameSegment(columnInfo.getName())));
         		if(i < (nColumns-1)) {
