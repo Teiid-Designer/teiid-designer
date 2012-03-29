@@ -289,7 +289,7 @@ public abstract class ProcedureInfo implements SqlConstants {
 	 * @return rootPath the root path xquery expression
 	 */
 	public String getRootPath() {
-		return this.getGenerator().getImportManager().isMessageServiceMode() ? ResponseInfo.SOAPHEADER_ROOTPATH+this.rootPath : this.rootPath;
+		return this.getGenerator().getImportManager().isMessageServiceMode() ? ResponseInfo.SOAPENVELOPE_ROOTPATH: this.rootPath;
 	}
 
 	/**

@@ -227,9 +227,17 @@ public class ImportWsdlSchemaHandler {
 				}
 			}
 			if( type == ProcedureInfo.TYPE_BODY ) {
-				responseInfo.addBodyColumn(responseInfo.getUniqueBodyColumnName(name), false,RuntimeTypeNames.STRING, null,xpath.toString());
+				String pathPrefix = ""; //$NON-NLS-1$
+				if (importManager.isMessageServiceMode()){
+					pathPrefix = ResponseInfo.SOAPBODY_ROOTPATH;
+				}
+				responseInfo.addBodyColumn(responseInfo.getUniqueBodyColumnName(name), false,RuntimeTypeNames.STRING, null,pathPrefix+parentXpath.toString()+xpath.toString());
 			} else {
-				responseInfo.addHeaderColumn(responseInfo.getUniqueHeaderColumnName(name), false,RuntimeTypeNames.STRING, null,xpath.toString());
+				String pathPrefix = ""; //$NON-NLS-1$
+				if (importManager.isMessageServiceMode()){
+					pathPrefix = ResponseInfo.SOAPHEADER_ROOTPATH;
+				}
+				responseInfo.addHeaderColumn(responseInfo.getUniqueHeaderColumnName(name), false,RuntimeTypeNames.STRING, null,pathPrefix+parentXpath.toString()+xpath.toString());
 			}
 			operationsDetailsPage.notifyColumnDataChanged();
 			return null;

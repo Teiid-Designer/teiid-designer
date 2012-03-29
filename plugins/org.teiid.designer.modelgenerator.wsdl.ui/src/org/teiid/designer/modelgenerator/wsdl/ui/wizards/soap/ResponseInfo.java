@@ -19,8 +19,10 @@ import com.metamatrix.modeler.modelgenerator.wsdl.model.Operation;
 public class ResponseInfo extends ProcedureInfo {
 
 	private String defaultNSPrefix;
-	public static String SOAPHEADER_ROOTPATH = "/soap:Envelope/soap:Body";//$NON-NLS-1$
-
+	public static String SOAPENVELOPE_ROOTPATH = "/soap:Envelope";//$NON-NLS-1$
+	public static String SOAPHEADER_ROOTPATH = "/soap:Header";//$NON-NLS-1$
+	public static String SOAPBODY_ROOTPATH = "/soap:Body";//$NON-NLS-1$
+	
 	public ResponseInfo(Operation operation, ProcedureGenerator generator) {
 		super(operation, RESPONSE, generator);
 		setProcedureName(getDefaultProcedureName());
