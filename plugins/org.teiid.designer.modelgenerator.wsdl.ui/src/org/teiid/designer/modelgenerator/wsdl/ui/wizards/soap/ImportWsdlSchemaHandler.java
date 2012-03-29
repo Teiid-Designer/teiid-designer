@@ -20,6 +20,7 @@ import org.eclipse.xsd.impl.XSDElementDeclarationImpl;
 import org.eclipse.xsd.impl.XSDParticleImpl;
 
 import com.metamatrix.modeler.core.types.DatatypeConstants.RuntimeTypeNames;
+import com.metamatrix.modeler.internal.transformation.util.SqlConstants;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Model;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.ModelGenerationException;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Operation;
@@ -204,6 +205,9 @@ public class ImportWsdlSchemaHandler {
 			String namespace = null;
 			String prefix = null;
 			StringBuilder parentXpath = new StringBuilder();
+			if (importManager.isMessageServiceMode()){
+				responseInfo.addNamespace(SqlConstants.ENVELOPE_NS_ALIAS, SqlConstants.ENVELOPE_NS);
+			}
 			for (SchemaObject schemaObject : elements) {
 				if (schemaObject.getName().equals(name)) {
 					getParentXpath(schemaObject, parentXpath);
@@ -216,6 +220,7 @@ public class ImportWsdlSchemaHandler {
 								prefix, namespace);
 					}
 					responseInfo.setRootPath(parentXpath.toString());
+					
 					
 					// TODO: Make sure Root Path is set in the responseElementsInfoPanel on Refresh
 					//operationsDetailsPage.responseElementsInfoPanel.getRootPathText().setText(parentXpath.toString());

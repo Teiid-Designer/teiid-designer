@@ -46,14 +46,11 @@ public interface SqlConstants {
     public static final String TABLE = "TABLE"; //$NON-NLS-1$
     public static final String EXEC = "EXEC"; //$NON-NLS-1$
     
-    public static final String ENVELOPE_NAME = "soapenv:Envelope"; //$NON-NLS-1$
-    public static final String HEADER_NAME = "soapenv:Header"; //$NON-NLS-1$
-    public static final String BODY_NAME = "soapenv:Body"; //$NON-NLS-1$
     public static final String ENVELOPE_NS = "http://schemas.xmlsoap.org/soap/envelope/"; //$NON-NLS-1$
-    public static final String ENVELOPE_NS_ALIAS = "soapenv"; //$NON-NLS-1$
-    
-    
-    
+    public static final String ENVELOPE_NS_ALIAS = "soap"; //$NON-NLS-1$
+    public static final String ENVELOPE_NAME = ENVELOPE_NS_ALIAS+":Envelope"; //$NON-NLS-1$
+    public static final String HEADER_NAME = ENVELOPE_NS_ALIAS+":Header"; //$NON-NLS-1$
+    public static final String BODY_NAME = ENVELOPE_NS_ALIAS+":Body"; //$NON-NLS-1$
     
     public static final String PATH = "PATH"; //$NON-NLS-1$
     public static final String FOR_ORDINALITY = "FOR ORDINALITY"; //$NON-NLS-1$
