@@ -146,6 +146,7 @@ public class Messages  extends NLS {
 	public static String StatusSectionChangeProject;
     public static String StatusSectionSelectProjectMessage;
     public static String StatusSectionChangeProjectTooltip;
+    public static String StatusSectionEnableStatusTooltip;
     public static String StatusSectionTitle_NoProjectSelected;
     public static String StatusSectionDefaultDescription;
     public static String StatusSectionHelpTooltip;

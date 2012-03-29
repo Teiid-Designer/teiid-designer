@@ -29,7 +29,6 @@ import org.teiid.designer.advisor.ui.Messages;
 import org.teiid.designer.advisor.ui.core.AdvisorHyperLinkListener;
 import org.teiid.designer.advisor.ui.util.DSPPluginImageHelper;
 import org.teiid.designer.advisor.ui.util.HyperLinkLabelRow;
-
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.internal.ui.forms.FormUtil;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelProjectSelectionStatusValidator;
@@ -202,7 +201,7 @@ public class ProjectStatusSection implements AdvisorUiConstants.Groups {
             	}
             }
         });
-        this.enableStatusButton.setToolTipText(Messages.StatusSectionChangeProjectTooltip);
+        this.enableStatusButton.setToolTipText(Messages.StatusSectionEnableStatusTooltip);
         
         // configure add button
         this.changeProjectButton = buttons[1];
