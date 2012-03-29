@@ -123,8 +123,10 @@ public class Messages  extends NLS {
     public static String Error_DeterminingSourceModelHas_0_Procedure;
     public static String Error_DeterminingSourceModelHasMatchingProfile;
     public static String Error_InvalidName_0_Reason_1;
+    public static String Error_NoColumnsDefinedForResponseProcedureForOperation_0;
+    public static String Error_NoElementsDefinedForRequestProcedureForOperation_0;
+    public static String Error_NoOperationsSelected;
     public static String Error_RequestProcedureNameCannotBeNullOrEmpty;
-    public static String Error_ResponseProcedureHasNoResultColumns;
     public static String Error_ResponseProcedureNameCannotBeNullOrEmpty;
     public static String Error_WrapperProcedureNameCannotBeNullOrEmpty;
 

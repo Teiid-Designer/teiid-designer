@@ -234,6 +234,7 @@ public class WsdlOperationsPanel implements FileUtils.Constants, CoreStringUtil.
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				setAllNodesSelected(true);
+				updateImportManager();
 				setPageStatus();
 			}
 			
@@ -247,6 +248,7 @@ public class WsdlOperationsPanel implements FileUtils.Constants, CoreStringUtil.
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				setAllNodesSelected(false);
+				updateImportManager();
 				setPageStatus();
 			}
 			
@@ -283,6 +285,7 @@ public class WsdlOperationsPanel implements FileUtils.Constants, CoreStringUtil.
 					updateTreeSelectionDetails();
 					if (e.detail == SWT.CHECK) {
 						updateImportManager();
+						setPageStatus();
 					}
 				}
 				
@@ -381,7 +384,6 @@ public class WsdlOperationsPanel implements FileUtils.Constants, CoreStringUtil.
 	private void updateImportManager() {
 		this.importManager.setSelectedOperations(getSelectedOperations());
 		
-		// TODO: Find the Port from "wsdlModel" and determine it's Binding type (SOAP11 or SOAP12)
 		// Set the value 
 		if( this.wsdlModel != null ) {
     		Port port = this.wsdlModel.getPort(this.portNameCombo.getText());
@@ -458,6 +460,7 @@ public class WsdlOperationsPanel implements FileUtils.Constants, CoreStringUtil.
 		if (panelStatus.isOK()) {
 			panelStatus = Status.OK_STATUS;
 		}
+		this.wsdlPage.setPageStatus();
 	}
 
 	public IStatus getStatus() {

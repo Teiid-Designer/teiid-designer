@@ -693,16 +693,22 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 	 * @since 4.2
 	 */
 	void setPageStatus() {
-		// TODO:
-
+		
 		IStatus generatorStatus = procedureGenerator.validate();
-		if (generatorStatus.isOK()
-				|| generatorStatus.getSeverity() == IStatus.INFO) {
+		if (generatorStatus.isOK() || generatorStatus.getSeverity() < IStatus.ERROR) {
 			this.setErrorMessage(null);
 			WizardUtil.setPageComplete(this);
+			// NOW CHECK THE REMAINING OPERATIONS
+			IStatus importManagerStatus = this.importManager.validate();
+			if( importManagerStatus.getSeverity() > IStatus.WARNING ) {
+				WizardUtil.setPageComplete(this, importManagerStatus.getMessage(),importManagerStatus.getSeverity());
+				this.setErrorMessage(importManagerStatus.getMessage());
+				this.setPageComplete(false);
+			} else if( importManagerStatus.getSeverity() == IStatus.WARNING ) {
+				this.setMessage(importManagerStatus.getMessage(), IStatus.WARNING);
+			}
 		} else {
-			WizardUtil.setPageComplete(this, generatorStatus.getMessage(),
-					generatorStatus.getSeverity());
+			WizardUtil.setPageComplete(this, generatorStatus.getMessage(),generatorStatus.getSeverity());
 			this.setErrorMessage(generatorStatus.getMessage());
 			this.setPageComplete(false);
 		}

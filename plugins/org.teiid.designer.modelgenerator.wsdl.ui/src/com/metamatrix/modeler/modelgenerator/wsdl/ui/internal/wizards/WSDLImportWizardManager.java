@@ -16,8 +16,11 @@ import java.util.Properties;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
+import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.ProcedureGenerator;
 
 import com.metamatrix.modeler.modelgenerator.wsdl.WSDLReader;
@@ -420,4 +423,23 @@ public class WSDLImportWizardManager {
     		this.designerProperties.put(key, value);
     	}
     }
+    
+    public IStatus validate() {
+    	IStatus returnStatus = Status.OK_STATUS;
+    	
+    	if( this.procedureGenerators.isEmpty() ) {
+			return new Status(IStatus.WARNING, ProcedureGenerator.PLUGIN_ID, Messages.Error_NoOperationsSelected);
+    	}
+    	
+		for(ProcedureGenerator generator : this.procedureGenerators.values() ) {
+			IStatus status = generator.validate();
+			if( status.getSeverity() > IStatus.WARNING ) {
+				return status;
+			} else if( status.getSeverity() == IStatus.WARNING && returnStatus.getSeverity() == IStatus.OK) {
+				returnStatus = status;
+			}
+		}
+		return returnStatus;
+    }
+    
 }

@@ -378,9 +378,9 @@ public class WsdlDefinitionPage extends WizardPage implements Listener, IProfile
 			Shell shell = this.getShell();
 			ErrorDialog.openError(shell, Messages.WsdlDefinitionPage_dialog_wsdlValidationError_title,
 				Messages.WsdlDefinitionPage_dialog_wsdlValidationError_msg, this.wsdlStatus);
-			this.operationsPanel.notifyWsdlChanged();
+			//this.operationsPanel.notifyWsdlChanged();
 		} else {
-			this.operationsPanel.notifyWsdlChanged();
+			//this.operationsPanel.notifyWsdlChanged();
 		}
 		
 		updateValidateWSDLButtonEnablement();
@@ -507,7 +507,7 @@ public class WsdlDefinitionPage extends WizardPage implements Listener, IProfile
 	/**
 	 * Performs validation and sets the page status.
 	 */
-	void setPageStatus() {
+	public void setPageStatus() {
 		// Validate the source WSDL Selection
 		boolean sourceValid = validateSourceSelection();
 		if (!sourceValid) {
@@ -518,6 +518,8 @@ public class WsdlDefinitionPage extends WizardPage implements Listener, IProfile
 			WizardUtil.setPageComplete(this, Messages.NoOperationsSelected, IMessageProvider.ERROR);
 		} else if (this.wsdlStatus != null && this.wsdlStatus.getSeverity() > IStatus.WARNING) {
 			WizardUtil.setPageComplete(this, Messages.WsdlDefinitionPage_wsdlErrorContinuation_msg, IMessageProvider.WARNING);
+		} else if( this.operationsPanel.getStatus().getSeverity() > IStatus.WARNING){
+			WizardUtil.setPageComplete(this, this.operationsPanel.getStatus().getMessage(), IMessageProvider.ERROR);
 		} else {
 			WizardUtil.setPageComplete(this);
 		}
@@ -615,9 +617,9 @@ public class WsdlDefinitionPage extends WizardPage implements Listener, IProfile
 		}
 	}
 
-	public void selectConnectionProfile(String name) {
+	public boolean selectConnectionProfile(String name) {
 		if (name == null) {
-			return;
+			return false;
 		}
 
 		int cpIndex = -1;
@@ -631,34 +633,46 @@ public class WsdlDefinitionPage extends WizardPage implements Listener, IProfile
 			}
 			i++;
 		}
+		boolean profileChanged = false;
 		if (cpIndex > -1) {
 			connectionProfilesCombo.select(cpIndex);
 			IConnectionProfile profile = profileWorker.getProfile(connectionProfilesCombo.getText());
 			this.profileWorker.setSelection(profile);
-			this.importManager.setConnectionProfile(profile);
+			IConnectionProfile currentProfile = this.importManager.getConnectionProfile();
+			if( profile != currentProfile ) {
+				profileChanged = true;
+				this.importManager.setConnectionProfile(profile);
+			}
 		}
 
 		refreshUiFromManager();
-		
-		this.operationsPanel.notifyWsdlChanged();
+		if( profileChanged ) {
+			this.operationsPanel.notifyWsdlChanged();
+		}
+		return profileChanged;
 	}
 
 	public void setVisible(boolean visible) {
 		super.setVisible(visible);
 
 		if (visible) {
+			boolean profileChanged = false;
+			
 			if (this.connectionProfilesCombo.getItemCount() > 0 ) {
 				if( this.importManager.getConnectionProfile() != null ) {
 					if( this.connectionProfilesCombo.getText() != null &&
 						this.connectionProfilesCombo.getText().equals(this.importManager.getConnectionProfile().getName()) ) {
-						selectConnectionProfile(this.importManager.getConnectionProfile().getName());
+						profileChanged = selectConnectionProfile(this.importManager.getConnectionProfile().getName());
 					}
 				} else {
     				if(this.connectionProfilesCombo.getSelectionIndex() < 0 ) {
     					this.connectionProfilesCombo.select(0);
+    					profileChanged = true;
     				}
 				}
-				handleConnectionProfileSelected();
+				if( profileChanged ) {
+					handleConnectionProfileSelected();
+				}
 			} 
 
 			refreshUiFromManager();

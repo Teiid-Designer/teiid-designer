@@ -11,6 +11,7 @@ import java.util.Properties;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.osgi.util.NLS;
 import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
 
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Operation;
@@ -64,6 +65,12 @@ public class RequestInfo extends ProcedureInfo {
 				return colNameStatus;
 			}
 		}
+		
+		if( getBodyColumnInfoList().length == 0 ) {
+			return new Status(IStatus.WARNING, ProcedureGenerator.PLUGIN_ID,
+				NLS.bind(Messages.Error_NoElementsDefinedForRequestProcedureForOperation_0, getOperation().getName()));
+		}
+
 		// Check Request Info
 		
 		return status;

@@ -11,6 +11,7 @@ import java.util.Properties;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.osgi.util.NLS;
 import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
 
 import com.metamatrix.core.util.StringUtilities;
@@ -64,7 +65,7 @@ public class ResponseInfo extends ProcedureInfo {
 		
 		if( getBodyColumnInfoList().length == 0 ) {
 			return new Status(IStatus.ERROR, ProcedureGenerator.PLUGIN_ID,
-				Messages.Error_ResponseProcedureHasNoResultColumns);
+				NLS.bind(Messages.Error_NoColumnsDefinedForResponseProcedureForOperation_0, getOperation().getName()));
 		}
 
 		// Look at all element xpaths
