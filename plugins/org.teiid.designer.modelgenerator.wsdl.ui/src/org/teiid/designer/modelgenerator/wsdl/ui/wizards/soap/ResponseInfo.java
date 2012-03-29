@@ -46,11 +46,23 @@ public class ResponseInfo extends ProcedureInfo {
 
 		// Look at all element names
 		for (ColumnInfo info : getBodyColumnInfoList()) {
-			IStatus colNameStatus = getGenerator()
-					.getNameStatus(info.getName());
+			IStatus colNameStatus = getGenerator().getNameStatus(info.getName());
 			if (colNameStatus.getSeverity() > IStatus.INFO) {
 				return colNameStatus;
 			}
+		}
+		
+		// Look at all element names
+		for (ColumnInfo info : getHeaderColumnInfoList()) {
+			IStatus colNameStatus = getGenerator().getNameStatus(info.getName());
+			if (colNameStatus.getSeverity() > IStatus.INFO) {
+				return colNameStatus;
+			}
+		}
+		
+		if( getBodyColumnInfoList().length == 0 ) {
+			return new Status(IStatus.ERROR, ProcedureGenerator.PLUGIN_ID,
+				Messages.Error_ResponseProcedureHasNoResultColumns);
 		}
 
 		// Look at all element xpaths

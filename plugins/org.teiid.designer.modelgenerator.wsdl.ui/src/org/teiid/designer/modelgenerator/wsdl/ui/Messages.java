@@ -124,6 +124,7 @@ public class Messages  extends NLS {
     public static String Error_DeterminingSourceModelHasMatchingProfile;
     public static String Error_InvalidName_0_Reason_1;
     public static String Error_RequestProcedureNameCannotBeNullOrEmpty;
+    public static String Error_ResponseProcedureHasNoResultColumns;
     public static String Error_ResponseProcedureNameCannotBeNullOrEmpty;
     public static String Error_WrapperProcedureNameCannotBeNullOrEmpty;
 

@@ -56,6 +56,14 @@ public class RequestInfo extends ProcedureInfo {
 				return colNameStatus;
 			}
 		}
+		
+		// Look at all element names
+		for (ColumnInfo info : getHeaderColumnInfoList()) {
+			IStatus colNameStatus = getGenerator().getNameStatus(info.getName());
+			if (colNameStatus.getSeverity() > IStatus.INFO) {
+				return colNameStatus;
+			}
+		}
 		// Check Request Info
 		
 		return status;
