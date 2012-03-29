@@ -93,7 +93,8 @@ public class ResponseSchemaContentsGroup {
 			public void doubleClick(DoubleClickEvent event) {
 				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
 				if (selection != null && !selection.isEmpty() && 
-					selection.getFirstElement() instanceof XSDParticleImpl) {
+					(selection.getFirstElement() instanceof XSDParticleImpl || 
+					selection.getFirstElement() instanceof XSDElementDeclarationImpl)) {
 					createResponseColumn();
 				}
 			}

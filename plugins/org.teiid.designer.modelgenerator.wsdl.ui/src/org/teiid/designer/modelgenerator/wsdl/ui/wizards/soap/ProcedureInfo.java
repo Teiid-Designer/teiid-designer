@@ -194,13 +194,13 @@ public abstract class ProcedureInfo implements SqlConstants {
 	}
 	
 	public void moveHeaderColumnUp(ColumnInfo columnInfo) {
-		int startIndex = getBodyColumnIndex(columnInfo);
+		int startIndex = getHeaderColumnIndex(columnInfo);
 		
 		// 
 		if( startIndex > 0 ) {
 			// Make Copy of List & get columnInfo of startIndex-1
-			ColumnInfo priorInfo = getBodyColumnInfoList()[startIndex-1];
-			ColumnInfo[] infos = getBodyColumnInfoList();
+			ColumnInfo priorInfo = getHeaderColumnInfoList()[startIndex-1];
+			ColumnInfo[] infos = getHeaderColumnInfoList();
 			infos[startIndex-1] = columnInfo;
 			infos[startIndex] = priorInfo;
 			
@@ -214,11 +214,11 @@ public abstract class ProcedureInfo implements SqlConstants {
 	}
 	
 	public void moveHeaderColumnDown(ColumnInfo columnInfo) {
-		int startIndex = getBodyColumnIndex(columnInfo);
-		if( startIndex < (getBodyColumnInfoList().length-1) ) {
+		int startIndex = getHeaderColumnIndex(columnInfo);
+		if( startIndex < (getHeaderColumnInfoList().length-1) ) {
 			// Make Copy of List & get columnInfo of startIndex-1
-			ColumnInfo afterInfo = getBodyColumnInfoList()[startIndex+1];
-			ColumnInfo[] infos = getBodyColumnInfoList();
+			ColumnInfo afterInfo = getHeaderColumnInfoList()[startIndex+1];
+			ColumnInfo[] infos = getHeaderColumnInfoList();
 			infos[startIndex+1] = columnInfo;
 			infos[startIndex] = afterInfo;
 			
@@ -241,7 +241,7 @@ public abstract class ProcedureInfo implements SqlConstants {
 	
 	private int getHeaderColumnIndex(ColumnInfo columnInfo) {
 		int i=0;
-		for( ColumnInfo colInfo : getBodyColumnInfoList() ) {
+		for( ColumnInfo colInfo : getHeaderColumnInfoList() ) {
 			if( colInfo == columnInfo) {
 				return i;
 			}
@@ -301,6 +301,11 @@ public abstract class ProcedureInfo implements SqlConstants {
 		
 		// Need to walk through the ColumnInfo objects and have them re-set their paths
 		for( ColumnInfo colInfo : getBodyColumnInfoList() ) {
+			colInfo.setRootPath(this.rootPath);
+		}
+		
+		// Need to walk through the ColumnInfo objects and have them re-set their paths
+		for( ColumnInfo colInfo : getHeaderColumnInfoList() ) {
 			colInfo.setRootPath(this.rootPath);
 		}
 		

@@ -117,8 +117,11 @@ public class ColumnsInfoPanel {
 						Messages.InvalidSelectedSchemaObject,
 						NLS.bind(Messages.InvalidSelectedSchemaObject_column_msg, name));
 					if( ok ) {
-    					detailsPage.getProcedureGenerator().getResponseInfo().addBodyColumn(name, false, ColumnInfo.DEFAULT_DATATYPE, null, null);
-    					editColumnsPanel.refresh();
+						if( type == ProcedureInfo.TYPE_BODY ) {
+							detailsPage.getProcedureGenerator().getResponseInfo().addBodyColumn(name, false, ColumnInfo.DEFAULT_DATATYPE, null, null);
+						} else {
+							detailsPage.getProcedureGenerator().getResponseInfo().addHeaderColumn(name, false, ColumnInfo.DEFAULT_DATATYPE, null, null);
+						}    					editColumnsPanel.refresh();
     					notifyColumnDataChanged();
 					}
 				}
@@ -136,7 +139,11 @@ public class ColumnsInfoPanel {
 			public void widgetSelected(SelectionEvent e) {
 				ColumnInfo info = editColumnsPanel.getSelectedColumn();
 				if( info != null ) {
-					detailsPage.getProcedureGenerator().getResponseInfo().removeBodyColumn(info);
+					if( type == ProcedureInfo.TYPE_BODY ) {
+						detailsPage.getProcedureGenerator().getResponseInfo().removeBodyColumn(info);
+					} else {
+						detailsPage.getProcedureGenerator().getResponseInfo().removeHeaderColumn(info);
+					}
 					
 					deleteButton.setEnabled(false);
 					editColumnsPanel.selectRow(-1);
@@ -158,10 +165,15 @@ public class ColumnsInfoPanel {
 				ColumnInfo info = editColumnsPanel.getSelectedColumn();
 				if( info != null ) {
 					int selectedIndex = editColumnsPanel.getSelectedIndex();
-					detailsPage.getProcedureGenerator().getResponseInfo().moveBodyColumnUp(info);
-					
-					downButton.setEnabled(detailsPage.getProcedureGenerator().getResponseInfo().canMoveBodyColumnDown(info));
-					upButton.setEnabled(detailsPage.getProcedureGenerator().getResponseInfo().canMoveBodyColumnUp(info));
+					if( type == ProcedureInfo.TYPE_BODY ) {
+    					detailsPage.getProcedureGenerator().getResponseInfo().moveBodyColumnUp(info);
+    					downButton.setEnabled(detailsPage.getProcedureGenerator().getResponseInfo().canMoveBodyColumnDown(info));
+    					upButton.setEnabled(detailsPage.getProcedureGenerator().getResponseInfo().canMoveBodyColumnUp(info));
+					} else {
+						detailsPage.getProcedureGenerator().getResponseInfo().moveHeaderColumnUp(info);
+    					downButton.setEnabled(detailsPage.getProcedureGenerator().getResponseInfo().canMoveHeaderColumnDown(info));
+    					upButton.setEnabled(detailsPage.getProcedureGenerator().getResponseInfo().canMoveHeaderColumnUp(info));
+					}
 					editColumnsPanel.refresh();
 					notifyColumnDataChanged();
 					
@@ -182,10 +194,15 @@ public class ColumnsInfoPanel {
 				ColumnInfo info = editColumnsPanel.getSelectedColumn();
 				if( info != null ) {
 					int selectedIndex = editColumnsPanel.getSelectedIndex();
-					detailsPage.getProcedureGenerator().getResponseInfo().moveBodyColumnDown(info);
-					downButton.setEnabled(detailsPage.getProcedureGenerator().getResponseInfo().canMoveBodyColumnDown(info));
-					upButton.setEnabled(detailsPage.getProcedureGenerator().getResponseInfo().canMoveBodyColumnUp(info));
-					editColumnsPanel.refresh();
+					if( type == ProcedureInfo.TYPE_BODY ) {
+    					detailsPage.getProcedureGenerator().getResponseInfo().moveBodyColumnDown(info);
+    					downButton.setEnabled(detailsPage.getProcedureGenerator().getResponseInfo().canMoveBodyColumnDown(info));
+    					upButton.setEnabled(detailsPage.getProcedureGenerator().getResponseInfo().canMoveBodyColumnUp(info));
+					} else {
+						detailsPage.getProcedureGenerator().getResponseInfo().moveHeaderColumnDown(info);
+    					downButton.setEnabled(detailsPage.getProcedureGenerator().getResponseInfo().canMoveHeaderColumnDown(info));
+    					upButton.setEnabled(detailsPage.getProcedureGenerator().getResponseInfo().canMoveHeaderColumnUp(info));
+					}					editColumnsPanel.refresh();
 					notifyColumnDataChanged();
 					
 					editColumnsPanel.selectRow(selectedIndex+1);
@@ -223,8 +240,13 @@ public class ColumnsInfoPanel {
 					}
 					deleteButton.setEnabled(enable);
 					if( enable ) {
-						upButton.setEnabled(procedureInfo.canMoveBodyColumnUp(columnInfo));
-						downButton.setEnabled(procedureInfo.canMoveBodyColumnDown(columnInfo));
+						if( type == ProcedureInfo.TYPE_BODY ) {
+    						upButton.setEnabled(procedureInfo.canMoveBodyColumnUp(columnInfo));
+    						downButton.setEnabled(procedureInfo.canMoveBodyColumnDown(columnInfo));
+						} else {
+							upButton.setEnabled(procedureInfo.canMoveHeaderColumnUp(columnInfo));
+    						downButton.setEnabled(procedureInfo.canMoveHeaderColumnDown(columnInfo));
+						}
 					}
 					
 				}
