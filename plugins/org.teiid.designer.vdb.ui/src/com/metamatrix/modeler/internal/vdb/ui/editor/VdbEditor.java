@@ -13,7 +13,6 @@ import static org.teiid.designer.vdb.Vdb.Event.CLOSED;
 import static org.teiid.designer.vdb.Vdb.Event.ENTRY_SYNCHRONIZATION;
 import static org.teiid.designer.vdb.Vdb.Event.MODEL_JNDI_NAME;
 import static org.teiid.designer.vdb.Vdb.Event.MODEL_TRANSLATOR;
-
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
@@ -24,7 +23,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -104,7 +102,6 @@ import org.teiid.designer.vdb.VdbEntry.Synchronization;
 import org.teiid.designer.vdb.VdbModelEntry;
 import org.teiid.designer.vdb.VdbUtil;
 import org.teiid.designer.vdb.connections.SourceHandlerExtensionManager;
-
 import com.metamatrix.metamodels.core.ModelAnnotation;
 import com.metamatrix.metamodels.relational.RelationalPackage;
 import com.metamatrix.metamodels.xml.XmlDocumentPackage;
@@ -923,9 +920,9 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
 			@Override
 			public void modifyText(ModifyEvent e) {
 				try {
-					int value = Integer.parseInt(queryTimeoutText.getText());
-					if( value > -1 ) {
-						getVdb().setQueryTimeout(value);
+                    int valueInSecs = Integer.parseInt(queryTimeoutText.getText());
+                    if (valueInSecs > -1) {
+                        getVdb().setQueryTimeout(valueInSecs);
 					}
 				} catch (NumberFormatException ex) {
 					MessageDialog.openWarning(Display.getCurrent().getActiveShell(),

@@ -27,7 +27,6 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
-
 import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -35,9 +34,7 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
-
 import net.jcip.annotations.ThreadSafe;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
@@ -54,7 +51,6 @@ import org.teiid.designer.vdb.manifest.PropertyElement;
 import org.teiid.designer.vdb.manifest.TranslatorElement;
 import org.teiid.designer.vdb.manifest.VdbElement;
 import org.xml.sax.SAXException;
-
 import com.metamatrix.core.modeler.util.FileUtils;
 import com.metamatrix.core.modeler.util.OperationUtil;
 import com.metamatrix.core.modeler.util.OperationUtil.Unreliable;
@@ -195,8 +191,12 @@ public final class Vdb {
                             final String name = property.getName();
                             if (Xml.PREVIEW.equals(name)) {
                             	previewable[0] = Boolean.parseBoolean(property.getValue());
+                                // The stored timeout is in milliseconds. We are converting to seconds for display in Designer
                             } else if (Xml.QUERY_TIMEOUT.equals(name)) { 
-                            	queryTimeout[0] = Integer.parseInt(property.getValue());
+                                int timeoutMillis = Integer.parseInt(property.getValue());
+                                if (timeoutMillis > 0) {
+                                    queryTimeout[0] = timeoutMillis / 1000;
+                                }
                             } else assert false;
                         }
                         for (final EntryElement element : manifest.getEntries())
@@ -439,9 +439,9 @@ public final class Vdb {
     public int getVersion() {
         return version;
     }
-    
+
     /**
-     * @return the query timeout value for this VDB
+     * @return the query timeout value for this VDB (in seconds)
      */
     public int getQueryTimeout() {
         return queryTimeout;

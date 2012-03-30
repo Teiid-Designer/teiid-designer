@@ -10,14 +10,12 @@ package org.teiid.designer.vdb.manifest;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
-
 import org.teiid.designer.vdb.TranslatorOverride;
 import org.teiid.designer.vdb.Vdb;
 import org.teiid.designer.vdb.VdbDataRole;
@@ -84,8 +82,10 @@ public class VdbElement implements Serializable {
         for (final VdbDataRole dataPolicyEntry : vdb.getDataPolicyEntries())
             getDataPolicies().add(new DataRoleElement(dataPolicyEntry));
         getProperties().add(new PropertyElement(Vdb.Xml.PREVIEW, Boolean.toString(vdb.isPreview())));
+        // The Vdb object stores timeout in seconds, but we will persist to Vdb manifest in millis for teiid.
         if( vdb.getQueryTimeout() > 0 ) {
-        	getProperties().add(new PropertyElement(Vdb.Xml.QUERY_TIMEOUT, Integer.toString(vdb.getQueryTimeout())));
+            int timeoutMillis = vdb.getQueryTimeout() * 1000;
+            getProperties().add(new PropertyElement(Vdb.Xml.QUERY_TIMEOUT, Integer.toString(timeoutMillis)));
         }
     }
 
