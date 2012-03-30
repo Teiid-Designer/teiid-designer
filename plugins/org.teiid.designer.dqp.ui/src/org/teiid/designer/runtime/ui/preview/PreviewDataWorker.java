@@ -467,10 +467,13 @@ public class PreviewDataWorker {
 	private String insertParameterValuesSQL(String sql, List<String> paramValues) {
 		if( paramValues != null && !paramValues.isEmpty() ) {
 			for (String value : paramValues) {
-				// skip over null values as those don't have a ? to replace
-				if( value != null ) {
-					sql = sql.replaceFirst("\\?", "'" + value + "'"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				}
+                // If value is null, replace with the word null
+                if (value == null) {
+                    sql = sql.replaceFirst("\\?", "null"); //$NON-NLS-1$ //$NON-NLS-2$ 
+                    // Non-null, replace with quoted value
+                } else {
+                    sql = sql.replaceFirst("\\?", "'" + value + "'"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                }
 			}
 		}
 		return sql;
