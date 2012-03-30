@@ -22,7 +22,6 @@ import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
-import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
@@ -170,8 +169,14 @@ public class WsdlOperationsPanel implements FileUtils.Constants, CoreStringUtil.
 	void updateTreeSelectionDetails() {
 		TableItem[] selections = this.operationsViewer.getTable().getSelection();
 		if (selections != null && selections.length > 0) {
-			TableItem selectedItem = selections[0];
-			updateSelectionDetailsArea(selectedItem.getData());
+			if( selections.length == 1 ) {
+    			TableItem selectedItem = selections[0];
+    			updateSelectionDetailsArea(selectedItem.getData());
+			} else {
+				this.detailsTextBox.setText(Messages.MultipleOperationsSelected_msg);
+			}
+		} else {
+			this.detailsTextBox.setText(Messages.NoOperationsSelected_msg);
 		}
 	}
 
@@ -185,18 +190,8 @@ public class WsdlOperationsPanel implements FileUtils.Constants, CoreStringUtil.
 		Composite pnlMain = WidgetFactory.createPanel(theParent, SWT.NONE, GridData.FILL_BOTH);
 		GridLayout layout = new GridLayout(COLUMNS, false);
 		pnlMain.setLayout(layout);
-		
-		SashForm splitter = new SashForm(pnlMain, SWT.VERTICAL);
-		GridData gid = new GridData();
-		gid.grabExcessHorizontalSpace = gid.grabExcessVerticalSpace = true;
-		gid.horizontalAlignment = gid.verticalAlignment = GridData.FILL;
-		splitter.setLayoutData(gid);
-		
-		createCheckboxTableComposite(splitter, Messages.WsdlOperationsPage_checkboxTreeGroup_title);
 
-		createDetailsComposite(splitter);
-
-		splitter.setWeights(new int[] { 70, 30 });
+		createCheckboxTableComposite(pnlMain, Messages.WsdlOperationsPage_checkboxTreeGroup_title);
 	}
 
 	/**
@@ -298,30 +293,18 @@ public class WsdlOperationsPanel implements FileUtils.Constants, CoreStringUtil.
 		operationNameColumn.getColumn().setText(Messages.Operation);
 		operationNameColumn.setLabelProvider(new OperationsColumnLabelProvider());
 		operationNameColumn.getColumn().pack();
-	}
-
-	/**
-	 * create the selection details text Composite
-	 * 
-	 * @param parent
-	 *            the parent composite
-	 */
-	private void createDetailsComposite(Composite parent) {
-		Composite detailsComposite = WidgetFactory.createPanel(parent, SWT.NONE, GridData.FILL_BOTH);
-		GridLayout layout = new GridLayout(1, false);
-		detailsComposite.setLayout(layout);
-
-		// Have to remove WidgetFactory.createLabel since it breaks 4.3.3
-		// at runtime due to a change to the return type to a type that
-		// does not exist in 4.3.3
-
-		CLabel theLabel = new CLabel(detailsComposite, SWT.NONE);
+		
+		
+		CLabel theLabel = new CLabel(group, SWT.NONE);
 		theLabel.setText(Messages.WsdlOperationsPage_detailsTextbox_title);
-		final GridData gridData = new GridData(SWT.NONE);
+		GridData gridData = new GridData(SWT.NONE);
 		gridData.horizontalSpan = 1;
 		theLabel.setLayoutData(gridData);
-
-		this.detailsTextBox = WidgetFactory.createTextBox(detailsComposite, SWT.NONE, GridData.FILL_BOTH);
+		this.detailsTextBox = new Text(group, SWT.BORDER | SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL); //WidgetFactory.createTextBox(detailsComposite, SWT.NONE, GridData.FILL_BOTH);
+		gridData = new GridData(GridData.FILL_HORIZONTAL);
+		gridData.heightHint = 70;
+		gridData.horizontalSpan = 2;
+		this.detailsTextBox.setLayoutData(gridData);
 		detailsTextBox.setEditable(false);
 	}
 

@@ -58,11 +58,13 @@ public class Messages  extends NLS {
     public static String Location;
     
     public static String ModelsDefinition;
+    public static String MultipleOperationsSelected_msg;
     
     public static String Name;
     public static String New;
     public static String NoHeaderMessage;
     public static String NoOperationsSelected;
+    public static String NoOperationsSelected_msg;
     
     public static String Operation;
     public static String Operations;
