@@ -131,7 +131,6 @@ public class ImportWsdlSchemaHandler {
 							if (type == ProcedureInfo.RESPONSE)
 								try {
 									describe(schema, elementName);
-									displayXpathTest();
 								} catch (ModelerCoreException ex) {
 									throw new RuntimeException(ex);
 								}
@@ -154,18 +153,6 @@ public class ImportWsdlSchemaHandler {
 		return elementArrayList;
 	}
 	
-	private void displayXpathTest(){
-		
-		for (Object nodeKey:schemaTreeModel.getMapNode().keySet()){
-			SchemaNode node = schemaTreeModel.getMapNode().get(nodeKey);
-			String xpath = node.getParentXpath();
-			String rootPath = schemaTreeModel.getRootNodeXpath();
-			System.out.println(xpath+rootPath);
-		}
-		
-		
-	}
-
 	private String getPartElementName(Part part) {
 		String partElementName = null;
 
@@ -333,7 +320,6 @@ public class ImportWsdlSchemaHandler {
 		XSDTypeDefinition xtd = xed.getTypeDefinition();
 
 		if (xtd instanceof XSDComplexTypeDefinition) {
-			System.out.println(xed.getName());
 			rootnode.setElement(xed);
 			rootnode.setRoot(true);
 			XSDComplexTypeDefinition complexType = (XSDComplexTypeDefinition) xtd;
@@ -385,7 +371,6 @@ public class ImportWsdlSchemaHandler {
 			}
 		} else if (content instanceof XSDElementDeclaration) {
 			XSDElementDeclaration element = (XSDElementDeclaration) content;
-			System.out.println(element.getName());
 			node = schemaTreeModel.new SchemaNode(particle, parent, null, false);
 			if (parent!=null){
 				parent.addChild(node);
