@@ -260,7 +260,7 @@ public class ImportWsdlSoapWizard extends AbstractWizard implements IImportWizar
         // Check for sources and views folders in Property Definitions
     	if( this.importManager.getSourceModelLocation() == null) {
             IContainer srcResource = DesignerPropertiesUtil.getSourcesFolder(designerProperties);
-            IContainer viewResource = DesignerPropertiesUtil.getSourcesFolder(designerProperties);
+            IContainer viewResource = DesignerPropertiesUtil.getViewsFolder(designerProperties);
             if (srcResource != null) {
                 this.importManager.setSourceModelLocation(srcResource);
             }

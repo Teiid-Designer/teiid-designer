@@ -106,6 +106,10 @@ public final class WidgetUtil implements
     public static final String A_START_TAG = "<a>"; //$NON-NLS-1$
     public static final String FORM_TEXT_END_TAG = "</p></html>"; //$NON-NLS-1$
     public static final String FORM_TEXT_START_TAG = "<html><p>"; //$NON-NLS-1$
+    
+    public static final int TEXT_COLOR_DEFAULT = 0;
+    public static final int TEXT_COLOR_BLUE = 1;
+    
 
     // ============================================================================================================================
     // Static Methods
@@ -430,6 +434,16 @@ public final class WidgetUtil implements
     
     public static Color getSystemColor(int colorId) {
     	return Display.getCurrent().getSystemColor(colorId);
+    }
+    
+    public static void colorizeWidget(Control control, int colorStyle, boolean readOnly) {
+    	if( colorStyle == TEXT_COLOR_BLUE ) {
+    		control.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
+    	}
+    	if( readOnly ) {
+    		control.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
+    	}
+    	
     }
 
     /**

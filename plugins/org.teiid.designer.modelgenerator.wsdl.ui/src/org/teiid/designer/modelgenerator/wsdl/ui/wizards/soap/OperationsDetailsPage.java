@@ -184,8 +184,7 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 		this.responseBodyColumnsInfoPanel.refresh();
 		this.responseHeaderColumnsInfoPanel.refresh();
 		updateSqlText(BOTH);
-		this.wrapperPanel.notifyOperationChanged(this.getProcedureGenerator()
-				.getOperation());
+		this.wrapperPanel.notifyOperationChanged(this.getProcedureGenerator().getOperation());
 
 		updateStatus();
 	}
@@ -301,12 +300,8 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 		procedureNameLabel.setText(Messages.GeneratedProcedureName);
 
 		requestProcedureNameText = new Text(namePanel, SWT.BORDER | SWT.SINGLE);
-		requestProcedureNameText.setBackground(Display.getCurrent()
-				.getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
-		requestProcedureNameText.setForeground(Display.getCurrent()
-				.getSystemColor(SWT.COLOR_DARK_BLUE));
-		requestProcedureNameText.setLayoutData(new GridData(
-				GridData.FILL_HORIZONTAL));
+		WidgetUtil.colorizeWidget(requestProcedureNameText, WidgetUtil.TEXT_COLOR_BLUE, true);
+		requestProcedureNameText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		requestProcedureNameText.setEditable(false);
 
 		createTabbedRequestPanel(panel);
@@ -402,7 +397,7 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 		requestSqlDocument = new Document();
 		requestSqlTextViewer.setInput(requestSqlDocument);
 		requestSqlTextViewer.setEditable(false);
-		requestSqlTextViewer.getTextWidget().setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
+		WidgetUtil.colorizeWidget(requestSqlTextViewer.getTextWidget(), WidgetUtil.TEXT_COLOR_DEFAULT, true);
 		requestSqlDocument.set(CoreStringUtil.Constants.EMPTY_STRING);
 		requestSqlTextViewer.getControl().setLayoutData(new GridData(GridData.FILL_BOTH));
 	}
@@ -425,12 +420,8 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 		procedureNameLabel.setText(Messages.GeneratedProcedureName);
 
 		responseProcedureNameText = new Text(namePanel, SWT.BORDER | SWT.SINGLE);
-		responseProcedureNameText.setBackground(Display.getCurrent()
-				.getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
-		responseProcedureNameText.setForeground(Display.getCurrent()
-				.getSystemColor(SWT.COLOR_DARK_BLUE));
-		responseProcedureNameText.setLayoutData(new GridData(
-				GridData.FILL_HORIZONTAL));
+		WidgetUtil.colorizeWidget(responseProcedureNameText, WidgetUtil.TEXT_COLOR_BLUE, true);
+		responseProcedureNameText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		responseProcedureNameText.setEditable(false);
 
 		createTabbedReponsePanel(panel);

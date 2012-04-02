@@ -85,8 +85,7 @@ public class ImportOptionsPanel implements ModelGeneratorWsdlUiConstants {
     		this.sourceModelContainerText = new Text(group, SWT.BORDER | SWT.SINGLE);
     		GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
     		this.sourceModelContainerText.setLayoutData(gridData);
-    		this.sourceModelContainerText.setBackground(WidgetUtil.getReadOnlyBackgroundColor());
-    		this.sourceModelContainerText.setForeground(WidgetUtil.getDarkBlueColor());
+    		WidgetUtil.colorizeWidget(this.sourceModelContainerText, WidgetUtil.TEXT_COLOR_BLUE, true);
     		this.sourceModelContainerText.setEditable(false);
     
     		Button browseButton = new Button(group, SWT.PUSH);
@@ -111,8 +110,7 @@ public class ImportOptionsPanel implements ModelGeneratorWsdlUiConstants {
     		gridData.widthHint = 200;
     		this.sourceModelFileText.setLayoutData(gridData);
     		this.sourceModelFileText.setToolTipText(Messages.SourceNameTooltip);
-    		//this.sourceModelFileText.setBackground(WidgetUtil.getReadOnlyBackgroundColor());
-    		this.sourceModelFileText.setForeground(WidgetUtil.getDarkBlueColor());
+    		WidgetUtil.colorizeWidget(this.sourceModelFileText, WidgetUtil.TEXT_COLOR_BLUE, false);
     		this.sourceModelFileText.addModifyListener(new ModifyListener() {
     			public void modifyText(ModifyEvent e) {
     				// Check view file name for existing if "location" is already
@@ -143,8 +141,7 @@ public class ImportOptionsPanel implements ModelGeneratorWsdlUiConstants {
         
     
     			sourceModelHelpText = new Text(helpGroup, SWT.WRAP | SWT.READ_ONLY);
-    			sourceModelHelpText.setBackground(WidgetUtil.getReadOnlyBackgroundColor());
-    			sourceModelHelpText.setForeground(WidgetUtil.getDarkBlueColor());
+    			WidgetUtil.colorizeWidget(this.sourceModelHelpText, WidgetUtil.TEXT_COLOR_BLUE, true);
     			gd = new GridData(GridData.FILL_BOTH);
     			gd.heightHint = 40;
     			gd.widthHint = 600;
@@ -164,8 +161,7 @@ public class ImportOptionsPanel implements ModelGeneratorWsdlUiConstants {
     		this.viewModelContainerText = new Text(group, SWT.BORDER | SWT.SINGLE);
     		GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
     		this.viewModelContainerText.setLayoutData(gridData);
-    		this.viewModelContainerText.setBackground(WidgetUtil.getReadOnlyBackgroundColor());
-    		this.viewModelContainerText.setForeground(WidgetUtil.getDarkBlueColor());
+    		WidgetUtil.colorizeWidget(this.viewModelContainerText, WidgetUtil.TEXT_COLOR_BLUE, true);
     		this.viewModelContainerText.setEditable(false);
     
     		Button browseButton = new Button(group, SWT.PUSH);
@@ -190,7 +186,7 @@ public class ImportOptionsPanel implements ModelGeneratorWsdlUiConstants {
     		gridData = new GridData(GridData.FILL_HORIZONTAL);
     		this.viewModelFileText.setLayoutData(gridData);
     		this.viewModelFileText.setToolTipText(Messages.ViewNameTooltip);
-    		//this.viewModelFileText.setBackground(WidgetUtil.getReadOnlyBackgroundColor());
+    		WidgetUtil.colorizeWidget(this.viewModelFileText, WidgetUtil.TEXT_COLOR_BLUE, false);
     		this.viewModelFileText.setForeground(WidgetUtil.getDarkBlueColor());
     		this.viewModelFileText.addModifyListener(new ModifyListener() {
     			public void modifyText(ModifyEvent e) {
@@ -222,8 +218,7 @@ public class ImportOptionsPanel implements ModelGeneratorWsdlUiConstants {
         
     
     			viewModelHelpText = new Text(helpGroup, SWT.WRAP | SWT.READ_ONLY);
-    			viewModelHelpText.setBackground(WidgetUtil.getReadOnlyBackgroundColor());
-    			viewModelHelpText.setForeground(WidgetUtil.getDarkBlueColor());
+    			WidgetUtil.colorizeWidget(this.viewModelHelpText, WidgetUtil.TEXT_COLOR_BLUE, true);
     			gd = new GridData(GridData.FILL_BOTH);
     			gd.heightHint = 40;
     			gd.widthHint = 600;

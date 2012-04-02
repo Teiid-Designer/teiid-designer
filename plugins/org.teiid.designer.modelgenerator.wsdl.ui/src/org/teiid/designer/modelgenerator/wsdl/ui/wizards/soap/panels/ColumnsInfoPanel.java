@@ -30,6 +30,7 @@ import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.ColumnInfo;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.OperationsDetailsPage;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.ProcedureInfo;
 
+import com.metamatrix.core.util.StringUtilities;
 import com.metamatrix.ui.internal.util.WidgetFactory;
 
 public class ColumnsInfoPanel {
@@ -45,6 +46,8 @@ public class ColumnsInfoPanel {
 	
 	final OperationsDetailsPage detailsPage;
 	
+	boolean initializing = false;
+	
 	public ColumnsInfoPanel(Composite parent, int style, int type, OperationsDetailsPage detailsPage) {
 		super();
 		this.type = type;
@@ -57,10 +60,18 @@ public class ColumnsInfoPanel {
 	}
 	
 	public void setProcedureInfo(ProcedureInfo info) {
+		initializing = true;
 		this.procedureInfo = info;
 		editColumnsPanel.setProcedureInfo(info);
 		editColumnsPanel.refresh();
 		this.addButton.setEnabled(info != null);
+		
+		String rootPath = StringUtilities.EMPTY_STRING;
+		if( this.getProcedureInfo().getRootPath() != null ) {
+			rootPath = this.getProcedureInfo().getRootPath();
+		}
+		this.rootPathText.setText(rootPath);
+		initializing = false;
 	}
 	
 	public void refresh() {
@@ -256,7 +267,9 @@ public class ColumnsInfoPanel {
     }
 	
 	private void notifyColumnDataChanged() {
-		this.detailsPage.notifyColumnDataChanged();
+		if( ! initializing ) {
+			this.detailsPage.notifyColumnDataChanged();
+		}
 	}
 	
 	public void setEnabled(boolean enable ) {
