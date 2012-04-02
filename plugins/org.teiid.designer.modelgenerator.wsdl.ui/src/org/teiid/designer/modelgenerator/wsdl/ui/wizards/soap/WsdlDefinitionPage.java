@@ -11,7 +11,6 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Properties;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -51,7 +50,6 @@ import org.teiid.designer.datatools.ui.dialogs.ConnectionProfileWorker;
 import org.teiid.designer.datatools.ui.dialogs.IProfileChangedListener;
 import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.panels.WsdlOperationsPanel;
-
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstants;
 import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.util.ModelGeneratorWsdlUiUtil;
@@ -202,8 +200,6 @@ public class WsdlDefinitionPage extends WizardPage implements Listener, IProfile
 
 		// Set the initial page status
 		setPageStatus();
-
-		restoreState();
 	}
 
 	/**
@@ -340,22 +336,22 @@ public class WsdlDefinitionPage extends WizardPage implements Listener, IProfile
 	 * @see org.eclipse.jface.wizard.WizardPage#getDialogSettings()
 	 */
 	@Override
-	protected IDialogSettings getDialogSettings() {
-		IDialogSettings settings = super.getDialogSettings();
+    protected IDialogSettings getDialogSettings() {
+        IDialogSettings settings = super.getDialogSettings();
 
-		if (settings != null) {
-			// get the right section of the NewModelWizard settings
-			IDialogSettings temp = settings.getSection(DIALOG_SETTINGS_SECTION);
+        if (settings != null) {
+            // get the right section of the NewModelWizard settings
+            IDialogSettings temp = settings.getSection(DIALOG_SETTINGS_SECTION);
 
-			if (temp == null) {
-				settings = settings.addNewSection(DIALOG_SETTINGS_SECTION);
-			} else {
-				settings = temp;
-			}
-		}
+            if (temp == null) {
+                settings = settings.addNewSection(DIALOG_SETTINGS_SECTION);
+            } else {
+                settings = temp;
+            }
+        }
 
-		return settings;
-	}
+        return settings;
+    }
 
 	/**
 	 * Handler for Validate WSDL Button pressed
@@ -405,30 +401,6 @@ public class WsdlDefinitionPage extends WizardPage implements Listener, IProfile
 			return false;
 		}
 		return true;
-	}
-
-	/**
-	 * Restores dialog size and position of the last time wizard ran.
-	 */
-	private void restoreState() {
-		IDialogSettings settings = getDialogSettings();
-
-		if (settings != null && getContainer() != null) {
-			Shell shell = getContainer().getShell();
-
-			if (shell != null) {
-				try {
-					int x = settings.getInt(DIALOG_X);
-					int y = settings.getInt(DIALOG_Y);
-					int width = settings.getInt(DIALOG_WIDTH);
-					int height = settings.getInt(DIALOG_HEIGHT);
-					shell.setBounds(x, y, width, height);
-				} catch (NumberFormatException theException) {
-					// getInt(String) throws exception if not found.
-					// just means no settings exist yet.
-				}
-			}
-		}
 	}
 
 	/**

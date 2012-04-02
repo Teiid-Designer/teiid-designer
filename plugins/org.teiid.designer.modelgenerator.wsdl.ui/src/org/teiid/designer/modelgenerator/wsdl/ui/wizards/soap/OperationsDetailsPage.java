@@ -10,7 +10,6 @@ package org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.dialogs.IDialogSettings;
@@ -51,7 +50,6 @@ import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.panels.ElementsInf
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.panels.RequestSchemaContentsGroup;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.panels.ResponseSchemaContentsGroup;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.panels.WrapperProcedurePanel;
-
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Operation;
 import com.metamatrix.modeler.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstants;
@@ -226,8 +224,6 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 		createOperationsSelectionPanel(pnlMain);
 
 		createTabbedDetailsPanel(pnlMain);
-
-		restoreState();
 	}
 
 	@SuppressWarnings("unused")
@@ -623,48 +619,22 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 	 * @since 4.2
 	 */
 	@Override
-	protected IDialogSettings getDialogSettings() {
-		IDialogSettings settings = super.getDialogSettings();
+    protected IDialogSettings getDialogSettings() {
+        IDialogSettings settings = super.getDialogSettings();
 
-		if (settings != null) {
-			// get the right section of the NewModelWizard settings
-			IDialogSettings temp = settings.getSection(DIALOG_SETTINGS_SECTION);
+        if (settings != null) {
+            // get the right section of the NewModelWizard settings
+            IDialogSettings temp = settings.getSection(DIALOG_SETTINGS_SECTION);
 
-			if (temp == null) {
-				settings = settings.addNewSection(DIALOG_SETTINGS_SECTION);
-			} else {
-				settings = temp;
-			}
-		}
+            if (temp == null) {
+                settings = settings.addNewSection(DIALOG_SETTINGS_SECTION);
+            } else {
+                settings = temp;
+            }
+        }
 
-		return settings;
-	}
-
-	/**
-	 * Restores dialog size and position of the last time wizard ran.
-	 * 
-	 * @since 4.2
-	 */
-	private void restoreState() {
-		IDialogSettings settings = getDialogSettings();
-
-		if (settings != null) {
-			Shell shell = getContainer().getShell();
-
-			if (shell != null) {
-				try {
-					int x = settings.getInt(DIALOG_X);
-					int y = settings.getInt(DIALOG_Y);
-					int width = settings.getInt(DIALOG_WIDTH);
-					int height = settings.getInt(DIALOG_HEIGHT);
-					shell.setBounds(x, y, width, height);
-				} catch (NumberFormatException theException) {
-					// getInt(String) throws exception if not found.
-					// just means no settings exist yet.
-				}
-			}
-		}
-	}
+        return settings;
+    }
 
 	/**
 	 * Persists dialog size and position.
@@ -772,17 +742,15 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 	public String createRequestColumn(int requestType) {
 		if( requestType == ProcedureInfo.TYPE_BODY ) {
 			return this.requestBodySchemaContentsGroup.createRequestColumn();
-		} else {
-			return this.requestHeaderSchemaContentsGroup.createRequestColumn();
 		}
+        return this.requestHeaderSchemaContentsGroup.createRequestColumn();
 	}
 
 	public String createResponseColumn(int responseType) {
 		if( responseType == ProcedureInfo.TYPE_BODY ) {
 			return this.responseBodySchemaContentsGroup.createResponseColumn();
-		} else {
-			return this.responseHeaderSchemaContentsGroup.createResponseColumn();
-		}
+        }
+        return this.responseHeaderSchemaContentsGroup.createResponseColumn();
 	}
 
 	class OperationsListProvider extends LabelProvider implements

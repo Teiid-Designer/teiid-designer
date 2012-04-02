@@ -10,8 +10,6 @@ package org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ControlEvent;
-import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Rectangle;
@@ -24,7 +22,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.panels.ImportOptionsPanel;
-
 import com.metamatrix.modeler.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstants;
 import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.util.ModelGeneratorWsdlUiUtil;
 import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.wizards.SelectWsdlOperationsPage;
@@ -84,25 +81,11 @@ public class ModelDefinitionPage extends AbstractWizardPage implements
 		GridLayout layout = new GridLayout(COLUMNS, false);
 		pnlMain.setLayout(layout);
 		setControl(pnlMain);
-		pnlMain.addControlListener(new ControlListener() {
-			
-			@Override
-			public void controlResized(ControlEvent e) {
-				System.out.println("XXXXX"); //$NON-NLS-1$
-				
-			}
-			
-			@Override
-			public void controlMoved(ControlEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-		});
 
 		MODEL_DEFINITION: {
 			// Defines Location and Name values for source and view models
 			importOptionsPanel = new ImportOptionsPanel(pnlMain, this.importManager);
-		};
+        }
 		
 		GENERATE_PROCEDURE_OPTION : {
 			// Includes a radio button and description for 
@@ -154,8 +137,6 @@ public class ModelDefinitionPage extends AbstractWizardPage implements
 			defaultProceduresHelpText.setLayoutData(gd);
 			defaultProceduresHelpText.setText(Messages.OptionDefineDefaultProcedures);
 		}
-
-		restoreState();
 	}
 	
 	private void handleGenerateOptionChanged() {
@@ -186,48 +167,22 @@ public class ModelDefinitionPage extends AbstractWizardPage implements
 	 * @since 4.2
 	 */
 	@Override
-	protected IDialogSettings getDialogSettings() {
-		IDialogSettings settings = super.getDialogSettings();
+    protected IDialogSettings getDialogSettings() {
+        IDialogSettings settings = super.getDialogSettings();
 
-		if (settings != null) {
-			// get the right section of the NewModelWizard settings
-			IDialogSettings temp = settings.getSection(DIALOG_SETTINGS_SECTION);
+        if (settings != null) {
+            // get the right section of the NewModelWizard settings
+            IDialogSettings temp = settings.getSection(DIALOG_SETTINGS_SECTION);
 
-			if (temp == null) {
-				settings = settings.addNewSection(DIALOG_SETTINGS_SECTION);
-			} else {
-				settings = temp;
-			}
-		}
+            if (temp == null) {
+                settings = settings.addNewSection(DIALOG_SETTINGS_SECTION);
+            } else {
+                settings = temp;
+            }
+        }
 
-		return settings;
-	}
-
-	/**
-	 * Restores dialog size and position of the last time wizard ran.
-	 * 
-	 * @since 4.2
-	 */
-	private void restoreState() {
-		IDialogSettings settings = getDialogSettings();
-
-		if (settings != null) {
-			Shell shell = getContainer().getShell();
-
-			if (shell != null) {
-				try {
-					int x = settings.getInt(DIALOG_X);
-					int y = settings.getInt(DIALOG_Y);
-					int width = settings.getInt(DIALOG_WIDTH);
-					int height = settings.getInt(DIALOG_HEIGHT);
-					shell.setBounds(x, y, width, height);
-				} catch (NumberFormatException theException) {
-					// getInt(String) throws exception if not found.
-					// just means no settings exist yet.
-				}
-			}
-		}
-	}
+        return settings;
+    }
 
 	/**
 	 * Persists dialog size and position.
