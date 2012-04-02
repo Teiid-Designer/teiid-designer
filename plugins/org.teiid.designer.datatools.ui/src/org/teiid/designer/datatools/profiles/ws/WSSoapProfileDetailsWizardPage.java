@@ -14,7 +14,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 import java.util.Properties;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -49,7 +48,6 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.progress.UIJob;
 import org.teiid.designer.datatools.ui.DatatoolsUiConstants;
-
 import com.metamatrix.ui.internal.util.WidgetFactory;
 
 public class WSSoapProfileDetailsWizardPage  extends ConnectionProfileDetailsPage
@@ -138,12 +136,12 @@ public class WSSoapProfileDetailsWizardPage  extends ConnectionProfileDetailsPag
 				dialog.setFilterExtensions(new String[] { "*.wsdl", "*.*" //$NON-NLS-1$ //$NON-NLS-2$
 				});
 				if (urlText.getText() != null && urlText.getText().trim().length() > 0) {
-					dialog.setFilterPath(urlText.getText());
+                    dialog.setFilterPath(urlText.getText().trim());
 				}
 
 				String selectedLocation = dialog.open();
-				if (selectedLocation != null) {
-					urlText.setText(selectedLocation);
+                if (selectedLocation != null && selectedLocation.trim().length() > 0) {
+                    urlText.setText(selectedLocation.trim());
 				}
 			}
 
@@ -204,7 +202,9 @@ public class WSSoapProfileDetailsWizardPage  extends ConnectionProfileDetailsPag
 
         if (event.widget == urlText) {
             Properties properties = ((NewConnectionProfileWizard)getWizard()).getProfileProperties();
-            properties.setProperty(IWSProfileConstants.WSDL_URI_PROP_ID, urlText.getText());
+            String urlStr = urlText.getText();
+            if (urlStr != null) urlStr = urlStr.trim();
+            properties.setProperty(IWSProfileConstants.WSDL_URI_PROP_ID, urlStr);
         }
         updateState();
     }
@@ -244,7 +244,7 @@ public class WSSoapProfileDetailsWizardPage  extends ConnectionProfileDetailsPag
         	
         }
         if( urlError ) {
-    		File file = new File(properties.get(IWSProfileConstants.WSDL_URI_PROP_ID).toString());;
+            File file = new File(properties.get(IWSProfileConstants.WSDL_URI_PROP_ID).toString());
 
             if( !file.exists() && urlError) {
             	setErrorMessage(UTIL.getString("Common.URLorFILE.Invalid.Message")); //$NON-NLS-1$

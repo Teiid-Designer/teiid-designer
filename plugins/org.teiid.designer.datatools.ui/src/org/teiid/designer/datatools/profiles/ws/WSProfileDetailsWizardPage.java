@@ -13,7 +13,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 import java.util.Properties;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -44,11 +43,8 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.progress.UIJob;
 import org.teiid.designer.datatools.profiles.ws.IWSProfileConstants.SecurityType;
-import org.teiid.designer.datatools.profiles.ws.WSSoapProfileDetailsWizardPage.URLPingJob;
-import org.teiid.designer.datatools.profiles.ws.WSSoapProfileDetailsWizardPage.URLPingJob.XmlUrlPingUIJob;
 import org.teiid.designer.datatools.profiles.xml.IXmlProfileConstants;
 import org.teiid.designer.datatools.ui.DatatoolsUiConstants;
-
 import com.metamatrix.ui.internal.util.WidgetFactory;
 
 public class WSProfileDetailsWizardPage extends ConnectionProfileDetailsPage
@@ -215,7 +211,9 @@ public class WSProfileDetailsWizardPage extends ConnectionProfileDetailsPage
         }
         if (event.widget == urlText) {
             Properties properties = ((NewConnectionProfileWizard)getWizard()).getProfileProperties();
-            properties.setProperty(IWSProfileConstants.URL_PROP_ID, urlText.getText());
+            String urlStr = urlText.getText();
+            if (urlStr != null) urlStr = urlStr.trim();
+            properties.setProperty(IWSProfileConstants.URL_PROP_ID, urlStr);
         }
         if (event.widget == securityCombo) {
             Properties properties = ((NewConnectionProfileWizard)getWizard()).getProfileProperties();
