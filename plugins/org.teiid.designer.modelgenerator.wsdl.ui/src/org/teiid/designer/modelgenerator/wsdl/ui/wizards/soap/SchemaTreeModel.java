@@ -10,6 +10,7 @@ package org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
@@ -49,6 +50,46 @@ public class SchemaTreeModel {
 		
 		return ""; //$NON-NLS-1$
 	}
+	
+	public String determineRootPath(){
+		StringBuilder commonRoot = new StringBuilder();
+		
+		List<String> segmentList = new ArrayList();
+		for (Object nodeKey:this.mapNode.keySet()){
+			SchemaNode node = this.mapNode.get(nodeKey);
+			if (node.children.isEmpty()){
+				String path = node.getFullPath();
+				if (!path.equals("")){ //$NON-NLS-1$
+					segmentList.add(path);
+				}
+			}
+		}
+		
+		String[][] segments = new String[segmentList.size()][];
+		for(int i = 0; i < segmentList.size(); i++){
+			segments[i] = segmentList.get(i).split("/");  //$NON-NLS-1$
+		}
+		for(int j = 0; j < segments[0].length; j++){
+			String thisSegment = segments[0][j]; 
+			boolean allMatched = true; 
+			for(int i = 1; i < segments.length && allMatched; i++){ 
+				if(segments[i].length < j){
+					allMatched = false; 
+					break; 
+				}
+				allMatched &= segments[i][j].equals(thisSegment); 
+			}
+			if(allMatched){ 
+				commonRoot.append("/").append(thisSegment) ; //$NON-NLS-1$
+			}else{
+				break;
+			}
+		}
+		//Change any double slashes to single slashes
+		commonRoot = new StringBuilder(commonRoot.toString().replaceAll("//", "/")); //$NON-NLS-1$ //$NON-NLS-2$
+		return commonRoot.toString();
+	}
+	
 	
 	public class SchemaNode {
 		protected Object element;
@@ -130,6 +171,11 @@ public class SchemaTreeModel {
 			}
 			
 			return xpath.toString(); 
+		}
+		
+		public String getFullPath() {
+		
+			return getParentXpath()+getRelativeXpath();
 		}
 
 		private void getParentXpath(Stack stack, SchemaNode parent) {

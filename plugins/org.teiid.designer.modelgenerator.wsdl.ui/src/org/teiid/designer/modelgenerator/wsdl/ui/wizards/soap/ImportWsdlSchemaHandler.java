@@ -249,11 +249,8 @@ public class ImportWsdlSchemaHandler {
 						SqlConstants.ENVELOPE_NS);
 			}
 			getParentXpath(obj, parentXpath);
-			//TODO: Determine Lowest Common Path programmatically instead
-			//of just taking the first parent path of the first column the 
-			//use picks
 			if (this.schemaTreeModel.getRootPath()==null){
-				this.schemaTreeModel.setRootPath(parentXpath.toString());
+				this.schemaTreeModel.setRootPath(this.schemaTreeModel.determineRootPath());
 			}
 			
 			getRelativeXpath(obj, xpath);
@@ -411,16 +408,6 @@ public class ImportWsdlSchemaHandler {
 		}
 	}
 
-//	private void addSimpleTypeDefToTree(XSDSimpleTypeDefinition simpleType,
-//			String name, SchemaNode node) throws ModelerCoreException {
-//		SchemaNode childNode = schemaTreeModel.new SchemaNode();
-//		node.addChild(childNode);
-//		childNode.setElement(simpleType);
-//		childNode.setParent(node);
-//		schemaTreeModel.getMapNode().put(childNode.getElement(), childNode);
-//		schemaTreeModel.getMapNode().put(node.getElement(), node);
-//	}
-
 	private void getParentXpath(Object element, StringBuilder parentXpath) {
 		SchemaNode node = this.schemaTreeModel.getMapNode().get(element);
 		String rootPath = this.schemaTreeModel.getRootNodeXpath();
@@ -432,7 +419,7 @@ public class ImportWsdlSchemaHandler {
 		SchemaNode node = this.schemaTreeModel.getMapNode().get(element);
 		String relativeXpath = node.getRelativeXpath();
 		//We need to append the full path and then remove the root path.
-		//This allows us to resolve nested complex type
+		//This allows us to resolve nested complex types
 		String parentXPath = node.getParentXpath();
 		parentXPath = parentXPath.replace(this.schemaTreeModel.getRootPath(), ""); //$NON-NLS-1$
 		xpath.append(parentXPath).append(relativeXpath);
