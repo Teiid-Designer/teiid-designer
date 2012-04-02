@@ -42,8 +42,6 @@
                 <br/> <b>2)</b> Enter a WSDL URL or 'Browse...' to select a local WSDL.
                 <br/> <b>3)</b> Click <b>Test Connection</b> to verify connectivity.
                 <br/> <b>4)</b> Click <b>Finish</b>
-                <br/> <b>NOTE: </b> You may optionally enter a <b>SOAP End Point</b>, if the end point in the WSDL
-                                    is not to be used.  A custom driver class may also be specified, using the optional parameters.
       	  </description>
    	  </subitem>
    </item>
