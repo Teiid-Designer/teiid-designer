@@ -740,6 +740,10 @@ public abstract class ModelUtilities implements UiConstants {
      */
     public static String validateModelName( String proposedName,
                                             String fileExtension ) {
+        if (proposedName == null || proposedName.equals(PluginConstants.EMPTY_STRING)) {
+            return Util.getString("ModelUtilities.zeroLengthFileMessage"); //$NON-NLS-1$
+        }
+        
         boolean removedValidExtension = false;
         if (proposedName.endsWith(fileExtension)) {
             proposedName = proposedName.substring(0, proposedName.lastIndexOf(fileExtension));

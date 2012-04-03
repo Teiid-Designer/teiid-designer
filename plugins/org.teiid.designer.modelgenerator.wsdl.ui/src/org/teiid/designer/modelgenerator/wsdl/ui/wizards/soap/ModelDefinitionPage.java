@@ -22,6 +22,9 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.panels.ImportOptionsPanel;
+
+import com.metamatrix.core.event.IChangeListener;
+import com.metamatrix.core.event.IChangeNotifier;
 import com.metamatrix.modeler.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstants;
 import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.util.ModelGeneratorWsdlUiUtil;
 import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.wizards.SelectWsdlOperationsPage;
@@ -31,7 +34,8 @@ import com.metamatrix.ui.internal.util.WidgetUtil;
 import com.metamatrix.ui.internal.util.WizardUtil;
 import com.metamatrix.ui.internal.wizard.AbstractWizardPage;
 
-public class ModelDefinitionPage extends AbstractWizardPage implements 
+public class ModelDefinitionPage extends AbstractWizardPage implements
+	IChangeListener,
 	ModelGeneratorWsdlUiConstants, 
 	ModelGeneratorWsdlUiConstants.Images {
 
@@ -68,6 +72,7 @@ public class ModelDefinitionPage extends AbstractWizardPage implements
 		this.importManager = theImportManager;
 		this.wizard = wizard;
 		setImageDescriptor(ModelGeneratorWsdlUiUtil.getImageDescriptor(NEW_MODEL_BANNER));
+		this.importManager.addChangeListener(this);
 	}
 
 	/**
@@ -143,10 +148,9 @@ public class ModelDefinitionPage extends AbstractWizardPage implements
 		// need to set the boolean value on importManager and notify the wizard to update it's pages
 		// to remove Page 3 if generate default is checked
 		this.importManager.setGenerateDefaultProcedures(this.generateDefaultProceduresButton.getSelection());
-		this.importOptionsPanel.validate();
 		this.wizard.notifyManagerChanged();
 		
-		setPageStatus();
+		notifyChanged();
 	}
 	
 
@@ -212,13 +216,14 @@ public class ModelDefinitionPage extends AbstractWizardPage implements
 	 */
 	void setPageStatus() {
 		// Check importOptionsPanel status
-		IStatus modelStatus = this.importOptionsPanel.getCurrentStatus();
+		IStatus modelStatus = this.importManager.getValidator().getModelsStatus();
 		
 		if( modelStatus.getSeverity() == IStatus.OK ) {
 			WizardUtil.setPageComplete(this);
 			this.setMessage(modelStatus.getMessage());
 		} else {
-			WizardUtil.setPageComplete(this, modelStatus.getMessage(), modelStatus.getSeverity());
+			WizardUtil.setPageComplete(
+				this, this.importManager.getValidator().getPrimaryMessage(modelStatus), WizardUtil.getMessageSeverity(modelStatus.getSeverity()));
 		}
 
 
@@ -229,6 +234,8 @@ public class ModelDefinitionPage extends AbstractWizardPage implements
 	public void setVisible(boolean isVisible) {
 		super.setVisible(isVisible);
 		if (isVisible) {
+			this.importManager.validate();
+			
 			this.importOptionsPanel.setVisible();
 			this.generateDefaultProceduresButton.setSelection(this.importManager.doGenerateDefaultProcedures());
 			this.generateCustomProceduresButton.setSelection(! this.importManager.doGenerateDefaultProcedures());
@@ -240,4 +247,16 @@ public class ModelDefinitionPage extends AbstractWizardPage implements
     public void updateDesignerProperties() {
     	
     }
+    
+	/* (non-Javadoc)
+	 * @see com.metamatrix.core.event.IChangeListener#stateChanged(com.metamatrix.core.event.IChangeNotifier)
+	 */
+	@Override
+	public void stateChanged(IChangeNotifier theSource) {
+		setPageStatus();
+	}
+	
+	public void notifyChanged() {
+		this.importManager.notifyChanged();
+	}
 }

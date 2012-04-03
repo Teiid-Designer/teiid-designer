@@ -66,14 +66,13 @@ public abstract class ProcedureInfo implements SqlConstants {
 	
 	private int type;
 	
-	/**
-	 * Current <code>IStatus</code> representing the state of the input values for this instance of
-	 * <code>ProcedureInfo</code>
-	 */
-	private IStatus status;
+	private boolean changed;
+	
+	private boolean initializing;
 
 	public ProcedureInfo(Operation operation, int type, ProcedureGenerator generator) {
 		super();
+		this.initializing = true;
 		this.operation = operation;
 		this.bodyColumnInfoList = new ArrayList<ColumnInfo>();
 		this.headerColumnInfoList = new ArrayList<ColumnInfo>();
@@ -81,6 +80,7 @@ public abstract class ProcedureInfo implements SqlConstants {
 		this.type = type;
 		this.generator = generator;
 		this.nameValidator = new StringNameValidator(true);
+		this.initializing = false;
 	}
 	
 	public abstract String getDefaultProcedureName();
@@ -91,10 +91,12 @@ public abstract class ProcedureInfo implements SqlConstants {
 	
 	public void addNamespace(String key, String value) {
 		this.namespaceMap.put(key, value);
+		setChanged(true);
 	}
 	
 	public void addNamespaces(Map<String, String> namespaces) {
 		this.namespaceMap.putAll(namespaces);
+		setChanged(true);
 	}
 	
 	public Map<String, String> getNamespaceMap() {
@@ -104,7 +106,6 @@ public abstract class ProcedureInfo implements SqlConstants {
 	public int getType() {
 		return this.type;
 	}
-	
 
 	public ColumnInfo[] getBodyColumnInfoList() {
 		return this.bodyColumnInfoList.toArray(new ColumnInfo[this.bodyColumnInfoList.size()]);
@@ -112,12 +113,12 @@ public abstract class ProcedureInfo implements SqlConstants {
 	
 	public void addBodyColumn(String name, boolean ordinality, String datatype, String defaultValue, String path) {
 		this.bodyColumnInfoList.add(new ColumnInfo(name, ordinality, datatype, defaultValue, path));
-		validate();
+		setChanged(true);
 	}
 	
 	public void removeBodyColumn(ColumnInfo theInfo) {
 		this.bodyColumnInfoList.remove(theInfo);
-		validate();
+		setChanged(true);
 	}
 	
 	public void moveBodyColumnUp(ColumnInfo columnInfo) {
@@ -137,6 +138,7 @@ public abstract class ProcedureInfo implements SqlConstants {
 			}
 			
 			this.bodyColumnInfoList = colInfos;
+			setChanged(true);
 		}
 	}
 	
@@ -155,6 +157,7 @@ public abstract class ProcedureInfo implements SqlConstants {
 			}
 			
 			this.bodyColumnInfoList = colInfos;
+			setChanged(true);
 		}
 	}
 	
@@ -185,12 +188,12 @@ public abstract class ProcedureInfo implements SqlConstants {
 	
 	public void addHeaderColumn(String name, boolean ordinality, String datatype, String defaultValue, String path) {
 		this.headerColumnInfoList.add(new ColumnInfo(name, ordinality, datatype, defaultValue, path));
-		validate();
+		setChanged(true);
 	}
 	
 	public void removeHeaderColumn(ColumnInfo theInfo) {
 		this.headerColumnInfoList.remove(theInfo);
-		validate();
+		setChanged(true);
 	}
 	
 	public void moveHeaderColumnUp(ColumnInfo columnInfo) {
@@ -210,6 +213,7 @@ public abstract class ProcedureInfo implements SqlConstants {
 			}
 			
 			this.headerColumnInfoList = colInfos;
+			setChanged(true);
 		}
 	}
 	
@@ -228,6 +232,7 @@ public abstract class ProcedureInfo implements SqlConstants {
 			}
 			
 			this.headerColumnInfoList = colInfos;
+			setChanged(true);
 		}
 	}
 	
@@ -253,7 +258,7 @@ public abstract class ProcedureInfo implements SqlConstants {
 	}
 	
 	public void columnChanged(ColumnInfo columnInfo) {
-		validate();
+		setChanged(true);
 	}
 	
 	public void setOrdinality(ColumnInfo columnInfo, boolean value) {
@@ -277,7 +282,7 @@ public abstract class ProcedureInfo implements SqlConstants {
 			}
 			columnInfo.setOrdinality(true);
 		}
-		validate();
+		setChanged(true);
 	}
 	
     public String getProcedureName() {
@@ -309,11 +314,12 @@ public abstract class ProcedureInfo implements SqlConstants {
 			colInfo.setRootPath(this.rootPath);
 		}
 		
-		validate();
+		setChanged(true);
 	}
 
 	public void setProcedureName(String procedureName) {
 		this.procedureName = procedureName;
+		setChanged(true);
 	}
 
 	public Operation getOperation() {
@@ -322,22 +328,6 @@ public abstract class ProcedureInfo implements SqlConstants {
 	
 	public IStatus validate() {
 		return Status.OK_STATUS;
-	}
-	
-	/**
-	 * 
-	 * @return status the <code>IStatus</code> representing the validity of the data in this info object
-	 */
-	public IStatus getStatus() {
-		return this.status;
-	}
-
-	/**
-	 * 
-	 * @param status the <code>IStatus</code> representing the validity of the data in this info object
-	 */
-	public void setStatus(IStatus status) {
-		this.status = status;
 	}
 	
 	public String getUniqueBodyColumnName(String proposedName) {
@@ -359,6 +349,17 @@ public abstract class ProcedureInfo implements SqlConstants {
 		String finalName = changedName == null ? proposedName : changedName;
 		this.nameValidator.clearExistingNames();
 		return finalName;
+	}
+	
+	public void setChanged(boolean value) {
+		this.changed = value;
+		if( this.changed && !this.initializing) {
+			this.generator.setChanged(changed);
+		}
+	}
+	
+	public boolean isChanged() {
+		return this.changed;
 	}
 	
 	abstract String getSqlStringTemplate();

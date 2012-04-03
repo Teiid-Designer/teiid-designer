@@ -91,9 +91,9 @@ public class WrapperProcedurePanel {
 
 	public void notifyOperationChanged(Operation operation) {
 
-		updateUi();
-
 		validate();
+
+		updateUi();
 	}
 
 	private void updateUi() {

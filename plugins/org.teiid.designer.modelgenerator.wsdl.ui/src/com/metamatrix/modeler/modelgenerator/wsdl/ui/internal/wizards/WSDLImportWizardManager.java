@@ -16,13 +16,13 @@ import java.util.Properties;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
-import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
+import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.ImportManagerValidator;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.ProcedureGenerator;
 
+import com.metamatrix.core.event.IChangeListener;
+import com.metamatrix.core.event.IChangeNotifier;
 import com.metamatrix.modeler.modelgenerator.wsdl.WSDLReader;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Model;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.ModelGenerationException;
@@ -37,7 +37,7 @@ import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.util.ModelGenerato
  * @author tejones
  *
  */
-public class WSDLImportWizardManager {
+public class WSDLImportWizardManager implements IChangeNotifier {
 
     public static final int WORKSPACE_SOURCE = 0;
     public static final int FILESYSTEM_SOURCE = 1;
@@ -77,6 +77,11 @@ public class WSDLImportWizardManager {
     private String translatorDefaultServiceMode = PAYLOAD; 
     
     private Properties designerProperties;
+    
+    private ImportManagerValidator validator;
+    private Collection<IChangeListener> listeners;
+    
+    private boolean changed;
 
     // /////////////////////////////////////////////////////////////////////////////////////////////
     // CONSTRUCTOR
@@ -85,6 +90,9 @@ public class WSDLImportWizardManager {
         this.wsdlReader = new WSDLReader();
         this.selectedOperations = new ArrayList();
         this.procedureGenerators = new HashMap<Operation, ProcedureGenerator>();
+        this.listeners = new ArrayList<IChangeListener>(5);
+        this.validator = new ImportManagerValidator(this);
+        setChanged(true);
     }
 
     // /////////////////////////////////////////////////////////////////////////////////////////////
@@ -103,6 +111,7 @@ public class WSDLImportWizardManager {
             this.wsdlReader.setWSDLUri(fileUri);
             this.wsdlModel = null;
     	}
+    	setChanged(true);
     }
 
     /**
@@ -130,6 +139,7 @@ public class WSDLImportWizardManager {
 	 */
 	public void setEndPoint(String endPoint) {
 		this.endPoint = endPoint;
+		setChanged(true);
 	}
 
     /**
@@ -170,6 +180,7 @@ public class WSDLImportWizardManager {
      */
     public void setViewModelLocation( IContainer viewModelLocation ) {
         this.viewModelLocation = viewModelLocation;
+        setChanged(true);
     }
 
     /**
@@ -188,6 +199,7 @@ public class WSDLImportWizardManager {
      */
     public void setViewModelName( String targetModelName ) {
         this.viewModelName = targetModelName;
+        setChanged(true);
     }
 
     /**
@@ -198,6 +210,7 @@ public class WSDLImportWizardManager {
     public void setSelectedOperations( List<Operation> operations ) {
         this.selectedOperations = operations;
         synchronizeProcedureGenerators();
+        setChanged(true);
     }
 
     /**
@@ -225,6 +238,7 @@ public class WSDLImportWizardManager {
      */
     public void setUriSource( int uriSource ) {
         this.uriSource = uriSource;
+        setChanged(true);
     }
 
 	/**ModelGeneratorWsdlUiUtil.modelExists(modelFileContainerPath.toOSString(), this.viewModelFileText.getText())
@@ -239,10 +253,15 @@ public class WSDLImportWizardManager {
 	 */
 	public void setConnectionProfile(IConnectionProfile connectionProfile) {
 		this.connectionProfile = connectionProfile;
+		setChanged(true);
 	}
 	
 	public ProcedureGenerator getProcedureGenerator(Operation operation) {
 		return this.procedureGenerators.get(operation);
+	}
+	
+	public Collection<ProcedureGenerator> getProcedureGenerators() {
+		return this.procedureGenerators.values();
 	}
 
 	private void synchronizeProcedureGenerators() {
@@ -296,6 +315,7 @@ public class WSDLImportWizardManager {
 	 */
 	public void setSourceModelName(String sourceModelName) {
 		this.sourceModelName = sourceModelName;
+		setChanged(true);
 	}
 	
 	/**
@@ -312,12 +332,10 @@ public class WSDLImportWizardManager {
 	 */
 	public void setSourceModelLocation(IContainer location) {
 		this.sourceModelLocation = location;
+		setChanged(true);
 	}
 	
 	public void setViewModelExists(boolean viewModelExists) {
-//		if( this.viewModelExists == viewModelExists) {
-//			return;
-//		}
 		
 		this.viewModelExists = viewModelExists;
 		// Need to update the request and response procedure names if view model exists
@@ -356,6 +374,7 @@ public class WSDLImportWizardManager {
 				
 			}
 		}
+		setChanged(true);
 	}
 	
 	public boolean viewModelExists() {
@@ -364,6 +383,7 @@ public class WSDLImportWizardManager {
 	
 	public void setSourceModelExists(boolean sourceModelExists) {
 		this.sourceModelExists = sourceModelExists;
+		setChanged(true);
 	}
 	
 	public boolean sourceModelExists() {
@@ -376,6 +396,7 @@ public class WSDLImportWizardManager {
 
 	public void setGenerateDefaultProcedures(boolean generateDefaultProcedures) {
 		this.generateDefaultProcedures = generateDefaultProcedures;
+		setChanged(true);
 	}
 
 	/**
@@ -390,6 +411,7 @@ public class WSDLImportWizardManager {
 	 */
 	public void setTranslatorDefaultBinding(String translatorDefaultBinding) {
 		this.translatorDefaultBinding = translatorDefaultBinding;
+		setChanged(true);
 	}
 
 	/**
@@ -408,6 +430,7 @@ public class WSDLImportWizardManager {
 	 */
 	public void setTranslatorDefaultServiceMode(String translatorDefaultServiceMode) {
 		this.translatorDefaultServiceMode = translatorDefaultServiceMode;
+		setChanged(true);
 	}
 
     public void setDesignerProperties(Properties props) {
@@ -424,22 +447,49 @@ public class WSDLImportWizardManager {
     	}
     }
     
-    public IStatus validate() {
-    	IStatus returnStatus = Status.OK_STATUS;
-    	
-    	if( this.procedureGenerators.isEmpty() ) {
-			return new Status(IStatus.WARNING, ProcedureGenerator.PLUGIN_ID, Messages.Error_NoOperationsSelected);
+    public void validate() {
+    	if( isChanged() ) {
+    		this.validator.validate();
+    	}
+    	setChanged(false);
+    }
+    
+	public void setChanged(boolean value) {
+		this.changed = value;
+	}
+    
+    private boolean isChanged() {
+    	if( changed ) {
+    		return true;
     	}
     	
 		for(ProcedureGenerator generator : this.procedureGenerators.values() ) {
-			IStatus status = generator.validate();
-			if( status.getSeverity() > IStatus.WARNING ) {
-				return status;
-			} else if( status.getSeverity() == IStatus.WARNING && returnStatus.getSeverity() == IStatus.OK) {
-				returnStatus = status;
+			if( generator.isChanged() ) {
+				return true;
 			}
 		}
-		return returnStatus;
+		
+		return false;
     }
     
+    public ImportManagerValidator getValidator() {
+    	return this.validator;
+    }
+    
+    public void notifyChanged() {
+    	validate();
+    	for( IChangeListener listener: this.listeners ) {
+    		listener.stateChanged(this);
+    	}
+    }
+    
+    @Override
+    public void addChangeListener(IChangeListener listener) {
+    	this.listeners.add(listener);
+    }
+    
+    @Override
+    public void removeChangeListener(IChangeListener listener) {
+    	this.listeners.remove(listener);
+    }
 }

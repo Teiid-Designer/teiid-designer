@@ -11,6 +11,7 @@ import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -149,6 +150,16 @@ public final class WizardUtil implements InternalUiConstants.Widgets,
         if (control != null) {
             control.setFocus();
         }
+    }
+    
+    public static int getMessageSeverity(int statusSeverity) {
+    	switch( statusSeverity ) {
+    		case IStatus.ERROR : return IMessageProvider.ERROR;
+    		case IStatus.WARNING : return IMessageProvider.WARNING;
+    		case IStatus.INFO : return IMessageProvider.INFORMATION;
+    	}
+    	
+    	return IStatus.OK;
     }
 
     /**<p>

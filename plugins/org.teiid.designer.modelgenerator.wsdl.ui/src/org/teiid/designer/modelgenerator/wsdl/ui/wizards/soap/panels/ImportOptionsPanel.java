@@ -8,12 +8,12 @@
 package org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.panels;
 
 import java.util.Properties;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
@@ -31,7 +31,9 @@ import org.eclipse.swt.widgets.Text;
 import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
 import org.teiid.designer.datatools.connection.IConnectionInfoHelper;
 import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
-import com.metamatrix.core.util.CoreStringUtil;
+
+import com.metamatrix.core.event.IChangeListener;
+import com.metamatrix.core.event.IChangeNotifier;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.internal.ui.viewsupport.MetamodelSelectionUtilities;
@@ -46,7 +48,7 @@ import com.metamatrix.modeler.ui.viewsupport.ModelingResourceFilter;
 import com.metamatrix.ui.internal.util.WidgetFactory;
 import com.metamatrix.ui.internal.util.WidgetUtil;
 
-public class ImportOptionsPanel implements ModelGeneratorWsdlUiConstants {
+public class ImportOptionsPanel implements IChangeListener, ModelGeneratorWsdlUiConstants {
 	// Source Model Definition
 	private Text sourceModelFileText;
 	private Text sourceModelContainerText;
@@ -61,11 +63,12 @@ public class ImportOptionsPanel implements ModelGeneratorWsdlUiConstants {
 	
 	final WSDLImportWizardManager importManager;
 	
-	IStatus currentStatus;
+	boolean refreshing = false;
 
 	public ImportOptionsPanel(Composite parent, WSDLImportWizardManager importManager) {
 		super();
 		this.importManager = importManager;
+		this.importManager.addChangeListener(this);
 		init(parent);
 	}
 
@@ -230,24 +233,11 @@ public class ImportOptionsPanel implements ModelGeneratorWsdlUiConstants {
 
 	public void setVisible() {
 		// Set field values from import manager\
+		refreshing = true;
 
-		IContainer sourceLocation = this.importManager.getSourceModelLocation();
-		if( sourceLocation != null ) {
-			this.sourceModelContainerText.setText(sourceLocation.getFullPath().makeRelative().toString());
-		}
-		if( this.importManager.getSourceModelName() != null ) {
-			this.sourceModelFileText.setText(this.importManager.getSourceModelName());
-		}
+		refreshUiFromManager();
 		
-		IContainer viewLocation = this.importManager.getViewModelLocation();
-		if( viewLocation != null ) {
-			this.viewModelContainerText.setText(viewLocation.getFullPath().makeRelative().toString());
-		}
-		if( this.importManager.getViewModelName() != null ) {
-			this.viewModelFileText.setText(this.importManager.getViewModelName());
-		}
-		
-		validate();
+		refreshing = false;
 	}
 
 	/**
@@ -264,7 +254,7 @@ public class ImportOptionsPanel implements ModelGeneratorWsdlUiConstants {
 			this.sourceModelContainerText.setText(folder.getFullPath().makeRelative().toString());
 		}
 
-		validate();
+		notifyChanged();
 	}
 	
 	void handleViewModelLocationBrowse() {
@@ -277,7 +267,7 @@ public class ImportOptionsPanel implements ModelGeneratorWsdlUiConstants {
 			this.viewModelContainerText.setText(folder.getFullPath().makeRelative().toString());
 		}
 
-		validate();
+		notifyChanged();
 	}
 
 	void handleSourceModelBrowse() {
@@ -293,7 +283,7 @@ public class ImportOptionsPanel implements ModelGeneratorWsdlUiConstants {
 			this.sourceModelFileText.setText(modelName);
 		}
 
-		validate();
+		notifyChanged();
 	}
 
 	void handleViewModelBrowse() {
@@ -309,11 +299,12 @@ public class ImportOptionsPanel implements ModelGeneratorWsdlUiConstants {
 			this.viewModelFileText.setText(modelName);
 		}
 
-		validate();
+		notifyChanged();
 	}
 
 	void handleViewModelTextChanged() {
-
+		if( refreshing ) return;
+		
 		String newName = ""; //$NON-NLS-1$
 		if (this.viewModelFileText.getText() != null) {
 			if (this.viewModelFileText.getText().length() == 0) {
@@ -327,11 +318,12 @@ public class ImportOptionsPanel implements ModelGeneratorWsdlUiConstants {
 
 		}
 
-		validate();
+		notifyChanged();
 	}
 
 	void handleSourceModelTextChanged() {
-
+		if( refreshing ) return;
+		
 		String newName = ""; //$NON-NLS-1$
 		if (this.sourceModelFileText.getText() != null) {
 			if (this.sourceModelFileText.getText().length() == 0) {
@@ -345,7 +337,7 @@ public class ImportOptionsPanel implements ModelGeneratorWsdlUiConstants {
 
 		}
 
-		validate();
+		notifyChanged();
 	}
 
 	private boolean viewModelExists() {
@@ -366,72 +358,35 @@ public class ImportOptionsPanel implements ModelGeneratorWsdlUiConstants {
 			this.sourceModelFileText.getText());
 	}
 
-	public void validate() {
-		// Check Source Model info
-		// 1) Location is NOT NULL
-		// 2) Model Name 
-		//     - NOT NULL
-		//     - VALID NAME
-		if (CoreStringUtil.isEmpty(this.sourceModelContainerText.getText()) ) {
-			setCurrentStatus(IStatus.ERROR, Messages.Status_SourceModelLocationUndefined);
-			return;
+	public void refreshUiFromManager() {
+		this.refreshing = true;
+		IContainer sourceLocation = this.importManager.getSourceModelLocation();
+		if( sourceLocation != null ) {
+			this.sourceModelContainerText.setText(sourceLocation.getFullPath().makeRelative().toString());
+		}
+		if( this.importManager.getSourceModelName() != null ) {
+			this.sourceModelFileText.setText(this.importManager.getSourceModelName());
 		}
 		
-		if (CoreStringUtil.isEmpty(this.sourceModelFileText.getText()) ) {
-			setCurrentStatus(IStatus.ERROR, Messages.Status_SourceModelNameUndefined);
-			return;
+		IContainer viewLocation = this.importManager.getViewModelLocation();
+		if( viewLocation != null ) {
+			this.viewModelContainerText.setText(viewLocation.getFullPath().makeRelative().toString());
+		}
+		if( this.importManager.getViewModelName() != null ) {
+			this.viewModelFileText.setText(this.importManager.getViewModelName());
 		}
 		
-		String fileNameMessage = ModelUtilities.validateModelName(this.sourceModelFileText.getText(), ".xmi"); //$NON-NLS-1$
-		if (fileNameMessage != null) {
-			setCurrentStatus(IStatus.ERROR, fileNameMessage);
-			return;
-		}
-		
-		// source model info is complete so go ahead and set message for user
+//		// source model info is complete so go ahead and set message for user
 		setSourceModelHelpMessage();
-		
-		// Check View Model info
-		// 1) Location is NOT NULL
-		// 2) Model Name 
-		//     - NOT NULL
-		//     - VALID NAME
-		
-		if (CoreStringUtil.isEmpty(this.sourceModelContainerText.getText()) ) {
-			setCurrentStatus(IStatus.ERROR, Messages.Status_ViewModelLocationUndefined);
-			return;
-		}
-		
-		if (CoreStringUtil.isEmpty(this.sourceModelFileText.getText()) ) {
-			setCurrentStatus(IStatus.ERROR, Messages.Status_ViewModelNameUndefined);
-			return;
-		}
-		
-		fileNameMessage = ModelUtilities.validateModelName(this.sourceModelFileText.getText(), ".xmi"); //$NON-NLS-1$
-		if (fileNameMessage != null) {
-			setCurrentStatus(IStatus.ERROR, fileNameMessage);
-			return;
-		}
 		
 		// source model info is complete so go ahead and set message for user
 		setViewModelHelpMessage();
-		if( this.importManager.doGenerateDefaultProcedures() ) {
-			setCurrentStatus(IStatus.OK, Messages.Status_AllOkClickFinishToGenerateProcedures);
-		} else {
-			setCurrentStatus(IStatus.OK, Messages.Status_AllOkClickNextToDefineProcedures);
-		}
 		
 		updateDesignerProperties();
+		
+		this.refreshing = false;
 	}
-	
-	public void setCurrentStatus(int severity, String message) {
-		this.currentStatus =  new Status(severity, PLUGIN_ID, message);
-	}
-	
-	public IStatus getCurrentStatus() {
-		return this.currentStatus;
-	}
-	
+
 	private void setSourceModelHelpMessage() {
 		String message = NLS.bind(Messages.Status_SourceModelDoesNotExistAndWillBeCreated, this.sourceModelFileText.getText());
 		if (sourceModelExists()) {
@@ -511,20 +466,30 @@ public class ImportOptionsPanel implements ModelGeneratorWsdlUiConstants {
 	}
 	
     private void updateDesignerProperties() {
-    	if( this.currentStatus.isOK() ) {
-            Properties designerProperties = this.importManager.getDesignerProperties();
-            if (designerProperties != null) {
-                if (this.sourceModelFileText.getText() != null) {
-                    DesignerPropertiesUtil.setSourceModelName(designerProperties, this.sourceModelFileText.getText());
-                }
-                if (this.importManager.getSourceModelLocation() != null) {
-                    DesignerPropertiesUtil.setProjectName(designerProperties,
-                                                          this.importManager.getSourceModelLocation().getProject().getName());
-                }
-                if (this.viewModelFileText.getText() != null) {
-                    DesignerPropertiesUtil.setViewModelName(designerProperties, this.viewModelFileText.getText());
-                }
+        Properties designerProperties = this.importManager.getDesignerProperties();
+        if (designerProperties != null) {
+            if (this.sourceModelFileText.getText() != null) {
+                DesignerPropertiesUtil.setSourceModelName(designerProperties, this.sourceModelFileText.getText());
             }
-    	}
+            if (this.importManager.getSourceModelLocation() != null) {
+                DesignerPropertiesUtil.setProjectName(designerProperties,
+                                                      this.importManager.getSourceModelLocation().getProject().getName());
+            }
+            if (this.viewModelFileText.getText() != null) {
+                DesignerPropertiesUtil.setViewModelName(designerProperties, this.viewModelFileText.getText());
+            }
+        }
     }
+    
+	/* (non-Javadoc)
+	 * @see com.metamatrix.core.event.IChangeListener#stateChanged(com.metamatrix.core.event.IChangeNotifier)
+	 */
+	@Override
+	public void stateChanged(IChangeNotifier theSource) {
+		refreshUiFromManager();
+	}
+    
+	public void notifyChanged() {
+		this.importManager.notifyChanged();
+	}
 }

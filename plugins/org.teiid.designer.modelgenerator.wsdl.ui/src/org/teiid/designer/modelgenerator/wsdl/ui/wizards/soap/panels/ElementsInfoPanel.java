@@ -235,12 +235,15 @@ public class ElementsInfoPanel {
 		this.detailsPage.notifyColumnDataChanged();
 	}
 	
-	
-	public void setEnabled(boolean enable ) {
-		addButton.setEnabled(enable);
+	public void disableButtons() {
 		deleteButton.setEnabled(false);
 		upButton.setEnabled(false);
 		downButton.setEnabled(false);
+	}
+	
+	public void setEnabled(boolean enable ) {
+		addButton.setEnabled(enable);
+		disableButtons();
 		editElementsPanel.setEnabled(enable);
 	}
 

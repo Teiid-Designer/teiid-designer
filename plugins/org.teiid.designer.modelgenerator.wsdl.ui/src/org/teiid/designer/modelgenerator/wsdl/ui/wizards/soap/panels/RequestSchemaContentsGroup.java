@@ -119,6 +119,8 @@ public class RequestSchemaContentsGroup {
 	
 	public void setInput(Object value) {
 		schemaTreeViewer.setInput(value);
+		// Update the columns view buttons
+		elementsInfoPanel.disableButtons();
 	}
 	
 	private ProcedureInfo getRequestInfo() {

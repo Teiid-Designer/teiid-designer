@@ -10,6 +10,7 @@ package org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap;
 import java.util.Properties;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.osgi.util.NLS;
 import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
@@ -75,9 +76,14 @@ public class ProcedureGenerator implements SqlConstants {
 	
 	private boolean wrapperExists = false;
 	
+	private boolean changed;
+	
+	private boolean initializing;
+	
 
 	public ProcedureGenerator(Operation operation, WSDLImportWizardManager importManager) {
 		super();
+		this.initializing = true;
 		this.operation = operation;
 		this.requestInfo = new RequestInfo(operation, this);
 		this.responseInfo = new ResponseInfo(operation, this);
@@ -87,6 +93,7 @@ public class ProcedureGenerator implements SqlConstants {
 		this.namespaceURI = operation.getBinding().getPort().getNamespaceURI();
 		this.bindingType = operation.getBinding().getPort().getBindingType();
 		this.soapAction = operation.getSOAPAction();
+		this.initializing = false;
 	}
 
 	public WSDLImportWizardManager getImportManager() {
@@ -127,6 +134,7 @@ public class ProcedureGenerator implements SqlConstants {
 
 	public void setGenerateWrapperProcedure(boolean value) {
 		this.generateWrapperProcedure = value;
+		setChanged(true);
 	}
 	
 	public boolean doGenerateWrapperProcedure() {
@@ -135,6 +143,7 @@ public class ProcedureGenerator implements SqlConstants {
 	
 	public void setWrapperProcedureName(String name ) {
 		this.wrapperProcedureName = name;
+		setChanged(true);
 	}
 	
 	public String getDefaultWrapperProcedureName() {
@@ -177,6 +186,7 @@ public class ProcedureGenerator implements SqlConstants {
 				getViewModelName(), validWrapperName,false, false);
 		}
 		setWrapperProcedureName(validWrapperName);
+		setChanged(true);
 	}
 	
 	public boolean doOverwriteExistingProcedures() {
@@ -189,6 +199,29 @@ public class ProcedureGenerator implements SqlConstants {
 	
 	public String getNamespaceURI() {
 		return this.namespaceURI;
+	}
+	
+	public void setChanged(boolean value) {
+		this.changed = value;
+		if( this.changed && !this.initializing) {
+			this.importManager.setChanged(true);
+		}
+	}
+	
+	public boolean isChanged() {
+	    if( this.changed ) {
+	    	return true;
+	    }
+	    
+	    if( requestInfo.isChanged() ) {
+	    	return true;
+	    }
+	    
+	    if( responseInfo.isChanged() ) {
+	    	return true;
+	    }
+	    
+	    return false;
 	}
 	
 	public String getWrapperSqlString() {
@@ -319,7 +352,8 @@ public class ProcedureGenerator implements SqlConstants {
 	}
 	
 	public IStatus validate() {
-		IStatus status = Status.OK_STATUS;
+		MultiStatus status = new MultiStatus(PLUGIN_ID, 0, null, null);
+
 		
 		// Check for existing wrapper procedure
 		if( this.importManager.viewModelExists() ) {
@@ -333,23 +367,28 @@ public class ProcedureGenerator implements SqlConstants {
 		
 		// Go through objects and look for problems
 		if( getWrapperProcedureName() == null) {	
-			return new Status(IStatus.ERROR, PLUGIN_ID, Messages.Error_WrapperProcedureNameCannotBeNullOrEmpty);
+			status.add( 
+				new Status(IStatus.ERROR, PLUGIN_ID, 
+					NLS.bind(Messages.Error_Operation_0_WrapperProcedureNameCannotBeNullOrEmpty, 
+						getOperation().getName())));
 		}
 		
 		IStatus nameStatus = getNameStatus(getWrapperProcedureName());
 		if( nameStatus.getSeverity() > IStatus.INFO) {
-			return nameStatus;
+			status.merge(nameStatus);
 		}
 		
 		IStatus requestStatus = getRequestInfo().validate();
 		if( requestStatus.getSeverity() > IStatus.INFO ) {
-			return requestStatus;
+			status.merge( requestStatus);
 		}
 
 		IStatus responseStatus = getResponseInfo().validate();
 		if( responseStatus.getSeverity() > IStatus.INFO ) {
-			return responseStatus;
+			status.merge( responseStatus);
 		}
+		
+		setChanged(false);
 		
 		return status;
 	}

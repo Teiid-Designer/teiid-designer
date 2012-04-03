@@ -50,6 +50,9 @@ import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.panels.ElementsInf
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.panels.RequestSchemaContentsGroup;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.panels.ResponseSchemaContentsGroup;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.panels.WrapperProcedurePanel;
+
+import com.metamatrix.core.event.IChangeListener;
+import com.metamatrix.core.event.IChangeNotifier;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Operation;
 import com.metamatrix.modeler.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstants;
@@ -63,7 +66,7 @@ import com.metamatrix.ui.internal.util.WizardUtil;
 import com.metamatrix.ui.internal.wizard.AbstractWizardPage;
 
 public class OperationsDetailsPage extends AbstractWizardPage implements
-		ModelGeneratorWsdlUiConstants {
+	IChangeListener, ModelGeneratorWsdlUiConstants {
 
 	/** <code>IDialogSetting</code>s key for saved dialog height. */
 	private static final String DIALOG_HEIGHT = "dialogHeight"; //$NON-NLS-1$
@@ -148,6 +151,7 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 		schemaLabelProvider = new AdapterFactoryLabelProvider(semanticAdapterFactory);
 		schemaContentProvider = new SchemaTreeContentProvider(semanticAdapterFactory);
 		schemaHandler = new ImportWsdlSchemaHandler(theImportManager, this);
+		this.importManager.addChangeListener(this);
 	}
 
 	public ProcedureGenerator getProcedureGenerator() {
@@ -174,7 +178,7 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 
 		updateSqlText(BOTH);
 		updateSchemaTree(BOTH);
-
+		
 		updateStatus();
 	}
 
@@ -190,7 +194,8 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 	}
 
 	public void updateStatus() {
-		setPageStatus();
+		this.importManager.notifyChanged();
+//		setPageStatus();
 	}
 
 	public WSDLImportWizardManager getImportManager() {
@@ -655,22 +660,27 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 	 */
 	void setPageStatus() {
 		
-		IStatus generatorStatus = procedureGenerator.validate();
+		IStatus generatorStatus = this.importManager.getValidator().getProcedureStatus(this.procedureGenerator);
+		if( generatorStatus == null ) {
+			return;
+		}
 		if (generatorStatus.isOK() || generatorStatus.getSeverity() < IStatus.ERROR) {
 			this.setErrorMessage(null);
 			WizardUtil.setPageComplete(this);
 			// NOW CHECK THE REMAINING OPERATIONS
-			IStatus importManagerStatus = this.importManager.validate();
-			if( importManagerStatus.getSeverity() > IStatus.WARNING ) {
-				WizardUtil.setPageComplete(this, importManagerStatus.getMessage(),importManagerStatus.getSeverity());
-				this.setErrorMessage(importManagerStatus.getMessage());
+			IStatus operationsStatus = this.importManager.getValidator().getOperationsStatus();
+			String finalMessage = this.importManager.getValidator().getPrimaryMessage(operationsStatus);
+			if( operationsStatus.getSeverity() > IStatus.WARNING ) {
+				WizardUtil.setPageComplete(this, finalMessage, WizardUtil.getMessageSeverity(operationsStatus.getSeverity()));
+				this.setErrorMessage(finalMessage);
 				this.setPageComplete(false);
-			} else if( importManagerStatus.getSeverity() == IStatus.WARNING ) {
-				this.setMessage(importManagerStatus.getMessage(), IStatus.WARNING);
+			} else if( operationsStatus.getSeverity() == IStatus.WARNING ) {
+				this.setMessage(finalMessage, WizardUtil.getMessageSeverity(IStatus.WARNING));
 			}
 		} else {
-			WizardUtil.setPageComplete(this, generatorStatus.getMessage(),generatorStatus.getSeverity());
-			this.setErrorMessage(generatorStatus.getMessage());
+			String finalMessage = this.importManager.getValidator().getPrimaryMessage(generatorStatus);
+			WizardUtil.setPageComplete(this, finalMessage, WizardUtil.getMessageSeverity(generatorStatus.getSeverity()));
+			this.setErrorMessage(finalMessage);
 			this.setPageComplete(false);
 		}
 
@@ -679,36 +689,44 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 
 	@Override
 	public void setVisible(boolean isVisible) {
+		super.setVisible(isVisible);
 		if (isVisible) {
 			WidgetUtil.setComboItems(operationsCombo, getOperationsNameList(),
 					null, true);
 
 			selectComboItem(0);
-
-			setPageStatus();
-		}
-		super.setVisible(isVisible);
-		this.wrapperPanel.setVisible();
-		this.overwriteExistingCB.setEnabled(this.importManager.viewModelExists());
 		
-		boolean includeHeader = this.importManager.isMessageServiceMode();
-		if( includeHeader ) {
-			this.requestHeaderStackLayout.topControl = requestHeaderSplitter;
-			this.responseHeaderStackLayout.topControl = responseHeaderSplitter;
-		} else {
-			this.requestHeaderStackLayout.topControl = disabledRequestHeaderPanel;
-			this.responseHeaderStackLayout.topControl = disabledResponseHeaderPanel;
+    		this.wrapperPanel.setVisible();
+    		this.overwriteExistingCB.setEnabled(this.importManager.viewModelExists());
+    		
+    		boolean includeHeader = this.importManager.isMessageServiceMode();
+    		if( includeHeader ) {
+    			this.requestHeaderStackLayout.topControl = requestHeaderSplitter;
+    			this.responseHeaderStackLayout.topControl = responseHeaderSplitter;
+    		} else {
+    			this.requestHeaderStackLayout.topControl = disabledRequestHeaderPanel;
+    			this.responseHeaderStackLayout.topControl = disabledResponseHeaderPanel;
+    		}
+    		this.requestHeaderStackPanel.layout();
+    		this.responseHeaderStackPanel.layout();
+    		this.requestHeaderTab.getControl().setEnabled(includeHeader);
+    		this.responseHeaderTab.getControl().setEnabled(includeHeader);
 		}
-		this.requestHeaderStackPanel.layout();
-		this.responseHeaderStackPanel.layout();
-		this.requestHeaderTab.getControl().setEnabled(includeHeader);
-		this.responseHeaderTab.getControl().setEnabled(includeHeader);
-		
+		setPageStatus();
 	}
     
     public void updateDesignerProperties() {
 
     }
+    
+    
+	/* (non-Javadoc)
+	 * @see com.metamatrix.core.event.IChangeListener#stateChanged(com.metamatrix.core.event.IChangeNotifier)
+	 */
+	@Override
+	public void stateChanged(IChangeNotifier theSource) {
+		setPageStatus();
+	}
 
 	Object[] getNodeChildren(Object element) {
 		return new Object[0];

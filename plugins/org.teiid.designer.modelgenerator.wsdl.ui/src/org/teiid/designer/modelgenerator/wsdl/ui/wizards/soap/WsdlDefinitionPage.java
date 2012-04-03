@@ -11,6 +11,7 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Properties;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -50,6 +51,9 @@ import org.teiid.designer.datatools.ui.dialogs.ConnectionProfileWorker;
 import org.teiid.designer.datatools.ui.dialogs.IProfileChangedListener;
 import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.panels.WsdlOperationsPanel;
+
+import com.metamatrix.core.event.IChangeListener;
+import com.metamatrix.core.event.IChangeNotifier;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstants;
 import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.util.ModelGeneratorWsdlUiUtil;
@@ -59,7 +63,8 @@ import com.metamatrix.ui.internal.util.WidgetFactory;
 import com.metamatrix.ui.internal.util.WidgetUtil;
 import com.metamatrix.ui.internal.util.WizardUtil;
 
-public class WsdlDefinitionPage extends WizardPage implements Listener, IProfileChangedListener, FileUtils.Constants,
+public class WsdlDefinitionPage extends WizardPage 
+	implements IChangeListener, Listener, IProfileChangedListener, FileUtils.Constants,
 	ModelGeneratorWsdlUiConstants, ModelGeneratorWsdlUiConstants.Images, ModelGeneratorWsdlUiConstants.HelpContexts {
 
 	/** <code>IDialogSetting</code>s key for saved dialog height. */
@@ -83,10 +88,6 @@ public class WsdlDefinitionPage extends WizardPage implements Listener, IProfile
 
 	/** Source and target text fields */
 	CLabel wsdlURIText;
-//	Text textFieldTargetModelLocation;
-//
-//	Button buttonSelectTargetModelLocation;
-//	Button buttonDoGenerateDefaultProcedures;
 
 	private Button newCPButton;
 	private Button editCPButton;
@@ -96,7 +97,6 @@ public class WsdlDefinitionPage extends WizardPage implements Listener, IProfile
 
 	private MultiStatus wsdlStatus;
 
-//	private IContainer targetModelLocation;
 	private boolean initializing = false;
 
 	private Combo connectionProfilesCombo;
@@ -121,6 +121,7 @@ public class WsdlDefinitionPage extends WizardPage implements Listener, IProfile
 		this.importManager = theImportManager;
 		this.wizard = wizard;
 		setImageDescriptor(ModelGeneratorWsdlUiUtil.getImageDescriptor(NEW_MODEL_BANNER));
+		this.importManager.addChangeListener(this);
 	}
 
 	/**
@@ -302,23 +303,20 @@ public class WsdlDefinitionPage extends WizardPage implements Listener, IProfile
 				profileWorker.setSelection(profile);
 				importManager.setConnectionProfile(profile);
 				if (profileChanged) {
+					Properties props = profile.getBaseProperties();
+					importManager.setWSDLFileUri(props.getProperty(WSDL_URI_PROP_KEY));
 					this.wsdlStatus = null;
 				}
-				refreshUiFromManager();
 				
 				this.operationsPanel.notifyWsdlChanged();
 			}
 		}
 		
-		setPageStatus();
+		notifyChanged();
 	}
 	
 	private void createWsdlOperationsPanel(Composite theParent) {
 		this.operationsPanel = new WsdlOperationsPanel(theParent, this, this.importManager);
-	}
-	
-	public void handleOperationsChanged() {
-		setPageStatus();
 	}
 	
 	/**
@@ -380,7 +378,7 @@ public class WsdlDefinitionPage extends WizardPage implements Listener, IProfile
 		}
 		
 		updateValidateWSDLButtonEnablement();
-		setPageStatus();
+		notifyChanged();
 	}
 
 	void validateWSDL(IProgressMonitor monitor) {
@@ -448,7 +446,7 @@ public class WsdlDefinitionPage extends WizardPage implements Listener, IProfile
 			}
 
 			String profileName = connectionProfilesCombo.getText();
-			IConnectionProfile profile = profileWorker.getConnectionProfile();
+			IConnectionProfile profile = profileWorker.getProfile(profileName);
 			if (null == profile) {
 				// this should really never happen
 				setMessage(null);
@@ -458,7 +456,7 @@ public class WsdlDefinitionPage extends WizardPage implements Listener, IProfile
 			}
 			Properties props = profile.getBaseProperties();
 			wsdlURIText.setText(props.getProperty(WSDL_URI_PROP_KEY));
-			importManager.setWSDLFileUri(props.getProperty(WSDL_URI_PROP_KEY));
+			//importManager.setWSDLFileUri(props.getProperty(WSDL_URI_PROP_KEY));
 			updateWidgetEnablements();
 			
 		}
@@ -473,7 +471,7 @@ public class WsdlDefinitionPage extends WizardPage implements Listener, IProfile
 		
 		importManager.setConnectionProfile(profile);
 
-		setPageStatus();
+		notifyChanged();
 	}
 
 	/**
@@ -617,7 +615,7 @@ public class WsdlDefinitionPage extends WizardPage implements Listener, IProfile
 			}
 		}
 
-		refreshUiFromManager();
+		//refreshUiFromManager();
 		if( profileChanged ) {
 			this.operationsPanel.notifyWsdlChanged();
 		}
@@ -642,14 +640,30 @@ public class WsdlDefinitionPage extends WizardPage implements Listener, IProfile
     					profileChanged = true;
     				}
 				}
-				if( profileChanged ) {
-					handleConnectionProfileSelected();
-				}
+
 			} 
 
 			refreshUiFromManager();
 			
+			if( profileChanged ) {
+				handleConnectionProfileSelected();
+			}
+			
 			setPageStatus();
 		}
+	}
+
+	/* (non-Javadoc)
+	 * @see com.metamatrix.core.event.IChangeListener#stateChanged(com.metamatrix.core.event.IChangeNotifier)
+	 */
+	@Override
+	public void stateChanged(IChangeNotifier theSource) {
+		//refreshUiFromManager();
+		setPageStatus();
+	}
+	
+	public void notifyChanged() {
+	    refreshUiFromManager();
+		this.importManager.notifyChanged();
 	}
 }

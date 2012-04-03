@@ -10,6 +10,7 @@ package org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap;
 import java.util.Properties;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.osgi.util.NLS;
 import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
@@ -35,23 +36,25 @@ public class ResponseInfo extends ProcedureInfo {
 
 	@Override
 	public IStatus validate() {
-		IStatus status = Status.OK_STATUS;
+		MultiStatus status = new MultiStatus(ProcedureGenerator.PLUGIN_ID, 0, null, null);
+		
 		// Go through objects and look for problems
 		if (getProcedureName() == null) {
-			return new Status(IStatus.ERROR, ProcedureGenerator.PLUGIN_ID,
-					Messages.Error_ResponseProcedureNameCannotBeNullOrEmpty);
+			status.add(new Status(IStatus.ERROR, ProcedureGenerator.PLUGIN_ID,
+				NLS.bind(Messages.Error_Operation_0_ResponseProcedureNameCannotBeNullOrEmpty,
+					getOperation().getName())));
 		}
 
 		IStatus nameStatus = getGenerator().getNameStatus(getProcedureName());
 		if (nameStatus.getSeverity() > IStatus.INFO) {
-			return nameStatus;
+			status.merge(nameStatus);
 		}
 
 		// Look at all element names
 		for (ColumnInfo info : getBodyColumnInfoList()) {
 			IStatus colNameStatus = getGenerator().getNameStatus(info.getName());
 			if (colNameStatus.getSeverity() > IStatus.INFO) {
-				return colNameStatus;
+				status.merge(colNameStatus);
 			}
 		}
 		
@@ -59,13 +62,14 @@ public class ResponseInfo extends ProcedureInfo {
 		for (ColumnInfo info : getHeaderColumnInfoList()) {
 			IStatus colNameStatus = getGenerator().getNameStatus(info.getName());
 			if (colNameStatus.getSeverity() > IStatus.INFO) {
-				return colNameStatus;
+				status.merge(colNameStatus);
 			}
 		}
 		
 		if( getBodyColumnInfoList().length == 0 ) {
-			return new Status(IStatus.ERROR, ProcedureGenerator.PLUGIN_ID,
-				NLS.bind(Messages.Error_NoColumnsDefinedForResponseProcedureForOperation_0, getOperation().getName()));
+			status.add(new Status(IStatus.ERROR, ProcedureGenerator.PLUGIN_ID,
+				NLS.bind(Messages.Error_NoColumnsDefinedForResponseProcedureForOperation_0, 
+					getOperation().getName())));
 		}
 
 		// Look at all element xpaths
@@ -75,7 +79,8 @@ public class ResponseInfo extends ProcedureInfo {
 		// return colNameStatus;
 		// }
 		// }
-
+		
+		setChanged(false);
 		return status;
 	}
 
