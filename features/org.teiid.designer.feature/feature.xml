@@ -8,7 +8,7 @@
 -->
 <feature
       id="org.teiid.designer.feature"
-      label="%featureName"
+      label="Teiid Designer"
       version="7.7.0.qualifier"
       provider-name="%providerName"
       plugin="org.teiid.designer"

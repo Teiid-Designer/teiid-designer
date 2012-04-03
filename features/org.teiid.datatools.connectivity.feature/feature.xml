@@ -14,7 +14,7 @@
   -->
 <feature
       id="org.teiid.datatools.connectivity.feature"
-      label="%featureName"
+      label="Teiid DataTools Connectivity"
       version="7.7.0.qualifier"
       provider-name="%providerName">
 
