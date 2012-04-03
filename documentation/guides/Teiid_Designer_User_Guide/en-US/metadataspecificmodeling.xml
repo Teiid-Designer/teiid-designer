@@ -79,8 +79,8 @@
 		<section id="source-table-wizard-section">
 			<title>Create Relational Table Wizard</title>
 			<para>In Teiid Designer 7.6 a new action, <emphasis role="bold">New Child > Base Table...</emphasis>, was added to aid in creating tables, complete
-                with all of it's child entities.  This action is in addition to the original <emphasis role="bold">New Child > Base Table</emphasis>,
-                which only creates the empty table (and requires numerous separate steps to add it's children)
+                with all of it's child entities.  This action replaces the original <emphasis role="bold">New Child > Base Table</emphasis>,
+                which only created the empty table.
             </para>
 			
 			<figure>
@@ -93,9 +93,8 @@
 			</figure>
 			<para>Running the action will display the <emphasis role="bold">Create Relational Table</emphasis> wizard. The
 				wizard page contains 5 tabbed panels representing the various properties and 
-				components that make up the possible definition of a relational table. Enter your database function name, define input
-				 parameters including datatype and length, specify output parameter info, 
-				set options and click <emphasis role="bold">OK</emphasis>.</para>
+				components that make up the possible definition of a relational table. Enter your table name, define columns, keys,
+				constraints and other options, then click <emphasis role="bold">OK</emphasis>.</para>
 			<para>This wizard is designed to provide 
 				feedback as to the completeness of the relational table information as well as the validation state of the 
 				table and it's components.  Note that although errors may be displayed during editing, the wizard is 
@@ -254,6 +253,68 @@
 			</figure>
 			
 		</section>
+
+        <!-- ####### VIEW TABLE WIZARD ######################################## -->
+        <section id="view-table-wizard-section">
+            <title>Create Relational View Table Wizard</title>
+            <para>In Teiid Designer 7.7 a new action, <emphasis role="bold">New Child > Base Table...</emphasis>, was added to aid in 
+                creating relational view tables, complete with its target columns and SQL transformation.  This action replaces the 
+                original <emphasis role="bold">New Child > Base Table</emphasis> action, which only created the empty table.
+            </para>
+            
+            <figure>
+                <title>New View Table Wizard Action</title>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata fileref="images/screencaps/new-viewtable-wizard-action.png"/>
+                    </imageobject>
+                </mediaobject>
+            </figure>
+            <para>Running the action will display the <emphasis role="bold">Create Relational View Table</emphasis> wizard. The
+                wizard page contains 3 tabbed panels representing the various properties and 
+                components that make up the possible definition of a relational view table. Enter your table name, define the desired
+                columns and specify the SQL transformation, then click <emphasis role="bold">OK</emphasis>.</para>
+            <para>This wizard is designed to provide feedback as to the completeness of the relational view table information,
+                as well as the validation state of the table and it's components.  Note that although errors or warnings may be 
+                displayed during editing, the wizard is designed to allow finishing even if the table definition is incomplete.</para>
+            <para>The first tab labeled <emphasis role="bold">Properties</emphasis> contains the input for the simple table properties 
+                including name and supports update. 
+            </para>
+            <figure>
+                <title>Properties Tab</title>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata
+                            fileref="images/screencaps/new-viewtable-wizard-tab-1.png"/>
+                    </imageobject>
+                </mediaobject>
+            </figure>
+            <para>The <emphasis role="bold">Columns</emphasis> tab allows creation and editing of basic relational columns. This includes adding, 
+                deleting or moving columns as well as changing the name, datatype and length properties. 
+            </para>
+            <figure>
+                <title>Columns Tab</title>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata
+                            fileref="images/screencaps/new-viewtable-wizard-tab-2.png"/>
+                    </imageobject>
+                </mediaobject>
+            </figure>
+            <para>The <emphasis role="bold">SQL</emphasis> tab allows editing of the SQL Transformation for the relational view.  The
+                desired SQL can be entered directly into the text area or a SQL Template may be selected by clicking the 
+                <emphasis role="bold">Templates...</emphasis> button.
+            </para>
+            <figure>
+                <title>SQL Tab</title>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata
+                            fileref="images/screencaps/new-viewtable-wizard-tab-3.png"/>
+                    </imageobject>
+                </mediaobject>
+            </figure>
+        </section>
 	</section>
 	
 	<!-- ####### XML Document Modeling Section ######################################## -->

@@ -351,6 +351,21 @@
 					</mediaobject>
 				</figure>
 		</section>
+		
+        <section id="execution-plan-section">
+            <title>Execution Plans</title>
+            <para>When Preview Data is executed, the Teiid Execution Plan is also displayed as shown below.  The Execution Plan
+                may also be obtained by rt-clicking on a previewable object, then selecting 'Modeling > Show Execution Plan'.
+            </para>
+                <figure>
+                    <title>Teiid Execution Plan View</title>
+                    <mediaobject>
+                        <imageobject>
+                            <imagedata fileref="images/screencaps/execution-plan-view-sample.png"/>
+                        </imageobject>
+                    </mediaobject>
+                </figure>
+        </section>
 
 	</section>
 	
@@ -569,6 +584,20 @@
 									</mediaobject>
 								</figure>					
 							</listitem>
+                            <listitem>
+                                <para><emphasis role="bold">Step 9 </emphasis> - The query Execution Plan should also be displayed 
+                                    on the <emphasis role="bold">Teiid Execution Plan</emphasis> view tab.</para>  The Execution Plan
+                                    can also be generated without running the query.  In the SQL scrapbook, rt-click then select
+                                    <emphasis role="bold">Teiid_7.x > Get Execution Plan</emphasis>
+                                <figure>
+                                    <title>Teiid Execution Plan View</title>
+                                    <mediaobject>
+                                        <imageobject>
+                                            <imagedata fileref="images/screencaps/execution-plan-view-sample.png"/>
+                                        </imageobject>
+                                    </mediaobject>
+                                </figure>                   
+                            </listitem>
 						</itemizedlist>
 					</para>
 				</listitem>

@@ -413,7 +413,7 @@
 				The Teiid View provides a means to display and manage Teiid server instances 
 				and their contents within Designer.
 			</para>
-			<para>To show the Teiid View click "<emphasis role="bold">Views > Show View > Other...</emphasis>" 
+			<para>To show the Teiid View click "<emphasis role="bold">Window > Show View > Other...</emphasis>" 
 			to display the Show View dialog. Choose "<emphasis role="bold">Teiid Designer > Teiid</emphasis>" 
 			view and hit <emphasis role="bold">OK</emphasis>.</para>
 			<figure id="teiid-view-image">
@@ -638,7 +638,7 @@
 				<emphasis role="bold">Description View</emphasis>
 				provides a means to display and edit (add, change or remove) a
 				description for any model or model object. To show the Description
-				View click <emphasis role="bold">Views > Show View > Other...</emphasis> to display the
+				View click <emphasis role="bold">Window > Show View > Other...</emphasis> to display the
 				<emphasis role="bold"><xref linkend="show-view-dialog-image" /></emphasis>
 				dialog. Choose <emphasis role="bold">Teiid Designer > Description</emphasis> view and hit
 				<emphasis role="bold">OK</emphasis>
@@ -768,7 +768,7 @@
 			</figure>
 			<para> By default, the <emphasis role="bold">Problems View</emphasis> is included in the Teiid Designer
 				perspective. If the <emphasis role="bold">Problems View</emphasis> is not showing in the current
-				perspective click <emphasis role="bold">Views > Show View > Other > Teiid Designer > Problems</emphasis>.
+				perspective click <emphasis role="bold">Window > Show View > Other > Teiid Designer > Problems</emphasis>.
 			</para>
 			<para> There are 5 columns in the view's table which include:</para>
 			<para>
@@ -997,7 +997,7 @@
 				<emphasis role="bold">Teiid Designer's Datatype Hierarchy
 				</emphasis>
 				view, select the main menu's
-				<emphasis role="bold">Views > Show View > Other...</emphasis>
+				<emphasis role="bold">Window > Show View > Other...</emphasis>
 				and select the
 				<emphasis role="bold">Teiid Designer > Datatypes</emphasis>
 				view in the dialog.
@@ -1040,7 +1040,7 @@
 				<emphasis role="bold">Teiid Designer's System Catalog
 				</emphasis>
 				view, select the main menu's
-				<emphasis role="bold">Views > Show View > Other...</emphasis>
+				<emphasis role="bold">Window > Show View > Other...</emphasis>
 				and select the
 				<emphasis role="bold">Teiid Designer > System Catalog</emphasis>
 				view in the dialog..
@@ -1055,7 +1055,7 @@
 			</figure>
 		</section>
 		
-		    <!-- ####### SQL RESERVED WORDS VIEW  ############################################# -->
+		<!-- ####### SQL RESERVED WORDS VIEW  ############################################# -->
 	    
 		<section id="sql-reserved-words-view">
 			<title>SQL Reserved Words View</title>
@@ -1064,7 +1064,7 @@
 				<emphasis role="bold">Teiid Designer's SQL Reserved Words
 				</emphasis>
 				view, select the main menu's
-				<emphasis role="bold">Views > Show View > Other...</emphasis>
+				<emphasis role="bold">Window > Show View > Other...</emphasis>
 				and select the
 				<emphasis role="bold">Teiid Designer > SQL Reserved Words</emphasis>
 				view in the dialog.
@@ -1097,7 +1097,7 @@
 				To open
 				<emphasis role="bold">Teiid Designer's MED Registry</emphasis>
 				view, select the main menu's
-				<emphasis role="bold">Views > Show View > Other...</emphasis>
+				<emphasis role="bold">Window > Show View > Other...</emphasis>
 				and select the
 				<emphasis role="bold">Teiid Designer > Model Extension Registry</emphasis>
 				view in the dialog.
@@ -1137,6 +1137,141 @@
 				The registry keeps its own copy. And a registered MED can always be copied back to the workspace 
 				by using the appropriate toolbar or context menu action.</para>
 		</section>
+
+        <!-- ####### GUIDES VIEW  ############################################# -->
+        
+        <section id="guides-view">
+            <title>Guides View</title>
+            <para>
+                To open
+                <emphasis role="bold">Teiid Designer's Guides</emphasis>
+                view, select the main menu's
+                <emphasis role="bold">Window > Show View > Other...</emphasis>
+                and select the
+                <emphasis role="bold">Teiid Designer > Guides</emphasis>
+                view in the dialog.
+            </para>
+            <para>The <emphasis role="bold">Guides</emphasis> view provides assistance for many common modeling tasks.  The view includes
+                categorized Modeling Actions and also links to 'Cheat Sheets' for common processes.  'Cheat Sheets' are an eclipse concept
+                for which Teiid Designer has provided contributions (see <xref linkend="cheat-sheets-view"/>).
+                The Guides view is shown below:</para>
+            <figure id="guides-view-figure">
+                <title>Guides View</title>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata fileref="images/screencaps/guides-view.png"/>
+                    </imageobject>
+                </mediaobject>
+            </figure>
+            <para>The upper 'Action Sets' section provides categorized sets of actions.  Select the desired category in the dropdown, then
+                the related actions for the selected category are displayed in the list below it.  Execute an action by clicking the 
+                'Execute selected action' link or double-clicking on the action.
+            </para>
+            <para>The lower 'Cheat Sheets' section provides a list of available 'Cheat Sheet' links, which will launch the appropriate
+                Cheat Sheet to guide you step-by-step through the selected process.
+            </para>
+        </section>
+        
+        <!-- ####### STATUS VIEW  ############################################# -->
+        
+        <section id="status-view">
+            <title>Status View</title>
+            <para>
+                To open
+                <emphasis role="bold">Teiid Designer's Status</emphasis>
+                view, select the main menu's
+                <emphasis role="bold">Window > Show View > Other...</emphasis>
+                and select the
+                <emphasis role="bold">Teiid Designer > Status</emphasis>
+                view in the dialog.
+            </para>
+            <para>The <emphasis role="bold">Status</emphasis> view provides a quick overview status of the selected project. 
+                A sample Status view for a project is shown below:</para>
+            <figure id="status-view-figure">
+                <title>Status View</title>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata fileref="images/screencaps/status-view.png"/>
+                    </imageobject>
+                </mediaobject>
+            </figure>
+            <para>The status view is broken down into common project areas:
+            </para>
+            <itemizedlist>
+                <listitem>
+                    <para>
+                        <emphasis role="bold">Source Connections</emphasis>
+                        - all Source Connections are fully defined.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <emphasis role="bold">Sources</emphasis>
+                        - Source Models exist.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <emphasis role="bold">XML Schema</emphasis>
+                        - XML Schemas exist.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <emphasis role="bold">Views</emphasis>
+                        - View Models exist.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <emphasis role="bold">VDBs</emphasis>
+                        - VDBs exist and are deployable.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <emphasis role="bold">Model Validation (Status)</emphasis>
+                        - all Models pass validation.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <emphasis role="bold">Test</emphasis>
+                        - all defined VDBs pass validation.
+                    </para>
+                </listitem>
+            </itemizedlist>
+            <para>The status of each area is denoted by an icon:  A green check indicates OK, a red 'x' indicates errors 
+                and a 'warning' icon indicates potential problems.  The project can be changed by selecting the 'Change Project' button.
+            </para>
+        </section>
+        
+        <!-- ####### CHEAT SHEETS  ############################################# -->
+        
+        <section id="cheat-sheets-view">
+            <title>Cheat Sheets View</title>
+            <para>
+                To open
+                <emphasis role="bold">Cheat Sheets</emphasis>
+                view, select the main menu's
+                <emphasis role="bold">Window > Show View > Other...</emphasis>
+                and select the
+                <emphasis role="bold">Help > Cheat Sheets</emphasis>
+                view in the dialog.
+            </para>
+            <para>The <emphasis role="bold">Cheat Sheets</emphasis> view is a standard Eclipse Help concept.  Cheat Sheets provide 
+                step-by-step assistance for common process workflows.  Teiid Designer has contributed to the Eclipse help framework to provide
+                assistance for many common modeling tasks.  The Guides View (see <xref linkend="guides-view"/>) provides links to these 
+                Cheat Sheets, as previously described.  A sample Cheat Sheet is shown below:</para>
+            <figure id="cheat-sheet-figure">
+                <title>Cheat Sheet Sample</title>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata fileref="images/screencaps/cheat-sheet-sample.png"/>
+                    </imageobject>
+                </mediaobject>
+            </figure>
+        </section>
 	</section>
 	<section id="teiid-designer-editors-section">
 	  	<title>Editors</title>
