@@ -167,6 +167,7 @@ public class VirtualGroupTutorialTest extends TeiidDesignerTestCase {
 	public void createTransformation(){
 		ModelExplorerView modelView = TeiidPerspective.getInstance().getModelExplorerView();
 		modelView.newBaseTable(PROJECT_NAME, VIRTUAL_MODEL_NAME, VIRTUAL_TABLE_NAME);
+		modelView.openTransformationDiagram(PROJECT_NAME, VIRTUAL_MODEL_NAME, VIRTUAL_TABLE_NAME);
 		modelView.addTransformationSource(PROJECT_NAME, ORACLE_MODEL_NAME, "SUPPLIER");
 		modelView.addTransformationSource(PROJECT_NAME, SQLSERVER_MODEL_NAME, "SUPPLIER_PARTS");
 
