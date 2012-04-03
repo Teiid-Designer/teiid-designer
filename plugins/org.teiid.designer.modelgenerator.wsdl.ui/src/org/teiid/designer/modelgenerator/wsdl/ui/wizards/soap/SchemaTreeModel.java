@@ -65,14 +65,23 @@ public class SchemaTreeModel {
 			}
 		}
 		
+		//We parse paths to get all segments. We need to find the shortest
+		//path up front, since we cannot have a common root greater than
+		//the shortest path.
 		String[][] segments = new String[segmentList.size()][];
+		int shortestPathLength = 0;
 		for(int i = 0; i < segmentList.size(); i++){
 			segments[i] = segmentList.get(i).split("/");  //$NON-NLS-1$
+			if (i==0) shortestPathLength = segments[i].length;
+			if (shortestPathLength>segments[i].length){
+				shortestPathLength = segments[i].length;
+			}
 		}
-		for(int j = 0; j < segments[0].length; j++){
+		
+		for(int j = 0; j < shortestPathLength; j++){
 			String thisSegment = segments[0][j]; 
 			boolean allMatched = true; 
-			for(int i = 1; i < segments.length && allMatched; i++){ 
+			for(int i = 0; i < segments.length && allMatched; i++){ 
 				if(segments[i].length < j){
 					allMatched = false; 
 					break; 
