@@ -314,6 +314,22 @@
                     </imageobject>
                 </mediaobject>
             </figure>
+            <para>If the <emphasis role="bold">Templates...</emphasis> button is selected on the SQL tab, the 
+                <emphasis role="bold">Choose a SQL Template</emphasis> dialog will display, as shown below. 
+            </para>
+            <figure>
+                <title>SQL Templates Dialog</title>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata
+                            fileref="images/screencaps/sql-templates-dialog.png"/>
+                    </imageobject>
+                </mediaobject>
+            </figure>
+            <para>A number of common SQL templates may be chosen using the dialog.  Depending on usage context, the PROCEDURES tab
+                may also be available in addition to the SELECT queries tab.  The SQL Template dialog can also be accessed in the
+                Transformation Editor, from the rt-click context menu.
+            </para>
         </section>
 	</section>
 	
