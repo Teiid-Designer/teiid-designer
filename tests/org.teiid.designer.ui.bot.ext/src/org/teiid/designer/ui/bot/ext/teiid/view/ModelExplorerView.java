@@ -27,13 +27,15 @@ public class ModelExplorerView extends View {
 	
 	public void newBaseTable(String project, String model, String tableName){
 		SWTBot bot = getBot();
+		bot.shells();
 		SWTBotTreeItem model_node =  SWTEclipseExt.selectTreeLocation(bot, project, model);
 
 		ContextMenuHelper.prepareTreeItemForContextMenu(bot.tree(), model_node);
-		ContextMenuHelper.clickContextMenu(bot.tree(), "New Child", "Base Table");
+		ContextMenuHelper.clickContextMenu(bot.tree(), "New Child", "Base Table...");
 
-		bot.text("NewBaseTable").setText(tableName);
-		bot.tree().setFocus();
+		SWTBot shellBot = bot.shell("Create Relational View Table").activate().bot();
+		shellBot.textWithLabel("Name").setText(tableName);
+		shellBot.button("OK").click();
 	}
 	
 	public Procedure newProcedure(String project, String model, String procedure){
