@@ -183,13 +183,24 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 	}
 
 	public void notifyColumnDataChanged() {
+		if (!responseBodyColumnsInfoPanel.getRootPathText().getText().equals("")) { //$NON-NLS-1$
+			this.schemaHandler.schemaTreeModel.setRootPath(responseBodyColumnsInfoPanel.getRootPathText().getText());
+			this.getProcedureGenerator().getResponseInfo().setRootPath(responseBodyColumnsInfoPanel.getRootPathText().getText());
+		}
 		this.requestBodyElementsInfoPanel.refresh();
 		this.requestHeaderElementsInfoPanel.refresh();
 		this.responseBodyColumnsInfoPanel.refresh();
 		this.responseHeaderColumnsInfoPanel.refresh();
+		
 		updateSqlText(BOTH);
 		this.wrapperPanel.notifyOperationChanged(this.getProcedureGenerator().getOperation());
 
+		updateStatus();
+	}
+	
+	public void notifyRootTextColumnDataChanged() {
+		this.schemaHandler.schemaTreeModel.setRootPath(responseBodyColumnsInfoPanel.getRootPathText().getText());
+	
 		updateStatus();
 	}
 

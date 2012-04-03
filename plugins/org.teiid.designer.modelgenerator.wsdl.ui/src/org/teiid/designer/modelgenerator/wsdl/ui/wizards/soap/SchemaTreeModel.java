@@ -58,7 +58,7 @@ public class SchemaTreeModel {
 		for (Object nodeKey:this.mapNode.keySet()){
 			SchemaNode node = this.mapNode.get(nodeKey);
 			if (node.children.isEmpty()){
-				String path = node.getFullPath();
+				String path = node.getFullPathMinusLastSegment();
 				if (!path.equals("")){ //$NON-NLS-1$
 					segmentList.add(path);
 				}
@@ -176,6 +176,21 @@ public class SchemaTreeModel {
 		public String getFullPath() {
 		
 			return getParentXpath()+getRelativeXpath();
+		}
+		
+		public String getFullPathMinusLastSegment() {
+			
+			String relativePath = getRelativeXpath();
+			if (!relativePath.isEmpty()){ 
+				int i = relativePath.lastIndexOf("/"); //$NON-NLS-1$
+				if (i==0) {
+					relativePath = ""; //$NON-NLS-1$
+				}else{
+					relativePath = relativePath.substring(0,i-1);
+				}
+				
+			}
+			return getParentXpath()+relativePath;
 		}
 
 		private void getParentXpath(Stack stack, SchemaNode parent) {
