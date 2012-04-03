@@ -989,8 +989,10 @@ FROM
 	<!-- ####### WSDL AS SOURCE IMPORTER ######################################### -->
 	
 	<section id="wsdl-to-relational-import-section">
-		<title>Import WSDL into Relational Source Model</title>
-		<para>You can create a Relational model by selecting an existing 
+		<title>Import WSDL into Relational Models</title>
+		<para>You can turn your WSDL file (local or URL) into a queryable relational procedures that 
+			represent your desired request and response web service structure defined through your WSDL's schema definition.
+			This importer is accessed by lanching Eclipse's "Import..." action and selecting the "Teiid Designer > WSDL File or URL >> Source and View Model (SOAP)" option.
 			<emphasis>Web Services Connection Profile</emphasis> defined 
 			by a WSDL file in your workspace or defined by a URL. Designer 
 			will interpret the WSDL, locate any associated or dependent XML 
@@ -999,27 +1001,6 @@ FROM
 			the XML declared as the service messages.</para>
 		<itemizedlist>
 			<listitem>
-				<para>The sample WSDL for this section defines the following:
-				<itemizedlist>
-					<listitem>
-						<para>A single <emphasis role="bold">wsdl:service</emphasis> named Share_BSM_Real_Time_Data_Design_Server_RealTimeData_portService</para>
-					</listitem>
-					<listitem>
-						<para>A single <emphasis role="bold">wsdl:port</emphasis> named Share_BSM_Real_Time_Data_Design_Server_RealTimeData_portPort0"</para>
-					</listitem>
-					<listitem>
-						<para>A single <emphasis role="bold">wsdl:portType</emphasis> named Share_BSM_Real_Time_Data_Design_Server_RealTimeData_portPortType</para>
-					</listitem>
-					<listitem>
-						<para>A single <emphasis role="bold">wsdl:operation</emphasis> named OnHand</para>
-					</listitem>
-				</itemizedlist>
-					<mediaobject>
-						<imageobject>
-							<imagedata fileref="images/screencaps/import-wsdl-into-rel-onhand-decl.png"/>
-						</imageobject>
-					</mediaobject>
-				</para>
 				<para>
 					To create relational models from <emphasis role="bold">WSDL</emphasis> use the steps below.
 					<itemizedlist>
@@ -1030,10 +1011,10 @@ FROM
 						</listitem>
 						<listitem>
 							<para><emphasis role="bold">Step 2 </emphasis> - Select the import option 
-								<emphasis role="bold">Teiid Designer > WSDL File or URL >> Source Model</emphasis>  and 
+								<emphasis role="bold">Teiid Designer > WSDL File or URL >> Source  and View Model (SOAP)</emphasis>  and 
 									click <emphasis role="bold">Next></emphasis></para>
 							<figure>
-								<title>Import from WSDL into Source Model</title>
+								<title>Import from WSDL into Source and View Models</title>
 								<mediaobject>
 									<imageobject>
 										<imagedata fileref="images/screencaps/import-wsdl-to-source-selection-dialog.png"/>
@@ -1045,34 +1026,53 @@ FROM
 							<para><emphasis role="bold">Step 3 </emphasis> - On the next page select an existing 
 							Web Service Connection Profile from the list, or click the <emphasis role="bold">New</emphasis> Button to create a new profile.</para>
 							<figure>
-								<title>Source and Target Selection Dialog</title>
+								<title>WSDL Source Selection</title>
 								<mediaobject>
 									<imageobject>
-										<imagedata fileref="images/screencaps/import-wsdl-into-rel-page-2.png"/>
+										<imagedata fileref="images/screencaps/import-wsdl-to-source-page-2.png"/>
 									</imageobject>
 								</mediaobject>
 							</figure>
 						</listitem>
 						<listitem>
-							<para><emphasis role="bold">Step 4 </emphasis> - When the connection profile is selected, you'll be required to 
-								validate your <emphasis role="bold">WSDL</emphasis> via the <emphasis role="bold">Validate WSDL</emphasis>
-								button (see above figure).  If the WSDL is not valid, or does not comply with WS-I 1.0, the validation failures will be displayed in an error dialog.</para>
-						</listitem>
-						<listitem>
-							<para><emphasis role="bold">Step 5 </emphasis> - Select a model project 
-								in the <emphasis role="bold">Target Workspace Folder</emphasis> field via the <emphasis role="bold">Browse...</emphasis> button. Click <emphasis role="bold">Next></emphasis> when the target is defined. </para>
-						</listitem>
-						<listitem>
-							<para><emphasis role="bold">Step 6 </emphasis> - The next page allows you to selected 
-								individual <emphasis role="bold">Web Service Operations</emphasis> to model. 
+							<para><emphasis role="bold">Step 4 </emphasis> - Select individual <emphasis role="bold">Web Service Operations</emphasis> to model. 
 								The default behavior of this page selects <emphasis role="bold">all</emphasis> available operations in 
-								the tree. Operations can be de-selected if they are not being modeled.  The Selection Details editor displays static information
-								about the operation such as the names of the input and output messages, and faults thrown by the operation.</para>
+								the tree. Operations can be de-selected if they are not being modeled.  The Selection Details panel displays static information
+								about the operation such as the names of the input and output messages, and faults thrown by the operation.	</para>	
+							<para>Click <emphasis role="bold">Next ></emphasis></para>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Step 5 </emphasis> - The next page titled Model Definiton requires both
+								a model location (i.e. folder or project) and a valid model name for both source and view
+								models. Use the <emphasis role="bold">Browse...</emphasis> button to select existing folders
+								or models. Click <emphasis role="bold">Next></emphasis> when all the info is defined.</para>
 							<figure>
-								<title>WSDL Operations Selection Dialog</title>
+								<title>WSDL Source Selection</title>
 								<mediaobject>
 									<imageobject>
-										<imagedata fileref="images/screencaps/import-wsdl-into-rel-page-3.png"/>
+										<imagedata fileref="images/screencaps/import-wsdl-to-source-page-3.png"/>
+									</imageobject>
+								</mediaobject>
+							</figure>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Step 6 </emphasis> - This wizard generates both request and response procedures 
+							that are used in the queryable wrapped procedure. The next page , Procedure Definition, contains requires defining 
+							the details of your request and response structure.</para>
+							<para>In the Request tab, select and double-click the schema elements you wish to be input parameters 
+							for your request. These will be added to the Element Info panel and the resulting 
+							generated SQL statement will be updated to reflect the new element. 
+							Note the BODY and HEADER tabs which exist on both the Request and Response tabs. 
+							If the selected service mode for this procedure is set to MESSAGE, the HEADER tab will be 
+							enabled and allow you to define the SOAP header variables utilizing the same schema tree.</para>
+							<para>Select the Response tab and create the response procedures result set columns in the same way.</para>
+							<para>Repeat this process for all operations by changing the selection target operation via the
+							<emphasis role="bold">Operations</emphasis> selector at the top.</para>
+							<figure>
+								<title>Procedure Definition Page</title>
+								<mediaobject>
+									<imageobject>
+										<imagedata fileref="images/screencaps/import-wsdl-to-source-page-4-request.png"/>
 									</imageobject>
 								</mediaobject>
 							</figure>
@@ -1086,32 +1086,20 @@ FROM
 			</listitem>
 		</itemizedlist>
 		<para>In the <emphasis role="bold">Model Explorer</emphasis> you can see the importer created
-		the following:
-			<itemizedlist>
-				<listitem>
-					<para>A single <emphasis role="bold">physical model</emphasis> containing a single procedure called invoke.  
-					This model and procedure correspond to the single port declared in the WSDL. For a WSDL with multiple <emphasis role="bold">wsdl:port</emphasis> 
-					declarations the importer would create a physical model with an invoke procedure for each <emphasis role="bold">wsdl:port</emphasis> declaration.  
-					This facilitates binding each physical model to its own Teiid WebService Connector and allowing the connector to supply the endpoint.</para>
-				</listitem>
-				<listitem>
-					<para>A single <emphasis role="bold">view model</emphasis> containing a <emphasis role="bold">catalog</emphasis> named after the operation 
-					declared in the WSDL.  For a WSDL with multiple <emphasis role="bold">wsdl:operation</emphasis> declarations, the importer would create
-					multiple catalogs.  The <emphasis role="bold">catalog</emphasis> contains procedure declarations that use the <emphasis role="bold">SQLXML</emphasis> calls
-					   supported by Teiid to create and parse the XML defined as the operation messages.</para>   
-				</listitem>
-			</itemizedlist>
-			</para>
-		<figure>  
-		   <title>Importing the WSDL file into the Model Explorer</title>
-	  		<mediaobject>
-				<imageobject>
-					<imagedata fileref="images/screencaps/import-wsdl-into-rel-model-explorer.png"/>
-				</imageobject>
-			</mediaobject>
-		</figure>
-		<para>The user can now use the procedures defined by the importer in a higher level view model that builds the request, executes the service via the invoke procedure, 
-		and extracts the results from the response.  			
+			the following a single <emphasis role="bold">physical model</emphasis> containing a single procedure called invoke.  
+			This model and procedure correspond to the single port declared in the WSDL.</para>
+		<para>A single <emphasis role="bold">view model</emphasis> was also created containing your new procedures named after the operations 
+			declared in the WSDL. For each operation a wrapper procedure was created which can be previewed in Designer. Below
+			is an example dependency diagram showing the sources for the wrapper procedure as request, response procedures
+			and the invoke() source procedure.</para>  
+			<figure>
+				<title>Example Web Services Wrapper Procedure</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/screencaps/import-wsdl-to-source-procedure-dependency-diagram.png"/>
+					</imageobject>
+				</mediaobject>
+			</figure> 
 		</para>
 		
 	</section>
