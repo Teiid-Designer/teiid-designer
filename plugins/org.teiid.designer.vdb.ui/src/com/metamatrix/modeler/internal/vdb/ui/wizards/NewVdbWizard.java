@@ -666,7 +666,7 @@ public final class NewVdbWizard extends AbstractWizard
 	}
 	
 	private void updateForProperties() {
-    	if( this.folder == null ) {
+    	if( this.folder == null && this.designerProperties != null) {
             // Get Project from Properties - if it exists.
             IProject project = DesignerPropertiesUtil.getProject(this.designerProperties);
             if (project != null) {
