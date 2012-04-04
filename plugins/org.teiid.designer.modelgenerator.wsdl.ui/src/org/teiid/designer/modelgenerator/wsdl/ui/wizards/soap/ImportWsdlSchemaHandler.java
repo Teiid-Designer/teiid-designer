@@ -282,7 +282,8 @@ public class ImportWsdlSchemaHandler {
 				if (importManager.isMessageServiceMode()) {
 					pathPrefix = ResponseInfo.SOAPBODY_ROOTPATH;
 					//Need to fully qualify xpath at the column level for BODY in MESSAGE mode
-					xpath = new StringBuilder(this.schemaTreeModel.getRootPath()).append(xpath);
+					String root = this.schemaTreeModel.getRootPath().replaceAll(ResponseInfo.SOAPENVELOPE_ROOTPATH, ""); //$NON-NLS-1$
+					xpath = new StringBuilder(root).append(xpath);
 				}
 				responseInfo.addBodyColumn(
 						responseInfo.getUniqueBodyColumnName(name), false,
