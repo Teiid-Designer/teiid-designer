@@ -875,11 +875,13 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 
     private void setProfileFromProperties() {
         // Check for Connection Profile in properties
-        String profileName = DesignerPropertiesUtil.getConnectionProfileName(this.designerProperties);
-        if (profileName != null && !profileName.isEmpty()) {
-            // Select profile
-            selectConnectionProfile(profileName);
-        }
+    	if( this.designerProperties != null ) {
+            String profileName = DesignerPropertiesUtil.getConnectionProfileName(this.designerProperties);
+            if (profileName != null && !profileName.isEmpty()) {
+                // Select profile
+                selectConnectionProfile(profileName);
+            }
+    	}
     }
 
 	private void refreshConnectionProfiles() {
