@@ -73,8 +73,10 @@ public class TeiidXmlImportWizard extends TeiidMetadataImportWizard {
 		}, false);
 		
         // Update Properties to include the created source and view Models
-        DesignerPropertiesUtil.setSourceModelName(this.designerProperties, getFileInfo().getSourceModelName());
-        DesignerPropertiesUtil.setViewModelName(this.designerProperties, getFileInfo().getViewModelName());
+		if( this.designerProperties != null ) {
+            DesignerPropertiesUtil.setSourceModelName(this.designerProperties, getFileInfo().getSourceModelName());
+            DesignerPropertiesUtil.setViewModelName(this.designerProperties, getFileInfo().getViewModelName());
+		}
 
 		return true;
 	}
