@@ -88,7 +88,7 @@ public class ModelUtil {
     public static final String MODEL_CLASS_XML = "XML"; //$NON-NLS-1$
     public static final String MODEL_CLASS_XML_SCHEMA = "XML Schema (XSD)"; //$NON-NLS-1$
     public static final String MODEL_CLASS_WEB_SERVICE = "Web Service"; //$NON-NLS-1$
-    public static final String MODEL_CLASS_FUNCTION = "Function"; //$NON-NLS-1$
+    public static final String MODEL_CLASS_FUNCTION = "Function (Deprecated)"; //$NON-NLS-1$
     public static final String MODEL_CLASS_MODEL_EXTENSION = "Model Extension (Deprecated)"; //$NON-NLS-1$
     
     public static final String URI_XML_VIEW_MODEL = "http://www.metamatrix.com/metamodels/XmlDocument"; //$NON-NLS-1$
