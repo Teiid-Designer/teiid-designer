@@ -394,47 +394,6 @@
 			<para>There is an additional option in the second page of the wizard which can automatically set the
 				relational table's supports update property to false. If this is unchecked the default value will be true.</para>
 		</section>
-		<section id="relational-view-create-from-schema-section">
-			<title>Create From XML Schema</title>
-
-			<para>In the Teiid Designer you can use your existing schema models to generate relational view tables.</para>
-			<itemizedlist>
-				<listitem>
-					<para>
-						To create a new relational view model from XML schema:
-						<itemizedlist>
-							<listitem>
-								<para><emphasis role="bold">Step 1 </emphasis> - Select any <emphasis role="bold">XML Schema model (XSD)</emphasis> in 
-								in the <xref linkend="model-explorer-view" /> tree.</para>
-							</listitem>
-							<listitem>
-								<para><emphasis role="bold">Step 2 </emphasis> - Right-click to display the context menu 
-									and select the <emphasis role="bold">Modeling > Create Relational View Model from Schema</emphasis> action.</para>
-							</listitem>
-							<listitem>
-								<para><emphasis role="bold">Step 3 </emphasis> - In the 
-									<emphasis role="bold">Create Virtual Tables from XSD Schema Wizard</emphasis> dialog, 
-									specify a relational view model name.</para>
-								<figure>
-									<title>Create Virtual Tables From XML Schema Dialog</title>
-									<mediaobject>
-										<imageobject>
-											<imagedata fileref="images/screencaps/create-virtual-tables-from-schema-wizard.png"/>
-										</imageobject>
-									</mediaobject>
-								</figure>
-							</listitem>
-							<listitem>
-								<para><emphasis role="bold">Step 4 </emphasis> - Select one or more global schema entities 
-									and move from left panel to the right panel. 
-									Click <emphasis role="bold">Finish</emphasis> when done.</para>
-							</listitem>	
-						</itemizedlist>
-					</para>
-				</listitem>
-			</itemizedlist>
-			<para>When model generation is complete the new model will be opened in an editor for your viewing.</para>
-		</section>
 	</section>
 		
 	<!-- ####### XML DOCUMENT VIEW MODEL ######################################## -->

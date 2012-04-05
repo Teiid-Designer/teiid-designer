@@ -27,19 +27,6 @@
 					<listitem>
 						<para><inlinemediaobject>
 								<imageobject>
-									<imagedata fileref="images/icons/relationship-search-page.png"/>
-								</imageobject>
-							</inlinemediaobject> <emphasis role="bold">Relationship...</emphasis> - Launches the 
-							Search dialog and auto-selects the Relationships tab.  User can search for models in the workspace 
-							by specifying a relationship type, participant locations, and/or names containing specified
-							text.  Search results appear in 
-							the <xref linkend="search-results-view" /> view, 
-							and double-clicking a result will open that model in the appropriate editor.
-						</para>
-					</listitem>
-					<listitem>
-						<para><inlinemediaobject>
-								<imageobject>
 									<imagedata fileref="images/icons/search-transformation.png"/>
 								</imageobject>
 							</inlinemediaobject> <emphasis role="bold">Transformations...</emphasis> - Launches the 
@@ -132,50 +119,6 @@
 							<para><emphasis role="bold">Step 4 </emphasis> - Click <emphasis role="bold">OK</emphasis>. If editor 
 								is not open for the object's model, an editor will open. The desired object should end up 
 								displayed in a diagram (if applicable) and selected.</para>
-						</listitem>
-					</itemizedlist>
-				</para>
-			</listitem>
-		</itemizedlist>
-	</section>
-	
-	<!-- ####### SEARCH RELATIONSHIPS ######################################### -->
-	
-	<section id="search-relationships-section">
-		<title>Search Models Via Relationship Properties</title>
-		<para>The Teiid Designer provides a search capability to find model objects that are characterized by one
-			or more relationship property values including relationship type, participants and name.</para>
-		<itemizedlist>
-			<listitem>
-				<para>
-					To search for relationships:
-					<itemizedlist>
-						<listitem>
-							<para><emphasis role="bold">Step 1 </emphasis> - Select <emphasis role="bold">Search > Relationships...</emphasis> 
-								action on the Teiid Designer main menu <inlinemediaobject>
-								<imageobject>
-									<imagedata fileref="images/icons/relationship-search-page.png"/>
-								</imageobject>
-							</inlinemediaobject> which opens the <emphasis role="bold">Search</emphasis> dialog.</para>
-							<figure>
-								<title>Relationship Search Dialog</title>
-								<mediaobject>
-									<imageobject>
-										<imagedata fileref="images/screencaps/search-relationships-dialog.png"/>
-									</imageobject>
-								</mediaobject>
-							</figure>
-						</listitem>
-						<listitem>
-							<para><emphasis role="bold">Step 2 </emphasis> - Specify desired search options for 
-								<emphasis role="bold">Object Type</emphasis>, location of
-								<emphasis role="bold">Participants</emphasis> and <emphasis role="bold">Name</emphasis>.</para>
-						</listitem>
-						<listitem>
-							<para><emphasis role="bold">Step 3 </emphasis> - Click <emphasis role="bold">Search</emphasis>. 
-								The search will be performed and the results will be displayed in the 
-								<xref linkend="search-results-view" />. 
-								If the view is not yet open, it will be opened automatically.</para>
 						</listitem>
 					</itemizedlist>
 				</para>

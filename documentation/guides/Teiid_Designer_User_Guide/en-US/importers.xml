@@ -43,15 +43,8 @@
 						</listitem>
 						<listitem>
 							<para><emphasis role="bold">Step 2 </emphasis> - Select the import option 
-								<emphasis role="bold">Teiid Designer > DDL File >> Source or View Model</emphasis>  and click <emphasis role="bold">Next></emphasis></para>
-							<figure>
-								<title>Import DDL</title>
-								<mediaobject>
-									<imageobject>
-										<imagedata fileref="images/screencaps/import-ddl-selection-dialog.png"/>
-									</imageobject>
-								</mediaobject>
-							</figure>
+								<emphasis role="bold">Teiid Designer > DDL File >> Source or View Model</emphasis>  and click <emphasis role="bold">Next></emphasis>
+							</para>
 						</listitem>
 						<listitem>
 							<para><emphasis role="bold">Step 3 </emphasis> - Select existing DDL from either 
@@ -109,15 +102,8 @@
 						</listitem>
 						<listitem>
 							<para><emphasis role="bold">Step 2 </emphasis> - Select the import option 
-								<emphasis role="bold">Metadata Modeling > JDBC Database >> Source Model</emphasis>  and click <emphasis role="bold">Next></emphasis></para>
-							<figure>
-								<title>Import from JDBC Database</title>
-								<mediaobject>
-									<imageobject>
-										<imagedata fileref="images/screencaps/import-jdbc-selection-dialog.png"/>
-									</imageobject>
-								</mediaobject>
-							</figure>
+								<emphasis role="bold">Metadata Modeling > JDBC Database >> Source Model</emphasis>  and click <emphasis role="bold">Next></emphasis>
+							</para>
 						</listitem>
 						<listitem>
 							<para><emphasis role="bold">Step 3 </emphasis> - Select existing or previous 
@@ -581,15 +567,8 @@ FROM
 						</listitem>
 						<listitem>
 							<para><emphasis role="bold">Step 2 </emphasis> - Select the import option 
-								<emphasis role="bold">Teiid Designer > Salesforce >> Source Model</emphasis>  and click <emphasis role="bold">Next></emphasis></para>
-							<figure>
-								<title>Import from Salesforce</title>
-								<mediaobject>
-									<imageobject>
-										<imagedata fileref="images/screencaps/import-salesforce-selection-dialog.png"/>
-									</imageobject>
-								</mediaobject>
-							</figure>
+								<emphasis role="bold">Teiid Designer > Salesforce >> Source Model</emphasis>  and click <emphasis role="bold">Next></emphasis>
+							</para>
 						</listitem>
 						<listitem>
 							<para><emphasis role="bold">Step 3 </emphasis> - Select existing or previous 
@@ -687,14 +666,6 @@ FROM
 								<emphasis role="bold">Teiid Designer > Designer Text File >> Source or View Models</emphasis> 
 								and click <emphasis role="bold">Next></emphasis>
 							</para>
-							<figure>
-								<title>Import From Designer Text File</title>
-								<mediaobject>
-									<imageobject>
-										<imagedata fileref="images/screencaps/import-from-text-file-selection-dialog.png"/>
-									</imageobject>
-								</mediaobject>
-							</figure>
 						</listitem>
 						<listitem>
 							<para>
@@ -1012,15 +983,8 @@ FROM
 						<listitem>
 							<para><emphasis role="bold">Step 2 </emphasis> - Select the import option 
 								<emphasis role="bold">Teiid Designer > WSDL File or URL >> Source  and View Model (SOAP)</emphasis>  and 
-									click <emphasis role="bold">Next></emphasis></para>
-							<figure>
-								<title>Import from WSDL into Source and View Models</title>
-								<mediaobject>
-									<imageobject>
-										<imagedata fileref="images/screencaps/import-wsdl-to-source-selection-dialog.png"/>
-									</imageobject>
-								</mediaobject>
-							</figure>
+									click <emphasis role="bold">Next></emphasis>
+							</para>
 						</listitem>
 						<listitem>
 							<para><emphasis role="bold">Step 3 </emphasis> - On the next page select an existing 
@@ -1161,14 +1125,6 @@ FROM
 								<para><emphasis role="bold">Step 2 </emphasis> - Select the import option 
 									<emphasis role="bold">Teiid Designer > WSDL File or URL >> Web Service Model </emphasis> option 
 									shown below and click <emphasis role="bold">Next></emphasis></para>
-								<figure>
-									<title>Import WSDL File Into Web Service Model</title>
-									<mediaobject>
-										<imageobject>
-											<imagedata fileref="images/screencaps/import-wsdl-to-ws-selection-dialog.png"/>
-										</imageobject>
-									</mediaobject>
-								</figure>
 							</listitem>
 							<listitem>
 								<para><emphasis role="bold">Step 3 </emphasis> - Input a valid name for your 
@@ -1317,15 +1273,8 @@ FROM
 							</listitem>
 							<listitem>
 								<para><emphasis role="bold">Step 2 </emphasis> - Select the import option 
-									<emphasis role="bold">Teiid Designer > WSDL File or URL >> Web Service Model </emphasis>  and click <emphasis role="bold">Next></emphasis></para>
-								<figure>
-								<title>Import WSDL File Into Web Service Model</title>
-								<mediaobject>
-									<imageobject>
-										<imagedata fileref="images/screencaps/import-wsdl-to-ws-selection-dialog.png"/>
-									</imageobject>
-								</mediaobject>
-							</figure>
+									<emphasis role="bold">Teiid Designer > WSDL File or URL >> Web Service Model </emphasis>  and click <emphasis role="bold">Next></emphasis>
+								</para>
 							</listitem>
 							<listitem>
 								<para><emphasis role="bold">Step 3 </emphasis> - Input a valid name for your 
@@ -1464,15 +1413,8 @@ FROM
 							</listitem>
 							<listitem>
 								<para><emphasis role="bold">Step 2 </emphasis> - Select the import option 
-									<emphasis role="bold">Teiid Designer > WSDL File or URL >> Web Service Model </emphasis>  and click <emphasis role="bold">Next></emphasis></para>
-								<figure>
-								<title>Import WSDL File Into Web Service Model</title>
-								<mediaobject>
-									<imageobject>
-										<imagedata fileref="images/screencaps/import-wsdl-to-ws-selection-dialog.png"/>
-									</imageobject>
-								</mediaobject>
-							</figure>
+									<emphasis role="bold">Teiid Designer > WSDL File or URL >> Web Service Model </emphasis>  and click <emphasis role="bold">Next></emphasis>
+								</para>
 							</listitem>
 							<listitem>
 								<para><emphasis role="bold">Step 3 </emphasis> - Input a valid name for your 
@@ -1615,15 +1557,8 @@ FROM
 						</listitem>
 						<listitem>
 							<para><emphasis role="bold">Step 2 </emphasis> - Select the import option 
-								<emphasis role="bold">Metadata Modeling > XSD Schemas </emphasis>  and click <emphasis role="bold">Next></emphasis></para>
-							<figure>
-								<title>Import XSD Schemas</title>
-								<mediaobject>
-									<imageobject>
-										<imagedata fileref="images/screencaps/import-xml-schemas-selection-dialog.png"/>
-									</imageobject>
-								</mediaobject>
-							</figure>
+								<emphasis role="bold">Metadata Modeling > XSD Schemas </emphasis>  and click <emphasis role="bold">Next></emphasis>
+							</para>
 						</listitem>
 						<listitem>
 							<para><emphasis role="bold">Step 3 </emphasis> - Select either <emphasis role="bold">Import XSD Schemas from file system</emphasis>
