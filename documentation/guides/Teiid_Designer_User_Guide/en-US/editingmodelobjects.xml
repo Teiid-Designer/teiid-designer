@@ -487,9 +487,8 @@
 		<section id="transformation-editor-section">
 			<title>Transformation Editor</title>
 			<para>The <emphasis role="bold">Teiid Designer's Transformation Editor</emphasis> enables you to create the
-				query transformations that describe how to derive your virtual
-				metadata information from physical metadata sources or other virtual
-				metadata and how to update the sources.</para>
+				query transformations that describe how to derive your virtual metadata information from physical metadata sources 
+				or other virtual metadata and how to update the sources.</para>
 			<para>The <emphasis role="bold">Transformation Editor</emphasis> provides a robust set of tools you
 				can use to create these SQL queries. You can use these tools, or you
 				can simply type a SQL query into the Transformation Editor.</para>
@@ -657,7 +656,8 @@
 									</inlinemediaobject> <emphasis role="bold">Reconcile</emphasis> - allows you to resolve any 
 									discrepancies between the transformation symbols and the target attributes. Pressing this button 
 									will display the "Reconcile Virtual Target Attributes" dialog box in which you can resolve 
-									discrepancies.
+									discrepancies.  See <xref linkend="using-reconciler-section"/> for more information about the
+									Reconciler Dialog.
 								</para>
 							</listitem>
 							<listitem>
@@ -683,6 +683,7 @@
 									a query that allows a criteria. Pressing the button will launch the Criteria Builder dialog. If 
 									the Criteria Builder is launched inside an existing criteria, that criteria will be displayed for 
 									edit, otherwise the Criteria Builder will be initially empty. 
+									See <xref linkend="using-criteria-builder-section"/> for further information.
 								</para>
 							</listitem>
 							<listitem>
@@ -694,8 +695,9 @@
 									</inlinemediaobject> <emphasis role="bold">Expression Builder</emphasis> - allows you to build an 
 									expression within your transformation. The button will enable if the cursor position is at a 
 									location that allows an expression. Pressing the button will launch the Expression Builder dialog.
-									 If the Expression Builder is launched inside an existing expression, that expression will be 
-									 displayed for edit, otherwise the Expression Builder will be initially empty.
+									If the Expression Builder is launched inside an existing expression, that expression will be 
+									displayed for edit, otherwise the Expression Builder will be initially empty.
+                                    See <xref linkend="using-expression-builder-section"/> for further information.
 								</para>
 							</listitem>
 							<listitem>
@@ -788,6 +790,191 @@
 				</listitem>
 			</itemizedlist>
 			
+            <!-- ####### USING RECONCILER SECTION ######################################### -->
+            
+            <section id="using-reconciler-section">
+                <title>Using the Reconciler</title>
+                <para>The Transformation Editor’s <emphasis role="bold">Reconciler</emphasis> offers you a
+                    quick, graphical means to reconcile the Target View attributes and the Transformation SQL.  As you make changes,
+                    the overall status will appear at the top of the dialog to assist you in successfully completing your edits.</para>
+                <para> To launch the Reconciler, click on the <emphasis role="bold">Reconcile Transformation</emphasis> button
+                    <inlinemediaobject>
+                       <imageobject><imagedata fileref="images/icons/tb-reconcile-sql.png"/></imageobject>
+                    </inlinemediaobject> in the Transformation Editor.  The Reconciler Dialog is shown below:
+                 </para>
+                 <figure>
+                     <title>Reconciler Dialog</title>
+                     <mediaobject>
+                         <imageobject>
+                             <imagedata fileref="images/screencaps/reconciler-dialog.png" />
+                         </imageobject>
+                     </mediaobject>
+                 </figure>
+                 <para>To summarize the different sections of the dialog:</para>
+                <itemizedlist>
+                    <listitem>
+                    <para><emphasis role="bold">Target Attributes - SQL Symbol Table</emphasis>:
+                        This table shows the target attributes in the left column and the SQL Symbols in the right column.  The SQL Symbols
+                        are the symbols that are 'projected' from the SQL transformation.  A symbol is referred to as being 'bound' to a target
+                        attribute when it is displayed next to the attribute.</para>
+                    <para>
+                        If a target attribute is 'unbound', its row is highlighted in red.  The transformation is not valid until all
+                        attributes have a corresponding SQL symbol binding.
+                    </para>
+                    <para>Here are a few things you can do in the table section:</para>
+                        <itemizedlist>
+                            <listitem><emphasis role="bold">Lock Target Attributes</emphasis>:  To 'lock' the target attribute
+                            ordering, check the 'Lock Target Attributes' checkbox.  This will lock the attributes in place.
+                            </listitem>
+                            <listitem><emphasis role="bold">Re-Order Attributes</emphasis>:  To change the ordering of the target
+                            attributes, use the 'Top', 'Up', 'Swap', 'Down', and 'Bottom' controls beneath the table.  Select or 
+                            multi-select the table rows, then click the desired action button.
+                            </listitem>
+                            <listitem><emphasis role="bold">Delete Attributes</emphasis>:  To delete one or more of the target
+                            attributes, select the table row(s) you want to delete - then click the 'Delete' button. 
+                            </listitem>
+                            <listitem><emphasis role="bold">Resolve Types</emphasis>:  If an Attribute-SQL Symbol binding has a 
+                            datatype conflict, a message will be displayed.  To assist in resolving the datatype conflict, a 'Datatype
+                            Resolver Dialog' is provided.  Click on the table row, then click the 'Type Resolver...' button to display
+                            the dialog. See <xref linkend="using-datatype-resolver-section"/> for further information.
+                            </listitem>
+                        </itemizedlist>
+                    </listitem>
+                    <listitem>
+                    <para><emphasis role="bold">Unmatched SQL Symbols list</emphasis>:
+                    This list is to the right of the attribute-symbol binding table, and shows the SQL symbols from the transformation
+                    SQL that are not 'bound' to a target table attribute.
+                    </para>
+                    <para>Here are a few things you can do in the list section:</para>
+                        <itemizedlist>
+                            <listitem><emphasis role="bold">Add SQL Symbols</emphasis>:  To 'Add' SQL Symbols to the list, click
+                            the 'Add' button.  You will be presented with a dialog showing all available symbols from your transformation
+                            source tables.  Click on the symbols you want to add, then click 'OK'.
+                            </listitem>
+                            <listitem><emphasis role="bold">Remove or Clear Symbols</emphasis>:  To remove one or more of the SQL 
+                            symbols, select the list items then click the 'Remove' button.  To clear the entire SQL symbols list,
+                            click the 'Clear' button.
+                            </listitem>
+                            <listitem><emphasis role="bold">Sort Symbols</emphasis>:  By default, the symbols are shown in the order
+                            that they appear in the SQL query.  To show them alphabetically in the list, click the 'Sort' button.
+                            </listitem>
+                        </itemizedlist>
+                    </listitem>
+                    <listitem>
+                    <para><emphasis role="bold">Binding Controls</emphasis>:
+                    The 'Binding Controls' are located between the Attribute-Symbol table and the Unmatched SQL Symbols list.  Use
+                    these buttons to define the Attribute-Symbol bindings.
+                    </para>
+                    <para>Here are a few things you can do with the binding controls:</para>
+                        <itemizedlist>
+                            <listitem><emphasis role="bold">Bind</emphasis>:  This button will 'Bind' a SQL Symbol to a target attribute.
+                            Select an Unmatched SQL symbol and select a target attribute, then click 'Bind' to establish the binding.
+                            </listitem>
+                            <listitem><emphasis role="bold">Unbind</emphasis>:  This button will 'Unbind' an Attribute-Symbol binding.
+                            Select an already-bound attribute in the table, then click 'Unbind'.  The SQL Symbol will be released 
+                            to the Unmatched Symbols list.
+                            </listitem>
+                            <listitem><emphasis role="bold">New</emphasis>:  This button will create a new target attribute, using an 
+                            Unmatched SQL Symbol.  Select an Unmatched Symbol from the list, then click 'New'.  A new target attribute
+                            will be added to the bottom of the Attribute-Symbol table, bound to the selected SQL symbol.
+                            </listitem>
+                            <listitem><emphasis role="bold">Null</emphasis>:  This button allows you to bind 'null' to a target attribute
+                            instead of binding a SQL Symbol to it.  Select a row in the Attribute-Symbol table, then click 'Null'.
+                            The target attribute will be bound to 'null'. If it was originally bound to a SQL Symbol, the symbol will 
+                            be released to the Unmatched Symbol list.
+                            </listitem>
+                            <listitem><emphasis role="bold">Function</emphasis>:  This button allows you to define an expression instead
+                            of just a SQL Symbol for the binding.  To define the expression, select a row in the Attribute-Symbol table,
+                            then click the 'Function' button.  The Expression Builder Dialog will display, allowing you to define any
+                            type of expression.  See <xref linkend="using-expression-builder-section"/> for further information about the
+                            Expression Builder.
+                            </listitem>
+                        </itemizedlist>
+                    </listitem>
+                    <listitem>
+                    <para><emphasis role="bold">SQL Display</emphasis>:
+                    The current transformation SQL is shown at the bottom of the reconciler dialog.  As you add / remove SQL symbols and make
+                    other changes, you can see the SQL display change to reflect those changes.  When you 'OK' the dialog, this SQL will 
+                    be your new transformation SQL.  If desired, the SQL Display can be hidden by un-checking the 'Show SQL Display'
+                    checkbox.
+                    </para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                    Once you are finished defining the bindings and resolving datatypes, click 'OK' to accept the changes.  The transformation
+                    SQL will change to reflect your edits.
+                </para>
+            </section>
+
+            <!-- ####### DATATYPE RESOLVER DIALOG ######################################### -->
+            
+            <section id="using-datatype-resolver-section">
+                <title>Using the Datatype Resolver</title>
+                <para>This dialog is accessible from the <emphasis role="bold">Reconciler</emphasis> dialog (See <xref linkend="using-reconciler-section"/>) 
+                    and offers you a quick way to resolve datatype conflicts between a target attribute and its SQL Symbol.  
+                    The Datatype Resolver Dialog is shown below: </para>
+                 <figure>
+                     <title>Datatype Resolver Dialog</title>
+                     <mediaobject>
+                         <imageobject>
+                             <imagedata fileref="images/screencaps/resolve-datatype-conflicts-dialog.png" />
+                         </imageobject>
+                     </mediaobject>
+                 </figure>
+                 <para>To summarize the different sections of the dialog:</para>
+                <itemizedlist>
+                    <listitem>
+                    <para><emphasis role="bold">Target Attribute - SQL Symbol Table</emphasis>:
+                    This table shows all target attribute - SQL Symbol bindings from the Reconciler Dialog which have a type conflict.
+                    Select on a table row to populate the lower Edit Panel</para>
+                    </listitem>
+                    <listitem>
+                    <para><emphasis role="bold">Edit Panel</emphasis>:
+                    The lower panel shows the Target Attribute and SQL Symbol datatype information for the selected binding.  You can
+                    resolve the conflict in one of the following ways:</para>
+                        <itemizedlist>
+		                    <listitem>
+		                        <para><emphasis role="bold">Virtual Target Attribute</emphasis>: Resolve the type conflict by changing 
+		                        the target attribute type to be compatible with the SQL Symbol type.  The attribute's current runtime
+		                        type is shown, along with a potential new datatype - and some button controls:
+		                        </para>
+		                        <itemizedlist>
+                                    <listitem><emphasis role="bold">Apply Button</emphasis>: If the suggested datatype is acceptable,
+                                        click 'Apply' to allow the attribute type to be changed.
+                                    </listitem>
+                                    <listitem><emphasis role="bold">Convert All Button</emphasis>: If you wish to change all of the attribute
+                                        types in the table to be compatible with its corresponding SQL Symbol datatype, click the 'Convert All' button.
+                                    </listitem>
+                                    <listitem><emphasis role="bold">Change Button</emphasis>: If the suggested datatype is not acceptable,
+                                        click 'Change' to choose your own datatype from a datatype dialog.
+                                    </listitem>
+		                        </itemizedlist>
+		                    </listitem>
+                            <listitem>
+                                <para><emphasis role="bold">SQL Symbol</emphasis>: Resolve the type conflict by applying a CONVERT
+                                function to the SQL Symbol, so that its type is compatible with the target attribute type.  The SQL Symbol's
+                                current type is shown, along with a suggested CONVERT function - and two button controls:
+                                </para>
+                                <itemizedlist>
+                                    <listitem><emphasis role="bold">Apply Button</emphasis>: If the suggested CONVERT function is acceptable,
+                                        click 'Apply' to apply the CONVERT function to the SQL Symbol.
+                                    </listitem>
+                                    <listitem><emphasis role="bold">Convert All Button</emphasis>: If you wish to apply a CONVERT function 
+                                        to all of the SQL Symbols in the table so that their datatype is compatible with the corresponding
+                                        attribute datateyp, click the 'Convert All' button.
+                                    </listitem>
+                                </itemizedlist>
+                            </listitem>
+                        </itemizedlist>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                    Once you are finished resolving datatypes, click 'OK' to accept the changes.  You are directed back to the Reconciler Dialog,
+                    which will be updated to reflect your edits.
+                </para>
+                    
+            </section>
+            
 			<!-- ####### CRITERIA BUILDER EDITOR ######################################### -->
 			
 			<section id="using-criteria-builder-section">
