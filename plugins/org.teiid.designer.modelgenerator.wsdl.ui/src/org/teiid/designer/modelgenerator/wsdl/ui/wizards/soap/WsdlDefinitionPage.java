@@ -303,8 +303,6 @@ public class WsdlDefinitionPage extends WizardPage
 				profileWorker.setSelection(profile);
 				importManager.setConnectionProfile(profile);
 				if (profileChanged) {
-					Properties props = profile.getBaseProperties();
-					importManager.setWSDLFileUri(props.getProperty(WSDL_URI_PROP_KEY));
 					this.wsdlStatus = null;
 				}
 				

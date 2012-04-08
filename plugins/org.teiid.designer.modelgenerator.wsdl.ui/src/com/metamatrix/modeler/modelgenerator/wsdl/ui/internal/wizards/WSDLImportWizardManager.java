@@ -47,6 +47,8 @@ public class WSDLImportWizardManager implements IChangeNotifier {
     public static final String MESSAGE = "MESSAGE"; //$NON-NLS-1$
     
     public static final String[] SERVICE_MODES = {PAYLOAD, MESSAGE};
+    
+    private static final String WSDL_URI_PROP_KEY = "wsdlURI"; //$NON-NLS-1$
 
     // /////////////////////////////////////////////////////////////////////////////////////////////
     // FIELDS
@@ -253,6 +255,13 @@ public class WSDLImportWizardManager implements IChangeNotifier {
 	 */
 	public void setConnectionProfile(IConnectionProfile connectionProfile) {
 		this.connectionProfile = connectionProfile;
+		if( this.connectionProfile != null ) {
+            Properties props = this.connectionProfile.getBaseProperties();
+            String fileUri = props.getProperty(WSDL_URI_PROP_KEY);
+            if( fileUri != null ) {
+            	setWSDLFileUri(props.getProperty(WSDL_URI_PROP_KEY));
+            }
+		}
 		setChanged(true);
 	}
 	

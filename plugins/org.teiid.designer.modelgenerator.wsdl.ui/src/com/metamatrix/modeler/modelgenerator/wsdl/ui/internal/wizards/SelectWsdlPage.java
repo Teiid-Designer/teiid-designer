@@ -756,8 +756,9 @@ public class SelectWsdlPage extends WizardPage
                 return;
             }
             Properties props = profile.getBaseProperties();
-            wsdlURIText.setText(props.getProperty(WSDL_URI_PROP_KEY));
-            importManager.setWSDLFileUri(props.getProperty(WSDL_URI_PROP_KEY));
+            if( importManager.getWSDLFileUri() != null ) {
+            	wsdlURIText.setText(importManager.getWSDLFileUri());
+            }
             updateWidgetEnablements();
         }
         
