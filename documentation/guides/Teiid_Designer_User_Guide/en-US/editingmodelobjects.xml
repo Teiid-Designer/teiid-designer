@@ -561,6 +561,9 @@
 					<para>Disable specific update transformation types on this
 						virtual class.</para>
 				</listitem>
+                <listitem>
+                    <para>Start your transformation with a provided SQL Template.</para>
+                </listitem>
 				<listitem>
 					<para>Build or edit a criteria clause to use in your
 						transformation.</para>
@@ -788,6 +791,47 @@
 						</itemizedlist>
 					</para>
 				</listitem>
+                    <listitem>
+                    <para>
+                        The <emphasis role="bold">Transformation Editor</emphasis> context menu can be displayed by Rt-Clicking within
+                        the editor's text area.  The context menu is show below:
+			            <figure>
+			                <title>Transformation Editor context menu</title>
+			                <mediaobject>
+			                    <imageobject>
+			                        <imagedata fileref="images/screencaps/transformation-editor-context-menu.png" />
+			                    </imageobject>
+			                </mediaobject>
+			            </figure>
+			            Following is a summary of the context menu actions:
+                        <itemizedlist>
+                            <listitem>
+                                <para>
+                                    <emphasis role="bold">Cut - Copy - Paste</emphasis> - Typical text editor actions to cut, copy or
+                                    paste text within the editor.
+                                </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <emphasis role="bold">Undo - Redo</emphasis> - Allows you to Undo or Redo the previous action.
+                                </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <emphasis role="bold">Find</emphasis> - Displays a Find-Replace Dialog which allows you to 
+                                    search and replace text within the transformation.
+                                </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <emphasis role="bold">Apply Template...</emphasis> - Displays the 'Choose a SQL Template' Dialog,
+                                    which allows you to choose a starting SQL Template from a list of common SQL patterns.  See 
+                                     <xref linkend="view-table-wizard-section" /> for a description of this dialog.
+                                </para>
+                            </listitem>
+                        </itemizedlist>
+                    </para>
+                </listitem>
 			</itemizedlist>
 			
             <!-- ####### USING RECONCILER SECTION ######################################### -->
