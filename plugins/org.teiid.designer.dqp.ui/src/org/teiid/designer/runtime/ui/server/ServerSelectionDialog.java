@@ -7,6 +7,10 @@
  */
 package org.teiid.designer.runtime.ui.server;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -18,8 +22,10 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
@@ -28,9 +34,11 @@ import org.teiid.designer.runtime.Server;
 import com.metamatrix.core.event.IChangeListener;
 import com.metamatrix.core.event.IChangeNotifier;
 import com.metamatrix.core.util.I18nUtil;
+import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.internal.dqp.ui.workspace.TeiidViewTreeProvider;
 import com.metamatrix.ui.internal.util.WidgetFactory;
+import com.metamatrix.ui.internal.util.WidgetUtil;
 import com.metamatrix.ui.internal.widget.Label;
 
 public class ServerSelectionDialog extends TitleAreaDialog implements
@@ -40,11 +48,7 @@ public class ServerSelectionDialog extends TitleAreaDialog implements
 
 	Server selectedServer;
 	
-    TreeViewer viewer;
-    TeiidViewTreeProvider treeProvider;
-
-	private Button browseButton;
-	private Text selectedServerText;
+	Combo serversCombo;
 
 	/**
 	 * @since 5.5.3
@@ -52,20 +56,6 @@ public class ServerSelectionDialog extends TitleAreaDialog implements
 	public ServerSelectionDialog(Shell parentShell) {
 		super(parentShell);
 		setShellStyle(getShellStyle() | SWT.RESIZE);
-	}
-
-	/**
-	 * @see org.eclipse.jface.dialogs.Dialog#close()
-	 * @since 5.5.3
-	 */
-	@Override
-	public boolean close() {
-
-		if (this.treeProvider != null) {
-			this.treeProvider.dispose();
-		}
-
-		return super.close();
 	}
 
 	/**
@@ -98,39 +88,56 @@ public class ServerSelectionDialog extends TitleAreaDialog implements
 	 * @see org.eclipse.jface.dialogs.TitleAreaDialog#createDialogArea(org.eclipse.swt.widgets.Composite)
 	 * @since 5.5.3
 	 */
+	@SuppressWarnings("unused")
 	@Override
 	protected Control createDialogArea(Composite parent) {
 
 		Composite pnlOuter = (Composite) super.createDialogArea(parent);
 		Composite panel = new Composite(pnlOuter, SWT.NONE);
 		GridLayout gridLayout = new GridLayout();
-		gridLayout.numColumns = 3;
+		gridLayout.numColumns = 2;
 		panel.setLayout(gridLayout);
 		panel.setLayoutData(new GridData(GridData.FILL_BOTH));
 
 		// set title
-		setTitle("Teiid Server Selection"); //UTIL.getString(PREFIX + "subTitle")); //$NON-NLS-1$
-		setMessage("Browse to select an Teiid Server to edit"); //UTIL.getString(PREFIX + "initialMessage")); //$NON-NLS-1$
+		setTitle(UTIL.getString(PREFIX + "title")); //$NON-NLS-1$
+		setMessage(UTIL.getString(PREFIX + "initialMessage")); //$NON-NLS-1$
 
-		Label label = WidgetFactory.createLabel(panel, "Server"); //UTIL.getString(PREFIX + "tableOrProcedure")); //$NON-NLS-1$
-		label.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false));
+//		Group serversGroup = WidgetFactory.createGroup(panel, UTIL.getString(PREFIX + "teiidServers"), GridData.FILL_BOTH, 2, 2); //$NON-NLS-1$
+//		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+//		gd.horizontalSpan = 2;
+//		serversGroup.setLayoutData(gd);
 
-		// textfield for named type
-		this.selectedServerText = WidgetFactory.createTextField(panel,GridData.FILL_HORIZONTAL/* GridData.HORIZONTAL_ALIGN_FILL */);
-		this.selectedServerText.setEditable(false);
+		ACTION_COMBO: {
+			serversCombo = new Combo(panel, SWT.NONE | SWT.READ_ONLY);
+			GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+			gd.horizontalSpan = 2;
+			serversCombo.setLayoutData(gd);
 
-		// browse type button
-		this.browseButton = WidgetFactory.createButton(panel, "..."); //UTIL.getString(PREFIX + "button.browseType")); //$NON-NLS-1$
-//		this.browseButton.setToolTipText(UTIL.getString(PREFIX	+ "button.browseType.tip")); //$NON-NLS-1$
-		this.browseButton.setEnabled(true);
-		this.browseButton.setLayoutData(new GridData(SWT.CENTER, SWT.NONE,
-				false, false));
-		this.browseButton.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent theEvent) {
-				handleBrowseForServerPressed();
+			serversCombo.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent ev) {
+					selectedServer = null;
+					String serverName = serversCombo.getItem(serversCombo.getSelectionIndex());
+					
+					Collection<Server> servers = DqpPlugin.getInstance().getServerManager().getServers();
+					for( Server server : servers ) {
+						if( server.getCustomLabel().equalsIgnoreCase(serverName) ) {
+							selectedServer = server;
+							break;
+						}
+					}
+					
+					updateState();
+				}
+			});
+			Collection<Server> servers = DqpPlugin.getInstance().getServerManager().getServers();
+			List<String> nameList = new ArrayList<String>();
+			for( Server server : servers ) {
+				nameList.add(server.getCustomLabel());
 			}
-		});
+			WidgetUtil.setComboItems(serversCombo, nameList, null, true);
+		}
 
 		return panel;
 	}
@@ -148,37 +155,20 @@ public class ServerSelectionDialog extends TitleAreaDialog implements
 	}
 
 	private void updateState() {
-		IStatus status = Status.OK_STATUS;
 
-		if (status.getSeverity() == IStatus.ERROR) {
+		if (this.selectedServer == null ) {
 			getButton(OK).setEnabled(false);
-			setErrorMessage(status.getMessage());
+			if( this.serversCombo.getItemCount() == 0 ) {
+				setErrorMessage(UTIL.getString(PREFIX + "noServersExistMessage")); //$NON-NLS-1$
+			} else {
+				setErrorMessage(UTIL.getString(PREFIX + "noServerSelectedMessage")); //$NON-NLS-1$
+			}
+
+			
 		} else {
 			getButton(OK).setEnabled(true);
 			setErrorMessage(null);
 			setMessage(UTIL.getString(PREFIX + "okMsg")); //$NON-NLS-1$
 		}
-	}
-
-	private void handleBrowseForServerPressed() {
-		MessageDialog.openWarning(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Unimplemented Dialog",  //$NON-NLS-1$
-				"Browse for Server Selection not yet ready..."); //$NON-NLS-1$
-		
-//		ModelWorkspaceDialog sdDialog = createTableOrProcedureSelector();
-//
-//		// add filters
-//		((ModelWorkspaceDialog) sdDialog).addFilter(new ClosedProjectFilter());
-//
-//		sdDialog.open();
-//
-//		if (sdDialog.getReturnCode() == Window.OK) {
-//			Object[] selections = sdDialog.getResult();
-//			// should be single selection
-//			selectedServer = (Server) selections[0];
-//			this.selectedServerText.setText(selectedServer.getCustomLabel());
-//
-//			updateState();
-//		}
-
 	}
 }
