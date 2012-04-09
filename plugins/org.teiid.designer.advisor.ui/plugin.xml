@@ -83,7 +83,7 @@
             id="org.teiid.designer.ui.cheatsheet_advisor_04"
             name="Create Model from XML Local File Source">
          <description>
-            Create Model from a local or remote XML source
+            Create Model from a local XML source
          </description>
       </cheatsheet>
       <cheatsheet
@@ -93,7 +93,7 @@
             id="org.teiid.designer.ui.cheatsheet_advisor_05"
             name="Create Model from XML Remote Source">
          <description>
-            Create Model from a local or remote XML source
+            Create Model from a remote XML source
          </description>
       </cheatsheet>
       <cheatsheet
