@@ -396,6 +396,11 @@ CHEAT_SHEET_IDS.MODEL_XML_LOCAL_SOURCE,
 	        return;
 		}
 		
+		if( id.equalsIgnoreCase(COMMAND_IDS.NEW_MODEL_XML_DOC)) {
+			createNewModel(ModelType.VIRTUAL_LITERAL, MODEL_CLASSES.XML, properties);
+	        return;
+		}
+		
         // NEW OBJECT OPTIONS
         if (id.equalsIgnoreCase(COMMAND_IDS.NEW_OBJECT_VIEW_TABLE)) {
             CreateViewTableAction action = new CreateViewTableAction(properties);
