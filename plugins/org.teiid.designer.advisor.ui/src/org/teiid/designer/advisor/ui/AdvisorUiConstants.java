@@ -86,13 +86,11 @@ public interface AdvisorUiConstants {
 	};
 	
 	String[] ASPECT_CONSUME_SOAP_WS = {
-			COMMAND_IDS.CREATE_WEB_SRVICES_DATA_FILE,
 			COMMAND_IDS.CREATE_CONNECTION_WEB_SERVICE_ODA,
 			COMMAND_IDS.GENERATE_WS_MODELS_FROM_WSDL
 	};
 	
 	String[] ASPECT_CONSUME_REST_WS = {
-			COMMAND_IDS.CREATE_WEB_SRVICES_DATA_FILE,
 			COMMAND_IDS.CREATE_CONNECTION_WEB_SERVICE,
 			COMMAND_IDS.GENERATE_WS_MODELS_FROM_WSDL
 	};
@@ -158,8 +156,6 @@ public interface AdvisorUiConstants {
 		String CREATE_CONNECTION_WEB_SERVICE = "org.teiid.designer.connection.new.ws"; //$NON-NLS-1$
 		String CREATE_CONNECTION_WEB_SERVICE_ODA = "org.teiid.designer.connection.new.odaws"; //$NON-NLS-1$
 		
-		String CREATE_WEB_SRVICES_DATA_FILE= "org.teiid.designer.connection.new.wsdatafile"; //$NON-NLS-1$
-		
 		String GENERATE_WS_MODELS_FROM_WSDL = "org.teiid.designer.generatewsmodelsfromwsdl";  //$NON-NLS-1$
 		String OPEN_DATA_SOURCE_EXPLORER_VIEW = "org.eclipse.datatools.openexplorerview"; //$NON-NLS-1$
 		
@@ -209,8 +205,6 @@ public interface AdvisorUiConstants {
 		String CREATE_CONNECTION_WEB_SERVICE = "Create a NON-SOAP Web Services connection profile"; //$NON-NLS-1$
 		String CREATE_CONNECTION_WEB_SERVICE_ODA = "Create an ODA Web Services connection profile"; //$NON-NLS-1$
 		
-		String CREATE_WEB_SRVICES_DATA_FILE= "org.teiid.designer.connection.new.wsdatafile"; //$NON-NLS-1$
-		
 		String GENERATE_WS_MODELS_FROM_WSDL = "org.teiid.designer.generatewsmodelsfromwsdl";  //$NON-NLS-1$
 		String OPEN_DATA_SOURCE_EXPLORER_VIEW = "Open Datatools' Data Source Explorer view"; //$NON-NLS-1$
 		
@@ -256,7 +250,6 @@ public interface AdvisorUiConstants {
 		String CREATE_CONNECTION_MODESHAPE = Messages.CreateModeshapeConnection;
 		String CREATE_CONNECTION_WEB_SERVICE = Messages.CreateWebServicesConnection;
 		String CREATE_CONNECTION_WEB_SERVICE_ODA = Messages.CreateOdaWebServicesConnection;
-		String CREATE_WEB_SRVICES_DATA_FILE= Messages.CreateWebServicesDataFile;
 		
 		String GENERATE_WS_MODELS_FROM_WSDL= Messages.GenerateWSModelsFromWsdl;
 		
@@ -302,7 +295,6 @@ public interface AdvisorUiConstants {
 		String CREATE_CONNECTION_MODESHAPE = Messages.CreateModeshapeConnection_Short;
 		String CREATE_CONNECTION_WEB_SERVICE = Messages.CreateWebServicesConnection_Short;
 		String CREATE_CONNECTION_WEB_SERVICE_ODA= Messages.CreateOdaWebServicesConnection_Short;
-		String CREATE_WEB_SRVICES_DATA_FILE= Messages.CreateWebServicesDataFile_Short;
 		
 		String GENERATE_WS_MODELS_FROM_WSDL= Messages.GenerateWSModelsFromWsdl_Short;
 		

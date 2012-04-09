@@ -77,8 +77,6 @@ public class Messages  extends NLS {
     public static String CreateVdb_Short;
     public static String CreateWebServicesConnection;
     public static String CreateWebServicesConnection_Short;
-    public static String CreateWebServicesDataFile;
-    public static String CreateWebServicesDataFile_Short;
     
     public static String DefineModels;
     public static String DeployVdb;
