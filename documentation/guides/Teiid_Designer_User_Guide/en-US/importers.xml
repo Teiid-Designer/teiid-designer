@@ -963,7 +963,7 @@ FROM
 		<title>Import WSDL into Relational Models</title>
 		<para>You can turn your WSDL file (local or URL) into a queryable relational procedures that 
 			represent your desired request and response web service structure defined through your WSDL's schema definition.
-			This importer is accessed by lanching Eclipse's "Import..." action and selecting the "Teiid Designer > WSDL File or URL >> Source and View Model (SOAP)" option.
+			This importer is accessed by launching Eclipse's "Import..." action and selecting the "Teiid Designer > WSDL File or URL >> Source and View Model (SOAP)" option.
 			<emphasis>Web Services Connection Profile</emphasis> defined 
 			by a WSDL file in your workspace or defined by a URL. Designer 
 			will interpret the WSDL, locate any associated or dependent XML 
@@ -1021,8 +1021,8 @@ FROM
 						</listitem>
 						<listitem>
 							<para><emphasis role="bold">Step 6 </emphasis> - This wizard generates both request and response procedures 
-							that are used in the queryable wrapped procedure. The next page , Procedure Definition, contains requires defining 
-							the details of your request and response structure.</para>
+							that are used in the queryable wrapped procedure. The next page, Procedure Definition, provides the means to define 
+							the details of your request and response structures.</para>
 							<para>In the Request tab, select and double-click the schema elements you wish to be input parameters 
 							for your request. These will be added to the Element Info panel and the resulting 
 							generated SQL statement will be updated to reflect the new element. 
