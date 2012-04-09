@@ -456,7 +456,8 @@ public class WsdlDefinitionPage extends WizardPage
 			wsdlURIText.setText(props.getProperty(WSDL_URI_PROP_KEY));
 			//importManager.setWSDLFileUri(props.getProperty(WSDL_URI_PROP_KEY));
 			updateWidgetEnablements();
-			
+			setErrorMessage(null);
+			setMessage(Messages.WsdlDefinitionPage_select_profile);
 		}
 
 		synchronizing = false;
