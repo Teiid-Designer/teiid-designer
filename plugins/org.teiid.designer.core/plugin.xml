@@ -48,7 +48,7 @@
          name="systemVirtualResource"
          point="org.teiid.designer.core.externalResource">
       <resourceName>
-         /System/SYS.xmi
+         System/SYS.xmi
       </resourceName>
       <resourceUrl>
          System.vdb
