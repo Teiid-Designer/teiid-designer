@@ -128,7 +128,7 @@ public class StatusActionHandler implements IAdvisorActionHandler, AdvisorUiCons
 	        IAction newSalesforceCPAction = new Action() {
 	            @Override
 	            public void run() {
-	            	AdvisorActionFactory.executeAction(COMMAND_IDS.CREATE_CONNECTION_JDBC, true);
+	            	AdvisorActionFactory.executeAction(COMMAND_IDS.CREATE_CONNECTION_SALESFORCE, true);
 	            }
 	        };
 	        newSalesforceCPAction.setText(Messages.CreateSalesforceConnection);
@@ -189,7 +189,7 @@ public class StatusActionHandler implements IAdvisorActionHandler, AdvisorUiCons
 	        IAction delegateImportDdlAction = new Action() {
 	            @Override
 	            public void run() {
-	                AdvisorActionFactory.executeAction(COMMAND_IDS.IMPORT_SALESFORCE, true);
+	                AdvisorActionFactory.executeAction(COMMAND_IDS.IMPORT_DDL, true);
 	            }
 	        };
 	        delegateImportDdlAction.setText(Messages.Action_ImportDdl_text);
@@ -205,7 +205,7 @@ public class StatusActionHandler implements IAdvisorActionHandler, AdvisorUiCons
 	        IAction delegateImportFlatFileAction = new Action() {
 	            @Override
 	            public void run() {
-	                AdvisorActionFactory.executeAction(COMMAND_IDS.IMPORT_SALESFORCE, true);
+	                AdvisorActionFactory.executeAction(COMMAND_IDS.IMPORT_FLAT_FILE, true);
 	            }
 	        };
 	        delegateImportFlatFileAction.setText(Messages.Action_ImportFlatFile_text);
@@ -222,7 +222,7 @@ public class StatusActionHandler implements IAdvisorActionHandler, AdvisorUiCons
 	        IAction delegateImportXmlFileAction = new Action() {
 	            @Override
 	            public void run() {
-	                AdvisorActionFactory.executeAction(COMMAND_IDS.IMPORT_SALESFORCE, true);
+	                AdvisorActionFactory.executeAction(COMMAND_IDS.IMPORT_XML_FILE, true);
 	            }
 	        };
 	        delegateImportXmlFileAction.setText(Messages.Action_ImportXmlFile_text);
