@@ -541,7 +541,7 @@ public final class VdbModelEntry extends VdbEntry {
 
                 if (refs != null) {
                     for (final Resource importedModel : refs) {
-                        java.net.URI uri = URIUtil.fromString(importedModel.getURI().toString());
+                    	java.net.URI uri = java.net.URI.create(importedModel.getURI().toString());
                         IFile[] modelFiles = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocationURI(uri);
                         final IPath name = modelFiles[0].getFullPath();
                         VdbModelEntry importedEntry = null;
