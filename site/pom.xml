@@ -5,10 +5,10 @@
 	<parent>
 		<groupId>org.jboss.tools</groupId>
 		<artifactId>teiid</artifactId>
-		<version>0.0.4-SNAPSHOT</version>
+		<version>0.0.3-SNAPSHOT</version>
 	</parent>
 	<groupId>org.jboss.tools</groupId>
 	<artifactId>teiid.site</artifactId>
-	<version>0.0.4-SNAPSHOT</version>
+	<version>0.0.3-SNAPSHOT</version>
 	<packaging>eclipse-update-site</packaging>
 </project>
