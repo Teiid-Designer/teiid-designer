@@ -22,5 +22,18 @@
 		<module>tests</module>
 		<module>site</module>
 	</modules>
+
+	<repositories>
+		<!-- To resolve parent artifact -->
+		<repository>
+      			<id>jboss-public-repository-group</id>
+	      		<name>JBoss Public Repository Group</name>
+      			<url>http://repository.jboss.org/nexus/content/groups/public/</url>
+	    	</repository>
+	    	<repository>
+			<id>jboss-snapshots-repository</id>
+			<name>JBoss Snapshots Repository</name>
+			<url>https://repository.jboss.org/nexus/content/repositories/snapshots/</url>
+		</repository>
+	</repositories>
 </project>
-	

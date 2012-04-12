@@ -10,5 +10,5 @@
 	<groupId>org.jboss.tools</groupId>
 	<artifactId>teiid.site</artifactId>
 	<version>0.0.4-SNAPSHOT</version>
-	<packaging>eclipse-update-site</packaging>
+	<packaging>eclipse-repository</packaging>
 </project>
