@@ -24,7 +24,6 @@ import javax.wsdl.OperationType;
 import javax.wsdl.Output;
 import javax.wsdl.WSDLException;
 import javax.wsdl.extensions.http.HTTPAddress;
-import javax.wsdl.extensions.http.HTTPOperation;
 import javax.wsdl.extensions.soap.SOAPAddress;
 import javax.wsdl.extensions.soap.SOAPBinding;
 import javax.wsdl.extensions.soap.SOAPBody;
@@ -67,6 +66,7 @@ public class ModelBuilder {
     private Exception m_wsdlException;
     private XSDSchema[] m_schemas;
     private WSDLSchemaExtractor extractor;
+    private static String DEFAULT_STYLE = "document"; //$NON-NLS-1$
 
     public ModelBuilder() {
 
@@ -290,11 +290,11 @@ public class ModelBuilder {
                 } 
             }
             if (operation.getBinding().getStyle() == null) {
-                operation.setCanModel(false);
-                String message = ModelGeneratorWsdlPlugin.Util.getString("ModelBuilder.cannot.resolve.style"); //$NON-NLS-1$
-                operation.addProblemMessage(message);
-            } else {
-                createBindingInfo(operation);
+            	//Per the spec, if the binding style is not set (rpc or document)
+            	//the default should be "document".
+            	//see http://www.w3.org/TR/wsdl#_soap:binding
+            	operation.getBinding().setStyle(DEFAULT_STYLE);
+            	createBindingInfo(operation);
             }
             retVal[arrayPtr++] = operation;
         }

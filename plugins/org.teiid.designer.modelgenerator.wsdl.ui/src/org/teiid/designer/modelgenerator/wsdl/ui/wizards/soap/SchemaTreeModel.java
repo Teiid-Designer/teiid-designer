@@ -212,6 +212,10 @@ public class SchemaTreeModel {
 					&& ((XSDParticleImpl) parentElement).getContent() instanceof XSDElementDeclarationImpl) {
 				name = ((XSDElementDeclarationImpl) ((XSDParticleImpl) parentElement)
 						.getContent()).getName();
+				if (name==null){
+				name = ((XSDElementDeclarationImpl) ((XSDParticleImpl) parentElement)
+						.getContent()).getResolvedElementDeclaration().getName();
+				}
 				stack.push("/"+name); //$NON-NLS-1$
 			} else if (parentElement instanceof XSDElementDeclarationImpl) {
 				name = ((XSDElementDeclarationImpl) parentElement).getName();

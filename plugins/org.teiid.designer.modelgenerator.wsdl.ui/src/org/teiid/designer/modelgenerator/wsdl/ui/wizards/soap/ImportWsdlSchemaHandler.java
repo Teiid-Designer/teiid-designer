@@ -93,15 +93,23 @@ public class ImportWsdlSchemaHandler {
 			boolean foundElement = false;
 
 			for (XSDSchema schema : schemas) {
-				EList<XSDTypeDefinition> types = schema.getTypeDefinitions();
-				for (XSDTypeDefinition xsdType : types) {
-					String elementName = xsdType.getName();
+				
+				EList<XSDElementDeclaration> elements = schema
+						.getElementDeclarations();
+				for (XSDElementDeclaration element : elements) {
+					String elementName = element.getName();
 					if (elementName.equals(partElementName)) {
-						elementDeclaration = xsdType;
+						if (element.getTypeDefinition() instanceof XSDSimpleTypeDefinition) {
+							elementDeclaration = element;
+						} else {
+							elementDeclaration = element
+									.getTypeDefinition();
+						}
+
 						foundElement = true;
 						if (type == ProcedureInfo.RESPONSE)
 							try {
-								describe(schema, elementName);
+								describe(schema, elementName, (XSDElementDeclarationImpl)element);
 							} catch (ModelerCoreException ex) {
 								throw new RuntimeException(ex);
 							}
@@ -109,28 +117,22 @@ public class ImportWsdlSchemaHandler {
 						break;
 					}
 				}
+				
 
 				if (foundElement == true)
-					continue;
+					break;
 
 				if (elementDeclaration == null) {
 
-					EList<XSDElementDeclaration> elements = schema
-							.getElementDeclarations();
-					for (XSDElementDeclaration element : elements) {
-						String elementName = element.getName();
+					EList<XSDTypeDefinition> types = schema.getTypeDefinitions();
+					for (XSDTypeDefinition xsdType : types) {
+						String elementName = xsdType.getName();
 						if (elementName.equals(partElementName)) {
-							if (element.getTypeDefinition() instanceof XSDSimpleTypeDefinition) {
-								elementDeclaration = element;
-							} else {
-								elementDeclaration = element
-										.getTypeDefinition();
-							}
-
+							elementDeclaration = xsdType;
 							foundElement = true;
 							if (type == ProcedureInfo.RESPONSE)
 								try {
-									describe(schema, elementName);
+									describe(schema, elementName, null);
 								} catch (ModelerCoreException ex) {
 									throw new RuntimeException(ex);
 								}
@@ -175,6 +177,10 @@ public class ImportWsdlSchemaHandler {
 				&& ((XSDParticleImpl) obj).getContent() instanceof XSDElementDeclarationImpl) {
 			name = ((XSDElementDeclarationImpl) ((XSDParticleImpl) obj)
 					.getContent()).getName();
+			if (name==null){
+				name = ((XSDElementDeclarationImpl) ((XSDParticleImpl) obj)
+						.getContent()).getResolvedElementDeclaration().getName();
+			}
 			ns = ((XSDElementDeclarationImpl) ((XSDParticleImpl) obj)
 					.getContent()).getTargetNamespace();
 			if (type == ProcedureInfo.TYPE_BODY) {
@@ -240,6 +246,12 @@ public class ImportWsdlSchemaHandler {
 			List<SchemaObject> elements = schemaModel.getElements();
 			String name = ((XSDElementDeclarationImpl) ((XSDParticleImpl) obj)
 					.getContent()).getName();
+			
+			if (name==null){
+				name = ((XSDElementDeclarationImpl) ((XSDParticleImpl) obj)
+						.getContent()).getResolvedElementDeclaration().getName();
+			}
+		
 			StringBuilder xpath = new StringBuilder();
 			String namespace = null;
 			String prefix = null;
@@ -249,7 +261,7 @@ public class ImportWsdlSchemaHandler {
 						SqlConstants.ENVELOPE_NS);
 			}
 			getParentXpath(obj, parentXpath);
-			if (this.schemaTreeModel.getRootPath()==null){
+			if (this.schemaTreeModel.getRootPath()==null || this.schemaTreeModel.getRootPath().isEmpty()){
 				this.schemaTreeModel.setRootPath(this.schemaTreeModel.determineRootPath());
 			}
 			
@@ -310,12 +322,12 @@ public class ImportWsdlSchemaHandler {
 
 	//Traverse Element to build parent-child relationships used
 	//to determine XPath
-	private void describe(XSDSchema schema, String element)
+	private void describe(XSDSchema schema, String element, XSDElementDeclaration elementDeclaration)
 			throws ModelerCoreException {
 		schemaTreeModel = new SchemaTreeModel();
 		rootnode = schemaTreeModel.new SchemaNode();
-		XSDElementDeclaration xed = schema.resolveElementDeclaration(element);
-		XSDTypeDefinition xtd = xed.getTypeDefinition();
+		XSDElementDeclaration xed = (elementDeclaration == null ? schema.resolveElementDeclaration(element) : elementDeclaration);
+		XSDTypeDefinition xtd = elementDeclaration.getTypeDefinition();
 
 		if (xtd instanceof XSDComplexTypeDefinition) {
 			rootnode.setElement(xed);
@@ -364,6 +376,10 @@ public class ImportWsdlSchemaHandler {
 		} else if (content instanceof XSDModelGroup) {
 			XSDModelGroup group = (XSDModelGroup) content;
 			EList<XSDParticle> contents = group.getContents();
+			node = schemaTreeModel.new SchemaNode(content, parent, null, false);
+			if (parent!=null){
+				parent.addChild(node);
+			}
 			for (XSDParticle xsdParticle : contents) {
 				addXSDParticleToTree(xsdParticle, parent, node);
 			}
@@ -412,16 +428,16 @@ public class ImportWsdlSchemaHandler {
 	private void getParentXpath(Object element, StringBuilder parentXpath) {
 		SchemaNode node = this.schemaTreeModel.getMapNode().get(element);
 		String rootPath = this.schemaTreeModel.getRootNodeXpath();
-		String parentXPath = node.getParentXpath();
+		String parentXPath = node == null ? "" : node.getParentXpath();
 		parentXpath.append(rootPath).append(parentXPath);
 	}
 	
 	private void getRelativeXpath(Object element, StringBuilder xpath) {
 		SchemaNode node = this.schemaTreeModel.getMapNode().get(element);
-		String relativeXpath = node.getRelativeXpath();
+		String relativeXpath = node == null ? "" : node.getRelativeXpath();
 		//We need to append the full path and then remove the root path.
 		//This allows us to resolve nested complex types
-		String parentXPath = node.getParentXpath();
+		String parentXPath = node == null ? "" : node.getParentXpath();
 		parentXPath = parentXPath.replace(this.schemaTreeModel.getRootPath(), ""); //$NON-NLS-1$
 		xpath.append(parentXPath).append(relativeXpath);
 	}
