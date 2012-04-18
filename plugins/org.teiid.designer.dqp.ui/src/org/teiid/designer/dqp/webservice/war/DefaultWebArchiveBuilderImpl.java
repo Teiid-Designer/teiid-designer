@@ -24,14 +24,17 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+
 import javax.tools.JavaCompiler;
 import javax.tools.JavaCompiler.CompilationTask;
 import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.StandardLocation;
 import javax.tools.ToolProvider;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
@@ -47,15 +50,14 @@ import org.eclipse.xsd.XSDSchemaContent;
 import org.eclipse.xsd.util.XSDParser;
 import org.teiid.core.util.StringUtil;
 import org.teiid.designer.dqp.webservice.war.ui.wizards.WarDeploymentInfoPanel;
+
 import com.metamatrix.core.modeler.util.FileUtils;
 import com.metamatrix.core.util.TempDirectory;
 import com.metamatrix.modeler.core.types.DatatypeConstants;
-import com.metamatrix.modeler.core.workspace.ModelResource;
-import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
-import com.metamatrix.modeler.internal.core.workspace.WorkspaceResourceFinderUtil;
-import com.metamatrix.modeler.internal.ui.viewsupport.ModelIdentifier;
+import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.webservice.gen.BasicWsdlGenerator;
 import com.metamatrix.modeler.sdt.ModelerSdtPlugin;
+import com.metamatrix.modeler.vdb.ui.util.VdbResourceFinder;
 import com.metamatrix.modeler.webservice.WebServicePlugin;
 import com.metamatrix.modeler.webservice.util.AntTasks;
 
@@ -113,7 +115,7 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
         return operationToProcedureMap;
     }
 
-    /**
+	/**
      * @param operationToProcedureMap Sets operationToProcedureMap to the specified value.
      */
     public void setOperationToProcedureMap( Map<String, String> operationToProcedureMap ) {
@@ -652,27 +654,40 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
     }
 
     public void generateWsdl( Properties properties,
-                              File classesFolder ) throws IOException {
+                              File classesFolder ) throws IOException, CoreException {
 
         BasicWsdlGenerator wsdlGenerator = new BasicWsdlGenerator();
-        ModelResource wsModel = null;
+        Resource wsModel = null;
         final String contextName = (String)properties.get(WebArchiveBuilderConstants.PROPERTY_CONTEXT_NAME);
         final String host = (String)properties.get(WebArchiveBuilderConstants.PROPERTY_WAR_HOST);
         final String port = (String)properties.get(WebArchiveBuilderConstants.PROPERTY_WAR_PORT);
         final String tns = (String)properties.get(WebArchiveBuilderConstants.PROPERTY_WSDL_TNS);
-        final ArrayList<ModelResource> modelsArrayList = (ArrayList<ModelResource>)properties.get(WebArchiveBuilderConstants.PROPERTY_VDB_WS_MODELS);
+
         String webServiceName = contextName;
-        for (ModelResource webServiceModel : modelsArrayList) {
+
+        String vdbFileName = properties.getProperty(WebArchiveBuilderConstants.PROPERTY_VDB_FILE_NAME);
+        IPath vdbPath = new Path(vdbFileName);
+        IFile vdbFile = ResourcesPlugin.getWorkspace().getRoot().getFile(vdbPath);
+        
+    	VdbResourceFinder vdbResourceFinder = new VdbResourceFinder(vdbFile);
+        
+        for (Resource webServiceModel : vdbResourceFinder.getWebServiceResources() ) {
             try {
                 wsModel = webServiceModel;
-                wsdlGenerator.addWebServiceModel(webServiceModel.getEmfResource());
-                ArrayList<IResource> dependentSchemas = new ArrayList<IResource>();
-                IResource[] iResources = WorkspaceResourceFinderUtil.getDependentResources(webServiceModel.getResource());
-                getAllDependentSchemas(iResources, dependentSchemas);
-                for (IResource iResource : dependentSchemas) {
-                    if (ModelIdentifier.isSchemaModel(iResource)) {
+                wsdlGenerator.addWebServiceModel(wsModel);
+                ArrayList<Resource> dependentSchemas = new ArrayList<Resource>();
+                Resource[] resources = vdbResourceFinder.getDependentResources(wsModel);
+                vdbResourceFinder.getAllDependentSchemas(resources, dependentSchemas);
+                for (Resource resource : dependentSchemas) {
+                	
+                    if (ModelUtil.isXsdFile(resource)) {
+                    	String fullFilePath = resource.getURI().path();
+                    	String fileNameWithExtension = new Path(fullFilePath).lastSegment();
+                    	IPath fileLocationPath = new Path(fullFilePath).removeLastSegments(1);
+                    	//String fileLocation = fileLocationPath.toOSString();
+                    	
                         // Copy the XSD file to the classes folder
-                        XSDSchema xsdSchema = importSchema(iResource.getLocationURI().toString());
+                        XSDSchema xsdSchema = importSchema(fullFilePath);
 
                         // Check for an import of the global data types schema
                         if (containsGlobalDataTypeImport(xsdSchema)) {
@@ -680,27 +695,30 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
                             Resource builtInDataypesResource = ModelerSdtPlugin.getBuiltInTypesResource();
                             FileUtils.copy(new File(builtInDataypesResource.getURI().path()), classesFolder, true);
                             // Copy iResource to classesFolder
-                            File xsd = new File(iResource.getLocation().toOSString());
+                            File xsd = new File(fullFilePath);
                             FileUtils.copy(xsd, classesFolder, true);
                             // Get handle to new file in classesFolder
-                            File xsdCopy = new File(classesFolder.getPath() + "/" + iResource.getName()); //$NON-NLS-1$
+                            File xsdCopy = new File(classesFolder.getPath() + "/" + fileNameWithExtension); //$NON-NLS-1$
                             // Replace the schemaLocation of the global data
                             // types schema import with the relative path to xsd
                             AntTasks.replace(xsdCopy,
                                              "schemaLocation=\"http://www.metamatrix.com/metamodels/SimpleDatatypes-instance\"", //$NON-NLS-1$
                                              "schemaLocation=\"builtInDataTypes.xsd\""); //$NON-NLS-1$ 
                         } else {
-                            FileUtils.copy(new File(iResource.getLocation().toOSString()), classesFolder, true);
+                            FileUtils.copy(new File(fullFilePath), classesFolder, true);
                         }
 
-                        wsdlGenerator.addXsdModel(importSchema(iResource.getLocationURI().toString()), iResource.getLocation());
+                        wsdlGenerator.addXsdModel(xsdSchema, fileLocationPath);
                     }
                 }
-            } catch (ModelWorkspaceException e) {
+            } catch ( Exception e ) {
+            	vdbResourceFinder.dispose();
                 throw new RuntimeException(e.getMessage());
             }
         }
-
+        
+        vdbResourceFinder.dispose();
+        
         wsdlGenerator.setName(webServiceName);
         wsdlGenerator.setTargetNamespace(tns);
         wsdlGenerator.setUrlRootForReferences(StringUtil.Constants.EMPTY_STRING);
@@ -720,7 +738,7 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
             OutputStream stream = new FileOutputStream(new File(classesFolder, fileName));
             wsdlGenerator.write(stream);
             // Get an iFile instance to refresh our workspace
-            IFile iFile = wsModel.getModelProject().getProject().getFile(fileName);
+            IFile iFile = vdbFile;
             iFile.refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
             setPorts(wsdlGenerator.getPorts());
             setOperationToProcedureMap(wsdlGenerator.getOperationToProcedureMap());
@@ -749,27 +767,6 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
 
         }
         return containsImport;
-    }
-
-    private void getAllDependentSchemas( IResource[] iResources,
-                                         ArrayList<IResource> dependentSchemas ) {
-
-        // Add discovered dependent schemas
-        for (IResource iResource : iResources) {
-            if (ModelIdentifier.isSchemaModel(iResource)) {
-                dependentSchemas.add(iResource);
-            }
-        }
-
-        // Now iterate through the dependent schemas and find their dependent
-        // resources, if any
-        for (IResource iResource : iResources) {
-            IResource[] moreIResources = WorkspaceResourceFinderUtil.getDependentResources(iResource);
-            if (moreIResources.length > 0) {
-                getAllDependentSchemas(moreIResources, dependentSchemas);
-            }
-        }
-
     }
 
     public XSDSchema importSchema( String path ) {

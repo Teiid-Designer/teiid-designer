@@ -25,6 +25,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.teiid.designer.vdb.Vdb.Xml;
+import org.teiid.designer.vdb.manifest.ModelElement;
 import org.teiid.designer.vdb.manifest.PropertyElement;
 import org.teiid.designer.vdb.manifest.VdbElement;
 import org.xml.sax.SAXException;
@@ -65,79 +66,70 @@ public class VdbUtil {
 	public static boolean isPreviewVdb(final IFile file) {
         CoreArgCheck.isNotNull(file, "file is null"); //$NON-NLS-1$
 
-        if (!file.exists()) {
-            return false;
+        if (file.exists()) {
+	        // if VDB file is empty just check file name
+	        if (file.getLocation().toFile().length() == 0L) {
+	            // make sure file prefix and extension is right
+	            if (!Vdb.FILE_EXTENSION_NO_DOT.equals(file.getFileExtension())) {
+	                return false;
+	            }
+	
+	            return file.getName().startsWith(Vdb.PREVIEW_PREFIX);
+	        }
+	
+	        VdbElement manifest = VdbUtil.getVdbManifest(file);
+	        if( manifest != null ) {
+	            // VDB properties
+	            for (final PropertyElement property : manifest.getProperties()) {
+	                final String name = property.getName();
+	                if (Xml.PREVIEW.equals(name)) {
+	                    return Boolean.parseBoolean(property.getValue());
+	                }
+	            }
+	        }
         }
 
-        // if VDB file is empty just check file name
-        if (file.getLocation().toFile().length() == 0L) {
-            // make sure file prefix and extension is right
-            if (!Vdb.FILE_EXTENSION_NO_DOT.equals(file.getFileExtension())) {
-                return false;
-            }
-
-            return file.getName().startsWith(Vdb.PREVIEW_PREFIX);
-        }
-
-        final boolean[] previewable = new boolean[1];
-        
-        OperationUtil.perform(new Unreliable() {
-
-            ZipFile archive = null;
-            InputStream entryStream = null;
-
-            @Override
-            public void doIfFails() {
-            }
-
-            @Override
-            public void finallyDo() throws Exception {
-                if (entryStream != null) entryStream.close();
-                if (archive != null) archive.close();
-            }
-
-            @Override
-            public void tryToDo() throws Exception {
-                archive = new ZipFile(file.getLocation().toString());
-                boolean foundManifest = false;
-                for (final Enumeration<? extends ZipEntry> iter = archive.entries(); iter.hasMoreElements();) {
-                    final ZipEntry zipEntry = iter.nextElement();
-                    entryStream = archive.getInputStream(zipEntry);
-                    if (zipEntry.getName().equals(MANIFEST)) {
-                        // Initialize using manifest
-                        foundManifest = true;
-                        final Unmarshaller unmarshaller = getJaxbContext().createUnmarshaller();
-                        unmarshaller.setSchema(getManifestSchema());
-                        final VdbElement manifest = (VdbElement)unmarshaller.unmarshal(entryStream);
-
-                        // VDB properties
-                        for (final PropertyElement property : manifest.getProperties()) {
-                            final String name = property.getName();
-                            if (Xml.PREVIEW.equals(name)) {
-                                previewable[0] = Boolean.parseBoolean(property.getValue());
-                            }
-                        }
-                    }
-                    // Don't process any more than we need to.
-                    if( foundManifest ) {
-                        break;
-                    }
-                }
-            }
-        });
-        return previewable[0];
+        return false;
 	}
 	
 	/**
+	 * Utility method to determine if a vdb contains models of a certain "class"
 	 * @param file
-	 * @return version the vdb version number
+	 * * @param modelClass
+	 * @param type 
+	 * @return preview attribute value for VDB. true or false
 	 */
-	public static int getVdbVersion(final IFile file) {
-        final int[] vdbVersion = new int[1];
-        
-        if( !file.exists() ) {
-        	return 0;
+	public static boolean hasModelClass(final IFile file, final String modelClass, final String type) {
+        if( file.exists() && Vdb.FILE_EXTENSION_NO_DOT.equals(file.getFileExtension()) ) {
+            VdbElement manifest = VdbUtil.getVdbManifest(file);
+            if( manifest != null ) {
+            	for( ModelElement model : manifest.getModels()) {
+            		String typeValue = model.getType();
+            		if( type.equalsIgnoreCase(typeValue) ) {
+	                    for (final PropertyElement property : model.getProperties()) {
+	                        final String name = property.getName();
+	                        if (ModelElement.MODEL_CLASS.equals(name)) {
+	                        	String modelClassValue = property.getValue();
+	                        	if( modelClass.equalsIgnoreCase(modelClassValue) ) {
+	                        		return true;
+	                        	}
+	                        }
+	                    }
+            		}
+            	}
+            }
         }
+        
+        return false;
+	}
+	
+	private static VdbElement getVdbManifest(final IFile file) {
+		final VdbElement[] manifest = new VdbElement[1];
+		
+        if( !file.exists() ) {
+        	return null;
+        }
+        
         OperationUtil.perform(new Unreliable() {
 
             ZipFile archive = null;
@@ -165,9 +157,8 @@ public class VdbUtil {
                     	foundManifest = true;
                         final Unmarshaller unmarshaller = getJaxbContext().createUnmarshaller();
                         unmarshaller.setSchema(getManifestSchema());
-                        final VdbElement manifest = (VdbElement)unmarshaller.unmarshal(entryStream);
-   
-                        vdbVersion[0] = manifest.getVersion();
+                        manifest[0] = (VdbElement)unmarshaller.unmarshal(entryStream);
+
                     }
                     // Don't process any more than we need to.
                     if( foundManifest ) {
@@ -176,7 +167,24 @@ public class VdbUtil {
                 }
             }
         });
-        return vdbVersion[0];
+        
+        return manifest[0];
+	}
+	
+	/**
+	 * @param file
+	 * @return version the vdb version number
+	 */
+	public static int getVdbVersion(final IFile file) {
+        
+        if( file.exists() ) {
+            VdbElement manifest = VdbUtil.getVdbManifest(file);
+            if( manifest != null ) {
+            	return manifest.getVersion();
+            }
+        }
+        
+        return 0;
 	}
 	
     static JAXBContext getJaxbContext() throws JAXBException {

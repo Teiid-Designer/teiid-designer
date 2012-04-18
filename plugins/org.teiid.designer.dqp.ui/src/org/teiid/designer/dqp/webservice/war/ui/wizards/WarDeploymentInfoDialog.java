@@ -8,7 +8,7 @@
 package org.teiid.designer.dqp.webservice.war.ui.wizards;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -27,8 +27,8 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.teiid.designer.dqp.webservice.war.WebArchiveBuilder;
 import org.teiid.designer.dqp.webservice.war.WebArchiveBuilderFactory;
+
 import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
 import com.metamatrix.modeler.webservice.WebServicePlugin;
@@ -57,7 +57,6 @@ public class WarDeploymentInfoDialog extends TitleAreaDialog implements Internal
     private WarDeploymentInfoDataPage warDeploymentInfoDataPage;
 
     private IFile theVdb;
-    private ArrayList<ModelResource> wsModelResourcearrayList;
     private IStatus deploymentStatus;
     private String warFileName;
 
@@ -70,7 +69,6 @@ public class WarDeploymentInfoDialog extends TitleAreaDialog implements Internal
      */
     public WarDeploymentInfoDialog( Shell parent,
                                     IFile theVdb,
-                                    ArrayList<ModelResource> wsModelResources,
                                     IStatus initialStatus ) {
         super(parent); // );
         // this.setShellStyle(getShellStyle());
@@ -79,7 +77,7 @@ public class WarDeploymentInfoDialog extends TitleAreaDialog implements Internal
         if (id != null) setDefaultImage(id.createImage());
 
         this.theVdb = theVdb;
-        this.wsModelResourcearrayList = wsModelResources;
+        //this.wsModelResourcearrayList = wsModelResources;
         this.initialStatus = initialStatus;
         deploymentStatus = new Status(IStatus.OK, DqpUiConstants.PLUGIN_ID, IStatus.OK, "WAR file created successfully", null);//$NON-NLS-1$
     }
@@ -192,7 +190,7 @@ public class WarDeploymentInfoDialog extends TitleAreaDialog implements Internal
                 createWar = MessageDialog.openQuestion(this.getShell(), OVERWRITE_TARGET_WAR_TITLE, OVERWRITE_TARGET_WAR_MESSAGE);
 
             }
-            if (createWar) {
+            if (createWar) {//        WarDataserviceModel.getInstance().setWsModelResourcearrayList(wsModelResourcearrayList);
                 monitor.beginTask(DqpUiConstants.UTIL.getString(CREATING_WAR_FILE_MESSAGE_ID, warFileName), 100);
                 deploymentStatus = webArchiveBuilder.createWebArchive(WarDataserviceModel.getInstance().getProperties(), monitor);
                 // log status
@@ -235,7 +233,6 @@ public class WarDeploymentInfoDialog extends TitleAreaDialog implements Internal
         loadUseMTOMDefault();
 
         WarDataserviceModel.getInstance().setVdbFile(theVdb);
-        WarDataserviceModel.getInstance().setWsModelResourcearrayList(wsModelResourcearrayList);
 
         warDeploymentInfoDataPage.loadData();
         warDeploymentInfoDataPage.setWarFileNameInDialog();
