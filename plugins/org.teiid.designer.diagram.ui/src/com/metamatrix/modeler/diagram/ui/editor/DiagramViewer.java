@@ -12,12 +12,14 @@ import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
 import org.eclipse.draw2d.FigureCanvas;
 import org.eclipse.draw2d.Viewport;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.EditPart;
+import org.eclipse.gef.ui.parts.GraphicalViewerKeyHandler;
 import org.eclipse.gef.ui.parts.ScrollingGraphicalViewer;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
@@ -25,6 +27,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.printing.Printer;
 import org.eclipse.swt.printing.PrinterData;
+
 import com.metamatrix.metamodels.core.ModelAnnotation;
 import com.metamatrix.metamodels.diagram.Diagram;
 import com.metamatrix.modeler.core.workspace.ModelResource;
@@ -49,6 +52,7 @@ public class DiagramViewer extends ScrollingGraphicalViewer {
         super();
         this.editor = editor;
         packageDiagramProvider = new PackageDiagramContentProvider();
+        setKeyHandler(new DiagramKeyHandler(this));
     }
 
     @Override
