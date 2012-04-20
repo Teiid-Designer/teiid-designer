@@ -104,15 +104,7 @@
         point="org.teiid.designer.ui.modelResourceAction">
       <resourceAction
          name="org.teiid.designer.runtime.ui.actions.GenerateWarAction"
-         label="%generateWarAction.label"><extension
-        id="GenerateWarAction"
-        name="%generateWarAction.name"
-        point="org.teiid.designer.ui.modelResourceAction">
-      <resourceAction
-         name="org.teiid.designer.runtime.ui.actions.GenerateWarAction"
          label="%generateWarAction.label">
-      </resourceAction>
-   </extension>
       </resourceAction>
    </extension>
    <extension
