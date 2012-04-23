@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Localization: plugin
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.teiid.designer.vdb;singleton:=true
-Bundle-Version: 7.7.0.qualifier
+Bundle-Version: 7.7.1.qualifier
 Bundle-Activator: org.teiid.designer.vdb.VdbPlugin
 Bundle-Vendor: %pluginProvider
 Require-Bundle: teiid_embedded_query,

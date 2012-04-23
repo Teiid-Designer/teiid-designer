@@ -2,6 +2,6 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.teiid.designer
-Bundle-Version: 7.7.0.qualifier
+Bundle-Version: 7.7.1.qualifier
 Bundle-Vendor: %pluginProvider
 Bundle-Localization: plugin
