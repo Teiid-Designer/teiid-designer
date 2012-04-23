@@ -8,7 +8,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 	</parent>
 	<groupId>org.jboss.tools</groupId>
 	<artifactId>org.teiid.designer.metamodels.xmlservice</artifactId> 
-	<version>7.7.0-SNAPSHOT</version>
+	<version>7.7.1-SNAPSHOT</version>
 	<packaging>eclipse-plugin</packaging>
     <build>
         <plugins>
