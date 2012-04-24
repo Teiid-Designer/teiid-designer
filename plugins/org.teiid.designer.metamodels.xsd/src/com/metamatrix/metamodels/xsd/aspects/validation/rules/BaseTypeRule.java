@@ -107,7 +107,7 @@ public class BaseTypeRule implements StructuralFeatureValidationRule {
         List typesInHierarchy = new ArrayList();
         typesInHierarchy.add(this);
         XSDSimpleTypeDefinition baseTypeDefn = datatype.getBaseTypeDefinition();
-        if (baseTypeDefn == this) {
+        if (this.equals(baseTypeDefn)) {
             return true;
         }
         while (baseTypeDefn != null && baseTypeDefn.getName() != null) {

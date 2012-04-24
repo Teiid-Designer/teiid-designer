@@ -85,7 +85,7 @@ public abstract class UiBusyIndicator {
             shells = display.getShells();
             for (int i = 0; i < shells.length; i++) {
                 Integer id = (Integer)shells[i].getData(BUSYID_NAME);
-                if (id == busyId) {
+                if (busyId.equals(id)) {
                     shells[i].setCursor(null);
                     shells[i].setData(BUSYID_NAME, null);
                 }

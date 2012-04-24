@@ -248,7 +248,7 @@ public class SqlAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy
         String sDocTextUpcased = d.get();
 
         if ( sDocTextUpcased.length() > 0 && sDocTextUpcased.charAt( sDocTextUpcased.length() - 1 ) == chNEWLINE ) {
-            sDocTextUpcased.trim();
+            sDocTextUpcased = sDocTextUpcased.trim();
         }
 
         sDocTextUpcased += command.text;
