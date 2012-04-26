@@ -27,14 +27,14 @@ public abstract class DatatypeUtilities {
         MetamodelAspect mmAspect = ModelObjectUtilities.getSqlAspect(eObject);
         if( mmAspect instanceof SqlColumnAspect ) {
             // Now we parse the name
-            int index = newSignature.indexOf(COLON);
+            int index = newSignature.lastIndexOf(COLON);
             boolean canSetLength = ((SqlColumnAspect)mmAspect).canSetLength();
             if( index > 0 ) {
                 SqlColumnAspect sqAspect = (SqlColumnAspect)mmAspect;
                 String newName = newSignature.substring(0, index).trim();
                 index++;
                 String fullDatatype = newSignature.substring(index);
-                if( fullDatatype.length() > 0 ) {
+                if( fullDatatype.length() > 0 && fullDatatype.toUpperCase().equals("STRING")) { //$NON-NLS-1$
 
                     String dTypeString = null;
                     
@@ -67,6 +67,8 @@ public abstract class DatatypeUtilities {
                             sqAspect.setDatatype(eObject,dType);
                         }
                     }
+                } else {
+                	newName += COLON + fullDatatype;
                 }
                 
                 ModelerCore.getModelEditor().rename(eObject, newName);
