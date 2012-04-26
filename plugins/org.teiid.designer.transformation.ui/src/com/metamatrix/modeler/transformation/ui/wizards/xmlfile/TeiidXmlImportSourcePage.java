@@ -61,6 +61,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.INewWizard;
 import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
 import org.teiid.designer.datatools.connection.IConnectionInfoHelper;
+import org.teiid.designer.datatools.profiles.ws.IWSProfileConstants;
 import org.teiid.designer.datatools.profiles.xml.IXmlProfileConstants;
 import org.teiid.designer.datatools.ui.actions.EditConnectionProfileAction;
 import org.teiid.designer.datatools.ui.dialogs.NewTeiidFilteredCPWizard;
@@ -124,6 +125,7 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 
 	private static final String XML_URL_FILE_ID = IXmlProfileConstants.FILE_URL_CONNECTION_PROFILE_ID;
 	private static final String XML_FILE_ID = IXmlProfileConstants.LOCAL_FILE_CONNECTION_PROFILE_ID;
+	private static final String TEIID_WS_ID = IWSProfileConstants.TEIID_WS_CONNECTION_PROFILE_ID;
 
 	//private static final String SCHEMA_LIST_PROPERTY_KEY = "SCHEMAFILELIST";  //$NON-NLS-1$
 	private static final String LOCAL_FILE_NAME_KEY = IXmlProfileConstants.LOCAL_FILE_PATH_PROP_ID;
@@ -661,27 +663,40 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 		INewWizard wiz = null;
 
 		if (this.info.getFileMode() == TeiidMetadataImportInfo.FILE_MODE_TEIID_XML_URL) {
-			wiz = (INewWizard) new NewTeiidFilteredCPWizard(XML_URL_FILE_ID);
+			// We need to create a Dialog to ask user to choose either a XML File URL CP or a WS REST CP
+			TeiidXmlConnectionOptionsDialog dialog = new TeiidXmlConnectionOptionsDialog(Display.getCurrent().getActiveShell());
+			if (dialog.open() == Window.OK) {
+				boolean isRestProfile = dialog.isRestProfile();
+				if( isRestProfile ) {
+					wiz = (INewWizard) new NewTeiidFilteredCPWizard(TEIID_WS_ID);
+				} else {
+					wiz = (INewWizard) new NewTeiidFilteredCPWizard(XML_URL_FILE_ID);
+				}
+			}
+			
+			
 		} else {
 			wiz = (INewWizard) new NewTeiidFilteredCPWizard(XML_FILE_ID);
 		}
-
-		WizardDialog wizardDialog = new WizardDialog(Display.getCurrent().getActiveShell(), (Wizard) wiz);
-		wizardDialog.setBlockOnOpen(true);
-
-		CPListener listener = new CPListener();
-		ProfileManager.getInstance().addProfileListener(listener);
-		if (wizardDialog.open() == Window.OK) {
-
-			refreshConnectionProfiles();
-
-			resetCPComboItems();
-			setConnectionProfile(listener.getChangedProfile());
-
-			selectProfile(listener.getChangedProfile());
-
+		
+		if( wiz != null ) {
+			WizardDialog wizardDialog = new WizardDialog(Display.getCurrent().getActiveShell(), (Wizard) wiz);
+			wizardDialog.setBlockOnOpen(true);
+	
+			CPListener listener = new CPListener();
+			ProfileManager.getInstance().addProfileListener(listener);
+			if (wizardDialog.open() == Window.OK) {
+	
+				refreshConnectionProfiles();
+	
+				resetCPComboItems();
+				setConnectionProfile(listener.getChangedProfile());
+	
+				selectProfile(listener.getChangedProfile());
+	
+			}
+			ProfileManager.getInstance().removeProfileListener(listener);
 		}
-		ProfileManager.getInstance().removeProfileListener(listener);
 	}
 
 	void selectProfile(IConnectionProfile profile) {
