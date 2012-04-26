@@ -8,6 +8,8 @@
 package org.teiid.designer.datatools.profiles.ws;
 
 public interface IWSProfileConstants {
+	
+	String TEIID_WS_CONNECTION_PROFILE_ID = "org.teiid.designer.datatools.profiles.ws.WSConnectionProfile";  //$NON-NLS-1$
 
     String TEIID_CATEGORY = "org.teiid.designer.import.category"; //$NON-NLS-1$
     String PASSWORD_PROP_ID = "AuthPassword"; //$NON-NLS-1$

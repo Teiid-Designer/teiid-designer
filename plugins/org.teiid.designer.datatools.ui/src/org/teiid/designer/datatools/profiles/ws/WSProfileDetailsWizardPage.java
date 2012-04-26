@@ -119,12 +119,13 @@ public class WSProfileDetailsWizardPage extends ConnectionProfileDetailsPage
         urlText = new Text(scrolled, SWT.SINGLE | SWT.BORDER);
         urlText.setToolTipText(UTIL.getString("Common.URL.ToolTip")); //$NON-NLS-1$
         gd = new GridData(GridData.FILL_HORIZONTAL);
+        gd.widthHint = 500;
         urlText.setLayoutData(gd);
 
         securityLabel = new Label(scrolled, SWT.NONE);
         securityLabel.setText(UTIL.getString("Common.Security.Type.Label")); //$NON-NLS-1$
         securityLabel.setToolTipText(UTIL.getString("Common.Context.Factory.ToolTip")); //$NON-NLS-1$
-        gd = new GridData(GridData.FILL_HORIZONTAL);
+        gd = new GridData();
         securityLabel.setLayoutData(gd);
 
         securityCombo = new Combo(scrolled, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY);
@@ -137,7 +138,7 @@ public class WSProfileDetailsWizardPage extends ConnectionProfileDetailsPage
         usernameLabel = new Label(scrolled, SWT.NONE);
         usernameLabel.setText(UTIL.getString("Common.Username.Label")); //$NON-NLS-1$
         usernameLabel.setToolTipText(UTIL.getString("Common.Username.ToolTip")); //$NON-NLS-1$
-        gd = new GridData(GridData.FILL_HORIZONTAL);
+        gd = new GridData();
         usernameLabel.setLayoutData(gd);
 
         usernameText = new Text(scrolled, SWT.SINGLE | SWT.BORDER);
@@ -149,7 +150,7 @@ public class WSProfileDetailsWizardPage extends ConnectionProfileDetailsPage
         passwordLabel = new Label(scrolled, SWT.NONE);
         passwordLabel.setText(UTIL.getString("Common.Password.Label")); //$NON-NLS-1$
         passwordLabel.setToolTipText(UTIL.getString("Common.Password.ToolTip")); //$NON-NLS-1$
-        gd = new GridData(GridData.FILL_HORIZONTAL);
+        gd = new GridData();
         passwordLabel.setLayoutData(gd);
 
         passwordText = new Text(scrolled, SWT.SINGLE | SWT.BORDER | SWT.PASSWORD);
