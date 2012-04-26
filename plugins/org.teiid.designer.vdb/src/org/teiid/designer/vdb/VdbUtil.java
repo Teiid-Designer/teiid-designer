@@ -33,11 +33,24 @@ import org.xml.sax.SAXException;
 import com.metamatrix.core.modeler.util.OperationUtil;
 import com.metamatrix.core.modeler.util.OperationUtil.Unreliable;
 import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.metamodels.core.ModelType;
 
 /**
  * Utility methods used to query VDB manifest and VDB's
  */
 public class VdbUtil {
+	
+	@SuppressWarnings("javadoc")
+	public static final String PHYSICAL = "PHYSICAL"; //$NON-NLS-1$
+	@SuppressWarnings("javadoc")
+	public static final String VIRTUAL = "VIRTUAL"; //$NON-NLS-1$
+	@SuppressWarnings("javadoc")
+	public static final String FUNCTION = "FUNCTION"; //$NON-NLS-1$
+	@SuppressWarnings("javadoc")
+	public static final String OTHER = "OTHER"; //$NON-NLS-1$
+	@SuppressWarnings("javadoc")
+	public static final String DEPRECATED_TYPE = "TYPE"; //$NON-NLS-1$
+	
 	private static final String MANIFEST = "META-INF/vdb.xml"; //$NON-NLS-1$
 	
 	
@@ -196,4 +209,18 @@ public class VdbUtil {
         return schemaFactory.newSchema(VdbElement.class.getResource("/vdb-deployer.xsd")); //$NON-NLS-1$
     }
 
+    /**
+     * This method converts a vdb manifest model type and model path to a Designer ModelType object
+     * Reason being that an XML Schema (TYPE) model is defined in the vdb manifest as "OTHER"
+     * @param vdbModelType
+     * @param modelPath
+     * @return ModelType
+     */
+    public static ModelType getModelType(String vdbModelType, String modelPath) {
+    	if( vdbModelType == OTHER && modelPath.toUpperCase().endsWith(".XSD") ) { //$NON-NLS-1$
+      		return ModelType.TYPE_LITERAL;
+      	} else {
+      		return ModelType.get(vdbModelType);
+      	}
+    }
 }

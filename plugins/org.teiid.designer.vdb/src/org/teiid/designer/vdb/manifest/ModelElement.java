@@ -15,6 +15,7 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 import org.teiid.designer.vdb.VdbModelEntry;
+import org.teiid.designer.vdb.VdbUtil;
 import org.teiid.designer.vdb.VdbModelEntry.Problem;
 
 /**
@@ -74,7 +75,7 @@ public class ModelElement extends EntryElement {
         final String lastSeg = entry.getName().lastSegment();
         final int ndx = lastSeg.lastIndexOf('.');
         name = (ndx < 0 ? lastSeg : lastSeg.substring(0, ndx));
-        type = entry.getType().getName();
+        type = entry.getType();
         visible = entry.isVisible();
         if (entry.getSourceName() != null) getSources().add(new SourceElement(entry));
         for (final Problem problem : entry.getProblems())
@@ -117,6 +118,9 @@ public class ModelElement extends EntryElement {
      * @return type
      */
     public String getType() {
+    	if( VdbUtil.DEPRECATED_TYPE.equalsIgnoreCase(type.toUpperCase())) {
+        	return VdbUtil.OTHER;
+    	}
         return type;
     }
 
