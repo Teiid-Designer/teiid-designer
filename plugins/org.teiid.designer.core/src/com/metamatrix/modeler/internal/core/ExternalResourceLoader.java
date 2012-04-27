@@ -136,6 +136,7 @@ public class ExternalResourceLoader {
                                        final String resourceName,
                                        final String tempDirectoryPath ) throws ModelerCoreException {
 
+    	//System.out.println("retrieveResourceFile(" + resourceUrl + ", " + resourceName + ", " + tempDirectoryPath + ")");
         File resourceFile = null;
 
         // since this could be jar/zip/vdb file, and ZipUtil only works with the
@@ -150,6 +151,18 @@ public class ExternalResourceLoader {
                     throw new ModelerCoreException(
                                                    ModelerCore.Util.getString("ExternalResourceLoader.An_existing_resource_with_the_name_cannot_retrieved_from_{1}._7", resourceName, resourceUrl)); //$NON-NLS-1$				
                 }
+             } else {
+            	//System.out.println("First Check: " + resourceFile.getAbsolutePath());
+            	try {
+					if (!(contentEquals(new FileInputStream(resourceFile),new URL(resourceUrl).openStream()))){
+						//System.out.println("contents mismatch: trying to write new resource");
+						FileUtils.write(new URL(resourceUrl).openStream(), resourceFile);
+					}
+				} catch (IOException e) {
+					e.printStackTrace();
+					throw new ModelerCoreException(
+							ModelerCore.Util.getString("ExternalResourceLoader.An_existing_resource_with_the_name_cannot_retrieved_from_{1}._7", resourceName, resourceUrl)); //$NON-NLS-1$
+				}
             }
         } else {
             resourceFile = new File(resourceUrl);
@@ -165,7 +178,34 @@ public class ExternalResourceLoader {
         }
         return resourceFile;
     }
+    
+    /*
+    *  A resource currently exists if the resource does not match the resource from the Bundle it will be overwritten
+    *  TODO:  Determine if moving these resources to the workspace is actually needed.  Some of this might be avoided by
+    *  referencing the files directly from the plugin directory 
+    */
+    public static boolean contentEquals(InputStream input1, InputStream input2) throws IOException {
+    	if (!(input1 instanceof BufferedInputStream)) {
+    		input1 = new BufferedInputStream(input1);
+    	}
+    	if (!(input2 instanceof BufferedInputStream)) {
+    		input2 = new BufferedInputStream(input2);
+    	}
 
+    	int ch = input1.read();
+    	while (-1 != ch) {
+    		int ch2 = input2.read();
+    		if (ch != ch2) {
+    			return false;
+    		}
+    		ch = input1.read();
+    	}
+
+    	// ch2 should not have anymore to read
+    	int ch2 = input2.read();
+    	return (ch2 == -1);
+    }
+    
     /**
      * Load the model resource into the specified container
      * 
