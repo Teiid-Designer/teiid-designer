@@ -9,11 +9,21 @@ package com.metamatrix.modeler.transformation.ui.wizards.xmlfile;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Properties;
+
+import javax.xml.ws.handler.MessageContext;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -59,6 +69,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.INewWizard;
+import org.teiid.core.util.Base64;
 import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
 import org.teiid.designer.datatools.connection.IConnectionInfoHelper;
 import org.teiid.designer.datatools.profiles.ws.IWSProfileConstants;
@@ -130,6 +141,8 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 	//private static final String SCHEMA_LIST_PROPERTY_KEY = "SCHEMAFILELIST";  //$NON-NLS-1$
 	private static final String LOCAL_FILE_NAME_KEY = IXmlProfileConstants.LOCAL_FILE_PATH_PROP_ID;
 	private static final String FILE_URL_NAME_KEY = IXmlProfileConstants.URL_PROP_ID;
+	
+	private static final String CONTENT_TYPE_XML = "application/xml"; //$NON-NLS-1$
 
 	private static String getString(final String id) {
 		return Util.getString(I18N_PREFIX + id);
@@ -510,6 +523,15 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 	private IConnectionProfile getConnectionProfile() {
 		return this.info.getConnectionProfile();
 	}
+	
+	private boolean isRestConnectionProfile() {
+		IConnectionProfile profile = this.info.getConnectionProfile();
+		if( profile != null ) {
+			return profile.getProviderId().equals(TEIID_WS_ID);
+		}
+		
+		return false;
+	}
 
 	private void clearFileListViewer() {
 		this.info.clearXmlFileInfos();
@@ -523,79 +545,21 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 			String urlString = getUrlStringForConnectionProfile();
 
 			if (theXmlFile != null && theXmlFile.exists()) {
-				fileViewer.setInput(theXmlFile);
-				TeiidXmlFileInfo fileInfo = this.info.getXmlFileInfo(theXmlFile);
-				if (fileInfo == null) {
-					fileInfo = new TeiidXmlFileInfo(theXmlFile);
-					fileInfo.setIsUrl(false);
-					this.info.addXmlFileInfo(fileInfo);
-				}
-				fileParsingStatus = fileInfo.getParsingStatus();
-				if (fileParsingStatus.getSeverity() == IStatus.ERROR) {
-					MessageDialog.openError(this.getShell(),
-							getString("parsingErrorTitle"), //$NON-NLS-1$
-							fileParsingStatus.getMessage());
-				}
-				fileViewer.getTable().select(0);
-				fileViewer.getTable().getItem(0).setChecked(true);
-				info.setDoProcessXml(fileInfo.getDataFile(), true);
+				setXmlFile(theXmlFile, false, null);
 			} else if (urlString != null && urlString.trim().length() > 0) {
 				File xmlFile = null;
 				// Clears the viewer
 				// This will be the case if No XML is defined and URL
 				// version exists OR if nothing is defined in CP
 				fileViewer.setInput("no input"); //$NON-NLS-1$
-				//
-				URL newUrl = null;
-				try {
-					newUrl = URLHelper.buildURL(urlString);
-				} catch (MalformedURLException e) {
-					Util.log(e);
-					MessageDialog.openError(
-									this.getShell(),
-									getString("malformedUrlErrorTitle"), //$NON-NLS-1$
-									UiConstants.Util.getString("malformedUrlErrorMessage", urlString, e.getMessage())); //$NON-NLS-1$
+				
+				if( isRestConnectionProfile() ) {
+					xmlFile = getXmlFileFromRestUrl(getConnectionProfile());
+				} else {
+					xmlFile = getXmlFileFromUrl(urlString);
 				}
-
-				if (newUrl != null) {
-					boolean resolved = true;
-					try {
-						resolved = URLHelper.resolveUrl(newUrl);
-					} catch (Exception e) {
-						resolved = false;
-
-					}
-
-					if (resolved) {
-						try {
-							String filePath = formatPath(newUrl);
-							xmlFile = URLHelper.createFileFromUrl(newUrl,CoreStringUtil.createFileName(filePath),DOT_XML_LOWER);
-						} catch (MalformedURLException theException) {
-							Util.log(theException);
-						} catch (IOException theException) {
-							Util.log(theException);
-						}
-					}
-				}
-
 				if (xmlFile != null && xmlFile.exists()) {
-					fileViewer.setInput(xmlFile);
-					TeiidXmlFileInfo fileInfo = this.info.getXmlFileInfo(xmlFile);
-					if (fileInfo == null) {
-						fileInfo = new TeiidXmlFileInfo(xmlFile);
-						fileInfo.setIsUrl(true);
-						fileInfo.setXmlFileUrl(urlString);
-						this.info.addXmlFileInfo(fileInfo);
-					}
-					fileViewer.getTable().select(0);
-					fileViewer.getTable().getItem(0).setChecked(true);
-					info.setDoProcessXml(fileInfo.getDataFile(), true);
-					fileParsingStatus = fileInfo.getParsingStatus();
-					if (fileParsingStatus.getSeverity() == IStatus.ERROR) {
-						MessageDialog.openError(this.getShell(),
-								getString("parsingErrorTitle"), //$NON-NLS-1$
-								fileParsingStatus.getMessage());
-					}
+					setXmlFile(xmlFile, true, urlString);
 				}
 			} else {
 				fileViewer.setInput(null);
@@ -603,6 +567,110 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 						getString("invalidXmlConnectionProfileTitle"), //$NON-NLS-1$
 						getString("invalidXmlConnectionProfileMessage")); //$NON-NLS-1$
 			}
+		}
+	}
+	
+	private File getXmlFileFromRestUrl(IConnectionProfile profile) {
+		File xmlFile = null;
+		Properties props = profile.getBaseProperties();
+		String endpoint = (String) props.get(IWSProfileConstants.URL_PROP_ID);
+		String username = (String) props.get(IWSProfileConstants.USERNAME_PROP_ID);
+		String password = (String) props.get(IWSProfileConstants.PASSWORD_PROP_ID);
+		
+		try {
+			HashMap<String, Object> requestContext = new HashMap<String, Object>();
+			
+			final URL url = new URL(endpoint);
+			final HttpURLConnection httpConn = (HttpURLConnection) url.openConnection();
+			
+			if( !CONTENT_TYPE_XML.equalsIgnoreCase(httpConn.getContentType())) {
+				return null;
+			}
+			//httpConn.setRequestMethod((String) requestContext.get(MessageContext.HTTP_REQUEST_METHOD));
+			Map<String, List<String>> header = (Map<String, List<String>>)requestContext.get(MessageContext.HTTP_REQUEST_HEADERS);
+//		for (Map.Entry<String, List<String>> entry : header.entrySet()) {
+//			String value = StringUtil.join(entry.getValue(), ","); //$NON-NLS-1$
+//			httpConn.setRequestProperty(entry.getKey(), value);
+//		}
+//			String username = "xxxxx"; //(String) requestContext.get(Dispatch.USERNAME_PROPERTY);
+//			String password = "yyyy"; //(String) requestContext.get(Dispatch.PASSWORD_PROPERTY);
+
+			if (username != null) {
+				httpConn.setRequestProperty("Authorization", "Basic " + Base64.encodeBytes((username + ':' + password).getBytes())); //$NON-NLS-1$ //$NON-NLS-2$
+			}
+			
+			httpConn.setDoOutput(true);
+			OutputStream os = httpConn.getOutputStream();
+		} catch (MalformedURLException ex) {
+			// TODO Auto-generated catch block
+			ex.printStackTrace();
+		} catch (ProtocolException ex) {
+			// TODO Auto-generated catch block
+			ex.printStackTrace();
+		} catch (IOException ex) {
+			// TODO Auto-generated catch block
+			ex.printStackTrace();
+		}
+		
+		return xmlFile;
+	}
+	
+	private File getXmlFileFromUrl(String urlString) {
+		File xmlFile = null;
+		URL newUrl = null;
+		try {
+			newUrl = URLHelper.buildURL(urlString);
+		} catch (MalformedURLException e) {
+			Util.log(e);
+			MessageDialog.openError(
+							this.getShell(),
+							getString("malformedUrlErrorTitle"), //$NON-NLS-1$
+							UiConstants.Util.getString("malformedUrlErrorMessage", urlString, e.getMessage())); //$NON-NLS-1$
+		}
+
+		if (newUrl != null) {
+			boolean resolved = true;
+			try {
+				resolved = URLHelper.resolveUrl(newUrl);
+			} catch (Exception e) {
+				resolved = false;
+
+			}
+
+			if (resolved) {
+				try {
+					String filePath = formatPath(newUrl);
+					xmlFile = URLHelper.createFileFromUrl(newUrl,CoreStringUtil.createFileName(filePath),DOT_XML_LOWER);
+				} catch (MalformedURLException theException) {
+					Util.log(theException);
+				} catch (IOException theException) {
+					Util.log(theException);
+				}
+			}
+		}
+		
+		return xmlFile;
+	}
+	
+	private void setXmlFile(File xmlFile, boolean isUrl, String urlString) {
+		fileViewer.setInput(xmlFile);
+		TeiidXmlFileInfo fileInfo = this.info.getXmlFileInfo(xmlFile);
+		if (fileInfo == null) {
+			fileInfo = new TeiidXmlFileInfo(xmlFile);
+			fileInfo.setIsUrl(isUrl);
+			if( isUrl ) {
+				fileInfo.setXmlFileUrl(urlString);
+			}
+			this.info.addXmlFileInfo(fileInfo);
+		}
+		fileViewer.getTable().select(0);
+		fileViewer.getTable().getItem(0).setChecked(true);
+		info.setDoProcessXml(fileInfo.getDataFile(), true);
+		fileParsingStatus = fileInfo.getParsingStatus();
+		if (fileParsingStatus.getSeverity() == IStatus.ERROR) {
+			MessageDialog.openError(this.getShell(),
+					getString("parsingErrorTitle"), //$NON-NLS-1$
+					fileParsingStatus.getMessage());
 		}
 	}
 
@@ -646,9 +714,16 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 	private String getUrlStringForConnectionProfile() {
 		if (getConnectionProfile() != null) {
 			Properties props = getConnectionProfile().getBaseProperties();
-			String fileListValue = (String) props.get(FILE_URL_NAME_KEY);
-			if (fileListValue != null) {
-				return fileListValue;
+			if(isRestConnectionProfile()) {
+				String fileListValue = (String) props.get(IWSProfileConstants.URL_PROP_ID);
+				if (fileListValue != null) {
+					return fileListValue;
+				}
+			} else {
+				String fileListValue = (String) props.get(FILE_URL_NAME_KEY);
+				if (fileListValue != null) {
+					return fileListValue;
+				}
 			}
 		}
 
@@ -900,6 +975,8 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 				if( this.info.isXmlLocalFileMode() && profile.getProviderId().equalsIgnoreCase(XML_FILE_ID)) {
 					connectionProfiles.add(profile);
 				} else if( this.info.isXmlUrlFileMode() && profile.getProviderId().equalsIgnoreCase(XML_URL_FILE_ID) ) {
+					connectionProfiles.add(profile);
+				} else if( this.info.isXmlUrlFileMode() && profile.getProviderId().equalsIgnoreCase(TEIID_WS_ID) ) {
 					connectionProfiles.add(profile);
 				}
 			}
