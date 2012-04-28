@@ -106,6 +106,7 @@ public class Messages  extends NLS {
     public static String ModelFlatFileSource;
     public static String ModelingActions;
     public static String ModelJdbcSource;
+    public static String ModelLocalXmlFileSource;
     public static String ModelRemoteXmlFileSource;
     public static String ModelViews;
     
