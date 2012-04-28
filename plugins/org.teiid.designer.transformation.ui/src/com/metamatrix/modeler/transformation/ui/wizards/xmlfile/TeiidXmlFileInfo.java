@@ -24,6 +24,7 @@ import org.xml.sax.helpers.LocatorImpl;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.core.util.StringUtilities;
+import com.metamatrix.modeler.internal.transformation.util.SqlConstants;
 import com.metamatrix.modeler.transformation.ui.UiConstants;
 import com.metamatrix.modeler.transformation.ui.UiPlugin;
 import com.metamatrix.modeler.transformation.ui.wizards.file.TeiidColumnInfo;
@@ -33,24 +34,11 @@ import com.metamatrix.modeler.transformation.ui.wizards.file.TeiidFileInfo;
  * Business object used to manage Teiid-specific XML Data File information used during import
  * 
  */
-public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants {
+public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants, SqlConstants {
 	private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(TeiidXmlFileInfo.class);
 	
-	public static final char DOT = '.';
-    public static final char COMMA = ',';
-    public static final char SPACE = ' ';
-    public static final char L_PAREN = '(';
-    public static final char R_PAREN = ')';
-    public static final char S_QUOTE = '\'';
-    public static final String AS = "AS"; //$NON-NLS-1$
-    public static final String COLUMNS = "COLUMNS"; //$NON-NLS-1$
-    public static final String PATH = "PATH"; //$NON-NLS-1$
-    public static final String DEFAULT = "DEFAULT"; //$NON-NLS-1$
-    public static final String FOR_ORDINALITY = "FOR ORDINALITY"; //$NON-NLS-1$
-    public static final String DEFAULT_XQUERY = "/"; //$NON-NLS-1$
-    public static final String GET = "GET"; //$NON-NLS-1$
+
     public static final String NULL = "null"; //$NON-NLS-1$
-    public static final String XMLNAMESPACES = "XMLNAMESPACES";  //$NON-NLS-1$
     private static final String XSI_NAMESPACE_PREFIX = "xsi"; //$NON-NLS-1$
 	
     private static String getString( final String id ) {
@@ -529,7 +517,7 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants {
     	int i=0;
     	int nColumns = getColumnInfoList().length;
     	for( TeiidColumnInfo columnInfo : getColumnInfoList()) {
-    		String name = columnInfo.getName();
+    		String name = getValidSqlName(columnInfo.getName());
     		sb.append(alias).append(DOT).append(name).append(SPACE).append(AS).append(SPACE).append(name);
     		
     		if(i < (nColumns-1)) {
@@ -565,7 +553,7 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants {
     		if( columnInfo.getOrdinality() ) {
     			sb.append(columnInfo.getName()).append(SPACE).append(FOR_ORDINALITY);
     		} else {
-	    		sb.append(columnInfo.getName()).append(SPACE).append(columnInfo.getDatatype());
+	    		sb.append(getValidSqlName(columnInfo.getName())).append(SPACE).append(columnInfo.getDatatype());
 	    		
 	    		String defValue = columnInfo.getDefaultValue();
 	    		if( defValue != null && defValue.length() > 0) {
@@ -617,6 +605,15 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants {
 	    			alias);
     	}
     	return finalSQLString;
+    }
+    
+    private String getValidSqlName(String name) {
+    	// NOT SURE ABOUT OTHER CHARACTERS including a '.' ???
+		if( name.indexOf(COLON) > -1 ) {
+			return D_QUOTE + name + D_QUOTE;
+		}
+		
+		return name;
     }
     
     public XmlElement getRootNode() {
