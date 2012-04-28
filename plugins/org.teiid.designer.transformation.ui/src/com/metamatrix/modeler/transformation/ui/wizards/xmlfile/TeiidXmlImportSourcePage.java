@@ -8,21 +8,16 @@
 package com.metamatrix.modeler.transformation.ui.wizards.xmlfile;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Properties;
-
-import javax.xml.ws.handler.MessageContext;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -70,12 +65,14 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.INewWizard;
 import org.teiid.core.util.Base64;
+import org.teiid.core.util.ObjectConverterUtil;
 import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
 import org.teiid.designer.datatools.connection.IConnectionInfoHelper;
 import org.teiid.designer.datatools.profiles.ws.IWSProfileConstants;
 import org.teiid.designer.datatools.profiles.xml.IXmlProfileConstants;
 import org.teiid.designer.datatools.ui.actions.EditConnectionProfileAction;
 import org.teiid.designer.datatools.ui.dialogs.NewTeiidFilteredCPWizard;
+
 import com.metamatrix.common.protocol.URLHelper;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.core.util.I18nUtil;
@@ -142,7 +139,7 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 	private static final String LOCAL_FILE_NAME_KEY = IXmlProfileConstants.LOCAL_FILE_PATH_PROP_ID;
 	private static final String FILE_URL_NAME_KEY = IXmlProfileConstants.URL_PROP_ID;
 	
-	private static final String CONTENT_TYPE_XML = "application/xml"; //$NON-NLS-1$
+	//private static final String CONTENT_TYPE_XML = "application/xml"; //$NON-NLS-1$
 
 	private static String getString(final String id) {
 		return Util.getString(I18N_PREFIX + id);
@@ -571,45 +568,48 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 	}
 	
 	private File getXmlFileFromRestUrl(IConnectionProfile profile) {
-		File xmlFile = null;
 		Properties props = profile.getBaseProperties();
 		String endpoint = (String) props.get(IWSProfileConstants.URL_PROP_ID);
 		String username = (String) props.get(IWSProfileConstants.USERNAME_PROP_ID);
 		String password = (String) props.get(IWSProfileConstants.PASSWORD_PROP_ID);
+		File xmlFile = null;
+		FileOutputStream fos = null;
 		
 		try {
-			HashMap<String, Object> requestContext = new HashMap<String, Object>();
 			
 			final URL url = new URL(endpoint);
 			final HttpURLConnection httpConn = (HttpURLConnection) url.openConnection();
+			String filePath = formatPath(url);
 			
-			if( !CONTENT_TYPE_XML.equalsIgnoreCase(httpConn.getContentType())) {
-				return null;
-			}
-			//httpConn.setRequestMethod((String) requestContext.get(MessageContext.HTTP_REQUEST_METHOD));
-			Map<String, List<String>> header = (Map<String, List<String>>)requestContext.get(MessageContext.HTTP_REQUEST_HEADERS);
-//		for (Map.Entry<String, List<String>> entry : header.entrySet()) {
-//			String value = StringUtil.join(entry.getValue(), ","); //$NON-NLS-1$
-//			httpConn.setRequestProperty(entry.getKey(), value);
-//		}
-//			String username = "xxxxx"; //(String) requestContext.get(Dispatch.USERNAME_PROPERTY);
-//			String password = "yyyy"; //(String) requestContext.get(Dispatch.PASSWORD_PROPERTY);
-
-			if (username != null) {
+			//TODO Validate content is XML
+//			if( !CONTENT_TYPE_XML.equalsIgnoreCase(httpConn.getContentType())) {
+//				return null;
+//			}
+			
+			if (username != null && !username.isEmpty()) {
 				httpConn.setRequestProperty("Authorization", "Basic " + Base64.encodeBytes((username + ':' + password).getBytes())); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			
 			httpConn.setDoOutput(true);
-			OutputStream os = httpConn.getOutputStream();
+			InputStream is = httpConn.getInputStream();
+			xmlFile = File.createTempFile(CoreStringUtil.createFileName(filePath),DOT_XML_LOWER);
+			FileOutputStream os = new FileOutputStream(xmlFile);
+			ObjectConverterUtil.write(os, is, -1);
+			
 		} catch (MalformedURLException ex) {
-			// TODO Auto-generated catch block
-			ex.printStackTrace();
+			throw new RuntimeException(ex);
 		} catch (ProtocolException ex) {
-			// TODO Auto-generated catch block
-			ex.printStackTrace();
+			throw new RuntimeException(ex);
 		} catch (IOException ex) {
-			// TODO Auto-generated catch block
-			ex.printStackTrace();
+			throw new RuntimeException(ex);
+		} finally {
+			try {
+				if (fos != null) {
+					fos.close();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 		
 		return xmlFile;
