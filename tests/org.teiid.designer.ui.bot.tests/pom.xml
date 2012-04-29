@@ -5,7 +5,7 @@
 
 	<groupId>org.jboss.tools</groupId>
 	<artifactId>org.teiid.designer.ui.bot.tests</artifactId>
-	<version>7.6.0-SNAPSHOT</version>
+	<version>7.7.0-SNAPSHOT</version>
 	<packaging>eclipse-test-plugin</packaging>
 
 	<parent>
@@ -15,7 +15,7 @@
 	</parent>
 
 	<properties>
-		<jbosstools.test.teiid-7>teiid-7.6.0.Final</jbosstools.test.teiid-7>
+		<jbosstools.test.teiid-7>teiid-7.7.0.Final</jbosstools.test.teiid-7>
 		<jbosstools.test.jboss-as-5>jboss-5.1.0.GA</jbosstools.test.jboss-as-5>
 		<jbosstools.test.jboss-as-5.home>${requirement.build.root}/${jbosstools.test.jboss-as-5}</jbosstools.test.jboss-as-5.home>
 		<configurations.dir>resources/project_config_files</configurations.dir>
