@@ -11,6 +11,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
+import org.teiid.query.sql.symbol.ElementSymbol;
 
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.StringUtilities;
@@ -28,14 +29,12 @@ public class TeiidColumnInfo {
 	
 	public static final int DEFAULT_WIDTH = 10;
 	
-	private static final StringNameValidator nameValidator = new RelationalStringNameValidator(false, true);
-	
 	private static final IPath EMPTY_PATH = new Path(StringUtilities.EMPTY_STRING);
 	
     /**
      * The unique column name (never <code>null</code> or empty).
      */
-	private String name;
+	private ElementSymbol nameSymbol;
 	
 	 /**
      * The unique column datatype (never <code>null</code> or empty).
@@ -96,8 +95,8 @@ public class TeiidColumnInfo {
 		super();
         CoreArgCheck.isNotEmpty(name, "name is null"); //$NON-NLS-1$
         CoreArgCheck.isNotEmpty(datatype, "datatype is null"); //$NON-NLS-1$
-        
-		this.name = name;
+
+		initNameSymbol(name);
 		this.datatype = datatype;
 		validate();
 	}
@@ -135,12 +134,37 @@ public class TeiidColumnInfo {
         validate();
 	}
 
+	/** 
+	 * Initialise the {@link ElementSymbol} to hold the
+	 * name. This validates the symbol's character composition.
+	 * 
+	 * The '.' character is the only puntuation symbol that will cause
+	 * problems for an element symbol so these are replaced these with '_'.
+	 */
+	private void initNameSymbol(final String name) {
+	    nameSymbol = new ElementSymbol(name.replaceAll("\\.", "_"));  //$NON-NLS-1$//$NON-NLS-2$
+	}
+	
 	/**
+	 * Get the fully validated column name. This should be used in SQL string
+	 * generation.
 	 * 
 	 * @return name the column name
 	 */
+	public String getSymbolName() {
+		return this.nameSymbol.toString();
+	}
+	
+    /**
+     * Get the column name for display in the UI. This removes any quotes for
+     * aesthetic reasons. Use {@link #getSymbolName()} for retrieving the 
+     * fully validated column name.
+     * 
+     * @return the column name sans quotes.
+     */
 	public String getName() {
-		return this.name;
+	    String name = this.nameSymbol.toString();
+	    return name.replaceAll("\"", ""); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**
@@ -149,7 +173,8 @@ public class TeiidColumnInfo {
 	 */
 	public void setName(String name) {
 		CoreArgCheck.isNotNull(name, "name is null"); //$NON-NLS-1$
-		this.name = name;
+		
+		initNameSymbol(name);
 		validate();
 	}
 
@@ -338,13 +363,17 @@ public class TeiidColumnInfo {
 	
 	private void validate() {
 
-		String result = nameValidator.checkValidName(getName());
-		if( result != null ) {
-			setStatus(new Status(IStatus.ERROR, UiConstants.PLUGIN_ID, UiConstants.Util.getString("TeiidColumnInfo.status.invalidColumnName", getName()))); //$NON-NLS-1$
-			return;
-		}
-		
-		// Validate Paths
+        /*
+         * No validation is currently required since the name is automatically
+         * 'fixed' by the teiid element symbol. If validation is required on
+         * other fields then a failure should be captured by setting the status,
+         * eg.
+         * 
+         * setStatus(new Status(IStatus.ERROR, UiConstants.PLUGIN_ID,
+         * UiConstants
+         * .Util.getString("TeiidColumnInfo.status.invalidColumnName",
+         * getName()))); //$NON-NLS-1$
+         */
 		
 		setStatus(Status.OK_STATUS);
 	}
@@ -359,6 +388,7 @@ public class TeiidColumnInfo {
         StringBuilder text = new StringBuilder();
         text.append("Teiid Metadata Column Info: "); //$NON-NLS-1$
         text.append("name =").append(getName()); //$NON-NLS-1$
+        text.append("symbol name = ").append(getSymbolName()); //$NON-NLS-1$
         text.append(", datatype =").append(getDatatype()); //$NON-NLS-1$
 
         return text.toString();

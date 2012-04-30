@@ -78,7 +78,7 @@ public class FlatFileViewModelFactory extends FlatFileRelationalModelFactory {
     	for (TeiidColumnInfo columnInfo : info.getColumnInfoList()) {
     		Column column = factory.createColumn();
     		column.setName(columnInfo.getName());
-    		column.setNameInSource(columnInfo.getName());
+    		column.setNameInSource(columnInfo.getSymbolName());
     		column.setLength(columnInfo.getWidth());
     		column.setDefaultValue(columnInfo.getDefaultValue());
     		column.setFixedLength(info.isFixedWidthColumns());

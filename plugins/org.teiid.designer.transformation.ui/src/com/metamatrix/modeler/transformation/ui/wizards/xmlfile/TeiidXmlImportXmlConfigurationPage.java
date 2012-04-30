@@ -12,6 +12,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Set;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.text.Document;
@@ -162,13 +163,29 @@ public class TeiidXmlImportXmlConfigurationPage extends AbstractWizardPage imple
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see com.metamatrix.ui.internal.wizard.AbstractWizardPage#canFlipToNextPage()
+	 */
+	@Override
+	public boolean canFlipToNextPage() {
+		return isFileInfoValid() ? super.canFlipToNextPage() : false;
+	}
+
 	private boolean validatePage() {
 
+		if( !isFileInfoValid()) {
+			setThisPageComplete(fileInfo.getStatus().getMessage(), IStatus.ERROR);
+			return false;
+		}
+
 		setThisPageComplete(StringUtilities.EMPTY_STRING, NONE);
-		
 		return true;
 	}
-	
+
+	private boolean isFileInfoValid() {
+		return fileInfo.getStatus().isOK() || fileInfo.getStatus().getSeverity() == IStatus.WARNING;
+	}
+
     private void setThisPageComplete( String message, int severity) {
     	WizardUtil.setPageComplete(this, message, severity);
     }

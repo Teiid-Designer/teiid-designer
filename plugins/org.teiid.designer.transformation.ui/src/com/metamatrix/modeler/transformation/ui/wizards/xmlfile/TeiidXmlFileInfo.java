@@ -125,7 +125,7 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants, SqlC
 		this.rootPath = info.getRootPath(); 
 		this.columnInfoList = new ArrayList<TeiidColumnInfo>();
 		for( TeiidColumnInfo colInfo : info.getColumnInfoList() ) {
-			this.columnInfoList.add(new TeiidColumnInfo(colInfo.getName(), 
+			this.columnInfoList.add(new TeiidColumnInfo(colInfo.getSymbolName(), 
 						colInfo.getOrdinality(), 
 						colInfo.getDatatype(), 
 						colInfo.getDefaultValue(),
@@ -253,31 +253,35 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants, SqlC
 		return this.columnInfoList.toArray(new TeiidColumnInfo[this.columnInfoList.size()]);
 	}
 	
-	public void addColumn(String name, boolean ordinality, String datatype, String defaultValue, String path) {
-		this.columnInfoList.add(new TeiidColumnInfo(name, ordinality, datatype, defaultValue, path));
-		validate();
-	}
-	
-	public TeiidColumnInfo addColumn(String name, boolean ordinality, String datatype, String defaultValue, String rootPath, String fullPath) {
+	private TeiidColumnInfo addColumnInternal(String name, boolean ordinality, String datatype, String defaultValue, String fullPath) {
 		TeiidColumnInfo newColumnInfo = new TeiidColumnInfo(name, ordinality, datatype, defaultValue, fullPath);
-		if( rootPath != null ) {
-			newColumnInfo.setRootPath(rootPath);
-		}
 		this.columnInfoList.add(newColumnInfo);
-		validate();
-		
 		return newColumnInfo;
 	}
 	
-	public TeiidColumnInfo addColumn(String name, boolean ordinality, String datatype, String defaultValue, String rootPath, XmlElement element) {
-		TeiidColumnInfo newColumnInfo = new TeiidColumnInfo(name, ordinality, datatype, defaultValue, element.getFullPath());
-		newColumnInfo.setXmlElement(element);
+	private TeiidColumnInfo addColumnInternalWithRootPath(String name, boolean ordinality, String datatype, String defaultValue, String rootPath, String fullPath) {
+		TeiidColumnInfo newColumnInfo = addColumnInternal(name, ordinality, datatype, defaultValue, fullPath);
 		if( rootPath != null ) {
 			newColumnInfo.setRootPath(rootPath);
 		}
-		this.columnInfoList.add(newColumnInfo);
+		return newColumnInfo;
+	}
+	
+	public void addColumn(String name, boolean ordinality, String datatype, String defaultValue, String path) {
+		addColumnInternal(name, ordinality, datatype, defaultValue, path);
 		validate();
-		
+	}
+
+	public TeiidColumnInfo addColumn(String name, boolean ordinality, String datatype, String defaultValue, String rootPath, String fullPath) {
+		TeiidColumnInfo newColumnInfo = addColumnInternalWithRootPath(name, ordinality, datatype, defaultValue, rootPath, fullPath);
+		validate();
+		return newColumnInfo;
+	}
+
+	public TeiidColumnInfo addColumn(String name, boolean ordinality, String datatype, String defaultValue, String rootPath, XmlElement element) {
+		TeiidColumnInfo newColumnInfo = addColumnInternalWithRootPath(name, ordinality, datatype, defaultValue, rootPath, element.getFullPath());
+		newColumnInfo.setXmlElement(element);
+		validate();
 		return newColumnInfo;
 	}
 	
@@ -517,7 +521,7 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants, SqlC
     	int i=0;
     	int nColumns = getColumnInfoList().length;
     	for( TeiidColumnInfo columnInfo : getColumnInfoList()) {
-    		String name = getValidSqlName(columnInfo.getName());
+    		String name = columnInfo.getSymbolName();
     		sb.append(alias).append(DOT).append(name).append(SPACE).append(AS).append(SPACE).append(name);
     		
     		if(i < (nColumns-1)) {
@@ -551,9 +555,9 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants, SqlC
     	i=0;
     	for( TeiidColumnInfo columnInfo : getColumnInfoList()) {
     		if( columnInfo.getOrdinality() ) {
-    			sb.append(columnInfo.getName()).append(SPACE).append(FOR_ORDINALITY);
+    			sb.append(columnInfo.getSymbolName()).append(SPACE).append(FOR_ORDINALITY);
     		} else {
-	    		sb.append(getValidSqlName(columnInfo.getName())).append(SPACE).append(columnInfo.getDatatype());
+	    		sb.append(columnInfo.getSymbolName()).append(SPACE).append(columnInfo.getDatatype());
 	    		
 	    		String defValue = columnInfo.getDefaultValue();
 	    		if( defValue != null && defValue.length() > 0) {
@@ -605,15 +609,6 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants, SqlC
 	    			alias);
     	}
     	return finalSQLString;
-    }
-    
-    private String getValidSqlName(String name) {
-    	// NOT SURE ABOUT OTHER CHARACTERS including a '.' ???
-		if( name.indexOf(COLON) > -1 ) {
-			return D_QUOTE + name + D_QUOTE;
-		}
-		
-		return name;
     }
     
     public XmlElement getRootNode() {
