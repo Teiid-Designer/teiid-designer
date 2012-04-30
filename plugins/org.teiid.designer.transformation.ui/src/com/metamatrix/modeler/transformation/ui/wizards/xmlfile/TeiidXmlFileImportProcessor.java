@@ -14,6 +14,8 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.swt.widgets.Shell;
 import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
+import org.teiid.designer.datatools.profiles.ws.IWSProfileConstants;
+import org.teiid.designer.datatools.profiles.ws.WSConnectionInfoProvider;
 import org.teiid.designer.datatools.profiles.xml.XmlFileConnectionInfoProvider;
 import org.teiid.designer.datatools.profiles.xml.XmlUrlConnectionInfoProvider;
 import com.metamatrix.modeler.core.ModelerCoreException;
@@ -103,7 +105,11 @@ public class TeiidXmlFileImportProcessor extends TeiidMetadataImportProcessor im
     		if( getInfo().isXmlLocalFileMode() ) {
             provider = new XmlFileConnectionInfoProvider();
     		} else if( getInfo().isXmlUrlFileMode() ) {
-    			provider = new XmlUrlConnectionInfoProvider();
+    			if( IWSProfileConstants.TEIID_WS_CONNECTION_PROFILE_ID.equalsIgnoreCase(profile.getProviderId()) ) {
+    				provider = new WSConnectionInfoProvider();
+    			} else {
+    				provider = new XmlUrlConnectionInfoProvider();
+    			}
     		}
     		if( provider != null ) {
     			provider.setConnectionInfo(sourceModel, profile);
