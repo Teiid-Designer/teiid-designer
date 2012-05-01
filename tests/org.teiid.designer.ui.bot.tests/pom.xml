@@ -15,7 +15,7 @@
 	</parent>
 
 	<properties>
-		<jbosstools.test.teiid-7>teiid-7.6.0.Final</jbosstools.test.teiid-7>
+		<jbosstools.test.teiid-7>teiid-7.7.0.Final</jbosstools.test.teiid-7>
 		<jbosstools.test.jboss-as-5>jboss-5.1.0.GA</jbosstools.test.jboss-as-5>
 		<jbosstools.test.jboss-as-5.home>${requirement.build.root}/${jbosstools.test.jboss-as-5}</jbosstools.test.jboss-as-5.home>
 		<configurations.dir>resources/project_config_files</configurations.dir>
@@ -76,7 +76,7 @@
 				<executions>
 					<execution>
 						<id>prepare-teiid</id>
-						<phase>generate-test-resources</phase>
+						<phase>pre-integration-test</phase>
 						<goals>
 							<goal>run</goal>
 						</goals>
