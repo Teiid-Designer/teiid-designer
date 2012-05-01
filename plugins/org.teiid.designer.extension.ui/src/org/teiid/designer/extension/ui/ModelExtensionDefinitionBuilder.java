@@ -10,13 +10,11 @@ package org.teiid.designer.extension.ui;
 import static org.teiid.designer.extension.ExtensionConstants.MED_EXTENSION;
 import static org.teiid.designer.extension.ExtensionConstants.PLUGIN_ID;
 import static org.teiid.designer.extension.ui.UiConstants.UTIL;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
@@ -40,7 +38,6 @@ import org.teiid.designer.extension.definition.ModelExtensionDefinitionParser;
 import org.teiid.designer.extension.definition.ModelObjectExtensionAssistant;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 import org.teiid.designer.extension.ui.UiConstants.ExtensionIds;
-
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 
 /**
@@ -50,6 +47,9 @@ import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 public final class ModelExtensionDefinitionBuilder extends IncrementalProjectBuilder {
 
     private static final boolean VISIT_MODELS = true; // turns visiting off for model files
+    private static final String SAX_ERR_PREFIX = "cvc-"; //$NON-NLS-1$
+    private static final String MED_VALIDATION_MSG = "MED Validation: "; //$NON-NLS-1$
+    private static final String SEE_DETAILS_MSG = " (See log for details)"; //$NON-NLS-1$
 
     private ModelExtensionAssistantAggregator aggregator = ExtensionPlugin.getInstance().getModelExtensionAssistantAggregator();
     private ModelExtensionRegistry registry = ExtensionPlugin.getInstance().getRegistry();
@@ -219,6 +219,21 @@ public final class ModelExtensionDefinitionBuilder extends IncrementalProjectBui
         // parameters
         assert (file != null) : "file is null"; //$NON-NLS-1$
         assert ((message != null) && !message.isEmpty()) : "message is empty"; //$NON-NLS-1$
+
+        // For severity=ERROR, Re-write the Raw SaxParser exception to something more readable
+        if (severity == IMarker.SEVERITY_ERROR) {
+            String originalMessage = message;
+            if (message.trim().startsWith(SAX_ERR_PREFIX)) {
+                int index1 = message.indexOf(':'); // colon following cvc code
+                int index2 = message.indexOf('.', index1); // end of first sentence of parser msg
+                StringBuffer sb = new StringBuffer(MED_VALIDATION_MSG);
+                sb.append(message.substring(index1 + 1, index2 + 1));
+                sb.append(SEE_DETAILS_MSG);
+                message = sb.toString();
+            }
+            // log the original message
+            UTIL.log(IStatus.ERROR, MED_VALIDATION_MSG + originalMessage);
+        }
 
         Map attributes = new HashMap();
         attributes.put(IMarker.SEVERITY, severity);
