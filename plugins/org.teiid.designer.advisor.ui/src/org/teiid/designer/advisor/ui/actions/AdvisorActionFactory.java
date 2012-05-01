@@ -869,6 +869,14 @@ CHEAT_SHEET_IDS.MODEL_XML_LOCAL_SOURCE,
 		if( commandId.equalsIgnoreCase(COMMAND_IDS.OPEN_DATA_SOURCE_EXPLORER_VIEW)) {
 			return ACTION_OPEN_DATA_SOURCE_EXPLORER_VIEW;
 		}
+		
+		if( commandId.equalsIgnoreCase(COMMAND_IDS.NEW_TEIID_SERVER)) {
+			return ACTION_NEW_TEIID_SERVER;
+		}
+		
+		if( commandId.equalsIgnoreCase(COMMAND_IDS.EDIT_TEIID_SERVER)) {
+			return ACTION_EDIT_TEIID_SERVER;
+		}
 		return null;
 	}
 	
