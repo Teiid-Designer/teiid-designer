@@ -359,7 +359,7 @@ public class ViewTableEditorPanel implements RelationalConstants {
             @Override
             public void widgetSelected( SelectionEvent e ) {
                 viewTable.createColumn();
-                handleInfoChanged();
+                handleColumnsChanged();
             }
 
         });
@@ -384,7 +384,7 @@ public class ViewTableEditorPanel implements RelationalConstants {
                 if (column != null) {
                     viewTable.removeColumn(column);
                     deleteColumnButton.setEnabled(false);
-                    handleInfoChanged();
+                    handleColumnsChanged();
                 }
             }
 
@@ -410,7 +410,7 @@ public class ViewTableEditorPanel implements RelationalConstants {
                 if (info != null) {
                     int selectedIndex = columnsViewer.getTable().getSelectionIndex();
                     viewTable.moveColumnUp(info);
-                    handleInfoChanged();
+                    handleColumnsChanged();
                     columnsViewer.getTable().select(selectedIndex - 1);
                     downColumnButton.setEnabled(viewTable.canMoveColumnDown(info));
                     upColumnButton.setEnabled(viewTable.canMoveColumnUp(info));
@@ -440,7 +440,7 @@ public class ViewTableEditorPanel implements RelationalConstants {
                 if (info != null) {
                     int selectedIndex = columnsViewer.getTable().getSelectionIndex();
                     viewTable.moveColumnDown(info);
-                    handleInfoChanged();
+                    handleColumnsChanged();
                     columnsViewer.getTable().select(selectedIndex + 1);
                     downColumnButton.setEnabled(viewTable.canMoveColumnDown(info));
                     upColumnButton.setEnabled(viewTable.canMoveColumnUp(info));
@@ -584,7 +584,7 @@ public class ViewTableEditorPanel implements RelationalConstants {
 			@Override
 			public void modifyText(ModifyEvent e) {
 				viewTable.setTransformationSQL(sqlTextViewer.getTextWidget().getText());
-                handleInfoChanged();
+				handleInfoChanged();
 				
 			}
 		});
@@ -601,8 +601,18 @@ public class ViewTableEditorPanel implements RelationalConstants {
             return;
         }
         validate();
-
-        //synchronizeUI();
+    }
+    
+    void handleColumnsChanged() {
+        this.columnsViewer.getTable().removeAll();
+        IStatus maxStatus = Status.OK_STATUS;
+        for (RelationalColumn row : viewTable.getColumns()) {
+            if (row.getStatus().getSeverity() > maxStatus.getSeverity()) {
+                maxStatus = row.getStatus();
+            }
+            this.columnsViewer.add(row);
+        }
+        handleInfoChanged();
     }
 
     /*
@@ -732,7 +742,7 @@ public class ViewTableEditorPanel implements RelationalConstants {
                 if (newValue != null && newValue.length() > 0 && !newValue.equalsIgnoreCase(oldValue)) {
                     ((RelationalColumn)element).setName(newValue);
                     columnsViewer.refresh(element);
-                    handleInfoChanged();
+                    handleColumnsChanged();
                 }
             }
         }
