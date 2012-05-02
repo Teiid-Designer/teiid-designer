@@ -29,6 +29,7 @@ public class Messages extends NLS {
     public static String moveUpLabel;
     public static String moveDownLabel;
 
+    public static String description;
     public static String modelFileLabel;
     public static String nameInSourceLabel;
     public static String cardinalityLabel;
