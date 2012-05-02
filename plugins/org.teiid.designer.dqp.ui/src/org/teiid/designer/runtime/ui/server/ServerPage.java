@@ -10,6 +10,9 @@ package org.teiid.designer.runtime.ui.server;
 import static com.metamatrix.modeler.dqp.ui.DqpUiConstants.PLUGIN_ID;
 import static com.metamatrix.modeler.dqp.ui.DqpUiConstants.UTIL;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -1014,6 +1017,17 @@ public final class ServerPage extends WizardPage implements HostProvider {
      * Validates all inputs and sets the validation status.
      */
     private void validate() {
+        
+        // Validate that we have a known host
+        try {
+            InetAddress.getByName(this.host);
+        } catch (UnknownHostException ex) {
+            this.status = new Status(IStatus.ERROR,
+                    DqpUiConstants.PLUGIN_ID,
+                    UTIL.getString("serverPageUnknownHost", this.host)); //$NON-NLS-1$
+            return;
+        }
+        
         // validate admin connection info
         this.status = this.localAdminInfo.validate();
 
@@ -1059,11 +1073,23 @@ public final class ServerPage extends WizardPage implements HostProvider {
             this.status = new Status(IStatus.ERROR, PLUGIN_ID, UTIL.getString("serverPageEmptyCustomLabelMsg")); //$NON-NLS-1$
         }
     }
+    
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.wizard.WizardPage#isPageComplete()
+     */
+    @Override
+    public boolean isPageComplete() {
+        return IStatus.OK == this.status.getSeverity();
+    }
 
     /**
      * Processing done after wizard 'Finish' button is clicked. Wizard was not canceled.
      */
     void performFinish() {
+        if (! isPageComplete()) {
+            return;
+        }
+        
         // update dialog settings
         getDialogSettings().put(AUTO_CONNECT_KEY, this.autoConnect);
         // If editing, set local server info values to the original server info
