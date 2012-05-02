@@ -22,7 +22,7 @@ public class Messages extends NLS {
     public static String changeLabel;
     public static String editLabel;
     public static String fkNameLabel;
-    //public static String xxxxx;
+    public static String descriptionLabel;
     //public static String xxxxx;
     //public static String xxxxx;
     //public static String xxxxx;
