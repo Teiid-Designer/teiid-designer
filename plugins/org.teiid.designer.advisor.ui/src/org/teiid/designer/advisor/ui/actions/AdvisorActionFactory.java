@@ -38,6 +38,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.cheatsheets.OpenCheatSheetAction;
 import org.teiid.designer.advisor.ui.AdvisorUiConstants;
 import org.teiid.designer.advisor.ui.AdvisorUiPlugin;
+import org.teiid.designer.advisor.ui.Messages;
 import org.teiid.designer.datatools.ui.dialogs.NewTeiidFilteredCPWizard;
 import org.teiid.designer.runtime.Server;
 import org.teiid.designer.runtime.ui.actions.DeployVdbAction;
@@ -500,7 +501,8 @@ CHEAT_SHEET_IDS.MODEL_XML_LOCAL_SOURCE,
 		
 		if( id.equalsIgnoreCase(COMMAND_IDS.CREATE_DATA_SOURCE)) {
             // make sure there is a Teiid connection
-            if (RuntimeAssistant.ensureServerConnection(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "No Teiid Server Defined")) { //$NON-NLS-1$
+            if (RuntimeAssistant.ensureServerConnection(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), 
+            		Messages.CreateDataSource_NoServerMessage)) {
             	try {
 					Server server = DqpPlugin.getInstance().getServerManager().getDefaultServer();
 					
@@ -730,14 +732,14 @@ CHEAT_SHEET_IDS.MODEL_XML_LOCAL_SOURCE,
 		addMenuForAspect(manager, MODELING_ASPECT_LABELS.MANAGE_CONNECTIONS, ASPECT_MANAGE_CONNECTIONS);
 		addMenuForAspect(manager, MODELING_ASPECT_LABELS.MODEL_DATA_SOURCES, ASPECT_MODEL_DATA_SOURCES);
 		//addMenuForAspect(manager, MODELING_ASPECT_LABELS.CONSUME_REST_WS, ASPECT_CONSUME_REST_WS);
-		addMenuForAspect(manager, MODELING_ASPECT_LABELS.CONSUME_SOAP_WS, ASPECT_CONSUME_SOAP_WS);
+//		addMenuForAspect(manager, MODELING_ASPECT_LABELS.CONSUME_SOAP_WS, ASPECT_CONSUME_SOAP_WS);
 		addMenuForAspect(manager, MODELING_ASPECT_LABELS.MANAGE_VDBS, ASPECT_MANAGE_VDBS);
 		addMenuForAspect(manager, MODELING_ASPECT_LABELS.TEIID_SERVER, ASPECT_TEIID_SERVER);
 		addMenuForAspect(manager, MODELING_ASPECT_LABELS.TEST, ASPECT_TEST);
 		
 		if( !cheatSheetActions.isEmpty() ) {
 			manager.add( new Separator());
-			MenuManager subManager = new MenuManager("Teiid Cheat Sheets"); //$NON-NLS-1$
+			MenuManager subManager = new MenuManager("Cheat Sheets"); //$NON-NLS-1$
 			for(IAction action : cheatSheetActions) {
 				subManager.add(action);
 			}

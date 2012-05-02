@@ -285,6 +285,8 @@ public class Messages  extends NLS {
     public static String CheatSheetSection_title;
     public static String CheatSheetSection_description;
     
+    public static String CreateDataSource_NoServerMessage;
+    
     static {
         NLS.initializeMessages("org.teiid.designer.advisor.ui.messages", Messages.class); //$NON-NLS-1$
     }
