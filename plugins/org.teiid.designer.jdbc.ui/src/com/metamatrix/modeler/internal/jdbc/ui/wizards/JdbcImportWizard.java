@@ -893,9 +893,12 @@ public class JdbcImportWizard extends AbstractWizard
     public void setProperties(Properties props) {
         this.designerProperties = props;
         if (this.folder == null) {
+        	IContainer project = DesignerPropertiesUtil.getProject(designerProperties);
             IContainer srcFolder = DesignerPropertiesUtil.getSourcesFolder(this.designerProperties);
             if (srcFolder != null) {
                 setFolder(srcFolder);
+            } else if( project != null ) {
+            	setFolder(project);
             }
         }
     	

@@ -189,13 +189,18 @@ public class TeiidMetadataImportWizard extends AbstractWizard implements
 		
         if (this.folder == null) {
             // Check for Sources and View Folder from property definitions
+    		IContainer project = DesignerPropertiesUtil.getProject(designerProperties);
             IContainer srcFolderResrc = DesignerPropertiesUtil.getSourcesFolder(this.designerProperties);
             IContainer viewFolderResrc = DesignerPropertiesUtil.getViewsFolder(this.designerProperties);
             if (srcFolderResrc != null) {
                 getFileInfo().setSourceModelLocation(srcFolderResrc.getFullPath());
+            } else if( project != null ) {
+            	getFileInfo().setSourceModelLocation(project.getFullPath());
             }
             if (viewFolderResrc != null) {
                 getFileInfo().setViewModelLocation(viewFolderResrc.getFullPath());
+            } else if( project != null ) {
+            	getFileInfo().setViewModelLocation(project.getFullPath());
             }
         }
     	
