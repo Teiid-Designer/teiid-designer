@@ -9,14 +9,12 @@ package com.metamatrix.modeler.modelgenerator.salesforce;
 
 import static com.metamatrix.modeler.modelgenerator.salesforce.SalesforceConstants.NAMESPACE_PROVIDER;
 import static com.metamatrix.modeler.modelgenerator.salesforce.SalesforceConstants.SF_Column.PICKLIST_VALUES;
-
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
@@ -25,7 +23,6 @@ import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.definition.ModelObjectExtensionAssistant;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
-
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.metamodels.core.CoreFactory;
@@ -565,14 +562,14 @@ public class RelationalModelgenerator {
         startDate.setName("StartDate"); //$NON-NLS-1$
         startDate.setNameInSource("StartDate"); //$NON-NLS-1$
         startDate.setDirection(DirectionKind.IN_LITERAL);
-        startDate.setType(dtMgr.getBuiltInDatatype(DatatypeConstants.BuiltInNames.DATE_TIME));
+        startDate.setType(dtMgr.getBuiltInDatatype(DatatypeConstants.BuiltInNames.TIMESTAMP));
 
         ProcedureParameter endDate = RelationalFactory.eINSTANCE.createProcedureParameter();
         proc.getParameters().add(endDate);
         endDate.setName("EndDate"); //$NON-NLS-1$
         endDate.setNameInSource("EndDate"); //$NON-NLS-1$
         endDate.setDirection(DirectionKind.IN_LITERAL);
-        endDate.setType(dtMgr.getBuiltInDatatype(DatatypeConstants.BuiltInNames.DATE_TIME));
+        endDate.setType(dtMgr.getBuiltInDatatype(DatatypeConstants.BuiltInNames.TIMESTAMP));
     }
 
     private void addLatestDateCoveredParam( Procedure proc,

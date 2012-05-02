@@ -71,6 +71,8 @@ import org.teiid.designer.runtime.preview.jobs.TeiidPreviewVdbJob;
 import org.teiid.designer.runtime.preview.jobs.WorkspacePreviewVdbJob;
 import org.teiid.designer.runtime.ui.server.RuntimeAssistant;
 import com.metamatrix.core.util.I18nUtil;
+import com.metamatrix.metamodels.relational.DirectionKind;
+import com.metamatrix.metamodels.relational.ProcedureParameter;
 import com.metamatrix.metamodels.webservice.Operation;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlAspectHelper;
@@ -322,8 +324,20 @@ public class PreviewDataWorker {
     	} else if (SqlAspectHelper.isProcedure(eObject)) {
     		SqlProcedureAspect procAspect = (SqlProcedureAspect)SqlAspectHelper.getSqlAspect(eObject);
     		List<EObject> params = procAspect.getParameters(eObject);
-    		if (params != null && !params.isEmpty()) {
-    			ParameterInputDialog dialog = getInputDialog(params);
+            // create list - (only the IN and IN/OUT parameters)
+            List<EObject> inParams = new ArrayList<EObject>();
+            for (EObject param : params) {
+                if (param instanceof ProcedureParameter) {
+                    DirectionKind direction = ((ProcedureParameter)param).getDirection();
+                    int directionKind = direction.getValue();
+                    if (directionKind == DirectionKind.IN || directionKind == DirectionKind.INOUT) {
+                        inParams.add(param);
+                    }
+                }
+            }
+
+            if (!inParams.isEmpty()) {
+                ParameterInputDialog dialog = getInputDialog(inParams);
     			dialog.open();
     			if (dialog.getReturnCode() == Window.OK) {
     				paramValues = dialog.getParameterValues();
@@ -470,6 +484,9 @@ public class PreviewDataWorker {
                 // If value is null, replace with the word null
                 if (value == null) {
                     sql = sql.replaceFirst("\\?", "null"); //$NON-NLS-1$ //$NON-NLS-2$ 
+                    // Escaped literal - no quotes
+                } else if (value.trim().startsWith("{") && value.trim().endsWith("}")) { //$NON-NLS-1$ //$NON-NLS-2$ 
+                    sql = sql.replaceFirst("\\?", value); //$NON-NLS-1$
                     // Non-null, replace with quoted value
                 } else {
                     sql = sql.replaceFirst("\\?", "'" + value + "'"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
