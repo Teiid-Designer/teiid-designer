@@ -20,6 +20,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.xsd.impl.XSDAttributeUseImpl;
 import org.eclipse.xsd.impl.XSDElementDeclarationImpl;
 import org.eclipse.xsd.impl.XSDParticleImpl;
 import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
@@ -94,7 +95,8 @@ public class ResponseSchemaContentsGroup {
 				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
 				if (selection != null && !selection.isEmpty() && 
 					(selection.getFirstElement() instanceof XSDParticleImpl || 
-					selection.getFirstElement() instanceof XSDElementDeclarationImpl)) {
+					selection.getFirstElement() instanceof XSDElementDeclarationImpl) ||
+					selection.getFirstElement() instanceof XSDAttributeUseImpl ) {
 					createResponseColumn();
 				}
 			}

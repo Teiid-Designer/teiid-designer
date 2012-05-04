@@ -370,8 +370,10 @@ public class WsdlOperationsPanel implements FileUtils.Constants, CoreStringUtil.
 		// Set the value 
 		if( this.wsdlModel != null ) {
     		Port port = this.wsdlModel.getPort(this.portNameCombo.getText());
-    		this.importManager.setTranslatorDefaultBinding(port.getBindingType());
-    		this.importManager.setEndPoint(port.getLocationURI());
+    		if( port != null ) {
+	    		this.importManager.setTranslatorDefaultBinding(port.getBindingType());
+	    		this.importManager.setEndPoint(port.getLocationURI());
+    		}
 		} else {
     		this.importManager.setTranslatorDefaultBinding(Port.SOAP11);
     		this.importManager.setEndPoint(null);
