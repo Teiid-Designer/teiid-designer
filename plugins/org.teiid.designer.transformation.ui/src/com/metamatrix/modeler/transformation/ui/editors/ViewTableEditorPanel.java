@@ -551,8 +551,9 @@ public class ViewTableEditorPanel implements RelationalConstants {
                 SQLTemplateDialog templateDialog = new SQLTemplateDialog(UiUtil.getWorkbenchShellOnlyIfUiThread(),
                                                                          SQLTemplateDialog.TABLE_TEMPLATES);
                 if (templateDialog.open() == Window.OK) {
-                    viewTable.setTransformationSQL(templateDialog.getSQL());
-                    sqlTextViewer.setInput(templateDialog.getSQL());
+                	String sql = templateDialog.getSQL();
+                    viewTable.setTransformationSQL(sql);
+                    sqlDocument.set(sql);
                     handleInfoChanged();
                 }
             }
