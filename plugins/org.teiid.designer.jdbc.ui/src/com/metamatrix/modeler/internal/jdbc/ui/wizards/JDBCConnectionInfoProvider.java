@@ -264,4 +264,9 @@ public class JDBCConnectionInfoProvider extends ConnectionInfoHelper implements 
         return DataSourceConnectionConstants.DataSource.JDBC;
     }
 
+	@Override
+	public boolean requiresPassword(IConnectionProfile connectionProfile) {
+		return true;
+	}
+    
 }

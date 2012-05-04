@@ -157,4 +157,8 @@ public class FlatFileConnectionInfoProvider  extends ConnectionInfoHelper implem
 		return "file"; //$NON-NLS-1$
 	}
 
+	@Override
+	public boolean requiresPassword(IConnectionProfile connectionProfile) {
+		return false;
+	}
 }

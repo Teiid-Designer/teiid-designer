@@ -103,4 +103,9 @@ public class LDAPConnectionInfoProvider extends ConnectionInfoHelper implements 
 
         return connectionProps;
     }
+    
+	@Override
+	public boolean requiresPassword(IConnectionProfile connectionProfile) {
+		return true;
+	}
 }

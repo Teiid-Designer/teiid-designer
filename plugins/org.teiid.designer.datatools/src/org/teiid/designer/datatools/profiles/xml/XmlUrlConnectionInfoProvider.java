@@ -130,4 +130,8 @@ public class XmlUrlConnectionInfoProvider  extends ConnectionInfoHelper implemen
 		return "ws"; //$NON-NLS-1$
 	}
 
+	@Override
+	public boolean requiresPassword(IConnectionProfile connectionProfile) {
+		return false;
+	}
 }

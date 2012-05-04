@@ -39,6 +39,8 @@ public interface IConnectionInfoProvider extends IConnectionInfoHelper {
      * @return
      */
     public abstract String getDataSourcePasswordPropertyKey();
+    
+    public abstract boolean requiresPassword(IConnectionProfile connectionProfile);
 
     /**
      * Accessor for the Teiid Data Source Type.

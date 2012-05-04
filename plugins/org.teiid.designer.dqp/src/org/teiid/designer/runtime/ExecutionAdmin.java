@@ -223,7 +223,7 @@ public class ExecutionAdmin {
             // The data source property key represents what's needed as a property for the Teiid Data Source
             // This is provided by the getDataSourcePasswordPropertyKey() method.
             String dsPasswordKey = connInfoProvider.getDataSourcePasswordPropertyKey();
-            boolean requiresPassword = (dsPasswordKey != null);
+            boolean requiresPassword = (dsPasswordKey != null && connInfoProvider.requiresPassword(modelConnectionProfile));
 
             if (modelConnectionProfile != null) {
                 String pwd = null;

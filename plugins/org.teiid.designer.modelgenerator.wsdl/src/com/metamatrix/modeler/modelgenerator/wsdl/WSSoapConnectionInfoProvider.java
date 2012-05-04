@@ -163,5 +163,9 @@ public class WSSoapConnectionInfoProvider  extends ConnectionInfoHelper implemen
     public String getDataSourceType() {
         return DataSourceConnectionConstants.DataSource.WS;
     }
-
+    
+	@Override
+	public boolean requiresPassword(IConnectionProfile connectionProfile) {
+		return false;
+	}
 }
