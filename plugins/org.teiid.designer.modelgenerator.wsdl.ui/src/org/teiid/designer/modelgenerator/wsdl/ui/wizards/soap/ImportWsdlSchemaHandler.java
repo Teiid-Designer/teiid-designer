@@ -246,6 +246,9 @@ public class ImportWsdlSchemaHandler {
 			schemaModel = processor.getSchemaModel();
 
 			List<SchemaObject> elements = schemaModel.getElements();
+			
+			XSDElementDeclaration element = (XSDElementDeclaration)((XSDParticleImpl) obj).getContent();
+			XSDTypeDefinition typeDefinition = element.getType();
 			String name = ((XSDElementDeclarationImpl) ((XSDParticleImpl) obj).getContent()).getName();
 			
 			if (name==null){
@@ -298,9 +301,13 @@ public class ImportWsdlSchemaHandler {
 					String root = this.schemaTreeModel.getRootPath().replaceAll(ResponseInfo.SOAPENVELOPE_ROOTPATH, ""); //$NON-NLS-1$
 					xpath = new StringBuilder(root).append(xpath);
 				}
+				String theType = RuntimeTypeNames.STRING;
+				if( typeDefinition != null ) {
+					theType = typeDefinition.getName();
+				}
 				responseInfo.addBodyColumn(
 						responseInfo.getUniqueBodyColumnName(name), false,
-						RuntimeTypeNames.STRING, null, pathPrefix
+						theType, null, pathPrefix
 								+ xpath.toString());
 			} else {
 				String pathPrefix = ""; //$NON-NLS-1$
@@ -418,8 +425,7 @@ public class ImportWsdlSchemaHandler {
 		XSDTypeDefinition typeDef = attribute.getAttributeDeclaration().getType().getBaseType();
 		while( typeDef.getBaseType() != null && 
 				!typeDef.equals(typeDef.getBaseType()) && 
-				!typeDef.getBaseType().getName().equalsIgnoreCase("anyType") && //$NON-NLS-1$
-				!typeDef.getBaseType().getName().equalsIgnoreCase("anySimpleType")) { //$NON-NLS-1$
+				!typeDef.getBaseType().getName().startsWith("any")) { //$NON-NLS-1$
 			typeDef = typeDef.getBaseType();
 		}
 		
