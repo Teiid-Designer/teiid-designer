@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IStatus;
@@ -64,6 +65,11 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants, SqlC
      * inside the XML structure that the COLUMN PATH's are relative to
      */
 	private String rootPath = StringUtilities.EMPTY_STRING;
+	
+	/**
+	 * Common Root path
+	 */
+	private String commonRootPath = StringUtilities.EMPTY_STRING;
 	
 	/**
 	 * Indicator for the import processor to attempt to create a View Table given the info in this object.
@@ -624,6 +630,10 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants, SqlC
     	return this.rootNode;
     }
     
+    public String getCommonRootPath() {
+    	return this.commonRootPath;
+    }
+    
     public IStatus getParsingStatus() {
     	return this.parsingStatus;
     }
@@ -684,8 +694,61 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants, SqlC
 			return new Status(IStatus.ERROR, UiConstants.PLUGIN_ID, message);
 		}
 		
-		setRootPath(rootNode.getName());
+		determineCommonRootPath();
+		
+		setRootPath(this.commonRootPath);
 
 		return Status.OK_STATUS;
     }
+    
+	private void determineCommonRootPath(){
+		StringBuilder commonRoot = new StringBuilder();
+		
+		List<String> segmentList = new ArrayList();
+		segmentList.add(rootNode.getFullPath());
+		for( Object node : rootNode.getChildrenDTDElements() ) {
+			addChildPaths((XmlElement)node, segmentList);
+		}
+		
+		//We parse paths to get all segments. We need to find the shortest
+		//path up front, since we cannot have a common root greater than
+		//the shortest path.
+		String[][] segments = new String[segmentList.size()][];
+		int shortestPathLength = 0;
+		for(int i = 0; i < segmentList.size(); i++){
+			segments[i] = segmentList.get(i).split("/"); //$NON-NLS-1$
+			if (i==0) shortestPathLength = segments[i].length;
+			if (shortestPathLength>segments[i].length){
+				shortestPathLength = segments[i].length;
+			}
+		}
+		
+		for(int j = 0; j < shortestPathLength; j++){
+			String thisSegment = segments[0][j]; 
+			boolean allMatched = true; 
+			for(int i = 0; i < segments.length && allMatched; i++){ 
+				if(segments[i].length < j){
+					allMatched = false; 
+					break; 
+				}
+				allMatched &= segments[i][j].equals(thisSegment); 
+			}
+			if(allMatched){ 
+				commonRoot.append("/").append(thisSegment) ; //$NON-NLS-1$
+			}else{
+				break;
+			}
+		}
+		//Change any double slashes to single slashes
+		commonRoot = new StringBuilder(commonRoot.toString().replaceAll("//", "/")); //$NON-NLS-1$ //$NON-NLS-2$
+		
+		commonRootPath = commonRoot.toString();
+	}
+	
+	private void addChildPaths(XmlElement element, List<String> segmentList ) {
+		segmentList.add(element.getFullPath());
+		for( Object node : element.getChildrenDTDElements() ) {
+			addChildPaths((XmlElement)node, segmentList);
+		}
+	}
 }

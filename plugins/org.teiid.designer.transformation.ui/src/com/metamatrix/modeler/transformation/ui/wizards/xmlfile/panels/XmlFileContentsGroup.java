@@ -178,7 +178,6 @@ public class XmlFileContentsGroup {
 			this.configPage.handleInfoChanged(false);
     	} else if( obj instanceof XmlAttribute ) {
     		XmlAttribute attribute = (XmlAttribute)obj;
-    		XmlElement element = attribute.getElement();
     		String newName =  attribute.getName();
     		String rootPath = getFileInfo().getRootPath();
     		getFileInfo().addColumn(newName, false, TeiidColumnInfo.DEFAULT_DATATYPE, null, rootPath, attribute);
