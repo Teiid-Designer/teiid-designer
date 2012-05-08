@@ -285,6 +285,15 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants, SqlC
 		return newColumnInfo;
 	}
 	
+	public TeiidColumnInfo addColumn(String name, boolean ordinality, String datatype, String defaultValue, String rootPath, XmlAttribute attribute) {
+		TeiidColumnInfo newColumnInfo = addColumnInternalWithRootPath(name, false, datatype, defaultValue, rootPath, attribute.getElement().getFullPath());
+		newColumnInfo.setXmlAttribute(attribute);
+		String newPath = newColumnInfo.getFullXmlPath().concat("/@" + name); //$NON-NLS-1$
+		newColumnInfo.setFullXmlPath(newPath);
+		validate();
+		return newColumnInfo;
+	}
+	
 	public void removeColumn(TeiidColumnInfo theInfo) {
 		this.columnInfoList.remove(theInfo);
 		validate();
@@ -297,7 +306,7 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants, SqlC
 	public void validate() {
 		// Validate XQuery Root Path Expression
 		if( this.getRootPath() == null || this.getRootPath().length() == 0 ) {
-			setStatus(new Status(IStatus.ERROR, PLUGIN_ID, getString("status.xqueryExpressionNullOrEmpty"))); //$NON-NLS-1$
+			setStatus(new Status(IStatus.ERROR, PLUGIN_ID, getString("status.rootPathUndefined"))); //$NON-NLS-1$
 			return;
 		}
 		
@@ -674,6 +683,8 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants, SqlC
 			String message = getString("noRootNodeParsingError"); //$NON-NLS-1$
 			return new Status(IStatus.ERROR, UiConstants.PLUGIN_ID, message);
 		}
+		
+		setRootPath(rootNode.getName());
 
 		return Status.OK_STATUS;
     }

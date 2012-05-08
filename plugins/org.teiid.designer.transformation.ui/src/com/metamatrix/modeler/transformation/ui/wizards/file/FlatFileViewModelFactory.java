@@ -75,6 +75,8 @@ public class FlatFileViewModelFactory extends FlatFileRelationalModelFactory {
      */
     @SuppressWarnings("unchecked")
     private void createColumns(TeiidMetadataFileInfo info, BaseTable baseTable) throws ModelerCoreException {
+    	EObject stringType = datatypeManager.findDatatype("string"); //$NON-NLS-1$
+    	
     	for (TeiidColumnInfo columnInfo : info.getColumnInfoList()) {
     		Column column = factory.createColumn();
     		column.setName(columnInfo.getName());
@@ -86,6 +88,13 @@ public class FlatFileViewModelFactory extends FlatFileRelationalModelFactory {
     		EObject datatype = datatypeManager.findDatatype(columnInfo.getDatatype());
     		if (datatype != null) {
     			column.setType(datatype);
+    			if( stringType != null && stringType == datatype) {
+    				if( info.isFixedWidthColumns()) {
+    					column.setLength(columnInfo.getWidth());
+    				} else {
+    					column.setLength(DEFAULT_STRING_LENGTH);
+    				}
+    			}
     		}
     		
     		baseTable.getColumns().add(column);

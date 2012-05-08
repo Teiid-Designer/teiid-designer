@@ -10,6 +10,7 @@ package com.metamatrix.modeler.transformation.ui.wizards.xmlfile;
 public class XmlAttribute {
 	private String name;
 	private String value;
+	private XmlElement element;
 
 	public XmlAttribute(String name)
 	{
@@ -17,11 +18,12 @@ public class XmlAttribute {
 		this.name = name;
 	}
 
-	public XmlAttribute(String name, String value)
+	public XmlAttribute(String name, String value, XmlElement element)
 	{
 		super();
 		this.name = name;
 		this.value = value;
+		this.element = element;
 	}
 
 	public String getName()
@@ -32,5 +34,9 @@ public class XmlAttribute {
 	public String getValue()
 	{
 		return value;
+	}
+	
+	public XmlElement getElement() {
+		return this.element;
 	}
 }

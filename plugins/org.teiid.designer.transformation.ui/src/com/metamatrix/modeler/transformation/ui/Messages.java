@@ -10,7 +10,24 @@ package com.metamatrix.modeler.transformation.ui;
 import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS {
-	
+    public static String Browse;
+    public static String Edit;
+    public static String Name;
+    public static String Path;
+    public static String RootPath;
+    public static String ColumnInfo;
+    public static String ColumnName;
+    public static String DefaultValue;
+    public static String ForOrdinality;
+    public static String GeneratedSQLStatement;
+    public static String XMLFile;
+    public static String XmlConfigPageTitle;
+    public static String XmlConfigPageInitialMessage;
+    public static String XmlFileContents;
+    public static String RootPathTooltip;
+    public static String CreateColumn;
+    public static String SetAsRootPath;
+    
     public static String createRelationalViewActionText;
     public static String createRelationalViewTitle;
     public static String createRelationalViewInitialMessage;

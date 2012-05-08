@@ -48,7 +48,7 @@ public class FlatFileRelationalModelFactory implements UiConstants {
     public static final String INVOKE_HTTP = "invokeHttp"; //$NON-NLS-1$
     public static final String ALL_INVOKE_PROCEDURES = "allInvokeProcedures"; //$NON-NLS-1$
     
-    public static final int DEFAULT_STRING_LENGTH = 255;
+    public static final int DEFAULT_STRING_LENGTH = 4000;
     
     private static boolean isTransactionable = ModelerCore.getPlugin() != null;
     
@@ -203,6 +203,7 @@ public class FlatFileRelationalModelFactory implements UiConstants {
     	column_2.setName("filePath"); //$NON-NLS-1$
     	if( stringType != null) {
     		column_2.setType(stringType);
+    		column_2.setLength(DEFAULT_STRING_LENGTH);
     	}
     	addValue(result, column_2, result.getColumns());
     	

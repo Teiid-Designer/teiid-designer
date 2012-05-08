@@ -15,9 +15,7 @@ import org.teiid.query.sql.symbol.ElementSymbol;
 
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.StringUtilities;
-import com.metamatrix.metamodels.relational.aspects.validation.RelationalStringNameValidator;
-import com.metamatrix.modeler.core.validation.rules.StringNameValidator;
-import com.metamatrix.modeler.transformation.ui.UiConstants;
+import com.metamatrix.modeler.transformation.ui.wizards.xmlfile.XmlAttribute;
 import com.metamatrix.modeler.transformation.ui.wizards.xmlfile.XmlElement;
 
 /**
@@ -71,6 +69,11 @@ public class TeiidColumnInfo {
      * The xml element
      */
 	private XmlElement xmlElement;
+	
+	/**
+	 * The xml attribute
+	 */
+	private XmlAttribute xmlAttribute;
 	
 	/**
 	 * Current <code>IStatus</code> representing the state of the input values for this instance of
@@ -274,16 +277,32 @@ public class TeiidColumnInfo {
 	public void setXmlElement(XmlElement element) {
 		this.xmlElement = element;
 	}
+	
+	public void setXmlAttribute(XmlAttribute attribute) {
+		this.xmlAttribute = attribute;
+		this.xmlElement = attribute.getElement();
+	}
+	
 	/**
 	 * 
 	 * @return xmlPath the column xmlPath
 	 */
 	public String getFullXmlPath() {
-		if( this.xmlElement != null ) {
-			return this.xmlElement.getFullPath();
+		if( isXmlAttribute() ) {
+			String theFullPath = null;
+			if( this.xmlElement != null ) {
+				theFullPath = this.xmlElement.getFullPath() + "/@" + this.xmlAttribute.getName(); //$NON-NLS-1$
+			} else {
+				theFullPath = this.fullXmlPath.toString();
+			}
+			return theFullPath;
+		} else {
+			if( this.xmlElement != null ) {
+				return this.xmlElement.getFullPath();
+			}
+			
+			return this.fullXmlPath.toString();
 		}
-		
-		return this.fullXmlPath.toString();
 	}
 	
 	/**
@@ -326,6 +345,18 @@ public class TeiidColumnInfo {
 	 */
 	public XmlElement getXmlElement() {
 		return this.xmlElement;
+	}
+	
+	/**
+	 * 
+	 * @return xmlElement the xmlAttribute
+	 */
+	public XmlAttribute getXmlAttribute() {
+		return this.xmlAttribute;
+	}
+	
+	public boolean isXmlAttribute() {
+		return this.xmlAttribute != null;
 	}
 	
 	/**

@@ -16,7 +16,7 @@ import org.eclipse.jface.text.Position;
 public class XmlElement {
 	private final String SEPARATOR = "/";  //$NON-NLS-1$
 	private List<XmlElement> elementChildren = new ArrayList<XmlElement>();
-	private List attributeChildren = new ArrayList();
+	private List<XmlAttribute> attributeChildren = new ArrayList<XmlAttribute>();
 
 	private String name;
 	private XmlElement parent;
@@ -69,6 +69,10 @@ public class XmlElement {
 			if (attribute.getName().equals(localName)) return attribute.getValue();
 		}
 		return null;
+	}
+	
+	public Object[] getAttributes() {
+		return attributeChildren.toArray(new Object[0]);
 	}
 
 	public void clear()
