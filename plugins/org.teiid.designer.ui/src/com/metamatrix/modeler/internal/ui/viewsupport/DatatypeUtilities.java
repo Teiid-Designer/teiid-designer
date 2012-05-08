@@ -34,7 +34,7 @@ public abstract class DatatypeUtilities {
                 String newName = newSignature.substring(0, index).trim();
                 index++;
                 String fullDatatype = newSignature.substring(index);
-                if( fullDatatype.length() > 0 && fullDatatype.toUpperCase().equals("STRING")) { //$NON-NLS-1$
+                if( fullDatatype.length() > 0 && fullDatatype.toUpperCase().startsWith("STRING(")) { //$NON-NLS-1$
 
                     String dTypeString = null;
                     
