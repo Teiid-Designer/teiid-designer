@@ -18,8 +18,6 @@ import org.eclipse.xsd.XSDAttributeUse;
 import org.eclipse.xsd.XSDComplexTypeDefinition;
 import org.eclipse.xsd.XSDParticle;
 
-import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
-
 public class SchemaTreeContentProvider extends AdapterFactoryContentProvider {
 	
 	@SuppressWarnings("unused")
@@ -34,7 +32,8 @@ public class SchemaTreeContentProvider extends AdapterFactoryContentProvider {
 	 */
 	@Override
 	public Object[] getChildren(Object object) {
-		Object[] result = ModelUtilities.getModelContentProvider().getChildren(object);
+		Object[] result = super.getChildren(object); 
+		
 		Collection<Object> filteredChildren = new ArrayList<Object>();
 		
 		for( Object child : result ) {

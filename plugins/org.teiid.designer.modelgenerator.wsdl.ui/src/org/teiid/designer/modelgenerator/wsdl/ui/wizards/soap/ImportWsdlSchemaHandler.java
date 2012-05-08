@@ -339,10 +339,14 @@ public class ImportWsdlSchemaHandler {
 
 			List<SchemaObject> elements = schemaModel.getElements();
 			
-			String name = ((XSDAttributeUseImpl) obj).getAttributeDeclaration().getName();
+			XSDAttributeUseImpl attributeImpl = (XSDAttributeUseImpl) obj;
+			
+			String name = attributeImpl.getAttributeDeclaration().getName();
 			if( name == null ) {
-				name = ((XSDAttributeUseImpl) obj).getAttributeDeclaration().getAliasName();
+				name = attributeImpl.getAttributeDeclaration().getAliasName();
 			}
+			
+			String dTypeString = getBaseTypeString(attributeImpl);
 			
 			StringBuilder xpath = new StringBuilder();
 			String namespace = null;
@@ -391,7 +395,7 @@ public class ImportWsdlSchemaHandler {
 				}
 				responseInfo.addBodyColumn(
 						responseInfo.getUniqueBodyColumnName(name), false,
-						RuntimeTypeNames.STRING, null, pathPrefix
+						dTypeString, null, pathPrefix
 								+ xpath.toString());
 			} else {
 				String pathPrefix = ""; //$NON-NLS-1$
@@ -408,6 +412,18 @@ public class ImportWsdlSchemaHandler {
 		}
 
 		return operationsDetailsPage.getSchemaLabelProvider().getText(obj);
+	}
+	
+	private String getBaseTypeString(XSDAttributeUseImpl attribute) {
+		XSDTypeDefinition typeDef = attribute.getAttributeDeclaration().getType().getBaseType();
+		while( typeDef.getBaseType() != null && 
+				!typeDef.equals(typeDef.getBaseType()) && 
+				!typeDef.getBaseType().getName().equalsIgnoreCase("anyType") && //$NON-NLS-1$
+				!typeDef.getBaseType().getName().equalsIgnoreCase("anySimpleType")) { //$NON-NLS-1$
+			typeDef = typeDef.getBaseType();
+		}
+		
+		return typeDef.getName();
 	}
 
 	// =================================================
