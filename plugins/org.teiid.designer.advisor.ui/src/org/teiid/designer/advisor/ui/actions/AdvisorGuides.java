@@ -69,7 +69,7 @@ public class AdvisorGuides implements AdvisorUiConstants {
 		infoList = new ArrayList<AdvisorActionInfo>();
 		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.NEW_TEIID_MODEL_PROJECT));
 		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.CREATE_CONNECTION_XML_FILE_URL));
-		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.IMPORT_XML_FILE));
+		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.IMPORT_XML_FILE_URL));
 		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.PREVIEW_DATA));
 		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.CREATE_VDB));
 		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.EXECUTE_VDB));

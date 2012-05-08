@@ -89,6 +89,15 @@ public class DesignerPropertiesUtil {
     public static String getPreviewTargetModelName( Properties properties ) {
         return properties.getProperty(IPropertiesContext.KEY_PREVIEW_TARGET_MODEL);
     }
+    
+    public static boolean isImportXmlRemote( Properties properties ) {
+    	String value = properties.getProperty(IPropertiesContext.KEY_IMPORT_XML_TYPE);
+    	if( value != null && value.equalsIgnoreCase(IPropertiesContext.IMPORT_XML_REMOTE)) {
+    		return true;
+    	}
+    	
+    	return false;
+    }
 
     public static void setProjectName( Properties properties,
                                        String projectName ) {

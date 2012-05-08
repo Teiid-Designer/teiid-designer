@@ -31,6 +31,8 @@ public class TeiidXmlImportWizard extends TeiidMetadataImportWizard {
         return Util.getString(I18N_PREFIX + id);
     }
 
+    TeiidXmlImportOptionsPage optionsPage;
+    
     TeiidXmlImportSourcePage sourcePage;
     
     private Properties designerProperties;
@@ -48,7 +50,7 @@ public class TeiidXmlImportWizard extends TeiidMetadataImportWizard {
 	
 	@Override
 	public void addPages() {
-		TeiidXmlImportOptionsPage optionsPage = new TeiidXmlImportOptionsPage(getFileInfo());
+		this.optionsPage = new TeiidXmlImportOptionsPage(getFileInfo());
 		addPage(optionsPage);
 		
         this.sourcePage = new TeiidXmlImportSourcePage(getFileInfo());
@@ -116,5 +118,7 @@ public class TeiidXmlImportWizard extends TeiidMetadataImportWizard {
             // Set properties - needs later to determine the connection profile
             sourcePage.setDesignerProperties(this.designerProperties);
 		}
+		
+		this.optionsPage.setDesignerProperties(this.designerProperties);
 	}
 }

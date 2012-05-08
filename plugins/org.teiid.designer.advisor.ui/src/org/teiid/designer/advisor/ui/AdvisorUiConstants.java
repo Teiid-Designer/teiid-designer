@@ -135,6 +135,7 @@ public interface AdvisorUiConstants {
 		String IMPORT_SALESFORCE = "org.teiid.designer.importSalesforceCommand";  //$NON-NLS-1$
 		String IMPORT_FLAT_FILE = "org.teiid.designer.importFlatFileCommand";  //$NON-NLS-1$
 		String IMPORT_XML_FILE = "org.teiid.designer.importXmlFileCommand";  //$NON-NLS-1$
+		String IMPORT_XML_FILE_URL = "org.teiid.designer.importXmlFileUrlCommand";  //$NON-NLS-1$
 		String IMPORT_WSDL_TO_SOURCE = "org.teiid.designer.importWsdlToSourceCommand";  //$NON-NLS-1$
 		String IMPORT_WSDL_TO_WS = "org.teiid.designer.importWsdlToWSCommand";  //$NON-NLS-1$
 		
@@ -183,6 +184,7 @@ public interface AdvisorUiConstants {
 		String IMPORT_SALESFORCE = "Create relational source model defined by your Salesforce metadata";  //$NON-NLS-1$
 		String IMPORT_FLAT_FILE = "Create view table to query a flat file source";  //$NON-NLS-1$
 		String IMPORT_XML_FILE = "Create view table to query your local or remote URL XML file source";  //$NON-NLS-1$
+		String IMPORT_XML_FILE_URL = "Create view table to query your remote URL XML file source";  //$NON-NLS-1$
 		String IMPORT_WSDL_TO_SOURCE = "Create view tables to query your Web Services defined by WSDL source";  //$NON-NLS-1$
 		String IMPORT_WSDL_TO_WS = "Create web service operations defined by your WSDL source";  //$NON-NLS-1$
 		
@@ -230,6 +232,7 @@ public interface AdvisorUiConstants {
 		String IMPORT_SALESFORCE = Messages.CreateSourceModelFromSalesforceDataSource;
 		String IMPORT_FLAT_FILE = Messages.ConsumeLocalFlatFileDataSource;
 		String IMPORT_XML_FILE = Messages.ConsumeXmlFileSource;
+		String IMPORT_XML_FILE_URL = Messages.ConsumeXmlFileUrlSource;
 		String IMPORT_WSDL_TO_SOURCE = Messages.CreateSourceModelFromWsdlSource;
 		String IMPORT_WSDL_TO_WS = Messages.ConsumeWebServiceWsdl;
 		
@@ -275,6 +278,7 @@ public interface AdvisorUiConstants {
 		String IMPORT_SALESFORCE = Messages.CreateSourceModelFromSalesforceDataSource_Short; 
 		String IMPORT_FLAT_FILE = Messages.ConsumeLocalFlatFileDataSource_Short;
 		String IMPORT_XML_FILE = Messages.ConsumeXmlFileSource_Short;
+		String IMPORT_XML_FILE_URL = Messages.ConsumeXmlFileUrlSource_Short;
 		String IMPORT_WSDL_TO_SOURCE = Messages.CreateSourceModelFromWsdlSource_Short;
 		String IMPORT_WSDL_TO_WS = Messages.ConsumeWebServiceWsdl_Short;
 		

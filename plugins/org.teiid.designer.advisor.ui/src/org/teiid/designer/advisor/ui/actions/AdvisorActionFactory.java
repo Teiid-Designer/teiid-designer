@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
@@ -47,10 +48,12 @@ import org.teiid.designer.runtime.ui.connection.CreateDataSourceAction;
 import org.teiid.designer.runtime.ui.preview.PreviewDataAction;
 import org.teiid.designer.runtime.ui.server.RuntimeAssistant;
 import org.teiid.designer.runtime.ui.vdb.ExecuteVdbAction;
+
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelerUiViewUtils;
 import com.metamatrix.modeler.transformation.ui.actions.CreateViewTableAction;
+import com.metamatrix.modeler.ui.viewsupport.IPropertiesContext;
 import com.metamatrix.ui.internal.util.UiUtil;
 import com.metamatrix.ui.internal.util.WidgetUtil;
 
@@ -78,6 +81,7 @@ public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChange
 	static IAction ACTION_IMPORT_WSDL_TO_SOURCE;
 	static IAction ACTION_IMPORT_WSDL_TO_WS;
 	static IAction ACTION_IMPORT_XML_FILE;
+	static IAction ACTION_IMPORT_XML_FILE_REMOTE;
 	static IAction ACTION_CREATE_CONNECTION_FLAT_FILE;
 	static IAction ACTION_CREATE_CONNECTION_JDBC;
 	static IAction ACTION_CREATE_CONNECTION_LDAP;
@@ -141,6 +145,11 @@ public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChange
         		COMMAND_LABELS.IMPORT_XML_FILE, 
         		COMMAND_LABELS_SHORT.IMPORT_XML_FILE,
         		COMMAND_DESC.IMPORT_XML_FILE);
+        addActionHandler(
+        		COMMAND_IDS.IMPORT_XML_FILE_URL, 
+        		COMMAND_LABELS.IMPORT_XML_FILE_URL, 
+        		COMMAND_LABELS_SHORT.IMPORT_XML_FILE_URL,
+        		COMMAND_DESC.IMPORT_XML_FILE_URL);
         addActionHandler(
         		COMMAND_IDS.CREATE_CONNECTION_FLAT_FILE, 
         		COMMAND_LABELS.CREATE_CONNECTION_FLAT_FILE, 
@@ -261,10 +270,11 @@ public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChange
         		COMMAND_LABELS.NEW_TEIID_MODEL_PROJECT, 
         		COMMAND_LABELS_SHORT.NEW_TEIID_MODEL_PROJECT,
         		COMMAND_DESC.NEW_TEIID_MODEL_PROJECT);
-        addActionHandler(COMMAND_IDS.NEW_OBJECT_VIEW_TABLE,
-                         COMMAND_LABELS.NEW_OBJECT_VIEW_TABLE,
-                         COMMAND_LABELS_SHORT.NEW_OBJECT_VIEW_TABLE,
-                         COMMAND_DESC.NEW_OBJECT_VIEW_TABLE);
+        addActionHandler(
+        		COMMAND_IDS.NEW_OBJECT_VIEW_TABLE,
+                COMMAND_LABELS.NEW_OBJECT_VIEW_TABLE,
+                COMMAND_LABELS_SHORT.NEW_OBJECT_VIEW_TABLE,
+                COMMAND_DESC.NEW_OBJECT_VIEW_TABLE);
         
         addActionHandler(
         		CHEAT_SHEET_IDS.MODEL_FROM_JDBC_SOURCE, 
@@ -275,12 +285,13 @@ public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChange
         		CHEAT_SHEET_DISPLAY_NAMES.MULTI_SOURCE_VDB, 
         		CHEAT_SHEET_DISPLAY_NAMES.MULTI_SOURCE_VDB);
         addActionHandler(
-CHEAT_SHEET_IDS.MODEL_XML_LOCAL_SOURCE,
-                         CHEAT_SHEET_DISPLAY_NAMES.MODEL_XML_LOCAL_SOURCE,
-                         CHEAT_SHEET_DISPLAY_NAMES.MODEL_XML_LOCAL_SOURCE);
-        addActionHandler(CHEAT_SHEET_IDS.MODEL_XML_REMOTE_SOURCE,
-                         CHEAT_SHEET_DISPLAY_NAMES.MODEL_XML_REMOTE_SOURCE,
-                         CHEAT_SHEET_DISPLAY_NAMES.MODEL_XML_REMOTE_SOURCE);
+        		CHEAT_SHEET_IDS.MODEL_XML_LOCAL_SOURCE,
+                CHEAT_SHEET_DISPLAY_NAMES.MODEL_XML_LOCAL_SOURCE,
+                CHEAT_SHEET_DISPLAY_NAMES.MODEL_XML_LOCAL_SOURCE);
+        addActionHandler(
+        		CHEAT_SHEET_IDS.MODEL_XML_REMOTE_SOURCE,
+                CHEAT_SHEET_DISPLAY_NAMES.MODEL_XML_REMOTE_SOURCE,
+                CHEAT_SHEET_DISPLAY_NAMES.MODEL_XML_REMOTE_SOURCE);
         addActionHandler(
         		CHEAT_SHEET_IDS.MODEL_FLAT_FILE_SOURCE, 
         		CHEAT_SHEET_DISPLAY_NAMES.MODEL_FLAT_FILE_SOURCE, 
@@ -363,9 +374,17 @@ CHEAT_SHEET_IDS.MODEL_XML_LOCAL_SOURCE,
 			 return;
 		}
 		if( id.equalsIgnoreCase(COMMAND_IDS.IMPORT_XML_FILE)) {
+			 properties.put(IPropertiesContext.KEY_IMPORT_XML_TYPE, IPropertiesContext.IMPORT_XML_LOCAL);
 			 launchWizard(ImportMetadataAction.TEIID_XML_FILE, properties, synchronous);
 			 return;
 		}
+		
+		if( id.equalsIgnoreCase(COMMAND_IDS.IMPORT_XML_FILE_URL)) {
+			 properties.put(IPropertiesContext.KEY_IMPORT_XML_TYPE, IPropertiesContext.IMPORT_XML_REMOTE);
+			 launchWizard(ImportMetadataAction.TEIID_XML_FILE, properties, synchronous);
+			 return;
+		}
+		
 		if( id.equalsIgnoreCase(COMMAND_IDS.IMPORT_WSDL_TO_SOURCE)) {
 			 launchWizard(ImportMetadataAction.WSDL_TO_RELATIONAL, properties, synchronous);
 			 return;
@@ -562,6 +581,9 @@ CHEAT_SHEET_IDS.MODEL_XML_LOCAL_SOURCE,
 			return Images.IMPORT;
 		}
 		if( id.equalsIgnoreCase(COMMAND_IDS.IMPORT_XML_FILE)) {
+			return Images.IMPORT;
+		}
+		if( id.equalsIgnoreCase(COMMAND_IDS.IMPORT_XML_FILE_URL)) {
 			return Images.IMPORT;
 		}
 		if( id.equalsIgnoreCase(COMMAND_IDS.IMPORT_WSDL_TO_SOURCE)) {
@@ -908,6 +930,7 @@ CHEAT_SHEET_IDS.MODEL_XML_LOCAL_SOURCE,
 		ACTION_IMPORT_WSDL_TO_SOURCE = createAction(COMMAND_IDS.IMPORT_WSDL_TO_SOURCE);
 		ACTION_IMPORT_WSDL_TO_WS = createAction(COMMAND_IDS.IMPORT_WSDL_TO_WS);
 		ACTION_IMPORT_XML_FILE = createAction(COMMAND_IDS.IMPORT_XML_FILE);
+		ACTION_IMPORT_XML_FILE_REMOTE = createAction(COMMAND_IDS.IMPORT_XML_FILE_URL);
 		ACTION_CREATE_CONNECTION_FLAT_FILE = createAction(COMMAND_IDS.CREATE_CONNECTION_FLAT_FILE);
 		ACTION_CREATE_CONNECTION_JDBC = createAction(COMMAND_IDS.CREATE_CONNECTION_JDBC);
 		ACTION_CREATE_CONNECTION_LDAP = createAction(COMMAND_IDS.CREATE_CONNECTION_LDAP);
