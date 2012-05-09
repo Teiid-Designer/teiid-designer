@@ -291,7 +291,7 @@ public class TeiidXmlColumnInfo {
 		if( obj instanceof XmlElement ) {
 			XmlElement element = (XmlElement)obj;
 			IPath fullPath = new Path(element.getFullPath());
-			IPath relativePath = fullPath.makeRelativeTo(rootPath);
+			IPath relativePath = fullPath.makeRelativeTo(rootPath).append(TEXT_SEGMENT);
 			setRelativePath(relativePath.toString());
 			return;
 		}
@@ -362,8 +362,8 @@ public class TeiidXmlColumnInfo {
 					setRelativePath(relativePath.toString());
 				} else {
 					IPath fullPath = new Path(this.xmlElement.getFullPath());
-					if( this.relativePath.lastSegment().equalsIgnoreCase(TEXT_SEGMENT)) {
-						IPath shortPath = fullPath.removeLastSegments(1);
+					if( this.relativePath != null && !this.relativePath.isEmpty() && this.relativePath.lastSegment().equalsIgnoreCase(TEXT_SEGMENT)) {
+						IPath shortPath = fullPath;
 						IPath newFullPath = shortPath.append(TEXT_SEGMENT);
 						IPath relativePath = newFullPath.makeRelativeTo(newRootPath);
 						setRelativePath(relativePath.toString());
