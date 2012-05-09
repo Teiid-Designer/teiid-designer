@@ -158,7 +158,12 @@ public class TeiidXmlImportXmlConfigurationPage extends AbstractWizardPage imple
 			setThisPageComplete(fileInfo.getStatus().getMessage(), IMessageProvider.ERROR);
 			return false;
 		}
-
+		
+		if( fileInfo.getStatus().getSeverity() == IStatus.WARNING ) {
+			setThisPageComplete(fileInfo.getStatus().getMessage(), IMessageProvider.WARNING);
+			return true;
+		}
+		
 		setThisPageComplete(StringUtilities.EMPTY_STRING, NONE);
 		return true;
 	}

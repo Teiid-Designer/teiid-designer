@@ -27,6 +27,7 @@ public class Messages extends NLS {
     public static String RootPathTooltip;
     public static String CreateColumn;
     public static String SetAsRootPath;
+    public static String InvalidPathWarning;
     
     public static String createRelationalViewActionText;
     public static String createRelationalViewTitle;

@@ -33,7 +33,6 @@ import com.metamatrix.modeler.internal.transformation.util.TransformationHelper;
 import com.metamatrix.modeler.internal.transformation.util.TransformationMappingHelper;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.transformation.ui.wizards.file.FlatFileRelationalModelFactory;
-import com.metamatrix.modeler.transformation.ui.wizards.file.TeiidColumnInfo;
 import com.metamatrix.modeler.transformation.validation.TransformationValidator;
 
 public class XmlFileViewModelFactory  extends FlatFileRelationalModelFactory {
@@ -109,7 +108,7 @@ public class XmlFileViewModelFactory  extends FlatFileRelationalModelFactory {
     private void createColumns(TeiidXmlFileInfo info, BaseTable baseTable) throws ModelerCoreException {
     	EObject stringType = datatypeManager.findDatatype("string"); //$NON-NLS-1$
     	
-    	for (TeiidColumnInfo columnInfo : info.getColumnInfoList()) {
+    	for (TeiidXmlColumnInfo columnInfo : info.getColumnInfoList()) {
     		Column column = factory.createColumn();
     		column.setName(columnInfo.getName());
     		column.setNameInSource(columnInfo.getSymbolName());

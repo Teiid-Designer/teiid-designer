@@ -26,7 +26,7 @@ import org.eclipse.swt.widgets.Text;
 
 import com.metamatrix.core.util.StringUtilities;
 import com.metamatrix.modeler.transformation.ui.Messages;
-import com.metamatrix.modeler.transformation.ui.wizards.file.TeiidColumnInfo;
+import com.metamatrix.modeler.transformation.ui.wizards.xmlfile.TeiidXmlColumnInfo;
 import com.metamatrix.modeler.transformation.ui.wizards.xmlfile.TeiidXmlFileInfo;
 import com.metamatrix.modeler.transformation.ui.wizards.xmlfile.TeiidXmlImportXmlConfigurationPage;
 import com.metamatrix.ui.internal.util.WidgetFactory;
@@ -124,7 +124,7 @@ public class ColumnsInfoPanel {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				TeiidColumnInfo info = editColumnsPanel.getSelectedColumn();
+				TeiidXmlColumnInfo info = editColumnsPanel.getSelectedColumn();
 				if( info != null ) {
 					getFileInfo().removeColumn(info);
 					deleteButton.setEnabled(false);
@@ -143,7 +143,7 @@ public class ColumnsInfoPanel {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				TeiidColumnInfo info = editColumnsPanel.getSelectedColumn();
+				TeiidXmlColumnInfo info = editColumnsPanel.getSelectedColumn();
 				if (info != null) {
 					int selectedIndex = editColumnsPanel.getSelectedIndex();
 					getFileInfo().moveColumnUp(info);
@@ -166,7 +166,7 @@ public class ColumnsInfoPanel {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				TeiidColumnInfo info = editColumnsPanel.getSelectedColumn();
+				TeiidXmlColumnInfo info = editColumnsPanel.getSelectedColumn();
 				if (info != null) {
 					int selectedIndex = editColumnsPanel.getSelectedIndex();
 					getFileInfo().moveColumnDown(info);
@@ -196,13 +196,13 @@ public class ColumnsInfoPanel {
 				} else {
 					boolean enable = true;
 					Object[] objs = sel.toArray();
-					TeiidColumnInfo columnInfo = null;
+					TeiidXmlColumnInfo columnInfo = null;
 					for( Object obj : objs) {
-						if(  !(obj instanceof TeiidColumnInfo)) {
+						if(  !(obj instanceof TeiidXmlColumnInfo)) {
 							enable = false;
 							break;
 						} else {
-							columnInfo = (TeiidColumnInfo)obj;
+							columnInfo = (TeiidXmlColumnInfo)obj;
 						}
 					} 
 					if( objs.length == 0 ) {

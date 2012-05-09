@@ -29,7 +29,6 @@ import org.eclipse.swt.widgets.Group;
 import com.metamatrix.modeler.transformation.ui.Messages;
 import com.metamatrix.modeler.transformation.ui.UiConstants;
 import com.metamatrix.modeler.transformation.ui.UiPlugin;
-import com.metamatrix.modeler.transformation.ui.wizards.file.TeiidColumnInfo;
 import com.metamatrix.modeler.transformation.ui.wizards.xmlfile.TeiidXmlFileInfo;
 import com.metamatrix.modeler.transformation.ui.wizards.xmlfile.TeiidXmlImportXmlConfigurationPage;
 import com.metamatrix.modeler.transformation.ui.wizards.xmlfile.XmlAttribute;
@@ -169,21 +168,10 @@ public class XmlFileContentsGroup {
     public void createColumn() {
     	IStructuredSelection sel = (IStructuredSelection)xmlTreeViewer.getSelection();
     	Object obj = sel.getFirstElement();
-    	if( obj instanceof XmlElement ) {
-    		XmlElement element = (XmlElement)obj;
-    		String newName =  element.getName();
-    		String rootPath = getFileInfo().getRootPath();
-    		getFileInfo().addColumn(newName, false, TeiidColumnInfo.DEFAULT_DATATYPE, null, rootPath, element);
-    		
-			this.configPage.handleInfoChanged(false);
-    	} else if( obj instanceof XmlAttribute ) {
-    		XmlAttribute attribute = (XmlAttribute)obj;
-    		String newName =  attribute.getName();
-    		String rootPath = getFileInfo().getRootPath();
-    		getFileInfo().addColumn(newName, false, TeiidColumnInfo.DEFAULT_DATATYPE, null, rootPath, attribute);
+    	if( obj instanceof XmlElement || obj instanceof XmlAttribute ) {
+    		getFileInfo().addNewColumn(obj);
     		this.configPage.handleInfoChanged(false);
     	}
-    
     }
 	
     Object[] getNodeChildren( Object element ) {

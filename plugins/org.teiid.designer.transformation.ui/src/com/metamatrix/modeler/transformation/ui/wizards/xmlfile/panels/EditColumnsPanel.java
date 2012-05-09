@@ -35,7 +35,7 @@ import com.metamatrix.modeler.transformation.ui.Messages;
 import com.metamatrix.modeler.transformation.ui.PluginConstants;
 import com.metamatrix.modeler.transformation.ui.UiConstants;
 import com.metamatrix.modeler.transformation.ui.UiPlugin;
-import com.metamatrix.modeler.transformation.ui.wizards.file.TeiidColumnInfo;
+import com.metamatrix.modeler.transformation.ui.wizards.xmlfile.TeiidXmlColumnInfo;
 import com.metamatrix.modeler.transformation.ui.wizards.xmlfile.TeiidXmlFileInfo;
 import com.metamatrix.modeler.transformation.ui.wizards.xmlfile.TeiidXmlImportXmlConfigurationPage;
 import com.metamatrix.ui.table.CheckBoxEditingSupport;
@@ -101,7 +101,7 @@ public class EditColumnsPanel {
         column.getColumn().pack();
         
         if( getFileInfo() != null ) {
-	        for( TeiidColumnInfo row : getFileInfo().getColumnInfoList() ) {
+	        for( TeiidXmlColumnInfo row : getFileInfo().getColumnInfoList() ) {
 	        	this.columnsViewer.add(row);
 	        }
         }
@@ -121,7 +121,7 @@ public class EditColumnsPanel {
     
 	public void refresh() {
     	this.columnsViewer.getTable().removeAll();
-        for( TeiidColumnInfo row : getFileInfo().getColumnInfoList() ) {
+        for( TeiidXmlColumnInfo row : getFileInfo().getColumnInfoList() ) {
         	this.columnsViewer.add(row);
         }
 	}
@@ -134,12 +134,12 @@ public class EditColumnsPanel {
 		this.columnsViewer.addSelectionChangedListener(listener);
 	}
 	
-	public TeiidColumnInfo getSelectedColumn() {
+	public TeiidXmlColumnInfo getSelectedColumn() {
 		
 		IStructuredSelection selection = (IStructuredSelection)this.columnsViewer.getSelection();
 		for( Object obj : selection.toArray()) {
-			if( obj instanceof TeiidColumnInfo ) {
-				return (TeiidColumnInfo) obj;
+			if( obj instanceof TeiidXmlColumnInfo ) {
+				return (TeiidXmlColumnInfo) obj;
 			}
 		}
 		
@@ -172,29 +172,29 @@ public class EditColumnsPanel {
 		 */
 		@Override
 		public String getText(Object element) {
-			if( element instanceof TeiidColumnInfo ) {
+			if( element instanceof TeiidXmlColumnInfo ) {
 				switch (this.columnNumber) {
 					case 0: {
-						if(element instanceof TeiidColumnInfo) {
-							return ((TeiidColumnInfo)element).getName();
+						if(element instanceof TeiidXmlColumnInfo) {
+							return ((TeiidXmlColumnInfo)element).getName();
 						}
 					}
 					case 1: {
 						return EMPTY;
 					}
 					case 2: {
-						if(element instanceof TeiidColumnInfo) {
-							return ((TeiidColumnInfo)element).getDatatype();
+						if(element instanceof TeiidXmlColumnInfo) {
+							return ((TeiidXmlColumnInfo)element).getDatatype();
 						}
 					}
 					case 3: {
-						if(element instanceof TeiidColumnInfo) {
-							return ((TeiidColumnInfo)element).getDefaultValue();
+						if(element instanceof TeiidXmlColumnInfo) {
+							return ((TeiidXmlColumnInfo)element).getDefaultValue();
 						}
 					}
 					case 4: {
-						if(element instanceof TeiidColumnInfo) {
-							return ((TeiidColumnInfo)element).getRelativePath();
+						if(element instanceof TeiidXmlColumnInfo) {
+							return ((TeiidXmlColumnInfo)element).getRelativePath();
 						}
 					}
 				}
@@ -225,8 +225,8 @@ public class EditColumnsPanel {
 			if( this.columnNumber == 0 ) {
 				return UiPlugin.getDefault().getImage(UiConstants.Images.COLUMN_ICON);
 			} else if( this.columnNumber == 1 ) {
-				if(element instanceof TeiidColumnInfo) {
-					if( ((TeiidColumnInfo)element).getOrdinality() ) {
+				if(element instanceof TeiidXmlColumnInfo) {
+					if( ((TeiidXmlColumnInfo)element).getOrdinality() ) {
 						return UiPlugin.getDefault().getImage(PluginConstants.Images.CHECKED_BOX_ICON);
 					} else {
 						return UiPlugin.getDefault().getImage(PluginConstants.Images.UNCHECKED_BOX_ICON);
@@ -278,16 +278,16 @@ public class EditColumnsPanel {
 		 * @see org.eclipse.jface.viewers.EditingSupport#getValue(java.lang.Object)
 		 */
 		protected Object getValue(Object element) {
-			if( element instanceof TeiidColumnInfo ) {
+			if( element instanceof TeiidXmlColumnInfo ) {
 				switch(this.type) {
 					case NAME_PROP: {
-						return ((TeiidColumnInfo)element).getName();
+						return ((TeiidXmlColumnInfo)element).getName();
 					}
 					case DEFAULT_VALUE_PROP: {
-						return ((TeiidColumnInfo)element).getDefaultValue();
+						return ((TeiidXmlColumnInfo)element).getDefaultValue();
 					}
 					case XML_PATH_PROP: {
-						return ((TeiidColumnInfo)element).getRelativePath();
+						return ((TeiidXmlColumnInfo)element).getRelativePath();
 					}
 				}
 			}
@@ -301,35 +301,35 @@ public class EditColumnsPanel {
 		 *      java.lang.Object)
 		 */
 		protected void setValue(Object element, Object value) {
-			if( element instanceof TeiidColumnInfo ) {
+			if( element instanceof TeiidXmlColumnInfo ) {
 				switch(this.type) {
 					case NAME_PROP: {
-						String oldValue = ((TeiidColumnInfo)element).getName();
+						String oldValue = ((TeiidXmlColumnInfo)element).getName();
 						String newValue = (String)value;
 						if( newValue != null && newValue.length() > 0 && !newValue.equalsIgnoreCase(oldValue)) {
-							((TeiidColumnInfo)element).setName(newValue);
+							((TeiidXmlColumnInfo)element).setName(newValue);
 							refresh(element);
-					    	getFileInfo().columnChanged((TeiidColumnInfo)element);
+					    	getFileInfo().columnChanged((TeiidXmlColumnInfo)element);
 							configPage.handleInfoChanged(false);
 						}
 					} break;
 					case DEFAULT_VALUE_PROP: {
-						String oldValue = ((TeiidColumnInfo)element).getDefaultValue();
+						String oldValue = ((TeiidXmlColumnInfo)element).getDefaultValue();
 						String newValue = (String)value;
 						if( newValue != null && newValue.length() > 0 && !newValue.equalsIgnoreCase(oldValue)) {
-							((TeiidColumnInfo)element).setDefaultValue(newValue);
+							((TeiidXmlColumnInfo)element).setDefaultValue(newValue);
 							refresh(element);
-							getFileInfo().columnChanged((TeiidColumnInfo)element);
+							getFileInfo().columnChanged((TeiidXmlColumnInfo)element);
 							configPage.handleInfoChanged(false);
 						}
 					} break;
 					case XML_PATH_PROP: {
-						String oldValue = ((TeiidColumnInfo)element).getRelativePath();
+						String oldValue = ((TeiidXmlColumnInfo)element).getRelativePath();
 						String newValue = (String)value;
 						if( newValue != null && newValue.length() > 0 && !newValue.equalsIgnoreCase(oldValue)) {
-							((TeiidColumnInfo)element).setRelativePath(newValue);
+							((TeiidXmlColumnInfo)element).setRelativePath(newValue);
 							refresh(element);
-							getFileInfo().columnChanged((TeiidColumnInfo)element);
+							getFileInfo().columnChanged((TeiidXmlColumnInfo)element);
 							configPage.handleInfoChanged(false);
 						}
 					} break;
@@ -364,7 +364,7 @@ public class EditColumnsPanel {
 
         @Override
         protected String getElementValue( Object element ) {
-        	return ((TeiidColumnInfo)element).getDatatype();
+        	return ((TeiidXmlColumnInfo)element).getDatatype();
         }
 
         @Override
@@ -375,8 +375,8 @@ public class EditColumnsPanel {
         @Override
         protected void setElementValue( Object element,
                                         String newValue ) {
-        	if( !((TeiidColumnInfo)element).getOrdinality() ) {
-	            ((TeiidColumnInfo)element).setDatatype(newValue);
+        	if( !((TeiidXmlColumnInfo)element).getOrdinality() ) {
+	            ((TeiidXmlColumnInfo)element).setDatatype(newValue);
 	            configPage.handleInfoChanged(false);
         	}
         }
@@ -389,9 +389,9 @@ public class EditColumnsPanel {
 
 		@Override
 		protected void setElementValue(Object element, Object newValue) {
-			if (element instanceof TeiidColumnInfo
+			if (element instanceof TeiidXmlColumnInfo
 					&& newValue instanceof Boolean) {
-				TeiidColumnInfo info = (TeiidColumnInfo) element;
+				TeiidXmlColumnInfo info = (TeiidXmlColumnInfo) element;
 				if (info.getOrdinality()) {
 					getFileInfo().setOrdinality(info, false);
 					configPage.handleInfoChanged(false);
