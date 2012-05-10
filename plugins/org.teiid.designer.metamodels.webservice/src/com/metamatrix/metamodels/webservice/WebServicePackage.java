@@ -158,6 +158,15 @@ public interface WebServicePackage extends EPackage{
      * @ordered
      */
 	int OPERATION__INTERFACE = WEB_SERVICE_COMPONENT_FEATURE_COUNT + 4;
+	
+	/**
+     * The feature id for the '<em><b>Update Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int OPERATION__UPDATE_COUNT = WEB_SERVICE_COMPONENT_FEATURE_COUNT + 5;
 
     /**
      * The number of structural features of the the '<em>Operation</em>' class.
@@ -166,7 +175,7 @@ public interface WebServicePackage extends EPackage{
      * @generated
      * @ordered
      */
-	int OPERATION_FEATURE_COUNT = WEB_SERVICE_COMPONENT_FEATURE_COUNT + 5;
+	int OPERATION_FEATURE_COUNT = WEB_SERVICE_COMPONENT_FEATURE_COUNT + 6;
 
     /**
      * The meta object id for the '{@link com.metamatrix.metamodels.webservice.impl.MessageImpl <em>Message</em>}' class.
@@ -571,7 +580,16 @@ public interface WebServicePackage extends EPackage{
      * @generated
      */
 	int ISTATUS = 9;
-
+		
+    /**
+     * The meta object id for the '{@link com.metamatrix.metamodels.webservice.OperationUpdateCount <em>Operation Update Count</em>}' enum.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see com.metamatrix.metamodels.webservice.OperationUpdateCount
+     * @see com.metamatrix.metamodels.webservice.impl.OperationPackageImpl#getOperationUpdateCount()
+     * @generated
+     */
+    int OPERATION_UPDATE_COUNT = 10;
 
     /**
      * Returns the meta object for class '{@link com.metamatrix.metamodels.webservice.Operation <em>Operation</em>}'.
@@ -637,6 +655,17 @@ public interface WebServicePackage extends EPackage{
      * @generated
      */
 	EReference getOperation_Interface();
+
+	/**
+     * Returns the meta object for the attribute '{@link com.metamatrix.metamodels.webservice.Operation#getUpdateCount() <em>UpdateCount</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>UpdateCount</em>'.
+     * @see com.metamatrix.metamodels.webservice.Operation#getUpdateCount()
+     * @see #getOperation()
+     * @generated
+     */
+    EAttribute getOperation_UpdateCount();
 
     /**
      * Returns the meta object for class '{@link com.metamatrix.metamodels.webservice.Message <em>Message</em>}'.

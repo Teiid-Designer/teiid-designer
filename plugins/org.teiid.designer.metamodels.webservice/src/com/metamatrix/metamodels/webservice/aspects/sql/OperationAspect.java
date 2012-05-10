@@ -74,7 +74,8 @@ public class OperationAspect extends WebServiceComponentAspect implements SqlPro
      * @since 5.5.3
      */
     public int getUpdateCount(EObject eObject) {
-        return 0;
+        CoreArgCheck.isInstanceOf(Operation.class, eObject);
+        return ((Operation)eObject).getUpdateCount().getValue();
     }
 
     /** 

@@ -12,9 +12,11 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
+
 import com.metamatrix.metamodels.webservice.Input;
 import com.metamatrix.metamodels.webservice.Interface;
 import com.metamatrix.metamodels.webservice.Operation;
+import com.metamatrix.metamodels.webservice.OperationUpdateCount;
 import com.metamatrix.metamodels.webservice.Output;
 import com.metamatrix.metamodels.webservice.SampleFile;
 import com.metamatrix.metamodels.webservice.SampleFromXsd;
@@ -76,6 +78,12 @@ public class WebServiceFactoryImpl extends EFactoryImpl implements WebServiceFac
         switch (eDataType.getClassifierID()) {
             case WebServicePackage.ISTATUS:
                 return createIStatusFromString(eDataType, initialValue);
+            case WebServicePackage.OPERATION_UPDATE_COUNT: {
+                OperationUpdateCount result = OperationUpdateCount.get(initialValue);
+                if (result == null) throw new IllegalArgumentException(
+                                                                       "The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                return result;
+            }
             default:
                 throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
         }
@@ -92,6 +100,8 @@ public class WebServiceFactoryImpl extends EFactoryImpl implements WebServiceFac
         switch (eDataType.getClassifierID()) {
             case WebServicePackage.ISTATUS:
                 return convertIStatusToString(eDataType, instanceValue);
+            case WebServicePackage.OPERATION_UPDATE_COUNT:
+                return instanceValue == null ? null : instanceValue.toString();
             default:
                 throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
         }

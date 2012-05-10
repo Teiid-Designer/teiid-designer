@@ -11,15 +11,18 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
+import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.impl.EPackageImpl;
 import org.eclipse.xsd.XSDPackage;
 import org.eclipse.xsd.impl.XSDPackageImpl;
+
 import com.metamatrix.metamodels.webservice.Input;
 import com.metamatrix.metamodels.webservice.Interface;
 import com.metamatrix.metamodels.webservice.Message;
 import com.metamatrix.metamodels.webservice.Operation;
+import com.metamatrix.metamodels.webservice.OperationUpdateCount;
 import com.metamatrix.metamodels.webservice.Output;
 import com.metamatrix.metamodels.webservice.SampleFile;
 import com.metamatrix.metamodels.webservice.SampleFromXsd;
@@ -106,6 +109,13 @@ public class WebServicePackageImpl extends EPackageImpl implements WebServicePac
      * @generated
      */
     private EDataType iStatusEDataType = null;
+    
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    private EEnum operationUpdateCountEEnum = null;
 
     /**
      * Creates an instance of the model <b>Package</b>, registered with {@link org.eclipse.emf.ecore.EPackage.Registry
@@ -224,6 +234,14 @@ public class WebServicePackageImpl extends EPackageImpl implements WebServicePac
      */
     public EReference getOperation_Interface() {
         return (EReference)operationEClass.getEStructuralFeatures().get(4);
+    }
+    
+    /**
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
+    public EAttribute getOperation_UpdateCount() {
+        return (EAttribute)operationEClass.getEStructuralFeatures().get(5);
     }
 
     /**
@@ -461,6 +479,15 @@ public class WebServicePackageImpl extends EPackageImpl implements WebServicePac
     }
 
     /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EEnum getOperationUpdateCount() {
+        return operationUpdateCountEEnum;
+    }
+    
+    /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
      * 
      * @generated
@@ -502,6 +529,7 @@ public class WebServicePackageImpl extends EPackageImpl implements WebServicePac
         createEReference(operationEClass, OPERATION__INPUT);
         createEReference(operationEClass, OPERATION__OUTPUT);
         createEReference(operationEClass, OPERATION__INTERFACE);
+        createEAttribute(operationEClass, OPERATION__UPDATE_COUNT);
 
         messageEClass = createEClass(MESSAGE);
         createEReference(messageEClass, MESSAGE__CONTENT_ELEMENT);
@@ -539,6 +567,9 @@ public class WebServicePackageImpl extends EPackageImpl implements WebServicePac
 
         // Create data types
         iStatusEDataType = createEDataType(ISTATUS);
+        
+        // Create enums
+        operationUpdateCountEEnum = createEEnum(OPERATION_UPDATE_COUNT);
     }
 
     /**
@@ -594,6 +625,9 @@ public class WebServicePackageImpl extends EPackageImpl implements WebServicePac
                        this.getInterface(),
                        this.getInterface_Operations(),
                        "interface", null, 1, 1, Operation.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEAttribute(getOperation_UpdateCount(), 
+                this.getOperationUpdateCount(), 
+                "updateCount", "AUTO", 0, 1, Operation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
 
         initEClass(messageEClass, Message.class, "Message", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
         initEReference(getMessage_ContentElement(),
@@ -689,6 +723,13 @@ public class WebServicePackageImpl extends EPackageImpl implements WebServicePac
 
         // Initialize data types
         initEDataType(iStatusEDataType, IStatus.class, "IStatus", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+
+        // Initialize enums and add enum literals
+        initEEnum(operationUpdateCountEEnum, OperationUpdateCount.class, "OperationUpdateCount"); //$NON-NLS-1$
+        addEEnumLiteral(operationUpdateCountEEnum, OperationUpdateCount.AUTO_LITERAL);
+        addEEnumLiteral(operationUpdateCountEEnum, OperationUpdateCount.ZERO_LITERAL);
+        addEEnumLiteral(operationUpdateCountEEnum, OperationUpdateCount.ONE_LITERAL);
+        addEEnumLiteral(operationUpdateCountEEnum, OperationUpdateCount.MULTIPLE_LITERAL);
 
         // Create resource
         createResource(eNS_URI);
