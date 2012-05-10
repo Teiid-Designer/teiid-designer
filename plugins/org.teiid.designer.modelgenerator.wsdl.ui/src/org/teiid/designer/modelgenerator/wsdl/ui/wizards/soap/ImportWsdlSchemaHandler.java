@@ -441,7 +441,7 @@ public class ImportWsdlSchemaHandler {
 		schemaTreeModel = new SchemaTreeModel();
 		rootnode = schemaTreeModel.new SchemaNode();
 		XSDElementDeclaration xed = (elementDeclaration == null ? schema.resolveElementDeclaration(element) : elementDeclaration);
-		XSDTypeDefinition xtd = elementDeclaration.getTypeDefinition();
+		XSDTypeDefinition xtd = xed.getTypeDefinition();
 
 		if (xtd instanceof XSDComplexTypeDefinition) {
 			rootnode.setElement(xed);
