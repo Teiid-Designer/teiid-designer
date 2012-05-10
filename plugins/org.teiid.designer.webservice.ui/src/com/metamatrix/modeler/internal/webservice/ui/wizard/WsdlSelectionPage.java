@@ -22,6 +22,7 @@ import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -114,6 +115,10 @@ import com.metamatrix.ui.internal.wizard.AbstractWizardPage;
 public final class WsdlSelectionPage extends AbstractWizardPage
     implements FileUtils.Constants, IInternalUiConstants, IInternalUiConstants.HelpContexts, IInternalUiConstants.Images,
     Listener {
+    
+    public static enum EditableNameField {
+        EDITABLE, UNEDITABLE;
+    }
 
     /** Used as a prefix to properties file keys. */
     private static final String PREFIX = I18nUtil.getPropertyPrefix(WsdlSelectionPage.class);
@@ -134,7 +139,7 @@ public final class WsdlSelectionPage extends AbstractWizardPage
     private static final String WSDL_SUFFIX = ".wsdl"; //$NON-NLS-1$
 
     /** Model name. */
-    private Text nameText;
+    private Text textName;
 
     /** The model builder. */
     private IWebServiceModelBuilder builder;
@@ -162,17 +167,14 @@ public final class WsdlSelectionPage extends AbstractWizardPage
     /** Action to view selected WSDL using system editor. */
     private IAction viewWsdlAction;
 
-    /** Selected workspace folder path */
-    private IPath modelLocationPath;
-
-    /** Boolean indicating whether or not to display the model name text field. */
-    private boolean displayModelNameTextField;
+    /** Enum indicating whether the model name text field is editable */
+    private EditableNameField modelNameTextFieldEditable;
 
     /** selection buttons */
-    Button buttonSelectTargetModelLocation;
+    private Button buttonSelectTargetModelLocation;
 
-    Text textFieldTargetProjectLocation;
-    private IContainer targetModelLocation;
+    /** Project location of the model */
+    private Text textFieldTargetProjectLocation;
 
     /** Filter for selecting WSDL files and their parent containers. */
     private ViewerFilter wsdlFilter = new ViewerFilter() {
@@ -252,14 +254,16 @@ public final class WsdlSelectionPage extends AbstractWizardPage
      * Constructs a <code>WsdlSelectionPage</code> using the specified builder.
      * 
      * @param theBuilder the model builder
+     * @param flag from {@link EditableNameField} indicating whether the model 
+     *                  name is editable
      * @since 4.2
      */
     public WsdlSelectionPage( IWebServiceModelBuilder theBuilder,
-                              boolean displayModelNameTextField ) {
+                              EditableNameField nameFieldEditable ) {
         super(WsdlSelectionPage.class.getSimpleName(), getString("title")); //$NON-NLS-1$
         this.builder = theBuilder;
         this.wsdlMap = new HashMap();
-        this.displayModelNameTextField = displayModelNameTextField;
+        this.modelNameTextFieldEditable = nameFieldEditable;
         setImageDescriptor(WebServiceUiUtil.getImageDescriptor(NEW_MODEL_BANNER));
     }
 
@@ -297,10 +301,8 @@ public final class WsdlSelectionPage extends AbstractWizardPage
         });
     }
 
-    void addWsdlFilesInternal( final Object[] theFiles,
+    private void addWsdlFilesInternal( final Object[] theFiles,
                                final boolean theWorkspaceResourceFlag ) {
-        IWebServiceModelBuilder modelBuilder = getBuilder();
-        modelBuilder.setModelPath(getModelLocationPath());
         Map map = getWsdlMap();
         List problems = null;
         List newWsdls = new ArrayList(theFiles.length);
@@ -358,9 +360,9 @@ public final class WsdlSelectionPage extends AbstractWizardPage
                 // catch and keep on adding.
                 try {
                     if (theWorkspaceResourceFlag) {
-                        resource = modelBuilder.addResource((IFile)theFiles[i]);
+                        resource = builder.addResource((IFile)theFiles[i]);
                     } else {
-                        resource = modelBuilder.addResource((File)theFiles[i]);
+                        resource = builder.addResource((File)theFiles[i]);
                     }
 
                     map.put(theFiles[i], resource);
@@ -435,72 +437,61 @@ public final class WsdlSelectionPage extends AbstractWizardPage
     }
 
     /**
-     * validate the selected target relational model name and location. Returns 'true' if the validation is successful, 'false' if
-     * not.
+     * Validate the location name. if the location is found, return the location container. 
      * 
-     * @return 'true' if the WSDL selection is valid, 'false' if not.
+     * If not valid, return a null value.
      */
-    private boolean validateTargetModelNameAndLocation() {
-        // Hardcode the updating flag to false for now.
-        // Plan to implement in the future.
-        // final boolean updating = this.updateCheckBox.getSelection();
-
-        try {
-            // Validate the target Model Name and location
-            targetModelLocation = validateFileAndFolder(this.textFieldTargetProjectLocation, ModelerCore.MODEL_FILE_EXTENSION);
-
-            // If null location was returned, error was found
-            if (targetModelLocation == null) {
-                return false;
-                // Check if locations project is a model project
-            } else if (targetModelLocation.getProject().getNature(ModelerCore.NATURE_ID) == null) {
-                setErrorMessage(getString("notModelProjectMessage")); //$NON-NLS-1$
-                setPageComplete(false);
-                targetModelLocation = null;
-                return false;
-            }
-
-            this.builder.setParentResource(targetModelLocation);
-            this.builder.setModelPath(targetModelLocation.getFullPath());
-            this.setModelLocationPath(this.builder.getModelPath());
-            getContainer().updateButtons();
-        } catch (final CoreException err) {
-            UTIL.log(err);
-            WizardUtil.setPageComplete(this, err.getLocalizedMessage(), IMessageProvider.ERROR);
-            return false;
-        }
-        WizardUtil.setPageComplete(this);
-        return true;
-    }
-
-    /**
-     * validate the file name and location name. if the file is valid and the location is found, return the location container. If
-     * not valid, return a null value.
-     * 
-     * @param fileText the Text entry widget for the file name.
-     * @param locationText the Text entry widget for the model location.
-     * @return the location container, null if invalid or not found.
-     */
-    private IContainer validateFileAndFolder( final Text folderText,
-                                              final String fileExtension ) {
-        CoreArgCheck.isNotNull(folderText);
-        CoreArgCheck.isNotNull(fileExtension);
-        final String folderName = folderText.getText();
+    private IContainer validateTargetFolder() {
+        final String folderName = textFieldTargetProjectLocation.getText();
         if (CoreStringUtil.isEmpty(folderName)) {
             WizardUtil.setPageComplete(this, getString("page.selectProject.msg"), IMessageProvider.ERROR); //$NON-NLS-1$
         } else {
             final IResource resrc = ResourcesPlugin.getWorkspace().getRoot().findMember(folderName);
+
             if (resrc == null || !(resrc instanceof IContainer) || resrc.getProject() == null) {
                 WizardUtil.setPageComplete(this, getString("invalidFolderMessage"), IMessageProvider.ERROR); //$NON-NLS-1$
             } else if (!resrc.getProject().isOpen()) {
                 WizardUtil.setPageComplete(this, getString("closedProjectMessage"), IMessageProvider.ERROR); //$NON-NLS-1$
             } else {
-                final IContainer folder = (IContainer)resrc;
-                WizardUtil.setPageComplete(this);
-                return folder;
+                try{
+                    if (resrc.getProject().getNature(ModelerCore.NATURE_ID) != null) {
+                        final IContainer folder = (IContainer)resrc;
+                        WizardUtil.setPageComplete(this);
+                        return folder;
+                    }
+                    else {
+                        WizardUtil.setPageComplete(this, getString("notModelProjectMessage"), IMessageProvider.ERROR); //$NON-NLS-1$
+                    }
+                } catch (final CoreException err) {
+                    UTIL.log(err);
+                    WizardUtil.setPageComplete(this, err.getLocalizedMessage(), IMessageProvider.ERROR);
+                }
             }
         }
         return null;
+    }
+
+    /**
+     * Validate the model name. if the model name is appropriate,
+     * return the model name with extension.
+     *
+     * If not valid, return a null value.
+     */
+    private String validateModelName() {
+        String name = textName.getText();
+
+        if (name == null || name.length() == 0) {
+            WizardUtil.setPageComplete(this, getString("noModelName"), IMessageProvider.ERROR); //$NON-NLS-1$
+            return null;
+        }
+
+        if (ModelUtilities.validateModelName(name, ModelerCore.MODEL_FILE_EXTENSION) != null) {
+            WizardUtil.setPageComplete(this, getString("invalidModelName"), IMessageProvider.ERROR); //$NON-NLS-1$,
+            return null;
+        }
+
+        WizardUtil.setPageComplete(this);
+        return name + ModelerCore.MODEL_FILE_EXTENSION;
     }
 
     /**
@@ -560,15 +551,15 @@ public final class WsdlSelectionPage extends AbstractWizardPage
 
         // Add widgets to page
         WidgetFactory.createLabel(pnl, getString("modelName")); //$NON-NLS-1$,
-        this.nameText = WidgetFactory.createTextField(pnl, GridData.FILL_HORIZONTAL, 1);
-        // If the model name should not be visible, set visible to false and
+        this.textName = WidgetFactory.createTextField(pnl, GridData.FILL_HORIZONTAL, 1);
+        // If the model name should not be editable, set editable to false and
         // set the value to to the model name.
-        if (!this.displayModelNameTextField) {
-            this.nameText.setEditable(false);
-            String modelName = getModelLocationPath().removeFileExtension().lastSegment();
-            this.nameText.setText(modelName);
+        if (EditableNameField.UNEDITABLE.equals(modelNameTextFieldEditable)) {
+            this.textName.setEditable(false);
+            String modelName = builder.getModelPath().removeFileExtension().lastSegment();
+            this.textName.setText(modelName);
         }
-        this.nameText.addModifyListener(new ModifyListener() {
+        this.textName.addModifyListener(new ModifyListener() {
 
             @Override
             public void modifyText( final ModifyEvent event ) {
@@ -816,16 +807,6 @@ public final class WsdlSelectionPage extends AbstractWizardPage
     }
 
     /**
-     * Convenience method to give inner classes access to the builder.
-     * 
-     * @return the builder
-     * @since 4.2
-     */
-    protected IWebServiceModelBuilder getBuilder() {
-        return this.builder;
-    }
-
-    /**
      * Override to replace the NewModelWizard settings with the section devoted to the Web Service Model Wizard.
      * 
      * @see org.eclipse.jface.wizard.WizardPage#getDialogSettings()
@@ -918,7 +899,7 @@ public final class WsdlSelectionPage extends AbstractWizardPage
      * @return the WSDLs
      * @since 4.2
      */
-    Object[] getWsdlResources() {
+    private Object[] getWsdlResources() {
         return this.wsdlMap.keySet().toArray();
     }
 
@@ -927,7 +908,7 @@ public final class WsdlSelectionPage extends AbstractWizardPage
      * 
      * @since 4.2
      */
-    void handleAddFileSystemWsdlFile() {
+    private void handleAddFileSystemWsdlFile() {
         FileDialog dialog = new FileDialog(getShell(), SWT.MULTI);
         dialog.setText(getString("dialog.addWsdl.title")); //$NON-NLS-1$
         dialog.setFilterExtensions(WebServiceUiUtil.FILE_DIALOG_WSDL_EXTENSIONS);
@@ -977,7 +958,7 @@ public final class WsdlSelectionPage extends AbstractWizardPage
      * 
      * @since 5.1
      */
-    void handleAddURLWsdlFile() {
+    private void handleAddURLWsdlFile() {
         WsdlUrlDialog dialog = new WsdlUrlDialog(getShell());
         // construct/display dialog
         dialog.create();
@@ -1039,7 +1020,7 @@ public final class WsdlSelectionPage extends AbstractWizardPage
      * 
      * @since 4.2
      */
-    void handleAddWorkspaceWsdlFile() {
+    private void handleAddWorkspaceWsdlFile() {
         Object[] wsdlFiles = WidgetUtil.showWorkspaceObjectSelectionDialog(getString("dialog.addWsdl.title"), //$NON-NLS-1$
                                                                            getString("dialog.addWsdl.msg"), //$NON-NLS-1$
                                                                            true,
@@ -1080,7 +1061,7 @@ public final class WsdlSelectionPage extends AbstractWizardPage
      * 
      * @since 4.2
      */
-    void handleCopyWsdlInfo() {
+    private void handleCopyWsdlInfo() {
         WebServiceUiUtil.copyToClipboard(this.viewer.getSelection());
     }
 
@@ -1089,7 +1070,7 @@ public final class WsdlSelectionPage extends AbstractWizardPage
      * 
      * @since 4.2
      */
-    void handleRemoveWsdlFile() {
+    private void handleRemoveWsdlFile() {
         Object[] selectedWsdlFiles = ((IStructuredSelection)this.viewer.getSelection()).toArray();
 
         // remove from builder and wsdlValidationMessages map
@@ -1126,7 +1107,7 @@ public final class WsdlSelectionPage extends AbstractWizardPage
      * 
      * @since 4.2
      */
-    void handleTableSelectionChanged() {
+    private void handleTableSelectionChanged() {
         IStructuredSelection selection = (IStructuredSelection)this.viewer.getSelection();
 
         // enable buttons
@@ -1142,7 +1123,7 @@ public final class WsdlSelectionPage extends AbstractWizardPage
      * 
      * @since 4.2
      */
-    void handleViewWsdlFile() {
+    private void handleViewWsdlFile() {
         WebServiceUiUtil.viewFile(getShell(), this.viewer.getSelection());
     }
 
@@ -1193,10 +1174,7 @@ public final class WsdlSelectionPage extends AbstractWizardPage
         }
     }
 
-    void setPageStatus() {
-        // no errors are possible on this page so the page is always complete.
-        // just update the message based on if WSDL files selected
-
+    private void setPageStatus() {
         String msg = null;
         int wsdlCount = this.wsdlMap.size();
 
@@ -1207,8 +1185,8 @@ public final class WsdlSelectionPage extends AbstractWizardPage
         }
 
         // Validate the target relational model name and location
-        boolean targetValid = validateTargetModelNameAndLocation();
-        if (!targetValid) {
+        boolean valid = validatePage();
+        if (!valid) {
             return;
         }
 
@@ -1244,22 +1222,8 @@ public final class WsdlSelectionPage extends AbstractWizardPage
         }
     }
 
-    /**
-     * @return modelLocationPath
-     */
-    public IPath getModelLocationPath() {
-        return modelLocationPath;
-    }
-
     public void setWsdlValidationMessages( Map wsdlValidationMessages ) {
         this.wsdlValidationMessages = wsdlValidationMessages;
-    }
-
-    /**
-     * @param modelLocationPath
-     */
-    public void setModelLocationPath( IPath modelLocationPath ) {
-        this.modelLocationPath = modelLocationPath;
     }
 
     /**
@@ -1302,48 +1266,34 @@ public final class WsdlSelectionPage extends AbstractWizardPage
     /**
      * @since 5.0.1
      */
-    private void validatePage() {
-        // Check if model name is valid
-
-        String name = this.nameText.getText();
-        String problem = null;
-
-        if (name == null || name.length() == 0) {
-            problem = getString("noModeName"); //$NON-NLS-1$,
+    private boolean validatePage() {
+        IContainer targetModelLocation = validateTargetFolder();
+        if (targetModelLocation == null) {
+            return false;
         }
 
-        boolean targetValid = validateTargetModelNameAndLocation();
-        if (!targetValid) {
-            problem = getString("page.selectProject.msg"); //$NON-NLS-1$
-            WizardUtil.setPageComplete(this, problem, IMessageProvider.ERROR);
-            return;
+        String modelName = validateModelName();
+        if (modelName == null) {
+            return false;
         }
 
-        if (problem != null) {
-            WizardUtil.setPageComplete(this, problem, IMessageProvider.ERROR);
+        IPath fullModelPath = targetModelLocation.getFullPath().append(modelName);
+
+        // see if model exists or would be a new model
+        String temp = null;
+        IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(fullModelPath);
+
+        if (resource != null) {
+            IPath path = resource.getLocation();
+            temp = path.toOSString();
+        }
+        String pathString = getModelPath(temp, modelName);
+        boolean exists = new File(pathString).exists();
+
+        if (exists) {
+            WizardUtil.setPageComplete(this, getString("page.existingWebServiceModel.msg", fullModelPath), IMessageProvider.ERROR); //$NON-NLS-1$,
         } else {
-            problem = ModelUtilities.validateModelName(name, ModelerCore.MODEL_FILE_EXTENSION);
-
-            if (problem != null) {
-                WizardUtil.setPageComplete(this, getString("invalidModelName") + '\n' + problem, IMessageProvider.ERROR); //$NON-NLS-1$,
-            } else {
-                // see if model exists or would be a new model
-                String temp = null;
-                IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(modelLocationPath);
-
-                if (resource != null) {
-                    IPath path = resource.getLocation();
-                    temp = path.toOSString();
-                }
-                String pathString = getModelPath(temp, name);
-                boolean exists = new File(pathString).exists();
-
-                if (exists) {
-                    WizardUtil.setPageComplete(this, getString("page.existingWebServiceModel.msg", name), IMessageProvider.ERROR); //$NON-NLS-1$,
-                } else {
-                    WizardUtil.setPageComplete(this);
-                }
-            }
+            WizardUtil.setPageComplete(this);
         }
 
         // jh Defect 22412: page complete must also consider whether any wsdl
@@ -1354,17 +1304,15 @@ public final class WsdlSelectionPage extends AbstractWizardPage
             }
         }
 
+        builder.setParentResource(targetModelLocation);
+        builder.setModelPath(fullModelPath);
+        getContainer().updateButtons();
+
         if (isPageComplete()) {
-            // If displayModelNameTextField is true, build the model path, else
-            // just take was set programmatically.
-            if (displayModelNameTextField) {
-                String locPath = modelLocationPath.toOSString() + File.separator + name + ".xmi"; //$NON-NLS-1$
-                getBuilder().setModelPath(new Path(locPath));
-            } else {
-                getBuilder().setModelPath(modelLocationPath);
-            }
             setBuilderXmlResponseDocModel();
         }
+
+        return true;
     }
 
     private String getModelPath( final String modelLocation,
@@ -1421,12 +1369,12 @@ public final class WsdlSelectionPage extends AbstractWizardPage
     /**
      * Handler for Workspace Target Model Location Browse button.
      */
-    void handleBrowseWorkspaceForTargetModelLocation() {
+    private void handleBrowseWorkspaceForTargetModelLocation() {
         // create the dialog for target location
         FolderSelectionDialog dlg = new FolderSelectionDialog(Display.getCurrent().getActiveShell(),
                                                               new WorkbenchLabelProvider(), new WorkbenchContentProvider());
 
-        dlg.setInitialSelection(this.getBuilder().getModelPath());
+        dlg.setInitialSelection(this.builder.getModelPath());
         dlg.addFilter(new ModelingResourceFilter(this.targetLocationFilter));
         dlg.setValidator(new ModelProjectSelectionStatusValidator());
         dlg.setAllowMultiple(false);

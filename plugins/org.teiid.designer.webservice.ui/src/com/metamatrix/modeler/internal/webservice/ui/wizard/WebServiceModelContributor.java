@@ -27,6 +27,7 @@ import com.metamatrix.modeler.core.metamodel.MetamodelDescriptor;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.internal.webservice.WebServiceModelProducer;
 import com.metamatrix.modeler.internal.webservice.ui.IInternalUiConstants;
+import com.metamatrix.modeler.internal.webservice.ui.wizard.WsdlSelectionPage.EditableNameField;
 import com.metamatrix.modeler.ui.wizards.INewModelWizardContributor2;
 import com.metamatrix.modeler.webservice.IWebServiceModelBuilder;
 import com.metamatrix.modeler.webservice.WebServicePlugin;
@@ -93,7 +94,7 @@ public final class WebServiceModelContributor implements INewModelWizardContribu
 
         // construct pages
 
-        this.wsdlSelectionPage = new WsdlSelectionPage(this.builder, false);
+        this.wsdlSelectionPage = new WsdlSelectionPage(this.builder, EditableNameField.UNEDITABLE);
         this.wsdlValidationPage = new ImportWsdlValidationPage(this.builder);
         this.selectWsdlOperationsPage = new SelectWsdlOperationsPage(this.builder);
         this.namespaceResolutionPage = new NamespaceResolutionPage(this.builder);
@@ -110,7 +111,6 @@ public final class WebServiceModelContributor implements INewModelWizardContribu
 
         // give the WSDL selection page the current workspace selection
         ((WsdlSelectionPage)this.wsdlSelectionPage).setInitialSelection(theSelection);
-        ((WsdlSelectionPage)this.wsdlSelectionPage).setModelLocationPath(theModelPath);
     }
 
     /**
