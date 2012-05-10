@@ -817,7 +817,9 @@ public final class TranslatorOverridesPanel extends Composite {
      */
     public void refresh() {
         this.translatorsViewer.setInput(this);
+        this.translatorsViewer.refresh();
         this.propertiesViewer.setInput(this);
+        this.propertiesViewer.refresh();
     }
 
     class PropertyLabelProvider extends ColumnLabelProvider {

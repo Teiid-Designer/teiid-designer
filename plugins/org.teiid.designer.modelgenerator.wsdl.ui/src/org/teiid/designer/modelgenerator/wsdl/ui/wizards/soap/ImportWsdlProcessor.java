@@ -223,12 +223,7 @@ public class ImportWsdlProcessor {
         			if( defaultServiceMode.equalsIgnoreCase(WSDLImportWizardManager.MESSAGE ) ) {
         				props.put(SOAPConnectionInfoProvider.SOAP_SERVICE_MODE, WSDLImportWizardManager.MESSAGE);
         			} else {
-        				// remove MESSAGE property if it exists
-        				String theProp = props.getProperty(SOAPConnectionInfoProvider.SOAP_SERVICE_MODE);
-        				if( theProp != null ) {
-        					props.remove(SOAPConnectionInfoProvider.SOAP_SERVICE_MODE);
-        				}
-        				
+        				props.put(SOAPConnectionInfoProvider.SOAP_SERVICE_MODE, WSDLImportWizardManager.PAYLOAD);
         			}
         			String defaultBinding = this.importManager.getTranslatorDefaultBinding();
         			if( defaultBinding.equalsIgnoreCase(Port.SOAP12) ) {
