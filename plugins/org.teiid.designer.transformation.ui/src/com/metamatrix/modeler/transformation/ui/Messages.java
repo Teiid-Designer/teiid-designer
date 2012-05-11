@@ -78,6 +78,11 @@ public class Messages extends NLS {
     public static String sqlTemplateDialogSelectTabTitle;
     public static String sqlTemplateDialogProceduresTabTitle;
     
+    public static String DefaultUpdateMessageOK;
+    public static String DefaultUpdateMessageAmbigious;
+    public static String DefaultUpdateMessageOverride;
+    
+    
     static {
         NLS.initializeMessages("com.metamatrix.modeler.transformation.ui.messages", Messages.class); //$NON-NLS-1$
     }
