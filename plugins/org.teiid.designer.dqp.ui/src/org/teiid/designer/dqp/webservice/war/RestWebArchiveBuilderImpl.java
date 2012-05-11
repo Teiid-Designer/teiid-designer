@@ -545,7 +545,7 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder {
         }
 
         // Gen return and execute
-        sb.append("\treturn teiidProvider.execute(\"" + restProcedure.getProcedureName() + "\", parameterMap);" + newline //$NON-NLS-1$ //$NON-NLS-2$
+        sb.append("\treturn teiidProvider.execute(\"" + restProcedure.getFullyQualifiedProcedureName() + "\", parameterMap);" + newline //$NON-NLS-1$ //$NON-NLS-2$
                   + "}" + newline + "\t"); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
@@ -561,7 +561,7 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder {
         }
 
         // Gen return and execute
-        sb.append("\tString result = teiidProvider.execute(\"" + restProcedure.getProcedureName() + "\", parameterMap);" + newline //$NON-NLS-1$ //$NON-NLS-2$
+        sb.append("\tString result = teiidProvider.execute(\"" + restProcedure.getFullyQualifiedProcedureName() + "\", parameterMap);" + newline //$NON-NLS-1$ //$NON-NLS-2$
                   + "\t"); //$NON-NLS-1$
         sb.append("\tString json = convertXMLToJSON(result);" + newline + "\t"); //$NON-NLS-1$ //$NON-NLS-2$
         sb.append("\treturn json;" + newline + "\t" + "}" + newline + "\t"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
