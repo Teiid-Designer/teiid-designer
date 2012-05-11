@@ -32,10 +32,10 @@
       <rootEntityClass
             name="com.metamatrix.metamodels.relational.Schema">
       </rootEntityClass>
+	  -->
       <rootEntityClass
             name="com.metamatrix.metamodels.relational.BaseTable">
       </rootEntityClass>
-      -->
       <rootEntityClass
             name="com.metamatrix.metamodels.relational.View">
       </rootEntityClass>

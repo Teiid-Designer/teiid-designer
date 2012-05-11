@@ -449,9 +449,17 @@ public class ModelEditorImpl implements ModelEditor {
                     URI nsUri = eObject.eClass().eResource().getURI();
                     List rootClasses = Arrays.asList(ModelerCore.getMetamodelRegistry().getMetamodelRootClasses(nsUri));
 
+                    Collection filteredClasses = new ArrayList(rootClasses.size());
+                    for( Object obj : rootClasses ) {
+                    	String className = ((MetamodelRootClass)obj).getEClass().getName();
+                    	if( !className.equalsIgnoreCase("BaseTable") ) { //$NON-NLS-1$
+                    		filteredClasses.add(obj);
+                    	}
+                    }
+                    
                     final EPackage ePackage = ModelerCore.getMetamodelRegistry().getEPackage(nsUri);
                     final EFactory eFactory = ePackage.getEFactoryInstance();
-                    descriptors = createSiblingDescriptors(rootClasses, eFactory, eObject);
+                    descriptors = createSiblingDescriptors(filteredClasses, eFactory, eObject);
                     descriptors = createCommands(descriptors, domain);
                 } else {
                     descriptors = domain.getNewChildDescriptors(null, eObject);
@@ -3542,7 +3550,16 @@ public class ModelEditorImpl implements ModelEditor {
         final EPackage ePackage = ModelerCore.getMetamodelRegistry().getEPackage(nsUri);
         final EFactory eFactory = ePackage.getEFactoryInstance();
         final Collection rootClasses = Arrays.asList(ModelerCore.getMetamodelRegistry().getMetamodelRootClasses(nsUri));
-        final Collection descriptors = createSiblingDescriptors(rootClasses, eFactory, rsrc);
+        
+        Collection filteredClasses = new ArrayList(rootClasses.size());
+        for( Object obj : rootClasses ) {
+        	String className = ((MetamodelRootClass)obj).getEClass().getName();
+        	if( !className.equalsIgnoreCase("BaseTable") ) { //$NON-NLS-1$
+        		filteredClasses.add(obj);
+        	}
+        }
+        
+        final Collection descriptors = createSiblingDescriptors(filteredClasses, eFactory, rsrc);
 
         return descriptors;
     }
