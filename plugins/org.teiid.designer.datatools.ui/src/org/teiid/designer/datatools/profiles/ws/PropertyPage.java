@@ -202,8 +202,7 @@ public class PropertyPage extends ProfileDetailsPropertyPage implements
             valid = false;
         }
         if (!SecurityType.None.name().equals(securityText.getText()) &&
-        		!SecurityType.HTTPBasic.name().equals(securityText.getText()) &&
-        		!SecurityType.WSSecurity.name().equals(securityText.getText())) {
+                !SecurityType.HTTPBasic.name().equals(securityText.getText())) {
         	errorMessage = UTIL.getString("Common.Security.Error.Message"); //$NON-NLS-1$
     		valid = false;
         }

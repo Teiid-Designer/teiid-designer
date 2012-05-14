@@ -64,7 +64,7 @@ public class CredentialsComposite extends Composite implements UiConstants, List
         securityCombo = new Combo(this, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY);
         securityCombo.setToolTipText(Util.getString(PREFIX + "Common.Context.Factory.ToolTip")); //$NON-NLS-1$
         securityCombo.setItems(new String[] { SecurityType.None.name(),
-                SecurityType.HTTPBasic.name(), SecurityType.WSSecurity.name() });
+                SecurityType.HTTPBasic.name() });
         securityCombo.setText(SecurityType.None.name());
         securityCombo.addListener(SWT.Modify, this);
         GridDataFactory.swtDefaults().grab(false, false).applyTo(securityCombo);

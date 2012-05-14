@@ -18,7 +18,18 @@ public interface ICredentialsCommon {
     
     enum SecurityType {
         None,
-        HTTPBasic,
-        WSSecurity
+        HTTPBasic
+        
+        /*
+         * Disabled since it is not currently 
+         * supported at the moment.
+         * 
+         * Should be added to the security type combo
+         * in CredentialsComposite for selection.
+         * 
+         * Also, should be properly checked in the validate
+         * method of the class PropertyPage.
+         */
+//        WSSecurity
     }
 }
