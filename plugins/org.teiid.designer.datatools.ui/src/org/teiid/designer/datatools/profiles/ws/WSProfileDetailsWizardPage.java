@@ -123,7 +123,7 @@ public class WSProfileDetailsWizardPage extends ConnectionProfileDetailsPage imp
         GridDataFactory.swtDefaults().grab(false, false).applyTo(spacerLabel);
         
         credentialsComposite = new CredentialsComposite(scrolled, SWT.BORDER);
-        gd = new GridData();
+        gd = new GridData(GridData.FILL_HORIZONTAL);
         credentialsComposite.setLayoutData(gd);
 
         setPingButtonVisible(true);
