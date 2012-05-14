@@ -26,6 +26,7 @@ import com.metamatrix.modeler.modelgenerator.wsdl.model.ModelGenerationException
 import com.metamatrix.modeler.modelgenerator.wsdl.model.internal.ModelBuilder;
 import com.metamatrix.modeler.modelgenerator.wsdl.validation.WSDLValidationException;
 import com.metamatrix.modeler.modelgenerator.wsdl.validation.WSDLValidationMessage;
+import com.metamatrix.ui.ICredentialsCommon.SecurityType;
 
 /**
  * This class is responsible for reading WSDL files from a URI or filesystem validating them and producing an OO representation of
@@ -34,6 +35,10 @@ import com.metamatrix.modeler.modelgenerator.wsdl.validation.WSDLValidationMessa
 public class WSDLReader {
 
     private String wsdlURI;
+    private SecurityType securityType = SecurityType.None;
+    private String userName;
+    private String password;
+
 	private static WSDLValidator VALIDATOR;
 
     public static final int VALIDATION_SEVERITY_ERROR = 0;
@@ -72,6 +77,7 @@ public class WSDLReader {
 
     private Model buildWSDLStructures() throws Exception {
         ModelBuilder builder = new ModelBuilder();
+        builder.setAuthentication(securityType, userName, password);
         builder.setWSDL(wsdlURI.replace("%20", " ")); //$NON-NLS-1$//$NON-NLS-2$
         if (!builder.isWSDLParsed()) {
             Exception myEx = builder.getWSDLException();
@@ -85,6 +91,19 @@ public class WSDLReader {
      */
     public String getWSDLUri() {
         return wsdlURI;
+    }
+
+    /**
+     * Set the optional authentication credentials
+     *
+     * @param securityType
+     * @param userName
+     * @param password
+     */
+    public void setAuthenticationCredentials(SecurityType securityType, String userName, String password) {
+		this.securityType = securityType;
+		this.userName = userName;
+		this.password = password;
     }
 
     /**
