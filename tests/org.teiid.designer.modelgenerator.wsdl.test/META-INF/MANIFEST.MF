@@ -7,4 +7,5 @@ Bundle-Vendor: %Bundle-Vendor.0
 Fragment-Host: org.teiid.designer.modelgenerator.wsdl
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Localization: plugin
-Require-Bundle: org.junit4
+Require-Bundle: org.junit4,
+ org.teiid.designer.sdt
