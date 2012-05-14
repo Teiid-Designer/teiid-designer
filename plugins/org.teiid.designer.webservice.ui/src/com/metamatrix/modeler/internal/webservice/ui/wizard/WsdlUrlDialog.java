@@ -9,9 +9,11 @@ package com.metamatrix.modeler.internal.webservice.ui.wizard;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.ICellEditorValidator;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
@@ -24,19 +26,22 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
+
 import com.metamatrix.common.protocol.URLHelper;
-import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.core.util.CoreStringUtil;
+import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.metamodels.core.util.UriValidator;
 import com.metamatrix.modeler.internal.webservice.ui.IInternalUiConstants;
 import com.metamatrix.modeler.ui.IHelpContextIds;
 import com.metamatrix.modeler.ui.UiConstants;
 import com.metamatrix.modeler.webservice.ui.IUiConstants;
+import com.metamatrix.ui.ICredentialsCommon.SecurityType;
 import com.metamatrix.ui.internal.util.UiUtil;
-import com.metamatrix.ui.internal.util.WidgetFactory;
+import com.metamatrix.ui.internal.widget.CredentialsComposite;
 import com.metamatrix.ui.internal.widget.Dialog;
 import com.metamatrix.ui.internal.widget.MessageLabel;
 
@@ -83,6 +88,11 @@ public class WsdlUrlDialog extends Dialog implements IHelpContextIds, IInternalU
      */
     private IStatus currentStatus;
 
+    /**
+     * UI composite for security, username and password
+     */
+    private CredentialsComposite credentialsComposite;
+
     private MessageLabel lblMsg;
 
     /**
@@ -116,7 +126,7 @@ public class WsdlUrlDialog extends Dialog implements IHelpContextIds, IInternalU
         this.validator = new NamespaceUriValidator();
 
         setReturnCode(Window.CANCEL);
-        setSizeRelativeToScreen(55, 20);
+        setSizeRelativeToScreen(55, 35);
         setCenterOnDisplay(true);
     }
 
@@ -162,7 +172,11 @@ public class WsdlUrlDialog extends Dialog implements IHelpContextIds, IInternalU
 
         boolean resolved = true;
         try {
-            resolved = URLHelper.resolveUrl(this.urlObject);
+            if (SecurityType.None.equals(getSecurityOption())) {
+                resolved = URLHelper.resolveUrl(this.urlObject);
+            } else {
+                resolved = URLHelper.resolveUrl(this.urlObject, getUserName(), getPassword(), true);
+            }
         } catch (Exception e) {
             resolved = false;
             currentStatus = new Status(IStatus.ERROR, IUiConstants.PLUGIN_ID, IStatus.OK,
@@ -199,7 +213,9 @@ public class WsdlUrlDialog extends Dialog implements IHelpContextIds, IInternalU
         //
         // create URI test field label
         //
-        WidgetFactory.createLabel(panel, getString("label.text"), GridData.HORIZONTAL_ALIGN_END); //$NON-NLS-1$
+        Label urlLabel = new Label(panel, SWT.NONE);
+        urlLabel.setText(getString("label.text")); //$NON-NLS-1$
+        GridDataFactory.swtDefaults().grab(false, false).applyTo(urlLabel);
 
         //
         // create URI entry text field
@@ -211,6 +227,19 @@ public class WsdlUrlDialog extends Dialog implements IHelpContextIds, IInternalU
                 handleModifyText(theEvent);
             }
         });
+        
+        //
+        // Spacer label to occupy the cell
+        //
+        Label spacerLabel = new Label(panel, SWT.NONE);
+        spacerLabel.setVisible(false);
+        GridDataFactory.swtDefaults().grab(false, false).applyTo(spacerLabel);
+
+        //
+        // Username / password composite
+        //
+        credentialsComposite = new CredentialsComposite(panel, SWT.BORDER);
+        GridDataFactory.fillDefaults().grab(true, false).applyTo(credentialsComposite);
 
         //
         // create status label
@@ -247,6 +276,18 @@ public class WsdlUrlDialog extends Dialog implements IHelpContextIds, IInternalU
         }
 
         return result;
+    }
+    
+    public SecurityType getSecurityOption() {
+        return credentialsComposite.getSecurityOption();
+    }
+    
+    public String getUserName() {
+        return credentialsComposite.getUserName();
+    }
+    
+    public String getPassword() {
+        return credentialsComposite.getPassword();
     }
 
     /**

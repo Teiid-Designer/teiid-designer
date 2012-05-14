@@ -5,7 +5,6 @@ import java.util.Properties;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
 import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
-import org.teiid.designer.datatools.profiles.ws.IWSProfileConstants.SecurityType;
 
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
@@ -95,7 +94,7 @@ public class WSConnectionInfoProvider extends ConnectionInfoHelper implements
 		Properties props = connectionProfile.getBaseProperties();
 		
 		String contextFactory = props.getProperty(IWSProfileConstants.SECURITY_TYPE_ID);
-		if( contextFactory != null && !contextFactory.equalsIgnoreCase(SecurityType.None.name()) ) {
+		if( contextFactory != null && !contextFactory.equalsIgnoreCase(IWSProfileConstants.SecurityType.None.name()) ) {
 			return true;
 		}
 		
