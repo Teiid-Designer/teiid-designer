@@ -5,7 +5,7 @@
  *
  * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
  */
-package com.metamatrix.modeler.internal.webservice.ui.wizard;
+package com.metamatrix.modeler.ui.wizards.wsdl;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -35,10 +35,8 @@ import com.metamatrix.common.protocol.URLHelper;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.metamodels.core.util.UriValidator;
-import com.metamatrix.modeler.internal.webservice.ui.IInternalUiConstants;
 import com.metamatrix.modeler.ui.IHelpContextIds;
 import com.metamatrix.modeler.ui.UiConstants;
-import com.metamatrix.modeler.webservice.ui.IUiConstants;
 import com.metamatrix.ui.ICredentialsCommon.SecurityType;
 import com.metamatrix.ui.internal.util.UiUtil;
 import com.metamatrix.ui.internal.widget.CredentialsComposite;
@@ -50,7 +48,7 @@ import com.metamatrix.ui.internal.widget.MessageLabel;
  * 
  * @since 5.0.1
  */
-public class WsdlUrlDialog extends Dialog implements IHelpContextIds, IInternalUiConstants {
+public class WsdlUrlDialog extends Dialog implements IHelpContextIds, UiConstants {
 
     /**
      * Properties key prefix.
@@ -78,7 +76,7 @@ public class WsdlUrlDialog extends Dialog implements IHelpContextIds, IInternalU
      * Utility method to obtain Properties values.
      */
     static String getString( String theKey ) {
-        return UTIL.getStringOrKey(PREFIX + theKey);
+        return Util.getStringOrKey(PREFIX + theKey);
     }
 
     private Button btnOk;
@@ -166,8 +164,8 @@ public class WsdlUrlDialog extends Dialog implements IHelpContextIds, IInternalU
     @Override
     protected void okPressed() {
 
-        this.currentStatus = new Status(IStatus.INFO, IUiConstants.PLUGIN_ID, IStatus.OK,
-                                        IInternalUiConstants.UTIL.getString("WsdlUrlDialog.0"), null); //$NON-NLS-1$
+        this.currentStatus = new Status(IStatus.INFO, UiConstants.PLUGIN_ID, IStatus.OK,
+                                        Util.getString("WsdlUrlDialog.0"), null); //$NON-NLS-1$
         updateMessage();
 
         boolean resolved = true;
@@ -179,8 +177,8 @@ public class WsdlUrlDialog extends Dialog implements IHelpContextIds, IInternalU
             }
         } catch (Exception e) {
             resolved = false;
-            currentStatus = new Status(IStatus.ERROR, IUiConstants.PLUGIN_ID, IStatus.OK,
-                                       IInternalUiConstants.UTIL.getString("WsdlUrlDialog.2"), null); //$NON-NLS-1$
+            currentStatus = new Status(IStatus.ERROR, UiConstants.PLUGIN_ID, IStatus.OK,
+                                       Util.getString("WsdlUrlDialog.2"), null); //$NON-NLS-1$
         }
 
         updateMessage();
@@ -328,15 +326,15 @@ public class WsdlUrlDialog extends Dialog implements IHelpContextIds, IInternalU
      */
     void handleModifyText( ModifyEvent theEvent ) {
         this.newValue = ((Text)theEvent.widget).getText();
-        this.currentStatus = new Status(IStatus.OK, IUiConstants.PLUGIN_ID, IStatus.OK, CoreStringUtil.Constants.EMPTY_STRING, null);
+        this.currentStatus = new Status(IStatus.OK, UiConstants.PLUGIN_ID, IStatus.OK, CoreStringUtil.Constants.EMPTY_STRING, null);
 
         URL url = null;
         try {
             url = URLHelper.buildURL(newValue);
             setUrlObject(url);
         } catch (MalformedURLException e) {
-            this.currentStatus = new Status(IStatus.ERROR, IUiConstants.PLUGIN_ID, IStatus.OK,
-                                            IInternalUiConstants.UTIL.getString("WsdlUrlDialog.1"), e); //$NON-NLS-1$
+            this.currentStatus = new Status(IStatus.ERROR, UiConstants.PLUGIN_ID, IStatus.OK,
+                                            Util.getString("WsdlUrlDialog.1"), e); //$NON-NLS-1$
         }
 
         updateMessage();
@@ -387,7 +385,7 @@ public class WsdlUrlDialog extends Dialog implements IHelpContextIds, IInternalU
                 }
             } else if (theValue != null) {
                 // not valid type
-                result = UTIL.getString(PREFIX + "invalidTypeForUri", theValue.getClass()); //$NON-NLS-1$
+                result = Util.getString(PREFIX + "invalidTypeForUri", theValue.getClass()); //$NON-NLS-1$
             }
 
             return result;
@@ -423,7 +421,7 @@ public class WsdlUrlDialog extends Dialog implements IHelpContextIds, IInternalU
                                             null); // no exception
                     } else if (!CoreStringUtil.isEmpty(oldValue) && !CoreStringUtil.isEmpty(theNewValue) && !oldValue.equals(theNewValue)) {
                         result = new Status(IStatus.WARNING, UiConstants.PLUGIN_ID, StatusCodes.CHANGED_VALUE,
-                                            UTIL.getString(PREFIX + "valueChanged", oldValue), //$NON-NLS-1$
+                                            Util.getString(PREFIX + "valueChanged", oldValue), //$NON-NLS-1$
                                             null); // no exception
                     }
                 }

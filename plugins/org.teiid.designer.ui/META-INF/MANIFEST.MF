@@ -39,7 +39,8 @@ Export-Package: com.metamatrix.modeler.internal.ui,
  com.metamatrix.modeler.ui.search,
  com.metamatrix.modeler.ui.undo,
  com.metamatrix.modeler.ui.viewsupport,
- com.metamatrix.modeler.ui.wizards
+ com.metamatrix.modeler.ui.wizards,
+ com.metamatrix.modeler.ui.wizards.wsdl
 Require-Bundle: org.eclipse.ui.cheatsheets,
  org.eclipse.ui.ide,
  org.eclipse.ui.views,

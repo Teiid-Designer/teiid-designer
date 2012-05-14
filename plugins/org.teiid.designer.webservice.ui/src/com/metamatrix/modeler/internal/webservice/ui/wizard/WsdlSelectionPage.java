@@ -18,24 +18,25 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.IMessageProvider;
-import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -54,8 +55,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ViewForm;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -64,21 +63,21 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.ISharedImages;
-import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
+import org.eclipse.ui.progress.UIJob;
 import org.eclipse.wst.wsdl.validation.internal.IValidationReport;
 import org.eclipse.wst.wsdl.validation.internal.WSDLValidationConfiguration;
 import org.eclipse.wst.wsdl.validation.internal.WSDLValidator;
 import org.jdom.JDOMException;
 import org.teiid.core.util.FileUtils;
+
 import com.metamatrix.common.protocol.URLHelper;
 import com.metamatrix.core.io.FileUrl;
 import com.metamatrix.core.util.CoreArgCheck;
@@ -87,21 +86,22 @@ import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.metamodels.wsdl.io.WsdlHelper;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
-import com.metamatrix.modeler.internal.ui.explorer.ModelExplorerLabelProvider;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelProjectSelectionStatusValidator;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.internal.webservice.ui.IInternalUiConstants;
 import com.metamatrix.modeler.ui.viewsupport.ModelingResourceFilter;
+import com.metamatrix.modeler.ui.wizards.wsdl.WsdlFileSelectionComposite;
+import com.metamatrix.modeler.ui.wizards.wsdl.WsdlFilter;
+import com.metamatrix.modeler.ui.wizards.wsdl.WsdlFileSelectionComposite.FileSelectionButtons;
 import com.metamatrix.modeler.webservice.IWebServiceModelBuilder;
 import com.metamatrix.modeler.webservice.IWebServiceResource;
+import com.metamatrix.modeler.webservice.WebServicePlugin;
 import com.metamatrix.modeler.webservice.ui.util.WebServiceUiUtil;
+import com.metamatrix.ui.ICredentialsCommon.SecurityType;
 import com.metamatrix.ui.internal.dialog.FolderSelectionDialog;
-import com.metamatrix.ui.internal.product.ProductCustomizerMgr;
 import com.metamatrix.ui.internal.util.UiUtil;
 import com.metamatrix.ui.internal.util.WidgetFactory;
-import com.metamatrix.ui.internal.util.WidgetUtil;
 import com.metamatrix.ui.internal.util.WizardUtil;
-import com.metamatrix.ui.internal.viewsupport.StatusInfo;
 import com.metamatrix.ui.internal.viewsupport.UiBusyIndicator;
 import com.metamatrix.ui.internal.widget.ListMessageDialog;
 import com.metamatrix.ui.internal.wizard.AbstractWizardPage;
@@ -177,78 +177,15 @@ public final class WsdlSelectionPage extends AbstractWizardPage
     private Text textFieldTargetProjectLocation;
 
     /** Filter for selecting WSDL files and their parent containers. */
-    private ViewerFilter wsdlFilter = new ViewerFilter() {
-        @Override
-        public boolean select( Viewer theViewer,
-                               Object theParentElement,
-                               Object theElement ) {
-            boolean result = false;
-
-            if (theElement instanceof IContainer) {
-                IProject project = ((IContainer)theElement).getProject();
-
-                // check for closed project
-                if (project.isOpen()) {
-                    try {
-                        if (project.getNature(ModelerCore.NATURE_ID) != null) {
-                            result = true;
-                        }
-                    } catch (CoreException theException) {
-                        UTIL.log(theException);
-                    }
-                }
-            } else if (theElement instanceof IFile) {
-                result = WebServiceUiUtil.isWsdlFile((IFile)theElement);
-            } else if (theElement instanceof File) {
-                return (((File)theElement).isDirectory() || WebServiceUiUtil.isWsdlFile(((File)theElement)));
-            }
-
-            return result;
-        }
-    };
-
+    private ViewerFilter wsdlFilter = new WsdlFilter();
+    
     /** Key=File or IFile, Value=IWebServiceResource. */
     private Map wsdlMap;
 
-    /** Validator that makes sure the selection containes all WSDL files. */
-    private ISelectionStatusValidator wsdlValidator = new ISelectionStatusValidator() {
-        @Override
-        public IStatus validate( Object[] theSelection ) {
-            IStatus result = null;
-            boolean valid = true;
-
-            if ((theSelection != null) && (theSelection.length > 0)) {
-                for (int i = 0; i < theSelection.length; i++) {
-                    if ((!(theSelection[i] instanceof IFile)) || !WebServiceUiUtil.isWsdlFile((IFile)theSelection[i])) {
-                        valid = false;
-                        break;
-                    }
-                }
-            } else {
-                valid = false;
-            }
-
-            if (valid) {
-                result = new StatusInfo(PLUGIN_ID);
-            } else {
-                result = new StatusInfo(PLUGIN_ID, IStatus.ERROR, getString("msg.selectionIsNotWsdl")); //$NON-NLS-1$
-            }
-
-            return result;
-        }
-    };
-
-    /** Control to add file system WSDL file to list. */
-    private Button btnFileSystemAdd;
-
-    /** Control to add WSDL URL to list. */
-    private Button btnURLAdd;
-
-    /** Control to add workspace WSDL file to list. */
-    private Button btnWorkspaceAdd;
-
     /** The selected WSDL files table viewer. */
     private TableViewer viewer;
+
+    private WsdlFileSelectionComposite fileSelectionComposite;
 
     /**
      * Constructs a <code>WsdlSelectionPage</code> using the specified builder.
@@ -275,7 +212,7 @@ public final class WsdlSelectionPage extends AbstractWizardPage
      *        {@link org.eclipse.core.resources.IResource}).
      * @since 4.2
      */
-    public void addWsdlFiles( final Object[] theFiles,
+    private void addWsdlFiles( final Object[] theFiles,
                               final boolean theWorkspaceResourceFlag ) {
         UiBusyIndicator.showWhile(getShell().getDisplay(), new Runnable() {
             @Override
@@ -520,7 +457,32 @@ public final class WsdlSelectionPage extends AbstractWizardPage
         helpSystem.setHelp(pnlMain, WSDL_SELECTION_PAGE);
 
         createFileAndLocationPanel(pnlMain);
-        createButtonPanel(pnlMain);
+        
+        fileSelectionComposite = new WsdlFileSelectionComposite(pnlMain, SWT.NONE);
+        GridDataFactory.fillDefaults().applyTo(fileSelectionComposite);
+        
+        WsdlFileSelectionComposite.IFileSelectionCallback fileSelectionCallback = new WsdlFileSelectionComposite.IFileSelectionCallback() {
+            
+            @Override
+            public void execute(File wsdlFile) {
+                if (wsdlFile != null) {
+                    addWsdlFiles(new Object[] { wsdlFile }, false);
+                }
+
+                // jh Defect 22412
+                validatePage();
+            }
+        };
+        
+        WsdlFileSelectionComposite.IURLSelectionCallback urlSelectionCallback = new WsdlFileSelectionComposite.IURLSelectionCallback() {
+            @Override
+            public void execute(URL url, SecurityType securityType, String userName, String password) {
+                addURLWsdlFile(url, securityType, userName, password);
+            }
+        };
+        
+        fileSelectionComposite.setCallbacks(fileSelectionCallback, fileSelectionCallback, urlSelectionCallback);
+        
         createTablePanel(pnlMain);
 
     }
@@ -616,55 +578,6 @@ public final class WsdlSelectionPage extends AbstractWizardPage
         buttonSelectTargetModelLocation.setToolTipText(getString("targetModelLocationBrowseButton.tooltip")); //$NON-NLS-1$
         buttonSelectTargetModelLocation.addListener(SWT.Selection, this);
 
-    }
-
-    /**
-     * Constructs the button panel controls.
-     * 
-     * @param theParent the parent container
-     * @since 4.2
-     */
-    private void createButtonPanel( Composite theParent ) {
-        int COLUMNS = 3;
-        Composite pnl = WidgetFactory.createPanel(theParent, GridData.VERTICAL_ALIGN_CENTER);
-        pnl.setLayout(new GridLayout(COLUMNS, false));
-
-        // workspace add button
-        if (!ProductCustomizerMgr.getInstance().getProductCharacteristics().isHiddenProjectCentric()) {
-            this.btnWorkspaceAdd = WidgetFactory.createButton(pnl,
-                                                              getString("button.addWsdlFile.workspace"), GridData.FILL_HORIZONTAL); //$NON-NLS-1$
-            this.btnWorkspaceAdd.setToolTipText(getString("button.addWsdlFile.workspace.tip")); //$NON-NLS-1$
-            this.btnWorkspaceAdd.setSize(300, 100);
-            this.btnWorkspaceAdd.addSelectionListener(new SelectionAdapter() {
-                @Override
-                public void widgetSelected( SelectionEvent theEvent ) {
-                    handleAddWorkspaceWsdlFile();
-                }
-            });
-        }
-
-        // file system add button
-        this.btnFileSystemAdd = WidgetFactory.createButton(pnl,
-                                                           getString("button.addWsdlFile.filesystem"), GridData.FILL_HORIZONTAL); //$NON-NLS-1$
-        this.btnFileSystemAdd.setToolTipText(getString("button.addWsdlFile.filesystem.tip")); //$NON-NLS-1$
-        this.btnFileSystemAdd.setSize(300, 100);
-        this.btnFileSystemAdd.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected( SelectionEvent theEvent ) {
-                handleAddFileSystemWsdlFile();
-            }
-        });
-
-        // URL add button
-        this.btnURLAdd = WidgetFactory.createButton(pnl, getString("button.addWsdlFile.URL"), GridData.FILL_HORIZONTAL); //$NON-NLS-1$
-        this.btnURLAdd.setToolTipText(getString("button.addWsdlFile.URL.tip")); //$NON-NLS-1$
-        this.btnURLAdd.setSize(300, 100);
-        this.btnURLAdd.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected( SelectionEvent theEvent ) {
-                handleAddURLWsdlFile();
-            }
-        });
     }
 
     /**
@@ -904,92 +817,58 @@ public final class WsdlSelectionPage extends AbstractWizardPage
     }
 
     /**
-     * Handler for browsing to add one or more file system WSDL files to the list.
-     * 
-     * @since 4.2
-     */
-    private void handleAddFileSystemWsdlFile() {
-        FileDialog dialog = new FileDialog(getShell(), SWT.MULTI);
-        dialog.setText(getString("dialog.addWsdl.title")); //$NON-NLS-1$
-        dialog.setFilterExtensions(WebServiceUiUtil.FILE_DIALOG_WSDL_EXTENSIONS);
-
-        if (dialog.open() != null) {
-            boolean validFiles = true;
-            String[] filenames = dialog.getFileNames();
-
-            if ((filenames != null) && (filenames.length > 0)) {
-                String directory = dialog.getFilterPath();
-                Object[] wsdlFiles = new Object[filenames.length];
-
-                for (int i = 0; i < filenames.length; i++) {
-                    String path = new StringBuffer().append(directory).append(File.separatorChar).append(filenames[i]).toString();
-                    wsdlFiles[i] = new File(path);
-
-                    // make sure the right type of file was selected. since the
-                    // user can enter *.* in file name
-                    // field of the dialog they can view all files regardless of
-                    // the filter extensions. this allows
-                    // them to actually select invalid file types.
-
-                    if (!WebServiceUiUtil.isWsdlFile((File)wsdlFiles[i])) {
-                        validFiles = false;
-                        break;
-                    }
-                }
-
-                if (validFiles) {
-                    addWsdlFiles(wsdlFiles, false);
-                } else {
-                    // open file chooser again based on if user OK'd dialog
-                    if (MessageDialog.openQuestion(getShell(), getString("dialog.wrongFileType.title"), //$NON-NLS-1$
-                                                   getString("dialog.wrongFileType.msg"))) { //$NON-NLS-1$
-                        handleAddFileSystemWsdlFile();
-                    }
-                }
-            }
-        }
-
-        // jh Defect 22412
-        validatePage();
-    }
-
-    /**
      * Handler for entering and adding a WSDL Url to the list.
+     * @param securityType 
      * 
      * @since 5.1
      */
-    private void handleAddURLWsdlFile() {
-        WsdlUrlDialog dialog = new WsdlUrlDialog(getShell());
-        // construct/display dialog
-        dialog.create();
-        dialog.open();
+    private void addURLWsdlFile(final URL url, final SecurityType securityType, final String userName, final String password) {
+        /* 
+         * Validating and adding the WSDL can take a few seconds
+         * so lets indicate that to the user by putting it in a UIJob
+         */
+        UIJob job = new UIJob("Validate and add WSDL to selection list") { //$NON-NLS-1$
 
-        if (dialog.getReturnCode() == Window.OK) {
-            URL newUrl = dialog.getUrlObject();
+            @Override
+            public IStatus runInUIThread(IProgressMonitor monitor) {
 
-            ArrayList list = new ArrayList();
-            urlMap = getUrlMap();
+                final ArrayList list = new ArrayList();
+                urlMap = getUrlMap();
 
-            try {
-                String filePath = formatPath(newUrl);
-                File wsdlFile = URLHelper.createFileFromUrl(newUrl, CoreStringUtil.createFileName(filePath), WSDL_SUFFIX);
-                urlMap.put(wsdlFile.getName(), newUrl.toString());
-                WsdlHelper.convertImportsToAbsolutePaths(wsdlFile, newUrl.toExternalForm(), list, urlMap, true);
-            } catch (MalformedURLException theException) {
-                UTIL.log(theException);
-            } catch (IOException theException) {
-                UTIL.log(theException);
-            } catch (JDOMException theException) {
-                UTIL.log(theException);
+                try {
+                    String filePath = formatPath(url);
+                    File wsdlFile;
+
+                    if (SecurityType.None.equals(securityType)) {
+                        wsdlFile = URLHelper.createFileFromUrl(url,
+                                CoreStringUtil.createFileName(filePath), WSDL_SUFFIX);
+                    } else {
+                        wsdlFile = URLHelper.createFileFromUrl(url,
+                                CoreStringUtil.createFileName(filePath), WSDL_SUFFIX,
+                                userName, password);
+                    }
+
+                    urlMap.put(wsdlFile.getName(), url.toString());
+                    WsdlHelper.convertImportsToAbsolutePaths(wsdlFile, url.toExternalForm(),
+                            list, urlMap, true);
+                } catch (MalformedURLException theException) {
+                    UTIL.log(theException);
+                } catch (IOException theException) {
+                    UTIL.log(theException);
+                } catch (JDOMException theException) {
+                    UTIL.log(theException);
+                }
+
+                Object[] wsdlFiles = list.toArray();
+                addWsdlFiles(wsdlFiles, false);
+  
+                // jh Defect 22412
+                validatePage();
+                return Status.OK_STATUS;
             }
-
-            Object[] wsdlFiles = list.toArray();
-
-            addWsdlFiles(wsdlFiles, false);
-        }
-
-        // jh Defect 22412
-        validatePage();
+        };
+        
+        job.schedule();
     }
 
     /**
@@ -1013,47 +892,6 @@ public final class WsdlSelectionPage extends AbstractWizardPage
             filePath = filePath.substring(0, dotLocation);
         }
         return filePath;
-    }
-
-    /**
-     * Handler for browsing to add one or more workspace WSDL files to the list.
-     * 
-     * @since 4.2
-     */
-    private void handleAddWorkspaceWsdlFile() {
-        Object[] wsdlFiles = WidgetUtil.showWorkspaceObjectSelectionDialog(getString("dialog.addWsdl.title"), //$NON-NLS-1$
-                                                                           getString("dialog.addWsdl.msg"), //$NON-NLS-1$
-                                                                           true,
-                                                                           null,
-                                                                           new ModelingResourceFilter(this.wsdlFilter),
-                                                                           this.wsdlValidator,
-                                                                           new ModelExplorerLabelProvider());
-
-        /*
-         * Defect 18786: In order to get over the problems with the 'Workspace
-         * WsDL File' case, we will turn it into the 'File System Wsdl File'
-         * case: 1. convert this array of IFiles into an array of Files 2. call
-         * addWsdlFiles() with a value of 'false'.
-         */
-
-        if ((wsdlFiles != null) && (wsdlFiles.length > 0)) {
-
-            Object[] aryFiles = new Object[wsdlFiles.length];
-            for (int i = 0; i < wsdlFiles.length; i++) {
-                IFile ifFile = (IFile)wsdlFiles[i];
-
-                // Convert the IFile object to a File object
-                File fNew = ifFile.getLocation().toFile();
-                aryFiles[i] = fNew;
-            }
-
-            // make the 'add' call as if we were initiated from the File System
-            // button (use 'false')
-            addWsdlFiles(aryFiles, false);
-        }
-
-        // jh Defect 22412
-        validatePage();
     }
 
     /**
@@ -1209,7 +1047,7 @@ public final class WsdlSelectionPage extends AbstractWizardPage
             List wsdls = new ArrayList();
 
             for (int i = 0; i < selectedObjects.length; i++) {
-                if ((selectedObjects[i] instanceof IFile) && WebServiceUiUtil.isWsdlFile((IFile)selectedObjects[i])) {
+                if ((selectedObjects[i] instanceof IFile) && WebServicePlugin.isWsdlFile((IFile)selectedObjects[i])) {
                     // Convert the IFile object to a File object
                     File fNew = ((IFile)selectedObjects[i]).getLocation().toFile();
                     wsdls.add(fNew);
@@ -1254,9 +1092,10 @@ public final class WsdlSelectionPage extends AbstractWizardPage
             // used by the viewer
             setPageStatus();
 
+            
             // set focus so that the help context will be correct
-            if (btnWorkspaceAdd != null) {
-                this.btnWorkspaceAdd.setFocus();
+            if (fileSelectionComposite.isVisible(FileSelectionButtons.WORKSPACE)) {
+                fileSelectionComposite.setFocus(FileSelectionButtons.WORKSPACE);
             }
         }
 

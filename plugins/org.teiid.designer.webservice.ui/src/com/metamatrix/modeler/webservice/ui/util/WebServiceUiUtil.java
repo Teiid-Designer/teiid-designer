@@ -55,7 +55,6 @@ import com.metamatrix.modeler.internal.transformation.util.TransformationHelper;
 import com.metamatrix.modeler.internal.transformation.util.TransformationSqlHelper;
 import com.metamatrix.modeler.internal.webservice.ui.IInternalUiConstants;
 import com.metamatrix.modeler.webservice.IWebServiceResource;
-import com.metamatrix.modeler.webservice.WebServicePlugin;
 import com.metamatrix.modeler.webservice.procedure.XsdInstanceNode;
 import com.metamatrix.modeler.webservice.ui.WebServiceUiPlugin;
 import com.metamatrix.modeler.webservice.util.WebServiceUtil;
@@ -70,14 +69,6 @@ public class WebServiceUiUtil implements FileUtils.Constants, IInternalUiConstan
 
     // ===========================================================================================================================
     // Constants
-
-    /**
-     * WSDL extensions prefixed with the file wildcard and extension separator. Suitable for use in the
-     * {@link org.eclipse.swt.widgets.FileDialog}.
-     * 
-     * @since 4.2
-     */
-    public static final String[] FILE_DIALOG_WSDL_EXTENSIONS;
 
     /**
      * XSD extensions prefixed with the file wildcard and extension separator. Suitable for use in the
@@ -96,14 +87,6 @@ public class WebServiceUiUtil implements FileUtils.Constants, IInternalUiConstan
     // Static Initializer
 
     static {
-        // create WSDL file dialog extension array
-        FILE_DIALOG_WSDL_EXTENSIONS = new String[WebServicePlugin.WSDL_FILE_EXTENSIONS.length];
-
-        int i = 0;
-        for (; i < WebServicePlugin.WSDL_FILE_EXTENSIONS.length; i++) {
-            FILE_DIALOG_WSDL_EXTENSIONS[i] = createFileDialogExtension(WebServicePlugin.WSDL_FILE_EXTENSIONS[i]);
-        }
-
         // create XSD file dialog extension array
         FILE_DIALOG_XSD_EXTENSIONS = new String[] {createFileDialogExtension(ModelUtil.EXTENSION_XSD)};
     }
@@ -626,28 +609,6 @@ public class WebServiceUiUtil implements FileUtils.Constants, IInternalUiConstan
                 }
             }
         }
-    }
-
-    /**
-     * Indicates if the specified file system resource is a WSDL.
-     * 
-     * @param theFile the file being checked
-     * @return <code>true</code>if a WSDL file; <code>false</code> otherwise.
-     * @since 4.2
-     */
-    public static boolean isWsdlFile( File theFile ) {
-        return WebServicePlugin.isWsdlFile(theFile);
-    }
-
-    /**
-     * Indicates if the specified workspace resource is a WSDL.
-     * 
-     * @param theFile the file being checked
-     * @return <code>true</code>if a WSDL file; <code>false</code> otherwise.
-     * @since 4.2
-     */
-    public static boolean isWsdlFile( IFile theFile ) {
-        return WebServicePlugin.isWsdlFile(theFile);
     }
 
     /**
