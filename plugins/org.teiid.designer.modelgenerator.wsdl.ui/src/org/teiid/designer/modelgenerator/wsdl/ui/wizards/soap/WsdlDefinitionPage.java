@@ -47,6 +47,7 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.teiid.core.util.FileUtils;
+import org.teiid.designer.datatools.profiles.ws.IWSProfileConstants;
 import org.teiid.designer.datatools.ui.dialogs.ConnectionProfileWorker;
 import org.teiid.designer.datatools.ui.dialogs.IProfileChangedListener;
 import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
@@ -78,8 +79,6 @@ public class WsdlDefinitionPage extends WizardPage
 
 	/** <code>IDialogSetting</code>s key for saved dialog Y position. */
 	private static final String DIALOG_Y = "dialogY"; //$NON-NLS-1$
-
-	private static final String WSDL_URI_PROP_KEY = "wsdlURI"; //$NON-NLS-1$
 
 	private static final String EMPTY_STR = ""; //$NON-NLS-1$
 
@@ -453,8 +452,7 @@ public class WsdlDefinitionPage extends WizardPage
 				return;
 			}
 			Properties props = profile.getBaseProperties();
-			wsdlURIText.setText(props.getProperty(WSDL_URI_PROP_KEY));
-			//importManager.setWSDLFileUri(props.getProperty(WSDL_URI_PROP_KEY));
+			wsdlURIText.setText(props.getProperty(IWSProfileConstants.WSDL_URI_PROP_ID));
 			updateWidgetEnablements();
 			setErrorMessage(null);
 			setMessage(Messages.WsdlDefinitionPage_select_profile);

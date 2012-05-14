@@ -91,7 +91,7 @@
          point="org.eclipse.datatools.connectivity.connectionProfile">
    		<newWizard
          class="org.teiid.designer.datatools.profiles.ws.WSSoapConnectionProfileWizard"
-         description="Create an SOAP Web Service connection profile."
+         description="Create a SOAP Web Service connection profile."
          icon="icons/full/obj16/web-service-cp.png"
          id="org.teiid.designer.datatools.profiles.ws.WSSoapConnectionProfileWizard"
          name="Web Services Data Source (SOAP)"
