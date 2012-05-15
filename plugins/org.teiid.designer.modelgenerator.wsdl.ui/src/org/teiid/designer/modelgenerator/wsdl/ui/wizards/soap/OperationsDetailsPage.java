@@ -148,7 +148,7 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 		setImageDescriptor(ModelGeneratorWsdlUiUtil.getImageDescriptor(Images.NEW_MODEL_BANNER));
 
 		semanticAdapterFactory = new XSDSemanticItemProviderAdapterFactory();
-		schemaLabelProvider = new AdapterFactoryLabelProvider(semanticAdapterFactory);
+		schemaLabelProvider = new SchemaTreeLabelProvider(semanticAdapterFactory);
 		schemaContentProvider = new SchemaTreeContentProvider(semanticAdapterFactory);
 		schemaHandler = new ImportWsdlSchemaHandler(theImportManager, this);
 		this.importManager.addChangeListener(this);

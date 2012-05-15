@@ -34,7 +34,6 @@ import org.eclipse.xsd.impl.XSDParticleImpl;
 import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.SchemaTreeModel.SchemaNode;
 
-import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.ModelerCoreException;
 import com.metamatrix.modeler.core.types.DatatypeConstants.RuntimeTypeNames;
 import com.metamatrix.modeler.internal.transformation.util.SqlConstants;
@@ -222,15 +221,51 @@ public class ImportWsdlSchemaHandler {
 			}
 			operationsDetailsPage.notifyColumnDataChanged();
 			return null;
+		} else if (obj instanceof XSDAttributeUseImpl) {
+			XSDAttributeUseImpl attributeImpl = (XSDAttributeUseImpl)obj;
+			name = attributeImpl.getAttributeDeclaration().getName();
+			if( name == null ) {
+				name = attributeImpl.getAttributeDeclaration().getAliasName();
+			}
+			ns = attributeImpl.getAttributeDeclaration().getTargetNamespace();
+			if (type == ProcedureInfo.TYPE_BODY) {
+				requestInfo.addBodyColumn(requestInfo.getUniqueBodyColumnName(name), false, RuntimeTypeNames.STRING, null, ns);
+			} else {
+				requestInfo.addHeaderColumn(requestInfo.getUniqueHeaderColumnName(name), false, RuntimeTypeNames.STRING, null, ns);
+			}
+			operationsDetailsPage.notifyColumnDataChanged();
+			return null;
 		}
 
 		return operationsDetailsPage.getSchemaLabelProvider().getText(obj);
+	}
+	
+	public static boolean shouldCreateResponseColumn(Object obj) {
+		if (obj instanceof XSDParticleImpl ) {
+			Object content = ((XSDParticleImpl) obj).getContent();
+			if( content instanceof XSDElementDeclarationImpl ) {
+				return ! (((XSDElementDeclaration )content).getType() instanceof XSDComplexTypeDefinition);
+			} else if( content instanceof XSDModelGroup ) {
+				return false;
+			} else {
+				return true;
+			}
+		} else if( obj instanceof XSDAttributeUseImpl ) {
+			return true;
+		}
+		
+		return false;
 	}
 
 	public String createResponseColumn(int type,
 			IStructuredSelection selection, ProcedureInfo responseInfo) {
 
 		Object obj = selection.getFirstElement();
+		
+		if( !shouldCreateResponseColumn(obj) ) {
+			return operationsDetailsPage.getSchemaLabelProvider().getText(obj);
+		}
+		
 		if (obj instanceof XSDParticleImpl 
 				&& ((XSDParticleImpl) obj).getContent() instanceof XSDElementDeclarationImpl) {
 
@@ -363,6 +398,23 @@ public class ImportWsdlSchemaHandler {
 				name = attributeImpl.getAttributeDeclaration().getAliasName();
 			}
 			
+			String parentElementName = null;
+			
+			SchemaNode parentSchemaNode =  getParentElement(attributeImpl);
+			if( parentSchemaNode != null ) {
+				Object parentElement = parentSchemaNode.getElement();
+				if (parentElement instanceof XSDParticleImpl 
+						&& ((XSDParticleImpl) parentElement).getContent() instanceof XSDElementDeclarationImpl) {
+					XSDElementDeclaration content = (XSDElementDeclaration)((XSDParticleImpl) parentElement).getContent();
+	
+					parentElementName = content.getName();
+					
+					if (parentElementName==null){
+						parentElementName = ((XSDElementDeclarationImpl) ((XSDParticleImpl) parentElement).getContent()).getResolvedElementDeclaration().getName();
+					}
+				}
+			}
+			
 			String dTypeString = getBaseTypeString(attributeImpl);
 			
 			StringBuilder xpath = new StringBuilder();
@@ -379,24 +431,26 @@ public class ImportWsdlSchemaHandler {
 			getRelativeXpath(obj, xpath);
 			xpath.append('/').append('@').append(name);
 			
-			for (SchemaObject schemaObject : elements) {
-				if (schemaObject.getName().equals(name)) {
-					namespace = schemaObject.getNamespace();
-					prefix = ((BaseSchemaObject) schemaObject)
-							.getNamespacePrefix();
-					if (namespace != null) {
-						responseInfo.addNamespace(prefix, namespace);
+			if( parentElementName != null ) {
+				for (SchemaObject schemaObject : elements) {
+					if (schemaObject.getName().equals(parentElementName)) {
+						namespace = schemaObject.getNamespace();
+						prefix = ((BaseSchemaObject) schemaObject)
+								.getNamespacePrefix();
+						if (namespace != null) {
+							responseInfo.addNamespace(prefix, namespace);
+						}
+						responseInfo.setRootPath(this.schemaTreeModel.getRootPath());
+						if (importManager.isMessageServiceMode()) {
+							operationsDetailsPage.responseBodyColumnsInfoPanel.getRootPathText().setText(ResponseInfo.SOAPENVELOPE_ROOTPATH);
+						} else {
+							operationsDetailsPage.responseBodyColumnsInfoPanel.getRootPathText().setText(this.schemaTreeModel.getRootPath());
+						}
+	
+						// TODO: Make sure Root Path is set in the
+						// responseElementsInfoPanel on Refresh
+						// operationsDetailsPage.responseElementsInfoPanel.getRootPathText().setText(parentXpath.toString());
 					}
-					responseInfo.setRootPath(this.schemaTreeModel.getRootPath());
-					if (importManager.isMessageServiceMode()) {
-						operationsDetailsPage.responseBodyColumnsInfoPanel.getRootPathText().setText(ResponseInfo.SOAPENVELOPE_ROOTPATH);
-					} else {
-						operationsDetailsPage.responseBodyColumnsInfoPanel.getRootPathText().setText(this.schemaTreeModel.getRootPath());
-					}
-
-					// TODO: Make sure Root Path is set in the
-					// responseElementsInfoPanel on Refresh
-					// operationsDetailsPage.responseElementsInfoPanel.getRootPathText().setText(parentXpath.toString());
 				}
 			}
 			
@@ -578,6 +632,15 @@ public class ImportWsdlSchemaHandler {
 		String rootPath = this.schemaTreeModel.getRootNodeXpath();
 		String parentXPath = node == null ? "" : node.getParentXpath(); //$NON-NLS-1$
 		parentXpath.append(rootPath).append(parentXPath);
+	}
+	
+	private SchemaNode getParentElement(Object element) {
+		SchemaNode node = this.schemaTreeModel.getMapNode().get(element);
+		if( node != null ) {
+			return node.getParent();
+		}
+		
+		return null;
 	}
 	
 	private void getRelativeXpath(Object element, StringBuilder xpath) {

@@ -20,10 +20,8 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
-import org.eclipse.xsd.impl.XSDAttributeUseImpl;
-import org.eclipse.xsd.impl.XSDElementDeclarationImpl;
-import org.eclipse.xsd.impl.XSDParticleImpl;
 import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
+import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.ImportWsdlSchemaHandler;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.OperationsDetailsPage;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.ProcedureInfo;
 
@@ -78,11 +76,12 @@ public class ResponseSchemaContentsGroup {
 			@Override
 			public void selectionChanged(final SelectionChangedEvent event) {
 				columnMenuManager.removeAll();
-				IStructuredSelection sel = (IStructuredSelection) schemaTreeViewer.getSelection();
-				if (sel.size() == 1
-					&& (sel.getFirstElement() instanceof XSDParticleImpl || 
-						sel.getFirstElement() instanceof XSDElementDeclarationImpl)) {
-					columnMenuManager.add(createColumnAction);
+				IStructuredSelection selection = (IStructuredSelection) schemaTreeViewer.getSelection();
+				if (selection.size() == 1 ) {
+					Object element = selection.getFirstElement();
+					if( ImportWsdlSchemaHandler.shouldCreateResponseColumn(element) ) {
+						columnMenuManager.add(createColumnAction);
+					}
 				}
 
 			}
@@ -93,11 +92,11 @@ public class ResponseSchemaContentsGroup {
 			@Override
 			public void doubleClick(DoubleClickEvent event) {
 				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
-				if (selection != null && !selection.isEmpty() && 
-					(selection.getFirstElement() instanceof XSDParticleImpl || 
-					selection.getFirstElement() instanceof XSDElementDeclarationImpl) ||
-					selection.getFirstElement() instanceof XSDAttributeUseImpl ) {
-					createResponseColumn();
+				if (selection != null && !selection.isEmpty() ) {
+					Object element = selection.getFirstElement();
+					if( ImportWsdlSchemaHandler.shouldCreateResponseColumn(element) ) {
+						createResponseColumn();
+					}
 				}
 			}
 		});

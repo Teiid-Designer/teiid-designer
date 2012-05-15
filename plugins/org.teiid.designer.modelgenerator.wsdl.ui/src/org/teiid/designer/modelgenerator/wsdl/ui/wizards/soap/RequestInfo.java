@@ -91,7 +91,8 @@ public class RequestInfo extends ProcedureInfo {
 //		BEGIN
 //			SELECT 
 //				XMLELEMENT(NAME "update", XMLNAMESPACES(DEFAULT 'http://quickstart.samples/xsd'), 
-//					XMLELEMENT(NAME symbol, StockQuoteServiceXML."update".create_update_.symbol), 
+//					XMLELEMENT(NAME symbol, StockQuoteServiceXML."update".create_update_.symbol, 
+//						XMLATTRIBUTES( symbol.empno AS "work_number"), 
 //					XMLELEMENT(NAME price, StockQuoteServiceXML."update".create_update_.price)
 //					) AS xml_out;
 //		END

@@ -20,9 +20,11 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.xsd.impl.XSDAttributeUseImpl;
 import org.eclipse.xsd.impl.XSDElementDeclarationImpl;
 import org.eclipse.xsd.impl.XSDParticleImpl;
 import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
+import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.ImportWsdlSchemaHandler;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.OperationsDetailsPage;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.ProcedureInfo;
 
@@ -80,7 +82,8 @@ public class RequestSchemaContentsGroup {
 				IStructuredSelection sel = (IStructuredSelection) schemaTreeViewer.getSelection();
 				if (sel.size() == 1
 					&& (sel.getFirstElement() instanceof XSDParticleImpl || 
-						sel.getFirstElement() instanceof XSDElementDeclarationImpl)) {
+						sel.getFirstElement() instanceof XSDElementDeclarationImpl) ||
+						sel.getFirstElement() instanceof XSDAttributeUseImpl ) {
 					columnMenuManager.add(createElementAction);
 				}
 
@@ -92,10 +95,11 @@ public class RequestSchemaContentsGroup {
 			@Override
 			public void doubleClick(DoubleClickEvent event) {
 				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
-				if (selection != null && !selection.isEmpty() && 
-					(selection.getFirstElement() instanceof XSDParticleImpl || 
-					selection.getFirstElement() instanceof XSDElementDeclarationImpl)) {
-					createRequestColumn();
+				if (selection != null && !selection.isEmpty() ) {
+					Object element = selection.getFirstElement();
+					if( ImportWsdlSchemaHandler.shouldCreateResponseColumn(element) ) {
+						createRequestColumn();
+					}
 				}
 			}
 		});
