@@ -7,10 +7,14 @@
  */
 package org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap;
 
+
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.xsd.XSDAttributeUse;
 import org.eclipse.xsd.XSDComplexTypeContent;
@@ -27,8 +31,10 @@ import org.eclipse.xsd.XSDWildcard;
 import org.eclipse.xsd.impl.XSDAttributeUseImpl;
 import org.eclipse.xsd.impl.XSDElementDeclarationImpl;
 import org.eclipse.xsd.impl.XSDParticleImpl;
+import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.SchemaTreeModel.SchemaNode;
 
+import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.ModelerCoreException;
 import com.metamatrix.modeler.core.types.DatatypeConstants.RuntimeTypeNames;
 import com.metamatrix.modeler.internal.transformation.util.SqlConstants;
@@ -38,6 +44,7 @@ import com.metamatrix.modeler.modelgenerator.wsdl.model.ModelGenerationException
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Operation;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Part;
 import com.metamatrix.modeler.modelgenerator.wsdl.schema.extensions.SOAPSchemaProcessor;
+import com.metamatrix.modeler.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstants;
 import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.wizards.WSDLImportWizardManager;
 import com.metamatrix.modeler.schema.tools.model.schema.SchemaModel;
 import com.metamatrix.modeler.schema.tools.model.schema.SchemaObject;
@@ -51,6 +58,9 @@ public class ImportWsdlSchemaHandler {
 	OperationsDetailsPage operationsDetailsPage;
 	SchemaTreeModel schemaTreeModel = null;
 	SchemaNode rootnode = null;
+	int depth = 0;
+	static int MAX_DEPTH = 1000;
+	boolean circularSchemaWarningTriggered = false;
 
 	public ImportWsdlSchemaHandler(WSDLImportWizardManager manager,
 			OperationsDetailsPage operationsDetailsPage) {
@@ -114,7 +124,7 @@ public class ImportWsdlSchemaHandler {
 							try {
 								describe(schema, elementName, (XSDElementDeclarationImpl)element);
 							} catch (ModelerCoreException ex) {
-								throw new RuntimeException(ex);
+								ErrorDialog.openError(this.operationsDetailsPage.getShell(), Messages.Error_GeneratingSchemaModelDueToCircularReferences_title, null, new Status(IStatus.WARNING, ModelGeneratorWsdlUiConstants.PLUGIN_ID, Messages.Error_GeneratingSchemaModelDueToCircularReferences));
 							}
 						elementArrayList.add(elementDeclaration);
 						break;
@@ -137,7 +147,7 @@ public class ImportWsdlSchemaHandler {
 								try {
 									describe(schema, elementName, null);
 								} catch (ModelerCoreException ex) {
-									throw new RuntimeException(ex);
+									ErrorDialog.openError(this.operationsDetailsPage.getShell(), Messages.Error_GeneratingSchemaModelDueToCircularReferences_title, null, new Status(IStatus.WARNING, ModelGeneratorWsdlUiConstants.PLUGIN_ID, Messages.Error_GeneratingSchemaModelDueToCircularReferences));
 								}
 							elementArrayList.add(elementDeclaration);
 							break;
@@ -438,8 +448,10 @@ public class ImportWsdlSchemaHandler {
 	//to determine XPath
 	private void describe(XSDSchema schema, String element, XSDElementDeclaration elementDeclaration)
 			throws ModelerCoreException {
+		circularSchemaWarningTriggered = false;
 		schemaTreeModel = new SchemaTreeModel();
 		rootnode = schemaTreeModel.new SchemaNode();
+		depth = 0;
 		XSDElementDeclaration xed = (elementDeclaration == null ? schema.resolveElementDeclaration(element) : elementDeclaration);
 		XSDTypeDefinition xtd = xed.getTypeDefinition();
 
@@ -447,7 +459,7 @@ public class ImportWsdlSchemaHandler {
 			rootnode.setElement(xed);
 			rootnode.setRoot(true);
 			XSDComplexTypeDefinition complexType = (XSDComplexTypeDefinition) xtd;
-			addComplexTypeDefToTree(complexType, rootnode, true);
+			addComplexTypeDefToTree(complexType, rootnode, true, depth++ );
 		} else if (xtd instanceof XSDSimpleTypeDefinition) {
 			XSDSimpleTypeDefinition simpleType = (XSDSimpleTypeDefinition) xtd;
 			addSimpleTypeDefToTree(simpleType, rootnode);
@@ -470,9 +482,13 @@ public class ImportWsdlSchemaHandler {
 	}
 
 	private void addComplexTypeDefToTree(XSDComplexTypeDefinition complexType,
-			SchemaNode node, boolean isRootNode) throws ModelerCoreException {
-		XSDComplexTypeContent content = complexType.getContent();
+			SchemaNode node, boolean isRootNode, int depth) throws ModelerCoreException {
 		
+		if (depth>MAX_DEPTH){
+			throw new ModelerCoreException(Messages.Error_GeneratingSchemaModelDueToCircularReferences);
+		}
+		
+		XSDComplexTypeContent content = complexType.getContent();
 		addToSchemaMap(complexType, node);
 		
 		addAttributes(complexType, node);
@@ -482,12 +498,12 @@ public class ImportWsdlSchemaHandler {
 			addSimpleTypeDefToTree(simpleType, node);
 		} else if (content instanceof XSDParticle) {
 			XSDParticle particle = (XSDParticle) content;
-			addXSDParticleToTree(particle, node, null);
+			addXSDParticleToTree(particle, node, null, depth++);
 		}
 	}
 
 	private void addXSDParticleToTree(XSDParticle particle, SchemaNode parent,
-			SchemaNode node) throws ModelerCoreException {
+			SchemaNode node, int depth) throws ModelerCoreException {
 		XSDParticleContent content = particle.getContent();
 		if (content instanceof XSDWildcard) {
 			// nothing
@@ -499,7 +515,7 @@ public class ImportWsdlSchemaHandler {
 				parent.addChild(node);
 			}
 			for (XSDParticle xsdParticle : contents) {
-				addXSDParticleToTree(xsdParticle, parent, node);
+				addXSDParticleToTree(xsdParticle, parent, node, depth++);
 			}
 		} else if (content instanceof XSDElementDeclaration) {
 			XSDElementDeclaration element = (XSDElementDeclaration) content;
@@ -525,14 +541,14 @@ public class ImportWsdlSchemaHandler {
 					name = element.getAliasName();
 				}
 				
-				addComplexTypeDefToTree(type, node, false);
+				addComplexTypeDefToTree(type, node, false, depth);
 			}
 		} else if (content instanceof XSDModelGroupDefinition) {
 			XSDModelGroupDefinition groupDefinition = (XSDModelGroupDefinition) content;
 			XSDModelGroup group = groupDefinition.getModelGroup();
 			EList<XSDParticle> contents = group.getContents();
 			for (XSDParticle xsdParticle : contents) {
-				addXSDParticleToTree(xsdParticle, node, null);
+				addXSDParticleToTree(xsdParticle, node, null, depth);
 			}
 		}
 	}
@@ -554,10 +570,7 @@ public class ImportWsdlSchemaHandler {
 
 	private void addSimpleTypeDefToTree(XSDSimpleTypeDefinition simpleType,
 			SchemaNode node) throws ModelerCoreException {
-		String name = simpleType.getName();
-		if (null == name) {
-			name = simpleType.getAliasName();
-		}
+		schemaTreeModel.getMapNode().put(simpleType, node);
 	}
 
 	private void getParentXpath(Object element, StringBuilder parentXpath) {

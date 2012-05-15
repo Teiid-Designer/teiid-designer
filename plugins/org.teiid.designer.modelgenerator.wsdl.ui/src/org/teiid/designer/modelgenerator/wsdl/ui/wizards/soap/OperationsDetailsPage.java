@@ -598,10 +598,12 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 			responseBodySchemaContentsGroup.setInput(getSchemaForSelectedOperation(type));
 			responseHeaderSchemaContentsGroup.setInput(getSchemaForSelectedOperation(type));
 		} else {
-			requestBodySchemaContentsGroup.setInput(getSchemaForSelectedOperation(REQUEST));
-			requestHeaderSchemaContentsGroup.setInput(getSchemaForSelectedOperation(REQUEST));
-			responseBodySchemaContentsGroup.setInput(getSchemaForSelectedOperation(RESPONSE));
-			responseHeaderSchemaContentsGroup.setInput(getSchemaForSelectedOperation(RESPONSE));
+			List<Object> requestList = getSchemaForSelectedOperation(REQUEST);
+			requestBodySchemaContentsGroup.setInput(requestList);
+			requestHeaderSchemaContentsGroup.setInput(requestList);
+			List<Object> responseList = getSchemaForSelectedOperation(RESPONSE);
+			responseBodySchemaContentsGroup.setInput(responseList);
+			responseHeaderSchemaContentsGroup.setInput(responseList);
 		}
 	}
 	
