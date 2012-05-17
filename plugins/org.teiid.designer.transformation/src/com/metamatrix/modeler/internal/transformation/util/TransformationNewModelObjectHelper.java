@@ -85,7 +85,6 @@ public class TransformationNewModelObjectHelper implements INewModelObjectHelper
 	                        tableAspect.setSupportsUpdate(newTarget, false);
 	                    } // endif
 
-	                    TransformationHelper.setSelectSqlString(newRoot, VIRTUAL_PROCEDURE_TEMPLATE_SQL, false, this);
 	                    return true;
                 	}
                 } else if (TransformationHelper.isSqlProcedure(newTarget) && !TransformationHelper.isOperation(newTarget)) {
