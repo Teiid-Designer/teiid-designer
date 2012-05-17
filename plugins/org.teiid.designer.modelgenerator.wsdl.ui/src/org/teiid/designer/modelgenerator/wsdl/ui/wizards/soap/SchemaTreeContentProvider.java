@@ -9,7 +9,9 @@ package org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
@@ -17,6 +19,7 @@ import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.xsd.XSDAttributeUse;
 import org.eclipse.xsd.XSDComplexTypeDefinition;
 import org.eclipse.xsd.XSDParticle;
+import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.SchemaTreeModel.SchemaNode;
 
 public class SchemaTreeContentProvider extends AdapterFactoryContentProvider {
 	
@@ -32,7 +35,10 @@ public class SchemaTreeContentProvider extends AdapterFactoryContentProvider {
 	 */
 	@Override
 	public Object[] getChildren(Object object) {
-		Object[] result = super.getChildren(object); 
+		
+		//Object[] result = super.getChildren(object); 
+		
+		Collection<SchemaNode> result = ((SchemaNode)object).getChildren(); 
 		
 		Collection<Object> filteredChildren = new ArrayList<Object>();
 		
@@ -47,7 +53,7 @@ public class SchemaTreeContentProvider extends AdapterFactoryContentProvider {
 
 	@Override
 	  public Object [] getElements(Object object) {
-		List elementList = (ArrayList)object;
+		List<SchemaNode> elementList = (ArrayList<SchemaNode>)object;
 		Object[] result = new Object[elementList.size()];
 		int i = 0;
 		for (Object obj:elementList){
@@ -65,17 +71,22 @@ public class SchemaTreeContentProvider extends AdapterFactoryContentProvider {
 		return filteredElements.toArray( new Object[filteredElements.size()]);
 	  }
 	
-	
-	
-	
+		
+	@Override
+	public boolean hasChildren(Object object) {
+		
+		return ((SchemaNode)object).getChildren().size() > 0; 
+	}
+
 	private boolean showObject(Object object) {
-		if( object instanceof XSDComplexTypeDefinition ) {
-			String name = ((XSDComplexTypeDefinition)object).getName();
+		SchemaNode node = (SchemaNode) object;
+		if( node.getElement() instanceof XSDComplexTypeDefinition ) {
+			String name = ((XSDComplexTypeDefinition) node.getElement()).getName();
 			if(name !=null && "ANYTYPE".equals(name.toUpperCase())) { //$NON-NLS-1$
 				return false;
 			}
 		}
-		if( object instanceof XSDParticle || object instanceof XSDAttributeUse ) {
+		if( node.getElement() instanceof XSDParticle ||  node.getElement() instanceof XSDAttributeUse ) {
 			return true;
 		}
 		

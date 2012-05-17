@@ -9,9 +9,7 @@ package org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Stack;
 
 import org.eclipse.xsd.XSDElementDeclaration;
@@ -21,7 +19,7 @@ import org.eclipse.xsd.impl.XSDParticleImpl;
 
 public class SchemaTreeModel {
 
-	Map<Object, SchemaNode> mapNode = new HashMap<Object, SchemaNode>();
+	Collection<SchemaNode> nodeList = new ArrayList<SchemaNode>();
 	String rootPath = null;
 
 	public String getRootPath() {
@@ -32,17 +30,16 @@ public class SchemaTreeModel {
 		this.rootPath = rootPath;
 	}
 
-	public Map<Object, SchemaNode> getMapNode() {
-		return this.mapNode;
+	public Collection<SchemaNode> getNodeList() {
+		return this.nodeList;
 	}
 
-	public void setMapNode(Map<Object, SchemaNode> mapNode) {
-		this.mapNode = mapNode;
+	public void setNodeList(Collection<SchemaNode> nodeList) {
+		this.nodeList = nodeList;
 	}
 	
 	public String getRootNodeXpath() {
-		for (Object nodeKey:this.mapNode.keySet()){
-			SchemaNode node = this.mapNode.get(nodeKey);
+		for (SchemaNode node:this.nodeList){
 			if (node.isRoot){
 				return node.getRelativeXpath();
 			}
@@ -55,8 +52,7 @@ public class SchemaTreeModel {
 		StringBuilder commonRoot = new StringBuilder();
 		
 		List<String> segmentList = new ArrayList();
-		for (Object nodeKey:this.mapNode.keySet()){
-			SchemaNode node = this.mapNode.get(nodeKey);
+		for (SchemaNode node:this.nodeList){
 			if (node.children.isEmpty()){
 				String path = node.getFullPathMinusLastSegment();
 				if (!path.equals("")){ //$NON-NLS-1$
@@ -124,6 +120,10 @@ public class SchemaTreeModel {
 			this.children.add(child);
 		}
 
+		public Collection<SchemaNode> getChildren() {
+			return children;
+		}
+		
 		public void setParent(SchemaNode parent) {
 			this.parent = parent;
 		}

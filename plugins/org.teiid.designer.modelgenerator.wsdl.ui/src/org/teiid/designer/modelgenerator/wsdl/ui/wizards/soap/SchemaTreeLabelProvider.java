@@ -15,6 +15,7 @@ import org.eclipse.xsd.XSDElementDeclaration;
 import org.eclipse.xsd.XSDModelGroup;
 import org.eclipse.xsd.XSDParticle;
 import org.eclipse.xsd.impl.XSDParticleImpl;
+import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.SchemaTreeModel.SchemaNode;
 
 import com.metamatrix.modeler.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstants;
 import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.util.ModelGeneratorWsdlUiUtil;
@@ -30,9 +31,10 @@ public class SchemaTreeLabelProvider extends AdapterFactoryLabelProvider {
 	@Override
 	public Image getImage(Object object) {
 		// TODO Auto-generated method stub
-		if( object instanceof XSDParticle) {
+		SchemaNode node = (SchemaNode)object;
+		if( node.getElement() instanceof XSDParticle) {
 			boolean doShow = false;
-			Object content = ((XSDParticleImpl) object).getContent();
+			Object content = ((XSDParticleImpl) node.getElement()).getContent();
 			if( content instanceof XSDElementDeclaration ) {
 				doShow =  ! (((XSDElementDeclaration )content).getType() instanceof XSDComplexTypeDefinition);
 			}
@@ -44,8 +46,16 @@ public class SchemaTreeLabelProvider extends AdapterFactoryLabelProvider {
 				return XSD_COMPLEX_ELEMENT_ICON_IMG;
 			}
 		}
-		return super.getImage(object);
+		return super.getImage(node.getElement());
 	}
+
+	@Override
+	public String getText(Object object) {
+		SchemaNode node = (SchemaNode) object;
+		return super.getText(node.getElement());
+	}
+	
+	
 
 	
 }

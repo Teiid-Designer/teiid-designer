@@ -9,7 +9,9 @@ package org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap;
 
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -55,9 +57,11 @@ public class ImportWsdlSchemaHandler {
 
 	WSDLImportWizardManager importManager;
 	OperationsDetailsPage operationsDetailsPage;
-	SchemaTreeModel schemaTreeModel = null;
+	SchemaTreeModel requestSchemaTreeModel = null;
+	SchemaTreeModel responseSchemaTreeModel = null;
 	SchemaNode rootnode = null;
 	int depth = 0;
+	int index = 0;
 	static int MAX_DEPTH = 1000;
 	boolean circularSchemaWarningTriggered = false;
 
@@ -68,12 +72,14 @@ public class ImportWsdlSchemaHandler {
 		this.operationsDetailsPage = operationsDetailsPage;
 	}
 
-	public List<Object> getSchemaForSelectedOperation(final int type,
+	public List<SchemaNode> getSchemaForSelectedOperation(final int type,
 			ProcedureGenerator generator) {
 
 		Model wsdlModel = null;
 		Object elementDeclaration = null;
-
+		this.requestSchemaTreeModel = new SchemaTreeModel();
+		this.responseSchemaTreeModel = new SchemaTreeModel();
+		
 		try {
 			wsdlModel = importManager.getWSDLModel();
 		} catch (ModelGenerationException e) {
@@ -119,9 +125,12 @@ public class ImportWsdlSchemaHandler {
 						}
 
 						foundElement = true;
-						if (type == ProcedureInfo.RESPONSE)
 							try {
-								describe(schema, elementName, (XSDElementDeclarationImpl)element);
+								if (type == ProcedureInfo.REQUEST){
+									this.requestSchemaTreeModel = describe(schema, elementName, (XSDElementDeclarationImpl)element, requestSchemaTreeModel);
+								}else{
+									this.responseSchemaTreeModel = describe(schema, elementName, (XSDElementDeclarationImpl)element, responseSchemaTreeModel);
+								}
 							} catch (ModelerCoreException ex) {
 								ErrorDialog.openError(this.operationsDetailsPage.getShell(), Messages.Error_GeneratingSchemaModelDueToCircularReferences_title, null, new Status(IStatus.WARNING, ModelGeneratorWsdlUiConstants.PLUGIN_ID, Messages.Error_GeneratingSchemaModelDueToCircularReferences));
 							}
@@ -142,9 +151,12 @@ public class ImportWsdlSchemaHandler {
 						if (elementName.equals(partElementName)) {
 							elementDeclaration = xsdType;
 							foundElement = true;
-							if (type == ProcedureInfo.RESPONSE)
 								try {
-									describe(schema, elementName, null);
+									if (type == ProcedureInfo.REQUEST){
+										this.requestSchemaTreeModel = describe(schema, elementName, null, requestSchemaTreeModel);
+									}else{
+										this.responseSchemaTreeModel = describe(schema, elementName, null, responseSchemaTreeModel);
+									}
 								} catch (ModelerCoreException ex) {
 									ErrorDialog.openError(this.operationsDetailsPage.getShell(), Messages.Error_GeneratingSchemaModelDueToCircularReferences_title, null, new Status(IStatus.WARNING, ModelGeneratorWsdlUiConstants.PLUGIN_ID, Messages.Error_GeneratingSchemaModelDueToCircularReferences));
 								}
@@ -164,7 +176,22 @@ public class ImportWsdlSchemaHandler {
 
 		}
 
-		return elementArrayList;
+		Collection<SchemaNode> nodeList = new ArrayList<SchemaNode>();
+		if (type == ProcedureInfo.REQUEST){
+			nodeList = this.requestSchemaTreeModel.getNodeList();
+		}else{
+			nodeList = this.responseSchemaTreeModel.getNodeList();
+		}
+
+		List<SchemaNode> elementsArray = new ArrayList<SchemaNode>();
+		
+		for (SchemaNode node : nodeList) {
+			if (node.isRoot()){
+				elementsArray.add(node);
+			}
+		}
+		
+		return	elementsArray;
 	}
 	
 	private String getPartElementName(Part part) {
@@ -181,7 +208,7 @@ public class ImportWsdlSchemaHandler {
 	public String createRequestColumn(int type, IStructuredSelection selection,
 			ProcedureInfo requestInfo) {
 
-		Object obj = selection.getFirstElement();
+		Object obj = ((SchemaNode)selection.getFirstElement()).getElement();
 		String name = null;
 		String ns = null;
 
@@ -260,7 +287,8 @@ public class ImportWsdlSchemaHandler {
 	public String createResponseColumn(int type,
 			IStructuredSelection selection, ProcedureInfo responseInfo) {
 
-		Object obj = selection.getFirstElement();
+		SchemaNode node = (SchemaNode)selection.getFirstElement();
+		Object obj = ((SchemaNode)selection.getFirstElement()).getElement();
 		
 		if( !shouldCreateResponseColumn(obj) ) {
 			return operationsDetailsPage.getSchemaLabelProvider().getText(obj);
@@ -308,12 +336,12 @@ public class ImportWsdlSchemaHandler {
 				responseInfo.addNamespace(SqlConstants.ENVELOPE_NS_ALIAS,
 						SqlConstants.ENVELOPE_NS);
 			}
-			getParentXpath(obj, parentXpath);
-			if (this.schemaTreeModel.getRootPath()==null || this.schemaTreeModel.getRootPath().isEmpty()){
-				this.schemaTreeModel.setRootPath(this.schemaTreeModel.determineRootPath());
+			getParentXpath(node, parentXpath, this.responseSchemaTreeModel);
+			if (this.responseSchemaTreeModel.getRootPath()==null || this.responseSchemaTreeModel.getRootPath().isEmpty()){
+				this.responseSchemaTreeModel.setRootPath(this.responseSchemaTreeModel.determineRootPath());
 			}
 			
-			getRelativeXpath(obj, xpath);
+			getRelativeXpath(node, xpath, this.responseSchemaTreeModel);
 			
 			for (SchemaObject schemaObject : elements) {
 				if (schemaObject.getName().equals(name)) {
@@ -323,11 +351,11 @@ public class ImportWsdlSchemaHandler {
 					if (namespace != null) {
 						responseInfo.addNamespace(prefix, namespace);
 					}
-					responseInfo.setRootPath(this.schemaTreeModel.getRootPath());
+					responseInfo.setRootPath(this.responseSchemaTreeModel.getRootPath());
 					if (importManager.isMessageServiceMode()) {
 						operationsDetailsPage.responseBodyColumnsInfoPanel.getRootPathText().setText(ResponseInfo.SOAPENVELOPE_ROOTPATH);
 					} else {
-						operationsDetailsPage.responseBodyColumnsInfoPanel.getRootPathText().setText(this.schemaTreeModel.getRootPath());
+						operationsDetailsPage.responseBodyColumnsInfoPanel.getRootPathText().setText(this.responseSchemaTreeModel.getRootPath());
 					}
 
 					// TODO: Make sure Root Path is set in the
@@ -343,7 +371,7 @@ public class ImportWsdlSchemaHandler {
 				if (importManager.isMessageServiceMode()) {
 					pathPrefix = ResponseInfo.SOAPBODY_ROOTPATH;
 					//Need to fully qualify xpath at the column level for BODY in MESSAGE mode
-					String root = this.schemaTreeModel.getRootPath().replaceAll(ResponseInfo.SOAPENVELOPE_ROOTPATH, ""); //$NON-NLS-1$
+					String root = this.responseSchemaTreeModel.getRootPath().replaceAll(ResponseInfo.SOAPENVELOPE_ROOTPATH, ""); //$NON-NLS-1$
 					xpath = new StringBuilder(root).append(xpath);
 				}
 				String theType = RuntimeTypeNames.STRING;
@@ -400,7 +428,7 @@ public class ImportWsdlSchemaHandler {
 			
 			String parentElementName = null;
 			
-			SchemaNode parentSchemaNode =  getParentElement(attributeImpl);
+			SchemaNode parentSchemaNode =  getParentElement(node);
 			if( parentSchemaNode != null ) {
 				Object parentElement = parentSchemaNode.getElement();
 				if (parentElement instanceof XSDParticleImpl 
@@ -422,13 +450,13 @@ public class ImportWsdlSchemaHandler {
 			String prefix = null;
 			StringBuilder parentXpath = new StringBuilder();
 
-			getParentXpath(obj, parentXpath);
+			getParentXpath(node, parentXpath, this.responseSchemaTreeModel);
 			
-			if (this.schemaTreeModel.getRootPath()==null || this.schemaTreeModel.getRootPath().isEmpty()){
-				this.schemaTreeModel.setRootPath(this.schemaTreeModel.determineRootPath());
+			if (this.responseSchemaTreeModel.getRootPath()==null || this.responseSchemaTreeModel.getRootPath().isEmpty()){
+				this.responseSchemaTreeModel.setRootPath(this.responseSchemaTreeModel.determineRootPath());
 			}
 			
-			getRelativeXpath(obj, xpath);
+			getRelativeXpath(node, xpath,this.responseSchemaTreeModel);
 			xpath.append('/').append('@').append(name);
 			
 			if( parentElementName != null ) {
@@ -440,11 +468,11 @@ public class ImportWsdlSchemaHandler {
 						if (namespace != null) {
 							responseInfo.addNamespace(prefix, namespace);
 						}
-						responseInfo.setRootPath(this.schemaTreeModel.getRootPath());
+						responseInfo.setRootPath(this.responseSchemaTreeModel.getRootPath());
 						if (importManager.isMessageServiceMode()) {
 							operationsDetailsPage.responseBodyColumnsInfoPanel.getRootPathText().setText(ResponseInfo.SOAPENVELOPE_ROOTPATH);
 						} else {
-							operationsDetailsPage.responseBodyColumnsInfoPanel.getRootPathText().setText(this.schemaTreeModel.getRootPath());
+							operationsDetailsPage.responseBodyColumnsInfoPanel.getRootPathText().setText(this.responseSchemaTreeModel.getRootPath());
 						}
 	
 						// TODO: Make sure Root Path is set in the
@@ -461,7 +489,7 @@ public class ImportWsdlSchemaHandler {
 				if (importManager.isMessageServiceMode()) {
 					pathPrefix = ResponseInfo.SOAPBODY_ROOTPATH;
 					//Need to fully qualify xpath at the column level for BODY in MESSAGE mode
-					String root = this.schemaTreeModel.getRootPath().replaceAll(ResponseInfo.SOAPENVELOPE_ROOTPATH, ""); //$NON-NLS-1$
+					String root = this.responseSchemaTreeModel.getRootPath().replaceAll(ResponseInfo.SOAPENVELOPE_ROOTPATH, ""); //$NON-NLS-1$
 					xpath = new StringBuilder(root).append(xpath);
 				}
 				responseInfo.addBodyColumn(
@@ -500,12 +528,13 @@ public class ImportWsdlSchemaHandler {
 
 	//Traverse Element to build parent-child relationships used
 	//to determine XPath
-	private void describe(XSDSchema schema, String element, XSDElementDeclaration elementDeclaration)
+	private SchemaTreeModel describe(XSDSchema schema, String element, XSDElementDeclaration elementDeclaration, SchemaTreeModel schemaTreeModel)
+	
 			throws ModelerCoreException {
 		circularSchemaWarningTriggered = false;
-		schemaTreeModel = new SchemaTreeModel();
 		rootnode = schemaTreeModel.new SchemaNode();
 		depth = 0;
+		index = 0;
 		XSDElementDeclaration xed = (elementDeclaration == null ? schema.resolveElementDeclaration(element) : elementDeclaration);
 		XSDTypeDefinition xtd = xed.getTypeDefinition();
 
@@ -513,51 +542,53 @@ public class ImportWsdlSchemaHandler {
 			rootnode.setElement(xed);
 			rootnode.setRoot(true);
 			XSDComplexTypeDefinition complexType = (XSDComplexTypeDefinition) xtd;
-			addComplexTypeDefToTree(complexType, rootnode, true, depth++ );
+			addComplexTypeDefToTree(complexType, rootnode, true, depth++, schemaTreeModel);
 		} else if (xtd instanceof XSDSimpleTypeDefinition) {
 			XSDSimpleTypeDefinition simpleType = (XSDSimpleTypeDefinition) xtd;
-			addSimpleTypeDefToTree(simpleType, rootnode);
+			addSimpleTypeDefToTree(simpleType, rootnode, schemaTreeModel);
 		} else {
 			XSDSimpleTypeDefinition simpleType = (XSDSimpleTypeDefinition) xed
 					.getType();
-			addElementDeclarationToTree(xed, simpleType, rootnode);
+			addElementDeclarationToTree(xed, simpleType, rootnode, schemaTreeModel);
 		}
+		
+		return schemaTreeModel;
 	}
 
 	private void addElementDeclarationToTree(XSDElementDeclaration element,
-			XSDSimpleTypeDefinition type, SchemaNode node)
+			XSDSimpleTypeDefinition type, SchemaNode node, SchemaTreeModel schemaTreeModel)
 			throws ModelerCoreException {
 		String name = element.getName();
 		if (null == name) {
 			name = element.getAliasName();
 		}
 		
-		addToSchemaMap(element, node);
+		addToSchemaMap(index++, node, schemaTreeModel);
 	}
 
 	private void addComplexTypeDefToTree(XSDComplexTypeDefinition complexType,
-			SchemaNode node, boolean isRootNode, int depth) throws ModelerCoreException {
+			SchemaNode node, boolean isRootNode, int depth, SchemaTreeModel schemaTreeModel) throws ModelerCoreException {
 		
 		if (depth>MAX_DEPTH){
 			throw new ModelerCoreException(Messages.Error_GeneratingSchemaModelDueToCircularReferences);
 		}
 		
 		XSDComplexTypeContent content = complexType.getContent();
-		addToSchemaMap(complexType, node);
+		addToSchemaMap(index++, node, schemaTreeModel);
 		
-		addAttributes(complexType, node);
+		addAttributes(index++, complexType, node, schemaTreeModel);
 		
 		if (content instanceof XSDSimpleTypeDefinition) {
 			XSDSimpleTypeDefinition simpleType = (XSDSimpleTypeDefinition) content;
-			addSimpleTypeDefToTree(simpleType, node);
+			addSimpleTypeDefToTree(simpleType, node, schemaTreeModel);
 		} else if (content instanceof XSDParticle) {
 			XSDParticle particle = (XSDParticle) content;
-			addXSDParticleToTree(particle, node, null, depth++);
+			addXSDParticleToTree(particle, node, null, depth++, schemaTreeModel);
 		}
 	}
 
 	private void addXSDParticleToTree(XSDParticle particle, SchemaNode parent,
-			SchemaNode node, int depth) throws ModelerCoreException {
+			SchemaNode node, int depth, SchemaTreeModel schemaTreeModel ) throws ModelerCoreException {
 		XSDParticleContent content = particle.getContent();
 		if (content instanceof XSDWildcard) {
 			// nothing
@@ -569,7 +600,7 @@ public class ImportWsdlSchemaHandler {
 				parent.addChild(node);
 			}
 			for (XSDParticle xsdParticle : contents) {
-				addXSDParticleToTree(xsdParticle, parent, node, depth++);
+				addXSDParticleToTree(xsdParticle, parent, node, depth++, schemaTreeModel);
 			}
 		} else if (content instanceof XSDElementDeclaration) {
 			XSDElementDeclaration element = (XSDElementDeclaration) content;
@@ -578,16 +609,16 @@ public class ImportWsdlSchemaHandler {
 				parent.addChild(node);
 			}
 			
-			addToSchemaMap(particle, node);
+			addToSchemaMap(index++, node, schemaTreeModel);
 			
-			addAttributes(element, node);
+			addAttributes(index++, element, node, schemaTreeModel);
 			
 			if (element.isElementDeclarationReference()) {
 				element = element.getResolvedElementDeclaration();
 			}
 			if (element.getType() instanceof XSDSimpleTypeDefinition) {
 				XSDSimpleTypeDefinition type = (XSDSimpleTypeDefinition) element.getType();
-				addElementDeclarationToTree(element, type, node);
+				addElementDeclarationToTree(element, type, node, schemaTreeModel);
 			} else {
 				XSDComplexTypeDefinition type = (XSDComplexTypeDefinition) element.getType();
 				String name = element.getName();
@@ -595,47 +626,45 @@ public class ImportWsdlSchemaHandler {
 					name = element.getAliasName();
 				}
 				
-				addComplexTypeDefToTree(type, node, false, depth);
+				addComplexTypeDefToTree(type, node, false, depth, schemaTreeModel);
 			}
 		} else if (content instanceof XSDModelGroupDefinition) {
 			XSDModelGroupDefinition groupDefinition = (XSDModelGroupDefinition) content;
 			XSDModelGroup group = groupDefinition.getModelGroup();
 			EList<XSDParticle> contents = group.getContents();
 			for (XSDParticle xsdParticle : contents) {
-				addXSDParticleToTree(xsdParticle, node, null, depth);
+				addXSDParticleToTree(xsdParticle, node, null, depth, schemaTreeModel);
 			}
 		}
 	}
 	
-	private void addAttributes(Object element, SchemaNode parent) {
+	private void addAttributes(int index, Object element, SchemaNode parent, SchemaTreeModel schemaTreeModel) {
 		Object[] result = ModelUtilities.getModelContentProvider().getChildren(element);
 		
 		for( Object obj : result) {
 			if( obj instanceof XSDAttributeUse ) {
 				SchemaNode node = schemaTreeModel.new SchemaNode(obj, parent, null, false);
-				addToSchemaMap(obj, node);
+				addToSchemaMap(index++, node, schemaTreeModel);
 			}
 		}
 	}
 	
-	private void addToSchemaMap(Object key, SchemaNode node) {
-		schemaTreeModel.getMapNode().put(key, node);
+	private void addToSchemaMap(int index, SchemaNode node, SchemaTreeModel schemaTreeModel) {
+		schemaTreeModel.getNodeList().add(node);
 	}
 
 	private void addSimpleTypeDefToTree(XSDSimpleTypeDefinition simpleType,
-			SchemaNode node) throws ModelerCoreException {
-		schemaTreeModel.getMapNode().put(simpleType, node);
+			SchemaNode node, SchemaTreeModel schemaTreeModel) throws ModelerCoreException {
+		schemaTreeModel.getNodeList().add(node);
 	}
 
-	private void getParentXpath(Object element, StringBuilder parentXpath) {
-		SchemaNode node = this.schemaTreeModel.getMapNode().get(element);
-		String rootPath = this.schemaTreeModel.getRootNodeXpath();
+	private void getParentXpath(SchemaNode node, StringBuilder parentXpath, SchemaTreeModel schemaTreeModel) {
+		String rootPath = schemaTreeModel.getRootNodeXpath();
 		String parentXPath = node == null ? "" : node.getParentXpath(); //$NON-NLS-1$
 		parentXpath.append(rootPath).append(parentXPath);
 	}
 	
-	private SchemaNode getParentElement(Object element) {
-		SchemaNode node = this.schemaTreeModel.getMapNode().get(element);
+	private SchemaNode getParentElement(SchemaNode node) {
 		if( node != null ) {
 			return node.getParent();
 		}
@@ -643,13 +672,12 @@ public class ImportWsdlSchemaHandler {
 		return null;
 	}
 	
-	private void getRelativeXpath(Object element, StringBuilder xpath) {
-		SchemaNode node = this.schemaTreeModel.getMapNode().get(element);
+	private void getRelativeXpath(SchemaNode node, StringBuilder xpath, SchemaTreeModel schemaTreeModel) {
 		String relativeXpath = node == null ? "" : node.getRelativeXpath(); //$NON-NLS-1$
 		//We need to append the full path and then remove the root path.
 		//This allows us to resolve nested complex types
 		String parentXPath = node == null ? "" : node.getParentXpath(); //$NON-NLS-1$
-		parentXPath = parentXPath.replace(this.schemaTreeModel.getRootPath(), ""); //$NON-NLS-1$
+		parentXPath = parentXPath.replace(schemaTreeModel.getRootPath(), ""); //$NON-NLS-1$
 		xpath.append(parentXPath).append(relativeXpath);
 	}
 }

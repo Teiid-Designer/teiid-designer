@@ -27,6 +27,7 @@ import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.ImportWsdlSchemaHandler;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.OperationsDetailsPage;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.ProcedureInfo;
+import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.SchemaTreeModel.SchemaNode;
 
 import com.metamatrix.ui.internal.util.WidgetFactory;
 
@@ -80,10 +81,11 @@ public class RequestSchemaContentsGroup {
 			public void selectionChanged(final SelectionChangedEvent event) {
 				columnMenuManager.removeAll();
 				IStructuredSelection sel = (IStructuredSelection) schemaTreeViewer.getSelection();
+				Object element = ((SchemaNode)sel.getFirstElement()).getElement();
 				if (sel.size() == 1
-					&& (sel.getFirstElement() instanceof XSDParticleImpl || 
-						sel.getFirstElement() instanceof XSDElementDeclarationImpl) ||
-						sel.getFirstElement() instanceof XSDAttributeUseImpl ) {
+					&& (element instanceof XSDParticleImpl || 
+						element instanceof XSDElementDeclarationImpl) ||
+						element instanceof XSDAttributeUseImpl ) {
 					columnMenuManager.add(createElementAction);
 				}
 
@@ -96,7 +98,7 @@ public class RequestSchemaContentsGroup {
 			public void doubleClick(DoubleClickEvent event) {
 				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
 				if (selection != null && !selection.isEmpty() ) {
-					Object element = selection.getFirstElement();
+					Object element = ((SchemaNode)selection.getFirstElement()).getElement();
 					if( ImportWsdlSchemaHandler.shouldCreateResponseColumn(element) ) {
 						createRequestColumn();
 					}

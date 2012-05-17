@@ -9,6 +9,7 @@ package org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
@@ -45,6 +46,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.provider.XSDSemanticItemProviderAdapterFactory;
 import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
+import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.SchemaTreeModel.SchemaNode;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.panels.ColumnsInfoPanel;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.panels.ElementsInfoPanel;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.panels.RequestSchemaContentsGroup;
@@ -58,6 +60,7 @@ import com.metamatrix.modeler.modelgenerator.wsdl.model.Operation;
 import com.metamatrix.modeler.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstants;
 import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.util.ModelGeneratorWsdlUiUtil;
 import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.wizards.WSDLImportWizardManager;
+import com.metamatrix.modeler.schema.tools.model.schema.SchemaModel;
 import com.metamatrix.modeler.transformation.ui.editors.sqleditor.SqlTextViewer;
 import com.metamatrix.ui.graphics.ColorManager;
 import com.metamatrix.ui.internal.util.WidgetFactory;
@@ -184,7 +187,7 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 
 	public void notifyColumnDataChanged() {
 		if (!responseBodyColumnsInfoPanel.getRootPathText().getText().equals("")) { //$NON-NLS-1$
-			this.schemaHandler.schemaTreeModel.setRootPath(responseBodyColumnsInfoPanel.getRootPathText().getText());
+			this.schemaHandler.responseSchemaTreeModel.setRootPath(responseBodyColumnsInfoPanel.getRootPathText().getText());
 			this.getProcedureGenerator().getResponseInfo().setRootPath(responseBodyColumnsInfoPanel.getRootPathText().getText());
 		}
 		this.requestBodyElementsInfoPanel.refresh();
@@ -199,7 +202,7 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 	}
 	
 	public void notifyRootTextColumnDataChanged() {
-		this.schemaHandler.schemaTreeModel.setRootPath(responseBodyColumnsInfoPanel.getRootPathText().getText());
+		this.schemaHandler.responseSchemaTreeModel.setRootPath(responseBodyColumnsInfoPanel.getRootPathText().getText());
 	
 		updateStatus();
 	}
@@ -592,22 +595,24 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 
 	void updateSchemaTree(int type) {
 		if (type == REQUEST) {
-			requestBodySchemaContentsGroup.setInput(getSchemaForSelectedOperation(type));
-			requestHeaderSchemaContentsGroup.setInput(getSchemaForSelectedOperation(type));
+			List<SchemaNode> requestMap = getSchemaForSelectedOperation(REQUEST);
+			requestBodySchemaContentsGroup.setInput(requestMap);
+			requestHeaderSchemaContentsGroup.setInput(requestMap);
 		} else if (type == RESPONSE) {
-			responseBodySchemaContentsGroup.setInput(getSchemaForSelectedOperation(type));
-			responseHeaderSchemaContentsGroup.setInput(getSchemaForSelectedOperation(type));
+			List<SchemaNode> responseMap = getSchemaForSelectedOperation(RESPONSE);
+			responseBodySchemaContentsGroup.setInput(responseMap);
+			responseHeaderSchemaContentsGroup.setInput(responseMap);
 		} else {
-			List<Object> requestList = getSchemaForSelectedOperation(REQUEST);
-			requestBodySchemaContentsGroup.setInput(requestList);
-			requestHeaderSchemaContentsGroup.setInput(requestList);
-			List<Object> responseList = getSchemaForSelectedOperation(RESPONSE);
-			responseBodySchemaContentsGroup.setInput(responseList);
-			responseHeaderSchemaContentsGroup.setInput(responseList);
+			List<SchemaNode> requestMap = getSchemaForSelectedOperation(REQUEST);
+			requestBodySchemaContentsGroup.setInput(requestMap);
+			requestHeaderSchemaContentsGroup.setInput(requestMap);
+			List<SchemaNode> responseMap = getSchemaForSelectedOperation(RESPONSE);
+			responseBodySchemaContentsGroup.setInput(responseMap);
+			responseHeaderSchemaContentsGroup.setInput(responseMap);
 		}
 	}
 	
-	List<Object> getSchemaForSelectedOperation(int type) {
+	private List<SchemaNode> getSchemaForSelectedOperation(int type) {
 		return this.schemaHandler.getSchemaForSelectedOperation(type, this.procedureGenerator);
 	}
 
