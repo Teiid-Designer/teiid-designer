@@ -31,19 +31,6 @@
 				<additionalSystemProperties>-Xdebug -Xrunjdwp:transport=dt_socket,address=8001,server=y,suspend=y </additionalSystemProperties>
 			</properties>
 		</profile>
-		
-		<profile>
-			<id>osx</id>
-			<activation>
-				<property>
-					<name>java.vendor.url</name>
-					<value>http://www.apple.com/</value>
-				</property>
-			</activation>
-			<properties>
-				<systemProperties>-XstartOnFirstThread ${additionalSystemProperties} -Djbosstools.test.jboss-as-5.home=${jbosstools.test.jboss-as-5.home} -Dtest.configurations.dir=${configurations.dir} -Dorg.eclipse.swtbot.screenshots.dir=${project.build.directory}/screenshots</systemProperties>
-			</properties>
-		</profile>
 	</profiles>
 	
 	<build>
