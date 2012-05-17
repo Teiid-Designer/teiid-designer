@@ -42,9 +42,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.progress.UIJob;
 import org.teiid.designer.datatools.ui.DatatoolsUiConstants;
 
-import com.metamatrix.common.protocol.URLHelper;
 import com.metamatrix.modeler.ui.wizards.wsdl.WsdlFileSelectionComposite;
-import com.metamatrix.modeler.ui.wizards.wsdl.WsdlFileSelectionComposite.IURLSelectionCallback;
 import com.metamatrix.ui.ICredentialsCommon.SecurityType;
 import com.metamatrix.ui.internal.util.WidgetFactory;
 
@@ -125,14 +123,16 @@ public class WSSoapProfileDetailsWizardPage  extends ConnectionProfileDetailsPag
         WsdlFileSelectionComposite.IFileSelectionCallback fileSelectionCallback = new WsdlFileSelectionComposite.IFileSelectionCallback() {
             @Override
             public void execute(File wsdlFile) {
-                if (wsdlFile == null)
-                    return;
-
                 try {
                     urlText.setText(wsdlFile.toURI().toURL().toString());
                 } catch (MalformedURLException ex) {
                     UTIL.log(ex);
                 }
+            }
+
+            @Override
+            public Display getDisplay() {
+                return getShell().getDisplay();
             }
         };
 
@@ -141,8 +141,12 @@ public class WSSoapProfileDetailsWizardPage  extends ConnectionProfileDetailsPag
             @Override
             public void execute(URL url, SecurityType securityType, String userName, String password) {
                 urlText.setText(url.toString());
-                
                 setAuthenticationProperties(securityType, userName, password);
+            }
+
+            @Override
+            public Display getDisplay() {
+                return getShell().getDisplay();
             }
         };
         wsdlFileSelectionComposite.setCallbacks(fileSelectionCallback, fileSelectionCallback, urlSelectionCallback);

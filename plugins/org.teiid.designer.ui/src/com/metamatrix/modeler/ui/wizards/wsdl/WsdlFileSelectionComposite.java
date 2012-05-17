@@ -21,6 +21,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 
@@ -33,6 +34,7 @@ import com.metamatrix.ui.ICredentialsCommon.SecurityType;
 import com.metamatrix.ui.internal.product.ProductCustomizerMgr;
 import com.metamatrix.ui.internal.util.WidgetFactory;
 import com.metamatrix.ui.internal.util.WidgetUtil;
+import com.metamatrix.ui.internal.viewsupport.UiBusyIndicator;
 
 /**
  *
@@ -48,11 +50,42 @@ public class WsdlFileSelectionComposite extends Composite implements UiConstants
     }
 
     public static interface IFileSelectionCallback {
-        public void execute(File wsdlFile);
+
+        /**
+         * Perform an operation on the given wsdl.
+         * 
+         * @param wsdlFile
+         */
+        void execute(File wsdlFile);
+
+        /**
+         * parent display of UI
+         * 
+         * @return
+         */
+        Display getDisplay();
     }
 
     public static interface IURLSelectionCallback {
-        public void execute(URL url, SecurityType securityType, String userName, String password);
+        /**
+         * Perform an operation on the given {@link URL} using the optional
+         * authentication credentials.
+         * 
+         * @param url
+         * @param securityType
+         * @param userName
+         * @param password
+         * @return
+         */
+        void execute(URL url, SecurityType securityType,
+                String userName, String password);
+
+        /**
+         * parent display of UI
+         * 
+         * @return
+         */
+        Display getDisplay();
     }
 
     WsdlFilter wsdlFilter = new WsdlFilter();
@@ -140,10 +173,13 @@ public class WsdlFileSelectionComposite extends Composite implements UiConstants
             if (btnWorkspaceAdd != null) {
                 btnWorkspaceAdd.setFocus();
             }
+            break;
         case FILESYSTEM:
             btnFileSystemAdd.setFocus();
+            break;
         case URL:
             btnURLAdd.setFocus();
+            break;
         default:
             // Do nothing
         }
@@ -167,7 +203,7 @@ public class WsdlFileSelectionComposite extends Composite implements UiConstants
     /**
      * Handler for choosing file system files.
      */
-    public void handleAddFileSystemWsdlFile() {
+    private void handleAddFileSystemWsdlFile() {
         FileDialog dialog = new FileDialog(getShell(), SWT.MULTI);
         dialog.setText(Util.getString(PREFIX + "dialog.addWsdl.title")); //$NON-NLS-1$
         dialog.setFilterExtensions(WsdlFileExtensions.FILE_DIALOG_WSDL_EXTENSIONS);
@@ -186,7 +222,7 @@ public class WsdlFileSelectionComposite extends Composite implements UiConstants
         for (int i = 0; i < filenames.length; i++) {
             String path = new StringBuffer().append(directory).append(File.separatorChar)
                     .append(filenames[i]).toString();
-            File wsdlFile = new File(path);
+            final File wsdlFile = new File(path);
 
             // make sure the right type of file was selected. since the
             // user can enter *.* in file name
@@ -194,9 +230,16 @@ public class WsdlFileSelectionComposite extends Composite implements UiConstants
             // the filter extensions. this allows
             // them to actually select invalid file types.
 
-            if (WebServicePlugin.isWsdlFile((File) wsdlFile)) {
-                fileSystemCallback.execute(wsdlFile);
-            } else {
+            if (WebServicePlugin.isWsdlFile(wsdlFile)) {
+                UiBusyIndicator.showWhile(fileSystemCallback.getDisplay(),
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                fileSystemCallback.execute(wsdlFile);
+                            }
+                        });
+            }
+            else {
                 validFiles = false;
             }
         }
@@ -235,8 +278,19 @@ public class WsdlFileSelectionComposite extends Composite implements UiConstants
             IFile ifFile = (IFile) wsdlFiles[i];
 
             // Convert the IFile object to a File object
-            File fNew = ifFile.getLocation().toFile();
-            workspaceCallback.execute(fNew);
+            final File fNew = ifFile.getLocation().toFile();
+
+            if (fNew == null) {
+                continue;
+            }
+
+            UiBusyIndicator.showWhile(workspaceCallback.getDisplay(),
+                    new Runnable() {
+                        @Override
+                        public void run() {
+                            workspaceCallback.execute(fNew);
+                        }
+                    });
         }
     }
 
@@ -245,7 +299,7 @@ public class WsdlFileSelectionComposite extends Composite implements UiConstants
      * 
      * @since 5.1
      */
-    void handleAddURLWsdlFile() {
+    private void handleAddURLWsdlFile() {
         final WsdlUrlDialog dialog = new WsdlUrlDialog(getShell());
         // construct/display dialog
         dialog.create();
@@ -255,6 +309,14 @@ public class WsdlFileSelectionComposite extends Composite implements UiConstants
             return;
         }
 
-        urlCallback.execute(dialog.getUrlObject(), dialog.getSecurityOption(), dialog.getUserName(), dialog.getPassword());
+        UiBusyIndicator.showWhile(urlCallback.getDisplay(),
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        urlCallback.execute(dialog.getUrlObject(),
+                                dialog.getSecurityOption(),
+                                dialog.getUserName(), dialog.getPassword());
+                    }
+                });
     }
 }

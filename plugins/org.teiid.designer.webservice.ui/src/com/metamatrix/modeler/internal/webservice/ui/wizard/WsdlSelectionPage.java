@@ -27,9 +27,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IToolBarManager;
@@ -71,7 +69,6 @@ import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
-import org.eclipse.ui.progress.UIJob;
 import org.eclipse.wst.wsdl.validation.internal.IValidationReport;
 import org.eclipse.wst.wsdl.validation.internal.WSDLValidationConfiguration;
 import org.eclipse.wst.wsdl.validation.internal.WSDLValidator;
@@ -91,8 +88,8 @@ import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.internal.webservice.ui.IInternalUiConstants;
 import com.metamatrix.modeler.ui.viewsupport.ModelingResourceFilter;
 import com.metamatrix.modeler.ui.wizards.wsdl.WsdlFileSelectionComposite;
-import com.metamatrix.modeler.ui.wizards.wsdl.WsdlFilter;
 import com.metamatrix.modeler.ui.wizards.wsdl.WsdlFileSelectionComposite.FileSelectionButtons;
+import com.metamatrix.modeler.ui.wizards.wsdl.WsdlFilter;
 import com.metamatrix.modeler.webservice.IWebServiceModelBuilder;
 import com.metamatrix.modeler.webservice.IWebServiceResource;
 import com.metamatrix.modeler.webservice.WebServicePlugin;
@@ -102,7 +99,6 @@ import com.metamatrix.ui.internal.dialog.FolderSelectionDialog;
 import com.metamatrix.ui.internal.util.UiUtil;
 import com.metamatrix.ui.internal.util.WidgetFactory;
 import com.metamatrix.ui.internal.util.WizardUtil;
-import com.metamatrix.ui.internal.viewsupport.UiBusyIndicator;
 import com.metamatrix.ui.internal.widget.ListMessageDialog;
 import com.metamatrix.ui.internal.wizard.AbstractWizardPage;
 
@@ -212,30 +208,28 @@ public final class WsdlSelectionPage extends AbstractWizardPage
      *        {@link org.eclipse.core.resources.IResource}).
      * @since 4.2
      */
-    private void addWsdlFiles( final Object[] theFiles,
-                              final boolean theWorkspaceResourceFlag ) {
-        UiBusyIndicator.showWhile(getShell().getDisplay(), new Runnable() {
-            @Override
-            public void run() {
+    private void addWsdlFiles(final Object[] theFiles,
+            final boolean theWorkspaceResourceFlag) {
 
-                boolean requiredStart = ModelerCore.startTxn(false, false, "Add WSDL Files", this); //$NON-NLS-1$
-                boolean succeeded = false;
+        boolean requiredStart = ModelerCore.startTxn(false, false,
+                "Add WSDL Files", this); //$NON-NLS-1$
+        boolean succeeded = false;
 
-                try {
-                    addWsdlFilesInternal(theFiles, theWorkspaceResourceFlag);
-                    succeeded = true;
-                } finally {
-                    // If we start txn, commit it
-                    if (requiredStart) {
-                        if (succeeded) {
-                            ModelerCore.commitTxn();
-                        } else {
-                            ModelerCore.rollbackTxn();
-                        }
-                    }
+        try {
+            addWsdlFilesInternal(theFiles, theWorkspaceResourceFlag);
+            succeeded = true;
+        }
+        finally {
+            // If we start txn, commit it
+            if (requiredStart) {
+                if (succeeded) {
+                    ModelerCore.commitTxn();
+                }
+                else {
+                    ModelerCore.rollbackTxn();
                 }
             }
-        });
+        }
     }
 
     private void addWsdlFilesInternal( final Object[] theFiles,
@@ -305,7 +299,8 @@ public final class WsdlSelectionPage extends AbstractWizardPage
                     map.put(theFiles[i], resource);
                     newWsdls.add(theFiles[i]);
                     validateWSDL(resource);
-                } catch (CoreException theException) {
+                }
+                catch (Exception theException) {
                     UTIL.log(theException);
 
                     if (problems == null) {
@@ -462,23 +457,33 @@ public final class WsdlSelectionPage extends AbstractWizardPage
         GridDataFactory.fillDefaults().applyTo(fileSelectionComposite);
         
         WsdlFileSelectionComposite.IFileSelectionCallback fileSelectionCallback = new WsdlFileSelectionComposite.IFileSelectionCallback() {
-            
+
             @Override
             public void execute(File wsdlFile) {
-                if (wsdlFile != null) {
-                    addWsdlFiles(new Object[] { wsdlFile }, false);
-                }
+                addWsdlFiles(new Object[] { wsdlFile }, false);
 
                 // jh Defect 22412
                 validatePage();
+            }
+
+            @Override
+            public Display getDisplay() {
+                return getShell().getDisplay();
             }
         };
         
         WsdlFileSelectionComposite.IURLSelectionCallback urlSelectionCallback = new WsdlFileSelectionComposite.IURLSelectionCallback() {
             @Override
-            public void execute(URL url, SecurityType securityType, String userName, String password) {
+            public void execute(URL url, SecurityType securityType,
+                    String userName, String password) {
                 addURLWsdlFile(url, securityType, userName, password);
             }
+
+            @Override
+            public Display getDisplay() {
+                return getShell().getDisplay();
+            }
+
         };
         
         fileSelectionComposite.setCallbacks(fileSelectionCallback, fileSelectionCallback, urlSelectionCallback);
@@ -822,53 +827,44 @@ public final class WsdlSelectionPage extends AbstractWizardPage
      * 
      * @since 5.1
      */
-    private void addURLWsdlFile(final URL url, final SecurityType securityType, final String userName, final String password) {
-        /* 
-         * Validating and adding the WSDL can take a few seconds
-         * so lets indicate that to the user by putting it in a UIJob
-         */
-        UIJob job = new UIJob("Validate and add WSDL to selection list") { //$NON-NLS-1$
+    private void addURLWsdlFile(final URL url, final SecurityType securityType,
+            final String userName, final String password) {
+        ArrayList list = new ArrayList();
+        urlMap = getUrlMap();
 
-            @Override
-            public IStatus runInUIThread(IProgressMonitor monitor) {
+        try {
+            String filePath = formatPath(url);
+            File wsdlFile;
 
-                final ArrayList list = new ArrayList();
-                urlMap = getUrlMap();
-
-                try {
-                    String filePath = formatPath(url);
-                    File wsdlFile;
-
-                    if (SecurityType.None.equals(securityType)) {
-                        wsdlFile = URLHelper.createFileFromUrl(url,
-                                CoreStringUtil.createFileName(filePath), WSDL_SUFFIX);
-                    } else {
-                        wsdlFile = URLHelper.createFileFromUrl(url,
-                                CoreStringUtil.createFileName(filePath), WSDL_SUFFIX,
-                                userName, password);
-                    }
-
-                    urlMap.put(wsdlFile.getName(), url.toString());
-                    WsdlHelper.convertImportsToAbsolutePaths(wsdlFile, url.toExternalForm(),
-                            list, urlMap, true);
-                } catch (MalformedURLException theException) {
-                    UTIL.log(theException);
-                } catch (IOException theException) {
-                    UTIL.log(theException);
-                } catch (JDOMException theException) {
-                    UTIL.log(theException);
-                }
-
-                Object[] wsdlFiles = list.toArray();
-                addWsdlFiles(wsdlFiles, false);
-  
-                // jh Defect 22412
-                validatePage();
-                return Status.OK_STATUS;
+            if (SecurityType.None.equals(securityType)) {
+                wsdlFile = URLHelper.createFileFromUrl(url,
+                        CoreStringUtil.createFileName(filePath), WSDL_SUFFIX);
             }
-        };
-        
-        job.schedule();
+            else {
+                wsdlFile = URLHelper.createFileFromUrl(url,
+                        CoreStringUtil.createFileName(filePath), WSDL_SUFFIX,
+                        userName, password);
+            }
+
+            urlMap.put(wsdlFile.getName(), url.toString());
+            WsdlHelper.convertImportsToAbsolutePaths(wsdlFile,
+                    url.toExternalForm(), list, urlMap, true);
+        }
+        catch (MalformedURLException theException) {
+            UTIL.log(theException);
+        }
+        catch (IOException theException) {
+            UTIL.log(theException);
+        }
+        catch (JDOMException theException) {
+            UTIL.log(theException);
+        }
+
+        Object[] wsdlFiles = list.toArray();
+        addWsdlFiles(wsdlFiles, false);
+
+        // jh Defect 22412
+        validatePage();
     }
 
     /**
