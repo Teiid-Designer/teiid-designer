@@ -111,9 +111,11 @@ public abstract class ProcedureInfo implements SqlConstants {
 		return this.bodyColumnInfoList.toArray(new ColumnInfo[this.bodyColumnInfoList.size()]);
 	}
 	
-	public void addBodyColumn(String name, boolean ordinality, String datatype, String defaultValue, String path) {
-		this.bodyColumnInfoList.add(new ColumnInfo(name, ordinality, datatype, defaultValue, path));
+	public ColumnInfo addBodyColumn(String name, boolean ordinality, String datatype, String defaultValue, String path) {
+		ColumnInfo newInfo = new ColumnInfo(name, ordinality, datatype, defaultValue, path);
+		this.bodyColumnInfoList.add(newInfo);
 		setChanged(true);
+		return newInfo;
 	}
 	
 	public void removeBodyColumn(ColumnInfo theInfo) {
@@ -186,9 +188,11 @@ public abstract class ProcedureInfo implements SqlConstants {
 		return this.headerColumnInfoList.toArray(new ColumnInfo[this.headerColumnInfoList.size()]);
 	}
 	
-	public void addHeaderColumn(String name, boolean ordinality, String datatype, String defaultValue, String path) {
-		this.headerColumnInfoList.add(new ColumnInfo(name, ordinality, datatype, defaultValue, path));
+	public ColumnInfo addHeaderColumn(String name, boolean ordinality, String datatype, String defaultValue, String path) {
+		ColumnInfo newInfo = new ColumnInfo(name, ordinality, datatype, defaultValue, path);
+		this.headerColumnInfoList.add(newInfo);
 		setChanged(true);
+		return newInfo;
 	}
 	
 	public void removeHeaderColumn(ColumnInfo theInfo) {

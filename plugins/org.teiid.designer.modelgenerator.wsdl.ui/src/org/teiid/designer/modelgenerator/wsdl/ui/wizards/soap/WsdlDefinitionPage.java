@@ -300,7 +300,7 @@ public class WsdlDefinitionPage extends WizardPage
 				}
 
 				profileWorker.setSelection(profile);
-				importManager.setConnectionProfile(profile);
+				setConnectionProfileInternal(profile);
 				if (profileChanged) {
 					this.wsdlStatus = null;
 				}
@@ -466,7 +466,7 @@ public class WsdlDefinitionPage extends WizardPage
 
 		selectConnectionProfile(profile.getName());
 		
-		importManager.setConnectionProfile(profile);
+		setConnectionProfileInternal(profile);
 
 		notifyChanged();
 	}
@@ -608,7 +608,7 @@ public class WsdlDefinitionPage extends WizardPage
 			IConnectionProfile currentProfile = this.importManager.getConnectionProfile();
 			if( profile != currentProfile ) {
 				profileChanged = true;
-				this.importManager.setConnectionProfile(profile);
+				setConnectionProfileInternal(profile);
 			}
 		}
 
@@ -617,6 +617,10 @@ public class WsdlDefinitionPage extends WizardPage
 			this.operationsPanel.notifyWsdlChanged();
 		}
 		return profileChanged;
+	}
+	
+	private void setConnectionProfileInternal(final IConnectionProfile profile) {
+        this.importManager.setConnectionProfile(profile);
 	}
 
 	public void setVisible(boolean visible) {
