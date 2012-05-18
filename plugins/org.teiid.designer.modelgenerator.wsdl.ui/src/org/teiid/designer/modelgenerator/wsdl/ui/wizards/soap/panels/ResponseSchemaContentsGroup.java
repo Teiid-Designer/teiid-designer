@@ -78,7 +78,7 @@ public class ResponseSchemaContentsGroup {
 			public void selectionChanged(final SelectionChangedEvent event) {
 				columnMenuManager.removeAll();
 				IStructuredSelection selection = (IStructuredSelection) schemaTreeViewer.getSelection();
-				if (selection.size() == 1 ) {
+				if (selection.size() == 1 && selection.getFirstElement() instanceof SchemaNode) {
 					Object element = ((SchemaNode)selection.getFirstElement()).getElement();
 					if( ImportWsdlSchemaHandler.shouldCreateResponseColumn(element) ) {
 						columnMenuManager.add(createColumnAction);
@@ -93,7 +93,7 @@ public class ResponseSchemaContentsGroup {
 			@Override
 			public void doubleClick(DoubleClickEvent event) {
 				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
-				if (selection != null && !selection.isEmpty() ) {
+				if (selection != null && !selection.isEmpty() && selection.getFirstElement() instanceof SchemaNode) {
 					Object element = ((SchemaNode)selection.getFirstElement()).getElement();
 					if( ImportWsdlSchemaHandler.shouldCreateResponseColumn(element) ) {
 						createResponseColumn();

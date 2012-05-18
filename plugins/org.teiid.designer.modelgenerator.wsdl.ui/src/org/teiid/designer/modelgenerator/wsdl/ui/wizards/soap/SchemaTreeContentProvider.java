@@ -9,9 +9,6 @@ package org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
@@ -37,59 +34,84 @@ public class SchemaTreeContentProvider extends AdapterFactoryContentProvider {
 	public Object[] getChildren(Object object) {
 		
 		//Object[] result = super.getChildren(object); 
-		
-		Collection<SchemaNode> result = ((SchemaNode)object).getChildren(); 
-		
-		Collection<Object> filteredChildren = new ArrayList<Object>();
-		
-		for( Object child : result ) {
-			if( showObject(child) ) {
-				filteredChildren.add(child);
+		if( object instanceof SchemaNode ) {
+			SchemaNode node = (SchemaNode)object;
+//			if( node.getElement() instanceof XSDAttributeUse ) {
+//				return super.getChildren(node.getElement());
+//			} else {
+				Collection<SchemaNode> result = node.getChildren(); 
+				
+				Collection<Object> filteredNodes = new ArrayList<Object>();
+				
+				for( Object child : result ) {
+					if( showObject(child) ) {
+						filteredNodes.add(child);
+					}
+				}
+				return filteredNodes.toArray( new Object[filteredNodes.size()]);
+//			}
+		} else {
+			Object[] result = super.getChildren(object);
+			
+			Collection<Object> filteredNodes = new ArrayList<Object>();
+			
+			for( Object child : result ) {
+				if( showObject(child) ) {
+					filteredNodes.add(child);
+				}
 			}
+			return filteredNodes.toArray( new Object[filteredNodes.size()]);
 		}
-		
-		return filteredChildren.toArray( new Object[filteredChildren.size()]);
 	}
 
 	@Override
-	  public Object [] getElements(Object object) {
-		List<SchemaNode> elementList = (ArrayList<SchemaNode>)object;
-		Object[] result = new Object[elementList.size()];
-		int i = 0;
-		for (Object obj:elementList){
-			result[i++]=obj;
-		}
-		
-		Collection<Object> filteredElements = new ArrayList<Object>();
-		
-		for( Object child : result ) {
-			if( showObject(child) ) {
-				filteredElements.add(child);
+	public Object[] getElements(Object object) {
+		if (object instanceof SchemaNodeWrapper) {
+			Collection<Object> filteredNodes = new ArrayList<Object>();
+
+			for (SchemaNode child : ((SchemaNodeWrapper)object).getChildren()) {
+				if (showObject(child)) {
+					filteredNodes.add(child);
+				}
 			}
+
+			return filteredNodes.toArray(new Object[filteredNodes.size()]);
 		}
 		
-		return filteredElements.toArray( new Object[filteredElements.size()]);
-	  }
+		return new Object[0];
+	}
 	
 		
 	@Override
 	public boolean hasChildren(Object object) {
+		if( object instanceof SchemaNode ) {
+			SchemaNode node = (SchemaNode)object;
+			if( node.getElement() instanceof XSDAttributeUse ) {
+				return super.hasChildren(node.getElement());
+			}
+			return node.getChildren().size() > 0; 
+		}
 		
-		return ((SchemaNode)object).getChildren().size() > 0; 
+		return false;//super.hasChildren(object);
 	}
 
 	private boolean showObject(Object object) {
-		SchemaNode node = (SchemaNode) object;
-		if( node.getElement() instanceof XSDComplexTypeDefinition ) {
-			String name = ((XSDComplexTypeDefinition) node.getElement()).getName();
-			if(name !=null && "ANYTYPE".equals(name.toUpperCase())) { //$NON-NLS-1$
-				return false;
+		if( object instanceof SchemaNode ) {
+			SchemaNode node = (SchemaNode) object;
+			if( node.getElement() instanceof XSDComplexTypeDefinition ) {
+				String name = ((XSDComplexTypeDefinition) node.getElement()).getName();
+				if(name !=null && "ANYTYPE".equals(name.toUpperCase())) { //$NON-NLS-1$
+					return false;
+				}
 			}
-		}
-		if( node.getElement() instanceof XSDParticle ||  node.getElement() instanceof XSDAttributeUse ) {
+
+			if( node.getElement() instanceof XSDParticle ||  node.getElement() instanceof XSDAttributeUse ) {
+				return true;
+			}
+			
 			return true;
 		}
 		
-		return true;
+		return false;
 	}
 }

@@ -80,15 +80,15 @@ public class RequestSchemaContentsGroup {
 			@Override
 			public void selectionChanged(final SelectionChangedEvent event) {
 				columnMenuManager.removeAll();
-				IStructuredSelection sel = (IStructuredSelection) schemaTreeViewer.getSelection();
-				Object element = ((SchemaNode)sel.getFirstElement()).getElement();
-				if (sel.size() == 1
-					&& (element instanceof XSDParticleImpl || 
-						element instanceof XSDElementDeclarationImpl) ||
-						element instanceof XSDAttributeUseImpl ) {
-					columnMenuManager.add(createElementAction);
+				IStructuredSelection selection = (IStructuredSelection) schemaTreeViewer.getSelection();
+				if( selection.size() == 1 && selection.getFirstElement() instanceof SchemaNode) {
+					Object element = ((SchemaNode)selection.getFirstElement()).getElement();
+					if (element instanceof XSDParticleImpl || 
+							element instanceof XSDElementDeclarationImpl ||
+							element instanceof XSDAttributeUseImpl ) {
+						columnMenuManager.add(createElementAction);
+					}
 				}
-
 			}
 		});
 
@@ -97,7 +97,7 @@ public class RequestSchemaContentsGroup {
 			@Override
 			public void doubleClick(DoubleClickEvent event) {
 				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
-				if (selection != null && !selection.isEmpty() ) {
+				if (selection != null && !selection.isEmpty() && selection.getFirstElement() instanceof SchemaNode) {
 					Object element = ((SchemaNode)selection.getFirstElement()).getElement();
 					if( ImportWsdlSchemaHandler.shouldCreateResponseColumn(element) ) {
 						createRequestColumn();

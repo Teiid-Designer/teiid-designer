@@ -9,8 +9,8 @@ package org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.dialogs.IDialogSettings;
@@ -60,7 +60,6 @@ import com.metamatrix.modeler.modelgenerator.wsdl.model.Operation;
 import com.metamatrix.modeler.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstants;
 import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.util.ModelGeneratorWsdlUiUtil;
 import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.wizards.WSDLImportWizardManager;
-import com.metamatrix.modeler.schema.tools.model.schema.SchemaModel;
 import com.metamatrix.modeler.transformation.ui.editors.sqleditor.SqlTextViewer;
 import com.metamatrix.ui.graphics.ColorManager;
 import com.metamatrix.ui.internal.util.WidgetFactory;
@@ -595,20 +594,20 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 
 	void updateSchemaTree(int type) {
 		if (type == REQUEST) {
-			List<SchemaNode> requestMap = getSchemaForSelectedOperation(REQUEST);
-			requestBodySchemaContentsGroup.setInput(requestMap);
-			requestHeaderSchemaContentsGroup.setInput(requestMap);
+			SchemaNodeWrapper nodeInput = new SchemaNodeWrapper(getSchemaForSelectedOperation(REQUEST));
+			requestBodySchemaContentsGroup.setInput(nodeInput);
+			requestHeaderSchemaContentsGroup.setInput(nodeInput);
 		} else if (type == RESPONSE) {
-			List<SchemaNode> responseMap = getSchemaForSelectedOperation(RESPONSE);
-			responseBodySchemaContentsGroup.setInput(responseMap);
-			responseHeaderSchemaContentsGroup.setInput(responseMap);
+			SchemaNodeWrapper nodeInput = new SchemaNodeWrapper(getSchemaForSelectedOperation(RESPONSE));
+			responseBodySchemaContentsGroup.setInput(nodeInput);
+			responseHeaderSchemaContentsGroup.setInput(nodeInput);
 		} else {
-			List<SchemaNode> requestMap = getSchemaForSelectedOperation(REQUEST);
-			requestBodySchemaContentsGroup.setInput(requestMap);
-			requestHeaderSchemaContentsGroup.setInput(requestMap);
-			List<SchemaNode> responseMap = getSchemaForSelectedOperation(RESPONSE);
-			responseBodySchemaContentsGroup.setInput(responseMap);
-			responseHeaderSchemaContentsGroup.setInput(responseMap);
+			SchemaNodeWrapper nodeInput = new SchemaNodeWrapper(getSchemaForSelectedOperation(REQUEST));
+			requestBodySchemaContentsGroup.setInput(nodeInput);
+			requestHeaderSchemaContentsGroup.setInput(nodeInput);
+			nodeInput = new SchemaNodeWrapper(getSchemaForSelectedOperation(RESPONSE));
+			responseBodySchemaContentsGroup.setInput(nodeInput);
+			responseHeaderSchemaContentsGroup.setInput(nodeInput);
 		}
 	}
 	

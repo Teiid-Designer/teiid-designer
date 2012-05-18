@@ -11,7 +11,6 @@ package org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -207,8 +206,9 @@ public class ImportWsdlSchemaHandler {
 
 	public String createRequestColumn(int type, IStructuredSelection selection,
 			ProcedureInfo requestInfo) {
-
-		Object obj = ((SchemaNode)selection.getFirstElement()).getElement();
+		SchemaNode node = (SchemaNode)selection.getFirstElement();
+		Object obj = node.getElement();
+		
 		String name = null;
 		String ns = null;
 
@@ -248,23 +248,85 @@ public class ImportWsdlSchemaHandler {
 			}
 			operationsDetailsPage.notifyColumnDataChanged();
 			return null;
-		} else if (obj instanceof XSDAttributeUseImpl) {
+		}else if (obj instanceof XSDAttributeUseImpl) {
 			XSDAttributeUseImpl attributeImpl = (XSDAttributeUseImpl)obj;
 			name = attributeImpl.getAttributeDeclaration().getName();
 			if( name == null ) {
 				name = attributeImpl.getAttributeDeclaration().getAliasName();
 			}
 			ns = attributeImpl.getAttributeDeclaration().getTargetNamespace();
-			if (type == ProcedureInfo.TYPE_BODY) {
-				requestInfo.addBodyColumn(requestInfo.getUniqueBodyColumnName(name), false, RuntimeTypeNames.STRING, null, ns);
-			} else {
-				requestInfo.addHeaderColumn(requestInfo.getUniqueHeaderColumnName(name), false, RuntimeTypeNames.STRING, null, ns);
-			}
+			
+			ColumnInfo columnInfo = getColumnInfoForAttribute(type, requestInfo, attributeImpl, node);
+			
+			columnInfo.addAttributeInfo(columnInfo.getXmlElement(), columnInfo.getUniqueAttributeName(name));
+
 			operationsDetailsPage.notifyColumnDataChanged();
 			return null;
 		}
 
 		return operationsDetailsPage.getSchemaLabelProvider().getText(obj);
+	}
+	
+	
+	private ColumnInfo getColumnInfoForAttribute(int type, ProcedureInfo requestInfo, XSDAttributeUse attributeUse, SchemaNode parentNode) {
+		SchemaNode parentSchemaNode =  getParentElement( parentNode);
+		if( parentSchemaNode != null ) {
+			Object parentElement = parentSchemaNode.getElement();
+			// See if columnInfo already exists
+			for( ColumnInfo info : requestInfo.getBodyColumnInfoList() ) {
+				if( parentElement == info.getXmlElement() ) {
+					return info;
+				}
+			}
+			
+			String name = null;
+			String ns = null;
+			ColumnInfo newInfo = null;
+			
+			if (parentElement instanceof XSDParticleImpl
+					&& ((XSDParticleImpl) parentElement).getContent() instanceof XSDElementDeclarationImpl) {
+				name = ((XSDElementDeclarationImpl) ((XSDParticleImpl) parentElement)
+						.getContent()).getName();
+				if (name==null){
+					name = ((XSDElementDeclarationImpl) ((XSDParticleImpl) parentElement)
+							.getContent()).getResolvedElementDeclaration().getName();
+				}
+				ns = ((XSDElementDeclarationImpl) ((XSDParticleImpl) parentElement)
+						.getContent()).getTargetNamespace();
+				if (type == ProcedureInfo.TYPE_BODY) {
+					newInfo = requestInfo.addBodyColumn(
+							requestInfo.getUniqueBodyColumnName(name), false,
+							RuntimeTypeNames.STRING, null, ns);
+					newInfo.setXmlElement(parentElement);
+				} else {
+					newInfo = requestInfo.addHeaderColumn(
+							requestInfo.getUniqueHeaderColumnName(name), false,
+							RuntimeTypeNames.STRING, null, ns);
+					newInfo.setXmlElement(parentElement);
+				}		
+				operationsDetailsPage.notifyColumnDataChanged();
+
+			} else if (parentElement instanceof XSDElementDeclarationImpl) {
+				name = ((XSDElementDeclarationImpl) parentElement).getName();
+				ns = ((XSDElementDeclarationImpl) parentElement).getTargetNamespace();
+				if (type == ProcedureInfo.TYPE_BODY) {
+					newInfo = requestInfo.addBodyColumn(
+							requestInfo.getUniqueBodyColumnName(name), false,
+							RuntimeTypeNames.STRING, null, ns);
+					newInfo.setXmlElement(parentElement);
+				} else {
+					newInfo = requestInfo.addHeaderColumn(
+							requestInfo.getUniqueHeaderColumnName(name), false,
+							RuntimeTypeNames.STRING, null, ns);
+					newInfo.setXmlElement(parentElement);
+				}
+				operationsDetailsPage.notifyColumnDataChanged();
+			}
+			
+			return newInfo;
+		}
+		
+		return null;
 	}
 	
 	public static boolean shouldCreateResponseColumn(Object obj) {
@@ -419,11 +481,11 @@ public class ImportWsdlSchemaHandler {
 
 			List<SchemaObject> elements = schemaModel.getElements();
 			
-			XSDAttributeUseImpl attributeImpl = (XSDAttributeUseImpl) obj;
+			XSDAttributeUse attributeUse = (XSDAttributeUse) obj;
 			
-			String name = attributeImpl.getAttributeDeclaration().getName();
+			String name = attributeUse.getAttributeDeclaration().getName();
 			if( name == null ) {
-				name = attributeImpl.getAttributeDeclaration().getAliasName();
+				name = attributeUse.getAttributeDeclaration().getAliasName();
 			}
 			
 			String parentElementName = null;
@@ -443,7 +505,7 @@ public class ImportWsdlSchemaHandler {
 				}
 			}
 			
-			String dTypeString = getBaseTypeString(attributeImpl);
+			String dTypeString = ImportWsdlSchemaHandler.getBaseTypeString(attributeUse);
 			
 			StringBuilder xpath = new StringBuilder();
 			String namespace = null;
@@ -513,7 +575,7 @@ public class ImportWsdlSchemaHandler {
 		return operationsDetailsPage.getSchemaLabelProvider().getText(obj);
 	}
 	
-	private String getBaseTypeString(XSDAttributeUseImpl attribute) {
+	public static String getBaseTypeString(XSDAttributeUse attribute) {
 		XSDTypeDefinition typeDef = attribute.getAttributeDeclaration().getType().getBaseType();
 		while( typeDef.getBaseType() != null && 
 				!typeDef.equals(typeDef.getBaseType()) && 
@@ -541,6 +603,7 @@ public class ImportWsdlSchemaHandler {
 		if (xtd instanceof XSDComplexTypeDefinition) {
 			rootnode.setElement(xed);
 			rootnode.setRoot(true);
+			addAttributes(index, xtd, rootnode, schemaTreeModel);
 			XSDComplexTypeDefinition complexType = (XSDComplexTypeDefinition) xtd;
 			addComplexTypeDefToTree(complexType, rootnode, true, depth++, schemaTreeModel);
 		} else if (xtd instanceof XSDSimpleTypeDefinition) {
@@ -639,11 +702,20 @@ public class ImportWsdlSchemaHandler {
 	}
 	
 	private void addAttributes(int index, Object element, SchemaNode parent, SchemaTreeModel schemaTreeModel) {
-		Object[] result = ModelUtilities.getModelContentProvider().getChildren(element);
+		Object[] result = new Object[0];
+		
+		if( element instanceof XSDComplexTypeDefinition ) {
+			result = ((XSDComplexTypeDefinition)element).getAttributeUses().toArray();
+		} else {
+			result = ModelUtilities.getModelContentProvider().getChildren(element);
+		}
 		
 		for( Object obj : result) {
 			if( obj instanceof XSDAttributeUse ) {
 				SchemaNode node = schemaTreeModel.new SchemaNode(obj, parent, null, false);
+				if (parent!=null){
+					parent.addChild(node);
+				}
 				addToSchemaMap(index++, node, schemaTreeModel);
 			}
 		}
