@@ -99,7 +99,7 @@ public class RequestSchemaContentsGroup {
 				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
 				if (selection != null && !selection.isEmpty() && selection.getFirstElement() instanceof SchemaNode) {
 					Object element = ((SchemaNode)selection.getFirstElement()).getElement();
-					if( ImportWsdlSchemaHandler.shouldCreateResponseColumn(element) ) {
+					if( ImportWsdlSchemaHandler.shouldCreateRequestColumn(element) ) {
 						createRequestColumn();
 					}
 				}

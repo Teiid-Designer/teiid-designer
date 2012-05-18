@@ -32,6 +32,7 @@ import org.eclipse.xsd.XSDWildcard;
 import org.eclipse.xsd.impl.XSDAttributeUseImpl;
 import org.eclipse.xsd.impl.XSDElementDeclarationImpl;
 import org.eclipse.xsd.impl.XSDParticleImpl;
+import org.eclipse.xsd.impl.XSDSimpleTypeDefinitionImpl;
 import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.SchemaTreeModel.SchemaNode;
 
@@ -60,7 +61,6 @@ public class ImportWsdlSchemaHandler {
 	SchemaTreeModel responseSchemaTreeModel = null;
 	SchemaNode rootnode = null;
 	int depth = 0;
-	int index = 0;
 	static int MAX_DEPTH = 1000;
 	boolean circularSchemaWarningTriggered = false;
 
@@ -329,6 +329,28 @@ public class ImportWsdlSchemaHandler {
 		return null;
 	}
 	
+	public static boolean shouldCreateRequestColumn(Object obj) {
+		if (obj instanceof XSDParticleImpl ) {
+			Object content = ((XSDParticleImpl) obj).getContent();
+			if( content instanceof XSDElementDeclarationImpl ) {
+				return ! (((XSDElementDeclaration )content).getType() instanceof XSDComplexTypeDefinition);
+			} else if( content instanceof XSDModelGroup ) {
+				return false;
+			} else {
+				return true;
+			}
+		} else if (obj instanceof XSDElementDeclarationImpl ) {
+			Object type = ((XSDElementDeclarationImpl) obj).getTypeDefinition();
+			if( type instanceof XSDSimpleTypeDefinitionImpl ) {
+				return true;
+			}
+		} else if( obj instanceof XSDAttributeUseImpl ) {
+			return true;
+		}
+		
+		return false;
+	}
+	
 	public static boolean shouldCreateResponseColumn(Object obj) {
 		if (obj instanceof XSDParticleImpl ) {
 			Object content = ((XSDParticleImpl) obj).getContent();
@@ -337,6 +359,11 @@ public class ImportWsdlSchemaHandler {
 			} else if( content instanceof XSDModelGroup ) {
 				return false;
 			} else {
+				return true;
+			}
+		} else if (obj instanceof XSDElementDeclarationImpl ) {
+			Object type = ((XSDElementDeclarationImpl) obj).getTypeDefinition();
+			if( type instanceof XSDSimpleTypeDefinitionImpl ) {
 				return true;
 			}
 		} else if( obj instanceof XSDAttributeUseImpl ) {
@@ -596,17 +623,19 @@ public class ImportWsdlSchemaHandler {
 		circularSchemaWarningTriggered = false;
 		rootnode = schemaTreeModel.new SchemaNode();
 		depth = 0;
-		index = 0;
 		XSDElementDeclaration xed = (elementDeclaration == null ? schema.resolveElementDeclaration(element) : elementDeclaration);
 		XSDTypeDefinition xtd = xed.getTypeDefinition();
 
 		if (xtd instanceof XSDComplexTypeDefinition) {
 			rootnode.setElement(xed);
 			rootnode.setRoot(true);
-			addAttributes(index, xtd, rootnode, schemaTreeModel);
+			addAttributes(xtd, rootnode, schemaTreeModel);
 			XSDComplexTypeDefinition complexType = (XSDComplexTypeDefinition) xtd;
 			addComplexTypeDefToTree(complexType, rootnode, true, depth++, schemaTreeModel);
 		} else if (xtd instanceof XSDSimpleTypeDefinition) {
+			rootnode.setElement(xed);
+			rootnode.setRoot(true);
+			addAttributes(xtd, rootnode, schemaTreeModel);
 			XSDSimpleTypeDefinition simpleType = (XSDSimpleTypeDefinition) xtd;
 			addSimpleTypeDefToTree(simpleType, rootnode, schemaTreeModel);
 		} else {
@@ -626,7 +655,7 @@ public class ImportWsdlSchemaHandler {
 			name = element.getAliasName();
 		}
 		
-		addToSchemaMap(index++, node, schemaTreeModel);
+		addToSchemaMap(node, schemaTreeModel);
 	}
 
 	private void addComplexTypeDefToTree(XSDComplexTypeDefinition complexType,
@@ -637,9 +666,9 @@ public class ImportWsdlSchemaHandler {
 		}
 		
 		XSDComplexTypeContent content = complexType.getContent();
-		addToSchemaMap(index++, node, schemaTreeModel);
+		addToSchemaMap(node, schemaTreeModel);
 		
-		addAttributes(index++, complexType, node, schemaTreeModel);
+		addAttributes(complexType, node, schemaTreeModel);
 		
 		if (content instanceof XSDSimpleTypeDefinition) {
 			XSDSimpleTypeDefinition simpleType = (XSDSimpleTypeDefinition) content;
@@ -662,7 +691,7 @@ public class ImportWsdlSchemaHandler {
 			if (parent!=null){
 				parent.addChild(node);
 			}
-			addToSchemaMap(index++, node, schemaTreeModel);
+			addToSchemaMap(node, schemaTreeModel);
 			parent=node;
 			for (XSDParticle xsdParticle : contents) {
 				addXSDParticleToTree(xsdParticle, parent, node, depth++, schemaTreeModel);
@@ -674,9 +703,9 @@ public class ImportWsdlSchemaHandler {
 				parent.addChild(node);
 			}
 			
-			addToSchemaMap(index++, node, schemaTreeModel);
+			addToSchemaMap(node, schemaTreeModel);
 			
-			addAttributes(index++, element, node, schemaTreeModel);
+			addAttributes(element, node, schemaTreeModel);
 			
 			if (element.isElementDeclarationReference()) {
 				element = element.getResolvedElementDeclaration();
@@ -703,7 +732,7 @@ public class ImportWsdlSchemaHandler {
 		}
 	}
 	
-	private void addAttributes(int index, Object element, SchemaNode parent, SchemaTreeModel schemaTreeModel) {
+	private void addAttributes(Object element, SchemaNode parent, SchemaTreeModel schemaTreeModel) {
 		Object[] result = new Object[0];
 		
 		if( element instanceof XSDComplexTypeDefinition ) {
@@ -718,18 +747,18 @@ public class ImportWsdlSchemaHandler {
 				if (parent!=null){
 					parent.addChild(node);
 				}
-				addToSchemaMap(index++, node, schemaTreeModel);
+				addToSchemaMap(node, schemaTreeModel);
 			}
 		}
 	}
 	
-	private void addToSchemaMap(int index, SchemaNode node, SchemaTreeModel schemaTreeModel) {
+	private void addToSchemaMap(SchemaNode node, SchemaTreeModel schemaTreeModel) {
 		schemaTreeModel.getNodeList().add(node);
 	}
 
 	private void addSimpleTypeDefToTree(XSDSimpleTypeDefinition simpleType,
 			SchemaNode node, SchemaTreeModel schemaTreeModel) throws ModelerCoreException {
-		schemaTreeModel.getNodeList().add(node);
+		    addToSchemaMap(node, schemaTreeModel);
 	}
 
 	private void getParentXpath(SchemaNode node, StringBuilder parentXpath, SchemaTreeModel schemaTreeModel) {
