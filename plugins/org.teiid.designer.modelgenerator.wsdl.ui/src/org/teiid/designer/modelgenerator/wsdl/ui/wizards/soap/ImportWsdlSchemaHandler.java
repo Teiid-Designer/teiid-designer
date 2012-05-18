@@ -662,6 +662,8 @@ public class ImportWsdlSchemaHandler {
 			if (parent!=null){
 				parent.addChild(node);
 			}
+			addToSchemaMap(index++, node, schemaTreeModel);
+			parent=node;
 			for (XSDParticle xsdParticle : contents) {
 				addXSDParticleToTree(xsdParticle, parent, node, depth++, schemaTreeModel);
 			}

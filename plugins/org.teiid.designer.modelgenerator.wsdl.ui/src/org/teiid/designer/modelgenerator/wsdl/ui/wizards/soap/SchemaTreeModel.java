@@ -15,6 +15,7 @@ import java.util.Stack;
 import org.eclipse.xsd.XSDElementDeclaration;
 import org.eclipse.xsd.XSDTypeDefinition;
 import org.eclipse.xsd.impl.XSDElementDeclarationImpl;
+import org.eclipse.xsd.impl.XSDModelGroupImpl;
 import org.eclipse.xsd.impl.XSDParticleImpl;
 
 public class SchemaTreeModel {
@@ -207,6 +208,7 @@ public class SchemaTreeModel {
 				return;
 			}
 			Object parentElement = parent.getElement();
+			
 			String name = null;
 			if (parentElement instanceof XSDParticleImpl
 					&& ((XSDParticleImpl) parentElement).getContent() instanceof XSDElementDeclarationImpl) {
@@ -220,6 +222,8 @@ public class SchemaTreeModel {
 			} else if (parentElement instanceof XSDElementDeclarationImpl) {
 				name = ((XSDElementDeclarationImpl) parentElement).getName();
 				stack.push("/"+name); //$NON-NLS-1$
+			} else if (parentElement instanceof XSDModelGroupImpl){
+					//fall through to getParentXpath() logic
 			} else {
 				return;
 			}
