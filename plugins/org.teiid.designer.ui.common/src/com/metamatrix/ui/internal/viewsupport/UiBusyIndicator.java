@@ -8,9 +8,9 @@
 package com.metamatrix.ui.internal.viewsupport;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * UiBusyIndicator is a copy of {@link org.eclipse.swt.custom.BusyIndicator}
@@ -54,83 +54,7 @@ public abstract class UiBusyIndicator {
 
     private static int nextBusyId = 1;
     private static final String BUSYID_NAME = "UI BusyIndicator"; //$NON-NLS-1$
-    // ===============================================================
-    /**
-     * Runs the given <code>Runnable</code> on the Display thread while providing
-     * busy feedback using this busy indicator.
-     * 
-     * @param display the display on which the busy feedback should be
-     *        displayed.  If the display is null, the Display for the current
-     *        thread will be used.  If there is no Display for the current thread,
-     *        the runnable code will be executed and no busy feedback will be displayed.
-     * @param runnable the runnable for which busy feedback is to be shown.
-     *        Must not be null.
-     * 
-    * @exception IllegalArgumentException <ul>
-     *    <li>ERROR_NULL_ARGUMENT - if the runnable is null</li>
-     * </ul>
-     */
-    public static void showWhile(Display display, final Runnable runnable) {
 
-        // ensure runnable is not null
-        if (runnable == null)
-            SWT.error(SWT.ERROR_NULL_ARGUMENT);
-        
-        // ensure we can get a valid Display object
-        if (display == null) {
-            display = Display.getCurrent();
-            if (display == null) {
-                runnable.run();
-                return;
-            }
-        }
-        
-        // ensure this method is called only on the display's event dispatch thread
-        if ( display.getThread() != Thread.currentThread() ) {
-            final Display d = display;
-            display.syncExec(new Runnable() {
-                public void run() {
-                    showWhile(d, runnable);
-                }
-            });
-            return;
-        }
-    
-        Integer busyId = new Integer(nextBusyId);
-        nextBusyId++;
-        Cursor cursor = new Cursor(display, SWT.CURSOR_WAIT);
-    
-        
-        Shell[] shells = display.getShells();
-        for (int i = 0; i < shells.length; i++) {
-            Integer id = (Integer)shells[i].getData(BUSYID_NAME);
-            if (id == null) {
-                shells[i].setCursor(cursor);
-                shells[i].setData(BUSYID_NAME, busyId);
-            }
-        }
-        
-        try {
-            if ( display.getThread() == Thread.currentThread() ) {
-                runnable.run();
-            } else {
-                display.syncExec(runnable);
-            }
-        } finally {
-            shells = display.getShells();
-            for (int i = 0; i < shells.length; i++) {
-                Integer id = (Integer)shells[i].getData(BUSYID_NAME);
-                if (busyId.equals(id)) {
-                    shells[i].setCursor(null);
-                    shells[i].setData(BUSYID_NAME, null);
-                }
-            }
-            if (!cursor.isDisposed()) {
-                cursor.dispose();
-            }
-        }
-    }
-    // =======================================================
     /**
      * Runs the given <code>Runnable</code> on the Display thread while
      * providing busy feedback using this busy indicator.
@@ -155,43 +79,44 @@ public abstract class UiBusyIndicator {
      *                <li>ERROR_NULL_ARGUMENT - if the runnable is null</li>
      *                </ul>
      */
-//    public static synchronized void showWhile(Display display,
-//            final Runnable runnable) {
-//        // ensure runnable is not null
-//        if (runnable == null)
-//            SWT.error(SWT.ERROR_NULL_ARGUMENT);
-//        
-//        // ensure we can get a valid Display object
-//        if (display == null) {
-//            display = Display.getCurrent() != null ? Display.getCurrent()
-//                    : Display.getDefault();
-//            if (display == null) {
-//                // This just should not happen ...
-//                runnable.run();
-//                return;
-//            }
-//        }
-//
-//        /*
-//         * ensure this method is called only on the display's event dispatch
-//         * thread
-//         */
-//        if (display.getThread() != Thread.currentThread()) {
-//            final Display d = display;
-//            display.syncExec(new Runnable() {
-//                @Override
-//                public void run() {
-//                    showWhileInternal(d, runnable);
-//                }
-//            });
-//        }
-//        else {
-//            showWhileInternal(display, runnable);
-//        }
-//    }
+    public static synchronized void showWhile(Display display,
+            final Runnable runnable) {
+        // ensure runnable is not null
+        if (runnable == null)
+            SWT.error(SWT.ERROR_NULL_ARGUMENT);
+
+        // ensure we can get a valid Display object
+        if (display == null) {
+            display = Display.getCurrent() != null ? Display.getCurrent()
+                    : Display.getDefault();
+            if (display == null) {
+                // This just should not happen ...
+                runnable.run();
+                return;
+            }
+        }
+
+        /*
+         * ensure this method is called only on the display's event dispatch
+         * thread
+         */
+        if (display.getThread() != Thread.currentThread()) {
+            final Display d = display;
+            display.syncExec(new Runnable() {
+                @Override
+                public void run() {
+                    showWhileInternal(d, runnable);
+                }
+            });
+            return;
+        }
+        else {
+            showWhileInternal(display, runnable);
+        }
+    }
 
     /**
-     * Internal method that change the cursor to WAITING, executies the runnable
+     * Internal method that change the cursor to WAITING, executes the runnable
      * and changes the cursor back again. Unlike
      * {@link org.eclipse.swt.custom.BusyIndicator}, the
      * {@link #executeRunnable(Display, Runnable, RunnableStatus)} will allow
@@ -202,6 +127,19 @@ public abstract class UiBusyIndicator {
      */
     private static void showWhileInternal(Display display,
             final Runnable runnable) {
+
+        if (PlatformUI.getWorkbench().isStarting()) {
+            /*
+             * Need to avoid calling executeRunnable on startup since it creates
+             * a new thread and uses display.syncExec. Since this thread is
+             * non-priveleged, the syncExec gets blocked until startup has
+             * completed. However, if showWhile() was called from a privileged
+             * startup thread that requires this to complete, a deadlock can
+             * result. Thus, we avoid this by simply running the runnable.
+             */
+            runnable.run();
+            return;
+        }
 
         Integer busyId = new Integer(nextBusyId);
         nextBusyId++;
@@ -239,10 +177,19 @@ public abstract class UiBusyIndicator {
      * and after the work, allowing the cursor icon to properly change to its
      * WAITING version.
      * 
+     * This method should NOT be allowed to execute while eclipse is starting up
+     * since the display.syncExec in its child thread can cause deadlocks and
+     * eclipse will hang. This is guarded against in
+     * {@link #showWhileInternal(Display, Runnable)}.
+     * 
      * @param runnable
      */
     private static void executeRunnable(final Display display,
             final Runnable runnable, final RunnableStatus runnableStatus) {
+
+        String threadName = UiBusyIndicator.class.getName()
+                + " runnable parent thread"; //$NON-NLS-1$
+
         Thread thread = new Thread(new Runnable() {
 
             @Override
@@ -269,8 +216,9 @@ public abstract class UiBusyIndicator {
                     }
                 });
             }
-        });
+        }, threadName);
 
+        thread.setDaemon(true);
         thread.start();
 
         while (!runnableStatus.isDone() && !shellsDisposed(display)) {
