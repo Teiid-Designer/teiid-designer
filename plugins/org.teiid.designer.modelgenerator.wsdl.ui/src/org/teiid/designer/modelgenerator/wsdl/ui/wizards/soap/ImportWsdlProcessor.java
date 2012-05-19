@@ -64,6 +64,7 @@ public class ImportWsdlProcessor {
 	public static final RelationalFactory factory = RelationalFactory.eINSTANCE;
 	public static final DatatypeManager datatypeManager = ModelerCore.getWorkspaceDatatypeManager();
 	public static final int DEFAULT_STRING_LENGTH = 4000;
+
 	
 	WSDLImportWizardManager importManager;
 	ModelResource sourceModel;
@@ -379,6 +380,7 @@ public class ImportWsdlProcessor {
     }
     
     public void createViewRequestProcedure(ModelResource modelResource, RequestInfo info) throws ModelerCoreException {
+    	final EObject STRING_DATATYPE = datatypeManager.findDatatype("string"); //$NON-NLS-1$
     	
     	// Create a Procedure using the text file name
     	Procedure procedure = factory.createProcedure();
@@ -412,6 +414,13 @@ public class ImportWsdlProcessor {
     			parameter.setLength(DEFAULT_STRING_LENGTH);
     		}
     		parameter.setProcedure(procedure);
+    		for( AttributeInfo attrInfo : columnInfo.getAttributeInfoArray() ) {
+        		ProcedureParameter attributeParam = factory.createProcedureParameter();
+        		attributeParam.setName(attrInfo.getName());
+        		attributeParam.setType(STRING_DATATYPE);
+        		attributeParam.setLength(DEFAULT_STRING_LENGTH);
+        		attributeParam.setProcedure(procedure);
+    		}
     	}
     	
     	ProcedureResult result = factory.createProcedureResult();
@@ -486,6 +495,8 @@ public class ImportWsdlProcessor {
     }
     
     private void createViewWrapperProcedure(ModelResource modelResource, ProcedureGenerator generator) throws ModelerCoreException {
+    	final EObject STRING_DATATYPE = datatypeManager.findDatatype("string"); //$NON-NLS-1$
+    	
     	// Create a Procedure using the text file name
     	Procedure procedure = factory.createProcedure();
     	procedure.setName(generator.getWrapperProcedureName());
@@ -516,6 +527,14 @@ public class ImportWsdlProcessor {
         		}
     		}
     		parameter.setProcedure(procedure);
+    		
+    		for( AttributeInfo attrInfo : columnInfo.getAttributeInfoArray() ) {
+        		ProcedureParameter attributeParam = factory.createProcedureParameter();
+        		attributeParam.setName(attrInfo.getName());
+        		attributeParam.setType(STRING_DATATYPE);
+        		attributeParam.setLength(DEFAULT_STRING_LENGTH);
+        		attributeParam.setProcedure(procedure);
+    		}
     	}
     	
     	

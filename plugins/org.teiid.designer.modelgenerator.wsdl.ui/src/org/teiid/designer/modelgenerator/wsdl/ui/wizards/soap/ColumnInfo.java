@@ -333,7 +333,7 @@ public class ColumnInfo implements ModelGeneratorWsdlUiConstants {
 	}
 	
 	public void addAttributeInfo(Object xmlElement, String name) {
-		this.attributeInfoList.add(new AttributeInfo(xmlElement, name));
+		this.attributeInfoList.add(new AttributeInfo(xmlElement, name, this));
 		validate();
 	}
 	

@@ -532,7 +532,12 @@ public class ImportWsdlSchemaHandler {
 				}
 			}
 			
-			String dTypeString = ImportWsdlSchemaHandler.getBaseTypeString(attributeUse);
+			String dTypeString = attributeUse.getAttributeDeclaration().getType().getAliasName();
+			if( dTypeString.equalsIgnoreCase("integer") ) { //$NON-NLS-1$
+				dTypeString = "biginteger"; //$NON-NLS-1$
+			} else if( dTypeString.equalsIgnoreCase("decimal") ) { //$NON-NLS-1$
+				dTypeString = "bigdecimal"; //$NON-NLS-1$
+			}
 			
 			StringBuilder xpath = new StringBuilder();
 			String namespace = null;
@@ -629,7 +634,6 @@ public class ImportWsdlSchemaHandler {
 		if (xtd instanceof XSDComplexTypeDefinition) {
 			rootnode.setElement(xed);
 			rootnode.setRoot(true);
-			addAttributes(xtd, rootnode, schemaTreeModel);
 			XSDComplexTypeDefinition complexType = (XSDComplexTypeDefinition) xtd;
 			addComplexTypeDefToTree(complexType, rootnode, true, depth++, schemaTreeModel);
 		} else if (xtd instanceof XSDSimpleTypeDefinition) {

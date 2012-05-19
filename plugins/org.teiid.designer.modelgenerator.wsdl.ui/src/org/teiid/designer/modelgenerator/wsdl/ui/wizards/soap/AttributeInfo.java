@@ -22,7 +22,12 @@ public class AttributeInfo implements ModelGeneratorWsdlUiConstants {
     /**
      * The unique attribute name (never <code>null</code> or empty).
      */
-	private String name; 
+	private String name;
+	
+	/**
+     * The unique alias name (never <code>null</code> or empty).
+     */
+	private String alias; 
 	
 	/**
      * The xml element
@@ -30,25 +35,32 @@ public class AttributeInfo implements ModelGeneratorWsdlUiConstants {
 	private Object xmlElement;
 	
 	/**
+     * The xml element
+     */
+	private ColumnInfo columnInfo;
+	
+	/**
 	 * Current <code>IStatus</code> representing the state of the input values for this instance of
-	 * <code>TeiidColumnInfo</code>
+	 * <code>AttributeInfo</code>
 	 */
 	private IStatus status;
 	
 	/**
 	 * 
-	 * @param name the column name (never <code>null</code> or empty).
+	 * @param name the attribute name (never <code>null</code> or empty).
 	 */
-	public AttributeInfo(Object xmlElement, String name) {
+	public AttributeInfo(Object xmlElement, String name, ColumnInfo columnInfo) {
 		super();
 		this.xmlElement = xmlElement;
 		this.name = name;
+		this.alias = name;
+		this.columnInfo = columnInfo;
 		validate();
 	}
 
 	/**
 	 * 
-	 * @return name the column name
+	 * @return name the attribute name
 	 */
 	public String getName() {
 		return this.name;
@@ -64,6 +76,30 @@ public class AttributeInfo implements ModelGeneratorWsdlUiConstants {
 		validate();
 	}
 	
+	/**
+	 * 
+	 * @return name the attribute alias
+	 */
+	public String getAlias() {
+		return this.alias;
+	}
+
+	/**
+	 * 
+	 * @param name the attribute alias (never <code>null</code> or empty).
+	 */
+	public void setAlias(String name) {
+		CoreArgCheck.isNotNull(name, "alias is null"); //$NON-NLS-1$
+		this.alias = name;
+		validate();
+	}
+	
+	public String getSignature() {
+		StringBuffer sb = new StringBuffer();
+		sb.append(getAlias()).append(" [").append(getName()).append(']'); //$NON-NLS-1$
+		return sb.toString();
+	}
+	
 	public void setXmlElement(Object element) {
 		this.xmlElement = element;
 	}
@@ -74,6 +110,14 @@ public class AttributeInfo implements ModelGeneratorWsdlUiConstants {
 	 */
 	public Object getXmlElement() {
 		return this.xmlElement;
+	}
+	
+	/**
+	 * 
+	 * @return name the attribute alias
+	 */
+	public ColumnInfo getColumnInfo() {
+		return this.columnInfo;
 	}
 
 	/**
@@ -96,7 +140,13 @@ public class AttributeInfo implements ModelGeneratorWsdlUiConstants {
 
 		String result = nameValidator.checkValidName(getName());
 		if( result != null ) {
-			setStatus(new Status(IStatus.ERROR, PLUGIN_ID, Messages.InvalidColumnName + getName()));
+			setStatus(new Status(IStatus.ERROR, PLUGIN_ID, Messages.InvalidAttributeName + getName()));
+			return;
+		}
+		
+		result = nameValidator.checkValidName(getAlias());
+		if( result != null ) {
+			setStatus(new Status(IStatus.ERROR, PLUGIN_ID, Messages.InvalidAttributeAliasName + getAlias()));
 			return;
 		}
 		
@@ -114,7 +164,8 @@ public class AttributeInfo implements ModelGeneratorWsdlUiConstants {
     public String toString() {
         StringBuilder text = new StringBuilder();
         text.append("AttributeInfo: "); //$NON-NLS-1$
-        text.append("name =").append(getName()); //$NON-NLS-1$
+        text.append("  name =").append(getName()); //$NON-NLS-1$
+        text.append("  alias =").append(getAlias()); //$NON-NLS-1$
 
         return text.toString();
     }

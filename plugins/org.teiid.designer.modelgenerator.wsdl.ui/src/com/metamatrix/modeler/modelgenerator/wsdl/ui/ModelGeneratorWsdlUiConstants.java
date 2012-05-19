@@ -83,6 +83,8 @@ public interface ModelGeneratorWsdlUiConstants {
         String COLUMN_ICON = OBJ16   + "column.gif"; //$NON-NLS-1$
         
         String XSD_COMPLEX_ELEMENT_ICON = OBJ16 + "xsd-complex-element.gif"; //$NON-NLS-1$
+        String XSD_ELEMENT_ICON = OBJ16 + "xsd-element.gif"; //$NON-NLS-1$
+        String XSD_ATTRIBUTE_ICON = OBJ16 + "xsd-attribute.gif"; //$NON-NLS-1$
     }
     
     /**

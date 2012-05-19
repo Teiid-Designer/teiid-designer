@@ -128,7 +128,7 @@ public class ProcedureGenerator implements SqlConstants {
 	
 	public String getViewModelName() {
 		String fullName = this.importManager.getViewModelName();
-		if( fullName.toUpperCase().endsWith(".XMI") ) {
+		if( fullName.toUpperCase().endsWith(".XMI") ) { //$NON-NLS-1$
 			// remove XMI
 			int endIndex = fullName.length() - 4;
 			return fullName.substring(0, endIndex);
@@ -278,6 +278,18 @@ public class ProcedureGenerator implements SqlConstants {
     			sb.append(COMMA).append(SPACE);
     		}
     		i++;
+    		int nAttributes = columnInfo.getAttributeInfoArray().length;
+    		if( nAttributes > 0 ) {
+    			int index = 0;
+    			sb.append(COMMA).append(SPACE);
+    			for( AttributeInfo attrInfo : columnInfo.getAttributeInfoArray() ) {
+        			sb.append(getParameterFullName(attrInfo.getName()));
+    				if( nAttributes > 1 && index < nAttributes - 1) {
+    					sb.append(COMMA).append(SPACE);
+    				}
+    				index++;
+    			}
+    		}
     	}
     	sb.append(R_PAREN).append(RETURN);
     	
@@ -474,11 +486,23 @@ public class ProcedureGenerator implements SqlConstants {
     		nColumns = getRequestInfo().getBodyColumnInfoList().length;
     		if (hColumns>0) sb.append(COMMA);
     		for ( ColumnInfo columnInfo : getRequestInfo().getBodyColumnInfoList() ) {
+    			int nAttributes = columnInfo.getAttributeInfoArray().length;
     			sb.append(TAB4).append(getWrapperProcedureParameterName(convertSqlNameSegment(columnInfo.getName())));
         		if(i < (nColumns-1)) {
         			sb.append(COMMA).append(SPACE).append(RETURN);
         		}
         		i++;
+        		if( nAttributes > 0 ) {
+        			int index = 0;
+        			sb.append(COMMA).append(SPACE);
+        			for( AttributeInfo attrInfo : columnInfo.getAttributeInfoArray() ) {
+            			sb.append(TAB4).append(getWrapperProcedureParameterName(convertSqlNameSegment(attrInfo.getName())));
+        				if( nAttributes > 1 && index < nAttributes - 1) {
+        					sb.append(COMMA).append(SPACE);
+        				}
+        				index++;
+        			}
+        		}
     		}
     	}
     	sb.append(R_PAREN);

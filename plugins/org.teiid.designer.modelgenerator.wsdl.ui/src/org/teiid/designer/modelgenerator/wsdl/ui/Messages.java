@@ -50,6 +50,8 @@ public class Messages  extends NLS {
     public static String Header_upper_case;
     
     public static String ImportOptions;
+    public static String InvalidAttributeName;
+    public static String InvalidAttributeAliasName;
     public static String InvalidColumnName;
     public static String InvalidSelectedSchemaObject;
     public static String InvalidSelectedSchemaObject_column_msg;

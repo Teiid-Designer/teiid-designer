@@ -150,7 +150,9 @@ public class RequestInfo extends ProcedureInfo {
 	    		sb.append(TAB).append(TAB).append(TAB).append(XMLELEMENT);
 	    		sb.append(L_PAREN);
 	    		sb.append(NAME).append(SPACE).append(getGenerator().convertSqlNameSegment(name));
-	    		sb.append(COMMA).append(SPACE).append(getFullParameterName(requestProcedureName, name));
+	    		if( columnInfo.getAttributeInfoArray().length == 0 ) {
+	    			sb.append(COMMA).append(SPACE).append(getFullParameterName(requestProcedureName, name));
+	    		}
 	    		
 	    		addAttributesForElement(sb, columnInfo);
 	    		
@@ -173,17 +175,21 @@ public class RequestInfo extends ProcedureInfo {
 	
 	private void addAttributesForElement(StringBuffer sb, ColumnInfo columnInfo) {
 		if( columnInfo.getAttributeInfoArray().length > 0 ) {
-			sb.append(RETURN).append(TAB).append(TAB).append(TAB).append(TAB).append(XMLATTRIBUTES);
+			sb.append(COMMA).append(RETURN).append(TAB).append(TAB).append(TAB).append(TAB).append(XMLATTRIBUTES);
 			sb.append(L_PAREN);
 			int index = 0;
 			for( AttributeInfo attrInfo : columnInfo.getAttributeInfoArray() ) {
 				if( index > 0 ) {
 					sb.append(COMMA).append(SPACE);
 				}
-				sb.append(attrInfo.getName()).append(SPACE).append(AS).append(SPACE);
-				sb.append(S_QUOTE).append(attrInfo.getName()).append(S_QUOTE);
+				sb.append(attrInfo.getName());
+				if( !attrInfo.getName().equalsIgnoreCase(attrInfo.getAlias())) {
+					sb.append(SPACE).append(AS).append(SPACE);
+					sb.append(attrInfo.getAlias());
+				}
 				index++;
 			}
+			sb.append(R_PAREN);
 		}
 	}
 	
