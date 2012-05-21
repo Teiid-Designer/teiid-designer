@@ -14,6 +14,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.osgi.util.NLS;
 import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
 
 import com.metamatrix.core.util.CoreArgCheck;
@@ -374,6 +375,13 @@ public class ColumnInfo implements ModelGeneratorWsdlUiConstants {
 		String result = nameValidator.checkValidName(getName());
 		if( result != null ) {
 			setStatus(new Status(IStatus.ERROR, PLUGIN_ID, Messages.InvalidColumnName + getName()));
+			return;
+		}
+		
+		// Check Datatypes
+		if( !ImportManagerValidator.isValidDatatype(getDatatype())) {
+			setStatus(new Status(IStatus.ERROR, PLUGIN_ID, 
+					NLS.bind(Messages.InvalidDatatype_0_ForColumn_1, getDatatype(), getName())));
 			return;
 		}
 		

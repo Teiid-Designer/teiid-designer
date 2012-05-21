@@ -274,10 +274,7 @@ public class ProcedureGenerator implements SqlConstants {
     		String name = columnInfo.getName();
     		sb.append(getParameterFullName(name));
     		
-    		if(i < (nColumns-1)) {
-    			sb.append(COMMA).append(SPACE);
-    		}
-    		i++;
+
     		int nAttributes = columnInfo.getAttributeInfoArray().length;
     		if( nAttributes > 0 ) {
     			int index = 0;
@@ -290,6 +287,11 @@ public class ProcedureGenerator implements SqlConstants {
     				index++;
     			}
     		}
+    		
+    		if(i < (nColumns-1)) {
+    			sb.append(COMMA).append(SPACE);
+    		}
+    		i++;
     	}
     	sb.append(R_PAREN).append(RETURN);
     	

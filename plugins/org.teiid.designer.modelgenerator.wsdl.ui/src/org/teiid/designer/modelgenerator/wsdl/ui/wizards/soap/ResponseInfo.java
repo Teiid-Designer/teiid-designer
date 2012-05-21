@@ -73,12 +73,11 @@ public class ResponseInfo extends ProcedureInfo {
 		}
 
 		// Look at all element xpaths
-		// for( ColumnInfo info : getColumnInfoList() ) {
-		// info.getRelativePath()
-		// if( colNameStatus.getSeverity() > IStatus.INFO) {
-		// return colNameStatus;
-		// }
-		// }
+		 for( ColumnInfo info : getBodyColumnInfoList() ) {
+			 if( info.getStatus().getSeverity() > IStatus.INFO) {
+				 return info.getStatus();
+			 }
+		 }
 		
 		setChanged(false);
 		return status;

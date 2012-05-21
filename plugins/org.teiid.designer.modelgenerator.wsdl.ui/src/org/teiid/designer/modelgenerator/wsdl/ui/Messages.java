@@ -53,6 +53,7 @@ public class Messages  extends NLS {
     public static String InvalidAttributeName;
     public static String InvalidAttributeAliasName;
     public static String InvalidColumnName;
+    public static String InvalidDatatype_0_ForColumn_1;
     public static String InvalidSelectedSchemaObject;
     public static String InvalidSelectedSchemaObject_column_msg;
     public static String InvalidSelectedSchemaObject_element_msg;
