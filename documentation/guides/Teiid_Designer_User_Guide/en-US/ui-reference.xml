@@ -2853,19 +2853,6 @@
 							<listitem>
 								<para><inlinemediaobject>
 										<imageobject>
-											<imagedata fileref="images/icons/relationship-search-page.png"/>
-										</imageobject>
-									</inlinemediaobject> <emphasis role="bold">Relationship...</emphasis> - Launches the 
-									Search dialog and auto-selects the Relationships tab.  User can search for models in the workspace 
-									by specifying a relationship type, participant locations, and/or names containing sprcified
-									text.  Search results appear in 
-									the <xref linkend="search-results-view" /> view, 
-									and double-clicking a result will open that model in the appropriate editor.
-								</para>
-							</listitem>
-							<listitem>
-								<para><inlinemediaobject>
-										<imageobject>
 											<imagedata fileref="images/icons/search-transformation.png"/>
 										</imageobject>
 									</inlinemediaobject> <emphasis role="bold">Transformations...</emphasis> - Launches the 
