@@ -7,7 +7,6 @@
  */
 package org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.panels;
 
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ILabelProvider;
@@ -109,9 +108,9 @@ public class EditElementsPanel {
 		this.columnsViewer.getTree().addMouseListener(new MouseAdapter() {
             @Override
             public void mouseDown( MouseEvent theEvent ) {
-                if (theEvent.button == 3) {
-                    if (isTextEditorActive()) {
-                        saveChangesAndDispose((EObject)getSelectedObject());
+                if (theEvent.button == 1 ) {
+                    if (isTextEditorActive() && selectedObject != null) {
+                        saveChangesAndDispose((AttributeInfo)selectedObject);
                     }
                 }
             }
