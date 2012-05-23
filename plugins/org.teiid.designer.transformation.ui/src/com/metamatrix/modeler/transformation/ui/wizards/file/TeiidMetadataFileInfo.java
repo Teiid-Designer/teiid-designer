@@ -909,7 +909,7 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants 
     			sb.append(SPACE).append(Integer.toString(getHeaderLineNumber()));
     		}
     	}
-    	if( doIncludeSkip() && getFirstDataRow() > 1 ) {
+    	if( getFirstDataRow() > 1 && (doIncludeSkip() || this.isFixedWidthColumns()) ) {
     		sb.append(SPACE).append("SKIP"); //$NON-NLS-1$
     		sb.append(SPACE).append(Integer.toString(getFirstDataRow()-1));
     	}
