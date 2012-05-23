@@ -191,13 +191,13 @@ public interface AdvisorUiConstants {
 		String NEW_MODEL_RELATIONAL_SOURCE = "Create new relational model. Options include empty model or copy from existing source model";  //$NON-NLS-1$
 		String NEW_MODEL_RELATIONAL_VIEW = "Create new relational view model. Options include empty model, copy from existing or by transforming" + //$NON-NLS-1$
 				" from existing relational model";  //$NON-NLS-1$
-		String NEW_MODEL_WS = "org.teiid.designer.newModelWSCommand";  //$NON-NLS-1$
-		String NEW_MODEL_XML_DOC = "org.teiid.designer.newModelXmlDocCommand";  //$NON-NLS-1$
-		String NEW_MODEL_MED = "org.teiid.designer.newModelMEDCommand";  //$NON-NLS-1$
+		String NEW_MODEL_WS = "Create new web services view model";  //$NON-NLS-1$
+		String NEW_MODEL_XML_DOC = "Crate new XML document view model";  //$NON-NLS-1$
+		String NEW_MODEL_MED = "Create new Model Extension Definition";  //$NON-NLS-1$
 		
-        String NEW_OBJECT_BASE_TABLE = "org.teiid.designer.newObjectBaseTable"; //$NON-NLS-1$
-        String NEW_OBJECT_VIEW_TABLE = "org.teiid.designer.newObjectViewTable"; //$NON-NLS-1$
-		String NEW_OBJECT_SOURCE_FUNCTION = "org.teiid.designer.newObjectSourceFunction";  //$NON-NLS-1$
+        String NEW_OBJECT_BASE_TABLE = "Create new relational table"; //$NON-NLS-1$
+        String NEW_OBJECT_VIEW_TABLE = "Create new relational view table"; //$NON-NLS-1$
+		String NEW_OBJECT_SOURCE_FUNCTION = "Create new relational source function";  //$NON-NLS-1$
 		
 		String CREATE_CONNECTION_JDBC = "Create connection profile for JDBC source"; //$NON-NLS-1$
 		String CREATE_CONNECTION_FLAT_FILE = "Create connection profile for local flat file source"; //$NON-NLS-1$
@@ -209,7 +209,7 @@ public interface AdvisorUiConstants {
 		String CREATE_CONNECTION_WEB_SERVICE = "Create a NON-SOAP Web Services connection profile"; //$NON-NLS-1$
 		String CREATE_CONNECTION_WEB_SERVICE_ODA = "Create an ODA Web Services connection profile"; //$NON-NLS-1$
 		
-		String GENERATE_WS_MODELS_FROM_WSDL = "org.teiid.designer.generatewsmodelsfromwsdl";  //$NON-NLS-1$
+		String GENERATE_WS_MODELS_FROM_WSDL = "Generate source and view models to access data from your web service. ";  //$NON-NLS-1$
 		String OPEN_DATA_SOURCE_EXPLORER_VIEW = "Open Datatools' Data Source Explorer view"; //$NON-NLS-1$
 		
 		String NEW_TEIID_MODEL_PROJECT = "Create new Teiid Model Project"; //$NON-NLS-1$
