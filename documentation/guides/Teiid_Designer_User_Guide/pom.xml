@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	
 	<modelVersion>4.0.0</modelVersion>
@@ -244,4 +245,14 @@
 			</plugins>
 		</pluginManagement>
 	</build>
+
+	<pluginRepositories>
+		<pluginRepository>
+			<id>JBoss Repo</id>
+			<url>https://repository.jboss.org/nexus/content/groups/public-jboss</url>
+			<name>JBoss Repo</name>
+		</pluginRepository>   
+	</pluginRepositories>
+
 </project>
+
