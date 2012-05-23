@@ -1419,8 +1419,15 @@ FROM
 							<listitem>
 								<para><emphasis role="bold">Step 3 </emphasis> - Input a valid name for your 
 									<emphasis role="bold">Web Service</emphasis> model and select the 
-									<emphasis role="bold">URL...</emphasis> button. Enter a valid WSDL URL in the 
-									dialog click <emphasis role="bold">OK></emphasis>. 
+									<emphasis role="bold">URL...</emphasis> button.
+                                    <itemizedlist>
+                                        <listitem>Enter a valid WSDL URL. If the URL cannot be validated then an error will be displayed and the <emphasis role="bold">OK></emphasis> button disabled.</listitem>
+                                        <listitem>
+                                            If the WSDL is protected by basic HTTP authentication then this option should be selected and
+                                            the appropriate username and password entered.
+                                        </listitem>
+                                        <listitem>Click <emphasis role="bold">OK></emphasis> to continue.</listitem>
+                                    </itemizedlist>
 									Click <emphasis role="bold">Next></emphasis> to continue.</para>
 								<figure>
 									<title>WSDL URL Dialog</title>

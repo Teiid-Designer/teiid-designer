@@ -604,7 +604,7 @@
 
 
 		<para>A connection profile  provides the connectivity to a data source and is 
-			defined by the DTP framework. Designer utilizes this framework from withing 
+			defined by the DTP framework. Designer utilizes this framework from within
 			it's JDBC Importer.
 		</para>
 			
