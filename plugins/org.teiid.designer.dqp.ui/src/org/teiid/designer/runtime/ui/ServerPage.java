@@ -9,6 +9,10 @@ package org.teiid.designer.runtime.ui;
 
 import static com.metamatrix.modeler.dqp.ui.DqpUiConstants.PLUGIN_ID;
 import static com.metamatrix.modeler.dqp.ui.DqpUiConstants.UTIL;
+
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -17,7 +21,8 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.BusyIndicator;
-import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.FocusAdapter;
+import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -246,14 +251,9 @@ public final class ServerPage extends WizardPage implements HostProvider {
             text.setToolTipText(UTIL.getString("serverPageHostNameTooltip")); //$NON-NLS-1$
             text.setText(this.host);
 
-            text.addModifyListener(new ModifyListener() {
-                /**
-                 * {@inheritDoc}
-                 * 
-                 * @see org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.swt.events.ModifyEvent)
-                 */
+            text.addFocusListener(new FocusAdapter() {
                 @Override
-                public void modifyText( ModifyEvent e ) {
+                public void focusLost(FocusEvent e) {
                     handleHostModified(((Text) e.widget).getText());
                 }
             });
@@ -283,14 +283,9 @@ public final class ServerPage extends WizardPage implements HostProvider {
             txtCustomLabel.setEnabled(this.useCustomLabel);
             txtCustomLabel.setText((this.customLabel == null) ? "" : this.customLabel); //$NON-NLS-1$
 
-            txtCustomLabel.addModifyListener(new ModifyListener() {
-                /**
-                 * {@inheritDoc}
-                 * 
-                 * @see org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.swt.events.ModifyEvent)
-                 */
+            txtCustomLabel.addFocusListener(new FocusAdapter() {
                 @Override
-                public void modifyText( ModifyEvent e ) {
+                public void focusLost(FocusEvent e) {
                     handleCustomLabelModified(((Text) e.widget).getText());
                 }
             });
@@ -332,14 +327,9 @@ public final class ServerPage extends WizardPage implements HostProvider {
                 text.setText(this.adminPort);
             }
 
-            text.addModifyListener(new ModifyListener() {
-                /**
-                 * {@inheritDoc}
-                 * 
-                 * @see org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.swt.events.ModifyEvent)
-                 */
+            text.addFocusListener(new FocusAdapter() {
                 @Override
-                public void modifyText( ModifyEvent e ) {
+                public void focusLost(FocusEvent e) {
                     handleAdminPortModified(((Text) e.widget).getText());
                 }
             });
@@ -365,16 +355,11 @@ public final class ServerPage extends WizardPage implements HostProvider {
                 text.setText(this.adminUsername);
             }
 
-            text.addModifyListener(new ModifyListener() {
-                /**
-                 * {@inheritDoc}
-                 * 
-                 * @see org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.swt.events.ModifyEvent)
-                 */
-                @Override
-                public void modifyText( ModifyEvent e ) {
-                    handleAdminUserModified(((Text) e.widget).getText());
-                }
+            text.addFocusListener(new FocusAdapter() {
+            	@Override
+            	public void focusLost(FocusEvent e) {
+            		handleAdminUserModified(((Text) e.widget).getText());
+            	}
             });
 
             {
@@ -399,15 +384,9 @@ public final class ServerPage extends WizardPage implements HostProvider {
                 text.setText(this.adminPassword);
             }
 
-            // listener for when value changes
-            text.addModifyListener(new ModifyListener() {
-                /**
-                 * {@inheritDoc}
-                 * 
-                 * @see org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.swt.events.ModifyEvent)
-                 */
+            text.addFocusListener(new FocusAdapter() {
                 @Override
-                public void modifyText( ModifyEvent e ) {
+                public void focusLost(FocusEvent e) {
                     handleAdminPasswordModified(((Text) e.widget).getText());
                 }
             });
@@ -559,14 +538,14 @@ public final class ServerPage extends WizardPage implements HostProvider {
                 text.setText(this.jdbcPort);
             }
 
-            text.addModifyListener(new ModifyListener() {
+            text.addFocusListener(new FocusAdapter() {
                 /**
                  * {@inheritDoc}
                  * 
                  * @see org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.swt.events.ModifyEvent)
                  */
                 @Override
-                public void modifyText( ModifyEvent e ) {
+                public void focusLost(FocusEvent e) {
                     handleJdbcPortModified(((Text) e.widget).getText());
                 }
             });
@@ -591,14 +570,9 @@ public final class ServerPage extends WizardPage implements HostProvider {
                 text.setText(this.jdbcUsername);
             }
 
-            text.addModifyListener(new ModifyListener() {
-                /**
-                 * {@inheritDoc}
-                 * 
-                 * @see org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.swt.events.ModifyEvent)
-                 */
-                @Override
-                public void modifyText( ModifyEvent e ) {
+            text.addFocusListener(new FocusAdapter() {
+            	@Override
+                public void focusLost(FocusEvent e) {
                     handleJdbcUserModified(((Text) e.widget).getText());
                 }
             });
@@ -626,14 +600,9 @@ public final class ServerPage extends WizardPage implements HostProvider {
             }
 
             // listener for when value changes
-            text.addModifyListener(new ModifyListener() {
-                /**
-                 * {@inheritDoc}
-                 * 
-                 * @see org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.swt.events.ModifyEvent)
-                 */
+            text.addFocusListener(new FocusAdapter() {
                 @Override
-                public void modifyText( ModifyEvent e ) {
+                public void focusLost(FocusEvent e) {
                     handleJdbcPasswordModified(((Text) e.widget).getText());
                 }
             });
@@ -768,6 +737,15 @@ public final class ServerPage extends WizardPage implements HostProvider {
     void handleAutoConnect() {
         this.autoConnect = this.btnAutoConnectOnFinish.getSelection();
     }
+    
+    /**
+     * @param oldValue
+     * @param newValue
+     * @return
+     */
+    private boolean valueChanged(String oldValue, String newValue) {
+    	return oldValue == null || ! oldValue.equals(newValue);
+    }
 
     /**
      * Handler for when the password control value is modified
@@ -775,6 +753,9 @@ public final class ServerPage extends WizardPage implements HostProvider {
      * @param newPassword the new password value
      */
     void handleAdminPasswordModified( String newPassword ) {
+    	if (! valueChanged(this.adminPassword, newPassword)) {
+    		return;
+    	}
         this.adminPassword = newPassword;
         this.localAdminInfo.setPassword(newPassword);
         updateState();
@@ -793,12 +774,19 @@ public final class ServerPage extends WizardPage implements HostProvider {
      * @param newPort the new host value
      */
     void handleAdminPortModified( String newPort ) {
-        this.adminPort = newPort;
+    	if (! valueChanged(this.adminPort, newPort)) {
+    		return;
+    	}
+    	
+    	this.adminPort = newPort;
         this.localAdminInfo.setPort(newPort);
         updateState();
     }
 
     void handleCustomLabelModified( String newCustomLabel ) {
+    	if (! valueChanged(this.customLabel, newCustomLabel)) {
+    		return;
+    	}
         this.customLabel = newCustomLabel.trim();
         updateState();
     }
@@ -807,7 +795,11 @@ public final class ServerPage extends WizardPage implements HostProvider {
      * @param newHost the new host value
      */
     void handleHostModified( String newHost ) {
-        this.host = newHost;
+       	if (! valueChanged(this.host, newHost)) {
+       		return;
+       	}
+       	
+       	this.host = newHost;
         updateState();
     }
 
@@ -817,6 +809,9 @@ public final class ServerPage extends WizardPage implements HostProvider {
      * @param newPassword the new password value
      */
     void handleJdbcPasswordModified( String newPassword ) {
+    	if (! valueChanged(this.jdbcPassword, newPassword)) {
+    		return;
+    	}
         this.jdbcPassword = newPassword;
         this.localJdbcInfo.setPassword(newPassword);
         updateState();
@@ -835,7 +830,11 @@ public final class ServerPage extends WizardPage implements HostProvider {
      * @param newPort the new host value
      */
     void handleJdbcPortModified( String newPort ) {
-        this.jdbcPort = newPort;
+    	if (! valueChanged(this.jdbcPort, newPort)) {
+    		return;
+    	}
+        
+    	this.jdbcPort = newPort;
         this.localJdbcInfo.setPort(newPort);
         updateState();
     }
@@ -878,6 +877,9 @@ public final class ServerPage extends WizardPage implements HostProvider {
      * @param newUser the new user value
      */
     void handleAdminUserModified( String newUser ) {
+    	if (! valueChanged(this.adminUsername, newUser)) {
+    		return;
+    	}
         this.adminUsername = newUser;
         this.localAdminInfo.setUsername(newUser);
         updateState();
@@ -900,6 +902,9 @@ public final class ServerPage extends WizardPage implements HostProvider {
      * @param newUser the new user value
      */
     void handleJdbcUserModified( String newUser ) {
+    	if (! valueChanged(this.jdbcUsername, newUser)) {
+    		return;
+    	}
         this.jdbcUsername = newUser;
         this.localJdbcInfo.setUsername(newUser);
         updateState();
@@ -981,6 +986,17 @@ public final class ServerPage extends WizardPage implements HostProvider {
      * Validates all inputs and sets the validation status.
      */
     private void validate() {
+    	
+    	// Validate that we have a known host
+    	try {
+    		InetAddress.getByName(this.host);
+    	} catch (UnknownHostException ex) {
+    		this.status = new Status(IStatus.ERROR,
+    				DqpUiConstants.PLUGIN_ID,
+    				UTIL.getString("serverPageUnknownHost", this.host)); //$NON-NLS-1$
+    		return;
+    	}
+    	
         // validate admin connection info
         this.status = this.localAdminInfo.validate();
 
@@ -1026,11 +1042,22 @@ public final class ServerPage extends WizardPage implements HostProvider {
             this.status = new Status(IStatus.ERROR, PLUGIN_ID, UTIL.getString("serverPageEmptyCustomLabelMsg")); //$NON-NLS-1$
         }
     }
+    
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.wizard.WizardPage#isPageComplete()
+     */
+    @Override
+    public boolean isPageComplete() {
+    	return IStatus.OK == this.status.getSeverity();
+    }
 
     /**
      * Processing done after wizard 'Finish' button is clicked. Wizard was not canceled.
      */
     void performFinish() {
+    	if (! isPageComplete()) {
+    		return;
+    	}
         // update dialog settings
         getDialogSettings().put(AUTO_CONNECT_KEY, this.autoConnect);
         // If editing, set local server info values to the original server info
