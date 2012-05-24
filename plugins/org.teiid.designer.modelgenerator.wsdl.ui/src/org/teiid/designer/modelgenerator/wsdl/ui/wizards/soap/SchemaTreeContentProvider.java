@@ -32,24 +32,23 @@ public class SchemaTreeContentProvider extends AdapterFactoryContentProvider {
 	 */
 	@Override
 	public Object[] getChildren(Object object) {
-		
-		//Object[] result = super.getChildren(object); 
 		if( object instanceof SchemaNode ) {
 			SchemaNode node = (SchemaNode)object;
-//			if( node.getElement() instanceof XSDAttributeUse ) {
-//				return super.getChildren(node.getElement());
-//			} else {
-				Collection<SchemaNode> result = node.getChildren(); 
-				
-				Collection<Object> filteredNodes = new ArrayList<Object>();
-				
+
+			Collection<SchemaNode> result = node.getChildren(); 
+			
+			Collection<Object> filteredNodes = new ArrayList<Object>();
+			
+			if( node.getElement() instanceof XSDParticle ) {
+				return super.getChildren(node.getElement());
+			} else {
 				for( Object child : result ) {
 					if( showObject(child) ) {
 						filteredNodes.add(child);
 					}
 				}
-				return filteredNodes.toArray( new Object[filteredNodes.size()]);
-//			}
+			}
+			return filteredNodes.toArray( new Object[filteredNodes.size()]);
 		} else {
 			Object[] result = super.getChildren(object);
 			
@@ -70,9 +69,7 @@ public class SchemaTreeContentProvider extends AdapterFactoryContentProvider {
 			Collection<Object> filteredNodes = new ArrayList<Object>();
 
 			for (SchemaNode child : ((SchemaNodeWrapper)object).getChildren()) {
-				if (showObject(child)) {
-					filteredNodes.add(child);
-				}
+				filteredNodes.add(child);
 			}
 
 			return filteredNodes.toArray(new Object[filteredNodes.size()]);
@@ -86,13 +83,13 @@ public class SchemaTreeContentProvider extends AdapterFactoryContentProvider {
 	public boolean hasChildren(Object object) {
 		if( object instanceof SchemaNode ) {
 			SchemaNode node = (SchemaNode)object;
-			if( node.getElement() instanceof XSDAttributeUse ) {
+			if( node.getElement() instanceof XSDAttributeUse || node.getElement() instanceof XSDParticle ) {
 				return super.hasChildren(node.getElement());
 			}
 			return node.getChildren().size() > 0; 
 		}
 		
-		return false;//super.hasChildren(object);
+		return false;
 	}
 
 	private boolean showObject(Object object) {
