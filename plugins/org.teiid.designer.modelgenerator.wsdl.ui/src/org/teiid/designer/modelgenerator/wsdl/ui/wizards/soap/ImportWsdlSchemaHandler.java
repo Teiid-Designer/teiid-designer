@@ -17,6 +17,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.xsd.XSDAttributeUse;
 import org.eclipse.xsd.XSDComplexTypeContent;
 import org.eclipse.xsd.XSDComplexTypeDefinition;
@@ -41,6 +42,7 @@ import com.metamatrix.modeler.core.types.DatatypeConstants.RuntimeTypeNames;
 import com.metamatrix.modeler.internal.transformation.util.SqlConstants;
 import com.metamatrix.modeler.internal.ui.viewsupport.DatatypeUtilities;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
+import com.metamatrix.modeler.modelgenerator.wsdl.ModelGeneratorWsdlPlugin;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Model;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.ModelGenerationException;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Operation;
@@ -56,13 +58,31 @@ import com.metamatrix.modeler.schema.tools.processing.SchemaProcessor;
 
 public class ImportWsdlSchemaHandler {
 
-	WSDLImportWizardManager importManager;
-	OperationsDetailsPage operationsDetailsPage;
-	SchemaTreeModel requestSchemaTreeModel = null;
-	SchemaTreeModel responseSchemaTreeModel = null;
-	SchemaNode rootnode = null;
-	int depth = 0;
-	static int MAX_DEPTH = 1000;
+    private static final String WSDL_SCHEMA_HANDLER_RECURSIVE_DEPTH_PROPERTY = "WsdlSchemaHandlerRecursiveDepth"; //$NON-NLS-1$
+
+    private static int MAX_DEPTH = 750;
+
+    private WSDLImportWizardManager importManager;
+    private OperationsDetailsPage operationsDetailsPage;
+    private SchemaTreeModel requestSchemaTreeModel = null;
+    private SchemaTreeModel responseSchemaTreeModel = null;
+    private SchemaNode rootnode = null;
+    private int depth = 0;
+
+    static {
+        try {
+            String value = System
+                    .getProperty(WSDL_SCHEMA_HANDLER_RECURSIVE_DEPTH_PROPERTY);
+            if (value != null) {
+                MAX_DEPTH = Integer.parseInt(value);
+            }
+        }
+        catch (Exception ex) {
+            // Revert to the default but log the exception
+            ModelGeneratorWsdlPlugin.Util.log(ex);
+        }
+    }
+
 	boolean circularSchemaWarningTriggered = false;
 
 	public ImportWsdlSchemaHandler(WSDLImportWizardManager manager,
@@ -125,16 +145,42 @@ public class ImportWsdlSchemaHandler {
 						}
 
 						foundElement = true;
-							try {
-								if (type == ProcedureInfo.REQUEST){
-									this.requestSchemaTreeModel = describe(schema, elementName, (XSDElementDeclarationImpl)element, requestSchemaTreeModel);
-								}else{
-									this.responseSchemaTreeModel = describe(schema, elementName, (XSDElementDeclarationImpl)element, responseSchemaTreeModel);
-								}
-							} catch (ModelerCoreException ex) {
-								ErrorDialog.openError(this.operationsDetailsPage.getShell(), Messages.Error_GeneratingSchemaModelDueToCircularReferences_title, null, new Status(IStatus.WARNING, ModelGeneratorWsdlUiConstants.PLUGIN_ID, Messages.Error_GeneratingSchemaModelDueToCircularReferences));
-							}
-						elementArrayList.add(elementDeclaration);
+                        try {
+                            if (type == ProcedureInfo.REQUEST) {
+                                this.requestSchemaTreeModel = describe(schema,
+                                        elementName,
+                                        (XSDElementDeclarationImpl) element,
+                                        requestSchemaTreeModel);
+                            }
+                            else {
+                                this.responseSchemaTreeModel = describe(schema,
+                                        elementName,
+                                        (XSDElementDeclarationImpl) element,
+                                        responseSchemaTreeModel);
+                            }
+                        }
+                        catch (ModelerCoreException ex) {
+                            openErrorDialog(ex.getMessage());
+                        }
+                        catch (StackOverflowError e) {
+                            /*
+                             * Can occur if the depth threshold is set too high.
+                             * Current value should be fine for most systems but
+                             * just in case...
+                             * 
+                             * Eclipse will show a nasty dialog and offer to
+                             * close the workbench which is confusing better to
+                             * exit a little more gracefully.
+                             */
+                            String message = NLS
+                                    .bind(Messages.Error_GeneratingSchemaModelCircularReferenceStackOverflow,
+                                            MAX_DEPTH,
+                                            WSDL_SCHEMA_HANDLER_RECURSIVE_DEPTH_PROPERTY);
+                            openErrorDialog(message);
+                            System.exit(1);
+                        }
+
+                        elementArrayList.add(elementDeclaration);
 						break;
 					}
 				}
@@ -194,6 +240,16 @@ public class ImportWsdlSchemaHandler {
 		return	elementsArray;
 	}
 	
+    private void openErrorDialog(String msg) {
+        ErrorDialog
+                .openError(
+                        operationsDetailsPage.getShell(),
+                        Messages.Error_GeneratingSchemaModelDueToCircularReferences_title,
+                        null,
+                        new Status(IStatus.WARNING,
+                                ModelGeneratorWsdlUiConstants.PLUGIN_ID, msg));
+    }
+
 	private String getPartElementName(Part part) {
 		String partElementName = null;
 
@@ -204,6 +260,10 @@ public class ImportWsdlSchemaHandler {
 
 		return partElementName;
 	}
+
+    public SchemaTreeModel getResponseSchemaTreeModel() {
+        return responseSchemaTreeModel;
+    }
 
 	public String createRequestColumn(int type, IStructuredSelection selection,
 			ProcedureInfo requestInfo) {
@@ -693,9 +753,12 @@ public class ImportWsdlSchemaHandler {
 
 	private void addComplexTypeDefToTree(XSDComplexTypeDefinition complexType,
 			SchemaNode node, boolean isRootNode, int depth, SchemaTreeModel schemaTreeModel) throws ModelerCoreException {
-		
-		if (depth>MAX_DEPTH){
-			throw new ModelerCoreException(Messages.Error_GeneratingSchemaModelDueToCircularReferences);
+        if (depth > MAX_DEPTH) {
+            String message = NLS
+                    .bind(Messages.Error_GeneratingSchemaModelDueToCircularReferences,
+                            MAX_DEPTH,
+                            WSDL_SCHEMA_HANDLER_RECURSIVE_DEPTH_PROPERTY);
+            throw new ModelerCoreException(message);
 		}
 		
 		XSDComplexTypeContent content = complexType.getContent();

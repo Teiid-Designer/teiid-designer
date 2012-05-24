@@ -128,6 +128,7 @@ public class Messages  extends NLS {
     public static String Error_DeterminingSourceModelHas_0_Procedure;
     public static String Error_DeterminingSourceModelHasMatchingProfile;
     public static String Error_GeneratingSchemaModelDueToCircularReferences;
+    public static String Error_GeneratingSchemaModelCircularReferenceStackOverflow;
     public static String Error_GeneratingSchemaModelDueToCircularReferences_title;
     public static String Error_InvalidName_0_Reason_1;
     public static String Error_InvalidSourceModelFileName_0_Reason_1;

@@ -186,7 +186,8 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 
 	public void notifyColumnDataChanged() {
 		if (!responseBodyColumnsInfoPanel.getRootPathText().getText().equals("")) { //$NON-NLS-1$
-			this.schemaHandler.responseSchemaTreeModel.setRootPath(responseBodyColumnsInfoPanel.getRootPathText().getText());
+            this.schemaHandler.getResponseSchemaTreeModel().setRootPath(
+                    responseBodyColumnsInfoPanel.getRootPathText().getText());
 			this.getProcedureGenerator().getResponseInfo().setRootPath(responseBodyColumnsInfoPanel.getRootPathText().getText());
 		}
 		this.requestBodyElementsInfoPanel.refresh();
@@ -201,7 +202,8 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 	}
 	
 	public void notifyRootTextColumnDataChanged() {
-		this.schemaHandler.responseSchemaTreeModel.setRootPath(responseBodyColumnsInfoPanel.getRootPathText().getText());
+        this.schemaHandler.getResponseSchemaTreeModel().setRootPath(
+                responseBodyColumnsInfoPanel.getRootPathText().getText());
 	
 		updateStatus();
 	}
