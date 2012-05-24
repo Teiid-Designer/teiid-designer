@@ -228,6 +228,10 @@ public class WSSoapProfileDetailsWizardPage  extends ConnectionProfileDetailsPag
         if (securityType != null) {
             properties.setProperty(IWSProfileConstants.SECURITY_TYPE_ID, securityType.name());
         }
+        else {
+            properties.setProperty(IWSProfileConstants.SECURITY_TYPE_ID,
+                    SecurityType.None.name());
+        }
         
         if (userName != null) {
             properties.setProperty(IWSProfileConstants.USERNAME_PROP_ID, userName);
@@ -327,13 +331,25 @@ public class WSSoapProfileDetailsWizardPage  extends ConnectionProfileDetailsPag
     
         Properties properties = ((NewConnectionProfileWizard) getWizard()).getProfileProperties();
         String securityType = properties.getProperty(IWSProfileConstants.SECURITY_TYPE_ID);
+        if (securityType == null) {
+            securityType = SecurityType.None.name();
+        }
         
         result.add(new String[] { UTIL.getString("Common.URL.Label"), properties.getProperty(IWSProfileConstants.WSDL_URI_PROP_ID) }); //$NON-NLS-1$
         
         if (! SecurityType.None.name().equals(securityType)) {
             result.add(new String[] { UTIL.getString("Common.SecurityType.Label"), securityType }); //$NON-NLS-1$
             result.add(new String[] { UTIL.getString("Common.Username.Label"), properties.getProperty(IWSProfileConstants.USERNAME_PROP_ID) }); //$NON-NLS-1$
-            result.add(new String[] { UTIL.getString("Common.Password.Label"), properties.getProperty(IWSProfileConstants.PASSWORD_PROP_ID) }); //$NON-NLS-1$
+
+            // Mask the password
+            String password = properties.getProperty(IWSProfileConstants.PASSWORD_PROP_ID);
+            StringBuffer masked = new StringBuffer(password.length());
+            for (int i = 0; i < password.length(); ++i) {
+                masked.append("*"); //$NON-NLS-1$
+            }
+
+            result.add(new String[] {
+                    UTIL.getString("Common.Password.Label"), masked.toString() }); //$NON-NLS-1$
         }
         
         return result;

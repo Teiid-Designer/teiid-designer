@@ -8,6 +8,7 @@ import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
 
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
+import com.metamatrix.ui.ICredentialsCommon.SecurityType;
 
 public class WSConnectionInfoProvider extends ConnectionInfoHelper implements
 		IConnectionInfoProvider {
@@ -31,10 +32,13 @@ public class WSConnectionInfoProvider extends ConnectionInfoHelper implements
         }
 
         String security = props.getProperty(IWSProfileConstants.SECURITY_TYPE_ID);
-        if (null != security) {
-            connectionProps.setProperty(CONNECTION_NAMESPACE + IWSProfileConstants.SECURITY_TYPE_ID, security);
+        if (security == null) {
+            security = SecurityType.None.name();
         }
         
+        connectionProps.setProperty(CONNECTION_NAMESPACE
+                + IWSProfileConstants.SECURITY_TYPE_ID, security);
+
         getHelper().removeProperties(modelResource, CONNECTION_PROFILE_NAMESPACE);
         getHelper().removeProperties(modelResource, TRANSLATOR_NAMESPACE);
         getHelper().removeProperties(modelResource, CONNECTION_NAMESPACE);
@@ -84,6 +88,10 @@ public class WSConnectionInfoProvider extends ConnectionInfoHelper implements
         String contextFactory = props.getProperty(IWSProfileConstants.SECURITY_TYPE_ID);
         if (null != contextFactory) {
             connectionProps.setProperty(IWSProfileConstants.SECURITY_TYPE_ID, contextFactory);
+        }
+        else {
+            connectionProps.setProperty(IWSProfileConstants.SECURITY_TYPE_ID,
+                    SecurityType.None.name());
         }
 
         return connectionProps;

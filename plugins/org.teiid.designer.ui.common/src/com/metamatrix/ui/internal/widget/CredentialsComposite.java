@@ -46,7 +46,7 @@ public class CredentialsComposite extends Composite implements UiConstants, List
      * Need to stash the inputted values since they may be retrieved after the
      * composite has been disposed.
      */
-    private SecurityType securityType;
+    private SecurityType securityType = SecurityType.None;
 
     private String password;
 
