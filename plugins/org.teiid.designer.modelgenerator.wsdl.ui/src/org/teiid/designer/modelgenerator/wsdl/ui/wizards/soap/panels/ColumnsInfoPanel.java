@@ -32,6 +32,7 @@ import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.ProcedureInfo;
 
 import com.metamatrix.core.util.StringUtilities;
 import com.metamatrix.ui.internal.util.WidgetFactory;
+import com.metamatrix.ui.internal.viewsupport.UiBusyIndicator;
 
 public class ColumnsInfoPanel {
 	private ProcedureInfo procedureInfo;
@@ -99,7 +100,8 @@ public class ColumnsInfoPanel {
     	gd.grabExcessHorizontalSpace = true;
     	rootPathText.setLayoutData(gd);
     	rootPathText.addModifyListener(new ModifyListener() {
-    		public void modifyText( final ModifyEvent event ) {
+            @Override
+            public void modifyText(final ModifyEvent event) {
     			notifyColumnDataChanged();
     		}
     	});
@@ -122,23 +124,67 @@ public class ColumnsInfoPanel {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				String name = detailsPage.createResponseColumn(type);
-				if (name != null) {
-					boolean ok = MessageDialog.openQuestion(detailsPage.getShell(), 
-						Messages.InvalidSelectedSchemaObject,
-						NLS.bind(Messages.InvalidSelectedSchemaObject_column_msg, name));
-					if( ok ) {
-						if( type == ProcedureInfo.TYPE_BODY ) {
-							detailsPage.getProcedureGenerator().getResponseInfo().addBodyColumn(name, false, ColumnInfo.DEFAULT_DATATYPE, null, null);
-						} else {
-							detailsPage.getProcedureGenerator().getResponseInfo().addHeaderColumn(name, false, ColumnInfo.DEFAULT_DATATYPE, null, null);
-						}    					editColumnsPanel.refresh();
-    					notifyColumnDataChanged();
-					}
-				}
-			}
-    		
-		});
+                UiBusyIndicator.showWhile(addButton.getDisplay(),
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                String name = null;
+
+                                try {
+                                    /*
+                                     * Stop the rootPathText modify listener
+                                     * from firing since it is notifying the
+                                     * panels to refresh which is done anyway.
+                                     */
+                                    initializing = true;
+
+                                    name = detailsPage
+                                            .createResponseColumn(type);
+                                }
+                                finally {
+                                    initializing = false;
+                                }
+
+                                if (name == null) {
+                                    return;
+                                }
+
+                                boolean ok = MessageDialog.openQuestion(
+                                        detailsPage.getShell(),
+                                        Messages.InvalidSelectedSchemaObject,
+                                        NLS.bind(
+                                                Messages.InvalidSelectedSchemaObject_column_msg,
+                                                name));
+                                if (!ok) {
+                                    return;
+                                }
+
+                                if (type == ProcedureInfo.TYPE_BODY) {
+                                    detailsPage
+                                            .getProcedureGenerator()
+                                            .getResponseInfo()
+                                            .addBodyColumn(
+                                                    name,
+                                                    false,
+                                                    ColumnInfo.DEFAULT_DATATYPE,
+                                                    null, null);
+                                }
+                                else {
+                                    detailsPage
+                                            .getProcedureGenerator()
+                                            .getResponseInfo()
+                                            .addHeaderColumn(
+                                                    name,
+                                                    false,
+                                                    ColumnInfo.DEFAULT_DATATYPE,
+                                                    null, null);
+                                }
+                                editColumnsPanel.refresh();
+                                notifyColumnDataChanged();
+                            }
+                        });
+            }
+        });
     	
     	deleteButton = new Button(leftToolbarPanel, SWT.PUSH);
     	deleteButton.setText(Messages.Delete);
