@@ -86,7 +86,7 @@ public class CreateSalesForceFunctionsAction extends SortableSelectionAction {
     }
 
     private boolean sourceModelSelected( ISelection theSelection ) {
-        if (SelectionUtilities.isSingleSelection(theSelection)) {
+        if (SelectionUtilities.isSingleSelection(theSelection) && theSelection instanceof IStructuredSelection) {
             Object selectedObj = ((IStructuredSelection)theSelection).getFirstElement();
 
             if ((selectedObj instanceof IFile) && ModelIdentifier.isRelationalSourceModel((IFile)selectedObj)) {
