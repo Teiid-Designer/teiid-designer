@@ -8,6 +8,8 @@
 package com.metamatrix.modeler.internal.ui.viewsupport;
 
 import org.eclipse.emf.ecore.EObject;
+import org.teiid.language.SQLConstants;
+
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.ModelerCoreException;
 import com.metamatrix.modeler.core.metamodel.aspect.MetamodelAspect;
@@ -33,7 +35,7 @@ public abstract class DatatypeUtilities {
                 SqlColumnAspect sqAspect = (SqlColumnAspect)mmAspect;
                 String newName = newSignature.substring(0, index).trim();
                 index++;
-                String fullDatatype = newSignature.substring(index);
+                String fullDatatype = newSignature.substring(index).trim();
                 if( fullDatatype.length() > 0 && fullDatatype.toUpperCase().startsWith("STRING(")) { //$NON-NLS-1$
 
                     String dTypeString = null;
@@ -68,7 +70,12 @@ public abstract class DatatypeUtilities {
                         }
                     }
                 } else {
-                	newName += COLON + fullDatatype;
+                    EObject dType = getDatatype(fullDatatype);
+                    if( dType != null ) {
+                        sqAspect.setDatatype(eObject,dType);
+                    } else {
+                    	newName += COLON + fullDatatype;
+                    }
                 }
                 
                 ModelerCore.getModelEditor().rename(eObject, newName);
@@ -149,6 +156,20 @@ public abstract class DatatypeUtilities {
         }
         
         return null;
+    }
+    
+    public static String getRuntimeTypeName(final String datatype) throws ModelerCoreException {
+    	String dType = datatype.toLowerCase();
+    	if( dType.equalsIgnoreCase(SQLConstants.Reserved.INT)) {
+    		dType = SQLConstants.Reserved.INTEGER.toLowerCase();
+    	}
+    	EObject theDataType = getDatatype(dType);
+    	if( theDataType == null ) {
+    		return datatype;
+    	}
+    	
+    	return ModelerCore.getWorkspaceDatatypeManager().getRuntimeTypeName(theDataType);
+    	
     }
     
     public static boolean renameSqlColumn(EObject newEObject, String newName) throws ModelerCoreException {

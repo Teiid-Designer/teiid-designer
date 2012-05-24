@@ -39,7 +39,7 @@ public class SchemaTreeContentProvider extends AdapterFactoryContentProvider {
 			
 			Collection<Object> filteredNodes = new ArrayList<Object>();
 			
-			if( node.getElement() instanceof XSDParticle ) {
+			if( node.getChildren().isEmpty() && node.getElement() instanceof XSDParticle ) {
 				return super.getChildren(node.getElement());
 			} else {
 				for( Object child : result ) {
@@ -83,7 +83,9 @@ public class SchemaTreeContentProvider extends AdapterFactoryContentProvider {
 	public boolean hasChildren(Object object) {
 		if( object instanceof SchemaNode ) {
 			SchemaNode node = (SchemaNode)object;
-			if( node.getElement() instanceof XSDAttributeUse || node.getElement() instanceof XSDParticle ) {
+			if( node.getElement() instanceof XSDAttributeUse ) {
+				return super.hasChildren(node.getElement());	
+			} else if( node.getChildren().isEmpty() && node.getElement() instanceof XSDParticle ) {
 				return super.hasChildren(node.getElement());
 			}
 			return node.getChildren().size() > 0; 

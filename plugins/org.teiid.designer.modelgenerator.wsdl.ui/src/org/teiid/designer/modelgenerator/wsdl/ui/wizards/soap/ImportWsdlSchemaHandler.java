@@ -39,6 +39,7 @@ import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.SchemaTreeModel.Sc
 import com.metamatrix.modeler.core.ModelerCoreException;
 import com.metamatrix.modeler.core.types.DatatypeConstants.RuntimeTypeNames;
 import com.metamatrix.modeler.internal.transformation.util.SqlConstants;
+import com.metamatrix.modeler.internal.ui.viewsupport.DatatypeUtilities;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Model;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.ModelGenerationException;
@@ -464,9 +465,25 @@ public class ImportWsdlSchemaHandler {
 					xpath = new StringBuilder(root).append(xpath);
 				}
 				String theType = RuntimeTypeNames.STRING;
-				if( typeDefinition != null ) {
+				if( typeDefinition != null && typeDefinition.getName() != null ) {
 					theType = typeDefinition.getName();
 				}
+				String runtimeTypeName = theType;
+				try {
+					runtimeTypeName = DatatypeUtilities.getRuntimeTypeName(theType);
+				} catch (ModelerCoreException ex) {
+					ex.printStackTrace();
+				}
+				
+				if( runtimeTypeName != null && !runtimeTypeName.equalsIgnoreCase(theType) ) {
+					theType = runtimeTypeName;
+				}
+				
+//				if( theType.equalsIgnoreCase("integer") ) { //$NON-NLS-1$
+//					theType = "biginteger"; //$NON-NLS-1$
+//				} else if( theType.equalsIgnoreCase("decimal") ) { //$NON-NLS-1$
+//					theType = "bigdecimal"; //$NON-NLS-1$
+//				}
 				responseInfo.addBodyColumn(
 						responseInfo.getUniqueBodyColumnName(name), false,
 						theType, null, pathPrefix
@@ -533,11 +550,23 @@ public class ImportWsdlSchemaHandler {
 			}
 			
 			String dTypeString = attributeUse.getAttributeDeclaration().getType().getAliasName();
-			if( dTypeString.equalsIgnoreCase("integer") ) { //$NON-NLS-1$
-				dTypeString = "biginteger"; //$NON-NLS-1$
-			} else if( dTypeString.equalsIgnoreCase("decimal") ) { //$NON-NLS-1$
-				dTypeString = "bigdecimal"; //$NON-NLS-1$
+			String runtimeTypeName = dTypeString;
+			try {
+				runtimeTypeName = DatatypeUtilities.getRuntimeTypeName(dTypeString);
+			} catch (ModelerCoreException ex) {
+				ex.printStackTrace();
 			}
+			
+			if( runtimeTypeName != null && !runtimeTypeName.equalsIgnoreCase(dTypeString) ) {
+				dTypeString = runtimeTypeName;
+			}
+			
+			
+//			if( dTypeString.equalsIgnoreCase("integer") ) { //$NON-NLS-1$
+//				dTypeString = "biginteger"; //$NON-NLS-1$
+//			} else if( dTypeString.equalsIgnoreCase("decimal") ) { //$NON-NLS-1$
+//				dTypeString = "bigdecimal"; //$NON-NLS-1$
+//			}
 			
 			StringBuilder xpath = new StringBuilder();
 			String namespace = null;
