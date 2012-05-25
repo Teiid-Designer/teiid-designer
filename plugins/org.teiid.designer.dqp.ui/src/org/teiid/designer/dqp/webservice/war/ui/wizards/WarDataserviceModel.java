@@ -533,6 +533,7 @@ public class WarDataserviceModel {
         properties.put(WebArchiveBuilderConstants.PROPERTY_SECURITY_REALM, this.getSecurityRealm());
         properties.put(WebArchiveBuilderConstants.PROPERTY_SECURITY_ROLE, this.getSecurityRole());
         properties.put(WebArchiveBuilderConstants.PROPERTY_SECURITY_USERNAME, this.getSecurityUsername());
+        properties.put(WebArchiveBuilderConstants.PROPERTY_SECURITY_PASSWORD, this.getSecurityPassword());
         properties.put(WebArchiveBuilderConstants.PROPERTY_USE_MTOM, this.getUseMtom());
 
         return properties;

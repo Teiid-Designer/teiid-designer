@@ -158,7 +158,9 @@ public abstract class WarDeploymentInfoPanel extends Composite implements Intern
 
             // Security Password
             text = (this.settings.get(SECURITY_PASSWORD) == null ? WarDataserviceModel.getInstance().getSecurityPassword() : this.settings.get(SECURITY_PASSWORD));
+            txfSecurityPassword.setEchoChar('*'); //$NON-NLS-1$
             txfSecurityPassword.setText(text);
+            
 
             // Security type
             text = (this.settings.get(SECURITY_TYPE) == null ? WarDataserviceModel.getInstance().getSecurityType() : this.settings.get(SECURITY_TYPE));
