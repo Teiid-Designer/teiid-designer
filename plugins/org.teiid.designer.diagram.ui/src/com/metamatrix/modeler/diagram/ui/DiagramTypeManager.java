@@ -12,13 +12,14 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.jface.viewers.ILabelProvider;
+
 import com.metamatrix.metamodels.diagram.Diagram;
 import com.metamatrix.metamodels.diagram.impl.DiagramEntityImpl;
 import com.metamatrix.modeler.core.workspace.ModelResource;
@@ -33,8 +34,6 @@ import com.metamatrix.ui.internal.util.WidgetUtil;
  * EditPartFactory, DiagramModelFactory and FigureFactory.
  */
 public class DiagramTypeManager implements PluginConstants, DiagramUiConstants, DiagramUiConstants.ExtensionPoints {
-
-    private ILabelProvider labelProvider;
 
     private IExtension[] exExtensions;
 
@@ -52,22 +51,7 @@ public class DiagramTypeManager implements PluginConstants, DiagramUiConstants, 
         loadAllExtensions();
     }
 
-    public String getExtensionDisplayName( String sExtensionId ) {
-        IExtension ex = hmExtensionsByExtensionId.get(sExtensionId);
-
-        if (ex != null) {
-            return ex.getLabel();
-        }
-        return "Unknown extension id..."; //$NON-NLS-1$     
-    }
-
-    // private List getExtensionIds() {
-    // return new ArrayList(hmExtensionsByExtensionId.keySet());
-    // }
-
     private void loadAllExtensions() {
-        // Util.log( IStatus.INFO, "[DiagramTypeManager.loadNotationExtensions] TOP" );
-
         IExtension[] exExtensions = getDiagramTypeExtensions();
 
         hmExtensionsByExtensionId = new HashMap<String, IExtension>();
@@ -97,7 +81,7 @@ public class DiagramTypeManager implements PluginConstants, DiagramUiConstants, 
         setOrderedExtentionIds();
     }
 
-    public IExtension[] getDiagramTypeExtensions() {
+    private IExtension[] getDiagramTypeExtensions() {
         if (exExtensions == null) {
 
             IExtensionPoint epExtensionPoint = Platform.getExtensionRegistry().getExtensionPoint(DiagramUiConstants.PLUGIN_ID,
@@ -132,6 +116,27 @@ public class DiagramTypeManager implements PluginConstants, DiagramUiConstants, 
         return isTransient;
     }
 
+    /**
+     * Has the diagram type been marked as deprecated in the plugin extension.
+     * For diagram types that are being phased out the extension attribute will
+     * be marked as true, while other diagram types will be either empty or
+     * false.
+     * 
+     * @param diagramTypeId
+     * @return
+     */
+    public boolean isDeprecatedDiagram(String diagramTypeId) {
+        IConfigurationElement ceElement = hmDiagramTypeElements
+                .get(diagramTypeId);
+        String deprecatedDiagram = ceElement
+                .getAttribute(DiagramType.DEPRECATED_DIAGRAM);
+        if (deprecatedDiagram != null
+                && deprecatedDiagram.equalsIgnoreCase("true")) {//$NON-NLS-1$ 
+            return true;
+        }
+        return false;
+    }
+
     public IDiagramType getDiagram( String sDiagramTypeId ) {
         return getDiagramTypeClassExecutable(sDiagramTypeId);
     }
@@ -157,14 +162,6 @@ public class DiagramTypeManager implements PluginConstants, DiagramUiConstants, 
         }
 
         return diagramType;
-    }
-
-    public void setLabelProvider( ILabelProvider provider ) {
-        this.labelProvider = provider;
-    }
-
-    public ILabelProvider getLabelProvider() {
-        return this.labelProvider;
     }
 
     public boolean canOpenContext( Object input ) {
@@ -236,6 +233,12 @@ public class DiagramTypeManager implements PluginConstants, DiagramUiConstants, 
             IDiagramType nextDiagramType = null;
             while (iter.hasNext()) {
                 nextExtensionID = iter.next();
+                
+                if (isDeprecatedDiagram(nextExtensionID)) {
+                    // Do not display colour object for deprecated diagrams
+                    continue;
+                }
+                
                 nextDiagramType = getDiagram(nextExtensionID);
                 if (nextDiagramType != null) {
                     dco = nextDiagramType.getBackgroundColorObject(nextDiagramType.getType());
@@ -253,7 +256,8 @@ public class DiagramTypeManager implements PluginConstants, DiagramUiConstants, 
                                       boolean forceCreate ) {
         Diagram someDiagram = null;
 
-        // Walk through all plugin extention types and ask for their IPackageDiagramProvider.
+        // Walk through all plugin extension types and ask for their
+        // IPackageDiagramProvider.
         // If you find one, ask it for a package diagram.
         // if it has one, set it and return;
         List<String> extensionIDs = getOrderedExtentionIds();
