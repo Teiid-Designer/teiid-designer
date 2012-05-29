@@ -106,6 +106,7 @@ public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChange
 	static IAction ACTION_EDIT_TEIID_SERVER;
 	static IAction ACTION_CREATE_DATA_SOURCE;
 	static IAction ACTION_NEW_TEIID_MODEL_PROJECT;
+	static IAction ACTION_DEFINE_TEIID_MODEL_PROJECT;
 
 	static void loadHandlers() {
 
@@ -271,10 +272,39 @@ public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChange
         		COMMAND_LABELS_SHORT.NEW_TEIID_MODEL_PROJECT,
         		COMMAND_DESC.NEW_TEIID_MODEL_PROJECT);
         addActionHandler(
+        		COMMAND_IDS.DEFINE_TEIID_MODEL_PROJECT, 
+        		COMMAND_LABELS.DEFINE_TEIID_MODEL_PROJECT, 
+        		COMMAND_LABELS_SHORT.DEFINE_TEIID_MODEL_PROJECT,
+        		COMMAND_DESC.DEFINE_TEIID_MODEL_PROJECT);
+        addActionHandler(
         		COMMAND_IDS.NEW_OBJECT_VIEW_TABLE,
                 COMMAND_LABELS.NEW_OBJECT_VIEW_TABLE,
                 COMMAND_LABELS_SHORT.NEW_OBJECT_VIEW_TABLE,
                 COMMAND_DESC.NEW_OBJECT_VIEW_TABLE);
+        
+        addActionHandler(
+        		COMMAND_IDS.NEW_OBJECT_REST_PROCEDURE,
+                COMMAND_LABELS.NEW_OBJECT_REST_PROCEDURE,
+                COMMAND_LABELS_SHORT.NEW_OBJECT_REST_PROCEDURE,
+                COMMAND_DESC.NEW_OBJECT_REST_PROCEDURE);
+
+        addActionHandler(
+        		COMMAND_IDS.GENERATE_REST_WAR,
+                COMMAND_LABELS.GENERATE_REST_WAR,
+                COMMAND_LABELS_SHORT.GENERATE_REST_WAR,
+                COMMAND_DESC.GENERATE_REST_WAR);
+
+        addActionHandler(
+        		COMMAND_IDS.GENERATE_SOAP_WAR,
+                COMMAND_LABELS.GENERATE_SOAP_WAR,
+                COMMAND_LABELS_SHORT.GENERATE_SOAP_WAR,
+                COMMAND_DESC.GENERATE_SOAP_WAR);
+        
+        addActionHandler(
+        		COMMAND_IDS.DEPLOY_WAR,
+                COMMAND_LABELS.DEPLOY_WAR,
+                COMMAND_LABELS_SHORT.DEPLOY_WAR,
+                COMMAND_DESC.DEPLOY_WAR);
         
         addActionHandler(
         		CHEAT_SHEET_IDS.MODEL_FROM_JDBC_SOURCE, 
@@ -487,8 +517,14 @@ public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChange
 	        return;
 		}
 		
-		if( id.equalsIgnoreCase(COMMAND_IDS.NEW_TEIID_MODEL_PROJECT)) {
+		if( id.equalsIgnoreCase(COMMAND_IDS.NEW_TEIID_MODEL_PROJECT)) {;
 			ModelerUiViewUtils.launchWizard("newModelProject", new StructuredSelection(), properties, synchronous); //$NON-NLS-1$
+	        return;
+		}
+		
+		if( id.equalsIgnoreCase(COMMAND_IDS.DEFINE_TEIID_MODEL_PROJECT)) {
+			DefineProjectAction action = new DefineProjectAction(properties);
+			action.run();
 	        return;
 		}
 		
@@ -540,6 +576,27 @@ public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChange
 	        return;
 		}
 		
+		if( id.equalsIgnoreCase(COMMAND_IDS.NEW_OBJECT_VIEW_TABLE)) {
+			// TODO
+	        return;
+		}
+		
+		if( id.equalsIgnoreCase(COMMAND_IDS.GENERATE_REST_WAR)) {
+			// TODO
+	        return;
+		}
+		
+		if( id.equalsIgnoreCase(COMMAND_IDS.GENERATE_SOAP_WAR)) {
+			// TODO
+	        return;
+		}
+
+		if( id.equalsIgnoreCase(COMMAND_IDS.DEPLOY_WAR)) {
+			// TODO
+	        return;
+		}
+
+
 		if( id.equalsIgnoreCase(CHEAT_SHEET_IDS.CONSUME_SOAP_SERVICE) ||
 				id.equalsIgnoreCase(CHEAT_SHEET_IDS.CREATE_AND_TEST_VDB) ||
 				id.equalsIgnoreCase(CHEAT_SHEET_IDS.MODEL_FLAT_FILE_SOURCE) ||
@@ -669,6 +726,10 @@ public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChange
 			return Images.NEW_PROJECT_ACTION;
 		}
 		
+		if( id.equalsIgnoreCase(COMMAND_IDS.DEFINE_TEIID_MODEL_PROJECT)) {
+			return Images.NEW_PROJECT_ACTION;
+		}
+		
 		if( id.equalsIgnoreCase(COMMAND_IDS.OPEN_DATA_SOURCE_EXPLORER_VIEW)) {
 			return Images.DATA_SOURCE_EXPLORER_VIEW;
 		}
@@ -679,6 +740,26 @@ public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChange
 		
 		if( id.equalsIgnoreCase(COMMAND_IDS.EDIT_TEIID_SERVER)) {
 			return Images.EDIT_TEIID_SERVER;
+		}
+		
+		if( id.equalsIgnoreCase(COMMAND_IDS.NEW_OBJECT_VIEW_TABLE)) {
+			return Images.NEW_VIRTUAL_TABLE_ICON;
+		}
+		
+		if( id.equalsIgnoreCase(COMMAND_IDS.NEW_OBJECT_REST_PROCEDURE)) {
+			return Images.NEW_VIRTUAL_PROCEDURE_ICON;
+		}
+		
+		if( id.equalsIgnoreCase(COMMAND_IDS.GENERATE_REST_WAR)) {
+			return Images.GENERATE_WAR;
+		}
+		
+		if( id.equalsIgnoreCase(COMMAND_IDS.GENERATE_SOAP_WAR)) {
+			return Images.GENERATE_WAR;
+		}
+		
+		if( id.equalsIgnoreCase(COMMAND_IDS.DEPLOY_WAR)) {
+			return Images.DEPLOY_WAR;
 		}
 		
 		if( id.equalsIgnoreCase(CHEAT_SHEET_IDS.CONSUME_SOAP_SERVICE) ) {
@@ -890,6 +971,10 @@ public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChange
 			return ACTION_NEW_TEIID_MODEL_PROJECT;
 		}
 		
+		if( commandId.equalsIgnoreCase(COMMAND_IDS.DEFINE_TEIID_MODEL_PROJECT)) {
+			return ACTION_DEFINE_TEIID_MODEL_PROJECT;
+		}
+		
 		if( commandId.equalsIgnoreCase(COMMAND_IDS.OPEN_DATA_SOURCE_EXPLORER_VIEW)) {
 			return ACTION_OPEN_DATA_SOURCE_EXPLORER_VIEW;
 		}
@@ -955,6 +1040,7 @@ public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChange
 		ACTION_EDIT_TEIID_SERVER = createAction(COMMAND_IDS.EDIT_TEIID_SERVER);
 		ACTION_CREATE_DATA_SOURCE = createAction(COMMAND_IDS.CREATE_DATA_SOURCE);
 		ACTION_NEW_TEIID_MODEL_PROJECT = createAction(COMMAND_IDS.NEW_TEIID_MODEL_PROJECT);
+		ACTION_DEFINE_TEIID_MODEL_PROJECT = createAction(COMMAND_IDS.DEFINE_TEIID_MODEL_PROJECT);
 		
 	}
 	

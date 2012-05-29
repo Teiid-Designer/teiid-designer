@@ -147,7 +147,8 @@ public interface AdvisorUiConstants {
 		
         String NEW_OBJECT_BASE_TABLE = "org.teiid.designer.newObjectBaseTable"; //$NON-NLS-1$
         String NEW_OBJECT_VIEW_TABLE = "org.teiid.designer.newObjectViewTable"; //$NON-NLS-1$
-		String NEW_OBJECT_SOURCE_FUNCTION = "org.teiid.designer.newObjectSourceFunction";  //$NON-NLS-1$
+        String NEW_OBJECT_REST_PROCEDURE = "org.teiid.designer.newObjectRestProcedure"; //$NON-NLS-1$
+        String NEW_OBJECT_SOURCE_FUNCTION = "org.teiid.designer.newObjectSourceFunction";  //$NON-NLS-1$
 		
 		String CREATE_CONNECTION_JDBC = "org.teiid.designer.connection.new.jdbc"; //$NON-NLS-1$
 		String CREATE_CONNECTION_FLAT_FILE = "org.teiid.designer.connection.new.flatfile"; //$NON-NLS-1$
@@ -163,12 +164,17 @@ public interface AdvisorUiConstants {
 		String OPEN_DATA_SOURCE_EXPLORER_VIEW = "org.eclipse.datatools.openexplorerview"; //$NON-NLS-1$
 		
 		String NEW_TEIID_MODEL_PROJECT = "org.teiid.designer.newProjectCommand"; //$NON-NLS-1$
+		String DEFINE_TEIID_MODEL_PROJECT = "org.teiid.designer.defineProjectCommand";  //$NON-NLS-1$
 		
 		String CREATE_VDB = "org.teiid.designer.vdb.create"; //$NON-NLS-1$
 		String EXECUTE_VDB = "org.teiid.designer.vdb.execute"; //$NON-NLS-1$
 		String PREVIEW_DATA = "org.teiid.designer.previewData"; //$NON-NLS-1$
 		String EDIT_VDB = "org.teiid.designer.vdb.edit"; //$NON-NLS-1$
 		String DEPLOY_VDB = "org.teiid.designer.vdb.deploy"; //$NON-NLS-1$
+		
+		String GENERATE_REST_WAR = "org.teiid.designer.war.rest.generate"; //$NON-NLS-1$
+		String GENERATE_SOAP_WAR = "org.teiid.designer.war.soap.generate"; //$NON-NLS-1$
+		String DEPLOY_WAR = "org.teiid.designer.war.deploy"; //$NON-NLS-1$
 		
 		String NEW_TEIID_SERVER = "org.teiid.designer.runtime.newTeiidServer"; //$NON-NLS-1$
 		String EDIT_TEIID_SERVER = "org.teiid.designer.runtime.editTeiidServer"; //$NON-NLS-1$
@@ -197,6 +203,7 @@ public interface AdvisorUiConstants {
 		
         String NEW_OBJECT_BASE_TABLE = "Create new relational table"; //$NON-NLS-1$
         String NEW_OBJECT_VIEW_TABLE = "Create new relational view table"; //$NON-NLS-1$
+        String NEW_OBJECT_REST_PROCEDURE = "Create new relational view REST procedure"; //$NON-NLS-1$
 		String NEW_OBJECT_SOURCE_FUNCTION = "Create new relational source function";  //$NON-NLS-1$
 		
 		String CREATE_CONNECTION_JDBC = "Create connection profile for JDBC source"; //$NON-NLS-1$
@@ -213,12 +220,17 @@ public interface AdvisorUiConstants {
 		String OPEN_DATA_SOURCE_EXPLORER_VIEW = "Open Datatools' Data Source Explorer view"; //$NON-NLS-1$
 		
 		String NEW_TEIID_MODEL_PROJECT = "Create new Teiid Model Project"; //$NON-NLS-1$
+		String DEFINE_TEIID_MODEL_PROJECT = "Define Teiid Model Project"; //$NON-NLS-1$
 		
 		String CREATE_VDB = "Create a new VDB"; //$NON-NLS-1$
 		String EXECUTE_VDB = "Test a VDB by deploying to Teiid Server, connecting to it via JDBC and executing queries against it via Datatools' SQL Scrapbook"; //$NON-NLS-1$
 		String PREVIEW_DATA = "Perform a test query on a table or procedure"; //$NON-NLS-1$
 		String EDIT_VDB = "Select and open a VDB for editing"; //$NON-NLS-1$
 		String DEPLOY_VDB = "Deploy a VDB to your Teiid server"; //$NON-NLS-1$
+		
+		String GENERATE_REST_WAR = "Generate a REST WAR file"; //$NON-NLS-1$
+		String GENERATE_SOAP_WAR = "Generate a JBossWS-CXF WAR file"; //$NON-NLS-1$
+		String DEPLOY_WAR = "Deploy WAR file"; //$NON-NLS-1$
 		
 		String NEW_TEIID_SERVER = "Create new Teiid server"; //$NON-NLS-1$
 		String EDIT_TEIID_SERVER = "Edit the properties of an existing Teiid server"; //$NON-NLS-1$
@@ -244,6 +256,7 @@ public interface AdvisorUiConstants {
 		
         String NEW_OBJECT_BASE_TABLE = Messages.CreateNewRelationalBaseTable;
         String NEW_OBJECT_VIEW_TABLE = Messages.CreateNewRelationalViewTable;
+        String NEW_OBJECT_REST_PROCEDURE = Messages.CreateNewRelationalViewRESTProcedure;
 		String NEW_OBJECT_SOURCE_FUNCTION = Messages.CreateNewRelationalSourceFunction;
 		
 		String CREATE_CONNECTION_JDBC = Messages.CreateJdbcConnection;
@@ -261,11 +274,16 @@ public interface AdvisorUiConstants {
 		String OPEN_DATA_SOURCE_EXPLORER_VIEW = Messages.OpenDatatoolsDataSourceExplorer;
 		
 		String NEW_TEIID_MODEL_PROJECT = Messages.CreateTeiidModelProject;
+		String DEFINE_TEIID_MODEL_PROJECT = Messages.DefineTeiidModelProject;
 		String CREATE_VDB = Messages.CreateVdb;
 		String EXECUTE_VDB = Messages.ExecuteVdb;
 		String EDIT_VDB = Messages.EditVdb;
 		String PREVIEW_DATA = Messages.PreviewData;
 		String DEPLOY_VDB = Messages.DeployVdb;
+		
+		String GENERATE_REST_WAR = Messages.GenerateRestWar;
+		String GENERATE_SOAP_WAR = Messages.GenerateSoapWar;
+		String DEPLOY_WAR = Messages.DeployWarFile;
 		
 		String NEW_TEIID_SERVER = Messages.NewTeiidServer;
 		String EDIT_TEIID_SERVER = Messages.EditTeiidServer;
@@ -290,6 +308,7 @@ public interface AdvisorUiConstants {
 		
         String NEW_OBJECT_BASE_TABLE = Messages.CreateNewRelationalBaseTable_Short;
         String NEW_OBJECT_VIEW_TABLE = Messages.CreateNewRelationalViewTable_Short;
+        String NEW_OBJECT_REST_PROCEDURE = Messages.CreateNewRelationalViewRESTProcedure_Short;
 		String NEW_OBJECT_SOURCE_FUNCTION = Messages.CreateNewRelationalSourceFunction_Short;
 		
 		String CREATE_CONNECTION_JDBC = Messages.CreateJdbcConnection_Short;
@@ -306,11 +325,16 @@ public interface AdvisorUiConstants {
 		
 		String OPEN_DATA_SOURCE_EXPLORER_PERSPECTIVE = Messages.OpenDatatoolsDataSourceExplorer;
 		
-		String NEW_TEIID_MODEL_PROJECT = Messages.CreateTeiidModelProject;
+		String NEW_TEIID_MODEL_PROJECT = Messages.CreateTeiidModelProject_Short;
+		String DEFINE_TEIID_MODEL_PROJECT = Messages.DefineTeiidModelProject_Short;
 		String CREATE_VDB = Messages.CreateVdb_Short;
 		String EXECUTE_VDB = Messages.ExecuteVdb;
 		String EDIT_VDB = Messages.EditVdb_Short;
 		String DEPLOY_VDB = Messages.DeployVdb_Short;
+		
+		String GENERATE_REST_WAR = Messages.GenerateRestWar_Short;
+		String GENERATE_SOAP_WAR = Messages.GenerateSoapWar_Short;
+		String DEPLOY_WAR = Messages.DeployWarFile_Short;
 		
 		String NEW_TEIID_SERVER = Messages.NewTeiidServer_Short;
 		String EDIT_TEIID_SERVER = Messages.EditTeiidServer_Short;
@@ -376,7 +400,8 @@ public interface AdvisorUiConstants {
 	    String CREATE_WEB_SRVICES_DATA_FILE = CTOOL16 + "new-web-services-definition-file.png"; //$NON-NLS-1$
 	
 	    String NEW_WS_MODEL = OBJ16 + "new-web-service.png"; //$NON-NLS-1$
-	    String EXPORT_WAR = CTOOL16 + "export-war.png"; //$NON-NLS-1$
+	    String GENERATE_WAR = CVIEW16 + "generate-war.png"; //$NON-NLS-1$
+	    String DEPLOY_WAR = CVIEW16 + "deploy-war.png"; //$NON-NLS-1$
 	    String NEW_VDB = CTOOL16 + "new-vdb-wiz.gif"; //$NON-NLS-1$
 	    String NEW_MODEL_ACTION = CTOOL16 + "new-model-wiz.gif"; //$NON-NLS-1$
 	    String NEW_PROJECT_ACTION = CTOOL16 + "new-project-wiz.gif";  //$NON-NLS-1$
@@ -399,65 +424,69 @@ public interface AdvisorUiConstants {
 	    String EXECUTE_ACTION = CTOOL16 + "execute-action.gif"; //$NON-NLS-1$
 	    
 	    
-        public static String VDB_PROJECT = CVIEW16 + "vdbproject.png"; //$NON-NLS-1$
-        public static String MODEL_PROJECT = CVIEW16 + "modelproject.png"; //$NON-NLS-1$
-        public static String EXIT = CTOOL16 + "exit.gif"; //$NON-NLS-1$
-        public static String DELETE = CTOOL16 + "delete.gif"; //$NON-NLS-1$
-        public static String NEW_VDB_WIZARD = WIZBAN + "newvdbwizard.gif"; //$NON-NLS-1$
-        public static String OPEN = CTOOL16 + "openVdb.gif"; //$NON-NLS-1$
-        public static String OPEN_OR_CREATE_VDB = CTOOL16 + "openOrCreateVdb.gif"; //$NON-NLS-1$
-        public static String REBUILD_VDB = CTOOL16 + "rebuild_vdb.gif"; //$NON-NLS-1$
-        public static String CONFIGURATION_MANAGER_VIEW = CVIEW16 + "ConfigurationManagerView.gif"; //$NON-NLS-1$
-        public static String CONNECTOR_BINDINGS = CVIEW16 + "ConnectorBindings.gif"; //$NON-NLS-1$
-        public static String CONNECTOR_BINDINGS_WITH_ERROR = CVIEW16 + "ConnectorBindingsWithError.gif"; //$NON-NLS-1$
-        public static String BUILD_ALL = CVIEW16 + "build_exec.gif"; //$NON-NLS-1$
-        public static String MODEL_STATISTICS = CVIEW16 + "statistics.gif"; //$NON-NLS-1$
-        public static String VIEW_MODEL_TYPES = CVIEW16 + "viewModelTypes.gif"; //$NON-NLS-1$
-        public static String VIEW_WEB_SERVICES = CVIEW16 + "viewWebServices.gif"; //$NON-NLS-1$
-        public static String BUILD_IMPORTS = OBJ16 + "Imports.gif"; //$NON-NLS-1$
-        public static String IMPORT_EXAMPLE_VDB = WIZBAN + "importExampleVdb.gif"; //$NON-NLS-1$
-        public static String NEW_WEB_SERVICE = CTOOL16 + "NewWebService.png"; //$NON-NLS-1$
+	    
+        String VDB_PROJECT = CVIEW16 + "vdbproject.png"; //$NON-NLS-1$
+        String MODEL_PROJECT = CVIEW16 + "modelproject.png"; //$NON-NLS-1$
+        String EXIT = CTOOL16 + "exit.gif"; //$NON-NLS-1$
+        String DELETE = CTOOL16 + "delete.gif"; //$NON-NLS-1$
+        String NEW_VDB_WIZARD = WIZBAN + "newvdbwizard.gif"; //$NON-NLS-1$
+        String OPEN = CTOOL16 + "openVdb.gif"; //$NON-NLS-1$
+        String OPEN_OR_CREATE_VDB = CTOOL16 + "openOrCreateVdb.gif"; //$NON-NLS-1$
+        String REBUILD_VDB = CTOOL16 + "rebuild_vdb.gif"; //$NON-NLS-1$
+        String CONFIGURATION_MANAGER_VIEW = CVIEW16 + "ConfigurationManagerView.gif"; //$NON-NLS-1$
+        String CONNECTOR_BINDINGS = CVIEW16 + "ConnectorBindings.gif"; //$NON-NLS-1$
+        String CONNECTOR_BINDINGS_WITH_ERROR = CVIEW16 + "ConnectorBindingsWithError.gif"; //$NON-NLS-1$
+        String BUILD_ALL = CVIEW16 + "build_exec.gif"; //$NON-NLS-1$
+        String MODEL_STATISTICS = CVIEW16 + "statistics.gif"; //$NON-NLS-1$
+        String VIEW_MODEL_TYPES = CVIEW16 + "viewModelTypes.gif"; //$NON-NLS-1$
+        String VIEW_WEB_SERVICES = CVIEW16 + "viewWebServices.gif"; //$NON-NLS-1$
+        String BUILD_IMPORTS = OBJ16 + "Imports.gif"; //$NON-NLS-1$
+        String IMPORT_EXAMPLE_VDB = WIZBAN + "importExampleVdb.gif"; //$NON-NLS-1$
+        String NEW_WEB_SERVICE = CTOOL16 + "NewWebService.png"; //$NON-NLS-1$
+        
+        String NEW_VIRTUAL_TABLE_ICON = CVIEW16 + "new-view-table.png"; //$NON-NLS-1$
+        String NEW_VIRTUAL_PROCEDURE_ICON = CVIEW16 + "new-view-procedure.png"; //$NON-NLS-1$
 
         // --------------------------------------------------------------------------------
         // For WebServiceAdvisorStatusPanel
-        public static String CHECKED_BOX = CTOOL16 + "checked_box.png"; //$NON-NLS-1$
-        public static String WARNING_CHECKED_BOX = CTOOL16 + "warning_checked_box.png"; //$NON-NLS-1$
-        public static String EMPTY_BOX = CTOOL16 + "empty_box.png"; //$NON-NLS-1$
-        public static String WARNING_EMPTY_BOX = CTOOL16 + "warning_empty_box.png"; //$NON-NLS-1$
-        public static String PROBLEM_BOX = CTOOL16 + "problem_box.png"; //$NON-NLS-1$
-        public static String WARNING_PROBLEM_BOX = CTOOL16 + "warning_problem_box.gif"; //$NON-NLS-1$
-        public static String EMPTY_GRAY_BOX = CTOOL16 + "empty_gray_box.gif"; //$NON-NLS-1$
+        String CHECKED_BOX = CTOOL16 + "checked_box.png"; //$NON-NLS-1$
+        String WARNING_CHECKED_BOX = CTOOL16 + "warning_checked_box.png"; //$NON-NLS-1$
+        String EMPTY_BOX = CTOOL16 + "empty_box.png"; //$NON-NLS-1$
+        String WARNING_EMPTY_BOX = CTOOL16 + "warning_empty_box.png"; //$NON-NLS-1$
+        String PROBLEM_BOX = CTOOL16 + "problem_box.png"; //$NON-NLS-1$
+        String WARNING_PROBLEM_BOX = CTOOL16 + "warning_problem_box.gif"; //$NON-NLS-1$
+        String EMPTY_GRAY_BOX = CTOOL16 + "empty_gray_box.gif"; //$NON-NLS-1$
         // button versions....
-        public static String CHECKED_BOX_BUTTON = CTOOL16 + "checked_box_button.gif"; //$NON-NLS-1$
-        public static String WARNING_CHECKED_BOX_BUTTON = CTOOL16 + "warning_checked_box_button.gif"; //$NON-NLS-1$
-        public static String EMPTY_BOX_BUTTON = CTOOL16 + "empty_box_button.gif"; //$NON-NLS-1$
-        public static String WARNING_EMPTY_BOX_BUTTON = CTOOL16 + "warning_empty_box_button.gif"; //$NON-NLS-1$
-        public static String PROBLEM_BOX_BUTTON = CTOOL16 + "problem_box_button.gif"; //$NON-NLS-1$
-        public static String WARNING_PROBLEM_BOX_BUTTON = CTOOL16 + "warning_problem_box_button.gif"; //$NON-NLS-1$
-        public static String EMPTY_GRAY_BOX_BUTTON = CTOOL16 + "empty_gray_box_button.gif"; //$NON-NLS-1$
+        String CHECKED_BOX_BUTTON = CTOOL16 + "checked_box_button.gif"; //$NON-NLS-1$
+        String WARNING_CHECKED_BOX_BUTTON = CTOOL16 + "warning_checked_box_button.gif"; //$NON-NLS-1$
+        String EMPTY_BOX_BUTTON = CTOOL16 + "empty_box_button.gif"; //$NON-NLS-1$
+        String WARNING_EMPTY_BOX_BUTTON = CTOOL16 + "warning_empty_box_button.gif"; //$NON-NLS-1$
+        String PROBLEM_BOX_BUTTON = CTOOL16 + "problem_box_button.gif"; //$NON-NLS-1$
+        String WARNING_PROBLEM_BOX_BUTTON = CTOOL16 + "warning_problem_box_button.gif"; //$NON-NLS-1$
+        String EMPTY_GRAY_BOX_BUTTON = CTOOL16 + "empty_gray_box_button.gif"; //$NON-NLS-1$
 
-        public static String VDB_OK = CTOOL16 + "vdb_ok_status.gif"; //$NON-NLS-1$
-        public static String VDB_ERROR = CTOOL16 + "vdb_error_status.gif"; //$NON-NLS-1$
-        public static String VDB_SAVE_REQUIRED = CTOOL16 + "vdb_save_required.gif"; //$NON-NLS-1$
+        String VDB_OK = CTOOL16 + "vdb_ok_status.gif"; //$NON-NLS-1$
+        String VDB_ERROR = CTOOL16 + "vdb_error_status.gif"; //$NON-NLS-1$
+        String VDB_SAVE_REQUIRED = CTOOL16 + "vdb_save_required.gif"; //$NON-NLS-1$
 
-        public static String IMPORT_XSD = CTOOL16 + "import_xsd.gif"; //$NON-NLS-1$
-        public static String IMPORT_VDB_ICON = WIZBAN + "import_vdb.gif"; //$NON-NLS-1$
-        public static String EDIT_BINDINGS = CVIEW16 + "ConnectorBindings.gif"; //$NON-NLS-1$
-        public static String NEW_MODEL_WIZARD = CVIEW16 + "newmodel_wiz.gif"; //$NON-NLS-1$
-        public static String FIX_IT = CTOOL16 + "fix_it.gif"; //$NON-NLS-1$
-        public static String LIGHTBULB_ICON = CTOOL16 + "lightbulb.gif"; //$NON-NLS-1$
+        String IMPORT_XSD = CTOOL16 + "import_xsd.gif"; //$NON-NLS-1$
+        String IMPORT_VDB_ICON = WIZBAN + "import_vdb.gif"; //$NON-NLS-1$
+        String EDIT_BINDINGS = CVIEW16 + "ConnectorBindings.gif"; //$NON-NLS-1$
+        String NEW_MODEL_WIZARD = CVIEW16 + "newmodel_wiz.gif"; //$NON-NLS-1$
+        String FIX_IT = CTOOL16 + "fix_it.gif"; //$NON-NLS-1$
+        String LIGHTBULB_ICON = CTOOL16 + "lightbulb.gif"; //$NON-NLS-1$
 
-        public static String PREVIEW_WSDL = CTOOL16 + "preview_wsdl.gif"; //$NON-NLS-1$
-        public static String PREVIEW_WSDL_ERROR = CTOOL16 + "preview_wsdl_error.gif"; //$NON-NLS-1$
-        public static String PREVIEW_WSDL_GRAY = DTOOL16 + "preview_wsdl_disabled.gif"; //$NON-NLS-1$
+        String PREVIEW_WSDL = CTOOL16 + "preview_wsdl.gif"; //$NON-NLS-1$
+        String PREVIEW_WSDL_ERROR = CTOOL16 + "preview_wsdl_error.gif"; //$NON-NLS-1$
+        String PREVIEW_WSDL_GRAY = DTOOL16 + "preview_wsdl_disabled.gif"; //$NON-NLS-1$
 
-        public static String PROBLEM_ERROR = CTOOL16 + "ProblemMarker_error.gif"; //$NON-NLS-1$
-        public static String PROBLEM_WARNING = CTOOL16 + "ProblemMarker_warning.gif"; //$NON-NLS-1$
-        public static String PROBLEM_INFO = CTOOL16 + "ProblemMarker_info.gif"; //$NON-NLS-1$
+        String PROBLEM_ERROR = CTOOL16 + "ProblemMarker_error.gif"; //$NON-NLS-1$
+        String PROBLEM_WARNING = CTOOL16 + "ProblemMarker_warning.gif"; //$NON-NLS-1$
+        String PROBLEM_INFO = CTOOL16 + "ProblemMarker_info.gif"; //$NON-NLS-1$
 
-        public static String HELP_ICON = CTOOL16 + "linkto_help.gif"; //$NON-NLS-1$
-        public static String PROBLEMS_VIEW = CTOOL16 + "problems_view.gif"; //$NON-NLS-1$
-        public static String NEW_MODEL = CTOOL16 + "newmodel_wiz.gif"; //$NON-NLS-1$
+        String HELP_ICON = CTOOL16 + "linkto_help.gif"; //$NON-NLS-1$
+        String PROBLEMS_VIEW = CTOOL16 + "problems_view.gif"; //$NON-NLS-1$
+        String NEW_MODEL = CTOOL16 + "newmodel_wiz.gif"; //$NON-NLS-1$
         // --------------------------------------------------------------------------------
 	}
 	

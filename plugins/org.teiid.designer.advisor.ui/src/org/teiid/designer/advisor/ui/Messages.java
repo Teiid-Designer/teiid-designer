@@ -31,6 +31,8 @@ public class Messages  extends NLS {
     public static String Create;
     public static String CreateARESTWebService;
     public static String CreateASOAPWebService;
+    public static String CreateARESTWar;
+    public static String CreateASOAPWar;
     public static String CreateConnection;
     public static String CreateDataSource;
     public static String CreateJdbcConnection;
@@ -45,6 +47,8 @@ public class Messages  extends NLS {
     public static String CreateNewRelationalBaseTable_Short;
     public static String CreateNewRelationalViewTable;
     public static String CreateNewRelationalViewTable_Short;
+    public static String CreateNewRelationalViewRESTProcedure;
+    public static String CreateNewRelationalViewRESTProcedure_Short;
     public static String CreateNewRelationalSourceFunction;
     public static String CreateNewRelationalSourceFunction_Short;
     public static String CreateNewRelationalSourceModel;
@@ -81,8 +85,12 @@ public class Messages  extends NLS {
     public static String CreateWebServicesConnection_Short;
     
     public static String DefineModels;
+    public static String DefineTeiidModelProject;
+    public static String DefineTeiidModelProject_Short;
     public static String DeployVdb;
     public static String DeployVdb_Short;
+    public static String DeployWarFile;
+    public static String DeployWarFile_Short;
     public static String DoubleClickToExecuteAction;
     
     public static String EditTeiidServer;
@@ -96,6 +104,11 @@ public class Messages  extends NLS {
     
     public static String GenerateWSModelsFromWsdl;
     public static String GenerateWSModelsFromWsdl_Short;
+    public static String GenerateRestWar;
+    public static String GenerateRestWar_Short;
+    public static String GenerateSoapWar;
+    public static String GenerateSoapWar_Short;
+
     
     public static String Guides;
     

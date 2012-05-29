@@ -25,6 +25,8 @@ public class AdvisorGuides implements AdvisorUiConstants {
 	public static final String MODEL_LOCAL_XML_SOURCE = Messages.ModelLocalXmlFileSource;
 	public static final String CONSUME_SOAP_WEB_SERVICE = Messages.ConsumeSoapWebService;
 	public static final String TEIID_SERVER_ACTIONS = Messages.TeiidServer;
+	public static final String CREATE_REST_WAR = Messages.CreateARESTWar;
+	public static final String CREATE_SOAP_WAR = Messages.CreateASOAPWar;
 			
 	public AdvisorGuides() {
 		super();
@@ -34,7 +36,7 @@ public class AdvisorGuides implements AdvisorUiConstants {
 	private void init() {
 		this.actionInfoMap = new HashMap<String, AdvisorActionInfo[]>(3);
 		Collection<AdvisorActionInfo> infoList = new ArrayList<AdvisorActionInfo>();
-		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.NEW_TEIID_MODEL_PROJECT));
+		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.DEFINE_TEIID_MODEL_PROJECT));
 		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.CREATE_CONNECTION_JDBC));
 		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.IMPORT_JDBC));
 		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.PREVIEW_DATA));
@@ -45,7 +47,7 @@ public class AdvisorGuides implements AdvisorUiConstants {
 		actionInfoMap.put(MODEL_JDBC_SOURCE, infoArray);
 		
 		infoList = new ArrayList<AdvisorActionInfo>();
-		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.NEW_TEIID_MODEL_PROJECT));
+		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.DEFINE_TEIID_MODEL_PROJECT));
 		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.CREATE_CONNECTION_FLAT_FILE));
 		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.IMPORT_FLAT_FILE));
 		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.PREVIEW_DATA));
@@ -56,7 +58,7 @@ public class AdvisorGuides implements AdvisorUiConstants {
 		actionInfoMap.put(MODEL_FLAT_FILE_SOURCE, infoArray);
 		
 		infoList = new ArrayList<AdvisorActionInfo>();
-		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.NEW_TEIID_MODEL_PROJECT));
+		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.DEFINE_TEIID_MODEL_PROJECT));
 		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.CREATE_CONNECTION_XML_FILE_LOCAL));
 		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.IMPORT_XML_FILE));
 		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.PREVIEW_DATA));
@@ -67,7 +69,7 @@ public class AdvisorGuides implements AdvisorUiConstants {
 		actionInfoMap.put(MODEL_LOCAL_XML_SOURCE, infoArray);
 
 		infoList = new ArrayList<AdvisorActionInfo>();
-		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.NEW_TEIID_MODEL_PROJECT));
+		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.DEFINE_TEIID_MODEL_PROJECT));
 		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.CREATE_CONNECTION_XML_FILE_URL));
 		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.IMPORT_XML_FILE_URL));
 		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.PREVIEW_DATA));
@@ -78,7 +80,7 @@ public class AdvisorGuides implements AdvisorUiConstants {
 		actionInfoMap.put(MODEL_REMOTE_XML_SOURCE, infoArray);
 		
 		infoList = new ArrayList<AdvisorActionInfo>();
-		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.NEW_TEIID_MODEL_PROJECT));
+		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.DEFINE_TEIID_MODEL_PROJECT));
 		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.CREATE_CONNECTION_WEB_SERVICE_ODA));
 		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.GENERATE_WS_MODELS_FROM_WSDL));
 		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.PREVIEW_DATA));
@@ -94,6 +96,58 @@ public class AdvisorGuides implements AdvisorUiConstants {
 
         infoArray = infoList.toArray(new AdvisorActionInfo[infoList.size()]);
 		actionInfoMap.put(TEIID_SERVER_ACTIONS, infoArray);
+		
+		// =============================================================================
+		// Create REST Web services WAR file
+		//
+		//		Create project
+		//	**	Create RESTful View
+		//	**		: New View Table in View model and generate procedure (invoke() ??)
+		//	**		: Full CRUD, if updates are required
+		//		Assign REST properties (MED)
+		//		Create VDB with view model
+		//	**	Deploy VDB
+		//	**	Generate DS for VDB
+		//		Generate REST WAR
+		//		Deploy REST WAR
+		// =============================================================================
+		infoList = new ArrayList<AdvisorActionInfo>();
+		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.DEFINE_TEIID_MODEL_PROJECT));
+		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.NEW_OBJECT_VIEW_TABLE));
+		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.NEW_OBJECT_REST_PROCEDURE));
+		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.PREVIEW_DATA));
+		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.CREATE_VDB));
+		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.DEPLOY_VDB));
+		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.GENERATE_REST_WAR));
+		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.DEPLOY_WAR));
+
+        infoArray = infoList.toArray(new AdvisorActionInfo[infoList.size()]);
+		actionInfoMap.put(CREATE_REST_WAR, infoArray);
+		
+		// =============================================================================
+		//		JBossWS-CXF (SOAP) War actions set:
+		//
+		//			Create project
+		//			Create Web Service Models
+		//			Create VDB
+		//			Add Models
+		//			Deploy VDB
+		//			Generate DS for VDB
+		//			Generate JBossWS-CXF WAR
+		//			Deploy JBossWS-CXF WAR
+		// =============================================================================
+		infoList = new ArrayList<AdvisorActionInfo>();
+		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.DEFINE_TEIID_MODEL_PROJECT));
+		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.NEW_OBJECT_VIEW_TABLE));
+		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.NEW_OBJECT_REST_PROCEDURE));
+		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.PREVIEW_DATA));
+		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.CREATE_VDB));
+		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.DEPLOY_VDB));
+		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.GENERATE_SOAP_WAR));
+		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.DEPLOY_WAR));
+
+        infoArray = infoList.toArray(new AdvisorActionInfo[infoList.size()]);
+		actionInfoMap.put(CREATE_SOAP_WAR, infoArray);
 		
 	}
 	
