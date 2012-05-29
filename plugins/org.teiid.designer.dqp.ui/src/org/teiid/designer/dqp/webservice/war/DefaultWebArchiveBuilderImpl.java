@@ -529,9 +529,9 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
 	    String pathToCallback = "/org" + File.separator + "teiid" + File.separator + "soap" + File.separator + "wsse"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 	    String pathToPlugin = "/org" + File.separator + "teiid" + File.separator + "soap"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
 	    final String tns = (String)properties.get(WebArchiveBuilderConstants.PROPERTY_WSDL_TNS);
-	    String vdbFileName = properties.getProperty(WebArchiveBuilderConstants.PROPERTY_VDB_FILE_NAME);
-	    File vdbFile = new File(FileUtils.getFilenameWithoutExtension(vdbFileName));
-	
+	    String context = properties.getProperty(WebArchiveBuilderConstants.PROPERTY_CONTEXT_NAME);
+	    
+	    
 	    List<File> portProviders = new ArrayList<File>();
 	    for (String port : getPorts()) {
 	        String providerJavaFilePath = webInfClassesDirectory.getCanonicalPath() + pathToProviders + File.separator + port
@@ -544,7 +544,7 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
 	        AntTasks.replace(providerJavaFile, "${className}", port); //$NON-NLS-1$
 	        AntTasks.replace(providerJavaFile, "${targetNamespace}", tns); //$NON-NLS-1$
 	        AntTasks.replace(providerJavaFile, "${portName}", port); //$NON-NLS-1$
-	        AntTasks.replace(providerJavaFile, "${serviceName}", vdbFile.getName()); //$NON-NLS-1$
+	        AntTasks.replace(providerJavaFile, "${serviceName}", context); //$NON-NLS-1$
 	        AntTasks.replace(providerJavaFile, "${wsdlFileName}", this.wsdlFilename); //$NON-NLS-1$
 	    }
 	
