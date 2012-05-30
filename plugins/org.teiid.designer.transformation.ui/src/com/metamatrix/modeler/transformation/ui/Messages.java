@@ -82,6 +82,7 @@ public class Messages extends NLS {
     public static String sqlTemplateDialogDelDefaultProcLabel;
     public static String sqlTemplateDialogSoapCreateProcLabel;
     public static String sqlTemplateDialogSoapExtractProcLabel;
+    public static String sqlTemplateDialogRestProcLabel;
     public static String sqlTemplateDialogSqlAreaGroup;
     public static String sqlTemplateDialogSelectTabTitle;
     public static String sqlTemplateDialogProceduresTabTitle;

@@ -10,6 +10,7 @@ package com.metamatrix.modeler.transformation.ui.editors;
 import java.util.Properties;
 
 import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IStatus;
@@ -54,7 +55,7 @@ import com.metamatrix.modeler.internal.ui.wizards.NewModelWizard;
 import com.metamatrix.modeler.transformation.ui.UiConstants;
 import com.metamatrix.modeler.transformation.ui.UiPlugin;
 import com.metamatrix.modeler.transformation.ui.actions.CreateViewTableAction;
-import com.metamatrix.modeler.ui.viewsupport.DesignerPropertiesUtil;
+import com.metamatrix.modeler.ui.viewsupport.DesignerProperties;
 import com.metamatrix.modeler.ui.wizards.NewModelWizardInput;
 import com.metamatrix.ui.internal.util.WidgetFactory;
 import com.metamatrix.ui.internal.viewsupport.ClosedProjectFilter;
@@ -83,7 +84,7 @@ public class DefineViewTableDialog extends TitleAreaDialog implements
 	private Button browseButton;
 	private Text selectedViewTableText;
 
-	Properties designerProperties;
+	DesignerProperties designerProperties;
 
 	/**
 	 * @since 5.5.3
@@ -98,7 +99,7 @@ public class DefineViewTableDialog extends TitleAreaDialog implements
 	 */
 	public DefineViewTableDialog(Shell parentShell, Properties properties) {
 		this(parentShell);
-		this.designerProperties = properties;
+		this.designerProperties = (DesignerProperties)properties;
 	}
 
 	/**
@@ -241,14 +242,14 @@ public class DefineViewTableDialog extends TitleAreaDialog implements
 
 		if (this.designerProperties != null) {
 			// Check for existing project??
-    		this.selectedModel = DesignerPropertiesUtil.getViewModel(this.designerProperties);
+    		this.selectedModel = this.designerProperties.getViewModel();
     		if( this.selectedModel != null ) {
 				this.selectedViewModelText.setText(this.selectedModel.getName());
     		}
-			EObject lastModelObject = DesignerPropertiesUtil.getLastViewModelObject(this.designerProperties);
+			EObject lastModelObject = this.designerProperties.getLastViewModelObject();
 			if (lastModelObject != null && lastModelObject instanceof Table) {
 				this.viewTable = lastModelObject;
-    			this.selectedViewTableText.setText(DesignerPropertiesUtil.getLastViewModelObjectName(this.designerProperties));
+    			this.selectedViewTableText.setText(this.designerProperties.getLastViewModelObjectName());
     		}
     		
 			updateState();
@@ -292,7 +293,7 @@ public class DefineViewTableDialog extends TitleAreaDialog implements
 		if( this.viewTable != null ) {
 			String name = ModelerCore.getModelEditor().getName(this.viewTable);
 			this.selectedViewTableText.setText(name);
-			DesignerPropertiesUtil.setLastViewModelObjectName(this.designerProperties, name);
+			this.designerProperties.setLastViewModelObjectName(name);
 		}
 	}
 
@@ -312,13 +313,15 @@ public class DefineViewTableDialog extends TitleAreaDialog implements
 			// Set the View Model too
 			String name = ModelerCore.getModelEditor().getName(this.viewTable);
 			this.selectedViewTableText.setText(name);
-			DesignerPropertiesUtil.setLastViewModelObjectName(this.designerProperties, name);
+			this.designerProperties.setLastViewModelObjectName(name);
+			this.designerProperties.setPreviewTargetObjectName(name);
 			
 			try {
 				ModelResource mr = ModelUtilities.getModelResource(this.viewTable);
 				this.selectedModel = mr.getUnderlyingResource();
-				DesignerPropertiesUtil.setViewModelName(this.designerProperties, this.selectedModel.getName());
+				this.designerProperties.setViewModelName(this.selectedModel.getName());
 				this.selectedViewModelText.setText(this.selectedModel.getName());
+				this.designerProperties.setPreviewTargetModelName(this.selectedModel.getName());
 			} catch (ModelWorkspaceException e) {
 	            UiConstants.Util.log(IStatus.ERROR, e, e.getMessage());
 			}
@@ -331,16 +334,23 @@ public class DefineViewTableDialog extends TitleAreaDialog implements
 		NewModelWizardInput newModelInput = 
 				new NewModelWizardInput("Relational", ModelType.VIRTUAL_LITERAL, null); //$NON-NLS-1$
 
+		boolean projectDefined = false;
+		
         final IWorkbenchWindow iww = UiPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow();
         boolean successful = false;
         try {
 
             NewModelWizard wizard = new NewModelWizard(newModelInput, this.designerProperties);
-
+            
             // Create a Project Selection here
-            IContainer viewsFolder = DesignerPropertiesUtil.getViewsFolder(this.designerProperties);
-
-            wizard.init(iww.getWorkbench(), new StructuredSelection(viewsFolder));
+            IContainer container = this.designerProperties.getViewsFolder();
+            if( container == null ) {
+            	container = this.designerProperties.getProject();
+            }
+            if( container != null ) {
+            	projectDefined = true;
+            	wizard.init(iww.getWorkbench(), new StructuredSelection(container));
+            }
             
             WizardDialog dialog = new WizardDialog(iww.getShell(), wizard);
             int result = dialog.open();
@@ -355,10 +365,18 @@ public class DefineViewTableDialog extends TitleAreaDialog implements
         } finally {
         	// Find the view model from the properties
         	if( successful ) {
-        		this.selectedModel = DesignerPropertiesUtil.getViewModel(this.designerProperties);
-        		if( this.selectedModel != null ) {
-        			this.selectedViewModelText.setText(this.selectedModel.getName());
-        		} 
+        		
+        		// Check for view model
+        		if( this.selectedModel == null || this.designerProperties.isViewModelDifferent((IFile)this.selectedModel) ) {
+	        		this.selectedModel = this.designerProperties.getViewModel();
+	        		if( this.selectedModel != null ) {
+	        			this.selectedViewModelText.setText(this.selectedModel.getName());
+	        		}
+        		}
+        		
+        		if( !projectDefined ) {
+        			this.designerProperties.setProjectName(this.selectedModel.getProject().getName());
+        		}
         	}
         }
 	}
@@ -377,7 +395,7 @@ public class DefineViewTableDialog extends TitleAreaDialog implements
 			Object[] selections = sdDialog.getResult();
 			// should be single selection
 			this.selectedModel = (IResource) selections[0];
-    		DesignerPropertiesUtil.setViewModelName(this.designerProperties, this.selectedModel.getName());
+			this.designerProperties.setViewModelName(this.selectedModel.getName());
     		this.selectedViewModelText.setText(this.selectedModel.getName());
 			
 			updateState();
@@ -451,7 +469,7 @@ public class DefineViewTableDialog extends TitleAreaDialog implements
 
 				}
 				if (!ok) {
-					String msg = getString("selectionDialog.invalidSelection"); //$NON-NLS-1$
+					String msg = getString("viewModel.selectionDialog.invalidSelection"); //$NON-NLS-1$
 					return new StatusInfo(UiConstants.PLUGIN_ID, IStatus.ERROR, msg);
 				}
 				return new StatusInfo(UiConstants.PLUGIN_ID);

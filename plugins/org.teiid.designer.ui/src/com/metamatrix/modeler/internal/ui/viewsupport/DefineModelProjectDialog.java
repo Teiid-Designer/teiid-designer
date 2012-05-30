@@ -40,6 +40,7 @@ import com.metamatrix.modeler.internal.core.workspace.DotProjectUtils;
 import com.metamatrix.modeler.internal.ui.explorer.ModelExplorerContentProvider;
 import com.metamatrix.modeler.internal.ui.explorer.ModelExplorerLabelProvider;
 import com.metamatrix.modeler.ui.UiConstants;
+import com.metamatrix.modeler.ui.viewsupport.DesignerProperties;
 import com.metamatrix.modeler.ui.viewsupport.DesignerPropertiesUtil;
 import com.metamatrix.ui.internal.util.WidgetFactory;
 import com.metamatrix.ui.internal.viewsupport.ClosedProjectFilter;
@@ -64,7 +65,7 @@ public class DefineModelProjectDialog extends TitleAreaDialog implements
 	private Button browseButton;
 	private Text selectedProjectText;
 
-	Properties designerProperties;
+	DesignerProperties designerProperties;
 
 	/**
 	 * @since 5.5.3
@@ -79,7 +80,7 @@ public class DefineModelProjectDialog extends TitleAreaDialog implements
 	 */
 	public DefineModelProjectDialog(Shell parentShell, Properties properties) {
 		this(parentShell);
-		this.designerProperties = properties;
+		this.designerProperties = (DesignerProperties)properties;
 	}
 
 	/**
@@ -239,9 +240,20 @@ public class DefineModelProjectDialog extends TitleAreaDialog implements
 		if (sdDialog.getReturnCode() == Window.OK) {
 			Object[] selections = sdDialog.getResult();
 			// should be single selection
-			this.project = (IProject) selections[0];
+			// Check for duplicate project, if NOT then need to clear all properties and then set, else ignore
+			IProject selectedProject = (IProject) selections[0];
+			if( this.project != null && 
+				selectedProject != null && 
+				selectedProject.getName().equals(this.project.getName())) {
+				return;
+			}
+			
+			// projects are different, clear properties
+			this.designerProperties.clear();
+			this.project = selectedProject;
 			this.selectedProjectText.setText(this.project.getName());
 			DesignerPropertiesUtil.setProjectName(this.designerProperties, this.project.getName());
+			
 			if( this.project != null ) {
 				// Check for source and view folders
 				try {

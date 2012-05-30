@@ -1,16 +1,17 @@
 /*
  * JBoss, Home of Professional Open Source.
- *
- * See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
- *
- * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
- */
+*
+* See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+*
+* See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+*/
 package com.metamatrix.modeler.ui.viewsupport;
 
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -19,6 +20,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.ecore.EObject;
+
 import com.metamatrix.modeler.core.ModelEditor;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelResource;
@@ -30,145 +32,145 @@ import com.metamatrix.modeler.internal.ui.viewsupport.ModelIdentifier;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.ui.UiPlugin;
 
-/**
- * Contains static helper methods for working with IPropertiesContext properties
- */
-public class DesignerPropertiesUtil {
+public class DesignerProperties extends Properties {
 
-    private static final DesignerPropertiesUtil INSTANCE = new DesignerPropertiesUtil();
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	
 
-    /**
-     * Get the DesignerPropertiesUtil instance for this VM.
-     * 
-     * @return the singleton instance for this VM; never null
-     */
-    public static DesignerPropertiesUtil getInstance() {
-        return INSTANCE;
-    }
+    public DesignerProperties(String guideID) {
+		super();
+		setProperty(IPropertiesContext.KEY_GUIDE_ID, guideID);
+	}
 
-    public static String getProjectName( Properties properties ) {
-        return properties.getProperty(IPropertiesContext.KEY_PROJECT_NAME);
-    }
-
-    public static String getVdbName( Properties properties ) {
-        return properties.getProperty(IPropertiesContext.KEY_LAST_VDB_NAME);
-    }
-
-    public static String getSourceModelName( Properties properties ) {
-        return properties.getProperty(IPropertiesContext.KEY_LAST_SOURCE_MODEL_NAME);
-    }
-
-    public static String getViewModelName( Properties properties ) {
-        return properties.getProperty(IPropertiesContext.KEY_LAST_VIEW_MODEL_NAME);
-    }
-
-    public static String getConnectionProfileName( Properties properties ) {
-        return properties.getProperty(IPropertiesContext.KEY_LAST_CONNECTION_PROFILE_ID);
-    }
-
-    public static String getSourcesFolderName( Properties properties ) {
-        return properties.getProperty(IPropertiesContext.KEY_SOURCES_FOLDER);
-    }
-
-    public static String getViewsFolderName( Properties properties ) {
-        return properties.getProperty(IPropertiesContext.KEY_VIEWS_FOLDER);
-    }
-
-    public static String getSchemaFolderName( Properties properties ) {
-        return properties.getProperty(IPropertiesContext.KEY_SCHEMA_FOLDER);
-    }
-
-    public static String getWebServiceFolderName( Properties properties ) {
-        return properties.getProperty(IPropertiesContext.KEY_WS_FOLDER);
-    }
-
-    public static String getPreviewTargetObjectName( Properties properties ) {
-        return properties.getProperty(IPropertiesContext.KEY_PREVIEW_TARGET_OBJECT);
-    }
-
-    public static String getPreviewTargetModelName( Properties properties ) {
-        return properties.getProperty(IPropertiesContext.KEY_PREVIEW_TARGET_MODEL);
+    public String getGuideID() {
+    	return getProperty(IPropertiesContext.KEY_GUIDE_ID);
     }
     
-    public static String getLastSourceModelObjectName( Properties properties ) {
-        return properties.getProperty(IPropertiesContext.KEY_LAST_SOURCE_MODEL_OBJECT_NAME);
+	@Override
+	public synchronized void clear() {
+		String guideID = getGuideID();
+		super.clear();
+		setGuideID(guideID);
+	}
+
+	public String getProjectName() {
+        return getProperty(IPropertiesContext.KEY_PROJECT_NAME);
     }
-    public static String getLastViewModelObjectName( Properties properties ) {
-        return properties.getProperty(IPropertiesContext.KEY_LAST_VIEW_MODEL_OBJECT_NAME);
+
+    public String getVdbName() {
+        return getProperty(IPropertiesContext.KEY_LAST_VDB_NAME);
+    }
+
+    public String getSourceModelName() {
+        return getProperty(IPropertiesContext.KEY_LAST_SOURCE_MODEL_NAME);
+    }
+
+    public String getViewModelName() {
+        return getProperty(IPropertiesContext.KEY_LAST_VIEW_MODEL_NAME);
+    }
+
+    public String getConnectionProfileName() {
+        return getProperty(IPropertiesContext.KEY_LAST_CONNECTION_PROFILE_ID);
+    }
+
+    public String getSourcesFolderName() {
+        return getProperty(IPropertiesContext.KEY_SOURCES_FOLDER);
+    }
+
+    public String getViewsFolderName() {
+        return getProperty(IPropertiesContext.KEY_VIEWS_FOLDER);
+    }
+
+    public String getSchemaFolderName() {
+        return getProperty(IPropertiesContext.KEY_SCHEMA_FOLDER);
+    }
+
+    public String getWebServiceFolderName() {
+        return getProperty(IPropertiesContext.KEY_WS_FOLDER);
+    }
+
+    public String getPreviewTargetObjectName() {
+        return getProperty(IPropertiesContext.KEY_PREVIEW_TARGET_OBJECT);
+    }
+
+    public String getPreviewTargetModelName() {
+        return getProperty(IPropertiesContext.KEY_PREVIEW_TARGET_MODEL);
     }
     
-    public static boolean isImportXmlRemote( Properties properties ) {
-    	String value = properties.getProperty(IPropertiesContext.KEY_IMPORT_XML_TYPE);
+    public String getLastSourceModelObjectName() {
+        return getProperty(IPropertiesContext.KEY_LAST_SOURCE_MODEL_OBJECT_NAME);
+    }
+    public String getLastViewModelObjectName() {
+        return getProperty(IPropertiesContext.KEY_LAST_VIEW_MODEL_OBJECT_NAME);
+    }
+    
+    public boolean isImportXmlRemote() {
+    	String value = getProperty(IPropertiesContext.KEY_IMPORT_XML_TYPE);
     	if( value != null && value.equalsIgnoreCase(IPropertiesContext.IMPORT_XML_REMOTE)) {
     		return true;
     	}
     	
     	return false;
     }
-
-    public static void setProjectName( Properties properties,
-                                       String projectName ) {
-        properties.put(IPropertiesContext.KEY_PROJECT_NAME, projectName);
+    
+    public void setGuideID(String ID) {
+    	put(IPropertiesContext.KEY_GUIDE_ID, ID);
     }
 
-    public static void setVdbName( Properties properties,
-                                   String vdbName ) {
-        properties.put(IPropertiesContext.KEY_LAST_VDB_NAME, vdbName);
+    public void setProjectName(String projectName ) {
+        put(IPropertiesContext.KEY_PROJECT_NAME, projectName);
     }
 
-    public static void setSourceModelName( Properties properties,
-                                           String sourceModelName ) {
-        properties.put(IPropertiesContext.KEY_LAST_SOURCE_MODEL_NAME, sourceModelName);
+    public void setVdbName(String vdbName ) {
+        put(IPropertiesContext.KEY_LAST_VDB_NAME, vdbName);
     }
 
-    public static void setViewModelName( Properties properties,
-                                         String viewModelName ) {
-        properties.put(IPropertiesContext.KEY_LAST_VIEW_MODEL_NAME, viewModelName);
+    public void setSourceModelName(String sourceModelName ) {
+        put(IPropertiesContext.KEY_LAST_SOURCE_MODEL_NAME, sourceModelName);
     }
 
-    public static void setConnectionProfileName( Properties properties,
-                                                 String connProfileName ) {
-        properties.put(IPropertiesContext.KEY_LAST_CONNECTION_PROFILE_ID, connProfileName);
+    public void setViewModelName(String viewModelName ) {
+        put(IPropertiesContext.KEY_LAST_VIEW_MODEL_NAME, viewModelName);
     }
 
-    public static void setSourcesFolderName( Properties properties,
-                                             String sourcesFolderName ) {
-        properties.put(IPropertiesContext.KEY_SOURCES_FOLDER, sourcesFolderName);
+    public void setConnectionProfileName(String connProfileName ) {
+        put(IPropertiesContext.KEY_LAST_CONNECTION_PROFILE_ID, connProfileName);
     }
 
-    public static void setViewsFolderName( Properties properties,
-                                           String sourcesFolderName ) {
-        properties.put(IPropertiesContext.KEY_VIEWS_FOLDER, sourcesFolderName);
+    public void setSourcesFolderName(String sourcesFolderName ) {
+        put(IPropertiesContext.KEY_SOURCES_FOLDER, sourcesFolderName);
     }
 
-    public static void setSchemaFolderName( Properties properties,
-                                            String schemaFolderName ) {
-        properties.put(IPropertiesContext.KEY_SCHEMA_FOLDER, schemaFolderName);
+    public void setViewsFolderName(String sourcesFolderName ) {
+        put(IPropertiesContext.KEY_VIEWS_FOLDER, sourcesFolderName);
     }
 
-    public static void setWebServiceFolderName( Properties properties,
-                                                String webServiceFolderName ) {
-        properties.put(IPropertiesContext.KEY_WS_FOLDER, webServiceFolderName);
+    public void setSchemaFolderName(String schemaFolderName ) {
+        put(IPropertiesContext.KEY_SCHEMA_FOLDER, schemaFolderName);
     }
 
-    public static void setPreviewTargetObjectName( Properties properties,
-                                                   String previewTargetObjectName ) {
-        properties.put(IPropertiesContext.KEY_PREVIEW_TARGET_OBJECT, previewTargetObjectName);
+    public void setWebServiceFolderName(String webServiceFolderName ) {
+        put(IPropertiesContext.KEY_WS_FOLDER, webServiceFolderName);
     }
 
-    public static void setPreviewTargetModelName( Properties properties,
-                                                  String previewTargetModelName ) {
-        properties.put(IPropertiesContext.KEY_PREVIEW_TARGET_MODEL, previewTargetModelName);
+    public void setPreviewTargetObjectName(String previewTargetObjectName ) {
+        put(IPropertiesContext.KEY_PREVIEW_TARGET_OBJECT, previewTargetObjectName);
+    }
+
+    public void setPreviewTargetModelName(String previewTargetModelName ) {
+        put(IPropertiesContext.KEY_PREVIEW_TARGET_MODEL, previewTargetModelName);
     }
     
-    public static void setLastViewModelObjectName( Properties properties,
-    											   String name ) {
-    	properties.put(IPropertiesContext.KEY_LAST_VIEW_MODEL_OBJECT_NAME, name);
+    public void setLastViewModelObjectName(String name ) {
+    	put(IPropertiesContext.KEY_LAST_VIEW_MODEL_OBJECT_NAME, name);
 	}
     
-    public static void setLastSourceModelObjectName( Properties properties,
-			   									   String name ) {
-    	properties.put(IPropertiesContext.KEY_LAST_SOURCE_MODEL_OBJECT_NAME, name);
+    public void setLastSourceModelObjectName(String name ) {
+    	put(IPropertiesContext.KEY_LAST_SOURCE_MODEL_OBJECT_NAME, name);
 	}
 
 
@@ -178,13 +180,13 @@ public class DesignerPropertiesUtil {
      * @param properties the Designer properties
      * @return the Sources Folder Container, null if not defined
      */
-    public static IContainer getSourcesFolder( Properties properties ) {
+    public IContainer getSourcesFolder() {
         IContainer folder = null;
         // check for project property and if sources folder property exists
-        String projectName = properties.getProperty(IPropertiesContext.KEY_PROJECT_NAME);
+        String projectName = getProperty(IPropertiesContext.KEY_PROJECT_NAME);
         if (projectName != null && !projectName.isEmpty()) {
             String folderName = projectName;
-            String sourcesFolder = properties.getProperty(IPropertiesContext.KEY_SOURCES_FOLDER);
+            String sourcesFolder = getProperty(IPropertiesContext.KEY_SOURCES_FOLDER);
             if (sourcesFolder != null && !sourcesFolder.isEmpty()) {
                 folderName = new Path(projectName).append(sourcesFolder).toString();
             }
@@ -202,13 +204,13 @@ public class DesignerPropertiesUtil {
      * @param properties the Designer properties
      * @return the Views Folder Container, null if not defined
      */
-    public static IContainer getViewsFolder( Properties properties ) {
+    public IContainer getViewsFolder() {
         IContainer folder = null;
         // check for project property and if sources folder property exists
-        String projectName = properties.getProperty(IPropertiesContext.KEY_PROJECT_NAME);
+        String projectName = getProperty(IPropertiesContext.KEY_PROJECT_NAME);
         if (projectName != null && !projectName.isEmpty()) {
             String folderName = projectName;
-            String viewsFolder = properties.getProperty(IPropertiesContext.KEY_VIEWS_FOLDER);
+            String viewsFolder = getProperty(IPropertiesContext.KEY_VIEWS_FOLDER);
             if (viewsFolder != null && !viewsFolder.isEmpty()) {
                 folderName = new Path(projectName).append(viewsFolder).toString();
             }
@@ -227,9 +229,9 @@ public class DesignerPropertiesUtil {
      * @param properties the Designer properties
      * @return the IProject, null if not defined or found
      */
-    public static IProject getProject( Properties properties ) {
+    public IProject getProject() {
         IProject project = null;
-        String projectName = properties.getProperty(IPropertiesContext.KEY_PROJECT_NAME);
+        String projectName = getProperty(IPropertiesContext.KEY_PROJECT_NAME);
         if (projectName != null) {
             IProject[] openProjects = DotProjectUtils.getOpenModelProjects();
             for (IProject openProject : openProjects) {
@@ -248,9 +250,9 @@ public class DesignerPropertiesUtil {
      * @param properties the Designer properties
      * @return the IFile, null if not defined or found
      */
-    public static IFile getViewModel( Properties properties ) {
+    public IFile getViewModel() {
         IFile viewModel = null;
-        String modelName = properties.getProperty(IPropertiesContext.KEY_LAST_VIEW_MODEL_NAME);
+        String modelName = getProperty(IPropertiesContext.KEY_LAST_VIEW_MODEL_NAME);
         if (modelName != null) {
             // Expect ModelName to end with extension
             if (!modelName.endsWith(ModelUtil.DOT_EXTENSION_XMI)) modelName = modelName + ModelUtil.DOT_EXTENSION_XMI;
@@ -269,9 +271,9 @@ public class DesignerPropertiesUtil {
      * @param properties the Designer properties
      * @return the IFile, null if not defined or found
      */
-    public static IFile getSourceModel( Properties properties ) {
+    public IFile getSourceModel() {
         IFile sourceModel = null;
-        String modelName = properties.getProperty(IPropertiesContext.KEY_LAST_SOURCE_MODEL_NAME);
+        String modelName = getProperty(IPropertiesContext.KEY_LAST_SOURCE_MODEL_NAME);
         if (modelName != null) {
             // Expect ModelName to end with extension
             if (!modelName.endsWith(ModelUtil.DOT_EXTENSION_XMI)) modelName = modelName + ModelUtil.DOT_EXTENSION_XMI;
@@ -290,10 +292,10 @@ public class DesignerPropertiesUtil {
      * @param properties the Designer properties
      * @return the IResource, null if not defined or found
      */
-    public static IResource getVDB( Properties properties ) {
+    public IResource getVDB() {
         IResource vdbResource = null;
         // check for vdb name property
-        String vdbName = properties.getProperty(IPropertiesContext.KEY_LAST_VDB_NAME);
+        String vdbName = getProperty(IPropertiesContext.KEY_LAST_VDB_NAME);
         if (vdbName != null) {
             // Try to find VDB in workspace - collect only vdb resources from the workspace
             // Collect only vdb archive resources from the workspace
@@ -316,14 +318,14 @@ public class DesignerPropertiesUtil {
      * @param properties the Designer properties
      * @return the IFile, null if not defined or found
      */
-    public static IFile getPreviewTargetModel( Properties properties ) {
-        String targetModelName = DesignerPropertiesUtil.getPreviewTargetModelName(properties);
-        String viewsFolder = DesignerPropertiesUtil.getViewsFolderName(properties);
+    public IFile getPreviewTargetModel() {
+        String targetModelName = getPreviewTargetModelName();
+        String viewsFolder = getViewsFolderName();
 
         IFile targetPreviewModel = null;
 
         // Get the target Project (must be open)
-        IProject project = DesignerPropertiesUtil.getProject(properties);
+        IProject project = getProject();
         if (project != null) {
             // Construct path to target model
             IPath targetModelPath = new Path("").makeAbsolute(); //$NON-NLS-1$
@@ -342,12 +344,12 @@ public class DesignerPropertiesUtil {
      * @param properties the Designer properties
      * @return the EObject, null if not defined or found
      */
-    public static EObject getPreviewTargetObject( Properties properties ) {
+    public EObject getPreviewTargetObject() {
         EObject targetEObj = null;
 
-        IFile targetModel = getPreviewTargetModel(properties);
+        IFile targetModel = getPreviewTargetModel();
         if (targetModel != null) {
-            String targetObjName = DesignerPropertiesUtil.getPreviewTargetObjectName(properties);
+            String targetObjName = getPreviewTargetObjectName();
             // Locate the Target Preview Object in the Preview Model
             if (targetObjName != null && !targetObjName.isEmpty()) {
                 ModelEditor editor = ModelerCore.getModelEditor();
@@ -378,12 +380,12 @@ public class DesignerPropertiesUtil {
      * @param properties the Designer properties
      * @return the EObject, null if not defined or found
      */
-    public static EObject getLastSourceModelObject( Properties properties ) {
+    public EObject getLastSourceModelObject() {
         EObject targetEObj = null;
 
-        IFile sourceModel = getSourceModel(properties);
+        IFile sourceModel = getSourceModel();
         if (sourceModel != null) {
-            String targetObjName = DesignerPropertiesUtil.getLastSourceModelObjectName(properties);
+            String targetObjName = getLastSourceModelObjectName();
             // Locate the Target Preview Object in the Preview Model
             if (targetObjName != null && !targetObjName.isEmpty()) {
                 ModelEditor editor = ModelerCore.getModelEditor();
@@ -414,12 +416,12 @@ public class DesignerPropertiesUtil {
      * @param properties the Designer properties
      * @return the EObject, null if not defined or found
      */
-    public static EObject getLastViewModelObject( Properties properties ) {
+    public EObject getLastViewModelObject() {
         EObject targetEObj = null;
 
-        IFile targetModel = getViewModel(properties);
+        IFile targetModel = getViewModel();
         if (targetModel != null) {
-            String targetObjName = DesignerPropertiesUtil.getLastViewModelObjectName(properties);
+            String targetObjName = getLastViewModelObjectName();
             // Locate the Target Preview Object in the Preview Model
             if (targetObjName != null && !targetObjName.isEmpty()) {
                 ModelEditor editor = ModelerCore.getModelEditor();
@@ -450,8 +452,8 @@ public class DesignerPropertiesUtil {
      * @param properties the Designer properties
      * @return boolean, true if project name value exists in properties
      */
-    public static boolean isProjectNameSet( Properties properties ) {
-    	return DesignerPropertiesUtil.getProjectName(properties) != null;
+    public boolean isProjectNameSet( ) {
+    	return getProjectName() != null;
     }
     
     /**
@@ -461,15 +463,53 @@ public class DesignerPropertiesUtil {
      * @param properties the Designer properties
      * @return boolean, true if project names are different
      */
-    public static boolean isProjectDifferent( IProject newProject, Properties properties ) {
-    	if( newProject == null && DesignerPropertiesUtil.getProjectName(properties) != null ) {
+    public boolean isProjectDifferent( IProject newProject) {
+    	if( newProject == null && getProjectName() != null ) {
     		return true;
     	}
     	
-    	if( newProject != null && DesignerPropertiesUtil.getProjectName(properties) == null ) {
+    	if( newProject != null && getProjectName() == null ) {
     		return true;
     	}
 
-    	return !(newProject.getName().equals(DesignerPropertiesUtil.getProjectName(properties)));
+    	return !(newProject.getName().equals(getProjectName()));
+    }
+    
+    /**
+     * Determines if the new source model file is different than source name stored in properties
+     * 
+     * @param newFile the IFile
+     * @param properties the Designer properties
+     * @return boolean, true if model names are different
+     */
+    public boolean isSourceModelDifferent( IFile newFile) {
+    	if( newFile == null && getSourceModelName() != null ) {
+    		return true;
+    	}
+    	
+    	if( newFile != null && getSourceModelName() == null ) {
+    		return true;
+    	}
+
+    	return !(newFile.getName().equals(getSourceModelName()));
+    }
+    
+    /**
+     * Determines if the new view model file is different than view name stored in properties
+     * 
+     * @param newFile the IFile
+     * @param properties the Designer properties
+     * @return boolean, true if model names are different
+     */
+    public boolean isViewModelDifferent( IFile newFile) {
+    	if( newFile == null && getViewModelName() != null ) {
+    		return true;
+    	}
+    	
+    	if( newFile != null && getViewModelName() == null ) {
+    		return true;
+    	}
+
+    	return !(newFile.getName().equals(getViewModelName()));
     }
 }

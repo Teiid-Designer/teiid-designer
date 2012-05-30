@@ -57,7 +57,8 @@ public class SQLTemplateDialog  extends TitleAreaDialog {
     
     Button selectRB, selectJoinRB, unionRB, flatFileSourceRB;
     Button xmlFileLocalSourceRB, xmlFileUrlSourceRB;
-    Button insertDefaultProcRB, updateDefaultProcRB, deleteDefaultProcRB, soapCreateProcRB, soapExtractProcRB;
+    Button insertDefaultProcRB, updateDefaultProcRB, deleteDefaultProcRB, 
+    	soapCreateProcRB, soapExtractProcRB, restProcedureRB;
 
     //=============================================================
     // Constructors
@@ -331,6 +332,19 @@ public class SQLTemplateDialog  extends TitleAreaDialog {
                 setSQLTemplateArea();
             }
         });
+        
+        // REST Procedure SQL
+        this.restProcedureRB = WidgetFactory.createRadioButton(thePanel,
+                                                                 Messages.sqlTemplateDialogRestProcLabel,
+                                                                 SWT.NONE,
+                                                                 1,
+                                                                 false);
+        this.restProcedureRB.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected( final SelectionEvent event ) {
+                setSQLTemplateArea();
+            }
+        });
 
         return thePanel;
     }
@@ -368,6 +382,8 @@ public class SQLTemplateDialog  extends TitleAreaDialog {
                 sqlTextViewer.getDocument().set(SQLTemplates.PROC_SOAP_WS_CREATE);
             } else if (this.soapExtractProcRB.getSelection()) {
                 sqlTextViewer.getDocument().set(SQLTemplates.PROC_SOAP_WS_EXTRACT);
+            } else if (this.restProcedureRB.getSelection()) {
+                sqlTextViewer.getDocument().set(SQLTemplates.REST_PROCEDURE);
             }
         }
 

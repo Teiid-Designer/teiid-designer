@@ -42,10 +42,7 @@ public class PropertiesContextManager extends CheatSheetListener {
 		CoreArgCheck.isNotEmpty(id, "id"); //$NON-NLS-1$
 		CoreArgCheck.isNotEmpty(key, "key"); //$NON-NLS-1$
 		CoreArgCheck.isNotEmpty(value, "value"); //$NON-NLS-1$
-		Properties sheetProperties = cachedPropertiesMap.get(id);
-		if( sheetProperties == null ) {
-			sheetProperties = new Properties();
-		}
+		Properties sheetProperties = getProperties(id);
 		sheetProperties.put(key, value);
 	}
 	
@@ -76,7 +73,7 @@ public class PropertiesContextManager extends CheatSheetListener {
 		CoreArgCheck.isNotEmpty(id, "id"); //$NON-NLS-1$
 		Properties sheetProperties = cachedPropertiesMap.get(id);
 		if( sheetProperties == null ) {
-			sheetProperties = new Properties();
+			sheetProperties = new DesignerProperties(id);
 			cachedPropertiesMap.put(id, sheetProperties);
 		}
 		return sheetProperties;

@@ -521,7 +521,7 @@ public class ViewProcedureEditorPanel  implements RelationalConstants {
             @Override
             public void widgetSelected( SelectionEvent e ) {
                 SQLTemplateDialog templateDialog = new SQLTemplateDialog(UiUtil.getWorkbenchShellOnlyIfUiThread(),
-                                                                         SQLTemplateDialog.TABLE_TEMPLATES);
+                                                                         SQLTemplateDialog.ALL_TEMPLATES);
                 if (templateDialog.open() == Window.OK) {
                 	String sql = templateDialog.getSQL();
                     viewProcedure.setTransformationSQL(sql);

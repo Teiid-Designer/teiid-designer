@@ -38,6 +38,8 @@ public interface IPropertiesContext {
 	public static final String KEY_IMPORT_XML_TYPE = "xmlImportType"; //$NON-NLS-1$
 	public static final String IMPORT_XML_LOCAL = "local"; //$NON-NLS-1$
 	public static final String IMPORT_XML_REMOTE = "remote"; //$NON-NLS-1$
+	
+	public static final String KEY_GUIDE_ID = "guideID"; //$NON-NLS-1$
 
 	/**
 	 * Sets the properties context object
