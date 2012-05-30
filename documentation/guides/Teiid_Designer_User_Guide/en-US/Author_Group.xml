@@ -25,4 +25,8 @@
 		<firstname>Ted</firstname>
 		<surname>Jones</surname>
 	</author>
+    <author>
+        <firstname>Paul</firstname>
+        <surname>Richardson</surname>
+    </author>
 </authorgroup>
