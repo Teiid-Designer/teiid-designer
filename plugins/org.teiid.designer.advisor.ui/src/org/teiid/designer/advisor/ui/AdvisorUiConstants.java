@@ -148,6 +148,7 @@ public interface AdvisorUiConstants {
         String NEW_OBJECT_BASE_TABLE = "org.teiid.designer.newObjectBaseTable"; //$NON-NLS-1$
         String NEW_OBJECT_VIEW_TABLE = "org.teiid.designer.newObjectViewTable"; //$NON-NLS-1$
         String DEFINE_VIEW_TABLE = "org.teiid.designer.defineViewTable"; //$NON-NLS-1$
+        String DEFINE_VIEW_PROCEDURE = "org.teiid.designer.defineViewProcedure"; //$NON-NLS-1$
         String NEW_OBJECT_REST_PROCEDURE = "org.teiid.designer.newObjectRestProcedure"; //$NON-NLS-1$
         String NEW_OBJECT_SOURCE_FUNCTION = "org.teiid.designer.newObjectSourceFunction";  //$NON-NLS-1$
 		
@@ -205,6 +206,7 @@ public interface AdvisorUiConstants {
         String NEW_OBJECT_BASE_TABLE = "Create new relational table"; //$NON-NLS-1$
         String NEW_OBJECT_VIEW_TABLE = "Create new relational view table"; //$NON-NLS-1$
         String DEFINE_VIEW_TABLE = "Define relational view table"; //$NON-NLS-1$
+        String DEFINE_VIEW_PROCEDURE = "Define relational view procedure"; //$NON-NLS-1$
         String NEW_OBJECT_REST_PROCEDURE = "Create new relational view REST procedure"; //$NON-NLS-1$
 		String NEW_OBJECT_SOURCE_FUNCTION = "Create new relational source function";  //$NON-NLS-1$
 		
@@ -259,6 +261,7 @@ public interface AdvisorUiConstants {
         String NEW_OBJECT_BASE_TABLE = Messages.CreateNewRelationalBaseTable;
         String NEW_OBJECT_VIEW_TABLE = Messages.CreateNewRelationalViewTable;
         String DEFINE_VIEW_TABLE = Messages.DefineRelationalViewTable;
+        String DEFINE_VIEW_PROCEDURE = Messages.DefineRelationalViewProcedure;
         String NEW_OBJECT_REST_PROCEDURE = Messages.CreateNewRelationalViewRESTProcedure;
 		String NEW_OBJECT_SOURCE_FUNCTION = Messages.CreateNewRelationalSourceFunction;
 		
@@ -312,6 +315,7 @@ public interface AdvisorUiConstants {
         String NEW_OBJECT_BASE_TABLE = Messages.CreateNewRelationalBaseTable_Short;
         String NEW_OBJECT_VIEW_TABLE = Messages.CreateNewRelationalViewTable_Short;
         String DEFINE_VIEW_TABLE = Messages.DefineRelationalViewTable;
+        String DEFINE_VIEW_PROCEDURE = Messages.DefineRelationalViewProcedure;
         String NEW_OBJECT_REST_PROCEDURE = Messages.CreateNewRelationalViewRESTProcedure_Short;
 		String NEW_OBJECT_SOURCE_FUNCTION = Messages.CreateNewRelationalSourceFunction_Short;
 		

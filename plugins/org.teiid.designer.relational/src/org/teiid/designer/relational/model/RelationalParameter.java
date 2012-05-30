@@ -36,6 +36,8 @@ public class RelationalParameter extends RelationalReference {
     public static final int DEFAULT_RADIX = 0;
     public static final int DEFAULT_SCALE = 10;
     
+    public static final int DEFAULT_STRING_LENGTH = 4000;
+    
     private String  datatype;
     private String  nativeType;
     private String  nullable;
@@ -169,6 +171,12 @@ public class RelationalParameter extends RelationalReference {
     public void setScale( int scale ) {
         this.scale = scale;
     }
+    
+	@Override
+	public void validate() {
+		// Walk through the properties for the parameter and set the status
+		super.validate();
+	}
     
     public void setProperties(Properties props) {
         for( Object key : props.keySet() ) {

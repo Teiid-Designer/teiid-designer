@@ -107,6 +107,7 @@ public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChange
 	static IAction ACTION_NEW_TEIID_MODEL_PROJECT;
 	static IAction ACTION_DEFINE_TEIID_MODEL_PROJECT;
 	static IAction ACTION_DEFINE_VIEW_TABLE;
+	static IAction ACTION_DEFINE_REST_PROCEDURE;
 
 	static void loadHandlers() {
 
@@ -286,7 +287,11 @@ public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChange
                 COMMAND_LABELS.DEFINE_VIEW_TABLE,
                 COMMAND_LABELS_SHORT.DEFINE_VIEW_TABLE,
                 COMMAND_DESC.DEFINE_VIEW_TABLE);
-        
+        addActionHandler(
+        		COMMAND_IDS.DEFINE_VIEW_PROCEDURE,
+                COMMAND_LABELS.DEFINE_VIEW_PROCEDURE,
+                COMMAND_LABELS_SHORT.DEFINE_VIEW_PROCEDURE,
+                COMMAND_DESC.DEFINE_VIEW_PROCEDURE);
         addActionHandler(
         		COMMAND_IDS.NEW_OBJECT_REST_PROCEDURE,
                 COMMAND_LABELS.NEW_OBJECT_REST_PROCEDURE,
@@ -455,6 +460,13 @@ public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChange
             action.run();
             return;
         }
+        
+        // NEW OBJECT OPTIONS
+        if (id.equalsIgnoreCase(COMMAND_IDS.DEFINE_VIEW_PROCEDURE)) {
+        	DefineViewProcedureAction action = new DefineViewProcedureAction(properties);
+            action.run();
+            return;
+        }
 
         // CONNECTIONPROFILE OPTIONS
 		if( id.equalsIgnoreCase(COMMAND_IDS.CREATE_CONNECTION_JDBC)) {
@@ -580,10 +592,10 @@ public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChange
 	        return;
 		}
 		
-		if( id.equalsIgnoreCase(COMMAND_IDS.NEW_OBJECT_VIEW_TABLE)) {
-			// TODO
-	        return;
-		}
+//		if( id.equalsIgnoreCase(COMMAND_IDS.NEW_OBJECT_VIEW_TABLE)) {
+//			// TODO
+//	        return;
+//		}
 		
 		if( id.equalsIgnoreCase(COMMAND_IDS.GENERATE_REST_WAR)) {
 			// TODO
@@ -752,6 +764,10 @@ public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChange
 		
 		if( id.equalsIgnoreCase(COMMAND_IDS.DEFINE_VIEW_TABLE)) {
 			return Images.NEW_VIRTUAL_TABLE_ICON;
+		}
+		
+		if( id.equalsIgnoreCase(COMMAND_IDS.DEFINE_VIEW_PROCEDURE)) {
+			return Images.NEW_VIRTUAL_PROCEDURE_ICON;
 		}
 		
 		if( id.equalsIgnoreCase(COMMAND_IDS.NEW_OBJECT_REST_PROCEDURE)) {

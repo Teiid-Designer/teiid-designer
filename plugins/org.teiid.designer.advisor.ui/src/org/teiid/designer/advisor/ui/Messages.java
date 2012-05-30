@@ -85,6 +85,7 @@ public class Messages  extends NLS {
     public static String CreateWebServicesConnection_Short;
     
     public static String DefineModels;
+    public static String DefineRelationalViewProcedure;
     public static String DefineRelationalViewTable;
     public static String DefineTeiidModelProject;
     public static String DefineTeiidModelProject_Short;

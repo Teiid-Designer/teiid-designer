@@ -40,7 +40,7 @@ import com.metamatrix.core.event.IChangeListener;
 import com.metamatrix.core.event.IChangeNotifier;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.metamodels.core.ModelType;
-import com.metamatrix.metamodels.relational.Table;
+import com.metamatrix.metamodels.relational.Procedure;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
@@ -53,7 +53,7 @@ import com.metamatrix.modeler.internal.ui.viewsupport.SingleProjectFilter;
 import com.metamatrix.modeler.internal.ui.wizards.NewModelWizard;
 import com.metamatrix.modeler.transformation.ui.UiConstants;
 import com.metamatrix.modeler.transformation.ui.UiPlugin;
-import com.metamatrix.modeler.transformation.ui.actions.CreateViewTableAction;
+import com.metamatrix.modeler.transformation.ui.actions.CreateViewProcedureAction;
 import com.metamatrix.modeler.ui.viewsupport.DesignerPropertiesUtil;
 import com.metamatrix.modeler.ui.wizards.NewModelWizardInput;
 import com.metamatrix.ui.internal.util.WidgetFactory;
@@ -61,16 +61,16 @@ import com.metamatrix.ui.internal.viewsupport.ClosedProjectFilter;
 import com.metamatrix.ui.internal.viewsupport.StatusInfo;
 import com.metamatrix.ui.internal.widget.Label;
 
-public class DefineViewTableDialog extends TitleAreaDialog implements
+public class DefineViewProcedureDialog extends TitleAreaDialog implements
 		IChangeListener, UiConstants {
 
-	private static final String PREFIX = I18nUtil.getPropertyPrefix(DefineViewTableDialog.class);
-	
+	private static final String PREFIX = I18nUtil.getPropertyPrefix(DefineViewProcedureDialog.class);
+
 	private static String getString(String key) {
 		return Util.getString(PREFIX + key);
 	}
 
-	private EObject viewTable;
+	private EObject viewProcedure;
 	private IResource selectedModel;
 
 	private ILabelProvider labelProvider = new ModelExplorerLabelProvider();
@@ -78,17 +78,17 @@ public class DefineViewTableDialog extends TitleAreaDialog implements
 	private Button newViewModelButton;
 	private Button browseModelsButton;
 	private Text selectedViewModelText;
-	
-	private Button newViewTableButton;
+
+	private Button newViewProcedureButton;
 	private Button browseButton;
-	private Text selectedViewTableText;
+	private Text selectedViewProcedureText;
 
 	Properties designerProperties;
 
 	/**
 	 * @since 5.5.3
 	 */
-	public DefineViewTableDialog(Shell parentShell) {
+	public DefineViewProcedureDialog(Shell parentShell) {
 		super(parentShell);
 		setShellStyle(getShellStyle() | SWT.RESIZE);
 	}
@@ -96,7 +96,7 @@ public class DefineViewTableDialog extends TitleAreaDialog implements
 	/**
 	 * @since 5.5.3
 	 */
-	public DefineViewTableDialog(Shell parentShell, Properties properties) {
+	public DefineViewProcedureDialog(Shell parentShell, Properties properties) {
 		this(parentShell);
 		this.designerProperties = properties;
 	}
@@ -160,30 +160,30 @@ public class DefineViewTableDialog extends TitleAreaDialog implements
 		setTitle(getString("subTitle")); //$NON-NLS-1$
 		setMessage(getString("initialMessage")); //$NON-NLS-1$
 
-		VIEW_MODEL_WIDGETS : {
-			Label label = WidgetFactory.createLabel(panel,getString("viewModelName")); //$NON-NLS-1$
+		VIEW_MODEL_WIDGETS: {
+			Label label = WidgetFactory.createLabel(panel, getString("viewModelName")); //$NON-NLS-1$
 			label.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false));
-	
+
 			// textfield for named type
-			this.selectedViewModelText = WidgetFactory.createTextField(panel,
-					GridData.FILL_HORIZONTAL/* GridData.HORIZONTAL_ALIGN_FILL */);
+			this.selectedViewModelText = WidgetFactory.createTextField(panel, GridData.FILL_HORIZONTAL);
 			this.selectedViewModelText.setToolTipText(getString("viewModelNameTooltip")); //$NON-NLS-1$
 			this.selectedViewModelText.setEditable(false);
 			this.selectedViewModelText.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
 			this.selectedViewModelText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
-	
+
 			// browse type button
-			this.newViewModelButton = WidgetFactory.createButton(panel,getString("newViewModelButton")); //$NON-NLS-1$
+			this.newViewModelButton = WidgetFactory.createButton(panel, getString("newViewModelButton")); //$NON-NLS-1$
 			this.newViewModelButton.setToolTipText(getString("newViewModelButtonTooltip")); //$NON-NLS-1$
 			this.newViewModelButton.setEnabled(true);
-			this.newViewModelButton.setLayoutData(new GridData(SWT.CENTER, SWT.NONE,false, false));
+			this.newViewModelButton.setLayoutData(new GridData(SWT.CENTER,
+					SWT.NONE, false, false));
 			this.newViewModelButton.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent theEvent) {
 					handleNewViewModelPressed();
 				}
 			});
-	
+
 			this.browseModelsButton = WidgetFactory.createButton(panel, getString("browseModelsButton")); //$NON-NLS-1$
 			this.browseModelsButton.setToolTipText(getString("browseModelsButtonTooltip")); //$NON-NLS-1$
 			this.browseModelsButton.setEnabled(true);
@@ -195,35 +195,34 @@ public class DefineViewTableDialog extends TitleAreaDialog implements
 				}
 			});
 		}
-		
-		VIEW_TABLE_WIDGETS : {
-			Label label = WidgetFactory.createLabel(panel,getString("viewTableName")); //$NON-NLS-1$
+
+		VIEW_PROCEDURE_WIDGETS: {
+			Label label = WidgetFactory.createLabel(panel, getString("viewProcedureName")); //$NON-NLS-1$
 			label.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false));
-	
+
 			// textfield for named type
-			this.selectedViewTableText = WidgetFactory.createTextField(panel,
-					GridData.FILL_HORIZONTAL/* GridData.HORIZONTAL_ALIGN_FILL */);
-			this.selectedViewTableText.setToolTipText(getString("viewTableNameTooltip")); //$NON-NLS-1$
-			this.selectedViewTableText.setEditable(false);
-			this.selectedViewTableText.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
-			this.selectedViewTableText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
-	
+			this.selectedViewProcedureText = WidgetFactory .createTextField(panel, GridData.FILL_HORIZONTAL);
+			this.selectedViewProcedureText.setToolTipText(getString("viewProcedureNameTooltip")); //$NON-NLS-1$
+			this.selectedViewProcedureText.setEditable(false);
+			this.selectedViewProcedureText.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
+			this.selectedViewProcedureText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
+
 			// browse type button
-			this.newViewTableButton = WidgetFactory.createButton(panel,getString("newButton")); //$NON-NLS-1$
-			this.newViewTableButton.setToolTipText(getString("newButtonTooltip")); //$NON-NLS-1$
-			this.newViewTableButton.setEnabled(true);
-			this.newViewTableButton.setLayoutData(new GridData(SWT.CENTER, SWT.NONE,false, false));
-			this.newViewTableButton.addSelectionListener(new SelectionAdapter() {
+			this.newViewProcedureButton = WidgetFactory.createButton(panel, getString("newButton")); //$NON-NLS-1$
+			this.newViewProcedureButton.setToolTipText(getString("newButtonTooltip")); //$NON-NLS-1$
+			this.newViewProcedureButton.setEnabled(true);
+			this.newViewProcedureButton.setLayoutData(new GridData(SWT.CENTER, SWT.NONE, false, false));
+			this.newViewProcedureButton.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent theEvent) {
-					handleNewViewTablePressed();
+					handleNewViewProcedurePressed();
 				}
 			});
-	
+
 			this.browseButton = WidgetFactory.createButton(panel, getString("browseButton")); //$NON-NLS-1$
 			this.browseButton.setToolTipText(getString("browseButtonTooltip")); //$NON-NLS-1$
 			this.browseButton.setEnabled(true);
-			this.browseButton.setLayoutData(new GridData(SWT.CENTER, SWT.NONE, false, false));
+			this.browseButton.setLayoutData(new GridData(SWT.CENTER, SWT.NONE,false, false));
 			this.browseButton.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent theEvent) {
@@ -241,16 +240,16 @@ public class DefineViewTableDialog extends TitleAreaDialog implements
 
 		if (this.designerProperties != null) {
 			// Check for existing project??
-    		this.selectedModel = DesignerPropertiesUtil.getViewModel(this.designerProperties);
-    		if( this.selectedModel != null ) {
+			this.selectedModel = DesignerPropertiesUtil.getViewModel(this.designerProperties);
+			if (this.selectedModel != null) {
 				this.selectedViewModelText.setText(this.selectedModel.getName());
-    		}
+			}
 			EObject lastModelObject = DesignerPropertiesUtil.getLastViewModelObject(this.designerProperties);
-			if (lastModelObject != null && lastModelObject instanceof Table) {
-				this.viewTable = lastModelObject;
-    			this.selectedViewTableText.setText(DesignerPropertiesUtil.getLastViewModelObjectName(this.designerProperties));
-    		}
-    		
+			if (lastModelObject != null && lastModelObject instanceof Procedure) {
+				 this.viewProcedure = lastModelObject;
+				this.selectedViewProcedureText.setText(DesignerPropertiesUtil.getLastViewModelObjectName(this.designerProperties));
+			}
+
 			updateState();
 		}
 		return control;
@@ -260,8 +259,8 @@ public class DefineViewTableDialog extends TitleAreaDialog implements
 
 	}
 
-	public EObject getViewTable() {
-		return this.viewTable;
+	public EObject getViewProcedure() {
+		return this.viewProcedure;
 	}
 
 	/**
@@ -284,83 +283,85 @@ public class DefineViewTableDialog extends TitleAreaDialog implements
 			setMessage(getString("okMsg")); //$NON-NLS-1$
 		}
 	}
-	
-	private void handleNewViewTablePressed() {
-		CreateViewTableAction action = new CreateViewTableAction(this.designerProperties);
+
+	private void handleNewViewProcedurePressed() {
+		CreateViewProcedureAction action = new CreateViewProcedureAction(this.designerProperties);
 		action.run();
-		this.viewTable = action.getNewViewTable();
-		if( this.viewTable != null ) {
-			String name = ModelerCore.getModelEditor().getName(this.viewTable);
-			this.selectedViewTableText.setText(name);
+		this.viewProcedure = action.getNewViewProcedure();
+		if( this.viewProcedure != null ) {
+			String name = ModelerCore.getModelEditor().getName(this.viewProcedure);
+			this.selectedViewProcedureText.setText(name);
 			DesignerPropertiesUtil.setLastViewModelObjectName(this.designerProperties, name);
 		}
 	}
 
 	private void handleBrowseWorkspaceForObjectPressed() {
-		ModelWorkspaceDialog sdDialog = createViewTableSelector();
+		ModelWorkspaceDialog sdDialog = createViewProcedureSelector();
 
 		// add filters
 		((ModelWorkspaceDialog) sdDialog).addFilter(new ClosedProjectFilter());
-		((ModelWorkspaceDialog) sdDialog).addFilter(new SingleProjectFilter(this.designerProperties));
+		((ModelWorkspaceDialog) sdDialog).addFilter(new SingleProjectFilter(
+				this.designerProperties));
 
 		sdDialog.open();
 
 		if (sdDialog.getReturnCode() == Window.OK) {
 			Object[] selections = sdDialog.getResult();
 			// should be single selection
-			viewTable = (EObject) selections[0];
+			viewProcedure = (EObject) selections[0];
 			// Set the View Model too
-			String name = ModelerCore.getModelEditor().getName(this.viewTable);
-			this.selectedViewTableText.setText(name);
+			String name = ModelerCore.getModelEditor().getName(this.viewProcedure);
+			this.selectedViewProcedureText.setText(name);
 			DesignerPropertiesUtil.setLastViewModelObjectName(this.designerProperties, name);
-			
+
 			try {
-				ModelResource mr = ModelUtilities.getModelResource(this.viewTable);
+				ModelResource mr = ModelUtilities.getModelResource(this.viewProcedure);
 				this.selectedModel = mr.getUnderlyingResource();
 				DesignerPropertiesUtil.setViewModelName(this.designerProperties, this.selectedModel.getName());
 				this.selectedViewModelText.setText(this.selectedModel.getName());
 			} catch (ModelWorkspaceException e) {
-	            UiConstants.Util.log(IStatus.ERROR, e, e.getMessage());
+				UiConstants.Util.log(IStatus.ERROR, e, e.getMessage());
 			}
-			
+
 			updateState();
 		}
 	}
-	
+
 	private void handleNewViewModelPressed() {
-		NewModelWizardInput newModelInput = 
-				new NewModelWizardInput("Relational", ModelType.VIRTUAL_LITERAL, null); //$NON-NLS-1$
+		NewModelWizardInput newModelInput = new NewModelWizardInput(
+				"Relational", ModelType.VIRTUAL_LITERAL, null); //$NON-NLS-1$
 
-        final IWorkbenchWindow iww = UiPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow();
-        boolean successful = false;
-        try {
+		final IWorkbenchWindow iww = UiPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow();
+		boolean successful = false;
+		try {
 
-            NewModelWizard wizard = new NewModelWizard(newModelInput, this.designerProperties);
+			NewModelWizard wizard = new NewModelWizard(newModelInput,
+					this.designerProperties);
 
-            // Create a Project Selection here
-            IContainer viewsFolder = DesignerPropertiesUtil.getViewsFolder(this.designerProperties);
+			// Create a Project Selection here
+			IContainer viewsFolder = DesignerPropertiesUtil.getViewsFolder(this.designerProperties);
 
-            wizard.init(iww.getWorkbench(), new StructuredSelection(viewsFolder));
-            
-            WizardDialog dialog = new WizardDialog(iww.getShell(), wizard);
-            int result = dialog.open();
-            if (result == Dialog.OK) {
-                successful = true;
-            }
-        } catch (Exception e) {
-            UiConstants.Util.log(IStatus.ERROR, e, e.getMessage());
-            MessageDialog.openError(iww.getShell(), 
-            		getString("modelCreationError.title"),  //$NON-NLS-1$
-            		getString("modelCreationError.message")); //$NON-NLS-1$
-        } finally {
-        	// Find the view model from the properties
-        	if( successful ) {
-        		this.selectedModel = DesignerPropertiesUtil.getViewModel(this.designerProperties);
-        		if( this.selectedModel != null ) {
-        			this.selectedViewModelText.setText(this.selectedModel.getName());
-        		} 
-        	}
-        }
+			wizard.init(iww.getWorkbench(), new StructuredSelection(viewsFolder));
+
+			WizardDialog dialog = new WizardDialog(iww.getShell(), wizard);
+			int result = dialog.open();
+			if (result == Dialog.OK) {
+				successful = true;
+			}
+		} catch (Exception e) {
+			UiConstants.Util.log(IStatus.ERROR, e, e.getMessage());
+			MessageDialog.openError(iww.getShell(),
+					getString("modelCreationError.title"), //$NON-NLS-1$
+					getString("modelCreationError.message")); //$NON-NLS-1$
+		} finally {
+			// Find the view model from the properties
+			if (successful) {
+				this.selectedModel = DesignerPropertiesUtil.getViewModel(this.designerProperties);
+				if (this.selectedModel != null) {
+					this.selectedViewModelText.setText(this.selectedModel.getName());
+				}
+			}
+		}
 	}
 
 	private void handleBrowseWorkspaceForModelPressed() {
@@ -368,8 +369,8 @@ public class DefineViewTableDialog extends TitleAreaDialog implements
 
 		// add filters
 		((ModelWorkspaceDialog) sdDialog).addFilter(new ClosedProjectFilter());
-		((ModelWorkspaceDialog) sdDialog).addFilter(new SingleProjectFilter(this.designerProperties));
-		
+		((ModelWorkspaceDialog) sdDialog).addFilter(new SingleProjectFilter(
+				this.designerProperties));
 
 		sdDialog.open();
 
@@ -377,14 +378,14 @@ public class DefineViewTableDialog extends TitleAreaDialog implements
 			Object[] selections = sdDialog.getResult();
 			// should be single selection
 			this.selectedModel = (IResource) selections[0];
-    		DesignerPropertiesUtil.setViewModelName(this.designerProperties, this.selectedModel.getName());
-    		this.selectedViewModelText.setText(this.selectedModel.getName());
-			
+			DesignerPropertiesUtil.setViewModelName(this.designerProperties, this.selectedModel.getName());
+			this.selectedViewModelText.setText(this.selectedModel.getName());
+
 			updateState();
 		}
 	}
 
-	public ModelWorkspaceDialog createViewTableSelector() {
+	public ModelWorkspaceDialog createViewProcedureSelector() {
 
 		ModelWorkspaceDialog result = new ModelWorkspaceDialog(getShell(),
 				null, new ModelExplorerLabelProvider(),
@@ -401,13 +402,12 @@ public class DefineViewTableDialog extends TitleAreaDialog implements
 		result.setValidator(new ISelectionStatusValidator() {
 			public IStatus validate(Object[] selection) {
 				boolean ok = false;
-				if( selection != null && 
-					selection.length == 1 &&
-					selection[0] instanceof EObject ) {
-					EObject eObj = (EObject)selection[0];
-					if( eObj instanceof Table )  {
+				if (selection != null && selection.length == 1
+						&& selection[0] instanceof EObject) {
+					EObject eObj = (EObject) selection[0];
+					if (eObj instanceof Procedure) {
 						ModelResource mr = ModelUtilities.getModelResource(eObj);
-						if( mr != null ) {
+						if (mr != null) {
 							ok = ModelIdentifier.isVirtualModelType(mr);
 						}
 					}
@@ -422,7 +422,7 @@ public class DefineViewTableDialog extends TitleAreaDialog implements
 
 		return result;
 	}
-	
+
 	public ModelWorkspaceDialog createViewModelSelector() {
 
 		ModelWorkspaceDialog result = new ModelWorkspaceDialog(getShell(),
@@ -440,19 +440,18 @@ public class DefineViewTableDialog extends TitleAreaDialog implements
 		result.setValidator(new ISelectionStatusValidator() {
 			public IStatus validate(Object[] selection) {
 				boolean ok = false;
-				if( selection != null && 
-					selection.length == 1 &&
-					selection[0] instanceof IResource ) {
-					IResource res = (IResource)selection[0];
+				if (selection != null && selection.length == 1 && selection[0] instanceof IResource) {
+					IResource res = (IResource) selection[0];
 					ModelResource mr = ModelUtilities.getModelResource(res);
-					if( mr != null ) {
+					if (mr != null) {
 						ok = ModelIdentifier.isVirtualModelType(mr);
 					}
 
 				}
 				if (!ok) {
 					String msg = getString("selectionDialog.invalidSelection"); //$NON-NLS-1$
-					return new StatusInfo(UiConstants.PLUGIN_ID, IStatus.ERROR, msg);
+					return new StatusInfo(UiConstants.PLUGIN_ID, IStatus.ERROR,
+							msg);
 				}
 				return new StatusInfo(UiConstants.PLUGIN_ID);
 			}

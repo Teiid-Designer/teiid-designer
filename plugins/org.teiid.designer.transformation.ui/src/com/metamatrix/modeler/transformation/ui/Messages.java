@@ -34,6 +34,12 @@ public class Messages extends NLS {
     public static String createRelationalViewInitialMessage;
     public static String createRelationalViewExceptionMessage;
     public static String createRelationalViewHelpText;
+    
+    public static String createRelationalViewProcedureActionText;
+    public static String createRelationalViewProcedureTitle;
+    public static String createRelationalViewProcedureInitialMessage;
+    public static String createRelationalViewProcedureExceptionMessage;
+    public static String createRelationalViewProcedureHelpText;
 
     public static String sqlLabel;
     public static String sqlDescriptionLabel;
@@ -56,6 +62,8 @@ public class Messages extends NLS {
     public static String columnNameLabel;
     public static String dataTypeLabel;
     public static String lengthLabel;
+    public static String parametersLabel;
+    public static String parameterNameLabel;
     public static String cardinalityErrorTitle;
     public static String cardinalityMustBeAnInteger;
     public static String validationOkCreateObject;
