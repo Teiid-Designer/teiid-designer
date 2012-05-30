@@ -126,7 +126,7 @@ public class CheatSheetSection {
 
         sectionBody.pack(true);
         section.setClient(sectionBody);
-        section.setExpanded(true);
+        section.setExpanded(false);
     }
 
     /**

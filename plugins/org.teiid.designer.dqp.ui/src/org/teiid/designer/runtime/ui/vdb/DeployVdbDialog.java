@@ -34,6 +34,7 @@ import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.internal.ui.explorer.ModelExplorerContentProvider;
 import com.metamatrix.modeler.internal.ui.explorer.ModelExplorerLabelProvider;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelWorkspaceDialog;
+import com.metamatrix.modeler.internal.ui.viewsupport.SingleProjectFilter;
 import com.metamatrix.modeler.ui.viewsupport.DesignerPropertiesUtil;
 import com.metamatrix.ui.internal.util.WidgetFactory;
 import com.metamatrix.ui.internal.viewsupport.ClosedProjectFilter;
@@ -178,6 +179,7 @@ public class DeployVdbDialog extends TitleAreaDialog implements DqpUiConstants,
 
 		// add filters
 		((ModelWorkspaceDialog) vdbDialog).addFilter(new ClosedProjectFilter());
+		((ModelWorkspaceDialog) vdbDialog).addFilter(new SingleProjectFilter(this.designerProperties));
 
 		vdbDialog.open();
 

@@ -52,7 +52,6 @@ import org.teiid.designer.runtime.ui.vdb.ExecuteVdbAction;
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelerUiViewUtils;
-import com.metamatrix.modeler.transformation.ui.actions.CreateViewTableAction;
 import com.metamatrix.modeler.ui.viewsupport.IPropertiesContext;
 import com.metamatrix.ui.internal.util.UiUtil;
 import com.metamatrix.ui.internal.util.WidgetUtil;
@@ -107,6 +106,7 @@ public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChange
 	static IAction ACTION_CREATE_DATA_SOURCE;
 	static IAction ACTION_NEW_TEIID_MODEL_PROJECT;
 	static IAction ACTION_DEFINE_TEIID_MODEL_PROJECT;
+	static IAction ACTION_DEFINE_VIEW_TABLE;
 
 	static void loadHandlers() {
 
@@ -281,13 +281,17 @@ public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChange
                 COMMAND_LABELS.NEW_OBJECT_VIEW_TABLE,
                 COMMAND_LABELS_SHORT.NEW_OBJECT_VIEW_TABLE,
                 COMMAND_DESC.NEW_OBJECT_VIEW_TABLE);
+        addActionHandler(
+        		COMMAND_IDS.DEFINE_VIEW_TABLE,
+                COMMAND_LABELS.DEFINE_VIEW_TABLE,
+                COMMAND_LABELS_SHORT.DEFINE_VIEW_TABLE,
+                COMMAND_DESC.DEFINE_VIEW_TABLE);
         
         addActionHandler(
         		COMMAND_IDS.NEW_OBJECT_REST_PROCEDURE,
                 COMMAND_LABELS.NEW_OBJECT_REST_PROCEDURE,
                 COMMAND_LABELS_SHORT.NEW_OBJECT_REST_PROCEDURE,
                 COMMAND_DESC.NEW_OBJECT_REST_PROCEDURE);
-
         addActionHandler(
         		COMMAND_IDS.GENERATE_REST_WAR,
                 COMMAND_LABELS.GENERATE_REST_WAR,
@@ -446,8 +450,8 @@ public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChange
 		}
 		
         // NEW OBJECT OPTIONS
-        if (id.equalsIgnoreCase(COMMAND_IDS.NEW_OBJECT_VIEW_TABLE)) {
-            CreateViewTableAction action = new CreateViewTableAction(properties);
+        if (id.equalsIgnoreCase(COMMAND_IDS.DEFINE_VIEW_TABLE)) {
+        	DefineViewTableAction action = new DefineViewTableAction(properties);
             action.run();
             return;
         }
@@ -743,6 +747,10 @@ public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChange
 		}
 		
 		if( id.equalsIgnoreCase(COMMAND_IDS.NEW_OBJECT_VIEW_TABLE)) {
+			return Images.NEW_VIRTUAL_TABLE_ICON;
+		}
+		
+		if( id.equalsIgnoreCase(COMMAND_IDS.DEFINE_VIEW_TABLE)) {
 			return Images.NEW_VIRTUAL_TABLE_ICON;
 		}
 		

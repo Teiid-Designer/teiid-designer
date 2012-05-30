@@ -51,6 +51,9 @@ public class CreateViewTableAction extends Action implements INewChildAction, IN
 	 
 	private Collection<String> datatypes;
     private Properties designerProperties;
+    
+    private EObject newViewTable;
+    private RelationalViewTable relationalViewTable;
 	 
 	public CreateViewTableAction() {
 		super(TITLE);
@@ -79,7 +82,8 @@ public class CreateViewTableAction extends Action implements INewChildAction, IN
     }
     
     /* (non-Javadoc)
-     * @see com.metamatrix.modeler.ui.actions.INewChildAction#canCreateChild(org.eclipse.core.resources.IFile)
+     * @see com.metamatrix.modeler.ui.actions.INewChildAc
+				tion#canCreateChild(org.eclipse.core.resources.IFile)
      */
     public boolean canCreateChild(IFile modelFile) {
     	return isApplicable(new StructuredSelection(modelFile));
@@ -134,23 +138,27 @@ public class CreateViewTableAction extends Action implements INewChildAction, IN
 	        ModelResource mr = ModelUtilities.getModelResource(selectedModel);
 	        final Shell shell = UiPlugin.getDefault().getCurrentWorkbenchWindow().getShell();
 	        
-            RelationalViewTable viewTable = new RelationalViewTable();
-            viewTable.setSupportsUpdate(true);
+            relationalViewTable = new RelationalViewTable();
+            relationalViewTable.setSupportsUpdate(true);
 	        
 	        // Hand the table off to the generic edit dialog
-            EditViewTableDialog dialog = new EditViewTableDialog(shell, viewTable, selectedModel);
+            EditViewTableDialog dialog = new EditViewTableDialog(shell, relationalViewTable, selectedModel);
 
 	        dialog.open();
 	        
 	        if (dialog.getReturnCode() == Window.OK) {
-                createViewTableInTxn(mr, viewTable);
+	        	this.newViewTable = createViewTableInTxn(mr, relationalViewTable);
+	        } else {
+	        	this.relationalViewTable = null;
+	        	this.newViewTable = null;
 	        }
 		}
 		
 	}
 
-    private void createViewTableInTxn( ModelResource modelResource,
-                                       RelationalViewTable viewTable ) {
+    private EObject createViewTableInTxn( ModelResource modelResource, RelationalViewTable viewTable ) {
+    	EObject newTable = null;
+    	
         boolean requiredStart = ModelerCore.startTxn(true, true, Messages.createRelationalViewTitle, this);
         boolean succeeded = false;
         try {
@@ -170,6 +178,14 @@ public class CreateViewTableAction extends Action implements INewChildAction, IN
                     editor.doSave(new NullProgressMonitor());
                 }
                 succeeded = true;
+                
+                for( Object child : modelResource.getEObjects() ) {
+                	EObject eObj = (EObject)child;
+                	if( ModelerCore.getModelEditor().getName(eObj).equalsIgnoreCase(this.relationalViewTable.getName()) ) {
+                		newTable = eObj;
+                		break;
+                	}
+                }
             }
         } catch (Exception e) {
             MessageDialog.openError(Display.getCurrent().getActiveShell(),
@@ -178,7 +194,7 @@ public class CreateViewTableAction extends Action implements INewChildAction, IN
             IStatus status = new Status(IStatus.ERROR, UiConstants.PLUGIN_ID, Messages.createRelationalViewExceptionMessage, e);
             UiConstants.Util.log(status);
 
-            return;
+            return null;
         } finally {
             // if we started the txn, commit it.
             if (requiredStart) {
@@ -189,5 +205,11 @@ public class CreateViewTableAction extends Action implements INewChildAction, IN
                 }
             }
         }
+        
+        return newTable;
+    }
+    
+    public EObject getNewViewTable() {
+    	return this.newViewTable;
     }
 }

@@ -90,6 +90,13 @@ public class DesignerPropertiesUtil {
         return properties.getProperty(IPropertiesContext.KEY_PREVIEW_TARGET_MODEL);
     }
     
+    public static String getLastSourceModelObjectName( Properties properties ) {
+        return properties.getProperty(IPropertiesContext.KEY_LAST_SOURCE_MODEL_OBJECT_NAME);
+    }
+    public static String getLastViewModelObjectName( Properties properties ) {
+        return properties.getProperty(IPropertiesContext.KEY_LAST_VIEW_MODEL_OBJECT_NAME);
+    }
+    
     public static boolean isImportXmlRemote( Properties properties ) {
     	String value = properties.getProperty(IPropertiesContext.KEY_IMPORT_XML_TYPE);
     	if( value != null && value.equalsIgnoreCase(IPropertiesContext.IMPORT_XML_REMOTE)) {
@@ -153,6 +160,17 @@ public class DesignerPropertiesUtil {
                                                   String previewTargetModelName ) {
         properties.put(IPropertiesContext.KEY_PREVIEW_TARGET_MODEL, previewTargetModelName);
     }
+    
+    public static void setLastViewModelObjectName( Properties properties,
+    											   String name ) {
+    	properties.put(IPropertiesContext.KEY_LAST_VIEW_MODEL_OBJECT_NAME, name);
+	}
+    
+    public static void setLastSourceModelObjectName( Properties properties,
+			   									   String name ) {
+    	properties.put(IPropertiesContext.KEY_LAST_SOURCE_MODEL_OBJECT_NAME, name);
+	}
+
 
     /**
      * Get the Sources Folder, if the properties are defined
@@ -322,7 +340,7 @@ public class DesignerPropertiesUtil {
      * in the defined 'views' folder
      * 
      * @param properties the Designer properties
-     * @return the IFile, null if not defined or found
+     * @return the EObject, null if not defined or found
      */
     public static EObject getPreviewTargetObject( Properties properties ) {
         EObject targetEObj = null;
@@ -330,6 +348,78 @@ public class DesignerPropertiesUtil {
         IFile targetModel = getPreviewTargetModel(properties);
         if (targetModel != null) {
             String targetObjName = DesignerPropertiesUtil.getPreviewTargetObjectName(properties);
+            // Locate the Target Preview Object in the Preview Model
+            if (targetObjName != null && !targetObjName.isEmpty()) {
+                ModelEditor editor = ModelerCore.getModelEditor();
+                ModelResource resource = ModelUtilities.getModelResourceForIFile(targetModel, true);
+                if (resource != null) {
+                    try {
+                        List<EObject> eObjects = resource.getEObjects();
+                        for (EObject eObj : eObjects) {
+                            // If Target Preview Object is found, update the UI
+                            if (targetObjName.equals(editor.getName(eObj))) {
+                                targetEObj = eObj;
+                                break;
+                            }
+                        }
+                    } catch (ModelWorkspaceException ex) {
+                        UiPlugin.getDefault().getPluginUtil().log(ex);
+                    }
+                }
+            }
+        }
+
+        return targetEObj;
+    }
+    
+    /**
+     * Get the Last Source Model Object, if the properties are defined and it can be found.
+     * 
+     * @param properties the Designer properties
+     * @return the EObject, null if not defined or found
+     */
+    public static EObject getLastSourceModelObject( Properties properties ) {
+        EObject targetEObj = null;
+
+        IFile sourceModel = getSourceModel(properties);
+        if (sourceModel != null) {
+            String targetObjName = DesignerPropertiesUtil.getLastSourceModelObjectName(properties);
+            // Locate the Target Preview Object in the Preview Model
+            if (targetObjName != null && !targetObjName.isEmpty()) {
+                ModelEditor editor = ModelerCore.getModelEditor();
+                ModelResource resource = ModelUtilities.getModelResourceForIFile(sourceModel, true);
+                if (resource != null) {
+                    try {
+                        List<EObject> eObjects = resource.getEObjects();
+                        for (EObject eObj : eObjects) {
+                            // If Target Preview Object is found, update the UI
+                            if (targetObjName.equals(editor.getName(eObj))) {
+                                targetEObj = eObj;
+                                break;
+                            }
+                        }
+                    } catch (ModelWorkspaceException ex) {
+                        UiPlugin.getDefault().getPluginUtil().log(ex);
+                    }
+                }
+            }
+        }
+
+        return targetEObj;
+    }
+    
+    /**
+     * Get the Last View Model Object, if the properties are defined and it can be found.
+     * 
+     * @param properties the Designer properties
+     * @return the EObject, null if not defined or found
+     */
+    public static EObject getLastViewModelObject( Properties properties ) {
+        EObject targetEObj = null;
+
+        IFile targetModel = getViewModel(properties);
+        if (targetModel != null) {
+            String targetObjName = DesignerPropertiesUtil.getLastViewModelObjectName(properties);
             // Locate the Target Preview Object in the Preview Model
             if (targetObjName != null && !targetObjName.isEmpty()) {
                 ModelEditor editor = ModelerCore.getModelEditor();

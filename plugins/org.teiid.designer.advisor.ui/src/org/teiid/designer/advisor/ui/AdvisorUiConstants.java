@@ -147,6 +147,7 @@ public interface AdvisorUiConstants {
 		
         String NEW_OBJECT_BASE_TABLE = "org.teiid.designer.newObjectBaseTable"; //$NON-NLS-1$
         String NEW_OBJECT_VIEW_TABLE = "org.teiid.designer.newObjectViewTable"; //$NON-NLS-1$
+        String DEFINE_VIEW_TABLE = "org.teiid.designer.defineViewTable"; //$NON-NLS-1$
         String NEW_OBJECT_REST_PROCEDURE = "org.teiid.designer.newObjectRestProcedure"; //$NON-NLS-1$
         String NEW_OBJECT_SOURCE_FUNCTION = "org.teiid.designer.newObjectSourceFunction";  //$NON-NLS-1$
 		
@@ -203,6 +204,7 @@ public interface AdvisorUiConstants {
 		
         String NEW_OBJECT_BASE_TABLE = "Create new relational table"; //$NON-NLS-1$
         String NEW_OBJECT_VIEW_TABLE = "Create new relational view table"; //$NON-NLS-1$
+        String DEFINE_VIEW_TABLE = "Define relational view table"; //$NON-NLS-1$
         String NEW_OBJECT_REST_PROCEDURE = "Create new relational view REST procedure"; //$NON-NLS-1$
 		String NEW_OBJECT_SOURCE_FUNCTION = "Create new relational source function";  //$NON-NLS-1$
 		
@@ -256,6 +258,7 @@ public interface AdvisorUiConstants {
 		
         String NEW_OBJECT_BASE_TABLE = Messages.CreateNewRelationalBaseTable;
         String NEW_OBJECT_VIEW_TABLE = Messages.CreateNewRelationalViewTable;
+        String DEFINE_VIEW_TABLE = Messages.DefineRelationalViewTable;
         String NEW_OBJECT_REST_PROCEDURE = Messages.CreateNewRelationalViewRESTProcedure;
 		String NEW_OBJECT_SOURCE_FUNCTION = Messages.CreateNewRelationalSourceFunction;
 		
@@ -308,6 +311,7 @@ public interface AdvisorUiConstants {
 		
         String NEW_OBJECT_BASE_TABLE = Messages.CreateNewRelationalBaseTable_Short;
         String NEW_OBJECT_VIEW_TABLE = Messages.CreateNewRelationalViewTable_Short;
+        String DEFINE_VIEW_TABLE = Messages.DefineRelationalViewTable;
         String NEW_OBJECT_REST_PROCEDURE = Messages.CreateNewRelationalViewRESTProcedure_Short;
 		String NEW_OBJECT_SOURCE_FUNCTION = Messages.CreateNewRelationalSourceFunction_Short;
 		
@@ -422,8 +426,6 @@ public interface AdvisorUiConstants {
 	    String LINK_TO_HELP = CTOOL16 + "link-to-help.gif"; //$NON-NLS-1$
 	    String LIGHT_BULB = CTOOL16 + "light-bulb.gif"; //$NON-NLS-1$
 	    String EXECUTE_ACTION = CTOOL16 + "execute-action.gif"; //$NON-NLS-1$
-	    
-	    
 	    
         String VDB_PROJECT = CVIEW16 + "vdbproject.png"; //$NON-NLS-1$
         String MODEL_PROJECT = CVIEW16 + "modelproject.png"; //$NON-NLS-1$
