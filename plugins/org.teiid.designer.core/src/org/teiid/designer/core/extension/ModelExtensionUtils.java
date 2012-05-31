@@ -706,6 +706,7 @@ class ModelExtensionUtils {
                 if (annotation.getTags().isEmpty()) {
                     ModelResourceContainerFactory.deleteAnnotation(annotation);
                 }
+                succeeded = true;
             } finally {
                 // if we started the transaction, commit it.
                 if (requiredStart) {
@@ -923,6 +924,7 @@ class ModelExtensionUtils {
                     }
                 }
             }
+            succeeded = true;
         } finally {
             // if we started the transaction, commit it.
             if (requiredStart) {
