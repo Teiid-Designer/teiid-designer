@@ -34,8 +34,11 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
+import org.eclipse.ui.ide.IDE;
 
 import com.metamatrix.core.event.IChangeListener;
 import com.metamatrix.core.event.IChangeNotifier;
@@ -287,6 +290,14 @@ public class DefineViewTableDialog extends TitleAreaDialog implements
 	}
 	
 	private void handleNewViewTablePressed() {
+       try {
+			// open editor
+			IWorkbenchPage page = UiPlugin.getDefault().getCurrentWorkbenchWindow().getActivePage();
+			IDE.openEditor(page, (IFile)this.selectedModel);
+		} catch (PartInitException ex) {
+			// Do nothing?
+		}
+	       
 		CreateViewTableAction action = new CreateViewTableAction(this.designerProperties);
 		action.run();
 		this.viewTable = action.getNewViewTable();

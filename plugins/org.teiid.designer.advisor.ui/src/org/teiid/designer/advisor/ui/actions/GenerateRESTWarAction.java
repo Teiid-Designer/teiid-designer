@@ -9,32 +9,32 @@ package org.teiid.designer.advisor.ui.actions;
 
 import java.util.Properties;
 
-import org.eclipse.emf.ecore.EObject;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.teiid.designer.advisor.ui.AdvisorUiConstants;
 import org.teiid.designer.advisor.ui.AdvisorUiPlugin;
-import org.teiid.designer.runtime.ui.extension.ApplyRestWarPropertiesAction;
+import org.teiid.designer.advisor.ui.dialogs.GenerateRestWarDialog;
+import org.teiid.designer.runtime.ui.actions.GenerateRestWarAction;
 
-import com.metamatrix.modeler.transformation.ui.editors.DefineViewProcedureDialog;
-
-public class DefineViewProcedureAction extends Action implements AdvisorUiConstants {
+public class GenerateRESTWarAction extends Action implements AdvisorUiConstants {
 
     private Properties designerProperties;
 
     /**
      * Construct an instance of NewModelAction.
      */
-    public DefineViewProcedureAction() {
+    public GenerateRESTWarAction() {
         super();
-        setText("Define View Table"); //$NON-NLS-1$
-        setToolTipText("Define View Table Tooltip"); //$NON-NLS-1$
-        setImageDescriptor(AdvisorUiPlugin.getDefault().getImageDescriptor(Images.NEW_VIRTUAL_PROCEDURE_ICON));
+        setText("Generate REST War"); //$NON-NLS-1$
+        setToolTipText("Generate REST War"); //$NON-NLS-1$
+        setImageDescriptor(AdvisorUiPlugin.getDefault().getImageDescriptor(Images.GENERATE_WAR));
 
     }
     
-    public DefineViewProcedureAction( Properties properties ) {
+    public GenerateRESTWarAction( Properties properties ) {
         this();
         this.designerProperties = properties;
     }
@@ -45,19 +45,16 @@ public class DefineViewProcedureAction extends Action implements AdvisorUiConsta
     public void run() {
     	final IWorkbenchWindow iww = AdvisorUiPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow();
     	
-    	DefineViewProcedureDialog sdDialog = new DefineViewProcedureDialog(iww.getShell(), this.designerProperties);
+		GenerateRestWarDialog sdDialog = new GenerateRestWarDialog(iww.getShell(), this.designerProperties);
 
 		sdDialog.open();
 
 		if (sdDialog.getReturnCode() == Window.OK) {
-			EObject proc = sdDialog.getViewProcedure();
-			boolean doApply = sdDialog.doApplyRestWarProperties();
-			if( proc != null && doApply ) {
-				try {
-					ApplyRestWarPropertiesAction.applyRestWarProperties(proc);
-				} catch (Exception ex) {
-					AdvisorUiConstants.UTIL.log(ex);
-				}
+			IFile theVdbFile = (IFile)sdDialog.getVdb();
+			if( theVdbFile != null ) {
+				GenerateRestWarAction genAction = new GenerateRestWarAction();
+				genAction.setSelection(new StructuredSelection(theVdbFile));
+				genAction.run();
 			}
 		}
     }

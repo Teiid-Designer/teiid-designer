@@ -311,6 +311,20 @@ public class Messages  extends NLS {
     
     public static String CreateDataSource_NoServerMessage;
     
+    public static String GenerateRestWarDialog_title;
+    public static String GenerateRestWarDialog_subTitle;
+    public static String GenerateRestWarDialog_initialMessage;
+    public static String GenerateRestWarDialog_vdbName;
+    public static String GenerateRestWarDialog_browseExisting;
+    public static String GenerateRestWarDialog_browseTooltip;
+    public static String GenerateRestWarDialog_noVdbError;
+    public static String GenerateRestWarDialog_noRestProceduresInVdbError;
+    public static String GenerateRestWarDialog_clickOkMessage;
+    public static String GenerateRestWarDialog_selectVdbTitle;
+    public static String GenerateRestWarDialog_selectVdbMessage;
+    public static String GenerateRestWarDialog_selectedObjectNotVdbMessage;
+
+    
     static {
         NLS.initializeMessages("org.teiid.designer.advisor.ui.messages", Messages.class); //$NON-NLS-1$
     }

@@ -25,6 +25,8 @@ Require-Bundle: org.eclipse.ui,
  org.teiid.designer.dqp,
  org.teiid.designer.dqp.ui,
  org.teiid.designer.transformation.ui,
- org.teiid.designer.vdb.ui
+ org.teiid.designer.vdb.ui,
+ org.eclipse.ui.ide,
+ org.eclipse.emf.ecore
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy

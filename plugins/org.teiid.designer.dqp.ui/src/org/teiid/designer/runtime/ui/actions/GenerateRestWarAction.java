@@ -154,11 +154,9 @@ public class GenerateRestWarAction extends Action implements ISelectionListener,
         }
         notifyResult(rc == Window.OK);
     }
-
-    @Override
-    public void selectionChanged( IWorkbenchPart part,
-                                  ISelection selection ) {
-        boolean enable = false;
+    
+    public boolean setSelection(ISelection selection) {
+    	boolean result = false;
         List restfulProcedureArray = null;
         if (!SelectionUtilities.isMultiSelection(selection)) {
             Object obj = SelectionUtilities.getSelectedObject(selection);
@@ -205,7 +203,7 @@ public class GenerateRestWarAction extends Action implements ISelectionListener,
                             }
 
                             if (restfulProcedureArray.size() > 0) {
-                                enable = true;
+                            	result = true;
                             }
 
                         }
@@ -214,10 +212,70 @@ public class GenerateRestWarAction extends Action implements ISelectionListener,
                 }
             }
         }
-        setEnabled(enable);
+        
+        return result;
     }
 
-    private String getRestMethod( Procedure procedure ) {
+    @Override
+    public void selectionChanged( IWorkbenchPart part,
+                                  ISelection selection ) {
+        boolean enable = setSelection(selection);
+
+        setEnabled(enable);
+    }
+    
+    public static boolean isRestWarVdb(IFile vdbFile) {
+    	boolean result = false;
+        String extension = vdbFile.getFileExtension();
+        if (extension != null && extension.equals(VDB_EXTENSION)) {
+        	List restfulProcedureArray = null;
+        	
+            Vdb vdb = new Vdb(vdbFile, new NullProgressMonitor());
+            Set<VdbModelEntry> modelEntrySet = vdb.getModelEntries();
+            for (VdbModelEntry vdbModelEntry : modelEntrySet) {
+                final ModelResource modelResource = ModelerCore.getModelWorkspace().findModelResource(vdbModelEntry.getName());
+                if (ModelIdentifier.isVirtualModelType(modelResource)) {
+                	restfulProcedureArray = new ArrayList<RestProcedure>();
+
+                    Collection<EObject> eObjectList = null;
+                    try {
+                        eObjectList = modelResource.getEObjects();
+                        for (EObject eObject : eObjectList) {
+                            if (SqlAspectHelper.isProcedure(eObject)) {
+                                IPath path = ModelerCore.getModelEditor().getModelRelativePathIncludingModel(eObject);
+                                final StringBuffer sb = new StringBuffer();
+                                final String[] segments = path.segments();
+                                for (int i = 0; i < segments.length; i++) {
+                                    if (i != 0) {
+                                        sb.append('.');
+                                    }
+                                    final String segment = segments[i];
+                                    sb.append(segment);
+                                }
+                                String fullName = sb.toString();
+                                String name = ((ProcedureImpl)eObject).getName();
+                                createRestProcedureCollection((Procedure)eObject, name, fullName, restfulProcedureArray);
+                            }
+                        }
+
+                        if (restfulProcedureArray.size() > 0) {
+                        	result = true;
+                        }
+                    } catch (ModelWorkspaceException e) {
+                        throw new RuntimeException(e);
+                    }
+                    if( result ) {
+                    	break;
+                    }
+                }
+            }
+
+        }
+        
+        return result;
+    }
+
+    private static String getRestMethod( Procedure procedure ) {
         String restMethod = null;
 
         try {
@@ -240,7 +298,7 @@ public class GenerateRestWarAction extends Action implements ISelectionListener,
         return restMethod;
     }
 
-    private String getUri( Procedure procedure ) {
+    private static String getUri( Procedure procedure ) {
         String uri = null;
 
         try {
@@ -267,7 +325,7 @@ public class GenerateRestWarAction extends Action implements ISelectionListener,
      * @return
      * @throws ModelerCoreException
      */
-    private void createRestProcedureCollection( Procedure procedure,
+    private static void createRestProcedureCollection( Procedure procedure,
                                                 String name,
                                                 String fullName,
                                                 List restfulProcedureArray ) {

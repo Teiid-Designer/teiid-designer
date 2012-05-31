@@ -616,14 +616,15 @@ public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChange
 		}
 		
 		if( id.equalsIgnoreCase(COMMAND_IDS.GENERATE_REST_WAR)) {
-			// TODO
+			GenerateRESTWarAction action = new GenerateRESTWarAction(properties);
+			action.run();
 	        return;
 		}
 		
-		if( id.equalsIgnoreCase(COMMAND_IDS.GENERATE_SOAP_WAR)) {
-			// TODO
-	        return;
-		}
+//		if( id.equalsIgnoreCase(COMMAND_IDS.GENERATE_SOAP_WAR)) {
+//			// TODO
+//	        return;
+//		}
 
 		if( id.equalsIgnoreCase(COMMAND_IDS.DEPLOY_WAR)) {
 			// TODO
