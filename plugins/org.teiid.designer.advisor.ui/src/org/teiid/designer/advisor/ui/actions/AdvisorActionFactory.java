@@ -229,6 +229,11 @@ public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChange
                 COMMAND_LABELS_SHORT.DEFINE_VDB,
                 COMMAND_DESC.DEFINE_VDB);
         addActionHandler(
+        		COMMAND_IDS.DEFINE_SOURCE,
+                COMMAND_LABELS.DEFINE_SOURCE,
+                COMMAND_LABELS_SHORT.DEFINE_SOURCE,
+                COMMAND_DESC.DEFINE_SOURCE);
+        addActionHandler(
         		COMMAND_IDS.EXECUTE_VDB, 
         		COMMAND_LABELS.EXECUTE_VDB, 
         		COMMAND_LABELS.EXECUTE_VDB,
@@ -604,10 +609,11 @@ public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChange
 	        return;
 		}
 		
-//		if( id.equalsIgnoreCase(COMMAND_IDS.NEW_OBJECT_VIEW_TABLE)) {
-//			// TODO
-//	        return;
-//		}
+		if( id.equalsIgnoreCase(COMMAND_IDS.DEFINE_SOURCE)) {
+			DefineSourceAction action = new DefineSourceAction(properties);
+			action.run();
+	        return;
+		}
 		
 		if( id.equalsIgnoreCase(COMMAND_IDS.GENERATE_REST_WAR)) {
 			// TODO
@@ -800,6 +806,10 @@ public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChange
 		
 		if( id.equalsIgnoreCase(COMMAND_IDS.DEPLOY_WAR)) {
 			return Images.DEPLOY_WAR;
+		}
+		
+		if( id.equalsIgnoreCase(COMMAND_IDS.DEFINE_SOURCE)) {
+			return Images.IMPORT;
 		}
 		
 		if( id.equalsIgnoreCase(CHEAT_SHEET_IDS.CONSUME_SOAP_SERVICE) ) {

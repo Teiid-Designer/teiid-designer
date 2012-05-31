@@ -209,10 +209,6 @@ public class DefineVdbDialog extends TitleAreaDialog implements IChangeListener 
 		return control;
 	}
 
-	{
-
-	}
-
 	/**
 	 * @return the VDB
 	 */

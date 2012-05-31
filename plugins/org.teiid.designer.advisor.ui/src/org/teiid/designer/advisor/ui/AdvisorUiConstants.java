@@ -59,6 +59,8 @@ public interface AdvisorUiConstants {
 	String[] ASPECT_MODEL_DATA_SOURCES = {
 			COMMAND_IDS.IMPORT_DDL,
 			COMMAND_IDS.IMPORT_FLAT_FILE,
+			COMMAND_IDS.IMPORT_XML_FILE,
+			COMMAND_IDS.IMPORT_XML_FILE_URL,
 			COMMAND_IDS.IMPORT_JDBC,
 			COMMAND_IDS.IMPORT_SALESFORCE,
 			COMMAND_IDS.IMPORT_WSDL_TO_SOURCE,
@@ -167,6 +169,7 @@ public interface AdvisorUiConstants {
 		
 		String NEW_TEIID_MODEL_PROJECT = "org.teiid.designer.newProjectCommand"; //$NON-NLS-1$
 		String DEFINE_TEIID_MODEL_PROJECT = "org.teiid.designer.defineProjectCommand";  //$NON-NLS-1$
+		String DEFINE_SOURCE = "org.teiid.designer.defineSource";  //$NON-NLS-1$
 		
 		String CREATE_VDB = "org.teiid.designer.vdb.create"; //$NON-NLS-1$
 		String EXECUTE_VDB = "org.teiid.designer.vdb.execute"; //$NON-NLS-1$
@@ -226,6 +229,7 @@ public interface AdvisorUiConstants {
 		
 		String NEW_TEIID_MODEL_PROJECT = "Create new Teiid Model Project"; //$NON-NLS-1$
 		String DEFINE_TEIID_MODEL_PROJECT = "Define Teiid Model Project"; //$NON-NLS-1$
+		String DEFINE_SOURCE = "Define Source"; //$NON-NLS-1$
 		
 		String CREATE_VDB = "Create a new VDB"; //$NON-NLS-1$
 		String EXECUTE_VDB = "Test a VDB by deploying to Teiid Server, connecting to it via JDBC and executing queries against it via Datatools' SQL Scrapbook"; //$NON-NLS-1$
@@ -283,6 +287,8 @@ public interface AdvisorUiConstants {
 		
 		String NEW_TEIID_MODEL_PROJECT = Messages.CreateTeiidModelProject;
 		String DEFINE_TEIID_MODEL_PROJECT = Messages.DefineTeiidModelProject;
+		String DEFINE_SOURCE = Messages.DefineSource;
+		
 		String CREATE_VDB = Messages.CreateVdb;
 		String EXECUTE_VDB = Messages.ExecuteVdb;
 		String EDIT_VDB = Messages.EditVdb;
@@ -338,6 +344,8 @@ public interface AdvisorUiConstants {
 		
 		String NEW_TEIID_MODEL_PROJECT = Messages.CreateTeiidModelProject_Short;
 		String DEFINE_TEIID_MODEL_PROJECT = Messages.DefineTeiidModelProject_Short;
+		String DEFINE_SOURCE = Messages.DefineSource;
+		
 		String CREATE_VDB = Messages.CreateVdb_Short;
 		String EXECUTE_VDB = Messages.ExecuteVdb;
 		String EDIT_VDB = Messages.EditVdb_Short;

@@ -14,6 +14,8 @@ public class Messages  extends NLS {
     public static String ActionSets;
     
 	public static String CheatSheets;
+	public static String ClickOkToFinish;
+	public static String ClickToLaunchSelectedImporter;
 	public static String CommonActionSets;
     public static String ConsumeARESTWebService;
     public static String ConsumeARESTWebService_Short;
@@ -85,8 +87,11 @@ public class Messages  extends NLS {
     public static String CreateWebServicesConnection_Short;
     
     public static String DefineModels;
+    public static String DefineDataSourceModels;
+    public static String DefineDataSourceModelsMessage;
     public static String DefineRelationalViewProcedure;
     public static String DefineRelationalViewTable;
+    public static String DefineSource;
     public static String DefineTeiidModelProject;
     public static String DefineTeiidModelProject_Short;
     public static String DefineVdb;
@@ -116,6 +121,7 @@ public class Messages  extends NLS {
     public static String Guides;
     
     public static String Importing;
+    public static String ImportSourceOptions;
 
     public static String ManageConnections;
     public static String ManageModelProjects;
