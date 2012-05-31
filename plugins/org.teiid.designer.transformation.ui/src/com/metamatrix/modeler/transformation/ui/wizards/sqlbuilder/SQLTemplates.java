@@ -61,7 +61,7 @@ public class SQLTemplates {
                                                 + "COLUMNS empID integer PATH '@id', firstname string PATH 'name/first', " //$NON-NLS-1$
                                                 + "lastname string PATH 'name/last') AS employee; END"; //$NON-NLS-1$
     
-    public static String REST_PROCEDURE = "CREATE VIRTUAL PROCEDURE BEGIN" //$NON-NLS-1$
+    public static String REST_PROCEDURE = "CREATE VIRTUAL PROCEDURE BEGIN " //$NON-NLS-1$
     											+ "SELECT XMLELEMENT(NAME authors, " //$NON-NLS-1$
     												+ "XMLAGG(XMLELEMENT(NAME author, " //$NON-NLS-1$
     												+ "XMLFOREST(MySqlBooks.AUTHORS.AUTHOR_ID, MySqlBooks.AUTHORS.FIRSTNAME, MySqlBooks.AUTHORS.LASTNAME, MySqlBooks.AUTHORS.MIDDLEINIT)))) " //$NON-NLS-1$

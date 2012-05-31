@@ -304,6 +304,12 @@ public class DefineViewTableDialog extends TitleAreaDialog implements
 		((ModelWorkspaceDialog) sdDialog).addFilter(new ClosedProjectFilter());
 		((ModelWorkspaceDialog) sdDialog).addFilter(new SingleProjectFilter(this.designerProperties));
 
+		IFile viewModel = designerProperties.getViewModel();
+
+		if (viewModel != null) {
+			((ModelWorkspaceDialog) sdDialog).setInitialSelection(viewModel);
+		}
+		
 		sdDialog.open();
 
 		if (sdDialog.getReturnCode() == Window.OK) {

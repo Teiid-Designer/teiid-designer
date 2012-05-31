@@ -89,6 +89,7 @@ public class Messages  extends NLS {
     public static String DefineRelationalViewTable;
     public static String DefineTeiidModelProject;
     public static String DefineTeiidModelProject_Short;
+    public static String DefineVdb;
     public static String DeployVdb;
     public static String DeployVdb_Short;
     public static String DeployWarFile;

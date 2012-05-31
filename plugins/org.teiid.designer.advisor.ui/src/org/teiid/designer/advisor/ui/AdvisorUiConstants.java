@@ -173,6 +173,7 @@ public interface AdvisorUiConstants {
 		String PREVIEW_DATA = "org.teiid.designer.previewData"; //$NON-NLS-1$
 		String EDIT_VDB = "org.teiid.designer.vdb.edit"; //$NON-NLS-1$
 		String DEPLOY_VDB = "org.teiid.designer.vdb.deploy"; //$NON-NLS-1$
+		String DEFINE_VDB = "org.teiid.designer.vdb.define"; //$NON-NLS-1$
 		
 		String GENERATE_REST_WAR = "org.teiid.designer.war.rest.generate"; //$NON-NLS-1$
 		String GENERATE_SOAP_WAR = "org.teiid.designer.war.soap.generate"; //$NON-NLS-1$
@@ -231,6 +232,7 @@ public interface AdvisorUiConstants {
 		String PREVIEW_DATA = "Perform a test query on a table or procedure"; //$NON-NLS-1$
 		String EDIT_VDB = "Select and open a VDB for editing"; //$NON-NLS-1$
 		String DEPLOY_VDB = "Deploy a VDB to your Teiid server"; //$NON-NLS-1$
+		String DEFINE_VDB = "Define VDB";  //$NON-NLS-1$
 		
 		String GENERATE_REST_WAR = "Generate a REST WAR file"; //$NON-NLS-1$
 		String GENERATE_SOAP_WAR = "Generate a JBossWS-CXF WAR file"; //$NON-NLS-1$
@@ -286,6 +288,7 @@ public interface AdvisorUiConstants {
 		String EDIT_VDB = Messages.EditVdb;
 		String PREVIEW_DATA = Messages.PreviewData;
 		String DEPLOY_VDB = Messages.DeployVdb;
+		String DEFINE_VDB = Messages.DefineVdb;
 		
 		String GENERATE_REST_WAR = Messages.GenerateRestWar;
 		String GENERATE_SOAP_WAR = Messages.GenerateSoapWar;
@@ -339,6 +342,7 @@ public interface AdvisorUiConstants {
 		String EXECUTE_VDB = Messages.ExecuteVdb;
 		String EDIT_VDB = Messages.EditVdb_Short;
 		String DEPLOY_VDB = Messages.DeployVdb_Short;
+		String DEFINE_VDB = Messages.DefineVdb;
 		
 		String GENERATE_REST_WAR = Messages.GenerateRestWar_Short;
 		String GENERATE_SOAP_WAR = Messages.GenerateSoapWar_Short;

@@ -95,6 +95,7 @@ public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChange
 	static IAction ACTION_NEW_MODEL_WS;
 	static IAction ACTION_NEW_MODEL_XML_DOC;
 	static IAction ACTION_CREATE_VDB;
+	static IAction ACTION_DEFINE_VDB;
 	static IAction ACTION_EXECUTE_VDB;
 	static IAction ACTION_EDIT_VDB;
 	static IAction ACTION_DEPLOY_VDB;
@@ -222,6 +223,11 @@ public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChange
         		COMMAND_LABELS.CREATE_VDB, 
         		COMMAND_LABELS_SHORT.CREATE_VDB,
         		COMMAND_DESC.CREATE_VDB);
+        addActionHandler(
+        		COMMAND_IDS.DEFINE_VDB,
+                COMMAND_LABELS.DEFINE_VDB,
+                COMMAND_LABELS_SHORT.DEFINE_VDB,
+                COMMAND_DESC.DEFINE_VDB);
         addActionHandler(
         		COMMAND_IDS.EXECUTE_VDB, 
         		COMMAND_LABELS.EXECUTE_VDB, 
@@ -515,6 +521,12 @@ public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChange
 	        return;
 		}
 		
+		if( id.equalsIgnoreCase(COMMAND_IDS.DEFINE_VDB)) {
+			DefineVdbAction action = new DefineVdbAction(properties);
+			action.run();
+	        return;
+		}
+		
 		if( id.equalsIgnoreCase(COMMAND_IDS.EDIT_VDB)) {
 			EditVdbAction action = new EditVdbAction();
 			action.run();
@@ -716,6 +728,10 @@ public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChange
 		}
 		
 		if( id.equalsIgnoreCase(COMMAND_IDS.CREATE_VDB)) {
+			return Images.NEW_VDB;
+		}
+		
+		if( id.equalsIgnoreCase(COMMAND_IDS.DEFINE_VDB)) {
 			return Images.NEW_VDB;
 		}
 		
@@ -969,6 +985,10 @@ public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChange
 		}
 		
 		if( commandId.equalsIgnoreCase(COMMAND_IDS.CREATE_VDB)) {
+			return ACTION_CREATE_VDB;
+		}
+		
+		if( commandId.equalsIgnoreCase(COMMAND_IDS.DEFINE_VDB)) {
 			return ACTION_CREATE_VDB;
 		}
 		

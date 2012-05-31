@@ -512,4 +512,23 @@ public class DesignerProperties extends Properties {
 
     	return !(newFile.getName().equals(getViewModelName()));
     }
+    
+    /**
+     * Determines if the new vdb file is different than vdb name stored in properties
+     * 
+     * @param newVdb the IFile
+     * @param properties the Designer properties
+     * @return boolean, true if vdb names are different
+     */
+    public boolean isVdbDifferent( IFile newVdb) {
+    	if( newVdb == null && getVdbName() != null ) {
+    		return true;
+    	}
+    	
+    	if( newVdb != null && getVdbName() == null ) {
+    		return true;
+    	}
+
+    	return !(newVdb.getName().equals(getVdbName()));
+    }
 }
