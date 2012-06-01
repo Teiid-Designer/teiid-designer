@@ -811,7 +811,7 @@ public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChange
 		}
 		
 		if( id.equalsIgnoreCase(COMMAND_IDS.DEFINE_SOURCE)) {
-			return Images.IMPORT;
+			return Images.CREATE_SOURCES;
 		}
 		
 		if( id.equalsIgnoreCase(CHEAT_SHEET_IDS.CONSUME_SOAP_SERVICE) ) {

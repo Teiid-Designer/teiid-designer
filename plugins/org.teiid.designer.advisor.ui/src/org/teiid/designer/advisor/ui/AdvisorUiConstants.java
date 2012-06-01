@@ -442,6 +442,7 @@ public interface AdvisorUiConstants {
 	    String NEW_CONNECTION_PROFILE = CTOOL16 + "new-connection-profile.gif";  //$NON-NLS-1$
 	    String IMPORT = CTOOL16 + "import.gif";  //$NON-NLS-1$
 	    String EXPORT = CTOOL16 + "export.gif";  //$NON-NLS-1$
+	    String CREATE_SOURCES = CTOOL16 + "import-create-models.png";  //$NON-NLS-1$
 	    
 	    String LINK_TO_HELP = CTOOL16 + "link-to-help.gif"; //$NON-NLS-1$
 	    String LIGHT_BULB = CTOOL16 + "light-bulb.gif"; //$NON-NLS-1$
