@@ -52,9 +52,17 @@ public class DefineViewProcedureAction extends Action implements AdvisorUiConsta
 		if (sdDialog.getReturnCode() == Window.OK) {
 			EObject proc = sdDialog.getViewProcedure();
 			boolean doApply = sdDialog.doApplyRestWarProperties();
+			String restMethod = sdDialog.getRestMethod();
+			String restURI = sdDialog.getRestUri();
 			if( proc != null && doApply ) {
 				try {
 					ApplyRestWarPropertiesAction.applyRestWarProperties(proc);
+					if( restMethod != null ) {
+						ApplyRestWarPropertiesAction.setRestMethod(proc, restMethod);
+					}
+					if( restURI != null ) {
+						ApplyRestWarPropertiesAction.setRestUri(proc, restURI);
+					}
 				} catch (Exception ex) {
 					AdvisorUiConstants.UTIL.log(ex);
 				}

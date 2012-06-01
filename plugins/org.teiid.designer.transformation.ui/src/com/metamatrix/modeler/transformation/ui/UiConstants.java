@@ -105,6 +105,15 @@ public interface UiConstants {
     	int UPDATE_DELETE = 4;
     	
     }
+    
+    interface METHODS {
+    	String GET = "GET"; //$NON-NLS-1$
+	    String PUT = "PUT"; //$NON-NLS-1$
+	    String POST = "POST"; //$NON-NLS-1$
+	    String DELETE = "DELETE"; //$NON-NLS-1$
+    }
+    
+    String[] METHODS_ARRAY = {METHODS.GET, METHODS.PUT, METHODS.POST, METHODS.DELETE };
 
     /**
      * Constants related to color of diagram objects

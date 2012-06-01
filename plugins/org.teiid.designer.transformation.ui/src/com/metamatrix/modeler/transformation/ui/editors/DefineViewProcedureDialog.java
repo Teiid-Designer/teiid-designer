@@ -7,6 +7,8 @@
  */
 package com.metamatrix.modeler.transformation.ui.editors;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 import org.eclipse.core.resources.IContainer;
@@ -24,14 +26,18 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbenchPage;
@@ -61,6 +67,7 @@ import com.metamatrix.modeler.transformation.ui.actions.CreateViewProcedureActio
 import com.metamatrix.modeler.ui.viewsupport.DesignerProperties;
 import com.metamatrix.modeler.ui.wizards.NewModelWizardInput;
 import com.metamatrix.ui.internal.util.WidgetFactory;
+import com.metamatrix.ui.internal.util.WidgetUtil;
 import com.metamatrix.ui.internal.viewsupport.ClosedProjectFilter;
 import com.metamatrix.ui.internal.viewsupport.StatusInfo;
 import com.metamatrix.ui.internal.widget.Label;
@@ -89,6 +96,11 @@ public class DefineViewProcedureDialog extends TitleAreaDialog implements
 	
 	private Button applyRestWarPropertiesCB;
 	private boolean doApplyRestWarProperties;
+	
+	private String restMethodValue = METHODS.GET;
+	private Combo restMethodsCombo;
+	private String restUriValue;
+	private Text restUriText;
 
 	DesignerProperties designerProperties;
 
@@ -238,13 +250,58 @@ public class DefineViewProcedureDialog extends TitleAreaDialog implements
 			});
 		}
 		
-		this.applyRestWarPropertiesCB = WidgetFactory.createCheckBox(panel, getString("enableRestForThisProcedure")); //$NON-NLS-1$
-		this.applyRestWarPropertiesCB.setEnabled(true);
-		this.applyRestWarPropertiesCB.setSelection(true);
-		this.doApplyRestWarProperties = true;
-		GridData gd = new GridData();
-		gd.horizontalSpan=4;
-		this.applyRestWarPropertiesCB.setLayoutData(gd);
+		REST_PROPERTIES : {
+			Group restGroup = WidgetFactory.createGroup(panel, getString("restOptions"), SWT.FILL); //$NON-NLS-1$
+			restGroup.setLayout(new GridLayout(2, false));
+			GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+			gd.horizontalSpan=4;
+			restGroup.setLayoutData(gd);
+			
+			this.applyRestWarPropertiesCB = WidgetFactory.createCheckBox(restGroup, getString("enableRestForThisProcedure")); //$NON-NLS-1$
+			this.applyRestWarPropertiesCB.setEnabled(true);
+			this.applyRestWarPropertiesCB.setSelection(true);
+			this.doApplyRestWarProperties = true;
+			gd = new GridData();
+			gd.horizontalSpan=2;
+			this.applyRestWarPropertiesCB.setLayoutData(gd);
+			
+			Label label = WidgetFactory.createLabel(restGroup, getString("restMethod")); //$NON-NLS-1$
+			label.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
+			
+			restMethodsCombo = new Combo(restGroup, SWT.NONE | SWT.READ_ONLY);
+			gd = new GridData(GridData.FILL_HORIZONTAL);
+			gd.verticalAlignment = GridData.CENTER;
+			gd.horizontalSpan = 1;
+			restMethodsCombo.setLayoutData(gd);
+			
+			List<String> comboItems = new ArrayList<String>();
+			for( String str : METHODS_ARRAY ) {
+				comboItems.add(str);
+			}
+			WidgetUtil.setComboItems(restMethodsCombo, comboItems, null, true);
+			restMethodsCombo.addSelectionListener(new SelectionAdapter() {
+	            @Override
+	            public void widgetSelected( SelectionEvent ev ) {
+	            	selectComboItem(restMethodsCombo.getSelectionIndex());
+	            }
+	        });
+			
+			label = WidgetFactory.createLabel(restGroup, getString("uri"));  //$NON-NLS-1$
+			label.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
+
+			// textfield for named type
+			this.restUriText = WidgetFactory.createTextField(restGroup, GridData.FILL_HORIZONTAL);
+			this.restUriText.setToolTipText(getString("viewModelNameTooltip")); //$NON-NLS-1$
+			this.restUriText.setEditable(true);
+			this.restUriText.addModifyListener(new ModifyListener() {
+				
+				@Override
+				public void modifyText(ModifyEvent e) {
+					restUriValue = restUriText.getText();
+				}
+			});
+		}
+
 
 		return panel;
 	}
@@ -277,6 +334,14 @@ public class DefineViewProcedureDialog extends TitleAreaDialog implements
 	public boolean doApplyRestWarProperties() {
 		return this.doApplyRestWarProperties;
 	}
+	
+	public String getRestMethod() {
+		return this.restMethodValue;
+	}
+	
+	public String getRestUri() {
+		return this.restUriValue;
+	}
 
 	@Override
 	protected void okPressed() {
@@ -284,6 +349,13 @@ public class DefineViewProcedureDialog extends TitleAreaDialog implements
 
 		super.okPressed();
 	}
+	
+    private void selectComboItem(int selectionIndex) {
+    	if( selectionIndex >=0 ) {
+    		restMethodsCombo.select(selectionIndex);
+    		this.restMethodValue = restMethodsCombo.getItem(selectionIndex);
+    	}
+    }
 	
 	/**
 	 * @see com.metamatrix.core.event.IChangeListener#stateChanged(com.metamatrix.core.event.IChangeNotifier)

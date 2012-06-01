@@ -15,6 +15,7 @@ import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.ExtensionConstants.MedOperations;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 import org.teiid.designer.runtime.extension.rest.RestModelExtensionAssistant;
+import org.teiid.designer.runtime.extension.rest.RestModelExtensionConstants;
 
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.metamodels.relational.Procedure;
@@ -91,6 +92,22 @@ public class ApplyRestWarPropertiesAction extends RestWarPropertiesAction {
 			ModelExtensionRegistry registry = ExtensionPlugin.getInstance().getRegistry();
 			RestModelExtensionAssistant assistant = (RestModelExtensionAssistant)registry.getModelExtensionAssistant(NAMESPACE_PROVIDER.getNamespacePrefix());
 			assistant.saveModelExtensionDefinition(procedure);
+    	}
+    }
+    
+    public static void setRestMethod(EObject procedure, String newValue) throws Exception {
+    	if( procedure instanceof Procedure) {
+			ModelExtensionRegistry registry = ExtensionPlugin.getInstance().getRegistry();
+			RestModelExtensionAssistant assistant = (RestModelExtensionAssistant)registry.getModelExtensionAssistant(NAMESPACE_PROVIDER.getNamespacePrefix());
+			assistant.setPropertyValue(procedure, RestModelExtensionConstants.PropertyIds.REST_METHOD, newValue);
+    	}
+    }
+    
+    public static void setRestUri(EObject procedure, String newValue) throws Exception {
+    	if( procedure instanceof Procedure) {
+			ModelExtensionRegistry registry = ExtensionPlugin.getInstance().getRegistry();
+			RestModelExtensionAssistant assistant = (RestModelExtensionAssistant)registry.getModelExtensionAssistant(NAMESPACE_PROVIDER.getNamespacePrefix());
+			assistant.setPropertyValue(procedure, RestModelExtensionConstants.PropertyIds.URI, newValue);
     	}
     }
 
