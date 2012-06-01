@@ -576,6 +576,9 @@ public class ImportWsdlSchemaHandler {
 				throw new RuntimeException(e);
 			}
 
+			//Add the default namespace.
+			responseInfo.addNamespace(ResponseInfo.DEFAULT_NS, this.operationsDetailsPage.getProcedureGenerator().getNamespaceURI()); 
+			
 			SchemaProcessor processor = new SOAPSchemaProcessor(null);
 			processor.representTypes(true);
 			processor.setNamespaces(wsdlModel.getNamespaces());
