@@ -454,7 +454,7 @@ FROM
 								<emphasis role="bold">Teiid Designer > File Source (XML) >> Source and View Model</emphasis>  and 
 								 click <emphasis role="bold">Next></emphasis></para>
 							<figure>
-								<title>Import from Flat File Source</title>
+								<title>Import from XML File Source</title>
 								<mediaobject>
 									<imageobject>
 										<imagedata fileref="images/screencaps/teiid-data-file-import-options.png"/>
@@ -516,7 +516,7 @@ FROM
 							   default value. See the Teiid User's Guide for details on the XMLTABLE() function.</para>
 							<para>When finished with this page, click <emphasis role="bold">Next></emphasis>.</para>
 							<figure>
-								<title>Flat File Delimited Columns Options Page</title>
+								<title>XML File Delimited Columns Options Page</title>
 								<mediaobject>
 									<imageobject>
 										<imagedata fileref="images/screencaps/teiid-xml-file-source-page-3.png"/>
