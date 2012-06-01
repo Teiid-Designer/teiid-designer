@@ -14,6 +14,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Properties;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -371,6 +372,36 @@ public class Server implements HostProvider {
             return new Status(IStatus.ERROR, PLUGIN_ID, msg, ex);
 		} catch (Exception ex) {
 			String msg = Util.getString("serverDeployUndeployProblemPingingTeiidJdbc"); //$NON-NLS-1$
+            return new Status(IStatus.ERROR, PLUGIN_ID, msg, ex);
+		}
+		
+		return Status.OK_STATUS;
+    }
+    
+    public String getVdbDataSourceConnectionUrl(String vdbName) {
+    	String host = this.teiidAdminInfo.getHostProvider().getHost();
+		String port = this.teiidAdminInfo.getPort();
+		return "jdbc:teiid:" + vdbName + "@mm://"+host+':'+port;  //$NON-NLS-1$ //$NON-NLS-2$
+    }
+    
+    public IStatus createVdbDataSource(String vdbName, String displayName, String jndiName) {
+    	Properties props = new Properties();
+		String username = this.teiidJdbcInfo.getUsername();
+		String password = this.teiidJdbcInfo.getPassword();
+		if( username != null ) {
+			props.put("user-name", username); //$NON-NLS-1$
+		}
+		if( password != null ) {
+			props.put("password", password); //$NON-NLS-1$
+		}
+		
+		props.put("driver-class", "org.teiid.jdbc.TeiidDriver"); //$NON-NLS-1$ //$NON-NLS-2$
+		props.put("connection-url", getVdbDataSourceConnectionUrl(vdbName)); //$NON-NLS-1$
+    	
+    	try {
+			getAdmin().getOrCreateDataSource(displayName, jndiName, "connector-jdbc", props); //$NON-NLS-1$
+		} catch (Exception ex) {
+			String msg = "Error creating data source for VDB " + vdbName; //$NON-NLS-1$
             return new Status(IStatus.ERROR, PLUGIN_ID, msg, ex);
 		}
 		
