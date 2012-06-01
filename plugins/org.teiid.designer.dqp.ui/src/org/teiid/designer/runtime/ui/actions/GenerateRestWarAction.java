@@ -15,6 +15,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 
 import javax.tools.JavaCompiler;
@@ -65,13 +66,16 @@ public class GenerateRestWarAction extends Action implements ISelectionListener,
     private IFile selectedVDB;
     // Map of models containing restful procedures
     private Map<String, List<RestProcedure>> restfulProcedureMap = new HashMap<String, List<RestProcedure>>();
+    
+    private Properties designerProperties;
 
-    public GenerateRestWarAction() {
+    public GenerateRestWarAction(Properties designerProperties) {
         this.setText(UTIL.getString(I18N_PREFIX + "text")); //$NON-NLS-1$
         this.setToolTipText(UTIL.getString(I18N_PREFIX + "tooltip")); //$NON-NLS-1$
         this.setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(DqpUiConstants.Images.CREATE_WAR));
         setDisabledImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(DqpUiConstants.Images.CREATE_WAR));
         setEnabled(false);
+        this.designerProperties = designerProperties;
     }
 
     @Override
@@ -127,7 +131,7 @@ public class GenerateRestWarAction extends Action implements ISelectionListener,
         }
 
         RestWarDeploymentInfoDialog dialog = null;
-        dialog = new RestWarDeploymentInfoDialog(window.getShell(), this.selectedVDB, this.restfulProcedureMap, null);
+        dialog = new RestWarDeploymentInfoDialog(window.getShell(), this.selectedVDB, this.restfulProcedureMap, null, this.designerProperties);
 
         int rc = dialog.open();
 

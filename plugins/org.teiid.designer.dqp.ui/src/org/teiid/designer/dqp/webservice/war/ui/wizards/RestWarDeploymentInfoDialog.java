@@ -10,6 +10,8 @@ package org.teiid.designer.dqp.webservice.war.ui.wizards;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -63,6 +65,8 @@ public class RestWarDeploymentInfoDialog extends TitleAreaDialog implements Inte
     private String warFileName;
 
     private IStatus initialStatus;
+    
+    private Properties designerProperties;
 
     /**
      * @param parent
@@ -72,7 +76,8 @@ public class RestWarDeploymentInfoDialog extends TitleAreaDialog implements Inte
     public RestWarDeploymentInfoDialog( Shell parent,
                                         IFile theVdb,
                                         Map<String, List<RestProcedure>> restProcedureMap,
-                                        IStatus initialStatus ) {
+                                        IStatus initialStatus,
+                                        Properties designerProperties) {
         super(parent); // );
 
         ImageDescriptor id = DqpUiPlugin.getDefault().getImageDescriptor(InternalModelerWarUiConstants.WebServicesImages.WAR_FILE_ICON);
@@ -82,6 +87,7 @@ public class RestWarDeploymentInfoDialog extends TitleAreaDialog implements Inte
         this.restProcedureMap = restProcedureMap;
         this.initialStatus = initialStatus;
         deploymentStatus = new Status(IStatus.OK, DqpUiConstants.PLUGIN_ID, IStatus.OK, "WAR file created successfully", null);//$NON-NLS-1$
+        this.designerProperties = designerProperties;
     }
 
     // /////////////////////////////////////////////////////////////////////////////////////////////
@@ -112,7 +118,7 @@ public class RestWarDeploymentInfoDialog extends TitleAreaDialog implements Inte
     protected Control createDialogArea( Composite parent ) {
         Composite contents = WidgetFactory.createPanel(parent, SWT.NONE, GridData.FILL_BOTH, 1);
         warDeploymentInfoDataPage = null;
-        warDeploymentInfoDataPage = new RestWarDeploymentInfoDataPage(contents, this, this.theVdb, this.initialStatus);
+        warDeploymentInfoDataPage = new RestWarDeploymentInfoDataPage(contents, this, this.theVdb, this.initialStatus, this.designerProperties);
 
         ImageDescriptor id = DqpUiPlugin.getDefault().getImageDescriptor(InternalModelerWarUiConstants.WebServicesImages.WAR_FILE_ICON);
         if (id != null) this.setTitleImage(id.createImage());
