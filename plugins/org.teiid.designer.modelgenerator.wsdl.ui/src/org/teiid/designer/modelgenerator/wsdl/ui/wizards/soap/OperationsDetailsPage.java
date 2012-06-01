@@ -92,7 +92,7 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 	// ========== UI COMPONENTS =========================
 
 	/** The Operations Combo Selector */
-	private Combo operationsCombo;
+	Combo operationsCombo;
 
 	private XSDSemanticItemProviderAdapterFactory semanticAdapterFactory;
 	private AdapterFactoryLabelProvider schemaLabelProvider;

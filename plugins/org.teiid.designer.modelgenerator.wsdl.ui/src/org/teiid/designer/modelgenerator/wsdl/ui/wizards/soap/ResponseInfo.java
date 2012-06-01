@@ -24,6 +24,7 @@ public class ResponseInfo extends ProcedureInfo {
 	public static String SOAPENVELOPE_ROOTPATH = "/soap:Envelope";//$NON-NLS-1$
 	public static String SOAPHEADER_ROOTPATH = "/soap:Header";//$NON-NLS-1$
 	public static String SOAPBODY_ROOTPATH = "/soap:Body";//$NON-NLS-1$
+	public static String DEFAULT_NS = "ns";//$NON-NLS-1$
 	
 	public ResponseInfo(Operation operation, ProcedureGenerator generator) {
 		super(operation, RESPONSE, generator);
@@ -226,7 +227,7 @@ public class ResponseInfo extends ProcedureInfo {
 				sb.append(COMMA).append(SPACE);
 			}
 			String uri = getNamespaceMap().get(prefix);
-			if (uri.equals(this.getGenerator().getNamespaceURI())) {
+			if (uri.equals(this.getGenerator().getNamespaceURI()) || prefix.equals(DEFAULT_NS)) {
 				//This is the default NS
 				sb.append(DEFAULT).append(SPACE).append(S_QUOTE).append(uri).append(S_QUOTE);
 				this.defaultNSPrefix = prefix;

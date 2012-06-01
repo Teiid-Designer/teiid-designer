@@ -9,7 +9,9 @@ package org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Stack;
 
 import org.eclipse.xsd.XSDElementDeclaration;
@@ -22,6 +24,15 @@ public class SchemaTreeModel {
 
 	Collection<SchemaNode> nodeList = new ArrayList<SchemaNode>();
 	String rootPath = null;
+	public static Map<String, String> namespaceMap = new HashMap<String, String>();
+
+	public Map<String, String> getNamespaceMap() {
+		return namespaceMap;
+	}
+
+	public void setNamespaceMap(Map<String, String> namespaceMap) {
+		this.namespaceMap = namespaceMap;
+	}
 
 	public String getRootPath() {
 		return this.rootPath;
@@ -96,10 +107,10 @@ public class SchemaTreeModel {
 		return commonRoot.toString();
 	}
 	
-	
-	public class SchemaNode {
+    public class SchemaNode {
 		protected Object element;
 		protected SchemaNode parent;
+
 		protected boolean isRoot = false;
 		protected Collection<SchemaNode> children = new ArrayList<SchemaTreeModel.SchemaNode>();
 
@@ -132,7 +143,7 @@ public class SchemaTreeModel {
 		public void setElement(Object element) {
 			this.element = element;
 		}
-
+		
 		public SchemaNode getParent() {
 			return parent;
 		}
@@ -160,10 +171,10 @@ public class SchemaTreeModel {
 				if (element instanceof XSDParticleImpl &&
 				   ((XSDParticleImpl)element).getTerm() instanceof XSDElementDeclaration) {
 					XSDElementDeclaration xed = (XSDElementDeclaration) ((XSDParticleImpl)element).getTerm();
-					name = "/" + (xed.getName() != null ? xed.getName() : xed.getAliasName()); //$NON-NLS-1$
+					name = (xed.getName() != null ? xed.getName() : xed.getAliasName()); //$NON-NLS-1$
 				}
 			
-			return name; 
+			return "/" + getNamespacePrefix(element) + name; 
 		}
 
 		public String getParentXpath() {
@@ -218,10 +229,10 @@ public class SchemaTreeModel {
 				name = ((XSDElementDeclarationImpl) ((XSDParticleImpl) parentElement)
 						.getContent()).getResolvedElementDeclaration().getName();
 				}
-				stack.push("/"+name); //$NON-NLS-1$
+				stack.push("/"+ getNamespacePrefix(parentElement) +name); //$NON-NLS-1$
 			} else if (parentElement instanceof XSDElementDeclarationImpl) {
 				name = ((XSDElementDeclarationImpl) parentElement).getName();
-				stack.push("/"+name); //$NON-NLS-1$
+				stack.push("/"+ getNamespacePrefix(parentElement) +name);
 			} else if (parentElement instanceof XSDModelGroupImpl){
 					//fall through to getParentXpath() logic
 			} else {
@@ -237,5 +248,29 @@ public class SchemaTreeModel {
 			return "" + getElement(); //$NON-NLS-1$
 		}
 	}
+	
+    private String getNamespacePrefix(Object obj) {
+		
+		String nsPrefix = ""; //$NON-NLS-1$
+		String ns = ""; //$NON-NLS-1$
+		if (obj instanceof XSDParticleImpl
+				&& ((XSDParticleImpl) obj).getContent() instanceof XSDElementDeclarationImpl) {
+			ns = ((XSDElementDeclarationImpl) ((XSDParticleImpl) obj)
+					.getContent()).getTargetNamespace();
+		} else if (obj instanceof XSDElementDeclarationImpl) {
+			ns = ((XSDElementDeclarationImpl) obj).getTargetNamespace();
+		}
+		
+		for (Object nsKey: SchemaTreeModel.namespaceMap.keySet()){
+			if (SchemaTreeModel.namespaceMap.get(nsKey).equals(ns)){
+				nsPrefix = (String) nsKey;
+			}
+		}
+		
+		//This is default.. no need to alias
+		if (nsPrefix.equals(ResponseInfo.DEFAULT_NS)) nsPrefix = ""; //$NON-NLS-1$ //$NON-NLS-2$
+		return nsPrefix == "" ? nsPrefix : nsPrefix + ":"; //$NON-NLS-1$ //$NON-NLS-2$
+		
+		}
 
 }

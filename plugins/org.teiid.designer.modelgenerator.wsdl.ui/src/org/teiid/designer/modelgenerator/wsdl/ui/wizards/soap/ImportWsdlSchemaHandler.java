@@ -11,6 +11,7 @@ package org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -67,6 +68,7 @@ public class ImportWsdlSchemaHandler {
     private SchemaTreeModel requestSchemaTreeModel = null;
     private SchemaTreeModel responseSchemaTreeModel = null;
     private SchemaNode rootnode = null;
+    private SchemaModel schemaModel;
     private int depth = 0;
 
     static {
@@ -448,7 +450,6 @@ public class ImportWsdlSchemaHandler {
 				&& ((XSDParticleImpl) obj).getContent() instanceof XSDElementDeclarationImpl) {
 
 			Model wsdlModel = null;
-			SchemaModel schemaModel;
 			XSDSchema[] schemas;
 
 			try {
@@ -486,13 +487,13 @@ public class ImportWsdlSchemaHandler {
 				responseInfo.addNamespace(SqlConstants.ENVELOPE_NS_ALIAS,
 						SqlConstants.ENVELOPE_NS);
 			}
+			//Add the default namespace.
+			responseInfo.addNamespace(ResponseInfo.DEFAULT_NS, this.operationsDetailsPage.getProcedureGenerator().getNamespaceURI()); 
 			getParentXpath(node, parentXpath, this.responseSchemaTreeModel);
 			if (this.responseSchemaTreeModel.getRootPath()==null || this.responseSchemaTreeModel.getRootPath().isEmpty()){
 				this.responseSchemaTreeModel.setRootPath(this.responseSchemaTreeModel.determineRootPath());
 			}
-			
-			getRelativeXpath(node, xpath, this.responseSchemaTreeModel);
-			
+			 
 			for (SchemaObject schemaObject : elements) {
 				if (schemaObject.getName().equals(name)) {
 					namespace = schemaObject.getNamespace();
@@ -501,7 +502,6 @@ public class ImportWsdlSchemaHandler {
 					if (namespace != null) {
 						responseInfo.addNamespace(prefix, namespace);
 					}
-					responseInfo.setRootPath(this.responseSchemaTreeModel.getRootPath());
 					if (importManager.isMessageServiceMode()) {
 						operationsDetailsPage.responseBodyColumnsInfoPanel.getRootPathText().setText(ResponseInfo.SOAPENVELOPE_ROOTPATH);
 					} else {
@@ -511,10 +511,13 @@ public class ImportWsdlSchemaHandler {
 					// TODO: Make sure Root Path is set in the
 					// responseElementsInfoPanel on Refresh
 					// operationsDetailsPage.responseElementsInfoPanel.getRootPathText().setText(parentXpath.toString());
+					break;
 				}
 			}
-			
-			
+			//Set namespace map on schemaTreeModel. This will be used for determining ns alias names to use for the root path and column paths 
+			this.responseSchemaTreeModel.setNamespaceMap(responseInfo.getNamespaceMap());
+			responseInfo.setRootPath(this.responseSchemaTreeModel.getRootPath());
+			getRelativeXpath(node, xpath, this.responseSchemaTreeModel);
 			
 			if (type == ProcedureInfo.TYPE_BODY) {
 				String pathPrefix = ""; //$NON-NLS-1$
@@ -544,6 +547,7 @@ public class ImportWsdlSchemaHandler {
 //				} else if( theType.equalsIgnoreCase("decimal") ) { //$NON-NLS-1$
 //					theType = "bigdecimal"; //$NON-NLS-1$
 //				}
+				String columnName = pathPrefix + xpath.toString();
 				responseInfo.addBodyColumn(
 						responseInfo.getUniqueBodyColumnName(name), false,
 						theType, null, pathPrefix
@@ -872,11 +876,16 @@ public class ImportWsdlSchemaHandler {
 	}
 	
 	private void getRelativeXpath(SchemaNode node, StringBuilder xpath, SchemaTreeModel schemaTreeModel) {
+		Object element = node.getElement();
+		Map<String, String> nsMap = this.operationsDetailsPage.getProcedureGenerator().getResponseInfo().getNamespaceMap();
 		String relativeXpath = node == null ? "" : node.getRelativeXpath(); //$NON-NLS-1$
 		//We need to append the full path and then remove the root path.
 		//This allows us to resolve nested complex types
 		String parentXPath = node == null ? "" : node.getParentXpath(); //$NON-NLS-1$
+		
 		parentXPath = parentXPath.replace(schemaTreeModel.getRootPath(), ""); //$NON-NLS-1$
 		xpath.append(parentXPath).append(relativeXpath);
 	}
+	
+	
 }

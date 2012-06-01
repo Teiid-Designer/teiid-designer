@@ -90,6 +90,12 @@ public abstract class ProcedureInfo implements SqlConstants {
 	}
 	
 	public void addNamespace(String key, String value) {
+		for (String nsKey:this.namespaceMap.keySet()){
+			String ns = this.namespaceMap.get(nsKey);
+			if (value.endsWith(ns)){
+				return;
+			}
+		}
 		this.namespaceMap.put(key, value);
 		setChanged(true);
 	}
