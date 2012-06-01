@@ -189,56 +189,51 @@
 			</figure>
 			<para>Designer includes a feature to assist in quickly creating materialized relational tables based
 			on your existing view tables.</para>
-			<itemizedlist>
-				<listitem>
-					<para> To create materialized views: 
-					<itemizedlist>
-						<listitem>
-							<para><emphasis role="bold">Step 1 </emphasis> - Right-click on one or more view tables
-								in the <xref linkend="model-explorer-view" /> and select the <emphasis
-									role="bold">Modeling > Create Materialized Views</emphasis>
-								action.</para>
-							<para>
-								<mediaobject>
-									<imageobject>
-										<imagedata fileref="images/screencaps/create-materialized-views-action.png"/>
-									</imageobject>
-								</mediaobject>
-							</para>
-						</listitem>
-						<listitem>
-							<para><emphasis role="bold">Step 2 </emphasis> - In the <emphasis role="bold">Create Materialized View Model</emphasis> dialog
+			<para> To create materialized views: 
+				<itemizedlist>
+					<listitem>
+						<emphasis role="bold">Step 1 </emphasis> - Right-click on one or more view tables
+							in the <xref linkend="model-explorer-view" /> and select the <emphasis
+								role="bold">Modeling > Create Materialized Views</emphasis>
+							action.
+							<mediaobject>
+								<imageobject>
+									<imagedata fileref="images/screencaps/create-materialized-views-action.png"/>
+								</imageobject>
+							</mediaobject>
+						
+					</listitem>
+					<listitem>
+						<para><emphasis role="bold">Step 2 </emphasis> - In the <emphasis role="bold">Create Materialized View Model</emphasis> dialog
 								specify or select a target relational model for your generated relational tables.</para>
-							<para>
-								<mediaobject>
-									<imageobject>
-										<imagedata fileref="images/screencaps/create-materialized-views-dialog.png"/>
-									</imageobject>
-								</mediaobject>
-							</para>
-						</listitem>
-						<listitem>
-							<para><emphasis role="bold">Step 2a </emphasis> - Selecting the browse '...' button displays
-							the <emphasis role="bold">Relational Model Selector dialog</emphasis> where you select an
-							existing relational model or specify a unique name for a new model.</para>
-							<para>
-								<mediaobject>
-									<imageobject>
-										<imagedata fileref="images/screencaps/create-materialized-views-select-model.png"/>
-									</imageobject>
-								</mediaobject>
-							</para>
-						</listitem>
-						<listitem>
-							<para><emphasis role="bold">Step 3 </emphasis> - Click <emphasis role="bold">OK</emphasis> to
-								create relational tables corresponding to your selected view tables and automatically set the 
-								<emphasis role="bold">Materialized</emphasis> property to TRUE and the 
-			 					<emphasis role="bold">Materialized Table</emphasis> reference value to your newly generated table.</para>
-						</listitem>
-					</itemizedlist>
-					</para>
-				</listitem>
-			</itemizedlist>
+						<para>
+							<mediaobject>
+								<imageobject>
+									<imagedata fileref="images/screencaps/create-materialized-views-dialog.png"/>
+								</imageobject>
+							</mediaobject>
+						</para>
+					</listitem>
+					<listitem>
+						<para><emphasis role="bold">Step 2a </emphasis> - Selecting the browse '...' button displays
+						the <emphasis role="bold">Relational Model Selector dialog</emphasis> where you select an
+						existing relational model or specify a unique name for a new model.</para>
+						<para>
+							<mediaobject>
+								<imageobject>
+									<imagedata fileref="images/screencaps/create-materialized-views-select-model.png"/>
+								</imageobject>
+							</mediaobject>
+						</para>
+					</listitem>
+					<listitem>
+						<para><emphasis role="bold">Step 3 </emphasis> - Click <emphasis role="bold">OK</emphasis> to
+							create relational tables corresponding to your selected view tables and automatically set the 
+							<emphasis role="bold">Materialized</emphasis> property to TRUE and the 
+			 				<emphasis role="bold">Materialized Table</emphasis> reference value to your newly generated table.</para>
+					</listitem>
+			     </itemizedlist>
+            </para>
 			
 			<para>When finished your view tables will be configured with their new materialized properties and the 
 			corresponding relational tables will be shown in their package diagram.</para>
@@ -660,7 +655,7 @@
         will accept URI path parameters and/or JSON.</para>
         <itemizedlist>
           <listitem>
-            <para><emphasis role="bold">Step 1</emphasis>In a virtual 
+            <para><emphasis role="bold">Step 1</emphasis> - In a virtual 
             model, add a procedure(s) that returns an XMLLiteral 
             object. The target of your procedure can be any models in 
             your VDB. Here is an example procedure that selects from a 
