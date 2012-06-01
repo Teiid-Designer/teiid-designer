@@ -30,6 +30,7 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -264,6 +265,21 @@ public class DefineViewProcedureDialog extends TitleAreaDialog implements
 			gd = new GridData();
 			gd.horizontalSpan=2;
 			this.applyRestWarPropertiesCB.setLayoutData(gd);
+			this.applyRestWarPropertiesCB.addSelectionListener(new SelectionListener() {
+				
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					boolean checked = applyRestWarPropertiesCB.getSelection();
+					restMethodsCombo.setEnabled(checked);
+					restUriText.setEnabled(checked);
+				}
+				
+				@Override
+				public void widgetDefaultSelected(SelectionEvent e) {
+					// TODO Auto-generated method stub
+					
+				}
+			});
 			
 			Label label = WidgetFactory.createLabel(restGroup, getString("restMethod")); //$NON-NLS-1$
 			label.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));

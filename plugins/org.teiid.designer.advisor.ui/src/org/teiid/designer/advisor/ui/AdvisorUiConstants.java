@@ -209,8 +209,8 @@ public interface AdvisorUiConstants {
 		
         String NEW_OBJECT_BASE_TABLE = "Create new relational table"; //$NON-NLS-1$
         String NEW_OBJECT_VIEW_TABLE = "Create new relational view table"; //$NON-NLS-1$
-        String DEFINE_VIEW_TABLE = "Define relational view table"; //$NON-NLS-1$
-        String DEFINE_VIEW_PROCEDURE = "Define relational view procedure"; //$NON-NLS-1$
+        String DEFINE_VIEW_TABLE = "Define relational view table by creating or selecting existing table"; //$NON-NLS-1$
+        String DEFINE_VIEW_PROCEDURE = "Define relational view procedure by creating or selecting existing table"; //$NON-NLS-1$
         String NEW_OBJECT_REST_PROCEDURE = "Create new relational view REST procedure"; //$NON-NLS-1$
 		String NEW_OBJECT_SOURCE_FUNCTION = "Create new relational source function";  //$NON-NLS-1$
 		
@@ -228,19 +228,23 @@ public interface AdvisorUiConstants {
 		String OPEN_DATA_SOURCE_EXPLORER_VIEW = "Open Datatools' Data Source Explorer view"; //$NON-NLS-1$
 		
 		String NEW_TEIID_MODEL_PROJECT = "Create new Teiid Model Project"; //$NON-NLS-1$
-		String DEFINE_TEIID_MODEL_PROJECT = "Define Teiid Model Project"; //$NON-NLS-1$
-		String DEFINE_SOURCE = "Define Source"; //$NON-NLS-1$
+		String DEFINE_TEIID_MODEL_PROJECT = "Define Teiid Model Project by selecting existing or creating new project"; //$NON-NLS-1$
+		String DEFINE_SOURCE = "Define Source Model by importing from your data source"; //$NON-NLS-1$
 		
 		String CREATE_VDB = "Create a new VDB"; //$NON-NLS-1$
 		String EXECUTE_VDB = "Test a VDB by deploying to Teiid Server, connecting to it via JDBC and executing queries against it via Datatools' SQL Scrapbook"; //$NON-NLS-1$
 		String PREVIEW_DATA = "Perform a test query on a table or procedure"; //$NON-NLS-1$
 		String EDIT_VDB = "Select and open a VDB for editing"; //$NON-NLS-1$
 		String DEPLOY_VDB = "Deploy a VDB to your Teiid server"; //$NON-NLS-1$
-		String DEFINE_VDB = "Define VDB";  //$NON-NLS-1$
+		String DEFINE_VDB = "Define VDB by selecting existing or creating new VDB";  //$NON-NLS-1$
 		
 		String GENERATE_REST_WAR = "Generate a REST WAR file"; //$NON-NLS-1$
 		String GENERATE_SOAP_WAR = "Generate a JBossWS-CXF WAR file"; //$NON-NLS-1$
-		String DEPLOY_WAR = "Deploy WAR file"; //$NON-NLS-1$
+		String DEPLOY_WAR = 
+				"To deploy WAR file :\n" +  //$NON-NLS-1$
+				"\t1) Insure target JBossAS is configured and running\n" + //$NON-NLS-1$
+				"\t2) Select your WAR file in the Model Explorer view\n" + //$NON-NLS-1$
+				"\t3) Right-click select 'Mark as Deployable'"; //$NON-NLS-1$
 		
 		String NEW_TEIID_SERVER = "Create new Teiid server"; //$NON-NLS-1$
 		String EDIT_TEIID_SERVER = "Edit the properties of an existing Teiid server"; //$NON-NLS-1$
@@ -523,7 +527,7 @@ public interface AdvisorUiConstants {
 
 	/**
 	 * Constants related to extensions, including all extension ID's.
-	 * 
+	 * s
 	 * @since 4.0
 	 */
 	interface Extensions {
@@ -589,5 +593,18 @@ public interface AdvisorUiConstants {
         String MODEL_XML_REMOTE_SOURCE = Images.IMPORT_WSDL;
 		String MULTI_SOURCE_VDB = Images.NEW_VDB;
 		String CREATE_AND_TEST_VDB = Images.EXECUTE_VDB_ACTION;
+	}
+	
+	interface INSTRUCTIONS {
+		String[] DEPLOY_WAR_FILE = {
+				Messages.DeployWarFile_Line_1,
+				Messages.DeployWarFile_Line_2,
+				Messages.DeployWarFile_Line_3,
+				Messages.DeployWarFile_Line_4,
+				Messages.DeployWarFile_Line_5,
+				Messages.DeployWarFile_Line_6,
+				Messages.DeployWarFile_Line_7,
+				Messages.DeployWarFile_Line_8
+		};
 	}
 }

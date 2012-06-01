@@ -627,7 +627,8 @@ public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChange
 //		}
 
 		if( id.equalsIgnoreCase(COMMAND_IDS.DEPLOY_WAR)) {
-			// TODO
+			LaunchInstructionsAction action = new LaunchInstructionsAction(INSTRUCTIONS.DEPLOY_WAR_FILE);
+			action.run();
 	        return;
 		}
 
