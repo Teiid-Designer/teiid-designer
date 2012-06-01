@@ -64,6 +64,10 @@ public class DesignerProperties extends Properties {
     public String getVdbName() {
         return getProperty(IPropertiesContext.KEY_LAST_VDB_NAME);
     }
+    
+    public String getVdbJndiName() {
+        return getProperty(IPropertiesContext.KEY_VDB_DATA_SOURCE_JNDI_NAME);
+    }
 
     public String getSourceModelName() {
         return getProperty(IPropertiesContext.KEY_LAST_SOURCE_MODEL_NAME);
@@ -127,6 +131,10 @@ public class DesignerProperties extends Properties {
 
     public void setVdbName(String vdbName ) {
         put(IPropertiesContext.KEY_LAST_VDB_NAME, vdbName);
+    }
+    
+    public void setVdbJndiName(String vdbJndiName ) {
+        put(IPropertiesContext.KEY_VDB_DATA_SOURCE_JNDI_NAME, vdbJndiName);
     }
 
     public void setSourceModelName(String sourceModelName ) {

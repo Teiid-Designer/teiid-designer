@@ -53,6 +53,10 @@ public class DesignerPropertiesUtil {
     public static String getVdbName( Properties properties ) {
         return properties.getProperty(IPropertiesContext.KEY_LAST_VDB_NAME);
     }
+    
+    public static String getVdbJndiName( Properties properties ) {
+        return properties.getProperty(IPropertiesContext.KEY_VDB_DATA_SOURCE_JNDI_NAME);
+    }
 
     public static String getSourceModelName( Properties properties ) {
         return properties.getProperty(IPropertiesContext.KEY_LAST_SOURCE_MODEL_NAME);
@@ -115,6 +119,10 @@ public class DesignerPropertiesUtil {
                                    String vdbName ) {
         properties.put(IPropertiesContext.KEY_LAST_VDB_NAME, vdbName);
     }
+    
+    public static void setVdbJndiName( Properties properties, String vdbJndiName ) {
+		properties.put(IPropertiesContext.KEY_VDB_DATA_SOURCE_JNDI_NAME, vdbJndiName);
+	}
 
     public static void setSourceModelName( Properties properties,
                                            String sourceModelName ) {
