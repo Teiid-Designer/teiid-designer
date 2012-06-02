@@ -69,13 +69,17 @@ public class GenerateRestWarAction extends Action implements ISelectionListener,
     
     private Properties designerProperties;
 
-    public GenerateRestWarAction(Properties designerProperties) {
+    public GenerateRestWarAction() {
         this.setText(UTIL.getString(I18N_PREFIX + "text")); //$NON-NLS-1$
         this.setToolTipText(UTIL.getString(I18N_PREFIX + "tooltip")); //$NON-NLS-1$
         this.setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(DqpUiConstants.Images.CREATE_WAR));
         setDisabledImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(DqpUiConstants.Images.CREATE_WAR));
         setEnabled(false);
-        this.designerProperties = designerProperties;
+        
+    }
+    
+    public void setDesingerProperties(Properties properties) {
+    	this.designerProperties = properties;
     }
 
     @Override
