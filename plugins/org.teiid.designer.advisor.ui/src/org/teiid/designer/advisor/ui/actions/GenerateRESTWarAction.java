@@ -52,7 +52,8 @@ public class GenerateRESTWarAction extends Action implements AdvisorUiConstants 
 		if (sdDialog.getReturnCode() == Window.OK) {
 			IFile theVdbFile = (IFile)sdDialog.getVdb();
 			if( theVdbFile != null ) {
-				GenerateRestWarAction genAction = new GenerateRestWarAction(this.designerProperties);
+				GenerateRestWarAction genAction = new GenerateRestWarAction();
+				genAction.setDesingerProperties(this.designerProperties);
 				genAction.setSelection(new StructuredSelection(theVdbFile));
 				genAction.run();
 			}
