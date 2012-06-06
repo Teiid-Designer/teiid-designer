@@ -43,7 +43,7 @@ public class DefaultStatusManager  extends AdvisorStatusManager {
      */
     @Override
     protected void generateNewStatus() {
-    	System.out.println("DefaultStatusProvider.generateNewStatus()");
+    	System.out.println("DefaultStatusProvider.generateNewStatus()"); //$NON-NLS-1$
         setCurrentStatus(StatusValidationConstants.STATUS_MSGS.ADVISOR_NO_PROJECT_SELECTED);
     }
 

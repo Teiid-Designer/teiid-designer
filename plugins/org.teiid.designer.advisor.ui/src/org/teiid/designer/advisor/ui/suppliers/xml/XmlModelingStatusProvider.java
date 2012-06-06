@@ -42,7 +42,7 @@ public class XmlModelingStatusProvider  implements IStatusContentProvider {
      */
     @Override
     public String getDescription() {
-        return "Xml Modeling + Relational Modeling Description";
+        return "Xml Modeling + Relational Modeling Description"; //$NON-NLS-1$
     }
 
     /**
@@ -70,7 +70,7 @@ public class XmlModelingStatusProvider  implements IStatusContentProvider {
      */
     @Override
     public String getLinkTooltip( int id ) {
-        return "Xml Modeling Tooltip";
+        return "Xml Modeling Tooltip"; //$NON-NLS-1$
     }
 
     /**
@@ -113,7 +113,7 @@ public class XmlModelingStatusProvider  implements IStatusContentProvider {
      */
     @Override
     public String getText( int id ) {
-        return "Xml Modeling Text";
+        return "Xml Modeling Text"; //$NON-NLS-1$
     }
 
     /**
@@ -124,7 +124,7 @@ public class XmlModelingStatusProvider  implements IStatusContentProvider {
     @Override
     public String getTitle() {
     	if( statusManager == null || statusManager.getCurrentObject() == null ) {
-    		return "Xml Modeling Title";
+    		return "Xml Modeling Title"; //$NON-NLS-1$
     	}
     	
         return ((IProject)statusManager.getCurrentObject()).getName();

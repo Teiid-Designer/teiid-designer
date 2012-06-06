@@ -43,7 +43,7 @@ public class RelationalModelingStatusProvider implements IStatusContentProvider 
      */
     @Override
     public String getDescription() {
-        return "Relational Source and View Modeling Description";
+        return "Relational Source and View Modeling Description"; //$NON-NLS-1$
     }
 
     /**
@@ -71,7 +71,7 @@ public class RelationalModelingStatusProvider implements IStatusContentProvider 
      */
     @Override
     public String getLinkTooltip( int id ) {
-        return "Relational Modeling Tooltip";
+        return "Relational Modeling Tooltip"; //$NON-NLS-1$
     }
 
     /**
@@ -114,7 +114,7 @@ public class RelationalModelingStatusProvider implements IStatusContentProvider 
      */
     @Override
     public String getText( int id ) {
-        return "Relational Modeling Text";
+        return "Relational Modeling Text"; //$NON-NLS-1$
     }
 
     /**
@@ -125,7 +125,7 @@ public class RelationalModelingStatusProvider implements IStatusContentProvider 
     @Override
     public String getTitle() {
     	if( statusManager == null || statusManager.getCurrentObject() == null ) {
-    		return "Relational Modeling Title";
+    		return "Relational Modeling Title"; //$NON-NLS-1$
     	}
     	
         return ((IProject)statusManager.getCurrentObject()).getName();

@@ -44,7 +44,7 @@ public class SelectModelingScopeDialog extends Dialog {
      */
     public SelectModelingScopeDialog( Shell parent,
                                       IProject project ) {
-        super(parent, "Select Modeling Scope");
+        super(parent, "Select Modeling Scope"); //$NON-NLS-1$
         this.selectedProject = project;
     }
 
@@ -74,16 +74,16 @@ public class SelectModelingScopeDialog extends Dialog {
         gridData.grabExcessVerticalSpace = true;
         parent.setLayoutData(gridData);
 
-        WidgetFactory.createLabel(parent, GridData.HORIZONTAL_ALIGN_BEGINNING, 1, "Select modeling scope for the project: "
-                                                                                  + selectedProject.getName() + "     ");
-        Group grpScaling = WidgetFactory.createGroup(parent, "Modeling Scope", GridData.FILL_HORIZONTAL);
+        WidgetFactory.createLabel(parent, GridData.HORIZONTAL_ALIGN_BEGINNING, 1, "Select modeling scope for the project: " //$NON-NLS-1$
+                                                                                  + selectedProject.getName() + "     "); //$NON-NLS-1$
+        Group grpScaling = WidgetFactory.createGroup(parent, "Modeling Scope", GridData.FILL_HORIZONTAL); //$NON-NLS-1$
 
-        radioGeneralModeling = WidgetFactory.createRadioButton(grpScaling, "General");
-        radioRelationalModeling = WidgetFactory.createRadioButton(grpScaling, "Relational");
-        radioXMLModeling = WidgetFactory.createRadioButton(grpScaling, "XML + Relational");
-        radioWebServiceModeling = WidgetFactory.createRadioButton(grpScaling, "Web Services + XML + Relational");
+        radioGeneralModeling = WidgetFactory.createRadioButton(grpScaling, "General"); //$NON-NLS-1$
+        radioRelationalModeling = WidgetFactory.createRadioButton(grpScaling, "Relational"); //$NON-NLS-1$
+        radioXMLModeling = WidgetFactory.createRadioButton(grpScaling, "XML + Relational"); //$NON-NLS-1$
+        radioWebServiceModeling = WidgetFactory.createRadioButton(grpScaling, "Web Services + XML + Relational"); //$NON-NLS-1$
 
-        vdbProjectCheckBox = WidgetFactory.createCheckBox(parent, "VDB Project");
+        vdbProjectCheckBox = WidgetFactory.createCheckBox(parent, "VDB Project"); //$NON-NLS-1$
 
         try {
             setIntialScope();

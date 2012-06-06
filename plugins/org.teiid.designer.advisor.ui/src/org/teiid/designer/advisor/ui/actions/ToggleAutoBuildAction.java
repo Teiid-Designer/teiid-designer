@@ -27,7 +27,7 @@ public class ToggleAutoBuildAction extends Action implements
 	 *            The window for parenting dialogs associated with this action
 	 */
 	public ToggleAutoBuildAction(IWorkbenchWindow window) {
-		super("Build Automatically");
+		super("Build Automatically"); //$NON-NLS-1$
 		this.window = window;
 		setChecked(ResourcesPlugin.getWorkspace().isAutoBuilding());
 	}

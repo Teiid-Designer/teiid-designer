@@ -92,7 +92,7 @@ public class AdvisorStatusExtensionManager {
             if (target instanceof IProject) {
                 id = getPrimaryProjectScopeNature((IProject)target);
             } else if (target instanceof IResource && ModelUtilities.isModelFile((IResource)target)) {
-                id = "Model";
+                id = "Model"; //$NON-NLS-1$
             }
 
             // create a NewChildAction for every new child type
@@ -144,6 +144,6 @@ public class AdvisorStatusExtensionManager {
         	AdvisorUiConstants.UTIL.log(e);
         }
 
-        return "NoNature";
+        return "NoNature"; //$NON-NLS-1$
     }
 }

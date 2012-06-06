@@ -93,7 +93,7 @@ public class AdvisorStatusManager implements IChangeListener, IStatusManager {
     }
 
     protected void generateNewStatus() {
-    	System.out.println("AdvisorStatusManager.generateNewStatus() (NO OP METHOD)");
+    	System.out.println("AdvisorStatusManager.generateNewStatus() (NO OP METHOD)"); //$NON-NLS-1$
     }
 
     /**

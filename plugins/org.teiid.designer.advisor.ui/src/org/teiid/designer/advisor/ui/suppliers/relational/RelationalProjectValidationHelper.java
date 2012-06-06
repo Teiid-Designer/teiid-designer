@@ -70,7 +70,7 @@ public class RelationalProjectValidationHelper implements StatusValidationConsta
 
     // Needed to wrap in transaction so these don't cause UNDO events.
     public AdvisorStatus getCurrentStatus() {
-    	System.out.println(" >>> RelationalProjectValidationHelper.getCurrentStatus()");
+    	System.out.println(" >>> RelationalProjectValidationHelper.getCurrentStatus()"); //$NON-NLS-1$
         validating = true;
         // System.out.println("WebServiceValidationHelper.getCurrentStatus() ---------- START ------------------");
         AdvisorStatus status = null;

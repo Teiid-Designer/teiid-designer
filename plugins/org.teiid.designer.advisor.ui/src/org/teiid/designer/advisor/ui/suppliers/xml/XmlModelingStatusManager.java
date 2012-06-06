@@ -61,7 +61,7 @@ public class XmlModelingStatusManager extends AdvisorStatusManager {
      */
     @Override
     protected void generateNewStatus() {
-    	System.out.println("XmlModelingStatusManager.generateNewStatus()");
+    	System.out.println("XmlModelingStatusManager.generateNewStatus()"); //$NON-NLS-1$
         this.helper.setCurrentProject((IProject)getCurrentObject());
         setCurrentStatus(helper.getCurrentStatus());
     }

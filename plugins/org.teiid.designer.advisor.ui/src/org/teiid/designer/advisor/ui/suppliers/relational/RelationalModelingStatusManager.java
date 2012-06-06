@@ -64,7 +64,7 @@ public class RelationalModelingStatusManager extends AdvisorStatusManager {
      */
     @Override
     protected void generateNewStatus() {
-    	System.out.println("RelationalModelingStatusManager.generateNewStatus()");
+    	System.out.println("RelationalModelingStatusManager.generateNewStatus()"); //$NON-NLS-1$
         this.helper.setCurrentProject((IProject)getCurrentObject());
         setCurrentStatus(helper.getCurrentStatus());
     }

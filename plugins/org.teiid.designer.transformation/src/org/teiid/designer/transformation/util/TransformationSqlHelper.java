@@ -1759,14 +1759,14 @@ public class TransformationSqlHelper implements SqlConstants {
                 if (xmlDocSourceCase) {
                     theMap.put(name, new Integer(Integer.MAX_VALUE));
                 } else {
-                    if (String.class.equals(((Class)typeObj))) {//$NON-NLS-1$
+                    if (String.class.equals(((Class)typeObj))) {
                         int stringLength = getSymbolLength(symbol);
                         if (stringLength > 0) {
                             theMap.put(name, new Integer(stringLength));
                         } else {
                             theMap.put(name, new Integer(ModelerCore.getTransformationPreferences().getDefaultStringLength()));
                         }
-                    } else if (Character.class.equals((Class) typeObj)) { //$NON-NLS-1$
+                    } else if (Character.class.equals((Class) typeObj)) { 
                         theMap.put(name, new Integer(1));
                     } else {
                         theMap.put(name, new Integer(-1));

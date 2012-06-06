@@ -27,7 +27,7 @@ public class AdvisorStatusUpdateJob extends Job {
     // Implementation of abstract methods:
     @Override
     protected IStatus run( IProgressMonitor monitor ) {
-    	System.out.println(" >>> AdvisorStatusUpdateJob.run()");
+    	System.out.println(" >>> AdvisorStatusUpdateJob.run()"); //$NON-NLS-1$
         // let's wire this job up to listen for vdb context change events
 
     	this.statusManager.generateNewStatus();

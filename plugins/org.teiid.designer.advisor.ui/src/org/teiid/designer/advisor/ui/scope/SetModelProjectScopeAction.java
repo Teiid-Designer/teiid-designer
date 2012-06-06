@@ -28,7 +28,7 @@ public class SetModelProjectScopeAction extends Action implements ISelectionList
 
     public SetModelProjectScopeAction() {
         super();
-        setText("Change Modeling Scope");
+        setText("Change Modeling Scope"); //$NON-NLS-1$
         setImageDescriptor(UiPlugin.getDefault().getImageDescriptor(PluginConstants.Images.MODEL));
     }
 

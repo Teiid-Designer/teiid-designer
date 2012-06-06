@@ -191,10 +191,10 @@ public class SchemaTreeModel {
 				if (element instanceof XSDParticleImpl &&
 				   ((XSDParticleImpl)element).getTerm() instanceof XSDElementDeclaration) {
 					XSDElementDeclaration xed = (XSDElementDeclaration) ((XSDParticleImpl)element).getTerm();
-					name = (xed.getName() != null ? xed.getName() : xed.getAliasName()); //$NON-NLS-1$
+					name = (xed.getName() != null ? xed.getName() : xed.getAliasName());
 				}
 			
-			return "/" + getNamespacePrefix(element) + name; 
+			return "/" + getNamespacePrefix(element) + name;  //$NON-NLS-1$
 		}
 
 		public String getParentXpath() {
@@ -252,7 +252,7 @@ public class SchemaTreeModel {
 				stack.push("/"+ getNamespacePrefix(parentElement) +name); //$NON-NLS-1$
 			} else if (parentElement instanceof XSDElementDeclarationImpl) {
 				name = ((XSDElementDeclarationImpl) parentElement).getName();
-				stack.push("/"+ getNamespacePrefix(parentElement) +name);
+				stack.push("/"+ getNamespacePrefix(parentElement) +name); //$NON-NLS-1$
 			} else if (parentElement instanceof XSDModelGroupImpl){
 					//fall through to getParentXpath() logic
 			} else {
@@ -288,11 +288,11 @@ public class SchemaTreeModel {
 			}
 		}
 		
-	//  This is default.. no need to alias
-	//	if (nsPrefix.equals(ResponseInfo.DEFAULT_NS)) nsPrefix = ""; //$NON-NLS-1$ //$NON-NLS-2$
-	//  We will always prefix, since we can't count on a service default for a given element
+		//  This is default.. no need to alias
+		//	if (nsPrefix.equals(ResponseInfo.DEFAULT_NS)) nsPrefix = ""; //$NON-NLS-1$ //$NON-NLS-2$
+		//  We will always prefix, since we can't count on a service default for a given element
 		return nsPrefix == "" ? nsPrefix : nsPrefix + ":"; //$NON-NLS-1$ //$NON-NLS-2$
 		
-		}
+    }
 
 }

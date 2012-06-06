@@ -229,7 +229,7 @@ IEditorActionDelegate, ISelectionChangedListener, IUpdate {
         String executionPlan = null;
 
         if (sql == null || sql.length() == 0) {
-            throw new SQLException("An SQL statement is required to retrieve the execution plan");
+            throw new SQLException("An SQL statement is required to retrieve the execution plan"); //$NON-NLS-1$
         }
 
         Statement stmt = sqlConnection.createStatement();
