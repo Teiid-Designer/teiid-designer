@@ -7,12 +7,11 @@
 */
 package org.teiid.designer.datatools.profiles.ws;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 import java.util.Properties;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -21,10 +20,8 @@ import org.eclipse.datatools.connectivity.IConnection;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.datatools.connectivity.internal.ui.ConnectivityUIPlugin;
 import org.eclipse.datatools.connectivity.internal.ui.dialogs.ExceptionHandler;
-import org.eclipse.datatools.connectivity.oda.OdaException;
 import org.eclipse.datatools.connectivity.ui.wizards.ConnectionProfileDetailsPage;
 import org.eclipse.datatools.connectivity.ui.wizards.NewConnectionProfileWizard;
-import org.eclipse.datatools.enablement.oda.xml.util.XMLSourceFromPath;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.swt.SWT;
@@ -43,10 +40,10 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.progress.UIJob;
 import org.teiid.designer.datatools.ui.DatatoolsUiConstants;
+import org.teiid.designer.ui.common.ICredentialsCommon;
 import org.teiid.designer.ui.common.ICredentialsCommon.SecurityType;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.widget.CredentialsComposite;
-
 
 public class WSProfileDetailsWizardPage extends ConnectionProfileDetailsPage implements DatatoolsUiConstants {
 
@@ -169,7 +166,7 @@ public class WSProfileDetailsWizardPage extends ConnectionProfileDetailsPage imp
         credentialsComposite.addSecurityOptionListener(SWT.Modify, new Listener() {
             @Override
             public void handleEvent(Event event) {
-                setProperty(IWSProfileConstants.SECURITY_TYPE_ID,
+                setProperty(ICredentialsCommon.SECURITY_TYPE_ID,
                         credentialsComposite.getSecurityOption().name());
             }
         });
@@ -177,7 +174,7 @@ public class WSProfileDetailsWizardPage extends ConnectionProfileDetailsPage imp
         credentialsComposite.addUserNameListener(SWT.Modify, new Listener() {
             @Override
             public void handleEvent(Event event) {
-                setProperty(IWSProfileConstants.USERNAME_PROP_ID,
+                setProperty(ICredentialsCommon.USERNAME_PROP_ID,
                         credentialsComposite.getUserName());
             }
         });
@@ -185,7 +182,7 @@ public class WSProfileDetailsWizardPage extends ConnectionProfileDetailsPage imp
         credentialsComposite.addPasswordListener(SWT.Modify, new Listener() {
             @Override
             public void handleEvent(Event event) {
-                setProperty(IWSProfileConstants.PASSWORD_PROP_ID,
+                setProperty(ICredentialsCommon.PASSWORD_PROP_ID,
                         credentialsComposite.getPassword());
             }
         });
@@ -230,16 +227,16 @@ public class WSProfileDetailsWizardPage extends ConnectionProfileDetailsPage imp
         	return;
         }
         
-        if (null != properties.get(IWSProfileConstants.SECURITY_TYPE_ID) &&
-        		!SecurityType.None.name().equals(properties.get(IWSProfileConstants.SECURITY_TYPE_ID))) {
-        	if (null == properties.get(IWSProfileConstants.USERNAME_PROP_ID)
-                    || properties.get(IWSProfileConstants.USERNAME_PROP_ID).toString().isEmpty()) {
+        if (null != properties.get(ICredentialsCommon.SECURITY_TYPE_ID) &&
+        		!SecurityType.None.name().equals(properties.get(ICredentialsCommon.SECURITY_TYPE_ID))) {
+        	if (null == properties.get(ICredentialsCommon.USERNAME_PROP_ID)
+                    || properties.get(ICredentialsCommon.USERNAME_PROP_ID).toString().isEmpty()) {
                     setErrorMessage(UTIL.getString("Common.Username.Error.Message")); //$NON-NLS-1$
                     return;
                 }
                 setErrorMessage(null);
-                if (null == properties.get(IWSProfileConstants.PASSWORD_PROP_ID)
-                    || properties.get(IWSProfileConstants.PASSWORD_PROP_ID).toString().isEmpty()) {
+                if (null == properties.get(ICredentialsCommon.PASSWORD_PROP_ID)
+                    || properties.get(ICredentialsCommon.PASSWORD_PROP_ID).toString().isEmpty()) {
                     setErrorMessage(UTIL.getString("Common.Password.Error.Message")); //$NON-NLS-1$
                     return;
                 }
@@ -278,20 +275,20 @@ public class WSProfileDetailsWizardPage extends ConnectionProfileDetailsPage imp
 			complete = false;
 		}
 		if (complete
-				&& null != properties.get(IWSProfileConstants.SECURITY_TYPE_ID) && (!SecurityType.None.name().equals(
-						properties.get(IWSProfileConstants.SECURITY_TYPE_ID)
+				&& null != properties.get(ICredentialsCommon.SECURITY_TYPE_ID) && (!SecurityType.None.name().equals(
+						properties.get(ICredentialsCommon.SECURITY_TYPE_ID)
 								.toString()))) {
 			if (complete
 					&& (null == properties
-							.get(IWSProfileConstants.USERNAME_PROP_ID) || properties
-							.get(IWSProfileConstants.USERNAME_PROP_ID)
+							.get(ICredentialsCommon.USERNAME_PROP_ID) || properties
+							.get(ICredentialsCommon.USERNAME_PROP_ID)
 							.toString().isEmpty())) {
 				complete = false;
 			}
 			if (complete
 					&& (null == properties
-							.get(IWSProfileConstants.PASSWORD_PROP_ID) || properties
-							.get(IWSProfileConstants.PASSWORD_PROP_ID)
+							.get(ICredentialsCommon.PASSWORD_PROP_ID) || properties
+							.get(ICredentialsCommon.PASSWORD_PROP_ID)
 							.toString().isEmpty())) {
 				complete = false;
 			}

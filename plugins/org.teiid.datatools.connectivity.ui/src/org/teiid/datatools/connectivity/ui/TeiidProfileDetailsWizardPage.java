@@ -26,6 +26,7 @@ import org.eclipse.datatools.connectivity.ui.wizards.ExtensibleNewConnectionProf
 import org.eclipse.datatools.connectivity.ui.wizards.IDriverUIContributorInformation;
 import org.eclipse.datatools.help.HelpUtil;
 import org.eclipse.jface.dialogs.DialogPage;
+import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -109,7 +110,7 @@ public class TeiidProfileDetailsWizardPage extends
 		if (driverCombo.getCombo().getItemCount() > 0) {
 			driverCombo.getCombo().select(0);
 		} else if (driverCombo.getErrorMessage() != null) {
-			setMessage(driverCombo.getErrorMessage(), DialogPage.INFORMATION);//ErrorMessage(driverCombo.getErrorMessage());
+			setMessage(driverCombo.getErrorMessage(), IMessageProvider.INFORMATION);//ErrorMessage(driverCombo.getErrorMessage());
 		}
 	}
 

@@ -9,6 +9,7 @@ package org.teiid.designer.transformation.ui.preferences;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;

@@ -572,7 +572,7 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants, SqlC
     	
     	if( isUrl() ) {
 	    	// SELECT {0} FROM (EXEC {1}.getTextFiles({2})) AS f, XMLTABLE('{3}' PASSING XMLPARSE(DOCUMENT f.file) AS d COLUMNS {4}) AS {5}
-	    	finalSQLString = UiPlugin.Util.getString(
+	    	finalSQLString = UiConstants.Util.getString(
 	    			"TeiidXmlFileInfo.xmlInvokeHttpTableSqlTemplate", //$NON-NLS-1$
 	    			string_0,
 	    			relationalModelName,
@@ -587,7 +587,7 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants, SqlC
 	//    			"XMLPARSE(DOCUMENT f.file) AS d " + 
 	//    			"COLUMNS pmid biginteger PATH 'PMID', journal string PATH 'Article/Journal/Title', title string PATH 'Article/ArticleTitle') AS title";
     	} else {
-    		finalSQLString = UiPlugin.Util.getString(
+    		finalSQLString = UiConstants.Util.getString(
 	    			"TeiidXmlFileInfo.xmlGetTextFilesTableSqlTemplate", //$NON-NLS-1$
 	    			string_0,
 	    			relationalModelName,

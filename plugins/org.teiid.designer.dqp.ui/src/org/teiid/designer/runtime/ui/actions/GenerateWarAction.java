@@ -96,8 +96,8 @@ public class GenerateWarAction extends Action implements ISelectionListener,
 		boolean cont = true;
 		if (compiler == null) {
 			cont = MessageDialog.openConfirm(window.getShell(),
-					DqpUiPlugin.UTIL.getString(I18N_PREFIX + "javaWarningTitle"), //$NON-NLS-1$
-					DqpUiPlugin.UTIL.getString(I18N_PREFIX
+					DqpUiConstants.UTIL.getString(I18N_PREFIX + "javaWarningTitle"), //$NON-NLS-1$
+					DqpUiConstants.UTIL.getString(I18N_PREFIX
 							+ "invalidJDKMessage")); //$NON-NLS-1$
 		}
 
@@ -113,21 +113,21 @@ public class GenerateWarAction extends Action implements ISelectionListener,
 		// Retrieve the file name for the confirmation dialog
 		String warFileName = dialog.getWarFileName();
 
-		final String successMessage = DqpUiPlugin.UTIL.getString(I18N_PREFIX + "warFileCreated", warFileName); //$NON-NLS-1$
+		final String successMessage = DqpUiConstants.UTIL.getString(I18N_PREFIX + "warFileCreated", warFileName); //$NON-NLS-1$
 
 		boolean wasSuccessful = (rc == Window.OK);
 		if (wasSuccessful) {
 			Display.getDefault().asyncExec(new Runnable() {
 				public void run() {
 					MessageDialog.openInformation(window.getShell(),
-							DqpUiPlugin.UTIL.getString(I18N_PREFIX + "creationCompleteTitle"),//$NON-NLS-1$ 
+							DqpUiConstants.UTIL.getString(I18N_PREFIX + "creationCompleteTitle"),//$NON-NLS-1$ 
 							successMessage);
 				}
 			});
 		} else {
 			if (rc != Window.CANCEL) {
 
-				MessageDialog.openError(window.getShell(), DqpUiPlugin.UTIL.getString(I18N_PREFIX + "creationFailedTitle"),//$NON-NLS-1$ 
+				MessageDialog.openError(window.getShell(), DqpUiConstants.UTIL.getString(I18N_PREFIX + "creationFailedTitle"),//$NON-NLS-1$ 
 						dialog.getMessage());
 			}
 		}

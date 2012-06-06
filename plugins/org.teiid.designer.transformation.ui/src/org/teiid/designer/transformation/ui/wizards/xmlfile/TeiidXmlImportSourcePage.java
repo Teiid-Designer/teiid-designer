@@ -86,6 +86,7 @@ import org.teiid.designer.transformation.ui.UiPlugin;
 import org.teiid.designer.transformation.ui.wizards.file.FlatFileRelationalModelFactory;
 import org.teiid.designer.transformation.ui.wizards.file.TeiidMetadataImportInfo;
 import org.teiid.designer.transformation.ui.wizards.file.TeiidMetadataImportSourcePage;
+import org.teiid.designer.ui.common.ICredentialsCommon;
 import org.teiid.designer.ui.common.InternalUiConstants;
 import org.teiid.designer.ui.common.product.ProductCustomizerMgr;
 import org.teiid.designer.ui.common.util.WidgetFactory;
@@ -102,7 +103,6 @@ import org.teiid.designer.ui.viewsupport.ModelResourceSelectionValidator;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
 import org.teiid.designer.ui.viewsupport.ModelWorkspaceViewerFilter;
 import org.teiid.designer.ui.viewsupport.ModelingResourceFilter;
-
 
 public class TeiidXmlImportSourcePage extends AbstractWizardPage
 		implements UiConstants, InternalUiConstants.Widgets,
@@ -570,8 +570,8 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 	private File getXmlFileFromRestUrl(IConnectionProfile profile) {
 		Properties props = profile.getBaseProperties();
 		String endpoint = (String) props.get(IWSProfileConstants.URL_PROP_ID);
-		String username = (String) props.get(IWSProfileConstants.USERNAME_PROP_ID);
-		String password = (String) props.get(IWSProfileConstants.PASSWORD_PROP_ID);
+		String username = (String) props.get(ICredentialsCommon.USERNAME_PROP_ID);
+		String password = (String) props.get(ICredentialsCommon.PASSWORD_PROP_ID);
 		File xmlFile = null;
 		FileOutputStream fos = null;
 		

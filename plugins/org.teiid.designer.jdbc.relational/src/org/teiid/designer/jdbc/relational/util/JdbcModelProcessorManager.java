@@ -3,17 +3,17 @@ package org.teiid.designer.jdbc.relational.util;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.teiid.core.plugin.PluginUtilities;
 import org.teiid.designer.core.ModelerCore;
-import org.teiid.designer.jdbc.relational.JdbcRelationalPlugin;
+import org.teiid.designer.jdbc.JdbcSource;
 import org.teiid.designer.jdbc.relational.ModelerJdbcRelationalConstants;
 import org.teiid.designer.jdbc.relational.RelationalModelProcessor;
 import org.teiid.designer.jdbc.relational.impl.RelationalModelProcessorImpl;
 import org.teiid.designer.metamodels.relational.util.RelationalTypeMapping;
 import org.teiid.designer.metamodels.relational.util.RelationalTypeMappingImpl;
-
 
 /**
  * This class provides a static way to manage the extension contributions for the <code>RelationalModelProcessor</code>.
@@ -42,7 +42,7 @@ public class JdbcModelProcessorManager {
 
             public static final String ID = "modelProcessor"; //$NON-NLS-1$
 
-            public static final String UNIQUE_ID = JdbcRelationalPlugin.PLUGIN_ID + DELIMITER + ID;
+            public static final String UNIQUE_ID = ModelerJdbcRelationalConstants.PLUGIN_ID + DELIMITER + ID;
         }
     }
     

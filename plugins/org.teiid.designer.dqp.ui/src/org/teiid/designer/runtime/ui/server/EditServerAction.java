@@ -107,7 +107,7 @@ public final class EditServerAction extends BaseSelectionListenerAction {
 
         int result = dialog.open();
         
-        if( result == Dialog.OK) {
+        if( result == Window.OK) {
 	        
 	        if( wizard.shouldAutoConnect() ) {
 	            	try {

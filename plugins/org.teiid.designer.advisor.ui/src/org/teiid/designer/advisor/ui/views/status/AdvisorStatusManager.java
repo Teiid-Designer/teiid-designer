@@ -72,7 +72,7 @@ public class AdvisorStatusManager implements IChangeListener {
     }
 
     private void init() {
-        this.helper = new StatusValidationHelper();
+        AdvisorStatusManager.helper = new StatusValidationHelper();
         this.statusListeners = new ArrayList();
         this.autoBuildJobListener = new AutoBuildJobListener();
         // viewWorker = VdbViewUtil.getVdbViewWorker();

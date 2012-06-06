@@ -919,7 +919,7 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants 
     	}
     	String string_4 = sb.toString();
     	
-    	String finalSQLString = UiPlugin.Util.getString(
+    	String finalSQLString = UiConstants.Util.getString(
     			"TeiidMetadataFileInfo.textTableSqlTemplate", //$NON-NLS-1$
     			string_0,
     			relationalModelName,

@@ -51,7 +51,7 @@ public class SchemaTreeModel {
 	}
 
 	public void setNamespaceMap(Map<String, String> namespaceMap) {
-		this.namespaceMap = namespaceMap;
+		SchemaTreeModel.namespaceMap = namespaceMap;
 	}
 
 	public String getRootPath() {

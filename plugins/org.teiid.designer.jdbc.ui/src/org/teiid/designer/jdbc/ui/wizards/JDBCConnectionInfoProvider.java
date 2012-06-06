@@ -27,8 +27,7 @@ import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
 import org.teiid.designer.datatools.connection.DataSourceConnectionConstants;
 import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
 import org.teiid.designer.jdbc.JdbcSource;
-import org.teiid.designer.jdbc.ui.ModelerJdbcUiPlugin;
-
+import org.teiid.designer.jdbc.ui.InternalModelerJdbcUiPluginConstants;
 
 /**
  * 
@@ -109,7 +108,7 @@ public class JDBCConnectionInfoProvider extends ConnectionInfoHelper implements 
 
             if (!enoughProps) {
                 throw new ModelWorkspaceException(
-                                                  ModelerJdbcUiPlugin.Util.getString("JDBCConnectionInfoProvider.notEnoughConnectionProviders", //$NON-NLS-1$
+                                                  InternalModelerJdbcUiPluginConstants.Util.getString("JDBCConnectionInfoProvider.notEnoughConnectionProviders", //$NON-NLS-1$
                                                                                      modelResource.getItemName()));
             }
             // Remove old connection properties
@@ -186,7 +185,7 @@ public class JDBCConnectionInfoProvider extends ConnectionInfoHelper implements 
             }
         } else {
             throw new ModelWorkspaceException(
-                                              ModelerJdbcUiPlugin.Util.getString("JDBCConnectionInfoProvider.errorFindingModelResourceForModelFile", //$NON-NLS-1$
+                                              InternalModelerJdbcUiPluginConstants.Util.getString("JDBCConnectionInfoProvider.errorFindingModelResourceForModelFile", //$NON-NLS-1$
                                                                                  resource.getName()));
         }
 

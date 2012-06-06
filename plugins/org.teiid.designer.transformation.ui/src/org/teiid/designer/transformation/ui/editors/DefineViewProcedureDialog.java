@@ -472,7 +472,7 @@ public class DefineViewProcedureDialog extends TitleAreaDialog implements
 
 			WizardDialog dialog = new WizardDialog(iww.getShell(), wizard);
 			int result = dialog.open();
-			if (result == Dialog.OK) {
+			if (result == Window.OK) {
 				successful = true;
 			}
 		} catch (Exception e) {

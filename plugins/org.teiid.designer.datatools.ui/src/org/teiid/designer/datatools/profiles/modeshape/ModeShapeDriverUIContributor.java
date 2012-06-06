@@ -31,51 +31,50 @@ import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
 import org.teiid.designer.datatools.ui.DatatoolsUiConstants;
-import org.teiid.designer.datatools.ui.DatatoolsUiPlugin;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 
 
 public class ModeShapeDriverUIContributor implements IDriverUIContributor, Listener {
 
-    private static final String HOST_LBL_UI_ = DatatoolsUiPlugin.UTIL.getString("Common.HOST_LBL_UI_"); //$NON-NLS-1$
+    private static final String HOST_LBL_UI_ = DatatoolsUiConstants.UTIL.getString("Common.HOST_LBL_UI_"); //$NON-NLS-1$
 
-    private static final String PORT_LBL_UI_ = DatatoolsUiPlugin.UTIL.getString("Common.PORT_LBL_UI_"); //$NON-NLS-1$
+    private static final String PORT_LBL_UI_ = DatatoolsUiConstants.UTIL.getString("Common.PORT_LBL_UI_"); //$NON-NLS-1$
 
-    private static final String CONNECTIONURL_LBL_UI_ = DatatoolsUiPlugin.UTIL.getString("Common.CONNECTIONURL_LBL_UI_"); //$NON-NLS-1$
+    private static final String CONNECTIONURL_LBL_UI_ = DatatoolsUiConstants.UTIL.getString("Common.CONNECTIONURL_LBL_UI_"); //$NON-NLS-1$
 
-    private static final String USERNAME_LBL_UI_ = DatatoolsUiPlugin.UTIL.getString("Common.USERNAME_LBL_UI_"); //$NON-NLS-1$
+    private static final String USERNAME_LBL_UI_ = DatatoolsUiConstants.UTIL.getString("Common.USERNAME_LBL_UI_"); //$NON-NLS-1$
 
-    private static final String PASSWORD_LBL_UI_ = DatatoolsUiPlugin.UTIL.getString("Common.PASSWORD_LBL_UI_"); //$NON-NLS-1$
+    private static final String PASSWORD_LBL_UI_ = DatatoolsUiConstants.UTIL.getString("Common.PASSWORD_LBL_UI_"); //$NON-NLS-1$
 
-    private static final String SSL_BTN_UI_ = DatatoolsUiPlugin.UTIL.getString("Common.SSL_BTN_UI_"); //$NON-NLS-1$
+    private static final String SSL_BTN_UI_ = DatatoolsUiConstants.UTIL.getString("Common.SSL_BTN_UI_"); //$NON-NLS-1$
     
-    private static final String TEIID_BTN_UI_ = DatatoolsUiPlugin.UTIL.getString("Common.TEIID_BTN_UI_"); //$NON-NLS-1$
+    private static final String TEIID_BTN_UI_ = DatatoolsUiConstants.UTIL.getString("Common.TEIID_BTN_UI_"); //$NON-NLS-1$
 
-    private static final String BROWSE_BUTTON_LBL_UI_ = DatatoolsUiPlugin.UTIL.getString("Common.BROWSE_BUTTON_LBL_UI_"); //$NON-NLS-1$
+    private static final String BROWSE_BUTTON_LBL_UI_ = DatatoolsUiConstants.UTIL.getString("Common.BROWSE_BUTTON_LBL_UI_"); //$NON-NLS-1$
     
-    private static final String SAVE_PASSWORD_LBL_UI_ = DatatoolsUiPlugin.UTIL.getString("Common.SAVE_PASSWORD_LBL_UI_"); //$NON-NLS-1$
+    private static final String SAVE_PASSWORD_LBL_UI_ = DatatoolsUiConstants.UTIL.getString("Common.SAVE_PASSWORD_LBL_UI_"); //$NON-NLS-1$
 
-	private static final String PATH_LBL_UI_ = DatatoolsUiPlugin.UTIL.getString("ModeShapeDriverUIContributor.REPOS.TXT"); //$NON-NLS-1$
+	private static final String PATH_LBL_UI_ = DatatoolsUiConstants.UTIL.getString("ModeShapeDriverUIContributor.REPOS.TXT"); //$NON-NLS-1$
 
-    private static final String HOST_SUMMARY_DATA_TEXT_ = DatatoolsUiPlugin.UTIL.getString("Common.summary.host"); //$NON-NLS-1$
+    private static final String HOST_SUMMARY_DATA_TEXT_ = DatatoolsUiConstants.UTIL.getString("Common.summary.host"); //$NON-NLS-1$
 
-    private static final String PORT_SUMMARY_DATA_TEXT_ = DatatoolsUiPlugin.UTIL.getString("Common.summary.port"); //$NON-NLS-1$
+    private static final String PORT_SUMMARY_DATA_TEXT_ = DatatoolsUiConstants.UTIL.getString("Common.summary.port"); //$NON-NLS-1$
 
-    private static final String USERNAME_SUMMARY_DATA_TEXT_ = DatatoolsUiPlugin.UTIL.getString("Common.summary.username"); //$NON-NLS-1$
+    private static final String USERNAME_SUMMARY_DATA_TEXT_ = DatatoolsUiConstants.UTIL.getString("Common.summary.username"); //$NON-NLS-1$
 
-    private static final String URL_SUMMARY_DATA_TEXT_ = DatatoolsUiPlugin.UTIL.getString("Common.summary.url"); //$NON-NLS-1$
+    private static final String URL_SUMMARY_DATA_TEXT_ = DatatoolsUiConstants.UTIL.getString("Common.summary.url"); //$NON-NLS-1$
 
-    private static final String SSL_SUMMARY_DATA_TEXT_ = DatatoolsUiPlugin.UTIL.getString("Common.summary.protocol"); //$NON-NLS-1$
+    private static final String SSL_SUMMARY_DATA_TEXT_ = DatatoolsUiConstants.UTIL.getString("Common.summary.protocol"); //$NON-NLS-1$
     
-    private static final String TEIID_SUMMARY_DATA_TEXT_ = DatatoolsUiPlugin.UTIL.getString("Common.summary.teiid"); //$NON-NLS-1$
+    private static final String TEIID_SUMMARY_DATA_TEXT_ = DatatoolsUiConstants.UTIL.getString("Common.summary.teiid"); //$NON-NLS-1$
 
-    private static final String SAVE_PASSWORD_SUMMARY_DATA_TEXT_ = DatatoolsUiPlugin.UTIL.getString("Common.summary.persistpassword.label"); //$NON-NLS-1$
+    private static final String SAVE_PASSWORD_SUMMARY_DATA_TEXT_ = DatatoolsUiConstants.UTIL.getString("Common.summary.persistpassword.label"); //$NON-NLS-1$
 
-    private static final String TRUE_SUMMARY_DATA_TEXT_ = DatatoolsUiPlugin.UTIL.getString("Common.summary.true"); //$NON-NLS-1$
+    private static final String TRUE_SUMMARY_DATA_TEXT_ = DatatoolsUiConstants.UTIL.getString("Common.summary.true"); //$NON-NLS-1$
 
-    private static final String FALSE_SUMMARY_DATA_TEXT_ = DatatoolsUiPlugin.UTIL.getString("Common.summary.false"); //$NON-NLS-1$
+    private static final String FALSE_SUMMARY_DATA_TEXT_ = DatatoolsUiConstants.UTIL.getString("Common.summary.false"); //$NON-NLS-1$
 
-	private static final String PATH_SUMMARY_DATA_TEXT_ = DatatoolsUiPlugin.UTIL.getString("Common.summary.path"); //$NON-NLS-1$
+	private static final String PATH_SUMMARY_DATA_TEXT_ = DatatoolsUiConstants.UTIL.getString("Common.summary.path"); //$NON-NLS-1$
     
 	private boolean isReadOnly = false;
 	
@@ -401,19 +400,19 @@ public class ModeShapeDriverUIContributor implements IDriverUIContributor, Liste
     public boolean determineContributorCompletion() {
         boolean isComplete = true;
         if (hostText.getText().trim().length() < 1) {
-            parentPage.setErrorMessage(DatatoolsUiPlugin.UTIL.getString("ModeShapeDriverUIContributor.VALIDATE_HOST_REQ_UI_")); //$NON-NLS-1$
+            parentPage.setErrorMessage(DatatoolsUiConstants.UTIL.getString("ModeShapeDriverUIContributor.VALIDATE_HOST_REQ_UI_")); //$NON-NLS-1$
             isComplete = false;
         } else if (portText.getText().trim().length() < 1) {
-            parentPage.setErrorMessage(DatatoolsUiPlugin.UTIL.getString("ModeShapeDriverUIContributor.VALIDATE_PORT_REQ_MSG_UI_")); //$NON-NLS-1$
+            parentPage.setErrorMessage(DatatoolsUiConstants.UTIL.getString("ModeShapeDriverUIContributor.VALIDATE_PORT_REQ_MSG_UI_")); //$NON-NLS-1$
             isComplete = false;
         } else if (usernameText.getText().trim().length() < 1) {
-            parentPage.setErrorMessage(DatatoolsUiPlugin.UTIL.getString("ModeShapeDriverUIContributor.VALIDATE_USERID_REQ_MSG_UI_")); //$NON-NLS-1$
+            parentPage.setErrorMessage(DatatoolsUiConstants.UTIL.getString("ModeShapeDriverUIContributor.VALIDATE_USERID_REQ_MSG_UI_")); //$NON-NLS-1$
             isComplete = false;
         } else if (passwordText.getText().trim().length() < 1) {
-            parentPage.setErrorMessage(DatatoolsUiPlugin.UTIL.getString("ModeShapeDriverUIContributor.VALIDATE_PASSWORD_REQ_MSG_UI_")); //$NON-NLS-1$
+            parentPage.setErrorMessage(DatatoolsUiConstants.UTIL.getString("ModeShapeDriverUIContributor.VALIDATE_PASSWORD_REQ_MSG_UI_")); //$NON-NLS-1$
             isComplete = false;
         } else if (reposCombo.getText().trim().length() < 1) {
-            parentPage.setErrorMessage(DatatoolsUiPlugin.UTIL.getString("ModeShapeDriverUIContributor.VALIDATE_PATH_REQ_UI_")); //$NON-NLS-1$
+            parentPage.setErrorMessage(DatatoolsUiConstants.UTIL.getString("ModeShapeDriverUIContributor.VALIDATE_PATH_REQ_UI_")); //$NON-NLS-1$
             isComplete = false;
         }
         if (isComplete) {

@@ -21,6 +21,7 @@ import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.IPageChangedListener;
 import org.eclipse.jface.dialogs.PageChangedEvent;
 import org.eclipse.jface.preference.PreferenceDialog;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
@@ -173,7 +174,7 @@ public class EditConnectionProfileAction extends Action {
 			}
 		}
 		int rtn_val = propertyDialog.open();
-		if (rtn_val == Dialog.OK) {
+		if (rtn_val == Window.OK) {
 			wasFinished = true;
 			saveState();
 		}

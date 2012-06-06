@@ -16,6 +16,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.teiid.designer.ui.PluginConstants;
 import org.teiid.designer.ui.UiConstants;
 import org.teiid.designer.ui.UiPlugin;
@@ -39,7 +40,7 @@ public class AddToMetadataFavoritesAction extends ModelObjectAction {
         super(UiPlugin.getDefault());
         setText(UiConstants.Util.getString("AddToMetadataFavoritesAction.label")); //$NON-NLS-1$
         setImageDescriptor(
-        		UiPlugin.imageDescriptorFromPlugin(UiConstants.PLUGIN_ID, PluginConstants.Images.METADATA_FAVORITES));
+        		AbstractUIPlugin.imageDescriptorFromPlugin(UiConstants.PLUGIN_ID, PluginConstants.Images.METADATA_FAVORITES));
     }
 
     /**

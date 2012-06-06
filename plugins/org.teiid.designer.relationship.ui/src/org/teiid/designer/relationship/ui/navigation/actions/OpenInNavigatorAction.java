@@ -12,6 +12,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.teiid.designer.relationship.ui.PluginConstants;
 import org.teiid.designer.relationship.ui.UiConstants;
 import org.teiid.designer.relationship.ui.UiPlugin;
@@ -35,7 +36,7 @@ public class OpenInNavigatorAction extends ModelObjectAction {
         super(UiPlugin.getDefault());
         setText(UiConstants.Util.getString("OpenInNavigatorAction.label")); //$NON-NLS-1$
         setImageDescriptor(
-        		UiPlugin.imageDescriptorFromPlugin(UiConstants.PLUGIN_ID, PluginConstants.Images.RELATIONSHIP_NAVIGATOR_ICON));
+        		AbstractUIPlugin.imageDescriptorFromPlugin(UiConstants.PLUGIN_ID, PluginConstants.Images.RELATIONSHIP_NAVIGATOR_ICON));
     }
 
     /**

@@ -385,8 +385,8 @@ public class TestDisplayNodeFactory extends TestCase {
     
     public void testJoinPredicate6() {
 	    ArrayList crits = new ArrayList();
-	    CompareCriteria comprCrit1 = new CompareCriteria(new ElementSymbol("m.g2.e1"), CompareCriteria.EQ, new ElementSymbol("m.g3.e1")); //$NON-NLS-1$ //$NON-NLS-2$
-	    CompareCriteria comprCrit2 = new CompareCriteria(new ElementSymbol("m.g2.e2"), CompareCriteria.EQ, new ElementSymbol("m.g3.e2")); //$NON-NLS-1$ //$NON-NLS-2$
+	    CompareCriteria comprCrit1 = new CompareCriteria(new ElementSymbol("m.g2.e1"), AbstractCompareCriteria.EQ, new ElementSymbol("m.g3.e1")); //$NON-NLS-1$ //$NON-NLS-2$
+	    CompareCriteria comprCrit2 = new CompareCriteria(new ElementSymbol("m.g2.e2"), AbstractCompareCriteria.EQ, new ElementSymbol("m.g3.e2")); //$NON-NLS-1$ //$NON-NLS-2$
   		IsNullCriteria inc = new IsNullCriteria();
   		inc.setExpression(new ElementSymbol("m.g.e1")); //$NON-NLS-1$
 	    
