@@ -159,7 +159,7 @@ public class RequestBuilderTraversalContext extends BaseTraversalContext
 			TransformationHelper.setSqlString(root, sqlString.toString(),
 					QueryValidator.SELECT_TRNS, true, this);
 			TransformationMappingHelper.reconcileMappingsOnSqlChange(
-					(EObject) root, this);
+					root, this);
 		}
 	}
 	

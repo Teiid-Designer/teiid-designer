@@ -8,7 +8,6 @@
 package org.teiid.designer.ui.common;
 
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchPage;
 import org.osgi.framework.BundleContext;

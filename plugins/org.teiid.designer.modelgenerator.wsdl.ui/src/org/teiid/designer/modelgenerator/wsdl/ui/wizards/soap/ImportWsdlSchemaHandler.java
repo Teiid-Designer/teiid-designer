@@ -161,13 +161,13 @@ public class ImportWsdlSchemaHandler {
                             if (type == ProcedureInfo.REQUEST) {
                                 this.requestSchemaTreeModel = describe(schema,
                                         elementName,
-                                        (XSDElementDeclarationImpl) element,
+                                        element,
                                         requestSchemaTreeModel);
                             }
                             else {
                                 this.responseSchemaTreeModel = describe(schema,
                                         elementName,
-                                        (XSDElementDeclarationImpl) element,
+                                        element,
                                         responseSchemaTreeModel);
                             }
                         }

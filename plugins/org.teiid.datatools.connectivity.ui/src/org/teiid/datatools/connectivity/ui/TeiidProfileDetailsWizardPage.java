@@ -25,7 +25,6 @@ import org.eclipse.datatools.connectivity.ui.wizards.ConnectionProfileDetailsPag
 import org.eclipse.datatools.connectivity.ui.wizards.ExtensibleNewConnectionProfileWizard;
 import org.eclipse.datatools.connectivity.ui.wizards.IDriverUIContributorInformation;
 import org.eclipse.datatools.help.HelpUtil;
-import org.eclipse.jface.dialogs.DialogPage;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.swt.layout.GridLayout;

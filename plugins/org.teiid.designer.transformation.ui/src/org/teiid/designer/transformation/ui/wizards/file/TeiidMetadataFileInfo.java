@@ -21,9 +21,6 @@ import org.teiid.core.util.I18nUtil;
 import org.teiid.designer.core.validation.rules.StringNameValidator;
 import org.teiid.designer.metamodels.relational.aspects.validation.RelationalStringNameValidator;
 import org.teiid.designer.transformation.ui.UiConstants;
-import org.teiid.designer.transformation.ui.UiPlugin;
-
-
 
 /**
  * Business object used to manage Teiid-specific Metadata File information used during import

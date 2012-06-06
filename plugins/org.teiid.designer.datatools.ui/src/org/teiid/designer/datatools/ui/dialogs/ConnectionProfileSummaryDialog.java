@@ -137,7 +137,7 @@ public class ConnectionProfileSummaryDialog extends Dialog {
             Collection<StringKeyValuePair> propsColl = new ArrayList<StringKeyValuePair>();
             for (Object key : properties.keySet()) {
                 String keyStr = (String)key;
-                String value = (String)properties.getProperty((String)key);
+                String value = properties.getProperty((String)key);
                 propsColl.add(new StringKeyValuePair(keyStr, value));
             }
             propsViewer.setInput(propsColl);

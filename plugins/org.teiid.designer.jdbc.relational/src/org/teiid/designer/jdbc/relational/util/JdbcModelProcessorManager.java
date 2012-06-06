@@ -173,7 +173,7 @@ public class JdbcModelProcessorManager {
 	    	RelationalModelProcessor processor = getProcessor(extension);
 	    	
 	    	if( processor != null) {
-	    		return (RelationalModelProcessor)processor;
+	    		return processor;
 	    	}
     	}
     	
@@ -191,7 +191,7 @@ public class JdbcModelProcessorManager {
     	loadProcessors();
     	
     	for( String nextKey : processorNameMap.keySet() ) {
-    		String nextValue = (String)processorNameMap.get(nextKey);
+    		String nextValue = processorNameMap.get(nextKey);
     		if( nextKey.equalsIgnoreCase(type) ) {
     			return nextValue;
     		}
@@ -210,7 +210,7 @@ public class JdbcModelProcessorManager {
     	loadProcessors();
     	
     	for( String nextKey : processorNameMap.keySet() ) {
-    		String nextValue = (String)processorNameMap.get(nextKey);
+    		String nextValue = processorNameMap.get(nextKey);
     		if( nextValue.equalsIgnoreCase(nameKey) ) {
     			return nextKey;
     		}

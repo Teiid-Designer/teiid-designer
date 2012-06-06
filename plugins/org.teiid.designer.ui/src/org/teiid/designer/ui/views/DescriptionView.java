@@ -245,7 +245,7 @@ public class DescriptionView extends ModelerView
         if (this.currentObject instanceof EObject) {
             return ModelerCore.getModelEditor().getName((EObject)this.currentObject);
         } else if (this.currentObject instanceof ModelResource) {
-            return ((ModelResource)this.currentModel).getItemName();
+            return this.currentModel.getItemName();
         } else {
             // TODO: Check for VDB SELECTION
         }

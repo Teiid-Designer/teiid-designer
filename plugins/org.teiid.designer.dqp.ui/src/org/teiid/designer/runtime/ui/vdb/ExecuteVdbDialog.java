@@ -175,7 +175,7 @@ public class ExecuteVdbDialog extends TitleAreaDialog implements
 		ModelWorkspaceDialog vdbDialog = createVdbSelector();
 
 		// add filters
-		((ModelWorkspaceDialog) vdbDialog).addFilter(new ClosedProjectFilter());
+		vdbDialog.addFilter(new ClosedProjectFilter());
 
 		vdbDialog.open();
 

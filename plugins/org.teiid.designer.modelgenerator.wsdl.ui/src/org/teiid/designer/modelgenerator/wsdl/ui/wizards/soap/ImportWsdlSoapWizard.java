@@ -135,7 +135,7 @@ public class ImportWsdlSoapWizard extends AbstractWizard implements IImportWizar
         }
 
         // give the WSDL selection page the current workspace selection
-        ((WsdlDefinitionPage)this.selectWsdlPage).setInitialSelection(theSelection);
+        this.selectWsdlPage.setInitialSelection(theSelection);
     }
 
     /**

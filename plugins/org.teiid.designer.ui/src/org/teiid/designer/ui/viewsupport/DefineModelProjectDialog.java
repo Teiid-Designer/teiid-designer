@@ -235,7 +235,7 @@ public class DefineModelProjectDialog extends TitleAreaDialog implements
 		ModelWorkspaceDialog sdDialog = createProjectSelector();
 
 		// add filters
-		((ModelWorkspaceDialog) sdDialog).addFilter(new ClosedProjectFilter());
+		sdDialog.addFilter(new ClosedProjectFilter());
 
 		sdDialog.open();
 

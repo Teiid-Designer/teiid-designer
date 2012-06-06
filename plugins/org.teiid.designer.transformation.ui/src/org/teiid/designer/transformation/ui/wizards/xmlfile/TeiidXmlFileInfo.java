@@ -23,12 +23,10 @@ import org.teiid.core.util.CoreArgCheck;
 import org.teiid.core.util.I18nUtil;
 import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.transformation.ui.UiConstants;
-import org.teiid.designer.transformation.ui.UiPlugin;
 import org.teiid.designer.transformation.ui.wizards.file.TeiidFileInfo;
 import org.teiid.designer.transformation.util.SqlConstants;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.LocatorImpl;
-
 
 /**
  * Business object used to manage Teiid-specific XML Data File information used during import

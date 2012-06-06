@@ -749,7 +749,7 @@ public class SqlMappingRootCache implements SqlConstants {
         	//}
             cache.put(transMappingRoot,status);
             
-            notifyEventListeners(new SqlTransformationStatusChangeEvent((EObject)transMappingRoot, new Object(), false));
+            notifyEventListeners(new SqlTransformationStatusChangeEvent(transMappingRoot, new Object(), false));
         } else {
             removeStatus(transMappingRoot,cmdType);
         }

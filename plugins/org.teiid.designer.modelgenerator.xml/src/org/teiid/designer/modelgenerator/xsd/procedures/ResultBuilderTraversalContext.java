@@ -176,7 +176,7 @@ public class ResultBuilderTraversalContext extends BaseTraversalContext implemen
 		SqlTransformationMappingRoot root = (SqlTransformationMappingRoot)TransformationHelper.getTransformationMappingRoot(procedure);
 			TransformationHelper.setSqlString(root, sqlString.toString(),
 					QueryValidator.SELECT_TRNS, true, this);
-		TransformationMappingHelper.reconcileMappingsOnSqlChange((EObject) root, this);
+		TransformationMappingHelper.reconcileMappingsOnSqlChange(root, this);
 		}
 	}
 	

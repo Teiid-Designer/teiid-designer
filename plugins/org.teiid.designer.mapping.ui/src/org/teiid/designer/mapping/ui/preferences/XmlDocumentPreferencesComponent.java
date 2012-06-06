@@ -271,7 +271,7 @@ public class XmlDocumentPreferencesComponent implements IEditorPreferencesCompon
     public void fireValidationStatus( boolean validationStatus,
                                       String message ) {
         for (int i = 0; i < this.validationListeners.size(); i++) {
-            ((IEditorPreferencesValidationListener)this.validationListeners.get(i)).validationStatus(validationStatus, message);
+            this.validationListeners.get(i).validationStatus(validationStatus, message);
         }
     }
 

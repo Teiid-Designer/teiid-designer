@@ -11,35 +11,23 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
-import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.PlatformUI;
 import org.teiid.core.event.IChangeListener;
 import org.teiid.core.event.IChangeNotifier;
 import org.teiid.core.util.I18nUtil;
 import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.Server;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
-import org.teiid.designer.runtime.ui.views.TeiidViewTreeProvider;
-import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WidgetUtil;
-import org.teiid.designer.ui.common.widget.Label;
-
 
 public class ServerSelectionDialog extends TitleAreaDialog implements
 		DqpUiConstants, IChangeListener {

@@ -4,7 +4,6 @@ import java.sql.Driver;
 import java.util.Properties;
 
 import org.eclipse.datatools.connectivity.IConnectionProfile;
-import org.eclipse.datatools.connectivity.drivers.jdbc.IJDBCConnectionProfileConstants;
 import org.eclipse.datatools.connectivity.drivers.jdbc.IJDBCDriverDefinitionConstants;
 import org.eclipse.datatools.connectivity.drivers.jdbc.JDBCConnection;
 

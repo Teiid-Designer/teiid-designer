@@ -245,8 +245,8 @@ public class DeployVdbDialog extends TitleAreaDialog implements DqpUiConstants,
 		ModelWorkspaceDialog vdbDialog = createVdbSelector();
 
 		// add filters
-		((ModelWorkspaceDialog) vdbDialog).addFilter(new ClosedProjectFilter());
-		((ModelWorkspaceDialog) vdbDialog).addFilter(new SingleProjectFilter(this.designerProperties));
+		vdbDialog.addFilter(new ClosedProjectFilter());
+		vdbDialog.addFilter(new SingleProjectFilter(this.designerProperties));
 
 		vdbDialog.open();
 

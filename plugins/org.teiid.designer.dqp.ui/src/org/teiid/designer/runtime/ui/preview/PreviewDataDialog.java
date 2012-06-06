@@ -207,8 +207,8 @@ public class PreviewDataDialog extends TitleAreaDialog implements
 		ModelWorkspaceDialog sdDialog = createTableOrProcedureSelector();
 
 		// add filters
-		((ModelWorkspaceDialog)sdDialog).addFilter(new ClosedProjectFilter());
-		((ModelWorkspaceDialog) sdDialog).addFilter(new SingleProjectFilter(this.designerProperties));
+		sdDialog.addFilter(new ClosedProjectFilter());
+		sdDialog.addFilter(new SingleProjectFilter(this.designerProperties));
 		
 		sdDialog.open();
 

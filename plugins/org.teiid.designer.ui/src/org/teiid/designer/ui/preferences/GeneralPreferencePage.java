@@ -205,7 +205,7 @@ public final class GeneralPreferencePage extends PreferencePage
         Iterator<GeneralPreference> itr = this.preferenceMap.values().iterator();
 
         while (itr.hasNext()) {
-            GeneralPreference pref = (GeneralPreference)itr.next();
+            GeneralPreference pref = itr.next();
 
             try {
                 pref.contributor.performDefaults();

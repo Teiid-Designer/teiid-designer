@@ -110,7 +110,7 @@ public class EditElementsPanel {
             public void mouseDown( MouseEvent theEvent ) {
                 if (theEvent.button == 1 ) {
                     if (isTextEditorActive() && selectedObject != null) {
-                        saveChangesAndDispose((AttributeInfo)selectedObject);
+                        saveChangesAndDispose(selectedObject);
                     }
                 }
             }

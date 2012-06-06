@@ -83,7 +83,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
-
 /**
  * This loader reads a WSDL file from an input stream and populates a {@link org.teiid.designer.metamodels.wsdl.io.WsdlResourceImpl}
  * with the corresponding objects using the {@link WsdlPackage WSDL},{@link SoapPackage SOAP},{@link HttpPackage HTTP}and

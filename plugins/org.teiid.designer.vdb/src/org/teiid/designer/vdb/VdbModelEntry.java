@@ -450,10 +450,10 @@ public final class VdbModelEntry extends VdbEntry {
     	
         Set<Object> keys = props.keySet();
         for (Object nextKey : keys) {
-        	boolean existing = "name".equals((String)nextKey); //$NON-NLS-1$
+        	boolean existing = "name".equals(nextKey); //$NON-NLS-1$
         	// Look through current TO props to see if already defined
     		for( TranslatorOverrideProperty toProp : toProps ) {
-    			if( toProp.getDefinition().getId().equals((String)nextKey) ) {
+    			if( toProp.getDefinition().getId().equals(nextKey) ) {
 
     				// This is an override case
     				toProp.setValue(props.getProperty((String)nextKey));

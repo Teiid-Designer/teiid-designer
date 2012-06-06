@@ -44,7 +44,7 @@ public class EditVdbAction  extends Action implements VdbConstants {
 		ModelWorkspaceDialog vdbDialog = getSelectVdbDialog();
 
 		// add filters
-		((ModelWorkspaceDialog) vdbDialog).addFilter(new ClosedProjectFilter());
+		vdbDialog.addFilter(new ClosedProjectFilter());
 
 		vdbDialog.open();
 

@@ -16,7 +16,6 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.viewers.ILabelProvider;
@@ -312,13 +311,13 @@ public class DefineViewTableDialog extends TitleAreaDialog implements
 		ModelWorkspaceDialog sdDialog = createViewTableSelector();
 
 		// add filters
-		((ModelWorkspaceDialog) sdDialog).addFilter(new ClosedProjectFilter());
-		((ModelWorkspaceDialog) sdDialog).addFilter(new SingleProjectFilter(this.designerProperties));
+		sdDialog.addFilter(new ClosedProjectFilter());
+		sdDialog.addFilter(new SingleProjectFilter(this.designerProperties));
 
 		IFile viewModel = designerProperties.getViewModel();
 
 		if (viewModel != null) {
-			((ModelWorkspaceDialog) sdDialog).setInitialSelection(viewModel);
+			sdDialog.setInitialSelection(viewModel);
 		}
 		
 		sdDialog.open();
@@ -402,8 +401,8 @@ public class DefineViewTableDialog extends TitleAreaDialog implements
 		ModelWorkspaceDialog sdDialog = createViewModelSelector();
 
 		// add filters
-		((ModelWorkspaceDialog) sdDialog).addFilter(new ClosedProjectFilter());
-		((ModelWorkspaceDialog) sdDialog).addFilter(new SingleProjectFilter(this.designerProperties));
+		sdDialog.addFilter(new ClosedProjectFilter());
+		sdDialog.addFilter(new SingleProjectFilter(this.designerProperties));
 		
 
 		sdDialog.open();

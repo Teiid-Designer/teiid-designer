@@ -130,26 +130,26 @@ public class MappingRefactorModelHandler implements IRefactorModelHandler {
     	
     	for( String key: changedModelNames.keySet() ) {
     		// Replace all names with ' ' preceeding
-    		String oldName = ' ' + (String)key + '.';
-    		String newName = ' ' + (String)changedModelNames.get(key) + '.';
+    		String oldName = ' ' + key + '.';
+    		String newName = ' ' + changedModelNames.get(key) + '.';
     		if( copyOfSql.contains(oldName) ) {
     			copyOfSql = copyOfSql.replaceAll(oldName, newName);
     		}
     		// Replace all names with ',' preceeding
-    		oldName = ',' + (String)key + '.';
-    		newName = ',' + (String)changedModelNames.get(key) + '.';
+    		oldName = ',' + key + '.';
+    		newName = ',' + changedModelNames.get(key) + '.';
     		if( copyOfSql.contains(oldName) ) {
     			copyOfSql = copyOfSql.replaceAll(oldName, newName);
     		}
     		// Replace all names with ',' preceeding
-    		oldName = '\t' + (String)key + '.';
-    		newName = '\t' + (String)changedModelNames.get(key) + '.';
+    		oldName = '\t' + key + '.';
+    		newName = '\t' + changedModelNames.get(key) + '.';
     		if( copyOfSql.contains(oldName) ) {
     			copyOfSql = copyOfSql.replaceAll(oldName, newName);
     		}
     		// Replace all names with ',' preceeding
-    		oldName = '\n' + (String)key + '.';
-    		newName = '\n' + (String)changedModelNames.get(key) + '.';
+    		oldName = '\n' + key + '.';
+    		newName = '\n' + changedModelNames.get(key) + '.';
     		if( copyOfSql.contains(oldName) ) {
     			copyOfSql = copyOfSql.replaceAll(oldName, newName);
     		}
@@ -159,8 +159,8 @@ public class MappingRefactorModelHandler implements IRefactorModelHandler {
     	// So we should find all indexes of the old name
     	StringBuffer sb = new StringBuffer(copyOfSql.length());
     	for( String key: changedModelNames.keySet() ) {
-    		String oldName = '(' + (String)key + '.';
-    		String newName = '(' + (String)changedModelNames.get(key) + '.';
+    		String oldName = '(' + key + '.';
+    		String newName = '(' + changedModelNames.get(key) + '.';
     		while( copyOfSql.contains(oldName) ) {
     			int startIndex = copyOfSql.indexOf(oldName);
     			int endIndex = startIndex + oldName.length();

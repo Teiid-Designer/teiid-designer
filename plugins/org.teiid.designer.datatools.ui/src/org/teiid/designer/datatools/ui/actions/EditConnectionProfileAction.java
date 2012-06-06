@@ -16,7 +16,6 @@ import org.eclipse.datatools.connectivity.internal.ui.ProfileUIManager;
 import org.eclipse.datatools.connectivity.ui.wizards.ConnectionProfileDetailsPage;
 import org.eclipse.datatools.connectivity.ui.wizards.ProfileDetailsPropertyPage;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.IPageChangedListener;
 import org.eclipse.jface.dialogs.PageChangedEvent;
@@ -144,7 +143,7 @@ public class EditConnectionProfileAction extends Action {
 		boolean inReadOnlyRepository = false;
 
 		if (profile.getParentProfile() != null) {
-			IManagedConnection imc = ((IConnectionProfile) profile.getParentProfile())
+			IManagedConnection imc = profile.getParentProfile()
 				.getManagedConnection(IConnectionProfileRepositoryConstants.REPOSITORY_CONNECTION_FACTORY_ID);
 			if (imc != null && imc.isConnected()) {
 				IConnectionProfileRepository repo = (IConnectionProfileRepository) imc

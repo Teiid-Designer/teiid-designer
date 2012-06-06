@@ -45,7 +45,6 @@ import org.teiid.designer.core.search.runtime.ResourceObjectRecord;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.ui.UiConstants;
 
-
 /**
  * ModelObjectSelectionDialog Adapted from the eclipse class TwoPaneElementSelector, because that class had the functionality but
  * lacked extensibility.

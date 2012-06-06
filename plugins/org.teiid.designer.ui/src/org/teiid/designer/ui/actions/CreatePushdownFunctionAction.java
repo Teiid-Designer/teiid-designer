@@ -189,7 +189,7 @@ public class CreatePushdownFunctionAction extends Action implements INewChildAct
                 RelationalObjectFactory factory = new RelationalObjectFactory(modelResource);
                 
     	        // Create input parameters
-                Procedure pfd = (Procedure)factory.createPushdownFunction(data.getName(), data.getDescription());
+                Procedure pfd = factory.createPushdownFunction(data.getName(), data.getDescription());
     	        for( ParameterData paramData : data.getInputParameters() ) {
     	        	if( paramData.isIncluded() ) {
     	        	EObject dType = data.getDatatype(paramData.getType());

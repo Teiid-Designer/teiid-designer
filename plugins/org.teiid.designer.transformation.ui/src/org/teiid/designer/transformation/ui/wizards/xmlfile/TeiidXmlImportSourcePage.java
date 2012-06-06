@@ -43,7 +43,6 @@ import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.window.Window;
-import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -743,19 +742,19 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 			if (dialog.open() == Window.OK) {
 				boolean isRestProfile = dialog.isRestProfile();
 				if( isRestProfile ) {
-					wiz = (INewWizard) new NewTeiidFilteredCPWizard(TEIID_WS_ID);
+					wiz = new NewTeiidFilteredCPWizard(TEIID_WS_ID);
 				} else {
-					wiz = (INewWizard) new NewTeiidFilteredCPWizard(XML_URL_FILE_ID);
+					wiz = new NewTeiidFilteredCPWizard(XML_URL_FILE_ID);
 				}
 			}
 			
 			
 		} else {
-			wiz = (INewWizard) new NewTeiidFilteredCPWizard(XML_FILE_ID);
+			wiz = new NewTeiidFilteredCPWizard(XML_FILE_ID);
 		}
 		
 		if( wiz != null ) {
-			WizardDialog wizardDialog = new WizardDialog(Display.getCurrent().getActiveShell(), (Wizard) wiz);
+			WizardDialog wizardDialog = new WizardDialog(Display.getCurrent().getActiveShell(), wiz);
 			wizardDialog.setBlockOnOpen(true);
 	
 			CPListener listener = new CPListener();

@@ -28,11 +28,9 @@ import org.teiid.designer.transformation.util.TransformationHelper;
 import org.teiid.designer.ui.PluginConstants;
 import org.teiid.designer.ui.actions.SortableSelectionAction;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
-import org.teiid.designer.ui.common.widget.Dialog;
 import org.teiid.designer.ui.editors.ModelEditorManager;
 import org.teiid.designer.ui.viewsupport.ModelIdentifier;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
-
 
 public class CreateMaterializedViewsAction extends SortableSelectionAction {
 	
@@ -143,7 +141,7 @@ public class CreateMaterializedViewsAction extends SortableSelectionAction {
             }
 
             if (forceOpen) {
-                ModelEditorManager.open((EObject)firstEObj, true);
+                ModelEditorManager.open(firstEObj, true);
             }
         }
         if( userCancelled ) {
