@@ -16,16 +16,13 @@ import org.teiid.designer.relationship.ui.UiConstants;
 import org.teiid.designer.relationship.ui.UiPlugin;
 import org.teiid.designer.ui.common.wizard.AbstractWizard;
 import org.teiid.designer.ui.wizards.INewModelObjectWizard;
-import org.teiid.designer.ui.wizards.INewObjectWizard;
-
 
 /**<p>
  * </p>
  * @since 4.0
  */
 public final class NewRelationshipTypeWizard extends AbstractWizard 
-                                          implements INewModelObjectWizard,
-                                                     INewObjectWizard {
+                                          implements INewModelObjectWizard {
     //============================================================================================================================
     // Constants    
     private static final String PAGE_NAME 

@@ -27,7 +27,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model
  * @generated
  */
-public interface XmlInput extends XmlMessage, XmlServiceComponent{
+public interface XmlInput extends XmlMessage{
     /**
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->

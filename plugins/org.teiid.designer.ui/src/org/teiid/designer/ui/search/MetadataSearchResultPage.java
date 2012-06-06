@@ -11,13 +11,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -36,7 +36,6 @@ import org.teiid.designer.ui.actions.IModelerActionConstants;
 import org.teiid.designer.ui.common.actions.ActionService;
 import org.teiid.designer.ui.common.util.UiUtil;
 import org.teiid.designer.ui.editors.ModelEditorManager;
-
 
 /**
  *
@@ -381,7 +380,7 @@ public class MetadataSearchResultPage extends AbstractTextSearchViewPage impleme
     // Inner Class
     // ===========================================================================================================================
 
-    class ResultsContentProvider implements IStructuredContentProvider, ITreeContentProvider {
+    class ResultsContentProvider implements ITreeContentProvider {
 
         // =======================================================================================================================
         // Fields

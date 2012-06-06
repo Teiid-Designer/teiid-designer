@@ -8,6 +8,7 @@
 package org.teiid.designer.webservice;
 
 import java.util.Iterator;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
@@ -22,12 +23,10 @@ import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.impl.XSDDiagnosticImpl;
 import org.teiid.core.util.CoreArgCheck;
 
-
-
 /** 
  * @since 4.2
  */
-public class WebServiceXsdResource implements IWebServiceXsdResource, IInternalWebServiceXsdResource {
+public class WebServiceXsdResource implements IInternalWebServiceXsdResource {
 
     private final String targetNamespace;
     private final String originalPath;

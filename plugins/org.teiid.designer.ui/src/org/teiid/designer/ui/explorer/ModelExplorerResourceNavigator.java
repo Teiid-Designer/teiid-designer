@@ -106,7 +106,6 @@ import org.teiid.designer.ui.actions.SortModelContentsAction;
 import org.teiid.designer.ui.common.actions.ActionService;
 import org.teiid.designer.ui.common.actions.ExtendedMenuManager;
 import org.teiid.designer.ui.common.actions.GlobalActionsMap;
-import org.teiid.designer.ui.common.actions.IActionConstants;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.editors.ModelEditor;
@@ -126,14 +125,13 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 import org.teiid.designer.ui.viewsupport.ModelWorkspaceViewerFilter;
 import org.teiid.designer.ui.viewsupport.StatusBarUpdater;
 
-
 /**
  * ModelExplorerResourceNavigator is the Navigator View for the MetaBase Modeler.
  * 
  * @since 4.0
  */
 public class ModelExplorerResourceNavigator extends ResourceNavigator
-    implements IActionConstants, IModelerActionConstants, IGotoMarker, ModelViewer, UiConstants {
+    implements IModelerActionConstants, IGotoMarker, ModelViewer, UiConstants {
 
     static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(ModelExplorerResourceNavigator.class);
 

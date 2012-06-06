@@ -23,15 +23,13 @@ import org.teiid.designer.datatools.profiles.ws.IWSProfileConstants;
 import org.teiid.designer.datatools.profiles.ws.WSConnectionInfoProvider;
 import org.teiid.designer.datatools.profiles.xml.XmlFileConnectionInfoProvider;
 import org.teiid.designer.datatools.profiles.xml.XmlUrlConnectionInfoProvider;
-import org.teiid.designer.transformation.ui.UiConstants;
 import org.teiid.designer.transformation.ui.wizards.file.FlatFileRelationalModelFactory;
 import org.teiid.designer.transformation.ui.wizards.file.TeiidMetadataImportInfo;
 import org.teiid.designer.transformation.ui.wizards.file.TeiidMetadataImportProcessor;
 import org.teiid.designer.ui.editors.ModelEditor;
 import org.teiid.designer.ui.editors.ModelEditorManager;
 
-
-public class TeiidXmlFileImportProcessor extends TeiidMetadataImportProcessor implements UiConstants {
+public class TeiidXmlFileImportProcessor extends TeiidMetadataImportProcessor {
 	
 	public TeiidXmlFileImportProcessor(TeiidMetadataImportInfo info, Shell shell) {
 		super(info, shell);

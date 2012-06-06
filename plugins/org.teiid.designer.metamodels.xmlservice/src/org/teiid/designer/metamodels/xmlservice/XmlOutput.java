@@ -25,7 +25,7 @@ package org.teiid.designer.metamodels.xmlservice;
  * @model
  * @generated
  */
-public interface XmlOutput extends XmlMessage, XmlServiceComponent{
+public interface XmlOutput extends XmlMessage{
     /**
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->

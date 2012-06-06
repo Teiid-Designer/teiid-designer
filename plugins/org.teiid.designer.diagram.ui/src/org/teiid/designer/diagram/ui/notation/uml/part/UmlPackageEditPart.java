@@ -8,6 +8,7 @@
 package org.teiid.designer.diagram.ui.notation.uml.part;
 
 import java.beans.PropertyChangeEvent;
+
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
@@ -29,7 +30,6 @@ import org.teiid.designer.diagram.ui.model.DiagramModelNode;
 import org.teiid.designer.diagram.ui.notation.uml.figure.UmlPackageFigure;
 import org.teiid.designer.diagram.ui.notation.uml.model.UmlPackageNode;
 import org.teiid.designer.diagram.ui.part.AbstractNotationEditPart;
-import org.teiid.designer.diagram.ui.part.EditableEditPart;
 import org.teiid.designer.diagram.ui.part.PropertyChangeManager;
 import org.teiid.designer.diagram.ui.util.DiagramNodeSelectionEditPolicy;
 import org.teiid.designer.diagram.ui.util.SelectionTracker;
@@ -41,12 +41,10 @@ import org.teiid.designer.diagram.ui.util.directedit.LabelCellEditorLocator;
 import org.teiid.designer.ui.editors.ModelEditorManager;
 import org.teiid.designer.ui.viewsupport.ModelObjectUtilities;
 
-
-
 /**
  * UmlPackageEditPart
  */
-public class UmlPackageEditPart extends AbstractNotationEditPart implements DirectEditPart, EditableEditPart {
+public class UmlPackageEditPart extends AbstractNotationEditPart implements DirectEditPart {
     ///////////////////////////////////////////////////////////////////////////////////////////////
     // FIELDS
     ///////////////////////////////////////////////////////////////////////////////////////////////

@@ -9,13 +9,13 @@ package org.teiid.designer.metamodels.transformation.provider;
 
 import java.util.Collection;
 import java.util.List;
+
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.ResourceLocator;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.IItemPropertySource;
-import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 import org.eclipse.emf.edit.provider.ItemProviderAdapter;
 import org.eclipse.emf.edit.provider.ViewerNotification;
@@ -30,7 +30,7 @@ import org.teiid.designer.metamodels.transformation.TransformationPackage;
  * @generated
  */
 public class MappingClassSetContainerItemProvider extends ItemProviderAdapter
-    implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider,
+    implements IEditingDomainItemProvider, ITreeItemContentProvider, IItemLabelProvider,
     IItemPropertySource {
 
     /**

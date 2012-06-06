@@ -14,6 +14,6 @@ package org.teiid.designer.metamodels.wsdl;
  * @model interface="true" abstract="true"
  * @generated
  */
-public interface ExtensibleDocumented extends Documented, ElementOwner {
+public interface ExtensibleDocumented extends ElementOwner {
 
 } // ExtensibleDocumented

@@ -9,6 +9,7 @@ package org.teiid.designer.ui.table;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
@@ -51,12 +52,11 @@ import org.teiid.designer.ui.common.util.UiUtil;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.widget.ExtendedTitleAreaDialog;
 
-
 /**
  * ClipboardPasteProblemDialog
  */
 public class ClipboardPasteProblemDialog extends ExtendedTitleAreaDialog
-    implements UiConstants, org.teiid.designer.ui.common.UiConstants.Images, PluginConstants.Images {
+    implements UiConstants, PluginConstants.Images {
 
     private static final String PREFIX = I18nUtil.getPropertyPrefix(ClipboardPasteProblemDialog.class);
 
