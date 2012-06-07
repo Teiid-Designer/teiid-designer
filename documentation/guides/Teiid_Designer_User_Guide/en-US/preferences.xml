@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<chapter id="preferences-chapter">
+<appendix id="preferences-appendix">
 	<title>User Preferences</title>
 	
 	<!-- <para><emphasis role="bold">Go To:  <ulink url="index.html">Table of Contents</ulink></emphasis></para>  -->
@@ -247,4 +247,4 @@
 				during validation.</para></note>
 		</section>
 	</section>
-</chapter>
+</appendix>

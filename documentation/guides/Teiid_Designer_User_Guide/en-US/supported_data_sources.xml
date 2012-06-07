@@ -13,7 +13,7 @@
     <para>
         <table frame="border" rules="all">
             <title>Teiid Designer Supported Data Sources</title>
-            <tgroup align="left" cols="3">
+            <tgroup align="left" cols="3" title="Certified">
                 <colspec colname="dataSourceColumn"/>
                 <colspec colname="translatorColumn"/>
                 <colspec colname="optionsColumn"/>

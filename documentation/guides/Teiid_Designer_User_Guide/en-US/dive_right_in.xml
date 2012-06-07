@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<!-- ####### GUIDES AND CHEAT SHEETS ######################################## -->
+
+<chapter id="dive-right-in-chapter">
+	<title>Dive Right In!</title>
+	
+	<!-- <para><emphasis role="bold">Go To:  <ulink url="index.html">Table of Contents</ulink></emphasis></para>  -->
+
+    <para>We are going to dive right into some examples of common tasks in this section.  These examples will give you a quick 
+    introduction to the capabilities that are built into Designer to assist you with common design tasks.  Specifically, we will
+    introduce the following concepts:
+    </para>	
+	<itemizedlist>
+		<listitem>
+		    <para>Guides</para>
+		    <para>The Guides View is a good starting point for many common modeling tasks. The view includes categorized Modeling Actions 
+		    and also links to Cheat Sheets for common tasks.  The categorized Modeling Actions simply group together all of the actions
+		    that you'll need to accomplish a task.  You can launch the actions directly from the Guides view, rather than hunting through
+		    the various Designer menus.</para>
+	    </listitem>
+		<listitem>
+		    <para>Cheat Sheets</para>
+		    <para>The Cheat Sheets go beyond even the categorized Action Sets, and walk you step-by-step through some common tasks.
+		    At each step, the data entered in the previous step is carried through the process when possible.</para>
+		</listitem>
+	</itemizedlist>
+    <para>After seeing the Guides and Cheat Sheets in action, the subsequent chapters will offer detailed explanations of the various 
+    concepts and actions.
+    </para> 
+	
+	<!-- ####### GUIDE EXAMPLES SECTION ######################################## -->
+	
+	<section id="guide-examples-section">
+		<title>Guide Examples</title>
+		<para></para>
+		
+		<section id="guide-example-model-flatfile-section">
+			<title>Model a Flat File Source</title>
+
+			<para>This guide example demonstrates how to ... </para>
+		</section>
+		
+        <section id="guide-example-model-jdbc-section">
+            <title>Model a JDBC Source</title>
+
+            <para>This guide example demonstrates how to ... </para>
+        </section>
+	</section>
+	
+	<!-- ####### CHEAT SHEET EXAMPLES SECTION ######################################## -->
+	
+	<section id="cheatsheet-examples-section">
+		<title>Cheat Sheet Examples</title>
+		<para></para>
+		
+        <section id="cheatsheet-example-consume-soapws-section">
+            <title>Consume a SOAP Web Service</title>
+
+            <para>This cheat sheet example demonstrates how to ... </para>
+        </section>
+	</section>
+
+</chapter>
