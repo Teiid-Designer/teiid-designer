@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<chapter id="ui-reference-chapter">
+<appendix id="ui-reference-chapter">
 	<title>Teiid Designer Ui Reference</title>
 	<section id="teiid-designer-perspectives-section">
 		<title>Teiid Designer Perspectives</title>
@@ -3179,4 +3179,4 @@
 		</section>
 	</section>
 
-</chapter>
+</appendix>

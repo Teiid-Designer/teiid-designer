@@ -53,4 +53,5 @@
   <xi:include href="searching.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
   <xi:include href="preferences.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
   <xi:include href="ui-reference.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="supported_data_sources.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 </book>
