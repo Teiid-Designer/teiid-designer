@@ -20,14 +20,34 @@ import org.eclipse.xsd.impl.XSDElementDeclarationImpl;
 import org.eclipse.xsd.impl.XSDModelGroupImpl;
 import org.eclipse.xsd.impl.XSDParticleImpl;
 
+import com.metamatrix.modeler.modelgenerator.wsdl.model.Part;
+
 public class SchemaTreeModel {
 
 	Collection<SchemaNode> nodeList = new ArrayList<SchemaNode>();
+	String defaultNamespace = null;
 	String rootPath = null;
 	public static Map<String, String> namespaceMap = new HashMap<String, String>();
+	public Part[] partArray = null;
 
 	public Map<String, String> getNamespaceMap() {
 		return namespaceMap;
+	}
+
+	public String getDefaultNamespace() {
+		return defaultNamespace;
+	}
+
+	public void setDefaultNamespace(String defaultNamespace) {
+		this.defaultNamespace = defaultNamespace;
+	}
+
+	public Part[] getPartArray() {
+		return partArray;
+	}
+
+	public void setPartArray(Part[] partArray) {
+		this.partArray = partArray;
 	}
 
 	public void setNamespaceMap(Map<String, String> namespaceMap) {
@@ -264,11 +284,13 @@ public class SchemaTreeModel {
 		for (Object nsKey: SchemaTreeModel.namespaceMap.keySet()){
 			if (SchemaTreeModel.namespaceMap.get(nsKey).equals(ns)){
 				nsPrefix = (String) nsKey;
+				break;
 			}
 		}
 		
-		//This is default.. no need to alias
-		if (nsPrefix.equals(ResponseInfo.DEFAULT_NS)) nsPrefix = ""; //$NON-NLS-1$ //$NON-NLS-2$
+	//  This is default.. no need to alias
+	//	if (nsPrefix.equals(ResponseInfo.DEFAULT_NS)) nsPrefix = ""; //$NON-NLS-1$ //$NON-NLS-2$
+	//  We will always prefix, since we can't count on a service default for a given element
 		return nsPrefix == "" ? nsPrefix : nsPrefix + ":"; //$NON-NLS-1$ //$NON-NLS-2$
 		
 		}

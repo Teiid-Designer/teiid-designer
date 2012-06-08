@@ -35,6 +35,8 @@ public abstract class ProcedureInfo implements SqlConstants {
     
     private StringNameValidator nameValidator;
     
+    public SchemaTreeModel treeModel = null;
+    
 //	CREATE VIRTUAL PROCEDURE
 //	BEGIN
 //	    SELECT XMLELEMENT(NAME getPrice, XMLNAMESPACES(DEFAULT 'http://quickstart.samples/xsd'), XMLELEMENT(NAME symbol, StockQuoteServiceXML.getPrice.create_getPrice.symbol)) AS xml_out;
@@ -87,6 +89,14 @@ public abstract class ProcedureInfo implements SqlConstants {
 	
 	protected ProcedureGenerator getGenerator() {
 		return this.generator;
+	}
+	
+	public SchemaTreeModel getTreeModel() {
+		return treeModel;
+	}
+
+	public void setTreeModel(SchemaTreeModel treeModel) {
+		this.treeModel = treeModel;
 	}
 	
 	public void addNamespace(String key, String value) {

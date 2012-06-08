@@ -227,14 +227,15 @@ public class ResponseInfo extends ProcedureInfo {
 				sb.append(COMMA).append(SPACE);
 			}
 			String uri = getNamespaceMap().get(prefix);
-			if (uri.equals(this.getGenerator().getNamespaceURI()) || prefix.equals(DEFAULT_NS)) {
-				//This is the default NS
-				sb.append(DEFAULT).append(SPACE).append(S_QUOTE).append(uri).append(S_QUOTE);
-				this.defaultNSPrefix = prefix;
-			} else {
+//			Object defaultNs = this.getTreeModel().getDefaultNamespace();
+//			if (uri.equals(defaultNs)) {
+//				//This is the default NS
+//				sb.append(DEFAULT).append(SPACE).append(S_QUOTE).append(uri).append(S_QUOTE);
+//				this.defaultNSPrefix = prefix;
+//			} else {
 				sb.append(S_QUOTE).append(uri).append(S_QUOTE).append(SPACE)
 						.append(AS).append(SPACE).append(prefix);
-			}
+//			}
 			i++;
 		}
 		sb.append(R_PAREN).append(SPACE).append(COMMA).append(SPACE);

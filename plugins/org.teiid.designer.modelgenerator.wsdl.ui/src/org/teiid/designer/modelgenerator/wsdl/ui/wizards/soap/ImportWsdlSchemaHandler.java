@@ -99,8 +99,12 @@ public class ImportWsdlSchemaHandler {
 
 		Model wsdlModel = null;
 		Object elementDeclaration = null;
-		this.requestSchemaTreeModel = new SchemaTreeModel();
-		this.responseSchemaTreeModel = new SchemaTreeModel();
+		if (type == ProcedureInfo.REQUEST) {
+			this.requestSchemaTreeModel = new SchemaTreeModel();
+		}else{
+			this.responseSchemaTreeModel = new SchemaTreeModel();
+			
+		}
 		
 		try {
 			wsdlModel = importManager.getWSDLModel();
@@ -128,8 +132,14 @@ public class ImportWsdlSchemaHandler {
 
 		for (Part part : partArray) {
 			partElementName = getPartElementName(part);
-			elementDeclaration = null;
-
+			String namespace = part.getElementNamespace();
+			
+			if (type == ProcedureInfo.REQUEST) {
+				this.requestSchemaTreeModel.setDefaultNamespace(namespace);
+			}else{
+				this.responseSchemaTreeModel.setDefaultNamespace(namespace);
+			}
+			
 			boolean foundElement = false;
 
 			for (XSDSchema schema : schemas) {
@@ -271,6 +281,10 @@ public class ImportWsdlSchemaHandler {
 			ProcedureInfo requestInfo) {
 		SchemaNode node = (SchemaNode)selection.getFirstElement();
 		Object obj = node.getElement();
+		requestInfo.setTreeModel(this.requestSchemaTreeModel);
+		if (this.requestSchemaTreeModel.getDefaultNamespace()!=null){
+			requestInfo.addNamespace(ResponseInfo.DEFAULT_NS, this.requestSchemaTreeModel.getDefaultNamespace());
+		}
 		
 		String name = null;
 		String ns = null;
@@ -441,6 +455,7 @@ public class ImportWsdlSchemaHandler {
 
 		SchemaNode node = (SchemaNode)selection.getFirstElement();
 		Object obj = ((SchemaNode)selection.getFirstElement()).getElement();
+		responseInfo.setTreeModel(this.responseSchemaTreeModel);
 		
 		if( !shouldCreateResponseColumn(obj) ) {
 			return operationsDetailsPage.getSchemaLabelProvider().getText(obj);
@@ -488,11 +503,8 @@ public class ImportWsdlSchemaHandler {
 						SqlConstants.ENVELOPE_NS);
 			}
 			//Add the default namespace.
-			responseInfo.addNamespace(ResponseInfo.DEFAULT_NS, this.operationsDetailsPage.getProcedureGenerator().getNamespaceURI()); 
+			responseInfo.addNamespace(ResponseInfo.DEFAULT_NS, this.responseSchemaTreeModel.getDefaultNamespace());
 			getParentXpath(node, parentXpath, this.responseSchemaTreeModel);
-			if (this.responseSchemaTreeModel.getRootPath()==null || this.responseSchemaTreeModel.getRootPath().isEmpty()){
-				this.responseSchemaTreeModel.setRootPath(this.responseSchemaTreeModel.determineRootPath());
-			}
 			 
 			for (SchemaObject schemaObject : elements) {
 				if (schemaObject.getName().equals(name)) {
@@ -502,20 +514,26 @@ public class ImportWsdlSchemaHandler {
 					if (namespace != null) {
 						responseInfo.addNamespace(prefix, namespace);
 					}
-					if (importManager.isMessageServiceMode()) {
-						operationsDetailsPage.responseBodyColumnsInfoPanel.getRootPathText().setText(ResponseInfo.SOAPENVELOPE_ROOTPATH);
-					} else {
-						operationsDetailsPage.responseBodyColumnsInfoPanel.getRootPathText().setText(this.responseSchemaTreeModel.getRootPath());
-					}
-
 					// TODO: Make sure Root Path is set in the
 					// responseElementsInfoPanel on Refresh
 					// operationsDetailsPage.responseElementsInfoPanel.getRootPathText().setText(parentXpath.toString());
 					break;
 				}
 			}
+						
 			//Set namespace map on schemaTreeModel. This will be used for determining ns alias names to use for the root path and column paths 
 			this.responseSchemaTreeModel.setNamespaceMap(responseInfo.getNamespaceMap());
+			
+			if (this.responseSchemaTreeModel.getRootPath()==null || this.responseSchemaTreeModel.getRootPath().isEmpty()){
+				this.responseSchemaTreeModel.setRootPath(this.responseSchemaTreeModel.determineRootPath());
+			}
+			
+			if (importManager.isMessageServiceMode()) {
+				operationsDetailsPage.responseBodyColumnsInfoPanel.getRootPathText().setText(ResponseInfo.SOAPENVELOPE_ROOTPATH);
+			} else {
+				operationsDetailsPage.responseBodyColumnsInfoPanel.getRootPathText().setText(this.responseSchemaTreeModel.getRootPath());
+			}
+			
 			responseInfo.setRootPath(this.responseSchemaTreeModel.getRootPath());
 			getRelativeXpath(node, xpath, this.responseSchemaTreeModel);
 			
@@ -542,12 +560,6 @@ public class ImportWsdlSchemaHandler {
 					theType = runtimeTypeName;
 				}
 				
-//				if( theType.equalsIgnoreCase("integer") ) { //$NON-NLS-1$
-//					theType = "biginteger"; //$NON-NLS-1$
-//				} else if( theType.equalsIgnoreCase("decimal") ) { //$NON-NLS-1$
-//					theType = "bigdecimal"; //$NON-NLS-1$
-//				}
-				String columnName = pathPrefix + xpath.toString();
 				responseInfo.addBodyColumn(
 						responseInfo.getUniqueBodyColumnName(name), false,
 						theType, null, pathPrefix
@@ -628,13 +640,6 @@ public class ImportWsdlSchemaHandler {
 				dTypeString = runtimeTypeName;
 			}
 			
-			
-//			if( dTypeString.equalsIgnoreCase("integer") ) { //$NON-NLS-1$
-//				dTypeString = "biginteger"; //$NON-NLS-1$
-//			} else if( dTypeString.equalsIgnoreCase("decimal") ) { //$NON-NLS-1$
-//				dTypeString = "bigdecimal"; //$NON-NLS-1$
-//			}
-			
 			StringBuilder xpath = new StringBuilder();
 			String namespace = null;
 			String prefix = null;
@@ -699,7 +704,7 @@ public class ImportWsdlSchemaHandler {
 			operationsDetailsPage.notifyColumnDataChanged();
 			return null;
 		}
-
+		
 		return operationsDetailsPage.getSchemaLabelProvider().getText(obj);
 	}
 	
