@@ -12,7 +12,7 @@
 	
 	<section id="create-model-objects-section">
 		<title>Creating New Model Objects</title>
-		<para>As discussed in the introduction, <xref linkend="metadata-models" /> provide
+		<para>As discussed in the introduction, <xref linkend="what-is-modeler" />, Teiid Designer provides
 			a framework to model various types of metadata.
 			Each metamodel type has a set of parent-child relationships that establish constraints on what can be created and where.
 			You cannot, for example, create a column attribute in a stored procedure, nor can you create a mapping 
@@ -421,9 +421,8 @@
 		</para>		
 		<para> These actions are presented in Teiid Designer's main <emphasis role="bold">Edit</emphasis> menu and also
 			in the right-click context menus for model objects selected in the
-			<emphasis role="bold"><xref linkend="model-explorer-view" /></emphasis>, 
-			<emphasis role="bold"><xref linkend="diagram-editor-section" /></emphasis> and 
-			<emphasis role="bold"><xref linkend="table-editor-section" /></emphasis>.</para>
+			<xref linkend="model-explorer-view" />, <xref linkend="diagram-editor-section" /> and 
+			<xref linkend="table-editor-section" />.</para>
 
 		<!-- ####### MODELING SUB-MENU ######################################### -->
 		<formalpara id="modeling-sub-menu-section">
@@ -452,32 +451,31 @@
 			</figure>
 		
 		<para>Teiid Designer also provides specialized object editors to handle
-			complex model objects and their unique properties. These objects
-			include:</para>
+			complex model objects and their unique properties. These editors include:</para>
 		<itemizedlist>
 			<listitem>
 				<para>
-					<emphasis role="bold"><xref linkend="transformation-editor-section" /></emphasis>
+					<xref linkend="transformation-editor-section" />
 				</para>
 			</listitem>
 			<listitem>
 				<para>
-					<emphasis role="bold"><xref linkend="input-set-editor-section" /></emphasis>
+					<xref linkend="input-set-editor-section" />
 				</para>
 			</listitem>
 			<listitem>
 				<para>
-					<emphasis role="bold"><xref linkend="choice-editor-section" /></emphasis>
+					<xref linkend="choice-editor-section" />
 				</para>
 			</listitem>
 			<listitem>
 				<para>
-					<emphasis role="bold"><xref linkend="recursion-editor-section" /></emphasis>
+					<xref linkend="recursion-editor-section" />
 				</para>
 			</listitem>
 			<listitem>
 				<para>
-					<emphasis role="bold"><xref linkend="operation-editor-section" /></emphasis>
+					<xref linkend="operation-editor-section" />
 				</para>
 			</listitem>
 		</itemizedlist>
@@ -1633,7 +1631,7 @@
 				transformation query as recursive, and specify the recursion limit
 				properties.</para>
 			<section>
-				<title>The Editor</title>
+				<title>The Recursion Editor</title>
 				<para>The Recursion Editor lets you enable and limit recursion. The Recursion Editor button only displays on 
 				mapping classes, which have recursive patterns. For example, if you have an element named Employee which 
 				contains a element named Supervisor which itself contains an Employee element nested within it, you might need to

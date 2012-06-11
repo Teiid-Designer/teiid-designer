@@ -494,9 +494,11 @@
 				<imagedata fileref="images/screencaps/sample-model-file.png"/>
 			</imageobject></mediaobject>
 		  </figure>
+		  <note>
 		  <para> Model files should never be modified "by hand". While it is
 			possible to do so, there is the possibility that you may corrupt the
 			file such that it cannot be used within the Teiid Designer system.</para>
+		  </note>
 		  <para> The fundamental models in Teiid Designer define the structural and
 			data characteristics of the information contained in data sources.
 			These are referred to as source models (represented by <inlinemediaobject>
@@ -617,8 +619,8 @@
         <section id="models-and-vdbs">
     		<title>Models and VDBs</title>
 
-    		<para>Models used for data integration are packaged into a virtual
-	   		  database (VDB). The models must be in a complete and consistent state
+    		<para>Models used for data integration are packaged into a <emphasis role="bold">Virtual
+	   		  Database (VDB)</emphasis>. The models must be in a complete and consistent state
 			  when used for data integration. That is, the VDB must contain all the
 			  models and all resources they depend upon. VDB's are the transport mechanism to expose
 			  both the metadata to query against on a server and the corresponding references to the data sources
@@ -628,8 +630,8 @@
 		    <para><emphasis role="bold">Models and Connection Profiles</emphasis></para>
 
 
-		    <para>A connection profile  provides the connectivity to a data source and is 
-			  defined by the DTP framework. Designer utilizes this framework from within
+		    <para>A <emphasis role="bold">connection profile</emphasis>  provides the connectivity to a data source and is 
+			  defined by the Eclipse <emphasis role="bold">Data Tools Project (DTP)</emphasis> framework. Designer utilizes this framework from within
 			  it's JDBC Importer.
 		    </para>
         </section>			
@@ -645,7 +647,7 @@
 		  <para>Models must always be validated when they are deployed in a VDB for data 
 			access purposes.</para>
 		  <para>Teiid Designer will automatically validate your models 
-			whenever the user Saves ( Note: the "Models > Validate Automatically" option 
+			whenever the user Saves ( Note: the "Project > Build Automatically" menu option 
 			must be checked). When editing models, the editor tabs will display a "*" 
 			to indicate that the model has unsaved changes.
 		  </para>

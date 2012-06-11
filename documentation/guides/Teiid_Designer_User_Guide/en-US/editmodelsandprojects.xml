@@ -216,17 +216,10 @@
 								project in the <xref linkend="model-explorer-view" />.</para>
 						</listitem>
 						<listitem>
-							<para><emphasis role="bold">Step 2 </emphasis> - Right-click select the 
-								<emphasis role="bold">Clone Project</emphasis> action or select the <emphasis role="bold">Project > Clone Project</emphasis> 
-								action located in the Teiid Designer’s main menu bar. </para>
-							<figure>
-								<title>Clone Project In Context Menu</title>
-								<mediaobject>
-									<imageobject>
-										<imagedata fileref="images/screencaps/clone-project-action.png" />
-									</imageobject>
-								</mediaobject>
-							</figure>
+							<para><emphasis role="bold">Step 2 </emphasis> - Right-click, then select 
+								<emphasis role="bold">Model Project > Clone</emphasis> in the context menu.  Otherwise you can 
+								select the <emphasis role="bold">Project > Clone Project</emphasis> 
+								action, located in the Teiid Designer’s main menu bar. </para>
 							<figure>
 								<title>Clone Project In Project Menu</title>
 								<mediaobject>
