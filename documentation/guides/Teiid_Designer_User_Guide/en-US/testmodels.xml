@@ -151,7 +151,7 @@
 		
 		<!-- ####### PREVIEW DATA - RELATIONAL TABLE OR VIEW ######################################### -->
 		
-		<section>
+		<section id="preview-reltable-view-section">
 			<title>Preview Relational Table or View</title>
 			<para></para>
 			<itemizedlist>
@@ -188,7 +188,7 @@
 		
 		<!-- ####### PREVIEW DATA - RELATIONAL TABLE OR VIEW WITH ACCESS PATTERNS ######################################### -->
 		
-		<section>
+		<section id="preview-reltable-waccess-section">
 			<title>Preview Relational Table With Access Pattern</title>
 			<itemizedlist>
 				<listitem>
@@ -238,7 +238,7 @@
 		
 		<!-- ####### PREVIEW DATA - RELATIONAL PROCEDURE ######################################### -->
 		
-		<section>
+		<section id="preview-rel-procedure-section">
 			<title>Preview Relational Procedure</title>
 			<para></para>
 			<itemizedlist>
@@ -289,7 +289,7 @@
 		
 		<!-- ####### PREVIEW DATA - WEB SERVICE OPERATION ######################################### -->
 		
-		<section>
+		<section id="preview-ws-operation-section">
 			<title>Preview Web Service Operation</title>
 			<para></para>
 			<itemizedlist>

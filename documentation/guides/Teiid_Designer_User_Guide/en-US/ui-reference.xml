@@ -163,7 +163,7 @@
 				</listitem>
 			</itemizedlist>
 		</section>
-		<section>
+		<section id="further-information-section">
 		   <title>Further information</title>
 		   <para>For more details on perspectives, views and other Eclipse workbench details, see formal
 		      <ulink url="http://help.eclipse.org/ganymede/index.jsp">Eclipse Documentation</ulink>.</para>
