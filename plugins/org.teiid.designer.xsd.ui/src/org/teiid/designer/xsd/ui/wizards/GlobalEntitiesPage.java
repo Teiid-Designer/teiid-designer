@@ -290,7 +290,7 @@ public class GlobalEntitiesPage extends WizardPage implements InternalUiConstant
         }
         String fileName = getFileName();
         filePath = new Path(container).append(fileName);
-        if (ResourcesPlugin.getWorkspace().getRoot().exists(filePath)) {
+        if (ModelerCore.getWorkspace().getRoot().exists(filePath)) {
             currentStatus = STATUS_FILE_EXISTS;
             setMessage("File already exists. Input another valid name.", IMessageProvider.ERROR); //$NON-NLS-1$ 
             return;
@@ -393,7 +393,7 @@ public class GlobalEntitiesPage extends WizardPage implements InternalUiConstant
         String containerName = getContainerName();
 
         if (!CoreStringUtil.isEmpty(containerName)) {
-            IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+            IWorkspaceRoot root = ModelerCore.getWorkspace().getRoot();
             IResource resource = root.findMember(new Path(containerName));
 
             if (resource.exists()) {
@@ -409,7 +409,7 @@ public class GlobalEntitiesPage extends WizardPage implements InternalUiConstant
         String containerName = getContainerName();
 
         if (!CoreStringUtil.isEmpty(containerName)) {
-            IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+            IWorkspaceRoot root = ModelerCore.getWorkspace().getRoot();
             IResource resource = root.findMember(new Path(containerName));
 
             if (resource.exists()) {

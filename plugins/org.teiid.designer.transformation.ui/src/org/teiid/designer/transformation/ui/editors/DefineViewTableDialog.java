@@ -431,7 +431,7 @@ public class DefineViewTableDialog extends TitleAreaDialog implements
 		result.setMessage(message);
 		result.setAllowMultiple(false);
 
-		result.setInput(ResourcesPlugin.getWorkspace().getRoot());
+		result.setInput(ModelerCore.getWorkspace().getRoot());
 
 		result.setValidator(new ISelectionStatusValidator() {
 			public IStatus validate(Object[] selection) {
@@ -470,7 +470,7 @@ public class DefineViewTableDialog extends TitleAreaDialog implements
 		result.setMessage(message);
 		result.setAllowMultiple(false);
 
-		result.setInput(ResourcesPlugin.getWorkspace().getRoot());
+		result.setInput(ModelerCore.getWorkspace().getRoot());
 
 		result.setValidator(new ISelectionStatusValidator() {
 			public IStatus validate(Object[] selection) {

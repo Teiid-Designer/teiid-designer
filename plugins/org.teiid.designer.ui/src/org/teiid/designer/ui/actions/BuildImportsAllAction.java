@@ -56,7 +56,7 @@ public class BuildImportsAllAction extends ActionDelegate implements IWorkbenchW
     private Collection getModelResourceList() {
 
         final ModelResourceCollectorVisitor visitor = new ModelResourceCollectorVisitor();
-        final IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
+        final IProject[] projects = ModelerCore.getWorkspace().getRoot().getProjects();
 
         for (int i = 0; i < projects.length; ++i) {
             if (projects[i].isOpen() && ModelerCore.hasModelNature(projects[i])) {

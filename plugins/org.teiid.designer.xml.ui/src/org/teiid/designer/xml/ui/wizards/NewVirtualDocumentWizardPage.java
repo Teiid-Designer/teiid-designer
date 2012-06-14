@@ -641,7 +641,7 @@ class NewVirtualDocumentWizardPanel extends ScrolledComposite implements Modeler
             IResource resource = (IResource)populator.getItem();
             IEclipsePreferences currentPrefs = ModelerCore.getPreferences(ModelerCore.PLUGIN_ID);
 
-            if (ResourcesPlugin.getWorkspace().isAutoBuilding()
+            if (ModelerCore.getWorkspace().isAutoBuilding()
                 && currentPrefs.get(ValidationPreferences.XSD_MODEL_VALIDATION, "").equals(ValidationDescriptor.ERROR)) { //$NON-NLS-1$
                 // should have already been validated
                 if (errorMarkersExist(resource)) {
@@ -738,7 +738,7 @@ class NewVirtualDocumentWizardPanel extends ScrolledComposite implements Modeler
 
         ModelWorkspaceTreeProvider provider = new ModelWorkspaceTreeProvider();
         ElementTreeSelectionDialog dialog = new ElementTreeSelectionDialog(getShell(), provider, provider);
-        dialog.setInput(ResourcesPlugin.getWorkspace().getRoot());
+        dialog.setInput(ModelerCore.getWorkspace().getRoot());
         ViewerFilter filter = new ModelingResourceFilter(new SchemaFileViewerFilter());
         dialog.addFilter(filter);
         dialog.setAllowMultiple(false);

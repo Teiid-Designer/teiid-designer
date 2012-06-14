@@ -662,7 +662,7 @@ public class XsdTextEditorPage extends TextEditor implements ModelEditorPage, IS
             };
 
             try {
-                ResourcesPlugin.getWorkspace().run(operation, new NullProgressMonitor());
+                ModelerCore.getWorkspace().run(operation, new NullProgressMonitor());
                 // getSite().getWorkbenchWindow().run(false, false, operation);
             } catch (Exception exception) {
                 ModelerXsdUiConstants.Util.log(exception);

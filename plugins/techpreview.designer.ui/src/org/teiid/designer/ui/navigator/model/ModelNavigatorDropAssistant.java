@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -34,17 +33,17 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.navigator.CommonDropAdapter;
 import org.eclipse.ui.navigator.CommonDropAdapterAssistant;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.DotProjectUtils;
 import org.teiid.designer.ui.common.widget.ListMessageDialog;
-
 
 public class ModelNavigatorDropAssistant extends CommonDropAdapterAssistant {
 
     private void createExistingProject( String projectFolder ) {
         try {
-            final IProjectDescription description = ResourcesPlugin.getWorkspace().loadProjectDescription(new Path(projectFolder
+            final IProjectDescription description = ModelerCore.getWorkspace().loadProjectDescription(new Path(projectFolder
                                                                                                                   + "//.project")); //$NON-NLS-1$
-            final IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(description.getName());
+            final IProject project = ModelerCore.getWorkspace().getRoot().getProject(description.getName());
 
             // create the new project operation
             WorkspaceModifyOperation op = new WorkspaceModifyOperation() {

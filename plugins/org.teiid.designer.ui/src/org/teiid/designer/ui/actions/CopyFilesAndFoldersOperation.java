@@ -13,6 +13,7 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -20,7 +21,6 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IPath;
@@ -46,6 +46,7 @@ import org.eclipse.ui.dialogs.ContainerGenerator;
 import org.eclipse.ui.dialogs.IOverwriteQuery;
 import org.eclipse.ui.wizards.datatransfer.FileSystemStructureProvider;
 import org.eclipse.ui.wizards.datatransfer.ImportOperation;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.ui.UiConstants;
 
 /**
@@ -279,7 +280,7 @@ public class CopyFilesAndFoldersOperation implements UiConstants {
     private void collectExistingReadonlyFiles( IPath destinationPath,
                                                IResource[] copyResources,
                                                ArrayList existing ) {
-        IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
+        IWorkspaceRoot workspaceRoot = ModelerCore.getWorkspace().getRoot();
 
         for (int i = 0; i < copyResources.length; i++) {
             IResource source = copyResources[i];
@@ -382,7 +383,7 @@ public class CopyFilesAndFoldersOperation implements UiConstants {
         source.copy(destinationPath, IResource.SHALLOW, new SubProgressMonitor(subMonitor, 0));
 
         // Now that the copy has been done, find the file and remove some of the properties
-        IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
+        IWorkspaceRoot workspaceRoot = ModelerCore.getWorkspace().getRoot();
         IResource newDestination = workspaceRoot.findMember(destinationPath);
 
         newDestination.setPersistentProperty(VERSION_DECORATOR_NAME, null);
@@ -451,7 +452,7 @@ public class CopyFilesAndFoldersOperation implements UiConstants {
 
                 // Checks only required if this is an exisiting container path.
                 boolean copyWithAutoRename = false;
-                IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+                IWorkspaceRoot root = ModelerCore.getWorkspace().getRoot();
                 if (root.exists(destinationPath)) {
                     IContainer container = (IContainer)root.findMember(destinationPath);
                     // If we're copying to the source container then perform
@@ -531,7 +532,7 @@ public class CopyFilesAndFoldersOperation implements UiConstants {
             @Override
             public void execute( IProgressMonitor monitor ) {
                 // Checks only required if this is an exisiting container path.
-                IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+                IWorkspaceRoot root = ModelerCore.getWorkspace().getRoot();
                 if (root.exists(destinationPath)) {
                     IContainer container = (IContainer)root.findMember(destinationPath);
 
@@ -1088,7 +1089,7 @@ public class CopyFilesAndFoldersOperation implements UiConstants {
         collectExistingReadonlyFiles(destination.getFullPath(), sourceResources, copyFiles);
         if (copyFiles.size() > 0) {
             IFile[] files = (IFile[])copyFiles.toArray(new IFile[copyFiles.size()]);
-            IWorkspace workspace = ResourcesPlugin.getWorkspace();
+            IWorkspace workspace = ModelerCore.getWorkspace();
             IStatus status = workspace.validateEdit(files, parentShell);
 
             canceled = status.isOK() == false;

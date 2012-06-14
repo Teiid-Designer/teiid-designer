@@ -184,7 +184,7 @@ public class ModelBufferManager implements ModelBufferFactory {
                     return null;
                 }
 
-                final IWorkspaceRoot wsRoot = ResourcesPlugin.getWorkspace().getRoot();
+                final IWorkspaceRoot wsRoot = ModelerCore.getWorkspace().getRoot();
                 IFile resourceFile = wsRoot.getFileForLocation(path);
                 // See if the path is absolute with respect to the workspace
                 if ( resourceFile == null ) {

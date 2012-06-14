@@ -214,7 +214,7 @@ public final class VdbModelEntry extends VdbEntry {
     }
 
     private Resource findModel() {
-        IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(getName());
+        IResource resource = ModelerCore.getWorkspace().getRoot().findMember(getName());
 
         // model not found in workspace
         if (resource == null) {
@@ -544,7 +544,7 @@ public final class VdbModelEntry extends VdbEntry {
                 if (refs != null) {
                     for (final Resource importedModel : refs) {
                     	java.net.URI uri = java.net.URI.create(importedModel.getURI().toString());
-                        IFile[] modelFiles = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocationURI(uri);
+                        IFile[] modelFiles = ModelerCore.getWorkspace().getRoot().findFilesForLocationURI(uri);
                         final IPath name = modelFiles[0].getFullPath();
                         VdbModelEntry importedEntry = null;
 

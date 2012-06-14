@@ -122,7 +122,7 @@ public class ModelExplorerLabelProvider extends LabelProvider
                 }
             }
         };
-        ResourcesPlugin.getWorkspace().addResourceChangeListener(this.resrcChgListener);
+        ModelerCore.getWorkspace().addResourceChangeListener(this.resrcChgListener);
         diagramLabelProvider = new DiagramLabelProvider();
         extendedModelObjectLabelProvider = new ExtendedModelObjectLabelProvider();
     }
@@ -187,7 +187,7 @@ public class ModelExplorerLabelProvider extends LabelProvider
         if (debug) {
             System.err.println("ModelExplorerLabelProvider disposed: " + --instanceCounter + " instance(s) in memory."); //$NON-NLS-1$ //$NON-NLS-2$
         }
-        ResourcesPlugin.getWorkspace().removeResourceChangeListener(getResourceChangeListener());
+        ModelerCore.getWorkspace().removeResourceChangeListener(getResourceChangeListener());
     }
 
     /**

@@ -502,7 +502,7 @@ public class NewModelWizardMetamodelPage extends WizardPage
         }
         String fileName = getFileName();
         filePath = new Path(container).append(fileName);
-        if (ResourcesPlugin.getWorkspace().getRoot().exists(filePath)) {
+        if (ModelerCore.getWorkspace().getRoot().exists(filePath)) {
             currentStatus = STATUS_FILE_EXISTS;
             return false;
         }
@@ -596,7 +596,7 @@ public class NewModelWizardMetamodelPage extends WizardPage
         String containerName = getContainerName();
 
         if (!CoreStringUtil.isEmpty(containerName)) {
-            IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+            IWorkspaceRoot root = ModelerCore.getWorkspace().getRoot();
             IResource resource = root.findMember(new Path(containerName));
 
             if (resource.exists()) {
@@ -612,7 +612,7 @@ public class NewModelWizardMetamodelPage extends WizardPage
         String containerName = getContainerName();
 
         if (!CoreStringUtil.isEmpty(containerName)) {
-            IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+            IWorkspaceRoot root = ModelerCore.getWorkspace().getRoot();
             IResource resource = root.findMember(new Path(containerName));
 
             if (resource.exists()) {

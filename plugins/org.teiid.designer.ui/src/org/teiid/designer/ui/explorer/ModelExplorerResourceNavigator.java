@@ -20,7 +20,6 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
@@ -85,6 +84,7 @@ import org.eclipse.ui.views.properties.IPropertySheetPage;
 import org.teiid.core.event.EventObjectListener;
 import org.teiid.core.event.EventSourceException;
 import org.teiid.core.util.I18nUtil;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.DotProjectUtils;
 import org.teiid.designer.ui.PluginConstants;
 import org.teiid.designer.ui.UiConstants;
@@ -125,7 +125,6 @@ import org.teiid.designer.ui.viewsupport.ModelObjectUtilities;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
 import org.teiid.designer.ui.viewsupport.ModelWorkspaceViewerFilter;
 import org.teiid.designer.ui.viewsupport.StatusBarUpdater;
-
 
 /**
  * ModelExplorerResourceNavigator is the Navigator View for the MetaBase Modeler.
@@ -366,7 +365,7 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
                 }
             }
         };
-        ResourcesPlugin.getWorkspace().addResourceChangeListener(markerListener);
+        ModelerCore.getWorkspace().addResourceChangeListener(markerListener);
 
         addCustomListeners();
     }
@@ -491,7 +490,7 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
             ModelUtilities.removeNotifyChangedListener(notificationHandler);
         }
         if (markerListener != null) {
-            ResourcesPlugin.getWorkspace().removeResourceChangeListener(markerListener);
+            ModelerCore.getWorkspace().removeResourceChangeListener(markerListener);
         }
         if (modelResourceListener != null) {
             try {

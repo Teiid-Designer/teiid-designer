@@ -109,7 +109,7 @@ public class ImportVdbMainPage extends WizardDataTransferPage implements VdbUiCo
         return VdbUiConstants.Util.getString(I18N_PREFIX + SEPARATOR + id, object);
     }
 
-    private final String initialContainerFieldValue = ResourcesPlugin.getWorkspace().getRoot().getRawLocation().toString();
+    private final String initialContainerFieldValue = ModelerCore.getWorkspace().getRoot().getRawLocation().toString();
     // widgets
     Combo fileSystemSourceNameField;
     private Button fileSystemSourceBrowseButton;
@@ -688,7 +688,7 @@ public class ImportVdbMainPage extends WizardDataTransferPage implements VdbUiCo
     }
 
     IPath getDefaultFolder() {
-        return ResourcesPlugin.getWorkspace().getRoot().getRawLocation();
+        return ModelerCore.getWorkspace().getRoot().getRawLocation();
     }
 
     /**
@@ -738,7 +738,7 @@ public class ImportVdbMainPage extends WizardDataTransferPage implements VdbUiCo
      * @return the container resource specified in the container name entry field, or <code>null</code>
      */
     protected IContainer getSpecifiedContainer() {
-        final IWorkspace workspace = ResourcesPlugin.getWorkspace();
+        final IWorkspace workspace = ModelerCore.getWorkspace();
         final IPath path = getContainerFullPath();
         if (workspace.getRoot().exists(path)) return (IContainer)workspace.getRoot().findMember(path);
 
@@ -934,7 +934,7 @@ public class ImportVdbMainPage extends WizardDataTransferPage implements VdbUiCo
     }
 
     private boolean isClosedWorkspaceModelProjectFolder( final String projectName ) {
-        // IProject existingProject = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
+        // IProject existingProject = ModelerCore.getWorkspace().getRoot().getProject(projectName);
         final IProject[] projects = ModelerCore.getWorkspace().getRoot().getProjects();
         for (int i = 0; i < projects.length; i++)
             if (projects[i].getName().equals(projectName)) if (!projects[i].isOpen()) // System.out.println("ImportMPSMP.isWorkspaceProjectFolder() Selected Closed Project = "
@@ -950,7 +950,7 @@ public class ImportVdbMainPage extends WizardDataTransferPage implements VdbUiCo
     }
 
     private boolean isOpenWorkspaceModelProjectFolder( final String projectName ) {
-        final IProject existingProject = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
+        final IProject existingProject = ModelerCore.getWorkspace().getRoot().getProject(projectName);
         final IProject[] projects = ModelerCore.getWorkspace().getRoot().getProjects();
         for (final IProject project : projects)
             if (project.getName().equals(projectName)) if (project.isOpen()) if (ModelerCore.hasModelNature(existingProject)) return true;

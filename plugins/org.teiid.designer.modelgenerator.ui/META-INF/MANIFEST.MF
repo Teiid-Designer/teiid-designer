@@ -12,6 +12,7 @@ Require-Bundle: org.eclipse.core.resources,
  teiid_embedded_query,
  org.teiid.core.designer,
  org.eclipse.core.runtime,
- org.eclipse.emf.edit.ui
+ org.eclipse.emf.edit.ui,
+ org.teiid.designer.core
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

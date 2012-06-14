@@ -472,7 +472,7 @@ public class ModelWorkspaceSelections implements TreeSelection {
             final Iterator iter = paths.iterator();
             while (iter.hasNext()) {
                 final IPath path = (IPath)iter.next();
-                final IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(path);
+                final IResource resource = ModelerCore.getWorkspace().getRoot().findMember(path);
                 if ( resource != null ) {
                     // A ModelResource (or an object in a ModelResource) was specified by the path ..
                     if ( !result.contains(resource)) {

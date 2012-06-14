@@ -569,7 +569,7 @@ public final class Vdb {
                 out.close();
                 out = null;
                 // Replace archive in workspace with temporary archive
-                final File archiveFile = ResourcesPlugin.getWorkspace().getRoot().findMember(getName()).getLocation().toFile();
+                final File archiveFile = ModelerCore.getWorkspace().getRoot().findMember(getName()).getLocation().toFile();
                 if (!archiveFile.delete()) throw new RuntimeException(VdbPlugin.UTIL.getString("unableToDelete", archiveFile)); //$NON-NLS-1$
                 if (!tmpArchive.renameTo(archiveFile)) throw new RuntimeException(
                                                                                   VdbPlugin.UTIL.getString("unableToRename", tmpArchive, archiveFile)); //$NON-NLS-1$

@@ -233,7 +233,7 @@ public class NewModelWizard extends AbstractWizard
                    final IProgressMonitor monitor ) throws CoreException {
         // create a sample file
         monitor.beginTask(Util.getString("NewModelWizard.Creating__2") + fileName, 2); //$NON-NLS-1$
-        IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+        IWorkspaceRoot root = ModelerCore.getWorkspace().getRoot();
         IResource resource = root.findMember(new Path(containerName));
         if (!resource.exists() || !(resource instanceof IContainer)) {
             throwCoreException(Util.getString("NewModelWizard.Container___3") + containerName + Util.getString("NewModelWizard.__does_not_exist._4")); //$NON-NLS-1$ //$NON-NLS-2$

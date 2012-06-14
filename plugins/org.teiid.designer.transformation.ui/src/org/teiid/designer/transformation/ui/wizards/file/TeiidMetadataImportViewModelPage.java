@@ -272,7 +272,7 @@ public class TeiidMetadataImportViewModelPage extends AbstractWizardPage
 	 */
 	void handleViewModelLocationBrowse() {
 		final IContainer folder = WidgetUtil.showFolderSelectionDialog(
-				ResourcesPlugin.getWorkspace().getRoot(),
+				ModelerCore.getWorkspace().getRoot(),
 				new ModelingResourceFilter(),
 				new ModelProjectSelectionStatusValidator());
 
@@ -456,7 +456,7 @@ public class TeiidMetadataImportViewModelPage extends AbstractWizardPage
 		String containerName = getViewContainerName();
 
 		if (!CoreStringUtil.isEmpty(containerName)) {
-			IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+			IWorkspaceRoot root = ModelerCore.getWorkspace().getRoot();
 			IResource resource = root.findMember(new Path(containerName));
 
 			if (resource.exists()) {
@@ -602,7 +602,7 @@ public class TeiidMetadataImportViewModelPage extends AbstractWizardPage
 			modelPath = modelPath.addFileExtension(".xmi"); //$NON-NLS-1$
 		}
 
-    	IResource viewModel = ResourcesPlugin.getWorkspace().getRoot().getFile(modelPath);
+    	IResource viewModel = ModelerCore.getWorkspace().getRoot().getFile(modelPath);
     	ModelResource smr = ModelUtilities.getModelResourceForIFile((IFile)viewModel, false);
     	if( smr != null ) {
     		try {

@@ -7,7 +7,6 @@
  */
 package org.teiid.designer.vdb.ui.wizards;
 
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -19,11 +18,11 @@ import org.eclipse.ui.IImportWizard;
 import org.eclipse.ui.IWorkbench;
 import org.teiid.core.util.CoreStringUtil;
 import org.teiid.core.util.I18nUtil;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.ui.PluginConstants;
 import org.teiid.designer.ui.common.wizard.AbstractWizard;
 import org.teiid.designer.vdb.ui.VdbUiConstants;
 import org.teiid.designer.vdb.ui.VdbUiPlugin;
-
 
 /**
  * Wizard which allows importing existing VDB files into the user's workspace. The resulting workspace items will replicate the
@@ -98,7 +97,7 @@ public class ImportVdbWizard extends AbstractWizard
     }
 
     IPath getFolder() {
-        return ResourcesPlugin.getWorkspace().getRoot().getRawLocation();
+        return ModelerCore.getWorkspace().getRoot().getRawLocation();
     }
 
     /**

@@ -27,7 +27,6 @@ import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.IResourceDeltaVisitor;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourceAttributes;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -65,6 +64,7 @@ import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.ResourceChangeUtilities;
 import org.teiid.designer.extension.ExtensionConstants;
 import org.teiid.designer.extension.ExtensionPlugin;
@@ -81,7 +81,6 @@ import org.teiid.designer.extension.ui.UiConstants;
 import org.teiid.designer.extension.ui.actions.RegistryDeploymentValidator;
 import org.teiid.designer.extension.ui.actions.ShowModelExtensionRegistryViewAction;
 import org.teiid.designer.ui.forms.MessageFormDialog;
-
 
 /**
  * 
@@ -324,7 +323,7 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
 
         try {
             createMed();
-            ResourcesPlugin.getWorkspace().addResourceChangeListener(this);
+            ModelerCore.getWorkspace().addResourceChangeListener(this);
         } catch (Exception e) {
             throw new PartInitException(Messages.errorOpeningMedEditor, e);
         }
@@ -415,7 +414,7 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
             filePath = filePath.addFileExtension(ExtensionConstants.MED_EXTENSION);
         }
 
-        IWorkspace workspace = ResourcesPlugin.getWorkspace();
+        IWorkspace workspace = ModelerCore.getWorkspace();
         IFile file = workspace.getRoot().getFile(filePath);
 
         try {

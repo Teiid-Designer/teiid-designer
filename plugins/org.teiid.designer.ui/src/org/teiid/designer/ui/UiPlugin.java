@@ -302,7 +302,7 @@ public final class UiPlugin extends AbstractUiPlugin implements Debug, PluginCon
         ModelerUndoManager.getInstance();
 
         // Initialize the ModelEditorProjectListener
-        ResourcesPlugin.getWorkspace().addResourceChangeListener(projectListener);
+        ModelerCore.getWorkspace().addResourceChangeListener(projectListener);
 
         // Initialize the NotificationUtilities INotificationHandler to the modeler;
         NotificationUtilities.setNotificationHelper(new ModelerNotificationHelper());
@@ -446,7 +446,7 @@ public final class UiPlugin extends AbstractUiPlugin implements Debug, PluginCon
             getPreferenceStore().removePropertyChangeListener(this.tablePrefPropListener);
         }
         extractModelTableColumnUtilsToPreferenceStore();
-        ResourcesPlugin.getWorkspace().removeResourceChangeListener(projectListener);
+        ModelerCore.getWorkspace().removeResourceChangeListener(projectListener);
         super.stop(context);
     }
 

@@ -8,14 +8,13 @@
 package org.teiid.designer.compare.ui;
 
 import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.ui.IWorkbenchPage;
 import org.osgi.framework.BundleContext;
 import org.teiid.core.PluginUtil;
 import org.teiid.core.util.PluginUtilImpl;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.ui.common.AbstractUiPlugin;
 import org.teiid.designer.ui.common.actions.ActionService;
-
 
 /**
  * The main plugin class to be used in the desktop.
@@ -43,7 +42,7 @@ public class UiPlugin extends AbstractUiPlugin implements UiConstants{
      * Returns the workspace instance.
      */
     public static IWorkspace getWorkspace() {
-        return ResourcesPlugin.getWorkspace();
+        return ModelerCore.getWorkspace();
     }
 
     /** 

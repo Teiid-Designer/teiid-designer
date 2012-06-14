@@ -236,7 +236,7 @@ public class VdbResourceFinder {
      * @return the workspace
      */
     private IWorkspace getWorkspace() {
-        return ResourcesPlugin.getWorkspace();
+        return ModelerCore.getWorkspace();
     }
     
     

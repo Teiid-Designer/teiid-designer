@@ -8,10 +8,10 @@
 package org.teiid.designer.ui.explorer;
 
 import java.util.ArrayList;
+
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
@@ -26,10 +26,10 @@ import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.views.navigator.NavigatorDropAdapter;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.DotProjectUtils;
 import org.teiid.designer.ui.UiConstants;
 import org.teiid.designer.ui.common.widget.ListMessageDialog;
-
 
 /**
  * @author SDelap
@@ -123,8 +123,8 @@ public class ModelExplorerDropAdapter extends NavigatorDropAdapter {
 
     private void createExistingProject(String projectFolder) {
         try {
-            final IProjectDescription description = ResourcesPlugin.getWorkspace().loadProjectDescription(new Path(projectFolder + "//.project")); //$NON-NLS-1$
-            final IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(description.getName());
+            final IProjectDescription description = ModelerCore.getWorkspace().loadProjectDescription(new Path(projectFolder + "//.project")); //$NON-NLS-1$
+            final IProject project = ModelerCore.getWorkspace().getRoot().getProject(description.getName());
 
             // create the new project operation
             WorkspaceModifyOperation op = new WorkspaceModifyOperation() {

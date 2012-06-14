@@ -11,7 +11,6 @@ import java.util.Properties;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
@@ -35,6 +34,7 @@ import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.teiid.core.event.IChangeListener;
 import org.teiid.core.event.IChangeNotifier;
 import org.teiid.core.util.I18nUtil;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.viewsupport.ClosedProjectFilter;
@@ -45,7 +45,6 @@ import org.teiid.designer.ui.explorer.ModelExplorerLabelProvider;
 import org.teiid.designer.ui.viewsupport.DesignerProperties;
 import org.teiid.designer.ui.viewsupport.ModelWorkspaceDialog;
 import org.teiid.designer.ui.viewsupport.SingleProjectFilter;
-
 
 public class DeployVdbDialog extends TitleAreaDialog implements DqpUiConstants,
 		VdbConstants, IChangeListener {
@@ -273,7 +272,7 @@ public class DeployVdbDialog extends TitleAreaDialog implements DqpUiConstants,
 		result.setMessage(message);
 		result.setAllowMultiple(false);
 
-		result.setInput(ResourcesPlugin.getWorkspace().getRoot());
+		result.setInput(ModelerCore.getWorkspace().getRoot());
 
 		result.setValidator(new ISelectionStatusValidator() {
 			public IStatus validate(Object[] selection) {

@@ -13,12 +13,12 @@ import static org.teiid.designer.runtime.DqpPlugin.Util;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResourceRuleFactory;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.osgi.util.NLS;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.runtime.DebugConstants;
 import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.PreferenceConstants;
@@ -96,7 +96,7 @@ public abstract class WorkspacePreviewVdbJob extends WorkspaceJob implements Pre
      * @return the resource job scheduling rule factory
      */
     protected IResourceRuleFactory getSchedulingRuleFactory() {
-        return ResourcesPlugin.getWorkspace().getRuleFactory();
+        return ModelerCore.getWorkspace().getRuleFactory();
     }
 
     /**

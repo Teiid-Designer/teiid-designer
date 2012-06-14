@@ -705,7 +705,7 @@ public class GenerateXsdWizardOptionslPage extends WizardPage
         String containerName = getContainerName();
 
         if (!CoreStringUtil.isEmpty(containerName)) {
-            IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+            IWorkspaceRoot root = ModelerCore.getWorkspace().getRoot();
             IResource resource = root.findMember(new Path(containerName));
 
             if (resource.exists()) {

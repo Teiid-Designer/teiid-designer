@@ -109,7 +109,7 @@ public final class RelationshipSearchPage extends DialogPage implements ISearchP
         RelationshipType rt = (RelationshipType)ModelerCore.getModelContainer().getEObject(u, true);
         if (!RelationshipMetamodelPlugin.getBuiltInRelationshipTypeManager().isBuiltInRelationshipType(rt)) {
             // not built-in, need to determine if this URI exists in an open project:
-            IWorkspace ws = ResourcesPlugin.getWorkspace();
+            IWorkspace ws = ModelerCore.getWorkspace();
             IFile f = ws.getRoot().getFile(new Path(u.path()));
             if (!f.exists() || !f.isAccessible()) {
                 // no, so we don't want to load this type:

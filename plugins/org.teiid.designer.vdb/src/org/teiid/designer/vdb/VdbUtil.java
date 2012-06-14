@@ -13,18 +13,20 @@ import java.util.Collection;
 import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+
 import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.teiid.core.designer.util.OperationUtil;
 import org.teiid.core.designer.util.OperationUtil.Unreliable;
 import org.teiid.core.util.CoreArgCheck;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.vdb.Vdb.Xml;
 import org.teiid.designer.vdb.manifest.ModelElement;
@@ -59,7 +61,7 @@ public class VdbUtil {
 
         for (VdbModelEntry modelEntry : theVdb.getModelEntries()) {
             // IPath modelPath = modelEntry.getName();
-            IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(modelEntry.getName());
+            IResource resource = ModelerCore.getWorkspace().getRoot().findMember(modelEntry.getName());
 
             // if resource has been moved in the workspace since being added to the VDB then it will not be found
             if ((resource != null) && resource.exists()) {

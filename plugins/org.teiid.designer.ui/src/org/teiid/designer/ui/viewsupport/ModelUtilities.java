@@ -446,7 +446,7 @@ public abstract class ModelUtilities implements UiConstants {
             return false;
         }
         boolean result = false;
-        IWorkspace workspace = ResourcesPlugin.getWorkspace();
+        IWorkspace workspace = ModelerCore.getWorkspace();
         IProject[] projects = workspace.getRoot().getProjects();
 
         if ((projects != null) && (projects.length > 0)) {

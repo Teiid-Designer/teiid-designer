@@ -45,7 +45,7 @@ public class ModelMarkerManager implements IResourceChangeListener {
     public ModelMarkerManager() {
         super();
         if (ResourcesPlugin.getPlugin() != null) {
-            ResourcesPlugin.getWorkspace().addResourceChangeListener(this);
+            ModelerCore.getWorkspace().addResourceChangeListener(this);
         }
     }
     
@@ -273,7 +273,7 @@ public class ModelMarkerManager implements IResourceChangeListener {
      * @since 5.0
      */
     public void dispose() {
-        ResourcesPlugin.getWorkspace().removeResourceChangeListener(this);
+        ModelerCore.getWorkspace().removeResourceChangeListener(this);
         this.resourceMap.clear();
     }
 }

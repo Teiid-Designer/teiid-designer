@@ -9,8 +9,8 @@ package org.teiid.designer.ui.viewsupport;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
@@ -39,12 +39,12 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.ui.UiConstants;
 import org.teiid.designer.ui.explorer.ModelExplorerContentProvider;
 import org.teiid.designer.ui.explorer.ModelExplorerLabelProvider;
 import org.teiid.designer.ui.search.IFinderHostDialog;
 import org.teiid.designer.ui.search.IFinderPanel;
-
 
 /**
  * ModelWorkspacePanel is a panel that displays the workspace tree and allows selection
@@ -125,7 +125,7 @@ public class ModelWorkspacePanel extends Composite implements IFinderPanel, ISel
             setInput(root);
         } else {
             // use default root
-            setInput(ResourcesPlugin.getWorkspace().getRoot());
+            setInput(ModelerCore.getWorkspace().getRoot());
         }
 
         createControl(this);

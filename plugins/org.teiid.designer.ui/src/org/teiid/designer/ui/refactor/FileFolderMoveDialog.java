@@ -10,17 +10,16 @@ package org.teiid.designer.ui.refactor;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.refactor.ResourceMoveCommand;
 import org.teiid.designer.ui.UiConstants;
 import org.teiid.designer.ui.explorer.ModelExplorerContentProvider;
 import org.teiid.designer.ui.explorer.ModelExplorerLabelProvider;
 import org.teiid.designer.ui.viewsupport.ModelingResourceFilter;
-
 
 /**
  * FileFolderMoveDialog is a dialog that displays the workspace tree and allows selection
@@ -130,7 +129,7 @@ public class FileFolderMoveDialog extends ElementTreeSelectionDialog {
             setInput( root );
         } else {
             // use default root
-            setInput( ResourcesPlugin.getWorkspace().getRoot() );
+            setInput( ModelerCore.getWorkspace().getRoot() );
         }
 
         setAllowMultiple( false );
@@ -149,7 +148,7 @@ public class FileFolderMoveDialog extends ElementTreeSelectionDialog {
 
         IProject firstProject = null;
         IProject projectToSelect = null;
-        Object[] oChildren = cpContentProvider.getChildren( ResourcesPlugin.getWorkspace().getRoot() );
+        Object[] oChildren = cpContentProvider.getChildren( ModelerCore.getWorkspace().getRoot() );
 
         for ( int i = 0; i < oChildren.length; i++ ) {
             if( oChildren[ i ] instanceof IProject ) {

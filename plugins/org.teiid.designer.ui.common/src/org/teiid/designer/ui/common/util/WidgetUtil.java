@@ -17,9 +17,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.WrappedException;
@@ -71,11 +71,11 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.teiid.core.util.CoreArgCheck;
 import org.teiid.core.util.CoreStringUtil;
 import org.teiid.core.util.I18nUtil;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.ui.common.InternalUiConstants;
 import org.teiid.designer.ui.common.UiConstants;
 import org.teiid.designer.ui.common.widget.ITreeViewerController;
-
 
 /**
  * @since 4.0
@@ -1202,7 +1202,7 @@ public final class WidgetUtil implements
         if (validator != null) {
             dlg.setValidator(validator);
         }
-        dlg.setInput(ResourcesPlugin.getWorkspace().getRoot());
+        dlg.setInput(ModelerCore.getWorkspace().getRoot());
         if (selection != null) {
             dlg.setInitialSelection(selection);
         }
@@ -1249,7 +1249,7 @@ public final class WidgetUtil implements
         if (validator != null) {
             dlg.setValidator(validator);
         }
-        dlg.setInput(ResourcesPlugin.getWorkspace().getRoot());
+        dlg.setInput(ModelerCore.getWorkspace().getRoot());
         if (selection != null) {
             dlg.setInitialSelection(selection);
         }

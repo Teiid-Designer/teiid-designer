@@ -9,7 +9,6 @@ package org.teiid.designer.ui.viewsupport;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -26,10 +25,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.ui.UiConstants;
 import org.teiid.designer.ui.explorer.ModelExplorerContentProvider;
 import org.teiid.designer.ui.explorer.ModelExplorerLabelProvider;
-
 
 /**
  * ModelWorkspaceDialog is a dialog that displays the workspace tree and allows selection
@@ -102,7 +101,7 @@ public class ModelWorkspaceDialog extends ElementTreeSelectionDialog implements 
             setInput(root);
         } else {
             // use default root
-            setInput(ResourcesPlugin.getWorkspace().getRoot());
+            setInput(ModelerCore.getWorkspace().getRoot());
         }
 
     }

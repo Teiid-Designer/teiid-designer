@@ -565,7 +565,7 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage
     private boolean validatePage() {
         // Check for at least ONE open non-hidden Model Project
         boolean validProj = false;
-        for (IProject proj : ResourcesPlugin.getWorkspace().getRoot().getProjects()) {
+        for (IProject proj : ModelerCore.getWorkspace().getRoot().getProjects()) {
             try {
                 boolean result = proj.isOpen() && !proj.hasNature(ModelerCore.HIDDEN_PROJECT_NATURE_ID)
                                  && proj.hasNature(ModelerCore.NATURE_ID);

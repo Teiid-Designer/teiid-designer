@@ -8,18 +8,17 @@
 package org.teiid.designer.relationship.ui;
 
 import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPage;
 import org.osgi.framework.BundleContext;
 import org.teiid.core.PluginUtil;
 import org.teiid.core.util.PluginUtilImpl;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.diagram.ui.DiagramUiPlugin;
 import org.teiid.designer.ui.common.AbstractUiPlugin;
 import org.teiid.designer.ui.common.PreferenceKeyAndDefaultValue;
 import org.teiid.designer.ui.common.actions.ActionService;
-
 
 /**
  * The main plugin class to be used in the desktop.
@@ -48,7 +47,7 @@ public class UiPlugin extends AbstractUiPlugin implements UiConstants {
 	 * Returns the workspace instance.
 	 */
 	public static IWorkspace getWorkspace() {
-		return ResourcesPlugin.getWorkspace();
+		return ModelerCore.getWorkspace();
 	} 
 	
 	private void init() {

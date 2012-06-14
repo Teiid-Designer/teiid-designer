@@ -21,7 +21,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
-import org.eclipse.core.resources.ResourcesPlugin;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
@@ -44,6 +44,7 @@ import org.eclipse.xsd.XSDSchema;
 import org.teiid.core.TeiidException;
 import org.teiid.designer.common.xsd.XsdHeader;
 import org.teiid.designer.common.xsd.XsdHeaderReader;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.util.URLHelper;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
@@ -52,7 +53,6 @@ import org.teiid.designer.ui.common.viewsupport.JobUtils;
 import org.teiid.designer.ui.common.widget.ListMessageDialog;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
 import org.teiid.designer.xsd.ui.ModelerXsdUiConstants;
-
 
 /**
  * @since 5.5
@@ -434,7 +434,7 @@ public class XsdFileSystemImportUtil {
         operation.setContext(container.getShell());
 
         // Let's cache the auto-build and reset after.
-        boolean autoBuildOn = ResourcesPlugin.getWorkspace().isAutoBuilding();
+        boolean autoBuildOn = ModelerCore.getWorkspace().isAutoBuilding();
         if (autoBuildOn) {
             JobUtils.setAutoBuild(false);
         }

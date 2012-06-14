@@ -472,7 +472,7 @@ public class DiagramEditor extends GraphicalEditor
         }
 
         DiagramUiPlugin.getDefault().getWorkbench().getDecoratorManager().getLabelDecorator().removeListener(this);
-        ResourcesPlugin.getWorkspace().removeResourceChangeListener(markerListener);
+        ModelerCore.getWorkspace().removeResourceChangeListener(markerListener);
         ((AbstractActionService)DiagramUiPlugin.getDefault().getActionService(getEditorSite().getPage())).removePartListener(this);
         if (toolBarManager != null) {
             // System.out.println("  -->>  DE.dispose() calling toolBarManager.dispose() TBM = NULL");
@@ -909,7 +909,7 @@ public class DiagramEditor extends GraphicalEditor
                 }
             }
         };
-        ResourcesPlugin.getWorkspace().addResourceChangeListener(markerListener);
+        ModelerCore.getWorkspace().addResourceChangeListener(markerListener);
         ((AbstractActionService)DiagramUiPlugin.getDefault().getActionService(iSite.getPage())).addPartListener(this);
 
     }

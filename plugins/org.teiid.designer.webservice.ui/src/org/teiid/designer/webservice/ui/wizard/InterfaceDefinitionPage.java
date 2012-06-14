@@ -445,7 +445,7 @@ public class InterfaceDefinitionPage extends WizardPage
     void selectModelButtonClicked() {
         ModelWorkspaceTreeProvider provider = new ModelWorkspaceTreeProvider();
         ElementTreeSelectionDialog dialog = new ElementTreeSelectionDialog(getShell(), provider, provider);
-        dialog.setInput(ResourcesPlugin.getWorkspace().getRoot());
+        dialog.setInput(ModelerCore.getWorkspace().getRoot());
         dialog.setAllowMultiple(false);
         // Must select a Relationship Model
         MetamodelDescriptor descriptor = WebServiceUtil.getWebServiceModelDescriptor();
@@ -1049,7 +1049,7 @@ public class InterfaceDefinitionPage extends WizardPage
         }
 
         if (containerName != null && !CoreStringUtil.isEmpty(containerName)) {
-            IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+            IWorkspaceRoot root = ModelerCore.getWorkspace().getRoot();
             IResource resource = root.findMember(new Path(containerName));
 
             if (resource.exists()) {

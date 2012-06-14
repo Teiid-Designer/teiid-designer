@@ -8,10 +8,10 @@
 package org.teiid.designer.webservice;
 
 import java.util.Iterator;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
@@ -21,8 +21,7 @@ import org.eclipse.xsd.XSDDiagnosticSeverity;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.impl.XSDDiagnosticImpl;
 import org.teiid.core.util.CoreArgCheck;
-
-
+import org.teiid.designer.core.ModelerCore;
 
 /** 
  * @since 4.2
@@ -190,7 +189,7 @@ public class WebServiceXsdResource implements IWebServiceXsdResource, IInternalW
         }
         
         // See if an IResource already exists at that location ...
-        IResource existing = ResourcesPlugin.getWorkspace().getRoot().findMember(destPath, false);
+        IResource existing = ModelerCore.getWorkspace().getRoot().findMember(destPath, false);
         if ( existing != null && existing.exists() ) {
             if ( existing instanceof IFolder ) {
                 final Object[] params = new Object[] {destPath.toString()};

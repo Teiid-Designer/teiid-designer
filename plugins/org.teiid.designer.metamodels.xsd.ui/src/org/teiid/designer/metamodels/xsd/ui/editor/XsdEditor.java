@@ -1219,7 +1219,7 @@ public class XsdEditor extends MultiPageEditorPart
             };
 
             try {
-                ResourcesPlugin.getWorkspace().run(operation, new NullProgressMonitor());
+                ModelerCore.getWorkspace().run(operation, new NullProgressMonitor());
                 // getSite().getWorkbenchWindow().run(false, false, operation);
             } catch (Exception exception) {
                 XsdUiPlugin.Util.log(exception);
@@ -1772,7 +1772,7 @@ public class XsdEditor extends MultiPageEditorPart
         saveAsDialog.open();
         IPath path = saveAsDialog.getResult();
         if (path != null) {
-            IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
+            IFile file = ModelerCore.getWorkspace().getRoot().getFile(path);
             if (file != null) {
                 if (!file.exists()
                     || MessageDialog.openQuestion(getSite().getShell(), XsdUiPlugin.Util.getString("_UI_FileExists_title"), //$NON-NLS-1$

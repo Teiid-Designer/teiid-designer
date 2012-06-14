@@ -100,7 +100,7 @@ public class MoveRefactorAction extends RefactorAction {
             rmcCommand.setDestination(this.dest);
             
             // Let's cache the auto-build and reset after.  We don't want auto-building before the refactoring is complete
-            boolean autoBuildOn = ResourcesPlugin.getWorkspace().isAutoBuilding();
+            boolean autoBuildOn = ModelerCore.getWorkspace().isAutoBuilding();
             if( autoBuildOn ) {
                 JobUtils.setAutoBuild(false);
             }

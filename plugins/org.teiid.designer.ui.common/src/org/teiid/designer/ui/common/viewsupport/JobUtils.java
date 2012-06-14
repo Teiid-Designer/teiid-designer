@@ -9,6 +9,7 @@ package org.teiid.designer.ui.common.viewsupport;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceDescription;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -16,6 +17,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.jobs.IJobManager;
 import org.eclipse.core.runtime.jobs.Job;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.ui.common.UiConstants;
 
 /**
@@ -100,7 +102,7 @@ public class JobUtils {
      * @return true if changed state, false if not
      */
     public static boolean setAutoBuild( final boolean doBuild ) {
-        final IWorkspace workspace = ResourcesPlugin.getWorkspace();
+        final IWorkspace workspace = ModelerCore.getWorkspace();
         if (workspace.isAutoBuilding() == doBuild) {
             // Did not change autobuild value
             return false;

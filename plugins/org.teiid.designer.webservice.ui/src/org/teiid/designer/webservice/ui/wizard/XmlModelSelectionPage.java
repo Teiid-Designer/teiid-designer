@@ -10,9 +10,9 @@ package org.teiid.designer.webservice.ui.wizard;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
@@ -32,6 +32,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.teiid.core.util.FileUtils;
 import org.teiid.core.util.I18nUtil;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.ui.common.InternalUiConstants;
 import org.teiid.designer.ui.common.product.ProductCustomizerMgr;
@@ -46,7 +47,6 @@ import org.teiid.designer.ui.viewsupport.ModelWorkspaceViewerFilter;
 import org.teiid.designer.webservice.IWebServiceModelBuilder;
 import org.teiid.designer.webservice.ui.IInternalUiConstants;
 import org.teiid.designer.webservice.ui.util.WebServiceUiUtil;
-
 
 /**
  * @since 4.2
@@ -336,7 +336,7 @@ public class XmlModelSelectionPage extends AbstractWizardPage
 
                 for (int i = 0; i < temp.length; i++) {
                     // only add if folder exists in workspace
-                    if (ResourcesPlugin.getWorkspace().getRoot().findMember(temp[i]) != null) {
+                    if (ModelerCore.getWorkspace().getRoot().findMember(temp[i]) != null) {
                         folders.add(temp[i]);
                     }
                 }
@@ -482,7 +482,7 @@ public class XmlModelSelectionPage extends AbstractWizardPage
                 // see if model exists or would be a new model
                 String temp = null;
                 IPath containerPath = new Path(this.modelLocation);
-                IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(containerPath);
+                IResource resource = ModelerCore.getWorkspace().getRoot().findMember(containerPath);
 
                 if (resource != null) {
                     IPath path = resource.getLocation();

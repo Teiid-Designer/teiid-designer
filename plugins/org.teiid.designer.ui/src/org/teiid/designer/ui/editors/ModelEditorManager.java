@@ -568,7 +568,7 @@ abstract public class ModelEditorManager {
                         // if the editor is null, all we can do is lookup the resource via the tooltip path
                         String pathString = editorRefs[i].getTitleToolTip();
                         IPath path = new Path(pathString);
-                        IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(path);
+                        IResource resource = ModelerCore.getWorkspace().getRoot().findMember(path);
                         if (resource instanceof IFile) {
                             result.add(resource);
                         }

@@ -28,7 +28,6 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.edit.provider.INotifyChangedListener;
@@ -69,14 +68,16 @@ import org.eclipse.ui.navigator.ICommonViewerSite;
 import org.eclipse.ui.navigator.ICommonViewerWorkbenchSite;
 import org.teiid.core.event.EventObjectListener;
 import org.teiid.core.event.EventSourceException;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.DotProjectUtils;
 import org.teiid.designer.ui.PluginConstants;
-import org.teiid.designer.ui.UiPlugin;
 import org.teiid.designer.ui.UiConstants.Extensions;
+import org.teiid.designer.ui.UiPlugin;
 import org.teiid.designer.ui.actions.CloneProjectAction2;
 import org.teiid.designer.ui.actions.DelegatableAction;
 import org.teiid.designer.ui.actions.DeleteResourceAction;
 import org.teiid.designer.ui.actions.IModelerActionConstants;
+import org.teiid.designer.ui.actions.IModelerActionConstants.ContextMenu;
 import org.teiid.designer.ui.actions.ModelResourceActionManager;
 import org.teiid.designer.ui.actions.ModelerActionBarIdManager;
 import org.teiid.designer.ui.actions.ModelerActionService;
@@ -86,7 +87,6 @@ import org.teiid.designer.ui.actions.PasteInResourceAction;
 import org.teiid.designer.ui.actions.PasteSpecialAction;
 import org.teiid.designer.ui.actions.PropertyDialogAction;
 import org.teiid.designer.ui.actions.RemoveProjectAction;
-import org.teiid.designer.ui.actions.IModelerActionConstants.ContextMenu;
 import org.teiid.designer.ui.common.actions.ActionService;
 import org.teiid.designer.ui.common.actions.GlobalActionsMap;
 import org.teiid.designer.ui.common.actions.IActionConstants.EclipseGlobalActions;
@@ -98,7 +98,6 @@ import org.teiid.designer.ui.refactor.actions.RenameRefactorAction;
 import org.teiid.designer.ui.viewsupport.IExtendedModelObject;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
 import org.teiid.designer.ui.viewsupport.NonModelViewerFilter;
-
 
 /**
  * 
@@ -146,7 +145,7 @@ public class ModelActionProvider extends CommonActionProvider {
         }
 
         if (this.markerListener != null) {
-            ResourcesPlugin.getWorkspace().removeResourceChangeListener(this.markerListener);
+            ModelerCore.getWorkspace().removeResourceChangeListener(this.markerListener);
         }
 
         if (this.modelResourceListener != null) {
@@ -856,7 +855,7 @@ public class ModelActionProvider extends CommonActionProvider {
             }
         };
 
-        ResourcesPlugin.getWorkspace().addResourceChangeListener(this.markerListener);
+        ModelerCore.getWorkspace().addResourceChangeListener(this.markerListener);
 
         this.modelResourceListener = new EventObjectListener() {
             /**

@@ -15,7 +15,6 @@ import java.util.List;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -24,10 +23,10 @@ import org.eclipse.ui.IActionDelegate;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.actions.MoveProjectAction;
 import org.eclipse.ui.actions.MoveResourceAction;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.ui.actions.DelegatableAction;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 import org.teiid.designer.ui.refactor.actions.MoveRefactorAction;
-
 
 /**
  * 
@@ -75,7 +74,7 @@ public class ModelNavigatorMoveAction extends MoveResourceAction {
         List destinations = getDestinations();
 
         if ((destinations != null) && !destinations.isEmpty()) {
-            IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+            IWorkspaceRoot root = ModelerCore.getWorkspace().getRoot();
             List resources = new ArrayList();
 
             for (Object obj : destinations) {

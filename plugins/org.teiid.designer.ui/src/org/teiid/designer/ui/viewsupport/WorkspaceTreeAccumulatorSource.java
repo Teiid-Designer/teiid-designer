@@ -10,7 +10,7 @@ package org.teiid.designer.ui.viewsupport;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import org.eclipse.core.resources.ResourcesPlugin;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ISelection;
@@ -21,13 +21,13 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.ui.UiConstants;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 import org.teiid.designer.ui.common.viewsupport.StatusInfo;
 import org.teiid.designer.ui.common.widget.accumulator.IAccumulatorSource;
 import org.teiid.designer.ui.explorer.ModelExplorerContentProvider;
 import org.teiid.designer.ui.explorer.ModelExplorerLabelProvider;
-
 
 /**
  * WorkspaceTreeAccumulatorSource is an AccumulatorSource for the AccumulatorPanel that displays
@@ -150,7 +150,7 @@ public class WorkspaceTreeAccumulatorSource implements IAccumulatorSource {
         if ( viewerFilter != null ) {
             treeViewer.addFilter(viewerFilter);
         }
-        treeViewer.setInput(ResourcesPlugin.getWorkspace().getRoot());
+        treeViewer.setInput(ModelerCore.getWorkspace().getRoot());
         treeViewer.expandToLevel(2);
         return treeViewer.getControl();
     }

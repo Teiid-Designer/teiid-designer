@@ -238,7 +238,7 @@ public final class NewMedWizard extends AbstractWizard
     private IProject getWorkspaceOpenProject() {
         IProject openProj = null;
 
-        for (IProject proj : ResourcesPlugin.getWorkspace().getRoot().getProjects()) {
+        for (IProject proj : ModelerCore.getWorkspace().getRoot().getProjects()) {
             try {
                 boolean result = proj.isOpen() && !proj.hasNature(ModelerCore.HIDDEN_PROJECT_NATURE_ID)
                                  && proj.hasNature(ModelerCore.NATURE_ID);

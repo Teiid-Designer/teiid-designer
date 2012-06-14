@@ -195,7 +195,7 @@ public class DesignerPropertiesUtil {
             if (sourcesFolder != null && !sourcesFolder.isEmpty()) {
                 folderName = new Path(projectName).append(sourcesFolder).toString();
             }
-            final IResource resrc = ResourcesPlugin.getWorkspace().getRoot().findMember(folderName);
+            final IResource resrc = ModelerCore.getWorkspace().getRoot().findMember(folderName);
             if (resrc != null) {
                 folder = (IContainer)resrc;
             }
@@ -219,7 +219,7 @@ public class DesignerPropertiesUtil {
             if (viewsFolder != null && !viewsFolder.isEmpty()) {
                 folderName = new Path(projectName).append(viewsFolder).toString();
             }
-            final IResource resrc = ResourcesPlugin.getWorkspace().getRoot().findMember(folderName);
+            final IResource resrc = ModelerCore.getWorkspace().getRoot().findMember(folderName);
             if (resrc != null) {
                 folder = (IContainer)resrc;
             }

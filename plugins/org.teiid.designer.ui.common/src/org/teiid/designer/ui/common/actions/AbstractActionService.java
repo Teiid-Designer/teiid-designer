@@ -10,9 +10,9 @@ package org.teiid.designer.ui.common.actions;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -28,6 +28,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.internal.WorkbenchPage;
 import org.teiid.core.util.CoreArgCheck;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.ui.common.AbstractUiPlugin;
 import org.teiid.designer.ui.common.InternalUiConstants;
 
@@ -76,7 +77,7 @@ public abstract class AbstractActionService implements ActionService, InternalUi
      * @see org.teiid.designer.ui.common.actions.ActionService#addResourceChangeListener(org.eclipse.core.resources.IResourceChangeListener)
      */
     public void addResourceChangeListener( IResourceChangeListener theListener ) {
-        IWorkspace workspace = ResourcesPlugin.getWorkspace();
+        IWorkspace workspace = ModelerCore.getWorkspace();
 
         workspace.addResourceChangeListener(theListener);
     }
@@ -341,7 +342,7 @@ public abstract class AbstractActionService implements ActionService, InternalUi
      * @see org.teiid.designer.ui.common.actions.ActionService#removeResourceChangeListener(org.eclipse.core.resources.IResourceChangeListener)
      */
     public void removeResourceChangeListener( IResourceChangeListener theListener ) {
-        IWorkspace workspace = ResourcesPlugin.getWorkspace();
+        IWorkspace workspace = ModelerCore.getWorkspace();
 
         workspace.removeResourceChangeListener(theListener);
     }

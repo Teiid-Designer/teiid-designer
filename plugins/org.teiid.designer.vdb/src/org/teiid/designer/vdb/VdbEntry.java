@@ -24,7 +24,6 @@ import net.jcip.annotations.ThreadSafe;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
@@ -33,10 +32,10 @@ import org.teiid.core.designer.util.FileUtils;
 import org.teiid.core.designer.util.OperationUtil;
 import org.teiid.core.designer.util.ZipUtil;
 import org.teiid.core.util.ChecksumUtil;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.vdb.manifest.EntryElement;
 import org.teiid.designer.vdb.manifest.PropertyElement;
-
 
 /**
  *
@@ -85,7 +84,7 @@ public class VdbEntry {
 //                if (ResourceChangeUtilities.isContentChanged(delta)) fileChanged(delta);
 //            }
 //        };
-//        ResourcesPlugin.getWorkspace().addResourceChangeListener(fileListener);
+//        ModelerCore.getWorkspace().addResourceChangeListener(fileListener);
         if (this.description.get() == null) {
             this.description.set(EMPTY_STR);
         }
@@ -123,7 +122,7 @@ public class VdbEntry {
     }
 
     void dispose() {
-//        ResourcesPlugin.getWorkspace().removeResourceChangeListener(fileListener);
+//        ModelerCore.getWorkspace().removeResourceChangeListener(fileListener);
         new File(vdb.getFolder(), name.toString()).delete();
     }
 
@@ -169,7 +168,7 @@ public class VdbEntry {
      * @return the associated workspace file, or <code>null</code> if it doesn't exist
      */
     public final IFile findFileInWorkspace() {
-        final IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(name);
+        final IResource resource = ModelerCore.getWorkspace().getRoot().findMember(name);
         if (!(resource instanceof IFile)) {
             setSynchronization(Synchronization.NotApplicable);
             return null;

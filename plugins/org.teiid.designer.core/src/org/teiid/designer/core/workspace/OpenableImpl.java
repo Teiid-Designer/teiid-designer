@@ -10,12 +10,13 @@ package org.teiid.designer.core.workspace;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.teiid.designer.core.ModelerCore;
 
 /**
  * OpenableImpl
@@ -285,7 +286,7 @@ public abstract class OpenableImpl extends ModelWorkspaceItemImpl implements Ope
      * Returns whether the corresponding resource or associated file exists
      */
     protected boolean resourceExists() {
-        IWorkspace workspace = ResourcesPlugin.getWorkspace();
+        IWorkspace workspace = ModelerCore.getWorkspace();
         if (workspace == null) return false; // workaround for http://bugs.eclipse.org/bugs/show_bug.cgi?id=34069
         return ModelWorkspaceImpl.getTarget(workspace.getRoot(), this.getPath().makeRelative(), // ensure path is relative (see
                                             // http://dev.eclipse.org/bugs/show_bug.cgi?id=22517)

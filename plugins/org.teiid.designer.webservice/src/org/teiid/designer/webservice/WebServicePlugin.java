@@ -185,7 +185,7 @@ public class WebServicePlugin extends Plugin {
         ModelResource wsModelResource = modelWorkspace.findModelResource(wsModelPath);
         if ( wsModelResource == null ) {
             // Then create the model ...
-            final IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
+            final IWorkspaceRoot workspaceRoot = ModelerCore.getWorkspace().getRoot();
             final IFile file = workspaceRoot.getFile(wsModelPath);
             wsModelResource = ModelerCore.create(file);
             try {
@@ -205,7 +205,7 @@ public class WebServicePlugin extends Plugin {
             ModelResource xmlModelResource = modelWorkspace.findModelResource(xmlModelPath);
             if ( xmlModelResource == null ) {
                 // Then create the model ...
-                final IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
+                final IWorkspaceRoot workspaceRoot = ModelerCore.getWorkspace().getRoot();
                 final IFile file = workspaceRoot.getFile(xmlModelPath);
                 xmlModelResource = ModelerCore.create(file);
                 try {
@@ -243,7 +243,7 @@ public class WebServicePlugin extends Plugin {
      */
     public static String getDefaultWarFileSaveLocation() {
         
-        String defaultWarFileSaveLocation = ResourcesPlugin.getWorkspace().getRoot().getLocation().toString();
+        String defaultWarFileSaveLocation = ModelerCore.getWorkspace().getRoot().getLocation().toString();
         File workspaceFile = new File(defaultWarFileSaveLocation);
         if(workspaceFile.exists()) {
             File parentFolder = workspaceFile.getParentFile();

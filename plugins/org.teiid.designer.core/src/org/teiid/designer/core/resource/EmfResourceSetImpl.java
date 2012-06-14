@@ -508,7 +508,7 @@ public class EmfResourceSetImpl extends ResourceSetImpl implements EmfResourceSe
     }
 
     protected boolean canSearchWorkspace() {
-        return ModelerCore.isModelContainer(getContainer()); // (ResourcesPlugin.getWorkspace() != null);
+        return ModelerCore.isModelContainer(getContainer()); // (ModelerCore.getWorkspace() != null);
 
     }
 
