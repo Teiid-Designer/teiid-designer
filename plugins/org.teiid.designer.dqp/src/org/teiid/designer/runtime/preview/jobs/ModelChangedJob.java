@@ -9,11 +9,13 @@
 package org.teiid.designer.runtime.preview.jobs;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.osgi.util.NLS;
 import org.teiid.designer.runtime.Server;
 import org.teiid.designer.runtime.preview.Messages;
 import org.teiid.designer.runtime.preview.PreviewContext;
 import org.teiid.designer.runtime.preview.PreviewManager;
+import com.metamatrix.modeler.dqp.DqpPlugin;
 
 /**
  * The <code>ModelChangedJob</code> job synchronizes and saves the Preview VDB associated with the changed model. If the Preview
@@ -60,11 +62,24 @@ public final class ModelChangedJob extends CompositePreviewJob {
     private void process( Server previewServer ) throws Exception {
         PreviewContext context = getContext();
 
-        // make sure Preview VDB exists for model
-        add(new CreatePreviewVdbJob(this.changedModel, context));
+        try {
+            if (this.changedModel.exists()) {
+                if (!this.changedModel.isSynchronized(IResource.DEPTH_INFINITE)) {
+                    this.changedModel.refreshLocal(IResource.DEPTH_INFINITE, null);
+                }
 
-        // sync Preview VDB with workspace
-        add(new UpdatePreviewVdbJob(this.changedModel, previewServer, context));
+                // make sure Preview VDB exists for model
+                add(new CreatePreviewVdbJob(this.changedModel, context));
+
+                // sync Preview VDB with workspace
+                add(new UpdatePreviewVdbJob(this.changedModel, previewServer, context));
+            } else {
+                cancel();
+            }
+        } catch (Exception e) {
+            cancel();
+            DqpPlugin.Util.log(e);
+        }
     }
 
 }
