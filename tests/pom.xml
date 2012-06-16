@@ -27,33 +27,30 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 		</plugins>
 	</build>
 	<modules>
-                <module>org.teiid.core.designer.test.framework</module>
+    <module>org.teiid.core.designer.test.framework</module>
 		<module>org.teiid.core.designer.test</module>
 		<module>org.teiid.designer.compare.test</module>
-                <module>org.teiid.designer.core.test.framework</module>
- 		<!-- <module>org.teiid.designer.core.test</module> -->
+    <module>org.teiid.designer.core.test.framework</module>
+ 		<module>org.teiid.designer.core.test</module>
 		<module>org.teiid.designer.core.xslt.test</module>
-		<!-- <module>org.teiid.designer.ddl.importer.test</module> -->
-		<!-- <module>org.teiid.designer.dqp.test</module> -->
+		<module>org.teiid.designer.ddl.importer.test</module>
+		<module>org.teiid.designer.dqp.test</module>
 		<module>org.teiid.designer.extension.test</module>
-		<!-- <module>org.teiid.designer.jdbc.relational.test</module> -->
+		<module>org.teiid.designer.jdbc.relational.test</module>
 		<module>org.teiid.designer.jdbc.test.framework</module>
-		<!-- <module>org.teiid.designer.jdbc.test</module> -->
+		<module>org.teiid.designer.jdbc.test</module>
 		<module>org.teiid.designer.mapping.ui.test</module>
 		<module>org.teiid.designer.metamodels.core.test</module>
-		<!-- <module>org.teiid.designer.metamodels.dependency.test</module> -->
 		<module>org.teiid.designer.metamodels.relational.test</module>
 		<module>org.teiid.designer.metamodels.relationship.test</module>
 		<module>org.teiid.designer.metamodels.transformation.test</module>
 		<module>org.teiid.designer.metamodels.uml2.test</module>
-		<!-- <module>org.teiid.designer.metamodels.webservice.test</module> -->
 		<module>org.teiid.designer.metamodels.wsdl.test</module>
 		<module>org.teiid.designer.metamodels.xml.test</module>
 		<module>org.teiid.designer.modelgenerator.salesforce.test</module>
 		<module>org.teiid.designer.modelgenerator.test</module>
 		<module>org.teiid.designer.modelgenerator.uml2.test</module>
 		<module>org.teiid.designer.modelgenerator.wsdl.test</module>
-		<!-- <module>org.teiid.designer.modelgenerator.xml.test</module> -->
 		<module>org.teiid.designer.query.ui.test</module>
 		<module>org.teiid.designer.relationship.test</module>
 		<module>org.teiid.designer.schema.tools.test</module>
@@ -61,7 +58,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 		<module>org.teiid.designer.transformation.test</module>
 		<module>org.teiid.designer.ui.common.test</module>
 		<module>org.teiid.designer.ui.test</module>
-		<!-- <module>org.teiid.designer.vdb.test</module> -->
+		<module>org.teiid.designer.vdb.test</module>
 		<module>org.teiid.designer.webservice.test</module>
 		<module>org.teiid.designer.webservice.ui.test</module>
 		<module>org.teiid.designer.xml.ui.test</module>
