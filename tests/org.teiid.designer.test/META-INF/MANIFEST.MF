@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: %Bundle-Name
+Bundle-SymbolicName: org.teiid.designer.test
+Bundle-Version: 7.7.1.qualifier
+Bundle-Activator: org.teiid.designer.test.TestDesignerPlugin
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.junit4,
+ org.teiid.core.designer,
+ org.teiid.designer.ui.common,
+ org.teiid.designer.core,
+ org.teiid.designer.sdt
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-Vendor: %Bundle-Vendor

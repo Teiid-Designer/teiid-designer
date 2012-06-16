@@ -67,9 +67,9 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 		<module>org.teiid.designer.xml.ui.test</module>
 		<module>org.teiid.designer.xsd.ui.test</module>
 
-		<!-- <module>org.teiid.designer.ui.bot.ext</module> -->
-		<!-- <module>org.teiid.designer.ui.bot.tests</module> -->
 		<module>org.teiid.designer.ui.bot.test</module>
+		<module>org.teiid.designer.test</module>
+
 	</modules>
 </project>
 	
