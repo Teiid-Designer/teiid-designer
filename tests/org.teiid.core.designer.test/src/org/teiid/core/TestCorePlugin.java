@@ -8,17 +8,18 @@
 package org.teiid.core;
 
 import java.util.Date;
+
 import junit.extensions.TestSetup;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
-import org.teiid.core.CorePlugin;
 import org.teiid.core.designer.CoreModelerPlugin;
 import org.teiid.core.util.PluginUtilImpl;
-
+import org.teiid.core.util.SmartTestDesignerSuite;
 
 /**
  * TestCorePlugin
@@ -62,6 +63,7 @@ public class TestCorePlugin extends TestCase {
      */
     public static Test suite() {
         CoreModelerPlugin plugin = new CoreModelerPlugin();
+        SmartTestDesignerSuite.mockStartBundle(plugin, CoreModelerPlugin.PLUGIN_ID);
         ((PluginUtilImpl)CoreModelerPlugin.Util).initializePlatformLogger(plugin);
         // logger!
         TestSuite suite = new TestSuite("TestCorePlugin"); //$NON-NLS-1$

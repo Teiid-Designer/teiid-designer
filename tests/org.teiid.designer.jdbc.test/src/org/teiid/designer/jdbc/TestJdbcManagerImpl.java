@@ -131,9 +131,9 @@ public class TestJdbcManagerImpl extends TestCase {
             (new File(jar_path + "/MJoracle.jar")).toURI().toURL().toString() //$NON-NLS-1$
         };
         JAR_FILES_THAT_DONT_EXIST = new String[] {
-            SmartTestDesignerSuite.getTestDataFile("/drivers").toURI().toURL().toString() + "MJbase.ZIP", //$NON-NLS-1$ //$NON-NLS-2$
-            SmartTestDesignerSuite.getTestDataFile("/drivers").toURI().toURL().toString() + "MJutil.ZIP", //$NON-NLS-1$ //$NON-NLS-2$
-            SmartTestDesignerSuite.getTestDataFile("/drivers").toURI().toURL().toString() + "MJoracle.ZIP" //$NON-NLS-1$ //$NON-NLS-2$
+            SmartTestDesignerSuite.getTestDataFile(getClass(), "/drivers").toURI().toURL().toString() + "MJbase.ZIP", //$NON-NLS-1$ //$NON-NLS-2$
+            SmartTestDesignerSuite.getTestDataFile(getClass(), "/drivers").toURI().toURL().toString() + "MJutil.ZIP", //$NON-NLS-1$ //$NON-NLS-2$
+            SmartTestDesignerSuite.getTestDataFile(getClass(), "/drivers").toURI().toURL().toString() + "MJoracle.ZIP" //$NON-NLS-1$ //$NON-NLS-2$
         };
 
         mgr = new JdbcDriverManagerForTesting();

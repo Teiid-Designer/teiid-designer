@@ -69,17 +69,17 @@ public class TestModelUtil extends TestCase {
     }
 
     public void testGetFileExtensionForFileWithExtension() {
-        final File f = SmartTestDesignerSuite.getTestDataFile("testFileWithExtension.abc"); //$NON-NLS-1$
+        final File f = SmartTestDesignerSuite.getTestDataFile(getClass(), "testFileWithExtension.abc"); //$NON-NLS-1$
         assertEquals("abc", ModelUtil.getFileExtension(f)); //$NON-NLS-1$
     }
 
     public void testGetFileExtensionForFileWithNoExtension() {
-        final File f = SmartTestDesignerSuite.getTestDataFile("testFileWithNoExtension"); //$NON-NLS-1$
+        final File f = SmartTestDesignerSuite.getTestDataFile(getClass(), "testFileWithNoExtension"); //$NON-NLS-1$
         assertEquals("", ModelUtil.getFileExtension(f)); //$NON-NLS-1$
     }
 
     public void testGetFileExtensionForFileWithNoExtension2() {
-        final File f = SmartTestDesignerSuite.getTestDataFile("testFileWithNoExtension."); //$NON-NLS-1$
+        final File f = SmartTestDesignerSuite.getTestDataFile(getClass(), "testFileWithNoExtension."); //$NON-NLS-1$
         assertEquals("", ModelUtil.getFileExtension(f)); //$NON-NLS-1$
     }
 
@@ -135,7 +135,7 @@ public class TestModelUtil extends TestCase {
     }
 
     public void testGetVdbHeaderForNonVdbArchive() {
-        final File f = SmartTestDesignerSuite.getTestDataFile("emptyModel.xmi"); //$NON-NLS-1$
+        final File f = SmartTestDesignerSuite.getTestDataFile(getClass(), "emptyModel.xmi"); //$NON-NLS-1$
         assertTrue(null == ModelUtil.getVdbHeader(f));
     }
 
@@ -170,17 +170,17 @@ public class TestModelUtil extends TestCase {
     }
 
     public void testGetVdbHeaderForVdbArchive() {
-        final File f = SmartTestDesignerSuite.getTestDataFile("builtInDatatypes.zip"); //$NON-NLS-1$
+        final File f = SmartTestDesignerSuite.getTestDataFile(getClass(), "builtInDatatypes.zip"); //$NON-NLS-1$
         assertTrue(null == ModelUtil.getVdbHeader(f));
     }
 
     public void testGetVdbHeaderWithZipFile() {
-        final File f = SmartTestDesignerSuite.getTestDataFile("builtInDatatypes.zip"); //$NON-NLS-1$
+        final File f = SmartTestDesignerSuite.getTestDataFile(getClass(), "builtInDatatypes.zip"); //$NON-NLS-1$
         assertTrue(null == ModelUtil.getVdbHeader(f));
     }
 
     public void testGetXmiHeaderWith0200File() {
-        final File f = SmartTestDesignerSuite.getTestDataFile("partsSupplierOracle_v0200.xml"); //$NON-NLS-1$
+        final File f = SmartTestDesignerSuite.getTestDataFile(getClass(), "partsSupplierOracle_v0200.xml"); //$NON-NLS-1$
         final XMIHeader header = ModelFileUtil.getXmiHeader(f);
         assertTrue(null != header);
         assertTrue(header.getXmiVersion().startsWith("1.")); //$NON-NLS-1$
@@ -188,7 +188,7 @@ public class TestModelUtil extends TestCase {
     }
 
     public void testGetXmiHeaderWith0300File() {
-        final File f = SmartTestDesignerSuite.getTestDataFile("VirtualNorthwind.xml"); //$NON-NLS-1$
+        final File f = SmartTestDesignerSuite.getTestDataFile(getClass(), "VirtualNorthwind.xml"); //$NON-NLS-1$
         final XMIHeader header = ModelFileUtil.getXmiHeader(f);
         assertTrue(null != header);
         assertTrue(header.getXmiVersion().startsWith("1.")); //$NON-NLS-1$
@@ -196,7 +196,7 @@ public class TestModelUtil extends TestCase {
     }
 
     public void testGetXmiHeaderWithEmptyModelFile() {
-        final File f = SmartTestDesignerSuite.getTestDataFile("emptyModel.xmi"); //$NON-NLS-1$
+        final File f = SmartTestDesignerSuite.getTestDataFile(getClass(), "emptyModel.xmi"); //$NON-NLS-1$
         final XMIHeader header = ModelFileUtil.getXmiHeader(f);
         assertTrue(null != header);
         assertTrue(header.getXmiVersion().startsWith("2.")); //$NON-NLS-1$
@@ -204,12 +204,12 @@ public class TestModelUtil extends TestCase {
     }
 
     public void testGetXmiHeaderWithMsWordFile() {
-        final File f = SmartTestDesignerSuite.getTestDataFile("sampleMSWord.doc"); //$NON-NLS-1$
+        final File f = SmartTestDesignerSuite.getTestDataFile(getClass(), "sampleMSWord.doc"); //$NON-NLS-1$
         assertTrue(null == ModelFileUtil.getXmiHeader(f));
     }
 
     public void testGetXmiHeaderWithNonEmptyModelFile() {
-        final File f = SmartTestDesignerSuite.getTestDataFile("nonEmptyModel.xmi"); //$NON-NLS-1$
+        final File f = SmartTestDesignerSuite.getTestDataFile(getClass(), "nonEmptyModel.xmi"); //$NON-NLS-1$
         final XMIHeader header = ModelFileUtil.getXmiHeader(f);
         assertTrue(null != header);
         assertTrue(header.getXmiVersion().startsWith("2.")); //$NON-NLS-1$
@@ -221,32 +221,32 @@ public class TestModelUtil extends TestCase {
     }
 
     public void testGetXmiHeaderWithNonModelFile() {
-        final File f = SmartTestDesignerSuite.getTestDataFile("nonModelFile.txt"); //$NON-NLS-1$
+        final File f = SmartTestDesignerSuite.getTestDataFile(getClass(), "nonModelFile.txt"); //$NON-NLS-1$
         assertTrue(null == ModelFileUtil.getXmiHeader(f));
     }
 
     public void testGetXmiHeaderWithXsdFile() {
-        final File f = SmartTestDesignerSuite.getTestDataFile("Books.xsd"); //$NON-NLS-1$
+        final File f = SmartTestDesignerSuite.getTestDataFile(getClass(), "Books.xsd"); //$NON-NLS-1$
         assertTrue(null != ModelFileUtil.getXmiHeader(f));
     }
 
     public void testGetXmiHeaderWithZipFile() {
-        final File f = SmartTestDesignerSuite.getTestDataFile("builtInDatatypes.zip"); //$NON-NLS-1$
+        final File f = SmartTestDesignerSuite.getTestDataFile(getClass(), "builtInDatatypes.zip"); //$NON-NLS-1$
         assertTrue(null == ModelFileUtil.getXmiHeader(f));
     }
 
     public void testGetXsdHeaderWithEmptyModelFile() {
-        final File f = SmartTestDesignerSuite.getTestDataFile("emptyModel.xmi"); //$NON-NLS-1$
+        final File f = SmartTestDesignerSuite.getTestDataFile(getClass(), "emptyModel.xmi"); //$NON-NLS-1$
         assertTrue(null == ModelUtil.getXsdHeader(f));
     }
 
     public void testGetXsdHeaderWithMsWordFile() {
-        final File f = SmartTestDesignerSuite.getTestDataFile("sampleMSWord.doc"); //$NON-NLS-1$
+        final File f = SmartTestDesignerSuite.getTestDataFile(getClass(), "sampleMSWord.doc"); //$NON-NLS-1$
         assertTrue(null == ModelUtil.getXsdHeader(f));
     }
 
     public void testGetXsdHeaderWithNonEmptyModelFile() {
-        final File f = SmartTestDesignerSuite.getTestDataFile("nonEmptyModel.xmi"); //$NON-NLS-1$
+        final File f = SmartTestDesignerSuite.getTestDataFile(getClass(), "nonEmptyModel.xmi"); //$NON-NLS-1$
         assertTrue(null == ModelUtil.getXsdHeader(f));
     }
 
@@ -255,47 +255,47 @@ public class TestModelUtil extends TestCase {
     }
 
     public void testGetXsdHeaderWithNonModelFile() {
-        final File f = SmartTestDesignerSuite.getTestDataFile("nonModelFile.txt"); //$NON-NLS-1$
+        final File f = SmartTestDesignerSuite.getTestDataFile(getClass(), "nonModelFile.txt"); //$NON-NLS-1$
         assertTrue(null == ModelUtil.getXsdHeader(f));
     }
 
     public void testGetXsdHeaderWithVdbArchive() {
-        final File f = SmartTestDesignerSuite.getTestDataFile("PartSupplierVirtual.vdb"); //$NON-NLS-1$
+        final File f = SmartTestDesignerSuite.getTestDataFile(getClass(), "PartSupplierVirtual.vdb"); //$NON-NLS-1$
         assertTrue(null == ModelUtil.getXsdHeader(f));
     }
 
     public void testGetXsdHeaderWithXsdFile() {
-        final File f = SmartTestDesignerSuite.getTestDataFile("Books.xsd"); //$NON-NLS-1$
+        final File f = SmartTestDesignerSuite.getTestDataFile(getClass(), "Books.xsd"); //$NON-NLS-1$
         assertTrue(null != ModelUtil.getXsdHeader(f));
     }
 
     public void testGetXsdHeaderWithZipFile() {
-        final File f = SmartTestDesignerSuite.getTestDataFile("builtInDatatypes.zip"); //$NON-NLS-1$
+        final File f = SmartTestDesignerSuite.getTestDataFile(getClass(), "builtInDatatypes.zip"); //$NON-NLS-1$
         assertTrue(null == ModelUtil.getXsdHeader(f));
     }
 
     public void testIsModelFileWith0200File() {
-        final File f = SmartTestDesignerSuite.getTestDataFile("partsSupplierOracle_v0200.xml"); //$NON-NLS-1$
+        final File f = SmartTestDesignerSuite.getTestDataFile(getClass(), "partsSupplierOracle_v0200.xml"); //$NON-NLS-1$
         assertTrue(false == ModelFileUtil.isModelFile(f));
     }
 
     public void testIsModelFileWith0300File() {
-        final File f = SmartTestDesignerSuite.getTestDataFile("VirtualNorthwind.xml"); //$NON-NLS-1$
+        final File f = SmartTestDesignerSuite.getTestDataFile(getClass(), "VirtualNorthwind.xml"); //$NON-NLS-1$
         assertTrue(false == ModelFileUtil.isModelFile(f));
     }
 
     public void testIsModelFileWithEmptyModelFile() {
-        final File f = SmartTestDesignerSuite.getTestDataFile("emptyModel.xmi"); //$NON-NLS-1$
+        final File f = SmartTestDesignerSuite.getTestDataFile(getClass(), "emptyModel.xmi"); //$NON-NLS-1$
         assertTrue(true == ModelFileUtil.isModelFile(f));
     }
 
     public void testIsModelFileWithMsWordFile() {
-        final File f = SmartTestDesignerSuite.getTestDataFile("sampleMSWord.doc"); //$NON-NLS-1$
+        final File f = SmartTestDesignerSuite.getTestDataFile(getClass(), "sampleMSWord.doc"); //$NON-NLS-1$
         assertTrue(false == ModelFileUtil.isModelFile(f));
     }
 
     public void testIsModelFileWithNonEmptyModelFile() {
-        final File f = SmartTestDesignerSuite.getTestDataFile("nonEmptyModel.xmi"); //$NON-NLS-1$
+        final File f = SmartTestDesignerSuite.getTestDataFile(getClass(), "nonEmptyModel.xmi"); //$NON-NLS-1$
         assertTrue(true == ModelFileUtil.isModelFile(f));
     }
 
@@ -304,37 +304,37 @@ public class TestModelUtil extends TestCase {
     }
 
     public void testIsModelFileWithNonModelFile() {
-        final File f = SmartTestDesignerSuite.getTestDataFile("nonModelFile.txt"); //$NON-NLS-1$
+        final File f = SmartTestDesignerSuite.getTestDataFile(getClass(), "nonModelFile.txt"); //$NON-NLS-1$
         assertTrue(false == ModelFileUtil.isModelFile(f));
     }
 
     public void testIsModelFileWithVdbArchive() {
-        final File f = SmartTestDesignerSuite.getTestDataFile("PartSupplierVirtual.vdb"); //$NON-NLS-1$
+        final File f = SmartTestDesignerSuite.getTestDataFile(getClass(), "PartSupplierVirtual.vdb"); //$NON-NLS-1$
         assertTrue(false == ModelFileUtil.isModelFile(f));
     }
 
     public void testIsModelFileWithXmiFile() {
-        final File f = SmartTestDesignerSuite.getTestDataFile("PartSupplier_Oracle.xmi"); //$NON-NLS-1$
+        final File f = SmartTestDesignerSuite.getTestDataFile(getClass(), "PartSupplier_Oracle.xmi"); //$NON-NLS-1$
         assertTrue(true == ModelFileUtil.isModelFile(f));
     }
 
     public void testIsModelFileWithXmiFileAndMixedCaseExtension() {
-        final File f = SmartTestDesignerSuite.getTestDataFile("PartSupplier_Oracle.xMI"); //$NON-NLS-1$
+        final File f = SmartTestDesignerSuite.getTestDataFile(getClass(), "PartSupplier_Oracle.xMI"); //$NON-NLS-1$
         assertTrue(false == ModelFileUtil.isModelFile(f));
     }
 
     public void testIsModelFileWithXmiFileAndUpperCaseExtension() {
-        final File f = SmartTestDesignerSuite.getTestDataFile("PartSupplier_Oracle.XMI"); //$NON-NLS-1$
+        final File f = SmartTestDesignerSuite.getTestDataFile(getClass(), "PartSupplier_Oracle.XMI"); //$NON-NLS-1$
         assertTrue(false == ModelFileUtil.isModelFile(f));
     }
 
     public void testIsModelFileWithXsdFile() {
-        final File f = SmartTestDesignerSuite.getTestDataFile("Books.xsd"); //$NON-NLS-1$
+        final File f = SmartTestDesignerSuite.getTestDataFile(getClass(), "Books.xsd"); //$NON-NLS-1$
         assertTrue(true == ModelFileUtil.isModelFile(f));
     }
 
     public void testIsModelFileWithZipFile() {
-        final File f = SmartTestDesignerSuite.getTestDataFile("builtInDatatypes.zip"); //$NON-NLS-1$
+        final File f = SmartTestDesignerSuite.getTestDataFile(getClass(), "builtInDatatypes.zip"); //$NON-NLS-1$
         assertTrue(false == ModelFileUtil.isModelFile(f));
     }
 
@@ -343,47 +343,47 @@ public class TestModelUtil extends TestCase {
     }
 
     public void testIsVdbArchiveFileWithNonVdbFile() {
-        final File f = SmartTestDesignerSuite.getTestDataFile("builtInDatatypes.zip"); //$NON-NLS-1$
+        final File f = SmartTestDesignerSuite.getTestDataFile(getClass(), "builtInDatatypes.zip"); //$NON-NLS-1$
         assertTrue(false == ModelFileUtil.isVdbArchiveFile(f));
     }
 
     public void testIsVdbArchiveFileWithVdbFile() {
-        final File f = SmartTestDesignerSuite.getTestDataFile("PartSupplierVirtual.vdb"); //$NON-NLS-1$
+        final File f = SmartTestDesignerSuite.getTestDataFile(getClass(), "PartSupplierVirtual.vdb"); //$NON-NLS-1$
         assertTrue(true == ModelFileUtil.isVdbArchiveFile(f));
     }
 
     public void testIsVdbArchiveFileWithVdbFileAndMixedCaseExtension() {
-        final File f = SmartTestDesignerSuite.getTestDataFile("PartSupplierVirtual.vDb"); //$NON-NLS-1$
+        final File f = SmartTestDesignerSuite.getTestDataFile(getClass(), "PartSupplierVirtual.vDb"); //$NON-NLS-1$
         assertTrue(false == ModelFileUtil.isVdbArchiveFile(f));
     }
 
     public void testIsVdbArchiveFileWithVdbFileAndUpperCaseExtension() {
-        final File f = SmartTestDesignerSuite.getTestDataFile("PartSupplierVirtual.VDB"); //$NON-NLS-1$
+        final File f = SmartTestDesignerSuite.getTestDataFile(getClass(), "PartSupplierVirtual.VDB"); //$NON-NLS-1$
         assertTrue(false == ModelFileUtil.isVdbArchiveFile(f));
     }
 
     public void testIsXmiFileWith0200File() {
-        final File f = SmartTestDesignerSuite.getTestDataFile("partsSupplierOracle_v0200.xml"); //$NON-NLS-1$
+        final File f = SmartTestDesignerSuite.getTestDataFile(getClass(), "partsSupplierOracle_v0200.xml"); //$NON-NLS-1$
         assertTrue(false == ModelUtil.isXmiFile(f));
     }
 
     public void testIsXmiFileWith0300File() {
-        final File f = SmartTestDesignerSuite.getTestDataFile("VirtualNorthwind.xml"); //$NON-NLS-1$
+        final File f = SmartTestDesignerSuite.getTestDataFile(getClass(), "VirtualNorthwind.xml"); //$NON-NLS-1$
         assertTrue(false == ModelUtil.isXmiFile(f));
     }
 
     public void testIsXmiFileWithEmptyModelFile() {
-        final File f = SmartTestDesignerSuite.getTestDataFile("emptyModel.xmi"); //$NON-NLS-1$
+        final File f = SmartTestDesignerSuite.getTestDataFile(getClass(), "emptyModel.xmi"); //$NON-NLS-1$
         assertTrue(true == ModelUtil.isXmiFile(f));
     }
 
     public void testIsXmiFileWithMsWordFile() {
-        final File f = SmartTestDesignerSuite.getTestDataFile("sampleMSWord.doc"); //$NON-NLS-1$
+        final File f = SmartTestDesignerSuite.getTestDataFile(getClass(), "sampleMSWord.doc"); //$NON-NLS-1$
         assertTrue(false == ModelUtil.isXmiFile(f));
     }
 
     public void testIsXmiFileWithNonEmptyModelFile() {
-        final File f = SmartTestDesignerSuite.getTestDataFile("nonEmptyModel.xmi"); //$NON-NLS-1$
+        final File f = SmartTestDesignerSuite.getTestDataFile(getClass(), "nonEmptyModel.xmi"); //$NON-NLS-1$
         assertTrue(true == ModelUtil.isXmiFile(f));
     }
 
@@ -392,37 +392,37 @@ public class TestModelUtil extends TestCase {
     }
 
     public void testIsXmiFileWithNonModelFile() {
-        final File f = SmartTestDesignerSuite.getTestDataFile("nonModelFile.txt"); //$NON-NLS-1$
+        final File f = SmartTestDesignerSuite.getTestDataFile(getClass(), "nonModelFile.txt"); //$NON-NLS-1$
         assertTrue(false == ModelUtil.isXmiFile(f));
     }
 
     public void testIsXmiFileWithVdbArchive() {
-        final File f = SmartTestDesignerSuite.getTestDataFile("PartSupplierVirtual.vdb"); //$NON-NLS-1$
+        final File f = SmartTestDesignerSuite.getTestDataFile(getClass(), "PartSupplierVirtual.vdb"); //$NON-NLS-1$
         assertTrue(false == ModelUtil.isXmiFile(f));
     }
 
     public void testIsXmiFileWithXmiFile() {
-        final File f = SmartTestDesignerSuite.getTestDataFile("PartSupplier_Oracle.xmi"); //$NON-NLS-1$
+        final File f = SmartTestDesignerSuite.getTestDataFile(getClass(), "PartSupplier_Oracle.xmi"); //$NON-NLS-1$
         assertTrue(true == ModelUtil.isXmiFile(f));
     }
 
     public void testIsXmiFileWithXmiFileAndMixedCaseExtension() {
-        final File f = SmartTestDesignerSuite.getTestDataFile("PartSupplier_Oracle.xMI"); //$NON-NLS-1$
+        final File f = SmartTestDesignerSuite.getTestDataFile(getClass(), "PartSupplier_Oracle.xMI"); //$NON-NLS-1$
         assertTrue(false == ModelUtil.isXmiFile(f));
     }
 
     public void testIsXmiFileWithXmiFileAndUpperCaseExtension() {
-        final File f = SmartTestDesignerSuite.getTestDataFile("PartSupplier_Oracle.XMI"); //$NON-NLS-1$
+        final File f = SmartTestDesignerSuite.getTestDataFile(getClass(), "PartSupplier_Oracle.XMI"); //$NON-NLS-1$
         assertTrue(false == ModelUtil.isXmiFile(f));
     }
 
     public void testIsXmiFileWithXsdFile() {
-        final File f = SmartTestDesignerSuite.getTestDataFile("Books.xsd"); //$NON-NLS-1$
+        final File f = SmartTestDesignerSuite.getTestDataFile(getClass(), "Books.xsd"); //$NON-NLS-1$
         assertTrue(false == ModelUtil.isXmiFile(f));
     }
 
     public void testIsXmiFileWithZipFile() {
-        final File f = SmartTestDesignerSuite.getTestDataFile("builtInDatatypes.zip"); //$NON-NLS-1$
+        final File f = SmartTestDesignerSuite.getTestDataFile(getClass(), "builtInDatatypes.zip"); //$NON-NLS-1$
         assertTrue(false == ModelUtil.isXmiFile(f));
     }
 
@@ -431,22 +431,22 @@ public class TestModelUtil extends TestCase {
     }
 
     public void testIsXsdFileWithNonXsdFile() {
-        final File f = SmartTestDesignerSuite.getTestDataFile("nonModelFile.txt"); //$NON-NLS-1$
+        final File f = SmartTestDesignerSuite.getTestDataFile(getClass(), "nonModelFile.txt"); //$NON-NLS-1$
         assertTrue(false == ModelFileUtil.isXsdFile(f));
     }
 
     public void testIsXsdFileWithXsdFile() {
-        final File f = SmartTestDesignerSuite.getTestDataFile("Books.xsd"); //$NON-NLS-1$
+        final File f = SmartTestDesignerSuite.getTestDataFile(getClass(), "Books.xsd"); //$NON-NLS-1$
         assertTrue(true == ModelFileUtil.isXsdFile(f));
     }
 
     public void testIsXsdFileWithXsdFileAndMixedCaseExtension() {
-        final File f = SmartTestDesignerSuite.getTestDataFile("Books.xsD"); //$NON-NLS-1$
+        final File f = SmartTestDesignerSuite.getTestDataFile(getClass(), "Books.xsD"); //$NON-NLS-1$
         assertTrue(false == ModelFileUtil.isXsdFile(f));
     }
 
     public void testIsXsdFileWithXsdFileAndUpperCaseExtension() {
-        final File f = SmartTestDesignerSuite.getTestDataFile("Books.XSD"); //$NON-NLS-1$
+        final File f = SmartTestDesignerSuite.getTestDataFile(getClass(), "Books.XSD"); //$NON-NLS-1$
         assertTrue(false == ModelFileUtil.isXsdFile(f));
     }
 

@@ -8,16 +8,17 @@
 package org.teiid.designer.modelgenerator;
 
 import java.util.Date;
+
 import junit.extensions.TestSetup;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.teiid.core.util.PluginUtilImpl;
-import org.teiid.designer.modelgenerator.ModelGeneratorPlugin;
-
+import org.teiid.core.util.SmartTestDesignerSuite;
 
 /**
  * TestModelGeneratorPlugin
@@ -60,6 +61,7 @@ public class TestModelGeneratorPlugin extends TestCase {
             @Override
             public void setUp() {
                 ModelGeneratorPlugin plugin = new ModelGeneratorPlugin();
+                SmartTestDesignerSuite.mockStartBundle(plugin, ModelGeneratorPlugin.PLUGIN_ID);
                 ((PluginUtilImpl)ModelGeneratorPlugin.Util).initializePlatformLogger(plugin);
             }
 

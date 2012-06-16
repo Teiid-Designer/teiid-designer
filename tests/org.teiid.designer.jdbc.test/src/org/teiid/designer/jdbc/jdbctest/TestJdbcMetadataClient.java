@@ -29,7 +29,7 @@ public class TestJdbcMetadataClient extends TestCase {
     public static final String MM_DB2_DRIVER_CLASS_NAME = "com.metamatrix.jdbc.db2.DB2Driver"; //$NON-NLS-1$
     public static final String ORALCE_DRIVER_CLASS_NAME = "oracle.jdbc.OracleDriver"; //$NON-NLS-1$
 
-    public static final String PATH = "file:/" + SmartTestDesignerSuite.getTestDataPath() + "/drivers/"; //$NON-NLS-1$ //$NON-NLS-2$
+    public static final String PATH = "file:/" + SmartTestDesignerSuite.getTestDataPath(TestJdbcMetadataClient.class) + "/drivers/"; //$NON-NLS-1$ //$NON-NLS-2$
 
     private JdbcMetadataClient client;
 

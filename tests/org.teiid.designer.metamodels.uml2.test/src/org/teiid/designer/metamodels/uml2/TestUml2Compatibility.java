@@ -14,10 +14,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+
 import junit.extensions.TestSetup;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
+
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EEnum;
@@ -27,13 +29,12 @@ import org.eclipse.uml2.uml.UMLPackage;
 import org.teiid.core.util.CoreStringUtil;
 import org.teiid.core.util.SmartTestDesignerSuite;
 
-
 /**
  * TestUml2Compatibility
  */
 public class TestUml2Compatibility extends TestCase {
 
-    protected static final String METACLASS_FILE_PATH = SmartTestDesignerSuite.getTestDataPath() + "/MetaclassNameInclusionList.txt"; //$NON-NLS-1$
+    protected static final String METACLASS_FILE_PATH = SmartTestDesignerSuite.getTestDataPath(TestUml2Compatibility.class) + "/MetaclassNameInclusionList.txt"; //$NON-NLS-1$
     protected static final String eNS_URI = UMLPackage.eNS_URI;
     protected static final int PREFIX_LENGTH = eNS_URI.length() + 1;
     protected static String[] metaClassNames;

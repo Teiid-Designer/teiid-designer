@@ -19,6 +19,7 @@ import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
 import org.teiid.core.util.PluginUtilImpl;
+import org.teiid.core.util.SmartTestDesignerSuite;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.spi.RegistrySPI;
 import org.teiid.designer.jdbc.relational.impl.RelationalModelProcessorImpl;
@@ -73,8 +74,11 @@ public class TestJdbcRelationalPlugin extends TestCase {
             @Override
             public void setUp() {
                 JdbcRelationalPlugin jdbcRelationalPlugin = new JdbcRelationalPlugin();
-                ((PluginUtilImpl)org.teiid.designer.jdbc.relational.ModelerJdbcRelationalConstants.Util).initializePlatformLogger(jdbcRelationalPlugin);
+                SmartTestDesignerSuite.mockStartBundle(jdbcRelationalPlugin, ModelerJdbcRelationalConstants.PLUGIN_ID);
+                ((PluginUtilImpl)ModelerJdbcRelationalConstants.Util).initializePlatformLogger(jdbcRelationalPlugin);
+                
                 RelationalPlugin relationalPlugin = new RelationalPlugin();
+                SmartTestDesignerSuite.mockStartBundle(relationalPlugin, RelationalPlugin.PLUGIN_ID);
                 ((PluginUtilImpl)RelationalPlugin.Util).initializePlatformLogger(relationalPlugin);
                 ((RegistrySPI) ModelerCore.getRegistry()).unregister(ModelerCore.DEFAULT_CONTAINER_KEY);
             }

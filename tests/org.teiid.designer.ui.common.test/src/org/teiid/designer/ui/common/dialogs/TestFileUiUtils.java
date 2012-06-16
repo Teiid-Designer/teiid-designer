@@ -8,9 +8,11 @@
 package org.teiid.designer.ui.common.dialogs;
 
 import java.io.File;
+
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
+
 import org.teiid.core.util.EquivalenceUtil;
 import org.teiid.core.util.SmartTestDesignerSuite;
 import org.teiid.designer.ui.common.dialog.FileUiUtils;
@@ -32,7 +34,7 @@ public final class TestFileUiUtils extends TestCase {
     }
 
     static {
-        TEST_DIR = new File(SmartTestDesignerSuite.getTestDataPath());
+        TEST_DIR = new File(SmartTestDesignerSuite.getTestDataPath(TestFileUiUtils.class));
     }
 
     public TestFileUiUtils( String theTestName ) {

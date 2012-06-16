@@ -11,4 +11,5 @@ Export-Package: org.teiid.designer.jdbc.relational,
 Bundle-Localization: plugin
 Require-Bundle: org.junit4,
  org.teiid.designer.sdt,
- org.teiid.designer.jdbc.test.framework
+ org.teiid.designer.jdbc.test.framework,
+ org.teiid.core.designer.test.framework

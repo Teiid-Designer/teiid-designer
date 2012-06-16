@@ -8,35 +8,35 @@
 package org.teiid.designer.webservice;
 
 import java.io.File;
+
 import junit.extensions.TestSetup;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
+
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.teiid.core.util.SmartTestDesignerSuite;
-import org.teiid.designer.webservice.WebServiceResources;
-
 
 /**
  * @since 4.2
  */
 public class TestWebServiceResources extends TestCase {
 
-    public static final URI WSDL_BABEL_FISH = URI.createFileURI(SmartTestDesignerSuite.getTestDataFile("/wsdl/BabelFishService.wsdl").getAbsolutePath()); //$NON-NLS-1$
-    public static final URI WSDL_DAY_OF_WEEK = URI.createFileURI(SmartTestDesignerSuite.getTestDataFile("/wsdl/DayOfWeek.wsdl").getAbsolutePath()); //$NON-NLS-1$
-    public static final URI WSDL_HELLOSERVICE = URI.createFileURI(SmartTestDesignerSuite.getTestDataFile("/wsdl/HelloService.wsdl").getAbsolutePath()); //$NON-NLS-1$
-    public static final URI WSDL_HELLOSERVICE_SIMPLE = URI.createFileURI(SmartTestDesignerSuite.getTestDataFile("/wsdl/HelloServiceSimple.wsdl").getAbsolutePath()); //$NON-NLS-1$
-    public static final URI WSDL_HELLOSERVICE_WITHOUT_SOAP = URI.createFileURI(SmartTestDesignerSuite.getTestDataFile("/wsdl/HelloServiceWithoutSoap.wsdl").getAbsolutePath()); //$NON-NLS-1$
-    public static final URI WSDL_MSDOTNET_GENERATED = URI.createFileURI(SmartTestDesignerSuite.getTestDataFile("/wsdl/MsDotNetGenerated.wsdl").getAbsolutePath()); //$NON-NLS-1$
-    public static final URI WSDL_WEATHER_SUMMARY = URI.createFileURI(SmartTestDesignerSuite.getTestDataFile("/wsdl/WeatherSummary.wsdl").getAbsolutePath()); //$NON-NLS-1$
+    public static final URI WSDL_BABEL_FISH = URI.createFileURI(SmartTestDesignerSuite.getTestDataFile(TestWebServiceResources.class, "/wsdl/BabelFishService.wsdl").getAbsolutePath()); //$NON-NLS-1$
+    public static final URI WSDL_DAY_OF_WEEK = URI.createFileURI(SmartTestDesignerSuite.getTestDataFile(TestWebServiceResources.class, "/wsdl/DayOfWeek.wsdl").getAbsolutePath()); //$NON-NLS-1$
+    public static final URI WSDL_HELLOSERVICE = URI.createFileURI(SmartTestDesignerSuite.getTestDataFile(TestWebServiceResources.class, "/wsdl/HelloService.wsdl").getAbsolutePath()); //$NON-NLS-1$
+    public static final URI WSDL_HELLOSERVICE_SIMPLE = URI.createFileURI(SmartTestDesignerSuite.getTestDataFile(TestWebServiceResources.class, "/wsdl/HelloServiceSimple.wsdl").getAbsolutePath()); //$NON-NLS-1$
+    public static final URI WSDL_HELLOSERVICE_WITHOUT_SOAP = URI.createFileURI(SmartTestDesignerSuite.getTestDataFile(TestWebServiceResources.class, "/wsdl/HelloServiceWithoutSoap.wsdl").getAbsolutePath()); //$NON-NLS-1$
+    public static final URI WSDL_MSDOTNET_GENERATED = URI.createFileURI(SmartTestDesignerSuite.getTestDataFile(TestWebServiceResources.class, "/wsdl/MsDotNetGenerated.wsdl").getAbsolutePath()); //$NON-NLS-1$
+    public static final URI WSDL_WEATHER_SUMMARY = URI.createFileURI(SmartTestDesignerSuite.getTestDataFile(TestWebServiceResources.class, "/wsdl/WeatherSummary.wsdl").getAbsolutePath()); //$NON-NLS-1$
 
-    public static final URI AUTHORS_AND_PUBLISHERS = URI.createFileURI(SmartTestDesignerSuite.getTestDataFile("/xsd/AuthorsAndPublishers.xsd").getAbsolutePath()); //$NON-NLS-1$
-    public static final URI BOOK_DATATYPES = URI.createFileURI(SmartTestDesignerSuite.getTestDataFile("/xsd/BookDatatypes.xsd").getAbsolutePath()); //$NON-NLS-1$
-    public static final URI BOOK_REQUESTS = URI.createFileURI(SmartTestDesignerSuite.getTestDataFile("/xsd/BookRequests.xsd").getAbsolutePath()); //$NON-NLS-1$
-    public static final URI BOOKS = URI.createFileURI(SmartTestDesignerSuite.getTestDataFile("/xsd/Books.xsd").getAbsolutePath()); //$NON-NLS-1$
-    public static final URI AUTHORS_AND_PUBLISHERS_WEB_SERVICES = URI.createFileURI(SmartTestDesignerSuite.getTestDataFile("/xsd/AuthorsAndPublishers_WsdlDefaultNS.wsdl").getAbsolutePath()); //$NON-NLS-1$
-    public static final URI BOOKS_WEB_SERVICES = URI.createFileURI(SmartTestDesignerSuite.getTestDataFile("/xsd/BooksWebServiceWithDefaultNS.wsdl").getAbsolutePath()); //$NON-NLS-1$
+    public static final URI AUTHORS_AND_PUBLISHERS = URI.createFileURI(SmartTestDesignerSuite.getTestDataFile(TestWebServiceResources.class, "/xsd/AuthorsAndPublishers.xsd").getAbsolutePath()); //$NON-NLS-1$
+    public static final URI BOOK_DATATYPES = URI.createFileURI(SmartTestDesignerSuite.getTestDataFile(TestWebServiceResources.class, "/xsd/BookDatatypes.xsd").getAbsolutePath()); //$NON-NLS-1$
+    public static final URI BOOK_REQUESTS = URI.createFileURI(SmartTestDesignerSuite.getTestDataFile(TestWebServiceResources.class, "/xsd/BookRequests.xsd").getAbsolutePath()); //$NON-NLS-1$
+    public static final URI BOOKS = URI.createFileURI(SmartTestDesignerSuite.getTestDataFile(TestWebServiceResources.class, "/xsd/Books.xsd").getAbsolutePath()); //$NON-NLS-1$
+    public static final URI AUTHORS_AND_PUBLISHERS_WEB_SERVICES = URI.createFileURI(SmartTestDesignerSuite.getTestDataFile(TestWebServiceResources.class, "/xsd/AuthorsAndPublishers_WsdlDefaultNS.wsdl").getAbsolutePath()); //$NON-NLS-1$
+    public static final URI BOOKS_WEB_SERVICES = URI.createFileURI(SmartTestDesignerSuite.getTestDataFile(TestWebServiceResources.class, "/xsd/BooksWebServiceWithDefaultNS.wsdl").getAbsolutePath()); //$NON-NLS-1$
 
     private WebServiceResources resources;
 

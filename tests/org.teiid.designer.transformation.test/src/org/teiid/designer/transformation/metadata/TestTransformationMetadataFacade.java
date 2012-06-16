@@ -55,9 +55,9 @@ public class TestTransformationMetadataFacade extends TestCase {
 
     private static final List WORD_ENTRIES = new ArrayList(7);
     private static final String TEST_INDEX_FILE_NAME = "test.index"; //$NON-NLS-1$
-    static final String TEST_INDEX_DIRECTORY_PATH = SmartTestDesignerSuite.getTestScratchPath();
+    private static final String TEST_INDEX_DIRECTORY_PATH = SmartTestDesignerSuite.getTestScratchPath();
     private static final String TEST_INDEX_FILE_PATH = TEST_INDEX_DIRECTORY_PATH + File.separator + TEST_INDEX_FILE_NAME;
-    private static final String FAKE_FILE_PATH = SmartTestDesignerSuite.getTestDataPath() + File.separator + "PartsRelational.mmm"; //$NON-NLS-1$
+    private static final String FAKE_FILE_PATH = SmartTestDesignerSuite.getTestDataPath(TestTransformationMetadataFacade.class) + File.separator + "PartsRelational.mmm"; //$NON-NLS-1$
 
     /**
      * Constructor for TestTransformationMetadataFacade.

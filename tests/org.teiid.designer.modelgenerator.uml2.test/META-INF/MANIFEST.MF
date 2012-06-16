@@ -10,4 +10,6 @@ Export-Package: org.teiid.designer.modelgenerator.uml2.processor,
  org.teiid.designer.modelgenerator.uml2.util
 Bundle-Localization: plugin
 Require-Bundle: org.junit4,
- org.teiid.designer.sdt
+ org.teiid.designer.sdt,
+ org.mockito,
+ org.teiid.core.designer.test.framework

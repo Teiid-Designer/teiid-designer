@@ -29,6 +29,7 @@ import org.eclipse.xsd.XSDFactory;
 import org.eclipse.xsd.impl.XSDFactoryImpl;
 import org.teiid.core.selection.TreeSelection;
 import org.teiid.core.util.PluginUtilImpl;
+import org.teiid.core.util.SmartTestDesignerSuite;
 import org.teiid.designer.compare.selector.TransientModelSelector;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.metamodels.relational.impl.RelationalFactoryImpl;
@@ -38,15 +39,11 @@ import org.teiid.designer.metamodels.uml2.Uml2Plugin;
 import org.teiid.designer.modelgenerator.processor.RelationTracker;
 import org.teiid.designer.modelgenerator.uml2.processor.RelationTrackerImpl;
 import org.teiid.designer.modelgenerator.uml2.processor.Uml2RelationalOptions;
-import org.teiid.designer.modelgenerator.uml2.util.NullRelationalObjectNamingStrategy;
-import org.teiid.designer.modelgenerator.uml2.util.RelationalObjectGeneratorImpl;
-import org.teiid.designer.modelgenerator.uml2.util.RelationalObjectNamingStrategy;
 import org.teiid.designer.modelgenerator.util.AnnotationHelper;
 import org.teiid.designer.modelgenerator.util.AnnotationHelperImpl;
 import org.teiid.designer.modelgenerator.util.EObjectUtil;
 import org.teiid.designer.modelgenerator.util.NullSimpleDatatypeUtil;
 import org.teiid.designer.modelgenerator.util.SimpleDatatypeUtil;
-
 
 /**
  * Uml2RelationalUtilTest
@@ -76,8 +73,11 @@ public class TestRelationalObjectGenerator extends TestCase {
 
     static {
         RelationshipMetamodelPlugin rmPlugin = new RelationshipMetamodelPlugin();
+        SmartTestDesignerSuite.mockStartBundle(rmPlugin, RelationshipMetamodelPlugin.PLUGIN_ID);
         ((PluginUtilImpl)RelationshipMetamodelPlugin.Util).initializePlatformLogger(rmPlugin);
+        
         Uml2Plugin uml2Plugin = new Uml2Plugin();
+        SmartTestDesignerSuite.mockStartBundle(uml2Plugin, Uml2Plugin.PLUGIN_ID);
         ((PluginUtilImpl)Uml2Plugin.Util).initializePlatformLogger(uml2Plugin);
 
         SELECTOR.open();

@@ -7,18 +7,18 @@
  */
 package org.teiid.designer.ui.product;
 
+import junit.extensions.TestSetup;
+import junit.framework.Test;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
+
 import org.teiid.core.util.PluginUtilImpl;
+import org.teiid.core.util.SmartTestDesignerSuite;
 import org.teiid.designer.ui.common.UiConstants;
 import org.teiid.designer.ui.common.UiPlugin;
 import org.teiid.designer.ui.common.product.AbstractProductCustomizer;
 import org.teiid.designer.ui.common.product.IProductCharacteristics;
 import org.teiid.designer.ui.common.product.IProductContext;
-import org.teiid.designer.ui.product.IModelerProductContexts;
-
-import junit.extensions.TestSetup;
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 /**
  * @since 4.3
@@ -42,6 +42,7 @@ public class TestAbstractProductCustomizer extends TestCase {
             @Override
             public void setUp() throws Exception {
                 UiPlugin plugin = new UiPlugin();
+                SmartTestDesignerSuite.mockStartBundle(plugin, UiConstants.PLUGIN_ID);
                 ((PluginUtilImpl)UiConstants.Util).initializePlatformLogger(plugin);
             }
         };

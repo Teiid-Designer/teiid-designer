@@ -10,5 +10,6 @@ Bundle-Localization: plugin
 Require-Bundle: org.junit4,
  org.mockito,
  org.teiid.designer.core.test.framework,
- org.teiid.designer.sdt
+ org.teiid.designer.sdt,
+ org.teiid.core.designer.test.framework
 

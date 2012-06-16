@@ -7,20 +7,30 @@
  */
 package org.teiid.core.util;
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.net.URL;
+
 import junit.framework.Assert;
 import junit.framework.Test;
 import junit.framework.TestResult;
 import junit.framework.TestSuite;
-import org.junit.Ignore;
-import org.teiid.core.util.SmartTestDesignerSuite;
 
+import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Plugin;
+import org.eclipse.core.runtime.URIUtil;
+import org.junit.Ignore;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.FrameworkUtil;
 
 @Ignore
 public class SmartTestDesignerSuite extends TestSuite {
@@ -149,13 +159,11 @@ public class SmartTestDesignerSuite extends TestSuite {
 
     protected void setTestDataPath( final String testdataPath ) {
         this.testdataPath = testdataPath;
-        System.getProperties().setProperty(SmartTestDesignerSuite.TEST_DATA_ROOT_PROPERTY, testdataPath);
     }
 
     protected void setTestSourcePath( final String thePath ) {
         File file = new File(thePath);
         this.testSourcePath = file.getPath();
-        System.getProperties().setProperty(SmartTestDesignerSuite.TEST_SOURCE_ROOT_PROPERTY, this.testSourcePath);
     }
 
     /**
@@ -190,44 +198,39 @@ public class SmartTestDesignerSuite extends TestSuite {
     }
 
     /**
+     * Given a relative path, derive its absolute path from the given class.
+     * 
+     * @param testClass
+     * @param path
+     * @return
+     */
+    private static String getBundlePath(Class<?> testClass, Path path) {
+        Bundle bundle = FrameworkUtil.getBundle(testClass);
+        File file = null;
+        try {
+            URL url = FileLocator.find(bundle, path, null);
+            URL fileURL = FileLocator.toFileURL(url);
+            file = URIUtil.toFile(URIUtil.toURI(fileURL));
+        }
+        catch (Exception ex) {
+            Assert.fail("Unable to open the data file \"" + path + "\""); //$NON-NLS-1$ //$NON-NLS-2$
+            ex.printStackTrace();
+        }
+        
+        return file.getAbsolutePath();
+    }
+    
+    /**
      * Obtain a {@link File}for the file name in the test data directory (given by {@link #getTestDataPath()}).
      * 
+     * @param testClass A class that should be used to find the correct bundle containing the testdata file. In
+     *                          most cases this should be the test class calling this method.
      * @param fileName A path and name relative to the test data directory; for example, "MyFile.txt" if the file is in the test
      *        data directory, or "subfolder/MyFile.txt" if the file is in "subfolder".
      * @return The File referencing the file with the specified fileName within the test data directory
      */
-    public static File getTestDataFile( String fileName ) {
-        return new File(getTestDataPath(), fileName);
-    }
-
-    public static File getTestScratchFile( String fileName ) {
-        // Create the input stream ...
-        String path = getTestScratchPath();
-        File scratchDirectory = new File(path);
-        if (!scratchDirectory.exists()) {
-            scratchDirectory.mkdir();
-        }
-        File file = new File(scratchDirectory, fileName);
-        return file;
-    }
-
-    /**
-     * Obtain a {@link java.io.FileInputStream FileInputStream} to a data file in the test data directory (given by
-     * {@link #getTestDataPath()}). This method causes the test case to fail if the file could not be found or opened.
-     * 
-     * @param filename the path and name of the file relative to the test data directory; for example, "MyFile.txt" if the file is
-     *        in the test data directory, or "subfolder/MyFile.txt" if the file is in "subfolder".
-     * @return the FileInputStream to the file, which should be closed by the caller when finished
-     */
-    public static final FileOutputStream getTestScratchFileOutputStream( String filename ) {
-        FileOutputStream stream = null;
-        try {
-            File file = getTestScratchFile(filename);
-            stream = new FileOutputStream(file);
-        } catch (IOException e) {
-            Assert.fail("Unable to open the scratch output file \"" + filename + "\""); //$NON-NLS-1$ //$NON-NLS-2$
-        }
-        return stream;
+    public static File getTestDataFile(Class<?> testClass, String fileName) {
+        return new File(getTestDataPath(testClass), fileName);
     }
 
     /**
@@ -236,12 +239,13 @@ public class SmartTestDesignerSuite extends TestSuite {
      * 
      * @return File path, never null
      */
-    public static final String getTestDataPath() {
+    public static final String getTestDataPath(Class<?> testClass) {
         String filePath = System.getProperty(TEST_DATA_ROOT_PROPERTY);
         if (filePath == null) {
             filePath = DEFAULT_TESTDATA_PATH;
         }
-        return filePath;
+        
+        return getBundlePath(testClass, new Path(filePath));
     }
 
     /**
@@ -293,5 +297,32 @@ public class SmartTestDesignerSuite extends TestSuite {
             Assert.fail("IOException caught"); //$NON-NLS-1$
         }
     }
-
+    
+    public static String getProjectPath( Class clazz ) {
+        return getBundlePath(clazz, new Path("/")); //$NON-NLS-1$
+    }
+    
+    /**
+     * When declaring a new plugin in a junit suite method and initialising a platform logger,
+     * an exception can occur since the plugin has not been started (this assigns the bundle
+     * instance to the plugin's private bundle field). This mocks BundleContext and Bundle and
+     * so starts the plugin.
+     * 
+     * @param plugin
+     * @param pluginId
+     */
+    public static void mockStartBundle(Plugin plugin, String pluginId) {
+        Bundle bundle  = mock(Bundle.class);
+        when(bundle.getSymbolicName()).thenReturn(pluginId);
+        
+        BundleContext context = mock(BundleContext.class);
+        when(context.getBundle()).thenReturn(bundle);
+        
+        try {
+            plugin.start(context);
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
 }

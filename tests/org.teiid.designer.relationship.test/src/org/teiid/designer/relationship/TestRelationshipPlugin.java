@@ -7,20 +7,18 @@
  */
 package org.teiid.designer.relationship;
 
+import junit.extensions.TestSetup;
+import junit.framework.Test;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
+
 import org.teiid.core.util.PluginUtilImpl;
+import org.teiid.core.util.SmartTestDesignerSuite;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.metamodels.relationship.Relationship;
 import org.teiid.designer.metamodels.relationship.RelationshipFactory;
 import org.teiid.designer.metamodels.relationship.RelationshipMetamodelPlugin;
 import org.teiid.designer.metamodels.relationship.RelationshipType;
-import org.teiid.designer.relationship.RelationshipEditor;
-import org.teiid.designer.relationship.RelationshipPlugin;
-import org.teiid.designer.relationship.RelationshipTypeEditor;
-
-import junit.extensions.TestSetup;
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 /**
  * TestRelationshipPlugin
@@ -64,6 +62,7 @@ public class TestRelationshipPlugin extends TestCase {
             @Override
             public void setUp() {
                 RelationshipMetamodelPlugin plugin = new RelationshipMetamodelPlugin();
+                SmartTestDesignerSuite.mockStartBundle(plugin, RelationshipMetamodelPlugin.PLUGIN_ID);
                 ((PluginUtilImpl)RelationshipMetamodelPlugin.Util).initializePlatformLogger(plugin);
             }
 

@@ -9,4 +9,5 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.teiid.designer.modelgenerator,
  org.teiid.designer.modelgenerator.util
 Bundle-Localization: plugin
-Require-Bundle: org.junit4
+Require-Bundle: org.junit4,
+ org.teiid.core.designer.test.framework
