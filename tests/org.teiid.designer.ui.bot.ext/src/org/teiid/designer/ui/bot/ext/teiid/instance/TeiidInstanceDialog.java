@@ -41,6 +41,7 @@ public class TeiidInstanceDialog {
 	}
 
 	public void setName(String name) {
+		shell.bot().textInGroup("Name").setFocus();
 		shell.bot().textInGroup("Name").setText(name);
 	}
 	
@@ -49,6 +50,7 @@ public class TeiidInstanceDialog {
 	}
 
 	public void setHost(String host) {
+		shell.bot().textWithLabel("Host: ").setFocus();
 		shell.bot().textWithLabel("Host: ").setText(host);
 	}
 
@@ -57,6 +59,7 @@ public class TeiidInstanceDialog {
 	}
 
 	public void setAdminPort(String adminPort) {
+		shell.bot().textWithLabelInGroup(PORT_NUMBER, TEIID_ADMIN_CONNECTION_INFO, ADMIN_PORT_FIELD_INDEX).setFocus();
 		shell.bot().textWithLabelInGroup(PORT_NUMBER, TEIID_ADMIN_CONNECTION_INFO, ADMIN_PORT_FIELD_INDEX).setText(adminPort);
 	}
 
@@ -65,6 +68,7 @@ public class TeiidInstanceDialog {
 	}
 
 	public void setAdminUser(String adminUser) {
+		shell.bot().textWithLabelInGroup(USER_NAME, TEIID_ADMIN_CONNECTION_INFO, ADMIN_USER_FIELD_INDEX).setFocus();
 		shell.bot().textWithLabelInGroup(USER_NAME, TEIID_ADMIN_CONNECTION_INFO, ADMIN_USER_FIELD_INDEX).setText(adminUser);
 	}
 
@@ -73,6 +77,7 @@ public class TeiidInstanceDialog {
 	}
 
 	public void setAdminPassword(String adminPassword) {
+		shell.bot().textWithLabelInGroup(PASSWORD, TEIID_ADMIN_CONNECTION_INFO, ADMIN_PASSWORD_FIELD_INDEX).setFocus();
 		shell.bot().textWithLabelInGroup(PASSWORD, TEIID_ADMIN_CONNECTION_INFO, ADMIN_PASSWORD_FIELD_INDEX).setText(adminPassword);
 	}
 
@@ -81,6 +86,7 @@ public class TeiidInstanceDialog {
 	}
 
 	public void setUserPort(String userPort) {
+		shell.bot().textWithLabelInGroup(PORT_NUMBER, TEIID_JDBC_CONNECTION_INFO).setFocus();
 		shell.bot().textWithLabelInGroup(PORT_NUMBER, TEIID_JDBC_CONNECTION_INFO).setText(userPort);
 	}
 
@@ -89,6 +95,7 @@ public class TeiidInstanceDialog {
 	}
 
 	public void setUserName(String userName) {
+		shell.bot().textWithLabelInGroup(USER_NAME, TEIID_JDBC_CONNECTION_INFO).setFocus();
 		shell.bot().textWithLabelInGroup(USER_NAME, TEIID_JDBC_CONNECTION_INFO).setText(userName);
 	}
 
@@ -97,6 +104,7 @@ public class TeiidInstanceDialog {
 	}
 
 	public void setUserPassword(String userPassword) {
+		shell.bot().textWithLabelInGroup(PASSWORD, TEIID_JDBC_CONNECTION_INFO).setFocus();
 		shell.bot().textWithLabelInGroup(PASSWORD, TEIID_JDBC_CONNECTION_INFO).setText(userPassword);
 	}
 }
