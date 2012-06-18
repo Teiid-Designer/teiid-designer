@@ -204,8 +204,10 @@ public abstract class JdbcNodeImpl implements JdbcNode, Comparable, InternalJdbc
     /**
      * Utility method (mostly for testing) that allows one to add a child node one at a time. This method does <i>not</i> check
      * whether the node already exists as a child of this node.
+     * 
+     * Warning: this method is only made public to allow for unit testing. Other uses are discouraged.
      */
-    /*package*/void addChild( final JdbcNode node ) throws JdbcException {
+    public void addChild( final JdbcNode node ) throws JdbcException {
         final JdbcNode[] currentChildren = this.getChildren(); // may throw exception
         final int currentNumChildren = currentChildren.length;
         if (currentNumChildren != 0) {
