@@ -9,4 +9,5 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.teiid.core.designer.test.framework,
  org.mockito,
- org.junit4
+ org.junit4,
+ org.teiid.designer.sdt

@@ -16,6 +16,8 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.io.File;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -30,8 +32,10 @@ import org.junit.Test;
 import org.teiid.core.designer.EclipseMock;
 import org.teiid.core.exception.EmptyArgumentException;
 
+import com.metamatrix.core.util.SmartTestDesignerSuite;
+
 public class DdlImporterTest {    
-    private static final String TEST_DDL_FILE = "createTables.ddl";
+    private static final File TEST_DDL_FILE = SmartTestDesignerSuite.getTestDataFile(DdlImporterTest.class, "createTables.ddl");
     
     private EclipseMock eclipseMock;
     
@@ -126,8 +130,8 @@ public class DdlImporterTest {
 
     @Test
     public void shouldProvideDdlFile() {
-        importer.setDdlFileName(TEST_DDL_FILE);
-        assertThat(importer.ddlFileName(), is(TEST_DDL_FILE));
+        importer.setDdlFileName(TEST_DDL_FILE.getAbsolutePath());
+        assertThat(importer.ddlFileName(), is(TEST_DDL_FILE.getAbsolutePath()));
     }
 
     @Test
