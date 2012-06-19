@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.jboss.tools</groupId>
-	<artifactId>org.teiid.designer.ui.bot.tests</artifactId>
+	<artifactId>org.teiid.designer.ui.bot.test</artifactId>
 	<version>7.7.0-SNAPSHOT</version>
 	<packaging>eclipse-test-plugin</packaging>
 
@@ -42,7 +42,7 @@
 					<useUIThread>false</useUIThread>
 					<surefire.timeout>3600</surefire.timeout>
 					<forkedProcessTimeoutInSeconds>3600</forkedProcessTimeoutInSeconds>
-					<testSuite>org.teiid.designer.ui.bot.tests</testSuite>
+					<testSuite>org.teiid.designer.ui.bot.test</testSuite>
 					<testClass>${test.class}</testClass>
 					<skip>${swtbot.test.skip}</skip>
 					<dependencies combine.children="append">
