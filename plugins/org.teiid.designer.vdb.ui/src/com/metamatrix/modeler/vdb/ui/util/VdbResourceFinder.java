@@ -199,7 +199,7 @@ public class VdbResourceFinder {
 
                         final String location = info.getLocation();
                         if( !location.startsWith("http:") ) { //$NON-NLS-1$
-	                        final String path = new Path(fileLocation).append(location).toString() ;
+	                        final String path = new Path(fileLocation).append(location).toOSString() ;
 	                     // TODO: Need to convert the following call to work with "Resource" instead of "IResource" 
 	                        if (!CoreStringUtil.isEmpty(path)) {
 	                        	dependentResource = findResource(path);
@@ -304,8 +304,16 @@ public class VdbResourceFinder {
     
     private Resource getExistingVdbResource(File file) {
     	for( Resource modelFile : this.vdbModelFiles) {
-    		String vdbFileStr = modelFile.getURI().toFileString();
-    		String fileStr = file.getPath().toString();
+    	
+    		String vdbFileStr = WorkspaceResourceFinderUtil.normalizeUriString(modelFile.getURI().toFileString());
+    		
+    		//This will remove the drive from the file string on Windows
+    		String prefix = vdbFileStr.substring(0, vdbFileStr.indexOf("\\")>-1?vdbFileStr.indexOf("\\"):0);  //$NON-NLS-1$ //$NON-NLS-2$
+    		if (prefix.length() > 0 && prefix.contains(":")){ //$NON-NLS-1$
+    			vdbFileStr = vdbFileStr.replace(prefix, ""); //$NON-NLS-1$
+    		}
+    		
+    		String fileStr = file.getPath();
     		if( vdbFileStr.equals(fileStr) ) {
     			return modelFile;
     		}
