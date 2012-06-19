@@ -280,8 +280,20 @@ public class TeiidMetadataImportViewModelPage extends AbstractWizardPage
 			// viewModelContainerText.setText(folder.getFullPath().makeRelative().toString());
 			this.info.setViewModelLocation(folder.getFullPath().makeRelative());
 		}
-
-		synchronizeUI();
+		
+        if (folder != null && viewModelContainerText != null) {
+            this.info.setViewModelLocation(folder.getFullPath().makeRelative());
+            this.viewModelFilePath = this.info.getViewModelLocation();
+            this.viewModelContainerText.setText(this.info.getViewModelLocation().makeRelative().toString());
+        } else {
+        	this.info.setViewModelLocation(new Path(StringUtilities.EMPTY_STRING));
+            this.viewModelContainerText.setText(StringUtilities.EMPTY_STRING);
+        }
+        
+    	if( this.viewModelFileText.getText() != null && this.viewModelFileText.getText().length() > -1 ) {
+    		this.info.setViewModelExists(viewModelExists());
+    		
+    	}
 
 		validatePage();
 	}
@@ -308,8 +320,15 @@ public class TeiidMetadataImportViewModelPage extends AbstractWizardPage
 				info.setViewModelName(modelName);
 			}
 		}
-
-		synchronizeUI();
+		
+        if( this.info.getViewModelName() != null ) {
+        	this.viewModelFilePath = this.info.getViewModelLocation();
+        	this.viewModelContainerText.setText(this.info.getViewModelLocation().makeRelative().toString());
+        	this.viewModelFileText.setText(this.info.getViewModelName());
+        } else {
+        	this.viewModelFileText.setText(StringUtilities.EMPTY_STRING);
+        	this.viewModelContainerText.setText(StringUtilities.EMPTY_STRING);
+        }
 
 		validatePage();
 	}
@@ -331,7 +350,7 @@ public class TeiidMetadataImportViewModelPage extends AbstractWizardPage
 
 		}
 
-		synchronizeUI();
+		//synchronizeUI();
 
 		validatePage();
 	}

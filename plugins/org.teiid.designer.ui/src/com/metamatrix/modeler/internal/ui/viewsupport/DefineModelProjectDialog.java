@@ -224,7 +224,11 @@ public class DefineModelProjectDialog extends TitleAreaDialog implements
 	}
 	
 	private void handleNewProjectPressed() {
-		Properties properties = new Properties();
+		
+		Properties properties = this.designerProperties;
+		if( properties == null ) {
+			properties = new Properties();
+		}
 		ModelerUiViewUtils.launchWizard("newModelProject", new StructuredSelection(), properties, true); //$NON-NLS-1$
 		setProject(properties);
 	}

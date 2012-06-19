@@ -803,9 +803,16 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 
         if (folder != null && sourceModelContainerText != null) {
             this.info.setSourceModelLocation(folder.getFullPath().makeRelative());
+            this.sourceModelFilePath = this.info.getSourceModelLocation();
+            this.sourceModelContainerText.setText(this.info.getSourceModelLocation().makeRelative().toString());
+        } else {
+        	this.info.setSourceModelLocation(new Path(StringUtilities.EMPTY_STRING));
+            this.sourceModelContainerText.setText(StringUtilities.EMPTY_STRING);
         }
         
-        synchronizeUI();
+    	if( this.sourceModelFileText.getText() != null && this.sourceModelFileText.getText().length() > -1 ) {
+    		this.info.setSourceModelExists(sourceModelExists());
+    	}
 
         validatePage();
     }
@@ -832,7 +839,17 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
         	}
         }
         
-        synchronizeUI();
+        if( this.info.getSourceModelName() != null ) {
+        	this.sourceModelFilePath = this.info.getSourceModelLocation();
+        	this.sourceModelContainerText.setText(this.info.getSourceModelLocation().makeRelative().toString());
+        	this.sourceModelFileText.setText(this.info.getSourceModelName());
+        } else {
+        	this.sourceModelFileText.setText(StringUtilities.EMPTY_STRING);
+        	this.sourceModelContainerText.setText(StringUtilities.EMPTY_STRING);
+        }
+        
+        this.info.setSourceModelExists(sourceModelExists());
+        
         
         validatePage();
     }
@@ -847,7 +864,7 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
     		this.info.setSourceModelExists(sourceModelExists());
     		
     	}
-    	synchronizeUI();
+
     	validatePage();
     }
     
