@@ -13,9 +13,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.common.util.WrappedException;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -60,8 +62,6 @@ public class EResourceSetImpl extends ResourceSetImpl implements EResourceSet {
 
     /**
      * Constructor for EResourceSetImpl.
-     * 
-     * @param container The {@link Container} referencing this
      */
     public EResourceSetImpl() {
         super();
@@ -204,7 +204,7 @@ public class EResourceSetImpl extends ResourceSetImpl implements EResourceSet {
 
     // /**
     // * @see org.teiid.designer.core.resource.EResourceSet#getEObjectFinder()
-    // * @since 4.3
+	// * @since 4.3
     // */
     // public EObjectFinder getEObjectFinder() {
     // if (this.eObjectFinder == null) {
@@ -243,7 +243,7 @@ public class EResourceSetImpl extends ResourceSetImpl implements EResourceSet {
     // }
 
     /**
-     * @see com.org.teiid.designer.core.resource.EResourceSet#getEObjectHrefConverter()
+     * @see EResourceSet#getEObjectHrefConverter()
      * @since 4.3
      */
     @Override
@@ -256,7 +256,7 @@ public class EResourceSetImpl extends ResourceSetImpl implements EResourceSet {
     }
 
     /**
-     * @see com.org.teiid.designer.core.resource.EResourceSet#setEObjectHrefConverter(com.org.teiid.designer.core.resource.EObjectHrefConverter)
+     * @see EResourceSet#setEObjectHrefConverter(EObjectHrefConverter)
      * @since 4.3
      */
     @Override
@@ -265,7 +265,7 @@ public class EResourceSetImpl extends ResourceSetImpl implements EResourceSet {
     }
 
     /**
-     * @see com.org.teiid.designer.core.resource.EResourceSet#addListener(org.eclipse.emf.edit.provider.INotifyChangedListener)
+     * @see EResourceSet#addListener(org.eclipse.emf.edit.provider.INotifyChangedListener)
      * @since 4.3
      */
     @Override
@@ -274,7 +274,7 @@ public class EResourceSetImpl extends ResourceSetImpl implements EResourceSet {
     }
 
     /**
-     * @see com.org.teiid.designer.core.resource.EResourceSet#removeListener(org.eclipse.emf.edit.provider.INotifyChangedListener)
+     * @see EResourceSet#removeListener(org.eclipse.emf.edit.provider.INotifyChangedListener)
      * @since 4.3
      */
     @Override
@@ -286,9 +286,7 @@ public class EResourceSetImpl extends ResourceSetImpl implements EResourceSet {
      * Add a ResourceSet to be used for resolution of a resource URI. The specified ResourceSet will be treated as read-only and
      * will never be used to load a resource for the URI being checked.
      * 
-     * @see com.org.teiid.designer.core.resource.EResourceSet#addExternalResourceSet(org.eclipse.emf.ecore.resource.ResourceSet,
-     *      java.util.Map)
-     * @param listener
+     * @see EResourceSet#addExternalResourceSet(org.eclipse.emf.ecore.resource.ResourceSet)
      */
     public void addExternalResourceSet( final ResourceSet resourceSet,
                                         final Map physicalToLogicalUri ) {
@@ -317,7 +315,7 @@ public class EResourceSetImpl extends ResourceSetImpl implements EResourceSet {
     /**
      * Return the array of external resource sets registered with this resource set.
      * 
-     * @see com.org.teiid.designer.core.resource.EResourceSet#getExternalResourceSets()
+     * @see EResourceSet#getExternalResourceSets()
      * @return
      * @since 4.3
      */

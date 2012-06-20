@@ -48,7 +48,7 @@ public class GroupSymbolDisplayNode extends DisplayNode {
     }
     
     /** 
-     * @see org.teiid.query.internal.ui.sqleditor.component.DisplayNode#toDisplayString()
+     * @see DisplayNode#toDisplayString()
      * @since 5.0.1
      */
     @Override

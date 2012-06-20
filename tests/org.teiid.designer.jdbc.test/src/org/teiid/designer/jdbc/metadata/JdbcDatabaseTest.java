@@ -10,19 +10,17 @@ package org.teiid.designer.jdbc.metadata;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+import junit.framework.Assert;
+
 import org.teiid.designer.jdbc.JdbcException;
 import org.teiid.designer.jdbc.JdbcPlugin;
 import org.teiid.designer.jdbc.JdbcSource;
 import org.teiid.designer.jdbc.JdbcTestManager;
-import org.teiid.designer.jdbc.metadata.JdbcDatabase;
-
-import junit.framework.Assert;
 
 
 /**
- * The JdbcDatabaseTest is an abstract class used by the
- * {@link org.teiid.designer.jdbc.metadata.TestJdbcDatabaseMetadataOracle} test case, and is intended to be subclassed to
- * provide specific test behavior
+ * The JdbcDatabaseTest is an abstract class used by jdbc test cases, and is intended to be subclassed to
+ * provide specific test behaviour
  */
 public abstract class JdbcDatabaseTest {
 

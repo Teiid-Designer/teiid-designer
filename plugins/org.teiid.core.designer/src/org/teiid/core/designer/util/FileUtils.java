@@ -112,7 +112,7 @@ public class FileUtils {
      * @param fromFileName
      * @param toFileName
      * @param overwrite whether to overwrite the destination file if it exists.
-     * @throws MetaMatrixCoreException
+     * @throws IOException
      * @since 4.3
      */
     public static void copy( final String fromFileName,
@@ -293,7 +293,7 @@ public class FileUtils {
      * Test whether it's possible to read and write files in the specified directory.
      * 
      * @param dirPath Name of the directory to test
-     * @throws MetaMatrixCoreException
+     * @throws TeiidException
      * @since 4.3
      */
     public static void testDirectoryPermissions( final String dirPath ) throws TeiidException {

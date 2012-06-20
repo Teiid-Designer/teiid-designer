@@ -70,7 +70,7 @@ public final class WizardUtil implements InternalUiConstants.Widgets,
     }
 
     /**<p>
-     * Saves the settings of all {@link IPersistentWizardPages} within the specified wizard.
+     * Saves the settings of all {@link IPersistentWizardPage} within the specified wizard.
      * </p>
      * @since 4.0
      */

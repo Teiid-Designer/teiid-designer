@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -67,7 +68,7 @@ public class ResourceDescriptorImpl implements ResourceDescriptor {
     }
 
     /**
-     * @see org.teiid.designer.core.metamodel.api.mtk.core.MetamodelDescriptor#getFactoryClass()
+     * @see ResourceDescriptor#getResourceFactory()
      */
     @Override
 	public Resource.Factory getResourceFactory() throws ModelerCoreException {

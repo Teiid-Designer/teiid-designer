@@ -586,7 +586,6 @@ public interface WebServicePackage extends EPackage{
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @see org.teiid.designer.metamodels.webservice.OperationUpdateCount
-     * @see org.teiid.designer.metamodels.webservice.impl.OperationPackageImpl#getOperationUpdateCount()
      * @generated
      */
     int OPERATION_UPDATE_COUNT = 10;

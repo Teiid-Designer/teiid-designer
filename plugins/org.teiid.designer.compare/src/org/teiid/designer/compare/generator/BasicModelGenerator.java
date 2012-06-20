@@ -28,6 +28,7 @@ import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.ModelerCoreException;
 import org.teiid.designer.core.ModelerCoreRuntimeException;
 import org.teiid.designer.core.TransactionRunnable;
+import org.teiid.designer.core.compare.EObjectMatcherFactory;
 import org.teiid.designer.core.transaction.UnitOfWork;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
 
@@ -52,7 +53,7 @@ public class BasicModelGenerator extends AbstractModelGenerator {
      * @param original the ModelSelector defining the original model into which the <code>output</code> objects are to be merged;
      *        may not be null
      * @param outputProducer the component that produces the <code>output</code> contents; may not be null
-     * @param mappingAdapters the list of {@link org.teiid.designer.core.util.EObjectMappingAdapter mapping adapter} instances
+     * @param mappingAdapters the list of {@link EObjectMatcherFactory mapping adapter} instances
      *        used during the difference processing; may not be null or empty
      * @throws IllegalArgumentException if any of the above requirements are not satisfied, or if the <code>output</code> and
      *         <code>original</code> objects are the same object

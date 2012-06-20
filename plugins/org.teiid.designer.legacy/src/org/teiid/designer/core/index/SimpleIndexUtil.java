@@ -15,11 +15,11 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+
 import org.teiid.core.TeiidException;
 import org.teiid.core.util.ArgCheck;
 import org.teiid.core.util.FileUtils;
 import org.teiid.core.util.StringUtil;
-import org.teiid.designer.core.index.IEntryResult;
 import org.teiid.designer.core.util.CharOperation;
 import org.teiid.designer.metadata.runtime.impl.RecordFactory;
 
@@ -72,7 +72,7 @@ public class SimpleIndexUtil {
      * @param pattern
      * @param fieldDelimiter
      * @return results
-     * @throws QueryMetadataException
+     * @throws TeiidException
      */
     public static IEntryResult[] queryIndex(final Index[] indexes, final char[] pattern, final char fieldDelimiter) throws TeiidException {
         final boolean isCaseSensitive  = false;
@@ -153,7 +153,7 @@ public class SimpleIndexUtil {
      * @param indexes the array of MtkIndex instances to query
      * @param pattern
      * @return results
-     * @throws MetamatrixCoreException
+     * @throws TeiidException
      */
     public static IEntryResult[] queryIndex(final Index[] indexes, final char[] pattern, final boolean isPrefix, final boolean returnFirstMatch) throws TeiidException {
         return queryIndex(null, indexes, pattern, isPrefix, true, returnFirstMatch);
@@ -170,7 +170,7 @@ public class SimpleIndexUtil {
      * @param indexes the array of MtkIndex instances to query
      * @param pattern
      * @return results
-     * @throws MetamatrixCoreException
+     * @throws TeiidException
      */
     public static IEntryResult[] queryIndex(ProgressMonitor monitor, final Index[] indexes, final char[] pattern, final boolean isPrefix, final boolean returnFirstMatch) throws TeiidException {
         return queryIndex(monitor, indexes, pattern, isPrefix, true, returnFirstMatch);        
@@ -187,7 +187,7 @@ public class SimpleIndexUtil {
      * @param indexes the array of MtkIndex instances to query
      * @param pattern
      * @return results
-     * @throws MetamatrixCoreException
+     * @throws TeiidException
      */
     public static IEntryResult[] queryIndex(ProgressMonitor monitor, final Index[] indexes, final char[] pattern, final boolean isPrefix, final boolean isCaseSensitive, final boolean returnFirstMatch) throws TeiidException {
         final List<IEntryResult> queryResult = new ArrayList<IEntryResult>();
@@ -257,7 +257,7 @@ public class SimpleIndexUtil {
      * @param indexes the array of MtkIndex instances to query
      * @param pattern
      * @return results
-     * @throws MetamatrixCoreException
+     * @throws TeiidException
      */
     public static IEntryResult[] queryIndex(ProgressMonitor monitor, final Index[] indexes, final Collection patterns, final boolean isPrefix, final boolean isCaseSensitive, final boolean returnFirstMatch) throws TeiidException {
         final List<IEntryResult> queryResult = new ArrayList<IEntryResult>();
@@ -447,7 +447,7 @@ public class SimpleIndexUtil {
 	 * @param indexName The shortName of the index file
 	 * @param selector The indexSelector to lookup indexes
 	 * @return An array of indexes, may be duplicates depending on index selector.
-	 * @throws MetamatrixCoreException If there is an error looking up indexes
+	 * @throws TeiidException If there is an error looking up indexes
 	 * @since 4.2
 	 */
     public static Index[] getIndexes(final String indexName, final IndexSelector selector) throws TeiidException {

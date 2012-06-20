@@ -10,6 +10,8 @@ package org.teiid.designer.metadata.runtime;
 
 import java.util.List;
 
+import org.teiid.designer.metadata.runtime.MetadataConstants.DATATYPE_VARIETIES;
+
 
 /**
  * ColumnRecord
@@ -181,7 +183,7 @@ public interface DatatypeRecord extends MetadataRecord {
      * @param eObject The <code>EObject</code> to check 
      * @return short
      * 
-     * @see org.teiid.designer.core.metadata.runtime.MetadataConstants.DATATYPES_VARIETIES 
+     * @see DATATYPE_VARIETIES 
      */
     short getVarietyType();
     

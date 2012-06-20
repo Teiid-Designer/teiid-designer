@@ -8,7 +8,9 @@
 package org.teiid.designer.core.util;
 
 import java.util.Collection;
+
 import org.eclipse.emf.common.command.Command;
+import org.eclipse.emf.edit.command.CommandParameter;
 
 /**
  * This DisabledCommandParameter is a wrapper for a {@link CommandParameter} that signals that the

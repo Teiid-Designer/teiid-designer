@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.osgi.util.NLS;
 import org.teiid.core.PluginUtil;
 import org.teiid.core.designer.CoreModelerPlugin;
 
@@ -27,7 +28,7 @@ import org.teiid.core.designer.CoreModelerPlugin;
 /**
  * This class provides an alternative implementation of {@link PluginUtil} that is for logging purposes only.
  * 
- * Plug-ins that wish to utilize Eclipse's {@link NLS} i18n framework can instanciate this class instead of a
+ * Plug-ins that wish to utilize Eclipse's {@link NLS} i18n framework can instantiate this class instead of a
  * {@link PluginUtilImpl}
  *
  */
@@ -112,8 +113,7 @@ public class LoggingUtil implements PluginUtil {
      * Logs the given status.
      * <p>
      * If this class is initialized by the Eclipse Platform, then this will forward the request to the
-     * {@link org.eclipse.core.runtime.ILog#log(org.eclipse.core.runtime.IStatus)}method. In other cases (e.g., JUnit), the status
-     * is sent to the {@link SystemLogger}.
+     * {@link org.eclipse.core.runtime.ILog#log(org.eclipse.core.runtime.IStatus)}method.
      * </p>
      * 
      * @param status the status to log; may not be null
@@ -159,8 +159,7 @@ public class LoggingUtil implements PluginUtil {
      * Logs the given object using the object's {@link Object#toString() toString()}method.
      * <p>
      * If this class is initialized by the Eclipse Platform, then this will forward the request to the
-     * {@link org.eclipse.core.runtime.ILog#log(org.eclipse.core.runtime.IStatus)}method. In other cases (e.g., JUnit), the status
-     * is sent to the {@link SystemLogger}.
+     * {@link org.eclipse.core.runtime.ILog#log(org.eclipse.core.runtime.IStatus)}method.
      * </p>
      * 
      * @param obj the object to log; may not be null
@@ -176,8 +175,7 @@ public class LoggingUtil implements PluginUtil {
      * Logs the given Throwable.
      * <p>
      * If this class is initialized by the Eclipse Platform, then this will forward the request to the
-     * {@link org.eclipse.core.runtime.ILog#log(org.eclipse.core.runtime.IStatus)}method. In other cases (e.g., JUnit), the status
-     * is sent to the {@link SystemLogger}.
+     * {@link org.eclipse.core.runtime.ILog#log(org.eclipse.core.runtime.IStatus)}method.
      * </p>
      * 
      * @param throwable the Throwable to log; may not be null

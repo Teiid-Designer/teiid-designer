@@ -20,7 +20,7 @@ import java.util.List;
 public interface IndexSelector {
 
     /**
-     * Return the array of {@link com.metamatrix.internal.core.index.IIndex} 
+     * Return the array of {@link IIndex} 
      * instances to use
      * @return array of indexes
      * @throws IOException if errors are encountered obtaining the index file

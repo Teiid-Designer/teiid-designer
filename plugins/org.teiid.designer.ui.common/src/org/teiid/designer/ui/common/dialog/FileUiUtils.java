@@ -8,6 +8,7 @@
 package org.teiid.designer.ui.common.dialog;
 
 import java.io.File;
+
 import org.eclipse.core.runtime.IPath;
 import org.teiid.core.util.CoreArgCheck;
 import org.teiid.core.util.CoreStringUtil;
@@ -27,7 +28,7 @@ public class FileUiUtils implements UiConstants {
      * 
      * @param theFullPathName the file name being checked
      * @return the file name of an existing file having the same name but different case; otherwise the input parameter.
-     * @throws com.metamatrix.core.util.AssertionError if input paramater is <code>null</code> or empty
+     * @throws AssertionError if input parameter is <code>null</code> or empty
      * @since 5.0.1
      */
     public String getExistingCaseVariantFileName( String theFullPathName ) {

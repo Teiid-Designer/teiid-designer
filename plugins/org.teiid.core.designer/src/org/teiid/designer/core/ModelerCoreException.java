@@ -317,7 +317,7 @@ public class ModelerCoreException extends CoreException implements Externalizabl
     }
 
     /**
-     * Serializable implementation of IStatus used to serialize instances of CoreException and MetaMatrixCoreException
+     * Serializable implementation of IStatus used to serialize instances of CoreException and TeiidException
      */
     public static class StatusImpl implements IStatus, Externalizable {
         public static final long serialVersionUID = 0;

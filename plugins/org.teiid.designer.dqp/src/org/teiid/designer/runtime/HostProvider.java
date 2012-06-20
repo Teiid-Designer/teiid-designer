@@ -35,7 +35,7 @@ public interface HostProvider {
         /**
          * {@inheritDoc}
          *
-         * @see org.teiid.designer.runtime.ui.HostProvider#getHost()
+         * @see HostProvider#getHost()
          */
         @Override
         public String getHost() {

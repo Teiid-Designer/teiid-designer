@@ -10,6 +10,8 @@ package org.teiid.designer.core.transaction;
 import java.io.Serializable;
 import java.util.Collection;
 
+import javax.swing.undo.CompoundEdit;
+
 import org.teiid.designer.core.ModelerCoreException;
 
 /**

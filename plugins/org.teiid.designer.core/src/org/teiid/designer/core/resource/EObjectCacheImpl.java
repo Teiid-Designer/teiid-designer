@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
 import org.eclipse.emf.ecore.EObject;
 import org.teiid.core.id.ObjectID;
 import org.teiid.core.util.CoreArgCheck;
@@ -140,7 +141,7 @@ public class EObjectCacheImpl implements EObjectCache {
     }
 
     /**
-     * @see org.teiid.designer.core.resource.EObjectCache#containsKey(org.teid.core.id.ObjectID)
+     * @see org.teiid.designer.core.resource.EObjectCache#containsKey(ObjectID)
      * @since 4.3
      */
     @Override
@@ -236,7 +237,7 @@ public class EObjectCacheImpl implements EObjectCache {
     }
 
     /**
-     * @see org.teiid.designer.core.resource.EObjectCache#remove(com.metamatrix.core.id.ObjectID, boolean)
+     * @see org.teiid.designer.core.resource.EObjectCache#remove(ObjectID, boolean)
      * @since 4.3
      */
     @Override
@@ -268,7 +269,7 @@ public class EObjectCacheImpl implements EObjectCache {
     }
 
     /**
-     * @see org.teiid.designer.core.resource.EObjectCache#remove(com.metamatrix.core.id.ObjectID[], boolean)
+     * @see org.teiid.designer.core.resource.EObjectCache#remove(EObject[], boolean)
      * @since 4.3
      */
     @Override

@@ -28,7 +28,7 @@ public class MetadataSourceUtil {
     }
 
     /**
-     * @throws MetaMatrixCoreException
+     * @throws TeiidException
      * @see org.teiid.designer.core.index.IndexSelector#getFileContent(java.lang.String, java.lang.String[],
      *      java.lang.String[])
      * @since 4.2

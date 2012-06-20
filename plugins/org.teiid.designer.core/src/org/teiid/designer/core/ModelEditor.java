@@ -11,7 +11,9 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.command.Command;
@@ -25,13 +27,13 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.provider.ItemPropertyDescriptor;
 import org.teiid.core.id.ObjectID;
-import org.teiid.designer.core.ModelerCoreException;
 import org.teiid.designer.core.container.Container;
 import org.teiid.designer.core.metamodel.MetamodelDescriptor;
 import org.teiid.designer.core.resource.MMXmiResource;
 import org.teiid.designer.core.search.ModelWorkspaceSearch;
 import org.teiid.designer.core.util.ModelContents;
 import org.teiid.designer.core.workspace.ModelResource;
+import org.teiid.designer.core.workspace.ModelWorkspace;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.metamodels.core.Annotation;
 import org.teiid.designer.metamodels.core.ModelAnnotation;
@@ -252,8 +254,8 @@ public interface ModelEditor {
     /**
      * Get the object that corresponds to the identifier.  The identifier
      * must be the same as returned from {@link #getObjectID(EObject)} or
-     * {@link #getURI(EObject)}.
-     * @param objectId the {@link URI uri} or {@link com.metamatrix.core.id.ObjectID object}
+     * {@link #getUri(EObject) }
+     * @param objectId the {@link URI uri} or {@link ObjectID object}
      * identifier for the object; may not be null
      * @return the EObject; may be null if an object with that identifier could not be found
      * @throws ModelerCoreException if there is an unexpected while trying to locate the object
@@ -264,7 +266,7 @@ public interface ModelEditor {
     /**
      * Get the object that corresponds to the unique identifier.  The unique identifier
      * must be the same as returned from {@link #getObjectID(EObject)}.
-     * @param objectId the {@link URI uri} or {@link com.metamatrix.core.id.ObjectID object}
+     * @param objectId the {@link URI uri} or {@link ObjectID object}
      * identifier for the object; may not be null
      * @param resource the model resource in which the object exists; may not be null
      * @param monitor the progress monitor that may be used if the resource needs to be opened;

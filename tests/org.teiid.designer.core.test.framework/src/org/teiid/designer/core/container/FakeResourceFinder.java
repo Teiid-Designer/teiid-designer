@@ -100,7 +100,7 @@ public class FakeResourceFinder implements  ResourceFinder {
     }
 
     /** 
-     * @see org.teiid.designer.core.container.ResourceFinder#findByUUID(com.metamatrix.core.id.ObjectID, boolean)
+     * @see org.teiid.designer.core.container.ResourceFinder#findByUUID(ObjectID, boolean)
      * @since 4.3
      */
     @Override
@@ -110,7 +110,7 @@ public class FakeResourceFinder implements  ResourceFinder {
     }
 
     /** 
-     * @see org.teiid.designer.core.container.ResourceFinder#findByUUID(com.metamatrix.core.id.ObjectID, org.eclipse.emf.ecore.resource.Resource[])
+     * @see org.teiid.designer.core.container.ResourceFinder#findByUUID(ObjectID, Resource[])
      * @since 4.3
      */
     @Override

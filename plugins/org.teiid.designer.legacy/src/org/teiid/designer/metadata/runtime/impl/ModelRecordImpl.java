@@ -50,7 +50,7 @@ public class ModelRecordImpl extends AbstractMetadataRecord implements ModelReco
     }
 
     /* (non-Javadoc)
-     * @See org.teiid.designer.core.metadata.runtime.ModelRecord#getMaxSetSize()
+     * @see org.teiid.designer.metadata.runtime.ModelRecord#getMaxSetSize()
      */
     @Override
 	public int getMaxSetSize() {
@@ -58,7 +58,7 @@ public class ModelRecordImpl extends AbstractMetadataRecord implements ModelReco
     }
 
     /* (non-Javadoc)
-     * @See org.teiid.designer.core.metadata.runtime.ModelRecord#isVisible()
+     * @see org.teiid.designer.metadata.runtime.ModelRecord#isVisible()
      */
     @Override
 	public boolean isVisible() {
@@ -66,7 +66,7 @@ public class ModelRecordImpl extends AbstractMetadataRecord implements ModelReco
     }
 
     /* (non-Javadoc)
-     * @See org.teiid.designer.core.metadata.runtime.ModelRecord#supportsDistinct()
+     * @see org.teiid.designer.metadata.runtime.ModelRecord#supportsDistinct()
      */
     @Override
 	public boolean supportsDistinct() {
@@ -74,7 +74,7 @@ public class ModelRecordImpl extends AbstractMetadataRecord implements ModelReco
     }
 
     /* (non-Javadoc)
-     * @See org.teiid.designer.core.metadata.runtime.ModelRecord#supportsJoin()
+     * @see org.teiid.designer.metadata.runtime.ModelRecord#supportsJoin()
      */
     @Override
 	public boolean supportsJoin() {
@@ -82,7 +82,7 @@ public class ModelRecordImpl extends AbstractMetadataRecord implements ModelReco
     }
 
     /* (non-Javadoc)
-     * @See org.teiid.designer.core.metadata.runtime.ModelRecord#supportsOrderBy()
+     * @see org.teiid.designer.metadata.runtime.ModelRecord#supportsOrderBy()
      */
     @Override
 	public boolean supportsOrderBy() {
@@ -90,7 +90,7 @@ public class ModelRecordImpl extends AbstractMetadataRecord implements ModelReco
     }
 
     /* (non-Javadoc)
-     * @See org.teiid.designer.core.metadata.runtime.ModelRecord#supportsOuterJoin()
+     * @see org.teiid.designer.metadata.runtime.ModelRecord#supportsOuterJoin()
      */
     @Override
 	public boolean supportsOuterJoin() {
@@ -98,7 +98,7 @@ public class ModelRecordImpl extends AbstractMetadataRecord implements ModelReco
     }
 
     /* (non-Javadoc)
-     * @See org.teiid.designer.core.metadata.runtime.ModelRecord#supportsWhereAll()
+     * @see org.teiid.designer.metadata.runtime.ModelRecord#supportsWhereAll()
      */
     @Override
 	public boolean supportsWhereAll() {
@@ -106,7 +106,7 @@ public class ModelRecordImpl extends AbstractMetadataRecord implements ModelReco
     }
 
     /* (non-Javadoc)
-     * @See org.teiid.designer.core.metadata.runtime.ModelRecord#getModelType()
+     * @see org.teiid.designer.metadata.runtime.ModelRecord#getModelType()
      */
     @Override
 	public int getModelType() {
@@ -114,7 +114,7 @@ public class ModelRecordImpl extends AbstractMetadataRecord implements ModelReco
     }
 
     /* (non-Javadoc)
-     * @See org.teiid.designer.core.metadata.runtime.ModelRecord#isPhysical()
+     * @see org.teiid.designer.metadata.runtime.ModelRecord#isPhysical()
      */
     @Override
 	public boolean isPhysical() {

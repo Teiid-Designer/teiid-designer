@@ -7,7 +7,6 @@
  */
 package org.teiid.designer.core.container;
 
-import org.teiid.designer.core.container.EObjectFinder;
 
 /**
  * @since 3.1
@@ -18,7 +17,7 @@ public class FakeFinder implements EObjectFinder {
 	//############################################################################################################################
 
 	/**
-	 * @see org.teiid.designer.core.container.api.mtk.core.EObjectFinder#find(java.lang.Object)
+	 * @see EObjectFinder#find(java.lang.Object)
      * @since 3.1
 	 */
 	@Override
@@ -27,7 +26,7 @@ public class FakeFinder implements EObjectFinder {
 	}
 
 	/**
-	 * @see org.teiid.designer.core.container.api.mtk.core.EObjectFinder#findKey(java.lang.Object)
+	 * @see EObjectFinder#findKey(java.lang.Object)
      * @since 3.1
 	 */
 	@Override

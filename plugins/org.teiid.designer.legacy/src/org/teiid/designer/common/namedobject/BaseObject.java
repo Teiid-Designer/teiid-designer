@@ -24,7 +24,7 @@ public interface BaseObject extends Comparable, Cloneable {
      * node in name.
      * @return the name
      *
-     * @see getFullName
+     * @see #getFullName
      */
     String getName();
 

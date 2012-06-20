@@ -7,6 +7,7 @@
  */
 package org.teiid.designer.transformation.ui.builder;
 
+import org.teiid.designer.transformation.ui.builder.util.LanguageObjectContentProvider;
 import org.teiid.query.sql.LanguageObject;
 
 /**

@@ -23,6 +23,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.window.IShellProvider;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
@@ -311,7 +312,7 @@ public final class UiUtil implements UiConstants {
      * 
      * @param theViewId the identifier of the view part being requested
      * @return the view part or <code>null</code> if not open, not found, or if there is no active workbench page
-     * @throws com.metamatrix.core.util.AssertionError if <code>theViewId</code> is <code>null</code>
+     * @throws AssertionError if <code>theViewId</code> is <code>null</code>
      * @since 4.2
      */
     public static IViewPart getViewPart( String theViewId ) {

@@ -52,7 +52,7 @@ public class XsdHeaderReader {
      * 
      * @param istream the InputStream from which we read the header
      * @return the XMIHeader object representing the contents of this section
-     * @throws MetaMatrixException if there is an error reading from the stream
+     * @throws TeiidException if there is an error reading from the stream
      */
     public XsdHeader read( InputStream istream ) throws TeiidException {
         if (istream == null) {
@@ -93,7 +93,7 @@ public class XsdHeaderReader {
      * 
      * @param file the File from which we read the header
      * @return the XMIHeader object representing the contents of this section
-     * @throws MetaMatrixException if there is an error reading the file
+     * @throws TeiidException if there is an error reading the file
      */
     public XsdHeader read( File file ) throws TeiidException {
         if (file == null) {

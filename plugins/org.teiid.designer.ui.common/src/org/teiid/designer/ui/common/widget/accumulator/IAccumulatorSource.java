@@ -8,8 +8,10 @@
 package org.teiid.designer.ui.common.widget.accumulator;
 
 import java.util.Collection;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 

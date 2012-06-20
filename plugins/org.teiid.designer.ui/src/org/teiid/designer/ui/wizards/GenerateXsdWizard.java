@@ -10,6 +10,7 @@ package org.teiid.designer.ui.wizards;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
@@ -21,6 +22,7 @@ import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchWizard;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.xsd.XSDElementDeclaration;
 import org.teiid.core.PluginUtil;

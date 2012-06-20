@@ -19,6 +19,7 @@ import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourceAttributes;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
@@ -47,7 +48,6 @@ import org.teiid.designer.core.container.ResourceFinder;
 import org.teiid.designer.core.index.IndexUtil;
 import org.teiid.designer.core.resource.EmfResource;
 import org.teiid.designer.core.resource.MMXmiResource;
-import org.teiid.designer.core.workspace.ModelFileUtil;
 import org.teiid.designer.core.xmi.XMIHeader;
 import org.teiid.designer.core.xmi.XMIHeaderReader;
 import org.teiid.designer.metadata.runtime.RuntimeMetadataPlugin;
@@ -181,7 +181,7 @@ public class ModelUtil {
      * @param forceOpen true if the ModelResource should open in responce to this call, false if it is okay to lazily open the
      *        resource.
      * @return
-     * @throws CoreException
+     * @throws ModelWorkspaceException
      */
     public static ModelResource getModelResource( final IFile modelFile,
                                                   final boolean forceOpen ) throws ModelWorkspaceException {

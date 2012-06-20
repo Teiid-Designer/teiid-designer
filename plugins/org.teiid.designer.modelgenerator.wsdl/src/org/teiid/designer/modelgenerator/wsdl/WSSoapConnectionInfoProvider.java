@@ -53,8 +53,7 @@ public class WSSoapConnectionInfoProvider  extends ConnectionInfoHelper implemen
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.designer.datatools.connection.IConnectionInfoProvider#setConnectionInfo(org.teiid.designer.core.workspace.ModelResource,
-     *      org.teiid.designer.datatools.connection.IConnectionProfile)
+     * @see org.teiid.designer.datatools.connection.IConnectionInfoProvider#setConnectionInfo(ModelResource, IConnectionProfile)
      */
     @Override
     public void setConnectionInfo( ModelResource modelResource,

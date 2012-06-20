@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
@@ -42,12 +43,14 @@ import org.teiid.designer.compare.ModelerComparePlugin;
 import org.teiid.designer.compare.PropertyDifference;
 import org.teiid.designer.compare.impl.CompareFactoryImpl;
 import org.teiid.designer.compare.selector.ModelSelector;
+import org.teiid.designer.core.MappingAdapterDescriptor;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.ModelerCoreException;
 import org.teiid.designer.core.compare.EObjectMatcher;
 import org.teiid.designer.core.compare.EObjectMatcherCache;
 import org.teiid.designer.core.compare.EObjectMatcherFactory;
 import org.teiid.designer.core.compare.MappingProducer;
+import org.teiid.designer.core.workspace.ModelResource;
 import org.w3c.dom.Node;
 
 /**
@@ -854,11 +857,10 @@ public class DifferenceProcessorImpl implements DifferenceProcessor {
     }
 
     /**
-     * Return the list of {@link EObjectMappingAdapter} instances that will be used by this processor during
+     * Return the list of {@link MappingAdapterDescriptor} instances that will be used by this processor during
      * {@link #execute(IProgressMonitor) execution}.
      * 
      * @return the mapping adapters; never null
-     * @see #addMappingAdapters(List)
      */
     @Override
 	public List getEObjectMatcherFactories() {
@@ -866,7 +868,7 @@ public class DifferenceProcessorImpl implements DifferenceProcessor {
     }
 
     /**
-     * Helper method to add to the list of {@link EObjectMappingAdapter} instances that will be used by this processor during
+     * Helper method to add to the list of {@link MappingAdapterDescriptor} instances that will be used by this processor during
      * {@link #execute(IProgressMonitor) execution}.
      * 
      * @param adapters the new mapping adapters; may not be null

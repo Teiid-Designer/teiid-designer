@@ -11,8 +11,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.mapping.MappingRoot;
 import org.teiid.core.util.CoreArgCheck;
 import org.teiid.core.util.I18nUtil;
 import org.teiid.designer.core.ModelerCore;

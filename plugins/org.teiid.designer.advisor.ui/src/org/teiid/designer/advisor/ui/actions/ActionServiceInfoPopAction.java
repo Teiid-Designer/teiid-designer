@@ -42,7 +42,7 @@ public class ActionServiceInfoPopAction extends InfoPopAction {
     //
 
     /**
-     * @see org.eclipse.ui.advisor.core.vdbview.ui.webservices.InfoPopAction#getAction()
+     * @see InfoPopAction#getAction()
      * @since 5.0
      */
     @Override

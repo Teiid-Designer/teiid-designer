@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
@@ -215,7 +216,7 @@ public class ModelBufferManager implements ModelBufferFactory {
     }
 
     /**
-     * @see ModelBufferFactory#createBuffer(IOpenable)
+     * @see ModelBufferFactory#createBuffer(Openable)
      */
     @Override
 	public ModelBuffer createBuffer( final Openable owner) throws ModelWorkspaceException {

@@ -9,6 +9,7 @@ package org.teiid.designer.ui.editors;
 
 import java.util.Collections;
 import java.util.List;
+
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -23,7 +24,6 @@ import org.eclipse.ui.part.EditorActionBarContributor;
 import org.teiid.designer.ui.UiPlugin;
 import org.teiid.designer.ui.common.actions.ActionService;
 import org.teiid.designer.ui.common.actions.GlobalActionsMap;
-
 
 /**
  * Intended as the supertype for all {@link org.teiid.designer.ui.editors.ModelEditorPage}
@@ -197,7 +197,7 @@ implements IMenuListener {
     
     /**
      * Called by the action contributor for the parent editor whenever the editor page associated with this action contributor is
-     * deactivated.  This method is responsible for removing any actions contributed dynamically via {@link pageActivated}.
+     * deactivated.  This method is responsible for removing any actions contributed dynamically via {@link #pageActivated}.
      * @since 4.0
      */
     public abstract void pageDeactivated();

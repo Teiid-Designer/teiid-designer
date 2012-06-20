@@ -55,6 +55,7 @@ import org.teiid.designer.metamodels.relational.Procedure;
 import org.teiid.designer.metamodels.relational.extension.SourceFunctionModelExtensionConstants;
 import org.teiid.designer.metamodels.relational.util.ParameterData;
 import org.teiid.designer.metamodels.relational.util.PushdownFunctionData;
+import org.teiid.designer.udf.UdfManager;
 import org.teiid.designer.ui.PluginConstants;
 import org.teiid.designer.ui.UiConstants;
 import org.teiid.designer.ui.UiPlugin;

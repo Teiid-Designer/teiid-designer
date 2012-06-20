@@ -111,7 +111,7 @@ public class ModelWorkspaceException extends ModelerCoreException {
             return new ModelStatusImpl((CoreException)nestedException);
         }
         // should never really get here, as the only nested exceptions of a 
-        // MetaMatrixCoreException must be CoreException
+        // TeiidException must be CoreException
         return null;
     }
     /**
@@ -123,7 +123,7 @@ public class ModelWorkspaceException extends ModelerCoreException {
      * @return <code>true</code> if this exception indicates that a modeling
      *   element does not exist
      * @see ModelStatus#isDoesNotExist
-     * @see ModelStatusConstants#ELEMENT_DOES_NOT_EXIST
+     * @see ModelStatusConstants#ITEM_DOES_NOT_EXIST
      */
     public boolean isDoesNotExist() {
         ModelStatus modelStatus = getModelStatus();

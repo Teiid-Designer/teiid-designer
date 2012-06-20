@@ -13,6 +13,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
@@ -29,6 +30,7 @@ import org.eclipse.emf.mapping.Mapping;
 import org.eclipse.emf.mapping.MappingHelper;
 import org.teiid.core.util.CoreArgCheck;
 import org.teiid.designer.compare.DifferenceDescriptor;
+import org.teiid.designer.compare.DifferenceProcessor;
 import org.teiid.designer.compare.DifferenceReport;
 import org.teiid.designer.compare.DifferenceType;
 import org.teiid.designer.compare.MergeProcessor;

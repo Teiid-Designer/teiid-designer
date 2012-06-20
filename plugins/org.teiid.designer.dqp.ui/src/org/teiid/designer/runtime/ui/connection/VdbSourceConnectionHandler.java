@@ -394,7 +394,7 @@ public class VdbSourceConnectionHandler implements SourceHandler {
         /**
          * {@inheritDoc}
          * 
-         * @see org.teiid.designer.core.properties.PropertyDefinition#getAllowedValues()
+         * PropertyDefinition#getAllowedValues()
          */
         @Override
         public String[] getAllowedValues() {
@@ -404,7 +404,7 @@ public class VdbSourceConnectionHandler implements SourceHandler {
         /**
          * {@inheritDoc}
          * 
-         * @see org.teiid.designer.core.properties.PropertyDefinition#getDefaultValue()
+         * PropertyDefinition#getDefaultValue()
          */
         @Override
         public String getDefaultValue() {
@@ -414,7 +414,7 @@ public class VdbSourceConnectionHandler implements SourceHandler {
         /**
          * {@inheritDoc}
          * 
-         * @see org.teiid.designer.core.properties.PropertyDefinition#getDescription()
+         * PropertyDefinition#getDescription()
          */
         @Override
         public String getDescription() {
@@ -424,7 +424,7 @@ public class VdbSourceConnectionHandler implements SourceHandler {
         /**
          * {@inheritDoc}
          * 
-         * @see org.teiid.designer.core.properties.PropertyDefinition#getDisplayName()
+         * PropertyDefinition#getDisplayName()
          */
         @Override
         public String getDisplayName() {
@@ -434,7 +434,7 @@ public class VdbSourceConnectionHandler implements SourceHandler {
         /**
          * {@inheritDoc}
          * 
-         * @see org.teiid.designer.core.properties.PropertyDefinition#getId()
+         * PropertyDefinition#getId()
          */
         @Override
         public String getId() {
@@ -454,7 +454,7 @@ public class VdbSourceConnectionHandler implements SourceHandler {
         /**
          * {@inheritDoc}
          * 
-         * @see org.teiid.designer.core.properties.PropertyDefinition#isAdvanced()
+         * PropertyDefinition#isAdvanced()
          */
         @Override
         public boolean isAdvanced() {
@@ -464,7 +464,7 @@ public class VdbSourceConnectionHandler implements SourceHandler {
         /**
          * {@inheritDoc}
          * 
-         * @see org.teiid.designer.core.properties.PropertyDefinition#isMasked()
+         * PropertyDefinition#isMasked()
          */
         @Override
         public boolean isMasked() {
@@ -474,7 +474,7 @@ public class VdbSourceConnectionHandler implements SourceHandler {
         /**
          * {@inheritDoc}
          * 
-         * @see org.teiid.designer.core.properties.PropertyDefinition#isModifiable()
+         * PropertyDefinition#isModifiable()
          */
         @Override
         public boolean isModifiable() {
@@ -484,7 +484,7 @@ public class VdbSourceConnectionHandler implements SourceHandler {
         /**
          * {@inheritDoc}
          * 
-         * @see org.teiid.designer.core.properties.PropertyDefinition#isRequired()
+         * PropertyDefinition#isRequired()
          */
         @Override
         public boolean isRequired() {
@@ -494,7 +494,7 @@ public class VdbSourceConnectionHandler implements SourceHandler {
         /**
          * {@inheritDoc}
          * 
-         * @see org.teiid.designer.core.properties.PropertyDefinition#isValidValue(java.lang.String)
+         * PropertyDefinition#isValidValue(java.lang.String)
          */
         @Override
         public String isValidValue( String newValue ) {

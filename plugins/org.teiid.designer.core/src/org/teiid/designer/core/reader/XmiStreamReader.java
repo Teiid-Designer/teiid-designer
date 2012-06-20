@@ -41,7 +41,7 @@ public class XmiStreamReader implements StreamReader {
     }
 
     /**
-     * @see com.metamatrix.api.mtk.core.reader.MtkStreamReader#read(java.io.InputStream, java.util.Map)
+     * @see StreamReader#read(java.io.InputStream, java.util.Map)
      */
     @Override
 	public Collection read( InputStream inputStream,

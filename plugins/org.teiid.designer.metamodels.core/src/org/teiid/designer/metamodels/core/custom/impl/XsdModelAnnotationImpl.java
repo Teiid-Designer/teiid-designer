@@ -8,6 +8,7 @@
 package org.teiid.designer.metamodels.core.custom.impl;
 
 import java.util.Iterator;
+
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
@@ -53,7 +54,6 @@ public class XsdModelAnnotationImpl extends ModelAnnotationImpl {
     }
 
     /**
-     * @see org.teiid.designer.metamodels.core.xsd.XsdModelAnnotation#getResource()
      * @since 4.2
      */
     public Resource getResource() {
@@ -61,7 +61,6 @@ public class XsdModelAnnotationImpl extends ModelAnnotationImpl {
     }
 
     /**
-     * @see org.teiid.designer.metamodels.core.xsd.XsdModelAnnotation#setResource(org.eclipse.emf.ecore.resource.Resource)
      * @since 4.2
      */
     public void setResource( final Resource xsdResource ) {

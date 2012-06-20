@@ -10,7 +10,6 @@ package org.teiid.designer.core.transaction;
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.notify.Notification;
 import org.teiid.designer.core.ModelerCoreException;
-import org.teiid.designer.core.transaction.MtkTransaction;
 
 /**
  * Interface for the UnitOfWork Object for an Emf Container
@@ -49,7 +48,7 @@ public interface UnitOfWork extends MtkTransaction{
      * Pass through to the editing domain /  command stack to execute the
      * command
      * @return true if the command was executed, or false if it could not be executed
-     * @see com.metamatrix.mtk.emf.container.container.transaction.api.UnitOfWork#executeCommand(Command)
+     * @see UnitOfWork#executeCommand(Command)
      */
     boolean executeCommand(Command command) throws ModelerCoreException;  
     

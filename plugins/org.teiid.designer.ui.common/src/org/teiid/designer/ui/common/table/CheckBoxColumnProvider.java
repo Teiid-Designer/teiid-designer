@@ -13,7 +13,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.teiid.designer.ui.common.UiConstants;
 import org.teiid.designer.ui.common.UiPlugin;
-
+import org.teiid.designer.ui.common.widget.ButtonProvider;
 
 /**
  * @param <T>

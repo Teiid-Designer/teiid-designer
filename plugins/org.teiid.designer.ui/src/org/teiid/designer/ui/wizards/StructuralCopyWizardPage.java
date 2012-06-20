@@ -8,6 +8,7 @@
 package org.teiid.designer.ui.wizards;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.jface.dialogs.IDialogPage;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.wizard.WizardPage;

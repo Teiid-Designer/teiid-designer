@@ -10,6 +10,7 @@ package org.teiid.designer.metamodels.relational.util;
 import org.eclipse.emf.ecore.EObject;
 import org.teiid.designer.metamodels.relational.BaseTable;
 import org.teiid.designer.metamodels.relational.Catalog;
+import org.teiid.designer.metamodels.relational.Column;
 import org.teiid.designer.metamodels.relational.ColumnSet;
 import org.teiid.designer.metamodels.relational.Schema;
 

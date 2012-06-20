@@ -9,15 +9,15 @@ package org.teiid.designer.transformation.util;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.eclipse.emf.ecore.EObject;
+import org.teiid.core.types.DataTypeManager;
+import org.teiid.core.types.NullType;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.metamodel.aspect.AspectManager;
 import org.teiid.designer.core.metamodel.aspect.sql.SqlColumnAspect;
 import org.teiid.designer.core.types.DatatypeManager;
 import org.teiid.designer.udf.UdfManager;
-
-import org.teiid.core.types.DataTypeManager;
-import org.teiid.core.types.NullType;
 import org.teiid.query.function.FunctionDescriptor;
 import org.teiid.query.function.FunctionLibrary;
 import org.teiid.query.sql.symbol.Constant;
@@ -25,8 +25,7 @@ import org.teiid.query.sql.symbol.Expression;
 import org.teiid.query.sql.symbol.Function;
 
 /**
- * The <code>RuntimeTypeConverter</code> class reconciles the runtime types of 2 lists. For type changes to {@link MetaObject}s,
- * the {@link #commit()} method must be called.
+ * The <code>RuntimeTypeConverter</code> class reconciles the runtime types of 2 lists.
  * 
  * @author Dan Florian
  * @since 3.1
@@ -264,104 +263,6 @@ public class RuntimeTypeConverter {
         }
 
         return result;
-    }
-
-    /**
-     * Commits the changes in types for all {@link MetaObject}s by using the {@link MetaObjectEditor}. Also resets the converter
-     * to an initial state meaning that no conversions have taken place.
-     */
-    public void commit() {
-        // if (isConverted()) {
-        // UserTransaction txn = editor.createWriteTransaction();
-        // boolean wasErr = true;
-        //    
-        // try {
-        // txn.begin();
-        //    
-        // Object original = null;
-        //    
-        // // loop through primary looking for MetaObjects whose type has been converted
-        // // converted will be an ObjectReference if a conversion has taken place
-        // for (int i = 0; i < primarySize; i++) {
-        // if (primaryConverted[i]) {
-        // original = primaryCandidates.get(i);
-        // if (original instanceof MetaObject) {
-        // setMetaObjectType((MetaObject)original, primaryResults.get(i));
-        // }
-        // }
-        // }
-        //                
-        // // loop through secondary looking for MetaObjects whose type has been converted
-        // // converted will be an ObjectReference if a conversion has taken place
-        // for (int i = 0; i < secondarySize; i++) {
-        // if (secondaryConverted[i]) {
-        // original = secondaryCandidates.get(i);
-        // if (original instanceof MetaObject) {
-        // setMetaObjectType((MetaObject)original, secondaryResults.get(i));
-        // }
-        // }
-        // }
-        //    
-        // wasErr = false;
-        // }
-        // catch (TransactionException theException) {
-        // LogManager.logCritical(LogContexts.QUERY,
-        // theException,
-        // "RuntimeTypeConverter.commit():Changing MetaObject types.");
-        // }
-        // finally {
-        // try {
-        // if (wasErr) {
-        // txn.rollback();
-        // }
-        // else {
-        // txn.commit();
-        // // now update the original lists with the converted objects
-        // // and clear converted objects flag
-        // // only have to overwrite the SingleElementSymbols items since the meta object was changed
-        //                        
-        // Object original = null;
-        //    
-        // for (int i = 0; i < primarySize; i++) {
-        // if (primaryConverted[i]) {
-        // primaryConverted[i] = false;
-        // original = primaryCandidates.get(i);
-        //
-        // if (original instanceof SingleElementSymbol) {
-        // setPrimaryCandidate(i, primaryResults.get(i));
-        // }
-        // }
-        // }
-        //    
-        // for (int i = 0; i < secondarySize; i++) {
-        // if (secondaryConverted[i]) {
-        // secondaryConverted[i] = false;
-        // original = secondaryCandidates.get(i);
-        //
-        // if (original instanceof SingleElementSymbol) {
-        // setSecondaryCandidate(i, secondaryResults.get(i));
-        // }
-        // }
-        // }
-        //                        
-        // primaryResults = (List)primaryCandidates.clone();
-        // secondaryResults = (List)secondaryCandidates.clone();
-        // explicitMatch = true;
-        // }
-        // }
-        // catch (TransactionException theException) {
-        // LogManager.logCritical(LogContexts.QUERY,
-        // theException,
-        // "RuntimeTypeConverter.commit():Failed to " +
-        // (wasErr ? "rollback." : "commit."));
-        // }
-        // catch (ToolkitRuntimeException theException) {
-        // LogManager.logCritical(LogContexts.QUERY,
-        // theException,
-        // "RuntimeTypeConverter.commit():Runtime Exception");
-        // }
-        // }
-        // }
     }
 
     /**
@@ -610,9 +511,7 @@ public class RuntimeTypeConverter {
 
     /**
      * Gets an object from the result list associated with the original primary list. The object returned can be the same object
-     * as the original primary list, or it can be another object which is the result of a conversion taken place. For
-     * {@link MetaObject}s, if a conversion has taken place but not yet committed, the object will be a type
-     * {@link ObjectReference}.
+     * as the original primary list, or it can be another object which is the result of a conversion taken place.
      * 
      * @param theIndex the index of the object to be retrieved
      * @return the requested object
@@ -732,9 +631,7 @@ public class RuntimeTypeConverter {
 
     /**
      * Gets an object from the result list associated with the original secondary list. The object returned can be the same object
-     * as the original secondary list, or it can be another object which is the result of a conversion taken place. For
-     * {@link MetaObject}s, if a conversion has taken place but not yet committed, the object will be a type
-     * {@link ObjectReference}.
+     * as the original secondary list, or it can be another object which is the result of a conversion taken place.
      * 
      * @param theIndex the index of the object to be retrieved
      * @return the requested object

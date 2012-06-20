@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Collection;
 import java.util.Map;
+
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
 import org.teiid.core.util.CoreArgCheck;
@@ -32,7 +33,7 @@ public class XmiStreamWriter implements StreamWriter {
     }
 
     /**
-     * @see com.metamatrix.api.mtk.core.writer.MtkStreamWriter#write(java.io.OutputStream, java.util.Map, java.util.Collection)
+     * @see StreamWriter#write(java.io.OutputStream, java.util.Map, java.util.Collection)
      *      Warning: The objects collection input parameter will be added to a new Resource within the execution of this method,
      *      and thus will lose its relationship to any other resource that it is contained in.
      */

@@ -41,7 +41,7 @@ public class DatatypeAtomicRowObject extends AbstractRowObject {
     }
 
     /** 
-     * @see org.teiid.designer.relational.ui.relationaltable.AbstractRowObject#parseRow()
+     * @see AbstractRowObject#parseRow()
      * @since 4.2
      */
     @Override

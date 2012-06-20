@@ -43,7 +43,7 @@ public class ForeignKeyRecordImpl extends ColumnSetRecordImpl implements Foreign
     //==================================================================================
 
     /* (non-Javadoc)
-     * @See org.teiid.designer.core.metadata.runtime.ForeignKeyRecord#getPrimaryKeyID()
+     * @see org.teiid.designer.metadata.runtime.ForeignKeyRecord#getPrimaryKeyID()
      */
     @Override
     public Object getUniqueKeyID() {

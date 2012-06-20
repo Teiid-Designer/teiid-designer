@@ -68,7 +68,7 @@ public class ColumnRecordImpl extends org.teiid.designer.metadata.runtime.impl.C
     //==================================================================================
 
     /* (non-Javadoc)
-     * @See org.teiid.designer.core.metadata.runtime.ColumnRecord#getCharOctetLength()
+     * @see org.teiid.designer.metadata.runtime.ColumnRecord#getCharOctetLength()
      */
     @Override
     public int getCharOctetLength() {
@@ -79,7 +79,7 @@ public class ColumnRecordImpl extends org.teiid.designer.metadata.runtime.impl.C
     }
 
     /* (non-Javadoc)
-     * @See org.teiid.designer.core.metadata.runtime.ColumnRecord#getRuntimeType()
+     * @see org.teiid.designer.metadata.runtime.ColumnRecord#getRuntimeType()
      */
     @Override
     public String getRuntimeType() {
@@ -90,7 +90,7 @@ public class ColumnRecordImpl extends org.teiid.designer.metadata.runtime.impl.C
     }
 
     /* (non-Javadoc)
-     * @See org.teiid.designer.core.metadata.runtime.ColumnRecord#getDatatypeUUID()
+     * @see org.teiid.designer.metadata.runtime.ColumnRecord#getDatatypeUUID()
      */
     @Override
     public String getDatatypeUUID() {
@@ -101,7 +101,7 @@ public class ColumnRecordImpl extends org.teiid.designer.metadata.runtime.impl.C
     }
 
     /* (non-Javadoc)
-     * @See org.teiid.designer.core.metadata.runtime.ColumnRecord#getDefaultValue()
+     * @see org.teiid.designer.metadata.runtime.ColumnRecord#getDefaultValue()
      */
     @Override
     public Object getDefaultValue() {
@@ -112,7 +112,7 @@ public class ColumnRecordImpl extends org.teiid.designer.metadata.runtime.impl.C
     }
 
     /* (non-Javadoc)
-     * @See org.teiid.designer.core.metadata.runtime.ColumnRecord#getLength()
+     * @see org.teiid.designer.metadata.runtime.ColumnRecord#getLength()
      */
     @Override
     public int getLength() {
@@ -123,7 +123,7 @@ public class ColumnRecordImpl extends org.teiid.designer.metadata.runtime.impl.C
     }
 
     /* (non-Javadoc)
-     * @See org.teiid.designer.core.metadata.runtime.ColumnRecord#getMaxValue()
+     * @see org.teiid.designer.metadata.runtime.ColumnRecord#getMaxValue()
      */
     @Override
     public Object getMaxValue() {
@@ -134,7 +134,7 @@ public class ColumnRecordImpl extends org.teiid.designer.metadata.runtime.impl.C
     }
 
     /* (non-Javadoc)
-     * @See org.teiid.designer.core.metadata.runtime.ColumnRecord#getMinValue()
+     * @see org.teiid.designer.metadata.runtime.ColumnRecord#getMinValue()
      */
     @Override
     public Object getMinValue() {
@@ -145,7 +145,7 @@ public class ColumnRecordImpl extends org.teiid.designer.metadata.runtime.impl.C
     }
 
     /* (non-Javadoc)
-     * @See org.teiid.designer.core.metadata.runtime.ColumnRecord#getPrecision()
+     * @see org.teiid.designer.metadata.runtime.ColumnRecord#getPrecision()
      */
     @Override
     public int getPrecision() {
@@ -156,7 +156,7 @@ public class ColumnRecordImpl extends org.teiid.designer.metadata.runtime.impl.C
     }
 
     /* (non-Javadoc)
-     * @See org.teiid.designer.core.metadata.runtime.ColumnRecord#getPosition()
+     * @see org.teiid.designer.metadata.runtime.ColumnRecord#getPosition()
      */
     @Override
     public int getPosition() {
@@ -167,7 +167,7 @@ public class ColumnRecordImpl extends org.teiid.designer.metadata.runtime.impl.C
     }
 
     /* (non-Javadoc)
-     * @See org.teiid.designer.core.metadata.runtime.ColumnRecord#getScale()
+     * @see org.teiid.designer.metadata.runtime.ColumnRecord#getScale()
      */
     @Override
     public int getScale() {
@@ -178,7 +178,7 @@ public class ColumnRecordImpl extends org.teiid.designer.metadata.runtime.impl.C
     }
 
     /* (non-Javadoc)
-     * @See org.teiid.designer.core.metadata.runtime.ColumnRecord#getSearchTye()
+     * @see org.teiid.designer.metadata.runtime.ColumnRecord#getSearchTye()
      */
     @Override
     public int getSearchType() {
@@ -189,7 +189,7 @@ public class ColumnRecordImpl extends org.teiid.designer.metadata.runtime.impl.C
     }
 
     /* (non-Javadoc)
-     * @See org.teiid.designer.core.metadata.runtime.ColumnRecord#getFormat()
+     * @see org.teiid.designer.metadata.runtime.ColumnRecord#getFormat()
      */
     @Override
     public String getFormat() {
@@ -200,7 +200,7 @@ public class ColumnRecordImpl extends org.teiid.designer.metadata.runtime.impl.C
     }
 
     /* (non-Javadoc)
-     * @See org.teiid.designer.core.metadata.runtime.ColumnRecord#isAutoIncrementable()
+     * @see org.teiid.designer.metadata.runtime.ColumnRecord#isAutoIncrementable()
      */
     @Override
     public boolean isAutoIncrementable() {
@@ -211,7 +211,7 @@ public class ColumnRecordImpl extends org.teiid.designer.metadata.runtime.impl.C
     }
 
     /* (non-Javadoc)
-     * @See org.teiid.designer.core.metadata.runtime.ColumnRecord#isCaseSensitive()
+     * @see org.teiid.designer.metadata.runtime.ColumnRecord#isCaseSensitive()
      */
     @Override
     public boolean isCaseSensitive() {
@@ -222,7 +222,7 @@ public class ColumnRecordImpl extends org.teiid.designer.metadata.runtime.impl.C
     }
 
     /* (non-Javadoc)
-     * @See org.teiid.designer.core.metadata.runtime.ColumnRecord#isCurrency()
+     * @see org.teiid.designer.metadata.runtime.ColumnRecord#isCurrency()
      */
     @Override
     public boolean isCurrency() {
@@ -233,7 +233,7 @@ public class ColumnRecordImpl extends org.teiid.designer.metadata.runtime.impl.C
     }
 
     /* (non-Javadoc)
-     * @See org.teiid.designer.core.metadata.runtime.ColumnRecord#isFixedLength()
+     * @see org.teiid.designer.metadata.runtime.ColumnRecord#isFixedLength()
      */
     @Override
     public boolean isFixedLength() {
@@ -244,7 +244,7 @@ public class ColumnRecordImpl extends org.teiid.designer.metadata.runtime.impl.C
     }
 
     /**
-     * @see org.teiid.designer.core.metadata.runtime.ColumnRecord#isTranformationInputParameter()
+     * @see org.teiid.designer.metadata.runtime.ColumnRecord#isTranformationInputParameter()
      * @since 4.2
      */
     @Override
@@ -267,7 +267,7 @@ public class ColumnRecordImpl extends org.teiid.designer.metadata.runtime.impl.C
     }
 
     /* (non-Javadoc)
-     * @See org.teiid.designer.core.metadata.runtime.ColumnRecord#isSelectable()
+     * @see org.teiid.designer.metadata.runtime.ColumnRecord#isSelectable()
      */
     @Override
     public boolean isSelectable() {
@@ -278,7 +278,7 @@ public class ColumnRecordImpl extends org.teiid.designer.metadata.runtime.impl.C
     }
 
     /* (non-Javadoc)
-     * @See org.teiid.designer.core.metadata.runtime.ColumnRecord#isSigned()
+     * @see org.teiid.designer.metadata.runtime.ColumnRecord#isSigned()
      */
     @Override
     public boolean isSigned() {
@@ -289,7 +289,7 @@ public class ColumnRecordImpl extends org.teiid.designer.metadata.runtime.impl.C
     }
 
     /* (non-Javadoc)
-     * @See org.teiid.designer.core.metadata.runtime.ColumnRecord#isUpdatable()
+     * @see org.teiid.designer.metadata.runtime.ColumnRecord#isUpdatable()
      */
     @Override
     public boolean isUpdatable() {
@@ -300,7 +300,7 @@ public class ColumnRecordImpl extends org.teiid.designer.metadata.runtime.impl.C
     }
 
     /* (non-Javadoc)
-     * @See org.teiid.designer.core.metadata.runtime.ColumnRecord#getRadix()
+     * @see org.teiid.designer.metadata.runtime.ColumnRecord#getRadix()
      */
     @Override
     public int getRadix() {
@@ -311,7 +311,7 @@ public class ColumnRecordImpl extends org.teiid.designer.metadata.runtime.impl.C
     }
 
     /**
-     * @see org.teiid.designer.core.metadata.runtime.ColumnRecord#getNativeType()
+     * @see org.teiid.designer.metadata.runtime.ColumnRecord#getNativeType()
      * @since 4.2
      */
     @Override
@@ -323,7 +323,7 @@ public class ColumnRecordImpl extends org.teiid.designer.metadata.runtime.impl.C
     }
 
     /**
-     * @see org.teiid.designer.core.metadata.runtime.ColumnRecord#getDistinctValues()
+     * @see org.teiid.designer.metadata.runtime.ColumnRecord#getDistinctValues()
      * @since 4.3
      */
     @Override
@@ -335,7 +335,7 @@ public class ColumnRecordImpl extends org.teiid.designer.metadata.runtime.impl.C
     }
 
     /**
-     * @see org.teiid.designer.core.metadata.runtime.ColumnRecord#getNullValues()
+     * @see org.teiid.designer.metadata.runtime.ColumnRecord#getNullValues()
      * @since 4.3
      */
     @Override

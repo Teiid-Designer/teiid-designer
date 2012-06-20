@@ -8,6 +8,7 @@
 
 package org.teiid.designer.runtime.preview.jobs;
 
+import org.eclipse.core.runtime.IStatus;
 import org.teiid.designer.runtime.preview.PreviewContext;
 
 /**

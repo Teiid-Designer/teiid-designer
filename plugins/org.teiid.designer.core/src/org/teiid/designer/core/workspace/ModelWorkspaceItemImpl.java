@@ -8,6 +8,7 @@
 package org.teiid.designer.core.workspace;
 
 import java.util.ArrayList;
+
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.PlatformObject;
@@ -318,7 +319,7 @@ public abstract class ModelWorkspaceItemImpl extends PlatformObject implements M
     }
 
     /**
-     * @see IOpenable
+     * @see Openable
      */
     public void close() throws ModelWorkspaceException {
         this.closing = true;

@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -53,7 +54,7 @@ abstract public class TreeViewerUtil {
     /** Gets a List of all root nodes present in the specified tree.
       * 
       * @param viewer The Tree we are working with.
-      * @return {@link Collections.EMPTY_LIST} if the content provider is null,
+      * @return empty list if the content provider is null,
       *   the children of viewer.getInput() otherwise.
       */
     public static List getRootNodes(TreeViewer viewer) {

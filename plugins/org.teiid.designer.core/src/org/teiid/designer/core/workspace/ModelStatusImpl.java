@@ -172,9 +172,6 @@ public class ModelStatusImpl extends Status implements ModelStatus, ModelStatusC
         return fChildren;
     }
 
-    /**
-     * @see IJavaModelStatus
-     */
     @Override
 	public ModelWorkspaceItem[] getModelWorkspaceItems() {
         return fElements;
@@ -290,9 +287,6 @@ public class ModelStatusImpl extends Status implements ModelStatus, ModelStatusC
         return exception.toString();
     }
 
-    /**
-     * @see IJavaModelStatus#getPath()
-     */
     @Override
 	public IPath getPath() {
         return fPath;
@@ -314,9 +308,6 @@ public class ModelStatusImpl extends Status implements ModelStatus, ModelStatusC
         return severity;
     }
 
-    /**
-     * @see IJavaModelStatus#isDoesNotExist()
-     */
     @Override
 	public boolean isDoesNotExist() {
         return getCode() == ITEM_DOES_NOT_EXIST;

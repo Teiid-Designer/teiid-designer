@@ -11,10 +11,12 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EcoreFactory;
 import org.osgi.framework.Bundle;
+import org.teiid.designer.core.metamodel.MetamodelDescriptor;
 import org.teiid.designer.core.metamodel.MetamodelDescriptorImpl;
 
 /**
@@ -44,7 +46,14 @@ public class FakeMetamodelDescriptor extends MetamodelDescriptorImpl {
         RESOURCE_INPUTSTREAM = null;
         METAMODEL_URI = URI.createURI(NAMESPACE_URI);
     }
-
+    
+    /**
+     * Constructor
+     * 
+     * @param theNamespaceURI
+     * @param ePackageClassName
+     * @param bundle
+     */
     public FakeMetamodelDescriptor( final String theNamespaceURI,
                                     final String ePackageClassName,
                                     final Bundle bundle ) {
@@ -60,7 +69,7 @@ public class FakeMetamodelDescriptor extends MetamodelDescriptorImpl {
     }
 
     /**
-     * @see org.teiid.designer.core.metamodel.api.mtk.core.MetamodelDescriptor#getName()
+     * @see MetamodelDescriptor#getName()
      */
     @Override
     public String getName() {
@@ -68,7 +77,7 @@ public class FakeMetamodelDescriptor extends MetamodelDescriptorImpl {
     }
 
     /**
-     * @see org.teiid.designer.core.metamodel.api.mtk.core.MetamodelDescriptor#getURI()
+     * @return the namespace {@link URI}
      */
     public String getURI() {
         return NAMESPACE_URI;
@@ -84,7 +93,7 @@ public class FakeMetamodelDescriptor extends MetamodelDescriptorImpl {
     }
 
     /**
-     * @see org.teiid.designer.core.metamodel.api.mtk.core.MetamodelDescriptor#getNamespacePrefix()
+     * @see MetamodelDescriptor#getNamespacePrefix()
      */
     @Override
     public String getNamespacePrefix() {
@@ -92,21 +101,21 @@ public class FakeMetamodelDescriptor extends MetamodelDescriptorImpl {
     }
 
     /**
-     * @see org.teiid.designer.core.metamodel.api.mtk.core.MetamodelDescriptor#getFactoryClass()
+     * @return the factory class
      */
     public Class getFactoryClass() {
         return EFACTORY_CLASS;
     }
 
     /**
-     * @see org.teiid.designer.core.metamodel.api.mtk.core.MetamodelDescriptor#getResourceLocation()
+     * @return the resource location
      */
     public String getResourceURL() {
         return RESOURCE_LOCATION;
     }
 
     /**
-     * @see org.teiid.designer.core.metamodel.api.mtk.core.MetamodelDescriptor#getInputStream()
+     * @return an {@link InputStream} to the resource
      */
     public InputStream getInputStream() {
         File file = new File(RESOURCE_LOCATION);

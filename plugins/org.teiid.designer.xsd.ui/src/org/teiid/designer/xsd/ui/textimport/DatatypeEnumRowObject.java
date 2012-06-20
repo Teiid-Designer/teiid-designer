@@ -29,7 +29,7 @@ public class DatatypeEnumRowObject extends AbstractRowObject {
     }
 
     /** 
-     * @see org.teiid.designer.textimport.ui.wizards.AbstractRowObject#parseRow()
+     * @see AbstractRowObject#parseRow()
      * @since 4.2
      */
     @Override

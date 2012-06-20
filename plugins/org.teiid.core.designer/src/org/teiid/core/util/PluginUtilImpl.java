@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 import java.util.StringTokenizer;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.ILog;
@@ -26,6 +27,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
+import org.osgi.service.log.LogListener;
 import org.teiid.core.BundleUtil;
 import org.teiid.core.PluginUtil;
 import org.teiid.core.designer.CoreModelerPlugin;
@@ -206,8 +208,7 @@ public class PluginUtilImpl extends BundleUtil implements PluginUtil {
      * Logs the given status.
      * <p>
      * If this class is initialized by the Eclipse Platform, then this will forward the request to the
-     * {@link org.eclipse.core.runtime.ILog#log(org.eclipse.core.runtime.IStatus)}method. In other cases (e.g., JUnit), the status
-     * is sent to the {@link SystemLogger}.
+     * {@link org.eclipse.core.runtime.ILog#log(org.eclipse.core.runtime.IStatus)}method.
      * </p>
      * 
      * @param status the status to log; may not be null
@@ -247,8 +248,7 @@ public class PluginUtilImpl extends BundleUtil implements PluginUtil {
      * Logs the given object using the object's {@link Object#toString() toString()}method.
      * <p>
      * If this class is initialized by the Eclipse Platform, then this will forward the request to the
-     * {@link org.eclipse.core.runtime.ILog#log(org.eclipse.core.runtime.IStatus)}method. In other cases (e.g., JUnit), the status
-     * is sent to the {@link SystemLogger}.
+     * {@link org.eclipse.core.runtime.ILog#log(org.eclipse.core.runtime.IStatus)}method.
      * </p>
      * 
      * @param obj the object to log; may not be null
@@ -264,8 +264,7 @@ public class PluginUtilImpl extends BundleUtil implements PluginUtil {
      * Logs the given Throwable.
      * <p>
      * If this class is initialized by the Eclipse Platform, then this will forward the request to the
-     * {@link org.eclipse.core.runtime.ILog#log(org.eclipse.core.runtime.IStatus)}method. In other cases (e.g., JUnit), the status
-     * is sent to the {@link SystemLogger}.
+     * {@link org.eclipse.core.runtime.ILog#log(org.eclipse.core.runtime.IStatus)}method.
      * </p>
      * 
      * @param throwable the Throwable to log; may not be null

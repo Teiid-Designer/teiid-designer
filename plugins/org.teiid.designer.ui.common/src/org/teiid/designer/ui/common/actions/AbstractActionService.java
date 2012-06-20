@@ -32,7 +32,6 @@ import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.ui.common.AbstractUiPlugin;
 import org.teiid.designer.ui.common.InternalUiConstants;
 
-
 /**
  * The <code>AbstractActionService</code> class is a base implementation of the <code>ActionService</code> interface.
  */
@@ -172,7 +171,6 @@ public abstract class AbstractActionService implements ActionService, InternalUi
      * @param theActionClass the action class associated with the action to retrieve
      * @return the requested action
      * @throws CoreException if action class can't be instantiated
-     * @throws com.metamatrix.core.util.AssertionError if action class is <code>null</code> or if not an {@link IAction}
      */
     public IAction getAction( Class<? extends IAction> theActionClass ) throws CoreException {
         CoreArgCheck.isNotNull(theActionClass);
@@ -339,7 +337,7 @@ public abstract class AbstractActionService implements ActionService, InternalUi
      * Removes the action with the given identifier from the action service.
      * 
      * @param theActionId the identifier of the action being removed
-     * @throws com.metamatrix.core.util.AssertionError if input is null
+     * @throws IllegalArgumentException if input is null
      */
     @Override
 	public void removeAction( String theActionId ) {
@@ -398,7 +396,6 @@ public abstract class AbstractActionService implements ActionService, InternalUi
      * </ol>
      * 
      * @see org.teiid.designer.ui.common.actions.ActionService#shutdown()
-     * @see #shutdown(boolean)
      */
     @Override
 	public void shutdown() {

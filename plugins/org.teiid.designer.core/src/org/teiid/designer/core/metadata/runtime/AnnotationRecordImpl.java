@@ -39,7 +39,7 @@ public class AnnotationRecordImpl extends org.teiid.designer.metadata.runtime.im
     //==================================================================================
 
     /**
-     * @see org.teiid.designer.core.metadata.runtime.AnnotationRecord#getDescription()
+     * @see org.teiid.designer.metadata.runtime.AnnotationRecord#getDescription()
      */
     @Override
     public String getDescription() {

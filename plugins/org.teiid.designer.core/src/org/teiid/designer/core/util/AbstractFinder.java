@@ -7,11 +7,13 @@
  */
 package org.teiid.designer.core.util;
 
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Proxy;
+
 import org.eclipse.emf.ecore.EObject;
 import org.teiid.core.util.CoreArgCheck;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.container.EObjectFinder;
-
 
 /**
  * @since 3.1
@@ -22,12 +24,11 @@ public abstract class AbstractFinder implements EObjectFinder {
 	//############################################################################################################################
 
 	/**
-     * Finds the key associated with the specified proxy via the proxy's {@link ProxyHandler}.  The proxy must be an instance
+     * Finds the key associated with the specified proxy via the proxy's handler.  The proxy must be an instance
      * of {@link Proxy} that was created via the MetadataToolKit (i.e., its {@link InvocationHandler} must be an instance of
      * ProxyHandler).
-     * @param proxy The proxy for which to find a key; may not be null.
      * @return The key for the specified proxy; never null.
-	 * @see org.teiid.designer.core.container.api.mtk.core.EObjectFinder#findKey(java.lang.Object)
+	 * @see EObjectFinder#findKey(java.lang.Object)
      * @since 3.1
 	 */
 	@Override

@@ -8,6 +8,7 @@
 package org.teiid.designer.core.util;
 
 import java.util.Arrays;
+
 import org.eclipse.emf.common.util.URI;
 import org.teiid.core.util.CoreArgCheck;
 
@@ -39,7 +40,7 @@ public class BasicUriPathConverter implements UriPathConverter {
     // ==================================================================================
 
     /** 
-     * @see org.teiid.designer.core.resource.EmfUriHelper#makeAbsolute(java.lang.String, java.lang.String)
+     * @see UriHelper#makeAbsolutePath(String, String)
      */
     @Override
 	public String makeAbsolute(final String relativePath, final String basePath) {
@@ -61,7 +62,7 @@ public class BasicUriPathConverter implements UriPathConverter {
     }
 
     /** 
-     * @see org.teiid.designer.core.resource.EmfUriHelper#makeAbsolute(org.eclipse.emf.common.util.URI, org.eclipse.emf.common.util.URI)
+     * @see UriHelper#makeAbsolutePath(URI, URI)
      */
     @Override
 	public URI makeAbsolute(final URI relativeURI, final URI baseURI) {
@@ -89,7 +90,7 @@ public class BasicUriPathConverter implements UriPathConverter {
     }
 
     /** 
-     * @see org.teiid.designer.core.resource.EmfUriHelper#makeRelative(java.lang.String, java.lang.String)
+     * @see UriHelper#makeRelativePath(String, String)
      */
     @Override
 	public String makeRelative(final String absolutePath, final String basePath) {
@@ -103,7 +104,7 @@ public class BasicUriPathConverter implements UriPathConverter {
     }
 
     /** 
-     * @see org.teiid.designer.core.resource.EmfUriHelper#makeRelative(org.eclipse.emf.common.util.URI, org.eclipse.emf.common.util.URI)
+     * @see UriHelper#makeRelativeUri(URI, URI)
      */
     @Override
 	public URI makeRelative(final URI absoluteURI, final URI baseURI) {

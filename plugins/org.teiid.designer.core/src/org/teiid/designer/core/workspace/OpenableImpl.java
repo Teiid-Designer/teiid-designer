@@ -170,16 +170,13 @@ public abstract class OpenableImpl extends ModelWorkspaceItemImpl implements Ope
         return parentExists() && resourceExists();
     }
 
-    /**
-     * @see IParent
-     */
     @Override
 	public boolean hasChildren() throws ModelWorkspaceException {
         return getChildren().length > 0;
     }
 
     /**
-     * @see IOpenable
+     * @see Openable
      */
     @Override
 	public boolean hasUnsavedChanges() {
@@ -220,14 +217,14 @@ public abstract class OpenableImpl extends ModelWorkspaceItemImpl implements Ope
     /**
      * Subclasses must override as required.
      * 
-     * @see IOpenable
+     * @see Openable
      */
     public boolean isConsistent() {
         return true;
     }
 
     /**
-     * @see IOpenable
+     * @see Openable
      */
     @Override
 	public boolean isOpen() {
@@ -245,7 +242,7 @@ public abstract class OpenableImpl extends ModelWorkspaceItemImpl implements Ope
     }
 
     /**
-     * @see IOpenable
+     * @see Openable
      */
     public void makeConsistent( IProgressMonitor pm ) throws ModelWorkspaceException {
         if (!isConsistent()) {
@@ -254,12 +251,12 @@ public abstract class OpenableImpl extends ModelWorkspaceItemImpl implements Ope
     }
 
     /**
-     * @see IOpenable
+     * @see Openable
      */
     @Override
 	public void open( IProgressMonitor pm ) throws ModelWorkspaceException {
         if (!isOpen()) {
-            // TODO: need to synchronize (IOpenable.open(IProgressMonitor) is API
+            // TODO: need to synchronize (Openable.open(IProgressMonitor) is API
             // TODO: could use getItemInfo instead
             this.openWhenClosed(pm);
         }
@@ -300,7 +297,7 @@ public abstract class OpenableImpl extends ModelWorkspaceItemImpl implements Ope
     }
 
     /**
-     * @see IOpenable
+     * @see Openable
      */
     @Override
 	public void save( IProgressMonitor pm,
@@ -342,7 +339,7 @@ public abstract class OpenableImpl extends ModelWorkspaceItemImpl implements Ope
     // * made to create and fill this element's buffer. If the buffer has been
     // * closed since it was first opened, the buffer is re-created.
     // *
-    // * @see IOpenable
+    // * @see Openable
     // */
     // public synchronized ModelBuffer getBuffer() throws ModelWorkspaceException {
     // return getBuffer(false);
@@ -370,7 +367,7 @@ public abstract class OpenableImpl extends ModelWorkspaceItemImpl implements Ope
      * at one time. If this is the first time a request is being made for the buffer, an attempt is made to create and fill this
      * element's buffer. If the buffer has been closed since it was first opened, the buffer is re-created.
      * 
-     * @see IOpenable
+     * @see Openable
      */
     public synchronized ModelBuffer getBuffer() throws ModelWorkspaceException {
         if (hasBuffer()) {

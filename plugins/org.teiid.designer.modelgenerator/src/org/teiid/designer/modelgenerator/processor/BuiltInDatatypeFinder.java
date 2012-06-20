@@ -10,12 +10,12 @@ package org.teiid.designer.modelgenerator.processor;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.types.DatatypeManager;
-
 
 /**
  * BuiltInDatatypeFinder
@@ -33,7 +33,7 @@ public class BuiltInDatatypeFinder implements DatatypeFinder {
     }
 
     /**
-     * @See org.teiid.designer.modelgenerator.DatatypeFinder#findDatatype(java.lang.String)
+     * @see DatatypeFinder#findDatatype(java.lang.String)
      */
     @Override
 	public EObject findDatatype(final String name) throws CoreException {
@@ -46,7 +46,7 @@ public class BuiltInDatatypeFinder implements DatatypeFinder {
     }
 
     /**
-     * @See org.teiid.designer.modelgenerator.DatatypeFinder#findDatatype(org.eclipse.emf.common.util.URI)
+     * @see DatatypeFinder#findDatatype(org.eclipse.emf.common.util.URI)
      */
     @Override
 	public EObject findDatatype(final URI uri) throws CoreException {
@@ -59,7 +59,7 @@ public class BuiltInDatatypeFinder implements DatatypeFinder {
     }
 
     /**
-     * @See org.teiid.designer.modelgenerator.DatatypeFinder#findAllDatatypes(java.lang.String)
+     * @see DatatypeFinder#findAllDatatypes(java.lang.String)
      */
     @Override
 	public List findAllDatatypes(final String name) throws CoreException {
@@ -73,7 +73,7 @@ public class BuiltInDatatypeFinder implements DatatypeFinder {
     }
 
     /**
-     * @See org.teiid.designer.modelgenerator.DatatypeFinder#findAllDatatypes(org.eclipse.emf.common.util.URI)
+     * @see DatatypeFinder#findAllDatatypes(org.eclipse.emf.common.util.URI)
      */
     @Override
 	public List findAllDatatypes(final URI uri) throws CoreException {

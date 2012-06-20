@@ -10,13 +10,13 @@ package org.teiid.designer.metamodels.webservice;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
 import org.eclipse.emf.common.util.AbstractEnumerator;
 
 /**
  * <!-- begin-user-doc --> A representation of the literals of the enumeration '<em><b>Operation Update Count</b></em>', and
  * utility methods for working with them. <!-- end-user-doc -->
  * 
- * @see org.teiid.designer.metamodels.relational.RelationalPackage#getOperationUpdateCount()
  * @model
  * @generated
  */

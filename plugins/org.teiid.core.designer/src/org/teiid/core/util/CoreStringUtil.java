@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.regex.Pattern;
+
 import org.teiid.core.CorePlugin;
 import org.teiid.core.TeiidRuntimeException;
 
@@ -67,7 +68,7 @@ public final class CoreStringUtil {
     public static final String LINE_SEPARATOR_PROPERTY_NAME = "line.separator"; //$NON-NLS-1$
 
     /**
-     * The String that should be used to separate lines; defaults to {@link #NEW_LINE}
+     * The String that should be used to separate lines; defaults to {@link Constants#NEW_LINE}
      */
     public static final String LINE_SEPARATOR = System.getProperty(LINE_SEPARATOR_PROPERTY_NAME, Constants.NEW_LINE);
 

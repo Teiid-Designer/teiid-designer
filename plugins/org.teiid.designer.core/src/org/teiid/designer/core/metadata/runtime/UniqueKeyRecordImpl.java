@@ -44,7 +44,7 @@ public class UniqueKeyRecordImpl extends org.teiid.designer.metadata.runtime.imp
     //==================================================================================
 
     /*
-     * @See org.teiid.designer.core.metadata.runtime.UniqueKeyRecord#getForeignKeyIDs()
+     * @see org.teiid.designer.metadata.runtime.UniqueKeyRecord#getForeignKeyIDs()
      */
     @Override
     public List getForeignKeyIDs() {

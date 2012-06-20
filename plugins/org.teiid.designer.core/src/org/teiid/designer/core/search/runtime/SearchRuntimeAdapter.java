@@ -11,6 +11,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.util.EList;
@@ -26,6 +27,7 @@ import org.teiid.core.util.CoreStringUtil;
 import org.teiid.designer.core.ModelEditor;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.index.IndexConstants;
+import org.teiid.designer.core.index.WordEntry;
 import org.teiid.designer.core.metadata.runtime.RuntimeAdapter;
 import org.teiid.designer.core.metamodel.aspect.AspectManager;
 import org.teiid.designer.core.metamodel.aspect.ImportsAspect;
@@ -66,7 +68,7 @@ public class SearchRuntimeAdapter extends RuntimeAdapter {
 	}
 
     /**
-     * Create a {@link org.teiid.designer.core.index.index.impl.WordEntry}
+     * Create a {@link WordEntry}
      * instance representing a "typed" EObject.  A "typed" EObject is one
      * that references a datatype such as a Relational.Column or a
      * XSDSimpleTypeDefinition (references a basetype).
@@ -116,7 +118,7 @@ public class SearchRuntimeAdapter extends RuntimeAdapter {
 	}
 
     /**
-     * Create a {@link org.teiid.designer.core.index.index.impl.WordEntry}
+     * Create a {@link WordEntry}
      * instance representing a typed EObject.  This resulting WordEntry is of the form:
      * recordType|objectID|name|fullname|uri|datatypeName|datatypeID|runtimeType|modelPath|metaclassURI|
      */
@@ -179,7 +181,7 @@ public class SearchRuntimeAdapter extends RuntimeAdapter {
     }
 
     /**
-     * Create a {@link org.teiid.designer.core.index.index.impl.WordEntry}
+     * Create a {@link WordEntry}
      * instance representing an EObject.  This resulting WordEntry is of the form:
      * recordType|objectID|upperName|name|fullname|uri|modelPath|metaclassURI|
      */
@@ -225,7 +227,7 @@ public class SearchRuntimeAdapter extends RuntimeAdapter {
     }
 
     /**
-     * Create a {@link org.teiid.designer.core.index.index.impl.WordEntry}
+     * Create a {@link WordEntry}
      * instance representing an EObject.  This resulting WordEntry is of the form:
      * recordType|objectID|upperName|name|fullname|uri|modelPath|metaclassURI|
      */
@@ -272,7 +274,7 @@ public class SearchRuntimeAdapter extends RuntimeAdapter {
     }
 
     /**
-     * Create a {@link org.teiid.designer.core.index.index.impl.WordEntry}
+     * Create a {@link WordEntry}
      * instance representing an annotated EObject.  This resulting WordEntry is of the form:
      * recordType|objectID|name|fullname|uri|tags|description|modelPath|metaclassURI|
      */
@@ -490,7 +492,7 @@ public class SearchRuntimeAdapter extends RuntimeAdapter {
 	}
 
 	/**
-	 * Create the {@link org.teiid.designer.core.index.index.impl.WordEntry} instance(s)
+	 * Create the {@link WordEntry} instance(s)
 	 * to be used as the index file record(s) for this EObject instance.  The word entries
 	 * are added to the list provided by the calling method.
 	 * @param eObject
@@ -518,7 +520,7 @@ public class SearchRuntimeAdapter extends RuntimeAdapter {
 	}
 
 	/**
-	 * Create {@link org.teiid.designer.core.index.index.impl.WordEntry} instances
+	 * Create {@link WordEntry} instances
 	 * for all related objects in a given relationship.  This resulting <code>WordEntry</code>s
 	 * are of the form:
 	 * ObjectID|relationshipTypeID|relationshipName|relationshipTypeName|relationshipUri|comment
@@ -574,7 +576,7 @@ public class SearchRuntimeAdapter extends RuntimeAdapter {
 	}
 
 	/**
-	 * Create {@link org.teiid.designer.core.index.index.impl.WordEntry} instances
+	 * Create {@link WordEntry} instances
 	 * for all related objects in a given relationship.  This resulting <code>WordEntry</code>s
 	 * are of the form:
 	 * relationshipTypeName|superTypeID|ObjectID|sourceName|targetRoleName|relationshipUri
@@ -623,7 +625,7 @@ public class SearchRuntimeAdapter extends RuntimeAdapter {
 	}
 
 	/**
-	 * Create {@link org.teiid.designer.core.index.index.impl.WordEntry} instances
+	 * Create {@link WordEntry} instances
 	 * for all related objects in a given relationship. One entry is made for each of
 	 * the sourceObjects in the relationship to each of its targets and vice versa.
 	 * This resulting <code>WordEntry</code>s are of the form:
@@ -652,7 +654,7 @@ public class SearchRuntimeAdapter extends RuntimeAdapter {
 	}
 
 	/**
-	 * Create a {@link org.teiid.designer.core.index.index.impl.WordEntry}
+	 * Create a {@link WordEntry}
 	 * instance representing a related object.  This resulting WordEntry is of the form:
 	 * ObjectID|relationshipObjectID|relatedObjID|ObjectMetaclassUri|relatedObjmetaclassUri|isSource|uriofObject|uriofRelatedObject
 	 * @param eObject The <code>EObject</code> of the entity involved in the relationship
@@ -779,7 +781,7 @@ public class SearchRuntimeAdapter extends RuntimeAdapter {
 	}
 
 	/**
-	 * Return the {@link org.teiid.designer.core.search.runtime.relationship.search.index.SearchRecord}
+	 * Return the {@link SearchRecord}
 	 * instances for specified IEntryResult.
 	 * @param record The cgar array that is a search record
 	 * @return The SearchRecord
@@ -1048,7 +1050,7 @@ public class SearchRuntimeAdapter extends RuntimeAdapter {
 	}
 
 	/**
-	 * Return the {@link org.teiid.designer.core.search.runtime.relationship.search.index.RelationshipRecord}
+	 * Return the {@link org.teiid.designer.core.search.runtime.RelationshipRecord}
 	 * instances for specified record.
 	 * @param record The char array that is a search record
 	 * @return The RelationshipRecord
@@ -1086,7 +1088,7 @@ public class SearchRuntimeAdapter extends RuntimeAdapter {
 	}
 
 	/**
-	 * Return the {@link org.teiid.designer.core.search.runtime.relationship.search.index.RelationshipTypeRecord}
+	 * Return the {@link org.teiid.designer.core.search.runtime.RelationshipTypeRecord}
 	 * instances for specified record.
 	 * @param record The char array that is a search record
 	 * @return The RelationshipTypeRecord
@@ -1121,7 +1123,7 @@ public class SearchRuntimeAdapter extends RuntimeAdapter {
 	}
 
 	/**
-	 * Return the {@link org.teiid.designer.core.search.runtime.relationship.search.index.RelatedObjectRecord}
+	 * Return the {@link org.teiid.designer.core.search.runtime.RelatedObjectRecord}
 	 * instances for specified IEntryResult.
 	 * @param record The char array that is a search record
 	 * @return The RelatedObjectRecord

@@ -10,7 +10,7 @@ package org.teiid.designer.metadata.runtime.api;
 
 
 /**
- * Interface that represents the properties associated with a {@link VirtualDatabaseLoader}
+ * Interface that represents the properties associated with a {@link VirtualDatabase}
  * implementation.
  * @since 3.1
  */

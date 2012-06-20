@@ -9,6 +9,8 @@ package org.teiid.designer.core.util;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.teiid.designer.core.resource.EmfResource;

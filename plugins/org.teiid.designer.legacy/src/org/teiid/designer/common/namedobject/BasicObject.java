@@ -9,6 +9,7 @@
 package org.teiid.designer.common.namedobject;
 
 import java.io.Serializable;
+
 import org.teiid.core.TeiidRuntimeException;
 import org.teiid.designer.common.util.ErrorMessageKeys;
 import org.teiid.designer.common.util.I18nUtil;
@@ -48,7 +49,6 @@ public abstract class BasicObject implements BaseObject, Serializable {
      * The ID for this object. Never null.
      * 
      * @label ID
-     * @link aggregation
      * @supplierCardinality 1
      */
     private BaseID id;
@@ -81,7 +81,7 @@ public abstract class BasicObject implements BaseObject, Serializable {
      * return the last node in name.
      * 
      * @return the name
-     * @see getFullName
+     * @see #getFullName
      */
     @Override
 	public String getName() {

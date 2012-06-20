@@ -7,7 +7,9 @@
  */
 package org.teiid.designer.jdbc.data;
 
+import java.sql.Connection;
 import java.util.List;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.teiid.core.util.CoreArgCheck;

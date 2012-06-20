@@ -12,6 +12,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
@@ -874,7 +875,6 @@ public class ModelResourceContainerFactory {
      * @param resource
      * @param diagram
      * @param persistent
-     * @throws ModelWorkspaceException
      * @since 4.3
      */
     public static void setDiagramPersistence( final Diagram diagram,

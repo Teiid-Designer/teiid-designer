@@ -8,6 +8,7 @@
 package org.teiid.designer.modelgenerator.wsdl;
 
 import java.util.Properties;
+
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
@@ -54,8 +55,7 @@ public class SOAPConnectionInfoProvider extends ConnectionInfoHelper implements 
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.designer.datatools.connection.IConnectionInfoProvider#setConnectionInfo(org.teiid.designer.core.workspace.ModelResource,
-     *      org.teiid.designer.datatools.connection.IConnectionProfile)
+     * @see org.teiid.designer.datatools.connection.IConnectionInfoProvider#setConnectionInfo(ModelResource, IConnectionProfile)
      */
     @Override
     public void setConnectionInfo( ModelResource modelResource,

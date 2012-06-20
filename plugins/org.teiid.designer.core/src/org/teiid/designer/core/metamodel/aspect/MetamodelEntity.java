@@ -9,7 +9,10 @@ package org.teiid.designer.core.metamodel.aspect;
 
 import java.util.Collection;
 import java.util.List;
+
+import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EReference;
 
 /**
  * MetamodelEntity

@@ -9,11 +9,12 @@
 package org.teiid.designer.runtime;
 
 import java.util.Properties;
+
 import org.teiid.adminapi.Translator;
 import org.teiid.core.util.CoreArgCheck;
 
 /**
- * The <code>PseudoConnectionFactory</code> class is an implementation of {@link ConnectionFactory} that keeps track of the
+ * The <code>PseudoTranslator</code> class is an implementation of {@link Translator} that keeps track of the
  * initial property values and allows its name to be changed.
  */
 public class PseudoTranslator implements Translator {
@@ -30,8 +31,7 @@ public class PseudoTranslator implements Translator {
      * @param name the initial name (never <code>null</code>)
      * @param type the initial type (never <code>null</code>)
      */
-    public PseudoTranslator( String name,
-                                    String type, ExecutionAdmin admin) {
+    public PseudoTranslator( String name, String type) {
         CoreArgCheck.isNotNull(name, "name"); //$NON-NLS-1$
         CoreArgCheck.isNotNull(type, "type"); //$NON-NLS-1$
         this.name = name;

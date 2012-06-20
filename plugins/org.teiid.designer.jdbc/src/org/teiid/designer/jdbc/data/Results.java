@@ -8,7 +8,9 @@
 package org.teiid.designer.jdbc.data;
 
 import java.sql.Date;
+import java.sql.ResultSet;
 import java.sql.Timestamp;
+import java.sql.Types;
 
 /**
  * The Results interface is the primary means of accessing the cached data returned

@@ -8,6 +8,7 @@
 package org.teiid.designer.extension.ui.wizards;
 
 import java.util.List;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
@@ -21,6 +22,7 @@ import org.eclipse.ui.IWorkbench;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
+import org.eclipse.ui.IWorkbenchWizard;
 import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.definition.ModelExtensionAssistant;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
@@ -32,7 +34,6 @@ import org.teiid.designer.ui.UiPlugin;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.common.wizard.AbstractWizard;
-
 
 public class ManageModelExtensionDefnsWizard extends AbstractWizard {
 

@@ -966,14 +966,14 @@ public class JdbcMetadataClient {
 
         /**
          * Set the stopwatch as inactive.
-         * @see isActive
+         * @see #isActive
          */
         public void setInactive() {
             active = false;
         }
         /**
          * Set the stopwatch as active.
-         * @see isActive
+         * @see #isActive
          */
         public void setActive() {
             active = true;
@@ -982,7 +982,7 @@ public class JdbcMetadataClient {
         /**
          * If the stopwatch is active, record the starting time for a time segment.
          * If the stopwatch is inactive, the method returns immediately.
-         * @see isActive
+         * @see #isActive
          */
         public void start() {
             if ( active ) {
@@ -992,7 +992,7 @@ public class JdbcMetadataClient {
         /**
          * If the stopwatch is active, record the ending time for a time segment.
          * If the stopwatch is inactive, the method returns immediately.
-         * @see isActive
+         * @see #isActive
          */
         public void stop() {
             if ( active ) {

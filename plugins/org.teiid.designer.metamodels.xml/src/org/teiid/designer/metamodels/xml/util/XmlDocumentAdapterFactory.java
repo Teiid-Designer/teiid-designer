@@ -406,12 +406,12 @@ public class XmlDocumentAdapterFactory extends AdapterFactoryImpl {
     }
 
     /**
-     * Creates a new adapter for an object of class '{@link org.teiid.designer.metamodels.xml.XmlElementHolder
-     * <em>Xml Element Holder</em>}'. <!-- begin-user-doc --> This default implementation returns null so that we can easily ignore
+     * Creates a new adapter for an object of class <em>Xml Element Holder</em>}. 
+     * 
+     * <!-- begin-user-doc --> This default implementation returns null so that we can easily ignore
      * cases; it's useful to ignore a case when inheritance will catch all the cases anyway. <!-- end-user-doc -->
      * 
      * @return the new adapter.
-     * @see org.teiid.designer.metamodels.xml.XmlElementHolder
      * @generated
      */
     public Adapter createXmlElementHolderAdapter() {

@@ -9,9 +9,11 @@ package org.teiid.designer.metamodels.webservice.util;
 
 import java.util.HashSet;
 import java.util.Set;
+
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xsd.XSDComponent;
 import org.eclipse.xsd.XSDSchema;
+import org.teiid.designer.metamodels.webservice.Interface;
 import org.teiid.designer.metamodels.webservice.Message;
 import org.teiid.designer.metamodels.webservice.Output;
 import org.teiid.designer.metamodels.xml.XmlDocument;

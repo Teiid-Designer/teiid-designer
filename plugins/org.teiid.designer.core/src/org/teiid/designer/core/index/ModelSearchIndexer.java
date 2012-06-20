@@ -8,6 +8,7 @@
 package org.teiid.designer.core.index;
 
 import java.util.List;
+
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
@@ -17,8 +18,6 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.teiid.core.util.CoreArgCheck;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.ModelerCoreException;
-import org.teiid.designer.core.index.IDocument;
-import org.teiid.designer.core.index.IndexConstants;
 import org.teiid.designer.core.metamodel.MetamodelDescriptor;
 import org.teiid.designer.core.search.runtime.SearchRuntimeAdapter;
 import org.teiid.designer.core.workspace.ModelResource;
@@ -51,7 +50,7 @@ public class ModelSearchIndexer extends ModelIndexer {
     }
 
     /**
-     * Create a {@link org.teiid.designer.core.index.index.impl.WordEntry} instance representing a EObject within a resource. This
+     * Create a {@link WordEntry} instance representing a EObject within a resource. This
      * resulting WordEntry is of the form: uuid|metamodelURI#EClass|modelPath|
      * 
      * @see org.teiid.designer.core.index.ModelIndexer#addIndexWord(org.eclipse.emf.ecore.EObject, java.lang.String,

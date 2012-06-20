@@ -59,7 +59,7 @@ public abstract class AbstractMetadataRecord implements MetadataRecord {
     // ==================================================================================
 
     /* (non-Javadoc)
-     * @See org.teiid.designer.core.metadata.runtime.MetadataRecord#getUUID()
+     * @see org.teiid.designer.metadata.runtime.MetadataRecord#getUUID()
      */
     @Override
 	public String getUUID() {
@@ -67,7 +67,7 @@ public abstract class AbstractMetadataRecord implements MetadataRecord {
     }
 
     /* (non-Javadoc)
-     * @See org.teiid.designer.core.metadata.runtime.MetadataRecord#getParentUUID()
+     * @see org.teiid.designer.metadata.runtime.MetadataRecord#getParentUUID()
      */
     @Override
 	public String getParentUUID() {
@@ -75,7 +75,7 @@ public abstract class AbstractMetadataRecord implements MetadataRecord {
     }
 
     /* (non-Javadoc)
-     * @See org.teiid.designer.core.metadata.runtime.MetadataRecord#getNameInSource()
+     * @see org.teiid.designer.metadata.runtime.MetadataRecord#getNameInSource()
      */
     @Override
 	public String getNameInSource() {
@@ -100,7 +100,7 @@ public abstract class AbstractMetadataRecord implements MetadataRecord {
     }
 
     /*
-     * @See org.teiid.designer.core.metadata.runtime.MetadataRecord#getFullName()
+     * @see org.teiid.designer.metadata.runtime.MetadataRecord#getFullName()
      */
     @Override
 	public String getFullName() {
@@ -108,7 +108,7 @@ public abstract class AbstractMetadataRecord implements MetadataRecord {
     }
 
     /* (non-Javadoc)
-     * @See org.teiid.designer.core.metadata.runtime.MetadataRecord#getName()
+     * @see org.teiid.designer.metadata.runtime.MetadataRecord#getName()
      */
     @Override
 	public String getName() {
@@ -116,7 +116,7 @@ public abstract class AbstractMetadataRecord implements MetadataRecord {
     }
 
     /*
-     * @See org.teiid.designer.core.metadata.runtime.MetadataRecord#getPathString()
+     * @see org.teiid.designer.metadata.runtime.MetadataRecord#getPathString()
      */
     @Override
 	public String getPathString() {
@@ -127,7 +127,7 @@ public abstract class AbstractMetadataRecord implements MetadataRecord {
     }
 
     /* (non-Javadoc)
-     * @See org.teiid.designer.core.metadata.runtime.MetadataRecord#getPath()
+     * @see org.teiid.designer.metadata.runtime.MetadataRecord#getPath()
      */
     @Override
 	public String getPath() {
@@ -160,7 +160,7 @@ public abstract class AbstractMetadataRecord implements MetadataRecord {
     }
 
     /* (non-Javadoc)
-     * @See org.teiid.designer.core.metadata.runtime.MetadataRecord#getRecordType()
+     * @see org.teiid.designer.metadata.runtime.MetadataRecord#getRecordType()
      */
     @Override
 	public char getRecordType() {
@@ -229,7 +229,7 @@ public abstract class AbstractMetadataRecord implements MetadataRecord {
     }
 
     /* (non-Javadoc)
-     * @See org.teiid.designer.core.metadata.runtime.MetadataRecord#getEObject()
+     * @see org.teiid.designer.metadata.runtime.MetadataRecord#getEObject()
      */
     @Override
 	public Object getEObject() {
@@ -273,7 +273,7 @@ public abstract class AbstractMetadataRecord implements MetadataRecord {
     }
 
     /*
-     * @See org.teiid.designer.core.metadata.runtime.MetadataRecord#getPropertyValue(java.lang.String)
+     * @see org.teiid.designer.metadata.runtime.MetadataRecord#getPropertyValue(java.lang.String)
      */
     @Override
 	public Object getPropertyValue( String propertyName ) {
@@ -285,7 +285,7 @@ public abstract class AbstractMetadataRecord implements MetadataRecord {
     }
 
     /*
-     * @See org.teiid.designer.core.metadata.runtime.MetadataRecord#setPropertyValue(java.lang.String, java.lang.Object)
+     * @see org.teiid.designer.metadata.runtime.MetadataRecord#setPropertyValue(java.lang.String, java.lang.Object)
      */
     @Override
 	public void setPropertyValue( String propertyName,

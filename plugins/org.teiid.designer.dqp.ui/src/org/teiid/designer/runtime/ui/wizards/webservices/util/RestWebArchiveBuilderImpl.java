@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+
 import javax.tools.Diagnostic;
 import javax.tools.Diagnostic.Kind;
 import javax.tools.DiagnosticCollector;
@@ -33,6 +34,7 @@ import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.StandardLocation;
 import javax.tools.ToolProvider;
+
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -143,7 +145,7 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder {
     }
 
     /**
-     * @see org.teiid.designer.runtime.ui.wizards.webservices.util.dataservices.lds.WebArchiveBuilder#createWebArchive(java.io.InputStream, java.util.Map)
+     * @see org.teiid.designer.runtime.ui.wizards.webservices.util.WebArchiveBuilder#createWebArchive(Properties, IProgressMonitor)
      * @since 7.4
      */
     @Override

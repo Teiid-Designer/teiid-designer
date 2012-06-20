@@ -13,7 +13,7 @@ import java.util.Properties;
 import org.teiid.designer.metadata.runtime.MetadataConstants;
 
 /**
- * Interface that allows a {@link VirtualDatabaseLoader} implementation to create runtime metadata objects for a virtual database.
+ * Interface that allows a {@link VirtualDatabase} loader implementation to create runtime metadata objects for a virtual database.
  * 
  * @since 3.1
  */

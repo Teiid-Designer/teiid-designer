@@ -8,6 +8,7 @@
 package org.teiid.designer.core.index;
 
 import java.util.List;
+
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.teiid.core.util.CoreArgCheck;
@@ -61,7 +62,7 @@ public class ModelSearchIndexerVisitor implements ModelVisitor {
     }
 
     /**
-     * Create a {@link org.teiid.designer.core.index.index.impl.WordEntry} instance representing a EObject within a resource. This
+     * Create a {@link WordEntry} instance representing a EObject within a resource. This
      * resulting WordEntry is of the form: uuid|metamodelURI#EClass|modelPath|
      * 
      * @see org.teiid.designer.core.index.ModelIndexer#addIndexWord(org.eclipse.emf.ecore.EObject, java.lang.String,

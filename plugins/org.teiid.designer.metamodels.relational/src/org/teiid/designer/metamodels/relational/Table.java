@@ -149,8 +149,8 @@ public interface Table extends ColumnSet{
      * </p>
      * <!-- end-user-doc -->
      * @return the value of the '<em>Materialized Table</em>' reference.
-     * @see #setMaterializedTable(EObject)
-     * @see org.teiid.designer.metamodels.relational.Table#getTable_MaterializedTable()
+     * @see #setMaterializedTable(Table)
+     * @see org.teiid.designer.metamodels.relational.Table#getMaterializedTable()
      * @model
      * @generated
      */

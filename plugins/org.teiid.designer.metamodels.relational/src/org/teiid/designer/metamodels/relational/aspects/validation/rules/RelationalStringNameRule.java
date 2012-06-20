@@ -21,6 +21,7 @@ import org.teiid.designer.core.validation.ValidationResultImpl;
 import org.teiid.designer.core.validation.rules.CoreValidationRulesUtil;
 import org.teiid.designer.core.validation.rules.StringNameRule;
 import org.teiid.designer.metamodels.relational.AccessPattern;
+import org.teiid.designer.metamodels.relational.BaseTable;
 import org.teiid.designer.metamodels.relational.Catalog;
 import org.teiid.designer.metamodels.relational.Column;
 import org.teiid.designer.metamodels.relational.ForeignKey;
@@ -31,6 +32,7 @@ import org.teiid.designer.metamodels.relational.ProcedureParameter;
 import org.teiid.designer.metamodels.relational.Schema;
 import org.teiid.designer.metamodels.relational.Table;
 import org.teiid.designer.metamodels.relational.UniqueKey;
+import org.teiid.designer.metamodels.relational.View;
 import org.teiid.designer.metamodels.relational.aspects.validation.RelationalStringNameValidator;
 import org.teiid.designer.metamodels.relational.util.RelationalUtil;
 
@@ -53,10 +55,10 @@ public class RelationalStringNameRule extends StringNameRule {
      * This method groups siblings into the following domains, and chooses only those siblings that are in the same domain as the
      * supplied object.
      * <ul>
-     * <li>{@link Catalog} and {@link Schema} instances</li>
+     * <li>{@link Schema} instances</li>
      * <li>{@link BaseTable} and {@link View} instances</li>
      * <li>{@link Procedure} instances</li>
-     * <li>{@link ProcedureColumn} instances</li>
+     * <li>{@link Column} instances</li>
      * <li>{@link AccessPattern} instances</li>
      * <li>{@link UniqueKey}, {@link ForeignKey} and {@link Index} instances</li>
      * <li></li>

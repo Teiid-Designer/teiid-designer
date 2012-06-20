@@ -9,12 +9,14 @@ package org.teiid.designer.schema.tools.processing;
 
 import java.util.List;
 import java.util.Map;
+
 import org.eclipse.xsd.XSDElementDeclaration;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.XSDTypeDefinition;
 import org.teiid.designer.schema.tools.model.schema.SchemaModel;
 import org.teiid.designer.schema.tools.model.schema.SchemaObject;
 import org.teiid.designer.schema.tools.processing.internal.ElementContentTraversalContext;
+import org.teiid.designer.schema.tools.processing.internal.SchemaProcessorImpl;
 /**
  *Derives a SchemaModel from one or more XSDSchema.  The SchemaModel 
  *produced will combine the elements and optionally the types defined

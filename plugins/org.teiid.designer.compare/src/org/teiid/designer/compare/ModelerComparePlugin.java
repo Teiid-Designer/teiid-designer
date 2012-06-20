@@ -16,6 +16,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
+
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
@@ -44,7 +45,6 @@ import org.teiid.designer.core.compare.EObjectMatcherFactory;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
-
 
 /**
  * ModelerComparePlugin
@@ -209,7 +209,6 @@ public class ModelerComparePlugin extends Plugin {
      * @param startingResource the {@link ModelResource} containing the original (starting) state; may not be null
      * @param endingResource the {@link ModelResource} containing the final (ending) state; may not be null
      * @return the difference processor; never null
-     * @throws ModelWorkspaceException if there is a problem with the supplied resources
      */
     public static DifferenceProcessor createDifferenceProcessor( final ModelResource startingResource,
                                                                  final ModelResource endingResource ) {
@@ -283,7 +282,6 @@ public class ModelerComparePlugin extends Plugin {
      * @param startingResource the EMF resource containing the original (starting) state; may not be null
      * @param endingResource the EMF resource containing the final (ending) state; may not be null
      * @return the difference processor; never null
-     * @throws ModelWorkspaceException if there is a problem with the supplied resources
      */
     public static DifferenceProcessor createDifferenceProcessor( final Resource startingResource,
                                                                  final Resource endingResource ) {
@@ -309,8 +307,8 @@ public class ModelerComparePlugin extends Plugin {
      * 
      * @param startingResource the EMF resource containing the original (starting) state; may not be null
      * @param endingResource the EMF resource containing the final (ending) state; may not be null
+     * @param mappings 
      * @return the difference processor; never null
-     * @throws ModelWorkspaceException if there is a problem with the supplied resources
      */
     public static DifferenceProcessor createDifferenceProcessor( final Resource startingResource,
                                                                  final Resource endingResource,
@@ -374,8 +372,8 @@ public class ModelerComparePlugin extends Plugin {
     }
 
     /**
-     * Utility method to create {@link EObjectMappingAdapter mapping adapter} instances by using the
-     * {@link ModelerCore.EXTENSION_POINT.EOBJECT_MATCHER_FACTORY} extensions
+     * Utility method to create {@link EObjectMatcherFactory mapping adapter} instances by using the
+     * {@link org.teiid.designer.core.ModelerCore.EXTENSION_POINT.EOBJECT_MATCHER_FACTORY} extensions
      * 
      * @return a list of {@link EObjectMatcherFactory} instances defined via extensions
      * @see ModelerCore#getMappingAdapterDescriptors()

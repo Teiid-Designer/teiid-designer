@@ -10,6 +10,7 @@ package org.teiid.designer.core.search.commands;
 import java.util.Collection;
 
 import org.teiid.designer.core.index.IndexSelector;
+import org.teiid.designer.core.search.runtime.RelationshipTypeRecord;
 
 /**
  * This interface is used to find relationship types between models based on specified criteria.
@@ -17,7 +18,7 @@ import org.teiid.designer.core.index.IndexSelector;
 public interface FindRelationshipTypesCommand	extends SearchCommand {
 
 	/**
-	 * Return a collection of {@link org.teiid.designer.core.search.runtime.relationship.search.index.RelationshipTypeRecord}
+	 * Return a collection of {@link RelationshipTypeRecord}
 	 * objects that are found on this command execution. 
 	 * @return a collection of relationship type records
 	 */

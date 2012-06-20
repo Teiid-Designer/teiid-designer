@@ -12,7 +12,9 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EObject;
 import org.teiid.core.util.CoreArgCheck;
 import org.teiid.designer.jdbc.metadata.JdbcNode;
 import org.teiid.designer.jdbc.relational.JdbcRelationalPlugin;

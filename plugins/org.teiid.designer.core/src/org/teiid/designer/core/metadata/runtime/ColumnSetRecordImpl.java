@@ -42,7 +42,7 @@ public class ColumnSetRecordImpl extends org.teiid.designer.metadata.runtime.imp
     //==================================================================================    
 
     /** 
-     * @see org.teiid.designer.core.metadata.runtime.ColumnSetRecord#getColumnIDs()
+     * @see org.teiid.designer.metadata.runtime.ColumnSetRecord#getColumnIDs()
      */
     @Override
     public List getColumnIDs() {

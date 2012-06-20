@@ -8,6 +8,7 @@
 package org.teiid.designer.core.metadata.runtime;
 
 import java.util.List;
+
 import org.eclipse.emf.ecore.EObject;
 import org.teiid.designer.core.metamodel.aspect.sql.SqlTransformationAspect;
 import org.teiid.designer.core.metamodel.aspect.sql.SqlTransformationInfo;
@@ -42,7 +43,7 @@ public class TransformationRecordImpl extends org.teiid.designer.metadata.runtim
 	}
 
     /**
-     * @see org.teiid.designer.core.metadata.runtime.TransformationRecord#getTransformation()
+     * @see org.teiid.designer.metadata.runtime.TransformationRecord#getTransformation()
      */
     @Override
     public String getTransformation() {
@@ -56,7 +57,7 @@ public class TransformationRecordImpl extends org.teiid.designer.metadata.runtim
     }
 
     /*
-     * @See org.teiid.designer.core.metadata.runtime.TransformationRecord#getBindings()
+     * @see org.teiid.designer.metadata.runtime.TransformationRecord#getBindings()
      */
     @Override
     public List getBindings() {
@@ -67,7 +68,7 @@ public class TransformationRecordImpl extends org.teiid.designer.metadata.runtim
     }
 
     /*
-     * @See org.teiid.designer.core.metadata.runtime.TransformationRecord#getSchemaPaths()
+     * @see org.teiid.designer.metadata.runtime.TransformationRecord#getSchemaPaths()
      */
     @Override
     public List getSchemaPaths() {
@@ -78,7 +79,7 @@ public class TransformationRecordImpl extends org.teiid.designer.metadata.runtim
     }
 
     /**
-     * @see org.teiid.designer.core.metadata.runtime.TransformationRecord#getTransformedObjectID()
+     * @see org.teiid.designer.metadata.runtime.TransformationRecord#getTransformedObjectID()
      */
     @Override
     public Object getTransformedObjectID() {

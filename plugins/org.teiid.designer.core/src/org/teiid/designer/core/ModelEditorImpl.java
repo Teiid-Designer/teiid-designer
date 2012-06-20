@@ -842,7 +842,7 @@ public class ModelEditorImpl implements ModelEditor {
     }
 
     /**
-     * @see org.teiid.designer.core.ModelEditor#delete(java.util.Collecction)
+     * @see org.teiid.designer.core.ModelEditor#delete(java.util.Collection)
      */
     @Override
 	public boolean delete( final Collection eObjects ) throws ModelerCoreException {
@@ -858,7 +858,7 @@ public class ModelEditorImpl implements ModelEditor {
     }
 
     /**
-     * @see org.teiid.designer.core.ModelEditor#delete(java.util.Collecction)
+     * @see org.teiid.designer.core.ModelEditor#delete(java.util.Collection)
      */
     @Override
 	public boolean delete( final Collection eObjects,
@@ -1956,9 +1956,6 @@ public class ModelEditorImpl implements ModelEditor {
         return move(newParent, eObject, index);
     }
 
-    /**
-     * @see org.teiid.designer.core.ModelEditor#newParent
-     */
     @Override
 	public boolean move( final Object newParent,
                          final EObject eObject,
@@ -4606,7 +4603,7 @@ public class ModelEditorImpl implements ModelEditor {
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.designer.core.ModelEditor#setObjectID(org.eclipse.emf.ecore.EObject, com.metamatrix.core.id.ObjectID)
+     * @see org.teiid.designer.core.ModelEditor#setObjectID(EObject, ObjectID)
      */
     @Override
 	public void setObjectID( EObject object,

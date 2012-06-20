@@ -312,7 +312,7 @@ public class UnitOfWorkImpl implements UnitOfWork {
     /**
      * Undo all the txnCommand, flush the command stack and event queue and create and undoable edit
      * 
-     * @see org.teiid.designer.core.transaction.api.mtk.core.transaction.MtkTransaction#rollback()
+     * @see MtkTransaction#rollback()
      */
     @Override
 	public void rollback() {
@@ -357,7 +357,7 @@ public class UnitOfWorkImpl implements UnitOfWork {
      * Pass through to the editing domain / command stack to execute the command
      * 
      * @return true if the command was executed, or false if it could not be executed
-     * @see com.metamatrix.mtk.emf.container.container.transaction.api.UnitOfWork#executeCommand(Command)
+     * @see UnitOfWork#executeCommand(Command)
      */
     @Override
 	public boolean executeCommand( final Command command ) throws ModelerCoreException {
@@ -403,7 +403,7 @@ public class UnitOfWorkImpl implements UnitOfWork {
     }
 
     /**
-     * @see org.teiid.designer.core.transaction.api.mtk.core.transaction.MtkTransaction#isStarted()
+     * @see MtkTransaction#isStarted()
      */
     @Override
 	public boolean isStarted() {
@@ -411,7 +411,7 @@ public class UnitOfWorkImpl implements UnitOfWork {
     }
 
     /**
-     * @see org.teiid.designer.core.transaction.api.mtk.core.transaction.MtkTransaction#isCommitting()
+     * @see MtkTransaction#isCommitting()
      */
     @Override
 	public boolean isCommitting() {
@@ -419,7 +419,7 @@ public class UnitOfWorkImpl implements UnitOfWork {
     }
 
     /**
-     * @see org.teiid.designer.core.transaction.api.mtk.core.transaction.MtkTransaction#isCommitting()
+     * @see MtkTransaction#isCommitting()
      */
     @Override
 	public boolean isComplete() {
@@ -427,7 +427,7 @@ public class UnitOfWorkImpl implements UnitOfWork {
     }
 
     /**
-     * @see org.teiid.designer.core.transaction.api.mtk.core.transaction.MtkTransaction#isRollingBack()
+     * @see MtkTransaction#isRollingBack()
      */
     @Override
 	public boolean isRollingBack() {
@@ -435,7 +435,7 @@ public class UnitOfWorkImpl implements UnitOfWork {
     }
 
     /**
-     * @see org.teiid.designer.core.transaction.api.mtk.core.transaction.MtkTransaction#isFailed()
+     * @see MtkTransaction#isFailed()
      */
     @Override
 	public boolean isFailed() {

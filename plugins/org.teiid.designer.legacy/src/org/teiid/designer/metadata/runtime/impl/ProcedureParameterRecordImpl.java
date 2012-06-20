@@ -43,7 +43,7 @@ public class ProcedureParameterRecordImpl extends AbstractMetadataRecord impleme
     }
 
     /*
-     * @See org.teiid.designer.core.metadata.runtime.ProcedureParameterRecord#getDefaultValue()
+     * @see org.teiid.designer.metadata.runtime.ProcedureParameterRecord#getDefaultValue()
      */
     @Override
 	public Object getDefaultValue() {
@@ -51,7 +51,7 @@ public class ProcedureParameterRecordImpl extends AbstractMetadataRecord impleme
     }
 
     /*
-     * @See org.teiid.designer.core.metadata.runtime.ProcedureParameterRecord#getType()
+     * @see org.teiid.designer.metadata.runtime.ProcedureParameterRecord#getType()
      */
     @Override
 	public short getType() {
@@ -59,7 +59,7 @@ public class ProcedureParameterRecordImpl extends AbstractMetadataRecord impleme
     }
 
     /*
-     * @See org.teiid.designer.core.metadata.runtime.ProcedureParameterRecord#getDatatypeUUID()
+     * @see org.teiid.designer.metadata.runtime.ProcedureParameterRecord#getDatatypeUUID()
      */
     @Override
 	public String getDatatypeUUID() {
@@ -67,7 +67,7 @@ public class ProcedureParameterRecordImpl extends AbstractMetadataRecord impleme
     }
 
     /*
-     * @See org.teiid.designer.core.metadata.runtime.ProcedureParameterRecord#getRuntimeType()
+     * @see org.teiid.designer.metadata.runtime.ProcedureParameterRecord#getRuntimeType()
      */
     @Override
 	public String getRuntimeType() {
@@ -123,7 +123,7 @@ public class ProcedureParameterRecordImpl extends AbstractMetadataRecord impleme
     }
 
 	/*
-	 * @See org.teiid.designer.core.metadata.runtime.ProcedureParameterRecord#isOptional()
+	 * @see org.teiid.designer.metadata.runtime.ProcedureParameterRecord#isOptional()
 	 */
 	@Override
 	public boolean isOptional() {

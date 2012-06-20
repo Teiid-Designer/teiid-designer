@@ -8,6 +8,7 @@
 package org.teiid.designer.core.builder;
 
 import java.util.Collection;
+
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -80,7 +81,7 @@ public interface ResourceValidator {
     /**
      * Called immediately after validation starts for multiple resources.
      * 
-     * @param resources The {@link IResources resources} being validated; never null
+     * @param resources The {@link IResource resources} being validated; never null
      * @param context The {@link ValidationContext context} to use for validation; never null
      */
     void validationStarted( Collection resources,

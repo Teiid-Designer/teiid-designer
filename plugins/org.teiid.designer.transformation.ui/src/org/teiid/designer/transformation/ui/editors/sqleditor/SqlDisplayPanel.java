@@ -10,6 +10,7 @@ package org.teiid.designer.transformation.ui.editors.sqleditor;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
@@ -147,8 +148,8 @@ public class SqlDisplayPanel extends Composite implements UiConstants {
     class QueryValidatorImpl implements QueryValidator {
 
         /**
-         * Validate the sqlString of the given type, valid types are {@link SELECT_TRNS}, {@link INSERT_TRNS}, {@link UPDATE_TRNS}
-         * , {@link DELETE_TRNS} {@link UNKNOWN_TRNS}, if this is a unknow transfor, the query will only be parsed.
+         * Validate the sqlString of the given type, valid types are {@link QueryValidator#SELECT_TRNS}, {@link QueryValidator#INSERT_TRNS}, {@link QueryValidator#UPDATE_TRNS}
+         * , {@link QueryValidator#DELETE_TRNS} {@link QueryValidator#UNKNOWN_TRNS}, if this is a unknown transform, the query will only be parsed.
          * 
          * @param sqlString The sqlString that needs to be validate
          * @param type The type of sql being passed in
@@ -267,7 +268,7 @@ public class SqlDisplayPanel extends Composite implements UiConstants {
         }
 
         /**
-         * @see org.teiid.designer.core.query.query.resolver.util.QueryValidationResult#getStatusList()
+         * @see org.teiid.designer.core.query.QueryValidationResult#getStatusList()
          * @since 4.2
          */
         @Override

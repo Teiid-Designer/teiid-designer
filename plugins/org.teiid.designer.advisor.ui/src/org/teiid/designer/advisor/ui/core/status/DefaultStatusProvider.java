@@ -15,7 +15,7 @@ public class DefaultStatusProvider implements IStatusContentProvider {
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.designer.advisor.ui.core.status.IStatusContentProvider.StatusContentProvider#getDefaultStatus()
+     * @see IStatusContentProvider#getDefaultStatus()
      */
     @Override
     public IStatus getDefaultStatus() {
@@ -25,7 +25,7 @@ public class DefaultStatusProvider implements IStatusContentProvider {
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.designer.advisor.ui.core.status.IStatusContentProvider.StatusContentProvider#getDescription()
+     * @see IStatusContentProvider#getDescription()
      */
     @Override
     public String getDescription() {
@@ -35,7 +35,7 @@ public class DefaultStatusProvider implements IStatusContentProvider {
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.designer.advisor.ui.core.status.IStatusContentProvider.StatusContentProvider#getImage(int)
+     * @see IStatusContentProvider#getImage(int)
      */
     @Override
     public Image getImage( int id ) {
@@ -45,7 +45,7 @@ public class DefaultStatusProvider implements IStatusContentProvider {
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.designer.advisor.ui.core.status.IStatusContentProvider.StatusContentProvider#getLinkTooltip(int)
+     * @see IStatusContentProvider#getLinkTooltip(int)
      */
     @Override
     public String getLinkTooltip( int id ) {
@@ -55,7 +55,7 @@ public class DefaultStatusProvider implements IStatusContentProvider {
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.designer.advisor.ui.core.status.IStatusContentProvider.StatusContentProvider#getRowsProviders()
+     * @see IStatusContentProvider#getRowsProviders()
      */
     @Override
     public IStatusRowProvider[] getRowsProviders() {
@@ -68,7 +68,7 @@ public class DefaultStatusProvider implements IStatusContentProvider {
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.designer.advisor.ui.core.status.IStatusContentProvider.StatusContentProvider#getStatus(int)
+     * @see IStatusContentProvider#getStatus(int)
      */
     @Override
     public IStatus getStatus( int id ) {
@@ -78,7 +78,7 @@ public class DefaultStatusProvider implements IStatusContentProvider {
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.designer.advisor.ui.core.status.IStatusContentProvider.StatusContentProvider#getStatusImage(int)
+     * @see IStatusContentProvider#getStatusImage(int)
      */
     @Override
     public Image getStatusImage( int id ) {
@@ -88,7 +88,7 @@ public class DefaultStatusProvider implements IStatusContentProvider {
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.designer.advisor.ui.core.status.IStatusContentProvider.StatusContentProvider#getText(int)
+     * @see IStatusContentProvider#getText(int)
      */
     @Override
     public String getText( int id ) {
@@ -98,7 +98,7 @@ public class DefaultStatusProvider implements IStatusContentProvider {
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.designer.advisor.ui.core.status.IStatusContentProvider.StatusContentProvider#getTitle()
+     * @see IStatusContentProvider#getTitle()
      */
     @Override
     public String getTitle() {

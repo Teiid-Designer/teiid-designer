@@ -11,7 +11,7 @@ package org.teiid.designer.common.util;
 /**
  * Date Apr 2, 2003
  * <p>
- * The ErrorMessageKeys contains the message ID's for use with {@link I18NLogManager I18NLogManager} for internationalization of
+ * The ErrorMessageKeys contains the message ID's for use with i18N log managers for internationalization of
  * error messages.
  * </p>
  * <b>Adding a Message ID</b> <br>

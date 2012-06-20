@@ -26,7 +26,7 @@ public class ProcedureParameterFinder extends RelationalEntityFinder {
     }
 
     /**
-     * This method accumulates the {@link ProcedurePameter} instances. The implementation takes as many shortcuts as possible to
+     * This method accumulates the {@link ProcedureParameter} instances. The implementation takes as many shortcuts as possible to
      * prevent unnecessarily visiting unrelated objects.
      * 
      * @see org.teiid.designer.core.util.ModelVisitor#visit(org.eclipse.emf.ecore.EObject)

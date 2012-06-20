@@ -11,11 +11,13 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.teiid.core.UserCancelledException;
 import org.teiid.core.util.CoreArgCheck;
 import org.teiid.designer.compare.ModelGenerator;
+import org.teiid.designer.core.compare.EObjectMatcherFactory;
 
 
 /**
@@ -27,7 +29,7 @@ public class CompositeModelGenerator extends AbstractModelGenerator {
 
     /**
      * Construct an instance of AbstractModelGenerator.
-     * @param mappingAdapters the list of {@link org.teiid.designer.core.util.EObjectMappingAdapter mapping adapter}
+     * @param modelGenerators the list of {@link EObjectMatcherFactory mapping adapter}
      * instances used during the difference processing; may not be null or empty
      */
     public CompositeModelGenerator( final List modelGenerators ) {

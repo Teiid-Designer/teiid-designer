@@ -17,7 +17,7 @@ import org.eclipse.draw2d.Figure;
 public abstract class AbstractDiagramFigureFactory implements DiagramFigureFactory {
 
     /**
-     * @See org.teiid.designer.diagram.ui.FigureFactory#createFigure(java.lang.Object)
+     * @see DiagramFigureFactory#createFigure(java.lang.Object)
      */
     @Override
 	public Figure createFigure( Object modelObject ) {
@@ -26,7 +26,7 @@ public abstract class AbstractDiagramFigureFactory implements DiagramFigureFacto
     }
 
     /**
-     * @See org.teiid.designer.diagram.ui.FigureFactory#createFigure(java.lang.Object, String)
+     * @see DiagramFigureFactory#createFigure(java.lang.Object, String)
      */
     @Override
 	public Figure createFigure( Object modelObject,

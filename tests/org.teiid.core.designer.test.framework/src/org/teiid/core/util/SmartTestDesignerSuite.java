@@ -234,7 +234,7 @@ public class SmartTestDesignerSuite extends TestSuite {
     }
 
     /**
-     * Obtain the file path to the root of the test data file tree. This first checks the property {@link TEST_DATA_ROOT_PROPERTY}
+     * Obtain the file path to the root of the test data file tree. This first checks the property TEST_DATA_ROOT_PROPERTY
      * , and if that is not set to a valid path, uses the current directory.
      * 
      * @return File path, never null
@@ -250,7 +250,7 @@ public class SmartTestDesignerSuite extends TestSuite {
 
     /**
      * Obtain the file path to a scratch area where files may be created during testing. This first checks the property
-     * {@link TEST_DATA_SCRATCH_PROPERTY}. If that is not set to a valid path, it then checks the "java.io.tmpdir" property. If
+     * TEST_DATA_SCRATCH_PROPERTY. If that is not set to a valid path, it then checks the "java.io.tmpdir" property. If
      * that is not set, it uses the current directory.
      * 
      * @return File path, never null

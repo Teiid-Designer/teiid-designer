@@ -8,6 +8,7 @@
 package org.teiid.designer.compare.selector;
 
 import java.util.List;
+
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -42,7 +43,7 @@ public class ModelResourceSelector extends AbstractModelSelector {
     }
 
     /**
-     * @See org.teiid.designer.compare.processor.ModelSelector#open()
+     * @see org.teiid.designer.compare.selector.ModelSelector#open()
      */
     @Override
 	public void open() {
@@ -71,7 +72,7 @@ public class ModelResourceSelector extends AbstractModelSelector {
     }
 
     /**
-     * @See org.teiid.designer.compare.processor.ModelSelector#getUri()
+     * @see org.teiid.designer.compare.selector.ModelSelector#getUri()
      */
     @Override
 	public URI getUri() {
@@ -81,7 +82,7 @@ public class ModelResourceSelector extends AbstractModelSelector {
     }
 
     /**
-     * @See org.teiid.designer.compare.processor.ModelSelector#close()
+     * @see org.teiid.designer.compare.selector.ModelSelector#close()
      */
     @Override
 	public void close() {

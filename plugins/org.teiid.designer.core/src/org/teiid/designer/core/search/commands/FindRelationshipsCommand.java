@@ -11,6 +11,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.teiid.designer.core.index.IndexSelector;
+import org.teiid.designer.core.search.runtime.RelationshipRecord;
 
 /**
  * This interface is used to find relationships between models based on specified criteria.
@@ -18,7 +19,7 @@ import org.teiid.designer.core.index.IndexSelector;
 public interface FindRelationshipsCommand	extends SearchCommand {
 
 	/**
-	 * Return a collection of {@link org.teiid.designer.core.search.runtime.relationship.search.index.RelationshipRecord}
+	 * Return a collection of {@link RelationshipRecord}
 	 * objects that are found on this command execution. 
 	 * @return a collection of relationship records
 	 */

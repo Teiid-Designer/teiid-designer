@@ -291,10 +291,10 @@ public interface XmlDocumentPackage extends EPackage {
     int XML_DOCUMENT_NODE_FEATURE_COUNT = XML_DOCUMENT_ENTITY_FEATURE_COUNT + 7; // 7
 
     /**
-     * The meta object id for the '{@link org.teiid.designer.metamodels.xml.impl.XmlHolderEntityImpl <em>Holder Entity</em>}' class.
+     * The meta object id for the '{@link org.teiid.designer.metamodels.xml.XmlHolderEntity <em>Holder Entity</em>}' class.
      * <!-- begin-user-doc --> <!-- end-user-doc -->
      * 
-     * @see org.teiid.designer.metamodels.xml.impl.XmlHolderEntityImpl
+     * @see org.teiid.designer.metamodels.xml.XmlHolderEntity
      * @see org.teiid.designer.metamodels.xml.impl.XmlDocumentPackageImpl#getXmlHolderEntity()
      * @generated
      */

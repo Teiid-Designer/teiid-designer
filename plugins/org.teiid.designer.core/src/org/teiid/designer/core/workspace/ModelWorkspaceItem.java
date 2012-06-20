@@ -10,6 +10,8 @@ package org.teiid.designer.core.workspace;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IPath;
+import org.teiid.designer.metamodels.core.ModelImport;
+import org.teiid.designer.metamodels.transformation.MappingClassSet;
 
 /**
  * ModelWorkspaceItem is the base interface for all resource items in the Modeler's
@@ -67,14 +69,14 @@ public interface ModelWorkspaceItem extends IAdaptable {
     /**
      * Constant representing a model import container.
      * A model workspace item with this {@link #getItemType() type} can be safely 
-     * cast to {@link ModelImports}.
+     * cast to {@link ModelImport}.
      */
     int MODEL_IMPORTS = 6;
 
     /**
      * Constant representing a model import container.
      * A model workspace item with this {@link #getItemType() type} can be safely 
-     * cast to {@link ModelImports}.
+     * cast to {@link ModelImport}.
      */
     int METAMODEL_IMPORTS = 7;
 
@@ -174,11 +176,7 @@ public interface ModelWorkspaceItem extends IAdaptable {
      * this element.
      * <p>
      * For example, the corresponding resource for an {@link ModelResource}
-     * is its underlying {@link org.eclipse.core.resources.IFile}. 
-     * The corresponding resource for an {@link ModelPackageFragment}
-     * that is not contained in an archive is its underlying 
-     * {@link org.eclipse.core.resources.IFolder}. An {@link ModelPackageFragment}
-     * contained in an archive has no corresponding resource.
+     * is its underlying {@link org.eclipse.core.resources.IFile}.
      * <p>
      *
      * @return the corresponding resource, or <code>null</code> if none

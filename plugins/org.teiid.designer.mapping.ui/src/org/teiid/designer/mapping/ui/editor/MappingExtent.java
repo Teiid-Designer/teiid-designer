@@ -14,7 +14,7 @@ import org.teiid.core.util.HashCodeUtil;
  * The <code>MappingExtent</code> class provides information about one XML document mapping reference. The mapping reference will
  * either be a mapping class <code>EObject</code>, a mapping attribute <code>EObject</code>, or <code>null</code>. A mapping
  * reference is either required (the default) or optional. <code>MappingExtent</code>s are displayed in the diagram portion of the
- * {@link MappingTransfromView} and is used as a source point when connecting an extent to a mapping class or a mapping attribute.
+ * mapping transform view and is used as a source point when connecting an extent to a mapping class or a mapping attribute.
  * 
  * @author Barry LaFond & Dan Florian
  * @since 3.0`

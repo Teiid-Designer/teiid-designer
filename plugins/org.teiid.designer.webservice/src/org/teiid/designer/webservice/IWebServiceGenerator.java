@@ -9,10 +9,12 @@ package org.teiid.designer.webservice;
 
 import java.util.Collection;
 import java.util.List;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xsd.XSDSchema;
+import org.teiid.designer.metamodels.webservice.WebServiceComponent;
 import org.teiid.designer.metamodels.wsdl.Definitions;
 
 
@@ -58,7 +60,7 @@ public interface IWebServiceGenerator {
      * Add multiple {@link Definitions} objects that should be used to 
      * {@link #generate(IProgressMonitor) generate} the Web Service model components.
      * @param wsdlDefinitions the list of WSDL Definitions being added; may not be null
-     * @see #addWsdlDefinitions(WebServiceComponent)
+     * @see #addWsdlDefinitions(Definitions)
      * @see #getWsdlDefinitions()
      * @since 4.2
      */

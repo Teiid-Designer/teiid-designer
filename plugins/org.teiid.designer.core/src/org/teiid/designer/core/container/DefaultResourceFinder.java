@@ -15,9 +15,9 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.util.URI;
@@ -75,7 +75,7 @@ public class DefaultResourceFinder implements ResourceFinder {
     // ==================================================================================
 
     /**
-     * @see org.teiid.designer.modeler.core.container#findByUUID(org.teiid.core.id.ObjectID, boolean)
+     * @see org.teiid.designer.core.container#findByUUID(org.teiid.core.id.ObjectID, boolean)
      * @since 4.3
      */
     @Override
@@ -95,7 +95,7 @@ public class DefaultResourceFinder implements ResourceFinder {
     }
 
     /**
-     * @see org.teiid.designer.modeler.core.container#findByUUID(org.teiid.core.id.ObjectID,
+     * @see org.teiid.designer.core.container#findByUUID(org.teiid.core.id.ObjectID,
      *      org.eclipse.emf.ecore.resource.Resource[])
      * @since 4.3
      */
@@ -106,7 +106,7 @@ public class DefaultResourceFinder implements ResourceFinder {
     }
 
     /**
-     * @see org.teiid.designer.modeler.core.container#findByImport(org.teiid.designer.metamodels.core.ModelImport, boolean)
+     * @see org.teiid.designer.core.container#findByImport(org.teiid.designer.metamodels.core.ModelImport, boolean)
      * @since 4.3
      */
     @Override
@@ -127,7 +127,7 @@ public class DefaultResourceFinder implements ResourceFinder {
     }
 
     /**
-     * @see org.teiid.designer.modeler.core.container#findByImport(org.teiid.designer.metamodels.core.ModelImport,
+     * @see org.teiid.designer.core.container#findByImport(org.teiid.designer.metamodels.core.ModelImport,
      *      org.eclipse.emf.ecore.resource.Resource[])
      * @since 4.3
      */
@@ -169,7 +169,7 @@ public class DefaultResourceFinder implements ResourceFinder {
     }
 
     /**
-     * @see org.teiid.designer.modeler.core.container#findByName(java.lang.String, boolean, boolean)
+     * @see org.teiid.designer.core.container#findByName(java.lang.String, boolean, boolean)
      * @since 4.3
      */
     @Override
@@ -187,7 +187,7 @@ public class DefaultResourceFinder implements ResourceFinder {
     }
 
     /**
-     * @see org.teiid.designer.modeler.core.container#findByURI(org.eclipse.emf.common.util.URI, boolean)
+     * @see org.teiid.designer.core.container#findByURI(org.eclipse.emf.common.util.URI, boolean)
      * @since 4.3
      */
     @Override
@@ -241,7 +241,7 @@ public class DefaultResourceFinder implements ResourceFinder {
     }
 
     /**
-     * @see org.teiid.designer.modeler.core.container#isExternalResource(org.eclipse.emf.common.util.URI)
+     * @see org.teiid.designer.core.container#isExternalResource(org.eclipse.emf.common.util.URI)
      * @since 4.3
      */
     @Override
@@ -253,7 +253,7 @@ public class DefaultResourceFinder implements ResourceFinder {
     }
 
     /**
-     * @see org.teiid.designer.modeler.core.container#isExternalResource(org.eclipse.emf.ecore.resource.Resource)
+     * @see org.teiid.designer.core.container#isExternalResource(org.eclipse.emf.ecore.resource.Resource)
      * @since 4.3
      */
     @Override
@@ -265,7 +265,7 @@ public class DefaultResourceFinder implements ResourceFinder {
     }
 
     /**
-     * @see org.teiid.designer.modeler.core.container#isBuiltInResource(org.eclipse.emf.ecore.resource.Resource)
+     * @see org.teiid.designer.core.container#isBuiltInResource(org.eclipse.emf.ecore.resource.Resource)
      * @since 4.3
      */
     @Override
@@ -277,7 +277,7 @@ public class DefaultResourceFinder implements ResourceFinder {
     }
 
     /**
-     * @see org.teiid.designer.modeler.core.container#isBuiltInResource(org.eclipse.emf.common.util.URI)
+     * @see org.teiid.designer.core.container#isBuiltInResource(org.eclipse.emf.common.util.URI)
      * @since 4.3
      */
     @Override
@@ -351,7 +351,7 @@ public class DefaultResourceFinder implements ResourceFinder {
     }
 
     /**
-     * @see org.teiid.designer.modeler.core.container#isBuiltInSystemResource(org.eclipse.emf.common.util.URI)
+     * @see org.teiid.designer.core.container#isBuiltInSystemResource(org.eclipse.emf.common.util.URI)
      * @since 4.3
      */
     @Override
@@ -374,7 +374,7 @@ public class DefaultResourceFinder implements ResourceFinder {
     }
 
     /**
-     * @see org.teiid.designer.modeler.core.container#isBuiltInSystemResource(org.eclipse.emf.ecore.resource.Resource)
+     * @see org.teiid.designer.core.container#isBuiltInSystemResource(org.eclipse.emf.ecore.resource.Resource)
      * @since 4.3
      */
     @Override
@@ -386,7 +386,7 @@ public class DefaultResourceFinder implements ResourceFinder {
     }
 
     /**
-     * @see org.teiid.designer.modeler.core.container#findSystemResources()
+     * @see org.teiid.designer.core.container#findSystemResources()
      * @since 4.3
      */
     public Resource[] findSystemResources() {
@@ -394,7 +394,7 @@ public class DefaultResourceFinder implements ResourceFinder {
     }
 
     /**
-     * @see org.teiid.designer.modeler.core.container#findByEObject(org.eclipse.emf.ecore.EObject)
+     * @see org.teiid.designer.core.container#findByEObject(org.eclipse.emf.ecore.EObject)
      * @since 4.3
      */
     @Override

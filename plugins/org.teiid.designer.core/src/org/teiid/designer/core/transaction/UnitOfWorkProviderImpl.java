@@ -45,7 +45,7 @@ public class UnitOfWorkProviderImpl implements UnitOfWorkProvider {
     }
 
     /**
-     * @see org.teiid.designer.core.transaction.mtk.emf.container.container.transaction.api.UnitOfWorkProvider#getCurrent()
+     * @see UnitOfWorkProvider#getCurrent()
      */
     @Override
 	public UnitOfWork getCurrent() {

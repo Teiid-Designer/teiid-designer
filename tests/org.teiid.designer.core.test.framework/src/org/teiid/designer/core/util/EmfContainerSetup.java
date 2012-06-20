@@ -11,11 +11,11 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 /**
- * This class only runs within the plug-in environment and is called reflectively by the {@link EmfTestSetup} class.
+ * This class only runs within the plug-in environment and is called reflectively by the Test Setup classes.
  * @since 3.1
  * @version 3.1
  * @author <a href="mailto:jverhaeg@metamatrix.com">John P. A. Verhaeg</a>

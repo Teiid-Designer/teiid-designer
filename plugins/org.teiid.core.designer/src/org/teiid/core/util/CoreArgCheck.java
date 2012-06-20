@@ -9,13 +9,14 @@ package org.teiid.core.util;
 
 import java.util.Collection;
 import java.util.Properties;
+
 import org.teiid.core.CorePlugin;
 import org.teiid.core.designer.CoreModelerPlugin;
 
 /**
  * This class contains a set of static utility methods for checking method arguments. It contains many of the common checks that
  * are done, such as checking that an Object is non-null, checking the range of a value, etc. All of these methods throw
- * {@link #java.lang.IllegalArgumentException}.
+ * {@link IllegalArgumentException}.
  */
 public class CoreArgCheck {
 

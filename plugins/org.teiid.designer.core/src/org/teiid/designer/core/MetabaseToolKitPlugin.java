@@ -82,8 +82,8 @@ public class MetabaseToolKitPlugin /*extends Plugin*/ {
 //    }
     
     /**
-     * Return an {@link MtkStreamReader} for the specified reader name.
-     * @return the MtkStreamReader instance.
+     * Return an {@link StreamReader} for the specified reader name.
+     * @return the StreamReader instance.
      */
     public static StreamReader createStreamReaderService(final String uniqueID) throws ModelerCoreException {
         if(uniqueID == null){
@@ -102,8 +102,8 @@ public class MetabaseToolKitPlugin /*extends Plugin*/ {
     }
     
     /**
-     * Return an {@link MtkStreamWriter} for the specified writer name.
-     * @return the MtkStreamWriter instance.
+     * Return an {@link StreamWriter} for the specified writer name.
+     * @return the StreamWriter instance.
      */
     public static StreamWriter createStreamWriterService(final String uniqueID) throws ModelerCoreException {
         if(uniqueID == null){

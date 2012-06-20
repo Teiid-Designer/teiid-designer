@@ -12,6 +12,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.CheckboxCellEditor;
@@ -110,7 +111,7 @@ public class TableEditorPreferencesComponent implements IEditorPreferencesCompon
     }
 
     /**
-     * @see org.teiid.designer.ui.preferences.IEditorPreferencesComponent#createEditorPreferencesTab(null, int)
+     * @see IEditorPreferencesComponent#createEditorPreferencesComponent(Composite)
      */
     @Override
 	public Composite createEditorPreferencesComponent( Composite parent ) {

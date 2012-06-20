@@ -10,6 +10,7 @@ package org.teiid.designer.core.search.commands;
 import java.util.Collection;
 
 import org.teiid.designer.core.index.IndexSelector;
+import org.teiid.designer.core.search.runtime.RelatedObjectRecord;
 
 /**
  * Command that helps find all the objects that have relationships to a given object.
@@ -30,7 +31,7 @@ public interface FindRelatedObjectsCommand extends SearchCommand {
 	public void setModelObjectUri(String uri);
 	
 	/**
-	 * Return a collection of {@link org.teiid.designer.core.search.runtime.relationship.search.index.RelatedObjectRecord}
+	 * Return a collection of {@link RelatedObjectRecord}
 	 * objects.
 	 * @return a collection of search records that contain related object info.
 	 */

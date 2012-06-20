@@ -60,6 +60,7 @@ import org.teiid.core.util.CoreArgCheck;
 import org.teiid.core.util.CoreStringUtil;
 import org.teiid.core.util.PluginUtilImpl;
 import org.teiid.core.util.Stopwatch;
+import org.teiid.designer.core.ModelerCore.EXTENSION_POINT.EOBJECT_MATCHER_FACTORY;
 import org.teiid.designer.core.container.Container;
 import org.teiid.designer.core.container.ContainerImpl;
 import org.teiid.designer.core.container.ResourceDescriptor;
@@ -469,7 +470,7 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
     }
     
     /**
-     * Create a new {@link com.metamatrix.modeler.core.container.Container}instance. The new container will be initialized with a
+     * Create a new {@link Container}instance. The new container will be initialized with a
      * reference to the metamodel registry along with references to the resource factories needed to create new resource instances.
      * The container will be loaded with all external resources found through the "externalResource" extension point which includes
      * the "built-in" datatypes resource.
@@ -570,7 +571,7 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
     }
   
     /**
-     * Create a new empty {@link com.metamatrix.modeler.core.container.Container}instance. The new container will be initialized
+     * Create a new empty {@link Container}instance. The new container will be initialized
      * with a reference to the metamodel registry along with references to the resource factories needed to create new resource
      * instances. The container will <b>not </b> be loaded or have access to any of the external resources including the "built-in"
      * datatypes resource.
@@ -967,7 +968,7 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
 
     /**
      * Return a list of {@link org.teiid.designer.core.MappingAdapterDescriptor}instances for all extensions of the
-     * ModelerCore.EXTENSION_POINT.MODEL_OBJECT_RESOLVER.
+     * {@link EOBJECT_MATCHER_FACTORY}
      * 
      * @return
      */

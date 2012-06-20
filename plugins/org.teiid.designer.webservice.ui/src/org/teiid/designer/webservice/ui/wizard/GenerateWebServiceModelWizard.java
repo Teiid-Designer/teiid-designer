@@ -19,6 +19,7 @@ import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchWizard;
 import org.teiid.core.util.CoreArgCheck;
 import org.teiid.core.util.I18nUtil;
 import org.teiid.designer.core.ModelerCore;

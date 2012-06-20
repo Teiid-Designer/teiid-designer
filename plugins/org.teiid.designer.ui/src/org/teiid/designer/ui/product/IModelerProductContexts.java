@@ -88,7 +88,6 @@ public interface IModelerProductContexts extends IProductContexts {
          * The context used to determine if a import wizard capability is supported by a product.
          * 
          * @since 4.3
-         * @see org.teiid.designer.ui.modeler.ui.UiConstants.ProductInfo.Capabilities.IMPORT
          */
         IProductContext IMPORT = new ProductContext(Categories.CONTRIBUTIONS, "import"); //$NON-NLS-1$
 
@@ -96,7 +95,6 @@ public interface IModelerProductContexts extends IProductContexts {
          * The context used to determine if a import wizard capability is supported by a product.
          * 
          * @since 4.3
-         * @see org.teiid.designer.ui.modeler.ui.UiConstants.ProductInfo.Capabilities.EXPORT
          */
         IProductContext EXPORT = new ProductContext(Categories.CONTRIBUTIONS, "export"); //$NON-NLS-1$
 

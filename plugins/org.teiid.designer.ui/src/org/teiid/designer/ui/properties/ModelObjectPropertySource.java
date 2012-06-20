@@ -39,7 +39,7 @@ import org.teiid.designer.ui.viewsupport.StatusBarUpdater;
  * ModelObjectPropertySource is a specialization of PropertySource.
  * The class creates {@link ModelObjectPropertyDescriptor} instances rather than 
  * EMF PropertyDescriptors.  It also provides Metamodel Extension properties
- * along with the core metamodel properties based on the {@link IExtensionPropertiesControl}.
+ * along with the core metamodel properties.
  */
 public class ModelObjectPropertySource extends PropertySource {
 

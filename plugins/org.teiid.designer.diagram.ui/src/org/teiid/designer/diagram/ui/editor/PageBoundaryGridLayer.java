@@ -10,8 +10,10 @@ package org.teiid.designer.diagram.ui.editor;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.FigureUtilities;
 import org.eclipse.draw2d.Graphics;
+import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.gef.SnapToGrid;
 import org.eclipse.gef.editparts.GridLayer;
 import org.eclipse.swt.SWT;
 

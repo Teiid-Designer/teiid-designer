@@ -16,6 +16,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.Checksum;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -46,7 +47,6 @@ import org.teiid.designer.core.container.DuplicateResourceException;
 import org.teiid.designer.core.metamodel.MetamodelDescriptor;
 import org.teiid.designer.core.resource.EmfResource;
 import org.teiid.designer.core.util.ModelContents;
-import org.teiid.designer.core.workspace.ModelFileUtil;
 import org.teiid.designer.metamodels.core.CoreFactory;
 import org.teiid.designer.metamodels.core.ModelAnnotation;
 import org.teiid.designer.metamodels.core.ModelImport;
@@ -871,9 +871,6 @@ public class ModelResourceImpl extends OpenableImpl implements ModelResource {
         return Collections.EMPTY_LIST;
     }
 
-    /**
-     * @see IParent
-     */
     @Override
     public boolean hasChildren() {
         return true;

@@ -28,7 +28,7 @@ public class TranslatorTemplate extends TeiidTranslator {
      */
     public TranslatorTemplate( String name,
                               String type ) {
-        super(new PseudoTranslator(name, type, null), new ArrayList<PropertyDefinition>(), null);
+        super(new PseudoTranslator(name, type), new ArrayList<PropertyDefinition>(), null);
         this.changedProperties = new Properties();
     }
 

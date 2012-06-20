@@ -7,13 +7,17 @@
  */
 package org.teiid.designer.metamodels.relational.util;
 
+import java.sql.Types;
+
 import org.eclipse.emf.ecore.EObject;
+import org.teiid.core.types.DataTypeManager;
 import org.teiid.designer.core.ModelerCoreException;
+import org.teiid.designer.metadata.runtime.api.DataType;
 import org.teiid.designer.metamodels.relational.SearchabilityType;
 
 
 /**
- * This class provides a mapping between the built-in types and the {@link JDBC types}.
+ * This class provides a mapping between the built-in types and the JDBC types.
  */
 public interface RelationalTypeMapping {
 
@@ -56,21 +60,21 @@ public interface RelationalTypeMapping {
     }
 
     /**
-     * Find the {@link Datatype} that corresponds to the supplied type name from a JDBC data source.
+     * Find the {@link DataType} that corresponds to the supplied type name from a JDBC data source.
      * 
      * @param jdbcTypeName the name of the JDBC type
-     * @return the Datatype that best corresponds to the JDBC type name
-     * @throws ModelerCoreException if there is a problem with the datatype manager
+     * @return the {@link DataType} that best corresponds to the JDBC type name
+     * @throws ModelerCoreException if there is a problem with the {@link DataTypeManager}
      */
     public EObject getDatatype( final String jdbcTypeName ) throws ModelerCoreException;
 
     /**
-     * Find the {@link Datatype} that corresponds to the supplied {@link java.sql.Types JDBC type}.
+     * Find the {@link DataType} that corresponds to the supplied {@link java.sql.Types JDBC type}.
      * 
-     * @param jdbcType the {@link Type JDBC type}
-     * @return the Datatype that best corresponds to the JDBC type, or null if no Datatype could be found or if the type is
+     * @param jdbcType the JDBC type
+     * @return the {@link DataType} that best corresponds to the JDBC type, or null if no {@link DataType} could be found or if the type is
      *         ambiguous (such as {@link Types#OTHER}).
-     * @throws ModelerCoreException if there is a problem with the datatype manager
+     * @throws ModelerCoreException if there is a problem with the {@link DataTypeManager}
      */
     public EObject getDatatype( final int jdbcType ) throws ModelerCoreException;
 

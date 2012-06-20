@@ -11,6 +11,7 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
@@ -21,6 +22,7 @@ import org.teiid.core.util.CoreArgCheck;
 import org.teiid.designer.compare.DifferenceDescriptor;
 import org.teiid.designer.compare.DifferenceReport;
 import org.teiid.designer.compare.DifferenceType;
+import org.teiid.designer.compare.ModelerComparePlugin;
 import org.teiid.designer.compare.PropertyDifference;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.metamodels.core.AnnotationContainer;

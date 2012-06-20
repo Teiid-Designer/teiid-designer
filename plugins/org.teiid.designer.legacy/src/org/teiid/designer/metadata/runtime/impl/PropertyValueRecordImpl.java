@@ -32,7 +32,7 @@ public class PropertyValueRecordImpl implements PropertyValueRecord {
 	//==================================================================================
 
 	/* (non-Javadoc)
-	 * @See org.teiid.designer.core.metadata.runtime.PropertyValueRecord#getProperty()
+	 * @see org.teiid.designer.metadata.runtime.PropertyValueRecord#getProperty()
 	 */
 	@Override
 	public String getProperty() {
@@ -40,7 +40,7 @@ public class PropertyValueRecordImpl implements PropertyValueRecord {
 	}
 
 	/* (non-Javadoc)
-	 * @See org.teiid.designer.core.metadata.runtime.PropertyValueRecord#getValue()
+	 * @see org.teiid.designer.metadata.runtime.PropertyValueRecord#getValue()
 	 */
 	@Override
 	public String getValue() {

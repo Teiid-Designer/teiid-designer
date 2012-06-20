@@ -52,7 +52,7 @@ public class TransformationRecordImpl extends AbstractMetadataRecord implements 
     }
 
     /*
-     * @See org.teiid.designer.core.metadata.runtime.TransformationRecord#getBindings()
+     * @see org.teiid.designer.metadata.runtime.TransformationRecord#getBindings()
      */
     @Override
 	public List getBindings() {
@@ -60,7 +60,7 @@ public class TransformationRecordImpl extends AbstractMetadataRecord implements 
     }
 
     /*
-     * @See org.teiid.designer.core.metadata.runtime.TransformationRecord#getSchemaPaths()
+     * @see org.teiid.designer.metadata.runtime.TransformationRecord#getSchemaPaths()
      */
     @Override
 	public List getSchemaPaths() {
@@ -68,7 +68,7 @@ public class TransformationRecordImpl extends AbstractMetadataRecord implements 
     }
 
     /*
-     * @See org.teiid.designer.core.metadata.runtime.TransformationRecord#getTransformationType()
+     * @see org.teiid.designer.metadata.runtime.TransformationRecord#getTransformationType()
      */
     @Override
 	public String getTransformationType() {

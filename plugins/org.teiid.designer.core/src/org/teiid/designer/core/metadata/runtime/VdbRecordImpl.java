@@ -8,6 +8,7 @@
 package org.teiid.designer.core.metadata.runtime;
 
 import java.util.List;
+
 import org.eclipse.emf.ecore.EObject;
 import org.teiid.designer.core.index.IndexConstants;
 import org.teiid.designer.core.metamodel.aspect.sql.SqlVdbAspect;
@@ -52,7 +53,7 @@ public class VdbRecordImpl extends org.teiid.designer.metadata.runtime.impl.VdbR
     //==================================================================================
 
     /**
-     * @see org.teiid.designer.core.metadata.runtime.VdbRecord#getDescription()
+     * @see org.teiid.designer.metadata.runtime.VdbRecord#getDescription()
      */
     @Override
     public String getDescription() {
@@ -63,7 +64,7 @@ public class VdbRecordImpl extends org.teiid.designer.metadata.runtime.impl.VdbR
     }
 
     /**
-     * @see org.teiid.designer.core.metadata.runtime.VdbRecord#getIdentifier()
+     * @see org.teiid.designer.metadata.runtime.VdbRecord#getIdentifier()
      */
     @Override
     public String getIdentifier() {
@@ -74,7 +75,7 @@ public class VdbRecordImpl extends org.teiid.designer.metadata.runtime.impl.VdbR
     }
 
     /**
-     * @see org.teiid.designer.core.metadata.runtime.VdbRecord#getModelIDs()
+     * @see org.teiid.designer.metadata.runtime.VdbRecord#getModelIDs()
      */
     @Override
     public List getModelIDs() {
@@ -85,7 +86,7 @@ public class VdbRecordImpl extends org.teiid.designer.metadata.runtime.impl.VdbR
     }
 
     /**
-     * @see org.teiid.designer.core.metadata.runtime.VdbRecord#getProducerName()
+     * @see org.teiid.designer.metadata.runtime.VdbRecord#getProducerName()
      */
     @Override
     public String getProducerName() {
@@ -96,7 +97,7 @@ public class VdbRecordImpl extends org.teiid.designer.metadata.runtime.impl.VdbR
     }
 
     /**
-     * @see org.teiid.designer.core.metadata.runtime.VdbRecord#getProducerVersion()
+     * @see org.teiid.designer.metadata.runtime.VdbRecord#getProducerVersion()
      */
     @Override
     public String getProducerVersion() {
@@ -107,7 +108,7 @@ public class VdbRecordImpl extends org.teiid.designer.metadata.runtime.impl.VdbR
     }
 
     /**
-     * @see org.teiid.designer.core.metadata.runtime.VdbRecord#getProvider()
+     * @see org.teiid.designer.metadata.runtime.VdbRecord#getProvider()
      */
     @Override
     public String getProvider() {
@@ -118,7 +119,7 @@ public class VdbRecordImpl extends org.teiid.designer.metadata.runtime.impl.VdbR
     }
 
     /**
-     * @see org.teiid.designer.core.metadata.runtime.VdbRecord#getTimeLastChanged()
+     * @see org.teiid.designer.metadata.runtime.VdbRecord#getTimeLastChanged()
      */
     @Override
     public String getTimeLastChanged() {
@@ -129,7 +130,7 @@ public class VdbRecordImpl extends org.teiid.designer.metadata.runtime.impl.VdbR
     }
 
     /**
-     * @see org.teiid.designer.core.metadata.runtime.VdbRecord#getTimeLastProduced()
+     * @see org.teiid.designer.metadata.runtime.VdbRecord#getTimeLastProduced()
      */
     @Override
     public String getTimeLastProduced() {
@@ -140,7 +141,7 @@ public class VdbRecordImpl extends org.teiid.designer.metadata.runtime.impl.VdbR
     }
 
     /**
-     * @see org.teiid.designer.core.metadata.runtime.VdbRecord#getVersion()
+     * @see org.teiid.designer.metadata.runtime.VdbRecord#getVersion()
      */
     @Override
     public String getVersion() {

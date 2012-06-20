@@ -12,6 +12,8 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
@@ -31,6 +33,7 @@ import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelResourceImpl;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
+import org.teiid.designer.core.workspace.Openable;
 import org.teiid.designer.metamodels.core.Annotation;
 import org.teiid.designer.metamodels.core.AnnotationContainer;
 import org.teiid.designer.metamodels.core.CoreFactory;
@@ -311,7 +314,7 @@ public class ModelContents {
      * {@link #createNewDiagram(EObject, boolean)} method. org.teiid.designer.core.ModelEditor ModelEditor}.
      * <p>
      * Return a {@link List} rather than a <code>Diagram[]</code>, since the
-     * {@link org.eclipse.jface.viewers.ITreeContentProvider} will have to merge these diagrams into the existing children of the
+     * content provider will have to merge these diagrams into the existing children of the
      * target.
      * </p>
      * 
@@ -341,7 +344,7 @@ public class ModelContents {
      * {@link #createNewDiagram(EObject, boolean)} method.
      * <p>
      * Return a {@link List} rather than a <code>Diagram[]</code>, since the
-     * {@link org.eclipse.jface.viewers.ITreeContentProvider} will have to merge these diagrams into the existing children of the
+     * content provider will have to merge these diagrams into the existing children of the
      * target.
      * </p>
      * 
@@ -562,7 +565,7 @@ public class ModelContents {
      * Transformations are created using the {@link #createNewTransformation(EObject)} method.
      * <p>
      * Return a {@link List} rather than a <code>TransformationMappingRoot[]</code>, since the
-     * {@link org.eclipse.jface.viewers.ITreeContentProvider} will have to merge these transformations into the existing children
+     * content provider will have to merge these transformations into the existing children
      * of the target.
      * </p>
      * 
@@ -588,7 +591,7 @@ public class ModelContents {
      * Transformations are created using the {@link #createNewTransformation(EObject)} method.
      * <p>
      * Return a {@link List} rather than a <code>TransformationMappingRoot[]</code>, since the
-     * {@link org.eclipse.jface.viewers.ITreeContentProvider} will have to merge these transformations into the existing children
+     * ContentProvider will have to merge these transformations into the existing children
      * of the target.
      * </p>
      * 
@@ -614,7 +617,7 @@ public class ModelContents {
      * Transformations are created using the {@link #createNewTransformation(EObject)} method.
      * <p>
      * Return a {@link List} rather than a <code>TransformationMappingRoot[]</code>, since the
-     * {@link org.eclipse.jface.viewers.ITreeContentProvider} will have to merge these transformations into the existing children
+     * content provider will have to merge these transformations into the existing children
      * of the target.
      * </p>
      * 
@@ -640,7 +643,7 @@ public class ModelContents {
      * {@link #createNewTransformation(EObject)} method.
      * <p>
      * Return a {@link List} rather than a <code>Diagram[]</code>, since the
-     * {@link org.eclipse.jface.viewers.ITreeContentProvider} will have to merge these transformations into the existing children
+     * ContentProvider will have to merge these transformations into the existing children
      * of the target.
      * </p>
      * 
@@ -948,7 +951,7 @@ public class ModelContents {
      * {@link #createNewTransformation(EObject)} method.
      * <p>
      * Return a {@link List} rather than a <code>Diagram[]</code>, since the
-     * {@link org.eclipse.jface.viewers.ITreeContentProvider} will have to merge these transformations into the existing children
+     * content provider will have to merge these transformations into the existing children
      * of the target.
      * </p>
      * 

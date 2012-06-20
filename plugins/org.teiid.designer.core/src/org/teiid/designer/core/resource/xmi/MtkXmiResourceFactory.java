@@ -10,6 +10,7 @@ package org.teiid.designer.core.resource.xmi;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.impl.ResourceFactoryImpl;
+import org.eclipse.emf.ecore.resource.impl.ResourceImpl;
 
 /**
  * @author Lance Phillips

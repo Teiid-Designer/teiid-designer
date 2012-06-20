@@ -8,7 +8,9 @@
 package org.teiid.designer.compare;
 
 import java.util.List;
+
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.teiid.designer.compare.selector.ModelSelector;
 
 /**

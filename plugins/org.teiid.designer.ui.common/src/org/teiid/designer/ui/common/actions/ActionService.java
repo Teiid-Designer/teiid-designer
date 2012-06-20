@@ -112,7 +112,6 @@ public interface ActionService {
     /**
      * Removes the action with the given identifier from the action service.
      * @param theActionId the identifier of the action being removed
-     * @throws com.metamatrix.core.util.AssertionError if input is null
      */
     void removeAction(String theActionId);
     

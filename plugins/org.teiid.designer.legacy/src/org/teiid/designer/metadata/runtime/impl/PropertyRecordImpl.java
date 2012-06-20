@@ -36,7 +36,7 @@ public class PropertyRecordImpl extends AbstractMetadataRecord implements Proper
     //==================================================================================
 
     /*
-     * @See org.teiid.designer.core.metadata.runtime.PropertyRecord#getPropertyName()
+     * @see org.teiid.designer.metadata.runtime.PropertyRecord#getPropertyName()
      */
     @Override
 	public String getPropertyName() {
@@ -44,7 +44,7 @@ public class PropertyRecordImpl extends AbstractMetadataRecord implements Proper
     }
 
     /*
-     * @See org.teiid.designer.core.metadata.runtime.PropertyRecord#getPropertyValue()
+     * @see org.teiid.designer.metadata.runtime.PropertyRecord#getPropertyValue()
      */
     @Override
 	public String getPropertyValue() {

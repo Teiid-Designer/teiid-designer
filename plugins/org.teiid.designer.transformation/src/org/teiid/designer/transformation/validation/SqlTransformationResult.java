@@ -12,6 +12,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.teiid.designer.core.ModelerCore;
@@ -225,7 +226,7 @@ public class SqlTransformationResult implements QueryValidationResult {
     }
 	
     /** 
-     * @see org.teiid.designer.core.query.query.resolver.util.QueryValidationResult#getStatusList()
+     * @see org.teiid.designer.core.query.QueryValidationResult#getStatusList()
      * @since 4.2
      */
     @Override
@@ -234,7 +235,7 @@ public class SqlTransformationResult implements QueryValidationResult {
     }
 
     /** 
-     * @see org.teiid.designer.core.query.query.resolver.util.QueryValidationResult#getUpdateStatusList()
+     * @see org.teiid.designer.core.query.QueryValidationResult#getUpdateStatusList()
      * @since 4.2
      */
     @Override
@@ -260,7 +261,7 @@ public class SqlTransformationResult implements QueryValidationResult {
     }
     
     /**
-	 * @see org.teiid.designer.core.query.query.resolver.util.QueryValidationResult#getUpdateStatusList(int cmdType)
+	 * @see org.teiid.designer.core.query.QueryValidationResult#getUpdateStatusList(int cmdType)
      * @since 7.3
      */
     @Override

@@ -10,6 +10,7 @@ package org.teiid.designer.metamodels.wsdl.io;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -22,9 +23,9 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 public class DelegatingResourceSet extends ResourceSetImpl {
 
     private List readOnlyResourceSets;
+    
     /**
      * Constructor for EmfResourceSetImpl.
-     * @param container The {@link Container} referencing this
      */
     public DelegatingResourceSet() {
         super();
@@ -69,7 +70,7 @@ public class DelegatingResourceSet extends ResourceSetImpl {
      * Add a ResourceSet to be used for resolution of a resource URI.  The
      * specified ResourceSet will be treated as read-only and will never be
      * used to load a resource for the URI being checked.
-     * @param listener
+     * @param resourceSet
      */
     public void addDelegateResourceSet(final ResourceSet resourceSet) {
         if (resourceSet != null) {

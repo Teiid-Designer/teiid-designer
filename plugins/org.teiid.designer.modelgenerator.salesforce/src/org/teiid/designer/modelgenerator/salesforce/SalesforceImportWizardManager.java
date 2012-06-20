@@ -77,8 +77,6 @@ public class SalesforceImportWizardManager {
      * Get the WSDL Model. If the current WSDL is not valid or has not been specified an exception will be thrown.
      * 
      * @return the WSDL Model
-     * @throws Exception
-     * @throws ModelGenerationException
      */
     public DataModel getDataModel() {
         return dataModel;

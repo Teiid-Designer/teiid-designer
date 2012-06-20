@@ -8,6 +8,7 @@
 package org.teiid.query.ui.builder.util;
 
 import java.text.MessageFormat;
+
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -107,7 +108,7 @@ public class CriteriaStrategy implements ICriteriaStrategy {
 
     /**
      * Uses the TreeViewer's ITreeContentProvider and ILabelProvider to build a full name.
-     * @see com.metamatrix.toolbox.ui.query.builder.criteria.CriteriaStrategy#getRuntimeFullName(com.metamatrix.common.tree.TreeNode)
+     * @see CriteriaStrategy#getRuntimeFullName(Object)
      */
     @Override
 	public String getRuntimeFullName(Object theNode) {

@@ -8,6 +8,7 @@
 package org.teiid.designer.core.search;
 
 import java.util.List;
+
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.teiid.designer.core.ModelerCore;
@@ -123,21 +124,21 @@ public interface MetadataSearch extends ISearchEngine {
     /**
      * Get the property matching pattern for the search. The pattern may be null, zero-length or {@link #TEXT_PATTERN_ANY_STRING
      * "*"} if the text is not to be used in the criteria. If the text is to be evaluated against the criteria, then the pattern
-     * should consist of combinations of literal characters to be match, the {@link #NAME_PATTERN_ANY_STRING "*"} for matching any
-     * number of characters, the {@link #NAME_PATTERN_ANY_CHAR "?"} for matching any single character, and
-     * {@link #NAME_PATTERN_ESCAPE_CHAR "\"} for escaping the "*", "?" or "\" characters.
+     * should consist of combinations of literal characters to be match, the {@link #TEXT_PATTERN_ANY_STRING "*"} for matching any
+     * number of characters, the {@link #TEXT_PATTERN_ANY_CHAR "?"} for matching any single character, and
+     * {@link #TEXT_PATTERN_ESCAPE_CHAR "\"} for escaping the "*", "?" or "\" characters.
      * 
      * @return the text pattern; may be null or zero-length if there is no criteria
-     * @see #setFeatureCriteria(String, boolean)
+     * @see #setFeatureCriteria(String, String, boolean)
      */
     public String getFeatureCriteria();
 
     /**
      * Set the property matching criteria for the search. The pattern may be null, zero-length or {@link
-     * #NAME_PATTERN_ANY_STRING "*"} if the text is not to be used in the criteria. If the text is to be evaluated against the
+     * #TEXT_PATTERN_ANY_STRING "*"} if the text is not to be used in the criteria. If the text is to be evaluated against the
      * criteria, then the pattern should consist of combinations of literal characters to be match, the {@link
-     * #NAME_PATTERN_ANY_STRING "*"} for matching any number of characters, the {@link #NAME_PATTERN_ANY_CHAR "?"} for
-     * matching any single character, and {@link #NAME_PATTERN_ESCAPE_CHAR "\"} for escaping the "*", "?" or "\"
+     * #TEXT_PATTERN_ANY_STRING "*"} for matching any number of characters, the {@link #TEXT_PATTERN_ANY_CHAR "?"} for
+     * matching any single character, and {@link #TEXT_PATTERN_ESCAPE_CHAR "\"} for escaping the "*", "?" or "\"
      * characters.
      * 
      * @param featureName the feature name for the search

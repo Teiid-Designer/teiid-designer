@@ -37,8 +37,8 @@ public interface QueryValidator {
 
     /**
      * Validate the sqlString of the given type, valid types are 
-     * {@link SELECT_TRNS}, {@link INSERT_TRNS}, {@link UPDATE_TRNS}, {@link DELETE_TRNS}
-     * {@link UNKNOWN_TRNS}, if this is a unknow transfor, the query will only be parsed.
+     * {@link #SELECT_TRNS}, {@link #INSERT_TRNS}, {@link #UPDATE_TRNS}, {@link #DELETE_TRNS}
+     * {@link #UNKNOWN_TRNS}, if this is a unknown transform, the query will only be parsed.
      * @param sqlString The sqlString that needs to be validate
      * @param type The type of sql being passed in
      * @param cacheResult Boolean to determine if the result needs to be cached.

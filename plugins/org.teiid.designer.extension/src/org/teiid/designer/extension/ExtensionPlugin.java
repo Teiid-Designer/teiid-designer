@@ -9,6 +9,7 @@ package org.teiid.designer.extension;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Collection;
@@ -413,8 +414,6 @@ public class ExtensionPlugin extends Plugin {
     /**
      * {@inheritDoc}
      * <p>
-     * It is recommended for the UI to call {@link UserDefinitionsManager#shutdown(org.eclipse.core.runtime.IProgressMonitor)} as
-     * there are shutdown tasks that the UI should block on before shutting down.
      * 
      * @see org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
      */

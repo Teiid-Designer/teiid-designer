@@ -85,7 +85,7 @@ public class EmfTestUtil {
      * maps to a Structural Feature on the eClass.  The set method must take
      * only a single string as a parameter.  If no regular set method found.
      * Look for the regular eSet(StructuralFeature, Object) method
-     * @param eClass
+     * @param eObject
      * @return EObject
      */
     public static  Method findSetMethod(EObject eObject){
@@ -98,7 +98,8 @@ public class EmfTestUtil {
      * only a single string as a parameter.  Returns the nth match the meets all
      * criteria.  If no regular set method found. Look for the regular
      * eSet(StructuralFeature, Object) method
-     * @param eClass
+     * @param eObject
+     * @param n
      * @return EObject
      */
     public static  Method findSetMethod(EObject eObject, int n){
@@ -133,6 +134,8 @@ public class EmfTestUtil {
      * Searches through the StructuralFeatures of the eClass looking for one
      * that has a String data type.  Returns the nth match the meets the
      * criteria.
+     * @param eObject 
+     * @param n 
      * @return EStructuralFeature
      */
     public static EStructuralFeature findStringSF(EObject eObject, int n){
@@ -152,6 +155,7 @@ public class EmfTestUtil {
     /**
      * Searches through the StructuralFeatures of the eClass looking for one
      * that has a String data type.
+     * @param eObject 
      * @return EStructuralFeature
      */
     public static EStructuralFeature findStringSF(EObject eObject){

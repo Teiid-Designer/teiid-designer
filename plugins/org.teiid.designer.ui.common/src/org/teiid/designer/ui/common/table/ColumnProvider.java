@@ -10,7 +10,9 @@ package org.teiid.designer.ui.common.table;
 import java.util.Comparator;
 
 import org.eclipse.jface.viewers.CellEditor;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
+import org.teiid.metadata.Column;
 
 /**
  * @param <T>
@@ -24,48 +26,48 @@ public interface ColumnProvider<T, V> extends Comparator<T> {
     int getAlignment();
 
     /**
-     * @return the cell editor that will be used to edit the {@link TableColumn column's} {@link #isEditable(Object) editable} cells
+     * @return the cell editor that will be used to edit the {@link Column column's} {@link #isEditable(Object) editable} cells
      */
     Class<? extends CellEditor> getEditorClass();
 
     /**
      * @param element
-     * @return the {@link TableColumn column's} image for the supplied element value
+     * @return the {@link Column column's} image for the supplied element value
      */
     Image getImage( T element );
 
     /**
-     * @return the header name of the {@link TableColumn column}
+     * @return the header name of the {@link Column column}
      */
     String getName();
     
     /**
-     * @return the header image of the {@link TableColumn column}
+     * @return the header image of the {@link Column column}
      */
     Image getImage();
 
     /**
      * @param element
-     * @return the {@link TableColumn column's} text for the supplied element value (often just the string representation of the
+     * @return the {@link Column column's} text for the supplied element value (often just the string representation of the
      *         cell's {@link #getValue(Object) value})
      */
     String getText( T element );
 
     /**
      * @param element
-     * @return the {@link TableColumn column's} tooltip for the supplied element value
+     * @return the {@link Column column's} tooltip for the supplied element value
      */
     String getToolTip( T element );
 
     /**
      * @param element
-     * @return the {@link TableColumn column's} model value for the supplied element value; must not be <code>null</code>
+     * @return the {@link Column column's} model value for the supplied element value; must not be <code>null</code>
      */
     V getValue( T element );
 
     /**
      * @param element
-     * @return <code>true</code> if the {@link TableColumn column} is editable for the supplied element value
+     * @return <code>true</code> if the {@link Column column} is editable for the supplied element value
      */
     boolean isEditable( T element );
 
@@ -80,7 +82,7 @@ public interface ColumnProvider<T, V> extends Comparator<T> {
     boolean isSortable();
 
     /**
-     * Must be implemented if the {@link TableColumn column} is {@link #isEditable(Object) editable} for the supplied element value.
+     * Must be implemented if the {@link Column column} is {@link #isEditable(Object) editable} for the supplied element value.
      * 
      * @param element
      * @param value

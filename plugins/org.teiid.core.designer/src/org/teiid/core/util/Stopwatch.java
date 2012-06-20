@@ -40,7 +40,7 @@ public class Stopwatch implements Serializable {
      * If the stopwatch is active, record the starting time for a time segment. If the stopwatch is inactive, the method returns
      * immediately.
      * 
-     * @see isActive
+     * @see #isActive
      */
     public void start() {
         if (active) {
@@ -52,7 +52,7 @@ public class Stopwatch implements Serializable {
      * If the stopwatch is active, record the starting time for a time segment. If the stopwatch is inactive, the method returns
      * immediately.
      * 
-     * @see isActive
+     * @see #isActive
      */
     public void start( boolean reset ) {
         if (reset) reset();
@@ -63,7 +63,7 @@ public class Stopwatch implements Serializable {
      * If the stopwatch is active, record the ending time for a time segment. If the stopwatch is inactive, the method returns
      * immediately.
      * 
-     * @see isActive
+     * @see #isActive
      */
     public void stop() {
         if (active) {

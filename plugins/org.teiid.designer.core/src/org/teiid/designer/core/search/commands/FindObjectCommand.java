@@ -8,8 +8,10 @@
 package org.teiid.designer.core.search.commands;
 
 import java.util.Collection;
+
 import org.eclipse.emf.ecore.EClass;
 import org.teiid.designer.core.index.IndexSelector;
+import org.teiid.designer.core.search.MetadataSearch;
 
 /**
  * This interface is used to find typed objects based on datatype criteria.
@@ -39,17 +41,15 @@ public interface FindObjectCommand extends SearchCommand {
     
     /**
      * Set the property matching criteria for the search.  The pattern may be null, zero-length
-     * or {@link #NAME_PATTERN_ANY_STRING "*"} if the text is not to be used in the criteria.  If the text
+     * or {@link MetadataSearch#TEXT_PATTERN_ANY_STRING "*"} if the text is not to be used in the criteria.  If the text
      * is to be evaluated against the criteria, then the pattern should consist of combinations of literal
-     * characters to be match, the {@link #NAME_PATTERN_ANY_STRING "*"} for matching any number of characters,
-     * the {@link #NAME_PATTERN_ANY_CHAR "?"} for matching any single character, and
-     * {@link #NAME_PATTERN_ESCAPE_CHAR "\"} for escaping the "*", "?" or "\" characters.
+     * characters to be match, the {@link MetadataSearch#TEXT_PATTERN_ANY_STRING "*"} for matching any number of characters,
+     * the {@link MetadataSearch#TEXT_PATTERN_ANY_CHAR "?"} for matching any single character, and
+     * {@link MetadataSearch#TEXT_PATTERN_ESCAPE_CHAR "\"} for escaping the "*", "?" or "\" characters.
      * @param featureName the feature name for the search
      * @param textPattern the text matching pattern
      * @param containsPattern true if the specified pattern is to be matched, or false if matches are to be excluded
      * in the results 
-     * @see #isFeatureCriteriaCaseSensitive()
-     * @see #getFeatureCriteria()
      */
     public void setFeatureCriteria( String featureName, String textPattern, boolean containsPattern );
 

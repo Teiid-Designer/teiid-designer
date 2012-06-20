@@ -14,6 +14,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -26,11 +27,6 @@ import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.ModelerCoreException;
 import org.teiid.designer.core.container.Container;
 import org.teiid.designer.core.container.DuplicateResourceException;
-import org.teiid.designer.core.index.IDocument;
-import org.teiid.designer.core.index.IIndex;
-import org.teiid.designer.core.index.IIndexerOutput;
-import org.teiid.designer.core.index.IndexConstants;
-import org.teiid.designer.core.index.WordEntry;
 import org.teiid.designer.core.metadata.runtime.RuntimeAdapter;
 import org.teiid.designer.core.util.ModelObjectCollector;
 import org.teiid.designer.core.workspace.ModelResource;
@@ -298,7 +294,7 @@ public class ModelIndexer implements ResourceIndexer {
     }
 
     /**
-     * Create the {@link org.teiid.designer.core.index.index.impl.WordEntry} instance(s) to be used as the index file record(s) for
+     * Create the {@link WordEntry} instance(s) to be used as the index file record(s) for
      * this EObject instance. The word entries are added to the list provided by the calling method.
      * 
      * @param EObject
@@ -325,7 +321,7 @@ public class ModelIndexer implements ResourceIndexer {
     }
 
     /**
-     * Add {@link org.teiid.designer.core.index.index.impl.WordEntry} instance(s) for the resource that is being indexed.
+     * Add {@link WordEntry} instance(s) for the resource that is being indexed.
      * 
      * @param document
      * @param wordEntries

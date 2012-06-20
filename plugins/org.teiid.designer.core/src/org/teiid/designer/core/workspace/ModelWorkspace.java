@@ -16,7 +16,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 
 /**
- * A ModelWorkspace represents the {@link ModelWorkspaceItems items} in a
+ * A ModelWorkspace represents the {@link ModelWorkspaceItem items} in a
  * Modeler workspace.
  * <p>
  * Model workspace items need to be opened before they can be navigated or manipulated.
@@ -72,7 +72,7 @@ public interface ModelWorkspace extends ModelWorkspaceItem, Openable {
      * </p>
      * @return the {@link ModelProject} instances contained in this
      * workspace item, or an empty array if there are none.
-     * @exception JavaModelException if this request fails.
+     * @exception ModelWorkspaceException if this request fails.
      */
     ModelProject[] getModelProjects() throws ModelWorkspaceException;
 

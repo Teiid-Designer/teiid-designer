@@ -10,19 +10,21 @@ package org.teiid.designer.ui.common.util;
 import java.text.Collator;
 import java.text.RuleBasedCollator;
 import java.util.List;
+
 import org.eclipse.jface.viewers.ContentViewer;
 import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
+import org.teiid.designer.ui.common.widget.accumulator.AccumulatorPanel;
 
 /**
  * 
  * OrderableViewerSorter
  * 
  * Extension to {@link ViewerSorter} in which sorting can be turned off and on.  This was done to
- * accomodate the needs of a table in 
- * {@link com.metamatirx.ui.internal.widget.accumulator.AccumulatorPanel}.
+ * accommodate the needs of a table in 
+ * {@link AccumulatorPanel}.
  * 
  * User may call the setStringsOrder() method to set an order for the strings.  If called with a
  * list of strings, this list is expected to include all of the strings that may be compared for
@@ -146,7 +148,7 @@ public class OrderableViewerSorter extends ViewerSorter {
  * 
  * OrderableCollator
  * 
- * Extension to {@link RuleBasedCollator to override the compare() method.  A java.util.List of
+ * Extension to {@link RuleBasedCollator} to override the compare() method.  A java.util.List of
  * Strings can be supplied.  If they are present, they are expected to represent all of the items
  * that may be compared for collation, in the desired order.  If this list is not present, then
  * the comparison is performed by the superclass, in other words alphabetic.  This was developed for 

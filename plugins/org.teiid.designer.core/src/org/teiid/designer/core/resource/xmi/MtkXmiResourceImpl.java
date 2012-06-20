@@ -974,7 +974,7 @@ public class MtkXmiResourceImpl extends XMIResourceImpl implements EmfResource, 
     }
 
     /**
-     * @see org.teiid.designer.core.resource.mtk.emf.resource.EmfResource#getContainer()
+     * @see EmfResource#getContainer()
      */
     @Override
 	public Container getContainer() {
@@ -1040,7 +1040,7 @@ public class MtkXmiResourceImpl extends XMIResourceImpl implements EmfResource, 
     }
 
     /**
-     * @see org.teiid.designer.core.resource.mtk.emf.resource.EmfResource#getEObject(Object)
+     * @see EmfResource#getEObject(Object)
      */
     @Override
 	public EObject getEObject( final Object object ) {

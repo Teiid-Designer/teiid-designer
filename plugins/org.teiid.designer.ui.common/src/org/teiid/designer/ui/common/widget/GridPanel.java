@@ -155,7 +155,7 @@ public class GridPanel extends Composite {
     }
 
     /**
-     * @throws com.metamatrix.core.util.AssertionError if layout is not {@link GridLayout}.
+     * @throws AssertionError if layout is not {@link GridLayout}.
      * @see org.eclipse.swt.widgets.Composite#setLayout(org.eclipse.swt.widgets.Layout)
      */
     @Override

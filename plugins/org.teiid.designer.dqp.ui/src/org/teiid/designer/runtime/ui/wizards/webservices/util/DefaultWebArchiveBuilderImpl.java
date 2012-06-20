@@ -172,7 +172,7 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
     }
 
     /**
-     * @see org.teiid.designer.runtime.ui.wizards.webservices.util.dataservices.lds.WebArchiveBuilder#createWebArchive(java.io.InputStream, java.util.Map)
+     * @see WebArchiveBuilder#createWebArchive(Properties, IProgressMonitor)
      * @since 7.1
      */
     @Override

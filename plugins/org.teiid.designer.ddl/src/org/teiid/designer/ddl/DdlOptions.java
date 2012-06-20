@@ -8,6 +8,7 @@
 package org.teiid.designer.ddl;
 
 import org.teiid.designer.core.xslt.Style;
+import org.teiid.designer.metamodels.relational.RelationalPackage;
 
 
 /**

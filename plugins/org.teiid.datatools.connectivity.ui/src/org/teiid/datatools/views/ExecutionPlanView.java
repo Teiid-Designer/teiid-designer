@@ -3,6 +3,7 @@ package org.teiid.datatools.views;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.PrintWriter;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
@@ -480,7 +481,6 @@ public class ExecutionPlanView extends ViewPart {
         }
 
         /**
-         * @see org.teiid.designer.ui.common.widget.DefaultContentProvider#getElements(java.lang.Object)
          * @since 5.0.1
          */
         @Override

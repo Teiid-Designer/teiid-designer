@@ -120,7 +120,7 @@ public class Configuration {
         
     /**
      * Return a list of {@link org.teiid.designer.core.MappingAdapterDescriptor}
-     * instances for all extensions of the ModelerCore.EXTENSION_POINT.MODEL_OBJECT_RESOLVER.
+     * instances for all extensions of the ModelerCore.EXTENSION_POINT.EOBJECT_MATCHER_FACTORY.
      * @return
      */
     public List getMappingAdapterDescriptors() {

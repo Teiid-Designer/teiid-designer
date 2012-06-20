@@ -12,7 +12,7 @@ import org.eclipse.emf.ecore.EObject;
 
 
 /**
- * This implementation of {@link org.teiid.designer.core.resource.active.mtk.emf.resource.active.EmfResourceLoader}
+ * This implementation of {@link EmfResourceLoader}
  * does nothing.
  */
 public class DefaultResourceLoader implements EmfResourceLoader {

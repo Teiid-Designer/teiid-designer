@@ -8,6 +8,7 @@
 package org.teiid.designer.core.index;
 
 import java.util.Collection;
+
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.teiid.designer.core.metadata.runtime.RuntimeAdapter;
@@ -64,7 +65,7 @@ public class ModelIndexerVisitor implements ModelVisitor {
     }
 
     /**
-     * Create the {@link org.teiid.designer.core.index.index.impl.WordEntry} instance(s) to be used as the index file record(s) for
+     * Create the {@link WordEntry} instance(s) to be used as the index file record(s) for
      * this EObject instance. The word entries are added to the list provided by the calling method.
      * 
      * @param EObject

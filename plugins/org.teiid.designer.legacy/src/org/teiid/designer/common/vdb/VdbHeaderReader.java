@@ -94,7 +94,7 @@ public class VdbHeaderReader {
      * 
      * @param istream the InputStream from which we read the header
      * @return the VdbHeader object representing the contents of this section
-     * @throws MetaMatrixException if there is an error reading from the stream
+     * @throws TeiidException if there is an error reading from the stream
      */
     private VdbHeader read( InputStream istream ) throws TeiidException {
         if (istream == null) {
@@ -133,7 +133,7 @@ public class VdbHeaderReader {
      * 
      * @param file the File from which we read the header
      * @return the VdbHeader object representing the contents of this section
-     * @throws MetaMatrixException if there is an error reading the file
+     * @throws TeiidException if there is an error reading the file
      */
     public VdbHeader read( File file ) throws TeiidException {
         if (file == null) {

@@ -8,10 +8,12 @@
 package org.teiid.designer.ddl;
 
 import java.io.OutputStream;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.teiid.designer.core.workspace.ModelResource;
+import org.teiid.designer.core.workspace.ModelWorkspace;
 import org.teiid.designer.core.workspace.ModelWorkspaceSelections;
 import org.teiid.logging.Logger;
 

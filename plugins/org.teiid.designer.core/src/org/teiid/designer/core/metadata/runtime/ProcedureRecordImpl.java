@@ -44,7 +44,7 @@ public class ProcedureRecordImpl extends org.teiid.designer.metadata.runtime.imp
 	}
 
     /*
-     * @See org.teiid.designer.core.metadata.runtime.ProcedureRecord#getParameterIDs()
+     * @see org.teiid.designer.metadata.runtime.ProcedureRecord#getParameterIDs()
      */
     @Override
     public List getParameterIDs() {
@@ -56,7 +56,7 @@ public class ProcedureRecordImpl extends org.teiid.designer.metadata.runtime.imp
     }
 
     /*
-     * @See org.teiid.designer.core.metadata.runtime.ProcedureRecord#isFunction()
+     * @see org.teiid.designer.metadata.runtime.ProcedureRecord#isFunction()
      */
     @Override
     public boolean isFunction() {
@@ -67,7 +67,7 @@ public class ProcedureRecordImpl extends org.teiid.designer.metadata.runtime.imp
     }
 
     /*
-     * @See org.teiid.designer.core.metadata.runtime.ProcedureRecord#isVirtual()
+     * @see org.teiid.designer.metadata.runtime.ProcedureRecord#isVirtual()
      */
     @Override
     public boolean isVirtual() {
@@ -78,7 +78,7 @@ public class ProcedureRecordImpl extends org.teiid.designer.metadata.runtime.imp
     }
 
     /*
-     * @See org.teiid.designer.core.metadata.runtime.ProcedureRecord#getResultSetID()
+     * @see org.teiid.designer.metadata.runtime.ProcedureRecord#getResultSetID()
      */
     @Override
     public Object getResultSetID() {
@@ -126,7 +126,7 @@ public class ProcedureRecordImpl extends org.teiid.designer.metadata.runtime.imp
     }
 
     /**
-	  * @see org.teiid.designer.core.metadata.runtime.ProcedureRecord#getUpdateCount()
+	  * @see org.teiid.designer.metadata.runtime.ProcedureRecord#getUpdateCount()
 	  * @since 5.5.3
 	 */
 	 @Override

@@ -16,13 +16,14 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.teiid.core.util.CoreArgCheck;
+import org.teiid.designer.runtime.Server;
 import org.teiid.designer.runtime.ServerManager;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
 
 
 /**
- * The <code>NewServerAction</code> runs a UI that allows the user to create a new {@link PersistedServer server}.
+ * The <code>NewServerAction</code> runs a UI that allows the user to create a new {@link Server server}.
  */
 public class NewServerAction extends Action {
 

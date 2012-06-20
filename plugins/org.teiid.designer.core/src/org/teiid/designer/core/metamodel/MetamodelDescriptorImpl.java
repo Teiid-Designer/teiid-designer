@@ -15,6 +15,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.ecore.EPackage;
@@ -33,7 +34,6 @@ import org.teiid.designer.core.metamodel.aspect.relationship.RelationshipMetamod
 import org.teiid.designer.core.metamodel.aspect.sql.SqlAspect;
 import org.teiid.designer.core.metamodel.aspect.uml.UmlDiagramAspect;
 import org.teiid.designer.metamodels.core.ModelType;
-
 
 /**
  * @author dfuglsang

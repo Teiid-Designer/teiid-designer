@@ -40,7 +40,7 @@ public class ProcedureRecordImpl extends AbstractMetadataRecord implements Proce
     }
 
     /*
-     * @See org.teiid.designer.core.metadata.runtime.ProcedureRecord#getParameterIDs()
+     * @see org.teiid.designer.metadata.runtime.ProcedureRecord#getParameterIDs()
      */
     @Override
 	public List getParameterIDs() {
@@ -48,7 +48,7 @@ public class ProcedureRecordImpl extends AbstractMetadataRecord implements Proce
     }
 
     /*
-     * @See org.teiid.designer.core.metadata.runtime.ProcedureRecord#isFunction()
+     * @see org.teiid.designer.metadata.runtime.ProcedureRecord#isFunction()
      */
     @Override
 	public boolean isFunction() {
@@ -56,7 +56,7 @@ public class ProcedureRecordImpl extends AbstractMetadataRecord implements Proce
     }
 
     /*
-     * @See org.teiid.designer.core.metadata.runtime.ProcedureRecord#isVirtual()
+     * @see org.teiid.designer.metadata.runtime.ProcedureRecord#isVirtual()
      */
     @Override
 	public boolean isVirtual() {
@@ -64,7 +64,7 @@ public class ProcedureRecordImpl extends AbstractMetadataRecord implements Proce
     }
 
     /*
-     * @See org.teiid.designer.core.metadata.runtime.ProcedureRecord#getResultSetID()
+     * @see org.teiid.designer.metadata.runtime.ProcedureRecord#getResultSetID()
      */
     @Override
 	public Object getResultSetID() {
@@ -72,7 +72,7 @@ public class ProcedureRecordImpl extends AbstractMetadataRecord implements Proce
     }
 
     /*
-     * @See org.teiid.designer.core.metadata.runtime.ProcedureRecord#getType()
+     * @see org.teiid.designer.metadata.runtime.ProcedureRecord#getType()
      */
     @Override
 	public short getType() {

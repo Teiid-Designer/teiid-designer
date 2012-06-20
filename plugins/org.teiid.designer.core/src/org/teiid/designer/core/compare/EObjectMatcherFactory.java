@@ -8,11 +8,12 @@
 package org.teiid.designer.core.compare;
 
 import java.util.List;
+
 import org.eclipse.emf.ecore.EReference;
 
 /**
  * This interface represents a factory for {@link EObjectMatcher} instances.  Extensions of the
- * {@link ModelerCore.EXTENSION_POINT.MODEL_OBJECT_RESOLVER#UNIQUE_ID
+ * {@link org.teiid.designer.core.ModelerCore.EXTENSION_POINT.EOBJECT_MATCHER_FACTORY#UNIQUE_ID }
  */
 public interface EObjectMatcherFactory {
     

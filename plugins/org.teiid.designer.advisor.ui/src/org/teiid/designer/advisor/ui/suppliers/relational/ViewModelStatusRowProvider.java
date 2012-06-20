@@ -25,7 +25,7 @@ public class ViewModelStatusRowProvider  implements IStatusRowProvider {
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.designer.advisor.ui.core.status.IStatusRowProvider.StatusRowProvider#getId()
+     * @see IStatusRowProvider#getId()
      */
     @Override
     public int getId() {
@@ -35,7 +35,7 @@ public class ViewModelStatusRowProvider  implements IStatusRowProvider {
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.designer.advisor.ui.core.status.IStatusRowProvider.StatusRowProvider#getImage(org.eclipse.core.runtime.IStatus)
+     * @see IStatusRowProvider#getImage(org.eclipse.core.runtime.IStatus)
      */
     @Override
     public Image getImage( IStatus status ) {
@@ -46,7 +46,7 @@ public class ViewModelStatusRowProvider  implements IStatusRowProvider {
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.designer.advisor.ui.core.status.IStatusRowProvider.StatusRowProvider#getImageTooltip(org.eclipse.core.runtime.IStatus)
+     * @see IStatusRowProvider#getImageTooltip(org.eclipse.core.runtime.IStatus)
      */
     @Override
     public String getImageTooltip( IStatus status ) {
@@ -56,7 +56,7 @@ public class ViewModelStatusRowProvider  implements IStatusRowProvider {
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.designer.advisor.ui.core.status.IStatusRowProvider.StatusRowProvider#getLinkImage(org.eclipse.core.runtime.IStatus)
+     * @see IStatusRowProvider#getLinkImage(org.eclipse.core.runtime.IStatus)
      */
     @Override
     public Image getLinkImage( IStatus status ) {
@@ -66,7 +66,7 @@ public class ViewModelStatusRowProvider  implements IStatusRowProvider {
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.designer.advisor.ui.core.status.IStatusRowProvider.StatusRowProvider#getLinkTooltip(org.eclipse.core.runtime.IStatus)
+     * @see IStatusRowProvider#getLinkTooltip(org.eclipse.core.runtime.IStatus)
      */
     @Override
     public String getLinkTooltip( IStatus status ) {
@@ -76,7 +76,7 @@ public class ViewModelStatusRowProvider  implements IStatusRowProvider {
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.designer.advisor.ui.core.status.IStatusRowProvider.StatusRowProvider#getText(org.eclipse.core.runtime.IStatus)
+     * @see IStatusRowProvider#getText(org.eclipse.core.runtime.IStatus)
      */
     @Override
     public String getText( IStatus status ) {
@@ -86,7 +86,7 @@ public class ViewModelStatusRowProvider  implements IStatusRowProvider {
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.designer.advisor.ui.core.status.IStatusRowProvider.StatusRowProvider#getTextTooltip(org.eclipse.core.runtime.IStatus)
+     * @see IStatusRowProvider#getTextTooltip(org.eclipse.core.runtime.IStatus)
      */
     @Override
     public String getTextTooltip( IStatus status ) {

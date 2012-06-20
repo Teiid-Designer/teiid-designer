@@ -10,6 +10,7 @@ package org.teiid.designer.diagram.ui.figure;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
 import org.eclipse.draw2d.AnchorListener;
 import org.eclipse.draw2d.ArrowLocator;
 import org.eclipse.draw2d.ColorConstants;
@@ -18,6 +19,7 @@ import org.eclipse.draw2d.ConnectionAnchor;
 import org.eclipse.draw2d.ConnectionLocator;
 import org.eclipse.draw2d.ConnectionRouter;
 import org.eclipse.draw2d.DelegatingLayout;
+import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Polyline;
 import org.eclipse.draw2d.RotatableDecoration;

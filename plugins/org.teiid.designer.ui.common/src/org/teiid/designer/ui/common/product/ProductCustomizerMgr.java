@@ -174,7 +174,7 @@ public final class ProductCustomizerMgr implements IProductCustomizer,
     }
 
     /**
-     * @see org.teiid.designer.ui.common.product.IProductCustomizer#supports(org.teiid.designer.ui.product.ProductContext)
+     * @see org.teiid.designer.ui.common.product.IProductCustomizer#supports(IProductContext, Object)
      * @since 4.3
      */
     @Override
@@ -183,7 +183,7 @@ public final class ProductCustomizerMgr implements IProductCustomizer,
     }
 
     /**
-     * @see org.teiid.designer.ui.common.product.IProductCustomizer#supports(org.teiid.designer.ui.product.ProductContext, java.lang.Object)
+     * @see org.teiid.designer.ui.common.product.IProductCustomizer#supports(IProductContext, Object)
      * @since 4.3
      */
     @Override

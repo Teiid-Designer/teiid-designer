@@ -9,6 +9,7 @@ package org.teiid.designer.ui.common.widget;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.swt.widgets.Button;
 
 /**
  * 

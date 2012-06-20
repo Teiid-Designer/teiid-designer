@@ -11,10 +11,12 @@ import java.io.File;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.teiid.designer.compare.ModelGenerator;
@@ -246,8 +248,8 @@ public interface IWebServiceModelBuilder {
     /**
      * Return the ModelGenerator that can be used to perform the UML2 to Relational conversion/generation.
      * The model generator can be executed with one step (see {@link ModelGenerator#execute(IProgressMonitor)})
-     * or can be used to {@link ModelGenerator#generateOutputAndDifferenceReport(IProgressMonitor) compute differences},
-     * obtain a {@link ModelGenerator#getDifferenceReport() difference report}, and 
+     * or can be used to {@link ModelGenerator#generateOutput(IProgressMonitor) compute differences},
+     * obtain a {@link ModelGenerator#getDifferenceReports() difference report}, and 
      * {@link ModelGenerator#mergeOutputIntoOriginal(IProgressMonitor) merge results}.
      * @throws CoreException if there is a problem creating the generator
      */

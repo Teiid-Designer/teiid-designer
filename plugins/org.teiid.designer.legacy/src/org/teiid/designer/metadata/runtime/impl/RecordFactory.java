@@ -13,6 +13,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+
 import org.teiid.core.id.UUID;
 import org.teiid.core.util.Assertion;
 import org.teiid.core.util.StringUtil;
@@ -20,6 +21,7 @@ import org.teiid.designer.core.container.EObjectFinder;
 import org.teiid.designer.core.index.EntryResult;
 import org.teiid.designer.core.index.IEntryResult;
 import org.teiid.designer.core.index.IIndexConstants;
+import org.teiid.designer.core.index.Index;
 import org.teiid.designer.core.index.IndexConstants;
 import org.teiid.designer.metadata.runtime.AnnotationRecord;
 import org.teiid.designer.metadata.runtime.ColumnRecord;
@@ -52,10 +54,10 @@ public class RecordFactory {
     
     /**
      * The version number that is associated with the change made to change the list
-     * delimiter from {@link org.teiid.designer.core.index.IndexConstants.LIST_DELIMITER_OLD}
-     * to {@link org.teiid.designer.core.index.IndexConstants.LIST_DELIMITER} and also the
-     * property delimiter was changed from {@link org.teiid.designer.core.index.IndexConstants.PROP_DELIMITER_OLD}
-     * to {@link org.teiid.designer.core.index.IndexConstants.PROP_DELIMITER}.  Added 07/22/2004.
+     * delimiter from {@link org.teiid.designer.core.index.IndexConstants.RECORD_STRING#LIST_DELIMITER_OLD}
+     * to {@link org.teiid.designer.core.index.IndexConstants.RECORD_STRING#LIST_DELIMITER} and also the
+     * property delimiter was changed from {@link org.teiid.designer.core.index.IndexConstants.RECORD_STRING#PROP_DELIMITER_OLD}
+     * to {@link org.teiid.designer.core.index.IndexConstants.RECORD_STRING#PROP_DELIMITER}.  Added 07/22/2004.
      * @release 4.1.1
      */
     public static final int DELIMITER_INDEX_VERSION = 1;
@@ -132,7 +134,7 @@ public class RecordFactory {
     /**
      * Return a collection of {@link org.teiid.designer.metadata.runtime.MetadataRecord}
      * instances for the result obtained from executing <code>queryEntriesMatching</code>
-     * method on the {@link org.teiid.designer.core.index.index.impl.Index}
+     * method on the {@link Index}
      * @param queryResult
      * @param container Container reference to be set on the record
      */
@@ -150,7 +152,7 @@ public class RecordFactory {
     /**
      * Return a collection of {@link org.teiid.designer.metadata.runtime.MetadataRecord}
      * instances for the result obtained from executing <code>queryEntriesMatching</code>
-     * method on the {@link org.teiid.designer.core.index.index.impl.Index}
+     * method on the {@link Index}
      * @param queryResult
      * @param container Container reference to be set on the record
      */

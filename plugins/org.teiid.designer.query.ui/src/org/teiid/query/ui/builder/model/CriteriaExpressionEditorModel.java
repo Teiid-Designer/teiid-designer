@@ -30,7 +30,7 @@ public class CriteriaExpressionEditorModel extends CompositeLanguageObjectEditor
     
     /**
      * Constructs an <code>CriteriaExpressionEditorModel</code> by constructing a new {@link ConstantEditorModel},
-     * a new {@link ElementEditorModel}, and a new {@link theFunctionDisplayEditorModel}.
+     * a new {@link ElementEditorModel}, and a new {@link FunctionDisplayEditorModel}.
      */
     public CriteriaExpressionEditorModel() {
         this(new ConstantEditorModel(), new ElementEditorModel(), new FunctionDisplayEditorModel());

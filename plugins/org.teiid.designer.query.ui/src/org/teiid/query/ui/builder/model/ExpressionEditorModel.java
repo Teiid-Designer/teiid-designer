@@ -36,7 +36,7 @@ public class ExpressionEditorModel extends CompositeLanguageObjectEditorModel {
     
     /**
      * Constructs an <code>ExpressionEditorModel</code> by constructing a new {@link ConstantEditorModel},
-     * a new {@link ElementEditorModel}, and a new {@link theFunctionEditorModel}.
+     * a new {@link ElementEditorModel}, and a new {@link FunctionEditorModel}.
      */
     public ExpressionEditorModel() {
         this(new ConstantEditorModel(), new ElementEditorModel(), new FunctionEditorModel());

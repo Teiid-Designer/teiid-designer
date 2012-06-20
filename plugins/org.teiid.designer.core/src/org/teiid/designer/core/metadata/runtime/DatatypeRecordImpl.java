@@ -60,7 +60,7 @@ public class DatatypeRecordImpl extends org.teiid.designer.metadata.runtime.impl
     //==================================================================================
 
     /**
-     * @see org.teiid.designer.core.metadata.runtime.DatatypeRecord#getLength()
+     * @see org.teiid.designer.metadata.runtime.DatatypeRecord#getLength()
      */
     @Override
     public int getLength() {
@@ -71,7 +71,7 @@ public class DatatypeRecordImpl extends org.teiid.designer.metadata.runtime.impl
     }
 
     /**
-     * @see org.teiid.designer.core.metadata.runtime.DatatypeRecord#getPrecisionLength()
+     * @see org.teiid.designer.metadata.runtime.DatatypeRecord#getPrecisionLength()
      */
     @Override
     public int getPrecisionLength() {
@@ -82,7 +82,7 @@ public class DatatypeRecordImpl extends org.teiid.designer.metadata.runtime.impl
     }
 
     /**
-     * @see org.teiid.designer.core.metadata.runtime.DatatypeRecord#getScale()
+     * @see org.teiid.designer.metadata.runtime.DatatypeRecord#getScale()
      */
     @Override
     public int getScale() {
@@ -93,7 +93,7 @@ public class DatatypeRecordImpl extends org.teiid.designer.metadata.runtime.impl
     }
 
     /**
-     * @see org.teiid.designer.core.metadata.runtime.DatatypeRecord#getRadix()
+     * @see org.teiid.designer.metadata.runtime.DatatypeRecord#getRadix()
      */
     @Override
     public int getRadix() {
@@ -104,7 +104,7 @@ public class DatatypeRecordImpl extends org.teiid.designer.metadata.runtime.impl
     }
 
     /**
-     * @see org.teiid.designer.core.metadata.runtime.DatatypeRecord#isSigned()
+     * @see org.teiid.designer.metadata.runtime.DatatypeRecord#isSigned()
      */
     @Override
     public boolean isSigned() {
@@ -115,7 +115,7 @@ public class DatatypeRecordImpl extends org.teiid.designer.metadata.runtime.impl
     }
 
     /**
-     * @see org.teiid.designer.core.metadata.runtime.DatatypeRecord#isAutoIncrement()
+     * @see org.teiid.designer.metadata.runtime.DatatypeRecord#isAutoIncrement()
      */
     @Override
     public boolean isAutoIncrement() {
@@ -126,7 +126,7 @@ public class DatatypeRecordImpl extends org.teiid.designer.metadata.runtime.impl
     }
 
     /**
-     * @see org.teiid.designer.core.metadata.runtime.DatatypeRecord#isCaseSensitive()
+     * @see org.teiid.designer.metadata.runtime.DatatypeRecord#isCaseSensitive()
      */
     @Override
     public boolean isCaseSensitive() {
@@ -137,7 +137,7 @@ public class DatatypeRecordImpl extends org.teiid.designer.metadata.runtime.impl
     }
 
     /**
-     * @see org.teiid.designer.core.metadata.runtime.DatatypeRecord#getType()
+     * @see org.teiid.designer.metadata.runtime.DatatypeRecord#getType()
      */
     @Override
     public short getType() {
@@ -148,7 +148,7 @@ public class DatatypeRecordImpl extends org.teiid.designer.metadata.runtime.impl
     }
 
     /**
-     * @see org.teiid.designer.core.metadata.runtime.DatatypeRecord#getSearchType()
+     * @see org.teiid.designer.metadata.runtime.DatatypeRecord#getSearchType()
      */
     @Override
     public short getSearchType() {
@@ -159,7 +159,7 @@ public class DatatypeRecordImpl extends org.teiid.designer.metadata.runtime.impl
     }
 
     /**
-     * @see org.teiid.designer.core.metadata.runtime.DatatypeRecord#getNullType()
+     * @see org.teiid.designer.metadata.runtime.DatatypeRecord#getNullType()
      */
     @Override
     public short getNullType() {
@@ -170,7 +170,7 @@ public class DatatypeRecordImpl extends org.teiid.designer.metadata.runtime.impl
     }
 
     /**
-     * @see org.teiid.designer.core.metadata.runtime.DatatypeRecord#getJavaClassName()
+     * @see org.teiid.designer.metadata.runtime.DatatypeRecord#getJavaClassName()
      */
     @Override
     public String getJavaClassName() {
@@ -181,7 +181,7 @@ public class DatatypeRecordImpl extends org.teiid.designer.metadata.runtime.impl
     }
 
     /**
-     * @see org.teiid.designer.core.metadata.runtime.DatatypeRecord#getRuntimeTypeName()
+     * @see org.teiid.designer.metadata.runtime.DatatypeRecord#getRuntimeTypeName()
      */
     @Override
     public String getRuntimeTypeName() {
@@ -192,7 +192,7 @@ public class DatatypeRecordImpl extends org.teiid.designer.metadata.runtime.impl
     }
 
     /**
-     * @see org.teiid.designer.core.metadata.runtime.DatatypeRecord#getDatatypeID()
+     * @see org.teiid.designer.metadata.runtime.DatatypeRecord#getDatatypeID()
      */
     @Override
     public String getDatatypeID() {
@@ -203,7 +203,7 @@ public class DatatypeRecordImpl extends org.teiid.designer.metadata.runtime.impl
     }
 
     /**
-     * @see org.teiid.designer.core.metadata.runtime.DatatypeRecord#getBasetypeID()
+     * @see org.teiid.designer.metadata.runtime.DatatypeRecord#getBasetypeID()
      */
     @Override
     public String getBasetypeID() {
@@ -214,7 +214,7 @@ public class DatatypeRecordImpl extends org.teiid.designer.metadata.runtime.impl
     }
 
     /**
-     * @see org.teiid.designer.core.metadata.runtime.DatatypeRecord#getPrimitiveTypeID()
+     * @see org.teiid.designer.metadata.runtime.DatatypeRecord#getPrimitiveTypeID()
      * @since 4.3
      */
     @Override
@@ -226,7 +226,7 @@ public class DatatypeRecordImpl extends org.teiid.designer.metadata.runtime.impl
     }
 
     /**
-     * @see org.teiid.designer.core.metadata.runtime.DatatypeRecord#getVarietyType()
+     * @see org.teiid.designer.metadata.runtime.DatatypeRecord#getVarietyType()
      */
     @Override
     public short getVarietyType() {
@@ -237,7 +237,7 @@ public class DatatypeRecordImpl extends org.teiid.designer.metadata.runtime.impl
     }
 
     /**
-     * @see org.teiid.designer.core.metadata.runtime.DatatypeRecord#getVarietyProps()
+     * @see org.teiid.designer.metadata.runtime.DatatypeRecord#getVarietyProps()
      */
     @Override
     public List getVarietyProps() {

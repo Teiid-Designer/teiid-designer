@@ -9,9 +9,12 @@ package org.teiid.designer.core.metamodel.aspect.sql;
 
 import java.util.List;
 import java.util.Map;
+
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import org.teiid.designer.core.types.EnterpriseDatatypeInfo;
+import org.teiid.designer.metadata.runtime.MetadataConstants.DATATYPE_VARIETIES;
+import org.teiid.designer.metadata.runtime.api.MetadataConstants.DATATYPE_TYPES;
 
 /**
  * SqlDatatypeAspect is used to get the different properties on a datatype 
@@ -87,12 +90,12 @@ public interface SqlDatatypeAspect extends SqlAspect, SqlDatatypeCheckerAspect {
      * @param eObject The <code>EObject</code> to check 
      * @return short
      *
-     * @See org.teiid.designer.core.metadata.runtime.DATATYPE_TYPES
+     * @see DATATYPE_TYPES
      */
     short getType(EObject eObject);
 
     /**
-     * Returns a short indicating the serach typr.
+     * Returns a short indicating the search type.
      * @param eObject The <code>EObject</code> to check 
      * @return short
      * 
@@ -250,7 +253,7 @@ public interface SqlDatatypeAspect extends SqlAspect, SqlDatatypeCheckerAspect {
      * @param eObject The <code>EObject</code> to check 
      * @return short
      * 
-     * @see org.teiid.designer.core.metadata.runtime.MetadataConstants.DATATYPES_VARIETIES 
+     * @see DATATYPE_VARIETIES 
      */
     short getVarietyType(EObject eObject);
 

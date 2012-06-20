@@ -28,6 +28,7 @@ import org.eclipse.emf.ecore.EFactory;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.ItemProviderAdapter;
@@ -80,7 +81,7 @@ public class MetamodelRegistryImpl implements MetamodelRegistry {
     }
 
     /**
-     * @See org.teiid.designer.core.metamodel.ProtoMetamodelRegistry#containsURI(org.eclipse.emf.common.util.URI)
+     * @see MetamodelRegistry#containsURI(org.eclipse.emf.common.util.URI)
      * @since 5.0
      */
     @Override
@@ -119,7 +120,7 @@ public class MetamodelRegistryImpl implements MetamodelRegistry {
     }
 
     /**
-     * @See org.teiid.designer.core.metamodel.ProtoMetamodelRegistry#getMetamodelDescriptor(org.eclipse.emf.common.util.URI)
+     * @see MetamodelRegistry#getMetamodelDescriptor(org.eclipse.emf.common.util.URI)
      * @since 5.0
      */
     @Override
@@ -129,7 +130,7 @@ public class MetamodelRegistryImpl implements MetamodelRegistry {
     }
 
     /**
-     * @See org.teiid.designer.core.metamodel.ProtoMetamodelRegistry#getMetamodelDescriptors()
+     * @see MetamodelRegistry#getMetamodelDescriptors()
      * @since 5.0
      */
     @Override
@@ -141,7 +142,7 @@ public class MetamodelRegistryImpl implements MetamodelRegistry {
     /**
      * {@inheritDoc}
      *
-     * @see org.teiid.designer.core.metamodel.MetamodelRegistry#getMetamodelDisplayName(java.lang.String)
+     * @see MetamodelRegistry#getMetamodelName(String)
      */
     @Override
     public String getMetamodelName( String nsUriString ) {
@@ -212,7 +213,7 @@ public class MetamodelRegistryImpl implements MetamodelRegistry {
     }
 
     /**
-     * @See org.teiid.designer.core.metamodel.ProtoMetamodelRegistry#getEPackage(org.eclipse.emf.common.util.URI)
+     * @see MetamodelRegistry#getEPackage(org.eclipse.emf.common.util.URI)
      * @since 5.0
      */
     @Override
@@ -226,7 +227,7 @@ public class MetamodelRegistryImpl implements MetamodelRegistry {
     }
 
     /**
-     * @See org.teiid.designer.core.metamodel.ProtoMetamodelRegistry#getResource(org.eclipse.emf.common.util.URI)
+     * @see MetamodelRegistry#getResource(org.eclipse.emf.common.util.URI)
      * @since 5.0
      */
     @Override
@@ -243,7 +244,7 @@ public class MetamodelRegistryImpl implements MetamodelRegistry {
     }
 
     /**
-     * @See org.teiid.designer.core.metamodel.ProtoMetamodelRegistry#getURI(java.lang.String)
+     * @see MetamodelRegistry#getURI(java.lang.String)
      * @since 5.0
      */
     @Override
@@ -254,7 +255,7 @@ public class MetamodelRegistryImpl implements MetamodelRegistry {
     }
 
     /**
-     * @See org.teiid.designer.core.metamodel.ProtoMetamodelRegistry#getURIs()
+     * @see MetamodelRegistry#getURIs()
      * @since 5.0
      */
     @Override
@@ -263,7 +264,7 @@ public class MetamodelRegistryImpl implements MetamodelRegistry {
     }
 
     /**
-     * @See org.teiid.designer.core.metamodel.ProtoMetamodelRegistry#register(org.teiid.designer.core.metamodel.MetamodelDescriptor)
+     * @see MetamodelRegistry#register(MetamodelDescriptor)
      * @since 5.0
      */
     @Override
@@ -274,7 +275,7 @@ public class MetamodelRegistryImpl implements MetamodelRegistry {
     }
 
     /**
-     * @See org.teiid.designer.core.metamodel.ProtoMetamodelRegistry#unregister(org.eclipse.emf.common.util.URI)
+     * @see MetamodelRegistry#unregister(org.eclipse.emf.common.util.URI)
      * @since 5.0
      */
     @Override
@@ -287,7 +288,7 @@ public class MetamodelRegistryImpl implements MetamodelRegistry {
     }
 
     /**
-     * @See org.teiid.designer.core.metamodel.ProtoMetamodelRegistry#dispose()
+     * @see MetamodelRegistry#dispose()
      * @since 5.0
      */
     @Override
@@ -305,7 +306,7 @@ public class MetamodelRegistryImpl implements MetamodelRegistry {
     }
 
     /**
-     * @See org.teiid.designer.core.metamodel.ProtoMetamodelRegistry#getAdapterFactory()
+     * @see MetamodelRegistry#getAdapterFactory()
      * @since 5.0
      */
     @Override
@@ -330,7 +331,7 @@ public class MetamodelRegistryImpl implements MetamodelRegistry {
     }
 
     /**
-     * @See org.teiid.designer.core.metamodel.ProtoMetamodelRegistry#getMetamodelAspect(org.eclipse.emf.ecore.EClass,
+     * @see MetamodelRegistry#getMetamodelAspect(org.eclipse.emf.ecore.EClass,
      *      java.lang.Class)
      * @since 5.0
      */

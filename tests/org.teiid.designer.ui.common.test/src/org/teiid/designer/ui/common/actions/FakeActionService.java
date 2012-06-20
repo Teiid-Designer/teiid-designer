@@ -14,8 +14,6 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.teiid.designer.ui.common.AbstractUiPlugin;
-import org.teiid.designer.ui.common.actions.ActionService;
-import org.teiid.designer.ui.common.actions.GlobalActionsMap;
 
 /**
  * @since 4.0
@@ -154,7 +152,7 @@ public class FakeActionService implements ActionService {
      * Removes the action with the given identifier from the action service.
      * 
      * @param theActionId the identifier of the action being removed
-     * @throws com.metamatrix.core.util.AssertionError if input is null
+     * @throws AssertionError if input is null
      */
     @Override
 	public void removeAction( String theActionId ) {

@@ -9,16 +9,17 @@ package org.teiid.designer.core.compare;
 
 import java.util.List;
 import java.util.Map;
+
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.mapping.Mapping;
 import org.eclipse.emf.mapping.MappingFactory;
 
 /**
  * This interface defines an object that can match up objects from two separate lists.
- * Unlike {@link org.teiid.designer.core.util.EObjectMappingAdapter},
+ * Unlike {@link EObjectMatcherFactory},
  * this interface operates in a two-phase mode:
  * <ol>
- *   <li>Add the mappings (same as {@link org.teiid.designer.core.util.EObjectMappingAdapter});
+ *   <li>Add the mappings (same as {@link EObjectMatcherFactory});
  *       this is done for the whole tree structure, and the mappings between the inputs and outputs
  *       are recorded.</li>
  *   <li>Add the mappings once all input-to-output mappings are recorded in the first phase.</li>

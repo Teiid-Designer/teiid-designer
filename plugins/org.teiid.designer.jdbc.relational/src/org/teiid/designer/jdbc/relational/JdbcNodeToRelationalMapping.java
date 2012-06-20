@@ -9,6 +9,9 @@ package org.teiid.designer.jdbc.relational;
 
 import org.eclipse.emf.ecore.EClass;
 import org.teiid.designer.jdbc.metadata.JdbcNode;
+import org.teiid.designer.jdbc.metadata.JdbcTable;
+import org.teiid.designer.metamodels.relational.RelationalPackage;
+import org.teiid.designer.metamodels.relational.Table;
 
 /**
  * JdbcNodeToRelationalMapping

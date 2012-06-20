@@ -8,6 +8,7 @@
 package org.teiid.designer.core.metamodel.aspect.sql;
 
 import java.util.List;
+
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -57,7 +58,7 @@ public interface SqlProcedureAspect extends
     Object getResult(EObject eObject);
 
     /**
-     * Returns an integer {@link org.teiid.designer.metamodels.relational.ProcedureUpdateCount value} indicating the number of updates
+     * Returns an integer value indicating the number of updates
      * the user has specified will occur within the supplied procedure.
      * 
      * @param eObject

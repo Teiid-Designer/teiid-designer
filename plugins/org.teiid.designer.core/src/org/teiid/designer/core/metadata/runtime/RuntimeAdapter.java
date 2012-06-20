@@ -68,7 +68,7 @@ public class RuntimeAdapter extends RecordFactory {
     // ==================================================================================
 
     /**
-     * Create the {@link org.teiid.designer.core.index.index.impl.WordEntry} instance(s) to be used as the index file record(s) for
+     * Create the {@link WordEntry} instance(s) to be used as the index file record(s) for
      * this SqlAspect instance. The word entries are added to the list provided by the calling method.
      * 
      * @param sqlAspect
@@ -84,7 +84,7 @@ public class RuntimeAdapter extends RecordFactory {
     }
 
     /**
-     * Create the {@link org.teiid.designer.core.index.index.impl.WordEntry} instance(s) to be used as the index file record. The
+     * Create the {@link WordEntry} instance(s) to be used as the index file record. The
      * word entries are added to the list provided by the calling method.
      * 
      * @param filePath The path to the file in the vdb
@@ -109,7 +109,7 @@ public class RuntimeAdapter extends RecordFactory {
     }
 
     /**
-     * Create the {@link org.teiid.designer.core.index.index.impl.WordEntry} instance(s) to be used as the index file record(s) for
+     * Create the {@link WordEntry} instance(s) to be used as the index file record(s) for
      * this SqlAspect instance. The word entries are added to the list provided by the calling method.
      * 
      * @param sqlAspect
@@ -182,7 +182,7 @@ public class RuntimeAdapter extends RecordFactory {
     }
 
     /**
-     * Create a {@link org.teiid.designer.core.index.index.impl.WordEntry} instance representing a model. This resulting WordEntry
+     * Create a {@link WordEntry} instance representing a model. This resulting WordEntry
      * is of the form: header|maxSetSize|boolean values|footer|
      */
     public static void addModelWord( final SqlModelAspect aspect,
@@ -215,7 +215,7 @@ public class RuntimeAdapter extends RecordFactory {
     }
 
     /**
-     * Create a {@link org.teiid.designer.core.index.index.impl.WordEntry} instance representing a model. This resulting WordEntry
+     * Create a {@link WordEntry} instance representing a model. This resulting WordEntry
      * is of the form: header|maxSetSize|modelType|primaryMetamodelUri|boolean values|footer|
      */
     static void addModelWord( final String objectID,
@@ -266,7 +266,7 @@ public class RuntimeAdapter extends RecordFactory {
     }
 
     /**
-     * Create a {@link org.teiid.designer.core.index.index.impl.WordEntry} instance representing a VDB archive. This resulting
+     * Create a {@link WordEntry} instance representing a VDB archive. This resulting
      * WordEntry is of the form: header|version|identifer|producerName|producerVersion|provider|timeLastChanged|
      * timeLastProduced|modelIDs|description|footer|
      */
@@ -299,7 +299,7 @@ public class RuntimeAdapter extends RecordFactory {
     }
 
     /**
-     * Create a {@link org.teiid.designer.core.index.index.impl.WordEntry} instance representing a VDB archive. This resulting
+     * Create a {@link WordEntry} instance representing a VDB archive. This resulting
      * WordEntry is of the form: header|version|identifer|producerName|producerVersion|provider|timeLastChanged|
      * timeLastProduced|modelIDs|description|footer|
      */
@@ -367,7 +367,7 @@ public class RuntimeAdapter extends RecordFactory {
     }
 
     /**
-     * Create a {@link org.teiid.designer.core.index.index.impl.WordEntry} instance representing a transformation. This resulting
+     * Create a {@link WordEntry} instance representing a transformation. This resulting
      * WordEntry is of the form: recordType|upperFullName|objectID|fullName|nameInSource|parentObjectID|
      * transformationType|transformedObjectID|transformation|bindingNames|schemaPaths|footer|
      */
@@ -428,7 +428,7 @@ public class RuntimeAdapter extends RecordFactory {
     }
 
     /**
-     * Create a {@link org.teiid.designer.core.index.index.impl.WordEntry} instance representing a transformation. This resulting
+     * Create a {@link WordEntry} instance representing a transformation. This resulting
      * WordEntry is of the form: recordType|upperFullName|objectID|fullName|nameInSource|parentObjectID|
      * transformationType|transformedObjectID|transformation|bindingNames|schemaPaths|footer|
      */
@@ -487,7 +487,7 @@ public class RuntimeAdapter extends RecordFactory {
     }
 
     /**
-     * Create a {@link org.teiid.designer.core.index.index.impl.WordEntry} instance representing a model. This resulting WordEntry
+     * Create a {@link WordEntry} instance representing a model. This resulting WordEntry
      * is of the form: header|isFunction|parameterIDs|resultSetID|footer|
      */
     public static void addCallableWord( final SqlProcedureAspect aspect,
@@ -536,7 +536,7 @@ public class RuntimeAdapter extends RecordFactory {
     }
 
     /**
-     * Create a {@link org.teiid.designer.core.index.index.impl.WordEntry} instance representing a model. This resulting WordEntry
+     * Create a {@link WordEntry} instance representing a model. This resulting WordEntry
      * is of the form: header|defaultValue|dataType|length|radix|scale|nullable|precision|position|paramType|isOptional|footer|
      */
     public static void addCallableParameterWord( final SqlProcedureParameterAspect aspect,
@@ -611,7 +611,7 @@ public class RuntimeAdapter extends RecordFactory {
     }
 
     /**
-     * Create a {@link org.teiid.designer.core.index.index.impl.WordEntry} instance representing a table. This resulting WordEntry
+     * Create a {@link WordEntry} instance representing a table. This resulting WordEntry
      * is of the form: header|cardinality|boolean
      * values|columnIDs|primaryKeyID|foreignKeyIDs|indexIDs|uniqueKeyIDs|accessPatternIDs|materializedTableIDs|footer|
      */
@@ -658,7 +658,7 @@ public class RuntimeAdapter extends RecordFactory {
     }
 
     /**
-     * Create a {@link org.teiid.designer.core.index.index.impl.WordEntry} instance representing a table. This resulting WordEntry
+     * Create a {@link WordEntry} instance representing a table. This resulting WordEntry
      * is of the form: header|cardinality|boolean
      * values|columnIDs|primaryKeyID|foreignKeyIDs|indexIDs|uniqueKeyIDs|accessPatternIDs
      * |materializedTableID|materializedStageTableID|footer|
@@ -748,7 +748,7 @@ public class RuntimeAdapter extends RecordFactory {
     }
 
     /**
-     * Create a {@link org.teiid.designer.core.index.index.impl.WordEntry} instance representing a column. This resulting WordEntry
+     * Create a {@link WordEntry} instance representing a column. This resulting WordEntry
      * is of the form: header|boolean values|nullType|searchType|
      * length|scale|precision|charOctetLength|radix|distinctValues|nullValues
      * |minValue|maxValue|format|datatype|defaultValue|footer|
@@ -801,7 +801,7 @@ public class RuntimeAdapter extends RecordFactory {
     }
 
     /**
-     * Create a {@link org.teiid.designer.core.index.index.impl.WordEntry} instance representing a column. This resulting WordEntry
+     * Create a {@link WordEntry} instance representing a column. This resulting WordEntry
      * is of the form: header|boolean values|nullType|searchType|
      * length|scale|precision|charOctetLength|radix|distinctValues|nullValues
      * |minValue|maxValue|format|datatype|nativeType|defaultValue|footer|
@@ -929,7 +929,7 @@ public class RuntimeAdapter extends RecordFactory {
     }
 
     /**
-     * Create a {@link org.teiid.designer.core.index.index.impl.WordEntry} instance representing a index, access pattern or
+     * Create a {@link WordEntry} instance representing a index, access pattern or
      * resultSet. This resulting WordEntry is of the form: header|columnIDs|footer|
      */
     public static void addColumnSetWord( final SqlColumnSetAspect aspect,
@@ -964,7 +964,7 @@ public class RuntimeAdapter extends RecordFactory {
     }
 
     /**
-     * Create a {@link org.teiid.designer.core.index.index.impl.WordEntry} instance representing a primaryKey, uniqueKey, index, or
+     * Create a {@link WordEntry} instance representing a primaryKey, uniqueKey, index, or
      * access pattern. This resulting WordEntry is of the form: header|columnIDs|footer|
      */
     static void addColumnSetWord( final char recordType,
@@ -992,7 +992,7 @@ public class RuntimeAdapter extends RecordFactory {
     }
 
     /**
-     * Create a {@link org.teiid.designer.core.index.index.impl.WordEntry} instance representing a uniqueKey. This resulting
+     * Create a {@link WordEntry} instance representing a uniqueKey. This resulting
      * WordEntry is of the form: header|columnIDs|foreignKeyIDs|footer|
      */
     public static void addUniqueKeyWord( final SqlUniqueKeyAspect aspect,
@@ -1021,7 +1021,7 @@ public class RuntimeAdapter extends RecordFactory {
     }
 
     /**
-     * Create a {@link org.teiid.designer.core.index.index.impl.WordEntry} instance representing a uniqueKey. This resulting
+     * Create a {@link WordEntry} instance representing a uniqueKey. This resulting
      * WordEntry is of the form: header|columnIDs|foreignKeyIDs|footer|
      */
     static void addUniqueKeyWord( final char recordType,
@@ -1055,7 +1055,7 @@ public class RuntimeAdapter extends RecordFactory {
     }
 
     /**
-     * Create a {@link org.teiid.designer.core.index.index.impl.WordEntry} instance representing a foreignKey. This resulting
+     * Create a {@link WordEntry} instance representing a foreignKey. This resulting
      * WordEntry is of the form: header|columnIDs|uniqueKeyID|footer|
      */
     public static void addForeignKeyWord( final SqlForeignKeyAspect aspect,
@@ -1081,7 +1081,7 @@ public class RuntimeAdapter extends RecordFactory {
     }
 
     /**
-     * Create a {@link org.teiid.designer.core.index.index.impl.WordEntry} instance representing a foreignKey. This resulting
+     * Create a {@link WordEntry} instance representing a foreignKey. This resulting
      * WordEntry is of the form: header|columnIDs|uniqueKeyID|footer|
      */
     static void addForeignKeyWord( final String objectID,
@@ -1113,7 +1113,7 @@ public class RuntimeAdapter extends RecordFactory {
     }
 
     /**
-     * Create a {@link org.teiid.designer.core.index.index.impl.WordEntry} instance representing a datatype. This resulting
+     * Create a {@link WordEntry} instance representing a datatype. This resulting
      * WordEntry is of the form: recordType|datatypeID|basetypeID|fullName|objectID|nameInSource|varietyType|varietyProps|
      * runtimeTypeName|javaClassName|type|searchType|nullType|booleanValues|length|precisionLength|
      * scale|radix|primitiveTypeID|footer|
@@ -1158,7 +1158,7 @@ public class RuntimeAdapter extends RecordFactory {
     }
 
     /**
-     * Create a {@link org.teiid.designer.core.index.index.impl.WordEntry} instance representing a datatype. This resulting
+     * Create a {@link WordEntry} instance representing a datatype. This resulting
      * WordEntry is of the form: recordType|datatypeID|basetypeID|fullName|objectID|nameInSource|varietyType|varietyProps|
      * runtimeTypeName|javaClassName|type|searchType|nullType|booleanValues|length|precisionLength|
      * scale|radix|primitiveTypeID|footer|
@@ -1264,7 +1264,7 @@ public class RuntimeAdapter extends RecordFactory {
     }
 
     /**
-     * Create a {@link org.teiid.designer.core.index.index.impl.WordEntry} instance representing a annotation. This resulting
+     * Create a {@link WordEntry} instance representing a annotation. This resulting
      * WordEntry is of the form: recordType|objectID|propertyName|value|isExtention|footer|
      */
     public static void addPropertyWord( final SqlAspect sqlAspect,
@@ -1368,7 +1368,7 @@ public class RuntimeAdapter extends RecordFactory {
     }
 
     /**
-     * Create a {@link org.teiid.designer.core.index.index.impl.WordEntry} instance representing a annotation. This resulting
+     * Create a {@link WordEntry} instance representing a annotation. This resulting
      * WordEntry is of the form: recordType|objectID|propertyName|value|isExtention|footer|
      */
     public static void addPropertyWord( final String objectID,
@@ -1413,7 +1413,7 @@ public class RuntimeAdapter extends RecordFactory {
     }
 
     /**
-     * Create a {@link org.teiid.designer.core.index.index.impl.WordEntry} instance representing a annotation. This resulting
+     * Create a {@link WordEntry} instance representing a annotation. This resulting
      * WordEntry is of the form: header|description|footer|
      */
     public static void addAnnotationWord( final SqlAnnotationAspect aspect,
@@ -1451,7 +1451,7 @@ public class RuntimeAdapter extends RecordFactory {
     }
 
     /**
-     * Create a {@link org.teiid.designer.core.index.index.impl.WordEntry} instance representing a annotation. This resulting
+     * Create a {@link WordEntry} instance representing a annotation. This resulting
      * WordEntry is of the form: header|description|footer|
      */
     static void addAnnotationWord( final String objectID,

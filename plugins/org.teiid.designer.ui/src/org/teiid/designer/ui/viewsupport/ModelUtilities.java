@@ -13,13 +13,13 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -232,7 +232,7 @@ public abstract class ModelUtilities implements UiConstants {
      * 
      * @param theResource the resource being checked
      * @return <code>true</code> if modeling related resource; <code>false</code> otherwise.
-     * @throws com.metamatrix.core.util.AssertionError if resource is <code>null</code>
+     * @throws AssertionError if resource is <code>null</code>
      * @since 5.0.1
      */
     public static boolean isModelingRelatedFile( IResource theResource ) {

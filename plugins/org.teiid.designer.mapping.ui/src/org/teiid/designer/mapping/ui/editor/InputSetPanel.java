@@ -10,6 +10,7 @@ package org.teiid.designer.mapping.ui.editor;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.provider.ItemPropertyDescriptor.PropertyValueWrapper;
 import org.eclipse.jface.viewers.CellEditor;
@@ -57,7 +58,6 @@ import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.explorer.ModelExplorerLabelProvider;
 import org.teiid.designer.ui.viewsupport.ModelObjectUtilities;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
-
 
 /**
  * InputSetPanel
@@ -690,7 +690,7 @@ public class InputSetPanel extends SashForm implements SelectionListener, UiCons
         }
 
         /**
-         * @see IBindingListViewer#addBinding(Binding)
+         * @see IBindingListViewer#addBinding(BindingAdapter)
          */
         @Override
 		public void addBinding( BindingAdapter binding ) {
@@ -698,7 +698,7 @@ public class InputSetPanel extends SashForm implements SelectionListener, UiCons
         }
 
         /**
-         * @see IBindingListViewer#addBinding(Binding)
+         * @see IBindingListViewer#insertBinding(BindingAdapter, int)
          */
         @Override
 		public void insertBinding( BindingAdapter binding,
@@ -715,7 +715,7 @@ public class InputSetPanel extends SashForm implements SelectionListener, UiCons
         }
 
         /**
-         * @see IBindingListViewer#removeBinding(Binding)
+         * @see IBindingListViewer#removeBinding(BindingAdapter)
          */
         @Override
 		public void removeBinding( BindingAdapter binding ) {
@@ -723,7 +723,7 @@ public class InputSetPanel extends SashForm implements SelectionListener, UiCons
         }
 
         /**
-         * @see IBindingListViewer#removeBindings(Binding[])
+         * @see IBindingListViewer#removeBindings(Object[])
          */
         @Override
 		public void removeBindings( Object[] bindings ) {
@@ -731,7 +731,7 @@ public class InputSetPanel extends SashForm implements SelectionListener, UiCons
         }
 
         /**
-         * @see IBindingListViewer#updateBindings(Binding)
+         * @see IBindingListViewer#updateBinding(BindingAdapter)
          */
         @Override
 		public void updateBinding( BindingAdapter binding ) {
@@ -739,7 +739,7 @@ public class InputSetPanel extends SashForm implements SelectionListener, UiCons
         }
 
         /**
-         * @see IBindingListViewer#updateBindings(Binding)
+         * @see IBindingListViewer#refresh(boolean)
          */
         @Override
 		public void refresh( boolean updateLabels ) {
@@ -862,7 +862,7 @@ public class InputSetPanel extends SashForm implements SelectionListener, UiCons
         /**
          * Update the view to reflect the fact that bindings were removed from the binding list
          * 
-         * @param binding
+         * @param bindings
          */
         @Override
 		public void removeBindings( Object[] bindings ) {

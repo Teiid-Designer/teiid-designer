@@ -24,10 +24,6 @@ import org.teiid.api.exception.query.QueryMetadataException;
 import org.teiid.core.TeiidComponentException;
 import org.teiid.core.types.DataTypeManager;
 import org.teiid.core.util.CoreArgCheck;
-import org.teiid.designer.metadata.runtime.ColumnRecord;
-import org.teiid.designer.metadata.runtime.MetadataConstants;
-import org.teiid.designer.metadata.runtime.MetadataRecord;
-import org.teiid.designer.metadata.runtime.ProcedureParameterRecord;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.metadata.runtime.ColumnRecordImpl;
 import org.teiid.designer.core.metadata.runtime.TableRecordImpl;
@@ -41,6 +37,10 @@ import org.teiid.designer.core.metamodel.aspect.sql.SqlTableAspect;
 import org.teiid.designer.core.query.QueryValidator;
 import org.teiid.designer.core.query.SetQueryUtil;
 import org.teiid.designer.core.types.DatatypeConstants;
+import org.teiid.designer.metadata.runtime.ColumnRecord;
+import org.teiid.designer.metadata.runtime.MetadataConstants;
+import org.teiid.designer.metadata.runtime.MetadataRecord;
+import org.teiid.designer.metadata.runtime.ProcedureParameterRecord;
 import org.teiid.designer.metamodels.transformation.InputSet;
 import org.teiid.designer.metamodels.transformation.SqlAlias;
 import org.teiid.designer.metamodels.transformation.SqlTransformationMappingRoot;
@@ -1263,8 +1263,9 @@ public class TransformationSqlHelper implements SqlConstants {
 
     /**
      * This method rebuilds the Query Language Object in the event of a projected Symbol name conflict.
+     * @param resolvedQuery 
+     * @param addGroupElemsToSelect 
      * 
-     * @param queryCommand the query Command object
      * @return the modified Query language object
      */
     public static Query createQueryFixNameConflicts( Query resolvedQuery , boolean addGroupElemsToSelect) {

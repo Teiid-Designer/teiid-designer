@@ -91,8 +91,7 @@ public class CreateMaterializedViewWizard extends AbstractWizard
     
     
     /**
-     * @see org.eclipse.jfac
-     * e.wizard.IWizard#performFinish()
+     * @see org.eclipse.jface.wizard.IWizard#performFinish()
      * @since 4.0
      */
     @Override

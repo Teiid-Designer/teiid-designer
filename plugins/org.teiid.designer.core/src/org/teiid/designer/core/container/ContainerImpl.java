@@ -351,7 +351,7 @@ public class ContainerImpl implements Container, IEditingDomainProvider {
      * current state to determine whether it can be shut down. If the container can be shutdown, then this method calls the
      * {@link #performShutdown()} method, which is generally the method that should be overridden by subclasses.
      * 
-     * @see org.teiid.designer.core.container.api.mtk.core.Container#shutdown()
+     * @see Container#shutdown()
      * @since 3.1
      */
     @Override
@@ -369,7 +369,7 @@ public class ContainerImpl implements Container, IEditingDomainProvider {
      * current state to determine whether it can be shut down. If the container can be shutdown, then this method calls the
      * {@link #performStart()} method, which is generally the method that should be overridden by subclasses.
      * 
-     * @see org.teiid.designer.core.container.api.mtk.core.Container#start()
+     * @see Container#start()
      * @since 3.1
      */
     @Override
@@ -417,7 +417,7 @@ public class ContainerImpl implements Container, IEditingDomainProvider {
      * Get the name of the Container.
      * 
      * @return the Container's name.
-     * @see org.teiid.designer.core.container.api.mtk.core.Container#getName()
+     * @see Container#getName()
      * @since 3.1
      */
     @Override
@@ -499,7 +499,7 @@ public class ContainerImpl implements Container, IEditingDomainProvider {
     }
 
     /**
-     * @see org.teiid.designer.core.container.api.mtk.core.Container#getEObjectFinder()
+     * @see Container#getEObjectFinder()
      * @since 3.1
      */
     @Override
@@ -1217,7 +1217,7 @@ public class ContainerImpl implements Container, IEditingDomainProvider {
     }
 
     /**
-     * 
+     * @see AbstractContainer#performStart()
      */
     protected void performStart() {
         setState(STARTING);

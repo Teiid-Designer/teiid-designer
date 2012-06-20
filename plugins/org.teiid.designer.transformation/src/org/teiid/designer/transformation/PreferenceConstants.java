@@ -13,7 +13,7 @@ public interface PreferenceConstants {
     String AUTO_EXPAND_SELECT = PLUGIN_ID + ".preferences.auto_expand_select"; //$NON-NLS-1$
     
     /**
-     * The default value for the {@link #PREVIEW_ENABLED} preference. Default value is {@value} .
+     * The default value for the PreviewEnabled preference. Default value is {@value} .
      */
     boolean AUTO_EXPAND_SELECT_DEFAULT = false;
     

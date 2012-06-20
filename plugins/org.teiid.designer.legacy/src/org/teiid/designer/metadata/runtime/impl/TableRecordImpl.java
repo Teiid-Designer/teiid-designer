@@ -51,7 +51,7 @@ public class TableRecordImpl extends ColumnSetRecordImpl implements TableRecord 
     //==================================================================================
 
     /* (non-Javadoc)
-     * @See org.teiid.designer.core.metadata.runtime.TableRecord#getAccessPatternIDs()
+     * @see org.teiid.designer.metadata.runtime.TableRecord#getAccessPatternIDs()
      */
     @Override
 	public Collection getAccessPatternIDs() {
@@ -59,7 +59,7 @@ public class TableRecordImpl extends ColumnSetRecordImpl implements TableRecord 
     }
 
     /* (non-Javadoc)
-     * @See org.teiid.designer.core.metadata.runtime.TableRecord#getCardinality()
+     * @see org.teiid.designer.metadata.runtime.TableRecord#getCardinality()
      */
     @Override
 	public int getCardinality() {
@@ -67,7 +67,7 @@ public class TableRecordImpl extends ColumnSetRecordImpl implements TableRecord 
     }
 
     /* (non-Javadoc)
-     * @See org.teiid.designer.core.metadata.runtime.TableRecord#getForeignKeyIDs()
+     * @see org.teiid.designer.metadata.runtime.TableRecord#getForeignKeyIDs()
      */
     @Override
 	public Collection getForeignKeyIDs() {
@@ -75,7 +75,7 @@ public class TableRecordImpl extends ColumnSetRecordImpl implements TableRecord 
     }
 
     /* (non-Javadoc)
-     * @See org.teiid.designer.core.metadata.runtime.TableRecord#getIndexIDs()
+     * @see org.teiid.designer.metadata.runtime.TableRecord#getIndexIDs()
      */
     @Override
 	public Collection getIndexIDs() {
@@ -83,7 +83,7 @@ public class TableRecordImpl extends ColumnSetRecordImpl implements TableRecord 
     }
 
     /* (non-Javadoc)
-     * @See org.teiid.designer.core.metadata.runtime.TableRecord#getPrimaryKeyID()
+     * @see org.teiid.designer.metadata.runtime.TableRecord#getPrimaryKeyID()
      */
     @Override
 	public Object getPrimaryKeyID() {
@@ -91,7 +91,7 @@ public class TableRecordImpl extends ColumnSetRecordImpl implements TableRecord 
     }
 
     /* (non-Javadoc)
-     * @See org.teiid.designer.core.metadata.runtime.TableRecord#getUniqueKeyIDs()
+     * @see org.teiid.designer.metadata.runtime.TableRecord#getUniqueKeyIDs()
      */
     @Override
 	public Collection getUniqueKeyIDs() {
@@ -99,7 +99,7 @@ public class TableRecordImpl extends ColumnSetRecordImpl implements TableRecord 
     }
 
     /* (non-Javadoc)
-     * @See org.teiid.designer.core.metadata.runtime.TableRecord#isVirtual()
+     * @see org.teiid.designer.metadata.runtime.TableRecord#isVirtual()
      */
     @Override
 	public boolean isVirtual() {
@@ -132,7 +132,7 @@ public class TableRecordImpl extends ColumnSetRecordImpl implements TableRecord 
     }
 
     /*
-     * @See org.teiid.designer.core.metadata.runtime.TableRecord#getTableType()
+     * @see org.teiid.designer.metadata.runtime.TableRecord#getTableType()
      */
     @Override
 	public int getTableType() {
@@ -157,7 +157,7 @@ public class TableRecordImpl extends ColumnSetRecordImpl implements TableRecord 
     }
 
     /* (non-Javadoc)
-     * @See org.teiid.designer.core.metadata.runtime.TableRecord#supportsUpdate()
+     * @see org.teiid.designer.metadata.runtime.TableRecord#supportsUpdate()
      */
     @Override
 	public boolean supportsUpdate() {

@@ -8,7 +8,7 @@
 package org.teiid.designer.core.workspace;
 
 /** 
- * This interface is implemented by objects that visit {@link JdbcNode JDBC nodes}.
+ * This interface is implemented by objects that visit JDBC nodes.
  * <p> 
  * Usage:
  * <pre>

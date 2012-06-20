@@ -13,6 +13,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
@@ -22,7 +23,7 @@ import org.teiid.core.UserCancelledException;
 import org.teiid.designer.compare.DifferenceReport;
 import org.teiid.designer.compare.ModelGenerator;
 import org.teiid.designer.compare.ModelerComparePlugin;
-
+import org.teiid.designer.core.compare.EObjectMatcherFactory;
 
 /**
  * The AbstractModelGenerator class is the abstract base class that can be used to implement 
@@ -40,7 +41,7 @@ public abstract class AbstractModelGenerator implements ModelGenerator {
 
     /**
      * Construct an instance of AbstractModelGenerator.
-     * @param matcherFactories the list of {@link org.teiid.designer.core.util.EObjectMappingAdapter mapping adapter}
+     * @param matcherFactories the list of {@link EObjectMatcherFactory mapping adapter}
      * instances used during the difference processing; may not be null or empty
      */
     public AbstractModelGenerator( final List matcherFactories ) {
@@ -90,7 +91,7 @@ public abstract class AbstractModelGenerator implements ModelGenerator {
      * Execute the generator.  This method invokes the producer to populate the output model,
      * performs a difference analysis between the output and original models,
      * and merges all changes so that the original is a mirror of the output.
-     * @param monitor the progress monitor; may be null
+     * @param progressMonitor the progress monitor; may be null
      * @return the status containing the result of the generation and merge process
      */
     @Override
@@ -157,7 +158,7 @@ public abstract class AbstractModelGenerator implements ModelGenerator {
      * merge changes so that the original is a mirror of the output.
      * This method should be called before
      * {@link #computeDifferenceReport(IProgressMonitor)} and before {@link #mergeOutputIntoOriginal(IProgressMonitor)}.
-     * @param monitor the progress monitor; may be null
+     * @param progressMonitor the progress monitor; may be null
      * @return the status containing the result of the generation and merge process
      */
     @Override
@@ -183,7 +184,7 @@ public abstract class AbstractModelGenerator implements ModelGenerator {
     /**
      * After generating, compute the difference report.  This method should be called after
      * {@link #generateOutput(IProgressMonitor)} and before {@link #mergeOutputIntoOriginal(IProgressMonitor)}.
-     * @param monitor the progress monitor; may be null
+     * @param progressMonitor the progress monitor; may be null
      * @return the status containing the result of the generation and merge process
      */
     @Override
@@ -239,7 +240,7 @@ public abstract class AbstractModelGenerator implements ModelGenerator {
      * and merges all changes so that the original is a mirror of the output.
      * This method should be called after
      * {@link #generateOutput(IProgressMonitor)} and after {@link #computeDifferenceReport(IProgressMonitor)}.
-     * @param monitor the progress monitor; may be null
+     * @param progressMonitor the progress monitor; may be null
      * @return the status containing the result of the generation and merge process
      */
     @Override

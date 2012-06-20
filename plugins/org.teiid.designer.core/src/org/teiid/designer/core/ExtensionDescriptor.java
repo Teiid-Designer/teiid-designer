@@ -68,15 +68,14 @@ public interface ExtensionDescriptor {
      * Returns a list of descriptor objects immediately contained in this
      * multi-descriptor, or an empty list if this is not a multi-descriptor.
      * @return an array of descriptor objects
-     * @see #isMultiStatus
      */
     public ExtensionDescriptor[] getChildren();
     
     /**
      * Return the specified child descriptor object contained in this
      * multi-descriptor, or null if this is not a multi-descriptor.
+     * @param id 
      * @return the descriptor registered by this id.
-     * @see #isMultiStatus
      */
     public ExtensionDescriptor getChildDescriptor(Object id);
 

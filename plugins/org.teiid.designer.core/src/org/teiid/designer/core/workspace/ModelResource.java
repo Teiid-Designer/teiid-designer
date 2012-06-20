@@ -8,10 +8,13 @@
 package org.teiid.designer.core.workspace;
 
 import java.util.List;
+
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.teiid.designer.core.metamodel.MetamodelDescriptor;
 import org.teiid.designer.metamodels.core.ModelAnnotation;
+import org.teiid.designer.metamodels.core.ModelImport;
 import org.teiid.designer.metamodels.core.ModelType;
 
 
@@ -25,8 +28,7 @@ import org.teiid.designer.metamodels.core.ModelType;
  * </p>
  * <p>
  * Model resource items need to be opened before they can be navigated or manipulated.
- * The children are of type {@link ModelImports},
- * {@link MetamodelImports} and {@link org.eclipse.emf.ecore.EObject},
+ * The children are of type {@link ModelImport} and {@link org.eclipse.emf.ecore.EObject},
  * and appear in the order in which they are declared in the source.
  * </p>
  * <p>
@@ -86,11 +88,11 @@ public interface ModelResource extends ModelWorkspaceItem, Openable {
     String getUuid() throws ModelWorkspaceException;
     
     /**
-     * Return the {@link ModelAnnotations model annotation} for this
+     * Return the {@link ModelAnnotation model annotation} for this
      * resource.  
      * <p>
      * This method requires opening and parsing the resource and materializing
-     * the objects within the model, and will result in an {@link #getEmfResource(boolean) EMF resource}
+     * the objects within the model, and will result in an {@link #getEmfResource() EMF resource}
      * being created for this model resource if one does not already exist.
      * </p>
      * @return the annotation for the model resource itself; never null

@@ -63,7 +63,7 @@ public interface ObjectIDFactory {
      * This method is called by the {@link IDGenerator#stringToObject(String)} method, which
      * must process the protocol to determine the correct parser to use.  As such, it guarantees
      * that the parser that receives this call can assume that the protocol was equal to the
-     * protocol returned by the parser's {@link ObjectIDDescriptor#getProtocol()}.
+     * protocol returned by the parser's {@link ParsedObjectID#getProtocol()}.
      * @param value the stringified id with the protocol and ObjectID.DELIMITER already
      * removed, and should never null or zero length
      * @return the ObjectID instance for the stringified ID if this factory is able

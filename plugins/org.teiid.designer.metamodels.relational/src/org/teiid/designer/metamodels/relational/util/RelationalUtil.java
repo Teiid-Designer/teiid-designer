@@ -8,6 +8,7 @@
 package org.teiid.designer.metamodels.relational.util;
 
 import java.util.List;
+
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.teiid.designer.core.ModelerCore;
@@ -20,6 +21,8 @@ import org.teiid.designer.metamodels.relational.Catalog;
 import org.teiid.designer.metamodels.relational.Column;
 import org.teiid.designer.metamodels.relational.ForeignKey;
 import org.teiid.designer.metamodels.relational.Index;
+import org.teiid.designer.metamodels.relational.LogicalRelationship;
+import org.teiid.designer.metamodels.relational.LogicalRelationshipEnd;
 import org.teiid.designer.metamodels.relational.PrimaryKey;
 import org.teiid.designer.metamodels.relational.Procedure;
 import org.teiid.designer.metamodels.relational.ProcedureParameter;
@@ -27,6 +30,7 @@ import org.teiid.designer.metamodels.relational.ProcedureResult;
 import org.teiid.designer.metamodels.relational.Schema;
 import org.teiid.designer.metamodels.relational.Table;
 import org.teiid.designer.metamodels.relational.UniqueConstraint;
+import org.teiid.designer.metamodels.relational.UniqueKey;
 
 
 /**

@@ -502,7 +502,7 @@ public class StatusActionHandler implements IAdvisorActionHandler, AdvisorUiCons
     /**
      * {@inheritDoc}
      * 
-     * @see org.eclipse.ui.IAdvisorActionHandler.AdvisorActionHandler#setStatus(org.teiid.designer.advisor.ui.core.status.advisor.AdvisorStatus)
+     * @see IAdvisorActionHandler#setStatus(AdvisorStatus)
      */
     @Override
     public void setStatus( AdvisorStatus status ) {

@@ -16,6 +16,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.teiid.designer.ui.UiConstants;
+import org.teiid.designer.ui.views.DescriptionView;
 
 /**
  * ClipboardActionsAdapter This class can be used by Views that contain controls that need local Cut, Copy, Paste, SelectAll, Undo

@@ -10,6 +10,8 @@ package org.teiid.designer.metadata.runtime.api;
 
 import java.util.Properties;
 
+import org.teiid.query.mapping.xml.MappingNodeConstants.Defaults;
+
 
 public interface MetadataObject extends java.io.Serializable{
 
@@ -27,7 +29,7 @@ public interface MetadataObject extends java.io.Serializable{
      * node in name.
      * @return the name
      *
-     * @see getFullName
+     * @see #getFullName
      */
     String getName();
 
@@ -73,7 +75,7 @@ public interface MetadataObject extends java.io.Serializable{
      * this method.
      * @return the object that is the clone of this instance.
      * @throws CloneNotSupportedException if this object cannot be cloned (i.e., only objects in
-     * {@link com.metamatrix.metadata.api.Defaults Defaults} cannot be cloned).
+     * {@link Defaults Defaults} cannot be cloned).
      */
     public Object clone() throws CloneNotSupportedException;
 

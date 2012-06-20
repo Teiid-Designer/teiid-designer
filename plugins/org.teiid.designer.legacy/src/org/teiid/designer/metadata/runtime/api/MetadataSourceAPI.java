@@ -97,8 +97,7 @@ public interface MetadataSourceAPI {
      * @param groupID is the group from which the elements are contained
      * @param vdbID is the VirtualDatabaseID
      * @return List of type Element
-     * @throws InvalidRuntimeIDException if the group does not exist
-     * @throws VirtualDatabaseTransactionException an error occurs while trying to read the data.
+     * @throws VirtualDatabaseException an error occurs while trying to read the data.
      */
     List getElementsInGroup( GroupID groupID ) throws VirtualDatabaseException;
 

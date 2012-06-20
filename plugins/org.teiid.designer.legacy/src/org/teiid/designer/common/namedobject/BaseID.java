@@ -11,6 +11,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
 import org.teiid.core.util.StringUtil;
 import org.teiid.designer.common.util.ErrorMessageKeys;
 import org.teiid.designer.common.util.I18nUtil;
@@ -111,7 +112,7 @@ public abstract class BaseID implements Cloneable, Comparable, Serializable {
     /**
      * Obtain the specified component of the name.
      * 
-     * @param the index of the atomic name component to return; must be less than the result of the method <code>size</code> in
+     * @param index of the atomic name component to return; must be less than the result of the method <code>size</code> in
      *        order to be valid.
      * @return the full name for this identifier.
      * @throws IndexOutOfBoundsException if the index is not valid and is out of the bounds of this name.
@@ -269,8 +270,8 @@ public abstract class BaseID implements Cloneable, Comparable, Serializable {
      * Return a deep cloned instance of this object. Subclasses must override this method.
      * 
      * @return the object that is the clone of this instance.
-     * @throws CloneNotSupportedException if this object cannot be cloned.
-     */
+     * @throws CloneNotSupportedException if this object cannot be cloned
+    */
     @Override
 	public Object clone() throws CloneNotSupportedException {
         return super.clone();

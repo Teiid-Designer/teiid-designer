@@ -52,8 +52,8 @@ public interface TransformationRecord extends MetadataRecord {
     Object getTransformedObjectID();
 
     /**
-     * Get the transformation type, get the type 
-     * {@link org.teiid.designer.core.metamodel.aspect.sql.SqlTransformationAspect.Types}
+     * Get the transformation type
+     * 
      * @return the string containing the type of the transformation.
      */
     String getTransformationType();

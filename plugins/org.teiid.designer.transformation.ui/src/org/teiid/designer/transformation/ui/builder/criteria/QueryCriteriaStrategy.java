@@ -50,7 +50,7 @@ public class QueryCriteriaStrategy extends CriteriaStrategy {
     
     /**
      * Uses the TreeViewer's ITreeContentProvider and ILabelProvider to build a full name.
-     * @see com.metamatrix.toolbox.ui.query.builder.criteria.CriteriaStrategy#getRuntimeFullName(com.metamatrix.common.tree.TreeNode)
+     * @see CriteriaStrategy#getRuntimeFullName(Object)
      */
     @Override
     public String getRuntimeFullName(Object theNode) {

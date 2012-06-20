@@ -52,7 +52,7 @@ public class MetadataSearchResult extends AbstractTextSearchResult implements IE
     // ===========================================================================================================================
 
     /**
-     * Constructs a result for the specified query. Metadata matches must be added to the result using {@link #setMatches(List)}.
+     * Constructs a result for the specified query.
      * 
      * @param the query used to construct the result
      * @since 6.0.0

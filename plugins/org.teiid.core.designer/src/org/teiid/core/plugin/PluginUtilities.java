@@ -14,6 +14,7 @@ import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
@@ -149,7 +150,7 @@ public abstract class PluginUtilities {
      * @param installPath The path identifying the folder where the application is installed.
      * @param metadataPath The path identifying the folder under which the Eclipse metadata folder should be created.
      * @return An instance of ApplicationExtension, or null if no extension with the specified ID is found.
-     * @throws ClassNotFoundException If the {@link BootLoader} class could not be found in the boot jar file.
+     * @throws ClassNotFoundException If the BootLoader class could not be found in the boot jar file.
      * @throws CoreException If the boot plugin folder could not be found.
      * @throws IllegalAccessException If one of the reflectively accessed BootLoader methods is not public.
      * @throws InvocationTargetException If one of the reflectively called BootLoader methods throws a {@link RuntimeException}.

@@ -10,6 +10,7 @@ package org.teiid.designer.core.index;
 import java.io.File;
 import java.util.Collection;
 import java.util.zip.CRC32;
+
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -21,13 +22,6 @@ import org.teiid.core.TeiidException;
 import org.teiid.core.util.CoreArgCheck;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.ModelerCoreException;
-import org.teiid.designer.core.index.IEntryResult;
-import org.teiid.designer.core.index.IIndex;
-import org.teiid.designer.core.index.IIndexer;
-import org.teiid.designer.core.index.Index;
-import org.teiid.designer.core.index.IndexConstants;
-import org.teiid.designer.core.index.IndexSelector;
-import org.teiid.designer.core.index.SimpleIndexUtil;
 import org.teiid.designer.core.resource.EmfResource;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelWorkspace;
@@ -96,7 +90,7 @@ public class IndexUtil {
     }
 
     /**
-     * Create an {@link org.teiid.core.index.IIndex} from the {@link org.eclipse.emf.ecore.resource.Resource} if the
+     * Create an {@link IIndex} from the {@link org.eclipse.emf.ecore.resource.Resource} if the
      * resource exists.
      * 
      * @param resource The EMF resource to use
@@ -241,7 +235,7 @@ public class IndexUtil {
      * @param pattern
      * @param fieldDelimiter
      * @return results
-     * @throws QueryMetadataException
+     * @throws ModelerCoreException
      */
     public static IEntryResult[] queryIndex( final Index[] indexes,
                                              final char[] pattern,

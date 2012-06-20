@@ -7,6 +7,7 @@
  */
 package org.teiid.designer.modelgenerator.xml.wizards;
 
+import org.eclipse.jface.dialogs.IDialogPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;

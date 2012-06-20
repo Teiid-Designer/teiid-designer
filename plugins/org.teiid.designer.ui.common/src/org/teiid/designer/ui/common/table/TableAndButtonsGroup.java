@@ -9,6 +9,7 @@ package org.teiid.designer.ui.common.table;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -26,7 +27,6 @@ import org.eclipse.swt.widgets.Group;
 import org.teiid.designer.ui.common.UiConstants;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.widget.ButtonProvider;
-
 
 /**
  * @param <T>
@@ -142,7 +142,7 @@ public final class TableAndButtonsGroup<T> {
          * {@inheritDoc}
          * 
          * @return {@value TableAndButtonsGroup#ADD_BUTTON}
-         * @see org.teiid.designer.vdb.ui.editor.ButtonProvider#getText()
+         * @see ButtonProvider#getText()
          */
         @Override
         public final String getText() {
@@ -153,7 +153,7 @@ public final class TableAndButtonsGroup<T> {
          * {@inheritDoc}
          * 
          * @return <code>true</code>
-         * @see org.teiid.designer.vdb.ui.editor.ButtonProvider#isEnabled(org.eclipse.jface.viewers.IStructuredSelection)
+         * @see ButtonProvider#isEnabled(org.eclipse.jface.viewers.IStructuredSelection)
          */
         @Override
         public boolean isEnabled( final IStructuredSelection selection ) {
@@ -166,7 +166,7 @@ public final class TableAndButtonsGroup<T> {
          * Calls {@link #add()}, then {@link Table#packColumns() packs} the table's columns if this is the first row added.
          * </p>
          * 
-         * @see org.teiid.designer.vdb.ui.editor.ButtonProvider#selected(org.eclipse.jface.viewers.IStructuredSelection)
+         * @see ButtonProvider#selected(org.eclipse.jface.viewers.IStructuredSelection)
          */
         @Override
         public final void selected( final IStructuredSelection selection ) {
@@ -184,7 +184,7 @@ public final class TableAndButtonsGroup<T> {
          * {@inheritDoc}
          * 
          * @return {@value TableAndButtonsGroup#EDIT_BUTTON}
-         * @see org.teiid.designer.vdb.ui.editor.ButtonProvider#getText()
+         * @see ButtonProvider#getText()
          */
         @Override
         public final String getText() {
@@ -195,7 +195,7 @@ public final class TableAndButtonsGroup<T> {
          * {@inheritDoc}
          * 
          * @return <code>true</code> if the supplied selection contains exactly one element
-         * @see org.teiid.designer.vdb.ui.editor.ButtonProvider#isEnabled(org.eclipse.jface.viewers.IStructuredSelection)
+         * @see ButtonProvider#isEnabled(org.eclipse.jface.viewers.IStructuredSelection)
          */
         @Override
         public boolean isEnabled( final IStructuredSelection selection ) {
@@ -212,7 +212,7 @@ public final class TableAndButtonsGroup<T> {
          * {@inheritDoc}
          * 
          * @return {@value TableAndButtonsGroup#REMOVE_BUTTON}
-         * @see org.teiid.designer.vdb.ui.editor.ButtonProvider#getText()
+         * @see ButtonProvider#getText()
          */
         @Override
         public final String getText() {
@@ -223,7 +223,7 @@ public final class TableAndButtonsGroup<T> {
          * {@inheritDoc}
          * 
          * @return <code>true</code> if the supplied selection is not empty
-         * @see org.teiid.designer.vdb.ui.editor.ButtonProvider#isEnabled(org.eclipse.jface.viewers.IStructuredSelection)
+         * @see ButtonProvider#isEnabled(org.eclipse.jface.viewers.IStructuredSelection)
          */
         @Override
         public boolean isEnabled( final IStructuredSelection selection ) {
@@ -240,7 +240,7 @@ public final class TableAndButtonsGroup<T> {
          * {@inheritDoc}
          * 
          * @return {@value TableAndButtonsGroup#NEW_BUTTON}
-         * @see org.teiid.designer.vdb.ui.editor.ButtonProvider#getText()
+         * @see ButtonProvider#getText()
          */
         @Override
         public final String getText() {
@@ -251,7 +251,7 @@ public final class TableAndButtonsGroup<T> {
          * {@inheritDoc}
          * 
          * @return <code>true</code> if the supplied selection is not empty
-         * @see org.teiid.designer.vdb.ui.editor.ButtonProvider#isEnabled(org.eclipse.jface.viewers.IStructuredSelection)
+         * @see ButtonProvider#isEnabled(org.eclipse.jface.viewers.IStructuredSelection)
          */
         @Override
         public boolean isEnabled( final IStructuredSelection selection ) {

@@ -27,7 +27,7 @@ public abstract class AbstractAdvisorActionHandler implements IAdvisorActionHand
     /**
      * {@inheritDoc}
      * 
-     * @see org.eclipse.ui.IAdvisorActionHandler.AdvisorActionHandler#getStatus()
+     * @see IAdvisorActionHandler#getStatus()
      */
     @Override
     public AdvisorStatus getStatus() {
@@ -37,7 +37,7 @@ public abstract class AbstractAdvisorActionHandler implements IAdvisorActionHand
     /**
      * {@inheritDoc}
      * 
-     * @see org.eclipse.ui.IAdvisorActionHandler.AdvisorActionHandler#setStatus(org.eclipse.core.runtime.IStatus)
+     * @see IAdvisorActionHandler#setStatus(org.eclipse.core.runtime.IStatus)
      */
     @Override
 	public void setStatus( AdvisorStatus status ) {

@@ -22,7 +22,7 @@ public interface ResourceSetFinder {
      * been loaded.
      * @param resource the resource file, folder or project
      * @return the ResourceSet for the resource
-     * @throws CoreException
+     * @throws ModelWorkspaceException
      */
     public ResourceSet getResourceSet( IResource resource ) throws ModelWorkspaceException;
 

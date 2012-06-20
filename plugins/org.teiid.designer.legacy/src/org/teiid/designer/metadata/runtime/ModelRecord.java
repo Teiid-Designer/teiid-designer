@@ -71,7 +71,6 @@ public interface ModelRecord extends MetadataRecord {
      * Return integer indicating the type of Model it is. 
      * @return int
      *
-     * @see org.teiid.designer.core.metadata.runtime.MetadataConstants.MODEL_TYPES
      */
     int getModelType();
 
