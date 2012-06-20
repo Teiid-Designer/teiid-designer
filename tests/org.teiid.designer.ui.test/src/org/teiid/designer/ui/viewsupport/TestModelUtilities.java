@@ -8,25 +8,24 @@
 package org.teiid.designer.ui.viewsupport;
 
 import java.io.File;
+
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.teiid.core.util.SmartTestDesignerSuite;
 import org.teiid.designer.core.workspace.FakeIFile;
 import org.teiid.designer.core.workspace.FakeIResource;
 import org.teiid.designer.core.workspace.MockFileResource;
-import org.teiid.designer.ui.viewsupport.ModelUtilities;
-
-
 
 /** 
  * @since 5.0.1
  */
 public class TestModelUtilities extends TestCase {
     
-    protected static Test suite() {
+    public static Test suite() {
         return new TestSuite(TestModelUtilities.class);
     }
     

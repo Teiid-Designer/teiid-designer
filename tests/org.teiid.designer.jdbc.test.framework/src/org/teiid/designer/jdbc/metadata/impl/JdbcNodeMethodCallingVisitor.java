@@ -9,7 +9,9 @@ package org.teiid.designer.jdbc.metadata.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import junit.framework.Assert;
+
 import org.eclipse.core.runtime.IPath;
 import org.teiid.designer.jdbc.metadata.JdbcDatabase;
 import org.teiid.designer.jdbc.metadata.JdbcNode;
@@ -35,7 +37,6 @@ public class JdbcNodeMethodCallingVisitor implements JdbcNodeVisitor {
         visitedNodes.add(node);
         // Call some of the methods of JdbcNode ...
         node.allowsChildren();
-        Assert.assertTrue(node.equals(node));
         node.getFullyQualifiedName();
         Assert.assertNotNull(node.getJdbcDatabase());
         Assert.assertNotNull(node.getName());

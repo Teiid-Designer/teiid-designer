@@ -394,9 +394,12 @@ public class VdbResourceFinder {
 
 		if (workspaceUri.charAt(0) == IPath.SEPARATOR) {
 			pathInWorkspace = new Path(workspaceUri);
+			
+			URI pathInWorkspaceURI = URI.createURI(pathInWorkspace.toString());
 			for (final Resource fileResource2 : fileResources) {
 				fileResource = fileResource2;
-				if (fileResource != null && fileResource.getURI().equals(pathInWorkspace))
+
+				if (fileResource != null && fileResource.getURI().equals(pathInWorkspaceURI))
 					return fileResource;
 			}
 		}

@@ -8,6 +8,7 @@
 package org.teiid.designer.transformation.ui.builder.expression;
 
 import java.util.List;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
@@ -27,7 +28,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
-
 import org.teiid.core.util.CoreArgCheck;
 import org.teiid.core.util.I18nUtil;
 import org.teiid.designer.transformation.ui.builder.AbstractLanguageObjectEditor;
@@ -223,7 +223,7 @@ public class FunctionEditor extends AbstractLanguageObjectEditor {
 
     void displayFunctionChange() {
         // only update UI if different function selected
-        if ((cbxFunction.getSelectionIndex() == -1) || !cbxFunction.getText().equals(model.getFunction())) {
+        if ((cbxFunction.getSelectionIndex() == -1) || !cbxFunction.getText().equals(model.getFunction().toString())) {
             cbxFunction.setText(model.getFunctionName());
             cbxFunction.setToolTipText(model.getFunctionDescription());
             viewer.refresh();

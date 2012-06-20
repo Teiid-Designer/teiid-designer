@@ -7,13 +7,12 @@
  */
 package org.teiid.designer.modelgenerator.wsdl.model.impl;
 
+import junit.framework.TestCase;
+
 import org.teiid.designer.modelgenerator.wsdl.model.Binding;
 import org.teiid.designer.modelgenerator.wsdl.model.Fault;
 import org.teiid.designer.modelgenerator.wsdl.model.Message;
 import org.teiid.designer.modelgenerator.wsdl.model.Operation;
-import org.teiid.designer.modelgenerator.wsdl.model.impl.OperationImpl;
-
-import junit.framework.TestCase;
 
 public class OperationImplTest extends TestCase {
 
@@ -111,6 +110,6 @@ public class OperationImplTest extends TestCase {
                                            ModelElementFactory.getTestBinding("testBinding", "testBindingId", "http://test/test.wsdl", "Request_Response")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
         Fault[] faults = new Fault[] {ModelElementFactory.getTestFault("testFault", "testFaultId", oper)}; //$NON-NLS-1$ //$NON-NLS-2$
         oper.setFaults(faults);
-        assertEquals(faults, oper.getFaults());
+        assertSame(faults, oper.getFaults());
     }
 }

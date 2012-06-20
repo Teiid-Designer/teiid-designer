@@ -11,13 +11,12 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import org.eclipse.core.runtime.IStatus;
 import org.teiid.core.util.I18nUtil;
 import org.teiid.designer.ui.common.UiConstants;
-
 
 
 
@@ -36,7 +35,7 @@ public abstract class AbstractProductCustomizer implements IProductCustomizer,
     /**
      * Constant used to indicate all values of a context.
      */
-    private static final List ALL_VALUES = Collections.singletonList(new Object());
+    private static final Set ALL_VALUES = Collections.singleton(new Object());
     
     /**
      * i18n properties key prefix.
