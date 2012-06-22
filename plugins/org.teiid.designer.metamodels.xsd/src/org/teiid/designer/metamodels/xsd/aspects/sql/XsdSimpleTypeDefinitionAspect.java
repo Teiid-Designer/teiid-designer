@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.notify.Notification;
@@ -857,9 +858,8 @@ public class XsdSimpleTypeDefinitionAspect extends AbstractMetamodelAspect imple
         try {
             // Retrieve the Teiid Designer built-in datatype resource from the model container
             Resource resource = null;
-            final ResourceSet[] resourceSets = ModelerCore.getExternalResourceSets();
-            for (int i = 0; i < resourceSets.length; i++) {
-                ResourceSet resourceSet = resourceSets[i];
+            final List<ResourceSet> resourceSets = ModelerCore.getExternalResourceSets();
+            for (ResourceSet resourceSet : resourceSets) {
                 resource = resourceSet.getResource(BUILTIN_DATATYPES_URI, false);
                 if (resource != null) {
                     break; // Found it!!

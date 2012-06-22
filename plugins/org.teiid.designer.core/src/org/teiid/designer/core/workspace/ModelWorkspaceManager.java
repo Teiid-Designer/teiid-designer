@@ -168,11 +168,9 @@ public class ModelWorkspaceManager implements XmiHeaderCache {
 
                 manager.initModelWorkspace(workspace);
             } catch (final Throwable t) {
-                if (!ModelerCore.HEADLESS) {
-                    t.printStackTrace();
-                    ModelerCore.Util.log(IStatus.ERROR,
+            	t.printStackTrace();
+            	ModelerCore.Util.log(IStatus.ERROR,
                                          ModelerCore.Util.getString("ModelWorkspaceManager.Error_encountered_starting_ModelWorkspaceManager_1")); //$NON-NLS-1$
-                }
             }
         }
         return manager;

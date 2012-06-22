@@ -7,6 +7,8 @@
  */
 package org.teiid.designer.core.container;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.io.File;
 import java.util.Collection;
 import java.util.Collections;
@@ -121,6 +123,8 @@ public class ContainerImpl implements Container, IEditingDomainProvider {
     private EObjectFinder finder;
     private ResourceFinder resourceFinder;
     private EditingDomain editingDomain;
+    
+    private PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
 
     // ############################################################################################################################
     // # Constructors #
@@ -140,6 +144,29 @@ public class ContainerImpl implements Container, IEditingDomainProvider {
     // # Methods #
     // ############################################################################################################################
 
+    @Override
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+    	propertyChangeSupport.addPropertyChangeListener(listener);
+    }
+    
+    @Override
+    public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+    	propertyChangeSupport.addPropertyChangeListener(propertyName, listener);
+    }
+    
+    @Override
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+    	propertyChangeSupport.removePropertyChangeListener(listener);
+    }
+    
+    /* (non-Javadoc)
+     * @see com.metamatrix.modeler.core.PropertyChangePublisher#removePropertyChangeListener(java.lang.String, java.beans.PropertyChangeListener)
+     */
+    @Override
+    public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+    	propertyChangeSupport.removePropertyChangeListener(propertyName, listener);
+    }
+    
     /**
      * Returns a resource for the URI that either already exists, is new but represents an existing file, or is new and represents
      * a brand-new file.
@@ -302,7 +329,8 @@ public class ContainerImpl implements Container, IEditingDomainProvider {
         }
         final String oldName = this.name;
         this.name = newName;
-        updateRegistry(oldName);
+        
+        propertyChangeSupport.firePropertyChange(CONTAINER_NAME_PROPERTY, oldName, newName);
     }
 
     /**
@@ -355,24 +383,6 @@ public class ContainerImpl implements Container, IEditingDomainProvider {
     @Override
     public String toString() {
         return getName();
-    }
-
-    /**
-     * Method to update the registry with the new name. When this method is called, the name of the Container has already been
-     * changed to reflect the new name.
-     * 
-     * @param the old name of the Container
-     * @since 3.1
-     */
-    protected void updateRegistry( final String oldName ) {
-        final org.teiid.designer.core.Registry registry = ModelerCore.getRegistry();
-        // Add this to the Registry using the current (new) name
-        registry.register(getName(), this);
-
-        // If there is an old name, then unregister this ...
-        if (oldName != null && registry.lookup(oldName) == this) {
-            registry.unregister(oldName);
-        }
     }
 
     /**
@@ -971,19 +981,7 @@ public class ContainerImpl implements Container, IEditingDomainProvider {
      * @since 5.0.2
      */
     private boolean isExternalResourceSetMember( Resource theResource ) {
-        boolean result = false;
-        ResourceSet[] sets = ModelerCore.getExternalResourceSets();
-
-        for (int ndx = sets.length; --ndx >= 0;) {
-            ResourceSet set = sets[ndx];
-
-            if (theResource.getResourceSet() == set) {
-                result = true;
-                break;
-            }
-        }
-
-        return result;
+        return ModelerCore.isResourceInExternalResourceSet(theResource);
     }
 
     protected void processNotification( Notification notification ) {

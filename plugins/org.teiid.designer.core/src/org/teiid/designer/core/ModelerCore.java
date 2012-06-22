@@ -76,6 +76,7 @@ import org.teiid.designer.core.resource.EmfResourceSet;
 import org.teiid.designer.core.resource.EmfResourceSetImpl;
 import org.teiid.designer.core.search.MetadataSearch;
 import org.teiid.designer.core.search.MetadataSearchImpl;
+import org.teiid.designer.core.spi.RegistrySPI;
 import org.teiid.designer.core.transaction.UnitOfWork;
 import org.teiid.designer.core.types.DatatypeManager;
 import org.teiid.designer.core.types.DatatypeManagerLifecycle;
@@ -98,7 +99,20 @@ import org.teiid.designer.core.workspace.ModelWorkspaceManagerSaveParticipant;
  */
 public class ModelerCore extends Plugin implements DeclarativeTransactionManager {
 
-    public static boolean HEADLESS = false;
+	/**
+	 * Options for whether to register an item with this class' registry
+	 */
+	public static enum RegistryOption {
+		/**
+		 * Register the given item in this class' registry
+		 */
+		REGISTER, 
+		
+		/**
+		 * Do No register the given item in this class' registry
+		 */
+		NO_REGISTER;
+	}
 
     /**
      * The bundle ID of the Designer feature.
@@ -238,6 +252,7 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
                                                                        + "cache/www.w3.org/2001/MagicXMLSchema.xsd"; //$NON-NLS-1$
     public static final String XML_SCHEMA_INSTANCE_ECLIPSE_PLATFORM_URI = XML_SCHEMA_ECLIPSE_PLATFORM_URI_PREFIX
                                                                           + "cache/www.w3.org/2001/XMLSchema-instance.xsd"; //$NON-NLS-1$
+    
     /**
      * The {@link IResource#getSessionProperty(org.eclipse.core.runtime.QualifiedName) session property} key dictating this resource
      * as a duplicate of another model.
@@ -257,46 +272,38 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
 
     private static Plugin MODELER_CORE_PLUGIN = null;
 
-    // Model container
-    private static Container defaultModelContainer;
-
     private static final Object CONTAINER_LOCK = new Object();
 
-    private static final String DEFAULT_CONTAINER_NAME = "Modeler Container"; //$NON-NLS-1$
-    // External resource container
-    private static Container externalResourceContainer;
+    public static final String DEFAULT_CONTAINER_KEY = "Modeler Container"; //$NON-NLS-1$
+    
+    public static final String EXTERNAL_RESOURCE_CONTAINER_KEY = "External Resource Container"; //$NON-NLS-1$
+    
+    public static final String EXTERNAL_RESOURCE_SETS_KEY = "External Resource Sets"; //$NON-NLS-1$
+    
+    public static final String INVOCATION_FACTORY_HELPERS_KEY = "Invocation Factory Helpers"; //$NON-NLS-1$
 
-    private static final String EXTERNAL_RESOURCE_CONTAINER_NAME = "External Resource Container"; //$NON-NLS-1$
-
-    // External Resource Sets
-    private static ResourceSet[] externalResourceSets;
-    // InvocationFactoryHelper instances
-    private static InvocationFactoryHelper[] invocationFactoryHelpers;
-    // Model editor
-    private static ModelEditor modelEditor;
-
-    // Model editor
-    private static ValidationPreferences validationPreferences;
-    private static TransformationPreferences transformationPreferences;
-
+    public static final String CONFIGURATION_KEY = "Configuration"; //$NON-NLS-1$
+    
+    public static final String DEFAULT_DATATYPE_MANAGER_KEY = "Default DataType Manager"; //$NON-NLS-1$
+    
+    public static final String METAMODEL_REGISTRY_KEY = "Default Metamodel Registry";  //$NON-NLS-1$
+    
+    public static final String MODEL_EDITOR_KEY = "Model Editor";  //$NON-NLS-1$
+    
+    public static final String TRANSFORMATION_PREFERENCES_KEY = "Transformation Preferences"; //$NON-NLS-1$
+    
+    public static final String VALIDATION_PREFERENCES_KEY = "Validation Preferences"; //$NON-NLS-1$
+    
+    public static final String VALIDATION_RULE_MANAGER_KEY = "Validation Rule Manager"; //$NON-NLS-1$
+    
+    public static final String UUID_KEY = "Workspace UUID"; //$NON-NLS-1$
+    
+    public static final String WORKSPACE_KEY = "Workspace"; //$NON-NLS-1$
+    
     // Registry
-    private static Registry registry;
-
-    private static DatatypeManager dTypeManager;
-
-    // Metamodel registry
-    private static MetamodelRegistry metamodelRegistry;
+    private static RegistrySPI registry = new FlatRegistry();
 
     private static final Object METAMODEL_REGISTRY_LOCK = new Object();
-
-    // Configuration information
-    private static final Configuration CONFIG = new Configuration();
-
-    // Validation rule manager
-    private static ValidationRuleManager validationRuleMgr;
-
-    // Eclipse IWorkspace that can be set and used for headless testing.
-    private static IWorkspace WORKSPACE;
 
     public static boolean DEBUG = false;
     public static boolean DEBUG_MODELER_CORE_INIT = false;
@@ -320,15 +327,10 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
     public static boolean DEBUG_QUERY_RESOLUTION = false;
     public static boolean DEBUG_VDB_EDITING_CONTEXT = false;
     // If true the workspace build process will use preference settings for
-    // validation severity, otherwise, if false the buid process will ignore
+    // validation severity, otherwise, if false the build process will ignore
     // user preferences and use default severity levels for all validation
     // rules.
     private static boolean IGNORE_VALIDATION_PREFERNCES_ON_BUILD = false;
-
-    /**
-     * The UUID created and persisted for the current workspace
-     */
-    private static UUID workspaceUuid;
 
     /**
      * Add all model resource sets known through the EXTERNAL_RESOURCE_SET extension to the specified container
@@ -338,7 +340,7 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
     public static void addExternalResourceSets( final Container container ) {
         // Add each external resource set found in the configuration
         // to the container as a delegate resource set
-        final ResourceSet[] extRsrcSets = getExternalResourceSets();
+        final List<ResourceSet> extRsrcSets = getExternalResourceSets();
         for (final ResourceSet rsrcSet : extRsrcSets) {
             container.addExternalResourceSet(rsrcSet);
             if (DEBUG) {
@@ -454,19 +456,38 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
      * reference to the metamodel registry along with references to the resource factories needed to create new resource instances.
      * The container will be loaded with all external resources found through the "externalResource" extension point which includes
      * the "built-in" datatypes resource.
+     *
+     * Assumes the container should be registered with {@link ModelerCore}'s registry.
      * 
-     * @param containerName
-     * @return @throws CoreException
+     * @param containerName name of the new container
+     * @return the new container 
+     * 
+     * @throws CoreException
      */
     public static Container createContainer( final String containerName ) throws CoreException {
+    	return createContainer(containerName, RegistryOption.REGISTER);
+    }
+    
+    /**
+     * Create a new {@link com.metamatrix.modeler.core.container.Container}instance. The new container will be initialized with a
+     * reference to the metamodel registry along with references to the resource factories needed to create new resource instances.
+     * The container will be loaded with all external resources found through the "externalResource" extension point which includes
+     * the "built-in" datatypes resource.
+     * 
+     * @param containerName name of the new container
+     * @param registryOption whether the created container should be registerd
+     * @return @throws CoreException
+     */
+    public static Container createContainer( final String containerName, RegistryOption registryOption ) throws CoreException {
         final Container container = createEmptyContainer(containerName);
 
-        // Add the external rsesource sets to the container as delegate resource sets
+        // Add the external resource sets to the container as delegate resource sets
         // This must be done before the workspace's datatype manager is initialized
         // since it requires finding the built-in datatypes model in one of the external
         // resource sets.
+       
         addExternalResourceSets(container);
-
+       
         // Do this only if we are in the Eclipse plugin environment ...
         if (MODELER_CORE_PLUGIN != null) {
             // RMH 10/19/04 - Might be able to do this even outside the Eclipse environment if
@@ -507,7 +528,7 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
 
         // Instantiate the first DatatypeManager extension found in the configuration.
         // This instance is used to resolving built-in datatypes
-        final Collection desc = CONFIG.getDatatypeManagerDescriptors();
+        final Collection desc = getConfiguration().getDatatypeManagerDescriptors();
         if (desc.isEmpty()) {
             Util.log(IStatus.ERROR,
                      ModelerCore.Util.getString("ModelerCore.Error,_no_DatatypeManager_extensions_were_found_in_the_plugin_registry_1")); //$NON-NLS-1$
@@ -539,10 +560,27 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
      * instances. The container will <b>not </b> be loaded or have access to any of the external resources including the "built-in"
      * datatypes resource.
      * 
-     * @param containerName
+     * Assumes the new container should be registered with the {@link ModelerCore} registry.
+     * 
+     * @param containerName name of the empty container
      * @return @throws CoreException
      */
     public static Container createEmptyContainer( final String containerName ) throws CoreException {
+    	return createEmptyContainer(containerName, RegistryOption.REGISTER);
+    }
+  
+    /**
+     * Create a new empty {@link com.metamatrix.modeler.core.container.Container}instance. The new container will be initialized
+     * with a reference to the metamodel registry along with references to the resource factories needed to create new resource
+     * instances. The container will <b>not </b> be loaded or have access to any of the external resources including the "built-in"
+     * datatypes resource.
+     * 
+     * @param containerName name of the empty container
+     * @param registryOption of whether the container should be registered with {@link ModelerCore}. Temporary
+     *                 containers may prefer not to be registered.
+     * @return @throws CoreException
+     */
+    public static Container createEmptyContainer( final String containerName, RegistryOption registryOption ) throws CoreException {
         Container container = null;
         try {
             if (DEBUG_MODEL_WORKSPACE) {
@@ -560,8 +598,8 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
 
             // Ensure the container is registered with its name ...
             final String name = container.getName();
-            if (name != null && name.length() != 0) {
-                ModelerCore.getRegistry().register(name, container);
+            if (name != null && name.length() != 0 && RegistryOption.REGISTER.equals(registryOption)) {
+                registry.register(name, container, Container.CONTAINER_NAME_PROPERTY);
             }
             container.start();
 
@@ -587,7 +625,7 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
         }
 
         // Register the known resource descriptors
-        final Iterator iter = CONFIG.getResourceDescriptors().iterator();
+        final Iterator iter = getConfiguration().getResourceDescriptors().iterator();
         final List errors = new ArrayList();
         while (iter.hasNext()) {
             final ResourceDescriptor resourceDescriptor = (ResourceDescriptor)iter.next();
@@ -640,7 +678,12 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
     }
 
     public static Configuration getConfiguration() {
-        return CONFIG;
+        Configuration configuration = registry.lookup(CONFIGURATION_KEY, Configuration.class);
+        if (configuration == null) {
+            configuration = registry.register(CONFIGURATION_KEY, new Configuration());
+        }
+        
+        return configuration;
     }
 
     /**
@@ -670,7 +713,7 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
             if (resourceSet == XSDSchemaImpl.getGlobalResourceSet()) {
                 // 'obj' is a built-in type within the Schema of Schemas, so we will
                 // find it through the model container ...
-                return defaultModelContainer;
+                return registry.lookup(DEFAULT_CONTAINER_KEY, Container.class);
             }
         }
         return null;
@@ -699,7 +742,7 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
      * @return the current UoW for the defaultModelContainer
      */
     public static UnitOfWork getCurrentUoW() {
-        if (defaultModelContainer != null) {
+        if (registry.lookup(DEFAULT_CONTAINER_KEY, Container.class) != null) {
             try {
                 return getModelContainer().getEmfTransactionProvider().getCurrent();
             } catch (final CoreException e) {
@@ -716,7 +759,11 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
      * @return the DatatypeManager for the object's container, or null if the object is not associated with a container.
      */
     public static DatatypeManager getDatatypeManager() {
-        return dTypeManager;
+        DatatypeManager manager = registry.lookup(DEFAULT_DATATYPE_MANAGER_KEY, DatatypeManager.class);
+        if (manager == null) {
+            manager = registry.register(DEFAULT_DATATYPE_MANAGER_KEY, createDatatypeManager());
+        }
+        return manager;
     }
 
     /**
@@ -743,7 +790,10 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
         CoreArgCheck.isNotNull(object);
 
         // if DatatypeManager is set (thru UnitTest, use it)
-        if (dTypeManager != null) return dTypeManager;
+        DatatypeManager datatypeManager = registry.lookup(DEFAULT_DATATYPE_MANAGER_KEY, DatatypeManager.class);
+        if (datatypeManager != null) {
+            return datatypeManager;
+        }
 
         // Look up the object's container ...
         DatatypeManager result = null;
@@ -769,12 +819,13 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
     private static Map getDefaultContainerOptions() {
         final Map options = new HashMap();
 
-        // Check if are running in an Eclipse runtime environment ...
-        if (ModelerCore.getPlugin() != null && CONFIG != null) {
+        // Check if running in an Eclipse runtime environment ...
+        Configuration configuration = registry.lookup(CONFIGURATION_KEY, Configuration.class);
+        if (getPlugin() != null && configuration != null) {
 
             // Create a map of the XML loading options and add all contributions by the extensions
             final XMLResource.XMLMap xmlMap = new XMLMapImpl();
-            for (final Iterator iter = CONFIG.getResourceLoadOptions().iterator(); iter.hasNext();) {
+            for (final Iterator iter = configuration.getResourceLoadOptions().iterator(); iter.hasNext();) {
                 final ExtensionDescriptor descriptor = (ExtensionDescriptor)iter.next();
                 final ResourceLoadOptionContributor optionContributor = (ResourceLoadOptionContributor)descriptor.getExtensionClassInstance();
                 if (optionContributor != null) {
@@ -801,19 +852,6 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
     }
 
     /**
-     * Returns the default ModelWorkspace.
-     * 
-     * @return the object graph representing the modeling workspace
-     */
-    public static IWorkspace getEclispeWorkspace() {
-        if (HEADLESS) {
-            return WORKSPACE;
-        }
-
-        return ResourcesPlugin.getWorkspace();
-    }
-
-    /**
      * Return the {@link org.teiid.designer.core.container.Container}instance used to hold all external resources. This
      * container is used as an external resource set for all other containers created in the modeler thereby allowing those
      * containers access to the same global resources. The external resource container will be loaded with all external resources
@@ -823,11 +861,15 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
      * @return @throws CoreException
      */
     public synchronized static Container getExternalResourceContainer() throws CoreException {
+        Container externalResourceContainer = registry.lookup(EXTERNAL_RESOURCE_CONTAINER_KEY, Container.class);
+        
         if (externalResourceContainer == null) {
-            externalResourceContainer = createEmptyContainer(EXTERNAL_RESOURCE_CONTAINER_NAME);
-
+            externalResourceContainer = createEmptyContainer(EXTERNAL_RESOURCE_CONTAINER_KEY);
+            registry.register(EXTERNAL_RESOURCE_CONTAINER_KEY, externalResourceContainer);
+            
             // Load the container with all external resources ...
             loadExternalResources(externalResourceContainer);
+            
         }
 
         return externalResourceContainer;
@@ -838,40 +880,65 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
      * 
      * @param container
      */
-    public synchronized static ResourceSet[] getExternalResourceSets() {
+    public synchronized static List<ResourceSet> getExternalResourceSets() {
+        List<ResourceSet> externalResourceSets = registry.lookup(EXTERNAL_RESOURCE_SETS_KEY, List.class);
+        
         if (externalResourceSets == null) {
             // Instantiate each external resource set extension found in the configuration
-            final ArrayList tmp = new ArrayList();
+            externalResourceSets = registry.register(EXTERNAL_RESOURCE_SETS_KEY, new ArrayList<ResourceSet>());
 
             // Add the external resource container holding all shared external resources
             // to be shared by containers throughout the modeler
             try {
                 final ResourceSet rsrcSet = getExternalResourceContainer();
                 if (rsrcSet != null) {
-                    tmp.add(rsrcSet);
+                    externalResourceSets.add(rsrcSet);
                 }
             } catch (final CoreException e) {
                 ModelerCore.Util.log(IStatus.ERROR, e, e.getMessage());
             }
 
             // Add in all other resource sets known through the EXTERNAL_RESOURCE_SET extension
-            final Collection desc = CONFIG.getExternalResourceSetDescriptors();
+            final Collection desc = getConfiguration().getExternalResourceSetDescriptors();
             for (final Iterator iter = desc.iterator(); iter.hasNext();) {
                 final ExtensionDescriptor descriptor = (ExtensionDescriptor)iter.next();
                 final ExternalResourceSet extRsrcSet = (ExternalResourceSet)descriptor.getExtensionClassInstance();
                 if (extRsrcSet != null) {
                     final ResourceSet rsrcSet = extRsrcSet.getResourceSet();
                     if (rsrcSet != null) {
-                        tmp.add(rsrcSet);
+                        externalResourceSets.add(rsrcSet);
                     }
                 }
             }
-
-            // Create a ResourceSet[] to return
-            externalResourceSets = new ResourceSet[tmp.size()];
-            tmp.toArray(externalResourceSets);
         }
+        
         return externalResourceSets;
+    }
+    
+    /**
+     * Determine whether the given resource is part of one of the 
+     * external resource sets
+     * 
+     * @param resource
+     * @return
+     */
+    public static boolean isResourceInExternalResourceSet(Resource resource) {
+        if (resource == null) {
+            return false;
+        }
+        
+        List<ResourceSet> sets = getExternalResourceSets();
+        if (sets == null || sets.isEmpty()) {
+            return false;
+        }
+        
+        for (ResourceSet set : sets) {
+            if (resource.getResourceSet() == set) {
+                return true;
+            }
+        }
+        
+        return false;
     }
 
     /**
@@ -879,20 +946,21 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
      * 
      * @param container
      */
-    public static InvocationFactoryHelper[] getInvocationFactoryHelpers() {
-        if (invocationFactoryHelpers == null || invocationFactoryHelpers.length == 0) {
+    public static List<InvocationFactoryHelper> getInvocationFactoryHelpers() {
+        List<InvocationFactoryHelper> invocationFactoryHelpers = registry.lookup(INVOCATION_FACTORY_HELPERS_KEY, List.class);
+        
+        if (invocationFactoryHelpers == null) {
             // Instantiate each invocation factory helper extension found in the configuration
-            final ArrayList tmp = new ArrayList();
-            final Collection desc = CONFIG.getInvocationFactoryHelpers();
+            invocationFactoryHelpers = registry.register(INVOCATION_FACTORY_HELPERS_KEY, new ArrayList<InvocationFactoryHelper>());
+            
+            final Collection desc = getConfiguration().getInvocationFactoryHelpers();
             for (final Iterator iter = desc.iterator(); iter.hasNext();) {
                 final ExtensionDescriptor descriptor = (ExtensionDescriptor)iter.next();
                 final InvocationFactoryHelper helper = (InvocationFactoryHelper)descriptor.getExtensionClassInstance();
                 if (helper != null) {
-                    tmp.add(helper);
+                    invocationFactoryHelpers.add(helper);
                 }
             }
-            invocationFactoryHelpers = new InvocationFactoryHelper[tmp.size()];
-            tmp.toArray(invocationFactoryHelpers);
         }
         return invocationFactoryHelpers;
     }
@@ -904,7 +972,7 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
      * @return
      */
     public static List getMappingAdapterDescriptors() {
-        return CONFIG.getMappingAdapterDescriptors();
+        return getConfiguration().getMappingAdapterDescriptors();
     }
 
     /**
@@ -913,38 +981,45 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
      * @return the MetamodelRegistry instance.
      */
     public static MetamodelRegistry getMetamodelRegistry() {
-        // Create the MetamodelRegistry instance ...
-        synchronized (METAMODEL_REGISTRY_LOCK) {
-            if (metamodelRegistry == null) {
-                StartupLogger.log(" ModelerCore - getMetamodelRegistry() Create Registry STARTED"); //$NON-NLS-1$
-                final Stopwatch watch = new Stopwatch();
-                watch.start(true);
-                // If some other thread initialized it ...
-                if (metamodelRegistry != null) {
-                    return metamodelRegistry;
-                }
-
-                metamodelRegistry = new MetamodelRegistryImpl();
-
-                // Register all of the metamodel descriptors ...
-                if (DEBUG_METAMODEL) {
-                    Util.log(IStatus.INFO,
-                             ModelerCore.Util.getString("ModelerCore.Registering_metamodel_descriptor(s)_in_the_MetamodelRegistry_1", //$NON-NLS-1$
-                                                        CONFIG.getMetamodelDescriptors().size()));
-                }
-                final Iterator iter = CONFIG.getMetamodelDescriptors().iterator();
-                while (iter.hasNext()) {
-                    final MetamodelDescriptor descriptor = (MetamodelDescriptor)iter.next();
-                    if (DEBUG_METAMODEL) {
-                        Util.log(IStatus.INFO, ModelerCore.Util.getString("ModelerCore.Registering_metamodel", descriptor)); //$NON-NLS-1$
-                    }
-                    metamodelRegistry.register(descriptor);
-                }
-
-                watch.stop();
-                StartupLogger.log(" ModelerCore - getMetamodelRegistry() Create Registry Finished", watch.getTotalDuration()); //$NON-NLS-1$
-            }
+        MetamodelRegistry metamodelRegistry = registry.lookup(METAMODEL_REGISTRY_KEY, MetamodelRegistry.class);
+        if (metamodelRegistry != null) {
+            return metamodelRegistry;
         }
+        
+        synchronized (METAMODEL_REGISTRY_LOCK) {
+            // Create the MetamodelRegistry instance ...
+                
+            StartupLogger.log(" ModelerCore - getMetamodelRegistry() Create Registry STARTED"); //$NON-NLS-1$
+            final Stopwatch watch = new Stopwatch();
+            watch.start(true);
+            
+            // If some other thread initialized it ...
+            metamodelRegistry = registry.lookup(METAMODEL_REGISTRY_KEY, MetamodelRegistry.class);
+            if (metamodelRegistry != null) {
+                return metamodelRegistry;
+            }
+
+            metamodelRegistry = registry.register(METAMODEL_REGISTRY_KEY, new MetamodelRegistryImpl());
+
+            // Register all of the metamodel descriptors ...
+            if (DEBUG_METAMODEL) {
+                Util.log(IStatus.INFO,
+                        ModelerCore.Util.getString("ModelerCore.Registering_metamodel_descriptor(s)_in_the_MetamodelRegistry_1", //$NON-NLS-1$
+                                getConfiguration().getMetamodelDescriptors().size()));
+            }
+            final Iterator iter = getConfiguration().getMetamodelDescriptors().iterator();
+            while (iter.hasNext()) {
+                final MetamodelDescriptor descriptor = (MetamodelDescriptor)iter.next();
+                if (DEBUG_METAMODEL) {
+                    Util.log(IStatus.INFO, ModelerCore.Util.getString("ModelerCore.Registering_metamodel", descriptor)); //$NON-NLS-1$
+                }
+                metamodelRegistry.register(descriptor);
+            }
+
+            watch.stop();
+            StartupLogger.log(" ModelerCore - getMetamodelRegistry() Create Registry Finished", watch.getTotalDuration()); //$NON-NLS-1$
+        }
+        
         return metamodelRegistry;
     }
 
@@ -954,8 +1029,10 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
      * @return the object graph representing the modeling workspace
      */
     public static Container getModelContainer() throws CoreException {
-        if (defaultModelContainer == null && HEADLESS) {
-            loadModelContainer();
+        Container defaultModelContainer = registry.lookup(DEFAULT_CONTAINER_KEY, Container.class);
+        
+        if (defaultModelContainer == null) {
+            defaultModelContainer = loadModelContainer();
             defaultModelContainer.start();
         }
 
@@ -968,9 +1045,12 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
      * @return the editor for working with models
      */
     public static ModelEditor getModelEditor() {
+        ModelEditor modelEditor = registry.lookup(MODEL_EDITOR_KEY, ModelEditor.class);
+        
         if (modelEditor == null) {
-            modelEditor = new ModelEditorImpl();
+            modelEditor = registry.register(MODEL_EDITOR_KEY, new ModelEditorImpl());
         }
+        
         return modelEditor;
     }
 
@@ -1026,12 +1106,15 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
         // must be testing
         return "Teiid Designer"; //$NON-NLS-1$
     }
-
+    
+    /**
+     * Return the {@link ModelerCore}'s registry
+     * 
+     * @return A {@link Registry} that allows looking up but not registering. Only in specific 
+     *                circumstances, like testing, should the registry be cast to allow registering / unregistering.
+     */
     public synchronized static Registry getRegistry() {
-        if (registry == null) {
-            registry = new FlatRegistry();
-        }
-        return registry;
+    	return registry;
     }
 
     // /**
@@ -1085,9 +1168,11 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
      * @return the preferences used for transformation defaults
      */
     public static TransformationPreferences getTransformationPreferences() {
+        TransformationPreferences transformationPreferences = registry.lookup(TRANSFORMATION_PREFERENCES_KEY, TransformationPreferences.class);
         if (transformationPreferences == null) {
-            transformationPreferences = new TransformationPreferencesImpl();
+            transformationPreferences = registry.register(TRANSFORMATION_PREFERENCES_KEY, new TransformationPreferencesImpl());
         }
+        
         return transformationPreferences;
     }
 
@@ -1097,8 +1182,10 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
      * @return the preferences used for validating resources
      */
     public static ValidationPreferences getValidationPreferences() {
+        ValidationPreferences validationPreferences = registry.lookup(VALIDATION_PREFERENCES_KEY, ValidationPreferences.class);
+
         if (validationPreferences == null) {
-            validationPreferences = new ValidationPreferencesImpl();
+            validationPreferences = registry.register(VALIDATION_PREFERENCES_KEY, new ValidationPreferencesImpl());
         }
         return validationPreferences;
     }
@@ -1109,14 +1196,16 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
      * @return the ValidationRuleManager
      */
     public static synchronized ValidationRuleManager getValidationRuleManager() {
+        ValidationRuleManager validationRuleMgr = registry.lookup(VALIDATION_RULE_MANAGER_KEY, ValidationRuleManager.class);
+
         if (validationRuleMgr == null) {
-            validationRuleMgr = new ValidationRuleManager();
+            validationRuleMgr = registry.register(VALIDATION_RULE_MANAGER_KEY, new ValidationRuleManager());
         }
         return validationRuleMgr;
     }
 
     // private static void initializeModelContainer() {
-    // for (Iterator it = CONFIG.getModelContainerInitializerDescriptors().iterator(); it.hasNext();) {
+    // for (Iterator it = getConfiguration().getModelContainerInitializerDescriptors().iterator(); it.hasNext();) {
     // Object o1 = it.next();
     // if (o1 instanceof ExtensionDescriptor) {
     // ExtensionDescriptor descriptor = (ExtensionDescriptor) o1;
@@ -1151,7 +1240,12 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
      * Returns the workspace instance.
      */
     public static IWorkspace getWorkspace() {
-        return ResourcesPlugin.getWorkspace();
+        IWorkspace workspace = registry.lookup(WORKSPACE_KEY, IWorkspace.class);
+        if (workspace == null) {
+            workspace = registry.register(WORKSPACE_KEY, ResourcesPlugin.getWorkspace());
+        }
+        
+        return workspace;
     }
 
     /**
@@ -1235,7 +1329,7 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
     }
 
     public static boolean isModelContainer( final Container container ) {
-        return container == defaultModelContainer;
+        return container == registry.lookup(DEFAULT_CONTAINER_KEY, Container.class);
     }
 
     /**
@@ -1262,10 +1356,10 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
      * 
      * @param container
      */
-    public static void loadExternalResources( final Container container ) {
+    private static void loadExternalResources( final Container container ) {
         // Load all external model resources into the container
         final ExternalResourceLoader loader = new ExternalResourceLoader();
-        final Collection desc = CONFIG.getExternalResourceDescriptors();
+        final Collection desc = getConfiguration().getExternalResourceDescriptors();
         for (final Iterator iter = desc.iterator(); iter.hasNext();) {
             final ExternalResourceDescriptor descriptor = (ExternalResourceDescriptor)iter.next();
             try {
@@ -1279,17 +1373,21 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
     /**
      * Load the default container into which models are .
      */
-    private static void loadModelContainer() throws CoreException {
-        if (defaultModelContainer == null) {
-            synchronized (CONTAINER_LOCK) {
-                // If some other thread initialized it ...
-                if (defaultModelContainer != null) {
-                    return;
-                }
-                defaultModelContainer = createContainer(DEFAULT_CONTAINER_NAME);
-                // // run model container initializers (if any) that have been added via the configuration
-                // initializeModelContainer();
+    private static Container loadModelContainer() throws CoreException {
+        Container defaultContainer = registry.lookup(DEFAULT_CONTAINER_KEY, Container.class);
+        if (defaultContainer != null) {
+            return defaultContainer;
+        }
+        
+        synchronized (CONTAINER_LOCK) {
+            // If some other thread initialized it ...
+            defaultContainer = registry.lookup(DEFAULT_CONTAINER_KEY, Container.class);
+            
+            if (defaultContainer == null) {
+                defaultContainer = createContainer(DEFAULT_CONTAINER_KEY, RegistryOption.REGISTER);
             }
+            
+            return defaultContainer;
         }
     }
 
@@ -1349,33 +1447,6 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
     }
 
     /**
-     * Returns the DatatypeManager instance associated with the container where the supplied object exists.
-     * 
-     * @return the DatatypeManager for the object's container, or null if the object is not associated with a container.
-     */
-    public static void setDatatypeManager( final DatatypeManager mgr ) {
-        dTypeManager = mgr;
-    }
-
-    /**
-     * Returns the default ModelWorkspace.
-     * 
-     * @return the object graph representing the modeling workspace
-     */
-    public static void setEcliseWorkspace( final IWorkspace ws ) {
-        WORKSPACE = ws;
-    }
-
-    /**
-     * Setter for UnitTesting
-     * 
-     * @param externalSets
-     */
-    public synchronized static void setExternalResourceSets( final ResourceSet[] externalSets ) {
-        externalResourceSets = externalSets;
-    }
-
-    /**
      * Set whether validation preference settings will be adhered to during the validation step of a workspace build operation. If
      * set to true, preference settings will be ignored and default severity levels will be used for all validation rules. If false,
      * severity levels defined in the modeler's user preferences will be used.
@@ -1385,21 +1456,6 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
      */
     public static void setIgnoreValidationPreferencesOnBuild( final boolean ignorePrefs ) {
         IGNORE_VALIDATION_PREFERNCES_ON_BUILD = ignorePrefs;
-    }
-
-    public static void setMetamodelRegistry( final MetamodelRegistry registry ) {
-        synchronized (METAMODEL_REGISTRY_LOCK) {
-            metamodelRegistry = registry;
-        }
-    }
-
-    /**
-     * Sets the default container into which models are .
-     * 
-     * @return the object graph representing the modeling workspace
-     */
-    public static void setModelContainer( final Container container ) {
-        defaultModelContainer = container;
     }
 
     public static void setObjectId( final EObject object,
@@ -1499,7 +1555,7 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
      * @return the UUID of the current workspace
      */
     public static UUID workspaceUuid() {
-        return workspaceUuid;
+        return registry.lookup(UUID_KEY, UUID.class);
     }
 
     private ISaveParticipant saveParticipant;
@@ -1566,7 +1622,7 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
 
         // Change the factory to use the extension mechanism ...
         try {
-            EclipseConfigurationBuilder.build(CONFIG);
+            EclipseConfigurationBuilder.build(getConfiguration());
         } catch (final Throwable t) {
             Util.log(IStatus.ERROR,
                      ModelerCore.Util.getString("ModelerCore.Error_encountered_building_the_Eclipse_configuration_2", //$NON-NLS-1$
@@ -1595,10 +1651,12 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
         getValidationPreferences();
 
         final File file = getStateLocation().append(WORKSPACE_UUID_FILE).toFile();
+        
+        UUID workspaceUuid = null;
         if (file.exists()) {
             final BufferedReader reader = new BufferedReader(new FileReader(file));
             try {
-                workspaceUuid = UUID.fromString(reader.readLine());
+                workspaceUuid = registry.register(UUID_KEY, UUID.fromString(reader.readLine()));
             } catch (final IOException error) {
             } finally {
                 try {
@@ -1608,7 +1666,7 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
             }
         }
         if (workspaceUuid == null) {
-            workspaceUuid = UUID.randomUUID();
+            workspaceUuid = registry.register(UUID_KEY, UUID.randomUUID());
             final FileWriter writer = new FileWriter(file);
             try {
                 writer.write(workspaceUuid.toString());
@@ -1649,17 +1707,17 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
         super.stop(context);
 
         // Null the reference to the model container ...
-        defaultModelContainer = null;
-
-        // Null the reference to the registry ...
-        registry = null;
-
+        registry.unregister(DEFAULT_CONTAINER_KEY);
+        
         // Shut down the metamodel registry
-        metamodelRegistry.dispose();
-        metamodelRegistry = null;
+        MetamodelRegistry metamodelRegistry = registry.lookup(METAMODEL_REGISTRY_KEY, MetamodelRegistry.class);
+        if (metamodelRegistry != null) {
+        	metamodelRegistry.dispose();
+        	registry.unregister(METAMODEL_REGISTRY_KEY);
+        }
 
         // Remove this as a save participant ...
-        final IWorkspace workspace = ResourcesPlugin.getWorkspace();
+        final IWorkspace workspace = getWorkspace();
         workspace.removeSaveParticipant(this);
 
         // Shut down the model workspace manager ...

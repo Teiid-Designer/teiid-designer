@@ -18,7 +18,6 @@ import java.util.Iterator;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -591,14 +590,9 @@ abstract public class ModelEditorManager {
     }
 
     // =============================================
-    // Private Methods
-
+    
     public static ModelEditor getModelEditorForFile( final IFile file,
                                                      boolean forceOpen ) {
-        if (ModelerCore.HEADLESS) {
-            return null;
-        }
-
         ModelEditor result = null;
         staticEditor = null;
         if (file != null) {
