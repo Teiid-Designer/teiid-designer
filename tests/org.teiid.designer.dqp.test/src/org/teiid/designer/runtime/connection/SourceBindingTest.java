@@ -17,19 +17,15 @@ import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.powermock.modules.junit4.PowerMockRunner;
 import org.teiid.designer.runtime.ExecutionAdmin;
 import org.teiid.designer.runtime.TeiidTranslator;
-import org.teiid.designer.runtime.connection.SourceConnectionBinding;
 
 
 /**
  * 
  */
-@RunWith( PowerMockRunner.class )
 public class SourceBindingTest {
 
     private static final Set<TeiidTranslator> NULL_CONNECTORS = null;

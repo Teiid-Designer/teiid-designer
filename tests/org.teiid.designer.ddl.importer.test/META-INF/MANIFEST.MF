@@ -9,5 +9,4 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.teiid.core.designer.test.framework,
  org.mockito,
- org.powermock,
  org.junit4

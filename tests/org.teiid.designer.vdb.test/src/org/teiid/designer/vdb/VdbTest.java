@@ -10,42 +10,34 @@ package org.teiid.designer.vdb;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
-import static org.teiid.designer.vdb.Vdb.Event.*;
+import static org.teiid.designer.vdb.Vdb.Event.DESCRIPTION;
+
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Marshaller;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.hamcrest.core.IsSame;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 import org.teiid.core.designer.EclipseMock;
+import org.teiid.core.util.FileUtils;
 
 /**
  * 
  */
-@RunWith( PowerMockRunner.class )
-@PrepareForTest( {JAXBContext.class, ResourcesPlugin.class, VdbPlugin.class} )
 public class VdbTest {
 
     private Vdb vdb;
@@ -59,33 +51,31 @@ public class VdbTest {
 
         final IPath vdbPathAbsolute = mock(IPath.class);
         when(vdbFile.getLocation()).thenReturn(vdbPathAbsolute);
-        final File vdbFileAbsolute = File.createTempFile(VdbTest.class.getSimpleName(), ".vdb");
+        
+        /*
+         * Vdb uses this tempDir for creating temp archive then uses
+        * File.renameTo which seems to require that both files are in
+        * the same directory.
+        */
+        File tempDir = VdbPlugin.singleton().getStateLocation().toFile();
+        final File vdbFileAbsolute = File.createTempFile(VdbTest.class.getSimpleName(), ".vdb", tempDir);
         vdbFileAbsolute.deleteOnExit();
         when(vdbPathAbsolute.toFile()).thenReturn(vdbFileAbsolute);
+        
+        final IPath vdbName = mock(IPath.class);
+        when(vdbName.toString()).thenReturn(vdbFileAbsolute.getName());
+        when(vdbName.lastSegment()).thenReturn(FileUtils.getFilenameWithoutExtension(vdbFileAbsolute.getName()));
+        
         final IPath vdbPath = mock(IPath.class);
+        when(vdbPath.getFileExtension()).thenReturn("vdb");
+        when(vdbPath.removeFileExtension()).thenReturn(vdbName);
+        
         when(vdbFile.getFullPath()).thenReturn(vdbPath);
         when(vdbFile.findMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE)).thenReturn(new IMarker[0]);
-        final IPath vdbName = mock(IPath.class);
-        when(vdbPath.removeFileExtension()).thenReturn(vdbName);
 
         eclipseMock = new EclipseMock();
         when(eclipseMock.workspaceRoot().findMember(vdbPath)).thenReturn(vdbFile);
 
-        mockStatic(JAXBContext.class);
-        final JAXBContext context = PowerMockito.mock(JAXBContext.class);
-        when(JAXBContext.newInstance((Class[])anyObject())).thenReturn(context);
-        final Marshaller marshaller = mock(Marshaller.class);
-        when(context.createMarshaller()).thenReturn(marshaller);
-
-        mockStatic(VdbPlugin.class);
-        final VdbPlugin plugin = PowerMockito.mock(VdbPlugin.class);
-        when(VdbPlugin.singleton()).thenReturn(plugin);
-        final IPath stateFolderPath = mock(IPath.class);
-        when(plugin.getStateLocation()).thenReturn(stateFolderPath);
-        final IPath vdbFolderPath = mock(IPath.class);
-        when(stateFolderPath.append((IPath)anyObject())).thenReturn(vdbFolderPath);
-        final File vdbFolderFile = new File(".");
-        when(vdbFolderPath.toFile()).thenReturn(vdbFolderFile);
         vdb = new Vdb(vdbFile, null);
     }
 

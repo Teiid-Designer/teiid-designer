@@ -9,14 +9,15 @@ package org.teiid.designer.core;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
-import org.eclipse.core.runtime.CoreException;
+
+import org.eclipse.emf.common.util.BasicEList;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.edit.provider.ChangeNotifier;
 import org.teiid.core.designer.EclipseMock;
 import org.teiid.core.util.ArgCheck;
 import org.teiid.designer.core.container.Container;
 import org.teiid.designer.core.container.ResourceFinder;
-import org.teiid.designer.core.workspace.ModelWorkspaceManager;
-
+import org.teiid.designer.core.spi.RegistrySPI;
 
 /**
  * 
@@ -34,31 +35,27 @@ public final class ModelWorkspaceMock {
     }
 
     /**
-     * Mocks core modeling classes used when running Designer.
+     * Mocks core modelling classes used when running Designer.
      */
     public ModelWorkspaceMock( final EclipseMock mock ) {
         ArgCheck.isNotNull(mock, "mock"); //$NON-NLS-1$
         eclipseMock = mock;
 
-        // ModelWorkspaceManager
-        mockStatic(ModelWorkspaceManager.class);
-        final ModelWorkspaceManager modelWorkspaceMgr = mock(ModelWorkspaceManager.class);
-        when(ModelWorkspaceManager.getModelWorkspaceManager()).thenReturn(modelWorkspaceMgr);
-
         // ModelerCore
-        mockStatic(ModelerCore.class);
-        final ModelerCore modelerCore = mock(ModelerCore.class);
-        when(ModelerCore.getPlugin()).thenReturn(modelerCore);
-        final Container container = mock(Container.class);
-        try {
-            when(ModelerCore.getModelContainer()).thenReturn(container);
-            finder = mock(ResourceFinder.class);
-            when(container.getResourceFinder()).thenReturn(finder);
-        } catch (final CoreException notPossible) {
-            notPossible.printStackTrace();
-        }
+        Container container = mock(Container.class);
+        ((RegistrySPI) ModelerCore.getRegistry()).register(ModelerCore.DEFAULT_CONTAINER_KEY, container);
+        
+        ChangeNotifier changeNotifier = mock(ChangeNotifier.class);
+        when(container.getChangeNotifier()).thenReturn(changeNotifier);
+        
+        BasicEList<Resource> resourceList = new BasicEList<Resource>();
+        when(container.getResources()).thenReturn(resourceList);
+        
+        finder = mock(ResourceFinder.class);
+        when(container.getResourceFinder()).thenReturn(finder);
+        
         final ModelEditor editor = mock(ModelEditor.class);
-        when(ModelerCore.getModelEditor()).thenReturn(editor);
+        ((RegistrySPI) ModelerCore.getRegistry()).register(ModelerCore.MODEL_EDITOR_KEY, editor);
     }
 
     /**

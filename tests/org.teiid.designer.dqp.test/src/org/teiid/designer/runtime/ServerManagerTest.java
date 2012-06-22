@@ -21,22 +21,14 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
-import org.teiid.designer.core.ModelerCore;
-
 
 /**
  * 
  */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({ DqpPlugin.class, ModelerCore.class, ResourcesPlugin.class })
 public class ServerManagerTest {
 
     private static final String RESTORED_SERVER1_URL = "mm://localhost:8080";
@@ -191,8 +183,6 @@ public class ServerManagerTest {
     public void shouldOldRestoreServerRegistry() throws Exception {
         // setup
         MockObjectFactory.createModelContainer();
-        MockObjectFactory.createDqpPlugin();
-        MockObjectFactory.createResourcesPlugin();
 
         this.mgr = new ServerManager("testdata/oldregistrydata");
         this.mgr.restoreState();
@@ -218,8 +208,6 @@ public class ServerManagerTest {
     public void shouldRestoreServerRegistry() throws Exception {
         // setup
         MockObjectFactory.createModelContainer();
-        MockObjectFactory.createDqpPlugin();
-        MockObjectFactory.createResourcesPlugin();
 
         this.mgr = new ServerManager("testdata");
         this.mgr.restoreState();

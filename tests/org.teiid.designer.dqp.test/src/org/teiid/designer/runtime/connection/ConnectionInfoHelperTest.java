@@ -4,34 +4,26 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.when;
+
 import java.util.Properties;
+
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.datatools.connectivity.internal.ConnectionProfile;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 import org.teiid.designer.core.ModelResourceMockFactory;
-import org.teiid.designer.core.ModelerCore;
-import org.teiid.designer.core.util.ModelResourceContainerFactory;
 import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.core.workspace.ModelResource;
-import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.core.workspace.ResourceAnnotationHelper;
 import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
 import org.teiid.designer.datatools.connection.ConnectionProfileFactory;
 
-@RunWith( PowerMockRunner.class )
-@PrepareForTest( {ModelerCore.class, ModelResourceContainerFactory.class, ModelUtil.class} )
 public class ConnectionInfoHelperTest {
 
     private ConnectionInfoHelper helper;
-
-    // private IConnectionInfoProvider provider;
 
     private ModelResource modelResource;
 
@@ -50,9 +42,7 @@ public class ConnectionInfoHelperTest {
     private static String CP_PROVIDER_ID_VALUE = "connectionProfileProviderId"; //$NON-NLS-1$  
     private static String CP_PROVIDER_ID_KEY = ConnectionInfoHelper.CONNECTION_PROFILE_NAMESPACE
                                                + ConnectionInfoHelper.PROFILE_PROVIDER_ID_KEY;
-    //private static final String VALUE_1 = "partssupplier"; //$NON-NLS-1$
-    //private static final String VALUE_2 = "org.bogus.company.mydb.MyDbDriver"; //$NON-NLS-1$
-
+    
     private static final String EMPTY_STRING = StringUtilities.EMPTY_STRING;
 
     private Properties connectionProps;

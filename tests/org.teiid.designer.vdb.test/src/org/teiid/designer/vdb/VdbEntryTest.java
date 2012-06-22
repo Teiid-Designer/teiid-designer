@@ -14,39 +14,30 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.teiid.designer.vdb.Vdb.Event.ENTRY_CHECKSUM;
 import static org.teiid.designer.vdb.Vdb.Event.ENTRY_DESCRIPTION;
 import static org.teiid.designer.vdb.Vdb.Event.ENTRY_SYNCHRONIZATION;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.util.List;
-
-import javax.xml.bind.JAXBContext;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 import org.teiid.core.designer.EclipseMock;
-import org.teiid.core.designer.util.FileUtils;
+import org.teiid.designer.core.ModelResourceMockFactory;
 import org.teiid.designer.vdb.VdbEntry.Synchronization;
-
 
 /**
  * 
  */
-@RunWith( PowerMockRunner.class )
-@PrepareForTest( {FileUtils.class, JAXBContext.class, ResourcesPlugin.class, VdbPlugin.class} )
 public class VdbEntryTest {
 
     private EclipseMock eclipseMock;
@@ -64,35 +55,42 @@ public class VdbEntryTest {
 
     @Test
     public void shouldHaveChecksumIfFileInWorkspace() throws Exception {
-        mockStatic(FileUtils.class); // so files aren't copied
-
         // mock file and contents so that checksum can be computed
+        File tempFile = ModelResourceMockFactory.createTempFile("temp1", "", null, "abcdef");
+        FileInputStream fileInputStream = new FileInputStream(tempFile);
+        
         final IPath name = mock(Path.class);
         final IFile iFile = mock(IFile.class);
         when(iFile.getLocation()).thenReturn(name);
-        when(iFile.getContents()).thenReturn(new ByteArrayInputStream("abcdef".getBytes()));
+        when(iFile.getLocation().toFile()).thenReturn(tempFile);
+        when(iFile.getContents()).thenReturn(fileInputStream);
 
         // put file in workspace
         final IWorkspaceRoot mockRoot = eclipseMock.workspaceRoot();
         when(mockRoot.findMember(name)).thenReturn(iFile);
 
         // construct entry so that checksum will be computed
+        
+        
         entry = vdb.addEntry(name, null);
         assertThat(entry.getChecksum(), not(is(0L)));
     }
 
     @Test
     public void shouldHaveDifferentChecksumIfFileChanges() throws Exception {
-        mockStatic(FileUtils.class); // so files aren't copied
-
         // mock file and contents so that checksum can be computed
+        File tempFile1 = ModelResourceMockFactory.createTempFile("temp1", "", null, "abcdefxyz");
+        File tempFile2 = ModelResourceMockFactory.createTempFile("temp2", "", null, "xyz");
+        FileInputStream fis1 = new FileInputStream(tempFile1);
+        FileInputStream fis2 = new FileInputStream(tempFile2);
+        
         final IPath name = mock(Path.class);
         final IFile iFile = mock(IFile.class);
         when(iFile.getLocation()).thenReturn(name);
-
+        when(iFile.getLocation().toFile()).thenReturn(tempFile1, tempFile2);
+        
         // include values for first call and second call
-        when(iFile.getContents()).thenReturn(new ByteArrayInputStream("abcdef".getBytes()),
-                                             new ByteArrayInputStream("xyz".getBytes()));
+        when(iFile.getContents()).thenReturn(fis1, fis2);
 
         // put file in workspace
         final IWorkspaceRoot mockRoot = eclipseMock.workspaceRoot();
@@ -170,16 +168,20 @@ public class VdbEntryTest {
 
     @Test
     public void shouldNotifyAfterChecksumChanges() throws Exception {
-        mockStatic(FileUtils.class); // so files aren't copied
-
         // change checksum by changing file contents and synchronizing
+        
+        File tempFile1 = ModelResourceMockFactory.createTempFile("temp1", "", null, "abcdef");
+        File tempFile2 = ModelResourceMockFactory.createTempFile("temp2", "", null, "xyz");
+        FileInputStream fis1 = new FileInputStream(tempFile1);
+        FileInputStream fis2 = new FileInputStream(tempFile2);
+        
         final IPath name = mock(Path.class);
         final IFile iFile = mock(IFile.class);
         when(iFile.getLocation()).thenReturn(name);
-
+        when(iFile.getLocation().toFile()).thenReturn(tempFile1, tempFile2);
+        
         // include values for first call and second call
-        when(iFile.getContents()).thenReturn(new ByteArrayInputStream("abcdef".getBytes()),
-                                             new ByteArrayInputStream("xyz".getBytes()));
+        when(iFile.getContents()).thenReturn(fis1, fis2);
 
         // put file in workspace
         final IWorkspaceRoot mockRoot = eclipseMock.workspaceRoot();

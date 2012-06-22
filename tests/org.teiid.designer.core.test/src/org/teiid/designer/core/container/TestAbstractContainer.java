@@ -12,13 +12,10 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
+
 import org.eclipse.emf.edit.provider.ChangeNotifier;
 import org.teiid.designer.core.ModelerCore;
-import org.teiid.designer.core.container.EObjectFinder;
-import org.teiid.designer.core.container.FakeContainer;
-import org.teiid.designer.core.container.FakeFinder;
-import org.teiid.designer.core.container.FakeResourceFinder;
-
+import org.teiid.designer.core.spi.RegistrySPI;
 
 /**
  * @since 3.1
@@ -85,6 +82,7 @@ public class TestAbstractContainer extends TestCase {
         final ContainerImpl container = new FakeContainer();
         if (name != null) {
             container.setName(name);
+            ((RegistrySPI) ModelerCore.getRegistry()).register(name, container, Container.CONTAINER_NAME_PROPERTY);
         }
         if (desiredState == ContainerImpl.STARTED || desiredState == ContainerImpl.STOPPED) {
             container.start();
@@ -262,9 +260,15 @@ public class TestAbstractContainer extends TestCase {
     }
 
     public void testSetNullName() throws Exception {
-        // Can only set the name on unstartedContainers ...
-        helpTestSetName(this.unstartedContainer, null, true);
-        helpTestRegistryEntry(this.unstartedContainer, null);
+    	try {
+    		// Can only set the name on unstartedContainers ...
+    		// but cannot register an object with a null name
+    		helpTestSetName(this.unstartedContainer, null, true);
+    		fail("Should not be able to register object with a null name"); //$NON-NLS-1$
+    	}
+    	catch (IllegalArgumentException ex) {
+    		// Should throw this exception when trying to register the container with a null name
+    	}
     }
 
     public void testSetValidName() throws Exception {

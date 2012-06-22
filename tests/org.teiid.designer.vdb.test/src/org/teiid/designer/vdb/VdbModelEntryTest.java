@@ -16,80 +16,88 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
-import javax.xml.bind.JAXBContext;
+
+import java.io.File;
+import java.io.FileInputStream;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 import org.teiid.core.designer.EclipseMock;
 import org.teiid.core.designer.util.FileUtils;
-import org.teiid.core.designer.util.OperationUtil;
-import org.teiid.core.designer.util.OperationUtil.ReturningUnreliable;
+import org.teiid.designer.core.ModelEditor;
+import org.teiid.designer.core.ModelResourceMockFactory;
 import org.teiid.designer.core.ModelWorkspaceMock;
 import org.teiid.designer.core.ModelerCore;
-import org.teiid.designer.core.builder.ModelBuildUtil;
-import org.teiid.designer.core.index.Index;
-import org.teiid.designer.core.index.IndexUtil;
 import org.teiid.designer.core.resource.EmfResource;
 import org.teiid.designer.core.workspace.ModelObjectAnnotations;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
-import org.teiid.designer.core.workspace.ModelWorkspaceManager;
 import org.teiid.designer.metamodels.core.ModelAnnotation;
-
+import org.teiid.designer.metamodels.core.ModelType;
 
 /**
  * 
  */
-@RunWith( PowerMockRunner.class )
-@PrepareForTest( {FileUtils.class, IndexUtil.class, JAXBContext.class, ModelerCore.class, ModelWorkspaceManager.class,
-    ModelBuildUtil.class, ModelUtil.class, OperationUtil.class, ResourcesPlugin.class, VdbPlugin.class} )
 public class VdbModelEntryTest {
 
     private VdbModelEntry entry;
-    private Vdb vdb;
-    private EclipseMock eclipseMock;
+    private String modelResourceFileName;
 
     @Before
     public void before() throws Exception {
         final VdbTest vdbTest = new VdbTest();
         vdbTest.before();
-        vdb = vdbTest.getVdb();
-        mockStatic(IndexUtil.class);
-        final IPath modelPath = Path.fromPortableString("project/folder/test.xmi");
-        eclipseMock = vdbTest.getEclipseMock();
-        final ModelWorkspaceMock modelWorkspaceMock = new ModelWorkspaceMock(eclipseMock);
-        when(eclipseMock.workspaceRootLocation().append(modelPath)).thenReturn(modelPath);
+
+        Vdb vdb = vdbTest.getVdb();
+        EclipseMock eclipseMock = vdbTest.getEclipseMock();
+        File tempDir = VdbPlugin.singleton().getStateLocation().toFile();
+        tempDir = new File(tempDir, "project" + File.separator + "folder");
+        tempDir.mkdirs();
+        
+        String suffix = ".xmi";
+        File tempFile = ModelResourceMockFactory.createTempFile("test", suffix, tempDir, "abcdef");
+        FileInputStream fileInputStream = new FileInputStream(tempFile);
+
+        modelResourceFileName = FileUtils.getFilenameWithoutExtension(tempFile.getName());
+        final IPath nonExtModelPathName = mock(IPath.class);
+        when(nonExtModelPathName.toString()).thenReturn(modelResourceFileName);
+        when(nonExtModelPathName.lastSegment()).thenReturn(modelResourceFileName);
+
+        final IPath modelPath = mock(IPath.class);
+        when(modelPath.toFile()).thenReturn(tempFile);
+        when(modelPath.getFileExtension()).thenReturn("xmi");
+        when(modelPath.toString()).thenReturn(tempFile.getCanonicalPath());
+        when(modelPath.removeFileExtension()).thenReturn(nonExtModelPathName);
 
         IFile file = mock(IFile.class);
         when(file.getLocation()).thenReturn(modelPath);
         when(file.findMarkers(anyString(), anyBoolean(), anyInt())).thenReturn(new IMarker[0]);
-        when(eclipseMock.workspaceRoot().findMember(modelPath)).thenReturn(file);
-        mockStatic(FileUtils.class);
-        mockStatic(OperationUtil.class);
-        when(OperationUtil.perform(isA(ReturningUnreliable.class))).thenReturn(new Long(1));
-        mockStatic(ModelBuildUtil.class);
-        mockStatic(IndexUtil.class);
-        Index index = mock(Index.class);
-        when(IndexUtil.getIndexFile(anyString(), anyString(), anyString())).thenReturn(index);
+        when(file.getContents()).thenReturn(fileInputStream);
+        when(file.getFullPath()).thenReturn(modelPath);
 
+        final ModelWorkspaceMock modelWorkspaceMock = new ModelWorkspaceMock(eclipseMock);
+        when(eclipseMock.workspaceRootLocation().append(modelPath)).thenReturn(modelPath);
+        when(eclipseMock.workspaceRoot().findMember(modelPath)).thenReturn(file);
+
+        final ModelAnnotation annotation = mock(ModelAnnotation.class);
+        when(annotation.getModelType()).thenReturn(ModelType.PHYSICAL_LITERAL);
+        
         final EmfResource model = mock(EmfResource.class);
         when(modelWorkspaceMock.getFinder().findByURI(isA(URI.class), eq(false))).thenReturn(model);
-        final ModelAnnotation annotation = mock(ModelAnnotation.class);
+        when(model.getModelType()).thenReturn(ModelType.PHYSICAL_LITERAL);
         when(model.getModelAnnotation()).thenReturn(annotation);
-        mockStatic(ModelUtil.class);
-        when(ModelUtil.isXmiFile(model)).thenReturn(true);
-        when(ModelUtil.isPhysical(model)).thenReturn(true);
+        
         final ModelResource modelResource = mock(ModelResource.class);
-        when(ModelerCore.getModelEditor().findModelResource(model)).thenReturn(modelResource);
+        when(modelResource.getPrimaryMetamodelUri()).thenReturn(ModelUtil.URI_XML_SCHEMA_MODEL);
+        
+        final ModelEditor me = ModelerCore.getRegistry().lookup(ModelerCore.MODEL_EDITOR_KEY, ModelEditor.class);
+        when(me.findModelResource(model)).thenReturn(modelResource);
+        when(me.findModelResource(file)).thenReturn(modelResource);
+        
         final ModelObjectAnnotations annotations = mock(ModelObjectAnnotations.class);
         when(modelResource.getAnnotations()).thenReturn(annotations);
         entry = vdb.addModelEntry(modelPath, null);
@@ -97,11 +105,11 @@ public class VdbModelEntryTest {
 
     @Test
     public void shouldReflectJndiNameAsSimpleModelName() throws Exception {
-        assertThat(entry.getJndiName(), is("test"));
+        assertThat(entry.getJndiName(), is(modelResourceFileName));
     }
 
     @Test
     public void shouldReflectSourceNameAsSimpleModelName() throws Exception {
-        assertThat(entry.getSourceName(), is("test"));
+        assertThat(entry.getSourceName(), is(modelResourceFileName));
     }
 }

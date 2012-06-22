@@ -164,7 +164,7 @@ public class ExecutionAdmin {
         this.teiidVdbs = Collections.emptySet();
     }
     
-    Admin getAdminApi() {
+    public Admin getAdminApi() {
         return this.admin;
     }
 
@@ -194,7 +194,7 @@ public class ExecutionAdmin {
     /**
      * @return the event manager (never <code>null</code>)
      */
-    EventManager getEventManager() {
+    public EventManager getEventManager() {
         return this.eventManager;
     }
 

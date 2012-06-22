@@ -10,21 +10,19 @@ package org.teiid.designer.runtime;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Properties;
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
+
 import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.emf.edit.provider.ChangeNotifier;
 import org.teiid.adminapi.Admin;
 import org.teiid.adminapi.PropertyDefinition;
 import org.teiid.adminapi.Translator;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.container.Container;
+import org.teiid.designer.core.spi.RegistrySPI;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.runtime.connection.IConnectionProperties;
 
@@ -107,14 +105,13 @@ public class MockObjectFactory {
      * 
      * @return the plugin instance
      */
-    public static DqpPlugin createDqpPlugin() {
-        mockStatic(DqpPlugin.class);
-        DqpPlugin plugin = mock(DqpPlugin.class);
-        when(DqpPlugin.getInstance()).thenReturn(plugin);
-        IEclipsePreferences prefs = mock(IEclipsePreferences.class);
-        when(plugin.getPreferences()).thenReturn(prefs);
-        return plugin;
-    }
+//    public static DqpPlugin createDqpPlugin() {
+//        DqpPlugin plugin = mock(DqpPlugin.class);
+//        when(DqpPlugin.getInstance()).thenReturn(plugin);
+//        IEclipsePreferences prefs = mock(IEclipsePreferences.class);
+//        when(plugin.getPreferences()).thenReturn(prefs);
+//        return plugin;
+//    }
 
     /**
      * Test must use <code>@PrepareForTest( {ModelerCore.class} )</code> annotation.
@@ -122,16 +119,12 @@ public class MockObjectFactory {
      * @return the model container
      */
     public static Container createModelContainer() {
-        mockStatic(ModelerCore.class);
         Container container = mock(Container.class);
+        ((RegistrySPI) ModelerCore.getRegistry()).register(ModelerCore.DEFAULT_CONTAINER_KEY, container);
+        
         ChangeNotifier changeNotifier = mock(ChangeNotifier.class);
         when(container.getChangeNotifier()).thenReturn(changeNotifier);
-        try {
-            when(ModelerCore.getModelContainer()).thenReturn(container);
-        } catch (CoreException e) {
-            // should not happen
-        }
-
+       
         return container;
     }
 
@@ -153,20 +146,6 @@ public class MockObjectFactory {
         when(modelResource.getParent()).thenReturn(parent);
 
         return modelResource;
-    }
-
-    /**
-     * Test must use <code>@PrepareForTest( {ResourcesPlugin.class} )</code> annotation.
-     * 
-     * @return the plugin instance
-     */
-    public static ResourcesPlugin createResourcesPlugin() {
-        mockStatic(ResourcesPlugin.class);
-        ResourcesPlugin plugin = mock(ResourcesPlugin.class);
-        when(ResourcesPlugin.getPlugin()).thenReturn(plugin);
-        IWorkspace workspace = mock(IWorkspace.class);
-        when(ResourcesPlugin.getWorkspace()).thenReturn(workspace);
-        return plugin;
     }
 
     /**
