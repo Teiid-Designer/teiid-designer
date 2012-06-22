@@ -19,6 +19,7 @@ import java.util.Properties;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -45,17 +46,24 @@ public class ExecutionAdminTest {
     
     @Mock
     private EventManager eventManager;
+
+    private ModelWorkspaceMock modelWorkspaceMock;
     
     @Before
     public void beforeEach() {
         MockitoAnnotations.initMocks(this);
         
-    	new ModelWorkspaceMock();
+    	modelWorkspaceMock = new ModelWorkspaceMock();
         
         PROP_DEFS = new ArrayList<PropertyDefinition>(1);
         PropertyDefinition propDef = mock(PropertyDefinition.class);
         when(propDef.getName()).thenReturn("name");
         PROP_DEFS.add(mock(PropertyDefinition.class));
+    }
+    
+    @After
+    public void afterEach() {
+        modelWorkspaceMock.dispose();
     }
 
     private ExecutionAdmin getNewAdmin() throws Exception {

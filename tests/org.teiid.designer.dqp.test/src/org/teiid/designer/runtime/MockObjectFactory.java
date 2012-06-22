@@ -154,5 +154,11 @@ public class MockObjectFactory {
     private MockObjectFactory() {
         // nothing to do
     }
-
+    
+    /**
+     * Ensure that any object created have been unregistered
+     */
+    public static void dispose() {
+    	((RegistrySPI) ModelerCore.getRegistry()).unregister(ModelerCore.DEFAULT_CONTAINER_KEY);
+    }
 }

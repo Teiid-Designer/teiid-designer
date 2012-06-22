@@ -38,6 +38,10 @@ public final class EclipseMock {
         workspaceRootLocation = mock(IPath.class);
         when(workspaceRoot.getLocation()).thenReturn(workspaceRootLocation);
     }
+    
+    public void dispose() {
+        ((RegistrySPI) ModelerCore.getRegistry()).unregister(ModelerCore.WORKSPACE_KEY);
+    }
 
     /**
      * @return workspace

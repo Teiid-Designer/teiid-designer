@@ -59,6 +59,18 @@ public final class ModelWorkspaceMock {
     }
 
     /**
+     * Dispose this {@link ModelWorkspaceMock}.
+     * 
+     * This is necessary to remove the mocked objects from the
+     * {@link ModelerCore} registry that have been registered by this instance.
+     */
+    public void dispose() {
+        ((RegistrySPI) ModelerCore.getRegistry()).unregister(ModelerCore.DEFAULT_CONTAINER_KEY);
+        ((RegistrySPI) ModelerCore.getRegistry()).unregister(ModelerCore.MODEL_EDITOR_KEY);
+        eclipseMock.dispose();
+    }
+
+    /**
      * @return eclipseMock
      */
     public EclipseMock getEclipseMock() {

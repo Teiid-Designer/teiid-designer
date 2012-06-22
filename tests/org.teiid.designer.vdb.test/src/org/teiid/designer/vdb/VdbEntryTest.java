@@ -28,6 +28,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -43,14 +44,20 @@ public class VdbEntryTest {
     private EclipseMock eclipseMock;
     private VdbEntry entry;
     private Vdb vdb;
+    private VdbTest vdbTest;
 
     @Before
     public void before() throws Exception {
-        final VdbTest vdbTest = new VdbTest();
+        vdbTest = new VdbTest();
         vdbTest.before();
         eclipseMock = vdbTest.getEclipseMock();
         vdb = vdbTest.getVdb();
         entry = vdb.addEntry(mock(IPath.class), null);
+    }
+    
+    @After
+    public void afterEach() {
+        vdbTest.after();
     }
 
     @Test

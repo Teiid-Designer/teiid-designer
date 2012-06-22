@@ -27,12 +27,12 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.teiid.core.designer.EclipseMock;
 import org.teiid.core.exception.EmptyArgumentException;
-
-import com.metamatrix.core.util.SmartTestDesignerSuite;
+import org.teiid.core.util.SmartTestDesignerSuite;
 
 public class DdlImporterTest {    
     private static final File TEST_DDL_FILE = SmartTestDesignerSuite.getTestDataFile(DdlImporterTest.class, "createTables.ddl");
@@ -51,6 +51,10 @@ public class DdlImporterTest {
         importer = createImporter(null);
     }
     
+    @After
+    public void tearDown() {
+        eclipseMock.dispose();
+    }
     @Test
     public void shouldAcceptNewModel() {
         

@@ -6,6 +6,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.Properties;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -53,6 +54,11 @@ public class ResourceAnnotationHelperTest {
 		when(me.getModelContents(mr)).thenReturn(modelContents);
 		
 		return mr;
+	}
+	
+	@After
+	public void tearDown() {
+	    ((RegistrySPI) ModelerCore.getRegistry()).unregister(ModelerCore.MODEL_EDITOR_KEY);
 	}
 	
 	@Test

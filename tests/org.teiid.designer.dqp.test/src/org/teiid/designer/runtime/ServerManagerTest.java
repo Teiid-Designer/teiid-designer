@@ -23,6 +23,7 @@ import static org.mockito.Mockito.when;
 
 import java.io.File;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -54,6 +55,12 @@ public class ServerManagerTest {
     public void beforeEach() throws Exception {
         MockitoAnnotations.initMocks(this);
         this.mgr = new ServerManager(null);
+    }
+    
+        
+    @After
+    public void afterEach() throws Exception {
+    	MockObjectFactory.dispose();
     }
 
     @Test

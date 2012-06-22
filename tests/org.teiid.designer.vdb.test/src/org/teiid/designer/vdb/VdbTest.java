@@ -28,6 +28,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.hamcrest.core.IsSame;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -77,6 +78,11 @@ public class VdbTest {
         when(eclipseMock.workspaceRoot().findMember(vdbPath)).thenReturn(vdbFile);
 
         vdb = new Vdb(vdbFile, null);
+    }
+    
+    @After
+    public void after() {
+        eclipseMock.dispose();
     }
 
     /**
