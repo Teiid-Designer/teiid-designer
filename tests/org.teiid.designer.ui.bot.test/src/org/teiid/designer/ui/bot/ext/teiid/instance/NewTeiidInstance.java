@@ -41,6 +41,7 @@ public class NewTeiidInstance {
 		dialog.setUserPort(userPort);
 		dialog.setUserName(userName);
 		dialog.setUserPassword(userPassword);
+		dialog.checkSave();
 		dialog.finish();
 	}
 	

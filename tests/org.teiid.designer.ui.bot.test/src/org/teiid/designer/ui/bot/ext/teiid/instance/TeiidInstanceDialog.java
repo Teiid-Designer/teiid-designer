@@ -33,7 +33,9 @@ public class TeiidInstanceDialog {
 	}
 	
 	public void finish(){
-		new SWTBotWizard().finishWithWait();
+//		new SWTBotWizard().finishWithWait();
+		shell.bot().button("Finish").setFocus();
+		shell.bot().button("Finish").click();
 	}
 	
 	public String getName() {
@@ -106,5 +108,9 @@ public class TeiidInstanceDialog {
 	public void setUserPassword(String userPassword) {
 		shell.bot().textWithLabelInGroup(PASSWORD, TEIID_JDBC_CONNECTION_INFO).setFocus();
 		shell.bot().textWithLabelInGroup(PASSWORD, TEIID_JDBC_CONNECTION_INFO).setText(userPassword);
+	}
+	
+	public void checkSave() {
+		shell.bot().checkBox("Save").select();
 	}
 }

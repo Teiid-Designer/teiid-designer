@@ -1,6 +1,7 @@
 package org.teiid.designer.ui.bot.test;
 
 import org.jboss.tools.ui.bot.ext.config.Annotations.Require;
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.teiid.designer.ui.bot.ext.teiid.editor.ModelEditor;
@@ -144,5 +145,10 @@ public class ModelWizardTest extends TeiidDesignerTestCase{
 				FUNCTION_MODEL_NAME + ".xmi"));
 
 		assertTrue(ModelEditor.getInstance(FUNCTION_MODEL_NAME + ".xmi").isActive());
+	}
+	
+	@AfterClass
+	public static void saveAllEditors() {
+		bot.menu("File").menu("Save All").click();
 	}
 }

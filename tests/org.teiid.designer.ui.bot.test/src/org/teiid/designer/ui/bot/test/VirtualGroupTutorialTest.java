@@ -35,7 +35,7 @@ import org.teiid.designer.ui.bot.test.suite.Properties;
 import org.teiid.designer.ui.bot.test.suite.TeiidDesignerTestCase;
 
 
-@Require(server=@Server(type=ServerType.SOA,version="5.1", state=ServerState.Running), perspective="Teiid Designer")
+@Require(server=@Server(type=ServerType.ALL, state=ServerState.Running), perspective="Teiid Designer")
 public class VirtualGroupTutorialTest extends TeiidDesignerTestCase {
 
 	private static final String PROJECT_NAME = "MyFirstProject";
