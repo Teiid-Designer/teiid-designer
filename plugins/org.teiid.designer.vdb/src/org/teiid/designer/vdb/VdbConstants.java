@@ -29,4 +29,9 @@ public interface VdbConstants {
         String CLASS = "class"; //$NON-NLS-1$
         String CLASSNAME = "name"; //$NON-NLS-1$
     }
+    
+    /** Constants for the SourceHandler extension point */
+    interface Translator {
+        String NAME_KEY = "name"; //$NON-NLS-1$
+    }
 }

@@ -430,6 +430,10 @@ public final class VdbModelEntry extends VdbEntry {
      * 3) No way to tell if an OLD property needs to get removed though
      */
     void updateTranslatorOverrides(Properties props) {
+        // If only ONE property and it's "name", then ignore
+        if( props.size() == 1 && ((String)props.keySet().toArray()[0]).equalsIgnoreCase(VdbConstants.Translator.NAME_KEY) ) {
+            return;
+        }
     	TranslatorOverride to = getTranslatorOverride();
     	String oldTranslator = getTranslator();
     	if( to == null ) {
