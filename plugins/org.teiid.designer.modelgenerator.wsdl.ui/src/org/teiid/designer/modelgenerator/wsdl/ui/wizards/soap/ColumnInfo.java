@@ -10,9 +10,7 @@ package org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.osgi.util.NLS;
 import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
@@ -28,10 +26,14 @@ public class ColumnInfo implements ModelGeneratorWsdlUiConstants {
 	public static final String INTEGER_DATATYPE = "integer"; //$NON-NLS-1$
 	
 	public static final int DEFAULT_WIDTH = 10;
+	private static final char SEPARATOR = '/';
+
+    /** Constant value indicating no segments */
+    private static final String[] NO_SEGMENTS = new String[0];
 	
 	private static final StringNameValidator nameValidator = new RelationalStringNameValidator(false, true);
 	
-	private static final IPath EMPTY_PATH = new Path(StringUtilities.EMPTY_STRING);
+	private final SchemaPath EMPTY_PATH = new SchemaPath(StringUtilities.EMPTY_STRING);
 	
 	/**
 	 * The collection of AttributeInfo objects
@@ -67,12 +69,12 @@ public class ColumnInfo implements ModelGeneratorWsdlUiConstants {
 	 /**
      * The full xml path
      */
-	private IPath fullXmlPath = EMPTY_PATH;
+	private SchemaPath fullXmlPath = EMPTY_PATH;
 	
 	 /**
      * The root xml path
      */
-	private IPath rootXmlPath = EMPTY_PATH;
+	private SchemaPath rootXmlPath = EMPTY_PATH;
 	
 	 /**
      * The xml element
@@ -138,7 +140,7 @@ public class ColumnInfo implements ModelGeneratorWsdlUiConstants {
         if( fullXmlPath == null ) {
         	this.fullXmlPath = EMPTY_PATH;
         } else {
-        	this.fullXmlPath = new Path(fullXmlPath);
+        	this.fullXmlPath = new SchemaPath(fullXmlPath);
         }
         validate();
 	}
@@ -223,11 +225,10 @@ public class ColumnInfo implements ModelGeneratorWsdlUiConstants {
 	 * @param xmlPath the column xmlPath
 	 */
 	public void setRelativePath(String relativePath) {
-        if( relativePath == null ) {
-        	this.fullXmlPath = this.rootXmlPath;
-        } else {
-        	this.fullXmlPath = this.rootXmlPath.append(relativePath);
+        if( relativePath != null ) {
+            this.rootXmlPath.append(relativePath);
         }
+        this.fullXmlPath = new SchemaPath(this.rootXmlPath.toString());
 	}
 	
 	/**
@@ -246,7 +247,8 @@ public class ColumnInfo implements ModelGeneratorWsdlUiConstants {
 		}
 		if( !this.fullXmlPath.isEmpty() ) {
 			if( !this.rootXmlPath.isEmpty() && this.fullXmlPath.toString().indexOf(rootXmlPath.toString()) > -1) {
-				return '/' + this.fullXmlPath.removeFirstSegments(this.rootXmlPath.segmentCount()).toString();
+			    this.fullXmlPath.removeFirstSegments(this.rootXmlPath.segmentCount());
+				return this.fullXmlPath.toString();
 			} else {
 				return this.fullXmlPath.toString();
 			}
@@ -278,14 +280,14 @@ public class ColumnInfo implements ModelGeneratorWsdlUiConstants {
         if( fullPath == null ) {
         	this.fullXmlPath = EMPTY_PATH;
         } else {
-        	this.fullXmlPath = new Path(fullPath);
+        	this.fullXmlPath = new SchemaPath(fullPath);
         }
 	}
 	
 	public void setRootPath(String thePath) {
 		if( thePath != null && thePath.length() > 0 ) {
 			// Need to remove the OLD root path from FULL path
-			IPath oldRelativePath = new Path(getRelativePath());
+		    SchemaPath oldRelativePath = new SchemaPath(getRelativePath());
 			
 			String tmpRoot = thePath;
 			if( thePath.endsWith("/")) { //$NON-NLS-1$
@@ -296,7 +298,7 @@ public class ColumnInfo implements ModelGeneratorWsdlUiConstants {
 			
 			setFullXmlPath(newFullPath); //tmpRoot + oldRelativePath.toString());
 			
-			this.rootXmlPath = new Path(thePath);
+			this.rootXmlPath = new SchemaPath(thePath);
 		} else {
 			this.rootXmlPath = EMPTY_PATH;
 		}
@@ -399,10 +401,129 @@ public class ColumnInfo implements ModelGeneratorWsdlUiConstants {
     public String toString() {
         StringBuilder text = new StringBuilder();
         text.append("Column Info: "); //$NON-NLS-1$
-        text.append("name =").append(getName()); //$NON-NLS-1$
-        text.append(", datatype =").append(getDatatype()); //$NON-NLS-1$
+        text.append("name = ").append(getName()); //$NON-NLS-1$
+        text.append(", datatype = ").append(getDatatype()); //$NON-NLS-1$
+        text.append(", PATH = ").append(getRelativePath()); //$NON-NLS-1$
 
         return text.toString();
+    }
+    
+    class SchemaPath {
+        /** The path segments */
+        private String[] segments;
+        
+        public SchemaPath(String string) {
+            super();
+            segments = computeSegments(string);
+        }
+        
+        public boolean isEmpty() {
+            return segments.length == 0;
+        }
+        
+        public int segmentCount() {
+            return segments.length;
+        }
+        
+        public void append(String string) {
+            String[] tempSegments = computeSegments(string);
+            int segCount = tempSegments.length + segments.length;
+            Collection<String> allSegments = new ArrayList<String>(segments.length);
+            for( String seg : segments ) {
+                allSegments.add(seg);
+            }
+            for( String seg : tempSegments ) {
+                allSegments.add(seg);
+            }
+            
+            segments = allSegments.toArray(new String[segCount]);
+        }
+        
+        public void removeFirstSegments(int nSegs) {
+            int newSegCount = segments.length - nSegs;
+            Collection<String> newSegments = new ArrayList<String>(newSegCount);
+            int i=1;
+            for( String seg : segments ) {
+                if( i > nSegs) {
+                    newSegments.add(seg);
+                }
+                i++;
+            }
+            
+            segments = newSegments.toArray(new String[newSegCount]);
+        }
+        
+        /**
+         * Computes the segment array for the given canonicalized path.
+         */
+        private String[] computeSegments(String path) {
+            // performance sensitive --- avoid creating garbage
+            int segmentCount = computeSegmentCount(path);
+            if (segmentCount == 0)
+                return NO_SEGMENTS;
+            String[] newSegments = new String[segmentCount];
+            int len = path.length();
+            // check for initial slash
+            int firstPosition = (path.charAt(0) == SEPARATOR) ? 1 : 0;
+            // check for UNC
+            if (firstPosition == 1 && len > 1 && (path.charAt(1) == SEPARATOR))
+                firstPosition = 2;
+            int lastPosition = (path.charAt(len - 1) != SEPARATOR) ? len - 1 : len - 2;
+            // for non-empty paths, the number of segments is 
+            // the number of slashes plus 1, ignoring any leading
+            // and trailing slashes
+            int next = firstPosition;
+            for (int i = 0; i < segmentCount; i++) {
+                int start = next;
+                int end = path.indexOf(SEPARATOR, next);
+                if (end == -1) {
+                    newSegments[i] = path.substring(start, lastPosition + 1);
+                } else {
+                    newSegments[i] = path.substring(start, end);
+                }
+                next = end + 1;
+            }
+            return newSegments;
+        }
+        
+        private int computeSegmentCount(String path) {
+            int len = path.length();
+            if (len == 0 || (len == 1 && path.charAt(0) == SEPARATOR)) {
+                return 0;
+            }
+            int count = 1;
+            int prev = -1;
+            int i;
+            while ((i = path.indexOf(SEPARATOR, prev + 1)) != -1) {
+                if (i != prev + 1 && i != len) {
+                    ++count;
+                }
+                prev = i;
+            }
+            if (path.charAt(len - 1) == SEPARATOR) {
+                --count;
+            }
+            return count;
+        }
+        
+        public String toString() {
+            StringBuffer buf = new StringBuffer();
+            
+            int segCount = segmentCount();
+            int nSeg = 0;
+            for( String seg : segments ) {
+                if( nSeg == 0 && seg.charAt(0) != SEPARATOR) {
+                    buf.append(SEPARATOR);
+                }
+                buf.append(seg);
+                if( nSeg < segCount-1 ) {
+                    buf.append(SEPARATOR);
+                }
+                nSeg++;
+            }
+
+            return buf.toString();
+        }
     }
 }
 
