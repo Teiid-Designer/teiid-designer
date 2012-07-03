@@ -149,6 +149,8 @@ public class ModelWizardTest extends TeiidDesignerTestCase{
 	
 	@AfterClass
 	public static void saveAllEditors() {
-		bot.menu("File").menu("Save All").click();
+		if(bot.menu("File").menu("Save All").isEnabled()) {
+			bot.menu("File").menu("Save All").click();
+		}
 	}
 }

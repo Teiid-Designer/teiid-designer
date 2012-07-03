@@ -15,12 +15,7 @@
 	</parent>
 
 	<properties>
-		<jbosstools.test.teiid-7>teiid-7.7.0.Final</jbosstools.test.teiid-7>
-		<jbosstools.test.jboss-as-5>jboss-5.1.0.GA</jbosstools.test.jboss-as-5>
-		<jbosstools.test.jboss-as-5.home>${requirement.build.root}/${jbosstools.test.jboss-as-5}</jbosstools.test.jboss-as-5.home>
-		<configurations.dir>resources/project_config_files</configurations.dir>
-		<additionalSystemProperties></additionalSystemProperties>
-		<systemProperties>${additionalSystemProperties} -Djbosstools.test.jboss-as-5.home=${jbosstools.test.jboss-as-5.home} -Dtest.configurations.dir=${configurations.dir} -Dorg.eclipse.swtbot.screenshots.dir=${project.build.directory}/screenshots</systemProperties>
+		<systemProperties>-Dswtbot.test.properties.file=./org.teiid.designer.ui.bot.test.properties</systemProperties>
 		<test.class>org.teiid.designer.ui.bot.test.suite.TeiidDesignerAllTests</test.class>
 	</properties>
 
@@ -35,6 +30,65 @@
 	
 	<build>
 		<plugins>
+			<!-- Install AS and Teiid -->
+			<plugin>
+				<groupId>com.googlecode.maven-download-plugin</groupId>
+				<artifactId>maven-download-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>install-as-5.1.0</id>
+						<phase>pre-integration-test</phase>
+						<goals>
+							<goal>wget</goal>
+						</goals>
+						<configuration>
+							<url>http://repository.jboss.org/sourceforge/jboss-5.1.0.GA.zip</url>
+							<md5>78322c75ca0c13002a04418b4a8bc920</md5>
+							<unpack>true</unpack>
+						</configuration>
+					</execution>
+					<execution>
+						<id>get-teiid</id>
+						<phase>pre-integration-test</phase>
+						<goals>
+							<goal>wget</goal>
+						</goals>
+						<configuration>
+							<url>http://sourceforge.net/projects/teiid/files/teiid/7.7/Final/teiid-7.7.0.Final-jboss-dist.zip</url>
+							<md5>d5107e33b5c18673cbc74698e08b7612</md5>
+							<unpack>true</unpack>
+							<outputDirectory>${requirementsDirectory}/jboss-5.1.0.GA/server/default</outputDirectory>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>${maven.antrun.plugin.version}</version>
+				<executions>
+					<execution>
+						<id>prepare-teiid</id>
+						<phase>pre-integration-test</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<tasks>
+  								 <echo message="Copying drivers..."/>
+								 <copy todir="${requirementsDirectory}/jboss-5.1.0.GA/server/default/lib">
+    								<fileset dir="${basedir}/lib">
+    									  <include name="ojdbc*.jar"/>
+    									  <include name="sqljdbc*.jar"/>
+    								</fileset>
+  								 </copy>
+  								 <echo message="Drivers copied"/>
+							</tasks>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>tycho-surefire-plugin</artifactId>
@@ -69,80 +123,7 @@
 					</dependencies>
 				</configuration>
 			</plugin>
-
-			<plugin>
-				<artifactId>maven-antrun-plugin</artifactId>
-				<version>${maven.antrun.plugin.version}</version>
-				<executions>
-					<execution>
-						<id>prepare-teiid</id>
-						<phase>pre-integration-test</phase>
-						<goals>
-							<goal>run</goal>
-						</goals>
-						<configuration>
-							<tasks>
-								 <echo message="Installing Teiid..."/>
-								 <copy todir="${requirement.build.root}/${jbosstools.test.jboss-as-5}/server/default">
-    								<fileset dir="${requirement.build.root}/${jbosstools.test.teiid-7}" />
-  								 </copy>
-  								 <echo message="Teiid installed"/>
-  								 
-  								 <echo message="Copying drivers..."/>
-								 <copy todir="${requirement.build.root}/${jbosstools.test.jboss-as-5}/server/default/lib">
-    								<fileset dir="${basedir}/lib">
-    									  <include name="ojdbc*.jar"/>
-    									  <include name="sqljdbc*.jar"/>
-    								</fileset>
-  								 </copy>
-  								 <echo message="Drivers copied"/>
-							</tasks>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
 			
-			<plugin>
-				<groupId>org.eclipse.tycho</groupId>
-				<artifactId>target-platform-configuration</artifactId>
-				<version>${tychoVersion}</version>
-				<configuration>
-					<resolver>p2</resolver>
-					<ignoreTychoRepositories>true</ignoreTychoRepositories>
-					<environments>
-						<environment>
-							<os>macosx</os>
-							<ws>cocoa</ws>
-							<arch>x86</arch>
-						</environment>
-						<environment>
-							<os>macosx</os>
-							<ws>cocoa</ws>
-							<arch>x86_64</arch>
-						</environment>
-						<environment>
-							<os>win32</os>
-							<ws>win32</ws>
-							<arch>x86</arch>
-						</environment>
-						<environment>
-							<os>win32</os>
-							<ws>win32</ws>
-							<arch>x86_64</arch>
-						</environment>
-						<environment>
-							<os>linux</os>
-							<ws>gtk</ws>
-							<arch>x86</arch>
-						</environment>
-						<environment>
-							<os>linux</os>
-							<ws>gtk</ws>
-							<arch>x86_64</arch>
-						</environment>
-					</environments>
-				</configuration>
-			</plugin>
 		</plugins>
 	</build>
 </project>
