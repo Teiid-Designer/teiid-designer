@@ -20,9 +20,9 @@
 <book>
   <bookinfo>
     <title>Teiid Designer User Guide</title>
-    <releaseinfo>7.7.0
+    <releaseinfo>7.7.1
     </releaseinfo>
-    <productnumber>7.7.0
+    <productnumber>7.7.1
     </productnumber>
     <issuenum>1</issuenum>
     <mediaobject>
@@ -44,6 +44,7 @@
   
 
   <xi:include href="intro.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="dive_right_in.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
   <xi:include href="newmodels.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
   <xi:include href="importers.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
   <xi:include href="editingmodelobjects.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
@@ -51,6 +52,7 @@
   <xi:include href="editmodelsandprojects.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
   <xi:include href="testmodels.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
   <xi:include href="searching.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="supported_data_sources.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
   <xi:include href="preferences.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
   <xi:include href="ui-reference.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 </book>

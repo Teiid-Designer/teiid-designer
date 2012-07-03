@@ -126,6 +126,10 @@ public final class ServerWizard extends Wizard {
      */
     @Override
     public boolean performFinish() {
+        if (! this.page.isPageComplete()) {
+            return false;
+        }
+        
         // first let page know that wizard finished and was not canceled
         this.page.performFinish();
 

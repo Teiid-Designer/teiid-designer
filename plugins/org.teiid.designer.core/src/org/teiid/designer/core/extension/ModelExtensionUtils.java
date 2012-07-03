@@ -389,6 +389,7 @@ class ModelExtensionUtils {
 
             try {
                 Annotation annotation = getModelObjectAnnotationImpl(modelObject, true);
+                succeeded = true;
                 return annotation;
             } finally {
                 // if we started the transaction, commit it.
@@ -455,7 +456,9 @@ class ModelExtensionUtils {
             boolean succeeded = false;
 
             try {
-                return getResourceAnnotationImpl(modelResource, true);
+            	Annotation annotation = getResourceAnnotationImpl(modelResource, true);
+            	succeeded = true;
+                return annotation;
             } finally {
                 // if we started the transaction, commit it.
                 if (requiredStart) {
@@ -706,6 +709,7 @@ class ModelExtensionUtils {
                 if (annotation.getTags().isEmpty()) {
                     ModelResourceContainerFactory.deleteAnnotation(annotation);
                 }
+                succeeded = true;
             } finally {
                 // if we started the transaction, commit it.
                 if (requiredStart) {
@@ -923,6 +927,7 @@ class ModelExtensionUtils {
                     }
                 }
             }
+            succeeded = true;
         } finally {
             // if we started the transaction, commit it.
             if (requiredStart) {

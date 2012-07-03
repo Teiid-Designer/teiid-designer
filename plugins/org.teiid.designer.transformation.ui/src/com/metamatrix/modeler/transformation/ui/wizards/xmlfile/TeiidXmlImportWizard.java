@@ -31,6 +31,8 @@ public class TeiidXmlImportWizard extends TeiidMetadataImportWizard {
         return Util.getString(I18N_PREFIX + id);
     }
 
+    TeiidXmlImportOptionsPage optionsPage;
+    
     TeiidXmlImportSourcePage sourcePage;
     
     private Properties designerProperties;
@@ -48,7 +50,7 @@ public class TeiidXmlImportWizard extends TeiidMetadataImportWizard {
 	
 	@Override
 	public void addPages() {
-		TeiidXmlImportOptionsPage optionsPage = new TeiidXmlImportOptionsPage(getFileInfo());
+		this.optionsPage = new TeiidXmlImportOptionsPage(getFileInfo());
 		addPage(optionsPage);
 		
         this.sourcePage = new TeiidXmlImportSourcePage(getFileInfo());
@@ -96,13 +98,18 @@ public class TeiidXmlImportWizard extends TeiidMetadataImportWizard {
 		}
 
         // Check for Sources and View Folder from property definitions
+		IContainer project = DesignerPropertiesUtil.getProject(designerProperties);
         IContainer srcFolderResrc = DesignerPropertiesUtil.getSourcesFolder(this.designerProperties);
         IContainer viewFolderResrc = DesignerPropertiesUtil.getViewsFolder(this.designerProperties);
         if (srcFolderResrc != null) {
             getFileInfo().setSourceModelLocation(srcFolderResrc.getFullPath());
+        } else if( project != null ) {
+        	getFileInfo().setSourceModelLocation(project.getFullPath());
         }
         if (viewFolderResrc != null) {
             getFileInfo().setViewModelLocation(viewFolderResrc.getFullPath());
+        } else if( project != null ) {
+        	getFileInfo().setViewModelLocation(project.getFullPath());
         }
     	
         // Get Connection Profile from property definitions
@@ -111,5 +118,7 @@ public class TeiidXmlImportWizard extends TeiidMetadataImportWizard {
             // Set properties - needs later to determine the connection profile
             sourcePage.setDesignerProperties(this.designerProperties);
 		}
+		
+		this.optionsPage.setDesignerProperties(this.designerProperties);
 	}
 }

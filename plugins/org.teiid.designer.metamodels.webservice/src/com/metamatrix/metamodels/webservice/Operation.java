@@ -160,5 +160,35 @@ public interface Operation extends WebServiceComponent {
      * @generated
      */
     void setInterface( Interface value );
+    
+    /**
+     * Returns the value of the '<em><b>Update Count</b></em>' attribute.
+     * The default value is <code>"AUTO"</code>.
+     * The literals are from the enumeration {@link com.metamatrix.metamodels.webservice.OperationUpdateCount}.
+     * <!-- begin-user-doc -->
+     * <p>
+     * If the meaning of the '<em>Update Count</em>' attribute isn't clear,
+     * there really should be more of a description here...
+     * </p>
+     * <!-- end-user-doc -->
+     * @return the value of the '<em>Update Count</em>' attribute.
+     * @see com.metamatrix.metamodels.webservice.OperationUpdateCount
+     * @see #setUpdateCount(OperationUpdateCount)
+     * @see com.metamatrix.metamodels.webservice.WebServicePackage#getOperation_UpdateCount()
+     * @model default="AUTO"
+     * @generated
+     */
+    OperationUpdateCount getUpdateCount();
+    
+    /**
+     * Sets the value of the '{@link com.metamatrix.metamodels.webservice.Operation#getUpdateCount <em>Update Count</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @param value the new value of the '<em>Update Count</em>' attribute.
+     * @see com.metamatrix.metamodels.webservice.OperationUpdateCount
+     * @see #getUpdateCount()
+     * @generated
+     */
+    void setUpdateCount(OperationUpdateCount newUpdateCount);
 
 } // Operation

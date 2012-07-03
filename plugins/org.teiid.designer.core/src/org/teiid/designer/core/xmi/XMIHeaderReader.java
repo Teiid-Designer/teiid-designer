@@ -20,6 +20,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.teiid.core.TeiidException;
 
 public class XMIHeaderReader {
@@ -47,6 +48,15 @@ public class XMIHeaderReader {
     public static XMIHeader readHeader( final File file ) throws TeiidException {
         final XMIHeaderReader reader = new XMIHeaderReader();
         return reader.read(file);
+    }
+    
+    public static XMIHeader readHeader( final Resource resource ) throws TeiidException {
+        final XMIHeaderReader reader = new XMIHeaderReader();
+        File theFile = new File(resource.getURI().toFileString());
+        if( theFile.exists() ) {
+        	return reader.read(theFile);
+        }
+        return null;
     }
 
     public static XMIHeader readHeader( final InputStream istream ) throws TeiidException {

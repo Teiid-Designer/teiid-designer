@@ -8,8 +8,14 @@
 package org.teiid.designer.runtime.ui.extension;
 
 import static com.metamatrix.modeler.dqp.ui.DqpUiConstants.UTIL;
+import static org.teiid.designer.runtime.extension.rest.RestModelExtensionConstants.NAMESPACE_PROVIDER;
 
+import org.eclipse.emf.ecore.EObject;
+import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.ExtensionConstants.MedOperations;
+import org.teiid.designer.extension.registry.ModelExtensionRegistry;
+import org.teiid.designer.runtime.extension.rest.RestModelExtensionAssistant;
+import org.teiid.designer.runtime.extension.rest.RestModelExtensionConstants;
 
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.metamodels.relational.Procedure;
@@ -79,6 +85,30 @@ public class ApplyRestWarPropertiesAction extends RestWarPropertiesAction {
     @Override
     protected void runImpl( Procedure procedure ) throws Exception {
         getNewAssistant().saveModelExtensionDefinition(procedure);
+    }
+    
+    public static void applyRestWarProperties(EObject procedure) throws Exception {
+    	if( procedure instanceof Procedure) {
+			ModelExtensionRegistry registry = ExtensionPlugin.getInstance().getRegistry();
+			RestModelExtensionAssistant assistant = (RestModelExtensionAssistant)registry.getModelExtensionAssistant(NAMESPACE_PROVIDER.getNamespacePrefix());
+			assistant.saveModelExtensionDefinition(procedure);
+    	}
+    }
+    
+    public static void setRestMethod(EObject procedure, String newValue) throws Exception {
+    	if( procedure instanceof Procedure) {
+			ModelExtensionRegistry registry = ExtensionPlugin.getInstance().getRegistry();
+			RestModelExtensionAssistant assistant = (RestModelExtensionAssistant)registry.getModelExtensionAssistant(NAMESPACE_PROVIDER.getNamespacePrefix());
+			assistant.setPropertyValue(procedure, RestModelExtensionConstants.PropertyIds.REST_METHOD, newValue);
+    	}
+    }
+    
+    public static void setRestUri(EObject procedure, String newValue) throws Exception {
+    	if( procedure instanceof Procedure) {
+			ModelExtensionRegistry registry = ExtensionPlugin.getInstance().getRegistry();
+			RestModelExtensionAssistant assistant = (RestModelExtensionAssistant)registry.getModelExtensionAssistant(NAMESPACE_PROVIDER.getNamespacePrefix());
+			assistant.setPropertyValue(procedure, RestModelExtensionConstants.PropertyIds.URI, newValue);
+    	}
     }
 
 }

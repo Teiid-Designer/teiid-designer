@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.teiid.designer.ui;singleton:=true
-Bundle-Version: 7.7.0.qualifier
+Bundle-Version: 7.7.1.qualifier
 Bundle-Activator: com.metamatrix.modeler.ui.UiPlugin
 Bundle-Vendor: %pluginProvider
 Bundle-Localization: plugin
@@ -39,7 +39,8 @@ Export-Package: com.metamatrix.modeler.internal.ui,
  com.metamatrix.modeler.ui.search,
  com.metamatrix.modeler.ui.undo,
  com.metamatrix.modeler.ui.viewsupport,
- com.metamatrix.modeler.ui.wizards
+ com.metamatrix.modeler.ui.wizards,
+ com.metamatrix.modeler.ui.wizards.wsdl
 Require-Bundle: org.eclipse.ui.cheatsheets,
  org.eclipse.ui.ide,
  org.eclipse.ui.views,

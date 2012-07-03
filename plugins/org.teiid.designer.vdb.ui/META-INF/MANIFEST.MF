@@ -2,13 +2,14 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.teiid.designer.vdb.ui;singleton:=true
-Bundle-Version: 7.7.0.qualifier
+Bundle-Version: 7.7.1.qualifier
 Bundle-Activator: com.metamatrix.modeler.vdb.ui.VdbUiPlugin
 Bundle-Vendor: %pluginProvider
 Bundle-Localization: plugin
 Export-Package: com.metamatrix.modeler.internal.vdb.ui.editor,
  com.metamatrix.modeler.internal.vdb.ui.wizards,
- com.metamatrix.modeler.vdb.ui
+ com.metamatrix.modeler.vdb.ui,
+ com.metamatrix.modeler.vdb.ui.util
 Require-Bundle: org.teiid.designer.ui,
  org.teiid.designer.ui.common,
  org.teiid.designer.vdb,
@@ -30,6 +31,7 @@ Require-Bundle: org.teiid.designer.ui,
  org.teiid.designer.roles.ui,
  org.teiid.designer.roles,
  org.eclipse.emf.edit,
- org.teiid.designer.metamodels.relational
+ org.teiid.designer.metamodels.relational,
+ org.teiid.designer.legacy
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

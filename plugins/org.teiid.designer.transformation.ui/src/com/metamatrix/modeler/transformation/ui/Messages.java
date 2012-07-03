@@ -10,12 +10,36 @@ package com.metamatrix.modeler.transformation.ui;
 import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS {
-	
+    public static String Browse;
+    public static String Edit;
+    public static String Name;
+    public static String Path;
+    public static String RootPath;
+    public static String ColumnInfo;
+    public static String ColumnName;
+    public static String DefaultValue;
+    public static String ForOrdinality;
+    public static String GeneratedSQLStatement;
+    public static String XMLFile;
+    public static String XmlConfigPageTitle;
+    public static String XmlConfigPageInitialMessage;
+    public static String XmlFileContents;
+    public static String RootPathTooltip;
+    public static String CreateColumn;
+    public static String SetAsRootPath;
+    public static String InvalidPathWarning;
+    
     public static String createRelationalViewActionText;
     public static String createRelationalViewTitle;
     public static String createRelationalViewInitialMessage;
     public static String createRelationalViewExceptionMessage;
     public static String createRelationalViewHelpText;
+    
+    public static String createRelationalViewProcedureActionText;
+    public static String createRelationalViewProcedureTitle;
+    public static String createRelationalViewProcedureInitialMessage;
+    public static String createRelationalViewProcedureExceptionMessage;
+    public static String createRelationalViewProcedureHelpText;
 
     public static String sqlLabel;
     public static String sqlDescriptionLabel;
@@ -29,6 +53,7 @@ public class Messages extends NLS {
     public static String moveUpLabel;
     public static String moveDownLabel;
 
+    public static String description;
     public static String modelFileLabel;
     public static String nameInSourceLabel;
     public static String cardinalityLabel;
@@ -37,6 +62,8 @@ public class Messages extends NLS {
     public static String columnNameLabel;
     public static String dataTypeLabel;
     public static String lengthLabel;
+    public static String parametersLabel;
+    public static String parameterNameLabel;
     public static String cardinalityErrorTitle;
     public static String cardinalityMustBeAnInteger;
     public static String validationOkCreateObject;
@@ -55,9 +82,15 @@ public class Messages extends NLS {
     public static String sqlTemplateDialogDelDefaultProcLabel;
     public static String sqlTemplateDialogSoapCreateProcLabel;
     public static String sqlTemplateDialogSoapExtractProcLabel;
+    public static String sqlTemplateDialogRestProcLabel;
     public static String sqlTemplateDialogSqlAreaGroup;
     public static String sqlTemplateDialogSelectTabTitle;
     public static String sqlTemplateDialogProceduresTabTitle;
+    
+    public static String DefaultUpdateMessageOK;
+    public static String DefaultUpdateMessageAmbigious;
+    public static String DefaultUpdateMessageOverride;
+    
     
     static {
         NLS.initializeMessages("com.metamatrix.modeler.transformation.ui.messages", Messages.class); //$NON-NLS-1$

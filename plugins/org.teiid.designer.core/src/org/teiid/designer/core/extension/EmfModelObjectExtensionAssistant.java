@@ -404,7 +404,7 @@ public class EmfModelObjectExtensionAssistant extends ModelObjectExtensionAssist
         CoreArgCheck.isInstanceOf(EObject.class, modelObject);
 
         boolean valueIsDefault = CoreStringUtil.equals(propDefn.getDefaultValue(), newValue);
-        Annotation annotation = ModelExtensionUtils.getModelObjectAnnotation((EObject)modelObject, false);
+        Annotation annotation = ModelExtensionUtils.getModelObjectAnnotation((EObject)modelObject, true);
 
         // default values are not saved in the model object annotation
         if (valueIsDefault) {

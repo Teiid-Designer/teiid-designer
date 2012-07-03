@@ -1,0 +1,599 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<!-- ####### GUIDES AND CHEAT SHEETS ######################################## -->
+
+<chapter id="dive-right-in-chapter">
+	<title>Dive Right In!</title>
+	
+	<!-- <para><emphasis role="bold">Go To:  <ulink url="index.html">Table of Contents</ulink></emphasis></para>  -->
+
+    <para>We are going to dive right into a couple examples of common tasks in this section.  These examples will give you a quick 
+    introduction to the capabilities that are built into Designer to assist you with common design tasks.  Specifically, we will
+    introduce the following concepts:
+    </para>	
+	<itemizedlist>
+		<listitem>
+		    <para><emphasis role="bold">Guides</emphasis></para>
+		    <para>The <emphasis role="bold">Guides View</emphasis> is a good starting point for many common modeling tasks. The view includes categorized Modeling Actions 
+		    and also links to Cheat Sheets for common tasks.  The categorized Modeling Actions simply group together all of the actions
+		    that you'll need to accomplish a task.  You can launch the actions directly from the Guides view, rather than hunting through
+		    the various Designer menus.</para>
+	    </listitem>
+		<listitem>
+		    <para><emphasis role="bold">Cheat Sheets</emphasis></para>
+		    <para>The <emphasis role="bold">Cheat Sheets</emphasis> go beyond even the categorized Action Sets, and walk you step-by-step through some common tasks.
+		    At each step, the data entered in the previous step is carried through the process when possible.</para>
+		</listitem>
+	</itemizedlist>
+    <para>After seeing the Guides and Cheat Sheets in action, subsequent chapters will offer detailed explanations of the various 
+    concepts and actions.
+    </para> 
+	
+	<!-- ####### GUIDE EXAMPLES SECTION ######################################## -->
+	
+	<section id="guide-examples-section">
+		<title>Guide Example</title>
+		<para>In this section, we introduce the <emphasis role="bold">Guides View</emphasis> by walking through a simple example.  For this example, we will follow
+		the <emphasis role="bold">Model JDBC Source</emphasis> Action Set.  The actions appear in the following order:
+		</para>
+        <orderedlist>
+            <listitem><emphasis role="bold">Define Teiid Model Project</emphasis></listitem>
+            <listitem><emphasis role="bold">Create JDBC connection</emphasis></listitem>
+            <listitem><emphasis role="bold">Create source model for JDBC data source</emphasis></listitem>
+            <listitem><emphasis role="bold">Preview Data</emphasis></listitem>
+            <listitem><emphasis role="bold">Define VDB</emphasis></listitem>
+            <listitem><emphasis role="bold">Execute VDB</emphasis></listitem>
+        </orderedlist>
+        <para>The action names are self explanatory.  We will create a new "Model Project" in the workspace, then define our connection
+        properties to a MySQL database.  We will then connect to the database and import the 'metadata', creating a source model in
+        Designer.  Next we will 'preview' the database contents.  Finally we will define a 'VDB' and then deploy it to a running
+        Teiid Server to execute.
+        </para>
+		
+        <section id="guide-example-model-jdbc-section">
+            <title>Model a JDBC Source</title>
+
+            <para>This section shows how to Model a JDBC Source, using the Guide View action set.  We will connect to a MySQL database
+            for this example, but you can use the same process to connect to any supported database.</para>
+        <orderedlist>
+            <listitem>
+                <para><emphasis role="bold">Open Guides View</emphasis></para>
+                <para>
+                    To open the 
+                    <emphasis role="bold">Teiid Designer's Guides</emphasis>
+                    view, select the main menu's
+                    <emphasis role="bold">Window > Show View > Other...</emphasis>
+                    and select the
+                    <emphasis role="bold">Teiid Designer > Guides</emphasis>
+                    view in the dialog.
+                </para>
+	            <para>The Guides view is shown below, with the <emphasis role="bold">Model JDBC Source</emphasis> Action Set
+	            selected:
+	            </para>
+	            <figure id="guides-jdbc-view-figure">
+	                <title>Guides View</title>
+	                <mediaobject>
+	                    <imageobject>
+	                        <imagedata fileref="images/screencaps/guides-JDBC-view.png"/>
+	                    </imageobject>
+	                </mediaobject>
+	            </figure>
+            </listitem>
+            
+            <listitem>
+                <para><emphasis role="bold">Define Teiid Model Project</emphasis></para>
+                <para>
+                    The <emphasis role="bold">Define Teiid Model Project</emphasis> action launches the 
+                    <emphasis role="bold">New Model Project Wizard</emphasis>.  In the Action Set
+                    list, double-click the action (or select it, then click 'Execute selected action').  The wizard is launched
+                    as shown below:
+                </para>
+                <figure id="guides-newproj1-figure">
+                    <title>New Project Wizard</title>
+                    <mediaobject>
+                        <imageobject>
+                            <imagedata fileref="images/screencaps/guides-newproj-1.png"/>
+                        </imageobject>
+                    </mediaobject>
+                </figure>
+                <para>
+                    Enter a project name, e.g. 'MyProject' for the name.  Then click <emphasis role="bold">Next</emphasis>.  The next page of the wizard is shown
+                    below:
+                </para>
+                <figure id="guides-newproj2-figure">
+                    <title>New Project Folders</title>
+                    <mediaobject>
+                        <imageobject>
+                            <imagedata fileref="images/screencaps/guides-newproj-2.png"/>
+                        </imageobject>
+                    </mediaobject>
+                </figure>
+                <para>
+                    Under 'Create Folders', de-select 'schemas' and 'web_services' - we won't need them for this example.  Now, click
+                    <emphasis role="bold">Finish</emphasis> to exit the wizard.  The project has now been created - your Model Explorer view should like like this:
+                </para>
+                <figure id="guides-explorer-afterProjCreate-figure">
+                    <title>Model Explorer</title>
+                    <mediaobject>
+                        <imageobject>
+                            <imagedata fileref="images/screencaps/guides-explorer-afterProjCreate.png"/>
+                        </imageobject>
+                    </mediaobject>
+                </figure>
+            </listitem>
+            
+            <listitem>
+                <para><emphasis role="bold">Create JDBC connection</emphasis></para>
+                <para>
+                    The <emphasis role="bold">Create JDBC connection</emphasis> action will create the 'Connection profile' for your database.  The connection
+                    profile defines the properties and driver to be used when connecting to the database.  In the Action Set
+                    list, double-click the action (or select it, then click 'Execute selected action').  The wizard is launched
+                    as shown below:
+                </para>
+                <figure id="guides-connprofile1-figure">
+                    <title>Connection Profile Name and Type</title>
+                    <mediaobject>
+                        <imageobject>
+                            <imagedata fileref="images/screencaps/guides-connprofile-1.png"/>
+                        </imageobject>
+                    </mediaobject>
+                </figure>
+                <para>
+                    Select the type of database that you are connecting to (e.g. MySQL), and enter a name for the connection
+                    profile, e.g. 'TestMySQL'.  Click <emphasis role="bold">Next</emphasis>.
+                </para>
+                <figure id="guides-connprofile2-figure">
+                    <title>Connection Profile properties</title>
+                    <mediaobject>
+                        <imageobject>
+                            <imagedata fileref="images/screencaps/guides-connprofile-2.png"/>
+                        </imageobject>
+                    </mediaobject>
+                </figure>
+                <para>
+                    Now, select the driver and enter the login properties for your database.  Click <emphasis role="bold">Finish</emphasis> to complete the
+                    profile creation.
+                </para>
+            </listitem>
+            
+            <listitem>
+                <para><emphasis role="bold">Create source model for JDBC data source</emphasis></para>
+                <para>
+                    The <emphasis role="bold">Create source model for JDBC data source</emphasis> action will now utilitze the 
+                    <emphasis role="bold">Connection profile</emphasis> that you just created, to import the metadata from the database 
+                    to create your Teiid Source Model.  In the Action Set list, double-click the action (or select it, then click 'Execute selected action').  The wizard is launched
+                    as shown below:
+                </para>
+                <figure id="guides-import1-figure">
+                    <title>Select Connection Profile</title>
+                    <mediaobject>
+                        <imageobject>
+                            <imagedata fileref="images/screencaps/guides-import-1.png"/>
+                        </imageobject>
+                    </mediaobject>
+                </figure>
+                <para>
+                    On this page, select the 'TestMySQL' Connection profile that you created in the previous step.  
+                    Click <emphasis role="bold">Next</emphasis>.
+                </para>
+                <figure id="guides-import2-figure">
+                    <title>Select Database Metadata</title>
+                    <mediaobject>
+                        <imageobject>
+                            <imagedata fileref="images/screencaps/guides-import-2.png"/>
+                        </imageobject>
+                    </mediaobject>
+                </figure>
+                <para>
+                    On this page, select the database metadata that you want to import.  When finished, click <emphasis role="bold">Next</emphasis>.
+                </para>
+                <figure id="guides-import3-figure">
+                    <title>Select Database Objects</title>
+                    <mediaobject>
+                        <imageobject>
+                            <imagedata fileref="images/screencaps/guides-import-3.png"/>
+                        </imageobject>
+                    </mediaobject>
+                </figure>
+                <para>
+                    On this page, select the specific objects from the database that you want to import.  When finished, 
+                    click <emphasis role="bold">Next</emphasis>.
+                </para>
+                <figure id="guides-import4-figure">
+                    <title>Import Options</title>
+                    <mediaobject>
+                        <imageobject>
+                            <imagedata fileref="images/screencaps/guides-import-4.png"/>
+                        </imageobject>
+                    </mediaobject>
+                </figure>
+                <para>
+                    Finally, choose the name for the model to be created (defaults to 'profileName'.xmi).  The 'Into Folder' 
+                    field defines the target location for your new model.  Select the 'MyProject/sources' folder.  Now,
+                    click <emphasis role="bold">Finish</emphasis>.  The source model has now been created - your Model Explorer view should like like this:
+                </para>
+                <figure id="guides-explorer-afterImport-figure">
+                    <title>Model Explorer</title>
+                    <mediaobject>
+                        <imageobject>
+                            <imagedata fileref="images/screencaps/guides-explorer-afterImport.png"/>
+                        </imageobject>
+                    </mediaobject>
+                </figure>
+            </listitem>
+            
+            <listitem>
+                <para><emphasis role="bold">Preview Data</emphasis></para>
+                <para>
+                    All execution capabilities in Designer (Preview Data, VDB execution) require you to connect to a 
+                    running Teiid Server.  See <xref linkend="teiid-view" /> for instructions on establishing a Teiid Server connection.
+                    Once you are connected to a Teiid Server, you can proceed with the following steps.   
+                </para>
+                <para>
+                    The <emphasis role="bold">Preview Data</emphasis> action allows you to preview a sample of data rows from your source.  
+                    In the Action Set list, double-click the action (or select it, then click 'Execute selected action').  In the dialog, select the
+                    source table you want to preview, as shown below: 
+                </para>
+                <figure id="guides-previewSelect-figure">
+                    <title>Select Preview Table</title>
+                    <mediaobject>
+                        <imageobject>
+                            <imagedata fileref="images/screencaps/guides-previewSelect.png"/>
+                        </imageobject>
+                    </mediaobject>
+                </figure>
+                <para>
+                    After selecting the table, click <emphasis role="bold">OK</emphasis>.  Now, the preview results will be displayed:
+                </para>
+                <figure id="guides-previewResults-figure">
+                    <title>Preview Results</title>
+                    <mediaobject>
+                        <imageobject>
+                            <imagedata fileref="images/screencaps/guides-previewResults.png"/>
+                        </imageobject>
+                    </mediaobject>
+                </figure>
+            </listitem>
+            <listitem>
+                <para><emphasis role="bold">Define VDB</emphasis></para>
+                <para>
+                    The <emphasis role="bold">Define VDB</emphasis> action allows you to create a VDB (Virtual Database) artifact for deployment to a Teiid Server.
+                    In the Action Set list, double-click the action (or select it, then click 'Execute selected action').  The following
+                    dialog is displayed: 
+                </para>
+                <figure id="guides-createVDB-figure">
+                    <title>New VDB</title>
+                    <mediaobject>
+                        <imageobject>
+                            <imagedata fileref="images/screencaps/guides-createVDB-1.png"/>
+                        </imageobject>
+                    </mediaobject>
+                </figure>
+                <para>
+                    In the dialog, select the target 'In Folder' location where the VDB will be placed.  Enter a Name for the VDB,
+                    for example 'myVDB'.  Finally, select the models that will be included in the VDB.  When finished, click 
+                    <emphasis role="bold">Finish</emphasis>.
+                    The VDB will be created in your Teiid Model Project - as shown in the following figure.
+                </para>
+                <figure id="guides-explorer-afterCreateVDB-figure">
+                    <title>Model Explorer</title>
+                    <mediaobject>
+                        <imageobject>
+                            <imagedata fileref="images/screencaps/guides-explorer-afterCreateVDB.png"/>
+                        </imageobject>
+                    </mediaobject>
+                </figure>
+            </listitem>
+            <listitem>
+                <para><emphasis role="bold">Execute VDB</emphasis></para>
+                <para>
+                    Finally, the <emphasis role="bold">Execute VDB</emphasis> action allows you to execute your VDB and run sample 
+                    queries against it.  In the Action Set list, double-click the action (or select it, then click 'Execute selected action').  
+                    In the dialog, select the VDB you want to execute, then click <emphasis role="bold">OK</emphasis>.  The VDB will be deployed and
+                    executed, and the perpective will switch to the 'Database Development' perspective.  You can now
+                    run queries against the VDB, as show in the following example:
+                </para>
+                <figure id="guides-executeVDB-figure">
+                    <title>Execute VDB Example</title>
+                    <mediaobject>
+                        <imageobject>
+                            <imagedata fileref="images/screencaps/guides-executeVDB.png"/>
+                        </imageobject>
+                    </mediaobject>
+                </figure>
+           </listitem>
+        </orderedlist>
+        </section>
+	</section>
+	
+	<!-- ####### CHEAT SHEET EXAMPLES SECTION ######################################## -->
+	
+	<section id="cheatsheet-examples-section">
+		<title>Cheat Sheet Example</title>
+        <para>In this section, we introduce <emphasis role="bold">Cheat Sheets</emphasis> by walking through a simple example.  For this example, we will follow
+        the <emphasis role="bold">Consume a SOAP Web Service</emphasis> Cheat Sheet.
+        </para>
+        <section id="cheatsheet-example-consume-soapws-section">
+            <title>Consume a SOAP Web Service</title>
+
+            <para>This section shows how to consume a SOAP Web Service, using a Cheat Sheet.  We will demonstrate connection to
+            a publicly accessible web service.  You can use this process as an example for modeling other web services</para>
+
+            <orderedlist>
+            <listitem>
+                <para><emphasis role="bold">Open the Cheat Sheet</emphasis></para>
+	            <para>
+	                You can access the <emphasis role="bold">Cheat Sheet</emphasis> from the Designer Menu.  From the Designer main menu, select 
+	                <emphasis role="bold">Window > Show View > Other...</emphasis>, then select 
+	                <emphasis role="bold">Help > Cheat Sheets</emphasis> in the dialog.
+	            </para>
+                <para>
+                    Alternately, you can access the <emphasis role="bold">Cheat Sheet</emphasis> from the <emphasis role="bold">Guide View</emphasis>.
+                    A sample Guide view is shown below, with the <emphasis role="bold">Consume a SOAP Web Service</emphasis> Action Set
+                selected:
+                </para>
+                <figure id="guides-wcheatsheet-figure">
+                    <title>Guides View</title>
+                    <mediaobject>
+                        <imageobject>
+                            <imagedata fileref="images/screencaps/guideview-wcheatsheet.png"/>
+                        </imageobject>
+                    </mediaobject>
+                </figure>
+                <para>
+                    To open the <emphasis role="bold">Cheat Sheet</emphasis> from the Guide View, expand the Cheat Sheet section in
+                    the lower portion of the Guide View, then select the <emphasis role="bold">Consume a SOAP Web Service</emphasis> link.  
+                </para>
+            </listitem>
+            <listitem>
+                <para><emphasis role="bold">Begin the Cheat Sheet</emphasis></para>
+                <para>
+                    The <emphasis role="bold">Consume a SOAP Web Service</emphasis> Cheat Sheet is shown below:
+                </para>
+                <figure id="cheatsheet-begin">
+                    <title>Consume SOAP Web Service Cheat Sheet</title>
+                    <mediaobject>
+                        <imageobject>
+                            <imagedata fileref="images/screencaps/cheatsheet-begin.png"/>
+                        </imageobject>
+                    </mediaobject>
+                </figure>
+                <para>
+                    To start the Cheat Sheet process, expand the <emphasis role="bold">Introduction</emphasis> section, 
+                    then select <emphasis role="bold">Click to Begin</emphasis>.  The <emphasis role="bold">Create New Teiid Model Project</emphasis>
+                    section opens, as shown.
+                </para>
+                <figure id="cheatsheet-createproject">
+                    <title>Create Model Project</title>
+                    <mediaobject>
+                        <imageobject>
+                            <imagedata fileref="images/screencaps/cheatsheet-createproject.png"/>
+                        </imageobject>
+                    </mediaobject>
+                </figure>
+                <para>Note that each section of the sheet has basic instructions outlining what to do at each step.  
+                Click 
+                <inlinemediaobject>
+                    <imageobject>
+                        <imagedata fileref="images/screencaps/cheatsheet-play.png"/>
+                    </imageobject>
+                </inlinemediaobject> next to <emphasis role="bold">Launch New Teiid Model Project Wizard</emphasis> to launch the 'New Project' wizard.
+                </para>
+                <para>
+                    Follow the wizard to create a new Model Project.  For this example, we will use <emphasis role="bold">SOAPProj</emphasis> for our project name.
+                    On the second page of the wizard, select the 'sources' and 'views' folders.  Click <emphasis role="bold">Finish</emphasis>.  The new project
+                    is created.
+                </para>
+                <para>
+                    In the Cheat Sheet, you can advance to the next step - once the wizard has completed.  Click 
+                    <inlinemediaobject>
+                    <imageobject>
+                        <imagedata fileref="images/screencaps/cheatsheet-downarrow.png"/>
+                    </imageobject>
+                    </inlinemediaobject> to advance to the next step.
+                </para>
+            </listitem>
+            <listitem>
+                <para><emphasis role="bold">Create SOAP Web Service Connection</emphasis></para>
+                <para>
+                    This section of the Cheat Sheet provides instructions for creating a connection profile for the SOAP Web Service,
+                    as shown below:
+                </para>
+                <figure id="cheatsheet-createconnection">
+                    <title>Create SOAP Connection Profile</title>
+                    <mediaobject>
+                        <imageobject>
+                            <imagedata fileref="images/screencaps/cheatsheet-createconnection.png"/>
+                        </imageobject>
+                    </mediaobject>
+                </figure>
+                <para>
+                    Click 
+                    <inlinemediaobject>
+                        <imageobject>
+                            <imagedata fileref="images/screencaps/cheatsheet-play.png"/>
+                        </imageobject>
+                    </inlinemediaobject> next to <emphasis role="bold">Launch Create SOAP Connection Profile Wizard</emphasis> to launch the wizard.  The first
+                    page of the wizard is shown below:
+                </para>
+                <figure id="cheatsheet-soapconnprofile1">
+                    <title>Create SOAP Connection Profile</title>
+                    <mediaobject>
+                        <imageobject>
+                            <imagedata fileref="images/screencaps/soapconnprofile-1.png"/>
+                        </imageobject>
+                    </mediaobject>
+                </figure>
+                <para>
+                    The <emphasis role="bold">Web Services Data Source (SOAP)</emphasis> profile type will be selected.  Enter 
+                    <emphasis role="bold">CountryInfoConn</emphasis> for the profile name, then click <emphasis role="bold">Next</emphasis>.  The next page of the
+                    wizard is shown below:
+                </para>
+                <figure id="cheatsheet-soapconnprofile2">
+                    <title>SOAP Connection Properties</title>
+                    <mediaobject>
+                        <imageobject>
+                            <imagedata fileref="images/screencaps/soapconnprofile-2.png"/>
+                        </imageobject>
+                    </mediaobject>
+                </figure>
+                <para>
+                    The connection profile properties are entered on this page.  Click on the <emphasis role="bold">URL...</emphasis> button,
+                    then enter the following URL: <emphasis role="bold">http://www.oorsprong.org/websamples.countryinfo/CountryInfoService.wso?WSDL</emphasis>
+                </para>
+                <para>Select 'None' for SecurityType, then click <emphasis role="bold">OK</emphasis> to complete the wizard.  
+                In the Cheat Sheet, you can now continue - once the wizard has completed.  Click 
+                <inlinemediaobject>
+                    <imageobject>
+                        <imagedata fileref="images/screencaps/cheatsheet-downarrow.png"/>
+                    </imageobject>
+                </inlinemediaobject> to advance to the next step.
+                </para>
+            </listitem>
+            <listitem>
+                <para><emphasis role="bold">Create Models from SOAP Connection</emphasis></para>
+                <para>
+                    This section of the Cheat Sheet provides instructions for creating relational models using the previously-created
+                    connection profile for the SOAP Web Service, as shown below:
+                </para>
+                <figure id="cheatsheet-createmodels">
+                    <title>Create Models from SOAP Connection</title>
+                    <mediaobject>
+                        <imageobject>
+                            <imagedata fileref="images/screencaps/cheatsheet-createmodels.png"/>
+                        </imageobject>
+                    </mediaobject>
+                </figure>
+                <para>
+                    Click 
+                    <inlinemediaobject>
+                        <imageobject>
+                            <imagedata fileref="images/screencaps/cheatsheet-play.png"/>
+                        </imageobject>
+                    </inlinemediaobject> next to <emphasis role="bold">Launch the Consume SOAP Web Service Wizard</emphasis> 
+                    to launch the wizard.  The first page of the wizard is shown below:
+                </para>
+                <figure id="soap-createmodelwizard1">
+                    <title>Consume SOAP Wizard</title>
+                    <mediaobject>
+                        <imageobject>
+                            <imagedata fileref="images/screencaps/soap-createmodelwizard-1.png"/>
+                        </imageobject>
+                    </mediaobject>
+                </figure>
+                <para>
+                    For <emphasis role="bold">Connection Profile</emphasis>, select the previously-created <emphasis role="bold">CountryInfoConn</emphasis> profile.
+                    The available WSDL Operations will then be displayed under <emphasis role="bold">Select the desired WSDL Operations</emphasis>.
+                    Select only the first <emphasis role="bold">CapitalCity</emphasis> Operation for this example.
+                    Click <emphasis role="bold">Next</emphasis> to proceed to the next page, as shown below:
+                </para>
+                <figure id="soap-createmodelwizard2">
+                    <title>Consume SOAP Wizard</title>
+                    <mediaobject>
+                        <imageobject>
+                            <imagedata fileref="images/screencaps/soap-createmodelwizard-2.png"/>
+                        </imageobject>
+                    </mediaobject>
+                </figure>
+                <para>
+                    On the <emphasis role="bold">Model Definition</emphasis> page, the source and view model info section will be pre-filled.  We will keep the
+                    names and location defaults for the source and view models.  Click <emphasis role="bold">Next</emphasis> to 
+                    proceed to the next page, as shown below: 
+                </para>
+                <figure id="soap-createmodelwizard3a">
+                    <title>Consume SOAP Wizard</title>
+                    <mediaobject>
+                        <imageobject>
+                            <imagedata fileref="images/screencaps/soap-createmodelwizard-3a.png"/>
+                        </imageobject>
+                    </mediaobject>
+                </figure>
+                <para>
+                    On the <emphasis role="bold">Procedure Definition</emphasis> page, the <emphasis role="bold">CapitalCity</emphasis> 
+                    Operation will be selected since it is the only one used for this example.  On the <emphasis role="bold">Request</emphasis> tab, 
+                    select the <emphasis role="bold">sCountryISOCode</emphasis> element - then click the <emphasis role="bold">Add</emphasis> button.  
+                    This will add the selected element to the request.  Now select the <emphasis role="bold">Response</emphasis> tab, as shown below:
+                </para>
+                <figure id="soap-createmodelwizard3b">
+                    <title>Consume SOAP Wizard</title>
+                    <mediaobject>
+                        <imageobject>
+                            <imagedata fileref="images/screencaps/soap-createmodelwizard-3b.png"/>
+                        </imageobject>
+                    </mediaobject>
+                </figure>
+                <para>
+                    On the <emphasis role="bold">Response</emphasis> tab, select the <emphasis role="bold">Body</emphasis> sub-tab.  
+                    In the <emphasis role="bold">Schema Contents</emphasis>, select the <emphasis role="bold">CapitalCityResult</emphasis>, then
+                    click the <emphasis role="bold">Add</emphasis> button.  This will add the selected element to the response. 
+                </para>
+                <para>
+                   Select the <emphasis role="bold">Wrapper Procedure</emphasis> tab to see the full Generated Procedure SQL, as shown below.
+                </para>
+                <figure id="soap-createmodelwizard3c">
+                    <title>Consume SOAP Wizard</title>
+                    <mediaobject>
+                        <imageobject>
+                            <imagedata fileref="images/screencaps/soap-createmodelwizard-3c.png"/>
+                        </imageobject>
+                    </mediaobject>
+                </figure>
+                <para>
+                    Click <emphasis role="bold">Finish</emphasis> to exit the wizard.  
+                    In the Cheat Sheet, you can now continue.  Click 
+                    <inlinemediaobject>
+                    <imageobject>
+                        <imagedata fileref="images/screencaps/cheatsheet-downarrow.png"/>
+                    </imageobject>
+                    </inlinemediaobject> to advance to the next step.
+                </para>
+            </listitem>
+            <listitem>
+                <para><emphasis role="bold">Create VDB</emphasis></para>
+                <para>
+                    This section of the Cheat Sheet provides instructions for creating a VDB using the models that you created
+                    in the previous step.  The Cheat Sheet section is shown below:
+                </para>
+                <figure id="cheatsheet-createvdb">
+                    <title>Create VDB</title>
+                    <mediaobject>
+                        <imageobject>
+                            <imagedata fileref="images/screencaps/cheatsheet-createvdb.png"/>
+                        </imageobject>
+                    </mediaobject>
+                </figure>
+                <para>
+                    Click 
+                    <inlinemediaobject>
+                        <imageobject>
+                            <imagedata fileref="images/screencaps/cheatsheet-play.png"/>
+                        </imageobject>
+                    </inlinemediaobject> next to <emphasis role="bold">Launch New VDB Wizard</emphasis> to launch the wizard.  
+                    Follow the steps to create a VDB in your workspace.  When complete, exit the wizard.
+                    In the Cheat Sheet, you can now continue.  Click 
+                    <inlinemediaobject>
+                    <imageobject>
+                        <imagedata fileref="images/screencaps/cheatsheet-downarrow.png"/>
+                    </imageobject>
+                    </inlinemediaobject> to advance to the next step.
+                </para>
+            </listitem>
+            <listitem>
+                <para><emphasis role="bold">Test VDB</emphasis></para>
+                <para>
+                    This final section of the Cheat Sheet provides instructions for executing the VDB created in the previous step.
+                    Click 
+                    <inlinemediaobject>
+                        <imageobject>
+                            <imagedata fileref="images/screencaps/cheatsheet-play.png"/>
+                        </imageobject>
+                    </inlinemediaobject> next to <emphasis role="bold">Launch Execute VDB Dialog</emphasis> to launch
+                    the wizard.  Select the previously-created VDB to execute it. 
+                </para>
+            </listitem>
+            </orderedlist>
+        </section>
+	</section>
+
+</chapter>

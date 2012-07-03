@@ -10,6 +10,7 @@ package org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.dialogs.IDialogSettings;
@@ -45,6 +46,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.provider.XSDSemanticItemProviderAdapterFactory;
 import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
+import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.SchemaTreeModel.SchemaNode;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.panels.ColumnsInfoPanel;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.panels.ElementsInfoPanel;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.panels.RequestSchemaContentsGroup;
@@ -90,7 +92,7 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 	// ========== UI COMPONENTS =========================
 
 	/** The Operations Combo Selector */
-	private Combo operationsCombo;
+	Combo operationsCombo;
 
 	private XSDSemanticItemProviderAdapterFactory semanticAdapterFactory;
 	private AdapterFactoryLabelProvider schemaLabelProvider;
@@ -148,7 +150,7 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 		setImageDescriptor(ModelGeneratorWsdlUiUtil.getImageDescriptor(Images.NEW_MODEL_BANNER));
 
 		semanticAdapterFactory = new XSDSemanticItemProviderAdapterFactory();
-		schemaLabelProvider = new AdapterFactoryLabelProvider(semanticAdapterFactory);
+		schemaLabelProvider = new SchemaTreeLabelProvider(semanticAdapterFactory);
 		schemaContentProvider = new SchemaTreeContentProvider(semanticAdapterFactory);
 		schemaHandler = new ImportWsdlSchemaHandler(theImportManager, this);
 		this.importManager.addChangeListener(this);
@@ -184,7 +186,8 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 
 	public void notifyColumnDataChanged() {
 		if (!responseBodyColumnsInfoPanel.getRootPathText().getText().equals("")) { //$NON-NLS-1$
-			this.schemaHandler.schemaTreeModel.setRootPath(responseBodyColumnsInfoPanel.getRootPathText().getText());
+            this.schemaHandler.getResponseSchemaTreeModel().setRootPath(
+                    responseBodyColumnsInfoPanel.getRootPathText().getText());
 			this.getProcedureGenerator().getResponseInfo().setRootPath(responseBodyColumnsInfoPanel.getRootPathText().getText());
 		}
 		this.requestBodyElementsInfoPanel.refresh();
@@ -199,7 +202,8 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 	}
 	
 	public void notifyRootTextColumnDataChanged() {
-		this.schemaHandler.schemaTreeModel.setRootPath(responseBodyColumnsInfoPanel.getRootPathText().getText());
+        this.schemaHandler.getResponseSchemaTreeModel().setRootPath(
+                responseBodyColumnsInfoPanel.getRootPathText().getText());
 	
 		updateStatus();
 	}
@@ -592,20 +596,24 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 
 	void updateSchemaTree(int type) {
 		if (type == REQUEST) {
-			requestBodySchemaContentsGroup.setInput(getSchemaForSelectedOperation(type));
-			requestHeaderSchemaContentsGroup.setInput(getSchemaForSelectedOperation(type));
+			SchemaNodeWrapper nodeInput = new SchemaNodeWrapper(getSchemaForSelectedOperation(REQUEST));
+			requestBodySchemaContentsGroup.setInput(nodeInput);
+			requestHeaderSchemaContentsGroup.setInput(nodeInput);
 		} else if (type == RESPONSE) {
-			responseBodySchemaContentsGroup.setInput(getSchemaForSelectedOperation(type));
-			responseHeaderSchemaContentsGroup.setInput(getSchemaForSelectedOperation(type));
+			SchemaNodeWrapper nodeInput = new SchemaNodeWrapper(getSchemaForSelectedOperation(RESPONSE));
+			responseBodySchemaContentsGroup.setInput(nodeInput);
+			responseHeaderSchemaContentsGroup.setInput(nodeInput);
 		} else {
-			requestBodySchemaContentsGroup.setInput(getSchemaForSelectedOperation(REQUEST));
-			requestHeaderSchemaContentsGroup.setInput(getSchemaForSelectedOperation(REQUEST));
-			responseBodySchemaContentsGroup.setInput(getSchemaForSelectedOperation(RESPONSE));
-			responseHeaderSchemaContentsGroup.setInput(getSchemaForSelectedOperation(RESPONSE));
+			SchemaNodeWrapper nodeInput = new SchemaNodeWrapper(getSchemaForSelectedOperation(REQUEST));
+			requestBodySchemaContentsGroup.setInput(nodeInput);
+			requestHeaderSchemaContentsGroup.setInput(nodeInput);
+			nodeInput = new SchemaNodeWrapper(getSchemaForSelectedOperation(RESPONSE));
+			responseBodySchemaContentsGroup.setInput(nodeInput);
+			responseHeaderSchemaContentsGroup.setInput(nodeInput);
 		}
 	}
 	
-	List<Object> getSchemaForSelectedOperation(int type) {
+	private List<SchemaNode> getSchemaForSelectedOperation(int type) {
 		return this.schemaHandler.getSchemaForSelectedOperation(type, this.procedureGenerator);
 	}
 

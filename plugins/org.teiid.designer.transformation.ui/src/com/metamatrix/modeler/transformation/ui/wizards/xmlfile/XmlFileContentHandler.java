@@ -44,7 +44,7 @@ public class XmlFileContentHandler extends DefaultHandler implements ContentHand
 	                String value = attributes.getValue(i);
 	                String localName = attributes.getLocalName(i);
 
-	                rootElement.addChildAttribute(new XmlAttribute(localName, value));
+	                rootElement.addChildAttribute(new XmlAttribute(localName, value, rootElement));
 	            }
 	        }
 			parentElement = rootElement;
@@ -58,7 +58,7 @@ public class XmlFileContentHandler extends DefaultHandler implements ContentHand
 	                String value = attributes.getValue(i);
 	                String localName = attributes.getLocalName(i);
 
-	                newElement.addChildAttribute(new XmlAttribute(localName, value));
+	                newElement.addChildAttribute(new XmlAttribute(localName, value, newElement));
 	            }
 	        }
 			parentElement.addChildElement(newElement);

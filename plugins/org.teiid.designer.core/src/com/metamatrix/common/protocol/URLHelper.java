@@ -14,14 +14,17 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.Authenticator;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
-import java.net.PasswordAuthentication;
 import java.net.URL;
 import java.net.URLConnection;
+
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLSession;
+
+import org.teiid.core.util.Base64;
+
 import com.metamatrix.core.io.FileUrl;
 
 /**
@@ -67,6 +70,26 @@ public class URLHelper {
     static String convertBackSlashes( final String str ) {
         return str.replaceAll("\\\\", "/"); //$NON-NLS-1$ //$NON-NLS-2$
     }
+    
+    /**
+     * Given an {@link URLConnection}, set its authorization property using the 
+     * given username and password.
+     * 
+     * @param urlConn
+     * @param userName
+     * @param password
+     */
+    public static void setCredentials(URLConnection urlConn, String userName, String password) {
+        if (userName == null || password == null)
+            return;
+        
+        if (! (urlConn instanceof HttpURLConnection)) {
+            // Should not be authenticating on other types of url connection
+            return;
+        }
+        
+        urlConn.setRequestProperty("Authorization", "Basic " + Base64.encodeBytes((userName + ':' + password).getBytes())); //$NON-NLS-1$ //$NON-NLS-2$
+    }
 
     /**
      * Build a {@link java.io.File} from a {@link java.net.URL} object.
@@ -81,7 +104,16 @@ public class URLHelper {
                                           final String fileNamePrefix,
                                           final String fileNameSuffix ) throws MalformedURLException, IOException {
 
-        return createFileFromUrlInternal(url, FileUrl.createTempFile(fileNamePrefix, fileNameSuffix), true);
+        return createFileFromUrlInternal(url, FileUrl.createTempFile(fileNamePrefix, fileNameSuffix), null, null, true);
+    }
+    
+    public static File createFileFromUrl (final URL url,
+                                          final String fileNamePrefix,
+                                          final String fileNameSuffix,
+                                          final String userName,
+                                          final String password) throws MalformedURLException, IOException {
+
+        return createFileFromUrl(url, FileUrl.createTempFile(fileNamePrefix, fileNameSuffix).getAbsolutePath(), userName, password, true);
     }
 
     /**
@@ -102,12 +134,6 @@ public class URLHelper {
                                           final String userName,
                                           final String password,
                                           final boolean verifyHostname ) throws MalformedURLException, IOException {
-        if (userName != null && userName.length() != 0 && password != null) Authenticator.setDefault(new Authenticator() {
-            @Override
-            protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(userName, password.toCharArray());
-            }
-        });
         File file = null;
         final String tempDir = System.getProperty("java.io.tmpdir");//$NON-NLS-1$
         if (filePath.indexOf("/") != -1 || filePath.indexOf("\\") != -1) {//$NON-NLS-1$//$NON-NLS-2$
@@ -119,11 +145,13 @@ public class URLHelper {
             if (!dir.exists()) dir.mkdirs();
             file = new File(dir, filePath.substring(lastPart + 1));
         } else file = new File(new File(tempDir), filePath);
-        return createFileFromUrlInternal(url, new FileUrl(file.toURI()), verifyHostname);
+        return createFileFromUrlInternal(url, new FileUrl(file.toURI()), userName, password, verifyHostname);
     }
 
     private static File createFileFromUrlInternal( final URL url,
                                                    final File file,
+                                                   final String userName,
+                                                   final String password,
                                                    final boolean verifyHostname ) throws MalformedURLException, IOException {
         String nextLine;
         URLConnection urlConn = null;
@@ -137,6 +165,7 @@ public class URLHelper {
             fw = new FileWriter(file);
             bw = new BufferedWriter(fw);
             urlConn = url.openConnection();
+            setCredentials(urlConn, userName, password);
             if (!verifyHostname && urlConn instanceof HttpsURLConnection) ((HttpsURLConnection)urlConn).setHostnameVerifier(new HostnameVerifier() {
                 public boolean verify( final String arg,
                                        final SSLSession session ) {
@@ -210,6 +239,24 @@ public class URLHelper {
      */
     public static boolean resolveUrl( final URL url,
                                       final boolean verifyHostname ) throws MalformedURLException, IOException {
+        return resolveUrl(url, null, null, verifyHostname);
+    }
+
+    /**
+     * Determines whether a URL object resolves to a valid url. This will work for any protocol (file, HTTP, etc.).
+     * 
+     * @param url
+     * @param userName
+     * @param password
+     * @param verifyHostname whether to verify hostname for HTTPS connection
+     * @return resolved boolean
+     * @throws MalformedURLException, IOException
+     * @since 5.1
+     */
+    public static boolean resolveUrl( final URL url,
+                                      final String userName,
+                                      final String password,
+                                      final boolean verifyHostname ) throws MalformedURLException, IOException {
         boolean resolved = true;
         if (url == null) return resolved;
         String nextLine;
@@ -223,12 +270,14 @@ public class URLHelper {
         long deltaTime = 0;
         try {
             urlConn = url.openConnection();
+            setCredentials(urlConn, userName, password);
             if (!verifyHostname && urlConn instanceof HttpsURLConnection) ((HttpsURLConnection)urlConn).setHostnameVerifier(new HostnameVerifier() {
                 public boolean verify( final String arg,
                                        final SSLSession session ) {
                     return true;
                 }
             });
+            
             inStream = new InputStreamReader(urlConn.getInputStream());
             buff = new BufferedReader(inStream);
             boolean keepReading = true;
@@ -249,30 +298,5 @@ public class URLHelper {
         }
 
         return resolved;
-    }
-
-    /**
-     * Determines whether a URL object resolves to a valid url. This will work for any protocol (file, HTTP, etc.).
-     * 
-     * @param url
-     * @param userName
-     * @param password
-     * @param verifyHostname whether to verify hostname for HTTPS connection
-     * @return resolved boolean
-     * @throws MalformedURLException, IOException
-     * @since 5.1
-     */
-    public static boolean resolveUrl( final URL url,
-                                      final String userName,
-                                      final String password,
-                                      final boolean verifyHostname ) throws MalformedURLException, IOException {
-        if (userName != null && userName.length() != 0 && password != null) Authenticator.setDefault(new Authenticator() {
-
-            @Override
-            protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(userName, password.toCharArray());
-            }
-        });
-        return resolveUrl(url, verifyHostname);
     }
 }

@@ -367,7 +367,7 @@ FROM
 								<title>View Model Definition Page</title>
 								<mediaobject>
 									<imageobject>
-										<imagedata fileref="images/screencaps/import-flat-file-page-2.png"/>
+										<imagedata fileref="images/screencaps/teiid-flat-file-source-page-4.png"/>
 									</imageobject>
 								</mediaobject>
 							</figure>
@@ -454,7 +454,7 @@ FROM
 								<emphasis role="bold">Teiid Designer > File Source (XML) >> Source and View Model</emphasis>  and 
 								 click <emphasis role="bold">Next></emphasis></para>
 							<figure>
-								<title>Import from Flat File Source</title>
+								<title>Import from XML File Source</title>
 								<mediaobject>
 									<imageobject>
 										<imagedata fileref="images/screencaps/teiid-data-file-import-options.png"/>
@@ -516,7 +516,7 @@ FROM
 							   default value. See the Teiid User's Guide for details on the XMLTABLE() function.</para>
 							<para>When finished with this page, click <emphasis role="bold">Next></emphasis>.</para>
 							<figure>
-								<title>Flat File Delimited Columns Options Page</title>
+								<title>XML File Delimited Columns Options Page</title>
 								<mediaobject>
 									<imageobject>
 										<imagedata fileref="images/screencaps/teiid-xml-file-source-page-3.png"/>
@@ -1006,10 +1006,10 @@ FROM
 							<para>Click <emphasis role="bold">Next ></emphasis></para>
 						</listitem>
 						<listitem>
-							<para><emphasis role="bold">Step 5 </emphasis> - The next page titled Model Definiton requires both
+							<para><emphasis role="bold">Step 5 </emphasis> - The next page entitled Model Definiton requires both
 								a model location (i.e. folder or project) and a valid model name for both source and view
 								models. Use the <emphasis role="bold">Browse...</emphasis> button to select existing folders
-								or models. Click <emphasis role="bold">Next></emphasis> when all the info is defined.</para>
+								or models. Click <emphasis role="bold">Next></emphasis> when all the information is defined.</para>    
 							<figure>
 								<title>WSDL Source Selection</title>
 								<mediaobject>
@@ -1064,6 +1064,33 @@ FROM
 					</imageobject>
 				</mediaobject>
 			</figure> 
+            
+        <section>
+            <title>Circular References in WSDL Schemas</title>    
+            <para>
+                It is possible for a WSDL schema to either contain a very deep set of XML type references or indeed for such 
+                references to be circular. This is legal in the WSDL schema but can make processing the schema in Designer difficult.
+                If left unchecked such circular references can result in a JVM <emphasis role="bold">StackOverFlow</emphasis> 
+                exception and exiting of the application.
+            </para>
+            <para>
+                To mitigate this possibility a depth limit of 750 references has been introduced. Should the depth exceed this limit
+                then a warning is displayed and further processing of that fragment of the schema will end. It may be the case that
+                the reference in question is not circular but just very deep so in such a case it is possible to increase the depth
+                limit by setting the JVM property <emphasis role="bold">WsdlSchemaHandlerRecursiveDepth</emphasis> to a larger value,
+                eg. -D WsdlSchemaHandlerRecursiveDepth=800. This should only be used with caution as on some systems it is possible 
+                the JVM throws a <emphasis role="bold">StackOverFlow</emphasis> exception before the new depth limit is reached.
+            </para>
+            
+            <figure>
+                <title>Warning message displayed if depth limit has been reached</title>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata fileref="images/screencaps/import-wsdl-to-source-procedure-depth-limit-warning.png"/>
+                    </imageobject>
+                </mediaobject>
+            </figure> 
+        </section>    
 		
 	</section>
 	
@@ -1419,8 +1446,15 @@ FROM
 							<listitem>
 								<para><emphasis role="bold">Step 3 </emphasis> - Input a valid name for your 
 									<emphasis role="bold">Web Service</emphasis> model and select the 
-									<emphasis role="bold">URL...</emphasis> button. Enter a valid WSDL URL in the 
-									dialog click <emphasis role="bold">OK></emphasis>. 
+									<emphasis role="bold">URL...</emphasis> button.
+                                    <itemizedlist>
+                                        <listitem>Enter a valid WSDL URL. If the URL cannot be validated then an error will be displayed and the <emphasis role="bold">OK></emphasis> button disabled.</listitem>
+                                        <listitem>
+                                            If the WSDL is protected by basic HTTP authentication then this option should be selected and
+                                            the appropriate username and password entered.
+                                        </listitem>
+                                        <listitem>Click <emphasis role="bold">OK></emphasis> to continue.</listitem>
+                                    </itemizedlist>
 									Click <emphasis role="bold">Next></emphasis> to continue.</para>
 								<figure>
 									<title>WSDL URL Dialog</title>

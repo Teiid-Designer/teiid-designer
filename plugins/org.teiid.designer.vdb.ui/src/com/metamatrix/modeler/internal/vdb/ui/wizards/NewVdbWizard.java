@@ -68,6 +68,7 @@ import com.metamatrix.modeler.internal.ui.viewsupport.ModelLabelProvider;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelProjectSelectionStatusValidator;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelerUiViewUtils;
+import com.metamatrix.modeler.internal.ui.viewsupport.SingleProjectFilter;
 import com.metamatrix.modeler.internal.vdb.ui.editor.VdbEditor;
 import com.metamatrix.modeler.ui.UiConstants;
 import com.metamatrix.modeler.ui.UiPlugin;
@@ -179,6 +180,10 @@ public final class NewVdbWizard extends AbstractWizard
                     final IFile vdbFile = NewVdbWizard.this.folder.getFile(new Path(NewVdbWizard.this.name));
                     vdbFile.create(new ByteArrayInputStream(new byte[0]), false, monitor);
                     Vdb newVdb = new Vdb(vdbFile, false, monitor);
+            		String desc = descriptionTextEditor.getText();
+            		if( desc != null && desc.length() > 0 ) {
+            			newVdb.setDescription(desc);
+            		}
                     newVdb.save(monitor);
                     NewVdbWizard.this.folder.refreshLocal(IResource.DEPTH_INFINITE, monitor);
 
@@ -536,7 +541,9 @@ public final class NewVdbWizard extends AbstractWizard
      * @since 4.0
      */
     void browseButtonSelected() {
-        this.folder = WidgetUtil.showFolderSelectionDialog(this.folder, new ModelingResourceFilter(), projectValidator);
+    	ModelingResourceFilter resFilter = new ModelingResourceFilter();
+    	resFilter.addFilter(new SingleProjectFilter(this.designerProperties));
+        this.folder = WidgetUtil.showFolderSelectionDialog(this.folder, resFilter, projectValidator);
 
         if (folder != null) {
             this.folderText.setText(folder.getFullPath().makeRelative().toString());

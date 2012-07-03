@@ -1172,7 +1172,8 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
     	String newName = "column_" + (dataFileInfo.getColumnInfoList().length + 1); //$NON-NLS-1$
     	int length = 10;
     	if( selectedTextLengthText.getText().length() > 0 ) {
-    		length = Integer.parseInt(selectedTextLengthText.getText());
+    		int textLength = Integer.parseInt(selectedTextLengthText.getText());
+    		length = textLength > 0 ? textLength : length;
     	}
     	TeiidColumnInfo newColumn = new TeiidColumnInfo(newName, TeiidColumnInfo.DEFAULT_DATATYPE, length);
 		dataFileInfo.addColumn(newColumn);

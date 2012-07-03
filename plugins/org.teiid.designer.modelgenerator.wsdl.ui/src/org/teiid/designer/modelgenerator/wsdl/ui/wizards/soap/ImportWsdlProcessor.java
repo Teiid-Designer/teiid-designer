@@ -64,6 +64,7 @@ public class ImportWsdlProcessor {
 	public static final RelationalFactory factory = RelationalFactory.eINSTANCE;
 	public static final DatatypeManager datatypeManager = ModelerCore.getWorkspaceDatatypeManager();
 	public static final int DEFAULT_STRING_LENGTH = 4000;
+
 	
 	WSDLImportWizardManager importManager;
 	ModelResource sourceModel;
@@ -223,12 +224,7 @@ public class ImportWsdlProcessor {
         			if( defaultServiceMode.equalsIgnoreCase(WSDLImportWizardManager.MESSAGE ) ) {
         				props.put(SOAPConnectionInfoProvider.SOAP_SERVICE_MODE, WSDLImportWizardManager.MESSAGE);
         			} else {
-        				// remove MESSAGE property if it exists
-        				String theProp = props.getProperty(SOAPConnectionInfoProvider.SOAP_SERVICE_MODE);
-        				if( theProp != null ) {
-        					props.remove(SOAPConnectionInfoProvider.SOAP_SERVICE_MODE);
-        				}
-        				
+        				props.put(SOAPConnectionInfoProvider.SOAP_SERVICE_MODE, WSDLImportWizardManager.PAYLOAD);
         			}
         			String defaultBinding = this.importManager.getTranslatorDefaultBinding();
         			if( defaultBinding.equalsIgnoreCase(Port.SOAP12) ) {
@@ -384,6 +380,7 @@ public class ImportWsdlProcessor {
     }
     
     public void createViewRequestProcedure(ModelResource modelResource, RequestInfo info) throws ModelerCoreException {
+    	final EObject STRING_DATATYPE = datatypeManager.findDatatype("string"); //$NON-NLS-1$
     	
     	// Create a Procedure using the text file name
     	Procedure procedure = factory.createProcedure();
@@ -417,6 +414,13 @@ public class ImportWsdlProcessor {
     			parameter.setLength(DEFAULT_STRING_LENGTH);
     		}
     		parameter.setProcedure(procedure);
+    		for( AttributeInfo attrInfo : columnInfo.getAttributeInfoArray() ) {
+        		ProcedureParameter attributeParam = factory.createProcedureParameter();
+        		attributeParam.setName(attrInfo.getName());
+        		attributeParam.setType(STRING_DATATYPE);
+        		attributeParam.setLength(DEFAULT_STRING_LENGTH);
+        		attributeParam.setProcedure(procedure);
+    		}
     	}
     	
     	ProcedureResult result = factory.createProcedureResult();
@@ -491,6 +495,8 @@ public class ImportWsdlProcessor {
     }
     
     private void createViewWrapperProcedure(ModelResource modelResource, ProcedureGenerator generator) throws ModelerCoreException {
+    	final EObject STRING_DATATYPE = datatypeManager.findDatatype("string"); //$NON-NLS-1$
+    	
     	// Create a Procedure using the text file name
     	Procedure procedure = factory.createProcedure();
     	procedure.setName(generator.getWrapperProcedureName());
@@ -521,6 +527,14 @@ public class ImportWsdlProcessor {
         		}
     		}
     		parameter.setProcedure(procedure);
+    		
+    		for( AttributeInfo attrInfo : columnInfo.getAttributeInfoArray() ) {
+        		ProcedureParameter attributeParam = factory.createProcedureParameter();
+        		attributeParam.setName(attrInfo.getName());
+        		attributeParam.setType(STRING_DATATYPE);
+        		attributeParam.setLength(DEFAULT_STRING_LENGTH);
+        		attributeParam.setProcedure(procedure);
+    		}
     	}
     	
     	

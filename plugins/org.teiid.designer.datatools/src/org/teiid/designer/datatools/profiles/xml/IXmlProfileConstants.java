@@ -7,7 +7,11 @@
 */
 package org.teiid.designer.datatools.profiles.xml;
 
-public interface IXmlProfileConstants {
+import org.teiid.designer.datatools.profiles.ws.IWSProfileConstants;
+
+import com.metamatrix.ui.ICredentialsCommon;
+
+public interface IXmlProfileConstants extends ICredentialsCommon {
 	String FILE_URL_CONNECTION_PROFILE_ID = "org.teiid.designer.datatools.profiles.xml.fileurl"; //$NON-NLS-1$
 	String LOCAL_FILE_CONNECTION_PROFILE_ID = "org.teiid.designer.datatools.profiles.xml.localfile"; //$NON-NLS-1$
 	
@@ -16,6 +20,6 @@ public interface IXmlProfileConstants {
     String LOCAL_FILE_PATH_PROP_ID = "LocalFilePath"; //$NON-NLS-1$
     String TEIID_PARENT_DIRECTORY_KEY = "ParentDirectory"; //$NON-NLS-1$
     
-    String WS_ENDPOINT_KEY = "EndPoint"; //$NON-NLS-1$
+    String WS_ENDPOINT_KEY = IWSProfileConstants.URL_PROP_ID;
 
 }

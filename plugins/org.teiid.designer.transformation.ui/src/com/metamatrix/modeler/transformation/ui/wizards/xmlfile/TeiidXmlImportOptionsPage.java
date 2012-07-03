@@ -7,6 +7,8 @@
  */
 package com.metamatrix.modeler.transformation.ui.wizards.xmlfile;
 
+import java.util.Properties;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -21,6 +23,7 @@ import org.eclipse.swt.widgets.Text;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.transformation.ui.UiConstants;
 import com.metamatrix.modeler.transformation.ui.wizards.file.TeiidMetadataImportInfo;
+import com.metamatrix.modeler.ui.viewsupport.DesignerPropertiesUtil;
 import com.metamatrix.ui.internal.util.WidgetFactory;
 import com.metamatrix.ui.internal.wizard.AbstractWizardPage;
 
@@ -36,6 +39,8 @@ public class TeiidXmlImportOptionsPage extends AbstractWizardPage implements
 	private Button xmlFileOptionButton, xmlUrlOptionButton;
 	
 	private final TeiidMetadataImportInfo fileInfo;
+	
+	private Properties designerProperties;
 	
 	private boolean synchronizing = false;
 
@@ -112,4 +117,24 @@ public class TeiidXmlImportOptionsPage extends AbstractWizardPage implements
 		
 		synchronizing = false;
 	}
+	
+	@Override
+	public void setVisible(boolean visible) {
+		super.setVisible(visible);
+
+		if (visible) {
+			if( this.designerProperties != null ) {
+				boolean value = DesignerPropertiesUtil.isImportXmlRemote(this.designerProperties);
+				if( value ) {
+					this.xmlFileOptionButton.setSelection(false);
+					this.xmlUrlOptionButton.setSelection(true);
+					optionButtonSelected();
+				}
+			}
+		}
+	}
+	
+    public void setDesignerProperties( Properties properties ) {
+        this.designerProperties = properties;
+    }
 }

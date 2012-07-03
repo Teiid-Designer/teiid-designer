@@ -9,7 +9,7 @@
 <feature
       id="org.teiid.designer.feature"
       label="Teiid Designer"
-      version="7.7.0.qualifier"
+      version="7.7.1.qualifier"
       provider-name="%providerName"
       plugin="org.teiid.designer"
       image="designer32.png">

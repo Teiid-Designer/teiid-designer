@@ -14,6 +14,8 @@ public class Messages  extends NLS {
     public static String ActionSets;
     
 	public static String CheatSheets;
+	public static String ClickOkToFinish;
+	public static String ClickToLaunchSelectedImporter;
 	public static String CommonActionSets;
     public static String ConsumeARESTWebService;
     public static String ConsumeARESTWebService_Short;
@@ -26,9 +28,13 @@ public class Messages  extends NLS {
     public static String ConsumeWebServiceWsdl_Short;
     public static String ConsumeXmlFileSource;
     public static String ConsumeXmlFileSource_Short;
+    public static String ConsumeXmlFileUrlSource;
+    public static String ConsumeXmlFileUrlSource_Short;
     public static String Create;
     public static String CreateARESTWebService;
     public static String CreateASOAPWebService;
+    public static String CreateARESTWar;
+    public static String CreateASOAPWar;
     public static String CreateConnection;
     public static String CreateDataSource;
     public static String CreateJdbcConnection;
@@ -43,6 +49,8 @@ public class Messages  extends NLS {
     public static String CreateNewRelationalBaseTable_Short;
     public static String CreateNewRelationalViewTable;
     public static String CreateNewRelationalViewTable_Short;
+    public static String CreateNewRelationalViewRESTProcedure;
+    public static String CreateNewRelationalViewRESTProcedure_Short;
     public static String CreateNewRelationalSourceFunction;
     public static String CreateNewRelationalSourceFunction_Short;
     public static String CreateNewRelationalSourceModel;
@@ -79,8 +87,18 @@ public class Messages  extends NLS {
     public static String CreateWebServicesConnection_Short;
     
     public static String DefineModels;
+    public static String DefineDataSourceModels;
+    public static String DefineDataSourceModelsMessage;
+    public static String DefineRelationalViewProcedure;
+    public static String DefineRelationalViewTable;
+    public static String DefineSource;
+    public static String DefineTeiidModelProject;
+    public static String DefineTeiidModelProject_Short;
+    public static String DefineVdb;
     public static String DeployVdb;
     public static String DeployVdb_Short;
+    public static String DeployWarFile;
+    public static String DeployWarFile_Short;
     public static String DoubleClickToExecuteAction;
     
     public static String EditTeiidServer;
@@ -94,10 +112,16 @@ public class Messages  extends NLS {
     
     public static String GenerateWSModelsFromWsdl;
     public static String GenerateWSModelsFromWsdl_Short;
+    public static String GenerateRestWar;
+    public static String GenerateRestWar_Short;
+    public static String GenerateSoapWar;
+    public static String GenerateSoapWar_Short;
+
     
     public static String Guides;
     
     public static String Importing;
+    public static String ImportSourceOptions;
 
     public static String ManageConnections;
     public static String ManageModelProjects;
@@ -106,6 +130,7 @@ public class Messages  extends NLS {
     public static String ModelFlatFileSource;
     public static String ModelingActions;
     public static String ModelJdbcSource;
+    public static String ModelLocalXmlFileSource;
     public static String ModelRemoteXmlFileSource;
     public static String ModelViews;
     
@@ -283,6 +308,32 @@ public class Messages  extends NLS {
 
     public static String CheatSheetSection_title;
     public static String CheatSheetSection_description;
+    
+    public static String CreateDataSource_NoServerMessage;
+    
+    public static String GenerateRestWarDialog_title;
+    public static String GenerateRestWarDialog_subTitle;
+    public static String GenerateRestWarDialog_initialMessage;
+    public static String GenerateRestWarDialog_vdbName;
+    public static String GenerateRestWarDialog_browseExisting;
+    public static String GenerateRestWarDialog_browseTooltip;
+    public static String GenerateRestWarDialog_noVdbError;
+    public static String GenerateRestWarDialog_noRestProceduresInVdbError;
+    public static String GenerateRestWarDialog_clickOkMessage;
+    public static String GenerateRestWarDialog_selectVdbTitle;
+    public static String GenerateRestWarDialog_selectVdbMessage;
+    public static String GenerateRestWarDialog_selectedObjectNotVdbMessage;
+
+    public static String DeployWarFile_Line_1;
+    public static String DeployWarFile_Line_2;
+    public static String DeployWarFile_Line_3;
+    public static String DeployWarFile_Line_4;
+    public static String DeployWarFile_Line_5;
+    public static String DeployWarFile_Line_6;
+    public static String DeployWarFile_Line_7;
+    public static String DeployWarFile_Line_8;
+    public static String DeployWarFile_instructions;
+    public static String DeployWarFile_title;
     
     static {
         NLS.initializeMessages("org.teiid.designer.advisor.ui.messages", Messages.class); //$NON-NLS-1$

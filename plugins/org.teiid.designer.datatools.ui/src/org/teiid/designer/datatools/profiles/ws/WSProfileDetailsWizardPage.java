@@ -26,12 +26,12 @@ import org.eclipse.datatools.connectivity.ui.wizards.ConnectionProfileDetailsPag
 import org.eclipse.datatools.connectivity.ui.wizards.NewConnectionProfileWizard;
 import org.eclipse.datatools.enablement.oda.xml.util.XMLSourceFromPath;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
@@ -42,13 +42,13 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.progress.UIJob;
-import org.teiid.designer.datatools.profiles.ws.IWSProfileConstants.SecurityType;
-import org.teiid.designer.datatools.profiles.xml.IXmlProfileConstants;
 import org.teiid.designer.datatools.ui.DatatoolsUiConstants;
-import com.metamatrix.ui.internal.util.WidgetFactory;
 
-public class WSProfileDetailsWizardPage extends ConnectionProfileDetailsPage
-		implements Listener, DatatoolsUiConstants {
+import com.metamatrix.ui.ICredentialsCommon.SecurityType;
+import com.metamatrix.ui.internal.util.WidgetFactory;
+import com.metamatrix.ui.internal.widget.CredentialsComposite;
+
+public class WSProfileDetailsWizardPage extends ConnectionProfileDetailsPage implements DatatoolsUiConstants {
 
 	
     private Composite scrolled;
@@ -57,14 +57,9 @@ public class WSProfileDetailsWizardPage extends ConnectionProfileDetailsPage
     private CLabel profileText;
     private Label descriptionLabel;
     private Text descriptionText;
-    private Label usernameLabel;
-    private Text usernameText;
-    private Label passwordLabel;
-    private Text passwordText;
     private Label urlLabel;
     private Text urlText;
-    private Label securityLabel;
-    private Combo securityCombo;
+    private CredentialsComposite credentialsComposite;
 
     /**
      * @param wizardPageName
@@ -85,6 +80,7 @@ public class WSProfileDetailsWizardPage extends ConnectionProfileDetailsPage
         scrolled = new Composite(group, SWT.NONE);
         GridLayout gridLayout = new GridLayout();
         gridLayout.numColumns = 2;
+        gridLayout.verticalSpacing = 10;
         scrolled.setLayout(gridLayout);
 
         profileLabel = new Label(scrolled, SWT.NONE);
@@ -119,45 +115,17 @@ public class WSProfileDetailsWizardPage extends ConnectionProfileDetailsPage
         urlText = new Text(scrolled, SWT.SINGLE | SWT.BORDER);
         urlText.setToolTipText(UTIL.getString("Common.URL.ToolTip")); //$NON-NLS-1$
         gd = new GridData(GridData.FILL_HORIZONTAL);
+        gd.widthHint = 500;
         urlText.setLayoutData(gd);
-
-        securityLabel = new Label(scrolled, SWT.NONE);
-        securityLabel.setText(UTIL.getString("Common.Security.Type.Label")); //$NON-NLS-1$
-        securityLabel.setToolTipText(UTIL.getString("Common.Context.Factory.ToolTip")); //$NON-NLS-1$
-        gd = new GridData(GridData.FILL_HORIZONTAL);
-        securityLabel.setLayoutData(gd);
-
-        securityCombo = new Combo(scrolled, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY);
-        securityCombo.setToolTipText(UTIL.getString("Common.Context.Factory.ToolTip")); //$NON-NLS-1$
-        gd = new GridData(GridData.FILL_HORIZONTAL);
-        securityCombo.setLayoutData(gd);
-        securityCombo.setItems(new String[]{SecurityType.None.name(), SecurityType.HTTPBasic.name(), SecurityType.WSSecurity.name()});
-        securityCombo.setText(SecurityType.None.name());
         
-        usernameLabel = new Label(scrolled, SWT.NONE);
-        usernameLabel.setText(UTIL.getString("Common.Username.Label")); //$NON-NLS-1$
-        usernameLabel.setToolTipText(UTIL.getString("Common.Username.ToolTip")); //$NON-NLS-1$
-        gd = new GridData(GridData.FILL_HORIZONTAL);
-        usernameLabel.setLayoutData(gd);
-
-        usernameText = new Text(scrolled, SWT.SINGLE | SWT.BORDER);
-        usernameText.setToolTipText(UTIL.getString("Common.Username.ToolTip")); //$NON-NLS-1$
-        gd = new GridData(GridData.FILL_HORIZONTAL);
-        usernameText.setLayoutData(gd);
-        usernameText.setEnabled(false);
+        Label spacerLabel = new Label(scrolled, SWT.NONE);
+        spacerLabel.setVisible(false);
+        GridDataFactory.swtDefaults().grab(false, false).applyTo(spacerLabel);
         
-        passwordLabel = new Label(scrolled, SWT.NONE);
-        passwordLabel.setText(UTIL.getString("Common.Password.Label")); //$NON-NLS-1$
-        passwordLabel.setToolTipText(UTIL.getString("Common.Password.ToolTip")); //$NON-NLS-1$
+        credentialsComposite = new CredentialsComposite(scrolled, SWT.BORDER);
         gd = new GridData(GridData.FILL_HORIZONTAL);
-        passwordLabel.setLayoutData(gd);
+        credentialsComposite.setLayoutData(gd);
 
-        passwordText = new Text(scrolled, SWT.SINGLE | SWT.BORDER | SWT.PASSWORD);
-        passwordText.setToolTipText(UTIL.getString("Common.Password.ToolTip")); //$NON-NLS-1$
-        gd = new GridData(GridData.FILL_HORIZONTAL);
-        passwordText.setLayoutData(gd);
-        passwordText.setEnabled(false);
-        
         setPingButtonVisible(true);
         setPingButtonEnabled(false);
         setAutoConnectOnFinishDefault(false);
@@ -168,7 +136,7 @@ public class WSProfileDetailsWizardPage extends ConnectionProfileDetailsPage
         addListeners();
 
 	}
-	
+
     /* (non-Javadoc)
 	 * @see org.eclipse.jface.dialogs.DialogPage#setVisible(boolean)
 	 */
@@ -176,58 +144,56 @@ public class WSProfileDetailsWizardPage extends ConnectionProfileDetailsPage
 	public void setVisible(boolean visible) {
 		// TODO Auto-generated method stub
 		super.setVisible(visible);
-		
+
         String description = ((ConnectionProfileWizard)getWizard()).getProfileDescription();
         descriptionText.setText(description);
         
         profileText.setText(((ConnectionProfileWizard)getWizard()).getProfileName());
 	}
 
-	/**
+    /**
      * 
      */
     private void addListeners() {
-        usernameText.addListener(SWT.Modify, this);
-        passwordText.addListener(SWT.Modify, this);
-        urlText.addListener(SWT.Modify, this);
-        securityCombo.addListener(SWT.Modify, this);
+        urlText.addListener(SWT.Modify, new Listener() {
+            @Override
+            public void handleEvent(Event event) {
+                String urlStr = urlText.getText();
+                if (urlStr != null) {
+                    urlStr = urlStr.trim();
+                }
+                setProperty(IWSProfileConstants.URL_PROP_ID, urlStr);
+            }
+        });
+
+        credentialsComposite.addSecurityOptionListener(SWT.Modify, new Listener() {
+            @Override
+            public void handleEvent(Event event) {
+                setProperty(IWSProfileConstants.SECURITY_TYPE_ID,
+                        credentialsComposite.getSecurityOption().name());
+            }
+        });
+
+        credentialsComposite.addUserNameListener(SWT.Modify, new Listener() {
+            @Override
+            public void handleEvent(Event event) {
+                setProperty(IWSProfileConstants.USERNAME_PROP_ID,
+                        credentialsComposite.getUserName());
+            }
+        });
+
+        credentialsComposite.addPasswordListener(SWT.Modify, new Listener() {
+            @Override
+            public void handleEvent(Event event) {
+                setProperty(IWSProfileConstants.PASSWORD_PROP_ID,
+                        credentialsComposite.getPassword());
+            }
+        });
     }
-    
-    /**
-     * {@inheritDoc}
-     * 
-     * @see org.eclipse.swt.widgets.Listener#handleEvent(org.eclipse.swt.widgets.Event)
-     */
-    @Override
-    public void handleEvent( Event event ) {
 
-        if (event.widget == usernameText) {
-            Properties properties = ((NewConnectionProfileWizard)getWizard()).getProfileProperties();
-            properties.setProperty(IWSProfileConstants.USERNAME_PROP_ID, usernameText.getText());
-        }
-        if (event.widget == passwordText) {
-            Properties properties = ((NewConnectionProfileWizard)getWizard()).getProfileProperties();
-            properties.setProperty(IWSProfileConstants.PASSWORD_PROP_ID, passwordText.getText());
-        }
-        if (event.widget == urlText) {
-            Properties properties = ((NewConnectionProfileWizard)getWizard()).getProfileProperties();
-            String urlStr = urlText.getText();
-            if (urlStr != null) urlStr = urlStr.trim();
-            properties.setProperty(IWSProfileConstants.URL_PROP_ID, urlStr);
-        }
-        if (event.widget == securityCombo) {
-            Properties properties = ((NewConnectionProfileWizard)getWizard()).getProfileProperties();
-            properties.setProperty(IWSProfileConstants.SECURITY_TYPE_ID, securityCombo.getText());
-        	if(securityCombo.getText().equals(SecurityType.None.name())) {
-        		usernameText.setEnabled(false);
-        		passwordText.setEnabled(false);
-        	} else {
-        		usernameText.setEnabled(true);
-        		passwordText.setEnabled(true);
-        	}
-        	
-
-        }
+    private void setProperty(String propertyId, String value) {
+        Properties properties = ((NewConnectionProfileWizard) getWizard()).getProfileProperties();
+        properties.setProperty(propertyId, value);
         updateState();
     }
     
@@ -279,6 +245,8 @@ public class WSProfileDetailsWizardPage extends ConnectionProfileDetailsPage
                 }
                 
         }
+        
+        setPingButtonEnabled(true);
         
         setErrorMessage(null);
         setPageComplete(true);
@@ -341,8 +309,10 @@ public class WSProfileDetailsWizardPage extends ConnectionProfileDetailsPage
     public List getSummaryData() {
         List result = super.getSummaryData();
         result.add(new String[] {UTIL.getString("Common.URL.Label"), urlText.getText()}); //$NON-NLS-1$
-        result.add(new String[] {UTIL.getString("Common.Username.Label"), usernameText.getText()}); //$NON-NLS-1$
-        result.add(new String[] {UTIL.getString("Common.Security.Type.Label"), securityCombo.getText()}); //$NON-NLS-1$
+        result.add(new String[] {
+                UTIL.getString("Common.Username.Label"), credentialsComposite.getUserName() }); //$NON-NLS-1$
+        result.add(new String[] {
+                UTIL.getString("Common.Security.Type.Label"), credentialsComposite.getSecurityOption().name() }); //$NON-NLS-1$
         return result;
     }
     
@@ -407,21 +377,7 @@ public class WSProfileDetailsWizardPage extends ConnectionProfileDetailsPage
         }
 
         public Exception testXmlUrlConnection( IConnectionProfile icp ) {
-        	Properties connProperties = icp.getBaseProperties();
-			//InputStream not provided, check XML file
-			String xmlFile = connProperties == null ? null :(String) connProperties.get( IXmlProfileConstants.URL_PROP_ID );
-			try {
-				InputStream is = new XMLSourceFromPath(xmlFile, null).openInputStream();
-				try
-				{
-					is.close( );
-				}catch ( IOException e ) {
-				}
-			} catch (OdaException odaEx) {
-				return odaEx;
-			}
-			
-			return null;
+        	return WSWizardUtils.testURLConnection(icp, IWSProfileConstants.URL_PROP_ID);
         }
 
         public Throwable getTestConnectionException( IConnection conn ) {

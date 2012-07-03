@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
@@ -38,6 +39,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.cheatsheets.OpenCheatSheetAction;
 import org.teiid.designer.advisor.ui.AdvisorUiConstants;
 import org.teiid.designer.advisor.ui.AdvisorUiPlugin;
+import org.teiid.designer.advisor.ui.Messages;
 import org.teiid.designer.datatools.ui.dialogs.NewTeiidFilteredCPWizard;
 import org.teiid.designer.runtime.Server;
 import org.teiid.designer.runtime.ui.actions.DeployVdbAction;
@@ -46,10 +48,11 @@ import org.teiid.designer.runtime.ui.connection.CreateDataSourceAction;
 import org.teiid.designer.runtime.ui.preview.PreviewDataAction;
 import org.teiid.designer.runtime.ui.server.RuntimeAssistant;
 import org.teiid.designer.runtime.ui.vdb.ExecuteVdbAction;
+
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelerUiViewUtils;
-import com.metamatrix.modeler.transformation.ui.actions.CreateViewTableAction;
+import com.metamatrix.modeler.ui.viewsupport.IPropertiesContext;
 import com.metamatrix.ui.internal.util.UiUtil;
 import com.metamatrix.ui.internal.util.WidgetUtil;
 
@@ -77,6 +80,7 @@ public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChange
 	static IAction ACTION_IMPORT_WSDL_TO_SOURCE;
 	static IAction ACTION_IMPORT_WSDL_TO_WS;
 	static IAction ACTION_IMPORT_XML_FILE;
+	static IAction ACTION_IMPORT_XML_FILE_REMOTE;
 	static IAction ACTION_CREATE_CONNECTION_FLAT_FILE;
 	static IAction ACTION_CREATE_CONNECTION_JDBC;
 	static IAction ACTION_CREATE_CONNECTION_LDAP;
@@ -91,6 +95,7 @@ public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChange
 	static IAction ACTION_NEW_MODEL_WS;
 	static IAction ACTION_NEW_MODEL_XML_DOC;
 	static IAction ACTION_CREATE_VDB;
+	static IAction ACTION_DEFINE_VDB;
 	static IAction ACTION_EXECUTE_VDB;
 	static IAction ACTION_EDIT_VDB;
 	static IAction ACTION_DEPLOY_VDB;
@@ -101,6 +106,9 @@ public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChange
 	static IAction ACTION_EDIT_TEIID_SERVER;
 	static IAction ACTION_CREATE_DATA_SOURCE;
 	static IAction ACTION_NEW_TEIID_MODEL_PROJECT;
+	static IAction ACTION_DEFINE_TEIID_MODEL_PROJECT;
+	static IAction ACTION_DEFINE_VIEW_TABLE;
+	static IAction ACTION_DEFINE_REST_PROCEDURE;
 
 	static void loadHandlers() {
 
@@ -140,6 +148,11 @@ public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChange
         		COMMAND_LABELS.IMPORT_XML_FILE, 
         		COMMAND_LABELS_SHORT.IMPORT_XML_FILE,
         		COMMAND_DESC.IMPORT_XML_FILE);
+        addActionHandler(
+        		COMMAND_IDS.IMPORT_XML_FILE_URL, 
+        		COMMAND_LABELS.IMPORT_XML_FILE_URL, 
+        		COMMAND_LABELS_SHORT.IMPORT_XML_FILE_URL,
+        		COMMAND_DESC.IMPORT_XML_FILE_URL);
         addActionHandler(
         		COMMAND_IDS.CREATE_CONNECTION_FLAT_FILE, 
         		COMMAND_LABELS.CREATE_CONNECTION_FLAT_FILE, 
@@ -211,6 +224,16 @@ public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChange
         		COMMAND_LABELS_SHORT.CREATE_VDB,
         		COMMAND_DESC.CREATE_VDB);
         addActionHandler(
+        		COMMAND_IDS.DEFINE_VDB,
+                COMMAND_LABELS.DEFINE_VDB,
+                COMMAND_LABELS_SHORT.DEFINE_VDB,
+                COMMAND_DESC.DEFINE_VDB);
+        addActionHandler(
+        		COMMAND_IDS.DEFINE_SOURCE,
+                COMMAND_LABELS.DEFINE_SOURCE,
+                COMMAND_LABELS_SHORT.DEFINE_SOURCE,
+                COMMAND_DESC.DEFINE_SOURCE);
+        addActionHandler(
         		COMMAND_IDS.EXECUTE_VDB, 
         		COMMAND_LABELS.EXECUTE_VDB, 
         		COMMAND_LABELS.EXECUTE_VDB,
@@ -260,10 +283,48 @@ public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChange
         		COMMAND_LABELS.NEW_TEIID_MODEL_PROJECT, 
         		COMMAND_LABELS_SHORT.NEW_TEIID_MODEL_PROJECT,
         		COMMAND_DESC.NEW_TEIID_MODEL_PROJECT);
-        addActionHandler(COMMAND_IDS.NEW_OBJECT_VIEW_TABLE,
-                         COMMAND_LABELS.NEW_OBJECT_VIEW_TABLE,
-                         COMMAND_LABELS_SHORT.NEW_OBJECT_VIEW_TABLE,
-                         COMMAND_DESC.NEW_OBJECT_VIEW_TABLE);
+        addActionHandler(
+        		COMMAND_IDS.DEFINE_TEIID_MODEL_PROJECT, 
+        		COMMAND_LABELS.DEFINE_TEIID_MODEL_PROJECT, 
+        		COMMAND_LABELS_SHORT.DEFINE_TEIID_MODEL_PROJECT,
+        		COMMAND_DESC.DEFINE_TEIID_MODEL_PROJECT);
+        addActionHandler(
+        		COMMAND_IDS.NEW_OBJECT_VIEW_TABLE,
+                COMMAND_LABELS.NEW_OBJECT_VIEW_TABLE,
+                COMMAND_LABELS_SHORT.NEW_OBJECT_VIEW_TABLE,
+                COMMAND_DESC.NEW_OBJECT_VIEW_TABLE);
+        addActionHandler(
+        		COMMAND_IDS.DEFINE_VIEW_TABLE,
+                COMMAND_LABELS.DEFINE_VIEW_TABLE,
+                COMMAND_LABELS_SHORT.DEFINE_VIEW_TABLE,
+                COMMAND_DESC.DEFINE_VIEW_TABLE);
+        addActionHandler(
+        		COMMAND_IDS.DEFINE_VIEW_PROCEDURE,
+                COMMAND_LABELS.DEFINE_VIEW_PROCEDURE,
+                COMMAND_LABELS_SHORT.DEFINE_VIEW_PROCEDURE,
+                COMMAND_DESC.DEFINE_VIEW_PROCEDURE);
+        addActionHandler(
+        		COMMAND_IDS.NEW_OBJECT_REST_PROCEDURE,
+                COMMAND_LABELS.NEW_OBJECT_REST_PROCEDURE,
+                COMMAND_LABELS_SHORT.NEW_OBJECT_REST_PROCEDURE,
+                COMMAND_DESC.NEW_OBJECT_REST_PROCEDURE);
+        addActionHandler(
+        		COMMAND_IDS.GENERATE_REST_WAR,
+                COMMAND_LABELS.GENERATE_REST_WAR,
+                COMMAND_LABELS_SHORT.GENERATE_REST_WAR,
+                COMMAND_DESC.GENERATE_REST_WAR);
+
+        addActionHandler(
+        		COMMAND_IDS.GENERATE_SOAP_WAR,
+                COMMAND_LABELS.GENERATE_SOAP_WAR,
+                COMMAND_LABELS_SHORT.GENERATE_SOAP_WAR,
+                COMMAND_DESC.GENERATE_SOAP_WAR);
+        
+        addActionHandler(
+        		COMMAND_IDS.DEPLOY_WAR,
+                COMMAND_LABELS.DEPLOY_WAR,
+                COMMAND_LABELS_SHORT.DEPLOY_WAR,
+                COMMAND_DESC.DEPLOY_WAR);
         
         addActionHandler(
         		CHEAT_SHEET_IDS.MODEL_FROM_JDBC_SOURCE, 
@@ -274,12 +335,13 @@ public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChange
         		CHEAT_SHEET_DISPLAY_NAMES.MULTI_SOURCE_VDB, 
         		CHEAT_SHEET_DISPLAY_NAMES.MULTI_SOURCE_VDB);
         addActionHandler(
-CHEAT_SHEET_IDS.MODEL_XML_LOCAL_SOURCE,
-                         CHEAT_SHEET_DISPLAY_NAMES.MODEL_XML_LOCAL_SOURCE,
-                         CHEAT_SHEET_DISPLAY_NAMES.MODEL_XML_LOCAL_SOURCE);
-        addActionHandler(CHEAT_SHEET_IDS.MODEL_XML_REMOTE_SOURCE,
-                         CHEAT_SHEET_DISPLAY_NAMES.MODEL_XML_REMOTE_SOURCE,
-                         CHEAT_SHEET_DISPLAY_NAMES.MODEL_XML_REMOTE_SOURCE);
+        		CHEAT_SHEET_IDS.MODEL_XML_LOCAL_SOURCE,
+                CHEAT_SHEET_DISPLAY_NAMES.MODEL_XML_LOCAL_SOURCE,
+                CHEAT_SHEET_DISPLAY_NAMES.MODEL_XML_LOCAL_SOURCE);
+        addActionHandler(
+        		CHEAT_SHEET_IDS.MODEL_XML_REMOTE_SOURCE,
+                CHEAT_SHEET_DISPLAY_NAMES.MODEL_XML_REMOTE_SOURCE,
+                CHEAT_SHEET_DISPLAY_NAMES.MODEL_XML_REMOTE_SOURCE);
         addActionHandler(
         		CHEAT_SHEET_IDS.MODEL_FLAT_FILE_SOURCE, 
         		CHEAT_SHEET_DISPLAY_NAMES.MODEL_FLAT_FILE_SOURCE, 
@@ -362,9 +424,17 @@ CHEAT_SHEET_IDS.MODEL_XML_LOCAL_SOURCE,
 			 return;
 		}
 		if( id.equalsIgnoreCase(COMMAND_IDS.IMPORT_XML_FILE)) {
+			 properties.put(IPropertiesContext.KEY_IMPORT_XML_TYPE, IPropertiesContext.IMPORT_XML_LOCAL);
 			 launchWizard(ImportMetadataAction.TEIID_XML_FILE, properties, synchronous);
 			 return;
 		}
+		
+		if( id.equalsIgnoreCase(COMMAND_IDS.IMPORT_XML_FILE_URL)) {
+			 properties.put(IPropertiesContext.KEY_IMPORT_XML_TYPE, IPropertiesContext.IMPORT_XML_REMOTE);
+			 launchWizard(ImportMetadataAction.TEIID_XML_FILE, properties, synchronous);
+			 return;
+		}
+		
 		if( id.equalsIgnoreCase(COMMAND_IDS.IMPORT_WSDL_TO_SOURCE)) {
 			 launchWizard(ImportMetadataAction.WSDL_TO_RELATIONAL, properties, synchronous);
 			 return;
@@ -396,8 +466,15 @@ CHEAT_SHEET_IDS.MODEL_XML_LOCAL_SOURCE,
 		}
 		
         // NEW OBJECT OPTIONS
-        if (id.equalsIgnoreCase(COMMAND_IDS.NEW_OBJECT_VIEW_TABLE)) {
-            CreateViewTableAction action = new CreateViewTableAction(properties);
+        if (id.equalsIgnoreCase(COMMAND_IDS.DEFINE_VIEW_TABLE)) {
+        	DefineViewTableAction action = new DefineViewTableAction(properties);
+            action.run();
+            return;
+        }
+        
+        // NEW OBJECT OPTIONS
+        if (id.equalsIgnoreCase(COMMAND_IDS.DEFINE_VIEW_PROCEDURE)) {
+        	DefineViewProcedureAction action = new DefineViewProcedureAction(properties);
             action.run();
             return;
         }
@@ -449,6 +526,12 @@ CHEAT_SHEET_IDS.MODEL_XML_LOCAL_SOURCE,
 	        return;
 		}
 		
+		if( id.equalsIgnoreCase(COMMAND_IDS.DEFINE_VDB)) {
+			DefineVdbAction action = new DefineVdbAction(properties);
+			action.run();
+	        return;
+		}
+		
 		if( id.equalsIgnoreCase(COMMAND_IDS.EDIT_VDB)) {
 			EditVdbAction action = new EditVdbAction();
 			action.run();
@@ -467,8 +550,14 @@ CHEAT_SHEET_IDS.MODEL_XML_LOCAL_SOURCE,
 	        return;
 		}
 		
-		if( id.equalsIgnoreCase(COMMAND_IDS.NEW_TEIID_MODEL_PROJECT)) {
+		if( id.equalsIgnoreCase(COMMAND_IDS.NEW_TEIID_MODEL_PROJECT)) {;
 			ModelerUiViewUtils.launchWizard("newModelProject", new StructuredSelection(), properties, synchronous); //$NON-NLS-1$
+	        return;
+		}
+		
+		if( id.equalsIgnoreCase(COMMAND_IDS.DEFINE_TEIID_MODEL_PROJECT)) {
+			DefineProjectAction action = new DefineProjectAction(properties);
+			action.run();
 	        return;
 		}
 		
@@ -500,7 +589,8 @@ CHEAT_SHEET_IDS.MODEL_XML_LOCAL_SOURCE,
 		
 		if( id.equalsIgnoreCase(COMMAND_IDS.CREATE_DATA_SOURCE)) {
             // make sure there is a Teiid connection
-            if (RuntimeAssistant.ensureServerConnection(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "No Teiid Server Defined")) { //$NON-NLS-1$
+            if (RuntimeAssistant.ensureServerConnection(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), 
+            		Messages.CreateDataSource_NoServerMessage)) {
             	try {
 					Server server = DqpPlugin.getInstance().getServerManager().getDefaultServer();
 					
@@ -519,6 +609,30 @@ CHEAT_SHEET_IDS.MODEL_XML_LOCAL_SOURCE,
 	        return;
 		}
 		
+		if( id.equalsIgnoreCase(COMMAND_IDS.DEFINE_SOURCE)) {
+			DefineSourceAction action = new DefineSourceAction(properties);
+			action.run();
+	        return;
+		}
+		
+		if( id.equalsIgnoreCase(COMMAND_IDS.GENERATE_REST_WAR)) {
+			GenerateRESTWarAction action = new GenerateRESTWarAction(properties);
+			action.run();
+	        return;
+		}
+		
+//		if( id.equalsIgnoreCase(COMMAND_IDS.GENERATE_SOAP_WAR)) {
+//			// TODO
+//	        return;
+//		}
+
+		if( id.equalsIgnoreCase(COMMAND_IDS.DEPLOY_WAR)) {
+			LaunchInstructionsAction action = new LaunchInstructionsAction(INSTRUCTIONS.DEPLOY_WAR_FILE);
+			action.run();
+	        return;
+		}
+
+
 		if( id.equalsIgnoreCase(CHEAT_SHEET_IDS.CONSUME_SOAP_SERVICE) ||
 				id.equalsIgnoreCase(CHEAT_SHEET_IDS.CREATE_AND_TEST_VDB) ||
 				id.equalsIgnoreCase(CHEAT_SHEET_IDS.MODEL_FLAT_FILE_SOURCE) ||
@@ -560,6 +674,9 @@ CHEAT_SHEET_IDS.MODEL_XML_LOCAL_SOURCE,
 			return Images.IMPORT;
 		}
 		if( id.equalsIgnoreCase(COMMAND_IDS.IMPORT_XML_FILE)) {
+			return Images.IMPORT;
+		}
+		if( id.equalsIgnoreCase(COMMAND_IDS.IMPORT_XML_FILE_URL)) {
 			return Images.IMPORT;
 		}
 		if( id.equalsIgnoreCase(COMMAND_IDS.IMPORT_WSDL_TO_SOURCE)) {
@@ -622,6 +739,10 @@ CHEAT_SHEET_IDS.MODEL_XML_LOCAL_SOURCE,
 			return Images.NEW_VDB;
 		}
 		
+		if( id.equalsIgnoreCase(COMMAND_IDS.DEFINE_VDB)) {
+			return Images.NEW_VDB;
+		}
+		
 		if( id.equalsIgnoreCase(COMMAND_IDS.EXECUTE_VDB)) {
 			return Images.EXECUTE_VDB_ACTION;
 		}
@@ -645,6 +766,10 @@ CHEAT_SHEET_IDS.MODEL_XML_LOCAL_SOURCE,
 			return Images.NEW_PROJECT_ACTION;
 		}
 		
+		if( id.equalsIgnoreCase(COMMAND_IDS.DEFINE_TEIID_MODEL_PROJECT)) {
+			return Images.NEW_PROJECT_ACTION;
+		}
+		
 		if( id.equalsIgnoreCase(COMMAND_IDS.OPEN_DATA_SOURCE_EXPLORER_VIEW)) {
 			return Images.DATA_SOURCE_EXPLORER_VIEW;
 		}
@@ -655,6 +780,38 @@ CHEAT_SHEET_IDS.MODEL_XML_LOCAL_SOURCE,
 		
 		if( id.equalsIgnoreCase(COMMAND_IDS.EDIT_TEIID_SERVER)) {
 			return Images.EDIT_TEIID_SERVER;
+		}
+		
+		if( id.equalsIgnoreCase(COMMAND_IDS.NEW_OBJECT_VIEW_TABLE)) {
+			return Images.NEW_VIRTUAL_TABLE_ICON;
+		}
+		
+		if( id.equalsIgnoreCase(COMMAND_IDS.DEFINE_VIEW_TABLE)) {
+			return Images.NEW_VIRTUAL_TABLE_ICON;
+		}
+		
+		if( id.equalsIgnoreCase(COMMAND_IDS.DEFINE_VIEW_PROCEDURE)) {
+			return Images.NEW_VIRTUAL_PROCEDURE_ICON;
+		}
+		
+		if( id.equalsIgnoreCase(COMMAND_IDS.NEW_OBJECT_REST_PROCEDURE)) {
+			return Images.NEW_VIRTUAL_PROCEDURE_ICON;
+		}
+		
+		if( id.equalsIgnoreCase(COMMAND_IDS.GENERATE_REST_WAR)) {
+			return Images.GENERATE_WAR;
+		}
+		
+		if( id.equalsIgnoreCase(COMMAND_IDS.GENERATE_SOAP_WAR)) {
+			return Images.GENERATE_WAR;
+		}
+		
+		if( id.equalsIgnoreCase(COMMAND_IDS.DEPLOY_WAR)) {
+			return Images.DEPLOY_WAR;
+		}
+		
+		if( id.equalsIgnoreCase(COMMAND_IDS.DEFINE_SOURCE)) {
+			return Images.CREATE_SOURCES;
 		}
 		
 		if( id.equalsIgnoreCase(CHEAT_SHEET_IDS.CONSUME_SOAP_SERVICE) ) {
@@ -730,14 +887,14 @@ CHEAT_SHEET_IDS.MODEL_XML_LOCAL_SOURCE,
 		addMenuForAspect(manager, MODELING_ASPECT_LABELS.MANAGE_CONNECTIONS, ASPECT_MANAGE_CONNECTIONS);
 		addMenuForAspect(manager, MODELING_ASPECT_LABELS.MODEL_DATA_SOURCES, ASPECT_MODEL_DATA_SOURCES);
 		//addMenuForAspect(manager, MODELING_ASPECT_LABELS.CONSUME_REST_WS, ASPECT_CONSUME_REST_WS);
-		addMenuForAspect(manager, MODELING_ASPECT_LABELS.CONSUME_SOAP_WS, ASPECT_CONSUME_SOAP_WS);
+//		addMenuForAspect(manager, MODELING_ASPECT_LABELS.CONSUME_SOAP_WS, ASPECT_CONSUME_SOAP_WS);
 		addMenuForAspect(manager, MODELING_ASPECT_LABELS.MANAGE_VDBS, ASPECT_MANAGE_VDBS);
 		addMenuForAspect(manager, MODELING_ASPECT_LABELS.TEIID_SERVER, ASPECT_TEIID_SERVER);
 		addMenuForAspect(manager, MODELING_ASPECT_LABELS.TEST, ASPECT_TEST);
 		
 		if( !cheatSheetActions.isEmpty() ) {
 			manager.add( new Separator());
-			MenuManager subManager = new MenuManager("Teiid Cheat Sheets"); //$NON-NLS-1$
+			MenuManager subManager = new MenuManager("Cheat Sheets"); //$NON-NLS-1$
 			for(IAction action : cheatSheetActions) {
 				subManager.add(action);
 			}
@@ -843,6 +1000,10 @@ CHEAT_SHEET_IDS.MODEL_XML_LOCAL_SOURCE,
 			return ACTION_CREATE_VDB;
 		}
 		
+		if( commandId.equalsIgnoreCase(COMMAND_IDS.DEFINE_VDB)) {
+			return ACTION_CREATE_VDB;
+		}
+		
 		if( commandId.equalsIgnoreCase(COMMAND_IDS.EXECUTE_VDB)) {
 			return ACTION_EXECUTE_VDB;
 		}
@@ -866,8 +1027,20 @@ CHEAT_SHEET_IDS.MODEL_XML_LOCAL_SOURCE,
 			return ACTION_NEW_TEIID_MODEL_PROJECT;
 		}
 		
+		if( commandId.equalsIgnoreCase(COMMAND_IDS.DEFINE_TEIID_MODEL_PROJECT)) {
+			return ACTION_DEFINE_TEIID_MODEL_PROJECT;
+		}
+		
 		if( commandId.equalsIgnoreCase(COMMAND_IDS.OPEN_DATA_SOURCE_EXPLORER_VIEW)) {
 			return ACTION_OPEN_DATA_SOURCE_EXPLORER_VIEW;
+		}
+		
+		if( commandId.equalsIgnoreCase(COMMAND_IDS.NEW_TEIID_SERVER)) {
+			return ACTION_NEW_TEIID_SERVER;
+		}
+		
+		if( commandId.equalsIgnoreCase(COMMAND_IDS.EDIT_TEIID_SERVER)) {
+			return ACTION_EDIT_TEIID_SERVER;
 		}
 		return null;
 	}
@@ -898,6 +1071,7 @@ CHEAT_SHEET_IDS.MODEL_XML_LOCAL_SOURCE,
 		ACTION_IMPORT_WSDL_TO_SOURCE = createAction(COMMAND_IDS.IMPORT_WSDL_TO_SOURCE);
 		ACTION_IMPORT_WSDL_TO_WS = createAction(COMMAND_IDS.IMPORT_WSDL_TO_WS);
 		ACTION_IMPORT_XML_FILE = createAction(COMMAND_IDS.IMPORT_XML_FILE);
+		ACTION_IMPORT_XML_FILE_REMOTE = createAction(COMMAND_IDS.IMPORT_XML_FILE_URL);
 		ACTION_CREATE_CONNECTION_FLAT_FILE = createAction(COMMAND_IDS.CREATE_CONNECTION_FLAT_FILE);
 		ACTION_CREATE_CONNECTION_JDBC = createAction(COMMAND_IDS.CREATE_CONNECTION_JDBC);
 		ACTION_CREATE_CONNECTION_LDAP = createAction(COMMAND_IDS.CREATE_CONNECTION_LDAP);
@@ -922,6 +1096,7 @@ CHEAT_SHEET_IDS.MODEL_XML_LOCAL_SOURCE,
 		ACTION_EDIT_TEIID_SERVER = createAction(COMMAND_IDS.EDIT_TEIID_SERVER);
 		ACTION_CREATE_DATA_SOURCE = createAction(COMMAND_IDS.CREATE_DATA_SOURCE);
 		ACTION_NEW_TEIID_MODEL_PROJECT = createAction(COMMAND_IDS.NEW_TEIID_MODEL_PROJECT);
+		ACTION_DEFINE_TEIID_MODEL_PROJECT = createAction(COMMAND_IDS.DEFINE_TEIID_MODEL_PROJECT);
 		
 	}
 	

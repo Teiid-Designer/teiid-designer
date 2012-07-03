@@ -18,13 +18,11 @@ import static org.teiid.designer.extension.ui.UiConstants.ImageIds.EDIT_PROPERTY
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.MED_EDITOR;
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.REMOVE_METACLASS;
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.REMOVE_PROPERTY;
-
 import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -63,7 +61,6 @@ import org.teiid.designer.extension.ui.Activator;
 import org.teiid.designer.extension.ui.Messages;
 import org.teiid.designer.extension.ui.model.MedModelNode;
 import org.teiid.designer.extension.ui.model.MedModelNode.ModelType;
-
 import com.metamatrix.core.util.ArrayUtil;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.internal.ui.forms.FormUtil;
@@ -307,13 +304,7 @@ public class PropertiesEditorPage extends MedEditorPage {
                 @Override
                 public String getText( Object element ) {
                     String elemString = element.toString();
-                    // This extracts the name between ".impl." and "Impl" from the metaclass name
-                    if (!CoreStringUtil.isEmpty(elemString)) {
-                        int indx1 = elemString.indexOf(MC_PREFIX);
-                        int indx2 = elemString.indexOf(MC_SUFFIX);
-                        return elemString.substring(indx1 + MC_PREFIX.length(), indx2);
-                    }
-                    return null;
+                    return getMetaclassShortName(elemString);
                 }
             });
 
@@ -344,6 +335,16 @@ public class PropertiesEditorPage extends MedEditorPage {
         }
 
         return finalSection;
+    }
+
+    private String getMetaclassShortName( String metaclassName ) {
+        // This extracts the name between ".impl." and "Impl" from the metaclass name
+        if (!CoreStringUtil.isEmpty(metaclassName)) {
+            int indx1 = metaclassName.indexOf(MC_PREFIX);
+            int indx2 = metaclassName.indexOf(MC_SUFFIX);
+            return metaclassName.substring(indx1 + MC_PREFIX.length(), indx2);
+        }
+        return null;
     }
 
     @SuppressWarnings("unused")
@@ -754,10 +755,11 @@ public class PropertiesEditorPage extends MedEditorPage {
     void handleRemoveMetaclass() {
         assert !CoreStringUtil.isEmpty(getSelectedMetaclass()) : "Remove metaclass button is enabled and there is no metaclass selected"; //$NON-NLS-1$
         String selectedMetaclassName = getSelectedMetaclass();
+        String metaclassShortName = getMetaclassShortName(selectedMetaclassName);
 
         if (MessageFormDialog.openQuestion(getShell(), Messages.removeMetaclassDialogTitle,
                                            Activator.getDefault().getImage(MED_EDITOR),
-                                           NLS.bind(Messages.removeMetaclassDialogMsg, selectedMetaclassName))) {
+                                           NLS.bind(Messages.removeMetaclassDialogMsg, metaclassShortName))) {
             getMed().removeMetaclass(selectedMetaclassName);
         }
     }

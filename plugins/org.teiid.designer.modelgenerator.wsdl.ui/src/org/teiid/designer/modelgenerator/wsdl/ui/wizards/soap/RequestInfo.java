@@ -15,7 +15,9 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.osgi.util.NLS;
 import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
 
+import com.metamatrix.modeler.modelgenerator.wsdl.model.Message;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Operation;
+import com.metamatrix.modeler.modelgenerator.wsdl.model.Part;
 
 public class RequestInfo extends ProcedureInfo {
 
@@ -91,7 +93,8 @@ public class RequestInfo extends ProcedureInfo {
 //		BEGIN
 //			SELECT 
 //				XMLELEMENT(NAME "update", XMLNAMESPACES(DEFAULT 'http://quickstart.samples/xsd'), 
-//					XMLELEMENT(NAME symbol, StockQuoteServiceXML."update".create_update_.symbol), 
+//					XMLELEMENT(NAME symbol, StockQuoteServiceXML."update".create_update_.symbol, 
+//						XMLATTRIBUTES( symbol.empno AS "work_number"), 
 //					XMLELEMENT(NAME price, StockQuoteServiceXML."update".create_update_.price)
 //					) AS xml_out;
 //		END
@@ -128,8 +131,18 @@ public class RequestInfo extends ProcedureInfo {
     	
     	OUTER_PARENTH : {
 	    	sb.append(NAME).append(SPACE);
-	    	sb.append(getGenerator().convertSqlNameSegment(getOperation().getName())).append(COMMA).append(SPACE);
-	    	String nsString = getNamespaceString();
+	    	String elementName = null;
+	    	Message message = null;
+	    	Part[] parts = null;
+	    	
+	    	if (!(this.getGenerator().getImportManager().isMessageServiceMode())) {
+		    	message = this.getOperation().getInputMessage();
+		    	parts = message.getParts();
+		    	elementName = getPartElementName(parts[0]);
+	    	}
+	    	
+	    	sb.append(getGenerator().convertSqlNameSegment(elementName==null?getOperation().getName():elementName)).append(COMMA).append(SPACE);
+	    	String nsString = (!(this.getGenerator().getImportManager().isMessageServiceMode()) ? getNamespaceString(parts) : null);
 	    	//If this is MESSAGE mode, no need to add NS since we did that at the Envelope level
 	    	if (!(this.getGenerator().getImportManager().isMessageServiceMode())) {
 		    	if( nsString != null && !nsString.isEmpty() ) {
@@ -149,7 +162,12 @@ public class RequestInfo extends ProcedureInfo {
 	    		sb.append(TAB).append(TAB).append(TAB).append(XMLELEMENT);
 	    		sb.append(L_PAREN);
 	    		sb.append(NAME).append(SPACE).append(getGenerator().convertSqlNameSegment(name));
-	    		sb.append(COMMA).append(SPACE).append(getFullParameterName(requestProcedureName, name));
+	    		if( columnInfo.getAttributeInfoArray().length == 0 ) {
+	    			sb.append(COMMA).append(SPACE).append(getFullParameterName(requestProcedureName, name));
+	    		}
+	    		
+	    		addAttributesForElement(sb, columnInfo);
+	    		
 	    		sb.append(R_PAREN);
 	    		if(i < (nColumns-1)) {
 	    			sb.append(COMMA).append(SPACE).append(RETURN);
@@ -167,16 +185,64 @@ public class RequestInfo extends ProcedureInfo {
 		return sb.toString();
 	}
 	
-    private String getNamespaceString() {
+	private String getPartElementName(Part part) {
+		String partElementName = null;
+
+		partElementName = part.getTypeName();
+		if (partElementName == null) {
+			partElementName = part.getElementName();
+		}
+
+		return partElementName;
+	}
+	
+	private String getPartElementNamespace(Part part) {
+		String partElementNamespace = null;
+
+		partElementNamespace = part.getTypeNamespace();
+		if (partElementNamespace == null) {
+			partElementNamespace = part.getElementNamespace();
+		}
+
+		return partElementNamespace;
+	}
+	
+	private void addAttributesForElement(StringBuffer sb, ColumnInfo columnInfo) {
+		if( columnInfo.getAttributeInfoArray().length > 0 ) {
+			sb.append(COMMA).append(RETURN).append(TAB).append(TAB).append(TAB).append(TAB).append(XMLATTRIBUTES);
+			sb.append(L_PAREN);
+			int index = 0;
+			for( AttributeInfo attrInfo : columnInfo.getAttributeInfoArray() ) {
+				if( index > 0 ) {
+					sb.append(COMMA).append(SPACE);
+				}
+				sb.append(attrInfo.getName());
+				if( !attrInfo.getName().equalsIgnoreCase(attrInfo.getAlias())) {
+					sb.append(SPACE).append(AS).append(SPACE);
+					sb.append(attrInfo.getAlias());
+				}
+				index++;
+			}
+			sb.append(R_PAREN);
+		}
+	}
+	
+    private String getNamespaceString(Part[] parts) {
     	
     	if( getGenerator().getNamespaceURI() == null ) {
     		return null;
     	}
     	
+    	String ns = null;
+    	
+    	if (parts.length==1){
+    		ns = getPartElementNamespace(parts[0]);
+    	}
+    	
     	StringBuffer sb = new StringBuffer();
     	
     	sb.append(XMLNAMESPACES).append(L_PAREN);
-    	sb.append(DEFAULT).append(SPACE).append(S_QUOTE).append(getGenerator().getNamespaceURI()).append(S_QUOTE);
+    	sb.append(DEFAULT).append(SPACE).append(S_QUOTE).append(ns==null?getGenerator().getNamespaceURI():ns).append(S_QUOTE);
     	sb.append(R_PAREN);
     	
     	return sb.toString();

@@ -25,9 +25,10 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.teiid.designer.datatools.profiles.ws.IWSProfileConstants.SecurityType;
 import org.teiid.designer.datatools.ui.DatatoolsUiConstants;
 import org.teiid.designer.datatools.ui.DatatoolsUiPlugin;
+
+import com.metamatrix.ui.ICredentialsCommon.SecurityType;
 
 public class PropertyPage extends ProfileDetailsPropertyPage implements
 		IContextProvider, DatatoolsUiConstants {
@@ -120,7 +121,6 @@ public class PropertyPage extends ProfileDetailsPropertyPage implements
         gd.horizontalSpan = 1;
         securityText.setLayoutData(gd);
 
-
         usernameLabel = new Label(scrolled, SWT.NONE);
         usernameLabel.setText(UTIL.getString("Common.Username.Label")); //$NON-NLS-1$
         usernameLabel.setToolTipText(UTIL.getString("Common.Username.ToolTip")); //$NON-NLS-1$
@@ -202,8 +202,7 @@ public class PropertyPage extends ProfileDetailsPropertyPage implements
             valid = false;
         }
         if (!SecurityType.None.name().equals(securityText.getText()) &&
-        		!SecurityType.HTTPBasic.name().equals(securityText.getText()) &&
-        		!SecurityType.WSSecurity.name().equals(securityText.getText())) {
+                !SecurityType.HTTPBasic.name().equals(securityText.getText())) {
         	errorMessage = UTIL.getString("Common.Security.Error.Message"); //$NON-NLS-1$
     		valid = false;
         }

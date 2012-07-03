@@ -8,6 +8,7 @@
 package org.teiid.designer.runtime.ui.vdb;
 
 import java.util.Properties;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -17,16 +18,21 @@ import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
+
 import com.metamatrix.core.event.IChangeListener;
 import com.metamatrix.core.event.IChangeNotifier;
 import com.metamatrix.core.util.I18nUtil;
@@ -34,7 +40,8 @@ import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.internal.ui.explorer.ModelExplorerContentProvider;
 import com.metamatrix.modeler.internal.ui.explorer.ModelExplorerLabelProvider;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelWorkspaceDialog;
-import com.metamatrix.modeler.ui.viewsupport.DesignerPropertiesUtil;
+import com.metamatrix.modeler.internal.ui.viewsupport.SingleProjectFilter;
+import com.metamatrix.modeler.ui.viewsupport.DesignerProperties;
 import com.metamatrix.ui.internal.util.WidgetFactory;
 import com.metamatrix.ui.internal.viewsupport.ClosedProjectFilter;
 import com.metamatrix.ui.internal.viewsupport.StatusInfo;
@@ -51,8 +58,12 @@ public class DeployVdbDialog extends TitleAreaDialog implements DqpUiConstants,
 
 	private Button browseButton;
 	private Text selectedVdbText;
+	private Button createVdbDataSourceCB;
+	private boolean doCreateVdbDataSource;
+	private String jndiNameValue;
+	private Text jndiNameText;
 
-	Properties designerProperties;
+	DesignerProperties designerProperties;
 
 	/**
 	 * @since 5.5.3
@@ -60,7 +71,7 @@ public class DeployVdbDialog extends TitleAreaDialog implements DqpUiConstants,
 	public DeployVdbDialog(Shell parentShell, Properties properties) {
 		super(parentShell);
 		setShellStyle(getShellStyle() | SWT.RESIZE);
-		this.designerProperties = properties;
+		this.designerProperties = (DesignerProperties)properties;
 	}
 
 	/**
@@ -107,6 +118,7 @@ public class DeployVdbDialog extends TitleAreaDialog implements DqpUiConstants,
 	 * @see org.eclipse.jface.dialogs.TitleAreaDialog#createDialogArea(org.eclipse.swt.widgets.Composite)
 	 * @since 5.5.3
 	 */
+	@SuppressWarnings("unused")
 	@Override
 	protected Control createDialogArea(Composite parent) {
 
@@ -144,12 +156,68 @@ public class DeployVdbDialog extends TitleAreaDialog implements DqpUiConstants,
 				handleBrowseWorkspaceForVdbPressed();
 			}
 		});
+		
+		OPTIONS_WIDGETS : {
+			Group restGroup = WidgetFactory.createGroup(panel, UTIL.getString(PREFIX + "options"), SWT.FILL); //$NON-NLS-1$
+			restGroup.setLayout(new GridLayout(2, false));
+			GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+			gd.horizontalSpan=4;
+			restGroup.setLayoutData(gd);
+			
+			this.createVdbDataSourceCB = WidgetFactory.createCheckBox(restGroup, UTIL.getString(PREFIX + "createVdbDataSource")); //$NON-NLS-1$
+			this.createVdbDataSourceCB.setEnabled(true);
+			this.createVdbDataSourceCB.setSelection(true);
+			this.doCreateVdbDataSource = true;
+			gd = new GridData();
+			gd.horizontalSpan=3;
+			this.createVdbDataSourceCB.setLayoutData(gd);
+			this.createVdbDataSourceCB.addSelectionListener(new SelectionListener() {
+				
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					boolean doCreateVdbDataSource = createVdbDataSourceCB.getSelection();
+					jndiNameText.setEnabled(doCreateVdbDataSource);
+				}
+				
+				@Override
+				public void widgetDefaultSelected(SelectionEvent e) {
+					// TODO Auto-generated method stub
+					
+				}
+			});
+			
+			label = WidgetFactory.createLabel(restGroup, UTIL.getString(PREFIX + "jndiName")); //$NON-NLS-1$
+			label.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
+
+			// textfield for named type
+			this.jndiNameText = WidgetFactory.createTextField(restGroup, GridData.FILL_HORIZONTAL);
+			this.jndiNameText.setToolTipText(UTIL.getString(PREFIX + "jndiNameTooltip")); //$NON-NLS-1$
+			this.jndiNameText.setEditable(true);
+			this.jndiNameText.addModifyListener(new ModifyListener() {
+				
+				@Override
+				public void modifyText(ModifyEvent e) {
+					jndiNameValue = jndiNameText.getText();
+					if(designerProperties != null ) {
+						designerProperties.setVdbJndiName(jndiNameValue);
+					}
+				}
+			});
+		}
 
 		return panel;
 	}
 
 	public IFile getSelectedVdb() {
 		return this.selectedVdb;
+	}
+	
+	public boolean doCreateVdbDataSource() {
+		return this.doCreateVdbDataSource;
+	}
+	
+	public String getVdbDataSourceJndiName() {
+		return this.jndiNameValue;
 	}
 
 	/**
@@ -178,6 +246,7 @@ public class DeployVdbDialog extends TitleAreaDialog implements DqpUiConstants,
 
 		// add filters
 		((ModelWorkspaceDialog) vdbDialog).addFilter(new ClosedProjectFilter());
+		((ModelWorkspaceDialog) vdbDialog).addFilter(new SingleProjectFilter(this.designerProperties));
 
 		vdbDialog.open();
 
@@ -234,10 +303,14 @@ public class DeployVdbDialog extends TitleAreaDialog implements DqpUiConstants,
 
         // Check for VDB in property definitions
 		if (this.designerProperties != null) {
-            IResource vdbResource = DesignerPropertiesUtil.getVDB(this.designerProperties);
+            IResource vdbResource = designerProperties.getVDB();
             if (vdbResource != null) {
                 selectedVdb = (IFile)vdbResource;
                 this.selectedVdbText.setText(selectedVdb.getName());
+                String vdbJndiName = designerProperties.getVdbJndiName();
+                if( vdbJndiName != null ) {
+                	this.jndiNameText.setText(vdbJndiName);
+                }
                 updateState();
             }
 		}

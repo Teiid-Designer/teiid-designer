@@ -14,27 +14,38 @@ import org.eclipse.datatools.connectivity.ui.wizards.ProfileDetailsPropertyPage;
 import org.eclipse.datatools.help.ContextProviderDelegate;
 import org.eclipse.help.IContext;
 import org.eclipse.help.IContextProvider;
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.teiid.designer.datatools.ui.DatatoolsUiConstants;
 import org.teiid.designer.datatools.ui.DatatoolsUiPlugin;
+
+import com.metamatrix.ui.ICredentialsCommon.SecurityType;
+import com.metamatrix.ui.internal.widget.CredentialsComposite;
 
 public class WSSoapPropertyPage extends ProfileDetailsPropertyPage implements IContextProvider, DatatoolsUiConstants {
 
 	private ContextProviderDelegate contextProviderDelegate = new ContextProviderDelegate(DatatoolsUiPlugin
 		.getDefault().getBundle().getSymbolicName());
 	private Composite scrolled;
+	
 	private Label urlLabel;
+	
 	private Text urlText;
+
+ 	private CredentialsComposite credentialsComposite;
 
 	public WSSoapPropertyPage() {
 		super();
@@ -94,21 +105,32 @@ public class WSSoapPropertyPage extends ProfileDetailsPropertyPage implements IC
 		gd.horizontalSpan = 1;
 		urlText.setLayoutData(gd);
 
-
-
+ 		Label spacerLabel = new Label(scrolled, SWT.NONE);
+ 		spacerLabel.setVisible(false);
+ 		GridDataFactory.swtDefaults().grab(false, false).applyTo(spacerLabel);
+        
+ 		credentialsComposite = new CredentialsComposite(scrolled, SWT.BORDER);
+ 		gd = new GridData(GridData.FILL_HORIZONTAL);
+ 		credentialsComposite.setLayoutData(gd);
+        
 		initControls();
 		addlisteners();
 	}
 
 	private void addlisteners() {
 
-		urlText.addModifyListener(new ModifyListener() {
+ 		Listener listener = new Listener() {
 
 			@Override
-			public void modifyText(ModifyEvent e) {
+			public void handleEvent(Event event) {
 				validate();
 			}
-		});
+		};
+		
+ 		urlText.addListener(SWT.Modify, listener);
+ 		credentialsComposite.addSecurityOptionListener(SWT.Modify, listener);
+ 		credentialsComposite.addUserNameListener(SWT.Modify, listener);
+ 		credentialsComposite.addPasswordListener(SWT.Modify, listener);
 	}
 
 	protected void validate() {
@@ -125,8 +147,8 @@ public class WSSoapPropertyPage extends ProfileDetailsPropertyPage implements IC
 	}
 
 	/**
-* 
-*/
+ 	 * 
+ 	 */
 	private void initControls() {
 		IConnectionProfile profile = getConnectionProfile();
 		Properties props = profile.getBaseProperties();
@@ -134,6 +156,18 @@ public class WSSoapPropertyPage extends ProfileDetailsPropertyPage implements IC
 		if (null != props.get(IWSProfileConstants.WSDL_URI_PROP_ID)) {
 			urlText.setText((String) props.get(IWSProfileConstants.WSDL_URI_PROP_ID));
 		}
+		
+ 		if (null != props.get(IWSProfileConstants.SECURITY_TYPE_ID)) {
+ 			credentialsComposite.setSecurityOption((String) props.get(IWSProfileConstants.SECURITY_TYPE_ID));
+ 		}
+		
+ 		if (null != props.get(IWSProfileConstants.USERNAME_PROP_ID)) {
+ 	 		credentialsComposite.setUserName((String) props.get(IWSProfileConstants.USERNAME_PROP_ID));
+ 	 	}
+		
+		if (null != props.get(IWSProfileConstants.PASSWORD_PROP_ID)) {
+	 		credentialsComposite.setPassword((String) props.get(IWSProfileConstants.PASSWORD_PROP_ID));
+	 	}
 	}
 
 	/**
@@ -148,6 +182,9 @@ public class WSSoapPropertyPage extends ProfileDetailsPropertyPage implements IC
 			result = new Properties();
 		}
 		result.setProperty(IWSProfileConstants.WSDL_URI_PROP_ID, urlText.getText());
+		result.setProperty(IWSProfileConstants.SECURITY_TYPE_ID, credentialsComposite.getSecurityOption().name());
+		result.setProperty(IWSProfileConstants.USERNAME_PROP_ID, credentialsComposite.getUserName());
+		result.setProperty(IWSProfileConstants.PASSWORD_PROP_ID, credentialsComposite.getPassword());
 		return result;
 	}
 

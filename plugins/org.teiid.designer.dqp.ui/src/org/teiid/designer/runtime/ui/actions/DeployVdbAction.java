@@ -137,10 +137,17 @@ public class DeployVdbAction extends Action implements ISelectionListener, Compa
 
 		if (dialog.getReturnCode() == Window.OK) {
 			IFile vdb = dialog.getSelectedVdb();
+			boolean doCreateDS = dialog.doCreateVdbDataSource();
+			String jndiName = dialog.getVdbDataSourceJndiName();
 			if (vdb != null) {
 		        boolean doDeploy = VdbRequiresSaveChecker.insureOpenVdbSaved(vdb);
-		        if (doDeploy) {
-		            deployVdb(server, vdb);
+		        VDB deployedVDB = null;
+		        if( doDeploy  ) {
+		        	deployedVDB = deployVdb(server, vdb, true);
+		        }
+		        
+		        if( deployedVDB != null && doCreateDS  ) {
+		        	createVdbDataSource(vdb, jndiName, jndiName);
 		        }
 			}
 		}
@@ -182,100 +189,110 @@ public class DeployVdbAction extends Action implements ISelectionListener, Compa
      */
     public static VDB deployVdb( Server server,
                                  final Object vdbOrVdbFile ) {
-        Shell shell = DqpUiPlugin.getDefault().getCurrentWorkbenchWindow().getShell();
-        VDB[] result = new VDB[1];
+    	return deployVdb(server, vdbOrVdbFile, shouldAutoCreateDataSource());
 
-        try {
-            if (!(vdbOrVdbFile instanceof IFile) && !(vdbOrVdbFile instanceof Vdb)) {
-                throw new IllegalArgumentException(UTIL.getString(I18N_PREFIX + "selectionIsNotAVdb")); //$NON-NLS-1$
-            }
-
-            // make sure there is a Teiid connection
-            if (!RuntimeAssistant.ensureServerConnection(shell, UTIL.getString(I18N_PREFIX + "noTeiidInstanceMsg"))) { //$NON-NLS-1$
-                return null;
-            }
-
-            Vdb vdb = ((vdbOrVdbFile instanceof IFile) ? new Vdb((IFile)vdbOrVdbFile, null) : (Vdb)vdbOrVdbFile);
-            final VdbDeployer deployer = new VdbDeployer(shell, vdb, server.getAdmin(), shouldAutoCreateDataSource());
-            ProgressMonitorDialog dialog = new ProgressMonitorDialog(shell);
-
-            IRunnableWithProgress runnable = new IRunnableWithProgress() {
-                /**
-                 * {@inheritDoc}
-                 * 
-                 * @see org.eclipse.jface.operation.IRunnableWithProgress#run(org.eclipse.core.runtime.IProgressMonitor)
-                 */
-                @Override
-                public void run( IProgressMonitor monitor ) throws InvocationTargetException {
-                    try {
-                        deployer.deploy(monitor);
-                    } catch (Exception e) {
-                        throw new InvocationTargetException(e);
-                    }
-                }
-            };
-
-            // deploy using progress monitor (UI is blocked)
-            dialog.run(true, false, runnable);
-
-            // process results
-            VdbDeployer.DeployStatus status = deployer.getStatus();
-
-            if (status.isError()) {
-                String message = null;
-
-                if (VdbDeployer.DeployStatus.CREATE_DATA_SOURCE_FAILED == status) {
-                    message = UTIL.getString(I18N_PREFIX + "createDataSourceFailed", deployer.getVdbName()); //$NON-NLS-1$
-                } else if (VdbDeployer.DeployStatus.DEPLOY_VDB_FAILED == status) {
-                    message = UTIL.getString(I18N_PREFIX + "vdbFailedToDeploy", deployer.getVdbName()); //$NON-NLS-1$
-                } else if (VdbDeployer.DeployStatus.TRANSLATOR_PROBLEM == status) {
-                    message = UTIL.getString(I18N_PREFIX + "translatorDoesNotExistOnServer", deployer.getVdbName()); //$NON-NLS-1$
-                } else if (VdbDeployer.DeployStatus.EXCEPTION == status) {
-                    throw deployer.getException(); // let catch block below handle
-                } else {
-                    // unexpected
-                    message = UTIL.getString(I18N_PREFIX + "unknownDeployError", deployer.getVdbName(), status); //$NON-NLS-1$
-                }
-
-                // show user the error
-                MessageDialog.openError(shell, UTIL.getString(I18N_PREFIX + "vdbNotDeployedTitle"), message); //$NON-NLS-1$
-            } else if (status.isDeployed()) {
-                VDB deployedVdb = deployer.getDeployedVdb();
-                result[0] = deployedVdb;
-
-                if (deployedVdb.getStatus().equals(VDB.Status.INACTIVE)) {
-                    StringBuilder message = new StringBuilder(UTIL.getString(I18N_PREFIX + "vdbNotActiveMessage", //$NON-NLS-1$
-                                                                             deployedVdb.getName()));
-
-                    for (String error : deployedVdb.getValidityErrors()) {
-                        message.append(UTIL.getString(I18N_PREFIX + "notActiveErrorMessage", error)); //$NON-NLS-1$
-                    }
-
-                    MessageDialog.openWarning(shell, UTIL.getString(I18N_PREFIX + "vdbNotActiveTitle"), message.toString()); //$NON-NLS-1$
-                }
-            }
-        } catch (Throwable e) {
-            if (e instanceof InvocationTargetException) {
-                e = ((InvocationTargetException)e).getCause();
-            }
-
-            String vdbName = null;
-
-            if (vdbOrVdbFile instanceof IFile) {
-                vdbName = ((IFile)vdbOrVdbFile).getName();
-            } else if (vdbOrVdbFile instanceof Vdb) {
-                vdbName = ((Vdb)vdbOrVdbFile).getFile().getName();
-            } else {
-                vdbName = UTIL.getString(I18N_PREFIX + "selectionIsNotAVdb"); //$NON-NLS-1$
-            }
-
-            String message = UTIL.getString(I18N_PREFIX + "problemDeployingVdbToServer", vdbName, server); //$NON-NLS-1$
-            UTIL.log(e);
-            ErrorDialog.openError(shell, message, null, new Status(IStatus.ERROR, PLUGIN_ID, message, e));
-        }
-
-        return result[0];
     }
+    
+	public static VDB deployVdb(Server server, final Object vdbOrVdbFile, final boolean doCreateDataSource) {
+		Shell shell = DqpUiPlugin.getDefault().getCurrentWorkbenchWindow().getShell();
+		VDB[] result = new VDB[1];
+
+		try {
+			if (!(vdbOrVdbFile instanceof IFile) && !(vdbOrVdbFile instanceof Vdb)) {
+				throw new IllegalArgumentException(UTIL.getString(I18N_PREFIX + "selectionIsNotAVdb")); //$NON-NLS-1$
+			}
+
+			// make sure there is a Teiid connection
+			if (!RuntimeAssistant.ensureServerConnection(shell, UTIL.getString(I18N_PREFIX + "noTeiidInstanceMsg"))) { //$NON-NLS-1$
+				return null;
+			}
+
+			Vdb vdb = ((vdbOrVdbFile instanceof IFile) ? new Vdb(
+					(IFile) vdbOrVdbFile, null) : (Vdb) vdbOrVdbFile);
+			final VdbDeployer deployer = new VdbDeployer(shell, vdb, server.getAdmin(), doCreateDataSource);
+			ProgressMonitorDialog dialog = new ProgressMonitorDialog(shell);
+
+			IRunnableWithProgress runnable = new IRunnableWithProgress() {
+				/**
+				 * {@inheritDoc}
+				 * 
+				 * @see org.eclipse.jface.operation.IRunnableWithProgress#run(org.eclipse.core.runtime.IProgressMonitor)
+				 */
+				@Override
+				public void run(IProgressMonitor monitor)
+						throws InvocationTargetException {
+					try {
+						deployer.deploy(monitor);
+					} catch (Exception e) {
+						throw new InvocationTargetException(e);
+					}
+				}
+			};
+
+			// deploy using progress monitor (UI is blocked)
+			dialog.run(true, false, runnable);
+
+			// process results
+			VdbDeployer.DeployStatus status = deployer.getStatus();
+
+			if (status.isError()) {
+				String message = null;
+
+				if (VdbDeployer.DeployStatus.CREATE_DATA_SOURCE_FAILED == status) {
+					message = UTIL.getString(I18N_PREFIX + "createDataSourceFailed", deployer.getVdbName()); //$NON-NLS-1$
+				} else if (VdbDeployer.DeployStatus.DEPLOY_VDB_FAILED == status) {
+					message = UTIL.getString(I18N_PREFIX + "vdbFailedToDeploy", deployer.getVdbName()); //$NON-NLS-1$
+				} else if (VdbDeployer.DeployStatus.TRANSLATOR_PROBLEM == status) {
+					message = UTIL.getString(I18N_PREFIX + "translatorDoesNotExistOnServer", deployer.getVdbName()); //$NON-NLS-1$
+				} else if (VdbDeployer.DeployStatus.EXCEPTION == status) {
+					throw deployer.getException(); // let catch block below
+													// handle
+				} else {
+					// unexpected
+					message = UTIL.getString(I18N_PREFIX + "unknownDeployError", deployer.getVdbName(), status); //$NON-NLS-1$
+				}
+
+				// show user the error
+				MessageDialog.openError(shell,UTIL.getString(I18N_PREFIX+ "vdbNotDeployedTitle"), message); //$NON-NLS-1$
+			} else if (status.isDeployed()) {
+				VDB deployedVdb = deployer.getDeployedVdb();
+				result[0] = deployedVdb;
+
+				if (deployedVdb.getStatus().equals(VDB.Status.INACTIVE)) {
+					StringBuilder message = new StringBuilder(UTIL.getString(
+							I18N_PREFIX + "vdbNotActiveMessage", //$NON-NLS-1$
+							deployedVdb.getName()));
+
+					for (String error : deployedVdb.getValidityErrors()) {
+						message.append(UTIL.getString(I18N_PREFIX + "notActiveErrorMessage", error)); //$NON-NLS-1$
+					}
+
+					MessageDialog
+							.openWarning(shell, UTIL.getString(I18N_PREFIX + "vdbNotActiveTitle"), message.toString()); //$NON-NLS-1$
+				}
+			}
+		} catch (Throwable e) {
+			if (e instanceof InvocationTargetException) {
+				e = ((InvocationTargetException) e).getCause();
+			}
+
+			String vdbName = null;
+
+			if (vdbOrVdbFile instanceof IFile) {
+				vdbName = ((IFile) vdbOrVdbFile).getName();
+			} else if (vdbOrVdbFile instanceof Vdb) {
+				vdbName = ((Vdb) vdbOrVdbFile).getFile().getName();
+			} else {
+				vdbName = UTIL.getString(I18N_PREFIX + "selectionIsNotAVdb"); //$NON-NLS-1$
+			}
+
+			String message = UTIL.getString(I18N_PREFIX + "problemDeployingVdbToServer", vdbName, server); //$NON-NLS-1$
+			UTIL.log(e);
+			ErrorDialog.openError(shell, message, null, new Status(IStatus.ERROR, PLUGIN_ID, message, e));
+		}
+
+		return result[0];
+	}
 
     /**
      * @return <code>true</code> if data source should be auto-created based on the current preference value
@@ -285,6 +302,12 @@ public class DeployVdbAction extends Action implements ISelectionListener, Compa
                         .getPreferences()
                         .getBoolean(PreferenceConstants.AUTO_CREATE_DATA_SOURCE,
                                     PreferenceConstants.AUTO_CREATE_DATA_SOURCE_DEFAULT);
+    }
+    
+    private static void createVdbDataSource(Object vdbOrVdbFile, String displayName, String jndiName) {
+    	Vdb vdb = ((vdbOrVdbFile instanceof IFile) ? new Vdb((IFile) vdbOrVdbFile, null) : (Vdb) vdbOrVdbFile);
+    	Server server = getServerManager().getDefaultServer();
+    	server.createVdbDataSource(vdb.getFile().getName(), displayName, jndiName);
     }
 
 }

@@ -65,7 +65,9 @@ IEditorActionDelegate, ISelectionChangedListener, IUpdate {
     }
 
     public void update() {
-        setEnabled(_sqlEditor != null && (_sqlEditor.isConnected()) && super.canBeEnabled());
+        String sql = getSQLStatements();
+        setEnabled(_sqlEditor != null && (_sqlEditor.isConnected()) && super.canBeEnabled()
+                && (sql != null && sql.length() > 0));
     }
 
     @Override
@@ -225,6 +227,11 @@ IEditorActionDelegate, ISelectionChangedListener, IUpdate {
     private String getExecutionPlan( Connection sqlConnection,
                                      String sql ) throws SQLException {
         String executionPlan = null;
+
+        if (sql == null || sql.length() == 0) {
+            throw new SQLException("An SQL statement is required to retrieve the execution plan");
+        }
+
         Statement stmt = sqlConnection.createStatement();
         stmt.execute("SET SHOWPLAN DEBUG"); //$NON-NLS-1$
         stmt.executeQuery(sql);

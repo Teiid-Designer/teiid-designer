@@ -17,6 +17,7 @@
          point="org.teiid.designer.diagram.ui.diagramType">
       <diagram
             class="com.metamatrix.modeler.relationship.ui.diagram.RelationshipDiagramType"
+            deprecated="true"
             simpleDiagram="false">
       </diagram>
    </extension>

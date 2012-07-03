@@ -5,7 +5,7 @@
 
 	<groupId>org.jboss.tools</groupId>
 	<artifactId>org.teiid.designer.ui.bot.test</artifactId>
-	<version>7.7.0-SNAPSHOT</version>
+	<version>7.7.1-SNAPSHOT</version>
 	<packaging>eclipse-test-plugin</packaging>
 
 	<parent>

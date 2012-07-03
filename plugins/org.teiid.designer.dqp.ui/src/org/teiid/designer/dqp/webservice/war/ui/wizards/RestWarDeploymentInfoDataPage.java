@@ -9,6 +9,8 @@ package org.teiid.designer.dqp.webservice.war.ui.wizards;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Properties;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -36,8 +38,9 @@ public class RestWarDeploymentInfoDataPage extends RestWarDeploymentInfoPanel {
     public RestWarDeploymentInfoDataPage( Composite parent,
                                           RestWarDeploymentInfoDialog dialog,
                                           IFile theVdb,
-                                          IStatus initialStatus ) {
-        super(parent, dialog, theVdb);
+                                          IStatus initialStatus,
+                                          Properties designerProperties) {
+        super(parent, dialog, theVdb, designerProperties);
     }
 
     /**

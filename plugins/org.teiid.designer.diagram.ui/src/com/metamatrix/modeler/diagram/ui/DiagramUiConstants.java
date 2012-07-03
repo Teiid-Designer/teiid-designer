@@ -92,6 +92,7 @@ public interface DiagramUiConstants {
             String NAME = "names"; //$NON-NLS-1$
             String ID_ATTR = "id"; //$NON-NLS-1$
             String SIMPLE_DIAGRAM = "simpleDiagram"; //$NON-NLS-1$
+            String DEPRECATED_DIAGRAM = "deprecated"; //$NON-NLS-1$
         }
     }
 

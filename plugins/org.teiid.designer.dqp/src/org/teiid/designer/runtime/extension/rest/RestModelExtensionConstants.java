@@ -14,6 +14,15 @@ import org.teiid.designer.extension.properties.NamespaceProvider;
  * 
  */
 public interface RestModelExtensionConstants {
+	
+    interface METHODS {
+    	String GET = "GET"; //$NON-NLS-1$
+    	String PUT = "PUT"; //$NON-NLS-1$
+    	String POST = "POST"; //$NON-NLS-1$
+    	String DELETE = "DELETE"; //$NON-NLS-1$
+    }
+    
+    String[] METHODS_ARRAY = {METHODS.GET, METHODS.PUT, METHODS.POST, METHODS.DELETE };
 
     NamespaceProvider NAMESPACE_PROVIDER = new NamespaceProvider() {
 

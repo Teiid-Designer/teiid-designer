@@ -7,11 +7,10 @@
  */
 package org.teiid.designer.dqp.webservice.war.ui.wizards;
 
-import java.util.ArrayList;
 import java.util.Properties;
+
 import org.eclipse.core.resources.IFile;
 import org.teiid.designer.dqp.webservice.war.WebArchiveBuilderConstants;
-import com.metamatrix.modeler.core.workspace.ModelResource;
 
 /**
  * @since 7.1
@@ -47,24 +46,9 @@ public class WarDataserviceModel {
     private boolean useMtomDefault;
 
     private IFile theVdb;
-    private ArrayList<ModelResource> wsModelResourceArrayList;
 
     private boolean isReadyForFinish = false;
     private static WarDataserviceModel dataserviceModel;
-
-    /**
-     * @return wsModelResourcearrayList
-     */
-    public ArrayList<ModelResource> getWsModelResourcearrayList() {
-        return wsModelResourceArrayList;
-    }
-
-    /**
-     * @param wsModelResourcearrayList Sets wsModelResourcearrayList to the specified value.
-     */
-    public void setWsModelResourcearrayList( ArrayList<ModelResource> wsModelResourcearrayList ) {
-        this.wsModelResourceArrayList = wsModelResourcearrayList;
-    }
 
     /**
      * @since 7.1
@@ -540,8 +524,7 @@ public class WarDataserviceModel {
 
         properties.put(WebArchiveBuilderConstants.PROPERTY_WAR_FILE_SAVE_LOCATION, this.getWarFileLocation());
         properties.put(WebArchiveBuilderConstants.PROPERTY_CONTEXT_NAME, this.getContextName());
-        properties.put(WebArchiveBuilderConstants.PROPERTY_VDB_FILE_NAME, this.getVdbFile().getLocation().toOSString());
-        properties.put(WebArchiveBuilderConstants.PROPERTY_VDB_WS_MODELS, this.getWsModelResourcearrayList());
+        properties.put(WebArchiveBuilderConstants.PROPERTY_VDB_FILE_NAME, this.getVdbFile().getFullPath().toString()); //getLocation().toOSString());
         properties.put(WebArchiveBuilderConstants.PROPERTY_WAR_HOST, this.getHostName());
         properties.put(WebArchiveBuilderConstants.PROPERTY_WAR_PORT, this.getPort());
         properties.put(WebArchiveBuilderConstants.PROPERTY_WSDL_TNS, this.getTns());
@@ -550,6 +533,7 @@ public class WarDataserviceModel {
         properties.put(WebArchiveBuilderConstants.PROPERTY_SECURITY_REALM, this.getSecurityRealm());
         properties.put(WebArchiveBuilderConstants.PROPERTY_SECURITY_ROLE, this.getSecurityRole());
         properties.put(WebArchiveBuilderConstants.PROPERTY_SECURITY_USERNAME, this.getSecurityUsername());
+        properties.put(WebArchiveBuilderConstants.PROPERTY_SECURITY_PASSWORD, this.getSecurityPassword());
         properties.put(WebArchiveBuilderConstants.PROPERTY_USE_MTOM, this.getUseMtom());
 
         return properties;

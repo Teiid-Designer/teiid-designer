@@ -24,14 +24,17 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+
 import javax.tools.JavaCompiler;
 import javax.tools.JavaCompiler.CompilationTask;
 import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.StandardLocation;
 import javax.tools.ToolProvider;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
@@ -47,15 +50,14 @@ import org.eclipse.xsd.XSDSchemaContent;
 import org.eclipse.xsd.util.XSDParser;
 import org.teiid.core.util.StringUtil;
 import org.teiid.designer.dqp.webservice.war.ui.wizards.WarDeploymentInfoPanel;
+
 import com.metamatrix.core.modeler.util.FileUtils;
 import com.metamatrix.core.util.TempDirectory;
 import com.metamatrix.modeler.core.types.DatatypeConstants;
-import com.metamatrix.modeler.core.workspace.ModelResource;
-import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
-import com.metamatrix.modeler.internal.core.workspace.WorkspaceResourceFinderUtil;
-import com.metamatrix.modeler.internal.ui.viewsupport.ModelIdentifier;
+import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.webservice.gen.BasicWsdlGenerator;
 import com.metamatrix.modeler.sdt.ModelerSdtPlugin;
+import com.metamatrix.modeler.vdb.ui.util.VdbResourceFinder;
 import com.metamatrix.modeler.webservice.WebServicePlugin;
 import com.metamatrix.modeler.webservice.util.AntTasks;
 
@@ -113,7 +115,7 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
         return operationToProcedureMap;
     }
 
-    /**
+	/**
      * @param operationToProcedureMap Sets operationToProcedureMap to the specified value.
      */
     public void setOperationToProcedureMap( Map<String, String> operationToProcedureMap ) {
@@ -218,9 +220,13 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
             final String webInfDirectoryName = contextDirectoryName + File.separator + "WEB-INF"; //$NON-NLS-1$
             final File webInfDirectory = new File(webInfDirectoryName);
             webInfDirectory.mkdir();
+           //  Create the WEB-INF/wsdl directory.
+            final String webInfWsdlDirectoryName = webInfDirectoryName + File.separator + "wsdl"; //$NON-NLS-1$
+            final File webInfWsdlDirectory = new File(webInfWsdlDirectoryName);
+            webInfWsdlDirectory.mkdir();
             // Create the classes directory.
             final String webInfClassesDirectoryName = webInfDirectoryName + File.separator + "classes"; //$NON-NLS-1$
-            // Create the classes directory.
+            // Create the WEB-INF/wsdl directory.
             final String webInfLibDirectoryName = webInfDirectoryName + File.separator + "lib"; //$NON-NLS-1$
             final File webInfClassesDirectory = new File(webInfClassesDirectoryName);
             final File webInfLibDirectory = new File(webInfLibDirectoryName);
@@ -230,7 +236,7 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
 
             monitor.subTask(TASK_CREATING_WSDL_FILE);
             // Create WSDL file
-            generateWsdl(properties, webInfClassesDirectory);
+            generateWsdl(properties, webInfWsdlDirectory);
 
             monitor.subTask(TASK_COPYING_FILES);
             // Copy the Web files.
@@ -509,90 +515,90 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
     }
 
     /**
-     * Create the WSProvider java classes (one for each port)
-     * 
-     * @param webInfClassesDirectory
-     * @param properties
-     * @since 7.1
-     */
-    protected void createProviderJavaClasses( File webInfLibDirectory,
-                                              File webInfClassesDirectory,
-                                              Properties properties ) throws IOException {
-
-        String pathToProviders = "/org" + File.separator + "teiid" + File.separator + "soap" + File.separator + "provider"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-        String pathToCallback = "/org" + File.separator + "teiid" + File.separator + "soap" + File.separator + "wsse"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-        String pathToPlugin = "/org" + File.separator + "teiid" + File.separator + "soap"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
-        final String tns = (String)properties.get(WebArchiveBuilderConstants.PROPERTY_WSDL_TNS);
-        String vdbFileName = properties.getProperty(WebArchiveBuilderConstants.PROPERTY_VDB_FILE_NAME);
-        File vdbFile = new File(FileUtils.getFilenameWithoutExtension(vdbFileName));
-
-        List<File> portProviders = new ArrayList<File>();
-        for (String port : getPorts()) {
-            String providerJavaFilePath = webInfClassesDirectory.getCanonicalPath() + pathToProviders + File.separator + port
-                                          + ".java"; //$NON-NLS-1$
-            FileUtils.copy(webInfClassesDirectory.getCanonicalPath() + pathToProviders + File.separator + "ProviderTemplate.java", //$NON-NLS-1$
-                           providerJavaFilePath,
-                           true);
-            File providerJavaFile = new File(providerJavaFilePath);
-            portProviders.add(providerJavaFile);
-            AntTasks.replace(providerJavaFile, "${className}", port); //$NON-NLS-1$
-            AntTasks.replace(providerJavaFile, "${targetNamespace}", tns); //$NON-NLS-1$
-            AntTasks.replace(providerJavaFile, "${portName}", port); //$NON-NLS-1$
-            AntTasks.replace(providerJavaFile, "${serviceName}", vdbFile.getName()); //$NON-NLS-1$
-            AntTasks.replace(providerJavaFile, "${wsdlFileName}", this.wsdlFilename); //$NON-NLS-1$
-        }
-
-        File template = new File(webInfClassesDirectory.getCanonicalPath() + pathToProviders + File.separator
-                                 + "ProviderTemplate.java"); //$NON-NLS-1$
-
-        File soapPlugin = new File(webInfClassesDirectory.getCanonicalPath() + pathToPlugin + File.separator + "SoapPlugin.java"); //$NON-NLS-1$
-
-        File teiidProvider = new File(webInfClassesDirectory.getCanonicalPath() + pathToProviders + File.separator
-                                      + "TeiidWSProvider.java"); //$NON-NLS-1$
-
-        File usernameCallback = new File(webInfClassesDirectory.getCanonicalPath() + pathToCallback + File.separator
-                                         + "UsernamePasswordCallback.java"); //$NON-NLS-1$
-
-        if (isWSSecurity(properties)) {
-            AntTasks.replace(usernameCallback,
-                             "${username}", (String)properties.get(WebArchiveBuilderConstants.PROPERTY_SECURITY_USERNAME)); //$NON-NLS-1$
-            AntTasks.replace(usernameCallback,
-                             "${password}", (String)properties.get(WebArchiveBuilderConstants.PROPERTY_SECURITY_PASSWORD)); //$NON-NLS-1$
-        }
-
-        template.delete();
-        // Compile classes
-        JavaCompiler compilerTool = ToolProvider.getSystemJavaCompiler();
-        if (compilerTool != null) {
-            StandardJavaFileManager fileManager = compilerTool.getStandardFileManager(null, null, null);
-
-            String pathToWSSEJar = webInfLibDirectory.getCanonicalPath() + File.separator + "wss4j.jar"; //$NON-NLS-1$
-
-            File wsseJar = new File(pathToWSSEJar);
-            List<File> classPaths = Arrays.asList(wsseJar);
-            fileManager.setLocation(StandardLocation.CLASS_PATH, classPaths);
-
-            // prepare the source files to compile
-            List<File> sourceFileList = new ArrayList<File>();
-            sourceFileList.add(soapPlugin);
-            sourceFileList.add(teiidProvider);
-            if (isWSSecurity(properties)) {
-                sourceFileList.add(usernameCallback);
-            }
-            for (File providerClass : portProviders) {
-                sourceFileList.add(providerClass);
-            }
-
-            Iterable<? extends JavaFileObject> compilationUnits = fileManager.getJavaFileObjectsFromFiles(sourceFileList);
-            CompilationTask task = compilerTool.getTask(null, fileManager, null, null, null, compilationUnits);
-            task.call();
-            fileManager.close();
-
-            // Cleanup wsse.jar. Only needed for dynamic compilation.
-            wsseJar.delete();
-            webInfLibDirectory.delete();
-        }
-    }
+	 * Create the WSProvider java classes (one for each port)
+	 * 
+	 * @param webInfClassesDirectory
+	 * @param properties
+	 * @since 7.1
+	 */
+	protected void createProviderJavaClasses( File webInfLibDirectory,
+	                                          File webInfClassesDirectory,
+	                                          Properties properties ) throws IOException {
+	
+	    String pathToProviders = "/org" + File.separator + "teiid" + File.separator + "soap" + File.separator + "provider"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+	    String pathToCallback = "/org" + File.separator + "teiid" + File.separator + "soap" + File.separator + "wsse"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+	    String pathToPlugin = "/org" + File.separator + "teiid" + File.separator + "soap"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
+	    final String tns = (String)properties.get(WebArchiveBuilderConstants.PROPERTY_WSDL_TNS);
+	    String context = properties.getProperty(WebArchiveBuilderConstants.PROPERTY_CONTEXT_NAME);
+	    
+	    
+	    List<File> portProviders = new ArrayList<File>();
+	    for (String port : getPorts()) {
+	        String providerJavaFilePath = webInfClassesDirectory.getCanonicalPath() + pathToProviders + File.separator + port
+	                                      + ".java"; //$NON-NLS-1$
+	        FileUtils.copy(webInfClassesDirectory.getCanonicalPath() + pathToProviders + File.separator + "ProviderTemplate.java", //$NON-NLS-1$
+	                       providerJavaFilePath,
+	                       true);
+	        File providerJavaFile = new File(providerJavaFilePath);
+	        portProviders.add(providerJavaFile);
+	        AntTasks.replace(providerJavaFile, "${className}", port); //$NON-NLS-1$
+	        AntTasks.replace(providerJavaFile, "${targetNamespace}", tns); //$NON-NLS-1$
+	        AntTasks.replace(providerJavaFile, "${portName}", port); //$NON-NLS-1$
+	        AntTasks.replace(providerJavaFile, "${serviceName}", context); //$NON-NLS-1$
+	        AntTasks.replace(providerJavaFile, "${wsdlFileName}", this.wsdlFilename); //$NON-NLS-1$
+	    }
+	
+	    File template = new File(webInfClassesDirectory.getCanonicalPath() + pathToProviders + File.separator
+	                             + "ProviderTemplate.java"); //$NON-NLS-1$
+	
+	    File soapPlugin = new File(webInfClassesDirectory.getCanonicalPath() + pathToPlugin + File.separator + "SoapPlugin.java"); //$NON-NLS-1$
+	
+	    File teiidProvider = new File(webInfClassesDirectory.getCanonicalPath() + pathToProviders + File.separator
+	                                  + "TeiidWSProvider.java"); //$NON-NLS-1$
+	
+	    File usernameCallback = new File(webInfClassesDirectory.getCanonicalPath() + pathToCallback + File.separator
+	                                     + "UsernamePasswordCallback.java"); //$NON-NLS-1$
+	
+	    if (isWSSecurity(properties)) {
+	        AntTasks.replace(usernameCallback,
+	                         "${username}", (String)properties.get(WebArchiveBuilderConstants.PROPERTY_SECURITY_USERNAME)); //$NON-NLS-1$
+	        AntTasks.replace(usernameCallback,
+	                         "${password}", (String)properties.get(WebArchiveBuilderConstants.PROPERTY_SECURITY_PASSWORD)); //$NON-NLS-1$
+	    }
+	
+	    template.delete();
+	    // Compile classes
+	    JavaCompiler compilerTool = ToolProvider.getSystemJavaCompiler();
+	    if (compilerTool != null) {
+	        StandardJavaFileManager fileManager = compilerTool.getStandardFileManager(null, null, null);
+	
+	        String pathToWSSEJar = webInfLibDirectory.getCanonicalPath() + File.separator + "wss4j.jar"; //$NON-NLS-1$
+	
+	        File wsseJar = new File(pathToWSSEJar);
+	        List<File> classPaths = Arrays.asList(wsseJar);
+	        fileManager.setLocation(StandardLocation.CLASS_PATH, classPaths);
+	
+	        // prepare the source files to compile
+	        List<File> sourceFileList = new ArrayList<File>();
+	        sourceFileList.add(soapPlugin);
+	        sourceFileList.add(teiidProvider);
+	        if (isWSSecurity(properties)) {
+	            sourceFileList.add(usernameCallback);
+	        }
+	        for (File providerClass : portProviders) {
+	            sourceFileList.add(providerClass);
+	        }
+	
+	        Iterable<? extends JavaFileObject> compilationUnits = fileManager.getJavaFileObjectsFromFiles(sourceFileList);
+	        CompilationTask task = compilerTool.getTask(null, fileManager, null, null, null, compilationUnits);
+	        task.call();
+	        fileManager.close();
+	
+	        // Cleanup wsse.jar. Only needed for dynamic compilation.
+	        wsseJar.delete();
+	        webInfLibDirectory.delete();
+	    }
+	}
 
     private boolean isWSSecurity( Properties properties ) {
         return properties.get(WebArchiveBuilderConstants.PROPERTY_SECURITY_TYPE).equals(WarDeploymentInfoPanel.WSSE);
@@ -652,55 +658,72 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
     }
 
     public void generateWsdl( Properties properties,
-                              File classesFolder ) throws IOException {
+                              File webinfWsdlFolder) throws IOException, CoreException {
 
         BasicWsdlGenerator wsdlGenerator = new BasicWsdlGenerator();
-        ModelResource wsModel = null;
+        Resource wsModel = null;
         final String contextName = (String)properties.get(WebArchiveBuilderConstants.PROPERTY_CONTEXT_NAME);
         final String host = (String)properties.get(WebArchiveBuilderConstants.PROPERTY_WAR_HOST);
         final String port = (String)properties.get(WebArchiveBuilderConstants.PROPERTY_WAR_PORT);
         final String tns = (String)properties.get(WebArchiveBuilderConstants.PROPERTY_WSDL_TNS);
-        final ArrayList<ModelResource> modelsArrayList = (ArrayList<ModelResource>)properties.get(WebArchiveBuilderConstants.PROPERTY_VDB_WS_MODELS);
+
         String webServiceName = contextName;
-        for (ModelResource webServiceModel : modelsArrayList) {
+
+        String vdbFileName = properties.getProperty(WebArchiveBuilderConstants.PROPERTY_VDB_FILE_NAME);
+        IPath vdbPath = new Path(vdbFileName);
+        IFile vdbFile = ResourcesPlugin.getWorkspace().getRoot().getFile(vdbPath);
+        
+    	VdbResourceFinder vdbResourceFinder = new VdbResourceFinder(vdbFile);
+        
+        for (Resource webServiceModel : vdbResourceFinder.getWebServiceResources() ) {
             try {
                 wsModel = webServiceModel;
-                wsdlGenerator.addWebServiceModel(webServiceModel.getEmfResource());
-                ArrayList<IResource> dependentSchemas = new ArrayList<IResource>();
-                IResource[] iResources = WorkspaceResourceFinderUtil.getDependentResources(webServiceModel.getResource());
-                getAllDependentSchemas(iResources, dependentSchemas);
-                for (IResource iResource : dependentSchemas) {
-                    if (ModelIdentifier.isSchemaModel(iResource)) {
+                wsdlGenerator.addWebServiceModel(wsModel);
+                ArrayList<Resource> dependentSchemas = new ArrayList<Resource>();
+                Resource[] resources = vdbResourceFinder.getDependentResources(wsModel);
+                vdbResourceFinder.getAllDependentSchemas(resources, dependentSchemas);
+                for (Resource resource : dependentSchemas) {
+                	
+                    if (ModelUtil.isXsdFile(resource)) {
+                    	String fullFilePath = resource.getURI().path();
+                    	String fileNameWithExtension = new Path(fullFilePath).lastSegment();
+                    	IPath fileLocationPath = new Path(fullFilePath).removeLastSegments(1);
+                    	//String fileLocation = fileLocationPath.toOSString();
+                    	
                         // Copy the XSD file to the classes folder
-                        XSDSchema xsdSchema = importSchema(iResource.getLocationURI().toString());
+                        XSDSchema xsdSchema = importSchema(fullFilePath);
 
                         // Check for an import of the global data types schema
                         if (containsGlobalDataTypeImport(xsdSchema)) {
                             // Copy the builtInDataTypes.xsd file to the war
                             Resource builtInDataypesResource = ModelerSdtPlugin.getBuiltInTypesResource();
-                            FileUtils.copy(new File(builtInDataypesResource.getURI().path()), classesFolder, true);
-                            // Copy iResource to classesFolder
-                            File xsd = new File(iResource.getLocation().toOSString());
-                            FileUtils.copy(xsd, classesFolder, true);
-                            // Get handle to new file in classesFolder
-                            File xsdCopy = new File(classesFolder.getPath() + "/" + iResource.getName()); //$NON-NLS-1$
+                            FileUtils.copy(new File(builtInDataypesResource.getURI().path()), webinfWsdlFolder, true);
+                            // Copy iResource to classesFolder and WEB-INF/wsdl
+                            File xsd = new File(fullFilePath);
+                            FileUtils.copy(xsd, webinfWsdlFolder, true);
+                            // Get handle to new file in wsdl folder
+                            File xsdCopy = new File(webinfWsdlFolder.getPath() + "/" + fileNameWithExtension); //$NON-NLS-1$
                             // Replace the schemaLocation of the global data
                             // types schema import with the relative path to xsd
                             AntTasks.replace(xsdCopy,
-                                             "schemaLocation=\"http://www.metamatrix.com/metamodels/SimpleDatatypes-instance\"", //$NON-NLS-1$
-                                             "schemaLocation=\"builtInDataTypes.xsd\""); //$NON-NLS-1$ 
+                                    		 "schemaLocation=\"http://www.metamatrix.com/metamodels/SimpleDatatypes-instance\"", //$NON-NLS-1$
+                                     		 "schemaLocation=\"builtInDataTypes.xsd\""); //$NON-NLS-1$ 
                         } else {
-                            FileUtils.copy(new File(iResource.getLocation().toOSString()), classesFolder, true);
+                        	File schemaFile = new File(fullFilePath);
+                            FileUtils.copy(schemaFile, webinfWsdlFolder, true);
                         }
 
-                        wsdlGenerator.addXsdModel(importSchema(iResource.getLocationURI().toString()), iResource.getLocation());
+                        wsdlGenerator.addXsdModel(xsdSchema, fileLocationPath);
                     }
                 }
-            } catch (ModelWorkspaceException e) {
+            } catch ( Exception e ) {
+            	vdbResourceFinder.dispose();
                 throw new RuntimeException(e.getMessage());
             }
         }
-
+        
+        vdbResourceFinder.dispose();
+        
         wsdlGenerator.setName(webServiceName);
         wsdlGenerator.setTargetNamespace(tns);
         wsdlGenerator.setUrlRootForReferences(StringUtil.Constants.EMPTY_STRING);
@@ -717,10 +740,10 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
         wsdlFilename = fileName;
         try {
             // Create our WSDL file and write to it
-            OutputStream stream = new FileOutputStream(new File(classesFolder, fileName));
+            OutputStream stream = new FileOutputStream(new File(webinfWsdlFolder, fileName));
             wsdlGenerator.write(stream);
             // Get an iFile instance to refresh our workspace
-            IFile iFile = wsModel.getModelProject().getProject().getFile(fileName);
+            IFile iFile = vdbFile;
             iFile.refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
             setPorts(wsdlGenerator.getPorts());
             setOperationToProcedureMap(wsdlGenerator.getOperationToProcedureMap());
@@ -749,27 +772,6 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
 
         }
         return containsImport;
-    }
-
-    private void getAllDependentSchemas( IResource[] iResources,
-                                         ArrayList<IResource> dependentSchemas ) {
-
-        // Add discovered dependent schemas
-        for (IResource iResource : iResources) {
-            if (ModelIdentifier.isSchemaModel(iResource)) {
-                dependentSchemas.add(iResource);
-            }
-        }
-
-        // Now iterate through the dependent schemas and find their dependent
-        // resources, if any
-        for (IResource iResource : iResources) {
-            IResource[] moreIResources = WorkspaceResourceFinderUtil.getDependentResources(iResource);
-            if (moreIResources.length > 0) {
-                getAllDependentSchemas(moreIResources, dependentSchemas);
-            }
-        }
-
     }
 
     public XSDSchema importSchema( String path ) {
@@ -814,7 +816,7 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
         String endJaxwsEndpoint = "\t</jaxws:endpoint>\n"; //$NON-NLS-1$
         String serviceName = " serviceName=\"s:"; //$NON-NLS-1$
         String implementor = "\n\t\timplementor=\"org.teiid.soap.provider."; //$NON-NLS-1$
-        String wsdlLocation = " \n\t\twsdlLocation=\"classpath:"; //$NON-NLS-1$
+        String wsdlLocation = " \n\t\twsdlLocation=\"WEB-INF/wsdl/"; //$NON-NLS-1$
         String namespace = " xmlns:s=\""; //$NON-NLS-1$
         String wsseInterceptor1 = "\t\t<jaxws:inInterceptors>\n\t\t\t<ref bean=\"UsernameToken_Request\" />\n\t\t\t<bean "; //$NON-NLS-1$
         String wsseInterceptor2 = "class=\"org.apache.cxf.binding.soap.saaj.SAAJInInterceptor\" />\n\t\t</jaxws:inInterceptors>\n"; //$NON-NLS-1$

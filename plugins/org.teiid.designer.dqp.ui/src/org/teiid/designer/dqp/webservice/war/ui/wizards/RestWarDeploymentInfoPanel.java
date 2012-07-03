@@ -7,6 +7,8 @@
  */
 package org.teiid.designer.dqp.webservice.war.ui.wizards;
 
+import java.util.Properties;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.IDialogSettings;
@@ -27,6 +29,7 @@ import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
 import com.metamatrix.modeler.dqp.ui.DqpUiStringUtil;
+import com.metamatrix.modeler.ui.viewsupport.DesignerProperties;
 import com.metamatrix.ui.internal.InternalUiConstants;
 import com.metamatrix.ui.internal.util.WidgetFactory;
 import com.metamatrix.ui.internal.util.WidgetUtil;
@@ -59,6 +62,8 @@ public abstract class RestWarDeploymentInfoPanel extends Composite implements In
     protected String WARFILELOCATION;
     protected String CONTEXTNAME;
     protected String JNDI_NAME;
+    
+    private DesignerProperties designerProperties;
 
     /**
      * @param parent
@@ -69,12 +74,14 @@ public abstract class RestWarDeploymentInfoPanel extends Composite implements In
      */
     public RestWarDeploymentInfoPanel( Composite parent,
                                        RestWarDeploymentInfoDialog dialog,
-                                       IFile theVdb ) {
+                                       IFile theVdb,
+                                       Properties designerProperties) {
         super(parent, SWT.NONE);
         this.dialog = dialog;
         this.theVdb = theVdb;
         this.setLayout(new GridLayout());
         this.setLayoutData(new GridData(GridData.FILL_BOTH));
+        this.designerProperties = (DesignerProperties)designerProperties;
         init(this);
     }
 
@@ -105,6 +112,12 @@ public abstract class RestWarDeploymentInfoPanel extends Composite implements In
             // JNDI Name
             text = RestWarDataserviceModel.getInstance().getJndiName();
             txfJNDIName.setText(text);
+            if( designerProperties != null ) {
+            	String vdbJndiName = this.designerProperties.getVdbJndiName();
+            	if( vdbJndiName != null ) {
+            		txfJNDIName.setText(vdbJndiName);
+            	}
+            }
 
         } catch (RuntimeException err) {
             DqpUiConstants.UTIL.log(err);

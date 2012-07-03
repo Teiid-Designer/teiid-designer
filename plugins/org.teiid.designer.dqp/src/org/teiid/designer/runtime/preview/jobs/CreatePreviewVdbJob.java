@@ -115,38 +115,48 @@ public final class CreatePreviewVdbJob extends WorkspacePreviewVdbJob {
         try {
             IResource resource = ((this.project == null) ? this.model : this.project);
 
-            // if the file was deleted from outside Eclipse, Eclipse will think it still exists
-            if (this.pvdbFile.exists() && !this.pvdbFile.getLocation().toFile().exists()) {
-                this.pvdbFile.delete(true, monitor);
-            }
-
-            boolean isNew = false;
-            // create if necessary
-            if (!this.pvdbFile.exists()) {
-                isNew = true;
-                this.pvdbFile.create(new ByteArrayInputStream(new byte[0]), false, null);
-            }
-
-            // make sure the file is hidden
-            this.pvdbFile.setHidden(true);
-
-            Vdb pvdb = new Vdb(this.pvdbFile, true, monitor);
-
-            // don't do if a project PVDB
-            if (resource instanceof IFile) {
-                // don't add if already in the PVDB (only one model per PVDB)
-                if (pvdb.getModelEntries().isEmpty()) {
-                    pvdb.addModelEntry(this.model.getFullPath(), monitor);
+            if (resource.exists()) {
+                if (resource instanceof IFile) {
+                    if (!this.model.isSynchronized(IResource.DEPTH_INFINITE)) {
+                        this.model.refreshLocal(IResource.DEPTH_INFINITE, null);
+                    }
                 }
-            }
 
-            // this will trigger an resource change event which will eventually get an update job to run
-            if (isNew || pvdb.isModified()) {
-                pvdb.save(monitor);
+                // if the file was deleted from outside Eclipse, Eclipse will think it still exists
+                if (this.pvdbFile.exists() && !this.pvdbFile.getLocation().toFile().exists()) {
+                    this.pvdbFile.delete(true, monitor);
+                }
+
+                boolean isNew = false;
+                // create if necessary
+                if (!this.pvdbFile.exists()) {
+                    isNew = true;
+                    this.pvdbFile.create(new ByteArrayInputStream(new byte[0]), false, null);
+                }
+
+                // make sure the file is hidden
+                this.pvdbFile.setHidden(true);
+
+                Vdb pvdb = new Vdb(this.pvdbFile, true, monitor);
+
+                // don't do if a project PVDB
+                if (resource instanceof IFile) {
+                    // don't add if already in the PVDB (only one model per PVDB)
+                    if (pvdb.getModelEntries().isEmpty()) {
+                        pvdb.addModelEntry(this.model.getFullPath(), monitor);
+                    }
+                }
+
+                // this will trigger an resource change event which will eventually get an update job to run
+                if (isNew || pvdb.isModified()) {
+                    pvdb.save(monitor);
+                }
+            } else {
+                cancel();
             }
         } catch (Exception e) {
             IProject proj = ((this.project == null) ? this.model.getProject() : this.project);
-            
+
             // When a project is closed if an editor is open and dirty a dialog is presented to the user asking them if they
             // want to save the file. If the user saves the file a resource change event gets fired but when this job gets run
             // the model's project has been closed. Return a good status in this case. Otherwise return a bad status.

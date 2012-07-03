@@ -2,243 +2,182 @@
 
 <!DOCTYPE toc
   PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<toc label="Teiid Designer User Guide" topic="index.html">
-   <topic label="Introduction" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/intro-chapter.html">
-      <topic label="What is Teiid Designer?" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/intro-chapter.html#what-is-modeler"/>
-      <topic label="Why Use Teiid Designer?" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/intro-chapter.html#why-use-modeler"/>
-      <topic label="Metadata Overview" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/intro-chapter.html#metadata-overview">
-         <topic label="What is Metadata" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/intro-chapter.html#what-is-metadata"/>
-         <topic label="Editing Metadata vs. Editing Data" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/intro-chapter.html#editing-metadata-vs-data"/>
-         <topic label="Metadata Models" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/intro-chapter.html#metadata-models"/>
-         <topic label="Business and Technical Metadata" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/intro-chapter.html#business-technical-metadata">
-            <topic label="Technical Metadata" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/intro-chapter.html#technical-metadata"/>
-            <topic label="Business Metadata" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/intro-chapter.html#business-metadata"/>
-         </topic>
-         <topic label="Design-Time and Runtime Metadata" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/intro-chapter.html#design-runtime-metadata">
-            <topic label="Design-Time Metadata" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/intro-chapter.html#design-time-metadata"/>
-            <topic label="Runtime Metadata" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/intro-chapter.html#runtime-metadata"/>
-         </topic>
-         <topic label="Source and View Metadata" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/intro-chapter.html#source-view-metadata">
-            <topic label="Modeling Your Source Metadata" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/intro-chapter.html#modeling-source-metadata"/>
-            <topic label="Modeling Your View Metadata" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/intro-chapter.html#modeling-view-metadata"/>
-            <topic label="Modeling Metadata Transformations" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/intro-chapter.html#modeling-transformations">
-               <topic label="Metadata Transformations" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/intro-chapter.html#metadata-transformations"/>
-               <topic label="SQL in Transformations " href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/intro-chapter.html#sql-transformations"/>
-               <topic label="Mapping XML Transformations " href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/intro-chapter.html#mapping-xml-transformations"/>
-            </topic>
-         </topic>
+<toc label="Teiid Designer User Guide">
+   <topic label="Introduction" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/intro-chapter.html">
+      <topic label="What is Teiid Designer?" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/intro-chapter.html#what-is-modeler"/>
+      <topic label="Why Use Teiid Designer?" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/intro-chapter.html#why-use-modeler"/>
+      <topic label="Metadata Overview" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/intro-chapter.html#metadata-overview">
+         <topic label="What is Metadata" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/intro-chapter.html#what-is-metadata"/>
+         <topic label="Editing Metadata vs. Editing Data" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/intro-chapter.html#editing-metadata-vs-data"/>
+         <topic label="Metadata Models" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/intro-chapter.html#metadata-models"/>
+         <topic label="Business and Technical Metadata" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/intro-chapter.html#business-technical-metadata"/>
+         <topic label="Design-Time and Runtime Metadata" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/intro-chapter.html#design-runtime-metadata"/>
+         <topic label="Source and View Metadata" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/intro-chapter.html#source-view-metadata"/>
       </topic>
-      <topic label="It's all in the Modeling..." href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/intro-chapter.html#models-101-section">
-         <topic label="Model Object Extensions" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/intro-chapter.html#intro-to-model-extensions">
-            <topic label="Model Extension Definition (MED)" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/intro-chapter.html#model-extension-definition"/>
-            <topic label="Model Extension Definition Registry (MED Registry)" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/intro-chapter.html#d0e817"/>
-         </topic>
+      <topic label="It's all in the Modeling..." href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/intro-chapter.html#models-101-section">
+         <topic label="Model Object Extensions" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/intro-chapter.html#intro-to-model-extensions"/>
       </topic>
    </topic>
-   <topic label="New Model Wizards" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/newmodels-chapter.html">
-      <topic label="Creating New Relational Source Model" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/newmodels-chapter.html#new-relational-source-model">
-         <topic label="Generate File Translator Procedures" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/newmodels-chapter.html#relational-source-generate-file-translator-procedures-section"/>
-         <topic label="Generate Web Service Translator Procedures" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/newmodels-chapter.html#relational-source-generate-web-service-translator-procedures-section"/>
-         <topic label="Copy From Existing Model" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/newmodels-chapter.html#relational-source-copy-section"/>
+   <topic label="New Model Wizards" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/newmodels-chapter.html">
+      <topic label="Creating New Relational Source Model" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/newmodels-chapter.html#new-relational-source-model">
+         <topic label="Generate File Translator Procedures" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/newmodels-chapter.html#relational-source-generate-file-translator-procedures-section"/>
+         <topic label="Generate Web Service Translator Procedures" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/newmodels-chapter.html#relational-source-generate-web-service-translator-procedures-section"/>
+         <topic label="Copy From Existing Model" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/newmodels-chapter.html#relational-source-copy-section"/>
       </topic>
-      <topic label="Creating New Relational View Model" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/newmodels-chapter.html#new-relational-view-model">
-         <topic label="Copy From Existing Model" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/newmodels-chapter.html#relational-view-copy-section"/>
-         <topic label="Transform From Existing Model" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/newmodels-chapter.html#relational-view-transform-from-model-section"/>
-         <topic label="Create From XML Schema" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/newmodels-chapter.html#relational-view-create-from-schema-section"/>
+      <topic label="Creating New Relational View Model" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/newmodels-chapter.html#new-relational-view-model">
+         <topic label="Copy From Existing Model" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/newmodels-chapter.html#relational-view-copy-section"/>
+         <topic label="Transform From Existing Model" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/newmodels-chapter.html#relational-view-transform-from-model-section"/>
       </topic>
-      <topic label="Creating XML Document View Model" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/newmodels-chapter.html#new-xml-document-view-model">
-         <topic label="Copy From Existing Model" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/newmodels-chapter.html#xml-document-view-copy-section"/>
-         <topic label="Build XML Documents From XML Schema " href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/newmodels-chapter.html#xml-document-view-from-schema-section"/>
+      <topic label="Creating XML Document View Model" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/newmodels-chapter.html#new-xml-document-view-model">
+         <topic label="Copy From Existing Model" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/newmodels-chapter.html#xml-document-view-copy-section"/>
+         <topic label="Build XML Documents From XML Schema " href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/newmodels-chapter.html#xml-document-view-from-schema-section"/>
       </topic>
-      <topic label="Creating XML Schema Model" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/newmodels-chapter.html#new-xml-schema-model">
-         <topic label="Copy From Existing Model" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/newmodels-chapter.html#xml-schema-copy-section"/>
+      <topic label="Creating XML Schema Model" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/newmodels-chapter.html#new-xml-schema-model">
+         <topic label="Copy From Existing Model" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/newmodels-chapter.html#xml-schema-copy-section"/>
       </topic>
-      <topic label="Creating Web Service View Model" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/newmodels-chapter.html#new-web-service-view-model">
-         <topic label="Copy From Existing Model" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/newmodels-chapter.html#web-service-view-copy-section"/>
-         <topic label="Build From Existing WSDL File(s) or URL" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/newmodels-chapter.html#web-service-view-from-wsdl-section"/>
-         <topic label="Build From Relational Models" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/newmodels-chapter.html#web-service-view-from-relational-section"/>
-         <topic label="Build From XML Document View Models" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/newmodels-chapter.html#web-service-view-from-xml-doc-section"/>
-      </topic>
-   </topic>
-   <topic label="Importers" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/importers-chapter.html">
-      <topic label="Import DDL" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/importers-chapter.html#ddl-import-section"/>
-      <topic label="Import From JDBC Database" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/importers-chapter.html#jdbc-import-section"/>
-      <topic label="Import From Flat File Source" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/importers-chapter.html#flat-file-import-section"/>
-      <topic label="Import From XML Data File Source" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/importers-chapter.html#xml-data-file-import-section"/>
-      <topic label="Import From Salesforce" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/importers-chapter.html#salesforce-import-section"/>
-      <topic label="Import Metadata From Text File" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/importers-chapter.html#text-file-import-section">
-         <topic label="Import Relational Model (XML Format)" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/importers-chapter.html#relational-model-xml-text-import-section"/>
-         <topic label="Import Relational Tables (CSV Format)" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/importers-chapter.html#relational-tables-text-import-section"/>
-         <topic label="Import Relational View Tables (CSV Format)" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/importers-chapter.html#relational-virtual-tables-text-import-section"/>
-         <topic label="Import Datatypes (CSV Format)" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/importers-chapter.html#datatypes-text-import-section"/>
-      </topic>
-      <topic label="Import WSDL into Relational Source Model" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/importers-chapter.html#wsdl-to-relational-import-section"/>
-      <topic label="Import WSDL Into Web Service" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/importers-chapter.html#wsdl-to-web-service-import-section">
-         <topic label="Import WSDL From Workspace Location" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/importers-chapter.html#workspace-location-wsdl-ws-section"/>
-         <topic label="Import WSDL From File System Location" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/importers-chapter.html#file-system-location-wsdl-ws-section"/>
-         <topic label="Import WSDL From URL" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/importers-chapter.html#url-location-wsdl-ws-section"/>
-      </topic>
-      <topic label="XSD Schema File" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/importers-chapter.html#xsd-schema-import-section"/>
-   </topic>
-   <topic label="Creating and Editing Model Objects" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/editing-model-objects-chapter.html">
-      <topic label="Creating New Model Objects" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/editing-model-objects-chapter.html#create-model-objects-section">
-         <topic label="New Child Action" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/editing-model-objects-chapter.html#create-new-child-section"/>
-         <topic label="New Sibling Action" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/editing-model-objects-chapter.html#create-new-sibling-section"/>
-         <topic label="New Association Action" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/editing-model-objects-chapter.html#create-new-association-section"/>
-      </topic>
-      <topic label="Model Object Editors" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/editing-model-objects-chapter.html#model-object-editors-section">
-         <topic label="Transformation Editor" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/editing-model-objects-chapter.html#transformation-editor-section">
-            <topic label="Using the Criteria Builder" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/editing-model-objects-chapter.html#using-criteria-builder-section"/>
-            <topic label="Using the Expression Builder" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/editing-model-objects-chapter.html#using-expression-builder-section"/>
-         </topic>
-         <topic label="Input Set Editor (XML)" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/editing-model-objects-chapter.html#input-set-editor-section"/>
-         <topic label="Choice Editor (XML)" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/editing-model-objects-chapter.html#choice-editor-section">
-            <topic label="Using the Choice Editor" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/editing-model-objects-chapter.html#d0e5408"/>
-            <topic label="Excluding Fragments" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/editing-model-objects-chapter.html#d0e5435"/>
-            <topic label="Editing Choice Criteria" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/editing-model-objects-chapter.html#d0e5454"/>
-            <topic label="Setting Choice Element Order" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/editing-model-objects-chapter.html#d0e5498"/>
-            <topic label="Setting a Default Choice Action " href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/editing-model-objects-chapter.html#d0e5517"/>
-         </topic>
-         <topic label="Recursion Editor (XML)" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/editing-model-objects-chapter.html#recursion-editor-section">
-            <topic label="The Editor" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/editing-model-objects-chapter.html#d0e5601"/>
-         </topic>
-         <topic label="Operation Editor" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/editing-model-objects-chapter.html#operation-editor-section"/>
-      </topic>
-      <topic label="Managing Model Object Extensions" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/editing-model-objects-chapter.html#model-object-extension-properties-section">
-         <topic label="Create New MED" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/editing-model-objects-chapter.html#d0e5795"/>
-         <topic label="Edit MED" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/editing-model-objects-chapter.html#d0e5818"/>
-         <topic label="Extending Models With MEDs" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/editing-model-objects-chapter.html#d0e5884"/>
-         <topic label="Setting Extended Property Values" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/editing-model-objects-chapter.html#d0e5916"/>
+      <topic label="Creating Web Service View Model" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/newmodels-chapter.html#new-web-service-view-model">
+         <topic label="Copy From Existing Model" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/newmodels-chapter.html#web-service-view-copy-section"/>
+         <topic label="Build From Existing WSDL File(s) or URL" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/newmodels-chapter.html#web-service-view-from-wsdl-section"/>
+         <topic label="Build From Relational Models" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/newmodels-chapter.html#web-service-view-from-relational-section"/>
+         <topic label="Build From XML Document View Models" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/newmodels-chapter.html#web-service-view-from-xml-doc-section"/>
       </topic>
    </topic>
-   <topic label="Metadata-specific Modeling" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/metadata-specific-modeling-chapter.html">
-      <topic label="Relational Source Modeling" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/metadata-specific-modeling-chapter.html#relational-source-modeling-section">
-         <topic label="Source Function" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/metadata-specific-modeling-chapter.html#source-function-section"/>
-         <topic label="Create Relational Table Wizard" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/metadata-specific-modeling-chapter.html#source-table-wizard-section"/>
+   <topic label="Importers" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/importers-chapter.html">
+      <topic label="Import DDL" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/importers-chapter.html#ddl-import-section"/>
+      <topic label="Import From JDBC Database" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/importers-chapter.html#jdbc-import-section"/>
+      <topic label="Import From Flat File Source" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/importers-chapter.html#flat-file-import-section"/>
+      <topic label="Import From XML Data File Source" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/importers-chapter.html#xml-data-file-import-section"/>
+      <topic label="Import From Salesforce" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/importers-chapter.html#salesforce-import-section"/>
+      <topic label="Import Metadata From Text File" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/importers-chapter.html#text-file-import-section">
+         <topic label="Import Relational Model (XML Format)" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/importers-chapter.html#relational-model-xml-text-import-section"/>
+         <topic label="Import Relational Tables (CSV Format)" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/importers-chapter.html#relational-tables-text-import-section"/>
+         <topic label="Import Relational View Tables (CSV Format)" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/importers-chapter.html#relational-virtual-tables-text-import-section"/>
+         <topic label="Import Datatypes (CSV Format)" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/importers-chapter.html#datatypes-text-import-section"/>
       </topic>
-      <topic label="Relational View Modeling" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/metadata-specific-modeling-chapter.html#relational-view-modeling-section">
-         <topic label="Create Materialized Views" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/metadata-specific-modeling-chapter.html#create-materialized-views-section"/>
+      <topic label="Import WSDL into Relational Models" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/importers-chapter.html#wsdl-to-relational-import-section"/>
+      <topic label="Import WSDL Into Web Service" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/importers-chapter.html#wsdl-to-web-service-import-section">
+         <topic label="Import WSDL From Workspace Location" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/importers-chapter.html#workspace-location-wsdl-ws-section"/>
+         <topic label="Import WSDL From File System Location" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/importers-chapter.html#file-system-location-wsdl-ws-section"/>
+         <topic label="Import WSDL From URL" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/importers-chapter.html#url-location-wsdl-ws-section"/>
       </topic>
-      <topic label="XML Document Modeling" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/metadata-specific-modeling-chapter.html#xml-document-modeling-section">
-         <topic label="Create XML View Documents from schema" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/metadata-specific-modeling-chapter.html#create-xml-views-from-schema-section"/>
+      <topic label="XSD Schema File" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/importers-chapter.html#xsd-schema-import-section"/>
+   </topic>
+   <topic label="Creating and Editing Model Objects" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/editing-model-objects-chapter.html">
+      <topic label="Creating New Model Objects" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/editing-model-objects-chapter.html#create-model-objects-section">
+         <topic label="New Child Action" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/editing-model-objects-chapter.html#create-new-child-section"/>
+         <topic label="New Sibling Action" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/editing-model-objects-chapter.html#create-new-sibling-section"/>
+         <topic label="New Association Action" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/editing-model-objects-chapter.html#create-new-association-section"/>
       </topic>
-      <topic label="Web Services Modeling" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/metadata-specific-modeling-chapter.html#web-service-modeling-section">
-         <topic label="Create Web Service Action" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/metadata-specific-modeling-chapter.html#create-web-service-models"/>
-         <topic label="Web Services War Generation" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/metadata-specific-modeling-chapter.html#war-generation-section">
-            <topic label="Generating a JBossWS-CXF War" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/metadata-specific-modeling-chapter.html#generate-jbossws-cxf-war-section"/>
-            <topic label="Generating a RESTEasy War" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/metadata-specific-modeling-chapter.html#generate-resteasy-war-section"/>
-         </topic>
+      <topic label="Model Object Editors" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/editing-model-objects-chapter.html#model-object-editors-section">
+         <topic label="Transformation Editor" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/editing-model-objects-chapter.html#transformation-editor-section"/>
+         <topic label="Input Set Editor (XML)" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/editing-model-objects-chapter.html#input-set-editor-section"/>
+         <topic label="Choice Editor (XML)" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/editing-model-objects-chapter.html#choice-editor-section"/>
+         <topic label="Recursion Editor (XML)" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/editing-model-objects-chapter.html#recursion-editor-section"/>
+         <topic label="Operation Editor" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/editing-model-objects-chapter.html#operation-editor-section"/>
+      </topic>
+      <topic label="Managing Model Object Extensions" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/editing-model-objects-chapter.html#model-object-extension-properties-section">
+         <topic label="Create New MED" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/editing-model-objects-chapter.html#create-new-med-section"/>
+         <topic label="Edit MED" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/editing-model-objects-chapter.html#edit-med-section"/>
+         <topic label="Extending Models With MEDs" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/editing-model-objects-chapter.html#extending-models-with-meds-section"/>
+         <topic label="Setting Extended Property Values" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/editing-model-objects-chapter.html#setting-med-properties-section"/>
       </topic>
    </topic>
-   <topic label="Editing Models and Projects" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/edit-models-and-projects-chapter.html">
-      <topic label="Rename A Model" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/edit-models-and-projects-chapter.html#rename-model-section"/>
-      <topic label="Move Model" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/edit-models-and-projects-chapter.html#move-model-section"/>
-      <topic label="Save Copy of Model" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/edit-models-and-projects-chapter.html#save-as-modelsection"/>
-      <topic label="Clone Project" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/edit-models-and-projects-chapter.html#clone-project-section"/>
-   </topic>
-   <topic label="Testing Your Models" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/test-models-chapter.html">
-      <topic label="Manage Connection Profiles" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/test-models-chapter.html#manage-connection-profiles-section">
-         <topic label="Set Connection Profile for Source Model" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/test-models-chapter.html#set-connection-profile"/>
-         <topic label="View Connection Profile for Source Model" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/test-models-chapter.html#view-connection-profile"/>
-         <topic label="Remove Connection Profile from Source Model" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/test-models-chapter.html#remove-connection-profile"/>
+   <topic label="Metadata-specific Modeling" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/metadata-specific-modeling-chapter.html">
+      <topic label="Relational Source Modeling" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/metadata-specific-modeling-chapter.html#relational-source-modeling-section">
+         <topic label="Source Function" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/metadata-specific-modeling-chapter.html#source-function-section"/>
+         <topic label="Create Relational Table Wizard" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/metadata-specific-modeling-chapter.html#source-table-wizard-section"/>
       </topic>
-      <topic label="Previewing Data For a Model" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/test-models-chapter.html#test-preview-data-section">
-         <topic label="Preview Relational Table or View" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/test-models-chapter.html#d0e7098"/>
-         <topic label="Preview Relational Table With Access Pattern" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/test-models-chapter.html#d0e7139"/>
-         <topic label="Preview Relational Procedure" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/test-models-chapter.html#d0e7192"/>
-         <topic label="Preview Web Service Operation" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/test-models-chapter.html#d0e7245"/>
-         <topic label="Sample SQL Results for Preview Data" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/test-models-chapter.html#preview-results-section"/>
+      <topic label="Relational View Modeling" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/metadata-specific-modeling-chapter.html#relational-view-modeling-section">
+         <topic label="Create Materialized Views" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/metadata-specific-modeling-chapter.html#create-materialized-views-section"/>
+         <topic label="Create Relational View Table Wizard" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/metadata-specific-modeling-chapter.html#view-table-wizard-section"/>
       </topic>
-      <topic label="Testing With Your VDB" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/test-models-chapter.html#test-vdb-section">
-         <topic label="Creating Data Sources" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/test-models-chapter.html#creating-data-sources"/>
-         <topic label="Execute VDB from Model Explorer" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/test-models-chapter.html#execute-vdb-in-model-explorer"/>
-         <topic label="Deploy VDB from Model Explorer" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/test-models-chapter.html#deploy-vdb-from-model-explorer"/>
-         <topic label="Executing a Deployed VDB" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/test-models-chapter.html#executing-a-deployed-vdb"/>
+      <topic label="XML Document Modeling" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/metadata-specific-modeling-chapter.html#xml-document-modeling-section">
+         <topic label="Create XML View Documents from schema" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/metadata-specific-modeling-chapter.html#create-xml-views-from-schema-section"/>
+      </topic>
+      <topic label="Web Services Modeling" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/metadata-specific-modeling-chapter.html#web-service-modeling-section">
+         <topic label="Create Web Service Action" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/metadata-specific-modeling-chapter.html#create-web-service-models"/>
+         <topic label="Web Services War Generation" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/metadata-specific-modeling-chapter.html#war-generation-section"/>
       </topic>
    </topic>
-   <topic label="Searching" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/searching-chapter.html">
-      <topic label="Finding Model Objects" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/searching-chapter.html#find-model-objects-section"/>
-      <topic label="Search Models Via Relationship Properties" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/searching-chapter.html#search-relationships-section"/>
-      <topic label="Search Transformation SQL" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/searching-chapter.html#search-transformations-section"/>
-      <topic label="Search Models Via Metadata Properties" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/searching-chapter.html#search-metadata-section"/>
+   <topic label="Editing Models and Projects" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/edit-models-and-projects-chapter.html">
+      <topic label="Rename A Model" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/edit-models-and-projects-chapter.html#rename-model-section"/>
+      <topic label="Move Model" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/edit-models-and-projects-chapter.html#move-model-section"/>
+      <topic label="Save Copy of Model" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/edit-models-and-projects-chapter.html#save-as-modelsection"/>
+      <topic label="Clone Project" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/edit-models-and-projects-chapter.html#clone-project-section"/>
    </topic>
-   <topic label="User Preferences" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/preferences-chapter.html">
-      <topic label="Teiid Designer Preferences" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/preferences-chapter.html#modeler-prefs">
-         <topic label="Diagram Preferences" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/preferences-chapter.html#diagram-prefs"/>
-         <topic label="Diagram Printing Preferences" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/preferences-chapter.html#diagram-printing-prefs"/>
-         <topic label="Editor Preferences" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/preferences-chapter.html#editor-prefs">
-            <topic label="XML Document Preferences" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/preferences-chapter.html#xml-doc-editor-prefs-section"/>
-            <topic label="Table Editor Preferences" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/preferences-chapter.html#table-editor-prefs-section"/>
-            <topic label="Transformation Editor Preferences" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/preferences-chapter.html#transformation-editor-prefs-section"/>
-            <topic label="VDB Editor Preferences" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/preferences-chapter.html#vdb-editor-prefs-section"/>
-         </topic>
-         <topic label="Validation Preferences" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/preferences-chapter.html#validation-prefs"/>
+   <topic label="Testing Your Models" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/test-models-chapter.html">
+      <topic label="Manage Connection Profiles" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/test-models-chapter.html#manage-connection-profiles-section">
+         <topic label="Set Connection Profile for Source Model" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/test-models-chapter.html#set-connection-profile"/>
+         <topic label="View Connection Profile for Source Model" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/test-models-chapter.html#view-connection-profile"/>
+         <topic label="Remove Connection Profile from Source Model" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/test-models-chapter.html#remove-connection-profile"/>
+      </topic>
+      <topic label="Previewing Data For a Model" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/test-models-chapter.html#test-preview-data-section">
+         <topic label="Preview Relational Table or View" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/test-models-chapter.html#preview-reltable-view-section"/>
+         <topic label="Preview Relational Table With Access Pattern" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/test-models-chapter.html#preview-reltable-waccess-section"/>
+         <topic label="Preview Relational Procedure" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/test-models-chapter.html#preview-rel-procedure-section"/>
+         <topic label="Preview Web Service Operation" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/test-models-chapter.html#preview-ws-operation-section"/>
+         <topic label="Sample SQL Results for Preview Data" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/test-models-chapter.html#preview-results-section"/>
+         <topic label="Execution Plans" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/test-models-chapter.html#execution-plan-section"/>
+      </topic>
+      <topic label="Testing With Your VDB" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/test-models-chapter.html#test-vdb-section">
+         <topic label="Creating Data Sources" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/test-models-chapter.html#creating-data-sources"/>
+         <topic label="Execute VDB from Model Explorer" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/test-models-chapter.html#execute-vdb-in-model-explorer"/>
+         <topic label="Deploy VDB from Model Explorer" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/test-models-chapter.html#deploy-vdb-from-model-explorer"/>
+         <topic label="Executing a Deployed VDB" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/test-models-chapter.html#executing-a-deployed-vdb"/>
       </topic>
    </topic>
-   <topic label="Teiid Designer Ui Reference" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/ui-reference-chapter.html">
-      <topic label="Teiid Designer Perspectives" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/ui-reference-chapter.html#teiid-designer-perspectives-section">
-         <topic label="Teiid Designer Perspective" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/ui-reference-chapter.html#teiid-perpective-section"/>
-         <topic label="Opening a Perspective" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/ui-reference-chapter.html#opening-perspective-section"/>
-         <topic label="Further information" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/ui-reference-chapter.html#d0e8259"/>
+   <topic label="Searching" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/searching-chapter.html">
+      <topic label="Finding Model Objects" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/searching-chapter.html#find-model-objects-section"/>
+      <topic label="Search Transformation SQL" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/searching-chapter.html#search-transformations-section"/>
+      <topic label="Search Models Via Metadata Properties" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/searching-chapter.html#search-metadata-section"/>
+   </topic>
+   <topic label="User Preferences" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/preferences-chapter.html">
+      <topic label="Teiid Designer Preferences" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/preferences-chapter.html#modeler-prefs">
+         <topic label="Diagram Preferences" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/preferences-chapter.html#diagram-prefs"/>
+         <topic label="Diagram Printing Preferences" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/preferences-chapter.html#diagram-printing-prefs"/>
+         <topic label="Editor Preferences" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/preferences-chapter.html#editor-prefs"/>
+         <topic label="Validation Preferences" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/preferences-chapter.html#validation-prefs"/>
       </topic>
-      <topic label="Teiid Designer Views" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/ui-reference-chapter.html#teiid-designer-views-section">
-         <topic label="Model Explorer View" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/ui-reference-chapter.html#model-explorer-view">
-            <topic label="Selection-Based Action Menus" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/ui-reference-chapter.html#model-explorer-selection-menus"/>
-         </topic>
-         <topic label="Outline View" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/ui-reference-chapter.html#outline-view">
-            <topic label="Outline Tree View" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/ui-reference-chapter.html#outline-tree-view"/>
-            <topic label="Outline Thumbnail View" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/ui-reference-chapter.html#outline-thumbnail-view"/>
-         </topic>
-         <topic label="Teiid View" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/ui-reference-chapter.html#teiid-view"/>
-         <topic label="Properties View" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/ui-reference-chapter.html#properties-view"/>
-         <topic label="Description View" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/ui-reference-chapter.html#description-view"/>
-         <topic label="Editors" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/ui-reference-chapter.html#editors-view"/>
-         <topic label="Problems View" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/ui-reference-chapter.html#problems-view">
-            <topic label="Toolbar Menu" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/ui-reference-chapter.html#problems-view-toolbar-items"/>
-            <topic label="Context Menu" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/ui-reference-chapter.html#problems-view-context-menu"/>
-         </topic>
-         <topic label="Search Results View" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/ui-reference-chapter.html#search-results-view"/>
-         <topic label="Datatype Hierarchy View" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/ui-reference-chapter.html#datatypes-view"/>
-         <topic label="Teiid Model Classes View" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/ui-reference-chapter.html#model-classes-view"/>
-         <topic label="System Catalog View" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/ui-reference-chapter.html#system-catalog-view"/>
-         <topic label="SQL Reserved Words View" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/ui-reference-chapter.html#sql-reserved-words-view"/>
-         <topic label="Model Extension Definition Registry View (MED Registry View)" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/ui-reference-chapter.html#med-registry-view"/>
+   </topic>
+   <topic label="Teiid Designer Ui Reference" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/ui-reference-chapter.html">
+      <topic label="Teiid Designer Perspectives" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/ui-reference-chapter.html#teiid-designer-perspectives-section">
+         <topic label="Teiid Designer Perspective" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/ui-reference-chapter.html#teiid-perpective-section"/>
+         <topic label="Opening a Perspective" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/ui-reference-chapter.html#opening-perspective-section"/>
+         <topic label="Further information" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/ui-reference-chapter.html#further-information-section"/>
       </topic>
-      <topic label="Editors" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/ui-reference-chapter.html#teiid-designer-editors-section">
-         <topic label="Model Editor" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/ui-reference-chapter.html#model-editors-section">
-            <topic label="Diagram Editor" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/ui-reference-chapter.html#diagram-editor-section">
-               <topic label="Package Diagram" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/ui-reference-chapter.html#package-diagram-section"/>
-               <topic label="Custom Diagram" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/ui-reference-chapter.html#custom-diagram-section"/>
-               <topic label="Transformation Diagram" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/ui-reference-chapter.html#transformation-diagram-section"/>
-               <topic label="Mapping Diagram" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/ui-reference-chapter.html#mapping-diagram-section"/>
-               <topic label="Mapping Transformation Diagram" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/ui-reference-chapter.html#mapping-transformation-diagram-section"/>
-            </topic>
-            <topic label="Table Editor" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/ui-reference-chapter.html#table-editor-section">
-               <topic label="Editing Properties" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/ui-reference-chapter.html#d0e10128"/>
-               <topic label="Inserting Table Rows" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/ui-reference-chapter.html#d0e10171"/>
-            </topic>
-            <topic label="Simple Datatypes Editor" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/ui-reference-chapter.html#datatypes-editor-section"/>
-            <topic label="Semantic Editor" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/ui-reference-chapter.html#semantic-editor-section"/>
-            <topic label="Source Editor" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/ui-reference-chapter.html#source-editor-section"/>
-            <topic label="Model Object Editors" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/ui-reference-chapter.html#model-object-editors-sub-section"/>
-         </topic>
-         <topic label="VDB Editor" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/ui-reference-chapter.html#vdb-editor-section">
-            <topic label="Editing Data Roles" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/ui-reference-chapter.html#editing-data-roles-section"/>
-            <topic label="Editing Translator Overrides" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/ui-reference-chapter.html#editing-translator-overrides-section"/>
-         </topic>
-         <topic label="Model Extension Definition Editor" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/ui-reference-chapter.html#model-extension-definition-editor-section"/>
+      <topic label="Teiid Designer Views" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/ui-reference-chapter.html#teiid-designer-views-section">
+         <topic label="Model Explorer View" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/ui-reference-chapter.html#model-explorer-view"/>
+         <topic label="Outline View" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/ui-reference-chapter.html#outline-view"/>
+         <topic label="Teiid View" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/ui-reference-chapter.html#teiid-view"/>
+         <topic label="Properties View" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/ui-reference-chapter.html#properties-view"/>
+         <topic label="Description View" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/ui-reference-chapter.html#description-view"/>
+         <topic label="Problems View" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/ui-reference-chapter.html#problems-view"/>
+         <topic label="Search Results View" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/ui-reference-chapter.html#search-results-view"/>
+         <topic label="Datatype Hierarchy View" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/ui-reference-chapter.html#datatypes-view"/>
+         <topic label="Teiid Model Classes View" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/ui-reference-chapter.html#model-classes-view"/>
+         <topic label="System Catalog View" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/ui-reference-chapter.html#system-catalog-view"/>
+         <topic label="SQL Reserved Words View" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/ui-reference-chapter.html#sql-reserved-words-view"/>
+         <topic label="Model Extension Definition Registry View (MED Registry View)" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/ui-reference-chapter.html#med-registry-view"/>
+         <topic label="Guides View" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/ui-reference-chapter.html#guides-view"/>
+         <topic label="Status View" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/ui-reference-chapter.html#status-view"/>
+         <topic label="Cheat Sheets View" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/ui-reference-chapter.html#cheat-sheets-view"/>
       </topic>
-      <topic label="Teiid Designer Main Menu" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/ui-reference-chapter.html#teiid-designer-menus-section">
-         <topic label="File Menu" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/ui-reference-chapter.html#file-menu-section"/>
-         <topic label="Edit Menu" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/ui-reference-chapter.html#edit-menu-section"/>
-         <topic label="Refactor Menu" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/ui-reference-chapter.html#refactor-menu-section"/>
-         <topic label="Navigate Menu" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/ui-reference-chapter.html#navigate-menu-section"/>
-         <topic label="Search Menu" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/ui-reference-chapter.html#search-menu-section"/>
-         <topic label="Project Menu" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/ui-reference-chapter.html#project-menu-section"/>
-         <topic label="Metadata Menu" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/ui-reference-chapter.html#metadata-menu-section"/>
-         <topic label="Run Menu" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/ui-reference-chapter.html#run-menu-section"/>
-         <topic label="Window Menu" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/ui-reference-chapter.html#window-menu-section"/>
-         <topic label="Help Menu" href="http://docs.jboss.org/teiid/designer/7.6/user-guide/en-US/html/ui-reference-chapter.html#help-menu-section"/>
+      <topic label="Editors" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/ui-reference-chapter.html#teiid-designer-editors-section">
+         <topic label="Model Editor" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/ui-reference-chapter.html#model-editors-section"/>
+         <topic label="VDB Editor" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/ui-reference-chapter.html#vdb-editor-section"/>
+         <topic label="Model Extension Definition Editor" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/ui-reference-chapter.html#model-extension-definition-editor-section"/>
+      </topic>
+      <topic label="Teiid Designer Main Menu" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/ui-reference-chapter.html#teiid-designer-menus-section">
+         <topic label="File Menu" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/ui-reference-chapter.html#file-menu-section"/>
+         <topic label="Edit Menu" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/ui-reference-chapter.html#edit-menu-section"/>
+         <topic label="Refactor Menu" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/ui-reference-chapter.html#refactor-menu-section"/>
+         <topic label="Navigate Menu" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/ui-reference-chapter.html#navigate-menu-section"/>
+         <topic label="Search Menu" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/ui-reference-chapter.html#search-menu-section"/>
+         <topic label="Project Menu" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/ui-reference-chapter.html#project-menu-section"/>
+         <topic label="Metadata Menu" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/ui-reference-chapter.html#metadata-menu-section"/>
+         <topic label="Run Menu" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/ui-reference-chapter.html#run-menu-section"/>
+         <topic label="Window Menu" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/ui-reference-chapter.html#window-menu-section"/>
+         <topic label="Help Menu" href="http://docs.redhat.com/docs/en-US/JBoss_Enterprise_Data_Services/5/html/ui-reference-chapter.html#help-menu-section"/>
       </topic>
    </topic>
 </toc>

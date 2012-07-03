@@ -10,7 +10,6 @@ package com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.wizards;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
-import java.util.Properties;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -111,8 +110,6 @@ public class SelectWsdlPage extends WizardPage
 
     /** <code>IDialogSetting</code>s key for saved dialog Y position. */
     private static final String DIALOG_Y = "dialogY"; //$NON-NLS-1$
-    
-    private static final String WSDL_URI_PROP_KEY = "wsdlURI"; //$NON-NLS-1$
 
     private static final String EMPTY_STR = ""; //$NON-NLS-1$
 
@@ -399,12 +396,12 @@ public class SelectWsdlPage extends WizardPage
     }
     
 	private void createSourceModelGroup(Composite parent) {
-		Group sourceGroup = WidgetFactory.createGroup(parent,"Source Model Definition", SWT.NONE, 1);
+		Group sourceGroup = WidgetFactory.createGroup(parent,"Source Model Definition", SWT.NONE, 1); //$NON-NLS-1$
 		sourceGroup.setLayout(new GridLayout(3, false));
 		sourceGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 		Label locationLabel = new Label(sourceGroup, SWT.NULL);
-		locationLabel.setText("Location");
+		locationLabel.setText("Location"); //$NON-NLS-1$
 
 		sourceModelContainerText = new Text(sourceGroup, SWT.BORDER | SWT.SINGLE);
 
@@ -417,7 +414,7 @@ public class SelectWsdlPage extends WizardPage
 		Button browseButton = new Button(sourceGroup, SWT.PUSH);
 		gridData = new GridData();
 		browseButton.setLayoutData(gridData);
-		browseButton.setText("Browse...");
+		browseButton.setText("Browse..."); //$NON-NLS-1$
 		browseButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -426,7 +423,7 @@ public class SelectWsdlPage extends WizardPage
 		});
 
 		Label fileLabel = new Label(sourceGroup, SWT.NULL);
-		fileLabel.setText("Name :");
+		fileLabel.setText("Name :"); //$NON-NLS-1$
 
 		sourceModelFileText = new Text(sourceGroup, SWT.BORDER | SWT.SINGLE);
 		gridData = new GridData(GridData.FILL_HORIZONTAL);
@@ -441,7 +438,7 @@ public class SelectWsdlPage extends WizardPage
 		browseButton = new Button(sourceGroup, SWT.PUSH);
 		gridData = new GridData();
 		browseButton.setLayoutData(gridData);
-		browseButton.setText("Browse...");
+		browseButton.setText("Browse..."); //$NON-NLS-1$
 		browseButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -452,7 +449,7 @@ public class SelectWsdlPage extends WizardPage
 		new Label(sourceGroup, SWT.NONE);
 
 		Group helpGroup = WidgetFactory.createGroup(sourceGroup,
-				"Model Status", SWT.NONE | SWT.BORDER_DASH, 2);
+				"Model Status", SWT.NONE | SWT.BORDER_DASH, 2); //$NON-NLS-1$
 		helpGroup.setLayout(new GridLayout(1, false));
 		helpGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
@@ -583,7 +580,6 @@ public class SelectWsdlPage extends WizardPage
 				&& sourceModelFileText != null) {
 			if (selections[0] instanceof IFile) {
 				IFile modelFile = (IFile) selections[0];
-				IPath folderPath = modelFile.getFullPath().removeLastSegments(1);
 				String modelName = modelFile.getFullPath().lastSegment();
 				importManager.setSourceModelExists(true);
 				importManager.setSourceModelLocation(modelFile.getParent());
@@ -755,7 +751,6 @@ public class SelectWsdlPage extends WizardPage
                 buttonValidateWSDL.setEnabled(false);
                 return;
             }
-            Properties props = profile.getBaseProperties();
             if( importManager.getWSDLFileUri() != null ) {
             	wsdlURIText.setText(importManager.getWSDLFileUri());
             }

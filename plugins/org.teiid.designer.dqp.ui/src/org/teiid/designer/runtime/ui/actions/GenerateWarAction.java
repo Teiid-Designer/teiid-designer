@@ -7,14 +7,10 @@
  */
 package org.teiid.designer.runtime.ui.actions;
 
-import java.util.ArrayList;
-import java.util.Set;
-
 import javax.tools.JavaCompiler;
 import javax.tools.ToolProvider;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
@@ -24,15 +20,13 @@ import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.teiid.designer.dqp.webservice.war.ui.wizards.WarDeploymentInfoDialog;
-import org.teiid.designer.vdb.Vdb;
-import org.teiid.designer.vdb.VdbModelEntry;
+import org.teiid.designer.vdb.VdbUtil;
 
 import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.modeler.core.ModelerCore;
-import com.metamatrix.modeler.core.workspace.ModelResource;
+import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
-import com.metamatrix.modeler.internal.ui.viewsupport.ModelIdentifier;
+import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.ui.actions.ISelectionAction;
 import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
 
@@ -45,8 +39,8 @@ public class GenerateWarAction extends Action implements ISelectionListener,
 	protected boolean successfulRefresh = false;
 
 	IFile selectedVDB;
-	ArrayList<ModelResource> wsModelResources = new ArrayList<ModelResource>();
-	Vdb vdb;
+//	ArrayList<ModelResource> wsModelResources = new ArrayList<ModelResource>();
+//	Vdb vdb;
 	boolean contextIsLocal = false;
 
 	public GenerateWarAction() {
@@ -95,8 +89,7 @@ public class GenerateWarAction extends Action implements ISelectionListener,
 	@Override
 	public void run() {
 
-		final IWorkbenchWindow window = DqpUiPlugin.getDefault().getWorkbench()
-				.getActiveWorkbenchWindow();
+		final IWorkbenchWindow window = DqpUiPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow();
 
 		JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
 
@@ -113,33 +106,28 @@ public class GenerateWarAction extends Action implements ISelectionListener,
 			return;
 		}
 
-		WarDeploymentInfoDialog dialog = null;
-		dialog = new WarDeploymentInfoDialog(window.getShell(),
-				this.selectedVDB, wsModelResources, null);
+		WarDeploymentInfoDialog dialog = new WarDeploymentInfoDialog(window.getShell(), this.selectedVDB, null);
 
 		int rc = dialog.open();
 
 		// Retrieve the file name for the confirmation dialog
 		String warFileName = dialog.getWarFileName();
 
-		final String successMessage = DqpUiPlugin.UTIL.getString(I18N_PREFIX
-				+ "warFileCreated", warFileName); //$NON-NLS-1$
+		final String successMessage = DqpUiPlugin.UTIL.getString(I18N_PREFIX + "warFileCreated", warFileName); //$NON-NLS-1$
 
 		boolean wasSuccessful = (rc == Window.OK);
 		if (wasSuccessful) {
 			Display.getDefault().asyncExec(new Runnable() {
 				public void run() {
 					MessageDialog.openInformation(window.getShell(),
-							DqpUiPlugin.UTIL.getString(I18N_PREFIX
-									+ "creationCompleteTitle"),//$NON-NLS-1$ 
+							DqpUiPlugin.UTIL.getString(I18N_PREFIX + "creationCompleteTitle"),//$NON-NLS-1$ 
 							successMessage);
 				}
 			});
 		} else {
 			if (rc != Window.CANCEL) {
 
-				MessageDialog.openError(window.getShell(), DqpUiPlugin.UTIL
-						.getString(I18N_PREFIX + "creationFailedTitle"),//$NON-NLS-1$ 
+				MessageDialog.openError(window.getShell(), DqpUiPlugin.UTIL.getString(I18N_PREFIX + "creationFailedTitle"),//$NON-NLS-1$ 
 						dialog.getMessage());
 			}
 		}
@@ -156,23 +144,10 @@ public class GenerateWarAction extends Action implements ISelectionListener,
 				String extension = ((IFile) obj).getFileExtension();
 				if (extension != null && extension.equals(VDB_EXTENSION)) {
 					this.selectedVDB = (IFile) obj;
-					Vdb vdb = new Vdb(this.selectedVDB,
-							new NullProgressMonitor());
-					Set<VdbModelEntry> modelEntrySet = vdb.getModelEntries();
-					wsModelResources = new ArrayList<ModelResource>();
-					for (VdbModelEntry vdbModelEntry : modelEntrySet) {
-						final ModelResource modelResource = ModelerCore
-								.getModelWorkspace().findModelResource(
-										vdbModelEntry.getName());
-						if (ModelIdentifier
-								.isWebServicesViewModel(modelResource)) {
-							enable = true;
-							// Add to our ArrayList of ModelResources. These
-							// will be used to generate the war artifacts.
-							wsModelResources.add(modelResource);
-						}
+					
+					if( VdbUtil.hasModelClass(this.selectedVDB, ModelUtil.MODEL_CLASS_WEB_SERVICE, ModelType.VIRTUAL_LITERAL.getLiteral())) {
+						enable = true;
 					}
-
 				}
 			}
 		}

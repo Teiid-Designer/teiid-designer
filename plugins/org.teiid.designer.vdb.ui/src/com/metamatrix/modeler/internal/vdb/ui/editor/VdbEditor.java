@@ -1412,7 +1412,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                                 getVdb().synchronize(new NullProgressMonitor());
                                 modelsGroup.getTable().getViewer().refresh();
                                 otherFilesGroup.getTable().getViewer().refresh();
-
+                                pnlTranslatorOverrides.refresh();
                                 dataRoleResolver.allSynchronized();
                                 VdbEditor.this.doSave(new NullProgressMonitor());
                             }

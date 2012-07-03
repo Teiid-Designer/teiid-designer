@@ -59,11 +59,14 @@ public interface AdvisorUiConstants {
 	String[] ASPECT_MODEL_DATA_SOURCES = {
 			COMMAND_IDS.IMPORT_DDL,
 			COMMAND_IDS.IMPORT_FLAT_FILE,
+			COMMAND_IDS.IMPORT_XML_FILE,
+			COMMAND_IDS.IMPORT_XML_FILE_URL,
 			COMMAND_IDS.IMPORT_JDBC,
 			COMMAND_IDS.IMPORT_SALESFORCE,
 			COMMAND_IDS.IMPORT_WSDL_TO_SOURCE,
 			COMMAND_IDS.IMPORT_WSDL_TO_WS,
-			COMMAND_IDS.PREVIEW_DATA
+			COMMAND_IDS.GENERATE_WS_MODELS_FROM_WSDL,
+//			COMMAND_IDS.PREVIEW_DATA
 	};
 	
 	String[] ASPECT_MANAGE_CONNECTIONS = {
@@ -75,7 +78,8 @@ public interface AdvisorUiConstants {
 			COMMAND_IDS.CREATE_CONNECTION_WEB_SERVICE,
 			COMMAND_IDS.CREATE_CONNECTION_WEB_SERVICE_ODA,
 			COMMAND_IDS.CREATE_CONNECTION_XML_FILE_LOCAL,
-			COMMAND_IDS.CREATE_CONNECTION_XML_FILE_URL
+			COMMAND_IDS.CREATE_CONNECTION_XML_FILE_URL,
+			COMMAND_IDS.CREATE_DATA_SOURCE
 	};
 	
 	String[] ASPECT_MANAGE_VDBS = {
@@ -105,9 +109,9 @@ public interface AdvisorUiConstants {
 	String[] ASPECT_TEIID_SERVER = {
 			COMMAND_IDS.NEW_TEIID_SERVER,
 			COMMAND_IDS.EDIT_TEIID_SERVER,
-			COMMAND_IDS.CREATE_DATA_SOURCE,
-			COMMAND_IDS.DEPLOY_VDB,
-			COMMAND_IDS.EXECUTE_VDB,
+//			COMMAND_IDS.CREATE_DATA_SOURCE,
+//			COMMAND_IDS.DEPLOY_VDB,
+//			COMMAND_IDS.EXECUTE_VDB,
 	};
 	
 	String[] ASPECT_TEST = {
@@ -133,6 +137,7 @@ public interface AdvisorUiConstants {
 		String IMPORT_SALESFORCE = "org.teiid.designer.importSalesforceCommand";  //$NON-NLS-1$
 		String IMPORT_FLAT_FILE = "org.teiid.designer.importFlatFileCommand";  //$NON-NLS-1$
 		String IMPORT_XML_FILE = "org.teiid.designer.importXmlFileCommand";  //$NON-NLS-1$
+		String IMPORT_XML_FILE_URL = "org.teiid.designer.importXmlFileUrlCommand";  //$NON-NLS-1$
 		String IMPORT_WSDL_TO_SOURCE = "org.teiid.designer.importWsdlToSourceCommand";  //$NON-NLS-1$
 		String IMPORT_WSDL_TO_WS = "org.teiid.designer.importWsdlToWSCommand";  //$NON-NLS-1$
 		
@@ -144,7 +149,10 @@ public interface AdvisorUiConstants {
 		
         String NEW_OBJECT_BASE_TABLE = "org.teiid.designer.newObjectBaseTable"; //$NON-NLS-1$
         String NEW_OBJECT_VIEW_TABLE = "org.teiid.designer.newObjectViewTable"; //$NON-NLS-1$
-		String NEW_OBJECT_SOURCE_FUNCTION = "org.teiid.designer.newObjectSourceFunction";  //$NON-NLS-1$
+        String DEFINE_VIEW_TABLE = "org.teiid.designer.defineViewTable"; //$NON-NLS-1$
+        String DEFINE_VIEW_PROCEDURE = "org.teiid.designer.defineViewProcedure"; //$NON-NLS-1$
+        String NEW_OBJECT_REST_PROCEDURE = "org.teiid.designer.newObjectRestProcedure"; //$NON-NLS-1$
+        String NEW_OBJECT_SOURCE_FUNCTION = "org.teiid.designer.newObjectSourceFunction";  //$NON-NLS-1$
 		
 		String CREATE_CONNECTION_JDBC = "org.teiid.designer.connection.new.jdbc"; //$NON-NLS-1$
 		String CREATE_CONNECTION_FLAT_FILE = "org.teiid.designer.connection.new.flatfile"; //$NON-NLS-1$
@@ -160,12 +168,19 @@ public interface AdvisorUiConstants {
 		String OPEN_DATA_SOURCE_EXPLORER_VIEW = "org.eclipse.datatools.openexplorerview"; //$NON-NLS-1$
 		
 		String NEW_TEIID_MODEL_PROJECT = "org.teiid.designer.newProjectCommand"; //$NON-NLS-1$
+		String DEFINE_TEIID_MODEL_PROJECT = "org.teiid.designer.defineProjectCommand";  //$NON-NLS-1$
+		String DEFINE_SOURCE = "org.teiid.designer.defineSource";  //$NON-NLS-1$
 		
 		String CREATE_VDB = "org.teiid.designer.vdb.create"; //$NON-NLS-1$
 		String EXECUTE_VDB = "org.teiid.designer.vdb.execute"; //$NON-NLS-1$
 		String PREVIEW_DATA = "org.teiid.designer.previewData"; //$NON-NLS-1$
 		String EDIT_VDB = "org.teiid.designer.vdb.edit"; //$NON-NLS-1$
 		String DEPLOY_VDB = "org.teiid.designer.vdb.deploy"; //$NON-NLS-1$
+		String DEFINE_VDB = "org.teiid.designer.vdb.define"; //$NON-NLS-1$
+		
+		String GENERATE_REST_WAR = "org.teiid.designer.war.rest.generate"; //$NON-NLS-1$
+		String GENERATE_SOAP_WAR = "org.teiid.designer.war.soap.generate"; //$NON-NLS-1$
+		String DEPLOY_WAR = "org.teiid.designer.war.deploy"; //$NON-NLS-1$
 		
 		String NEW_TEIID_SERVER = "org.teiid.designer.runtime.newTeiidServer"; //$NON-NLS-1$
 		String EDIT_TEIID_SERVER = "org.teiid.designer.runtime.editTeiidServer"; //$NON-NLS-1$
@@ -181,19 +196,23 @@ public interface AdvisorUiConstants {
 		String IMPORT_SALESFORCE = "Create relational source model defined by your Salesforce metadata";  //$NON-NLS-1$
 		String IMPORT_FLAT_FILE = "Create view table to query a flat file source";  //$NON-NLS-1$
 		String IMPORT_XML_FILE = "Create view table to query your local or remote URL XML file source";  //$NON-NLS-1$
+		String IMPORT_XML_FILE_URL = "Create view table to query your remote URL XML file source";  //$NON-NLS-1$
 		String IMPORT_WSDL_TO_SOURCE = "Create view tables to query your Web Services defined by WSDL source";  //$NON-NLS-1$
 		String IMPORT_WSDL_TO_WS = "Create web service operations defined by your WSDL source";  //$NON-NLS-1$
 		
 		String NEW_MODEL_RELATIONAL_SOURCE = "Create new relational model. Options include empty model or copy from existing source model";  //$NON-NLS-1$
 		String NEW_MODEL_RELATIONAL_VIEW = "Create new relational view model. Options include empty model, copy from existing or by transforming" + //$NON-NLS-1$
 				" from existing relational model";  //$NON-NLS-1$
-		String NEW_MODEL_WS = "org.teiid.designer.newModelWSCommand";  //$NON-NLS-1$
-		String NEW_MODEL_XML_DOC = "org.teiid.designer.newModelXmlDocCommand";  //$NON-NLS-1$
-		String NEW_MODEL_MED = "org.teiid.designer.newModelMEDCommand";  //$NON-NLS-1$
+		String NEW_MODEL_WS = "Create new web services view model";  //$NON-NLS-1$
+		String NEW_MODEL_XML_DOC = "Crate new XML document view model";  //$NON-NLS-1$
+		String NEW_MODEL_MED = "Create new Model Extension Definition";  //$NON-NLS-1$
 		
-        String NEW_OBJECT_BASE_TABLE = "org.teiid.designer.newObjectBaseTable"; //$NON-NLS-1$
-        String NEW_OBJECT_VIEW_TABLE = "org.teiid.designer.newObjectViewTable"; //$NON-NLS-1$
-		String NEW_OBJECT_SOURCE_FUNCTION = "org.teiid.designer.newObjectSourceFunction";  //$NON-NLS-1$
+        String NEW_OBJECT_BASE_TABLE = "Create new relational table"; //$NON-NLS-1$
+        String NEW_OBJECT_VIEW_TABLE = "Create new relational view table"; //$NON-NLS-1$
+        String DEFINE_VIEW_TABLE = "Define relational view table by creating or selecting existing table"; //$NON-NLS-1$
+        String DEFINE_VIEW_PROCEDURE = "Define relational view procedure by creating or selecting existing table"; //$NON-NLS-1$
+        String NEW_OBJECT_REST_PROCEDURE = "Create new relational view REST procedure"; //$NON-NLS-1$
+		String NEW_OBJECT_SOURCE_FUNCTION = "Create new relational source function";  //$NON-NLS-1$
 		
 		String CREATE_CONNECTION_JDBC = "Create connection profile for JDBC source"; //$NON-NLS-1$
 		String CREATE_CONNECTION_FLAT_FILE = "Create connection profile for local flat file source"; //$NON-NLS-1$
@@ -205,16 +224,27 @@ public interface AdvisorUiConstants {
 		String CREATE_CONNECTION_WEB_SERVICE = "Create a NON-SOAP Web Services connection profile"; //$NON-NLS-1$
 		String CREATE_CONNECTION_WEB_SERVICE_ODA = "Create an ODA Web Services connection profile"; //$NON-NLS-1$
 		
-		String GENERATE_WS_MODELS_FROM_WSDL = "org.teiid.designer.generatewsmodelsfromwsdl";  //$NON-NLS-1$
+		String GENERATE_WS_MODELS_FROM_WSDL = "Generate source and view models to access data from your web service. ";  //$NON-NLS-1$
 		String OPEN_DATA_SOURCE_EXPLORER_VIEW = "Open Datatools' Data Source Explorer view"; //$NON-NLS-1$
 		
 		String NEW_TEIID_MODEL_PROJECT = "Create new Teiid Model Project"; //$NON-NLS-1$
+		String DEFINE_TEIID_MODEL_PROJECT = "Define Teiid Model Project by selecting existing or creating new project"; //$NON-NLS-1$
+		String DEFINE_SOURCE = "Define Source Model by importing from your data source"; //$NON-NLS-1$
 		
 		String CREATE_VDB = "Create a new VDB"; //$NON-NLS-1$
 		String EXECUTE_VDB = "Test a VDB by deploying to Teiid Server, connecting to it via JDBC and executing queries against it via Datatools' SQL Scrapbook"; //$NON-NLS-1$
 		String PREVIEW_DATA = "Perform a test query on a table or procedure"; //$NON-NLS-1$
 		String EDIT_VDB = "Select and open a VDB for editing"; //$NON-NLS-1$
 		String DEPLOY_VDB = "Deploy a VDB to your Teiid server"; //$NON-NLS-1$
+		String DEFINE_VDB = "Define VDB by selecting existing or creating new VDB";  //$NON-NLS-1$
+		
+		String GENERATE_REST_WAR = "Generate a REST WAR file"; //$NON-NLS-1$
+		String GENERATE_SOAP_WAR = "Generate a JBossWS-CXF WAR file"; //$NON-NLS-1$
+		String DEPLOY_WAR = 
+				"To deploy WAR file :\n" +  //$NON-NLS-1$
+				"\t1) Insure target JBossAS is configured and running\n" + //$NON-NLS-1$
+				"\t2) Select your WAR file in the Model Explorer view\n" + //$NON-NLS-1$
+				"\t3) Right-click select 'Mark as Deployable'"; //$NON-NLS-1$
 		
 		String NEW_TEIID_SERVER = "Create new Teiid server"; //$NON-NLS-1$
 		String EDIT_TEIID_SERVER = "Edit the properties of an existing Teiid server"; //$NON-NLS-1$
@@ -228,6 +258,7 @@ public interface AdvisorUiConstants {
 		String IMPORT_SALESFORCE = Messages.CreateSourceModelFromSalesforceDataSource;
 		String IMPORT_FLAT_FILE = Messages.ConsumeLocalFlatFileDataSource;
 		String IMPORT_XML_FILE = Messages.ConsumeXmlFileSource;
+		String IMPORT_XML_FILE_URL = Messages.ConsumeXmlFileUrlSource;
 		String IMPORT_WSDL_TO_SOURCE = Messages.CreateSourceModelFromWsdlSource;
 		String IMPORT_WSDL_TO_WS = Messages.ConsumeWebServiceWsdl;
 		
@@ -239,6 +270,9 @@ public interface AdvisorUiConstants {
 		
         String NEW_OBJECT_BASE_TABLE = Messages.CreateNewRelationalBaseTable;
         String NEW_OBJECT_VIEW_TABLE = Messages.CreateNewRelationalViewTable;
+        String DEFINE_VIEW_TABLE = Messages.DefineRelationalViewTable;
+        String DEFINE_VIEW_PROCEDURE = Messages.DefineRelationalViewProcedure;
+        String NEW_OBJECT_REST_PROCEDURE = Messages.CreateNewRelationalViewRESTProcedure;
 		String NEW_OBJECT_SOURCE_FUNCTION = Messages.CreateNewRelationalSourceFunction;
 		
 		String CREATE_CONNECTION_JDBC = Messages.CreateJdbcConnection;
@@ -256,11 +290,19 @@ public interface AdvisorUiConstants {
 		String OPEN_DATA_SOURCE_EXPLORER_VIEW = Messages.OpenDatatoolsDataSourceExplorer;
 		
 		String NEW_TEIID_MODEL_PROJECT = Messages.CreateTeiidModelProject;
+		String DEFINE_TEIID_MODEL_PROJECT = Messages.DefineTeiidModelProject;
+		String DEFINE_SOURCE = Messages.DefineSource;
+		
 		String CREATE_VDB = Messages.CreateVdb;
 		String EXECUTE_VDB = Messages.ExecuteVdb;
 		String EDIT_VDB = Messages.EditVdb;
 		String PREVIEW_DATA = Messages.PreviewData;
 		String DEPLOY_VDB = Messages.DeployVdb;
+		String DEFINE_VDB = Messages.DefineVdb;
+		
+		String GENERATE_REST_WAR = Messages.GenerateRestWar;
+		String GENERATE_SOAP_WAR = Messages.GenerateSoapWar;
+		String DEPLOY_WAR = Messages.DeployWarFile;
 		
 		String NEW_TEIID_SERVER = Messages.NewTeiidServer;
 		String EDIT_TEIID_SERVER = Messages.EditTeiidServer;
@@ -273,6 +315,7 @@ public interface AdvisorUiConstants {
 		String IMPORT_SALESFORCE = Messages.CreateSourceModelFromSalesforceDataSource_Short; 
 		String IMPORT_FLAT_FILE = Messages.ConsumeLocalFlatFileDataSource_Short;
 		String IMPORT_XML_FILE = Messages.ConsumeXmlFileSource_Short;
+		String IMPORT_XML_FILE_URL = Messages.ConsumeXmlFileUrlSource_Short;
 		String IMPORT_WSDL_TO_SOURCE = Messages.CreateSourceModelFromWsdlSource_Short;
 		String IMPORT_WSDL_TO_WS = Messages.ConsumeWebServiceWsdl_Short;
 		
@@ -284,6 +327,9 @@ public interface AdvisorUiConstants {
 		
         String NEW_OBJECT_BASE_TABLE = Messages.CreateNewRelationalBaseTable_Short;
         String NEW_OBJECT_VIEW_TABLE = Messages.CreateNewRelationalViewTable_Short;
+        String DEFINE_VIEW_TABLE = Messages.DefineRelationalViewTable;
+        String DEFINE_VIEW_PROCEDURE = Messages.DefineRelationalViewProcedure;
+        String NEW_OBJECT_REST_PROCEDURE = Messages.CreateNewRelationalViewRESTProcedure_Short;
 		String NEW_OBJECT_SOURCE_FUNCTION = Messages.CreateNewRelationalSourceFunction_Short;
 		
 		String CREATE_CONNECTION_JDBC = Messages.CreateJdbcConnection_Short;
@@ -300,11 +346,19 @@ public interface AdvisorUiConstants {
 		
 		String OPEN_DATA_SOURCE_EXPLORER_PERSPECTIVE = Messages.OpenDatatoolsDataSourceExplorer;
 		
-		String NEW_TEIID_MODEL_PROJECT = Messages.CreateTeiidModelProject;
+		String NEW_TEIID_MODEL_PROJECT = Messages.CreateTeiidModelProject_Short;
+		String DEFINE_TEIID_MODEL_PROJECT = Messages.DefineTeiidModelProject_Short;
+		String DEFINE_SOURCE = Messages.DefineSource;
+		
 		String CREATE_VDB = Messages.CreateVdb_Short;
 		String EXECUTE_VDB = Messages.ExecuteVdb;
 		String EDIT_VDB = Messages.EditVdb_Short;
 		String DEPLOY_VDB = Messages.DeployVdb_Short;
+		String DEFINE_VDB = Messages.DefineVdb;
+		
+		String GENERATE_REST_WAR = Messages.GenerateRestWar_Short;
+		String GENERATE_SOAP_WAR = Messages.GenerateSoapWar_Short;
+		String DEPLOY_WAR = Messages.DeployWarFile_Short;
 		
 		String NEW_TEIID_SERVER = Messages.NewTeiidServer_Short;
 		String EDIT_TEIID_SERVER = Messages.EditTeiidServer_Short;
@@ -370,7 +424,8 @@ public interface AdvisorUiConstants {
 	    String CREATE_WEB_SRVICES_DATA_FILE = CTOOL16 + "new-web-services-definition-file.png"; //$NON-NLS-1$
 	
 	    String NEW_WS_MODEL = OBJ16 + "new-web-service.png"; //$NON-NLS-1$
-	    String EXPORT_WAR = CTOOL16 + "export-war.png"; //$NON-NLS-1$
+	    String GENERATE_WAR = CVIEW16 + "generate-war.png"; //$NON-NLS-1$
+	    String DEPLOY_WAR = CVIEW16 + "deploy-war.png"; //$NON-NLS-1$
 	    String NEW_VDB = CTOOL16 + "new-vdb-wiz.gif"; //$NON-NLS-1$
 	    String NEW_MODEL_ACTION = CTOOL16 + "new-model-wiz.gif"; //$NON-NLS-1$
 	    String NEW_PROJECT_ACTION = CTOOL16 + "new-project-wiz.gif";  //$NON-NLS-1$
@@ -387,71 +442,74 @@ public interface AdvisorUiConstants {
 	    String NEW_CONNECTION_PROFILE = CTOOL16 + "new-connection-profile.gif";  //$NON-NLS-1$
 	    String IMPORT = CTOOL16 + "import.gif";  //$NON-NLS-1$
 	    String EXPORT = CTOOL16 + "export.gif";  //$NON-NLS-1$
+	    String CREATE_SOURCES = CTOOL16 + "import-create-models.png";  //$NON-NLS-1$
 	    
 	    String LINK_TO_HELP = CTOOL16 + "link-to-help.gif"; //$NON-NLS-1$
 	    String LIGHT_BULB = CTOOL16 + "light-bulb.gif"; //$NON-NLS-1$
 	    String EXECUTE_ACTION = CTOOL16 + "execute-action.gif"; //$NON-NLS-1$
 	    
-	    
-        public static String VDB_PROJECT = CVIEW16 + "vdbproject.png"; //$NON-NLS-1$
-        public static String MODEL_PROJECT = CVIEW16 + "modelproject.png"; //$NON-NLS-1$
-        public static String EXIT = CTOOL16 + "exit.gif"; //$NON-NLS-1$
-        public static String DELETE = CTOOL16 + "delete.gif"; //$NON-NLS-1$
-        public static String NEW_VDB_WIZARD = WIZBAN + "newvdbwizard.gif"; //$NON-NLS-1$
-        public static String OPEN = CTOOL16 + "openVdb.gif"; //$NON-NLS-1$
-        public static String OPEN_OR_CREATE_VDB = CTOOL16 + "openOrCreateVdb.gif"; //$NON-NLS-1$
-        public static String REBUILD_VDB = CTOOL16 + "rebuild_vdb.gif"; //$NON-NLS-1$
-        public static String CONFIGURATION_MANAGER_VIEW = CVIEW16 + "ConfigurationManagerView.gif"; //$NON-NLS-1$
-        public static String CONNECTOR_BINDINGS = CVIEW16 + "ConnectorBindings.gif"; //$NON-NLS-1$
-        public static String CONNECTOR_BINDINGS_WITH_ERROR = CVIEW16 + "ConnectorBindingsWithError.gif"; //$NON-NLS-1$
-        public static String BUILD_ALL = CVIEW16 + "build_exec.gif"; //$NON-NLS-1$
-        public static String MODEL_STATISTICS = CVIEW16 + "statistics.gif"; //$NON-NLS-1$
-        public static String VIEW_MODEL_TYPES = CVIEW16 + "viewModelTypes.gif"; //$NON-NLS-1$
-        public static String VIEW_WEB_SERVICES = CVIEW16 + "viewWebServices.gif"; //$NON-NLS-1$
-        public static String BUILD_IMPORTS = OBJ16 + "Imports.gif"; //$NON-NLS-1$
-        public static String IMPORT_EXAMPLE_VDB = WIZBAN + "importExampleVdb.gif"; //$NON-NLS-1$
-        public static String NEW_WEB_SERVICE = CTOOL16 + "NewWebService.png"; //$NON-NLS-1$
+        String VDB_PROJECT = CVIEW16 + "vdbproject.png"; //$NON-NLS-1$
+        String MODEL_PROJECT = CVIEW16 + "modelproject.png"; //$NON-NLS-1$
+        String EXIT = CTOOL16 + "exit.gif"; //$NON-NLS-1$
+        String DELETE = CTOOL16 + "delete.gif"; //$NON-NLS-1$
+        String NEW_VDB_WIZARD = WIZBAN + "newvdbwizard.gif"; //$NON-NLS-1$
+        String OPEN = CTOOL16 + "openVdb.gif"; //$NON-NLS-1$
+        String OPEN_OR_CREATE_VDB = CTOOL16 + "openOrCreateVdb.gif"; //$NON-NLS-1$
+        String REBUILD_VDB = CTOOL16 + "rebuild_vdb.gif"; //$NON-NLS-1$
+        String CONFIGURATION_MANAGER_VIEW = CVIEW16 + "ConfigurationManagerView.gif"; //$NON-NLS-1$
+        String CONNECTOR_BINDINGS = CVIEW16 + "ConnectorBindings.gif"; //$NON-NLS-1$
+        String CONNECTOR_BINDINGS_WITH_ERROR = CVIEW16 + "ConnectorBindingsWithError.gif"; //$NON-NLS-1$
+        String BUILD_ALL = CVIEW16 + "build_exec.gif"; //$NON-NLS-1$
+        String MODEL_STATISTICS = CVIEW16 + "statistics.gif"; //$NON-NLS-1$
+        String VIEW_MODEL_TYPES = CVIEW16 + "viewModelTypes.gif"; //$NON-NLS-1$
+        String VIEW_WEB_SERVICES = CVIEW16 + "viewWebServices.gif"; //$NON-NLS-1$
+        String BUILD_IMPORTS = OBJ16 + "Imports.gif"; //$NON-NLS-1$
+        String IMPORT_EXAMPLE_VDB = WIZBAN + "importExampleVdb.gif"; //$NON-NLS-1$
+        String NEW_WEB_SERVICE = CTOOL16 + "NewWebService.png"; //$NON-NLS-1$
+        
+        String NEW_VIRTUAL_TABLE_ICON = CVIEW16 + "new-view-table.png"; //$NON-NLS-1$
+        String NEW_VIRTUAL_PROCEDURE_ICON = CVIEW16 + "new-view-procedure.png"; //$NON-NLS-1$
 
         // --------------------------------------------------------------------------------
         // For WebServiceAdvisorStatusPanel
-        public static String CHECKED_BOX = CTOOL16 + "checked_box.png"; //$NON-NLS-1$
-        public static String WARNING_CHECKED_BOX = CTOOL16 + "warning_checked_box.png"; //$NON-NLS-1$
-        public static String EMPTY_BOX = CTOOL16 + "empty_box.png"; //$NON-NLS-1$
-        public static String WARNING_EMPTY_BOX = CTOOL16 + "warning_empty_box.png"; //$NON-NLS-1$
-        public static String PROBLEM_BOX = CTOOL16 + "problem_box.png"; //$NON-NLS-1$
-        public static String WARNING_PROBLEM_BOX = CTOOL16 + "warning_problem_box.gif"; //$NON-NLS-1$
-        public static String EMPTY_GRAY_BOX = CTOOL16 + "empty_gray_box.gif"; //$NON-NLS-1$
+        String CHECKED_BOX = CTOOL16 + "checked_box.png"; //$NON-NLS-1$
+        String WARNING_CHECKED_BOX = CTOOL16 + "warning_checked_box.png"; //$NON-NLS-1$
+        String EMPTY_BOX = CTOOL16 + "empty_box.png"; //$NON-NLS-1$
+        String WARNING_EMPTY_BOX = CTOOL16 + "warning_empty_box.png"; //$NON-NLS-1$
+        String PROBLEM_BOX = CTOOL16 + "problem_box.png"; //$NON-NLS-1$
+        String WARNING_PROBLEM_BOX = CTOOL16 + "warning_problem_box.gif"; //$NON-NLS-1$
+        String EMPTY_GRAY_BOX = CTOOL16 + "empty_gray_box.gif"; //$NON-NLS-1$
         // button versions....
-        public static String CHECKED_BOX_BUTTON = CTOOL16 + "checked_box_button.gif"; //$NON-NLS-1$
-        public static String WARNING_CHECKED_BOX_BUTTON = CTOOL16 + "warning_checked_box_button.gif"; //$NON-NLS-1$
-        public static String EMPTY_BOX_BUTTON = CTOOL16 + "empty_box_button.gif"; //$NON-NLS-1$
-        public static String WARNING_EMPTY_BOX_BUTTON = CTOOL16 + "warning_empty_box_button.gif"; //$NON-NLS-1$
-        public static String PROBLEM_BOX_BUTTON = CTOOL16 + "problem_box_button.gif"; //$NON-NLS-1$
-        public static String WARNING_PROBLEM_BOX_BUTTON = CTOOL16 + "warning_problem_box_button.gif"; //$NON-NLS-1$
-        public static String EMPTY_GRAY_BOX_BUTTON = CTOOL16 + "empty_gray_box_button.gif"; //$NON-NLS-1$
+        String CHECKED_BOX_BUTTON = CTOOL16 + "checked_box_button.gif"; //$NON-NLS-1$
+        String WARNING_CHECKED_BOX_BUTTON = CTOOL16 + "warning_checked_box_button.gif"; //$NON-NLS-1$
+        String EMPTY_BOX_BUTTON = CTOOL16 + "empty_box_button.gif"; //$NON-NLS-1$
+        String WARNING_EMPTY_BOX_BUTTON = CTOOL16 + "warning_empty_box_button.gif"; //$NON-NLS-1$
+        String PROBLEM_BOX_BUTTON = CTOOL16 + "problem_box_button.gif"; //$NON-NLS-1$
+        String WARNING_PROBLEM_BOX_BUTTON = CTOOL16 + "warning_problem_box_button.gif"; //$NON-NLS-1$
+        String EMPTY_GRAY_BOX_BUTTON = CTOOL16 + "empty_gray_box_button.gif"; //$NON-NLS-1$
 
-        public static String VDB_OK = CTOOL16 + "vdb_ok_status.gif"; //$NON-NLS-1$
-        public static String VDB_ERROR = CTOOL16 + "vdb_error_status.gif"; //$NON-NLS-1$
-        public static String VDB_SAVE_REQUIRED = CTOOL16 + "vdb_save_required.gif"; //$NON-NLS-1$
+        String VDB_OK = CTOOL16 + "vdb_ok_status.gif"; //$NON-NLS-1$
+        String VDB_ERROR = CTOOL16 + "vdb_error_status.gif"; //$NON-NLS-1$
+        String VDB_SAVE_REQUIRED = CTOOL16 + "vdb_save_required.gif"; //$NON-NLS-1$
 
-        public static String IMPORT_XSD = CTOOL16 + "import_xsd.gif"; //$NON-NLS-1$
-        public static String IMPORT_VDB_ICON = WIZBAN + "import_vdb.gif"; //$NON-NLS-1$
-        public static String EDIT_BINDINGS = CVIEW16 + "ConnectorBindings.gif"; //$NON-NLS-1$
-        public static String NEW_MODEL_WIZARD = CVIEW16 + "newmodel_wiz.gif"; //$NON-NLS-1$
-        public static String FIX_IT = CTOOL16 + "fix_it.gif"; //$NON-NLS-1$
-        public static String LIGHTBULB_ICON = CTOOL16 + "lightbulb.gif"; //$NON-NLS-1$
+        String IMPORT_XSD = CTOOL16 + "import_xsd.gif"; //$NON-NLS-1$
+        String IMPORT_VDB_ICON = WIZBAN + "import_vdb.gif"; //$NON-NLS-1$
+        String EDIT_BINDINGS = CVIEW16 + "ConnectorBindings.gif"; //$NON-NLS-1$
+        String NEW_MODEL_WIZARD = CVIEW16 + "newmodel_wiz.gif"; //$NON-NLS-1$
+        String FIX_IT = CTOOL16 + "fix_it.gif"; //$NON-NLS-1$
+        String LIGHTBULB_ICON = CTOOL16 + "lightbulb.gif"; //$NON-NLS-1$
 
-        public static String PREVIEW_WSDL = CTOOL16 + "preview_wsdl.gif"; //$NON-NLS-1$
-        public static String PREVIEW_WSDL_ERROR = CTOOL16 + "preview_wsdl_error.gif"; //$NON-NLS-1$
-        public static String PREVIEW_WSDL_GRAY = DTOOL16 + "preview_wsdl_disabled.gif"; //$NON-NLS-1$
+        String PREVIEW_WSDL = CTOOL16 + "preview_wsdl.gif"; //$NON-NLS-1$
+        String PREVIEW_WSDL_ERROR = CTOOL16 + "preview_wsdl_error.gif"; //$NON-NLS-1$
+        String PREVIEW_WSDL_GRAY = DTOOL16 + "preview_wsdl_disabled.gif"; //$NON-NLS-1$
 
-        public static String PROBLEM_ERROR = CTOOL16 + "ProblemMarker_error.gif"; //$NON-NLS-1$
-        public static String PROBLEM_WARNING = CTOOL16 + "ProblemMarker_warning.gif"; //$NON-NLS-1$
-        public static String PROBLEM_INFO = CTOOL16 + "ProblemMarker_info.gif"; //$NON-NLS-1$
+        String PROBLEM_ERROR = CTOOL16 + "ProblemMarker_error.gif"; //$NON-NLS-1$
+        String PROBLEM_WARNING = CTOOL16 + "ProblemMarker_warning.gif"; //$NON-NLS-1$
+        String PROBLEM_INFO = CTOOL16 + "ProblemMarker_info.gif"; //$NON-NLS-1$
 
-        public static String HELP_ICON = CTOOL16 + "linkto_help.gif"; //$NON-NLS-1$
-        public static String PROBLEMS_VIEW = CTOOL16 + "problems_view.gif"; //$NON-NLS-1$
-        public static String NEW_MODEL = CTOOL16 + "newmodel_wiz.gif"; //$NON-NLS-1$
+        String HELP_ICON = CTOOL16 + "linkto_help.gif"; //$NON-NLS-1$
+        String PROBLEMS_VIEW = CTOOL16 + "problems_view.gif"; //$NON-NLS-1$
+        String NEW_MODEL = CTOOL16 + "newmodel_wiz.gif"; //$NON-NLS-1$
         // --------------------------------------------------------------------------------
 	}
 	
@@ -470,7 +528,7 @@ public interface AdvisorUiConstants {
 
 	/**
 	 * Constants related to extensions, including all extension ID's.
-	 * 
+	 * s
 	 * @since 4.0
 	 */
 	interface Extensions {
@@ -536,5 +594,18 @@ public interface AdvisorUiConstants {
         String MODEL_XML_REMOTE_SOURCE = Images.IMPORT_WSDL;
 		String MULTI_SOURCE_VDB = Images.NEW_VDB;
 		String CREATE_AND_TEST_VDB = Images.EXECUTE_VDB_ACTION;
+	}
+	
+	interface INSTRUCTIONS {
+		String[] DEPLOY_WAR_FILE = {
+				Messages.DeployWarFile_Line_1,
+				Messages.DeployWarFile_Line_2,
+				Messages.DeployWarFile_Line_3,
+				Messages.DeployWarFile_Line_4,
+				Messages.DeployWarFile_Line_5,
+				Messages.DeployWarFile_Line_6,
+				Messages.DeployWarFile_Line_7,
+				Messages.DeployWarFile_Line_8
+		};
 	}
 }

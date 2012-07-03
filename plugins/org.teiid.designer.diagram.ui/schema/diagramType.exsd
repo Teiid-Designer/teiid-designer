@@ -1,11 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<!--
-  JBoss, Home of Professional Open Source.
-
-  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
-
-  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
--->
+<!-- Schema file written by PDE -->
 <schema targetNamespace="com.metamatrix.modeler.diagram.ui" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
       <appinfo>
@@ -63,6 +57,13 @@
             <annotation>
                <documentation>
                   
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="deprecated" type="boolean" use="default" value="false">
+            <annotation>
+               <documentation>
+                  Allows diagram type to remain in the plugin architecture but all actions and preferences can be prevented from being displayed.
                </documentation>
             </annotation>
          </attribute>

@@ -13,7 +13,7 @@ import javax.xml.ws.ServiceMode;
 import javax.xml.ws.WebServiceProvider;
 
 @ServiceMode(value = javax.xml.ws.Service.Mode.PAYLOAD)
-@WebServiceProvider(targetNamespace = "${targetNamespace}", portName = "${portName}", serviceName = "${serviceName}", wsdlLocation = "${wsdlFileName}")
+@WebServiceProvider(targetNamespace = "${targetNamespace}", portName = "${portName}", serviceName = "${serviceName}", wsdlLocation = "WEB-INF/wsdl/${wsdlFileName}")
 public class ${className} extends TeiidWSProvider implements
 		javax.xml.ws.Provider<Source> {
 	

@@ -118,4 +118,8 @@ public class SalesForceConnectionInfoProvider extends ConnectionInfoHelper imple
         return DataSourceConnectionConstants.DataSource.SALESFORCE;
     }
 
+	@Override
+	public boolean requiresPassword(IConnectionProfile connectionProfile) {
+		return true;
+	}
 }

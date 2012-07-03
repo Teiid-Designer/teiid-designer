@@ -46,7 +46,7 @@ public class ResultBuilderTraversalContext extends BaseTraversalContext implemen
 	//private SqlTransformationMappingRoot transformation;
 	private List<Column> cachedColumns = new ArrayList();
 	
-	public static final String EXTRACT = "extract_"; //$NON-NLS-1$
+	public static final String RESPONSE = "response_"; //$NON-NLS-1$
 	public static final String XML_IN = "xml_in"; //$NON-NLS-1$
 	
 	public ResultBuilderTraversalContext(String procedureName, QName namespace, TraversalContext ctx, ProcedureBuilder builder) {
@@ -90,7 +90,7 @@ public class ResultBuilderTraversalContext extends BaseTraversalContext implemen
 			throws ModelWorkspaceException, ModelerCoreException {
 		procedure = factory.createProcedure();
 		builder.getSchema().getProcedures().add(procedure);
-		String uniqueName = getUniqueName(procedure, EXTRACT + NameUtil.normalizeName(procedureNameBase));
+		String uniqueName = getUniqueName(procedure, RESPONSE + NameUtil.normalizeName(procedureNameBase));
 		procedure.setName(uniqueName);
 		procedure.setNameInSource(procedureNameBase);
 

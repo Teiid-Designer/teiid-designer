@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: org.teiid.designer.ui.bot.test
 Bundle-SymbolicName: org.teiid.designer.ui.bot.test;singleton:=true
-Bundle-Version: 7.7.0.qualifier
+Bundle-Version: 7.7.1.qualifier
 Bundle-ActivationPolicy: lazy
 Bundle-Vendor: 
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

@@ -37,7 +37,6 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.URIUtil;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
@@ -52,7 +51,6 @@ import com.metamatrix.core.modeler.util.FileUtils;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.core.util.StringUtilities;
 import com.metamatrix.internal.core.index.Index;
-import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.container.ResourceFinder;
 import com.metamatrix.modeler.core.workspace.ModelResource;
@@ -85,7 +83,7 @@ public final class VdbModelEntry extends VdbEntry {
     private final CopyOnWriteArraySet<VdbModelEntry> importedBy = new CopyOnWriteArraySet<VdbModelEntry>();
     private final String modelClass;
     private final boolean builtIn;
-    private final ModelType type;
+    private final String type;
     private final AtomicReference<String> translator = new AtomicReference<String>();
     private final AtomicReference<String> source = new AtomicReference<String>();
     private final AtomicReference<String> jndiName = new AtomicReference<String>();
@@ -109,7 +107,7 @@ public final class VdbModelEntry extends VdbEntry {
         modelClass = findModelClass(model);
         if (ModelUtil.isXmiFile(model)) {
             final EmfResource emfModel = (EmfResource)model;
-            type = emfModel.getModelType();
+            type = emfModel.getModelType().getName();
 
             // TODO: Backing out the auto-set visibility to FALSE for physical models (Preview won't work)
             // visible.set(false);
@@ -138,7 +136,7 @@ public final class VdbModelEntry extends VdbEntry {
             visible.set(true);
             // }
         } else {
-            type = ModelType.TYPE_LITERAL;
+        	type = VdbUtil.OTHER;
         }
         if (this.translator.get() == null) {
             this.translator.set(EMPTY_STR);
@@ -153,7 +151,7 @@ public final class VdbModelEntry extends VdbEntry {
                    final IProgressMonitor monitor ) {
         super(vdb, element, monitor);
         this.element = element;
-        type = ModelType.get(element.getType());
+        type =  element.getType();
         visible.set(element.isVisible());
         if (element.getSources() != null && !element.getSources().isEmpty()) {
             for (final SourceElement source : element.getSources()) {
@@ -309,7 +307,7 @@ public final class VdbModelEntry extends VdbEntry {
     /**
      * @return type
      */
-    public final ModelType getType() {
+    public final String getType() {
         return type;
     }
 
@@ -432,6 +430,10 @@ public final class VdbModelEntry extends VdbEntry {
      * 3) No way to tell if an OLD property needs to get removed though
      */
     void updateTranslatorOverrides(Properties props) {
+        // If only ONE property and it's "name", then ignore
+        if( props.size() == 1 && ((String)props.keySet().toArray()[0]).equalsIgnoreCase(VdbConstants.Translator.NAME_KEY) ) {
+            return;
+        }
     	TranslatorOverride to = getTranslatorOverride();
     	String oldTranslator = getTranslator();
     	if( to == null ) {

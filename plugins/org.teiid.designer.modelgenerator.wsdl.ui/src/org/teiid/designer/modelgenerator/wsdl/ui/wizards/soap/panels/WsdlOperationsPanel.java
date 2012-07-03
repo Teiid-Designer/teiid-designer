@@ -52,6 +52,7 @@ import com.metamatrix.modeler.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstan
 import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.util.ModelGeneratorWsdlUiUtil;
 import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.wizards.WSDLImportWizardManager;
 import com.metamatrix.ui.internal.util.WidgetFactory;
+import com.metamatrix.ui.internal.viewsupport.UiBusyIndicator;
 import com.metamatrix.ui.internal.widget.Label;
 
 public class WsdlOperationsPanel implements FileUtils.Constants, CoreStringUtil.Constants,
@@ -370,8 +371,10 @@ public class WsdlOperationsPanel implements FileUtils.Constants, CoreStringUtil.
 		// Set the value 
 		if( this.wsdlModel != null ) {
     		Port port = this.wsdlModel.getPort(this.portNameCombo.getText());
-    		this.importManager.setTranslatorDefaultBinding(port.getBindingType());
-    		this.importManager.setEndPoint(port.getLocationURI());
+    		if( port != null ) {
+	    		this.importManager.setTranslatorDefaultBinding(port.getBindingType());
+	    		this.importManager.setEndPoint(port.getLocationURI());
+    		}
 		} else {
     		this.importManager.setTranslatorDefaultBinding(Port.SOAP11);
     		this.importManager.setEndPoint(null);
@@ -407,18 +410,26 @@ public class WsdlOperationsPanel implements FileUtils.Constants, CoreStringUtil.
 	}
 
 	public void notifyWsdlChanged() {
-		this.panelStatus = Status.OK_STATUS;
+        /*
+         * Depending on the size of the WSDL selected in the connection profile,
+         * this can take a little while so indicate the user should wait.
+         */
+        UiBusyIndicator.showWhile(parentComposite.getDisplay(), new Runnable() {
+            @Override
+            public void run() {
+
+                panelStatus = Status.OK_STATUS;
 		try {
-			this.wsdlModel = this.importManager.getWSDLModel();
+                    wsdlModel = importManager.getWSDLModel();
 		} catch (ModelGenerationException e) {
-			this.wsdlModel = null;
+                    wsdlModel = null;
 			Status exStatus = new Status(IStatus.ERROR, PLUGIN_ID, 0,
 				Messages.WsdlOperationsPage_dialog_wsdlParseError_msg, e);
-			Shell shell = this.parentComposite.getShell();
+                    Shell shell = parentComposite.getShell();
 			ErrorDialog.openError(shell, null, Messages.WsdlOperationsPage_dialog_wsdlParseError_title, exStatus);
-			this.panelStatus = exStatus;
-			this.operationsViewer.getTable().clearAll();
-			this.operationsViewer.setInput(new Object());
+                    panelStatus = exStatus;
+                    operationsViewer.getTable().clearAll();
+                    operationsViewer.setInput(new Object());
 		}
 		
 		// Set Port Combo Items
@@ -430,9 +441,11 @@ public class WsdlOperationsPanel implements FileUtils.Constants, CoreStringUtil.
 			handlePortNameSelected();
 		}
 
-		this.importManager.setSelectedOperations(new ArrayList());
+                importManager.setSelectedOperations(new ArrayList());
 		setAllNodesSelected(true);
 		updateImportManager();
+            }
+        });
 	}
 	
 	private void handleDefaultServiceModeSelected() {

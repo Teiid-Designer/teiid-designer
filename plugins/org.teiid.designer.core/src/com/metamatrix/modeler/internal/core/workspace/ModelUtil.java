@@ -791,6 +791,17 @@ public class ModelUtil {
         }
         return false;
     }
+    
+    public static boolean isXsdFile( final File file ) {
+        if (file != null) {
+            // Check that the resource has the correct lower-case extension
+            final String fileName = file.getName();
+            if (fileName != null) {
+                if (fileName.endsWith(ModelFileUtil.EXTENSION_XSD)) return true;
+            }
+        }
+        return false;
+    }
 
     /**
      * @since 4.0

@@ -8,6 +8,7 @@
 package com.metamatrix.metamodels.webservice.aspects.sql;
 
 import org.eclipse.emf.ecore.EClassifier;
+
 import com.metamatrix.metamodels.webservice.WebServicePackage;
 import com.metamatrix.modeler.core.metamodel.aspect.MetamodelAspect;
 import com.metamatrix.modeler.core.metamodel.aspect.MetamodelAspectFactory;
@@ -31,6 +32,7 @@ public class WebServiceSqlAspectFactoryImpl implements MetamodelAspectFactory {
             case WebServicePackage.INPUT: return new InputAspect(entity);
             case WebServicePackage.OUTPUT: return new OutputAspect(entity);
             case WebServicePackage.SAMPLE_MESSAGES: return new SampleMessagesAspect(entity);
+            case WebServicePackage.OPERATION_UPDATE_COUNT: return null;
             default: return null;
         }
     }

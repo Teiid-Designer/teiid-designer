@@ -8,12 +8,11 @@
 package org.teiid.designer.datatools.profiles.ws;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 import java.util.Properties;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -22,32 +21,29 @@ import org.eclipse.datatools.connectivity.IConnection;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.datatools.connectivity.internal.ui.ConnectivityUIPlugin;
 import org.eclipse.datatools.connectivity.internal.ui.dialogs.ExceptionHandler;
-import org.eclipse.datatools.connectivity.oda.OdaException;
 import org.eclipse.datatools.connectivity.ui.wizards.ConnectionProfileDetailsPage;
 import org.eclipse.datatools.connectivity.ui.wizards.NewConnectionProfileWizard;
-import org.eclipse.datatools.enablement.oda.xml.util.XMLSourceFromPath;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.progress.UIJob;
 import org.teiid.designer.datatools.ui.DatatoolsUiConstants;
+
+import com.metamatrix.modeler.ui.wizards.wsdl.WsdlFileSelectionComposite;
+import com.metamatrix.ui.ICredentialsCommon.SecurityType;
 import com.metamatrix.ui.internal.util.WidgetFactory;
 
 public class WSSoapProfileDetailsWizardPage  extends ConnectionProfileDetailsPage
@@ -81,7 +77,7 @@ public class WSSoapProfileDetailsWizardPage  extends ConnectionProfileDetailsPag
 
         scrolled = new Composite(group, SWT.NONE);
         GridLayout gridLayout = new GridLayout();
-        gridLayout.numColumns = 3;
+        gridLayout.numColumns = 2;
         scrolled.setLayout(gridLayout);
 
         profileLabel = new Label(scrolled, SWT.NONE);
@@ -89,7 +85,6 @@ public class WSSoapProfileDetailsWizardPage  extends ConnectionProfileDetailsPag
         
         profileText = WidgetFactory.createLabel(scrolled, SWT.SINGLE | SWT.BORDER);
         gd = new GridData();
-        gd.horizontalSpan = 2;
         profileText.setLayoutData(gd);
         profileText.setText(((WSSoapConnectionProfileWizard)getWizard()).getProfileName());
 
@@ -101,7 +96,6 @@ public class WSSoapProfileDetailsWizardPage  extends ConnectionProfileDetailsPag
         descriptionText = WidgetFactory.createTextBox(scrolled, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY, GridData.FILL);
         gd = new GridData(GridData.FILL_HORIZONTAL);
         gd.grabExcessHorizontalSpace = true;
-        gd.horizontalSpan = 2;
         descriptionText.setLayoutData(gd);
         String description = ((WSSoapConnectionProfileWizard)getWizard()).getProfileDescription();
         descriptionText.setText(description);
@@ -114,39 +108,49 @@ public class WSSoapProfileDetailsWizardPage  extends ConnectionProfileDetailsPag
         urlLabel.setLayoutData(gd);
 
         urlText = new Text(scrolled, SWT.SINGLE | SWT.BORDER);
+        urlText.setEditable(false);
         urlText.setToolTipText(UTIL.getString("Common.URLorFILE.ToolTip")); //$NON-NLS-1$
         gd = new GridData(GridData.FILL_HORIZONTAL);
         urlText.setLayoutData(gd);
-        
-        Button button = new Button( scrolled, SWT.NONE );
-        gd = new GridData( );
-		button.setLayoutData( gd );
-		button.setText( "..."); //$NON-NLS-1$
-		button.addSelectionListener(new SelectionAdapter() {
 
-			/*
-			 * (non-Javadoc)
-			 * 
-			 * @see
-			 * org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse
-			 * .swt.events.SelectionEvent)
-			 */
-			public void widgetSelected(SelectionEvent e) {
-				FileDialog dialog = new FileDialog(PlatformUI.getWorkbench().getDisplay().getActiveShell(), SWT.OPEN);
-				dialog.setFilterExtensions(new String[] { "*.wsdl", "*.*" //$NON-NLS-1$ //$NON-NLS-2$
-				});
-				if (urlText.getText() != null && urlText.getText().trim().length() > 0) {
-                    dialog.setFilterPath(urlText.getText().trim());
-				}
+        Label spacerLabel = new Label(scrolled, SWT.NONE);
+        spacerLabel.setVisible(false);
+        GridDataFactory.swtDefaults().grab(false, false).applyTo(spacerLabel);
 
-				String selectedLocation = dialog.open();
-                if (selectedLocation != null && selectedLocation.trim().length() > 0) {
-                    urlText.setText(selectedLocation.trim());
-				}
-			}
+        WsdlFileSelectionComposite wsdlFileSelectionComposite = new WsdlFileSelectionComposite(
+                scrolled, SWT.NONE);
+        GridDataFactory.fillDefaults().applyTo(wsdlFileSelectionComposite);
+        WsdlFileSelectionComposite.IFileSelectionCallback fileSelectionCallback = new WsdlFileSelectionComposite.IFileSelectionCallback() {
+            @Override
+            public void execute(File wsdlFile) {
+                try {
+                    urlText.setText(wsdlFile.toURI().toURL().toString());
+                } catch (MalformedURLException ex) {
+                    UTIL.log(ex);
+                }
+            }
 
-		});
-        
+            @Override
+            public Display getDisplay() {
+                return getShell().getDisplay();
+            }
+        };
+
+        WsdlFileSelectionComposite.IURLSelectionCallback urlSelectionCallback = new WsdlFileSelectionComposite.IURLSelectionCallback() {
+
+            @Override
+            public void execute(URL url, SecurityType securityType, String userName, String password) {
+                urlText.setText(url.toString());
+                setAuthenticationProperties(securityType, userName, password);
+            }
+
+            @Override
+            public Display getDisplay() {
+                return getShell().getDisplay();
+            }
+        };
+        wsdlFileSelectionComposite.setCallbacks(fileSelectionCallback, fileSelectionCallback, urlSelectionCallback);
+
 		// Add widgets to page
 		Group descriptionGroup = WidgetFactory.createGroup(scrolled, UTIL.getString("Common.Description"), GridData.FILL_HORIZONTAL, 3); //$NON-NLS-1$
 
@@ -209,6 +213,36 @@ public class WSSoapProfileDetailsWizardPage  extends ConnectionProfileDetailsPag
         updateState();
     }
     
+    /**
+     * Used in the {@link IURLSelectionCallback} to record the 
+     * authentication details if a remote URL was selected.
+     * 
+     * @param securityType
+     * @param userName
+     * @param password
+     */
+    private void setAuthenticationProperties(SecurityType securityType, String userName, String password) {
+        Properties properties = ((NewConnectionProfileWizard) getWizard())
+                .getProfileProperties();
+        
+        if (securityType != null) {
+            properties.setProperty(IWSProfileConstants.SECURITY_TYPE_ID, securityType.name());
+        }
+        else {
+            properties.setProperty(IWSProfileConstants.SECURITY_TYPE_ID,
+                    SecurityType.None.name());
+        }
+        
+        if (userName != null) {
+            properties.setProperty(IWSProfileConstants.USERNAME_PROP_ID, userName);
+        }
+        
+        if( password != null) {
+            properties.setProperty(IWSProfileConstants.PASSWORD_PROP_ID, password);
+        }
+        
+    }
+
     /**
      * {@inheritDoc}
      * 
@@ -294,7 +328,30 @@ public class WSSoapProfileDetailsWizardPage  extends ConnectionProfileDetailsPag
     @Override
     public List getSummaryData() {
         List result = super.getSummaryData();
-        result.add(new String[] {UTIL.getString("Common.URL.Label"), urlText.getText()}); //$NON-NLS-1$
+    
+        Properties properties = ((NewConnectionProfileWizard) getWizard()).getProfileProperties();
+        String securityType = properties.getProperty(IWSProfileConstants.SECURITY_TYPE_ID);
+        if (securityType == null) {
+            securityType = SecurityType.None.name();
+        }
+        
+        result.add(new String[] { UTIL.getString("Common.URL.Label"), properties.getProperty(IWSProfileConstants.WSDL_URI_PROP_ID) }); //$NON-NLS-1$
+        
+        if (! SecurityType.None.name().equals(securityType)) {
+            result.add(new String[] { UTIL.getString("Common.SecurityType.Label"), securityType }); //$NON-NLS-1$
+            result.add(new String[] { UTIL.getString("Common.Username.Label"), properties.getProperty(IWSProfileConstants.USERNAME_PROP_ID) }); //$NON-NLS-1$
+
+            // Mask the password
+            String password = properties.getProperty(IWSProfileConstants.PASSWORD_PROP_ID);
+            StringBuffer masked = new StringBuffer(password.length());
+            for (int i = 0; i < password.length(); ++i) {
+                masked.append("*"); //$NON-NLS-1$
+            }
+
+            result.add(new String[] {
+                    UTIL.getString("Common.Password.Label"), masked.toString() }); //$NON-NLS-1$
+        }
+        
         return result;
     }
     
@@ -359,21 +416,7 @@ public class WSSoapProfileDetailsWizardPage  extends ConnectionProfileDetailsPag
         }
 
         public Exception testXmlUrlConnection( IConnectionProfile icp ) {
-        	Properties connProperties = icp.getBaseProperties();
-			//InputStream not provided, check XML file
-			String xmlFile = connProperties == null ? null :(String) connProperties.get( IWSProfileConstants.WSDL_URI_PROP_ID );
-			try {
-				InputStream is = new XMLSourceFromPath(xmlFile, null).openInputStream();
-				try
-				{
-					is.close( );
-				}catch ( IOException e ) {
-				}
-			} catch (OdaException odaEx) {
-				return odaEx;
-			}
-			
-			return null;
+        	return WSWizardUtils.testURLConnection(icp, IWSProfileConstants.WSDL_URI_PROP_ID);
         }
 
         public Throwable getTestConnectionException( IConnection conn ) {

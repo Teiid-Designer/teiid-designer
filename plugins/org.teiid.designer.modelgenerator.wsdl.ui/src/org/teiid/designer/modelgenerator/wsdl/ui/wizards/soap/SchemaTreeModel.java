@@ -17,12 +17,42 @@ import java.util.Stack;
 import org.eclipse.xsd.XSDElementDeclaration;
 import org.eclipse.xsd.XSDTypeDefinition;
 import org.eclipse.xsd.impl.XSDElementDeclarationImpl;
+import org.eclipse.xsd.impl.XSDModelGroupImpl;
 import org.eclipse.xsd.impl.XSDParticleImpl;
+
+import com.metamatrix.modeler.modelgenerator.wsdl.model.Part;
 
 public class SchemaTreeModel {
 
-	Map<Object, SchemaNode> mapNode = new HashMap<Object, SchemaNode>();
+	Collection<SchemaNode> nodeList = new ArrayList<SchemaNode>();
+	String defaultNamespace = null;
 	String rootPath = null;
+	public static Map<String, String> namespaceMap = new HashMap<String, String>();
+	public Part[] partArray = null;
+
+	public Map<String, String> getNamespaceMap() {
+		return namespaceMap;
+	}
+
+	public String getDefaultNamespace() {
+		return defaultNamespace;
+	}
+
+	public void setDefaultNamespace(String defaultNamespace) {
+		this.defaultNamespace = defaultNamespace;
+	}
+
+	public Part[] getPartArray() {
+		return partArray;
+	}
+
+	public void setPartArray(Part[] partArray) {
+		this.partArray = partArray;
+	}
+
+	public void setNamespaceMap(Map<String, String> namespaceMap) {
+		this.namespaceMap = namespaceMap;
+	}
 
 	public String getRootPath() {
 		return this.rootPath;
@@ -32,17 +62,16 @@ public class SchemaTreeModel {
 		this.rootPath = rootPath;
 	}
 
-	public Map<Object, SchemaNode> getMapNode() {
-		return this.mapNode;
+	public Collection<SchemaNode> getNodeList() {
+		return this.nodeList;
 	}
 
-	public void setMapNode(Map<Object, SchemaNode> mapNode) {
-		this.mapNode = mapNode;
+	public void setNodeList(Collection<SchemaNode> nodeList) {
+		this.nodeList = nodeList;
 	}
 	
 	public String getRootNodeXpath() {
-		for (Object nodeKey:this.mapNode.keySet()){
-			SchemaNode node = this.mapNode.get(nodeKey);
+		for (SchemaNode node:this.nodeList){
 			if (node.isRoot){
 				return node.getRelativeXpath();
 			}
@@ -55,8 +84,7 @@ public class SchemaTreeModel {
 		StringBuilder commonRoot = new StringBuilder();
 		
 		List<String> segmentList = new ArrayList();
-		for (Object nodeKey:this.mapNode.keySet()){
-			SchemaNode node = this.mapNode.get(nodeKey);
+		for (SchemaNode node:this.nodeList){
 			if (node.children.isEmpty()){
 				String path = node.getFullPathMinusLastSegment();
 				if (!path.equals("")){ //$NON-NLS-1$
@@ -99,10 +127,10 @@ public class SchemaTreeModel {
 		return commonRoot.toString();
 	}
 	
-	
-	public class SchemaNode {
+    public class SchemaNode {
 		protected Object element;
 		protected SchemaNode parent;
+
 		protected boolean isRoot = false;
 		protected Collection<SchemaNode> children = new ArrayList<SchemaTreeModel.SchemaNode>();
 
@@ -124,6 +152,10 @@ public class SchemaTreeModel {
 			this.children.add(child);
 		}
 
+		public Collection<SchemaNode> getChildren() {
+			return children;
+		}
+		
 		public void setParent(SchemaNode parent) {
 			this.parent = parent;
 		}
@@ -131,7 +163,7 @@ public class SchemaTreeModel {
 		public void setElement(Object element) {
 			this.element = element;
 		}
-
+		
 		public SchemaNode getParent() {
 			return parent;
 		}
@@ -159,10 +191,10 @@ public class SchemaTreeModel {
 				if (element instanceof XSDParticleImpl &&
 				   ((XSDParticleImpl)element).getTerm() instanceof XSDElementDeclaration) {
 					XSDElementDeclaration xed = (XSDElementDeclaration) ((XSDParticleImpl)element).getTerm();
-					name = "/" + (xed.getName() != null ? xed.getName() : xed.getAliasName()); //$NON-NLS-1$
+					name = (xed.getName() != null ? xed.getName() : xed.getAliasName()); //$NON-NLS-1$
 				}
 			
-			return name; 
+			return "/" + getNamespacePrefix(element) + name; 
 		}
 
 		public String getParentXpath() {
@@ -207,15 +239,22 @@ public class SchemaTreeModel {
 				return;
 			}
 			Object parentElement = parent.getElement();
+			
 			String name = null;
 			if (parentElement instanceof XSDParticleImpl
 					&& ((XSDParticleImpl) parentElement).getContent() instanceof XSDElementDeclarationImpl) {
 				name = ((XSDElementDeclarationImpl) ((XSDParticleImpl) parentElement)
 						.getContent()).getName();
-				stack.push("/"+name); //$NON-NLS-1$
+				if (name==null){
+				name = ((XSDElementDeclarationImpl) ((XSDParticleImpl) parentElement)
+						.getContent()).getResolvedElementDeclaration().getName();
+				}
+				stack.push("/"+ getNamespacePrefix(parentElement) +name); //$NON-NLS-1$
 			} else if (parentElement instanceof XSDElementDeclarationImpl) {
 				name = ((XSDElementDeclarationImpl) parentElement).getName();
-				stack.push("/"+name); //$NON-NLS-1$
+				stack.push("/"+ getNamespacePrefix(parentElement) +name);
+			} else if (parentElement instanceof XSDModelGroupImpl){
+					//fall through to getParentXpath() logic
 			} else {
 				return;
 			}
@@ -229,5 +268,31 @@ public class SchemaTreeModel {
 			return "" + getElement(); //$NON-NLS-1$
 		}
 	}
+	
+    private String getNamespacePrefix(Object obj) {
+		
+		String nsPrefix = ""; //$NON-NLS-1$
+		String ns = ""; //$NON-NLS-1$
+		if (obj instanceof XSDParticleImpl
+				&& ((XSDParticleImpl) obj).getContent() instanceof XSDElementDeclarationImpl) {
+			ns = ((XSDElementDeclarationImpl) ((XSDParticleImpl) obj)
+					.getContent()).getTargetNamespace();
+		} else if (obj instanceof XSDElementDeclarationImpl) {
+			ns = ((XSDElementDeclarationImpl) obj).getTargetNamespace();
+		}
+		
+		for (Object nsKey: SchemaTreeModel.namespaceMap.keySet()){
+			if (SchemaTreeModel.namespaceMap.get(nsKey).equals(ns)){
+				nsPrefix = (String) nsKey;
+				break;
+			}
+		}
+		
+	//  This is default.. no need to alias
+	//	if (nsPrefix.equals(ResponseInfo.DEFAULT_NS)) nsPrefix = ""; //$NON-NLS-1$ //$NON-NLS-2$
+	//  We will always prefix, since we can't count on a service default for a given element
+		return nsPrefix == "" ? nsPrefix : nsPrefix + ":"; //$NON-NLS-1$ //$NON-NLS-2$
+		
+		}
 
 }

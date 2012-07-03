@@ -84,6 +84,7 @@ import com.metamatrix.modeler.relational.ui.UiPlugin;
 import com.metamatrix.ui.internal.util.WidgetFactory;
 import com.metamatrix.ui.internal.util.WidgetUtil;
 import com.metamatrix.ui.table.ComboBoxEditingSupport;
+import com.metamatrix.ui.text.StyledTextEditor;
 
 public class RelationalTableEditorPanel extends RelationalEditorPanel implements RelationalConstants {
 	private static final String EMPTY_STRING = ""; //$NON-NLS-1$
@@ -107,6 +108,7 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 		cardinalityText, materializedTableText, 
 		primaryKeyNameText, uniqueConstraintNameText,
 		primaryKeyNISText, uniqueConstraintNISText;
+	StyledTextEditor descriptionTextEditor;
 	
 	// column widgets
 	Button addColumnButton, deleteColumnButton, upColumnButton, downColumnButton;
@@ -365,6 +367,7 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 		synchronizing = false;
 	}
 	
+	@SuppressWarnings("unused")
 	Composite createTablePanel(Composite parent) {
 		Composite thePanel = WidgetFactory.createPanel(parent, SWT.NONE, 1, 3);
 		thePanel.setLayout(new GridLayout(3, false));
@@ -449,6 +452,26 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
     		}
         });
         addSpacerLabels(thePanel, 1);
+        
+        DESCRIPTION_GROUP: {
+            final Group descGroup = WidgetFactory.createGroup(thePanel, Messages.descriptionLabel, GridData.FILL_HORIZONTAL, 3);
+            descriptionTextEditor = new StyledTextEditor(descGroup, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.WRAP | SWT.BORDER);
+            final GridData descGridData = new GridData(GridData.FILL_BOTH);
+            descGridData.horizontalSpan = 1;
+            descGridData.heightHint = 80;
+            descGridData.minimumHeight = 30;
+            descGridData.grabExcessVerticalSpace = true;
+            descriptionTextEditor.setLayoutData(descGridData);
+            descriptionTextEditor.setText(""); //$NON-NLS-1$
+            descriptionTextEditor.getTextWidget().addModifyListener(new ModifyListener() {
+				
+				@Override
+				public void modifyText(ModifyEvent e) {
+					table.setDescription(descriptionTextEditor.getText());
+				}
+			});
+        }
+        
         
         this.supportsUpdateCB = new Button(thePanel, SWT.CHECK | SWT.RIGHT);
         this.supportsUpdateCB.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));

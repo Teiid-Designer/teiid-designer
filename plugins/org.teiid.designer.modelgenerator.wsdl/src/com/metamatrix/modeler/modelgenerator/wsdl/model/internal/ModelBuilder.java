@@ -24,20 +24,17 @@ import javax.wsdl.OperationType;
 import javax.wsdl.Output;
 import javax.wsdl.WSDLException;
 import javax.wsdl.extensions.http.HTTPAddress;
-import javax.wsdl.extensions.http.HTTPOperation;
 import javax.wsdl.extensions.soap.SOAPAddress;
 import javax.wsdl.extensions.soap.SOAPBinding;
 import javax.wsdl.extensions.soap.SOAPBody;
 import javax.wsdl.extensions.soap.SOAPOperation;
 import javax.wsdl.extensions.soap12.SOAP12Address;
 import javax.wsdl.extensions.soap12.SOAP12Operation;
-import javax.wsdl.xml.WSDLReader;
 import javax.xml.namespace.QName;
 
 import org.eclipse.xsd.XSDSchema;
 
 import com.ibm.wsdl.ImportImpl;
-import com.ibm.wsdl.factory.WSDLFactoryImpl;
 import com.metamatrix.modeler.modelgenerator.wsdl.ModelGeneratorWsdlPlugin;
 import com.metamatrix.modeler.modelgenerator.wsdl.SoapBindingInfo;
 import com.metamatrix.modeler.modelgenerator.wsdl.TableBuilder;
@@ -49,9 +46,11 @@ import com.metamatrix.modeler.modelgenerator.wsdl.model.Operation;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Part;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Port;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Service;
+import com.metamatrix.modeler.modelgenerator.wsdl.util.ExtendedWSDLReader;
 import com.metamatrix.modeler.modelgenerator.wsdl.util.WSDLSchemaExtractor;
 import com.metamatrix.modeler.schema.tools.processing.SchemaProcessor;
 import com.metamatrix.modeler.schema.tools.processing.internal.SchemaProcessorImpl;
+import com.metamatrix.ui.ICredentialsCommon.SecurityType;
 
 /**
  * This class generates a lightweight model of the WSDL file leaving out a lot of the things from the javax.wsdl model and even
@@ -63,13 +62,25 @@ import com.metamatrix.modeler.schema.tools.processing.internal.SchemaProcessorIm
 public class ModelBuilder {
 
     private String m_wsdlURI;
+    private SecurityType m_securityType;
+    private String m_userName;
+    private String m_password;
+
     private Definition m_wsdlDef;
     private Exception m_wsdlException;
     private XSDSchema[] m_schemas;
     private WSDLSchemaExtractor extractor;
+    private static String DEFAULT_STYLE = "document"; //$NON-NLS-1$
 
     public ModelBuilder() {
 
+    }
+
+    public void setAuthentication(SecurityType securityType, String userName, String password) {
+		m_securityType = securityType;
+		m_userName = userName;
+		m_password = password;
+		m_wsdlDef = null;
     }
 
     public void setWSDL( String wsdlUri ) {
@@ -83,14 +94,18 @@ public class ModelBuilder {
         extractor = new WSDLSchemaExtractor();
     }
 
-    private WSDLReader getWSDLReader() {
-        WSDLFactoryImpl impl = new WSDLFactoryImpl();
-        return impl.newWSDLReader();
+    private ExtendedWSDLReader getWSDLReader() {
+        return new ExtendedWSDLReader();
     }
 
     private Definition getDefinition() throws WSDLException {
-        WSDLReader reader = getWSDLReader();
-        Definition def = reader.readWSDL(m_wsdlURI);
+        ExtendedWSDLReader reader = getWSDLReader();
+        Definition def;
+        if (SecurityType.None.equals(m_securityType)) {
+            def = reader.readWSDL(m_wsdlURI);
+        } else {
+            def = reader.readWSDL(m_wsdlURI, m_userName, m_password);
+        }
         return def;
     }
 
@@ -113,7 +128,7 @@ public class ModelBuilder {
         Model theModel = new ModelImpl();
         Map namespaceMap = m_wsdlDef.getNamespaces();
         theModel.setNamespaces(namespaceMap);
-        extractor.findSchema(m_wsdlURI);
+        extractor.findSchema(m_wsdlURI, m_securityType, m_userName, m_password);
 
         // Get the embedded schema from imported WSDLs
         extractImportedWSDL(m_wsdlDef);
@@ -138,7 +153,7 @@ public class ModelBuilder {
                     Definition imported = impImpl.getDefinition();
                     URI baseURI = new URI(imported.getDocumentBaseURI());
                     URL baseURL = baseURI.toURL();
-                    extractor.findSchema(baseURL.toString());
+                    extractor.findSchema(baseURL.toString(), m_securityType, m_userName, m_password);
                     extractImportedWSDL(imported);
                 }
 
@@ -290,11 +305,11 @@ public class ModelBuilder {
                 } 
             }
             if (operation.getBinding().getStyle() == null) {
-                operation.setCanModel(false);
-                String message = ModelGeneratorWsdlPlugin.Util.getString("ModelBuilder.cannot.resolve.style"); //$NON-NLS-1$
-                operation.addProblemMessage(message);
-            } else {
-                createBindingInfo(operation);
+            	//Per the spec, if the binding style is not set (rpc or document)
+            	//the default should be "document".
+            	//see http://www.w3.org/TR/wsdl#_soap:binding
+            	operation.getBinding().setStyle(DEFAULT_STYLE);
+            	createBindingInfo(operation);
             }
             retVal[arrayPtr++] = operation;
         }

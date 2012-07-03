@@ -25,9 +25,9 @@
 				</imageobject>
 			</mediaobject>
 		</figure>
-	</section>
-	<section id="why-use-modeler">
-		<title>Why Use Teiid Designer?</title>
+
+		<para><emphasis role="bold">Why Use Teiid Designer?</emphasis></para>
+
 		<para>
 			Teiid Designer
 			is a visual tool that enables rapid, model-driven definition,
@@ -119,9 +119,9 @@
 					<listitem> <para>How will my organization use and manage this metadata? (see <xref linkend="design-runtime-metadata" />)</para> </listitem>
 				</itemizedlist>
 			</para>
-		</section>
-		<section id="editing-metadata-vs-data">
-			<title>Editing Metadata vs. Editing Data</title>
+
+			<para><emphasis role="bold">Editing Metadata vs. Editing Data</emphasis></para>
+
 			<para> The Teiid Designer helps you to create and describe an abstract
 				graphic representation of your data structure of your data in the
 				original data sources. It also describes whether those data sources
@@ -133,9 +133,9 @@
 			<para> So when this documentation describes the process of creating,
 				deleting, or editing these meta objects, <emphasis role="bold">remember</emphasis> that you are not, in
 				fact, modifying the underlying data.</para>
-		</section>
-		<section id="metadata-models">
-			<title>Metadata Models</title>
+				
+			<para><emphasis role="bold">Metadata Models</emphasis></para>
+
 			<para> A <emphasis role="bold">metadata model</emphasis> represents a collection of metadata information
 				that describes a complete structure of data.</para>
 			<para> In a previous example we described the field ZIPCode as a
@@ -186,60 +186,61 @@
 				“view” metadata that indicate what the metadata represents. For more
 				information, (see <xref linkend="source-view-metadata" />).
 			</para>
-			<section id="technical-metadata">
-				<title>Technical Metadata</title>
-				<para>
-				Technical metadata represents information that describes how to access the data in its original 
-				native data storage. Technical metadata includes things such as datatype, 
-				the name of the data in the enterprise information system, and other information that 
-				describes the way the native enterprise information system identifies the meta object
-				</para>
-				<para>
-					Using our example of an address book database, the following represent the 
-					technical metadata we know about the ZIP code column:
-					<itemizedlist>
-						<listitem> <para>Named ZIPCode</para> </listitem>
-						<listitem> <para>Nine characters long</para> </listitem>
-						<listitem> <para>A string</para> </listitem>
-						<listitem> <para>Located in the StreetAddress table</para> </listitem>
-						<listitem> <para>Uses SQL Query Language</para> </listitem>
-					</itemizedlist>
-					These bits of information describe the data and information required to 
-					access and process the data in the enterprise information system.
-				</para>
-			</section>
-			<section id="business-metadata">
-				<title>Business Metadata</title>
-				<para> Business metadata represents additional information about a
-					piece of data, not necessarily related to its physical storage in the
-					enterprise information system or data access requirements. It can
-					also represent descriptions, business rules, and other additional
-					information about a piece of data.</para>
-				<para>
-					Continuing with our example of the ZIP Code column in the address
-					book database, the following represents business metadata we may know
-					about the ZIP code:
-					<itemizedlist>
-						<listitem>
-							<para>The first five characters represent the five ZIP code
-								numbers, the final four represent the ZIP Plus Four digits if
-								available, or 0000 if not</para>
-						</listitem>
-						<listitem>
-							<para>The application used to populate this field in the
-								database strictly enforces the integrity of the data format</para>
-						</listitem>
-					</itemizedlist>
-				</para>
-				<para> Although the first might seem technical, it does not directly
-					relate to the physical storage of the data. It represents a business
-					rule applied to the contents of the column, not the contents
-					themselves.</para>
-				<para> The second, of course, represents some business information
-					about the way the column was populated. This information, although
-					useful to associate with our definition of the column, does not
-					reflect the physical storage of the data.</para>
-			</section>
+			
+			<para><emphasis role="bold">Technical Metadata</emphasis></para>
+
+			<para>
+			Technical metadata represents information that describes how to access the data in its original 
+			native data storage. Technical metadata includes things such as datatype, 
+			the name of the data in the enterprise information system, and other information that 
+			describes the way the native enterprise information system identifies the meta object
+			</para>
+			<para>
+				Using our example of an address book database, the following represent the 
+				technical metadata we know about the ZIP code column:
+				<itemizedlist>
+					<listitem> <para>Named ZIPCode</para> </listitem>
+					<listitem> <para>Nine characters long</para> </listitem>
+					<listitem> <para>A string</para> </listitem>
+					<listitem> <para>Located in the StreetAddress table</para> </listitem>
+					<listitem> <para>Uses SQL Query Language</para> </listitem>
+				</itemizedlist>
+				These bits of information describe the data and information required to 
+				access and process the data in the enterprise information system.
+			</para>
+
+			<para><emphasis role="bold">Business Metadata</emphasis></para>
+
+			<para> Business metadata represents additional information about a
+				piece of data, not necessarily related to its physical storage in the
+				enterprise information system or data access requirements. It can
+				also represent descriptions, business rules, and other additional
+				information about a piece of data.</para>
+			<para>
+				Continuing with our example of the ZIP Code column in the address
+				book database, the following represents business metadata we may know
+				about the ZIP code:
+				<itemizedlist>
+					<listitem>
+						<para>The first five characters represent the five ZIP code
+							numbers, the final four represent the ZIP Plus Four digits if
+							available, or 0000 if not</para>
+					</listitem>
+					<listitem>
+						<para>The application used to populate this field in the
+							database strictly enforces the integrity of the data format</para>
+					</listitem>
+				</itemizedlist>
+			</para>
+			<para> Although the first might seem technical, it does not directly
+				relate to the physical storage of the data. It represents a business
+				rule applied to the contents of the column, not the contents
+				themselves.</para>
+			<para> The second, of course, represents some business information
+				about the way the column was populated. This information, although
+				useful to associate with our definition of the column, does not
+				reflect the physical storage of the data.
+			</para>
 		</section>
 		<section id="design-runtime-metadata">
 			<title>Design-Time and Runtime Metadata</title>
@@ -252,52 +253,52 @@
 				that you will create. Any information that is not absolutely
 				necessary to running the Virtual Database is stripped out of the
 				run-time metadata to ensure maximum system performance.</para>
-			<section id="design-time-metadata">
-				<title>Design-Time Metadata</title>
-				<para>
-					Design-time metadata refers to data within
-					your local directory that you have created or have imported. You can
-					model this metadata in the Teiid Designer, adding
-					<emphasis role="bold">Source</emphasis>
-					and
-					<emphasis role="bold">View</emphasis>
-					metadata.
-				</para>
-			</section>
-			<section id="runtime-metadata">
-				<title>Runtime Metadata</title>
-				<para> Once you have adequately modeled your enterprise information
-					systems, including the necessary technical metadata that describes
-					the physical structure of your sources, you can use the metadata for
-					data access.</para>
-				<para> To prepare the metadata for use in the Teiid Designer Server, you
-					take a snapshot of a metadata model for the Teiid Designer Server to use
-					when resolving queries from your client applications. This run-time
-					metadata represents a static version of design-time metadata you
-					created or imported. This snapshot is in the form of a <emphasis role="bold">Virtual
-					Database</emphasis> definition, or <emphasis role="bold">VDB</emphasis>.</para>
-				<para>
-					As you create this <emphasis role="bold">runtime metadata</emphasis>, the Teiid Designer:
-					<itemizedlist>
-						<listitem>
-							<para>derives the runtime metadata from a consistent set of
-								metadata models.</para>
-						</listitem>
-						<listitem>
-							<para>creates a subset of design-time metadata, focusing on
-								the technical metadata that describes the access to underlying
-								enterprise information systems.</para>
-						</listitem>
-						<listitem>
-							<para> optimizes runtime metadata for data access performance.
-							</para>
-						</listitem>
-					</itemizedlist>
-				</para>
-				<para> You can continue to work with the design-time metadata, but
-					once you have created a runtime metadata model, it remains static.
-				</para>
-			</section>
+				
+			<para><emphasis role="bold">Design-Time Metadata</emphasis></para>
+			
+			<para>
+				Design-time metadata refers to data within
+				your local directory that you have created or have imported. You can
+				model this metadata in the Teiid Designer, adding
+				<emphasis role="bold">Source</emphasis>
+				and
+				<emphasis role="bold">View</emphasis>
+				metadata.
+			</para>
+
+			<para><emphasis role="bold">Runtime Metadata</emphasis></para>
+			
+			<para> Once you have adequately modeled your enterprise information
+				systems, including the necessary technical metadata that describes
+				the physical structure of your sources, you can use the metadata for
+				data access.</para>
+			<para> To prepare the metadata for use in the Teiid Designer Server, you
+				take a snapshot of a metadata model for the Teiid Designer Server to use
+				when resolving queries from your client applications. This run-time
+				metadata represents a static version of design-time metadata you
+				created or imported. This snapshot is in the form of a <emphasis role="bold">Virtual
+				Database</emphasis> definition, or <emphasis role="bold">VDB</emphasis>.</para>
+			<para>
+				As you create this <emphasis role="bold">runtime metadata</emphasis>, the Teiid Designer:
+				<itemizedlist>
+					<listitem>
+						<para>derives the runtime metadata from a consistent set of
+							metadata models.</para>
+					</listitem>
+					<listitem>
+						<para>creates a subset of design-time metadata, focusing on
+							the technical metadata that describes the access to underlying
+							enterprise information systems.</para>
+					</listitem>
+					<listitem>
+						<para> optimizes runtime metadata for data access performance.
+						</para>
+					</listitem>
+				</itemizedlist>
+			</para>
+			<para> You can continue to work with the design-time metadata, but
+				once you have created a runtime metadata model, it remains static.
+			</para>
 		</section>
 		<section id="source-view-metadata">
 			<title>Source and View Metadata</title>
@@ -318,188 +319,187 @@
 				and business metadata. When you model <emphasis role="bold">View Metadata</emphasis>, you’re modeling
 				the data as your applications (and your enterprise) ultimately use it.
 			</para>
-			<section id="modeling-source-metadata">
-				<title>Modeling Your Source Metadata</title>
-				<para>
-					When you model the <emphasis role="bold">Source Metadata</emphasis> within your enterprise information
-					systems, you capture some detailed information, including:
-					<itemizedlist>
-						<listitem>
-							<para>Identification of datatype</para>
-						</listitem>
-						<listitem>
-							<para>Storage formats</para>
-						</listitem>
-						<listitem>
-							<para>Constraints</para>
-						</listitem>
-						<listitem>
-							<para>Source-specific locations and names</para>
-						</listitem>
-					</itemizedlist>
-				</para>
-				<para> The <emphasis role="bold">Source Metadata</emphasis> captures this detailed technical metadata
-					to provide a map of the data, the location of the data, and how you
-					access it.</para>
-				<para> This collection of <emphasis role="bold">Source Metadata</emphasis> comprises a direct mapping
-					of the information sources within your enterprise. If you use the
-					Teiid Designer Server for information integration, this technical
-					metadata plays an integral part in query resolution.</para>
-				<para> For example, our ZIPCode column and its parent table
-					StreetAddress map directly to fields within our hypothetical address
-					book database.</para>
-				<para> To extend our example, we might have a second source of
-					information, a comma-separated text file provided by a marketing
-					research vendor. This text file can supply additional demographic
-					information based upon address or ZIP code. This text file would
-					represent another Enterprise Information System (EIS), and the meta objects in its Source Model would
-					describe each comma-separated value.</para>
-			</section>
-			<section id="modeling-view-metadata">
-				<title>Modeling Your View Metadata</title>
-				<para> When you create <emphasis role="bold">View Metadata</emphasis>, you are not describing the
-					nature of your physical data storage. Instead, you describe the way
-					your enterprise uses the information in its day-to-day operations.
-				</para>
-				<para>
-					<emphasis role="bold">View Metadata</emphasis> derives its classes and attributes from other metadata.
-					You can derive <emphasis role="bold">View Metadata</emphasis> from <emphasis role="bold">Source Metadata</emphasis> that describes the
-					ultimate sources for the metadata or even from other View Metadata.
-					However, when you model <emphasis role="bold">View Metadata</emphasis>, you create special “views” on
-					your existing enterprise information systems that you can tailor to
-					your business use or application expectations. This <emphasis role="bold">View Metadata</emphasis>
-					offers many benefits:
-					<itemizedlist>
-						<listitem>
-							<para>You can expose only the information relevant to an
-								application. The application uses this <emphasis role="bold">View Metadata</emphasis> to resolve
-								its queries to the ultimate physical data storage.</para>
-						</listitem>
-						<listitem>
-							<para>You can add content to existing applications that require
-								different views of the data by adding the <emphasis role="bold">View Metadata</emphasis> to the
-								existing <emphasis role="bold">View Metadata</emphasis> that application uses. You save time and
-								effort since you do not have to create new models nor modify your
-								existing applications.</para>
-						</listitem>
-						<listitem>
-							<para>Your applications do not need to refer to specific
-								physical enterprise information systems, offering flexibility and
-								interchangeability. As you change sources for information, you do
-								not have to change your end applications.</para>
-						</listitem>
-						<listitem>
-							<para>The <emphasis role="bold">View Metadata</emphasis> models document the various ways your
-								enterprise uses the information and the different terminology that
-								refers to that information. They do so in a central location.
-							</para>
-						</listitem>
-					</itemizedlist>
-				</para>
-				<para> Our example enterprise information sources, the address book
-					database, and the vendor-supplied comma-delimited text file, reside
-					in two different native storage formats and therefore have two Source
-					Metadata models. However, they can represent one business need: a
-					pool of addresses for a mass mailing.</para>
-				<para> By creating a <emphasis role="bold">View Metadata</emphasis> model, we could accurately show
-					that this single View Table, the AddressPool, contains information
-					from the two enterprise information systems. The <emphasis role="bold">View Metadata</emphasis> model
-					not only shows from where it gets the information, but also the SQL
-					operations it performs to select its information from its source
-					models.</para>
-				<para> This <emphasis role="bold">View Metadata</emphasis> can not only reflect and describe how your
-					organization uses that information, but, if your enterprise uses the
-					Teiid Designer Server, your applications can use the <emphasis role="bold">View Metadata</emphasis> to
-					resolve queries.</para>
-				<para> To create this <emphasis role="bold">View Metadata</emphasis>, you create a view and define a
-					<emphasis role="bold">transformation</emphasis> for that view, a special query that enables you to
-					select information from the source (or even other view) metadata
-					models. For more information, see “<xref linkend="transformation-editor-section" />.”</para>
-			</section>
-			<section id="modeling-transformations">
-				<title>Modeling Metadata Transformations</title>
-				<para>
-					Section on Modeling transformations.
-				</para>
-				<section id="metadata-transformations">
-					<title>Metadata Transformations</title>
-					<para>
-					By modeling View Metadata, you can illustrate the business view of your enterprise information sources. View Metadata models not only describe that business view, but also illustrate how the meta objects within the View Metadata models derive their information from other metadata models.
-					</para>
-					<para>
-					Let’s return to the example of our address book database and the vendor’s comma-separated list. We want to generate the View Metadata model, Address Pool, from these enterprise information systems.
-					</para>
-					<figure id="address-transform">
-						<title>Data Flow for View Transformations</title>
-						<mediaobject><imageobject>
-							<imagedata fileref="images/screencaps/address-pool-transformation.png" align="center" />
-						</imageobject></mediaobject>
-					</figure>
-					<para>
-					The transformation that joins these metadata models to create the virtual Address Pool metadata model contains a SQL query, called a union, that determines what information to draw from the source metadata and what to do with it.
-					</para>
-					<para>
-					The resulting Address Pool contains not only the address information from our Address Book database, but also that from our vendor-supplied text file.
-					</para>
-				</section>
-				<section id="sql-transformations">
-					<title>SQL in Transformations </title>
-					<para>
-					Transformations contain SQL queries that SELECT the appropriate attributes from the information sources. 
-					</para>
-					<para>
-					For example, from the sources the transformation could select relevant address columns, including first name, last name, street address, city, state, and ZIP code. Although the metadata models could contain other columns and tables, such as phone number, fax number, e-mail address, and Web URL, the transformation acts as a filter and populates the Address Pool metadata model with only the data essential to building our Address Pool.
-					</para>
-					<para>
-					You can add other SQL logic to the transformation query to transform the data information. For example, the address book database uses a nine-character string that represents the ZIP Plus Four. The transformation could perform any SQL-supported logic upon the ZIPCode column to substring this information into the format we want for the Address Pool View metadata model.
-					</para>
-				</section>
-				<section id="mapping-xml-transformations">
-					<title>Mapping XML Transformations </title>
-					<para>
-					When you model View Metadata, you can also create a View XML Document model. This View Document lets you select information from within your other data sources, just like a regular View Metadata model, but you can also map the results to tags within an XML document.
-					</para>
-					<figure id="address-xml-transform">
-						<title>Data Flow for XML Transformations</title>
-						<mediaobject><imageobject>
-							<imagedata fileref="images/screencaps/address-pool-xml-transformation.png" align="center" />
-						</imageobject></mediaobject>
-					</figure>
-					<para>
-					In this example, the Address Pool View Metadata model still selects its information from the Address Book Database and the Vendor Text File, but it also maps the resulting columns into tags in the Address XML document.
-					</para>
-				</section>
-			</section>
+			
+			<para><emphasis role="bold">Modeling Your Source Metadata</emphasis></para>
+
+			<para>
+				When you model the <emphasis role="bold">Source Metadata</emphasis> within your enterprise information
+				systems, you capture some detailed information, including:
+				<itemizedlist>
+					<listitem>
+						<para>Identification of datatype</para>
+					</listitem>
+					<listitem>
+						<para>Storage formats</para>
+					</listitem>
+					<listitem>
+						<para>Constraints</para>
+					</listitem>
+					<listitem>
+						<para>Source-specific locations and names</para>
+					</listitem>
+				</itemizedlist>
+			</para>
+			<para> The <emphasis role="bold">Source Metadata</emphasis> captures this detailed technical metadata
+				to provide a map of the data, the location of the data, and how you
+				access it.</para>
+			<para> This collection of <emphasis role="bold">Source Metadata</emphasis> comprises a direct mapping
+				of the information sources within your enterprise. If you use the
+				Teiid Designer Server for information integration, this technical
+				metadata plays an integral part in query resolution.</para>
+			<para> For example, our ZIPCode column and its parent table
+				StreetAddress map directly to fields within our hypothetical address
+				book database.</para>
+			<para> To extend our example, we might have a second source of
+				information, a comma-separated text file provided by a marketing
+				research vendor. This text file can supply additional demographic
+				information based upon address or ZIP code. This text file would
+				represent another Enterprise Information System (EIS), and the meta objects in its Source Model would
+				describe each comma-separated value.
+			</para>
+
+			<para><emphasis role="bold">Modeling Your View Metadata</emphasis></para>
+
+			<para> When you create <emphasis role="bold">View Metadata</emphasis>, you are not describing the
+				nature of your physical data storage. Instead, you describe the way
+				your enterprise uses the information in its day-to-day operations.
+			</para>
+			<para>
+				<emphasis role="bold">View Metadata</emphasis> derives its classes and attributes from other metadata.
+				You can derive <emphasis role="bold">View Metadata</emphasis> from <emphasis role="bold">Source Metadata</emphasis> that describes the
+				ultimate sources for the metadata or even from other View Metadata.
+				However, when you model <emphasis role="bold">View Metadata</emphasis>, you create special “views” on
+				your existing enterprise information systems that you can tailor to
+				your business use or application expectations. This <emphasis role="bold">View Metadata</emphasis>
+				offers many benefits:
+				<itemizedlist>
+					<listitem>
+						<para>You can expose only the information relevant to an
+							application. The application uses this <emphasis role="bold">View Metadata</emphasis> to resolve
+							its queries to the ultimate physical data storage.</para>
+					</listitem>
+					<listitem>
+						<para>You can add content to existing applications that require
+							different views of the data by adding the <emphasis role="bold">View Metadata</emphasis> to the
+							existing <emphasis role="bold">View Metadata</emphasis> that application uses. You save time and
+							effort since you do not have to create new models nor modify your
+							existing applications.</para>
+					</listitem>
+					<listitem>
+						<para>Your applications do not need to refer to specific
+							physical enterprise information systems, offering flexibility and
+							interchangeability. As you change sources for information, you do
+							not have to change your end applications.</para>
+					</listitem>
+					<listitem>
+						<para>The <emphasis role="bold">View Metadata</emphasis> models document the various ways your
+							enterprise uses the information and the different terminology that
+							refers to that information. They do so in a central location.
+						</para>
+					</listitem>
+				</itemizedlist>
+			</para>
+			<para> Our example enterprise information sources, the address book
+				database, and the vendor-supplied comma-delimited text file, reside
+				in two different native storage formats and therefore have two Source
+				Metadata models. However, they can represent one business need: a
+				pool of addresses for a mass mailing.</para>
+			<para> By creating a <emphasis role="bold">View Metadata</emphasis> model, we could accurately show
+				that this single View Table, the AddressPool, contains information
+				from the two enterprise information systems. The <emphasis role="bold">View Metadata</emphasis> model
+				not only shows from where it gets the information, but also the SQL
+				operations it performs to select its information from its source
+				models.</para>
+			<para> This <emphasis role="bold">View Metadata</emphasis> can not only reflect and describe how your
+				organization uses that information, but, if your enterprise uses the
+				Teiid Designer Server, your applications can use the <emphasis role="bold">View Metadata</emphasis> to
+				resolve queries.</para>
+			<para> To create this <emphasis role="bold">View Metadata</emphasis>, you create a view and define a
+				<emphasis role="bold">transformation</emphasis> for that view, a special query that enables you to
+				select information from the source (or even other view) metadata
+				models. For more information, see “<xref linkend="transformation-editor-section" />.”
+			</para>
+
+			<para><emphasis role="bold">Metadata Transformations</emphasis></para>
+
+			<para>
+			By modeling View Metadata, you can illustrate the business view of your enterprise information sources. View Metadata models not only describe that business view, but also illustrate how the meta objects within the View Metadata models derive their information from other metadata models.
+			</para>
+			<para>
+			Let’s return to the example of our address book database and the vendor’s comma-separated list. We want to generate the View Metadata model, Address Pool, from these enterprise information systems.
+			</para>
+			<figure id="address-transform">
+				<title>Data Flow for View Transformations</title>
+				<mediaobject><imageobject>
+					<imagedata fileref="images/screencaps/address-pool-transformation.png" align="center" />
+				</imageobject></mediaobject>
+			</figure>
+			<para>
+			The transformation that joins these metadata models to create the virtual Address Pool metadata model contains a SQL query, called a union, that determines what information to draw from the source metadata and what to do with it.
+			</para>
+			<para>
+			The resulting Address Pool contains not only the address information from our Address Book database, but also that from our vendor-supplied text file.
+			</para>
+
+			<para><emphasis role="bold">SQL in Transformations</emphasis></para>
+
+			<para>
+			Transformations contain SQL queries that SELECT the appropriate attributes from the information sources. 
+			</para>
+			<para>
+			For example, from the sources the transformation could select relevant address columns, including first name, last name, street address, city, state, and ZIP code. Although the metadata models could contain other columns and tables, such as phone number, fax number, e-mail address, and Web URL, the transformation acts as a filter and populates the Address Pool metadata model with only the data essential to building our Address Pool.
+			</para>
+			<para>
+			You can add other SQL logic to the transformation query to transform the data information. For example, the address book database uses a nine-character string that represents the ZIP Plus Four. The transformation could perform any SQL-supported logic upon the ZIPCode column to substring this information into the format we want for the Address Pool View metadata model.
+			</para>
+
+			<para><emphasis role="bold">Mapping XML Transformations</emphasis></para>
+
+			<para>
+			When you model View Metadata, you can also create a View XML Document model. This View Document lets you select information from within your other data sources, just like a regular View Metadata model, but you can also map the results to tags within an XML document.
+			</para>
+			<figure id="address-xml-transform">
+				<title>Data Flow for XML Transformations</title>
+				<mediaobject><imageobject>
+					<imagedata fileref="images/screencaps/address-pool-xml-transformation.png" align="center" />
+				</imageobject></mediaobject>
+			</figure>
+			<para>
+			In this example, the Address Pool View Metadata model still selects its information from the Address Book Database and the Vendor Text File, but it also maps the resulting columns into tags in the Address XML document.
+			</para>
 		</section>
 	</section>
 	<section id="models-101-section">
 		<title>It's all in the Modeling...</title>
 		
-		<para><emphasis role="bold">What Are Models?</emphasis></para>
+        <section id="what-are-models">
+		  <title>What Are Models?</title>
 		
-		<para> A model is a representation of a set of information constructs.
+		  <para> A model is a representation of a set of information constructs.
 			A familiar model is the relational model, which defines tables
 			composed of columns and containing records of data. Another familiar
 			model is the XML model, which defines hierarchical data sets.</para>
-		<para> In Teiid Designer, models are used to define the entities, and
+		  <para> In Teiid Designer, models are used to define the entities, and
 			relationships between those entities, required to fully define the
 			integration of information sets so that they may be accessed in a
 			uniform manner, using a single API and access protocol. The file
 			   extension used for these models is <filename>.xmi</filename> ( Example:
 			NorthwindOracle.xmi ) which adheres to the XMI syntax defined by the
 			OMG.</para>
-		<para> Below is an example of the partial contents of a model file.
-		</para>
-		<figure>
+		  <para> Below is an example of the partial contents of a model file.
+		  </para>
+		  <figure>
 			<title>Sample Model File</title>
 			<mediaobject><imageobject>
 				<imagedata fileref="images/screencaps/sample-model-file.png"/>
 			</imageobject></mediaobject>
-		</figure>
-		<para> Model files should never be modified "by hand". While it is
+		  </figure>
+		  <note>
+		  <para> Model files should never be modified "by hand". While it is
 			possible to do so, there is the possibility that you may corrupt the
 			file such that it cannot be used within the Teiid Designer system.</para>
-		<para> The fundamental models in Teiid Designer define the structural and
+		  </note>
+		  <para> The fundamental models in Teiid Designer define the structural and
 			data characteristics of the information contained in data sources.
 			These are referred to as source models (represented by <inlinemediaobject>
 				<imageobject>
@@ -509,13 +509,13 @@
 			uses the information in source models to federate the information in
 			multiple sources, so that from a user's viewpoint these all appear to
 			be in a single source.</para>
-		<figure>
+		  <figure>
 			<title>Model Internals</title>
 			<mediaobject><imageobject>
 				<imagedata fileref="images/screencaps/model-internals.png"/>
 			</imageobject></mediaobject>
-		</figure>
-		<para> In addition to source models, Teiid Designer provides the ability to
+		  </figure>
+		  <para> In addition to source models, Teiid Designer provides the ability to
 			define a variety of view models(represented by <inlinemediaobject>
 				<imageobject>
 					<imagedata fileref="images/icons/view-model.png"/>
@@ -526,44 +526,69 @@
 			applications in business terms rather than as it is physically stored.
 			Views are mapped to sources using transformations between models.
 			These business views can be in a variety of forms:</para>
-		<itemizedlist>
+		  <itemizedlist>
 			<listitem> <para>Relational Tables and Views</para> </listitem>
 			<listitem> <para>XML</para> </listitem>
 			<listitem> <para>Web services</para> </listitem>
 			<listitem> <para>Functions</para> </listitem>
-		</itemizedlist>
-		<para>For full list of supported model types see <xref linkend="newmodels-chapter" /></para>
-		<para> A third model type, logical, provides the ability to define
+		  </itemizedlist>
+		  <para>For full list of supported model types see <xref linkend="newmodels-chapter" /></para>
+		  <para> A third model type, logical, provides the ability to define
 			models from a logical or structural perspective.</para>
+        </section>
+        
+        <section id="model-defined">
+		  <title>How is a Model Defined?</title>
 
-		<para><emphasis role="bold">How is a Model Defined?</emphasis></para>
-
-		<para>
-		    Models are defined using Teiid Designer in various ways:
-		</para>
-		<itemizedlist>
-			<listitem> 
-				<para>Created via importing source data characteristics. 
+    		<para>
+	   	       Models are defined using Teiid Designer in various ways:
+		  </para>
+		  <itemizedlist>
+			 <listitem> 
+				  <para>Created via importing source data characteristics. 
 					(see <xref linkend="importers-chapter" />)</para> 
-			</listitem>
-			<listitem> 
-				<para>Manual creation via <xref linkend="newmodels-chapter" /></para> 
-			</listitem>
-			<listitem> 
-				<para>Transforming or copying from one model into another
+			 </listitem>
+             <listitem> 
+		          <para>Manual creation via <xref linkend="newmodels-chapter" /></para> 
+			 </listitem>
+			 <listitem> 
+				  <para>Transforming or copying from one model into another
 					 (see <xref linkend="newmodels-chapter" /> options)</para> 
-			</listitem>
-			<listitem> <para>Various custom actions</para></listitem>
-		</itemizedlist>
-
-		<para><emphasis role="bold">Model Classes and Types</emphasis></para>
+			 </listitem>
+			 <listitem> <para>Various custom actions</para></listitem>
+		  </itemizedlist>
+        </section>
+        
+        <section id="guiding-through-the-process">
+            <title>Guiding through the process</title>
+            <para>
+                To make the process of using Teiid Designer to build models more as easy as
+                posssible, a guides view (<xref linkend="guides-view" />) has been introduced. 
+                It provides action sets which bring together the actions necessary to 
+                develop models for specific use-cases. Action sets are available for the following
+                scenerios: 
+            </para>
+            <itemizedlist>
+                <listitem>Consuming a SOAP Web Service</listitem>
+                <listitem>Creating a REST WAR archive</listitem>
+                <listitem>Creating a SOAP WAR archive</listitem>
+                <listitem>Modelling from a Flat File Source (a text file)</listitem>
+                <listitem>Modelling from a JDBC Data Source</listitem>
+                <listitem>Modelling from a Local XML File Source</listitem>
+                <listitem>Modelling from a Remote XML File Source</listitem>
+                <listitem>Connecting to a Teiid Server</listitem>
+            </itemizedlist>
+        </section>
+        
+        <section id="model-classes-and-types">
+		  <title>Model Classes and Types</title>
 		
-		<para>Teiid Designer can be used to model a variety of classes of
+		  <para>Teiid Designer can be used to model a variety of classes of
 			models. Each of these represent a conceptually different
 			classification of models.</para>
-		<itemizedlist>
-			<listitem> 
-				<para><emphasis role="bold">Relational</emphasis> - Model data that can be represented in table –
+		  <itemizedlist>
+            <listitem> 
+			    <para><emphasis role="bold">Relational</emphasis> - Model data that can be represented in table –
 					columns and records – form. Relational models can represent structures
 					found in relational databases, spreadsheets, text files, or simple Web
 					services.</para>
@@ -588,45 +613,50 @@
 				<para><emphasis role="bold">Function</emphasis> - The Function metamodel supports the capability to provide
 					user-defined functions, including binary source jars, to use in custom transformation SQL statements.</para>
 			</listitem>
-		</itemizedlist>
+		  </itemizedlist>
+        </section>
 
-		<para><emphasis role="bold">Models and VDBs</emphasis></para>
+        <section id="models-and-vdbs">
+    		<title>Models and VDBs</title>
 
-		<para>Models used for data integration are packaged into a virtual
-			database (VDB). The models must be in a complete and consistent state
-			when used for data integration. That is, the VDB must contain all the
-			models and all resources they depend upon. VDB's are the transport mechanism to expose
-			both the metadata to query against on a server and the corresponding references to the data sources
-			and connections required to perform the actual DB queries. (See the 
-			<xref linkend="vdb-editor-section" /> section)</para>
+    		<para>Models used for data integration are packaged into a <emphasis role="bold">Virtual
+	   		  Database (VDB)</emphasis>. The models must be in a complete and consistent state
+			  when used for data integration. That is, the VDB must contain all the
+			  models and all resources they depend upon. VDB's are the transport mechanism to expose
+			  both the metadata to query against on a server and the corresponding references to the data sources
+			  and connections required to perform the actual DB queries. (See the 
+			  <xref linkend="vdb-editor-section" /> section)</para>
 			
-		<para><emphasis role="bold">Models and Connection Profiles</emphasis></para>
+		    <para><emphasis role="bold">Models and Connection Profiles</emphasis></para>
 
 
-		<para>A connection profile  provides the connectivity to a data source and is 
-			defined by the DTP framework. Designer utilizes this framework from withing 
-			it's JDBC Importer.
-		</para>
-			
+		    <para>A <emphasis role="bold">connection profile</emphasis>  provides the connectivity to a data source and is 
+			  defined by the Eclipse <emphasis role="bold">Data Tools Project (DTP)</emphasis> framework. Designer utilizes this framework from within
+			  it's JDBC Importer.
+		    </para>
+        </section>			
 
-		<para><emphasis role="bold">Model Validation</emphasis></para>
+        <section id="model-validation">
+		  <title>Model Validation</title>
 		
-		<para>Models must be in a valid state in order to be used for data access. 
+		  <para>Models must be in a valid state in order to be used for data access. 
 			Validation of a single model means that it must be in a self-consistent and 
 			complete state, meaning that there are no "missing pieces" and 
 			no references to non-existent entities. Validation of multiple models 
 			checks that all inter-model dependencies are present and resolvable.</para>
-		<para>Models must always be validated when they are deployed in a VDB for data 
+		  <para>Models must always be validated when they are deployed in a VDB for data 
 			access purposes.</para>
-		<para>Teiid Designer will automatically validate your models 
-			whenever the user Saves ( Note: the "Models > Validate Automatically" option 
+		  <para>Teiid Designer will automatically validate your models 
+			whenever the user Saves ( Note: the "Project > Build Automatically" menu option 
 			must be checked). When editing models, the editor tabs will display a "*" 
 			to indicate that the model has unsaved changes.
-		</para>
-
-		<para><emphasis role="bold">Testing Your Models</emphasis></para>
+		  </para>
+        </section>
+        
+        <section id="testing-your-models">
+		  <title>Testing Your Models</title>
 		
-		<para> Designing and working with data is often much easier when you can
+		  <para> Designing and working with data is often much easier when you can
 			see the information you're working with. The Teiid Designer's 
 			<emphasis role="bold">Preview Data</emphasis>
 			feature makes this possible and allows you to instantly preview the
@@ -639,7 +669,7 @@
 			run more complicated queries like what your application likely uses,
 			simply execute the VDB in the Teiid Designer and type in any query or SQL
 			statement.</para>
-		<para> After creating your models, you can test them by using the
+		  <para> After creating your models, you can test them by using the
 			<emphasis role="bold">Preview Data</emphasis> action <inlinemediaobject>
 					<imageobject>
 						<imagedata fileref="images/icons/preview-data.png"/>
@@ -648,8 +678,8 @@
 			executing the action, the results of a simple query will be displayed
 			in the Data Tools SQL Results view. This action is accessible throughout the
 			Teiid Designer in various view toolbars and context menus.</para>
-		<para> Previewable objects include:</para>
-		<itemizedlist>
+		  <para> Previewable objects include:</para>
+		  <itemizedlist>
 			<listitem>
 				<para>Relational table or view, including tables involving
 					access patterns.</para>
@@ -663,11 +693,12 @@
 			<listitem>
 				<para>XML Document staging table.</para>
 			</listitem>
-		</itemizedlist>
-		<note>
+		  </itemizedlist>
+		  <note>
 			<para>If attempting to preview a relational access pattern, a web service operation or a relational procedure
 				with input parameters, a dialog will request values for required parameters.</para>
-		</note>
+		  </note>
+        </section>
 		<section id="intro-to-model-extensions">
 			<title>Model Object Extensions</title>
 			

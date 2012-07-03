@@ -49,7 +49,7 @@ public class DSPPluginImageHelper implements AdvisorUiConstants.Images {
     public final Image VDB_PROJECT_IMAGE = AdvisorUiPlugin.getDefault().getImage(VDB_PROJECT);
     
     public final Image IMPORT_WSDL_IMAGE = AdvisorUiPlugin.getDefault().getImage(IMPORT_WSDL);
-    public final Image EXPORT_WAR_IMAGE = AdvisorUiPlugin.getDefault().getImage(EXPORT_WAR);
+    public final Image EXPORT_WAR_IMAGE = AdvisorUiPlugin.getDefault().getImage(GENERATE_WAR);
     public final Image EXECUTE_VDB_IMAGE = AdvisorUiPlugin.getDefault().getImage(EXECUTE_VDB_ACTION);
     public final Image EDIT_VDB_IMAGE = AdvisorUiPlugin.getDefault().getImage(EDIT_VDB_ACTION);
     public final Image PREVIEW_DATA_IMAGE = AdvisorUiPlugin.getDefault().getImage(PREVIEW_DATA);

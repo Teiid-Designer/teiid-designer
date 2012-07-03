@@ -136,7 +136,7 @@ public class TeiidGuidesSection  implements AdvisorUiConstants {
 	        guidesViewer =  WidgetFactory.createTreeViewer(sectionBody, SWT.NONE | SWT.SINGLE );
 			GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 			gd.horizontalSpan = 2;
-			gd.heightHint = 120;
+			gd.heightHint = 180;
 			guidesViewer.getControl().setLayoutData(gd);
 			
 	        guidesViewer.addDoubleClickListener(new IDoubleClickListener() {

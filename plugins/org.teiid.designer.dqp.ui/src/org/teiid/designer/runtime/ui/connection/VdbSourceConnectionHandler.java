@@ -96,7 +96,7 @@ public class VdbSourceConnectionHandler implements SourceHandler {
         if (obj instanceof IStructuredSelection) {
             IStructuredSelection sel = (IStructuredSelection)obj;
             if (sel.getFirstElement() instanceof VdbModelEntry) {
-                if (((VdbModelEntry)sel.getFirstElement()).getType() == ModelType.PHYSICAL_LITERAL) {
+            	if (((VdbModelEntry)sel.getFirstElement()).getType() == ModelType.PHYSICAL_LITERAL.getName()) {
                     selectTranslatorAction.setSelection((VdbModelEntry)sel.getFirstElement());
                     selectJndiDataSourceAction.setSelection((VdbModelEntry)sel.getFirstElement());
                     return actions;

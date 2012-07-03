@@ -258,14 +258,25 @@ public class ImportWsdlSoapWizard extends AbstractWizard implements IImportWizar
     	}
     	
         // Check for sources and views folders in Property Definitions
-    	if( this.importManager.getSourceModelLocation() == null) {
+    	if( this.importManager.getSourceModelLocation() == null) {	
+    		IContainer project = DesignerPropertiesUtil.getProject(designerProperties);
             IContainer srcResource = DesignerPropertiesUtil.getSourcesFolder(designerProperties);
-            IContainer viewResource = DesignerPropertiesUtil.getViewsFolder(designerProperties);
             if (srcResource != null) {
                 this.importManager.setSourceModelLocation(srcResource);
+            } else if( project != null ) {
+            	this.importManager.setSourceModelLocation(project);
             }
+    	}
+    	
+        // Check for sources and views folders in Property Definitions
+    	if( this.importManager.getViewModelLocation() == null) {
+    		
+    		IContainer project = DesignerPropertiesUtil.getProject(designerProperties);
+            IContainer viewResource = DesignerPropertiesUtil.getViewsFolder(designerProperties);
             if (viewResource != null) {
                 this.importManager.setViewModelLocation(viewResource);
+            } else if( project != null ) {
+            	this.importManager.setViewModelLocation(project);
             }
     	}
     	

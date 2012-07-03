@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Set;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -49,6 +50,7 @@ import org.teiid.core.types.DataTypeManager;
 import org.teiid.designer.relational.RelationalConstants;
 import org.teiid.designer.relational.model.RelationalColumn;
 import org.teiid.designer.relational.ui.util.RelationalUiUtil;
+
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.modeler.relational.ui.UiConstants;
@@ -62,6 +64,7 @@ import com.metamatrix.ui.internal.util.UiUtil;
 import com.metamatrix.ui.internal.util.WidgetFactory;
 import com.metamatrix.ui.internal.util.WidgetUtil;
 import com.metamatrix.ui.table.ComboBoxEditingSupport;
+import com.metamatrix.ui.text.StyledTextEditor;
 
 /*
  *  ViewTableEditorPanel - this class creates the tabbed panel which is used
@@ -85,6 +88,7 @@ public class ViewTableEditorPanel implements RelationalConstants {
     // Table Property Tab Controls
     Button supportsUpdateCB;
     Text modelNameText, nameText;
+    StyledTextEditor descriptionTextEditor;
 
     // Table Column Tab Controls
     Button addColumnButton, deleteColumnButton, upColumnButton, downColumnButton;
@@ -113,7 +117,7 @@ public class ViewTableEditorPanel implements RelationalConstants {
 
         createPanel(parent);
         validate();
-        synchronizeUI();
+        initializeUi();
 
         this.nameText.setFocus();
     }
@@ -133,14 +137,15 @@ public class ViewTableEditorPanel implements RelationalConstants {
             Text helpText = new Text(parent, SWT.WRAP | SWT.READ_ONLY);
             helpText.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
             helpText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
-            helpText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+            helpText.setLayoutData(new GridData(SWT.FILL, SWT.BEGINNING, true, false));
             ((GridData)helpText.getLayoutData()).horizontalSpan = 1;
             ((GridData)helpText.getLayoutData()).heightHint = 40;
-            ((GridData)helpText.getLayoutData()).widthHint = 360;
+            ((GridData)helpText.getLayoutData()).widthHint = 450;
             helpText.setText(Messages.createRelationalViewHelpText);
         }
         tabFolder = new TabFolder(parent, SWT.TOP | SWT.BORDER);
         tabFolder.setLayoutData(new GridData(GridData.FILL_BOTH));
+        ((GridData)tabFolder.getLayoutData()).heightHint = 250;
 
         createGeneralPropertiesTab(tabFolder);
         createColumnsTab(tabFolder);
@@ -186,7 +191,7 @@ public class ViewTableEditorPanel implements RelationalConstants {
     /*
      * Synchronize the UI controls with the RelationalViewTable object
      */
-    protected void synchronizeUI() {
+    protected void initializeUi() {
         if (synchronizing) {
             return;
         }
@@ -242,7 +247,8 @@ public class ViewTableEditorPanel implements RelationalConstants {
     /*
      * Create the General Properties tab panel
      */
-    private Composite createGeneralPropertiesPanel( Composite parent ) {
+    @SuppressWarnings("unused")
+	private Composite createGeneralPropertiesPanel( Composite parent ) {
         Composite thePanel = WidgetFactory.createPanel(parent, SWT.NONE, 1, 3);
         thePanel.setLayout(new GridLayout(3, false));
         GridData panelGD = new GridData(GridData.FILL_BOTH);
@@ -279,7 +285,26 @@ public class ViewTableEditorPanel implements RelationalConstants {
             }
         });
         addSpacerLabels(thePanel, 1);
-
+        
+        DESCRIPTION_GROUP: {
+            final Group descGroup = WidgetFactory.createGroup(thePanel, Messages.description, GridData.FILL_HORIZONTAL, 3);
+            descriptionTextEditor = new StyledTextEditor(descGroup, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.WRAP | SWT.BORDER);
+            final GridData descGridData = new GridData(GridData.FILL_BOTH);
+            descGridData.horizontalSpan = 1;
+            descGridData.heightHint = 80;
+            descGridData.minimumHeight = 30;
+            descGridData.grabExcessVerticalSpace = true;
+            descriptionTextEditor.setLayoutData(descGridData);
+            descriptionTextEditor.setText(""); //$NON-NLS-1$
+            descriptionTextEditor.getTextWidget().addModifyListener(new ModifyListener() {
+				
+				@Override
+				public void modifyText(ModifyEvent e) {
+					viewTable.setDescription(descriptionTextEditor.getText());
+				}
+			});
+        }
+        
         this.supportsUpdateCB = new Button(thePanel, SWT.CHECK | SWT.RIGHT);
         this.supportsUpdateCB.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
         this.supportsUpdateCB.setText(Messages.supportsUpdateLabel);
@@ -334,7 +359,7 @@ public class ViewTableEditorPanel implements RelationalConstants {
             @Override
             public void widgetSelected( SelectionEvent e ) {
                 viewTable.createColumn();
-                handleInfoChanged();
+                handleColumnsChanged();
             }
 
         });
@@ -359,7 +384,7 @@ public class ViewTableEditorPanel implements RelationalConstants {
                 if (column != null) {
                     viewTable.removeColumn(column);
                     deleteColumnButton.setEnabled(false);
-                    handleInfoChanged();
+                    handleColumnsChanged();
                 }
             }
 
@@ -385,7 +410,7 @@ public class ViewTableEditorPanel implements RelationalConstants {
                 if (info != null) {
                     int selectedIndex = columnsViewer.getTable().getSelectionIndex();
                     viewTable.moveColumnUp(info);
-                    handleInfoChanged();
+                    handleColumnsChanged();
                     columnsViewer.getTable().select(selectedIndex - 1);
                     downColumnButton.setEnabled(viewTable.canMoveColumnDown(info));
                     upColumnButton.setEnabled(viewTable.canMoveColumnUp(info));
@@ -415,7 +440,7 @@ public class ViewTableEditorPanel implements RelationalConstants {
                 if (info != null) {
                     int selectedIndex = columnsViewer.getTable().getSelectionIndex();
                     viewTable.moveColumnDown(info);
-                    handleInfoChanged();
+                    handleColumnsChanged();
                     columnsViewer.getTable().select(selectedIndex + 1);
                     downColumnButton.setEnabled(viewTable.canMoveColumnDown(info));
                     upColumnButton.setEnabled(viewTable.canMoveColumnUp(info));
@@ -526,7 +551,9 @@ public class ViewTableEditorPanel implements RelationalConstants {
                 SQLTemplateDialog templateDialog = new SQLTemplateDialog(UiUtil.getWorkbenchShellOnlyIfUiThread(),
                                                                          SQLTemplateDialog.TABLE_TEMPLATES);
                 if (templateDialog.open() == Window.OK) {
-                    viewTable.setTransformationSQL(templateDialog.getSQL());
+                	String sql = templateDialog.getSQL();
+                    viewTable.setTransformationSQL(sql);
+                    sqlDocument.set(sql);
                     handleInfoChanged();
                 }
             }
@@ -553,6 +580,15 @@ public class ViewTableEditorPanel implements RelationalConstants {
         sqlTextViewer = new SqlTextViewer(textTableOptionsGroup, new VerticalRuler(0), styles, colorManager);
         sqlDocument = new Document();
         sqlTextViewer.setInput(sqlDocument);
+        sqlTextViewer.getTextWidget().addModifyListener(new ModifyListener() {
+			
+			@Override
+			public void modifyText(ModifyEvent e) {
+				viewTable.setTransformationSQL(sqlTextViewer.getTextWidget().getText());
+				handleInfoChanged();
+				
+			}
+		});
         sqlTextViewer.setEditable(true);
         sqlDocument.set(CoreStringUtil.Constants.EMPTY_STRING);
         sqlTextViewer.getControl().setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -566,8 +602,18 @@ public class ViewTableEditorPanel implements RelationalConstants {
             return;
         }
         validate();
-
-        synchronizeUI();
+    }
+    
+    void handleColumnsChanged() {
+        this.columnsViewer.getTable().removeAll();
+        IStatus maxStatus = Status.OK_STATUS;
+        for (RelationalColumn row : viewTable.getColumns()) {
+            if (row.getStatus().getSeverity() > maxStatus.getSeverity()) {
+                maxStatus = row.getStatus();
+            }
+            this.columnsViewer.add(row);
+        }
+        handleInfoChanged();
     }
 
     /*
@@ -697,7 +743,7 @@ public class ViewTableEditorPanel implements RelationalConstants {
                 if (newValue != null && newValue.length() > 0 && !newValue.equalsIgnoreCase(oldValue)) {
                     ((RelationalColumn)element).setName(newValue);
                     columnsViewer.refresh(element);
-                    handleInfoChanged();
+                    handleColumnsChanged();
                 }
             }
         }

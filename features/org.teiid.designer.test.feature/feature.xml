@@ -2,7 +2,7 @@
 <feature
       id="org.teiid.designer.test.feature"
       label="Teiid Designer Test"
-      version="7.7.0.qualifier"
+      version="7.7.1.qualifier"
       provider-name="%providerName"
       plugin="org.teiid.designer"
       image="feature.gif">

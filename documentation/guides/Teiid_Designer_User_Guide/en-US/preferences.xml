@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<chapter id="preferences-chapter">
+<appendix id="preferences-appendix">
 	<title>User Preferences</title>
 	
 	<!-- <para><emphasis role="bold">Go To:  <ulink url="index.html">Table of Contents</ulink></emphasis></para>  -->
@@ -30,7 +30,7 @@
 				editor will be opened before the operation is completed.</para>
 			</listitem>
 			<listitem>
-				<para><emphasis>Open Designer perspective when model is opened</emphasis> - If a model is opened via importing projects, 
+				<para><emphasis role="bold">Open Designer perspective when model is opened</emphasis> - If a model is opened via importing projects, 
 					the New > Teiid Metadata Model menu and the Teiid Designer perspective is not open, you may want
 					to automatically open the perspective and beging working on your model.  This preference has 3 settings.
 					Always open, which means always open the perspective without prompting; never open, which means
@@ -47,18 +47,13 @@
 				imports will be performed.</para>
 			</listitem>
 			<listitem>
-				<para><emphasis><emphasis>Import Logical ER Models as View Relational Models</emphasis></emphasis> - When importing 
-					ER models, the default relational model created during the import process is a 
-					Source model. This preferences, forces the importer to create a View relational model instead.</para>
-			</listitem>
-			<listitem>
-				<para><emphasis>Enable Preview</emphasis> - If the Designer Runtime feature is installed and a Teiid 
+				<para><emphasis role="bold">Enable Preview</emphasis> - If the Designer Runtime feature is installed and a Teiid 
 					Instance is defined, Teiid Designer will automatically keep the preview artifacts 
 					(VDBs) in sync with the workspace models. Unchecking this preference will disable 
 					preview feature and not create preview artifacts.</para>
 			</listitem>
 			<listitem>
-				<para><emphasis>Enable Preview Teiid Cleanup</emphasis> - If operating Designer with Enable 
+				<para><emphasis role="bold">Enable Preview Teiid Cleanup</emphasis> - If operating Designer with Enable 
 					Preview = TRUE, then this preference will result in automatic 
 					clean-up of your preview artifacts from your Teiid servers. Any preview 
 					VDBs or preview data sources will be undeployed from your servers as part of 
@@ -208,7 +203,8 @@
 			<title>Validation Preferences</title>
 			<para><emphasis role="bold">Validation Preferences</emphasis> provide a way to customize the severity
 				of some of the rules checked during model validation.</para>
-				<para> Validation preference pages, shown below, include Core, Relational Model, XML-related and XML Schema (XSD) models.</para>
+				<para> The Validation preference pages, shown below, include the validation preferences for 
+				<emphasis role="bold">Core, Relational, XML and XSD (XML Schema)</emphasis> models.</para>
 			<figure>
 				<title>Core Model Validation Preferences Panel</title>
 				<mediaobject>
@@ -247,4 +243,4 @@
 				during validation.</para></note>
 		</section>
 	</section>
-</chapter>
+</appendix>

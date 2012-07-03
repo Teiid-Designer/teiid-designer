@@ -165,4 +165,8 @@ public class SOAPConnectionInfoProvider extends ConnectionInfoHelper implements 
         return DataSourceConnectionConstants.DataSource.WS;
     }
 
+	@Override
+	public boolean requiresPassword(IConnectionProfile connectionProfile) {
+		return false;
+	}
 }

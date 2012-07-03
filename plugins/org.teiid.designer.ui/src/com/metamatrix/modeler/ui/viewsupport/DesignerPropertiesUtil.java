@@ -53,6 +53,10 @@ public class DesignerPropertiesUtil {
     public static String getVdbName( Properties properties ) {
         return properties.getProperty(IPropertiesContext.KEY_LAST_VDB_NAME);
     }
+    
+    public static String getVdbJndiName( Properties properties ) {
+        return properties.getProperty(IPropertiesContext.KEY_VDB_DATA_SOURCE_JNDI_NAME);
+    }
 
     public static String getSourceModelName( Properties properties ) {
         return properties.getProperty(IPropertiesContext.KEY_LAST_SOURCE_MODEL_NAME);
@@ -89,6 +93,22 @@ public class DesignerPropertiesUtil {
     public static String getPreviewTargetModelName( Properties properties ) {
         return properties.getProperty(IPropertiesContext.KEY_PREVIEW_TARGET_MODEL);
     }
+    
+    public static String getLastSourceModelObjectName( Properties properties ) {
+        return properties.getProperty(IPropertiesContext.KEY_LAST_SOURCE_MODEL_OBJECT_NAME);
+    }
+    public static String getLastViewModelObjectName( Properties properties ) {
+        return properties.getProperty(IPropertiesContext.KEY_LAST_VIEW_MODEL_OBJECT_NAME);
+    }
+    
+    public static boolean isImportXmlRemote( Properties properties ) {
+    	String value = properties.getProperty(IPropertiesContext.KEY_IMPORT_XML_TYPE);
+    	if( value != null && value.equalsIgnoreCase(IPropertiesContext.IMPORT_XML_REMOTE)) {
+    		return true;
+    	}
+    	
+    	return false;
+    }
 
     public static void setProjectName( Properties properties,
                                        String projectName ) {
@@ -99,6 +119,10 @@ public class DesignerPropertiesUtil {
                                    String vdbName ) {
         properties.put(IPropertiesContext.KEY_LAST_VDB_NAME, vdbName);
     }
+    
+    public static void setVdbJndiName( Properties properties, String vdbJndiName ) {
+		properties.put(IPropertiesContext.KEY_VDB_DATA_SOURCE_JNDI_NAME, vdbJndiName);
+	}
 
     public static void setSourceModelName( Properties properties,
                                            String sourceModelName ) {
@@ -144,6 +168,17 @@ public class DesignerPropertiesUtil {
                                                   String previewTargetModelName ) {
         properties.put(IPropertiesContext.KEY_PREVIEW_TARGET_MODEL, previewTargetModelName);
     }
+    
+    public static void setLastViewModelObjectName( Properties properties,
+    											   String name ) {
+    	properties.put(IPropertiesContext.KEY_LAST_VIEW_MODEL_OBJECT_NAME, name);
+	}
+    
+    public static void setLastSourceModelObjectName( Properties properties,
+			   									   String name ) {
+    	properties.put(IPropertiesContext.KEY_LAST_SOURCE_MODEL_OBJECT_NAME, name);
+	}
+
 
     /**
      * Get the Sources Folder, if the properties are defined
@@ -313,7 +348,7 @@ public class DesignerPropertiesUtil {
      * in the defined 'views' folder
      * 
      * @param properties the Designer properties
-     * @return the IFile, null if not defined or found
+     * @return the EObject, null if not defined or found
      */
     public static EObject getPreviewTargetObject( Properties properties ) {
         EObject targetEObj = null;
@@ -344,5 +379,105 @@ public class DesignerPropertiesUtil {
 
         return targetEObj;
     }
+    
+    /**
+     * Get the Last Source Model Object, if the properties are defined and it can be found.
+     * 
+     * @param properties the Designer properties
+     * @return the EObject, null if not defined or found
+     */
+    public static EObject getLastSourceModelObject( Properties properties ) {
+        EObject targetEObj = null;
 
+        IFile sourceModel = getSourceModel(properties);
+        if (sourceModel != null) {
+            String targetObjName = DesignerPropertiesUtil.getLastSourceModelObjectName(properties);
+            // Locate the Target Preview Object in the Preview Model
+            if (targetObjName != null && !targetObjName.isEmpty()) {
+                ModelEditor editor = ModelerCore.getModelEditor();
+                ModelResource resource = ModelUtilities.getModelResourceForIFile(sourceModel, true);
+                if (resource != null) {
+                    try {
+                        List<EObject> eObjects = resource.getEObjects();
+                        for (EObject eObj : eObjects) {
+                            // If Target Preview Object is found, update the UI
+                            if (targetObjName.equals(editor.getName(eObj))) {
+                                targetEObj = eObj;
+                                break;
+                            }
+                        }
+                    } catch (ModelWorkspaceException ex) {
+                        UiPlugin.getDefault().getPluginUtil().log(ex);
+                    }
+                }
+            }
+        }
+
+        return targetEObj;
+    }
+    
+    /**
+     * Get the Last View Model Object, if the properties are defined and it can be found.
+     * 
+     * @param properties the Designer properties
+     * @return the EObject, null if not defined or found
+     */
+    public static EObject getLastViewModelObject( Properties properties ) {
+        EObject targetEObj = null;
+
+        IFile targetModel = getViewModel(properties);
+        if (targetModel != null) {
+            String targetObjName = DesignerPropertiesUtil.getLastViewModelObjectName(properties);
+            // Locate the Target Preview Object in the Preview Model
+            if (targetObjName != null && !targetObjName.isEmpty()) {
+                ModelEditor editor = ModelerCore.getModelEditor();
+                ModelResource resource = ModelUtilities.getModelResourceForIFile(targetModel, true);
+                if (resource != null) {
+                    try {
+                        List<EObject> eObjects = resource.getEObjects();
+                        for (EObject eObj : eObjects) {
+                            // If Target Preview Object is found, update the UI
+                            if (targetObjName.equals(editor.getName(eObj))) {
+                                targetEObj = eObj;
+                                break;
+                            }
+                        }
+                    } catch (ModelWorkspaceException ex) {
+                        UiPlugin.getDefault().getPluginUtil().log(ex);
+                    }
+                }
+            }
+        }
+
+        return targetEObj;
+    }
+
+    /**
+     * Determines if the project name value is in the supplied properties
+     * 
+     * @param properties the Designer properties
+     * @return boolean, true if project name value exists in properties
+     */
+    public static boolean isProjectNameSet( Properties properties ) {
+    	return DesignerPropertiesUtil.getProjectName(properties) != null;
+    }
+    
+    /**
+     * Determines if the new project is different than project name stored in properties
+     * 
+     * @param newProject the target IProject
+     * @param properties the Designer properties
+     * @return boolean, true if project names are different
+     */
+    public static boolean isProjectDifferent( IProject newProject, Properties properties ) {
+    	if( newProject == null && DesignerPropertiesUtil.getProjectName(properties) != null ) {
+    		return true;
+    	}
+    	
+    	if( newProject != null && DesignerPropertiesUtil.getProjectName(properties) == null ) {
+    		return true;
+    	}
+
+    	return !(newProject.getName().equals(DesignerPropertiesUtil.getProjectName(properties)));
+    }
 }

@@ -66,8 +66,6 @@ public class ProcedureGenerator implements SqlConstants {
 	
 	private String soapAction;
 	
-	private String viewModelName;
-	
 	private String namespaceURI;
 	
 	private String bindingType;
@@ -87,7 +85,7 @@ public class ProcedureGenerator implements SqlConstants {
 		this.operation = operation;
 		this.requestInfo = new RequestInfo(operation, this);
 		this.responseInfo = new ResponseInfo(operation, this);
-		this.viewModelName = operation.getBinding().getPort().getService().getName() + "View"; //$NON-NLS-1$
+		//this.importManager.setViewModelName(operation.getBinding().getPort().getService().getName() + "View"); //$NON-NLS-1$
 		this.importManager = importManager;
 		this.generateWrapperProcedure = true;
 		this.namespaceURI = operation.getBinding().getPort().getNamespaceURI();
@@ -129,7 +127,13 @@ public class ProcedureGenerator implements SqlConstants {
 	}
 	
 	public String getViewModelName() {
-		return this.viewModelName;
+		String fullName = this.importManager.getViewModelName();
+		if( fullName.toUpperCase().endsWith(".XMI") ) { //$NON-NLS-1$
+			// remove XMI
+			int endIndex = fullName.length() - 4;
+			return fullName.substring(0, endIndex);
+		}
+		return fullName;
 	}
 
 	public void setGenerateWrapperProcedure(boolean value) {
@@ -269,6 +273,20 @@ public class ProcedureGenerator implements SqlConstants {
     	for( ColumnInfo columnInfo : this.requestInfo.getBodyColumnInfoList()) {
     		String name = columnInfo.getName();
     		sb.append(getParameterFullName(name));
+    		
+
+    		int nAttributes = columnInfo.getAttributeInfoArray().length;
+    		if( nAttributes > 0 ) {
+    			int index = 0;
+    			sb.append(COMMA).append(SPACE);
+    			for( AttributeInfo attrInfo : columnInfo.getAttributeInfoArray() ) {
+        			sb.append(getParameterFullName(attrInfo.getName()));
+    				if( nAttributes > 1 && index < nAttributes - 1) {
+    					sb.append(COMMA).append(SPACE);
+    				}
+    				index++;
+    			}
+    		}
     		
     		if(i < (nColumns-1)) {
     			sb.append(COMMA).append(SPACE);
@@ -470,11 +488,23 @@ public class ProcedureGenerator implements SqlConstants {
     		nColumns = getRequestInfo().getBodyColumnInfoList().length;
     		if (hColumns>0) sb.append(COMMA);
     		for ( ColumnInfo columnInfo : getRequestInfo().getBodyColumnInfoList() ) {
+    			int nAttributes = columnInfo.getAttributeInfoArray().length;
     			sb.append(TAB4).append(getWrapperProcedureParameterName(convertSqlNameSegment(columnInfo.getName())));
         		if(i < (nColumns-1)) {
         			sb.append(COMMA).append(SPACE).append(RETURN);
         		}
         		i++;
+        		if( nAttributes > 0 ) {
+        			int index = 0;
+        			sb.append(COMMA).append(SPACE);
+        			for( AttributeInfo attrInfo : columnInfo.getAttributeInfoArray() ) {
+            			sb.append(TAB4).append(getWrapperProcedureParameterName(convertSqlNameSegment(attrInfo.getName())));
+        				if( nAttributes > 1 && index < nAttributes - 1) {
+        					sb.append(COMMA).append(SPACE);
+        				}
+        				index++;
+        			}
+        		}
     		}
     	}
     	sb.append(R_PAREN);

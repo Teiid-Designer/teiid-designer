@@ -18,6 +18,7 @@ import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
+import org.teiid.designer.datatools.profiles.ws.IWSProfileConstants;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.ImportManagerValidator;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.ProcedureGenerator;
 
@@ -29,6 +30,7 @@ import com.metamatrix.modeler.modelgenerator.wsdl.model.ModelGenerationException
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Operation;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Port;
 import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.util.ModelGeneratorWsdlUiUtil;
+import com.metamatrix.ui.ICredentialsCommon.SecurityType;
 
 /**
  * WSDL Import Manager - Business Object for interacting with GUI
@@ -47,8 +49,6 @@ public class WSDLImportWizardManager implements IChangeNotifier {
     public static final String MESSAGE = "MESSAGE"; //$NON-NLS-1$
     
     public static final String[] SERVICE_MODES = {PAYLOAD, MESSAGE};
-    
-    private static final String WSDL_URI_PROP_KEY = "wsdlURI"; //$NON-NLS-1$
 
     // /////////////////////////////////////////////////////////////////////////////////////////////
     // FIELDS
@@ -100,6 +100,26 @@ public class WSDLImportWizardManager implements IChangeNotifier {
     // /////////////////////////////////////////////////////////////////////////////////////////////
     // METHODS
     // /////////////////////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * Apply authentication credentials to the WSDLReader
+     *
+     * @param securityTypeValue
+     * @param userName
+     * @param password
+     */
+    public void setWSDLCredentials(String securityTypeValue, String userName, String password) {
+        if (securityTypeValue == null) {
+            return;
+        }
+
+        SecurityType securityType = SecurityType.valueOf(securityTypeValue);
+        this.wsdlReader.setAuthenticationCredentials(securityType, userName, password);
+
+        // Changed authentication credentials then the model must be out of date
+        this.wsdlModel = null;
+        setChanged(true);
+    }
 
     /**
      * Set the WSDL File URI String
@@ -257,9 +277,15 @@ public class WSDLImportWizardManager implements IChangeNotifier {
 		this.connectionProfile = connectionProfile;
 		if( this.connectionProfile != null ) {
             Properties props = this.connectionProfile.getBaseProperties();
-            String fileUri = props.getProperty(WSDL_URI_PROP_KEY);
+
+            String securityTypeValue = props.getProperty(IWSProfileConstants.SECURITY_TYPE_ID);
+            String userName = props.getProperty(IWSProfileConstants.USERNAME_PROP_ID);
+            String password = props.getProperty(IWSProfileConstants.PASSWORD_PROP_ID);
+            setWSDLCredentials(securityTypeValue, userName, password);
+
+            String fileUri = props.getProperty(IWSProfileConstants.WSDL_URI_PROP_ID);
             if( fileUri != null ) {
-            	setWSDLFileUri(props.getProperty(WSDL_URI_PROP_KEY));
+                setWSDLFileUri(fileUri);
             }
 		}
 		setChanged(true);

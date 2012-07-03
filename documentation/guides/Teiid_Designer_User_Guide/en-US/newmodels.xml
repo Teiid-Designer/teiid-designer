@@ -182,8 +182,8 @@
 								will be displayed.</para>
 							</listitem>
 							<listitem>
-								<para><emphasis role="bold">Step 6 </emphasis> - Check one ore more of the <emphasis role="bold">Available File Translator Procedures</emphasis> 
-									Click <emphasis role="bold">Finish</emphasis></para>
+								<para><emphasis role="bold">Step 6 </emphasis> - Check one ore more of the <emphasis role="bold">Available File Translator Procedures</emphasis>,
+									then Click <emphasis role="bold">Finish</emphasis></para>
 								<figure>
 									<title>Generate File Translator Procedures Dialog</title>
 									<mediaobject>
@@ -219,8 +219,8 @@
 								will be displayed.</para>
 							</listitem>
 							<listitem>
-								<para><emphasis role="bold">Step 6 </emphasis> - Check one ore more of the <emphasis role="bold">Available Web Services Translator Procedures</emphasis> 
-									Click <emphasis role="bold">Finish</emphasis></para>
+								<para><emphasis role="bold">Step 6 </emphasis> - Check one ore more of the <emphasis role="bold">Available Web Services Translator Procedures</emphasis>,
+									then Click <emphasis role="bold">Finish</emphasis></para>
 								<figure>
 									<title>Generate Web Service Translator Procedures Dialog</title>
 									<mediaobject>
@@ -405,7 +405,7 @@
 		<itemizedlist id="create-empty-xml-document-view-model-section">
 			<title>Create XML Document View Model</title>
 			<listitem>
-				<para>To create a new empty xml document view model:
+				<para>To create a new empty XML document view model:
 					<itemizedlist>
 						<listitem>
 							<para><emphasis role="bold">Step 1 </emphasis> - Launch the <xref linkend="launch-new-model-wizard" />.</para>
@@ -435,7 +435,7 @@
 		
 		<itemizedlist>
 			<listitem>
-				<para> In addition to creating a new empty xml document view model, the following builder options are available:
+				<para> In addition to creating a new empty XML document view model, the following builder options are available:
 					<itemizedlist>
 						<listitem>
 							<para>Copy from existing model of the same model class.</para>
@@ -457,7 +457,7 @@
 			<itemizedlist>
 				<listitem>
 					<para>
-						To create a new relational model by copying contents from another xml document view model, 
+						To create a new relational model by copying contents from another XML document view model, 
 						complete <xref linkend="create-empty-xml-document-view-model-section" /> above 
 						and continue with these additional steps:
 						<itemizedlist>
@@ -500,7 +500,7 @@
 			<itemizedlist>
 				<listitem>
 					<para>
-						To create a new xml document view model by from XML schema, 
+						To create a new XML document view model by from XML schema, 
 						complete <xref linkend="create-empty-xml-document-view-model-section" /> above 
 						and continue with these additional steps:
 						<itemizedlist>
@@ -600,7 +600,7 @@
 		<itemizedlist id="create-empty-xml-schema-model-section">
 			<title>Create XML Schema Model</title>
 			<listitem>
-				<para>To create a new empty xml schema (.xsd) model:
+				<para>To create a new empty XML schema (.xsd) model:
 					<itemizedlist>
 						<listitem>
 							<para><emphasis role="bold">Step 1 </emphasis> - Launch the <xref linkend="launch-new-model-wizard" />.</para>
@@ -630,7 +630,7 @@
 		
 		<itemizedlist>
 			<listitem>
-				<para> In addition to creating a new empty xml schema model, the following builder option is available:
+				<para> In addition to creating a new empty XML schema model, the following builder option is available:
 					<itemizedlist>
 						<listitem>
 							<para>Copy from existing model of the same model class.</para>
@@ -649,7 +649,7 @@
 			<itemizedlist>
 				<listitem>
 					<para>
-						To create a new relational model by copying contents from another xml schema model, 
+						To create a new relational model by copying contents from another XML schema model, 
 						complete <xref linkend="create-empty-xml-schema-model-section" /> above 
 						and continue with these additional steps:
 						<itemizedlist>

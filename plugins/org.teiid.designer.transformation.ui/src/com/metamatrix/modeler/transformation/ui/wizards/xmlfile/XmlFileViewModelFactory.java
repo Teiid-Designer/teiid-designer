@@ -11,8 +11,11 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.emf.ecore.EObject;
+
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.metamodels.relational.BaseTable;
+import com.metamatrix.metamodels.relational.Column;
 import com.metamatrix.metamodels.relational.RelationalFactory;
 import com.metamatrix.metamodels.relational.RelationalPackage;
 import com.metamatrix.metamodels.transformation.SqlTransformationMappingRoot;
@@ -77,6 +80,13 @@ public class XmlFileViewModelFactory  extends FlatFileRelationalModelFactory {
     	BaseTable table = factory.createBaseTable();
     	table.setName(info.getViewTableName());
     	
+    	/* 
+   	  	* Creating the columns here ensures that any fixed lengths are assigned
+   	  	*  to the columns, otherwise reconcileMappingsOnSqlChange() (below)
+   	  	*  sets their lengths to default values.
+   	  	*/
+    	createColumns(info, table);
+    	
     	addValue(modelResource, table, getModelResourceContents(modelResource));
     	
     	NewModelObjectHelperManager.helpCreate(table, null);
@@ -94,5 +104,27 @@ public class XmlFileViewModelFactory  extends FlatFileRelationalModelFactory {
     	
     }
     
+    @SuppressWarnings("unchecked")
+    private void createColumns(TeiidXmlFileInfo info, BaseTable baseTable) throws ModelerCoreException {
+    	EObject stringType = datatypeManager.findDatatype("string"); //$NON-NLS-1$
+    	
+    	for (TeiidXmlColumnInfo columnInfo : info.getColumnInfoList()) {
+    		Column column = factory.createColumn();
+    		column.setName(columnInfo.getName());
+    		column.setNameInSource(columnInfo.getSymbolName());
+    		column.setLength(columnInfo.getWidth());
+    		column.setDefaultValue(columnInfo.getDefaultValue());
+    		
+    		EObject datatype = datatypeManager.findDatatype(columnInfo.getDatatype());
+    		if (datatype != null) {
+    			column.setType(datatype);
+    			if( stringType != null && stringType == datatype) {
+    				column.setLength(DEFAULT_STRING_LENGTH);
+    			}
+    		}
+    		
+    		baseTable.getColumns().add(column);
+    	}
+    }
 }
 

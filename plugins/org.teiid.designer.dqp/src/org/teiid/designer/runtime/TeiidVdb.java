@@ -50,6 +50,19 @@ public class TeiidVdb implements Comparable<TeiidVdb> {
 
         return false;
     }
+    
+    /**
+     * {@inheritDoc}
+     * 
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((this.getName() == null) ? 0 : this.getName().hashCode());
+        return result;
+    }
 
     public ExecutionAdmin getAdmin() {
         return admin;

@@ -14,9 +14,11 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+
 import com.metamatrix.metamodels.webservice.Input;
 import com.metamatrix.metamodels.webservice.Interface;
 import com.metamatrix.metamodels.webservice.Operation;
+import com.metamatrix.metamodels.webservice.OperationUpdateCount;
 import com.metamatrix.metamodels.webservice.Output;
 import com.metamatrix.metamodels.webservice.WebServicePackage;
 
@@ -92,6 +94,26 @@ public class OperationImpl extends WebServiceComponentImpl implements Operation 
      * @ordered
      */
     protected Output output = null;
+    
+    /**
+     * The default value of the '{@link #getUpdateCount() <em>Update Count</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getUpdateCount()
+     * @generated
+     * @ordered
+     */
+    protected static final OperationUpdateCount UPDATE_COUNT_EDEFAULT = OperationUpdateCount.AUTO_LITERAL;
+    
+    /**
+     * The cached value of the '{@link #getUpdateCount() <em>Update Count</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getUpdateCount()
+     * @generated
+     * @ordered
+     */
+    protected OperationUpdateCount updateCount = UPDATE_COUNT_EDEFAULT;
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -284,6 +306,27 @@ public class OperationImpl extends WebServiceComponentImpl implements Operation 
                                                                           WebServicePackage.OPERATION__INTERFACE, newInterface,
                                                                           newInterface));
     }
+    
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public OperationUpdateCount getUpdateCount() {
+        return updateCount;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public void setUpdateCount(OperationUpdateCount newUpdateCount) {
+        OperationUpdateCount oldUpdateCount = updateCount;
+        updateCount = newUpdateCount == null ? UPDATE_COUNT_EDEFAULT : newUpdateCount;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, WebServicePackage.OPERATION__UPDATE_COUNT, oldUpdateCount, updateCount));
+    }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -386,6 +429,8 @@ public class OperationImpl extends WebServiceComponentImpl implements Operation 
                 return getOutput();
             case WebServicePackage.OPERATION__INTERFACE:
                 return getInterface();
+            case WebServicePackage.OPERATION__UPDATE_COUNT:
+                return getUpdateCount();
         }
         return eDynamicGet(eFeature, resolve);
     }
@@ -417,6 +462,9 @@ public class OperationImpl extends WebServiceComponentImpl implements Operation 
             case WebServicePackage.OPERATION__INTERFACE:
                 setInterface((Interface)newValue);
                 return;
+            case WebServicePackage.OPERATION__UPDATE_COUNT:
+                setUpdateCount((OperationUpdateCount)newValue);
+                return;
         }
         eDynamicSet(eFeature, newValue);
     }
@@ -447,6 +495,9 @@ public class OperationImpl extends WebServiceComponentImpl implements Operation 
             case WebServicePackage.OPERATION__INTERFACE:
                 setInterface((Interface)null);
                 return;
+            case WebServicePackage.OPERATION__UPDATE_COUNT:
+                setUpdateCount(UPDATE_COUNT_EDEFAULT);
+                return;
         }
         eDynamicUnset(eFeature);
     }
@@ -471,6 +522,8 @@ public class OperationImpl extends WebServiceComponentImpl implements Operation 
                 return output != null;
             case WebServicePackage.OPERATION__INTERFACE:
                 return getInterface() != null;
+            case WebServicePackage.OPERATION__UPDATE_COUNT:
+                return updateCount != UPDATE_COUNT_EDEFAULT;
         }
         return eDynamicIsSet(eFeature);
     }
@@ -489,6 +542,8 @@ public class OperationImpl extends WebServiceComponentImpl implements Operation 
         result.append(pattern);
         result.append(", safe: "); //$NON-NLS-1$
         result.append(safe);
+        result.append(", updateCount: "); //$NON-NLS-1$
+        result.append(updateCount);
         result.append(')');
         return result.toString();
     }

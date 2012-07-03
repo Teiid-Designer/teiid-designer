@@ -85,6 +85,7 @@ import com.metamatrix.modeler.internal.ui.editors.ModelEditor;
 import com.metamatrix.modeler.internal.ui.editors.MultiPageModelEditor;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelObjectUtilities;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
+import com.metamatrix.modeler.transformation.ui.Messages;
 import com.metamatrix.modeler.transformation.ui.PluginConstants;
 import com.metamatrix.modeler.transformation.ui.UiConstants;
 import com.metamatrix.modeler.transformation.ui.UiPlugin;
@@ -111,6 +112,7 @@ import com.metamatrix.modeler.ui.viewsupport.StatusBarUpdater;
 import com.metamatrix.query.internal.ui.builder.util.ElementViewerFactory;
 import com.metamatrix.ui.internal.util.UiUtil;
 import com.metamatrix.ui.internal.util.WidgetFactory;
+import com.metamatrix.ui.internal.widget.Label;
 
 /**
  * TransformationObjectEditorPage is the class for editing Transformation Objects.
@@ -224,8 +226,11 @@ public class TransformationObjectEditorPage
     private SqlPanelDropTargetListener seSelectNoUpdateDropListener;
 
     Button chkUseDefaultForInsert;
+    Label useDefaultForInsertLabel;
     Button chkUseDefaultForUpdate;
+    Label useDefaultForUpdateLabel;
     Button chkUseDefaultForDelete;
+    Label useDefaultForDeleteLabel;
 
     private boolean bUseDefaultForInsert;
     private boolean bUseDefaultForUpdate;
@@ -422,7 +427,7 @@ public class TransformationObjectEditorPage
      */
     private void createUpdateTab( CTabFolder tabFolder ) {
         GridLayout glEditorGridLayout = new GridLayout();
-        glEditorGridLayout.numColumns = 1;
+        glEditorGridLayout.numColumns = 2;
 
         // create a composite to hold the controls and the textviewer
         sqlOuterUpdatePanel = new Composite(tabFolder, SWT.NONE);
@@ -432,9 +437,14 @@ public class TransformationObjectEditorPage
         // create/add the controls
         chkUseDefaultForUpdate = WidgetFactory.createCheckBox(sqlOuterUpdatePanel, USE_DEFAULT_CHECKBOX_TEXT, true);
         chkUseDefaultForUpdate.setToolTipText(USE_DEFAULT_CHECKBOX_TOOLTIP);
+        useDefaultForUpdateLabel = WidgetFactory.createLabel(sqlOuterUpdatePanel);
+        useDefaultForUpdateLabel.setText(Messages.DefaultUpdateMessageOK);
 
         sqlUpdateEditor = createEditorPanel(sqlOuterUpdatePanel, QueryValidator.UPDATE_TRNS);
         sqlUpdateEditor.setPanelType(UiConstants.SQLPanels.UPDATE_UPDATE);
+        GridData gd = new GridData(GridData.FILL_BOTH);
+        gd.horizontalSpan = 2;
+        sqlUpdateEditor.setLayoutData(gd);
 
         updateTab = new CTabItem(tabFolder, SWT.NONE);
         updateTab.setControl(sqlOuterUpdatePanel);
@@ -463,7 +473,7 @@ public class TransformationObjectEditorPage
      */
     private void createInsertTab( CTabFolder tabFolder ) {
         GridLayout glEditorGridLayout = new GridLayout();
-        glEditorGridLayout.numColumns = 1;
+        glEditorGridLayout.numColumns = 2;
         // create a composite to hold the controls and the textviewer
         sqlOuterInsertPanel = new Composite(tabFolder, SWT.NONE);
         sqlOuterInsertPanel.setLayout(glEditorGridLayout);
@@ -473,9 +483,14 @@ public class TransformationObjectEditorPage
         // create/add the controls
         chkUseDefaultForInsert = WidgetFactory.createCheckBox(sqlOuterInsertPanel, USE_DEFAULT_CHECKBOX_TEXT, true);
         chkUseDefaultForInsert.setToolTipText(USE_DEFAULT_CHECKBOX_TOOLTIP);
+        useDefaultForInsertLabel = WidgetFactory.createLabel(sqlOuterInsertPanel);
+        useDefaultForInsertLabel.setText(Messages.DefaultUpdateMessageOK);
 
         sqlInsertEditor = createEditorPanel(sqlOuterInsertPanel, QueryValidator.INSERT_TRNS);
         sqlInsertEditor.setPanelType(UiConstants.SQLPanels.UPDATE_INSERT);
+        GridData gd = new GridData(GridData.FILL_BOTH);
+        gd.horizontalSpan = 2;
+        sqlInsertEditor.setLayoutData(gd);
 
         insertTab = new CTabItem(tabFolder, SWT.NONE);
         insertTab.setControl(sqlOuterInsertPanel);
@@ -502,7 +517,7 @@ public class TransformationObjectEditorPage
      */
     private void createDeleteTab( CTabFolder tabFolder ) {
         GridLayout glEditorGridLayout = new GridLayout();
-        glEditorGridLayout.numColumns = 1;
+        glEditorGridLayout.numColumns = 2;
         // create a composite to hold the controls and the textviewer
         sqlOuterDeletePanel = new Composite(tabFolder, SWT.NONE);
         sqlOuterDeletePanel.setLayout(glEditorGridLayout);
@@ -512,9 +527,14 @@ public class TransformationObjectEditorPage
         // create/add the controls
         chkUseDefaultForDelete = WidgetFactory.createCheckBox(sqlOuterDeletePanel, USE_DEFAULT_CHECKBOX_TEXT, true);
         chkUseDefaultForDelete.setToolTipText(USE_DEFAULT_CHECKBOX_TOOLTIP);
+        useDefaultForDeleteLabel = WidgetFactory.createLabel(sqlOuterDeletePanel);
+        useDefaultForDeleteLabel.setText(Messages.DefaultUpdateMessageOK);
 
         sqlDeleteEditor = createEditorPanel(sqlOuterDeletePanel, QueryValidator.DELETE_TRNS);
         sqlDeleteEditor.setPanelType(UiConstants.SQLPanels.UPDATE_DELETE);
+        GridData gd = new GridData(GridData.FILL_BOTH);
+        gd.horizontalSpan = 2;
+        sqlDeleteEditor.setLayoutData(gd);
 
         deleteTab = new CTabItem(tabFolder, SWT.NONE);
         deleteTab.setControl(sqlOuterDeletePanel);
@@ -589,23 +609,14 @@ public class TransformationObjectEditorPage
      */
     private void removeCheckBoxListeners( Object item ) {
         if (item == insertTab) {
-//            if (!chkInsertEnabled.isDisposed()) {
-//                chkInsertEnabled.removeSelectionListener(checkBoxListener);
-//            }
             if (!chkUseDefaultForInsert.isDisposed()) {
                 chkUseDefaultForInsert.removeSelectionListener(checkBoxListener);
             }
         } else if (item == updateTab) {
-//            if (!chkUpdateEnabled.isDisposed()) {
-//                chkUpdateEnabled.removeSelectionListener(checkBoxListener);
-//            }
             if (!chkUseDefaultForUpdate.isDisposed()) {
                 chkUseDefaultForUpdate.removeSelectionListener(checkBoxListener);
             }
         } else if (item == deleteTab) {
-//            if (!chkDeleteEnabled.isDisposed()) {
-//                chkDeleteEnabled.removeSelectionListener(checkBoxListener);
-//            }
             if (!chkUseDefaultForDelete.isDisposed()) {
                 chkUseDefaultForDelete.removeSelectionListener(checkBoxListener);
             }
@@ -617,23 +628,14 @@ public class TransformationObjectEditorPage
      */
     private void addCheckBoxListeners( Object item ) {
         if (item == insertTab) {
-//            if (!chkInsertEnabled.isDisposed()) {
-//                chkInsertEnabled.addSelectionListener(checkBoxListener);
-//            }
             if (!chkUseDefaultForInsert.isDisposed()) {
                 chkUseDefaultForInsert.addSelectionListener(checkBoxListener);
             }
         } else if (item == updateTab) {
-//            if (!chkUpdateEnabled.isDisposed()) {
-//                chkUpdateEnabled.addSelectionListener(checkBoxListener);
-//            }
             if (!chkUseDefaultForUpdate.isDisposed()) {
                 chkUseDefaultForUpdate.addSelectionListener(checkBoxListener);
             }
         } else if (item == deleteTab) {
-//            if (!chkDeleteEnabled.isDisposed()) {
-//                chkDeleteEnabled.addSelectionListener(checkBoxListener);
-//            }
             if (!chkUseDefaultForDelete.isDisposed()) {
                 chkUseDefaultForDelete.addSelectionListener(checkBoxListener);
             }
@@ -1172,6 +1174,9 @@ public class TransformationObjectEditorPage
     		if( displayStatus != null ) {
     			toolTipText = displayStatus.getMessage();
     			displayImage = NOT_ALLOWED_IMAGE;
+    			useDefaultForInsertLabel.setText(Messages.DefaultUpdateMessageAmbigious);
+    		} else {
+    			useDefaultForInsertLabel.setText(Messages.DefaultUpdateMessageOK);
     		}
     	} else {
     		// Now we check for "insert" SQL errors and warnings
@@ -1210,6 +1215,9 @@ public class TransformationObjectEditorPage
     		if( displayStatus != null ) {
     			toolTipText = displayStatus.getMessage();
     			displayImage = NOT_ALLOWED_IMAGE;
+    			useDefaultForUpdateLabel.setText(Messages.DefaultUpdateMessageAmbigious);
+    		} else {
+    			useDefaultForUpdateLabel.setText(Messages.DefaultUpdateMessageOK);
     		}
     	} else {
     		// Now we check for "insert" SQL errors and warnings
@@ -1249,6 +1257,9 @@ public class TransformationObjectEditorPage
     		if( displayStatus != null ) {
     			toolTipText = displayStatus.getMessage();
     			displayImage = NOT_ALLOWED_IMAGE;
+    			useDefaultForDeleteLabel.setText(Messages.DefaultUpdateMessageAmbigious);
+    		} else {
+    			useDefaultForDeleteLabel.setText(Messages.DefaultUpdateMessageOK);
     		}
     	} else {
     		// Now we check for "insert" SQL errors and warnings
@@ -2339,10 +2350,19 @@ public class TransformationObjectEditorPage
                     // Set the UseDefault flag
                     if (cmdType == QueryValidator.INSERT_TRNS) {
                         TransformationHelper.setInsertSqlDefault(currentMappingRoot, true, false, this);
+                        if(  chkUseDefaultForInsert.getSelection() ) {
+                        	useDefaultForInsertLabel.setText(Messages.DefaultUpdateMessageOK);
+                        }
                     } else if (cmdType == QueryValidator.UPDATE_TRNS) {
                         TransformationHelper.setUpdateSqlDefault(currentMappingRoot, true, false, this);
+                        if(  chkUseDefaultForInsert.getSelection() ) {
+                        	useDefaultForUpdateLabel.setText(Messages.DefaultUpdateMessageOK);
+                        }
                     } else if (cmdType == QueryValidator.DELETE_TRNS) {
                         TransformationHelper.setDeleteSqlDefault(currentMappingRoot, true, false, this);
+                        if(  chkUseDefaultForInsert.getSelection() ) {
+                        	useDefaultForDeleteLabel.setText(Messages.DefaultUpdateMessageOK);
+                        }
                     }
                     SqlMappingRootCache.invalidateStatus(currentMappingRoot, true, this);
                     
@@ -2366,10 +2386,13 @@ public class TransformationObjectEditorPage
                 // Set the UseDefault flag
                 if (cmdType == QueryValidator.INSERT_TRNS) {
                     TransformationHelper.setInsertSqlDefault(currentMappingRoot, false, false, this);
+                    useDefaultForInsertLabel.setText(Messages.DefaultUpdateMessageOverride);
                 } else if (cmdType == QueryValidator.UPDATE_TRNS) {
                     TransformationHelper.setUpdateSqlDefault(currentMappingRoot, false, false, this);
+                    useDefaultForUpdateLabel.setText(Messages.DefaultUpdateMessageOverride);
                 } else if (cmdType == QueryValidator.DELETE_TRNS) {
                     TransformationHelper.setDeleteSqlDefault(currentMappingRoot, false, false, this);
+                    useDefaultForDeleteLabel.setText(Messages.DefaultUpdateMessageOverride);
                 }
                 // This gets the text from the EditorPanel and sets properties
                 SqlMappingRootCache.invalidateStatus(currentMappingRoot, true, this);

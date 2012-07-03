@@ -31,6 +31,7 @@ public class WebServiceUmlAspectFactoryImpl implements MetamodelAspectFactory {
             case WebServicePackage.INPUT: return new InputAspect(entity);
             case WebServicePackage.OUTPUT: return new OutputAspect(entity);
             case WebServicePackage.SAMPLE_MESSAGES: return new SampleMessagesAspect(entity);
+            case WebServicePackage.OPERATION_UPDATE_COUNT: return null; // enumeration
             default: return null;
         }
     }

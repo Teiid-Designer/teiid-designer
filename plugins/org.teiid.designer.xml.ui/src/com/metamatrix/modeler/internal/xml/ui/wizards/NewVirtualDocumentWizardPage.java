@@ -73,7 +73,6 @@ import com.metamatrix.modeler.ui.viewsupport.ModelingResourceFilter;
 import com.metamatrix.modeler.xml.IVirtualDocumentFragmentSource;
 import com.metamatrix.modeler.xml.PluginConstants;
 import com.metamatrix.modeler.xml.ui.ModelerXmlUiConstants;
-import com.metamatrix.modeler.xml.ui.ModelerXmlUiPlugin;
 import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
 import com.metamatrix.ui.internal.util.WidgetFactory;
 import com.metamatrix.ui.internal.viewsupport.StatusInfo;
@@ -304,8 +303,6 @@ class NewVirtualDocumentWizardPanel extends ScrolledComposite implements Modeler
     private static final String DATATYPE_OPTIONS = Util.getString("NewVirtualDocumentWizardPage.datatypeOptions"); //$NON-NLS-1$
     private static final String STRATEGY_OPTIONS = Util.getString("NewVirtualDocumentWizardPage.strategyOptions"); //$NON-NLS-1$
 
-    private static final String STRATEGY_PREF_KEY = "NewVirtualDocumentWizardPanel.defaultStrategy"; //$NON-NLS-1$
-
     private final static String BROWSE_SHORTHAND = "..."; //$NON-NLS-1$
     private final static int FILE_NAME_TEXT_WIDTH = (int)(Display.getCurrent().getBounds().width * .25);
     private static final int FILE_NAME_TEXT_HEIGHT = 16;
@@ -467,6 +464,11 @@ class NewVirtualDocumentWizardPanel extends ScrolledComposite implements Modeler
         strategyGroup.setText(STRATEGY_OPTIONS);
 
         MappingClassBuilderStrategy strategy = this.model.getMappingClassBuilderStrategy();
+        if(strategy==null) {
+        	strategy = MappingClassFactory.getDefaultStrategy();
+        }
+
+        boolean isCompositorStrategy = (strategy instanceof CompositorBasedBuilderStrategy);
 
         iterationStragetyButton = new Button(strategyGroup, SWT.RADIO);
         iterationStragetyButton.setText(MappingClassBuilderStrategy.iterationStrategyDescription);
@@ -474,13 +476,13 @@ class NewVirtualDocumentWizardPanel extends ScrolledComposite implements Modeler
         compositorStrategyButton = new Button(strategyGroup, SWT.RADIO);
         compositorStrategyButton.setText(MappingClassBuilderStrategy.compositorStrategyDescription);
 
-        if (strategy == null) {
-            iterationStragetyButton.setSelection(MappingClassFactory.getDefaultStrategy() instanceof IterationBasedBuilderStrategy);
+        if(isCompositorStrategy) {
+            compositorStrategyButton.setSelection(true);
+            iterationStragetyButton.setSelection(false);
         } else {
-            iterationStragetyButton.setSelection(strategy instanceof IterationBasedBuilderStrategy);
+        	compositorStrategyButton.setSelection(false);
+        	iterationStragetyButton.setSelection(true);
         }
-
-        compositorStrategyButton.setSelection(!iterationStragetyButton.getSelection());
 
         iterationStragetyButton.addSelectionListener(new SelectionAdapter() {
             @Override
@@ -499,8 +501,6 @@ class NewVirtualDocumentWizardPanel extends ScrolledComposite implements Modeler
                 if (compositorStrategyButton.getSelection()) {
                     model.setMappingClassBuilderStrategy(MappingClassBuilderStrategy.compositorStrategy);
                     MappingClassFactory.setDefaultStrategy(MappingClassBuilderStrategy.compositorStrategy);
-                    ModelerXmlUiPlugin.getDefault().getPreferenceStore().setValue(STRATEGY_PREF_KEY,
-                                                                                  MappingClassBuilderStrategy.compositorStrategyDescription);
                     updateComponentEnabledStates();
                 }
             }

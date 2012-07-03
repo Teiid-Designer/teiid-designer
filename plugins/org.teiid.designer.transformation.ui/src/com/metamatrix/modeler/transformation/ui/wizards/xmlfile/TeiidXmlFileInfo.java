@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IStatus;
@@ -24,33 +25,20 @@ import org.xml.sax.helpers.LocatorImpl;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.core.util.StringUtilities;
+import com.metamatrix.modeler.internal.transformation.util.SqlConstants;
 import com.metamatrix.modeler.transformation.ui.UiConstants;
 import com.metamatrix.modeler.transformation.ui.UiPlugin;
-import com.metamatrix.modeler.transformation.ui.wizards.file.TeiidColumnInfo;
 import com.metamatrix.modeler.transformation.ui.wizards.file.TeiidFileInfo;
 
 /**
  * Business object used to manage Teiid-specific XML Data File information used during import
  * 
  */
-public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants {
+public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants, SqlConstants {
 	private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(TeiidXmlFileInfo.class);
 	
-	public static final char DOT = '.';
-    public static final char COMMA = ',';
-    public static final char SPACE = ' ';
-    public static final char L_PAREN = '(';
-    public static final char R_PAREN = ')';
-    public static final char S_QUOTE = '\'';
-    public static final String AS = "AS"; //$NON-NLS-1$
-    public static final String COLUMNS = "COLUMNS"; //$NON-NLS-1$
-    public static final String PATH = "PATH"; //$NON-NLS-1$
-    public static final String DEFAULT = "DEFAULT"; //$NON-NLS-1$
-    public static final String FOR_ORDINALITY = "FOR ORDINALITY"; //$NON-NLS-1$
-    public static final String DEFAULT_XQUERY = "/"; //$NON-NLS-1$
-    public static final String GET = "GET"; //$NON-NLS-1$
+
     public static final String NULL = "null"; //$NON-NLS-1$
-    public static final String XMLNAMESPACES = "XMLNAMESPACES";  //$NON-NLS-1$
     private static final String XSI_NAMESPACE_PREFIX = "xsi"; //$NON-NLS-1$
 	
     private static String getString( final String id ) {
@@ -78,6 +66,11 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants {
 	private String rootPath = StringUtilities.EMPTY_STRING;
 	
 	/**
+	 * Common Root path
+	 */
+	private String commonRootPath = StringUtilities.EMPTY_STRING;
+	
+	/**
 	 * Indicator for the import processor to attempt to create a View Table given the info in this object.
 	 */
 	private boolean doProcess;
@@ -88,9 +81,9 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants {
 	private String[] cachedFirstLines;
 	
 	/**
-	 * The  <code>Collection</code> of <code>TeiidColumnInfo</code> objects parsed from the defined header information.
+	 * The  <code>Collection</code> of <code>TeiidXmlColumnInfo</code> objects parsed from the defined header information.
 	 */
-	private Collection<TeiidColumnInfo> columnInfoList;
+	private Collection<TeiidXmlColumnInfo> columnInfoList;
  	
 	
 	private XmlElement rootNode;
@@ -135,12 +128,16 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants {
 		this.cachedFirstLines = info.cachedFirstLines;
 		this.numberOfLinesInFile = info.getNumberOfLinesInFile();
 		this.rootPath = info.getRootPath(); 
-		this.columnInfoList = new ArrayList<TeiidColumnInfo>();
-		for( TeiidColumnInfo colInfo : info.getColumnInfoList() ) {
-			this.columnInfoList.add(new TeiidColumnInfo(colInfo.getName(), 
+		this.columnInfoList = new ArrayList<TeiidXmlColumnInfo>();
+		for( TeiidXmlColumnInfo colInfo : info.getColumnInfoList() ) {
+			this.columnInfoList.add(new TeiidXmlColumnInfo(
+						colInfo.getXmlElement(),
+						colInfo.getXmlAttribute(),
+						colInfo.getSymbolName(), 
 						colInfo.getOrdinality(), 
 						colInfo.getDatatype(), 
 						colInfo.getDefaultValue(),
+						getRootPath(),
 						colInfo.getFullXmlPath()));
 		}
 		
@@ -157,7 +154,7 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants {
 	private void initialize() {
 		setStatus(Status.OK_STATUS);
 		this.cachedFirstLines = new String[0];
-		this.columnInfoList = new ArrayList<TeiidColumnInfo>();
+		this.columnInfoList = new ArrayList<TeiidXmlColumnInfo>();
 		this.namespaceMap = new HashMap<String, String>();
 		
 		parsingStatus = parseXmlFile();
@@ -203,7 +200,7 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants {
 		this.rootPath = path;
 		
 		// Need to walk through the ColumnInfo objects and have them re-set their paths
-		for( TeiidColumnInfo colInfo : getColumnInfoList() ) {
+		for( TeiidXmlColumnInfo colInfo : getColumnInfoList() ) {
 			colInfo.setRootPath(this.rootPath);
 		}
 		
@@ -259,53 +256,36 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants {
 	
 	/**
 	 * 
-	 * @return columnInfoList the <code>TeiidColumnInfo[]</code> array parsed from the header in the data file
+	 * @return columnInfoList the <code>TeiidXmlColumnInfo[]</code> array parsed from the header in the data file
 	 */
-	public TeiidColumnInfo[] getColumnInfoList() {
-		return this.columnInfoList.toArray(new TeiidColumnInfo[this.columnInfoList.size()]);
+	public TeiidXmlColumnInfo[] getColumnInfoList() {
+		return this.columnInfoList.toArray(new TeiidXmlColumnInfo[this.columnInfoList.size()]);
 	}
 	
-	public void addColumn(String name, boolean ordinality, String datatype, String defaultValue, String path) {
-		this.columnInfoList.add(new TeiidColumnInfo(name, ordinality, datatype, defaultValue, path));
-		validate();
-	}
-	
-	public TeiidColumnInfo addColumn(String name, boolean ordinality, String datatype, String defaultValue, String rootPath, String fullPath) {
-		TeiidColumnInfo newColumnInfo = new TeiidColumnInfo(name, ordinality, datatype, defaultValue, fullPath);
-		if( rootPath != null ) {
-			newColumnInfo.setRootPath(rootPath);
+	public void addNewColumn(Object obj) {
+		if( obj instanceof XmlElement ) {
+			TeiidXmlColumnInfo newColumnInfo = new TeiidXmlColumnInfo((XmlElement)obj, getRootPath());
+			this.columnInfoList.add(newColumnInfo);
+		} else if( obj instanceof XmlAttribute ) {
+			TeiidXmlColumnInfo newColumnInfo = new TeiidXmlColumnInfo((XmlAttribute)obj, getRootPath());
+			this.columnInfoList.add(newColumnInfo);
 		}
-		this.columnInfoList.add(newColumnInfo);
 		validate();
-		
-		return newColumnInfo;
 	}
-	
-	public TeiidColumnInfo addColumn(String name, boolean ordinality, String datatype, String defaultValue, String rootPath, XmlElement element) {
-		TeiidColumnInfo newColumnInfo = new TeiidColumnInfo(name, ordinality, datatype, defaultValue, element.getFullPath());
-		newColumnInfo.setXmlElement(element);
-		if( rootPath != null ) {
-			newColumnInfo.setRootPath(rootPath);
-		}
-		this.columnInfoList.add(newColumnInfo);
-		validate();
-		
-		return newColumnInfo;
-	}
-	
-	public void removeColumn(TeiidColumnInfo theInfo) {
+
+	public void removeColumn(TeiidXmlColumnInfo theInfo) {
 		this.columnInfoList.remove(theInfo);
 		validate();
 	}
 	
-	public void columnChanged(TeiidColumnInfo columnInfo) {
+	public void columnChanged(TeiidXmlColumnInfo columnInfo) {
 		validate();
 	}
 	
 	public void validate() {
 		// Validate XQuery Root Path Expression
 		if( this.getRootPath() == null || this.getRootPath().length() == 0 ) {
-			setStatus(new Status(IStatus.ERROR, PLUGIN_ID, getString("status.xqueryExpressionNullOrEmpty"))); //$NON-NLS-1$
+			setStatus(new Status(IStatus.ERROR, PLUGIN_ID, getString("status.rootPathUndefined"))); //$NON-NLS-1$
 			return;
 		}
 		
@@ -318,14 +298,14 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants {
 		
 		// Validate Column names
 		// Check for ERRORS FIRST
-		for( TeiidColumnInfo info : this.getColumnInfoList()) {
+		for( TeiidXmlColumnInfo info : this.getColumnInfoList()) {
 			if( info.getStatus().getSeverity() == IStatus.ERROR ) {
 				this.setStatus(info.getStatus());
 				return;
 			}
 		}
 		
-		for( TeiidColumnInfo info : this.getColumnInfoList()) {
+		for( TeiidXmlColumnInfo info : this.getColumnInfoList()) {
 			if( info.getStatus().getSeverity() != IStatus.OK ) {
 				this.setStatus(info.getStatus());
 				return;
@@ -379,7 +359,7 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants {
 		return this.numberOfLinesInFile;
 	}
 	
-	public void setOrdinality(TeiidColumnInfo columnInfo, boolean value) {
+	public void setOrdinality(TeiidXmlColumnInfo columnInfo, boolean value) {
 		// Need to synchronize the setting of this value for a column info.
 		// Basically only ONE Column can be set to TRUE .... AND ... the datatype MUST be an INTEGER
 		
@@ -387,7 +367,7 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants {
 			// Only need to set the columnInfo value
 			columnInfo.setOrdinality(false);
 		} else  {
-			for( TeiidColumnInfo info : this.columnInfoList) {
+			for( TeiidXmlColumnInfo info : this.columnInfoList) {
 				if( !(info == columnInfo) ) {
 					if( info.getOrdinality() ) {
 						info.setOrdinality(false);
@@ -395,8 +375,8 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants {
 				}
 			}
 			
-			if( ! columnInfo.getDatatype().equalsIgnoreCase(TeiidColumnInfo.INTEGER_DATATYPE) ) {
-				columnInfo.setDatatype(TeiidColumnInfo.INTEGER_DATATYPE);
+			if( ! columnInfo.getDatatype().equalsIgnoreCase(TeiidXmlColumnInfo.INTEGER_DATATYPE) ) {
+				columnInfo.setDatatype(TeiidXmlColumnInfo.INTEGER_DATATYPE);
 			}
 			columnInfo.setOrdinality(true);
 		}
@@ -404,19 +384,19 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants {
 	}
 	
 	
-	public void moveColumnUp(TeiidColumnInfo columnInfo) {
+	public void moveColumnUp(TeiidXmlColumnInfo columnInfo) {
 		int startIndex = getColumnIndex(columnInfo);
 		
 		// 
 		if( startIndex > 0 ) {
 			// Make Copy of List & get columnInfo of startIndex-1
-			TeiidColumnInfo priorInfo = getColumnInfoList()[startIndex-1];
-			TeiidColumnInfo[] infos = getColumnInfoList();
+			TeiidXmlColumnInfo priorInfo = getColumnInfoList()[startIndex-1];
+			TeiidXmlColumnInfo[] infos = getColumnInfoList();
 			infos[startIndex-1] = columnInfo;
 			infos[startIndex] = priorInfo;
 			
-			Collection<TeiidColumnInfo> colInfos = new ArrayList<TeiidColumnInfo>(infos.length);
-			for( TeiidColumnInfo info : infos) {
+			Collection<TeiidXmlColumnInfo> colInfos = new ArrayList<TeiidXmlColumnInfo>(infos.length);
+			for( TeiidXmlColumnInfo info : infos) {
 				colInfos.add(info);
 			}
 			
@@ -424,17 +404,17 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants {
 		}
 	}
 	
-	public void moveColumnDown(TeiidColumnInfo columnInfo) {
+	public void moveColumnDown(TeiidXmlColumnInfo columnInfo) {
 		int startIndex = getColumnIndex(columnInfo);
 		if( startIndex < (getColumnInfoList().length-1) ) {
 			// Make Copy of List & get columnInfo of startIndex-1
-			TeiidColumnInfo afterInfo = getColumnInfoList()[startIndex+1];
-			TeiidColumnInfo[] infos = getColumnInfoList();
+			TeiidXmlColumnInfo afterInfo = getColumnInfoList()[startIndex+1];
+			TeiidXmlColumnInfo[] infos = getColumnInfoList();
 			infos[startIndex+1] = columnInfo;
 			infos[startIndex] = afterInfo;
 			
-			Collection<TeiidColumnInfo> colInfos = new ArrayList<TeiidColumnInfo>(infos.length);
-			for( TeiidColumnInfo info : infos) {
+			Collection<TeiidXmlColumnInfo> colInfos = new ArrayList<TeiidXmlColumnInfo>(infos.length);
+			for( TeiidXmlColumnInfo info : infos) {
 				colInfos.add(info);
 			}
 			
@@ -442,17 +422,17 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants {
 		}
 	}
 	
-	public boolean canMoveUp(TeiidColumnInfo columnInfo) {
+	public boolean canMoveUp(TeiidXmlColumnInfo columnInfo) {
 		return getColumnIndex(columnInfo) > 0;
 	}
 	
-	public boolean canMoveDown(TeiidColumnInfo columnInfo) {
+	public boolean canMoveDown(TeiidXmlColumnInfo columnInfo) {
 		return getColumnIndex(columnInfo) < getColumnInfoList().length-1;
 	}
 	
-	private int getColumnIndex(TeiidColumnInfo columnInfo) {
+	private int getColumnIndex(TeiidXmlColumnInfo columnInfo) {
 		int i=0;
-		for( TeiidColumnInfo colInfo : getColumnInfoList() ) {
+		for( TeiidXmlColumnInfo colInfo : getColumnInfoList() ) {
 			if( colInfo == columnInfo) {
 				return i;
 			}
@@ -528,8 +508,8 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants {
     	StringBuffer sb = new StringBuffer();
     	int i=0;
     	int nColumns = getColumnInfoList().length;
-    	for( TeiidColumnInfo columnInfo : getColumnInfoList()) {
-    		String name = columnInfo.getName();
+    	for( TeiidXmlColumnInfo columnInfo : getColumnInfoList()) {
+    		String name = columnInfo.getSymbolName();
     		sb.append(alias).append(DOT).append(name).append(SPACE).append(AS).append(SPACE).append(name);
     		
     		if(i < (nColumns-1)) {
@@ -561,11 +541,11 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants {
     	
     	sb = new StringBuffer();
     	i=0;
-    	for( TeiidColumnInfo columnInfo : getColumnInfoList()) {
+    	for( TeiidXmlColumnInfo columnInfo : getColumnInfoList()) {
     		if( columnInfo.getOrdinality() ) {
-    			sb.append(columnInfo.getName()).append(SPACE).append(FOR_ORDINALITY);
+    			sb.append(columnInfo.getSymbolName()).append(SPACE).append(FOR_ORDINALITY);
     		} else {
-	    		sb.append(columnInfo.getName()).append(SPACE).append(columnInfo.getDatatype());
+	    		sb.append(columnInfo.getSymbolName()).append(SPACE).append(columnInfo.getDatatype());
 	    		
 	    		String defValue = columnInfo.getDefaultValue();
 	    		if( defValue != null && defValue.length() > 0) {
@@ -621,6 +601,10 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants {
     
     public XmlElement getRootNode() {
     	return this.rootNode;
+    }
+    
+    public String getCommonRootPath() {
+    	return this.commonRootPath;
     }
     
     public IStatus getParsingStatus() {
@@ -682,7 +666,62 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants {
 			String message = getString("noRootNodeParsingError"); //$NON-NLS-1$
 			return new Status(IStatus.ERROR, UiConstants.PLUGIN_ID, message);
 		}
+		
+		determineCommonRootPath();
+		
+		setRootPath(this.commonRootPath);
 
 		return Status.OK_STATUS;
     }
+    
+	private void determineCommonRootPath(){
+		StringBuilder commonRoot = new StringBuilder();
+		
+		List<String> segmentList = new ArrayList();
+		segmentList.add(rootNode.getFullPath());
+		for( Object node : rootNode.getChildrenDTDElements() ) {
+			addChildPaths((XmlElement)node, segmentList);
+		}
+		
+		//We parse paths to get all segments. We need to find the shortest
+		//path up front, since we cannot have a common root greater than
+		//the shortest path.
+		String[][] segments = new String[segmentList.size()][];
+		int shortestPathLength = 0;
+		for(int i = 0; i < segmentList.size(); i++){
+			segments[i] = segmentList.get(i).split("/"); //$NON-NLS-1$
+			if (i==0) shortestPathLength = segments[i].length;
+			if (shortestPathLength>segments[i].length){
+				shortestPathLength = segments[i].length;
+			}
+		}
+		
+		for(int j = 0; j < shortestPathLength; j++){
+			String thisSegment = segments[0][j]; 
+			boolean allMatched = true; 
+			for(int i = 0; i < segments.length && allMatched; i++){ 
+				if(segments[i].length < j){
+					allMatched = false; 
+					break; 
+				}
+				allMatched &= segments[i][j].equals(thisSegment); 
+			}
+			if(allMatched){ 
+				commonRoot.append("/").append(thisSegment) ; //$NON-NLS-1$
+			}else{
+				break;
+			}
+		}
+		//Change any double slashes to single slashes
+		commonRoot = new StringBuilder(commonRoot.toString().replaceAll("//", "/")); //$NON-NLS-1$ //$NON-NLS-2$
+		
+		commonRootPath = commonRoot.toString();
+	}
+	
+	private void addChildPaths(XmlElement element, List<String> segmentList ) {
+		segmentList.add(element.getFullPath());
+		for( Object node : element.getChildrenDTDElements() ) {
+			addChildPaths((XmlElement)node, segmentList);
+		}
+	}
 }

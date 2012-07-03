@@ -54,6 +54,7 @@ import com.metamatrix.modeler.internal.ui.actions.DeleteResourceAction;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelerUiViewUtils;
 import com.metamatrix.modeler.internal.webservice.WebServiceModelProducer;
 import com.metamatrix.modeler.internal.webservice.ui.IInternalUiConstants;
+import com.metamatrix.modeler.internal.webservice.ui.wizard.WsdlSelectionPage.EditableNameField;
 import com.metamatrix.modeler.ui.UiPlugin;
 import com.metamatrix.modeler.ui.product.IModelerProductContexts.Metamodel;
 import com.metamatrix.modeler.webservice.IWebServiceModelBuilder;
@@ -208,7 +209,7 @@ public class WsdlFileSystemImportWizard extends AbstractWizard implements IImpor
         this.builder.setSaveAllBeforeFinish(true);
 
         // construct pages
-        this.wsdlSelectionPage = new WsdlSelectionPage(this.builder, true);
+        this.wsdlSelectionPage = new WsdlSelectionPage(this.builder, EditableNameField.EDITABLE);
         wsdlSelectionPage.setPageComplete(false);
         addPage(wsdlSelectionPage);
 
@@ -233,7 +234,6 @@ public class WsdlFileSystemImportWizard extends AbstractWizard implements IImpor
 
         // give the WSDL selection page the current workspace selection
         ((WsdlSelectionPage)this.wsdlSelectionPage).setInitialSelection(theSelection);
-        ((WsdlSelectionPage)this.wsdlSelectionPage).setModelLocationPath(theModelPath);
     }
 
     /**

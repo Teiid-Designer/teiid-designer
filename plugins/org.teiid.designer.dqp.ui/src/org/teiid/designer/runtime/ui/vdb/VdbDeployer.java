@@ -165,8 +165,8 @@ public class VdbDeployer {
                     String modelName = modelEntry.getName().toFile().getName();
                     monitor.subTask(UTIL.getString(PREFIX + "checkModelTypeTask", modelName)); //$NON-NLS-1$
                     boolean autoCreate = false; // based on DS name and preference value
-                    ModelType modelType = modelEntry.getType();
-                    boolean sourceModel = (modelType == ModelType.PHYSICAL_LITERAL);
+                    String modelType = modelEntry.getType();
+                    boolean sourceModel = (modelType.equalsIgnoreCase(ModelType.PHYSICAL_LITERAL.getName()));
 
                     // only source models have a data source and translator
                     if (!sourceModel) {

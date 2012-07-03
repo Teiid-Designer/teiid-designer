@@ -21,6 +21,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
+import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.AttributeInfo;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.ColumnInfo;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.OperationsDetailsPage;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.ProcedureInfo;
@@ -112,18 +113,33 @@ public class ElementsInfoPanel {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				ColumnInfo info = editElementsPanel.getSelectedColumn();
-				if (info != null) {
-					if( type == ProcedureInfo.TYPE_BODY ) {
-						detailsPage.getProcedureGenerator().getRequestInfo().removeBodyColumn(info);
-					} else {
-						detailsPage.getProcedureGenerator().getRequestInfo().removeHeaderColumn(info);
+				Object selectedObject = editElementsPanel.getSelectedObject();
+				if( selectedObject instanceof ColumnInfo) {
+					ColumnInfo info = (ColumnInfo)selectedObject;
+					if (info != null) {
+						if( type == ProcedureInfo.TYPE_BODY ) {
+							detailsPage.getProcedureGenerator().getRequestInfo().removeBodyColumn(info);
+						} else {
+							detailsPage.getProcedureGenerator().getRequestInfo().removeHeaderColumn(info);
+						}
+	
+						deleteButton.setEnabled(false);
+						editElementsPanel.selectRow(-1);
+						editElementsPanel.refresh();
+						notifyColumnDataChanged();
 					}
-
-					deleteButton.setEnabled(false);
-					editElementsPanel.selectRow(-1);
-					editElementsPanel.refresh();
-					notifyColumnDataChanged();
+				} else if( selectedObject instanceof AttributeInfo) {
+					AttributeInfo info = (AttributeInfo)selectedObject;
+					if (info != null) {
+						ColumnInfo parentColumnInfo = info.getColumnInfo();
+						parentColumnInfo.removeAttributeInfo(info);
+	
+						deleteButton.setEnabled(false);
+						editElementsPanel.selectRow(-1);
+						editElementsPanel.refresh();
+						
+						notifyColumnDataChanged();
+					}
 				}
 			}
 
@@ -194,35 +210,30 @@ public class ElementsInfoPanel {
 			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
 				IStructuredSelection sel = (IStructuredSelection) event.getSelection();
-
-				if (sel.isEmpty()) {
-					deleteButton.setEnabled(false);
-					upButton.setEnabled(false);
-					downButton.setEnabled(false);
-				} else {
-					boolean enable = true;
+				deleteButton.setEnabled(false);
+				upButton.setEnabled(false);
+				downButton.setEnabled(false);
+				
+				if (! sel.isEmpty()) {
+					
 					Object[] objs = sel.toArray();
-					ColumnInfo columnInfo = null;
-					for (Object obj : objs) {
-						if (!(obj instanceof ColumnInfo)) {
-							enable = false;
-							break;
-						} else {
-							columnInfo = (ColumnInfo) obj;
+
+					if (objs[0] instanceof ColumnInfo) {
+						boolean enable = true;
+						ColumnInfo columnInfo = (ColumnInfo) objs[0];
+						
+						deleteButton.setEnabled(true);
+						if (enable) {
+							if( type == ProcedureInfo.TYPE_BODY ) {
+	    						upButton.setEnabled(procedureInfo.canMoveBodyColumnUp(columnInfo));
+	    						downButton.setEnabled(procedureInfo.canMoveBodyColumnDown(columnInfo));
+							} else {
+								upButton.setEnabled(procedureInfo.canMoveHeaderColumnUp(columnInfo));
+	    						downButton.setEnabled(procedureInfo.canMoveHeaderColumnDown(columnInfo));
+							}
 						}
-					}
-					if (objs.length == 0) {
-						enable = false;
-					}
-					deleteButton.setEnabled(enable);
-					if (enable) {
-						if( type == ProcedureInfo.TYPE_BODY ) {
-    						upButton.setEnabled(procedureInfo.canMoveBodyColumnUp(columnInfo));
-    						downButton.setEnabled(procedureInfo.canMoveBodyColumnDown(columnInfo));
-						} else {
-							upButton.setEnabled(procedureInfo.canMoveHeaderColumnUp(columnInfo));
-    						downButton.setEnabled(procedureInfo.canMoveHeaderColumnDown(columnInfo));
-						}
+					} else if( objs[0] instanceof AttributeInfo) {
+						deleteButton.setEnabled(true);
 					}
 
 				}

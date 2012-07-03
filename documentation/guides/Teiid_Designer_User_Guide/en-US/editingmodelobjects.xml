@@ -12,7 +12,7 @@
 	
 	<section id="create-model-objects-section">
 		<title>Creating New Model Objects</title>
-		<para>As discussed in the introduction, <xref linkend="metadata-models" /> provide
+		<para>As discussed in the introduction, <xref linkend="what-is-modeler" />, Teiid Designer provides
 			a framework to model various types of metadata.
 			Each metamodel type has a set of parent-child relationships that establish constraints on what can be created and where.
 			You cannot, for example, create a column attribute in a stored procedure, nor can you create a mapping 
@@ -421,9 +421,8 @@
 		</para>		
 		<para> These actions are presented in Teiid Designer's main <emphasis role="bold">Edit</emphasis> menu and also
 			in the right-click context menus for model objects selected in the
-			<emphasis role="bold"><xref linkend="model-explorer-view" /></emphasis>, 
-			<emphasis role="bold"><xref linkend="diagram-editor-section" /></emphasis> and 
-			<emphasis role="bold"><xref linkend="table-editor-section" /></emphasis>.</para>
+			<xref linkend="model-explorer-view" />, <xref linkend="diagram-editor-section" /> and 
+			<xref linkend="table-editor-section" />.</para>
 
 		<!-- ####### MODELING SUB-MENU ######################################### -->
 		<formalpara id="modeling-sub-menu-section">
@@ -452,32 +451,31 @@
 			</figure>
 		
 		<para>Teiid Designer also provides specialized object editors to handle
-			complex model objects and their unique properties. These objects
-			include:</para>
+			complex model objects and their unique properties. These editors include:</para>
 		<itemizedlist>
 			<listitem>
 				<para>
-					<emphasis role="bold"><xref linkend="transformation-editor-section" /></emphasis>
+					<xref linkend="transformation-editor-section" />
 				</para>
 			</listitem>
 			<listitem>
 				<para>
-					<emphasis role="bold"><xref linkend="input-set-editor-section" /></emphasis>
+					<xref linkend="input-set-editor-section" />
 				</para>
 			</listitem>
 			<listitem>
 				<para>
-					<emphasis role="bold"><xref linkend="choice-editor-section" /></emphasis>
+					<xref linkend="choice-editor-section" />
 				</para>
 			</listitem>
 			<listitem>
 				<para>
-					<emphasis role="bold"><xref linkend="recursion-editor-section" /></emphasis>
+					<xref linkend="recursion-editor-section" />
 				</para>
 			</listitem>
 			<listitem>
 				<para>
-					<emphasis role="bold"><xref linkend="operation-editor-section" /></emphasis>
+					<xref linkend="operation-editor-section" />
 				</para>
 			</listitem>
 		</itemizedlist>
@@ -1633,7 +1631,7 @@
 				transformation query as recursive, and specify the recursion limit
 				properties.</para>
 			<section>
-				<title>The Editor</title>
+				<title>The Recursion Editor</title>
 				<para>The Recursion Editor lets you enable and limit recursion. The Recursion Editor button only displays on 
 				mapping classes, which have recursive patterns. For example, if you have an element named Employee which 
 				contains a element named Supervisor which itself contains an Employee element nested within it, you might need to
@@ -1799,7 +1797,7 @@
 				</listitem>
 			</itemizedlist>
 		</para>
-		<section>
+		<section id="create-new-med-section">
 			<title>Create New MED</title>
 			<para>To create a new MED select the <emphasis role="bold">File > New > Other...</emphasis> action to display the 
 				New wizard dialog. Select the <emphasis role="bold">Teiid Designer > Teiid Model Extension Defn</emphasis> option which displays the
@@ -1816,7 +1814,7 @@
 				</mediaobject>
 			</figure>
 		</section>
-		<section>
+		<section id="edit-med-section">
 			<title>Edit MED</title>
 			<para>To edit an MED file select an existing '.mxd' file in your workspace and right-click select the <emphasis role="bold">Open</emphasis> action.
 				The MED Editor will be opened to allow editing (See <xref linkend="model-extension-definition-editor-section" />).
@@ -1862,7 +1860,7 @@
 				</figure>
 			 </para>
 		</section>
-		<section>
+		<section id="extending-models-with-meds-section">
 			<title>Extending Models With MEDs</title>
 			<para>MEDs must be applied to a model in order for their extension properties to be available to that model's model objects. 
 				To manage the applied MEDs for a specific model select the model and right-click select the 
@@ -1897,7 +1895,7 @@
                 		</note>
 			</para>
 		</section>
-		<section>
+		<section id="setting-med-properties-section">
 			<title>Setting Extended Property Values</title>
 			<para>Extension properties are user-defined properties available to any extended model object via the Properties View.
 				As shown below, all extension properties are available up under the "Extension" category and are prefixed 

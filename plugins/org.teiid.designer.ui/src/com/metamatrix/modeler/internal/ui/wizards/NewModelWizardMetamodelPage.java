@@ -13,6 +13,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Properties;
 import java.util.TreeSet;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IProject;
@@ -58,6 +59,7 @@ import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.ui.UiConstants;
 import com.metamatrix.modeler.ui.UiPlugin;
 import com.metamatrix.modeler.ui.product.IModelerProductContexts;
+import com.metamatrix.modeler.ui.viewsupport.DesignerPropertiesUtil;
 import com.metamatrix.modeler.ui.viewsupport.ModelingResourceFilter;
 import com.metamatrix.modeler.ui.wizards.NewModelWizardInput;
 import com.metamatrix.ui.internal.InternalUiConstants;
@@ -134,17 +136,20 @@ public class NewModelWizardMetamodelPage extends WizardPage
     private String initialFileName;
     private boolean metamodelWasFoundAndSelected = false;
     private boolean builderAutoSelected = false;
+    
+    private Properties designerProperties;
 
     /**
      * Constructor for NewModelWizardSpecifyModelPage
      * 
      * @param pageName
      */
-    public NewModelWizardMetamodelPage( ISelection selection ) {
+    public NewModelWizardMetamodelPage( ISelection selection, Properties properties) {
         super("specifyModelPage"); //$NON-NLS-1$
         setTitle(Util.getString("NewModelWizard.title")); //$NON-NLS-1$
         setDescription(Util.getString("NewModelWizard.specifyModelDesc")); //$NON-NLS-1$
         this.selection = selection;
+        this.designerProperties = properties;
     }
 
     /**
@@ -389,6 +394,16 @@ public class NewModelWizardMetamodelPage extends WizardPage
 
         if (folder != null && containerText != null) {
             containerText.setText(folder.getFullPath().makeRelative().toString());
+            if( this.designerProperties != null ) {
+            	DesignerPropertiesUtil.setProjectName(this.designerProperties, folder.getProject().getName());
+            }
+            IPath folderPath = folder.getProjectRelativePath();
+            
+            if( folderPath.segmentCount() == 1 && folderPath.toString().equals("sources") ) { //$NON-NLS-1$
+            	DesignerPropertiesUtil.setSourcesFolderName(this.designerProperties, "sources"); //$NON-NLS-1$
+            } else if( folderPath.segmentCount() == 1 && folderPath.toString().equals("views") ) { //$NON-NLS-1$
+                DesignerPropertiesUtil.setViewsFolderName(this.designerProperties, "views"); //$NON-NLS-1$
+            }
         }
 
         updateStatusMessage();
@@ -796,6 +811,27 @@ public class NewModelWizardMetamodelPage extends WizardPage
             setDescription(Util.getStringOrKey(msgId));
             setTitle(Util.getString("NewModelWizard.singleModelTypeTitle", initialMetamodelClass)); //$NON-NLS-1$
         }
+        
+    	// Check designer properties
+    	if( this.designerProperties != null ) {
+        	IContainer container = DesignerPropertiesUtil.getProject(designerProperties);
+        	if( initialModelType != null && initialModelType.getLiteral().equalsIgnoreCase(ModelType.PHYSICAL_LITERAL.toString())) {
+        		IContainer srcsFolder = DesignerPropertiesUtil.getSourcesFolder(this.designerProperties);
+        		if( srcsFolder != null ) {
+        			container = srcsFolder;
+        		}
+        	} else if( initialModelType != null && initialModelType.getLiteral().equalsIgnoreCase(ModelType.PHYSICAL_LITERAL.toString())) {
+        		IContainer viewsFolder = DesignerPropertiesUtil.getViewsFolder(this.designerProperties);
+        		if( viewsFolder != null ) {
+        			container = viewsFolder;
+        		}
+        	}
+        	if( container != null ) {
+        		if (containerText != null) {
+        			containerText.setText(container.getFullPath().makeRelative().toString());
+        		}
+        	}
+    	}
     }
 
     public void setNewModelInput( NewModelWizardInput newModelInput ) {

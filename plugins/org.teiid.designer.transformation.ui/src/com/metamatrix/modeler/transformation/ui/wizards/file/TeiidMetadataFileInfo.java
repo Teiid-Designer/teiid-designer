@@ -211,7 +211,7 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants 
 		this.numberOfLinesInFile = info.getNumberOfLinesInFile();
 		this.columnInfoList = new ArrayList<TeiidColumnInfo>();
 		for( TeiidColumnInfo colInfo : info.getColumnInfoList() ) {
-			this.columnInfoList.add(new TeiidColumnInfo(colInfo.getName(), colInfo.getDatatype(), colInfo.getWidth()));
+			this.columnInfoList.add(new TeiidColumnInfo(colInfo.getSymbolName(), colInfo.getDatatype(), colInfo.getWidth()));
 		}
 		
 		setViewTableName(info.getViewTableName());
@@ -467,7 +467,7 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants 
 		
 		if( this.columnInfoList.size() == 1 ) {
 			// COULD HAVE ONE COLUMN, SO VALIDATE
-			String message = TeiidMetadataFileInfo.validator.checkValidName(this.columnInfoList.iterator().next().getName());
+			String message = TeiidMetadataFileInfo.validator.checkValidName(this.columnInfoList.iterator().next().getSymbolName());
 			if( message != null ) {
 				setStatus(new Status(IStatus.ERROR, PLUGIN_ID, getString("status.noHeaderFound"))); //$NON-NLS-1$
 				return;
@@ -859,7 +859,7 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants 
     	int i=0;
     	int nColumns = getColumnInfoList().length;
     	for( TeiidColumnInfo columnStr : getColumnInfoList()) {
-    		sb.append(alias).append(DOT).append(columnStr.getName());
+    		sb.append(alias).append(DOT).append(columnStr.getSymbolName());
     		
     		if(i < (nColumns-1)) {
     			sb.append(COMMA).append(SPACE);
@@ -871,7 +871,7 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants 
     	sb = new StringBuffer();
     	i=0;
     	for( TeiidColumnInfo columnStr : getColumnInfoList()) {
-    		sb.append(columnStr.getName()).append(SPACE).append(columnStr.getDatatype());
+    		sb.append(columnStr.getSymbolName()).append(SPACE).append(columnStr.getDatatype());
 			if( isFixedWidthColumns()) {
 				sb.append(SPACE).append(WIDTH).append(SPACE).append(Integer.toString(columnStr.getWidth()));
 			}
@@ -909,7 +909,7 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants 
     			sb.append(SPACE).append(Integer.toString(getHeaderLineNumber()));
     		}
     	}
-    	if( doIncludeSkip() && getFirstDataRow() > 1 ) {
+    	if( getFirstDataRow() > 1 && (doIncludeSkip() || this.isFixedWidthColumns()) ) {
     		sb.append(SPACE).append("SKIP"); //$NON-NLS-1$
     		sb.append(SPACE).append(Integer.toString(getFirstDataRow()-1));
     	}

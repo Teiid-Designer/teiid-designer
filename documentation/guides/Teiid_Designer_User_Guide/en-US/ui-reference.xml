@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<chapter id="ui-reference-chapter">
+<appendix id="ui-reference-appendix">
 	<title>Teiid Designer Ui Reference</title>
 	<section id="teiid-designer-perspectives-section">
 		<title>Teiid Designer Perspectives</title>
 		
 		<!-- <para><emphasis role="bold">Go To:  <ulink url="index.html">Table of Contents</ulink></emphasis></para>  -->
 		
-		<para>Teiid Designer utilizes <ulink url="http://www.eclipse.org">Eclipse's</ulink> Workbench environment
-			which controls visual layout via perspectives. A perspective defines
+		<para>Teiid Designer utilizes the <ulink url="http://www.eclipse.org">Eclipse</ulink> Workbench environment
+			which controls visual layout via perspectives. A <emphasis role="bold">Perspective</emphasis> defines
 			the initial set and layout of views and editors. Within the
 			application window, each perspective shares the same set of editors.
 			Each perspective provides a set of functionality aimed at
@@ -23,16 +23,16 @@
 			<title>Teiid Designer Perspective</title>
 			<para>The Teiid Designer perspective provides access to fundamental 
 				model editing and management capabilities. This perspective includes 
-				5 main UI components or groups of components as shown below. They include:</para>
+				6 main UI components (or groups of components) as shown below. They include:</para>
 			<itemizedlist>
 				<listitem>
 					<para>
-						<emphasis><xref linkend="model-explorer-view" /></emphasis>
+						<emphasis><xref linkend="model-explorer-view" /></emphasis> - Teiid 'tree' view of Model Objects.
 					</para>
 				</listitem>
 				<listitem>
 					<para>
-						<emphasis><xref linkend="teiid-view" /></emphasis> - Teiid 
+						<emphasis><xref linkend="teiid-view" /></emphasis> - Teiid Server 
 						instance view. Provides view of contents for connected instances of 
 						installed Teiid runtime.
 					</para>
@@ -43,14 +43,17 @@
 						editors targeted for ".xmi" metadata model files.
 					</para>
 				</listitem>
-				<listitem>
-					<para><emphasis><xref linkend="properties-view" /></emphasis> - Standard 
-						property values for selected workbench objects.</para>
-				</listitem>
+                <listitem>
+                    <para><emphasis><xref linkend="properties-view" /></emphasis> - Standard 
+                        property values for selected workbench objects.</para>
+                </listitem>
+                <listitem>
+                    <para><emphasis><xref linkend="guides-view" /></emphasis> - Guides and Status Views which enhance usability.</para>
+                </listitem>
 				<listitem>
 					<para>
-						<emphasis>Miscellaneous Views</emphasis> - Includes Problems view, Message 
-						Log view and the Data Tools SQL Results view (opened if Preview Data action is performed)
+						<emphasis role="bold">Miscellaneous Views</emphasis> - Includes the Problems view, Message 
+						Log view and the SQL Results view (opened if Preview Data action is performed)
 					</para>
 				</listitem>
 			</itemizedlist>
@@ -160,7 +163,7 @@
 				</listitem>
 			</itemizedlist>
 		</section>
-		<section>
+		<section id="further-information-section">
 		   <title>Further information</title>
 		   <para>For more details on perspectives, views and other Eclipse workbench details, see formal
 		      <ulink url="http://help.eclipse.org/ganymede/index.jsp">Eclipse Documentation</ulink>.</para>
@@ -2853,19 +2856,6 @@
 							<listitem>
 								<para><inlinemediaobject>
 										<imageobject>
-											<imagedata fileref="images/icons/relationship-search-page.png"/>
-										</imageobject>
-									</inlinemediaobject> <emphasis role="bold">Relationship...</emphasis> - Launches the 
-									Search dialog and auto-selects the Relationships tab.  User can search for models in the workspace 
-									by specifying a relationship type, participant locations, and/or names containing sprcified
-									text.  Search results appear in 
-									the <xref linkend="search-results-view" /> view, 
-									and double-clicking a result will open that model in the appropriate editor.
-								</para>
-							</listitem>
-							<listitem>
-								<para><inlinemediaobject>
-										<imageobject>
 											<imagedata fileref="images/icons/search-transformation.png"/>
 										</imageobject>
 									</inlinemediaobject> <emphasis role="bold">Transformations...</emphasis> - Launches the 
@@ -3092,13 +3082,13 @@
 				</mediaobject>
 			</figure>
 			
-			<para>The Preferences...  action launches the Preferences dialog, which can be used 
+			<para>The <emphasis role="bold">Preferences...</emphasis> action launches the Preferences dialog, which can be used 
 				to set preferences and default values for many features of Teiid Designer.</para>
 	
 			<para>Note that these menu items may vary depending on your set of installed Eclipse features and plugins.</para>
 	
 			<para>If you wish to customize a perspective to include one or more Teiid Designer views, 
-				select the Show View > Other...  action and expand the Teiid Designer category 
+				select the <emphasis role="bold">Show View > Other...</emphasis> action and expand the Teiid Designer category 
 				to show the available views.</para>
 			<figure>
 				<title>Show View Dialog</title>
@@ -3130,11 +3120,11 @@
 					<para>The individual actions are described below:
 						<itemizedlist>
 							<listitem>
-								<para><emphasis>Welcome</emphasis> - Shifts to the Welcome perspective, which contains links to documentation, examples and ‘how-to’ starting points.
+								<para><emphasis role="bold">Welcome</emphasis> - Shifts to the Welcome perspective, which contains links to documentation, examples and ‘how-to’ starting points.
 								</para>
 							</listitem>
 							<listitem>
-								<para><emphasis>Help Contents</emphasis><inlinemediaobject>
+								<para><emphasis role="bold">Help Contents</emphasis><inlinemediaobject>
 										<imageobject>
 											<imagedata fileref="images/icons/help-contents.png"/>
 										</imageobject>
@@ -3142,7 +3132,7 @@
 								</para>
 							</listitem>
 							<listitem>
-								<para><emphasis>Search</emphasis><inlinemediaobject>
+								<para><emphasis role="bold">Search</emphasis><inlinemediaobject>
 										<imageobject>
 											<imagedata fileref="images/icons/help-search.png"/>
 										</imageobject>
@@ -3150,39 +3140,39 @@
 								</para>
 							</listitem>
 							<listitem>
-								<para><emphasis>Dynamic Help</emphasis> - Opens the  docked  dynamic help  view.
+								<para><emphasis role="bold">Dynamic Help</emphasis> - Opens the  docked  dynamic help  view.
 								</para>
 							</listitem>
 							<listitem>
-								<para><emphasis>Key Assist</emphasis> (Ctrl-Shift-L) ... - Launches a dialog describing existing key assist bindings.
+								<para><emphasis role="bold">Key Assist</emphasis> (Ctrl-Shift-L) ... - Launches a dialog describing existing key assist bindings.
 								</para>
 							</listitem>
 							<listitem>
-								<para><emphasis>Tips and Tricks...</emphasis> - Launches a dialog to select one of any contributed "Tips and Tricks" help pages.
+								<para><emphasis role="bold">Tips and Tricks...</emphasis> - Launches a dialog to select one of any contributed "Tips and Tricks" help pages.
 								</para>
 							</listitem>
 							<listitem>
-								<para><emphasis>Cheat Sheets...</emphasis> - Launches a dialog to select one of any contributed Eclipse cheat sheets.
+								<para><emphasis role="bold">Cheat Sheets...</emphasis> - Launches a dialog to select one of any contributed Eclipse cheat sheets.
 								</para>
 							</listitem>
 							<listitem>
-								<para><emphasis>Project Examples..</emphasis>. - A JBoss contributed action which provides quick access to import various project examples into your workspace.
+								<para><emphasis role="bold">Project Examples..</emphasis>. - A JBoss contributed action which provides quick access to import various project examples into your workspace.
 								</para>
 							</listitem>
 							<listitem>
-								<para><emphasis>Report Problem</emphasis> - A JBoss contributed action which provides simple problem reporting.
+								<para><emphasis role="bold">Report Problem</emphasis> - A JBoss contributed action which provides simple problem reporting.
 								</para>
 							</listitem>
 							<listitem>
-								<para><emphasis>Check for Updates...</emphasis> - provides access to retrieve updates to installed Eclipse software.
+								<para><emphasis role="bold">Check for Updates...</emphasis> - provides access to retrieve updates to installed Eclipse software.
 								</para>
 							</listitem>
 							<listitem>
-								<para><emphasis>Install New Software...</emphasis> - provides access to install new software into your workbench.
+								<para><emphasis role="bold">Install New Software...</emphasis> - provides access to install new software into your workbench.
 								</para>
 							</listitem>
 							<listitem>
-								<para><emphasis>About XXXXX</emphasis> - Launches the About dialog.
+								<para><emphasis role="bold">About JBoss Developer Studio</emphasis> - Launches the About dialog.
 								</para>
 							</listitem>
 						</itemizedlist>
@@ -3192,4 +3182,4 @@
 		</section>
 	</section>
 
-</chapter>
+</appendix>

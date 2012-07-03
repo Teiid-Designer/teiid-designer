@@ -2092,7 +2092,7 @@ public class XsdEditor extends MultiPageEditorPart
             for (Iterator i = objects.iterator(); i.hasNext();) {
                 XSDConcreteComponent xsdConcreteComponent = (XSDConcreteComponent)i.next();
                 XSDConcreteComponent resolvedObject = getResolvedObject(xsdConcreteComponent);
-                if (resolvedObject != this) {
+                if (! this.equals(resolvedObject)) {
                     resolvedObjects.add(resolvedObject);
                 }
             }

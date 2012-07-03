@@ -33,7 +33,7 @@ import com.metamatrix.modeler.schema.tools.NameUtil;
 public class RequestBuilderTraversalContext extends BaseTraversalContext
 		implements TraversalContext {
 
-	public static final String CREATE = "create_"; //$NON-NLS-1$
+	public static final String REQUEST = "request_"; //$NON-NLS-1$
 	public static final String XML_OUT = "xml_out"; //$NON-NLS-1$
 
 	private Procedure procedure;
@@ -77,7 +77,7 @@ public class RequestBuilderTraversalContext extends BaseTraversalContext
 		
 		Procedure procedure = factory.createProcedure();
 		builder.getSchema().getProcedures().add(procedure);
-		String uniqueName = getUniqueName(procedure, CREATE + NameUtil.normalizeName(procedureNameBase));
+		String uniqueName = getUniqueName(procedure, REQUEST + NameUtil.normalizeName(procedureNameBase));
 		procedure.setName(uniqueName);
 		procedure.setNameInSource(procedureNameBase);
 		builder.addProcedure(procedureNameBase);

@@ -72,6 +72,7 @@ public interface UiConstants {
         String PROCEDURE_ERROR_ICON = OBJ16 + "relational-procedure-error.png"; //$NON-NLS-1$
         String PROCEDURE_WARNING_ICON = OBJ16 + "relational-procedure-warning.png"; //$NON-NLS-1$
         String VIRTUAL_PROCEDURE_ICON = OBJ16 + "virtual-relational-procedure.png"; //$NON-NLS-1$
+        String NEW_VIRTUAL_PROCEDURE_ICON = OBJ16 + "new-view-procedure.png"; //$NON-NLS-1$
         String VIRTUAL_PROCEDURE_ERROR_ICON = OBJ16 + "virtual-relational-procedure-error.png"; //$NON-NLS-1$
         String VIRTUAL_PROCEDURE_WARNING_ICON = OBJ16 + "virtual-relational-procedure-warning.png"; //$NON-NLS-1$
         String RESULT_SET_ERROR_ICON = OBJ16 + "result-set-error.png"; //$NON-NLS-1$

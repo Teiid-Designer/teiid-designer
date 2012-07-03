@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<appendix id="user-guide-supported-data-sources">
+	<title>Supported Data Sources</title>
+    <para>
+        The matrix indicates for a given data source how a model can be created (Desginer Import Option) and how the data source is 
+        integrated (Translator) for data access.
+    </para>
+    <para>
+        NOTE: The DDL Import option is an available option to build a source model for any data source. Its only indicated below 
+        when there's no specific importer created  for that specific data source type.
+    </para>
+    <para>
+        <table frame="border" rules="all">
+            <title>Teiid Designer Supported Data Sources</title>
+            <tgroup align="left" cols="3">
+                <colspec colname="dataSourceColumn"/>
+                <colspec colname="translatorColumn"/>
+                <colspec colname="optionsColumn"/>
+                <thead>
+                    <row>
+                        <entry align="center"><emphasis role="strong">Data Source</emphasis></entry>
+                        <entry align="center"><emphasis role="strong">Translator Type</emphasis></entry>
+                        <entry align="center"><emphasis role="strong">Designer Import Option</emphasis></entry>
+                    </row>
+                </thead>
+                <tbody valign="top">
+                    <row>
+                        <entry>Apache Derby</entry>
+                        <entry>JDBC - derby</entry>
+                        <entry>JDBC Importer</entry>
+                    </row>
+                    <row>
+                        <entry>Files</entry>
+                        <entry>file</entry>
+                        <entry>File Importer</entry>
+                    </row>
+                    <row>
+                        <entry>General JDBC</entry>
+                        <entry>JDBC - jdbc-simple</entry>
+                        <entry>JDBC Importer</entry>
+                    </row>
+                    <row>
+                        <entry>HDFS (Hadoop)</entry>
+                        <entry>hive</entry>
+                        <entry>use DDL importer or perform modeling manually</entry>
+                    </row>
+                    <row>
+                        <entry>HSQL</entry>
+                        <entry>JDBC - hsql</entry>
+                        <entry>JDBC Importer</entry>
+                    </row>
+                    <row>
+                        <entry>H2</entry>
+                        <entry>JDBC - h2</entry>
+                        <entry>JDBC Importer</entry>
+                    </row>
+                    <row>
+                        <entry>Ingres</entry>
+                        <entry>
+                            <itemizedlist spacing="Compact" mark="none">
+                                <listitem>JDBC - ingres (Ingres 2006 or later)</listitem>
+                                <listitem>JDBC - ingres93 (Ingres 9.3 or later)</listitem>
+                            </itemizedlist>
+                        </entry>
+                        <entry>JDBC Importer</entry>
+                    </row>
+                    <row>
+                        <entry>IBM DB2</entry>
+                        <entry>JDBC - db2</entry>
+                        <entry>JDBC Importer</entry>
+                    </row>
+                    <row>
+                        <entry>Informix</entry>
+                        <entry>JDBC - informix</entry>
+                        <entry>JDBC Importer</entry>
+                    </row>
+                    <row>
+                        <entry>LDAP/ActiveDirectory</entry>
+                        <entry>ldap</entry>
+                        <entry>use DDL importer or perform modeling manually</entry>
+                    </row>
+                    <row>
+                        <entry>LoopBack</entry>
+                        <entry>JDBC - loopback</entry>
+                        <entry>use DDL importer or perform modeling manually</entry>
+                    </row>
+                    <row>
+                        <entry>MetaMatrix</entry>
+                        <entry>JDBC - metamatrix</entry>
+                        <entry>JDBC Importer</entry>
+                    </row>
+                    <row>
+                        <entry>ModeShape/JCR</entry>
+                        <entry>JDBC - modeshape</entry>
+                        <entry>JDBC Importer</entry>
+                    </row>
+                    <row>
+                        <entry>Mondrian</entry>
+                        <entry>olap</entry>
+                        <entry>use DDL importer or perform modeling manually</entry>
+                    </row>
+                    <row>
+                        <entry>MS Access</entry>
+                        <entry>JDBC - access</entry>
+                        <entry>JDBC Importer</entry>
+                    </row>
+                    <row>
+                        <entry>MS Excel</entry>
+                        <entry>JDBC - excel-odbc</entry>
+                        <entry>JDBC Importer</entry>
+                    </row>
+                    <row>
+                        <entry>MS SQL Server</entry>
+                        <entry>JDBC - sqlserver</entry>
+                        <entry>JDBC Importer</entry>
+                    </row>
+                    <row>
+                        <entry>MySQL</entry>
+                        <entry>JDBC - mysql5 (mysql)</entry>
+                        <entry>JDBC Importer</entry>
+                    </row>
+                    <row>
+                        <entry>Netezza</entry>
+                        <entry>JDBC – netezza</entry>
+                        <entry>JDBC Importer</entry>
+                    </row>
+                    <row>
+                        <entry>Oracle</entry>
+                        <entry>JDBC - oracle</entry>
+                        <entry>JDBC Importer</entry>
+                    </row>
+                    <row>
+                        <entry>PostgreSQL</entry>
+                        <entry>JDBC - postgresql</entry>
+                        <entry>JDBC Importer</entry>
+                    </row>
+                    <row>
+                        <entry>Salesforce.com</entry>
+                        <entry>salesforce</entry>
+                        <entry>SalesForce Importer</entry>
+                    </row>
+                    <row>
+                        <entry>SAP Gateway</entry>
+                        <entry>ws</entry>
+                        <entry>File Source (XML) Importer</entry>
+                    </row>
+                    <row>
+                        <entry>SAP R/3</entry>
+                        <entry>ws</entry>
+                    </row>
+                    <row>
+                        <entry>SAP Services Registry</entry>
+                        <entry>ws</entry>
+                        <entry>WSDL Importer</entry>
+                    </row>
+                    <row>
+                        <entry>Sybase ASE</entry>
+                        <entry>JDBC - sybase</entry>
+                        <entry>JDBC Importer</entry>
+                    </row>
+                    <row>
+                        <entry>Teradata</entry>
+                        <entry>JDBC - teradata</entry>
+                        <entry>JDBC Importer</entry>
+                    </row>
+                    <row>
+                        <entry>Teiid</entry>
+                        <entry>JDBC - teiid</entry>
+                        <entry>JDBC Importer</entry>
+                    </row>
+                    <row>
+                        <entry>Web Services (SOAP/WSDL)</entry>
+                        <entry>ws</entry>
+                        <entry>WSDL or URL Importer</entry>
+                    </row>
+                    <row>
+                        <entry>Web Services (Rest/OData)</entry>
+                        <entry>ws</entry>
+                        <entry>File Source (XML) Importer</entry>
+                    </row>
+                </tbody>
+            </tgroup>
+        </table>
+    </para>
+</appendix>

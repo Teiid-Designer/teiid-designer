@@ -11,8 +11,11 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.emf.ecore.EObject;
+
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.metamodels.relational.BaseTable;
+import com.metamatrix.metamodels.relational.Column;
 import com.metamatrix.metamodels.relational.RelationalFactory;
 import com.metamatrix.metamodels.relational.RelationalPackage;
 import com.metamatrix.metamodels.transformation.SqlTransformationMappingRoot;
@@ -62,11 +65,54 @@ public class FlatFileViewModelFactory extends FlatFileRelationalModelFactory {
         return resrc;
     }
     
+    /**
+     * Create columns in the {@link BaseTable} based on the column 
+     * metadata contained in the given {@link TeiidMetadataFileInfo} object.
+     *  
+     * @param info
+     * @param baseTable
+     * @throws ModelerCoreException
+     */
+    @SuppressWarnings("unchecked")
+    private void createColumns(TeiidMetadataFileInfo info, BaseTable baseTable) throws ModelerCoreException {
+    	EObject stringType = datatypeManager.findDatatype("string"); //$NON-NLS-1$
+    	
+    	for (TeiidColumnInfo columnInfo : info.getColumnInfoList()) {
+    		Column column = factory.createColumn();
+    		column.setName(columnInfo.getName());
+    		column.setNameInSource(columnInfo.getSymbolName());
+    		column.setLength(columnInfo.getWidth());
+    		column.setDefaultValue(columnInfo.getDefaultValue());
+    		column.setFixedLength(info.isFixedWidthColumns());
+    		
+    		EObject datatype = datatypeManager.findDatatype(columnInfo.getDatatype());
+    		if (datatype != null) {
+    			column.setType(datatype);
+    			if( stringType != null && stringType == datatype) {
+    				if( info.isFixedWidthColumns()) {
+    					column.setLength(columnInfo.getWidth());
+    				} else {
+    					column.setLength(DEFAULT_STRING_LENGTH);
+    				}
+    			}
+    		}
+    		
+    		baseTable.getColumns().add(column);
+    	}
+    }
+    
     public void createViewTable(ModelResource modelResource, TeiidMetadataFileInfo info, String relationalModelName) throws ModelerCoreException {
     	
     	// Create a Procedure using the text file name
     	BaseTable table = factory.createBaseTable();
     	table.setName(info.getViewTableName());
+    	
+    	/* 
+    	  * Creating the columns here ensures that any fixed lengths are assigned
+    	  *  to the columns, otherwise reconcileMappingsOnSqlChange() (below)
+    	  *  sets their lengths to default values.
+    	  */
+    	createColumns(info, table);
     	
     	addValue(modelResource, table, getModelResourceContents(modelResource));
     	

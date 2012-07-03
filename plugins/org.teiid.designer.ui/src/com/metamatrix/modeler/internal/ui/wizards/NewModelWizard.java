@@ -129,7 +129,7 @@ public class NewModelWizard extends AbstractWizard
             }
         }
 
-        metamodelSelectionPage = new NewModelWizardMetamodelPage(selection);
+        metamodelSelectionPage = new NewModelWizardMetamodelPage(selection, designerProperties);
         NewModelWizardInput someModelInput = defaultNewModelInput;
 
         if (someModelInput == null || someModelInput.isEmpty()) {

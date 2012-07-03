@@ -5,7 +5,7 @@
   
   	<!-- <para><emphasis role="bold">Go To:  <ulink url="index.html">Table of Contents</ulink></emphasis></para>  -->
   	
-	<para>As described briefly in Chapter 1, you can test your models in Teiid Designer by using the 
+	<para>As described briefly in <xref linkend="testing-your-models" />, you can test your models in Teiid Designer by using the 
 		Preview Data action <inlinemediaobject>
 			<imageobject>
 				<imagedata fileref="images/icons/preview-data.png"/>
@@ -18,7 +18,7 @@
 	
 	<section id="manage-connection-profiles-section">
 		<title>Manage Connection Profiles</title>
-		<para>Teiid Designer utilizes the Eclipse Datatools' Connection Profile framework for connection management. Connection Profiles
+		<para>Teiid Designer utilizes the Eclipse Data Tools Platform (DTP) Connection Profile framework for connection management. Connection Profiles
 			provide a mechanism to connect to JDBC and non-JDBC sources to access metadata for constructing metadata source models.
 			Teiid Designer also provides a custom Teiid connection profile template designed as a JDBC source to a deployed VDB.
 		</para>
@@ -97,9 +97,11 @@
 				in the <xref linkend="preview-results-section" /> view. This 
 				action is accessible throughout the
 				Teiid Designer in various view toolbars and context menus.</para>
-		<para> There are two requirements for previewing your data: the
-			selected object must be one of several previewable model object types and
-			all source models within the model dependency tree must reference a connection profile. 
+		<para> There are two requirements for previewing your data: 
+		    <orderedlist>
+                <listitem>The selected object must be one of several previewable model object types</listitem>
+                <listitem>All source models within the model dependency tree must reference a connection profile.</listitem>
+		    </orderedlist> 
 			Model objects that can be previewed include:  relational tables and views (including
 			tables involving access patterns), relational procedures, Web service operations and
 			XML document staging tables.</para>
@@ -149,7 +151,7 @@
 		
 		<!-- ####### PREVIEW DATA - RELATIONAL TABLE OR VIEW ######################################### -->
 		
-		<section>
+		<section id="preview-reltable-view-section">
 			<title>Preview Relational Table or View</title>
 			<para></para>
 			<itemizedlist>
@@ -186,7 +188,7 @@
 		
 		<!-- ####### PREVIEW DATA - RELATIONAL TABLE OR VIEW WITH ACCESS PATTERNS ######################################### -->
 		
-		<section>
+		<section id="preview-reltable-waccess-section">
 			<title>Preview Relational Table With Access Pattern</title>
 			<itemizedlist>
 				<listitem>
@@ -236,7 +238,7 @@
 		
 		<!-- ####### PREVIEW DATA - RELATIONAL PROCEDURE ######################################### -->
 		
-		<section>
+		<section id="preview-rel-procedure-section">
 			<title>Preview Relational Procedure</title>
 			<para></para>
 			<itemizedlist>
@@ -287,7 +289,7 @@
 		
 		<!-- ####### PREVIEW DATA - WEB SERVICE OPERATION ######################################### -->
 		
-		<section>
+		<section id="preview-ws-operation-section">
 			<title>Preview Web Service Operation</title>
 			<para></para>
 			<itemizedlist>
@@ -353,8 +355,9 @@
 		
         <section id="execution-plan-section">
             <title>Execution Plans</title>
-            <para>When Preview Data is executed, the Teiid Execution Plan is also displayed as shown below.  The Execution Plan
-                may also be obtained by rt-clicking on a previewable object, then selecting 'Modeling > Show Execution Plan'.
+            <para>When Preview Data is executed, the <emphasis role="bold">Teiid Execution Plan</emphasis> is also displayed as shown below.  The Execution Plan
+                may also be obtained by rt-clicking on a previewable object, then selecting <emphasis role="bold">Modeling > Show Execution Plan</emphasis> in
+                the context menu.
             </para>
                 <figure>
                     <title>Teiid Execution Plan View</title>

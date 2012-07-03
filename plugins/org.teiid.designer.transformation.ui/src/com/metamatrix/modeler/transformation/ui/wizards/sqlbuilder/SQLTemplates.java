@@ -60,4 +60,12 @@ public class SQLTemplates {
                                                 + "'/teiid:getdepartmentResponse/return/employee' PASSING f.result " //$NON-NLS-1$
                                                 + "COLUMNS empID integer PATH '@id', firstname string PATH 'name/first', " //$NON-NLS-1$
                                                 + "lastname string PATH 'name/last') AS employee; END"; //$NON-NLS-1$
+    
+    public static String REST_PROCEDURE = "CREATE VIRTUAL PROCEDURE BEGIN " //$NON-NLS-1$
+    											+ "SELECT XMLELEMENT(NAME authors, " //$NON-NLS-1$
+    												+ "XMLAGG(XMLELEMENT(NAME author, " //$NON-NLS-1$
+    												+ "XMLFOREST(MySqlBooks.AUTHORS.AUTHOR_ID, MySqlBooks.AUTHORS.FIRSTNAME, MySqlBooks.AUTHORS.LASTNAME, MySqlBooks.AUTHORS.MIDDLEINIT)))) " //$NON-NLS-1$
+    												+ "AS result " //$NON-NLS-1$
+    												+ "FROM MySqlBooks.AUTHORS " //$NON-NLS-1$
+    												+ "WHERE Procedures.GetAuthorByID.author_id = MySqlBooks.AUTHORS.AUTHOR_ID; END"; //$NON-NLS-1$
 }

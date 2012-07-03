@@ -38,6 +38,7 @@ public interface SqlConstants {
     public static final String BEGIN = "BEGIN"; //$NON-NLS-1$
     public static final String END = "END"; //$NON-NLS-1$
     public static final String XMLELEMENT = "XMLELEMENT"; //$NON-NLS-1$
+    public static final String XMLATTRIBUTES = "XMLATTRIBUTES"; //$NON-NLS-1$
     public static final String NAME = "NAME"; //$NON-NLS-1$
     public static final String XMLNAMESPACES = "XMLNAMESPACES"; //$NON-NLS-1$
     public static final String DEFAULT = "DEFAULT"; //$NON-NLS-1$

@@ -176,7 +176,7 @@ public class ImportTextWizard extends AbstractWizard
             // be sure thePage is contributed
             // for( int i=0; i<importers.length; i++ ) {
             for (int i = 0; i < importers.length; i++) {
-                if (importers[i] == thePage) {
+                if (thePage.equals(importers[i])) {
                     isContributed = true;
                     break;
                 }

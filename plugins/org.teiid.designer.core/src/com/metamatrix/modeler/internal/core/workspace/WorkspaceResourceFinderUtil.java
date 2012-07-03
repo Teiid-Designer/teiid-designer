@@ -28,14 +28,14 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.teiid.core.id.UUID;
+import org.teiid.core.TeiidException;
 import org.teiid.designer.core.xmi.ModelImportInfo;
 import org.teiid.designer.core.xmi.XMIHeader;
 import org.teiid.designer.core.xmi.XMIHeaderReader;
 import com.metamatrix.common.vdb.VdbModelInfo;
 import com.metamatrix.common.xsd.XsdHeader;
 import com.metamatrix.common.xsd.XsdHeaderReader;
-import org.teiid.core.TeiidException;
-import org.teiid.core.id.UUID;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.types.DatatypeConstants;
@@ -291,7 +291,7 @@ public class WorkspaceResourceFinderUtil {
         return null;
     }
 
-    private static String getAbsoluteLocation( final File base,
+    public static String getAbsoluteLocation( final File base,
                                                final String relativePath ) {
         final URI baseLocation = URI.createFileURI(base.getAbsolutePath());
         URI relLocation = URI.createURI(relativePath, false);
@@ -969,7 +969,7 @@ public class WorkspaceResourceFinderUtil {
         return found;
     }
 
-    private static boolean isValidWorkspaceUri( final String workspaceUri ) {
+    public static boolean isValidWorkspaceUri( final String workspaceUri ) {
 
         if (workspaceUri == null || workspaceUri.length() == 0 || getWorkspace() == null) return false;
 
@@ -981,7 +981,7 @@ public class WorkspaceResourceFinderUtil {
         return true;
     }
 
-    private static String normalizeUriString( final String uriString ) {
+    public static String normalizeUriString( final String uriString ) {
         final String normalizedUriString = removeSchemeAndAuthority(uriString);
         return normalizedUriString;
     }

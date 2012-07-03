@@ -16,6 +16,7 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.ItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.ViewerNotification;
+
 import com.metamatrix.metamodels.webservice.Operation;
 import com.metamatrix.metamodels.webservice.WebServiceFactory;
 import com.metamatrix.metamodels.webservice.WebServicePackage;
@@ -49,6 +50,7 @@ public class OperationItemProvider extends WebServiceComponentItemProvider {
 
             addPatternPropertyDescriptor(object);
             addSafePropertyDescriptor(object);
+            addUpdateCountPropertyDescriptor(object);
         }
         return itemPropertyDescriptors;
     }
@@ -83,6 +85,23 @@ public class OperationItemProvider extends WebServiceComponentItemProvider {
                                                                  WebServicePackage.eINSTANCE.getOperation_Safe(),
                                                                  true,
                                                                  ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE,
+                                                                 null,
+                                                                 null));
+    }
+    
+    /**
+     * This adds a property descriptor for the Update Count feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
+     * @generated
+     */
+    protected void addUpdateCountPropertyDescriptor( Object object ) {
+        itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                                                                 getResourceLocator(),
+                                                                 getString("_UI_Operation_updateCount_feature"), //$NON-NLS-1$
+                                                                 getString("_UI_PropertyDescriptor_description", "_UI_Operation_updateCount_feature", "_UI_Operation_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                                                                 WebServicePackage.eINSTANCE.getOperation_UpdateCount(),
+                                                                 true,
+                                                                 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
                                                                  null,
                                                                  null));
     }

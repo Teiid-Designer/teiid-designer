@@ -84,6 +84,7 @@ public class TransformationNewModelObjectHelper implements INewModelObjectHelper
 	                        SqlTableAspect tableAspect = (SqlTableAspect)aspect;
 	                        tableAspect.setSupportsUpdate(newTarget, false);
 	                    } // endif
+
 	                    return true;
                 	}
                 } else if (TransformationHelper.isSqlProcedure(newTarget) && !TransformationHelper.isOperation(newTarget)) {
