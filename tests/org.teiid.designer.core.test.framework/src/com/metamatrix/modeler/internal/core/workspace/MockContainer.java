@@ -169,6 +169,14 @@ public class MockContainer implements IContainer {
                         int memberFlags ) {
 
     }
+    
+    /* (non-Javadoc)
+     * @see org.eclipse.core.resources.IResource#accept(org.eclipse.core.resources.IResourceProxyVisitor, int, int)
+     */
+    public void accept( IResourceProxyVisitor visitor,
+                        int depth,
+                        int memberFlags ) {
+    }
 
     /* (non-Javadoc)
      * @see org.eclipse.core.resources.IResource#clearHistory(org.eclipse.core.runtime.IProgressMonitor)

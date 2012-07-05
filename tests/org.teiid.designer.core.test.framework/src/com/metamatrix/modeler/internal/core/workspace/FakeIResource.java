@@ -94,7 +94,16 @@ public class FakeIResource implements IResource {
                         int depth,
                         int memberFlags ) {
     }
-
+    
+    /**
+     * @see org.eclipse.core.resources.IResource#accept(org.eclipse.core.resources.IResourceProxyVisitor, int, int)
+     * @since 4.2
+     */
+    public void accept( IResourceProxyVisitor visitor,
+                        int depth,
+                        int memberFlags ) {
+    }
+    
     /**
      * @see org.eclipse.core.resources.IResource#clearHistory(org.eclipse.core.runtime.IProgressMonitor)
      * @since 4.2

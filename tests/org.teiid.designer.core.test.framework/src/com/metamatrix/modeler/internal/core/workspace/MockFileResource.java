@@ -85,6 +85,14 @@ public class MockFileResource implements IFile {
                         int memberFlags ) {
 
     }
+    
+    /* (non-Javadoc)
+     * @see org.eclipse.core.resources.IResource#accept(org.eclipse.core.resources.IResourceProxyVisitor, int, int)
+     */
+    public void accept( IResourceProxyVisitor visitor,
+                        int depth,
+                        int memberFlags ) {
+    }
 
     /* (non-Javadoc)
      * @see org.eclipse.core.resources.IResource#clearHistory(org.eclipse.core.runtime.IProgressMonitor)
@@ -920,6 +928,15 @@ public class MockFileResource implements IFile {
                             int depth,
                             int memberFlags ) {
 
+        }
+        
+        /* (non-Javadoc)
+         * @see org.eclipse.core.resources.IResource#accept(org.eclipse.core.resources.IResourceProxyVisitor, int, int)
+         */
+        @SuppressWarnings("unused")
+		public void accept( IResourceProxyVisitor visitor,
+                            int depth,
+                            int memberFlags ) {
         }
 
         /* (non-Javadoc)
