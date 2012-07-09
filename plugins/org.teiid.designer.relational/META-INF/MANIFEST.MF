@@ -16,3 +16,4 @@ Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.teiid.designer.relational,
  org.teiid.designer.relational.model
+Bundle-Vendor: %Plugin-Provider
