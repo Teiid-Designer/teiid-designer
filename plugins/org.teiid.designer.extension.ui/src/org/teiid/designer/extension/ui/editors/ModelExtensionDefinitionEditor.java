@@ -65,6 +65,7 @@ import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
+import org.teiid.designer.core.workspace.ResourceChangeUtilities;
 import org.teiid.designer.extension.ExtensionConstants;
 import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
@@ -79,9 +80,8 @@ import org.teiid.designer.extension.ui.Messages;
 import org.teiid.designer.extension.ui.UiConstants;
 import org.teiid.designer.extension.ui.actions.RegistryDeploymentValidator;
 import org.teiid.designer.extension.ui.actions.ShowModelExtensionRegistryViewAction;
+import org.teiid.designer.ui.forms.MessageFormDialog;
 
-import com.metamatrix.modeler.internal.core.workspace.ResourceChangeUtilities;
-import com.metamatrix.modeler.internal.ui.forms.MessageFormDialog;
 
 /**
  * 

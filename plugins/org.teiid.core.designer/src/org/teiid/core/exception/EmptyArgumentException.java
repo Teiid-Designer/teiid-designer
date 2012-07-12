@@ -8,7 +8,7 @@
 package org.teiid.core.exception;
 
 import org.teiid.core.I18n;
-import com.metamatrix.core.modeler.CoreI18n;
+import org.teiid.core.designer.CoreI18n;
 
 /**
  * Thrown when a method argument is <code>null</code> or empty.

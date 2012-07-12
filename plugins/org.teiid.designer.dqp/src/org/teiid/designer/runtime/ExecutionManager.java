@@ -12,9 +12,8 @@ import java.sql.Connection;
 import java.util.Properties;
 
 import org.eclipse.core.runtime.IStatus;
+import org.teiid.core.util.CoreStringUtil;
 
-import com.metamatrix.core.util.CoreStringUtil;
-import com.metamatrix.modeler.dqp.DqpPlugin;
 
 /**
  *

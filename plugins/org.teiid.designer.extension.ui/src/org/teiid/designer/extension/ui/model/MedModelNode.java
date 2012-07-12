@@ -10,10 +10,10 @@ package org.teiid.designer.extension.ui.model;
 import java.util.Collection;
 
 import org.teiid.core.HashCodeUtil;
+import org.teiid.core.util.CoreArgCheck;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
 
-import com.metamatrix.core.util.CoreArgCheck;
 
 /**
  * The <code>MedModelNode</code> wraps attributes and propertes of a {@link ModelExtensionDefinition}.

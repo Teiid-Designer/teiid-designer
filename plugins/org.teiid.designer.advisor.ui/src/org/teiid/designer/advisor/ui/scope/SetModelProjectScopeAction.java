@@ -13,11 +13,12 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
-import com.metamatrix.modeler.core.ModelerCore;
-import com.metamatrix.modeler.internal.ui.PluginConstants;
-import com.metamatrix.modeler.ui.UiPlugin;
-import com.metamatrix.modeler.ui.actions.ISelectionAction;
-import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
+import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.ui.PluginConstants;
+import org.teiid.designer.ui.UiPlugin;
+import org.teiid.designer.ui.actions.ISelectionAction;
+import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
+
 
 /**
  * 

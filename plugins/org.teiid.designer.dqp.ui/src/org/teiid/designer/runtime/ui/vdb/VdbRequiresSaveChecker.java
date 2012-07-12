@@ -14,12 +14,12 @@ import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.teiid.core.util.CoreArgCheck;
+import org.teiid.designer.runtime.ui.DqpUiConstants;
+import org.teiid.designer.ui.UiPlugin;
+import org.teiid.designer.vdb.ui.VdbUiConstants;
+import org.teiid.designer.vdb.ui.editor.VdbEditor;
 
-import com.metamatrix.core.util.CoreArgCheck;
-import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
-import com.metamatrix.modeler.internal.vdb.ui.editor.VdbEditor;
-import com.metamatrix.modeler.ui.UiPlugin;
-import com.metamatrix.modeler.vdb.ui.VdbUiConstants;
 
 public class VdbRequiresSaveChecker {
 	

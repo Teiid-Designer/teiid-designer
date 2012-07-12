@@ -15,15 +15,15 @@ import org.mockito.MockitoAnnotations;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.teiid.designer.core.ModelResourceMockFactory;
+import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.core.util.ModelResourceContainerFactory;
+import org.teiid.designer.core.util.StringUtilities;
+import org.teiid.designer.core.workspace.ModelResource;
+import org.teiid.designer.core.workspace.ModelUtil;
+import org.teiid.designer.core.workspace.ModelWorkspaceException;
+import org.teiid.designer.core.workspace.ResourceAnnotationHelper;
 import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
 import org.teiid.designer.datatools.connection.ConnectionProfileFactory;
-import com.metamatrix.core.util.StringUtilities;
-import com.metamatrix.modeler.core.ModelerCore;
-import com.metamatrix.modeler.core.util.ModelResourceContainerFactory;
-import com.metamatrix.modeler.core.workspace.ModelResource;
-import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
-import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
-import com.metamatrix.modeler.internal.core.workspace.ResourceAnnotationHelper;
 
 @RunWith( PowerMockRunner.class )
 @PrepareForTest( {ModelerCore.class, ModelResourceContainerFactory.class, ModelUtil.class} )

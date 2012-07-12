@@ -43,10 +43,10 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.progress.UIJob;
 import org.teiid.designer.datatools.ui.DatatoolsUiConstants;
+import org.teiid.designer.ui.common.ICredentialsCommon.SecurityType;
+import org.teiid.designer.ui.common.util.WidgetFactory;
+import org.teiid.designer.ui.common.widget.CredentialsComposite;
 
-import com.metamatrix.ui.ICredentialsCommon.SecurityType;
-import com.metamatrix.ui.internal.util.WidgetFactory;
-import com.metamatrix.ui.internal.widget.CredentialsComposite;
 
 public class WSProfileDetailsWizardPage extends ConnectionProfileDetailsPage implements DatatoolsUiConstants {
 

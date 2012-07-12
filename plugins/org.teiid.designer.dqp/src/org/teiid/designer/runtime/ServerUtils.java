@@ -8,9 +8,9 @@
 package org.teiid.designer.runtime;
 
 import java.net.MalformedURLException;
+
+import org.teiid.core.PluginUtil;
 import org.teiid.net.TeiidURL;
-import com.metamatrix.core.PluginUtil;
-import com.metamatrix.modeler.dqp.DqpPlugin;
 
 /**
  * 

@@ -26,9 +26,9 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
 import org.teiid.designer.datatools.ui.DatatoolsUiConstants;
 import org.teiid.designer.datatools.ui.DatatoolsUiPlugin;
+import org.teiid.designer.ui.common.util.WidgetFactory;
+import org.teiid.designer.ui.common.widget.MessageLabel;
 
-import com.metamatrix.ui.internal.util.WidgetFactory;
-import com.metamatrix.ui.internal.widget.MessageLabel;
 
 public class SelectConnectionProfileDialog extends ElementTreeSelectionDialog implements ISelectionChangedListener {
     private static final String DEFAULT_TITLE = DatatoolsUiConstants.UTIL.getString("SelectConnectionProfileDialog.title"); //$NON-NLS-1$ 

@@ -12,9 +12,10 @@ import java.util.Properties;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.window.Window;
-import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
-import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
+import org.teiid.core.util.I18nUtil;
+import org.teiid.designer.runtime.ui.DqpUiConstants;
+import org.teiid.designer.runtime.ui.DqpUiPlugin;
+
 
 public class PreviewDataAction extends Action {
 	public static final String THIS_CLASS = I18nUtil.getPropertyPrefix(PreviewDataAction.class);

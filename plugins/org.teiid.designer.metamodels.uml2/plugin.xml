@@ -20,7 +20,7 @@
          http:///org/eclipse/uml2.ecore
       </alternateUri>
       <alternateUri>
-         mtkplugin:///com.metamatrix.metamodels.Uml2
+         mtkplugin:///org.teiid.designer.metamodels.Uml2
       </alternateUri>
       <properties
             createAsNewModel="false"
@@ -54,7 +54,7 @@
          name="UmlInvocationFactoryHelper"
          point="org.teiid.designer.core.invocationFactoryHelper">
       <class
-            name="com.metamatrix.metamodels.uml2.proxy.UmlInvocationFactoryHelper">
+            name="org.teiid.designer.metamodels.uml2.proxy.UmlInvocationFactoryHelper">
       </class>
    </extension>
    
@@ -66,7 +66,7 @@
          uml2
       </metamodelExtensionID>
       <factoryClass
-            name="com.metamatrix.metamodels.uml2.aspects.uml.Uml2UmlAspectFactoryImpl">
+            name="org.teiid.designer.metamodels.uml2.aspects.uml.Uml2UmlAspectFactoryImpl">
       </factoryClass>
    </extension>
    <extension
@@ -76,7 +76,7 @@
          uml2
       </metamodelExtensionID>
       <factoryClass
-            name="com.metamatrix.metamodels.uml2.aspects.validation.Uml2ValidationAspectFactoryImpl">
+            name="org.teiid.designer.metamodels.uml2.aspects.validation.Uml2ValidationAspectFactoryImpl">
       </factoryClass>
    </extension>
 <!-- EObject Matcher extensions -->
@@ -84,7 +84,7 @@
          id="uml2MatcherFactory"
          point="org.teiid.designer.core.eobjectMatcherFactory">
       <class
-            name="com.metamatrix.metamodels.uml2.compare.UmlObjectMatcherFactory">
+            name="org.teiid.designer.metamodels.uml2.compare.UmlObjectMatcherFactory">
       </class>
    </extension>
 <!-- Assocation extensions -->
@@ -92,21 +92,21 @@
          id="generalizationAssociationProvider"
          point="org.teiid.designer.core.associationProvider">
       <providerClass
-            name="com.metamatrix.metamodels.uml2.provider.Uml2GeneralizationProvider">
+            name="org.teiid.designer.metamodels.uml2.provider.Uml2GeneralizationProvider">
       </providerClass>
    </extension>
    <extension
          id="associationAssociationProvider"
          point="org.teiid.designer.core.associationProvider">
       <providerClass
-            name="com.metamatrix.metamodels.uml2.provider.Uml2AssociationProvider">
+            name="org.teiid.designer.metamodels.uml2.provider.Uml2AssociationProvider">
       </providerClass>
    </extension>
    <extension
          id="dependencyAssociationProvider"
          point="org.teiid.designer.core.associationProvider">
       <providerClass
-            name="com.metamatrix.metamodels.uml2.provider.Uml2DependencyProvider">
+            name="org.teiid.designer.metamodels.uml2.provider.Uml2DependencyProvider">
       </providerClass>
    </extension>
    
@@ -130,7 +130,7 @@
          name="%uml2ResourceLoadOptionsName"
          point="org.teiid.designer.core.resourceLoadOptions">
       <class
-            name="com.metamatrix.metamodels.uml2.util.Uml2ResourceLoadOptionContributor">
+            name="org.teiid.designer.metamodels.uml2.util.Uml2ResourceLoadOptionContributor">
       </class>
    </extension>
 

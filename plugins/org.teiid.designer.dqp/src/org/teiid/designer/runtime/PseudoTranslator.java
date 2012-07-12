@@ -10,7 +10,7 @@ package org.teiid.designer.runtime;
 
 import java.util.Properties;
 import org.teiid.adminapi.Translator;
-import com.metamatrix.core.util.CoreArgCheck;
+import org.teiid.core.util.CoreArgCheck;
 
 /**
  * The <code>PseudoConnectionFactory</code> class is an implementation of {@link ConnectionFactory} that keeps track of the

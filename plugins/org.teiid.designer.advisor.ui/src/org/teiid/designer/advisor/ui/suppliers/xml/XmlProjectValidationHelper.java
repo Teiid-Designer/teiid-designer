@@ -23,13 +23,13 @@ import org.teiid.designer.advisor.ui.AdvisorUiConstants;
 import org.teiid.designer.advisor.ui.AdvisorUiPlugin;
 import org.teiid.designer.advisor.ui.core.status.AdvisorStatus;
 import org.teiid.designer.advisor.ui.views.status.StatusValidationConstants;
+import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.core.notification.util.DefaultIgnorableNotificationSource;
+import org.teiid.designer.core.workspace.ModelResource;
+import org.teiid.designer.core.workspace.ModelWorkspaceException;
+import org.teiid.designer.core.workspace.ModelWorkspaceManager;
+import org.teiid.designer.ui.viewsupport.ModelIdentifier;
 
-import com.metamatrix.modeler.core.ModelerCore;
-import com.metamatrix.modeler.core.notification.util.DefaultIgnorableNotificationSource;
-import com.metamatrix.modeler.core.workspace.ModelResource;
-import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
-import com.metamatrix.modeler.internal.core.workspace.ModelWorkspaceManager;
-import com.metamatrix.modeler.internal.ui.viewsupport.ModelIdentifier;
 
 public class XmlProjectValidationHelper  implements StatusValidationConstants {
 

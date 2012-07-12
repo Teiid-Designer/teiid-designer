@@ -17,15 +17,15 @@ import java.util.Set;
 
 import org.eclipse.ui.IWorkbenchPage;
 import org.osgi.framework.BundleContext;
+import org.teiid.core.PluginUtil;
+import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.util.LoggingUtil;
+import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.core.metamodel.MetamodelRegistry;
 import org.teiid.designer.extension.ExtensionPlugin;
+import org.teiid.designer.ui.common.AbstractUiPlugin;
+import org.teiid.designer.ui.common.actions.ActionService;
 
-import com.metamatrix.core.PluginUtil;
-import com.metamatrix.core.util.CoreArgCheck;
-import com.metamatrix.core.util.LoggingUtil;
-import com.metamatrix.modeler.core.ModelerCore;
-import com.metamatrix.modeler.core.metamodel.MetamodelRegistry;
-import com.metamatrix.ui.AbstractUiPlugin;
-import com.metamatrix.ui.actions.ActionService;
 
 /**
  * 
@@ -57,7 +57,7 @@ public final class Activator extends AbstractUiPlugin {
     /**
      * {@inheritDoc}
      * 
-     * @see com.metamatrix.ui.AbstractUiPlugin#createActionService(org.eclipse.ui.IWorkbenchPage)
+     * @see org.teiid.designer.ui.common.AbstractUiPlugin#createActionService(org.eclipse.ui.IWorkbenchPage)
      */
     @Override
     protected ActionService createActionService( IWorkbenchPage page ) {
@@ -151,7 +151,7 @@ public final class Activator extends AbstractUiPlugin {
     /**
      * {@inheritDoc}
      * 
-     * @see com.metamatrix.ui.AbstractUiPlugin#getPluginUtil()
+     * @see org.teiid.designer.ui.common.AbstractUiPlugin#getPluginUtil()
      */
     @Override
     public PluginUtil getPluginUtil() {

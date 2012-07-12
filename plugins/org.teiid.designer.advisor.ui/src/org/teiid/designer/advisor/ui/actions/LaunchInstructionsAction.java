@@ -16,8 +16,8 @@ import org.eclipse.swt.widgets.Display;
 import org.teiid.designer.advisor.ui.AdvisorUiConstants;
 import org.teiid.designer.advisor.ui.AdvisorUiPlugin;
 import org.teiid.designer.advisor.ui.Messages;
+import org.teiid.designer.ui.common.widget.ListMessageDialog;
 
-import com.metamatrix.ui.internal.widget.ListMessageDialog;
 
 public class LaunchInstructionsAction extends Action implements AdvisorUiConstants {
 

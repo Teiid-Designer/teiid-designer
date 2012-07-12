@@ -18,6 +18,9 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.ui.IWorkbench;
+import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.core.workspace.ModelResource;
+import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.definition.ModelExtensionAssistant;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
@@ -25,13 +28,11 @@ import org.teiid.designer.extension.definition.ModelObjectExtensionAssistant;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 import org.teiid.designer.extension.ui.Messages;
 import org.teiid.designer.extension.ui.UiConstants;
-import com.metamatrix.modeler.core.ModelerCore;
-import com.metamatrix.modeler.core.workspace.ModelResource;
-import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
-import com.metamatrix.modeler.ui.UiPlugin;
-import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
-import com.metamatrix.ui.internal.util.WidgetUtil;
-import com.metamatrix.ui.internal.wizard.AbstractWizard;
+import org.teiid.designer.ui.UiPlugin;
+import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
+import org.teiid.designer.ui.common.util.WidgetUtil;
+import org.teiid.designer.ui.common.wizard.AbstractWizard;
+
 
 public class ManageModelExtensionDefnsWizard extends AbstractWizard {
 

@@ -7,7 +7,7 @@
  */
 package org.teiid.designer.runtime;
 
-import static com.metamatrix.modeler.dqp.DqpPlugin.Util;
+import static org.teiid.designer.runtime.DqpPlugin.Util;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -25,15 +25,15 @@ import org.teiid.adminapi.Admin;
 import org.teiid.adminapi.PropertyDefinition;
 import org.teiid.adminapi.Translator;
 import org.teiid.adminapi.VDB;
+import org.teiid.core.util.CoreArgCheck;
+import org.teiid.designer.core.workspace.ModelResource;
+import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.datatools.connection.ConnectionInfoProviderFactory;
 import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
 import org.teiid.designer.runtime.connection.IPasswordProvider;
 import org.teiid.designer.runtime.connection.ModelConnectionMatcher;
 import org.teiid.designer.vdb.Vdb;
 
-import com.metamatrix.core.util.CoreArgCheck;
-import com.metamatrix.modeler.core.workspace.ModelResource;
-import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 
 /**
  *

@@ -34,9 +34,9 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.navigator.CommonDropAdapter;
 import org.eclipse.ui.navigator.CommonDropAdapterAssistant;
+import org.teiid.designer.core.workspace.DotProjectUtils;
+import org.teiid.designer.ui.common.widget.ListMessageDialog;
 
-import com.metamatrix.modeler.internal.core.workspace.DotProjectUtils;
-import com.metamatrix.ui.internal.widget.ListMessageDialog;
 
 public class ModelNavigatorDropAssistant extends CommonDropAdapterAssistant {
 

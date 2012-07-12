@@ -7,16 +7,16 @@
  */
 package org.teiid.designer.runtime.ui.extension;
 
-import static com.metamatrix.modeler.dqp.ui.DqpUiConstants.UTIL;
+import static org.teiid.designer.runtime.ui.DqpUiConstants.UTIL;
 
 import java.util.Collection;
 
 import org.eclipse.emf.ecore.EObject;
+import org.teiid.core.util.I18nUtil;
+import org.teiid.designer.core.metamodel.aspect.sql.SqlAspectHelper;
 import org.teiid.designer.extension.ExtensionConstants.MedOperations;
+import org.teiid.designer.metamodels.relational.Procedure;
 
-import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.metamodels.relational.Procedure;
-import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlAspectHelper;
 
 /**
  * 
@@ -60,7 +60,7 @@ public class RemoveRestWarPropertiesAction extends RestWarPropertiesAction {
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.designer.runtime.ui.extension.RestWarPropertiesAction#isValidSelection(com.metamatrix.metamodels.relational.Procedure)
+     * @see org.teiid.designer.runtime.ui.extension.RestWarPropertiesAction#isValidSelection(org.teiid.designer.metamodels.relational.Procedure)
      */
     @Override
     protected boolean isValidSelection( Procedure procedure ) {
@@ -86,7 +86,7 @@ public class RemoveRestWarPropertiesAction extends RestWarPropertiesAction {
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.designer.runtime.ui.extension.RestWarPropertiesAction#runImpl(com.metamatrix.metamodels.relational.Procedure)
+     * @see org.teiid.designer.runtime.ui.extension.RestWarPropertiesAction#runImpl(org.teiid.designer.metamodels.relational.Procedure)
      */
     @Override
     protected void runImpl( Procedure procedure ) throws Exception {

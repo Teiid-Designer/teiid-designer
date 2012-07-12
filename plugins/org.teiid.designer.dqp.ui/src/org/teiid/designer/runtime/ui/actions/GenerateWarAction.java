@@ -19,16 +19,16 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.teiid.designer.dqp.webservice.war.ui.wizards.WarDeploymentInfoDialog;
+import org.teiid.core.util.I18nUtil;
+import org.teiid.designer.core.workspace.ModelUtil;
+import org.teiid.designer.metamodels.core.ModelType;
+import org.teiid.designer.runtime.ui.DqpUiConstants;
+import org.teiid.designer.runtime.ui.DqpUiPlugin;
+import org.teiid.designer.runtime.ui.wizards.webservices.WarDeploymentInfoDialog;
+import org.teiid.designer.ui.actions.ISelectionAction;
+import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 import org.teiid.designer.vdb.VdbUtil;
 
-import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.metamodels.core.ModelType;
-import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
-import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
-import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
-import com.metamatrix.modeler.ui.actions.ISelectionAction;
-import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
 
 public class GenerateWarAction extends Action implements ISelectionListener,
 		Comparable, ISelectionAction {

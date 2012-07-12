@@ -10,9 +10,9 @@ import org.eclipse.swtbot.swt.finder.results.VoidResult;
 import org.eclipse.swtbot.swt.finder.widgets.AbstractSWTBot;
 import org.eclipse.swtbot.swt.finder.widgets.AbstractSWTBotControl;
 import org.eclipse.ui.internal.handlers.WizardHandler.New;
+import org.teiid.designer.diagram.ui.notation.uml.figure.UmlClassifierFigure;
+import org.teiid.designer.transformation.ui.figure.TransformationFigure;
 
-import com.metamatrix.modeler.diagram.ui.notation.uml.figure.UmlClassifierFigure;
-import com.metamatrix.modeler.transformation.ui.figure.TransformationFigure;
 
 public abstract class SWTBotTeiidFigure extends AbstractSWTBot<FigureCanvas>{
 

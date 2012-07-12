@@ -25,14 +25,14 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.ColumnInfo;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.OperationsDetailsPage;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.ProcedureInfo;
+import org.teiid.designer.ui.common.util.WidgetFactory;
+import org.teiid.designer.ui.common.viewsupport.UiBusyIndicator;
 
-import com.metamatrix.core.util.StringUtilities;
-import com.metamatrix.ui.internal.util.WidgetFactory;
-import com.metamatrix.ui.internal.viewsupport.UiBusyIndicator;
 
 public class ColumnsInfoPanel {
 	private ProcedureInfo procedureInfo;

@@ -3,17 +3,17 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.teiid.designer.metamodels.relationship;singleton:=true
 Bundle-Version: 7.7.1.qualifier
-Bundle-Activator: com.metamatrix.metamodels.relationship.RelationshipMetamodelPlugin
+Bundle-Activator: org.teiid.designer.metamodels.relationship.RelationshipMetamodelPlugin
 Bundle-Vendor: %pluginProvider
 Bundle-Localization: plugin
-Export-Package: com.metamatrix.metamodels.relationship,
- com.metamatrix.metamodels.relationship.aspects.relationship,
- com.metamatrix.metamodels.relationship.aspects.validation,
- com.metamatrix.metamodels.relationship.aspects.validation.rules,
- com.metamatrix.metamodels.relationship.compare,
- com.metamatrix.metamodels.relationship.impl,
- com.metamatrix.metamodels.relationship.provider,
- com.metamatrix.metamodels.relationship.util
+Export-Package: org.teiid.designer.metamodels.relationship,
+ org.teiid.designer.metamodels.relationship.aspects.relationship,
+ org.teiid.designer.metamodels.relationship.aspects.validation,
+ org.teiid.designer.metamodels.relationship.aspects.validation.rules,
+ org.teiid.designer.metamodels.relationship.compare,
+ org.teiid.designer.metamodels.relationship.impl,
+ org.teiid.designer.metamodels.relationship.provider,
+ org.teiid.designer.metamodels.relationship.util
 Require-Bundle: org.eclipse.emf.ecore,
  org.eclipse.emf.edit,
  org.eclipse.emf.ecore.edit,
@@ -23,6 +23,7 @@ Require-Bundle: org.eclipse.emf.ecore,
  org.teiid.core.designer,
  teiid_embedded_query,
  org.eclipse.emf.mapping,
- org.eclipse.emf.ecore.xmi
+ org.eclipse.emf.ecore.xmi,
+ org.teiid.designer.legacy
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

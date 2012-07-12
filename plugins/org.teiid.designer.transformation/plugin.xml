@@ -19,7 +19,7 @@
          transformation
       </metamodelExtensionID>
       <factoryClass
-            name="com.metamatrix.modeler.transformation.aspects.validation.TransformationValidationAspectFactoryImpl">
+            name="org.teiid.designer.transformation.aspects.validation.TransformationValidationAspectFactoryImpl">
       </factoryClass>
    </extension>
    <extension
@@ -29,7 +29,7 @@
          transformation
       </metamodelExtensionID>
       <factoryClass
-            name="com.metamatrix.modeler.transformation.aspects.uml.TransformationUmlAspectFactoryImpl">
+            name="org.teiid.designer.transformation.aspects.uml.TransformationUmlAspectFactoryImpl">
       </factoryClass>
    </extension>
    <extension
@@ -39,7 +39,7 @@
          transformation
       </metamodelExtensionID>
       <factoryClass
-            name="com.metamatrix.modeler.transformation.aspects.sql.TransformationSqlAspectFactoryImpl">
+            name="org.teiid.designer.transformation.aspects.sql.TransformationSqlAspectFactoryImpl">
       </factoryClass>
    </extension>
 <!-- EObject Matcher extensions -->
@@ -47,7 +47,7 @@
          id="transformationMatcherFactory"
          point="org.teiid.designer.core.eobjectMatcherFactory">
       <class
-            name="com.metamatrix.modeler.transformation.compare.TransformationMatcherFactory">
+            name="org.teiid.designer.transformation.compare.TransformationMatcherFactory">
       </class>
    </extension>
 <!-- Other extensions -->
@@ -63,7 +63,7 @@
          id="transformationReferenceUpdator"
          point="org.teiid.designer.core.referenceUpdator">
       <class
-            name="com.metamatrix.modeler.internal.transformation.util.TransformationReferenceUpdator">
+            name="org.teiid.designer.transformation.util.TransformationReferenceUpdator">
       </class>
    </extension>
          <!-- Helper method to allow external edit for objects. i.e. Delete, Copy, etc.. -->
@@ -72,7 +72,7 @@
          name="%transformationNewModelObjectHelper"
          point="org.teiid.designer.core.newModelObjectHelper">
       <class
-        name="com.metamatrix.modeler.internal.transformation.util.TransformationNewModelObjectHelper">
+        name="org.teiid.designer.transformation.util.TransformationNewModelObjectHelper">
       </class>
    </extension>
    <extension
@@ -80,7 +80,7 @@
 		name="%transformationRefactorModelExtension.name"
         point="org.teiid.designer.core.refactorModelHandler">
       <refactorHandler
-         name="com.metamatrix.modeler.internal.transformation.util.TransformationRefactorModelHandler">
+         name="org.teiid.designer.transformation.util.TransformationRefactorModelHandler">
       </refactorHandler>
    </extension>
 </plugin>

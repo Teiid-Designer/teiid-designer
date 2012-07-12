@@ -61,6 +61,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.eclipse.ui.part.ViewPart;
+import org.teiid.core.util.CoreStringUtil;
 import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
@@ -70,13 +71,12 @@ import org.teiid.designer.extension.ui.Activator;
 import org.teiid.designer.extension.ui.Messages;
 import org.teiid.designer.extension.ui.actions.RegistryDeploymentValidator;
 import org.teiid.designer.extension.ui.wizards.NewMedWizard;
+import org.teiid.designer.ui.UiPlugin;
+import org.teiid.designer.ui.common.util.WidgetUtil;
+import org.teiid.designer.ui.common.viewsupport.StatusInfo;
+import org.teiid.designer.ui.explorer.ModelExplorerLabelProvider;
+import org.teiid.designer.ui.viewsupport.ModelingResourceFilter;
 
-import com.metamatrix.core.util.CoreStringUtil;
-import com.metamatrix.modeler.internal.ui.explorer.ModelExplorerLabelProvider;
-import com.metamatrix.modeler.ui.UiPlugin;
-import com.metamatrix.modeler.ui.viewsupport.ModelingResourceFilter;
-import com.metamatrix.ui.internal.util.WidgetUtil;
-import com.metamatrix.ui.internal.viewsupport.StatusInfo;
 
 /**
  * 

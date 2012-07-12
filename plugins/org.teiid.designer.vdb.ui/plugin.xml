@@ -18,7 +18,7 @@
             default="true"
             icon="platform:/plugin/org.teiid.designer.ui/icons/full/obj16/VDB.gif"
             extensions="vdb"
-            class="com.metamatrix.modeler.internal.vdb.ui.editor.VdbEditor"
+            class="org.teiid.designer.vdb.ui.editor.VdbEditor"
             id="vdbEditor">
       </editor>
    </extension>
@@ -28,14 +28,14 @@
          point="org.eclipse.ui.newWizards">
       <category
             name="%modelCategory"
-            id="com.metamatrix.modeler.ui">
+            id="org.teiid.designer.ui">
       </category>
 <!-- New VDB wizard -->
       <wizard
             name="%newVdbWizard"
             icon="icons/full/ctool16/newvdb_wiz.gif"
-            category="com.metamatrix.modeler.ui"
-            class="com.metamatrix.modeler.internal.vdb.ui.wizards.NewVdbWizard"
+            category="org.teiid.designer.ui"
+            class="org.teiid.designer.vdb.ui.wizards.NewVdbWizard"
             id="newVdbWizard">
          <description>
             %newVdbWizardDescription
@@ -48,7 +48,7 @@
       <wizard
             name="%importVdbWizard.name"
             icon="icons/full/ctool16/importvdb.gif"
-            class="com.metamatrix.modeler.internal.vdb.ui.wizards.ImportVdbWizard"
+            class="org.teiid.designer.vdb.ui.wizards.ImportVdbWizard"
             id="importVdbWizard">
          <description>
             %importVdbWizard.description
@@ -60,7 +60,7 @@
 <!-- VDB Editor Preference Page -->
    <extension
         point="org.teiid.designer.ui.common.editorPreferences">
-        <editorPreferenceComponent class="com.metamatrix.modeler.vdb.ui.preferences.VdbPreferencePage" />
+        <editorPreferenceComponent class="org.teiid.designer.vdb.ui.preferences.VdbPreferencePage" />
    </extension>   
 
 </plugin>

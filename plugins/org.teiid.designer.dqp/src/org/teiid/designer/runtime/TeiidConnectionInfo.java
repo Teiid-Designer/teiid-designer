@@ -7,15 +7,15 @@
  */
 package org.teiid.designer.runtime;
 
-import static com.metamatrix.modeler.dqp.DqpPlugin.PLUGIN_ID;
-import static com.metamatrix.modeler.dqp.DqpPlugin.Util;
+import static org.teiid.designer.runtime.DqpPlugin.PLUGIN_ID;
+import static org.teiid.designer.runtime.DqpPlugin.Util;
+
 import java.net.MalformedURLException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.teiid.core.util.CoreArgCheck;
 import org.teiid.core.util.HashCodeUtil;
-import com.metamatrix.core.util.CoreArgCheck;
-import com.metamatrix.core.util.StringUtilities;
-import com.metamatrix.modeler.dqp.DqpPlugin;
+import org.teiid.designer.core.util.StringUtilities;
 
 /**
  * 

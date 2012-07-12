@@ -11,17 +11,15 @@ import java.util.Set;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.EMap;
+import org.teiid.designer.core.resource.EmfResource;
+import org.teiid.designer.core.util.ModelContents;
+import org.teiid.designer.core.workspace.ModelObjectAnnotations;
+import org.teiid.designer.core.workspace.ModelResource;
+import org.teiid.designer.core.workspace.ModelWorkspaceException;
+import org.teiid.designer.metamodels.core.Annotation;
+import org.teiid.designer.metamodels.core.AnnotationContainer;
+import org.teiid.designer.metamodels.core.ModelAnnotation;
 
-import com.metamatrix.metamodels.core.Annotation;
-import com.metamatrix.metamodels.core.AnnotationContainer;
-import com.metamatrix.metamodels.core.ModelAnnotation;
-import com.metamatrix.modeler.core.ModelEditor;
-import com.metamatrix.modeler.core.ModelerCore;
-import com.metamatrix.modeler.core.util.ModelContents;
-import com.metamatrix.modeler.core.workspace.ModelObjectAnnotations;
-import com.metamatrix.modeler.core.workspace.ModelResource;
-import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
-import com.metamatrix.modeler.internal.core.resource.EmfResource;
 
 public class ModelResourceMockFactory {
 	public static ModelResource createModelResource(final String name,

@@ -10,5 +10,5 @@ Bundle-Localization: plugin
 Require-Bundle: org.junit4,
  org.teiid.core.designer.test.framework,
  org.teiid.designer.sdt
-Export-Package: com.metamatrix.metamodels.uml2,
- com.metamatrix.metamodels.uml2.util
+Export-Package: org.teiid.designer.metamodels.uml2,
+ org.teiid.designer.metamodels.uml2.util

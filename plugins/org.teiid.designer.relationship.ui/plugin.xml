@@ -16,7 +16,7 @@
          name="%relationshipDiagramType"
          point="org.teiid.designer.diagram.ui.diagramType">
       <diagram
-            class="com.metamatrix.modeler.relationship.ui.diagram.RelationshipDiagramType"
+            class="org.teiid.designer.relationship.ui.diagram.RelationshipDiagramType"
             deprecated="true"
             simpleDiagram="false">
       </diagram>
@@ -26,7 +26,7 @@
          id="relationshipDiagramModelObjectActionContributor"
          point="org.teiid.designer.ui.modelObjectActionContributor">
       <class
-            name="com.metamatrix.modeler.relationship.ui.actions.RelationshipDiagramPermanentActionContributor">
+            name="org.teiid.designer.relationship.ui.actions.RelationshipDiagramPermanentActionContributor">
       </class>
    </extension>
 <!--
@@ -34,7 +34,7 @@
          id="generateRelationshipsActionContributor"
          point="org.teiid.designer.ui.modelObjectActionContributor">
       <class
-            name="com.metamatrix.modeler.relationship.ui.actions.GenerateRelationshipsActionContributor">
+            name="org.teiid.designer.relationship.ui.actions.GenerateRelationshipsActionContributor">
       </class>
    </extension>
    -->
@@ -44,7 +44,7 @@
          name="Relationship Diagram Content Provider"
          point="org.teiid.designer.ui.diagramContentProvider">
       <class
-            name="com.metamatrix.modeler.relationship.ui.diagram.RelationshipDiagramContentProvider">
+            name="org.teiid.designer.relationship.ui.diagram.RelationshipDiagramContentProvider">
       </class>
       <diagramType
             name="relationshipDiagramType">
@@ -55,7 +55,7 @@
          name="Relationship Diagram LabelProvider"
          point="org.teiid.designer.ui.diagramLabelProvider">
       <class
-            name="com.metamatrix.modeler.relationship.ui.diagram.RelationshipDiagramLabelProvider">
+            name="org.teiid.designer.relationship.ui.diagram.RelationshipDiagramLabelProvider">
       </class>
       <diagramType
             name="relationshipDiagramType">
@@ -67,8 +67,8 @@
       <view
             name="%relationshipNavigationView"
             icon="icons/full/cview16/navigator_view.gif"
-            category="com.metamatrix.modeler.ui"
-            class="com.metamatrix.modeler.relationship.ui.navigation.NavigationView"
+            category="org.teiid.designer.ui"
+            class="org.teiid.designer.relationship.ui.navigation.NavigationView"
             id="relationship.ui.navigation.navigationView">
       </view>
    </extension>
@@ -79,7 +79,7 @@
          name="%customRelationshipDiagramType"
          point="org.teiid.designer.diagram.ui.diagramType">
       <diagram
-            class="com.metamatrix.modeler.relationship.ui.custom.CustomDiagramType"
+            class="org.teiid.designer.relationship.ui.custom.CustomDiagramType"
             simpleDiagram="true">
       </diagram>
    </extension>
@@ -89,7 +89,7 @@
          id="customRelationishipModelObjectActionContributor"
          point="org.teiid.designer.ui.modelObjectActionContributor">
       <class
-            name="com.metamatrix.modeler.relationship.ui.custom.actions.CustomDiagramPermanentActionContributor">
+            name="org.teiid.designer.relationship.ui.custom.actions.CustomDiagramPermanentActionContributor">
       </class>
    </extension>
 -->
@@ -99,7 +99,7 @@
          name="%customRelationshipDiagramContentProvider"
          point="org.teiid.designer.ui.diagramContentProvider">
       <class
-            name="com.metamatrix.modeler.relationship.ui.custom.CustomDiagramContentProvider">
+            name="org.teiid.designer.relationship.ui.custom.CustomDiagramContentProvider">
       </class>
       <diagramType
             name="customDiagramType">
@@ -112,7 +112,7 @@
          name="%customRelationshipDiagramLabelProvider"
          point="org.teiid.designer.ui.diagramLabelProvider">
       <class
-            name="com.metamatrix.modeler.relationship.ui.custom.CustomDiagramLabelProvider">
+            name="org.teiid.designer.relationship.ui.custom.CustomDiagramLabelProvider">
       </class>
       <diagramType
             name="customRelationshipDiagramType">
@@ -125,7 +125,7 @@
          name="%relationshipEditorName"
          point="org.teiid.designer.ui.modelObjectEditorPage">
       <class
-            name="com.metamatrix.modeler.relationship.ui.editor.RelationshipObjectEditorPage">
+            name="org.teiid.designer.relationship.ui.editor.RelationshipObjectEditorPage">
       </class>
    </extension>
  -->
@@ -135,7 +135,7 @@
          name="%relationshipEditorName"
          point="org.teiid.designer.ui.modelObjectEditorPage">
       <class
-            name="com.metamatrix.modeler.relationship.ui.editor.RelationshipTypeObjectEditorPage">
+            name="org.teiid.designer.relationship.ui.editor.RelationshipTypeObjectEditorPage">
       </class>
    </extension>
  -->
@@ -159,10 +159,10 @@
          name="%relationshipWizardName"
          point="org.teiid.designer.ui.newModelObjectWizard">
       <class
-            name="com.metamatrix.modeler.relationship.ui.editor.NewRelationshipWizard">
+            name="org.teiid.designer.relationship.ui.editor.NewRelationshipWizard">
       </class>
       <descriptorType
-            name="com.metamatrix.metamodels.relationship.Relationship">
+            name="org.teiid.designer.metamodels.relationship.Relationship">
       </descriptorType>
    </extension>
 -->
@@ -172,7 +172,7 @@
          name="%relationshipWizardName"
          point="org.teiid.designer.ui.newAssociationWizard">
       <class
-            name="com.metamatrix.modeler.relationship.ui.editor.NewRelationshipWizard">
+            name="org.teiid.designer.relationship.ui.editor.NewRelationshipWizard">
       </class>
       <descriptorType
             name="RelationshipAssociationDescriptor">
@@ -185,10 +185,10 @@
          name="%relationshipTypeWizardName"
          point="org.teiid.designer.ui.newModelObjectWizard">
       <class
-            name="com.metamatrix.modeler.relationship.ui.editor.NewRelationshipTypeWizard">
+            name="org.teiid.designer.relationship.ui.editor.NewRelationshipTypeWizard">
       </class>
       <descriptorType
-            name="com.metamatrix.metamodels.relationship.RelationshipType">
+            name="org.teiid.designer.metamodels.relationship.RelationshipType">
       </descriptorType>
    </extension>
  -->
@@ -201,7 +201,7 @@
             label="%relationshipSearchPage.name"
             icon="icons/full/obj16/relationshipSearchPage.gif"
             extensions="xmi:1"
-            class="com.metamatrix.modeler.internal.relationship.ui.search.RelationshipSearchPage"
+            class="org.teiid.designer.relationship.ui.search.RelationshipSearchPage"
             id="relationshipSearchPage">
       </page>
    </extension>
@@ -212,8 +212,8 @@
 	<extension
 		point="org.eclipse.ui.handlers">
 		<handler
-			class="com.metamatrix.modeler.internal.relationship.ui.search.OpenRelationshipSearchPageHandler"
-            commandId="com.metamatrix.modeler.relationship.ui.search.openRelationshipSearchPageCommand">
+			class="org.teiid.designer.relationship.ui.search.OpenRelationshipSearchPageHandler"
+            commandId="org.teiid.designer.relationship.ui.search.openRelationshipSearchPageCommand">
 		</handler>
    </extension>
 -->
@@ -221,8 +221,8 @@
    <extension
          point="org.eclipse.ui.commands">
 	  <command
-			categoryId="com.metamatrix.modeler.ui.category.modeler"
-			id="com.metamatrix.modeler.relationship.ui.search.openRelationshipSearchPageCommand"
+			categoryId="org.teiid.designer.ui.category.modeler"
+			id="org.teiid.designer.relationship.ui.search.openRelationshipSearchPageCommand"
 			name="%openRelationshipSearchAction.label">
 	  </command>
    </extension>
@@ -247,7 +247,7 @@
 		</menuContribution>
 		<menuContribution locationURI="menu:org.eclipse.search.menu?after=teiidDesignerSearchMenuActionsGroup">
 			<menu id="designerSearchSubMenu" label="%designerSearchSubMenu.label">
-				<command commandId="com.metamatrix.modeler.relationship.ui.search.openRelationshipSearchPageCommand"
+				<command commandId="org.teiid.designer.relationship.ui.search.openRelationshipSearchPageCommand"
 					label="%openRelationshipSearchAction.label"
                  	icon="icons/full/obj16/relationshipSearchPage.gif"
                  	tooltip="%openRelationshipSearchAction.tip">
@@ -262,7 +262,7 @@
          name="%relationshipPropertyEditorFactory"
          point="org.teiid.designer.ui.propertyEditorFactory">
       <class
-            name="com.metamatrix.modeler.relationship.ui.properties.RelationshipPropertyEditorFactory">
+            name="org.teiid.designer.relationship.ui.properties.RelationshipPropertyEditorFactory">
       </class>
    </extension>
 -->
@@ -273,7 +273,7 @@
          name="%customDiagramHelper"
          point="org.teiid.designer.ui.diagramHelper">
       <class
-         name="com.metamatrix.modeler.relationship.ui.custom.CustomDiagramHelper"
+         name="org.teiid.designer.relationship.ui.custom.CustomDiagramHelper"
          diagramType="customRelationshipDiagramType">
       </class>
    </extension>
@@ -285,7 +285,7 @@
          name="%relationshipPerspectiveContributor"
          point="org.teiid.designer.ui.modelerPerspectiveContributor">
       <class
-        name="com.metamatrix.modeler.relationship.ui.RelationshipPerspectiveContributor">
+        name="org.teiid.designer.relationship.ui.RelationshipPerspectiveContributor">
       </class>
    </extension>
 -->
@@ -296,7 +296,7 @@
          name="%relationshipsUiTextImporter"
          point="org.teiid.designer.tools.textimport.ui.textImportContributor">
       <class
-        name="com.metamatrix.modeler.internal.relationship.ui.wizards.ImportRelationshipsMainPage">
+        name="org.teiid.designer.relationship.ui.wizards.ImportRelationshipsMainPage">
       </class>
    </extension>
 -->
@@ -306,7 +306,7 @@
 		name="%generateSqlRelationshipsAction.name"
         point="org.teiid.designer.ui.modelObjectSpecialAction">
       <specialAction
-         name="com.metamatrix.modeler.relationship.ui.actions.GenerateSqlRelationshipsAction"
+         name="org.teiid.designer.relationship.ui.actions.GenerateSqlRelationshipsAction"
          label="%generateSqlRelationshipsAction.label">
       </specialAction>
    </extension>

@@ -3,13 +3,12 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.teiid.designer.mapping;singleton:=true
 Bundle-Version: 7.7.1.qualifier
-Bundle-Activator: com.metamatrix.modeler.mapping.ModelerMappingPlugin
+Bundle-Activator: org.teiid.designer.mapping.ModelerMappingPlugin
 Bundle-Vendor: %pluginProvider
 Bundle-Localization: plugin
-Export-Package: com.metamatrix.modeler.internal.mapping.factory,
- com.metamatrix.modeler.mapping,
- com.metamatrix.modeler.mapping.choice,
- com.metamatrix.modeler.mapping.factory
+Export-Package: org.teiid.designer.mapping,
+ org.teiid.designer.mapping.choice,
+ org.teiid.designer.mapping.factory
 Require-Bundle: org.teiid.designer.core,
  org.teiid.designer.metamodels.transformation,
  org.eclipse.emf.edit,

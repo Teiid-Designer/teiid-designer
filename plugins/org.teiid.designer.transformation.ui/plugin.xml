@@ -16,7 +16,7 @@
          name="%transformDiagramType"
          point="org.teiid.designer.diagram.ui.diagramType">
       <diagram
-            class="com.metamatrix.modeler.transformation.ui.diagram.TransformationDiagramType"
+            class="org.teiid.designer.transformation.ui.diagram.TransformationDiagramType"
             simpleDiagram="true">
       </diagram>
    </extension>
@@ -26,7 +26,7 @@
          name="%dependencyDiagramType"
          point="org.teiid.designer.diagram.ui.diagramType">
       <diagram
-            class="com.metamatrix.modeler.transformation.ui.diagram.DependencyDiagramType"
+            class="org.teiid.designer.transformation.ui.diagram.DependencyDiagramType"
             simpleDiagram="true">
       </diagram>
    </extension>
@@ -35,7 +35,7 @@
          name="Transformation Diagram Content Provider"
          point="org.teiid.designer.ui.diagramContentProvider">
       <class
-            name="com.metamatrix.modeler.transformation.ui.diagram.TransformationDiagramContentProvider">
+            name="org.teiid.designer.transformation.ui.diagram.TransformationDiagramContentProvider">
       </class>
       <diagramType
             name="transformationDiagramType">
@@ -46,7 +46,7 @@
          name="Transformation Diagram LabelProvider"
          point="org.teiid.designer.ui.diagramLabelProvider">
       <class
-            name="com.metamatrix.modeler.transformation.ui.diagram.TransformationDiagramLabelProvider">
+            name="org.teiid.designer.transformation.ui.diagram.TransformationDiagramLabelProvider">
       </class>
       <diagramType
             name="transformationDiagramType">
@@ -57,7 +57,7 @@
          name="Transformation Object Editor"
          point="org.teiid.designer.ui.modelObjectEditorPage">
       <class
-            name="com.metamatrix.modeler.transformation.ui.editors.TransformationObjectEditorPage">
+            name="org.teiid.designer.transformation.ui.editors.TransformationObjectEditorPage">
       </class>
    </extension>
 <!-- Transformation Diagram Type Permanent Model Object Action Contributor -->
@@ -65,7 +65,7 @@
          id="transformationDiagramModelObjectActionContributor"
          point="org.teiid.designer.ui.modelObjectActionContributor">
       <class
-            name="com.metamatrix.modeler.transformation.ui.actions.TransformationDiagramPermanentActionContributor">
+            name="org.teiid.designer.transformation.ui.actions.TransformationDiagramPermanentActionContributor">
       </class>
    </extension>
    <extension
@@ -73,7 +73,7 @@
          name="%transformationLinkContributor"
          point="org.teiid.designer.ui.newModelWizardContributor">
       <class
-            name="com.metamatrix.modeler.transformation.ui.wizards.TransformationLinkContributor"
+            name="org.teiid.designer.transformation.ui.wizards.TransformationLinkContributor"
             icon="icons/full/ctool16/newmodel_wiz.gif">
       </class>
       <metamodelDescriptorType
@@ -93,7 +93,7 @@
          name="%transformationObjectEditHelper"
          point="org.teiid.designer.ui.modelObjectEditHelper">
       <class
-        name="com.metamatrix.modeler.transformation.ui.actions.TransformationObjectEditHelper">
+        name="org.teiid.designer.transformation.ui.actions.TransformationObjectEditHelper">
       </class>
    </extension>
 
@@ -106,15 +106,15 @@
 			type="org.eclipse.core.resources.IFile"
 			namespace="org.teiid.designer.transformation.ui"
 			properties="VIRTUAL_MODEL"
-			class="com.metamatrix.modeler.transformation.ui.actions.TransformationUiPropertyTester">
+			class="org.teiid.designer.transformation.ui.actions.TransformationUiPropertyTester">
 		</propertyTester>
 	</extension>
 
 	<extension
 		point="org.eclipse.ui.handlers">
 		<handler
-			class="com.metamatrix.modeler.transformation.ui.actions.ValidateModelTransformationsHandler"
-            commandId="com.metamatrix.modeler.transformation.ui.actions.validateModelTransformationsCommand">
+			class="org.teiid.designer.transformation.ui.actions.ValidateModelTransformationsHandler"
+            commandId="org.teiid.designer.transformation.ui.actions.validateModelTransformationsCommand">
 			<enabledWhen>
 				<and>
 					<count value="1"/>
@@ -125,28 +125,28 @@
 			</enabledWhen>
 		</handler>
 		<handler
-			class="com.metamatrix.modeler.transformation.ui.search.OpenTransformationSearchPageHandler"
-            commandId="com.metamatrix.modeler.transformation.ui.search.openTransformationSearchPageCommand">
+			class="org.teiid.designer.transformation.ui.search.OpenTransformationSearchPageHandler"
+            commandId="org.teiid.designer.transformation.ui.search.openTransformationSearchPageCommand">
 		</handler>
    </extension>
 
    <extension
          point="org.eclipse.ui.commands">
 	  <command
-			categoryId="com.metamatrix.modeler.ui.category.modeler"
-			id="com.metamatrix.modeler.transformation.ui.actions.validateModelTransformationsCommand"
+			categoryId="org.teiid.designer.ui.category.modeler"
+			id="org.teiid.designer.transformation.ui.actions.validateModelTransformationsCommand"
 			name="%revalidateModelAction.label">
 	  </command>
 	  <command
-			categoryId="com.metamatrix.modeler.ui.category.modeler"
-			id="com.metamatrix.modeler.transformation.ui.search.openTransformationSearchPageCommand"
+			categoryId="org.teiid.designer.ui.category.modeler"
+			id="org.teiid.designer.transformation.ui.search.openTransformationSearchPageCommand"
 			name="%openTransformationSearchAction.label">
 	  </command>
    </extension>
 
 	<extension point="org.eclipse.ui.menus">
 		<menuContribution locationURI="menu:project?after=additions">
-			<command commandId="com.metamatrix.modeler.transformation.ui.actions.validateModelTransformationsCommand"
+			<command commandId="org.teiid.designer.transformation.ui.actions.validateModelTransformationsCommand"
 				label="%revalidateModelAction.label"
              	icon="icons/full/cview16/validate.gif"
              	tooltip="%revalidateModelAction.tooltip">
@@ -175,7 +175,7 @@
 		</menuContribution>
 		<menuContribution locationURI="menu:org.eclipse.search.menu?after=teiidDesignerSearchMenuActionsGroup">
 			<menu id="designerSearchSubMenu" label="%designerSearchSubMenu.label">
-				<command commandId="com.metamatrix.modeler.transformation.ui.search.openTransformationSearchPageCommand"
+				<command commandId="org.teiid.designer.transformation.ui.search.openTransformationSearchPageCommand"
 					label="%openTransformationSearchAction.label"
                  	icon="icons/full/cview16/search_transformation.gif"
                  	tooltip="%openTransformationSearchAction.tip">
@@ -195,7 +195,7 @@
                label="%revalidateModelAction.label"
                tooltip="%revalidateModelAction.tooltip"
                icon="icons/full/cview16/validate.gif"
-               class="com.metamatrix.modeler.transformation.ui.actions.RevalidateModelAction"
+               class="org.teiid.designer.transformation.ui.actions.RevalidateModelAction"
                menubarPath="project/additions"
                enablesFor="1"
                id="revalidateModelAction">
@@ -209,7 +209,7 @@
          name="%transformationUiNewModelObjectHelper"
          point="org.teiid.designer.core.newModelObjectHelper">
       <class
-        name="com.metamatrix.modeler.transformation.ui.util.TransformationUiNewModelObjectHelper">
+        name="org.teiid.designer.transformation.ui.util.TransformationUiNewModelObjectHelper">
       </class>
    </extension>
        <!-- Text Importer Contribution -->
@@ -218,7 +218,7 @@
          name="%transformationUiTextImporter"
          point="org.teiid.designer.tools.textimport.ui.textImportContributor">
       <class
-        name="com.metamatrix.modeler.transformation.ui.wizards.ImportVirtualTablesMainPage">
+        name="org.teiid.designer.transformation.ui.wizards.ImportVirtualTablesMainPage">
       </class>
    </extension>
    <extension
@@ -226,7 +226,7 @@
 		name="%revalidateModelTransformationsAction.name"
         point="org.teiid.designer.ui.modelResourceAction">
       <resourceAction
-         name="com.metamatrix.modeler.transformation.ui.actions.RevalidateModelTransformationsAction"
+         name="org.teiid.designer.transformation.ui.actions.RevalidateModelTransformationsAction"
          label="%revalidateModelTransformationsAction.label">
       </resourceAction>
    </extension>
@@ -235,7 +235,7 @@
 		name="%importTransformationSqlFromTextAction.name"
         point="org.teiid.designer.ui.modelObjectSpecialAction">
       <specialAction
-         name="com.metamatrix.modeler.transformation.ui.actions.ImportTransformationSqlFromTextAction"
+         name="org.teiid.designer.transformation.ui.actions.ImportTransformationSqlFromTextAction"
          label="%importTransformationSqlFromTextAction.label">
       </specialAction>
    </extension>
@@ -244,7 +244,7 @@
 		name="%exportTransformationSqlToTextAction.name"
         point="org.teiid.designer.ui.modelObjectSpecialAction">
       <specialAction
-         name="com.metamatrix.modeler.transformation.ui.actions.ExportTransformationSqlToTextAction"
+         name="org.teiid.designer.transformation.ui.actions.ExportTransformationSqlToTextAction"
          label="%exportTransformationSqlToTextAction.label">
       </specialAction>
    </extension>
@@ -253,7 +253,7 @@
 		name="%editTransformationAction.name"
         point="org.teiid.designer.ui.modelResourceAction">
       <resourceAction
-         name="com.metamatrix.modeler.transformation.ui.actions.EditTransformationAction"
+         name="org.teiid.designer.transformation.ui.actions.EditTransformationAction"
          label="%editTransformationAction.label">
       </resourceAction>
    </extension>
@@ -264,14 +264,14 @@
 		name="%createMaterializedViewsAction.name"
         point="org.teiid.designer.ui.modelObjectSpecialAction">
       <specialAction
-         name="com.metamatrix.modeler.transformation.ui.actions.CreateMaterializedViewsAction"
+         name="org.teiid.designer.transformation.ui.actions.CreateMaterializedViewsAction"
          label="%createMaterializedViewsAction.label">
       </specialAction>
    </extension>
    <extension
          point="org.teiid.designer.ui.common.editorPreferences">
          <editorPreferenceComponent
-         	class="com.metamatrix.modeler.transformation.ui.preferences.TransformationEditorPreferencesComponent"/>
+         	class="org.teiid.designer.transformation.ui.preferences.TransformationEditorPreferencesComponent"/>
    </extension>  
 <!-- Eclipse Import Wizards -->
    <extension
@@ -280,8 +280,8 @@
       <wizard
             name="%teiidMetadataImportWizard.name"
             icon="icons/full/cview16/import_teiid_metadata.png"
-            category="com.metamatrix.modeler.ui"
-            class="com.metamatrix.modeler.transformation.ui.wizards.file.TeiidMetadataImportWizard"
+            category="org.teiid.designer.ui"
+            class="org.teiid.designer.transformation.ui.wizards.file.TeiidMetadataImportWizard"
             id="teiidMetadataImportWizard">
          <description>
             %teiidMetadataImportWizard.description
@@ -294,8 +294,8 @@
       <wizard
             name="%teiidXmlImportWizard.name"
             icon="icons/full/cview16/import_teiid_metadata.png"
-            category="com.metamatrix.modeler.ui"
-            class="com.metamatrix.modeler.transformation.ui.wizards.xmlfile.TeiidXmlImportWizard"
+            category="org.teiid.designer.ui"
+            class="org.teiid.designer.transformation.ui.wizards.xmlfile.TeiidXmlImportWizard"
             id="teiidXmlImportWizard">
          <description>
             %teiidXmlImportWizard.description
@@ -308,7 +308,7 @@
          name="%newChildViewTableAction"
          point="org.teiid.designer.ui.newChildAction">
       <class
-            name="com.metamatrix.modeler.transformation.ui.actions.CreateViewTableAction">
+            name="org.teiid.designer.transformation.ui.actions.CreateViewTableAction">
       </class>
    </extension>
 
@@ -317,7 +317,7 @@
          name="%newSiblingViewTableAction"
          point="org.teiid.designer.ui.newSiblingAction">
       <class
-            name="com.metamatrix.modeler.transformation.ui.actions.CreateViewTableAction">
+            name="org.teiid.designer.transformation.ui.actions.CreateViewTableAction">
       </class>
    </extension>
   

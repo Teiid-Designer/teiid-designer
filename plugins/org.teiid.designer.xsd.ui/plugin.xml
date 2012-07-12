@@ -16,7 +16,7 @@
       <class
             tabName="%semanticEditor.tabname"
             order="3"
-            name="com.metamatrix.modeler.internal.xsd.ui.editor.XsdSemanticsEditorPage">
+            name="org.teiid.designer.xsd.ui.editor.XsdSemanticsEditorPage">
       </class>
    </extension>
 
@@ -27,7 +27,7 @@
       <class
             tabName="%simpleDatatypesEditor.tabname"
             order="1"
-            name="com.metamatrix.modeler.internal.xsd.ui.editor.XsdSimpleDatatypesEditorPage">
+            name="org.teiid.designer.xsd.ui.editor.XsdSimpleDatatypesEditorPage">
       </class>
    </extension>
 
@@ -38,7 +38,7 @@
       <class
             tabName="%sourceEditor.tabname"
             order="4"
-            name="com.metamatrix.modeler.internal.xsd.ui.editor.XsdTextEditorPage">
+            name="org.teiid.designer.xsd.ui.editor.XsdTextEditorPage">
       </class>
    </extension>
    <extension
@@ -46,7 +46,7 @@
          name="%xsdSchemaUiNewModelObjectHelper"
          point="org.teiid.designer.core.newModelObjectHelper">
       <class
-        name="com.metamatrix.modeler.xsd.ui.XsdSchemaUiNewModelObjectHelper">
+        name="org.teiid.designer.xsd.ui.XsdSchemaUiNewModelObjectHelper">
       </class>
    </extension>  
    <extension
@@ -54,7 +54,7 @@
          name="%datatypeUiTextImporter"
          point="org.teiid.designer.tools.textimport.ui.textImportContributor">
       <class
-        name="com.metamatrix.modeler.internal.xsd.ui.wizards.ImportDatatypesMainPage">
+        name="org.teiid.designer.xsd.ui.wizards.ImportDatatypesMainPage">
       </class>
    </extension>
    <extension
@@ -62,8 +62,8 @@
       <wizard
             name="%xsdFileSystemImportWizard.name"
             icon="icons/full/cview16/import_xsd_file.gif"
-            category="com.metamatrix.modeler.ui"
-            class="com.metamatrix.modeler.internal.xsd.ui.wizards.XsdFileSystemImportWizard"
+            category="org.teiid.designer.ui"
+            class="org.teiid.designer.xsd.ui.wizards.XsdFileSystemImportWizard"
             id="xsdFileSystemImportWizard">
          <description>
             %xsdFileSystemImportWizard.description
@@ -75,7 +75,7 @@
 		name="%createVirtualModelFromSchemaAction.name"
         point="org.teiid.designer.ui.modelResourceAction">
       <resourceAction
-         name="com.metamatrix.modeler.internal.xsd.ui.actions.CreateVirtualModelFromSchemaAction"
+         name="org.teiid.designer.xsd.ui.actions.CreateVirtualModelFromSchemaAction"
          label="%createVirtualModelFromSchemaAction.label">
       </resourceAction>
    </extension> 

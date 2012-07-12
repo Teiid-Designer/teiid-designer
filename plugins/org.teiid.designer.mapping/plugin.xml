@@ -16,7 +16,7 @@
 		name="%mappingRefactorModelExtension.name"
         point="org.teiid.designer.core.refactorModelHandler">
       <refactorHandler
-         name="com.metamatrix.modeler.internal.mapping.factory.MappingRefactorModelHandler">
+         name="org.teiid.designer.mapping.factory.MappingRefactorModelHandler">
       </refactorHandler>
    </extension>
 </plugin>

@@ -42,6 +42,13 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.teiid.core.designer.util.FileUtils;
+import org.teiid.core.designer.util.OperationUtil;
+import org.teiid.core.designer.util.OperationUtil.Unreliable;
+import org.teiid.core.util.CoreArgCheck;
+import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.core.builder.VdbModelBuilder;
+import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.roles.DataRole;
 import org.teiid.designer.vdb.VdbEntry.Synchronization;
 import org.teiid.designer.vdb.manifest.DataRoleElement;
@@ -51,13 +58,6 @@ import org.teiid.designer.vdb.manifest.PropertyElement;
 import org.teiid.designer.vdb.manifest.TranslatorElement;
 import org.teiid.designer.vdb.manifest.VdbElement;
 import org.xml.sax.SAXException;
-import com.metamatrix.core.modeler.util.FileUtils;
-import com.metamatrix.core.modeler.util.OperationUtil;
-import com.metamatrix.core.modeler.util.OperationUtil.Unreliable;
-import com.metamatrix.core.util.CoreArgCheck;
-import com.metamatrix.core.util.StringUtilities;
-import com.metamatrix.modeler.core.ModelerCore;
-import com.metamatrix.modeler.internal.core.builder.VdbModelBuilder;
 
 /**
  * 

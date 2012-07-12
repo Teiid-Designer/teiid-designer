@@ -24,7 +24,7 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.teiid.designer.datatools.ui.DatatoolsUiConstants;
-import com.metamatrix.ui.internal.util.WidgetFactory;
+import org.teiid.designer.ui.common.util.WidgetFactory;
 
 /**
  * 

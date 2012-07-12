@@ -28,25 +28,25 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.teiid.core.event.IChangeListener;
+import org.teiid.core.event.IChangeNotifier;
+import org.teiid.designer.core.workspace.ModelResource;
+import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
 import org.teiid.designer.datatools.connection.IConnectionInfoHelper;
 import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
+import org.teiid.designer.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstants;
+import org.teiid.designer.modelgenerator.wsdl.ui.util.ModelGeneratorWsdlUiUtil;
+import org.teiid.designer.modelgenerator.wsdl.ui.wizards.WSDLImportWizardManager;
+import org.teiid.designer.transformation.ui.wizards.file.FlatFileRelationalModelFactory;
+import org.teiid.designer.ui.common.util.WidgetFactory;
+import org.teiid.designer.ui.common.util.WidgetUtil;
+import org.teiid.designer.ui.viewsupport.DesignerPropertiesUtil;
+import org.teiid.designer.ui.viewsupport.MetamodelSelectionUtilities;
+import org.teiid.designer.ui.viewsupport.ModelProjectSelectionStatusValidator;
+import org.teiid.designer.ui.viewsupport.ModelUtilities;
+import org.teiid.designer.ui.viewsupport.ModelingResourceFilter;
 
-import com.metamatrix.core.event.IChangeListener;
-import com.metamatrix.core.event.IChangeNotifier;
-import com.metamatrix.modeler.core.workspace.ModelResource;
-import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
-import com.metamatrix.modeler.internal.ui.viewsupport.MetamodelSelectionUtilities;
-import com.metamatrix.modeler.internal.ui.viewsupport.ModelProjectSelectionStatusValidator;
-import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
-import com.metamatrix.modeler.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstants;
-import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.util.ModelGeneratorWsdlUiUtil;
-import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.wizards.WSDLImportWizardManager;
-import com.metamatrix.modeler.transformation.ui.wizards.file.FlatFileRelationalModelFactory;
-import com.metamatrix.modeler.ui.viewsupport.DesignerPropertiesUtil;
-import com.metamatrix.modeler.ui.viewsupport.ModelingResourceFilter;
-import com.metamatrix.ui.internal.util.WidgetFactory;
-import com.metamatrix.ui.internal.util.WidgetUtil;
 
 public class ImportOptionsPanel implements IChangeListener, ModelGeneratorWsdlUiConstants {
 	// Source Model Definition

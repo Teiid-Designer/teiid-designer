@@ -14,8 +14,8 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.teiid.designer.advisor.ui.AdvisorUiConstants;
 import org.teiid.designer.advisor.ui.AdvisorUiPlugin;
+import org.teiid.designer.ui.viewsupport.DefineModelProjectDialog;
 
-import com.metamatrix.modeler.internal.ui.viewsupport.DefineModelProjectDialog;
 
 public class DefineProjectAction  extends Action implements AdvisorUiConstants {
 

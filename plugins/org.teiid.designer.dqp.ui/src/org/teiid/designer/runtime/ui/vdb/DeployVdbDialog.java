@@ -32,20 +32,20 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
+import org.teiid.core.event.IChangeListener;
+import org.teiid.core.event.IChangeNotifier;
+import org.teiid.core.util.I18nUtil;
+import org.teiid.designer.runtime.ui.DqpUiConstants;
+import org.teiid.designer.ui.common.util.WidgetFactory;
+import org.teiid.designer.ui.common.viewsupport.ClosedProjectFilter;
+import org.teiid.designer.ui.common.viewsupport.StatusInfo;
+import org.teiid.designer.ui.common.widget.Label;
+import org.teiid.designer.ui.explorer.ModelExplorerContentProvider;
+import org.teiid.designer.ui.explorer.ModelExplorerLabelProvider;
+import org.teiid.designer.ui.viewsupport.DesignerProperties;
+import org.teiid.designer.ui.viewsupport.ModelWorkspaceDialog;
+import org.teiid.designer.ui.viewsupport.SingleProjectFilter;
 
-import com.metamatrix.core.event.IChangeListener;
-import com.metamatrix.core.event.IChangeNotifier;
-import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
-import com.metamatrix.modeler.internal.ui.explorer.ModelExplorerContentProvider;
-import com.metamatrix.modeler.internal.ui.explorer.ModelExplorerLabelProvider;
-import com.metamatrix.modeler.internal.ui.viewsupport.ModelWorkspaceDialog;
-import com.metamatrix.modeler.internal.ui.viewsupport.SingleProjectFilter;
-import com.metamatrix.modeler.ui.viewsupport.DesignerProperties;
-import com.metamatrix.ui.internal.util.WidgetFactory;
-import com.metamatrix.ui.internal.viewsupport.ClosedProjectFilter;
-import com.metamatrix.ui.internal.viewsupport.StatusInfo;
-import com.metamatrix.ui.internal.widget.Label;
 
 public class DeployVdbDialog extends TitleAreaDialog implements DqpUiConstants,
 		VdbConstants, IChangeListener {
@@ -221,7 +221,7 @@ public class DeployVdbDialog extends TitleAreaDialog implements DqpUiConstants,
 	}
 
 	/**
-	 * @see com.metamatrix.core.event.IChangeListener#stateChanged(com.metamatrix.core.event.IChangeNotifier)
+	 * @see org.teiid.core.event.IChangeListener#stateChanged(org.teiid.core.event.IChangeNotifier)
 	 * @since 5.5.3
 	 */
 	public void stateChanged(IChangeNotifier theSource) {

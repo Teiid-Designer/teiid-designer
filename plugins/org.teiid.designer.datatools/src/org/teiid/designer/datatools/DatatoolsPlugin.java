@@ -4,9 +4,9 @@ import java.util.ResourceBundle;
 
 import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;
+import org.teiid.core.PluginUtil;
+import org.teiid.core.util.PluginUtilImpl;
 
-import com.metamatrix.core.PluginUtil;
-import com.metamatrix.core.util.PluginUtilImpl;
 
 /**
  * The activator class controls the plug-in life cycle

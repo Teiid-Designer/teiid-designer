@@ -13,13 +13,13 @@ import java.util.ResourceBundle;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.ui.IWorkbenchPage;
 import org.osgi.framework.BundleContext;
+import org.teiid.core.PluginUtil;
+import org.teiid.core.util.PluginUtilImpl;
 import org.teiid.designer.advisor.ui.util.DSPPluginImageHelper;
 import org.teiid.designer.advisor.ui.views.status.AdvisorStatusManager;
+import org.teiid.designer.ui.common.AbstractUiPlugin;
+import org.teiid.designer.ui.common.actions.ActionService;
 
-import com.metamatrix.core.PluginUtil;
-import com.metamatrix.core.util.PluginUtilImpl;
-import com.metamatrix.ui.AbstractUiPlugin;
-import com.metamatrix.ui.actions.ActionService;
 
 public class AdvisorUiPlugin extends AbstractUiPlugin implements AdvisorUiConstants {
 	// ===========================================================================================================================
@@ -110,7 +110,7 @@ public class AdvisorUiPlugin extends AbstractUiPlugin implements AdvisorUiConsta
 	// Methods
 
 	/**
-	 * @see com.metamatrix.ui.AbstractUiPlugin#createActionService(org.eclipse.ui.IWorkbenchPage)
+	 * @see org.teiid.designer.ui.common.AbstractUiPlugin#createActionService(org.eclipse.ui.IWorkbenchPage)
 	 * @since 4.2
 	 */
     @Override
@@ -132,7 +132,7 @@ public class AdvisorUiPlugin extends AbstractUiPlugin implements AdvisorUiConsta
 	}
 
 	/**
-	 * @see com.metamatrix.ui.AbstractUiPlugin#getPluginUtil()
+	 * @see org.teiid.designer.ui.common.AbstractUiPlugin#getPluginUtil()
 	 * @since 4.2
 	 */
 	@Override

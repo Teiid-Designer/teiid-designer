@@ -18,13 +18,13 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.osgi.util.NLS;
+import org.teiid.core.util.ArrayUtil;
+import org.teiid.core.util.CoreStringUtil;
 import org.teiid.designer.extension.Messages;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition.Utils;
 import org.teiid.designer.extension.properties.Translation;
 
-import com.metamatrix.core.util.ArrayUtil;
-import com.metamatrix.core.util.CoreStringUtil;
 
 /**
  * Validates the properties of a {@link ModelExtensionDefinition}.

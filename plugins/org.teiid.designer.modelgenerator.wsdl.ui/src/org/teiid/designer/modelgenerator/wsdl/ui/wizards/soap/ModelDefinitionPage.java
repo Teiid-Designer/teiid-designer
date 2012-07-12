@@ -20,19 +20,19 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.teiid.core.event.IChangeListener;
+import org.teiid.core.event.IChangeNotifier;
 import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
+import org.teiid.designer.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstants;
+import org.teiid.designer.modelgenerator.wsdl.ui.util.ModelGeneratorWsdlUiUtil;
+import org.teiid.designer.modelgenerator.wsdl.ui.wizards.SelectWsdlOperationsPage;
+import org.teiid.designer.modelgenerator.wsdl.ui.wizards.WSDLImportWizardManager;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.panels.ImportOptionsPanel;
+import org.teiid.designer.ui.common.util.WidgetFactory;
+import org.teiid.designer.ui.common.util.WidgetUtil;
+import org.teiid.designer.ui.common.util.WizardUtil;
+import org.teiid.designer.ui.common.wizard.AbstractWizardPage;
 
-import com.metamatrix.core.event.IChangeListener;
-import com.metamatrix.core.event.IChangeNotifier;
-import com.metamatrix.modeler.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstants;
-import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.util.ModelGeneratorWsdlUiUtil;
-import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.wizards.SelectWsdlOperationsPage;
-import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.wizards.WSDLImportWizardManager;
-import com.metamatrix.ui.internal.util.WidgetFactory;
-import com.metamatrix.ui.internal.util.WidgetUtil;
-import com.metamatrix.ui.internal.util.WizardUtil;
-import com.metamatrix.ui.internal.wizard.AbstractWizardPage;
 
 public class ModelDefinitionPage extends AbstractWizardPage implements
 	IChangeListener,

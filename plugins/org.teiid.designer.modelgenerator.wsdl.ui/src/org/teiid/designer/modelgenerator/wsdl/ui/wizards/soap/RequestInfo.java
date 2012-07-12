@@ -13,11 +13,11 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.osgi.util.NLS;
+import org.teiid.designer.modelgenerator.wsdl.model.Message;
+import org.teiid.designer.modelgenerator.wsdl.model.Operation;
+import org.teiid.designer.modelgenerator.wsdl.model.Part;
 import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
 
-import com.metamatrix.modeler.modelgenerator.wsdl.model.Message;
-import com.metamatrix.modeler.modelgenerator.wsdl.model.Operation;
-import com.metamatrix.modeler.modelgenerator.wsdl.model.Part;
 
 public class RequestInfo extends ProcedureInfo {
 

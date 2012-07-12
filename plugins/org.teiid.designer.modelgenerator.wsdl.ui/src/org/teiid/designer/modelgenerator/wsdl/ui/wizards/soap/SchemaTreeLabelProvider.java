@@ -16,10 +16,10 @@ import org.eclipse.xsd.XSDElementDeclaration;
 import org.eclipse.xsd.XSDModelGroup;
 import org.eclipse.xsd.XSDParticle;
 import org.eclipse.xsd.impl.XSDParticleImpl;
+import org.teiid.designer.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstants;
+import org.teiid.designer.modelgenerator.wsdl.ui.util.ModelGeneratorWsdlUiUtil;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.SchemaTreeModel.SchemaNode;
 
-import com.metamatrix.modeler.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstants;
-import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.util.ModelGeneratorWsdlUiUtil;
 
 public class SchemaTreeLabelProvider extends AdapterFactoryLabelProvider {
 	private final Image XSD_COMPLEX_ELEMENT_ICON_IMG = 

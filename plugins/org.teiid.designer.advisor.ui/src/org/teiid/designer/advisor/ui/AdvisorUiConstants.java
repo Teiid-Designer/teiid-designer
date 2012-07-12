@@ -8,8 +8,10 @@
 package org.teiid.designer.advisor.ui;
 
 import java.util.ResourceBundle;
-import com.metamatrix.core.PluginUtil;
-import com.metamatrix.core.util.PluginUtilImpl;
+
+import org.teiid.core.PluginUtil;
+import org.teiid.core.util.PluginUtilImpl;
+
 
 public interface AdvisorUiConstants {
 	

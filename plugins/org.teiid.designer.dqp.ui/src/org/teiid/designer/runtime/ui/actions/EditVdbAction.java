@@ -15,17 +15,17 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.eclipse.ui.ide.IDE;
+import org.teiid.core.util.I18nUtil;
+import org.teiid.designer.runtime.ui.DqpUiConstants;
+import org.teiid.designer.runtime.ui.DqpUiPlugin;
 import org.teiid.designer.runtime.ui.vdb.VdbConstants;
+import org.teiid.designer.ui.common.util.UiUtil;
+import org.teiid.designer.ui.common.viewsupport.ClosedProjectFilter;
+import org.teiid.designer.ui.common.viewsupport.StatusInfo;
+import org.teiid.designer.ui.explorer.ModelExplorerContentProvider;
+import org.teiid.designer.ui.explorer.ModelExplorerLabelProvider;
+import org.teiid.designer.ui.viewsupport.ModelWorkspaceDialog;
 
-import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
-import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
-import com.metamatrix.modeler.internal.ui.explorer.ModelExplorerContentProvider;
-import com.metamatrix.modeler.internal.ui.explorer.ModelExplorerLabelProvider;
-import com.metamatrix.modeler.internal.ui.viewsupport.ModelWorkspaceDialog;
-import com.metamatrix.ui.internal.util.UiUtil;
-import com.metamatrix.ui.internal.viewsupport.ClosedProjectFilter;
-import com.metamatrix.ui.internal.viewsupport.StatusInfo;
 
 public class EditVdbAction  extends Action implements VdbConstants {
 	private static final String PREFIX = I18nUtil.getPropertyPrefix(EditVdbAction.class);

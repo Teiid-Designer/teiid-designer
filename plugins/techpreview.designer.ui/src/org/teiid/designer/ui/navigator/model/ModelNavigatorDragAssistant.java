@@ -7,7 +7,7 @@
  */
 package org.teiid.designer.ui.navigator.model;
 
-import static com.metamatrix.modeler.ui.UiConstants.Util;
+import static org.teiid.designer.ui.UiConstants.Util;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -22,12 +22,12 @@ import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DragSourceEvent;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.ui.navigator.CommonDragAdapterAssistant;
+import org.teiid.designer.core.workspace.ModelUtil;
+import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
+import org.teiid.designer.ui.editors.ModelEditorManager;
+import org.teiid.designer.ui.util.EObjectTransfer;
+import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
-import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
-import com.metamatrix.modeler.internal.ui.util.EObjectTransfer;
-import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
-import com.metamatrix.modeler.ui.editors.ModelEditorManager;
-import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
 
 /**
  * The <code>ModelNavigatorDragAssistant</code> prevents certain resources from being dragged unless they are being dragged from

@@ -6,10 +6,9 @@ Bundle-Version: 7.7.1.qualifier
 Bundle-Vendor: %Bundle-Vendor.0
 Fragment-Host: org.teiid.designer.webservice
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Export-Package: com.metamatrix.modeler.internal.webservice,
- com.metamatrix.modeler.internal.webservice.gen,
- com.metamatrix.modeler.webservice,
- com.metamatrix.modeler.webservice.procedure
+Export-Package: org.teiid.designer.webservice,
+ org.teiid.designer.webservice.gen,
+ org.teiid.designer.webservice.procedure
 Bundle-Localization: plugin
 Require-Bundle: org.junit4,
  org.teiid.core.designer.test.framework,

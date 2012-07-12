@@ -41,6 +41,8 @@ import org.teiid.designer.advisor.ui.AdvisorUiConstants;
 import org.teiid.designer.advisor.ui.AdvisorUiPlugin;
 import org.teiid.designer.advisor.ui.Messages;
 import org.teiid.designer.datatools.ui.dialogs.NewTeiidFilteredCPWizard;
+import org.teiid.designer.metamodels.core.ModelType;
+import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.Server;
 import org.teiid.designer.runtime.ui.actions.DeployVdbAction;
 import org.teiid.designer.runtime.ui.actions.EditVdbAction;
@@ -48,13 +50,11 @@ import org.teiid.designer.runtime.ui.connection.CreateDataSourceAction;
 import org.teiid.designer.runtime.ui.preview.PreviewDataAction;
 import org.teiid.designer.runtime.ui.server.RuntimeAssistant;
 import org.teiid.designer.runtime.ui.vdb.ExecuteVdbAction;
+import org.teiid.designer.ui.common.util.UiUtil;
+import org.teiid.designer.ui.common.util.WidgetUtil;
+import org.teiid.designer.ui.viewsupport.IPropertiesContext;
+import org.teiid.designer.ui.viewsupport.ModelerUiViewUtils;
 
-import com.metamatrix.metamodels.core.ModelType;
-import com.metamatrix.modeler.dqp.DqpPlugin;
-import com.metamatrix.modeler.internal.ui.viewsupport.ModelerUiViewUtils;
-import com.metamatrix.modeler.ui.viewsupport.IPropertiesContext;
-import com.metamatrix.ui.internal.util.UiUtil;
-import com.metamatrix.ui.internal.util.WidgetUtil;
 
 /**
  * Factory intended to provide high-level access to actions and their handlers for Teiid Designer Advisor framework

@@ -28,15 +28,15 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.ui.IActionDelegate;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.actions.RenameResourceAction;
+import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.ui.UiConstants;
+import org.teiid.designer.ui.actions.DelegatableAction;
+import org.teiid.designer.ui.actions.TreeViewerRenameAction;
+import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
+import org.teiid.designer.ui.common.util.WidgetUtil;
+import org.teiid.designer.ui.refactor.actions.RenameRefactorAction;
+import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
-import com.metamatrix.modeler.core.ModelerCore;
-import com.metamatrix.modeler.internal.ui.actions.TreeViewerRenameAction;
-import com.metamatrix.modeler.internal.ui.refactor.actions.RenameRefactorAction;
-import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
-import com.metamatrix.modeler.ui.UiConstants;
-import com.metamatrix.modeler.ui.actions.DelegatableAction;
-import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
-import com.metamatrix.ui.internal.util.WidgetUtil;
 
 /**
  * ModelNavigatorRenameAction is a specialization of ResourceNavigatorRenameAction that also handles in-line renaming of EObjects.

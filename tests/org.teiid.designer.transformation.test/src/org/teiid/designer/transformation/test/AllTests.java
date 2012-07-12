@@ -2,14 +2,14 @@ package org.teiid.designer.transformation.test;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
+import org.teiid.designer.transformation.aspects.validation.rules.TestMappingClassTransformationValidationHelper;
+import org.teiid.designer.transformation.metadata.TestPerformanceIndexFilePerRecordType;
+import org.teiid.designer.transformation.metadata.TestPerformanceMultipleRecordTypesInOneIndexFile;
+import org.teiid.designer.transformation.metadata.TestPerformancePrefixAndPatternLookUp;
+import org.teiid.designer.transformation.metadata.TestServerRuntimeMetadata;
+import org.teiid.designer.transformation.metadata.TestTransformationMetadata;
+import org.teiid.designer.transformation.metadata.TestTransformationMetadataFacade;
 
-import com.metamatrix.modeler.transformation.aspects.validation.rules.TestMappingClassTransformationValidationHelper;
-import com.metamatrix.modeler.transformation.metadata.TestPerformanceIndexFilePerRecordType;
-import com.metamatrix.modeler.transformation.metadata.TestPerformanceMultipleRecordTypesInOneIndexFile;
-import com.metamatrix.modeler.transformation.metadata.TestPerformancePrefixAndPatternLookUp;
-import com.metamatrix.modeler.transformation.metadata.TestServerRuntimeMetadata;
-import com.metamatrix.modeler.transformation.metadata.TestTransformationMetadata;
-import com.metamatrix.modeler.transformation.metadata.TestTransformationMetadataFacade;
 
 
 @RunWith( Suite.class )

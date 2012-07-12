@@ -8,14 +8,15 @@
 
 package org.teiid.designer.runtime.preview.jobs;
 
-import static com.metamatrix.modeler.dqp.DqpPlugin.Util;
+import static org.teiid.designer.runtime.DqpPlugin.Util;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.osgi.util.NLS;
 import org.teiid.designer.runtime.DebugConstants;
+import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.Server;
 import org.teiid.designer.runtime.preview.Messages;
 import org.teiid.designer.runtime.preview.PreviewContext;
-import com.metamatrix.modeler.dqp.DqpPlugin;
 
 /**
  *

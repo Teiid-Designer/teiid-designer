@@ -13,7 +13,7 @@
          point="org.eclipse.emf.ecore.generated_package">
       <package
             uri="http://www.metamatrix.com/metamodels/Diagram"
-            class="com.metamatrix.metamodels.diagram.DiagramPackage">
+            class="org.teiid.designer.metamodels.diagram.DiagramPackage">
       </package>
    </extension>
 <!--
@@ -29,13 +29,13 @@
          http://www.metamatrix.com/metamodels/Diagram
       </uri>
       <alternateUri>
-         mtkplugin:///com.metamatrix.metamodels.Diagram
+         mtkplugin:///org.teiid.designer.metamodels.Diagram
       </alternateUri>
       <packageClass
-            name="com.metamatrix.metamodels.diagram.DiagramPackage">
+            name="org.teiid.designer.metamodels.diagram.DiagramPackage">
       </packageClass>
       <adapterClass
-            name="com.metamatrix.metamodels.diagram.provider.DiagramItemProviderAdapterFactory">
+            name="org.teiid.designer.metamodels.diagram.provider.DiagramItemProviderAdapterFactory">
       </adapterClass>
       <properties
             createAsPhysical="false"

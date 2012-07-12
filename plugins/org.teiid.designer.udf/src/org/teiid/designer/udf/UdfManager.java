@@ -26,6 +26,27 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.teiid.core.designer.util.FileUtils;
+import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.core.ModelerCoreException;
+import org.teiid.designer.core.util.ModelObjectCollector;
+import org.teiid.designer.core.util.ModelVisitor;
+import org.teiid.designer.core.util.ModelVisitorProcessor;
+import org.teiid.designer.core.util.StringUtilities;
+import org.teiid.designer.core.workspace.ModelObjectAnnotationHelper;
+import org.teiid.designer.core.workspace.ModelResource;
+import org.teiid.designer.core.workspace.ModelUtil;
+import org.teiid.designer.core.workspace.ModelWorkspaceException;
+import org.teiid.designer.core.workspace.ModelWorkspaceManager;
+import org.teiid.designer.core.workspace.ResourceChangeUtilities;
+import org.teiid.designer.core.workspace.WorkspaceResourceFinderUtil;
+import org.teiid.designer.metamodels.core.ModelType;
+import org.teiid.designer.metamodels.function.ScalarFunction;
+import org.teiid.designer.metamodels.relational.DirectionKind;
+import org.teiid.designer.metamodels.relational.Procedure;
+import org.teiid.designer.metamodels.relational.ProcedureParameter;
+import org.teiid.designer.metamodels.relational.RelationalPackage;
+import org.teiid.designer.metamodels.relational.util.PushdownFunctionData;
 import org.teiid.metadata.FunctionMethod;
 import org.teiid.metadata.FunctionMethod.Determinism;
 import org.teiid.metadata.FunctionParameter;
@@ -35,27 +56,6 @@ import org.teiid.query.function.FunctionTree;
 import org.teiid.query.function.SystemFunctionManager;
 import org.teiid.query.function.UDFSource;
 
-import com.metamatrix.core.modeler.util.FileUtils;
-import com.metamatrix.core.util.StringUtilities;
-import com.metamatrix.metamodels.core.ModelType;
-import com.metamatrix.metamodels.function.ScalarFunction;
-import com.metamatrix.metamodels.relational.DirectionKind;
-import com.metamatrix.metamodels.relational.Procedure;
-import com.metamatrix.metamodels.relational.ProcedureParameter;
-import com.metamatrix.metamodels.relational.RelationalPackage;
-import com.metamatrix.metamodels.relational.util.PushdownFunctionData;
-import com.metamatrix.modeler.core.ModelerCore;
-import com.metamatrix.modeler.core.ModelerCoreException;
-import com.metamatrix.modeler.core.util.ModelObjectCollector;
-import com.metamatrix.modeler.core.util.ModelVisitor;
-import com.metamatrix.modeler.core.util.ModelVisitorProcessor;
-import com.metamatrix.modeler.core.workspace.ModelResource;
-import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
-import com.metamatrix.modeler.internal.core.workspace.ModelObjectAnnotationHelper;
-import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
-import com.metamatrix.modeler.internal.core.workspace.ModelWorkspaceManager;
-import com.metamatrix.modeler.internal.core.workspace.ResourceChangeUtilities;
-import com.metamatrix.modeler.internal.core.workspace.WorkspaceResourceFinderUtil;
 
 public final class UdfManager implements IResourceChangeListener {
     
@@ -345,8 +345,8 @@ public final class UdfManager implements IResourceChangeListener {
         			Collection<FunctionParameter> fParams = new ArrayList<FunctionParameter>();
         			
         			for( Object inputParam : function.getInputParameters() ) {
-        				if( inputParam instanceof com.metamatrix.metamodels.function.FunctionParameter) {
-        					com.metamatrix.metamodels.function.FunctionParameter param = (com.metamatrix.metamodels.function.FunctionParameter)inputParam;
+        				if( inputParam instanceof org.teiid.designer.metamodels.function.FunctionParameter) {
+        					org.teiid.designer.metamodels.function.FunctionParameter param = (org.teiid.designer.metamodels.function.FunctionParameter)inputParam;
         					fParams.add(new FunctionParameter(param.getName(), param.getType()));
         					// If any function parameter has an error don't add this
         					if( !functionPamameterHasError && !isFunctionObjectErrorFree(param, markers, functionModelResource)){

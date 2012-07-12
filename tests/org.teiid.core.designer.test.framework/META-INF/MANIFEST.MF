@@ -11,5 +11,5 @@ Require-Bundle: org.mockito,
  org.eclipse.core.runtime,
  org.teiid.core.designer,
  org.junit4
-Export-Package: com.metamatrix.core.util,
- org.teiid.core.designer
+Export-Package: org.teiid.core.designer,
+ org.teiid.core.util

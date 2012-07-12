@@ -6,9 +6,9 @@ Bundle-Version: 7.7.1.qualifier
 Bundle-Vendor: %Bundle-Vendor.0
 Fragment-Host: org.teiid.designer.ui
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Export-Package: com.metamatrix.modeler.internal.ui.explorer,
- com.metamatrix.modeler.internal.ui.viewsupport,
- com.metamatrix.modeler.ui.product
+Export-Package: org.teiid.designer.ui.explorer,
+ org.teiid.designer.ui.product,
+ org.teiid.designer.ui.viewsupport
 Bundle-Localization: plugin
 Require-Bundle: org.junit4,
  org.teiid.core.designer.test.framework,

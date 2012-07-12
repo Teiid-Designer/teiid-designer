@@ -7,28 +7,28 @@
  */
 package org.teiid.designer.runtime.ui.extension;
 
-import static com.metamatrix.modeler.dqp.ui.DqpUiConstants.UTIL;
-import static com.metamatrix.modeler.dqp.ui.DqpUiConstants.Images.EXTENSION_PROPS_ICON;
 import static org.teiid.designer.runtime.extension.rest.RestModelExtensionConstants.NAMESPACE_PROVIDER;
+import static org.teiid.designer.runtime.ui.DqpUiConstants.UTIL;
+import static org.teiid.designer.runtime.ui.DqpUiConstants.Images.EXTENSION_PROPS_ICON;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
+import org.teiid.core.util.I18nUtil;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.extension.deprecated.DeprecatedModelExtensionAssistant;
+import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
+import org.teiid.designer.metamodels.relational.Procedure;
 import org.teiid.designer.runtime.extension.rest.RestModelExtensionAssistant;
+import org.teiid.designer.runtime.ui.DqpUiPlugin;
+import org.teiid.designer.ui.actions.SortableSelectionAction;
+import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
+import org.teiid.designer.ui.editors.ModelEditorManager;
+import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
-import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.metamodels.relational.Procedure;
-import com.metamatrix.modeler.core.ModelerCore;
-import com.metamatrix.modeler.core.workspace.ModelResource;
-import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
-import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
-import com.metamatrix.modeler.ui.actions.SortableSelectionAction;
-import com.metamatrix.modeler.ui.editors.ModelEditorManager;
-import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
 
 /**
  * 
@@ -106,7 +106,7 @@ public abstract class RestWarPropertiesAction extends SortableSelectionAction {
     /**
      * {@inheritDoc}
      * 
-     * @see com.metamatrix.modeler.ui.actions.SortableSelectionAction#isApplicable(org.eclipse.jface.viewers.ISelection)
+     * @see org.teiid.designer.ui.actions.SortableSelectionAction#isApplicable(org.eclipse.jface.viewers.ISelection)
      */
     @Override
     final public boolean isApplicable( final ISelection selection ) {
@@ -122,7 +122,7 @@ public abstract class RestWarPropertiesAction extends SortableSelectionAction {
     /**
      * {@inheritDoc}
      * 
-     * @see com.metamatrix.modeler.ui.actions.SortableSelectionAction#isValidSelection(org.eclipse.jface.viewers.ISelection)
+     * @see org.teiid.designer.ui.actions.SortableSelectionAction#isValidSelection(org.eclipse.jface.viewers.ISelection)
      */
     @Override
     final public boolean isValidSelection( ISelection selection ) {

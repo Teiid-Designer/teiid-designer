@@ -49,6 +49,7 @@ import org.eclipse.ui.forms.IMessageManager;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
+import org.teiid.core.util.CoreStringUtil;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition.PropertyName;
 import org.teiid.designer.extension.definition.ModelExtensionDefinitionValidator;
@@ -56,9 +57,8 @@ import org.teiid.designer.extension.ui.Activator;
 import org.teiid.designer.extension.ui.Messages;
 import org.teiid.designer.extension.ui.model.MedModelNode;
 import org.teiid.designer.extension.ui.model.MedModelNode.ModelType;
+import org.teiid.designer.ui.forms.MessageFormDialog;
 
-import com.metamatrix.core.util.CoreStringUtil;
-import com.metamatrix.modeler.internal.ui.forms.MessageFormDialog;
 
 public final class OverviewEditorPage extends MedEditorPage {
 

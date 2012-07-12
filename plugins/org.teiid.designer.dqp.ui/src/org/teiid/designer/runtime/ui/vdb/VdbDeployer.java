@@ -8,22 +8,23 @@
 
 package org.teiid.designer.runtime.ui.vdb;
 
-import static com.metamatrix.modeler.dqp.ui.DqpUiConstants.UTIL;
+import static org.teiid.designer.runtime.ui.DqpUiConstants.UTIL;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.teiid.adminapi.VDB;
+import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.util.I18nUtil;
+import org.teiid.designer.core.util.StringUtilities;
+import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.runtime.ExecutionAdmin;
+import org.teiid.designer.runtime.ui.DqpUiPlugin;
 import org.teiid.designer.vdb.TranslatorOverride;
 import org.teiid.designer.vdb.Vdb;
 import org.teiid.designer.vdb.VdbModelEntry;
-import com.metamatrix.core.util.CoreArgCheck;
-import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.core.util.StringUtilities;
-import com.metamatrix.metamodels.core.ModelType;
-import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
 
 /**
  *

@@ -31,21 +31,21 @@ import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.ide.IDE;
+import org.teiid.core.util.CoreStringUtil;
+import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.definition.ModelExtensionAssistant;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.definition.ModelExtensionDefinitionWriter;
 import org.teiid.designer.extension.ui.Messages;
+import org.teiid.designer.ui.PluginConstants;
+import org.teiid.designer.ui.UiConstants;
+import org.teiid.designer.ui.UiPlugin;
+import org.teiid.designer.ui.common.util.WidgetUtil;
+import org.teiid.designer.ui.common.wizard.AbstractWizard;
+import org.teiid.designer.ui.viewsupport.ModelerUiViewUtils;
 
-import com.metamatrix.core.util.CoreStringUtil;
-import com.metamatrix.modeler.core.ModelerCore;
-import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
-import com.metamatrix.modeler.internal.ui.PluginConstants;
-import com.metamatrix.modeler.internal.ui.viewsupport.ModelerUiViewUtils;
-import com.metamatrix.modeler.ui.UiConstants;
-import com.metamatrix.modeler.ui.UiPlugin;
-import com.metamatrix.ui.internal.util.WidgetUtil;
-import com.metamatrix.ui.internal.wizard.AbstractWizard;
 
 /**
  * NewMedWizard - handles creating of new MEDs

@@ -11,10 +11,10 @@ import org.eclipse.swtbot.swt.finder.finders.UIThreadRunnable;
 import org.eclipse.swtbot.swt.finder.results.Result;
 import org.eclipse.swtbot.swt.finder.results.VoidResult;
 import org.eclipse.swtbot.swt.finder.widgets.AbstractSWTBotControl;
+import org.teiid.designer.diagram.ui.notation.uml.figure.UmlClassifierFigure;
+import org.teiid.designer.diagram.ui.notation.uml.figure.UmlClassifierHeader;
+import org.teiid.designer.transformation.ui.figure.TransformationFigure;
 
-import com.metamatrix.modeler.diagram.ui.notation.uml.figure.UmlClassifierFigure;
-import com.metamatrix.modeler.diagram.ui.notation.uml.figure.UmlClassifierHeader;
-import com.metamatrix.modeler.transformation.ui.figure.TransformationFigure;
 
 
 

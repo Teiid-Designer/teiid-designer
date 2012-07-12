@@ -3,16 +3,16 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.teiid.designer.query.ui;singleton:=true
 Bundle-Version: 7.7.1.qualifier
-Bundle-Activator: com.metamatrix.query.ui.UiPlugin
+Bundle-Activator: org.teiid.query.ui.UiPlugin
 Bundle-Vendor: %pluginProvider
 Bundle-Localization: plugin
-Export-Package: com.metamatrix.query.internal.ui.builder.model,
- com.metamatrix.query.internal.ui.builder.util,
- com.metamatrix.query.internal.ui.sqleditor.component,
- com.metamatrix.query.internal.ui.sqleditor.sql,
- com.metamatrix.query.internal.ui.tree,
- com.metamatrix.query.ui,
- com.metamatrix.query.ui.actions
+Export-Package: org.teiid.query.ui,
+ org.teiid.query.ui.actions,
+ org.teiid.query.ui.builder.model,
+ org.teiid.query.ui.builder.util,
+ org.teiid.query.ui.sqleditor.component,
+ org.teiid.query.ui.sqleditor.sql,
+ org.teiid.query.ui.tree
 Require-Bundle: org.eclipse.ui.ide,
  org.eclipse.ui.views,
  org.eclipse.jface.text,

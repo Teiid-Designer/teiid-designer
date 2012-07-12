@@ -18,7 +18,7 @@
             name="%diagramEditorExtensionName"
             icon="icons/full/cview16/Diagram.gif"
             extensions="dgm"
-            class="com.metamatrix.modeler.diagram.ui.editor.DiagramEditor"
+            class="org.teiid.designer.diagram.ui.editor.DiagramEditor"
             id="DiagramEditor">
       </editor>
    </extension>
@@ -27,7 +27,7 @@
       <page
             name="%diagramPreferences"
             category="modelerPreferencePage"
-            class="com.metamatrix.modeler.diagram.ui.preferences.DiagramPreferencePage"
+            class="org.teiid.designer.diagram.ui.preferences.DiagramPreferencePage"
             id="diagramPreferencePage">
       </page>
    </extension>
@@ -36,7 +36,7 @@
       <page
             name="%diagramPrintPreferences"
             category="modelerPreferencePage"
-            class="com.metamatrix.modeler.diagram.ui.preferences.DiagramPrintPreferencePage"
+            class="org.teiid.designer.diagram.ui.preferences.DiagramPrintPreferencePage"
             id="diagramPrintPreferencePage">
       </page>
    </extension>
@@ -48,7 +48,7 @@
       <class
             tabName="%diagramEditorName"
             order="0"
-            name="com.metamatrix.modeler.diagram.ui.editor.DiagramEditor">
+            name="org.teiid.designer.diagram.ui.editor.DiagramEditor">
       </class>
    </extension>
 <!-- Adding the default Diagram Notation extension-->
@@ -57,13 +57,13 @@
          name="%umlDiagramNotation"
          point="org.teiid.designer.diagram.ui.diagramNotation">
       <editPartGenerator
-            class="com.metamatrix.modeler.diagram.ui.notation.uml.UmlPartGenerator">
+            class="org.teiid.designer.diagram.ui.notation.uml.UmlPartGenerator">
       </editPartGenerator>
       <diagramModelGenerator
-            class="com.metamatrix.modeler.diagram.ui.notation.uml.UmlModelGenerator">
+            class="org.teiid.designer.diagram.ui.notation.uml.UmlModelGenerator">
       </diagramModelGenerator>
       <figureGenerator
-            class="com.metamatrix.modeler.diagram.ui.notation.uml.UmlFigureGenerator">
+            class="org.teiid.designer.diagram.ui.notation.uml.UmlFigureGenerator">
       </figureGenerator>
       <notationPreferences
             displayName="UML">
@@ -75,7 +75,7 @@
          name="%packageDiagramType"
          point="org.teiid.designer.diagram.ui.diagramType">
       <diagram
-            class="com.metamatrix.modeler.diagram.ui.pakkage.PackageDiagramType"
+            class="org.teiid.designer.diagram.ui.pakkage.PackageDiagramType"
             simpleDiagram="true">
       </diagram>
    </extension>
@@ -84,7 +84,7 @@
          id="packageModelObjectActionContributor"
          point="org.teiid.designer.ui.modelObjectActionContributor">
       <class
-            name="com.metamatrix.modeler.diagram.ui.pakkage.actions.PackageDiagramPermanentActionContributor">
+            name="org.teiid.designer.diagram.ui.pakkage.actions.PackageDiagramPermanentActionContributor">
       </class>
    </extension>
 <!-- Package Diagram Content Provider -->
@@ -93,7 +93,7 @@
          name="%packageDiagramContentProvider"
          point="org.teiid.designer.ui.diagramContentProvider">
       <class
-            name="com.metamatrix.modeler.diagram.ui.pakkage.PackageDiagramContentProvider">
+            name="org.teiid.designer.diagram.ui.pakkage.PackageDiagramContentProvider">
       </class>
       <diagramType
             name="packageDiagramType">
@@ -105,7 +105,7 @@
          name="%packageDiagramLabelProvider"
          point="org.teiid.designer.ui.diagramLabelProvider">
       <class
-            name="com.metamatrix.modeler.diagram.ui.pakkage.PackageDiagramLabelProvider">
+            name="org.teiid.designer.diagram.ui.pakkage.PackageDiagramLabelProvider">
       </class>
       <diagramType
             name="packageDiagramType">
@@ -117,7 +117,7 @@
          name="%customDiagramType"
          point="org.teiid.designer.diagram.ui.diagramType">
       <diagram
-            class="com.metamatrix.modeler.diagram.ui.custom.CustomDiagramType"
+            class="org.teiid.designer.diagram.ui.custom.CustomDiagramType"
             simpleDiagram="true">
       </diagram>
    </extension>
@@ -126,7 +126,7 @@
          id="customModelObjectActionContributor"
          point="org.teiid.designer.ui.modelObjectActionContributor">
       <class
-            name="com.metamatrix.modeler.diagram.ui.custom.actions.CustomDiagramPermanentActionContributor">
+            name="org.teiid.designer.diagram.ui.custom.actions.CustomDiagramPermanentActionContributor">
       </class>
    </extension>
 <!-- Custom Diagram Content Provider -->
@@ -135,7 +135,7 @@
          name="%customDiagramContentProvider"
          point="org.teiid.designer.ui.diagramContentProvider">
       <class
-            name="com.metamatrix.modeler.diagram.ui.custom.CustomDiagramContentProvider">
+            name="org.teiid.designer.diagram.ui.custom.CustomDiagramContentProvider">
       </class>
       <diagramType
             name="customDiagramType">
@@ -147,7 +147,7 @@
          name="%customDiagramLabelProvider"
          point="org.teiid.designer.ui.diagramLabelProvider">
       <class
-            name="com.metamatrix.modeler.diagram.ui.custom.CustomDiagramLabelProvider">
+            name="org.teiid.designer.diagram.ui.custom.CustomDiagramLabelProvider">
       </class>
       <diagramType
             name="customDiagramType">
@@ -159,7 +159,7 @@
          name="%customDiagramHelper"
          point="org.teiid.designer.ui.diagramHelper">
       <class
-         name="com.metamatrix.modeler.diagram.ui.custom.CustomDiagramHelper"
+         name="org.teiid.designer.diagram.ui.custom.CustomDiagramHelper"
          diagramType="customDiagramType">
       </class>
    </extension>
@@ -169,7 +169,7 @@
          name="%relationalObjectEditHelper"
          point="org.teiid.designer.ui.modelObjectEditHelper">
       <class
-        name="com.metamatrix.modeler.diagram.ui.actions.RelationalObjectEditHelper">
+        name="org.teiid.designer.diagram.ui.actions.RelationalObjectEditHelper">
       </class>
    </extension>
 <!-- Helper method to allow external edit for objects. i.e. Delete, Copy, etc.. -->
@@ -178,7 +178,7 @@
          name="%diagramUiNewModelObjectHelper"
          point="org.teiid.designer.core.newModelObjectHelper">
       <class
-        name="com.metamatrix.modeler.diagram.ui.util.DiagramUiNewModelObjectHelper">
+        name="org.teiid.designer.diagram.ui.util.DiagramUiNewModelObjectHelper">
       </class>
    </extension>
    <extension
@@ -186,7 +186,7 @@
 		name="%diagramRefactorModelExtension.name"
         point="org.teiid.designer.core.refactorModelHandler">
       <refactorHandler
-         name="com.metamatrix.modeler.diagram.ui.util.DiagramRefactorModelHandler">
+         name="org.teiid.designer.diagram.ui.util.DiagramRefactorModelHandler">
       </refactorHandler>
    </extension>
 </plugin>

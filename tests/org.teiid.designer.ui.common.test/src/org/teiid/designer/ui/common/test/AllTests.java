@@ -2,11 +2,11 @@ package org.teiid.designer.ui.common.test;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
+import org.teiid.designer.ui.common.dialogs.TestFileUiUtils;
+import org.teiid.designer.ui.common.eventsupport.TestSelectionProvider;
+import org.teiid.designer.ui.common.eventsupport.TestSelectionUtilities;
+import org.teiid.designer.ui.common.viewsupport.TestUiBusyIndicator;
 
-import com.metamatrix.ui.dialogs.TestFileUiUtils;
-import com.metamatrix.ui.internal.eventsupport.TestSelectionProvider;
-import com.metamatrix.ui.internal.eventsupport.TestSelectionUtilities;
-import com.metamatrix.ui.internal.viewsupport.TestUiBusyIndicator;
 
 @RunWith( Suite.class )
 @Suite.SuiteClasses({ TestSelectionUtilities.class,

@@ -16,7 +16,7 @@
          name="%datatypeManagerName"
          point="org.teiid.designer.core.datatypeManager">
       <class
-            name="com.metamatrix.modeler.internal.sdt.types.WorkspaceDatatypeManager">
+            name="org.teiid.designer.sdt.types.WorkspaceDatatypeManager">
       </class>
    </extension>
 <!-- ExternalResource extension -->
@@ -41,7 +41,7 @@
          name="%xsdResourceSetName"
          point="org.teiid.designer.core.externalResourceSet">
       <class
-            name="com.metamatrix.modeler.internal.sdt.types.XsdExternalResourceSet">
+            name="org.teiid.designer.sdt.types.XsdExternalResourceSet">
       </class>
    </extension>
 

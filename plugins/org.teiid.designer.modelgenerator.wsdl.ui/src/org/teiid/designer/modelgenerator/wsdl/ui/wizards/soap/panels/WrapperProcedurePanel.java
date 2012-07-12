@@ -22,15 +22,16 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.teiid.core.util.CoreStringUtil;
+import org.teiid.designer.modelgenerator.wsdl.model.Operation;
 import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.OperationsDetailsPage;
-import com.metamatrix.core.util.CoreStringUtil;
-import com.metamatrix.modeler.modelgenerator.wsdl.model.Operation;
-import com.metamatrix.modeler.transformation.ui.editors.sqleditor.SqlTextViewer;
-import com.metamatrix.modeler.ui.viewsupport.DesignerPropertiesUtil;
-import com.metamatrix.ui.graphics.ColorManager;
-import com.metamatrix.ui.internal.util.WidgetFactory;
-import com.metamatrix.ui.internal.util.WidgetUtil;
+import org.teiid.designer.transformation.ui.editors.sqleditor.SqlTextViewer;
+import org.teiid.designer.ui.common.graphics.ColorManager;
+import org.teiid.designer.ui.common.util.WidgetFactory;
+import org.teiid.designer.ui.common.util.WidgetUtil;
+import org.teiid.designer.ui.viewsupport.DesignerPropertiesUtil;
+
 
 public class WrapperProcedurePanel {
 

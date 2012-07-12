@@ -16,7 +16,7 @@
          name="%mappingDiagramType"
          point="org.teiid.designer.diagram.ui.diagramType">
       <diagram
-            class="com.metamatrix.modeler.mapping.ui.diagram.MappingDiagramType"
+            class="org.teiid.designer.mapping.ui.diagram.MappingDiagramType"
             simpleDiagram="false">
       </diagram>
    </extension>
@@ -26,7 +26,7 @@
          name="%mappingTransformationDiagramType"
          point="org.teiid.designer.diagram.ui.diagramType">
       <diagram
-            class="com.metamatrix.modeler.mapping.ui.diagram.MappingDiagramType"
+            class="org.teiid.designer.mapping.ui.diagram.MappingDiagramType"
             simpleDiagram="false">
       </diagram>
    </extension>
@@ -36,7 +36,7 @@
          name="Mapping Diagram Content Provider"
          point="org.teiid.designer.ui.diagramContentProvider">
       <class
-            name="com.metamatrix.modeler.mapping.ui.diagram.MappingDiagramContentProvider">
+            name="org.teiid.designer.mapping.ui.diagram.MappingDiagramContentProvider">
       </class>
       <diagramType
             name="mappingDiagramType">
@@ -47,7 +47,7 @@
          name="Mapping Diagram LabelProvider"
          point="org.teiid.designer.ui.diagramLabelProvider">
       <class
-            name="com.metamatrix.modeler.mapping.ui.diagram.MappingDiagramLabelProvider">
+            name="org.teiid.designer.mapping.ui.diagram.MappingDiagramLabelProvider">
       </class>
       <diagramType
             name="mappingDiagramType">
@@ -58,7 +58,7 @@
          name="Input Set Object Editor"
          point="org.teiid.designer.ui.modelObjectEditorPage">
       <class
-            name="com.metamatrix.modeler.mapping.ui.editor.InputSetObjectEditorPage">
+            name="org.teiid.designer.mapping.ui.editor.InputSetObjectEditorPage">
       </class>
    </extension>
    <extension
@@ -66,7 +66,7 @@
          name="Recursion Object Editor"
          point="org.teiid.designer.ui.modelObjectEditorPage">
       <class
-            name="com.metamatrix.modeler.mapping.ui.recursion.RecursionObjectEditorPage">
+            name="org.teiid.designer.mapping.ui.recursion.RecursionObjectEditorPage">
       </class>
    </extension>
 <!-- Mapping Diagram Type Permanent Model Object Action Contributor -->
@@ -74,7 +74,7 @@
          id="mappingDiagramModelObjectActionContributor"
          point="org.teiid.designer.ui.modelObjectActionContributor">
       <class
-            name="com.metamatrix.modeler.mapping.ui.actions.MappingDiagramPermanentActionContributor">
+            name="org.teiid.designer.mapping.ui.actions.MappingDiagramPermanentActionContributor">
       </class>
    </extension>
    <!-- Helper method to allow external edit for objects. i.e. Delete, Copy, etc.. -->
@@ -83,13 +83,13 @@
          name="%mappingObjectEditHelper"
          point="org.teiid.designer.ui.modelObjectEditHelper">
       <class
-        name="com.metamatrix.modeler.mapping.ui.actions.MappingObjectEditHelper">
+        name="org.teiid.designer.mapping.ui.actions.MappingObjectEditHelper">
       </class>
    </extension>
    <extension
          point="org.teiid.designer.ui.common.editorPreferences">
          <editorPreferenceComponent
-         	class="com.metamatrix.modeler.mapping.ui.preferences.XmlDocumentPreferencesComponent"/>
+         	class="org.teiid.designer.mapping.ui.preferences.XmlDocumentPreferencesComponent"/>
    </extension>   
  <!-- Helper method to allow external edit for objects. i.e. Delete, Copy, etc.. -->
    <extension
@@ -97,7 +97,7 @@
          name="%mappingUiNewModelObjectHelper"
          point="org.teiid.designer.core.newModelObjectHelper">
       <class
-        name="com.metamatrix.modeler.mapping.ui.util.MappingUiNewModelObjectHelper">
+        name="org.teiid.designer.mapping.ui.util.MappingUiNewModelObjectHelper">
       </class>
    </extension>
 <!-- Actions contributed to the object/model generation -->
@@ -106,7 +106,7 @@
 		name="%setExcludeFromDocumentSpecialAction.name"
         point="org.teiid.designer.ui.modelObjectSpecialAction">
       <specialAction
-         name="com.metamatrix.modeler.mapping.ui.actions.SetExcludeFromDocumentSpecialAction"
+         name="org.teiid.designer.mapping.ui.actions.SetExcludeFromDocumentSpecialAction"
          label="%setExcludeFromDocumentSpecialAction.label">
       </specialAction>
    </extension>
@@ -115,7 +115,7 @@
 		name="%setIncludeInDocumentSpecialAction.name"
         point="org.teiid.designer.ui.modelObjectSpecialAction">
       <specialAction
-         name="com.metamatrix.modeler.mapping.ui.actions.SetIncludeInDocumentSpecialAction"
+         name="org.teiid.designer.mapping.ui.actions.SetIncludeInDocumentSpecialAction"
          label="%setIncludeInDocumentSpecialAction.label">
       </specialAction>
    </extension>

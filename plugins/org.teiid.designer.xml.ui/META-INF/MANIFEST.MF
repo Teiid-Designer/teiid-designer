@@ -3,15 +3,14 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.teiid.designer.xml.ui;singleton:=true
 Bundle-Version: 7.7.1.qualifier
-Bundle-Activator: com.metamatrix.modeler.xml.ui.ModelerXmlUiPlugin
+Bundle-Activator: org.teiid.designer.xml.ui.ModelerXmlUiPlugin
 Bundle-Vendor: %pluginProvider
 Bundle-Localization: plugin
-Export-Package: com.metamatrix.modeler.internal.xml.ui.actions,
- com.metamatrix.modeler.internal.xml.ui.wizards,
- com.metamatrix.modeler.xml.ui,
- com.metamatrix.modeler.xml.ui.actions,
- com.metamatrix.modeler.xml.ui.dialogs,
- com.metamatrix.modeler.xml.ui.editor
+Export-Package: org.teiid.designer.xml.ui,
+ org.teiid.designer.xml.ui.actions,
+ org.teiid.designer.xml.ui.dialogs,
+ org.teiid.designer.xml.ui.editor,
+ org.teiid.designer.xml.ui.wizards
 Require-Bundle: org.eclipse.ui.ide,
  org.eclipse.ui.views,
  org.eclipse.jface.text,

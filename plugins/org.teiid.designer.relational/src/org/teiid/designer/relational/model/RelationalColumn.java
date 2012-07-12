@@ -9,7 +9,8 @@ package org.teiid.designer.relational.model;
 
 import java.util.Properties;
 
-import com.metamatrix.metamodels.relational.aspects.validation.RelationalStringNameValidator;
+import org.teiid.designer.metamodels.relational.aspects.validation.RelationalStringNameValidator;
+
 
 
 /**

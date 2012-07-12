@@ -3,22 +3,22 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.teiid.designer.metamodels.wsdl;singleton:=true
 Bundle-Version: 7.7.1.qualifier
-Bundle-Activator: com.metamatrix.metamodels.wsdl.WsdlMetamodelPlugin
+Bundle-Activator: org.teiid.designer.metamodels.wsdl.WsdlMetamodelPlugin
 Bundle-Vendor: %pluginProvider
 Bundle-Localization: plugin
-Export-Package: com.metamatrix.metamodels.wsdl,
- com.metamatrix.metamodels.wsdl.http,
- com.metamatrix.metamodels.wsdl.http.impl,
- com.metamatrix.metamodels.wsdl.http.util,
- com.metamatrix.metamodels.wsdl.impl,
- com.metamatrix.metamodels.wsdl.io,
- com.metamatrix.metamodels.wsdl.mime,
- com.metamatrix.metamodels.wsdl.mime.impl,
- com.metamatrix.metamodels.wsdl.mime.util,
- com.metamatrix.metamodels.wsdl.soap,
- com.metamatrix.metamodels.wsdl.soap.impl,
- com.metamatrix.metamodels.wsdl.soap.util,
- com.metamatrix.metamodels.wsdl.util
+Export-Package: org.teiid.designer.metamodels.wsdl,
+ org.teiid.designer.metamodels.wsdl.http,
+ org.teiid.designer.metamodels.wsdl.http.impl,
+ org.teiid.designer.metamodels.wsdl.http.util,
+ org.teiid.designer.metamodels.wsdl.impl,
+ org.teiid.designer.metamodels.wsdl.io,
+ org.teiid.designer.metamodels.wsdl.mime,
+ org.teiid.designer.metamodels.wsdl.mime.impl,
+ org.teiid.designer.metamodels.wsdl.mime.util,
+ org.teiid.designer.metamodels.wsdl.soap,
+ org.teiid.designer.metamodels.wsdl.soap.impl,
+ org.teiid.designer.metamodels.wsdl.soap.util,
+ org.teiid.designer.metamodels.wsdl.util
 Require-Bundle: org.eclipse.emf.ecore,
  org.eclipse.emf.ecore.edit,
  org.eclipse.emf.edit,

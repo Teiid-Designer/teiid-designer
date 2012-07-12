@@ -33,11 +33,11 @@ import org.teiid.adminapi.PropertyDefinition;
 import org.teiid.adminapi.Translator;
 import org.teiid.adminapi.VDB;
 import org.teiid.designer.core.ModelWorkspaceMock;
+import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.core.workspace.ModelWorkspaceManager;
+import org.teiid.designer.core.workspace.WorkspaceResourceFinderUtil;
 import org.teiid.designer.vdb.Vdb;
 
-import com.metamatrix.modeler.core.ModelerCore;
-import com.metamatrix.modeler.internal.core.workspace.ModelWorkspaceManager;
-import com.metamatrix.modeler.internal.core.workspace.WorkspaceResourceFinderUtil;
 
 /**
  * 

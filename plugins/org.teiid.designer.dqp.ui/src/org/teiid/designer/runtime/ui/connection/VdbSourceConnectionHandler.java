@@ -7,8 +7,8 @@
  */
 package org.teiid.designer.runtime.ui.connection;
 
-import static com.metamatrix.modeler.dqp.DqpPlugin.Util;
-import static com.metamatrix.modeler.dqp.ui.DqpUiConstants.UTIL;
+import static org.teiid.designer.runtime.DqpPlugin.Util;
+import static org.teiid.designer.runtime.ui.DqpUiConstants.UTIL;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -21,6 +21,13 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
 import org.teiid.core.properties.PropertyDefinition;
+import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.util.I18nUtil;
+import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.core.util.StringUtilities;
+import org.teiid.designer.core.workspace.ModelWorkspaceException;
+import org.teiid.designer.metamodels.core.ModelType;
+import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.ExecutionAdmin;
 import org.teiid.designer.runtime.Server;
 import org.teiid.designer.runtime.TeiidDataSource;
@@ -30,13 +37,6 @@ import org.teiid.designer.vdb.VdbModelEntry;
 import org.teiid.designer.vdb.connections.SourceHandler;
 import org.teiid.designer.vdb.connections.VdbSourceConnection;
 
-import com.metamatrix.core.util.CoreArgCheck;
-import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.core.util.StringUtilities;
-import com.metamatrix.metamodels.core.ModelType;
-import com.metamatrix.modeler.core.ModelerCore;
-import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
-import com.metamatrix.modeler.dqp.DqpPlugin;
 
 /**
  * Implements the SourceHandler interface which provides the VDB Editor the ability to access DQP-related connection info.

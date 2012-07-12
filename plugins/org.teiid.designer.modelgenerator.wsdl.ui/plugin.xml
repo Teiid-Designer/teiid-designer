@@ -15,8 +15,8 @@
 <!-- 
       <wizard
             icon="icons/full/ctool16/import_wsdl.gif"
-            category="com.metamatrix.modeler.ui"
-            class="com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.wizards.RelationalFromWSDLImportWizard"
+            category="org.teiid.designer.ui"
+            class="org.teiid.designer.modelgenerator.wsdl.ui.wizards.RelationalFromWSDLImportWizard"
             name="%relationalFromWSDLImportWizard.name"
             id="RelationalFromWSDLImportWizard">
          <description>
@@ -26,7 +26,7 @@
  -->
       <wizard
             icon="icons/full/ctool16/import_wsdl.gif"
-            category="com.metamatrix.modeler.ui"
+            category="org.teiid.designer.ui"
             class="org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.ImportWsdlSoapWizard"
             name="%importWsdlSoapWizard.name"
             id="org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.ImportWsdlSoapWizardID">

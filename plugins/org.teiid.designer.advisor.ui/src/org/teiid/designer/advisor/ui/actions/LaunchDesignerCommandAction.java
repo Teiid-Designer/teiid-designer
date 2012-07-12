@@ -12,7 +12,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.ui.cheatsheets.ICheatSheetAction;
 import org.eclipse.ui.cheatsheets.ICheatSheetManager;
 import org.eclipse.ui.internal.cheatsheets.views.CheatSheetManager;
-import com.metamatrix.modeler.ui.viewsupport.PropertiesContextManager;
+import org.teiid.designer.ui.viewsupport.PropertiesContextManager;
 
 
 /** This action can be used to launch an action defined in the product
@@ -22,7 +22,7 @@ import com.metamatrix.modeler.ui.viewsupport.PropertiesContextManager;
   *  to try to force a project to exist.  Otherwise, the action itself needs to make sure it can
   *  run.
   * <br/>Note: run() method is not implemented.  use run(String[], ICheatSheetManager) instead.
-  * See com.metamatrix.modeler.ui.product.IModelingProductCharacteristics for the
+  * See org.teiid.designer.ui.product.IModelingProductCharacteristics for the
   * constants to use.
   * @since 5.0
   */

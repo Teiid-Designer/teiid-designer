@@ -3,15 +3,14 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.teiid.designer.webservice.ui;singleton:=true
 Bundle-Version: 7.7.1.qualifier
-Bundle-Activator: com.metamatrix.modeler.webservice.ui.WebServiceUiPlugin
+Bundle-Activator: org.teiid.designer.webservice.ui.WebServiceUiPlugin
 Bundle-Vendor: %pluginProvider
 Bundle-Localization: plugin
-Export-Package: com.metamatrix.modeler.internal.webservice.ui,
- com.metamatrix.modeler.internal.webservice.ui.wizard,
- com.metamatrix.modeler.webservice.ui,
- com.metamatrix.modeler.webservice.ui.actions,
- com.metamatrix.modeler.webservice.ui.editor,
- com.metamatrix.modeler.webservice.ui.util
+Export-Package: org.teiid.designer.webservice.ui,
+ org.teiid.designer.webservice.ui.actions,
+ org.teiid.designer.webservice.ui.editor,
+ org.teiid.designer.webservice.ui.util,
+ org.teiid.designer.webservice.ui.wizard
 Require-Bundle: org.eclipse.ui.cheatsheets,
  org.eclipse.ui.ide,
  org.eclipse.jface.text,

@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.teiid.designer.core.xslt;singleton:=true
 Bundle-Version: 7.7.1.qualifier
-Bundle-Activator: com.metamatrix.core.xslt.CoreXsltPlugin
+Bundle-Activator: org.teiid.designer.core.xslt.CoreXsltPlugin
 Bundle-Vendor: %pluginProvider
 Bundle-Localization: plugin
 Require-Bundle: org.teiid.core.designer,
@@ -12,6 +12,6 @@ Require-Bundle: org.teiid.core.designer,
  teiid_embedded_query,
  org.jdom
 Bundle-ActivationPolicy: lazy
-Export-Package: com.metamatrix.core.xslt,
- com.metamatrix.core.xslt.impl
+Export-Package: org.teiid.designer.core.xslt,
+ org.teiid.designer.core.xslt.impl
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

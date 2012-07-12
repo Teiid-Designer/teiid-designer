@@ -18,15 +18,15 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
+import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.Server;
 import org.teiid.designer.runtime.TeiidDataSource;
+import org.teiid.designer.runtime.ui.DqpUiConstants;
+import org.teiid.designer.runtime.ui.views.TeiidViewTreeProvider;
+import org.teiid.designer.ui.common.util.WidgetFactory;
+import org.teiid.designer.ui.common.widget.MessageLabel;
 import org.teiid.designer.vdb.Vdb;
 
-import com.metamatrix.modeler.dqp.DqpPlugin;
-import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
-import com.metamatrix.modeler.internal.dqp.ui.workspace.TeiidViewTreeProvider;
-import com.metamatrix.ui.internal.util.WidgetFactory;
-import com.metamatrix.ui.internal.widget.MessageLabel;
 
 /**
  * Provides dialog for selecting a JNDI Data Source from existing Teiid Servers.

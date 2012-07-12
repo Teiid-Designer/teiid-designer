@@ -23,13 +23,13 @@
          http://www.metamatrix.com/metamodels/Transformation
       </uri>
       <alternateUri>
-         mtkplugin:///com.metamatrix.metamodels.Transformation
+         mtkplugin:///org.teiid.designer.metamodels.Transformation
       </alternateUri>
       <packageClass
-            name="com.metamatrix.metamodels.transformation.TransformationPackage">
+            name="org.teiid.designer.metamodels.transformation.TransformationPackage">
       </packageClass>
       <adapterClass
-            name="com.metamatrix.metamodels.transformation.provider.TransformationItemProviderAdapterFactory">
+            name="org.teiid.designer.metamodels.transformation.provider.TransformationItemProviderAdapterFactory">
       </adapterClass>
       <properties
             createAsPhysical="false"
@@ -44,7 +44,7 @@
          point="org.eclipse.emf.ecore.generated_package">
       <package
             uri="http://www.metamatrix.com/metamodels/Transformation"
-            class="com.metamatrix.metamodels.transformation.TransformationPackage">
+            class="org.teiid.designer.metamodels.transformation.TransformationPackage">
       </package>
    </extension>
      

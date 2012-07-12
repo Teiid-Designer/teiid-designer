@@ -28,24 +28,25 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IImportWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.ide.IDE;
+import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.core.ModelerCoreException;
+import org.teiid.designer.core.workspace.ModelWorkspaceException;
+import org.teiid.designer.modelgenerator.wsdl.ModelBuildingException;
+import org.teiid.designer.modelgenerator.wsdl.RelationalModelBuilder;
+import org.teiid.designer.modelgenerator.wsdl.model.Model;
+import org.teiid.designer.modelgenerator.wsdl.model.ModelGenerationException;
 import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
-import com.metamatrix.modeler.core.ModelerCore;
-import com.metamatrix.modeler.core.ModelerCoreException;
-import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
-import com.metamatrix.modeler.internal.ui.viewsupport.ModelerUiViewUtils;
-import com.metamatrix.modeler.modelgenerator.wsdl.ModelBuildingException;
-import com.metamatrix.modeler.modelgenerator.wsdl.RelationalModelBuilder;
-import com.metamatrix.modeler.modelgenerator.wsdl.model.Model;
-import com.metamatrix.modeler.modelgenerator.wsdl.model.ModelGenerationException;
-import com.metamatrix.modeler.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstants;
-import com.metamatrix.modeler.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstants.Images;
-import com.metamatrix.modeler.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiPlugin;
-import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.wizards.WSDLImportWizardManager;
-import com.metamatrix.modeler.schema.tools.processing.SchemaProcessingException;
-import com.metamatrix.modeler.ui.viewsupport.DesignerPropertiesUtil;
-import com.metamatrix.modeler.ui.viewsupport.IPropertiesContext;
-import com.metamatrix.ui.internal.util.UiUtil;
-import com.metamatrix.ui.internal.wizard.AbstractWizard;
+import org.teiid.designer.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstants;
+import org.teiid.designer.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiPlugin;
+import org.teiid.designer.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstants.Images;
+import org.teiid.designer.modelgenerator.wsdl.ui.wizards.WSDLImportWizardManager;
+import org.teiid.designer.schema.tools.processing.SchemaProcessingException;
+import org.teiid.designer.ui.common.util.UiUtil;
+import org.teiid.designer.ui.common.wizard.AbstractWizard;
+import org.teiid.designer.ui.viewsupport.DesignerPropertiesUtil;
+import org.teiid.designer.ui.viewsupport.IPropertiesContext;
+import org.teiid.designer.ui.viewsupport.ModelerUiViewUtils;
+
 
 public class ImportWsdlSoapWizard extends AbstractWizard implements IImportWizard, IPropertiesContext {
 

@@ -32,8 +32,8 @@ import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
 import org.teiid.designer.datatools.ui.DatatoolsUiConstants;
 import org.teiid.designer.datatools.ui.DatatoolsUiPlugin;
+import org.teiid.designer.ui.common.util.WidgetFactory;
 
-import com.metamatrix.ui.internal.util.WidgetFactory;
 
 public class ModeShapeDriverUIContributor implements IDriverUIContributor, Listener {
 

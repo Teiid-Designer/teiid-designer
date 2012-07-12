@@ -8,10 +8,10 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.teiid.core.util.StringUtil;
+import org.teiid.designer.core.container.Container;
 import org.teiid.designer.roles.DataRole;
 import org.teiid.designer.roles.Permission;
 
-import com.metamatrix.modeler.core.container.Container;
 
 public class DataRoleResolver {
 	private static final char DELIM = StringUtil.Constants.DOT_CHAR;

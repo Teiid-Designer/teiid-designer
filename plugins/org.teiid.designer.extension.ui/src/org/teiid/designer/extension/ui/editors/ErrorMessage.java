@@ -10,9 +10,9 @@ package org.teiid.designer.extension.ui.editors;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.IMessage;
+import org.teiid.core.util.CoreStringUtil;
 import org.teiid.designer.extension.definition.ValidationStatus;
 
-import com.metamatrix.core.util.CoreStringUtil;
 
 /**
  * An error message used in the {@link ModelExtensionDefinitionEditor}.

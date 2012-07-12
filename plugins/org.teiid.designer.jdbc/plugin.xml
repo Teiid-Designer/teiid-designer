@@ -23,13 +23,13 @@
          http://www.metamatrix.com/metamodels/JDBC
       </uri>
       <alternateUri>
-         mtkplugin:///com.metamatrix.metamodels.jdbc
+         mtkplugin:///org.teiid.designer.metamodels.jdbc
       </alternateUri>
       <packageClass
-            name="com.metamatrix.modeler.jdbc.JdbcPackage">
+            name="org.teiid.designer.jdbc.JdbcPackage">
       </packageClass>
       <adapterClass
-            name="com.metamatrix.modeler.jdbc.provider.JdbcItemProviderAdapterFactory">
+            name="org.teiid.designer.jdbc.provider.JdbcItemProviderAdapterFactory">
       </adapterClass>
       <properties
             createAsPhysical="false"
@@ -43,7 +43,7 @@
          point="org.eclipse.emf.ecore.generated_package">
       <package
             uri="http://www.metamatrix.com/metamodels/JDBC"
-            class="com.metamatrix.modeler.jdbc.JdbcPackage">
+            class="org.teiid.designer.jdbc.JdbcPackage">
       </package>
    </extension>
 

@@ -24,8 +24,8 @@ import org.teiid.designer.advisor.ui.scope.RelationalModelingNature;
 import org.teiid.designer.advisor.ui.scope.VdbNature;
 import org.teiid.designer.advisor.ui.scope.WebServicesModelingNature;
 import org.teiid.designer.advisor.ui.scope.XmlModelingNature;
+import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
-import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 /**
  * 
  */

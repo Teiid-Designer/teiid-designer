@@ -37,23 +37,23 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
+import org.teiid.core.util.CoreStringUtil;
 import org.teiid.core.util.FileUtils;
+import org.teiid.designer.modelgenerator.wsdl.model.Fault;
+import org.teiid.designer.modelgenerator.wsdl.model.Model;
+import org.teiid.designer.modelgenerator.wsdl.model.ModelGenerationException;
+import org.teiid.designer.modelgenerator.wsdl.model.Operation;
+import org.teiid.designer.modelgenerator.wsdl.model.Port;
+import org.teiid.designer.modelgenerator.wsdl.model.WSDLElement;
 import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
+import org.teiid.designer.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstants;
+import org.teiid.designer.modelgenerator.wsdl.ui.util.ModelGeneratorWsdlUiUtil;
+import org.teiid.designer.modelgenerator.wsdl.ui.wizards.WSDLImportWizardManager;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.WsdlDefinitionPage;
+import org.teiid.designer.ui.common.util.WidgetFactory;
+import org.teiid.designer.ui.common.viewsupport.UiBusyIndicator;
+import org.teiid.designer.ui.common.widget.Label;
 
-import com.metamatrix.core.util.CoreStringUtil;
-import com.metamatrix.modeler.modelgenerator.wsdl.model.Fault;
-import com.metamatrix.modeler.modelgenerator.wsdl.model.Model;
-import com.metamatrix.modeler.modelgenerator.wsdl.model.ModelGenerationException;
-import com.metamatrix.modeler.modelgenerator.wsdl.model.Operation;
-import com.metamatrix.modeler.modelgenerator.wsdl.model.Port;
-import com.metamatrix.modeler.modelgenerator.wsdl.model.WSDLElement;
-import com.metamatrix.modeler.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstants;
-import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.util.ModelGeneratorWsdlUiUtil;
-import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.wizards.WSDLImportWizardManager;
-import com.metamatrix.ui.internal.util.WidgetFactory;
-import com.metamatrix.ui.internal.viewsupport.UiBusyIndicator;
-import com.metamatrix.ui.internal.widget.Label;
 
 public class WsdlOperationsPanel implements FileUtils.Constants, CoreStringUtil.Constants,
 	ModelGeneratorWsdlUiConstants, ModelGeneratorWsdlUiConstants.Images {

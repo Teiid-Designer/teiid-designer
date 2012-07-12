@@ -44,8 +44,8 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.progress.UIJob;
 import org.teiid.designer.datatools.ui.DatatoolsUiConstants;
+import org.teiid.designer.ui.common.util.WidgetFactory;
 
-import com.metamatrix.ui.internal.util.WidgetFactory;
 
 public class XmlUrlProfileDetailsWizardPage  extends ConnectionProfileDetailsPage
 		implements Listener, DatatoolsUiConstants {

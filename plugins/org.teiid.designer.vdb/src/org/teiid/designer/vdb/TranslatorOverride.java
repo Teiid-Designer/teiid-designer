@@ -18,12 +18,12 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.teiid.core.properties.PropertyDefinition;
+import org.teiid.core.util.I18nUtil;
+import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.vdb.Vdb.Event;
 import org.teiid.designer.vdb.manifest.PropertyElement;
 import org.teiid.designer.vdb.manifest.TranslatorElement;
 
-import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.core.util.StringUtilities;
 
 /**
  * A VDB translator override.

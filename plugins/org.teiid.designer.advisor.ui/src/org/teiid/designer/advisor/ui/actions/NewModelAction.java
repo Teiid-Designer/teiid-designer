@@ -19,10 +19,11 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.teiid.designer.advisor.ui.AdvisorUiConstants;
 import org.teiid.designer.advisor.ui.AdvisorUiPlugin;
 import org.teiid.designer.advisor.ui.Messages;
-import com.metamatrix.metamodels.core.ModelType;
-import com.metamatrix.modeler.internal.ui.wizards.NewModelWizard;
-import com.metamatrix.modeler.ui.wizards.NewModelWizardInput;
-import com.metamatrix.ui.internal.product.ProductCustomizerMgr;
+import org.teiid.designer.metamodels.core.ModelType;
+import org.teiid.designer.ui.common.product.ProductCustomizerMgr;
+import org.teiid.designer.ui.wizards.NewModelWizard;
+import org.teiid.designer.ui.wizards.NewModelWizardInput;
+
 
 /**
  * NewModelAction is a hook for the active help system to run the New Metadata Model wizard. The action is not exposed anywhere in

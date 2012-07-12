@@ -7,7 +7,7 @@
  */
 package org.teiid.designer.runtime.ui.server;
 
-import static com.metamatrix.modeler.dqp.ui.DqpUiConstants.UTIL;
+import static org.teiid.designer.runtime.ui.DqpUiConstants.UTIL;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -16,13 +16,13 @@ import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.actions.BaseSelectionListenerAction;
+import org.teiid.core.util.CoreArgCheck;
 import org.teiid.designer.runtime.Server;
 import org.teiid.designer.runtime.ServerManager;
+import org.teiid.designer.runtime.ui.DqpUiConstants;
+import org.teiid.designer.runtime.ui.DqpUiPlugin;
+import org.teiid.designer.ui.common.util.WidgetUtil;
 
-import com.metamatrix.core.util.CoreArgCheck;
-import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
-import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
-import com.metamatrix.ui.internal.util.WidgetUtil;
 
 /**
  * 

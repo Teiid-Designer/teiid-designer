@@ -15,16 +15,16 @@ import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.osgi.util.NLS;
+import org.teiid.core.util.CoreStringUtil;
+import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.core.ModelerCoreException;
+import org.teiid.designer.core.types.DatatypeManager;
+import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
+import org.teiid.designer.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstants;
+import org.teiid.designer.modelgenerator.wsdl.ui.wizards.WSDLImportWizardManager;
+import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
-import com.metamatrix.core.util.CoreStringUtil;
-import com.metamatrix.core.util.StringUtilities;
-import com.metamatrix.modeler.core.ModelerCore;
-import com.metamatrix.modeler.core.ModelerCoreException;
-import com.metamatrix.modeler.core.types.DatatypeManager;
-import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
-import com.metamatrix.modeler.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstants;
-import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.wizards.WSDLImportWizardManager;
 
 /**
  * Class designed to provide validation logic and IStatus values for the WSDL importer wizard.

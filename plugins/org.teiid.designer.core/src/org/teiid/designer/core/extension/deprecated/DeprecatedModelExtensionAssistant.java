@@ -12,18 +12,18 @@ import java.util.Collections;
 import java.util.Iterator;
 
 import org.eclipse.emf.ecore.EObject;
+import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.util.CoreStringUtil;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.extension.EmfModelObjectExtensionAssistant;
+import org.teiid.designer.core.util.ModelObjectClassNameVisitor;
+import org.teiid.designer.core.util.ModelVisitorProcessor;
+import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.definition.ModelObjectExtensionAssistant;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
 import org.teiid.designer.extension.properties.NamespaceProvider;
 
-import com.metamatrix.core.util.CoreArgCheck;
-import com.metamatrix.core.util.CoreStringUtil;
-import com.metamatrix.modeler.core.ModelerCore;
-import com.metamatrix.modeler.core.util.ModelObjectClassNameVisitor;
-import com.metamatrix.modeler.core.util.ModelVisitorProcessor;
-import com.metamatrix.modeler.core.workspace.ModelResource;
 
 /**
  * 
@@ -239,7 +239,7 @@ public class DeprecatedModelExtensionAssistant extends EmfModelObjectExtensionAs
         }
 
         // convert all procedure model objects that have the same old namespace property
-        String className = "com.metamatrix.metamodels.relational.impl.ProcedureImpl"; //$NON-NLS-1$
+        String className = "org.teiid.designer.metamodels.relational.impl.ProcedureImpl"; //$NON-NLS-1$
         ModelObjectClassNameVisitor visitor = new ModelObjectClassNameVisitor(Collections.singletonList(className));
         ModelVisitorProcessor processor = new ModelVisitorProcessor(visitor, ModelVisitorProcessor.MODE_VISIBLE_CONTAINMENTS);
         processor.walk(modelResource, ModelVisitorProcessor.DEPTH_INFINITE);

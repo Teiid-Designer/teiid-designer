@@ -18,7 +18,7 @@
 			xsd
 		</metamodelExtensionID>
 		<factoryClass
-			name="com.metamatrix.modeler.internal.xsd.aspects.uml.XsdUmlAspectFactory">
+			name="org.teiid.designer.xsd.aspects.uml.XsdUmlAspectFactory">
 		</factoryClass>
 	</extension>
 

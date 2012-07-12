@@ -3,23 +3,22 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.teiid.core.designer;singleton:=true
 Bundle-Version: 7.7.1.qualifier
-Bundle-Activator: com.metamatrix.core.modeler.CoreModelerPlugin
+Bundle-Activator: org.teiid.core.designer.CoreModelerPlugin
 Bundle-Vendor: %pluginProvider
 Bundle-Localization: plugin
-Export-Package: com.metamatrix.core,
- com.metamatrix.core.aspects,
- com.metamatrix.core.event,
- com.metamatrix.core.modeler,
- com.metamatrix.core.modeler.util,
- com.metamatrix.core.plugin,
- com.metamatrix.core.selection,
- com.metamatrix.core.util,
- com.metamatrix.internal.core.xml,
- com.metamatrix.modeler.core,
- org.teiid.core,
+Export-Package: org.teiid.core,
+ org.teiid.core.aspects,
+ org.teiid.core.designer,
+ org.teiid.core.designer.util,
+ org.teiid.core.event,
  org.teiid.core.exception,
  org.teiid.core.id,
- org.teiid.core.properties
+ org.teiid.core.plugin,
+ org.teiid.core.properties,
+ org.teiid.core.selection,
+ org.teiid.core.util,
+ org.teiid.core.xml,
+ org.teiid.designer.core
 Require-Bundle: org.eclipse.core.runtime,
  teiid_embedded_query,
  net.sf.saxon

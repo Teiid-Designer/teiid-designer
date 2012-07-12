@@ -479,7 +479,7 @@ public class ExecutionPlanView extends ViewPart {
         }
 
         /**
-         * @see com.metamatrix.ui.internal.widget.DefaultContentProvider#getElements(java.lang.Object)
+         * @see org.teiid.designer.ui.common.widget.DefaultContentProvider#getElements(java.lang.Object)
          * @since 5.0.1
          */
         @Override

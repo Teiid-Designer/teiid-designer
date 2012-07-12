@@ -26,7 +26,7 @@
          http://www.metamatrix.com/metamodels/MetaMatrixFunction
       </alternateUri>
       <rootEntityClass
-            name="com.metamatrix.metamodels.function.ScalarFunction">
+            name="org.teiid.designer.metamodels.function.ScalarFunction">
       </rootEntityClass>
       <properties
             createAsPhysical="true"
@@ -41,17 +41,17 @@
          FUNCTION
       </allowableModelType>
       <packageClass
-            name="com.metamatrix.metamodels.function.impl.FunctionPackageImpl">
+            name="org.teiid.designer.metamodels.function.impl.FunctionPackageImpl">
       </packageClass>
       <adapterClass
-            name="com.metamatrix.metamodels.function.provider.FunctionItemProviderAdapterFactory">
+            name="org.teiid.designer.metamodels.function.provider.FunctionItemProviderAdapterFactory">
       </adapterClass>
    </extension>
    <extension
          point="org.eclipse.emf.ecore.generated_package">
       <package
             uri="http://www.metamatrix.com/metamodels/MetaMatrixFunction"
-            class="com.metamatrix.metamodels.function.FunctionPackage">
+            class="org.teiid.designer.metamodels.function.FunctionPackage">
       </package>
    </extension>
 
@@ -64,7 +64,7 @@
          function
       </metamodelExtensionID>
       <factoryClass
-            name="com.metamatrix.metamodels.function.aspects.validation.FunctionValidationAspectFactoryImpl">
+            name="org.teiid.designer.metamodels.function.aspects.validation.FunctionValidationAspectFactoryImpl">
       </factoryClass>
    </extension>
    <extension
@@ -74,7 +74,7 @@
          function
       </metamodelExtensionID>
       <factoryClass
-            name="com.metamatrix.metamodels.function.aspects.uml.FunctionUmlAspectFactoryImpl">
+            name="org.teiid.designer.metamodels.function.aspects.uml.FunctionUmlAspectFactoryImpl">
       </factoryClass>
    </extension>
 <!-- EObject Matcher extensions -->
@@ -82,7 +82,7 @@
          id="functionMatcherFactory"
          point="org.teiid.designer.core.eobjectMatcherFactory">
       <class
-            name="com.metamatrix.metamodels.function.compare.FunctionMatcherFactory">
+            name="org.teiid.designer.metamodels.function.compare.FunctionMatcherFactory">
       </class>
    </extension>
    
@@ -91,7 +91,7 @@
          point="org.teiid.designer.extension.extensibleMetamodelProvider">
       <definition 
             metamodelUri="http://www.metamatrix.com/metamodels/MetaMatrixFunction"
-            metaclassProviderClass="com.metamatrix.metamodels.function.extension.SourceFunctionExtendableClassnameProvider">
+            metaclassProviderClass="org.teiid.designer.metamodels.function.extension.SourceFunctionExtendableClassnameProvider">
       </definition>
    </extension>
    

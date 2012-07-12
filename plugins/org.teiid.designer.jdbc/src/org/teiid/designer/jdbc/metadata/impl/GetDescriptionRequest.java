@@ -1,0 +1,29 @@
+/*
+ * JBoss, Home of Professional Open Source.
+ *
+ * See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+ *
+ * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+ */
+package org.teiid.designer.jdbc.metadata.impl;
+
+import org.teiid.designer.jdbc.JdbcPlugin;
+import org.teiid.designer.jdbc.data.MethodRequest;
+import org.teiid.designer.jdbc.metadata.JdbcNode;
+
+/**
+ * GetDescriptionRequest
+ */
+public class GetDescriptionRequest extends MethodRequest {
+    
+    public static final String NAME = JdbcPlugin.Util.getString("GetDescriptionRequestName"); //$NON-NLS-1$
+    
+    /**
+     * Construct an instance of GetDescriptionRequest.
+     * 
+     */
+    public GetDescriptionRequest( final JdbcNode node, final String methodName ) {
+        super(NAME,node,methodName,new Object[]{});
+    }
+
+}

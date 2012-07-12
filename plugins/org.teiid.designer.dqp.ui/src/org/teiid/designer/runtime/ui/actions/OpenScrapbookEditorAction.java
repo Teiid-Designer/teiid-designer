@@ -22,9 +22,9 @@ import org.eclipse.datatools.sqltools.sqlscrapbook.actions.OpenScrapbookAction;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
+import org.teiid.designer.core.util.StringUtilities;
+import org.teiid.designer.ui.common.util.UiUtil;
 
-import com.metamatrix.core.util.StringUtilities;
-import com.metamatrix.ui.internal.util.UiUtil;
 
 public class OpenScrapbookEditorAction extends OpenScrapbookAction {
 

@@ -7,18 +7,18 @@
  */
 package org.teiid.designer.runtime.ui.server;
 
-import static com.metamatrix.modeler.dqp.ui.DqpUiConstants.UTIL;
+import static org.teiid.designer.runtime.ui.DqpUiConstants.UTIL;
 
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.osgi.service.prefs.BackingStoreException;
+import org.teiid.core.util.I18nUtil;
+import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.PreferenceConstants;
 import org.teiid.designer.runtime.Server;
 import org.teiid.designer.runtime.ServerManager;
 
-import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.modeler.dqp.DqpPlugin;
 
 /**
  * The <code>RuntimeAssistant<code> ensures that the preview preference is enabled and that a default Teiid server exists.

@@ -7,7 +7,8 @@
  */
 package org.teiid.designer.runtime.ui.server;
 
-import static com.metamatrix.modeler.dqp.ui.DqpUiConstants.UTIL;
+import static org.teiid.designer.runtime.ui.DqpUiConstants.UTIL;
+
 import java.util.ArrayList;
 import java.util.List;
 import org.eclipse.core.runtime.IStatus;
@@ -19,7 +20,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.actions.BaseSelectionListenerAction;
 import org.teiid.designer.runtime.Server;
 import org.teiid.designer.runtime.ServerManager;
-import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
+import org.teiid.designer.runtime.ui.DqpUiPlugin;
 
 /**
  * The <code>DeleteServerAction</code> deletes one or more servers from the server registry.

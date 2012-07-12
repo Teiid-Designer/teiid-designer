@@ -20,5 +20,6 @@ Require-Bundle: org.teiid.designer.extension,
  org.teiid.designer.ui,
  org.eclipse.ui.forms,
  org.eclipse.ui.views,
- org.eclipse.jface.text
+ org.eclipse.jface.text,
+ org.teiid.designer.legacy
 Bundle-Activator: org.teiid.designer.extension.ui.Activator

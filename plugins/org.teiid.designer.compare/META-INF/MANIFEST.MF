@@ -3,16 +3,16 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.teiid.designer.compare;singleton:=true
 Bundle-Version: 7.7.1.qualifier
-Bundle-Activator: com.metamatrix.modeler.compare.ModelerComparePlugin
+Bundle-Activator: org.teiid.designer.compare.ModelerComparePlugin
 Bundle-Vendor: %pluginProvider
 Bundle-Localization: plugin
-Export-Package: com.metamatrix.modeler.compare,
- com.metamatrix.modeler.compare.generator,
- com.metamatrix.modeler.compare.impl,
- com.metamatrix.modeler.compare.processor,
- com.metamatrix.modeler.compare.provider,
- com.metamatrix.modeler.compare.selector,
- com.metamatrix.modeler.compare.util
+Export-Package: org.teiid.designer.compare,
+ org.teiid.designer.compare.generator,
+ org.teiid.designer.compare.impl,
+ org.teiid.designer.compare.processor,
+ org.teiid.designer.compare.provider,
+ org.teiid.designer.compare.selector,
+ org.teiid.designer.compare.util
 Require-Bundle: org.eclipse.emf.ecore,
  org.eclipse.emf.edit,
  org.eclipse.emf.ecore.edit,

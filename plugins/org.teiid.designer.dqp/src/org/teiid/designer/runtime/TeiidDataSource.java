@@ -1,8 +1,9 @@
 package org.teiid.designer.runtime;
 
 import java.util.Properties;
+
+import org.teiid.core.util.CoreArgCheck;
 import org.teiid.core.util.HashCodeUtil;
-import com.metamatrix.core.util.CoreArgCheck;
 
 public class TeiidDataSource implements Comparable<TeiidDataSource> {
 

@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.teiid.designer.modelgenerator.salesforce;singleton:=true
 Bundle-Version: 7.7.1.qualifier
-Bundle-Activator: com.metamatrix.modeler.modelgenerator.salesforce.Activator
+Bundle-Activator: org.teiid.designer.modelgenerator.salesforce.Activator
 Bundle-Vendor: %pluginProvider
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.core.runtime,
@@ -26,14 +26,15 @@ Require-Bundle: org.eclipse.core.runtime,
  org.wsdl4j,
  org.teiid.designer.extension
 Bundle-ActivationPolicy: lazy
-Export-Package: com.metamatrix.modeler.modelgenerator.salesforce;uses:="junit.framework",
- com.metamatrix.modeler.modelgenerator.salesforce.connection,
- com.metamatrix.modeler.modelgenerator.salesforce.connection.impl,
- com.metamatrix.modeler.modelgenerator.salesforce.model;uses:="com.metamatrix.modeler.modelgenerator.salesforce.connection,org.eclipse.core.runtime",
- com.metamatrix.modeler.modelgenerator.salesforce.model.impl,
- com.metamatrix.modeler.modelgenerator.salesforce.util,
- com.sforce.soap.partner;x-friends:="org.teiid.designer.modelgenerator.salesforce.test",
- org.teiid.designer.datatools.salesforce
+Export-Package: com.sforce.soap.partner;x-friends:="org.teiid.designer.modelgenerator.salesforce.test",
+ org.teiid.designer.datatools.salesforce,
+ org.teiid.designer.modelgenerator.salesforce,
+ org.teiid.designer.modelgenerator.salesforce.connection,
+ org.teiid.designer.modelgenerator.salesforce.connection.impl,
+ org.teiid.designer.modelgenerator.salesforce.extension,
+ org.teiid.designer.modelgenerator.salesforce.model,
+ org.teiid.designer.modelgenerator.salesforce.model.impl,
+ org.teiid.designer.modelgenerator.salesforce.util
 Bundle-ClassPath: .,
  salesforce-api-7.4.1.jar,
  commons-httpclient-3.0.1.jar,

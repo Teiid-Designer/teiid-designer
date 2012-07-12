@@ -10,8 +10,9 @@ package org.teiid.designer.extension;
 import java.util.Comparator;
 import java.util.Locale;
 
-import com.metamatrix.core.PluginUtil;
-import com.metamatrix.core.util.LoggingUtil;
+import org.teiid.core.PluginUtil;
+import org.teiid.core.util.LoggingUtil;
+
 
 /**
  * Common extension constants.

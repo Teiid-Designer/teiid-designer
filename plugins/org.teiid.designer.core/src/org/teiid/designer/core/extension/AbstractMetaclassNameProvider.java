@@ -12,8 +12,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.teiid.core.util.CoreStringUtil;
 import org.teiid.designer.extension.definition.ExtendableMetaclassNameProvider;
-import com.metamatrix.core.util.CoreStringUtil;
 
 /**
  * 
@@ -25,40 +26,40 @@ public abstract class AbstractMetaclassNameProvider implements ExtendableMetacla
     private static final String WEB_SERVICE_URI = "http://www.metamatrix.com/metamodels/WebService"; //$NON-NLS-1$
     private static final String XML_DOCUMENT_URI = "http://www.metamatrix.com/metamodels/XmlDocument"; //$NON-NLS-1$
 
-    private static final String RELATIONAL_COLUMN = "com.metamatrix.metamodels.relational.impl.ColumnImpl"; //$NON-NLS-1$
-    private static final String RELATIONAL_PRIMARY_KEY = "com.metamatrix.metamodels.relational.impl.PrimaryKeyImpl"; //$NON-NLS-1$
-    private static final String RELATIONAL_FOREIGN_KEY = "com.metamatrix.metamodels.relational.impl.ForeignKeyImpl"; //$NON-NLS-1$
-    private static final String RELATIONAL_VIEW = "com.metamatrix.metamodels.relational.impl.ViewImpl"; //$NON-NLS-1$
-    private static final String RELATIONAL_PROCEDURE = "com.metamatrix.metamodels.relational.impl.ProcedureImpl"; //$NON-NLS-1$
-    private static final String RELATIONAL_INDEX = "com.metamatrix.metamodels.relational.impl.IndexImpl"; //$NON-NLS-1$
-    private static final String RELATIONAL_PROCEDURE_PARAMETER = "com.metamatrix.metamodels.relational.impl.ProcedureParameterImpl"; //$NON-NLS-1$
-    private static final String RELATIONAL_UNIQUE_CONSTRAINT = "com.metamatrix.metamodels.relational.impl.UniqueConstraintImpl"; //$NON-NLS-1$
-    private static final String RELATIONAL_ACCESS_PATTERN = "com.metamatrix.metamodels.relational.impl.AccessPatternImpl"; //$NON-NLS-1$
-    private static final String RELATIONAL_BASE_TABLE = "com.metamatrix.metamodels.relational.impl.BaseTableImpl"; //$NON-NLS-1$
-    private static final String RELATIONAL_PROCEDURE_RESULT = "com.metamatrix.metamodels.relational.impl.ProcedureResultImpl"; //$NON-NLS-1$
+    private static final String RELATIONAL_COLUMN = "org.teiid.designer.metamodels.relational.impl.ColumnImpl"; //$NON-NLS-1$
+    private static final String RELATIONAL_PRIMARY_KEY = "org.teiid.designer.metamodels.relational.impl.PrimaryKeyImpl"; //$NON-NLS-1$
+    private static final String RELATIONAL_FOREIGN_KEY = "org.teiid.designer.metamodels.relational.impl.ForeignKeyImpl"; //$NON-NLS-1$
+    private static final String RELATIONAL_VIEW = "org.teiid.designer.metamodels.relational.impl.ViewImpl"; //$NON-NLS-1$
+    private static final String RELATIONAL_PROCEDURE = "org.teiid.designer.metamodels.relational.impl.ProcedureImpl"; //$NON-NLS-1$
+    private static final String RELATIONAL_INDEX = "org.teiid.designer.metamodels.relational.impl.IndexImpl"; //$NON-NLS-1$
+    private static final String RELATIONAL_PROCEDURE_PARAMETER = "org.teiid.designer.metamodels.relational.impl.ProcedureParameterImpl"; //$NON-NLS-1$
+    private static final String RELATIONAL_UNIQUE_CONSTRAINT = "org.teiid.designer.metamodels.relational.impl.UniqueConstraintImpl"; //$NON-NLS-1$
+    private static final String RELATIONAL_ACCESS_PATTERN = "org.teiid.designer.metamodels.relational.impl.AccessPatternImpl"; //$NON-NLS-1$
+    private static final String RELATIONAL_BASE_TABLE = "org.teiid.designer.metamodels.relational.impl.BaseTableImpl"; //$NON-NLS-1$
+    private static final String RELATIONAL_PROCEDURE_RESULT = "org.teiid.designer.metamodels.relational.impl.ProcedureResultImpl"; //$NON-NLS-1$
 
-    private static final String FUNCTION_SCALAR_FUNCTION = "com.metamatrix.metamodels.function.impl.ScalarFunctionImpl"; //$NON-NLS-1$
-    private static final String FUNCTION_FUNCTION_PARAMETER = "com.metamatrix.metamodels.function.impl.FunctionParameterImpl"; //$NON-NLS-1$
-    private static final String FUNCTION_RETURN_PARAMETER = "com.metamatrix.metamodels.function.impl.ReturnParameterImpl"; //$NON-NLS-1$
+    private static final String FUNCTION_SCALAR_FUNCTION = "org.teiid.designer.metamodels.function.impl.ScalarFunctionImpl"; //$NON-NLS-1$
+    private static final String FUNCTION_FUNCTION_PARAMETER = "org.teiid.designer.metamodels.function.impl.FunctionParameterImpl"; //$NON-NLS-1$
+    private static final String FUNCTION_RETURN_PARAMETER = "org.teiid.designer.metamodels.function.impl.ReturnParameterImpl"; //$NON-NLS-1$
 
-    private static final String WEB_SERVICE_OPERATION = "com.metamatrix.metamodels.webservice.impl.OperationImpl"; //$NON-NLS-1$
-    private static final String WEB_SERVICE_INPUT = "com.metamatrix.metamodels.webservice.impl.InputImpl"; //$NON-NLS-1$
-    private static final String WEB_SERVICE_OUTPUT = "com.metamatrix.metamodels.webservice.impl.OutputImpl"; //$NON-NLS-1$
-    private static final String WEB_SERVICE_INTERFACE = "com.metamatrix.metamodels.webservice.impl.InterfaceImpl"; //$NON-NLS-1$
-    private static final String WEB_SERVICE_SAMPLE_MESSAGES = "com.metamatrix.metamodels.webservice.impl.SampleMessagesImpl"; //$NON-NLS-1$
-    private static final String WEB_SERVICE_SAMPLE_FILE = "com.metamatrix.metamodels.webservice.impl.SampleFileImpl"; //$NON-NLS-1$
-    private static final String WEB_SERVICE_SAMPLE_XSD = "com.metamatrix.metamodels.webservice.impl.SampleFromXsdImpl"; //$NON-NLS-1$
+    private static final String WEB_SERVICE_OPERATION = "org.teiid.designer.metamodels.webservice.impl.OperationImpl"; //$NON-NLS-1$
+    private static final String WEB_SERVICE_INPUT = "org.teiid.designer.metamodels.webservice.impl.InputImpl"; //$NON-NLS-1$
+    private static final String WEB_SERVICE_OUTPUT = "org.teiid.designer.metamodels.webservice.impl.OutputImpl"; //$NON-NLS-1$
+    private static final String WEB_SERVICE_INTERFACE = "org.teiid.designer.metamodels.webservice.impl.InterfaceImpl"; //$NON-NLS-1$
+    private static final String WEB_SERVICE_SAMPLE_MESSAGES = "org.teiid.designer.metamodels.webservice.impl.SampleMessagesImpl"; //$NON-NLS-1$
+    private static final String WEB_SERVICE_SAMPLE_FILE = "org.teiid.designer.metamodels.webservice.impl.SampleFileImpl"; //$NON-NLS-1$
+    private static final String WEB_SERVICE_SAMPLE_XSD = "org.teiid.designer.metamodels.webservice.impl.SampleFromXsdImpl"; //$NON-NLS-1$
 
-    private static final String XML_XMLDOCUMENT = "com.metamatrix.metamodels.xml.impl.XmlDocumentImpl"; //$NON-NLS-1$
-    private static final String XML_XMLELEMENT = "com.metamatrix.metamodels.xml.impl.XmlElementImpl"; //$NON-NLS-1$
-    private static final String XML_XMLATTRIBUTE = "com.metamatrix.metamodels.xml.impl.XmlAttributeImpl"; //$NON-NLS-1$
-    private static final String XML_XMLROOT = "com.metamatrix.metamodels.xml.impl.XmlRootImpl"; //$NON-NLS-1$
-    private static final String XML_XMLCOMMENT = "com.metamatrix.metamodels.xml.impl.XmlCommentImpl"; //$NON-NLS-1$
-    private static final String XML_XMLNAMESPACE = "com.metamatrix.metamodels.xml.impl.XmlNamespaceImpl"; //$NON-NLS-1$
-    private static final String XML_XMLSEQUENCE = "com.metamatrix.metamodels.xml.impl.XmlSequenceImpl"; //$NON-NLS-1$
-    private static final String XML_XMLALL = "com.metamatrix.metamodels.xml.impl.XmlAllImpl"; //$NON-NLS-1$
-    private static final String XML_XMLCHOICE = "com.metamatrix.metamodels.xml.impl.XmlChoiceImpl"; //$NON-NLS-1$
-    private static final String XML_XMLPROCESSING_INSTRUCTION = "com.metamatrix.metamodels.xml.impl.ProcessingInstructionImpl"; //$NON-NLS-1$
+    private static final String XML_XMLDOCUMENT = "org.teiid.designer.metamodels.xml.impl.XmlDocumentImpl"; //$NON-NLS-1$
+    private static final String XML_XMLELEMENT = "org.teiid.designer.metamodels.xml.impl.XmlElementImpl"; //$NON-NLS-1$
+    private static final String XML_XMLATTRIBUTE = "org.teiid.designer.metamodels.xml.impl.XmlAttributeImpl"; //$NON-NLS-1$
+    private static final String XML_XMLROOT = "org.teiid.designer.metamodels.xml.impl.XmlRootImpl"; //$NON-NLS-1$
+    private static final String XML_XMLCOMMENT = "org.teiid.designer.metamodels.xml.impl.XmlCommentImpl"; //$NON-NLS-1$
+    private static final String XML_XMLNAMESPACE = "org.teiid.designer.metamodels.xml.impl.XmlNamespaceImpl"; //$NON-NLS-1$
+    private static final String XML_XMLSEQUENCE = "org.teiid.designer.metamodels.xml.impl.XmlSequenceImpl"; //$NON-NLS-1$
+    private static final String XML_XMLALL = "org.teiid.designer.metamodels.xml.impl.XmlAllImpl"; //$NON-NLS-1$
+    private static final String XML_XMLCHOICE = "org.teiid.designer.metamodels.xml.impl.XmlChoiceImpl"; //$NON-NLS-1$
+    private static final String XML_XMLPROCESSING_INSTRUCTION = "org.teiid.designer.metamodels.xml.impl.ProcessingInstructionImpl"; //$NON-NLS-1$
 
     private static final String MC_PREFIX = ".impl."; //$NON-NLS-1$
     private static final String MC_SUFFIX = "Impl"; //$NON-NLS-1$

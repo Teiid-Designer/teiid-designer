@@ -9,12 +9,13 @@ package org.teiid.designer.runtime.ui.preview;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.ISelection;
-import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
-import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
-import com.metamatrix.modeler.internal.dqp.ui.jdbc.IResults;
-import com.metamatrix.modeler.ui.actions.SortableSelectionAction;
-import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
+import org.teiid.core.util.I18nUtil;
+import org.teiid.designer.runtime.ui.DqpUiConstants;
+import org.teiid.designer.runtime.ui.DqpUiPlugin;
+import org.teiid.designer.runtime.ui.jdbc.IResults;
+import org.teiid.designer.ui.actions.SortableSelectionAction;
+import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
+
 
 /**
  * @since 5.0
@@ -52,7 +53,7 @@ public class PreviewTableDataContextAction extends SortableSelectionAction {
      * of this action so it can allow preview of the specific edited virtual table or procedure. This allows the original action
      * to remain workspace selection driven. Override abstract method
      * 
-     * @see com.metamatrix.modeler.ui.actions.SortableSelectionAction#getClone()
+     * @see org.teiid.designer.ui.actions.SortableSelectionAction#getClone()
      * @since 5.0
      */
     @Override

@@ -7,18 +7,18 @@
  */
 package org.teiid.designer.runtime.ui.extension;
 
-import static com.metamatrix.modeler.dqp.ui.DqpUiConstants.UTIL;
 import static org.teiid.designer.runtime.extension.rest.RestModelExtensionConstants.NAMESPACE_PROVIDER;
+import static org.teiid.designer.runtime.ui.DqpUiConstants.UTIL;
 
 import org.eclipse.emf.ecore.EObject;
+import org.teiid.core.util.I18nUtil;
 import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.ExtensionConstants.MedOperations;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
+import org.teiid.designer.metamodels.relational.Procedure;
 import org.teiid.designer.runtime.extension.rest.RestModelExtensionAssistant;
 import org.teiid.designer.runtime.extension.rest.RestModelExtensionConstants;
 
-import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.metamodels.relational.Procedure;
 
 /**
  * Action to apply REST WAR generation extension properties to virtual procedures.
@@ -60,7 +60,7 @@ public class ApplyRestWarPropertiesAction extends RestWarPropertiesAction {
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.designer.runtime.ui.extension.RestWarPropertiesAction#isValidSelection(com.metamatrix.metamodels.relational.Procedure)
+     * @see org.teiid.designer.runtime.ui.extension.RestWarPropertiesAction#isValidSelection(org.teiid.designer.metamodels.relational.Procedure)
      */
     @Override
     protected boolean isValidSelection( Procedure procedure ) {
@@ -80,7 +80,7 @@ public class ApplyRestWarPropertiesAction extends RestWarPropertiesAction {
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.designer.runtime.ui.extension.RestWarPropertiesAction#runImpl(com.metamatrix.metamodels.relational.Procedure)
+     * @see org.teiid.designer.runtime.ui.extension.RestWarPropertiesAction#runImpl(org.teiid.designer.metamodels.relational.Procedure)
      */
     @Override
     protected void runImpl( Procedure procedure ) throws Exception {

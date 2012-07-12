@@ -2,20 +2,20 @@ package org.teiid.designer.modelgenerator.wsdl.test;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
-import com.metamatrix.modeler.modelgenerator.wsdl.RelationalModelBuilderTest;
-import com.metamatrix.modeler.modelgenerator.wsdl.WSDLReaderTest;
-import com.metamatrix.modeler.modelgenerator.wsdl.model.ModelTest;
-import com.metamatrix.modeler.modelgenerator.wsdl.model.internal.BindingImplTest;
-import com.metamatrix.modeler.modelgenerator.wsdl.model.internal.FaultImplTest;
-import com.metamatrix.modeler.modelgenerator.wsdl.model.internal.MessageImplTest;
-import com.metamatrix.modeler.modelgenerator.wsdl.model.internal.ModelBuilderTest;
-import com.metamatrix.modeler.modelgenerator.wsdl.model.internal.OperationImplTest;
-import com.metamatrix.modeler.modelgenerator.wsdl.model.internal.PartImplTest;
-import com.metamatrix.modeler.modelgenerator.wsdl.model.internal.PortImplTest;
-import com.metamatrix.modeler.modelgenerator.wsdl.model.internal.ServiceImplTest;
-import com.metamatrix.modeler.modelgenerator.wsdl.model.internal.WSDLElementImplTest;
-import com.metamatrix.modeler.modelgenerator.wsdl.validation.WSDLValidationExceptionTest;
-import com.metamatrix.modeler.modelgenerator.wsdl.validation.internal.WSDLValidatorImplTest;
+import org.teiid.designer.modelgenerator.wsdl.RelationalModelBuilderTest;
+import org.teiid.designer.modelgenerator.wsdl.WSDLReaderTest;
+import org.teiid.designer.modelgenerator.wsdl.model.ModelTest;
+import org.teiid.designer.modelgenerator.wsdl.model.impl.BindingImplTest;
+import org.teiid.designer.modelgenerator.wsdl.model.impl.FaultImplTest;
+import org.teiid.designer.modelgenerator.wsdl.model.impl.MessageImplTest;
+import org.teiid.designer.modelgenerator.wsdl.model.impl.ModelBuilderTest;
+import org.teiid.designer.modelgenerator.wsdl.model.impl.OperationImplTest;
+import org.teiid.designer.modelgenerator.wsdl.model.impl.PartImplTest;
+import org.teiid.designer.modelgenerator.wsdl.model.impl.PortImplTest;
+import org.teiid.designer.modelgenerator.wsdl.model.impl.ServiceImplTest;
+import org.teiid.designer.modelgenerator.wsdl.model.impl.WSDLElementImplTest;
+import org.teiid.designer.modelgenerator.wsdl.validation.WSDLValidationExceptionTest;
+import org.teiid.designer.modelgenerator.wsdl.validation.internal.WSDLValidatorImplTest;
 
 @RunWith( Suite.class )
 @Suite.SuiteClasses( {WSDLValidatorImplTest.class, WSDLValidationExceptionTest.class, WSDLElementImplTest.class,

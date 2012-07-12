@@ -7,7 +7,7 @@
  */
 package org.teiid.designer.core.extension;
 
-import static com.metamatrix.modeler.core.ModelerCore.Util;
+import static org.teiid.designer.core.ModelerCore.Util;
 
 import java.io.File;
 import java.util.Arrays;
@@ -23,20 +23,20 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.EMap;
 import org.eclipse.emf.ecore.EObject;
 import org.teiid.core.properties.PropertyDefinition;
+import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.util.CoreStringUtil;
+import org.teiid.core.util.I18nUtil;
+import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.core.util.ModelObjectClassNameVisitor;
+import org.teiid.designer.core.util.ModelResourceContainerFactory;
+import org.teiid.designer.core.util.ModelVisitorProcessor;
+import org.teiid.designer.core.workspace.ModelResource;
+import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.definition.ModelObjectExtensionAssistant;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
+import org.teiid.designer.metamodels.core.Annotation;
 
-import com.metamatrix.core.util.CoreArgCheck;
-import com.metamatrix.core.util.CoreStringUtil;
-import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.metamodels.core.Annotation;
-import com.metamatrix.modeler.core.ModelerCore;
-import com.metamatrix.modeler.core.util.ModelObjectClassNameVisitor;
-import com.metamatrix.modeler.core.util.ModelResourceContainerFactory;
-import com.metamatrix.modeler.core.util.ModelVisitorProcessor;
-import com.metamatrix.modeler.core.workspace.ModelResource;
-import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 
 /**
  * The <code>EmfModelObjectExtensionAssistant</code> is a model extension assistant that knows how to work with {@link EObject}s.

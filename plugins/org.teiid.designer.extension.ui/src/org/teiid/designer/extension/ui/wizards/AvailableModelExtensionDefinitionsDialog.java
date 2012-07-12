@@ -37,6 +37,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.dialogs.SelectionStatusDialog;
+import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.extension.ExtensionConstants;
 import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.definition.ModelExtensionAssistant;
@@ -45,11 +46,10 @@ import org.teiid.designer.extension.definition.ModelExtensionDefinitionHeader;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 import org.teiid.designer.extension.ui.Messages;
 import org.teiid.designer.extension.ui.UiConstants;
+import org.teiid.designer.ui.common.util.WidgetFactory;
+import org.teiid.designer.ui.common.util.WidgetUtil;
+import org.teiid.designer.ui.common.viewsupport.StatusInfo;
 
-import com.metamatrix.modeler.core.workspace.ModelResource;
-import com.metamatrix.ui.internal.util.WidgetFactory;
-import com.metamatrix.ui.internal.util.WidgetUtil;
-import com.metamatrix.ui.internal.viewsupport.StatusInfo;
 
 /**
  * AvailableModelExtensionDefinitionsDialog is a dialog that is used to add model extension definitions to a model.

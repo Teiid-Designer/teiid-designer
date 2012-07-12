@@ -10,11 +10,11 @@ package org.teiid.designer.relational.model;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.osgi.util.NLS;
+import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.core.ModelerCoreException;
+import org.teiid.designer.core.types.DatatypeManager;
 import org.teiid.designer.relational.Messages;
 import org.teiid.designer.relational.RelationalPlugin;
-import com.metamatrix.modeler.core.ModelerCore;
-import com.metamatrix.modeler.core.ModelerCoreException;
-import com.metamatrix.modeler.core.types.DatatypeManager;
 
 /**
  * Handles basic datatype lookup for Teiid-supported Runtime types

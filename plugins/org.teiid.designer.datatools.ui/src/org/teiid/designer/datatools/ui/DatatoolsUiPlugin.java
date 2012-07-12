@@ -2,11 +2,11 @@ package org.teiid.designer.datatools.ui;
 
 import org.eclipse.ui.IWorkbenchPage;
 import org.osgi.framework.BundleContext;
+import org.teiid.core.PluginUtil;
+import org.teiid.core.util.PluginUtilImpl;
+import org.teiid.designer.ui.common.AbstractUiPlugin;
+import org.teiid.designer.ui.common.actions.ActionService;
 
-import com.metamatrix.core.PluginUtil;
-import com.metamatrix.core.util.PluginUtilImpl;
-import com.metamatrix.ui.AbstractUiPlugin;
-import com.metamatrix.ui.actions.ActionService;
 
 /**
  * The activator class controls the plug-in life cycle

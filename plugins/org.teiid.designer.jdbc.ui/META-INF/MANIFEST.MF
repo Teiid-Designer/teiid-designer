@@ -3,15 +3,13 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.teiid.designer.jdbc.ui;singleton:=true
 Bundle-Version: 7.7.1.qualifier
-Bundle-Activator: com.metamatrix.modeler.internal.jdbc.ui.ModelerJdbcUiPlugin
+Bundle-Activator: org.teiid.designer.jdbc.ui.ModelerJdbcUiPlugin
 Bundle-Vendor: %pluginProvider
 Bundle-Localization: plugin
-Export-Package: com.metamatrix.modeler.internal.jdbc.ui,
- com.metamatrix.modeler.internal.jdbc.ui.actions,
- com.metamatrix.modeler.internal.jdbc.ui.util,
- com.metamatrix.modeler.internal.jdbc.ui.wizards,
- com.metamatrix.modeler.jdbc.ui,
- com.metamatrix.modeler.jdbc.ui.wizards
+Export-Package: org.teiid.designer.jdbc.ui,
+ org.teiid.designer.jdbc.ui.actions,
+ org.teiid.designer.jdbc.ui.util,
+ org.teiid.designer.jdbc.ui.wizards
 Require-Bundle: org.eclipse.ui.ide,
  org.eclipse.ui.views,
  org.eclipse.jface.text,

@@ -12,7 +12,7 @@ import java.net.URL;
 import java.util.Properties;
 import org.eclipse.datatools.connectivity.IConnection;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
-import com.metamatrix.modeler.modelgenerator.salesforce.connection.impl.Connection;
+import org.teiid.designer.modelgenerator.salesforce.connection.impl.Connection;
 
 /**
  * 

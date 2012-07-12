@@ -7,7 +7,7 @@
  */
 package org.teiid.designer.core.extension;
 
-import static com.metamatrix.modeler.core.ModelerCore.Util;
+import static org.teiid.designer.core.ModelerCore.Util;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -19,23 +19,23 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.util.EMap;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.impl.EStringToStringMapEntryImpl;
+import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.util.CoreStringUtil;
+import org.teiid.core.util.I18nUtil;
+import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.core.ModelerCoreException;
+import org.teiid.designer.core.util.ModelContents;
+import org.teiid.designer.core.util.ModelResourceContainerFactory;
+import org.teiid.designer.core.workspace.ModelResource;
+import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.extension.definition.ModelExtensionAssistant;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.definition.ModelExtensionDefinitionHeader;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
 import org.teiid.designer.extension.properties.Translation;
+import org.teiid.designer.metamodels.core.Annotation;
+import org.teiid.designer.metamodels.core.AnnotationContainer;
 
-import com.metamatrix.core.util.CoreArgCheck;
-import com.metamatrix.core.util.CoreStringUtil;
-import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.metamodels.core.Annotation;
-import com.metamatrix.metamodels.core.AnnotationContainer;
-import com.metamatrix.modeler.core.ModelerCore;
-import com.metamatrix.modeler.core.ModelerCoreException;
-import com.metamatrix.modeler.core.util.ModelContents;
-import com.metamatrix.modeler.core.util.ModelResourceContainerFactory;
-import com.metamatrix.modeler.core.workspace.ModelResource;
-import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 
 /**
  * Utilities that manage persisting of model extension definitions in model objects.

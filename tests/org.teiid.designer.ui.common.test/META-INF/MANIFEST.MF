@@ -6,9 +6,12 @@ Bundle-Version: 7.7.1.qualifier
 Bundle-Vendor: %Bundle-Vendor.0
 Fragment-Host: org.teiid.designer.ui.common
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Export-Package: com.metamatrix.ui.actions,
- com.metamatrix.ui.dialogs,
- com.metamatrix.ui.internal.eventsupport
+Export-Package: org.teiid.designer.ui.common.actions,
+ org.teiid.designer.ui.common.dialogs,
+ org.teiid.designer.ui.common.eventsupport,
+ org.teiid.designer.ui.common.testsupport,
+ org.teiid.designer.ui.common.util,
+ org.teiid.designer.ui.common.viewsupport
 Bundle-Localization: plugin
 Require-Bundle: org.junit4,
  org.teiid.core.designer.test.framework

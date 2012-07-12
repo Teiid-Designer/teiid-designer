@@ -22,13 +22,13 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.eclipse.osgi.util.NLS;
 import org.teiid.core.HashCodeUtil;
+import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.util.CoreStringUtil;
 import org.teiid.designer.extension.ExtensionConstants;
 import org.teiid.designer.extension.Messages;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
 import org.teiid.designer.extension.properties.NamespaceProvider;
 
-import com.metamatrix.core.util.CoreArgCheck;
-import com.metamatrix.core.util.CoreStringUtil;
 
 /**
  * A <code>ModelExtensionDefinition</code> defines extension properties for metaclasses within a metamodel.

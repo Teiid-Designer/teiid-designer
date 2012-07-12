@@ -8,7 +8,7 @@
 
 package org.teiid.designer.runtime;
 
-import static com.metamatrix.modeler.dqp.DqpPlugin.Util;
+import static org.teiid.designer.runtime.DqpPlugin.Util;
 
 import java.util.ArrayList;
 import java.util.Properties;

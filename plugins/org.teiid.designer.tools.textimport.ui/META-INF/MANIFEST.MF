@@ -3,11 +3,11 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.teiid.designer.tools.textimport.ui;singleton:=true
 Bundle-Version: 7.7.1.qualifier
-Bundle-Activator: com.metamatrix.modeler.tools.textimport.ui.TextImportPlugin
+Bundle-Activator: org.teiid.designer.tools.textimport.ui.TextImportPlugin
 Bundle-Vendor: %pluginProvider
 Bundle-Localization: plugin
-Export-Package: com.metamatrix.modeler.tools.textimport.ui,
- com.metamatrix.modeler.tools.textimport.ui.wizards
+Export-Package: org.teiid.designer.tools.textimport.ui,
+ org.teiid.designer.tools.textimport.ui.wizards
 Require-Bundle: org.eclipse.ui.views,
  org.eclipse.jface.text,
  org.eclipse.ui.workbench.texteditor,
@@ -21,6 +21,7 @@ Require-Bundle: org.eclipse.ui.views,
  org.eclipse.ui.ide,
  org.teiid.core.designer,
  teiid_embedded_query,
- org.eclipse.core.runtime
+ org.eclipse.core.runtime,
+ org.teiid.designer.legacy
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

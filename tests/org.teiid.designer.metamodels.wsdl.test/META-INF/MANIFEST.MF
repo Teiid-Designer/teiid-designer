@@ -10,4 +10,4 @@ Bundle-Localization: plugin
 Require-Bundle: org.junit4,
  org.teiid.core.designer.test.framework,
  org.teiid.designer.sdt
-Export-Package: com.metamatrix.metamodels.wsdl.io
+Export-Package: org.teiid.designer.metamodels.wsdl

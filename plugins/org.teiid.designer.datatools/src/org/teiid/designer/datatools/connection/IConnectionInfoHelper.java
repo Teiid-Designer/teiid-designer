@@ -13,8 +13,8 @@ import java.util.Set;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.datatools.connectivity.internal.ConnectionProfile;
-import com.metamatrix.modeler.core.workspace.ModelResource;
-import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
+import org.teiid.designer.core.workspace.ModelResource;
+import org.teiid.designer.core.workspace.ModelWorkspaceException;
 
 /**
  * Provides generic capabilities to insert and extract <code>IConnectionProfile</code> information into a

@@ -5,7 +5,7 @@
          point="org.eclipse.ui.views">
       <view
             allowMultiple="false"
-            category="com.metamatrix.modeler.ui"
+            category="org.teiid.designer.ui"
             class="org.teiid.designer.ui.navigator.model.ModelNavigator"
             icon="platform:/plugin/org.teiid.designer.ui/icons/full/cview16/projects.gif"
             id="org.teiid.designer.ui.navigator.model.modelExplorer"

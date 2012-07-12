@@ -24,16 +24,16 @@ import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.swt.widgets.Display;
+import org.teiid.core.event.EventObjectListener;
+import org.teiid.core.event.EventSourceException;
+import org.teiid.core.event.IChangeListener;
+import org.teiid.core.event.IChangeNotifier;
 import org.teiid.designer.advisor.ui.AdvisorUiConstants;
 import org.teiid.designer.advisor.ui.views.status.StatusListener;
+import org.teiid.designer.ui.UiPlugin;
+import org.teiid.designer.ui.common.viewsupport.JobUtils;
+import org.teiid.designer.ui.event.ModelResourceEvent;
 
-import com.metamatrix.core.event.EventObjectListener;
-import com.metamatrix.core.event.EventSourceException;
-import com.metamatrix.core.event.IChangeListener;
-import com.metamatrix.core.event.IChangeNotifier;
-import com.metamatrix.modeler.ui.UiPlugin;
-import com.metamatrix.modeler.ui.event.ModelResourceEvent;
-import com.metamatrix.ui.internal.viewsupport.JobUtils;
 
 /**
  * 
@@ -185,7 +185,7 @@ public class AdvisorStatusManager implements IChangeListener, IStatusManager {
         };
 
         try {
-            com.metamatrix.modeler.ui.UiPlugin.getDefault().getEventBroker().addListener(ModelResourceEvent.class,
+            org.teiid.designer.ui.UiPlugin.getDefault().getEventBroker().addListener(ModelResourceEvent.class,
                                                                                          modelResourceListener);
         } catch (EventSourceException e) {
         	AdvisorUiConstants.UTIL.log(IStatus.ERROR, e, e.getMessage());
@@ -273,7 +273,7 @@ public class AdvisorStatusManager implements IChangeListener, IStatusManager {
     /**
      * Need to be wired up to the current VDB Context.
      * 
-     * @see com.metamatrix.core.event.IChangeListener#stateChanged(com.metamatrix.core.event.IChangeNotifier)
+     * @see org.teiid.core.event.IChangeListener#stateChanged(org.teiid.core.event.IChangeNotifier)
      * @since 5.0
      */
     public void stateChanged( IChangeNotifier theSource ) {

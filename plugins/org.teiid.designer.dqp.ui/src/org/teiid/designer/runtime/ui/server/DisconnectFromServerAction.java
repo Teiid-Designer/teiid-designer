@@ -1,6 +1,6 @@
 package org.teiid.designer.runtime.ui.server;
 
-import static com.metamatrix.modeler.dqp.ui.DqpUiConstants.UTIL;
+import static org.teiid.designer.runtime.ui.DqpUiConstants.UTIL;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
@@ -8,8 +8,8 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.ui.actions.BaseSelectionListenerAction;
 import org.teiid.designer.runtime.Server;
+import org.teiid.designer.ui.common.util.WidgetUtil;
 
-import com.metamatrix.ui.internal.util.WidgetUtil;
 
 public class DisconnectFromServerAction extends BaseSelectionListenerAction {
 

@@ -11,11 +11,11 @@
       <extension
          point="org.eclipse.ui.importWizards">
       <wizard
-            class="com.metamatrix.modeler.modelgenerator.salesforce.ui.wizards.SalesforceToRelationalImportWizard"
+            class="org.teiid.designer.modelgenerator.salesforce.ui.wizards.SalesforceToRelationalImportWizard"
             name="%wizardName"
             id="SalesforceToRelationalImportWizard"
             icon="icons/salesforce_wiz.gif"
-            category="com.metamatrix.modeler.ui">
+            category="org.teiid.designer.ui">
          <description>
             %wizardDescription
          </description>
@@ -27,7 +27,7 @@
         name="%CreateSalesForceFunctionsAction.name"
         point="org.teiid.designer.ui.modelResourceAction">
       <resourceAction
-         name="com.metamatrix.modeler.modelgenerator.salesforce.ui.actions.CreateSalesForceFunctionsAction"
+         name="org.teiid.designer.modelgenerator.salesforce.ui.actions.CreateSalesForceFunctionsAction"
          label="%CreateSalesForceFunctionsAction.label">
    </resourceAction>
    </extension>
@@ -35,23 +35,23 @@
       <extension
          point="org.eclipse.datatools.connectivity.connectionProfile">
    <newWizard
-         class="org.teiid.designer.datatools.salesforce.ui.ConnectionProfileWizard"
+         class="org.teiid.designer.modelgenerator.salesforce.ui.ConnectionProfileWizard"
          description="Create a SalesForce connection profile."
          icon="icons/salesforce_wiz.gif"
-         id="org.teiid.designer.datatools.salesforce.ui.ConnectionProfileWizard"
+         id="org.teiid.designer.modelgenerator.salesforce.ui.ConnectionProfileWizard"
          name="SalesForce"
-         profile="org.teiid.designer.datatools.salesforce.connectionProfile"/>
+         profile="org.teiid.designer.modelgenerator.salesforce.connectionProfile"/>
    </extension>
 
    <extension
          point="org.eclipse.ui.propertyPages">
       <page
-            class="org.teiid.designer.datatools.salesforce.ui.PropertyPage"
-            id="org.teiid.designer.datatools.salesforce.ui.profileProperties"
+            class="org.teiid.designer.modelgenerator.salesforce.ui.PropertyPage"
+            id="org.teiid.designer.modelgenerator.salesforce.ui.profileProperties"
             name="%connectionProperties.name">
          <filter
                name="org.eclipse.datatools.profile.property.id"
-               value="org.teiid.designer.datatools.salesforce.connectionProfile"/>
+               value="org.teiid.designer.modelgenerator.salesforce.connectionProfile"/>
          <enabledWhen>
             <instanceof
                   value="org.eclipse.datatools.connectivity.IConnectionProfile">

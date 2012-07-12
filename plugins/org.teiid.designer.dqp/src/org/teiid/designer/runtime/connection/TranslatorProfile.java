@@ -2,7 +2,8 @@ package org.teiid.designer.runtime.connection;
 
 import java.util.Properties;
 
-import com.metamatrix.core.util.CoreArgCheck;
+import org.teiid.core.util.CoreArgCheck;
+
 
 public class TranslatorProfile {
 

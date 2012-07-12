@@ -10,9 +10,9 @@ package org.teiid.designer.extension.ui;
 import org.eclipse.swt.SWT;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.Section;
+import org.teiid.core.PluginUtil;
+import org.teiid.core.util.LoggingUtil;
 
-import com.metamatrix.core.PluginUtil;
-import com.metamatrix.core.util.LoggingUtil;
 
 /**
  * Common constants used by this plugin.

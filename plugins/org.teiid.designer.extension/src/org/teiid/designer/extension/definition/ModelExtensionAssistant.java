@@ -9,12 +9,12 @@ package org.teiid.designer.extension.definition;
 
 import java.util.Set;
 
+import org.teiid.core.util.CoreArgCheck;
 import org.teiid.designer.extension.ExtensionConstants;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinitionImpl;
 import org.teiid.designer.extension.properties.Translation;
 
-import com.metamatrix.core.util.CoreArgCheck;
 
 /**
  * The <code>ModelExtensionAssistant</code> is used when a model extension definition file is parsed and also when working with

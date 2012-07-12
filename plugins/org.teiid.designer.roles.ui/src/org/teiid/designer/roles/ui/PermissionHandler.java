@@ -13,12 +13,12 @@ import java.util.Map;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
+import org.teiid.designer.core.metamodel.aspect.sql.SqlTableAspect;
+import org.teiid.designer.metamodels.relational.ProcedureParameter;
 import org.teiid.designer.roles.Crud;
 import org.teiid.designer.roles.Crud.Type;
 import org.teiid.designer.roles.Permission;
-import com.metamatrix.metamodels.relational.ProcedureParameter;
-import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlTableAspect;
-import com.metamatrix.modeler.internal.transformation.util.TransformationHelper;
+import org.teiid.designer.transformation.util.TransformationHelper;
 
 public class PermissionHandler {
 
@@ -463,7 +463,7 @@ public class PermissionHandler {
         boolean isVirtualTable = TransformationHelper.isVirtualSqlTable(targetObj);
 
         if (TransformationHelper.isSqlTable(targetObj) && !TransformationHelper.isXmlDocument(targetObj)) {
-            SqlTableAspect tableAspect = (SqlTableAspect)com.metamatrix.modeler.core.metamodel.aspect.sql.SqlAspectHelper.getSqlAspect((EObject)targetObj);
+            SqlTableAspect tableAspect = (SqlTableAspect)org.teiid.designer.core.metamodel.aspect.sql.SqlAspectHelper.getSqlAspect((EObject)targetObj);
             if (tableAspect != null) {
                 if (isVirtualTable) {
                     EObject transMappingRoot = TransformationHelper.getTransformationMappingRoot((EObject)targetObj);

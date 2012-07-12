@@ -3,13 +3,17 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.teiid.designer.relational.ui;singleton:=true
 Bundle-Version: 7.7.1.qualifier
-Bundle-Activator: com.metamatrix.modeler.relational.ui.UiPlugin
+Bundle-Activator: org.teiid.designer.relational.ui.UiPlugin
 Bundle-Vendor: %pluginProvider
 Bundle-Localization: plugin
-Export-Package: com.metamatrix.modeler.internal.relational.ui.textimport,
- com.metamatrix.modeler.internal.relational.ui.wizards,
- com.metamatrix.modeler.relational.ui,
- org.teiid.designer.relational.ui.util
+Export-Package: org.teiid.designer.relational.ui,
+ org.teiid.designer.relational.ui.actions,
+ org.teiid.designer.relational.ui.edit,
+ org.teiid.designer.relational.ui.flatfile,
+ org.teiid.designer.relational.ui.textimport,
+ org.teiid.designer.relational.ui.util,
+ org.teiid.designer.relational.ui.webservice,
+ org.teiid.designer.relational.ui.wizards
 Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.views,
  org.eclipse.jface.text,
@@ -29,6 +33,7 @@ Require-Bundle: org.eclipse.ui,
  org.teiid.designer.metamodels.core,
  org.eclipse.core.resources,
  org.eclipse.emf.ecore,
- org.teiid.designer.relational
+ org.teiid.designer.relational,
+ org.teiid.designer.legacy
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

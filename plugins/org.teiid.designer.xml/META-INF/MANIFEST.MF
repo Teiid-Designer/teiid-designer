@@ -3,13 +3,13 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.teiid.designer.xml;singleton:=true
 Bundle-Version: 7.7.1.qualifier
-Bundle-Activator: com.metamatrix.modeler.xml.ModelerXmlPlugin
+Bundle-Activator: org.teiid.designer.xml.ModelerXmlPlugin
 Bundle-Vendor: %pluginProvider
 Bundle-Localization: plugin
-Export-Package: com.metamatrix.modeler.internal.xml.aspects.sql,
- com.metamatrix.modeler.internal.xml.choice,
- com.metamatrix.modeler.internal.xml.factory,
- com.metamatrix.modeler.xml
+Export-Package: org.teiid.designer.xml,
+ org.teiid.designer.xml.aspects.sql,
+ org.teiid.designer.xml.choice,
+ org.teiid.designer.xml.factory
 Require-Bundle: org.teiid.designer.metamodels.xml,
  org.teiid.designer.metamodels.xsd,
  org.teiid.designer.mapping,

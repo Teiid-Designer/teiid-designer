@@ -3,16 +3,15 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.teiid.designer.jdbc.relational;singleton:=true
 Bundle-Version: 7.7.1.qualifier
-Bundle-Activator: com.metamatrix.modeler.jdbc.relational.JdbcRelationalPlugin
+Bundle-Activator: org.teiid.designer.jdbc.relational.JdbcRelationalPlugin
 Bundle-Vendor: %pluginProvider
 Bundle-Localization: plugin
-Export-Package: com.metamatrix.modeler.internal.jdbc.relational,
- com.metamatrix.modeler.internal.jdbc.relational.util,
- com.metamatrix.modeler.jdbc.relational,
- com.metamatrix.modeler.jdbc.relational.aspects.sql,
- com.metamatrix.modeler.jdbc.relational.compare,
- com.metamatrix.modeler.jdbc.relational.impl,
- com.metamatrix.modeler.jdbc.relational.impl.custom
+Export-Package: org.teiid.designer.jdbc.relational,
+ org.teiid.designer.jdbc.relational.aspects.sql,
+ org.teiid.designer.jdbc.relational.compare,
+ org.teiid.designer.jdbc.relational.impl,
+ org.teiid.designer.jdbc.relational.impl.custom,
+ org.teiid.designer.jdbc.relational.util
 Require-Bundle: org.teiid.designer.metamodels.relational,
  org.teiid.designer.jdbc,
  org.teiid.designer.core,
@@ -23,6 +22,7 @@ Require-Bundle: org.teiid.designer.metamodels.relational,
  org.eclipse.core.runtime,
  org.eclipse.emf.mapping,
  org.teiid.designer.metamodels.core,
- org.eclipse.datatools.connectivity
+ org.eclipse.datatools.connectivity,
+ org.teiid.designer.legacy
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

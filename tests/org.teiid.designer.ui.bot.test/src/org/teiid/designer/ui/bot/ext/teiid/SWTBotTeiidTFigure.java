@@ -5,8 +5,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swtbot.swt.finder.finders.UIThreadRunnable;
 import org.eclipse.swtbot.swt.finder.results.VoidResult;
+import org.teiid.designer.transformation.ui.figure.TransformationFigure;
 
-import com.metamatrix.modeler.transformation.ui.figure.TransformationFigure;
 
 public class SWTBotTeiidTFigure extends SWTBotTeiidFigure{
 

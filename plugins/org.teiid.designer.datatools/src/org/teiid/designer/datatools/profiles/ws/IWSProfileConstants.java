@@ -7,7 +7,7 @@
 */
 package org.teiid.designer.datatools.profiles.ws;
 
-import com.metamatrix.ui.ICredentialsCommon;
+import org.teiid.designer.ui.common.ICredentialsCommon;
 
 public interface IWSProfileConstants extends ICredentialsCommon {
 

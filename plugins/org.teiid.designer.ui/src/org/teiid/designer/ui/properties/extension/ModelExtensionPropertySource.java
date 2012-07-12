@@ -7,7 +7,7 @@
  */
 package org.teiid.designer.ui.properties.extension;
 
-import static com.metamatrix.modeler.ui.UiConstants.Util;
+import static org.teiid.designer.ui.UiConstants.Util;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -17,13 +17,13 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
+import org.teiid.core.util.CoreArgCheck;
 import org.teiid.designer.core.extension.deprecated.DeprecatedModelExtensionAssistant;
 import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.ModelExtensionAssistantAggregator;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 
-import com.metamatrix.core.util.CoreArgCheck;
 
 /**
  * 

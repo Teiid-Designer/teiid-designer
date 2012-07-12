@@ -24,6 +24,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.osgi.util.NLS;
+import org.teiid.core.util.CoreArgCheck;
 import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.Messages;
 import org.teiid.designer.extension.definition.ModelExtensionAssistant;
@@ -31,7 +32,6 @@ import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.definition.ModelExtensionDefinitionParser;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
 
-import com.metamatrix.core.util.CoreArgCheck;
 
 /**
  * 

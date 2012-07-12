@@ -22,16 +22,16 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
+import org.teiid.core.event.IChangeListener;
+import org.teiid.core.event.IChangeNotifier;
+import org.teiid.core.util.I18nUtil;
 import org.teiid.designer.advisor.ui.AdvisorUiConstants;
 import org.teiid.designer.advisor.ui.Messages;
 import org.teiid.designer.advisor.ui.actions.AdvisorActionFactory;
+import org.teiid.designer.ui.common.util.WidgetFactory;
+import org.teiid.designer.ui.viewsupport.DesignerProperties;
+import org.teiid.designer.vdb.ui.VdbUiConstants;
 
-import com.metamatrix.core.event.IChangeListener;
-import com.metamatrix.core.event.IChangeNotifier;
-import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.modeler.ui.viewsupport.DesignerProperties;
-import com.metamatrix.modeler.vdb.ui.VdbUiConstants;
-import com.metamatrix.ui.internal.util.WidgetFactory;
 
 public class DefineSourceDialog  extends TitleAreaDialog implements IChangeListener, AdvisorUiConstants {
 
@@ -179,7 +179,7 @@ public class DefineSourceDialog  extends TitleAreaDialog implements IChangeListe
 	}
 
 	/**
-	 * @see com.metamatrix.core.event.IChangeListener#stateChanged(com.metamatrix.core.event.IChangeNotifier)
+	 * @see org.teiid.core.event.IChangeListener#stateChanged(org.teiid.core.event.IChangeNotifier)
 	 * @since 5.5.3
 	 */
 	@Override

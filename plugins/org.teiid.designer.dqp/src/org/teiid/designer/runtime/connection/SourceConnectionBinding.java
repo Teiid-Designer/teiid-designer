@@ -7,18 +7,19 @@
  */
 package org.teiid.designer.runtime.connection;
 
-import static com.metamatrix.modeler.dqp.DqpPlugin.Util;
+import static org.teiid.designer.runtime.DqpPlugin.Util;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import org.teiid.core.util.CoreArgCheck;
 import org.teiid.designer.runtime.TeiidTranslator;
 import org.teiid.designer.runtime.ExecutionAdmin;
 import org.teiid.designer.vdb.connections.VdbSourceConnection;
 
-import com.metamatrix.core.util.CoreArgCheck;
 
 /**
  * The binding between a model and one or more translators.

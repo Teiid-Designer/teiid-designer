@@ -13,7 +13,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import com.metamatrix.core.util.CoreArgCheck;
+import org.teiid.core.util.CoreArgCheck;
+
 
 public class DataRole {
 	

@@ -7,8 +7,8 @@
  */
 package org.teiid.designer.runtime;
 
-import static com.metamatrix.modeler.dqp.DqpPlugin.PLUGIN_ID;
-import static com.metamatrix.modeler.dqp.DqpPlugin.Util;
+import static org.teiid.designer.runtime.DqpPlugin.PLUGIN_ID;
+import static org.teiid.designer.runtime.DqpPlugin.Util;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -33,6 +33,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.teiid.core.util.Base64;
+import org.teiid.core.util.CoreArgCheck;
+import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.runtime.preview.PreviewManager;
 import org.teiid.net.TeiidURL;
 import org.w3c.dom.Document;
@@ -41,8 +43,6 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import com.metamatrix.core.util.CoreArgCheck;
-import com.metamatrix.core.util.StringUtilities;
 
 /**
  * The <code>ServerManager</code> class manages the creation, deletion, and editing of servers hosting Teiid servers.

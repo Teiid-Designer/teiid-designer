@@ -29,9 +29,8 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.teiid.designer.core.ModelerCore;
 
-import com.metamatrix.modeler.core.ModelerCore;
-import com.metamatrix.modeler.dqp.DqpPlugin;
 
 /**
  * 

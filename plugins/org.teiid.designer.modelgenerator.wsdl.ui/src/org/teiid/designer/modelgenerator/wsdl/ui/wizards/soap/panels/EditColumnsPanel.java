@@ -29,17 +29,17 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.teiid.core.types.DataTypeManager;
+import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.ColumnInfo;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.OperationsDetailsPage;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.ProcedureInfo;
+import org.teiid.designer.transformation.ui.PluginConstants;
+import org.teiid.designer.transformation.ui.UiConstants;
+import org.teiid.designer.transformation.ui.UiPlugin;
+import org.teiid.designer.ui.common.table.CheckBoxEditingSupport;
+import org.teiid.designer.ui.common.table.ComboBoxEditingSupport;
 
-import com.metamatrix.core.util.StringUtilities;
-import com.metamatrix.modeler.transformation.ui.PluginConstants;
-import com.metamatrix.modeler.transformation.ui.UiConstants;
-import com.metamatrix.modeler.transformation.ui.UiPlugin;
-import com.metamatrix.ui.table.CheckBoxEditingSupport;
-import com.metamatrix.ui.table.ComboBoxEditingSupport;
 
 public class EditColumnsPanel {
 	TableViewer columnsViewer;

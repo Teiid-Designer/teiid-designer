@@ -8,8 +8,8 @@
 package org.teiid.designer.datatools.profiles.xml;
 
 import org.teiid.designer.datatools.profiles.ws.IWSProfileConstants;
+import org.teiid.designer.ui.common.ICredentialsCommon;
 
-import com.metamatrix.ui.ICredentialsCommon;
 
 public interface IXmlProfileConstants extends ICredentialsCommon {
 	String FILE_URL_CONNECTION_PROFILE_ID = "org.teiid.designer.datatools.profiles.xml.fileurl"; //$NON-NLS-1$

@@ -22,15 +22,15 @@ import javax.xml.validation.SchemaFactory;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.teiid.core.designer.util.OperationUtil;
+import org.teiid.core.designer.util.OperationUtil.Unreliable;
+import org.teiid.core.util.CoreArgCheck;
+import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.vdb.Vdb.Xml;
 import org.teiid.designer.vdb.manifest.ModelElement;
 import org.teiid.designer.vdb.manifest.PropertyElement;
 import org.teiid.designer.vdb.manifest.VdbElement;
 import org.xml.sax.SAXException;
-import com.metamatrix.core.modeler.util.OperationUtil;
-import com.metamatrix.core.modeler.util.OperationUtil.Unreliable;
-import com.metamatrix.core.util.CoreArgCheck;
-import com.metamatrix.metamodels.core.ModelType;
 
 /**
  * Utility methods used to query VDB manifest and VDB's

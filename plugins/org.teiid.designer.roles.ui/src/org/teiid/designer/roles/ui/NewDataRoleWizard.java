@@ -45,18 +45,19 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.ui.IWorkbench;
+import org.teiid.core.util.I18nUtil;
+import org.teiid.designer.core.container.Container;
 import org.teiid.designer.roles.Crud;
 import org.teiid.designer.roles.DataRole;
 import org.teiid.designer.roles.Permission;
-import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.modeler.core.container.Container;
-import com.metamatrix.ui.internal.util.WidgetFactory;
-import com.metamatrix.ui.internal.widget.Dialog;
-import com.metamatrix.ui.internal.widget.IListPanelController;
-import com.metamatrix.ui.internal.widget.ListPanel;
-import com.metamatrix.ui.internal.widget.ListPanelAdapter;
-import com.metamatrix.ui.internal.wizard.AbstractWizard;
-import com.metamatrix.ui.text.StyledTextEditor;
+import org.teiid.designer.ui.common.text.StyledTextEditor;
+import org.teiid.designer.ui.common.util.WidgetFactory;
+import org.teiid.designer.ui.common.widget.Dialog;
+import org.teiid.designer.ui.common.widget.IListPanelController;
+import org.teiid.designer.ui.common.widget.ListPanel;
+import org.teiid.designer.ui.common.widget.ListPanelAdapter;
+import org.teiid.designer.ui.common.wizard.AbstractWizard;
+
 
 public class NewDataRoleWizard extends AbstractWizard {
     private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(NewDataRoleWizard.class);

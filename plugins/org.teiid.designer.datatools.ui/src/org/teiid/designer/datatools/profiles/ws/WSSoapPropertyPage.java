@@ -31,9 +31,9 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.teiid.designer.datatools.ui.DatatoolsUiConstants;
 import org.teiid.designer.datatools.ui.DatatoolsUiPlugin;
+import org.teiid.designer.ui.common.ICredentialsCommon.SecurityType;
+import org.teiid.designer.ui.common.widget.CredentialsComposite;
 
-import com.metamatrix.ui.ICredentialsCommon.SecurityType;
-import com.metamatrix.ui.internal.widget.CredentialsComposite;
 
 public class WSSoapPropertyPage extends ProfileDetailsPropertyPage implements IContextProvider, DatatoolsUiConstants {
 

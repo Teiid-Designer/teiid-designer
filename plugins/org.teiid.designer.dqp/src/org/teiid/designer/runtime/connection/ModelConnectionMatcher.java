@@ -3,11 +3,11 @@ package org.teiid.designer.runtime.connection;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.runtime.ExecutionAdmin;
 import org.teiid.designer.runtime.TeiidDataSource;
 import org.teiid.designer.vdb.Vdb;
 
-import com.metamatrix.modeler.core.ModelerCore;
 
 public class ModelConnectionMatcher {
 

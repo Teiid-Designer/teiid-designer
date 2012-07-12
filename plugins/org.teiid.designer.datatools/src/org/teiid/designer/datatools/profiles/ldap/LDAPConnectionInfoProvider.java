@@ -3,11 +3,11 @@ package org.teiid.designer.datatools.profiles.ldap;
 import java.util.Properties;
 
 import org.eclipse.datatools.connectivity.IConnectionProfile;
+import org.teiid.designer.core.workspace.ModelResource;
+import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
 import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
 
-import com.metamatrix.modeler.core.workspace.ModelResource;
-import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 
 public class LDAPConnectionInfoProvider extends ConnectionInfoHelper implements IConnectionInfoProvider {
 	public final static String LDAP_DATASOURCE_PASSWORD = "password"; //$NON-NLS-1$

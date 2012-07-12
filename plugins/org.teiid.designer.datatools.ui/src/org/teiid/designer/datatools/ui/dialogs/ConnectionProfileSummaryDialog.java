@@ -21,12 +21,12 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.teiid.core.util.I18nUtil;
+import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.datatools.ui.DatatoolsUiConstants;
+import org.teiid.designer.ui.common.util.WidgetFactory;
+import org.teiid.designer.ui.common.widget.Dialog;
 
-import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.core.util.StringUtilities;
-import com.metamatrix.ui.internal.util.WidgetFactory;
-import com.metamatrix.ui.internal.widget.Dialog;
 
 public class ConnectionProfileSummaryDialog extends Dialog {
 	private static final int WIDTH = 700;

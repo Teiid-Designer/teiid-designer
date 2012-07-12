@@ -10,14 +10,14 @@ package org.teiid.designer.relational.model;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.osgi.util.NLS;
+import org.teiid.core.util.CoreArgCheck;
+import org.teiid.designer.core.util.StringUtilities;
+import org.teiid.designer.core.validation.rules.StringNameValidator;
+import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.relational.Messages;
 import org.teiid.designer.relational.RelationalConstants;
 import org.teiid.designer.relational.RelationalPlugin;
 
-import com.metamatrix.core.util.CoreArgCheck;
-import com.metamatrix.core.util.StringUtilities;
-import com.metamatrix.metamodels.core.ModelType;
-import com.metamatrix.modeler.core.validation.rules.StringNameValidator;
 
 /**
  * 

@@ -2,21 +2,22 @@ package org.teiid.designer.jdbc.test;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
-import com.metamatrix.jdbctest.TestJdbcMetadataClient;
-import com.metamatrix.modeler.internal.jdbc.TestJdbcManagerImpl;
-import com.metamatrix.modeler.jdbc.TestJdbcPlugin;
-import com.metamatrix.modeler.jdbc.custom.TestExcelConnectionHandler;
-import com.metamatrix.modeler.jdbc.custom.TestExcelDatabaseMetaDataHandler;
-import com.metamatrix.modeler.jdbc.data.TestFakeRequest;
-import com.metamatrix.modeler.jdbc.data.TestMethodRequest;
-import com.metamatrix.modeler.jdbc.data.TestQueryRequest;
-import com.metamatrix.modeler.jdbc.metadata.impl.TestFakeJdbcDatabase;
-import com.metamatrix.modeler.jdbc.metadata.impl.TestJdbcDatabaseImpl;
-import com.metamatrix.modeler.jdbc.metadata.impl.TestJdbcNodeCache;
-import com.metamatrix.modeler.jdbc.metadata.impl.TestJdbcNodeImpl;
-import com.metamatrix.modeler.jdbc.metadata.impl.TestJdbcNodeSelections;
-import com.metamatrix.modeler.jdbc.metadata.impl.TestJdbcProcedureImpl;
-import com.metamatrix.modeler.jdbc.metadata.impl.TestJdbcTableImpl;
+import org.teiid.designer.jdbc.TestJdbcManagerImpl;
+import org.teiid.designer.jdbc.TestJdbcPlugin;
+import org.teiid.designer.jdbc.custom.TestExcelConnectionHandler;
+import org.teiid.designer.jdbc.custom.TestExcelDatabaseMetaDataHandler;
+import org.teiid.designer.jdbc.data.TestFakeRequest;
+import org.teiid.designer.jdbc.data.TestMethodRequest;
+import org.teiid.designer.jdbc.data.TestQueryRequest;
+import org.teiid.designer.jdbc.jdbctest.TestJdbcMetadataClient;
+import org.teiid.designer.jdbc.metadata.impl.TestFakeJdbcDatabase;
+import org.teiid.designer.jdbc.metadata.impl.TestJdbcDatabaseImpl;
+import org.teiid.designer.jdbc.metadata.impl.TestJdbcNodeCache;
+import org.teiid.designer.jdbc.metadata.impl.TestJdbcNodeImpl;
+import org.teiid.designer.jdbc.metadata.impl.TestJdbcNodeSelections;
+import org.teiid.designer.jdbc.metadata.impl.TestJdbcProcedureImpl;
+import org.teiid.designer.jdbc.metadata.impl.TestJdbcTableImpl;
+
 
 @RunWith( Suite.class )
 @Suite.SuiteClasses( {TestJdbcTableImpl.class, TestJdbcProcedureImpl.class, TestJdbcNodeSelections.class, TestJdbcNodeImpl.class,

@@ -15,13 +15,13 @@
     point="org.eclipse.ui.views">
       <category
             name="%category.name.0"
-            id="com.metamatrix.modeler.runtime.ui">
+            id="org.teiid.designer.runtime.ui">
       </category>
       <view
             name="%connectorsView"
             icon="icons/full/obj16/connectorBinding.gif"
-            category="com.metamatrix.modeler.ui"
-            class="com.metamatrix.modeler.internal.dqp.ui.workspace.TeiidView"
+            category="org.teiid.designer.ui"
+            class="org.teiid.designer.runtime.ui.views.TeiidView"
             id="connectorsView">
       </view>
   </extension>
@@ -31,7 +31,7 @@
          name="%teiidPerspectiveContributor.name"
          point="org.teiid.designer.ui.modelerPerspectiveContributor">
       <class
-        name="com.metamatrix.modeler.internal.dqp.ui.workspace.TeiidPerspectiveContributor">
+        name="org.teiid.designer.runtime.ui.views.TeiidPerspectiveContributor">
       </class>
    </extension>
    
@@ -46,19 +46,19 @@
       <preference
             id="enablePreviewPreferenceContributor"
             categoryId="dqpUiPreferenceCategory"
-            class="com.metamatrix.modeler.internal.dqp.ui.preferences.EnablePreviewPreferenceContributor">
+            class="org.teiid.designer.runtime.ui.preferences.EnablePreviewPreferenceContributor">
       </preference>
       <!-- Enable Teiid Preview Cleanup Preference -->
       <preference
             id="enableTeiidPreviewCleanupPreferenceContributor"
             categoryId="dqpUiPreferenceCategory"
-            class="com.metamatrix.modeler.internal.dqp.ui.preferences.EnableTeiidPreviewCleanupPreferenceContributor">
+            class="org.teiid.designer.runtime.ui.preferences.EnableTeiidPreviewCleanupPreferenceContributor">
       </preference>
       <!-- Enable Auto-create Data Source Preference -->
       <preference
             id="autoCreateDataSourcePreferenceContributor"
             categoryId="dqpUiPreferenceCategory"
-            class="com.metamatrix.modeler.internal.dqp.ui.preferences.AutoCreateDataSourcePreferenceContributor">
+            class="org.teiid.designer.runtime.ui.preferences.AutoCreateDataSourcePreferenceContributor">
       </preference>
   </extension>
 <!-- Actions contributed to the object/model generation -->
@@ -150,7 +150,7 @@
             adaptable="true"
             label="%decorator.label"
             state="true"
-            class="com.metamatrix.modeler.internal.dqp.ui.workspace.TeiidViewTreeProvider"
+            class="org.teiid.designer.runtime.ui.views.TeiidViewTreeProvider"
             id="org.teiid.designer.dqp.ui.decorator">
          <description>
             %decorator.description
@@ -167,7 +167,7 @@
             adaptable="true"
             label="%previewDecoratorr.label"
             state="true"
-            class="com.metamatrix.modeler.internal.dqp.ui.workspace.PreviewModelObjectLabelProvider"
+            class="org.teiid.designer.runtime.ui.views.PreviewModelObjectLabelProvider"
             id="org.teiid.designer.dqp.ui.previewDecorator">
          <description>
             %previewDecorator.description

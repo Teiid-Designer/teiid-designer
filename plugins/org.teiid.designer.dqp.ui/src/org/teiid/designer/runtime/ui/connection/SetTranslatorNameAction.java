@@ -21,21 +21,21 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
+import org.teiid.designer.runtime.ui.DqpUiConstants;
+import org.teiid.designer.runtime.ui.DqpUiPlugin;
+import org.teiid.designer.ui.actions.SortableSelectionAction;
+import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
+import org.teiid.designer.ui.common.util.WidgetFactory;
+import org.teiid.designer.ui.common.widget.Dialog;
+import org.teiid.designer.ui.common.widget.Label;
+import org.teiid.designer.ui.editors.ModelEditor;
+import org.teiid.designer.ui.editors.ModelEditorManager;
+import org.teiid.designer.ui.viewsupport.ModelIdentifier;
+import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
-import com.metamatrix.modeler.core.ModelerCore;
-import com.metamatrix.modeler.core.workspace.ModelResource;
-import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
-import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
-import com.metamatrix.modeler.internal.ui.editors.ModelEditor;
-import com.metamatrix.modeler.internal.ui.viewsupport.ModelIdentifier;
-import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
-import com.metamatrix.modeler.ui.actions.SortableSelectionAction;
-import com.metamatrix.modeler.ui.editors.ModelEditorManager;
-import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
-import com.metamatrix.ui.internal.util.WidgetFactory;
-import com.metamatrix.ui.internal.widget.Dialog;
-import com.metamatrix.ui.internal.widget.Label;
 
 public class SetTranslatorNameAction extends SortableSelectionAction {
     private static final String ACTION_TITLE = DqpUiConstants.UTIL.getString("SetTranslatorNameAction.title"); //$NON-NLS-1$
@@ -53,7 +53,7 @@ public class SetTranslatorNameAction extends SortableSelectionAction {
     }
 
     /**
-     * @see com.metamatrix.modeler.ui.actions.SortableSelectionAction#isValidSelection(org.eclipse.jface.viewers.ISelection)
+     * @see org.teiid.designer.ui.actions.SortableSelectionAction#isValidSelection(org.eclipse.jface.viewers.ISelection)
      * @since 5.0
      */
     @Override
@@ -139,7 +139,7 @@ public class SetTranslatorNameAction extends SortableSelectionAction {
     }
 
     /**
-     * @see com.metamatrix.modeler.ui.actions.ISelectionAction#isApplicable(org.eclipse.jface.viewers.ISelection)
+     * @see org.teiid.designer.ui.actions.ISelectionAction#isApplicable(org.eclipse.jface.viewers.ISelection)
      * @since 5.0
      */
     @Override

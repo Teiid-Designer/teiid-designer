@@ -9,9 +9,9 @@ package org.teiid.designer.extension.ui.model;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
+import org.teiid.core.util.ArrayUtil;
 import org.teiid.designer.extension.ui.editors.ModelExtensionDefinitionEditor;
 
-import com.metamatrix.core.util.ArrayUtil;
 
 /**
  * 

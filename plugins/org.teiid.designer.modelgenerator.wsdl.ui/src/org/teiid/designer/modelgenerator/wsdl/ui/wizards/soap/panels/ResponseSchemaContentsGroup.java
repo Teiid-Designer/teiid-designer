@@ -25,8 +25,8 @@ import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.ImportWsdlSchemaHa
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.OperationsDetailsPage;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.ProcedureInfo;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.SchemaTreeModel.SchemaNode;
+import org.teiid.designer.ui.common.util.WidgetFactory;
 
-import com.metamatrix.ui.internal.util.WidgetFactory;
 
 public class ResponseSchemaContentsGroup {
 	TreeViewer schemaTreeViewer;

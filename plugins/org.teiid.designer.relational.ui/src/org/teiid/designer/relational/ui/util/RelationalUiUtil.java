@@ -9,11 +9,11 @@ package org.teiid.designer.relational.ui.util;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swt.graphics.Image;
+import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.relational.RelationalConstants;
+import org.teiid.designer.relational.ui.UiConstants;
+import org.teiid.designer.relational.ui.UiPlugin;
 
-import com.metamatrix.metamodels.core.ModelType;
-import com.metamatrix.modeler.relational.ui.UiConstants;
-import com.metamatrix.modeler.relational.ui.UiPlugin;
 
 public class RelationalUiUtil implements RelationalConstants {
 	private static int OK = IStatus.OK;

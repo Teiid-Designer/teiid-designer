@@ -16,12 +16,12 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.teiid.designer.runtime.ui.DqpUiConstants;
+import org.teiid.designer.ui.common.InternalUiConstants;
+import org.teiid.designer.ui.common.util.WidgetFactory;
+import org.teiid.designer.ui.common.widget.Dialog;
+import org.teiid.designer.ui.common.widget.Label;
 
-import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
-import com.metamatrix.ui.internal.InternalUiConstants;
-import com.metamatrix.ui.internal.util.WidgetFactory;
-import com.metamatrix.ui.internal.widget.Dialog;
-import com.metamatrix.ui.internal.widget.Label;
 
 /**
  * 

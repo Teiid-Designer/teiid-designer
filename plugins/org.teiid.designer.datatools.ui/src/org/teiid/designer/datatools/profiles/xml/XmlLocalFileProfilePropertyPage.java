@@ -32,10 +32,10 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.datatools.ui.DatatoolsUiConstants;
 import org.teiid.designer.datatools.ui.DatatoolsUiPlugin;
 
-import com.metamatrix.core.util.StringUtilities;
 
 public class XmlLocalFileProfilePropertyPage extends ProfileDetailsPropertyPage
 		implements IContextProvider, DatatoolsUiConstants {

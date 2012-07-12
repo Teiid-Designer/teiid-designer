@@ -13,7 +13,7 @@
    <extension
          point="org.eclipse.ui.views">
       <view
-            category="com.metamatrix.modeler.ui"
+            category="org.teiid.designer.ui"
             class="org.teiid.designer.advisor.ui.views.guides.TeiidGuidesView"
             icon="icons/full/ctool16/advisor-view.png"
             id="org.teiid.designer.advisor.ui.views.guides.TeiidGuidesViewID"
@@ -32,7 +32,7 @@
    <extension
          point="org.eclipse.ui.views">
       <view
-            category="com.metamatrix.modeler.ui"
+            category="org.teiid.designer.ui"
             class="org.teiid.designer.advisor.ui.views.status.ProjectStatusView"
             icon="icons/full/ctool16/status-view.png"
             id="org.teiid.designer.advisor.ui.views.status.ProjectStatusViewID"

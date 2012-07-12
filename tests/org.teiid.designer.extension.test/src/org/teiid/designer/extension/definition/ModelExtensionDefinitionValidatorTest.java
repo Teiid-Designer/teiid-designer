@@ -15,11 +15,11 @@ import java.util.Collection;
 import java.util.Collections;
 
 import org.junit.Test;
+import org.teiid.core.util.CoreStringUtil;
 import org.teiid.designer.extension.Constants;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition.Type;
 import org.teiid.designer.extension.properties.Translation;
 
-import com.metamatrix.core.util.CoreStringUtil;
 
 /**
  * 

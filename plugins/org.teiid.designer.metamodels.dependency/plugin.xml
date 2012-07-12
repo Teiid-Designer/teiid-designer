@@ -13,7 +13,7 @@
          point="org.eclipse.emf.ecore.generated_package">
       <package
             uri="http://www.metamatrix.com/metamodels/Dependency"
-            class="com.metamatrix.metamodels.dependency.DependencyPackage">
+            class="org.teiid.designer.metamodels.dependency.DependencyPackage">
       </package>
    </extension>
 <!--
@@ -29,13 +29,13 @@
          http://www.metamatrix.com/metamodels/Dependency
       </uri>
       <alternateUri>
-         mtkplugin:///com.metamatrix.metamodels.Dependency
+         mtkplugin:///org.teiid.designer.metamodels.Dependency
       </alternateUri>
       <packageClass
-            name="com.metamatrix.metamodels.dependency.DependencyPackage">
+            name="org.teiid.designer.metamodels.dependency.DependencyPackage">
       </packageClass>
       <adapterClass
-            name="com.metamatrix.metamodels.dependency.provider.DependencyItemProviderAdapterFactory">
+            name="org.teiid.designer.metamodels.dependency.provider.DependencyItemProviderAdapterFactory">
       </adapterClass>
       <properties
             createAsPhysical="false"

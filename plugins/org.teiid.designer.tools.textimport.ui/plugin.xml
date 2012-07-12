@@ -16,8 +16,8 @@
 <!-- Modeler Text File Model Object Import Wizard -->
       <wizard
             icon="icons/full/cview16/import_text.gif"
-            category="com.metamatrix.modeler.ui"
-            class="com.metamatrix.modeler.tools.textimport.ui.wizards.ImportTextWizard"
+            category="org.teiid.designer.ui"
+            class="org.teiid.designer.tools.textimport.ui.wizards.ImportTextWizard"
             name="%importTextWizard.name"
             id="ImportTextWizard">
          <description>

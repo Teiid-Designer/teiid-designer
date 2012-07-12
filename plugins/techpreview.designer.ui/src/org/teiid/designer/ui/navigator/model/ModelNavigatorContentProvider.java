@@ -7,7 +7,7 @@
  */
 package org.teiid.designer.ui.navigator.model;
 
-import static com.metamatrix.modeler.internal.ui.PluginConstants.Prefs.General.SHOW_IMPORTS_IN_MODEL_EXPLORER;
+import static org.teiid.designer.ui.PluginConstants.Prefs.General.SHOW_IMPORTS_IN_MODEL_EXPLORER;
 
 import java.util.EventObject;
 import java.util.HashMap;
@@ -27,24 +27,24 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.ui.model.WorkbenchContentProvider;
+import org.teiid.core.event.EventObjectListener;
+import org.teiid.core.event.EventSourceException;
+import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.core.workspace.ModelResource;
+import org.teiid.designer.core.workspace.ModelUtil;
+import org.teiid.designer.core.workspace.ModelWorkspaceException;
+import org.teiid.designer.core.workspace.ResourceChangeUtilities;
+import org.teiid.designer.metamodels.core.ModelAnnotation;
+import org.teiid.designer.metamodels.core.ModelImport;
+import org.teiid.designer.ui.UiConstants;
+import org.teiid.designer.ui.UiPlugin;
+import org.teiid.designer.ui.event.ModelResourceEvent;
+import org.teiid.designer.ui.viewsupport.ExtendedModelObjectContentProvider;
+import org.teiid.designer.ui.viewsupport.IExtendedModelObject;
+import org.teiid.designer.ui.viewsupport.ImportContainer;
+import org.teiid.designer.ui.viewsupport.ModelObjectContentProvider;
+import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
-import com.metamatrix.core.event.EventObjectListener;
-import com.metamatrix.core.event.EventSourceException;
-import com.metamatrix.metamodels.core.ModelAnnotation;
-import com.metamatrix.metamodels.core.ModelImport;
-import com.metamatrix.modeler.core.ModelerCore;
-import com.metamatrix.modeler.core.workspace.ModelResource;
-import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
-import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
-import com.metamatrix.modeler.internal.core.workspace.ResourceChangeUtilities;
-import com.metamatrix.modeler.internal.ui.viewsupport.ExtendedModelObjectContentProvider;
-import com.metamatrix.modeler.internal.ui.viewsupport.ImportContainer;
-import com.metamatrix.modeler.internal.ui.viewsupport.ModelObjectContentProvider;
-import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
-import com.metamatrix.modeler.ui.UiConstants;
-import com.metamatrix.modeler.ui.UiPlugin;
-import com.metamatrix.modeler.ui.event.ModelResourceEvent;
-import com.metamatrix.modeler.ui.viewsupport.IExtendedModelObject;
 
 /**
  * ModelExplorerContentProvider
@@ -83,7 +83,7 @@ public class ModelNavigatorContentProvider extends WorkbenchContentProvider impl
             /**
              * {@inheritDoc}
              * 
-             * @see com.metamatrix.core.event.EventObjectListener#processEvent(java.util.EventObject)
+             * @see org.teiid.core.event.EventObjectListener#processEvent(java.util.EventObject)
              */
             @Override
             public void processEvent( EventObject theEvent ) {

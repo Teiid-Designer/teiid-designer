@@ -138,7 +138,7 @@ public class ModelExtensionDefinitionWriterTest implements Constants {
         med.setDescription("My Custom 7.4 Extension Definition"); //$NON-NLS-1$
 
         // Add a single metaclass - with no properties
-        med.addMetaclass("com.metamatrix.metamodels.relational.impl.ProcedureImpl"); //$NON-NLS-1$
+        med.addMetaclass("org.teiid.designer.metamodels.relational.impl.ProcedureImpl"); //$NON-NLS-1$
 
         // Write it, then read it back into another MED
         ModelExtensionDefinition resultMed = roundTrip(med);
@@ -156,9 +156,9 @@ public class ModelExtensionDefinitionWriterTest implements Constants {
         med.setDescription("My Custom 7.4 Extension Definition"); //$NON-NLS-1$
 
         // Add multiple metaclasses - with no properties
-        med.addMetaclass("com.metamatrix.metamodels.relational.impl.ProcedureImpl"); //$NON-NLS-1$
-        med.addMetaclass("com.metamatrix.metamodels.relational.impl.BaseTableImpl"); //$NON-NLS-1$
-        med.addMetaclass("com.metamatrix.metamodels.relational.impl.ColumnImpl"); //$NON-NLS-1$
+        med.addMetaclass("org.teiid.designer.metamodels.relational.impl.ProcedureImpl"); //$NON-NLS-1$
+        med.addMetaclass("org.teiid.designer.metamodels.relational.impl.BaseTableImpl"); //$NON-NLS-1$
+        med.addMetaclass("org.teiid.designer.metamodels.relational.impl.ColumnImpl"); //$NON-NLS-1$
 
         // Write it, then read it back into another MED
         ModelExtensionDefinition resultMed = roundTrip(med);
@@ -176,9 +176,9 @@ public class ModelExtensionDefinitionWriterTest implements Constants {
         med.setDescription("My Custom 7.4 Extension Definition"); //$NON-NLS-1$
 
         // Add single metaclass - with one default property
-        med.addMetaclass("com.metamatrix.metamodels.relational.impl.BaseTableImpl"); //$NON-NLS-1$
+        med.addMetaclass("org.teiid.designer.metamodels.relational.impl.BaseTableImpl"); //$NON-NLS-1$
         ModelExtensionPropertyDefinition propDefn = new ModelExtensionPropertyDefinitionImpl(med);
-        med.addPropertyDefinition("com.metamatrix.metamodels.relational.impl.BaseTableImpl", propDefn); //$NON-NLS-1$
+        med.addPropertyDefinition("org.teiid.designer.metamodels.relational.impl.BaseTableImpl", propDefn); //$NON-NLS-1$
 
         // Write it, then read it back into another MED
         ModelExtensionDefinition resultMed = roundTrip(med);

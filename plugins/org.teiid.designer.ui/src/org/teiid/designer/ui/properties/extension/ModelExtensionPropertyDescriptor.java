@@ -7,8 +7,8 @@
  */
 package org.teiid.designer.ui.properties.extension;
 
-import static com.metamatrix.modeler.ui.UiConstants.PLUGIN_ID;
 import static org.teiid.designer.extension.ExtensionPlugin.Util;
+import static org.teiid.designer.ui.UiConstants.PLUGIN_ID;
 
 import java.util.Collection;
 
@@ -36,17 +36,17 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.views.properties.PropertyDescriptor;
 import org.teiid.core.properties.PropertyDefinition;
+import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.util.CoreStringUtil;
+import org.teiid.designer.core.workspace.ModelResource;
+import org.teiid.designer.core.workspace.ModelUtil;
+import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.definition.ModelExtensionAssistant;
 import org.teiid.designer.extension.definition.ModelObjectExtensionAssistant;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
+import org.teiid.designer.ui.editors.ModelEditorManager;
 
-import com.metamatrix.core.util.CoreArgCheck;
-import com.metamatrix.core.util.CoreStringUtil;
-import com.metamatrix.modeler.core.workspace.ModelResource;
-import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
-import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
-import com.metamatrix.modeler.ui.editors.ModelEditorManager;
 
 /**
  * 

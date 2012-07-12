@@ -3,13 +3,15 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.teiid.designer.vdb.ui;singleton:=true
 Bundle-Version: 7.7.1.qualifier
-Bundle-Activator: com.metamatrix.modeler.vdb.ui.VdbUiPlugin
+Bundle-Activator: org.teiid.designer.vdb.ui.VdbUiPlugin
 Bundle-Vendor: %pluginProvider
 Bundle-Localization: plugin
-Export-Package: com.metamatrix.modeler.internal.vdb.ui.editor,
- com.metamatrix.modeler.internal.vdb.ui.wizards,
- com.metamatrix.modeler.vdb.ui,
- com.metamatrix.modeler.vdb.ui.util
+Export-Package: org.teiid.designer.vdb.ui,
+ org.teiid.designer.vdb.ui.editor,
+ org.teiid.designer.vdb.ui.preferences,
+ org.teiid.designer.vdb.ui.translators,
+ org.teiid.designer.vdb.ui.util,
+ org.teiid.designer.vdb.ui.wizards
 Require-Bundle: org.teiid.designer.ui,
  org.teiid.designer.ui.common,
  org.teiid.designer.vdb,

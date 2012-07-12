@@ -8,14 +8,15 @@
 package org.teiid.designer.runtime.connection;
 
 import java.util.Properties;
+
+import org.teiid.core.util.CoreArgCheck;
+import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.datatools.connection.ConnectionInfoProviderFactory;
 import org.teiid.designer.datatools.connection.IConnectionInfoHelper;
 import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
+import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.ExecutionAdmin;
 import org.teiid.designer.vdb.connections.VdbSourceConnection;
-import com.metamatrix.core.util.CoreArgCheck;
-import com.metamatrix.modeler.core.workspace.ModelResource;
-import com.metamatrix.modeler.dqp.DqpPlugin;
 
 /**
  * 

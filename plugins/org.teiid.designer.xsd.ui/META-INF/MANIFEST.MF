@@ -3,15 +3,14 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.teiid.designer.xsd.ui;singleton:=true
 Bundle-Version: 7.7.1.qualifier
-Bundle-Activator: com.metamatrix.modeler.xsd.ui.ModelerXsdUiPlugin
+Bundle-Activator: org.teiid.designer.xsd.ui.ModelerXsdUiPlugin
 Bundle-Vendor: %pluginProvider
 Bundle-Localization: plugin
-Export-Package: com.metamatrix.modeler.internal.xsd.ui,
- com.metamatrix.modeler.internal.xsd.ui.actions,
- com.metamatrix.modeler.internal.xsd.ui.editor,
- com.metamatrix.modeler.internal.xsd.ui.textimport,
- com.metamatrix.modeler.internal.xsd.ui.wizards,
- com.metamatrix.modeler.xsd.ui
+Export-Package: org.teiid.designer.xsd.ui,
+ org.teiid.designer.xsd.ui.actions,
+ org.teiid.designer.xsd.ui.editor,
+ org.teiid.designer.xsd.ui.textimport,
+ org.teiid.designer.xsd.ui.wizards
 Require-Bundle: org.eclipse.ui.ide,
  org.eclipse.ui.views,
  org.eclipse.jface.text,

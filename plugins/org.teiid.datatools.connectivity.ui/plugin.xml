@@ -12,12 +12,12 @@
     point="org.eclipse.ui.views">
       <category
             name="%category.name.0"
-            id="com.metamatrix.modeler.runtime.ui">
+            id="org.teiid.designer.runtime.ui">
       </category>
       <view
             name="%ExecutionPlanView.name"
             icon="icons/explain.gif"
-            category="com.metamatrix.modeler.ui"
+            category="org.teiid.designer.ui"
             class="org.teiid.datatools.views.ExecutionPlanView"
             id="views.executionPlanView">
       </view>

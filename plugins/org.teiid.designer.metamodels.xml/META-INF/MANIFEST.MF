@@ -3,19 +3,19 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.teiid.designer.metamodels.xml;singleton:=true
 Bundle-Version: 7.7.1.qualifier
-Bundle-Activator: com.metamatrix.metamodels.xml.XmlDocumentPlugin
+Bundle-Activator: org.teiid.designer.metamodels.xml.XmlDocumentPlugin
 Bundle-Vendor: %pluginProvider
 Bundle-Localization: plugin
-Export-Package: com.metamatrix.metamodels.internal.xml,
- com.metamatrix.metamodels.xml,
- com.metamatrix.metamodels.xml.aspects.uml,
- com.metamatrix.metamodels.xml.aspects.validation,
- com.metamatrix.metamodels.xml.aspects.validation.rules,
- com.metamatrix.metamodels.xml.compare,
- com.metamatrix.metamodels.xml.impl,
- com.metamatrix.metamodels.xml.namespace,
- com.metamatrix.metamodels.xml.provider,
- com.metamatrix.metamodels.xml.util
+Export-Package: org.teiid.designer.metamodels.xml,
+ org.teiid.designer.metamodels.xml.aspects.uml,
+ org.teiid.designer.metamodels.xml.aspects.validation,
+ org.teiid.designer.metamodels.xml.aspects.validation.rules,
+ org.teiid.designer.metamodels.xml.compare,
+ org.teiid.designer.metamodels.xml.extension,
+ org.teiid.designer.metamodels.xml.impl,
+ org.teiid.designer.metamodels.xml.namespace,
+ org.teiid.designer.metamodels.xml.provider,
+ org.teiid.designer.metamodels.xml.util
 Require-Bundle: org.eclipse.emf.ecore,
  org.teiid.designer.core,
  org.teiid.designer.metamodels.xsd,

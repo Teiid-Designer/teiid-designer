@@ -3,10 +3,10 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.teiid.designer.modelgenerator.ui;singleton:=true
 Bundle-Version: 7.7.1.qualifier
-Bundle-Activator: com.metamatrix.modeler.modelgenerator.ui.ModelerModelGeneratorUiPlugin
+Bundle-Activator: org.teiid.designer.modelgenerator.ui.ModelerModelGeneratorUiPlugin
 Bundle-Vendor: %pluginProvider
 Bundle-Localization: plugin
-Export-Package: com.metamatrix.modeler.modelgenerator.ui
+Export-Package: org.teiid.designer.modelgenerator.ui
 Require-Bundle: org.eclipse.core.resources,
  org.teiid.designer.ui.common,
  teiid_embedded_query,

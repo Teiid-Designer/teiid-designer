@@ -48,7 +48,7 @@
       <class
             tabName="%modelTableEditor"
             order="2"
-            name="com.metamatrix.modeler.internal.ui.table.ModelTableEditor">
+            name="org.teiid.designer.ui.table.ModelTableEditor">
       </class>
    </extension>
    <extension
@@ -56,7 +56,7 @@
          name="%structuralCopyWizard"
          point="org.teiid.designer.ui.newModelWizardContributor">
       <class
-            name="com.metamatrix.modeler.internal.ui.wizards.StructuralCopyContributor"
+            name="org.teiid.designer.ui.wizards.StructuralCopyContributor"
             icon="icons/full/ctool16/newmodel_wiz.gif">
       </class>
       <metamodelDescriptorType
@@ -74,7 +74,7 @@
             label="%metadataSearchPage.name"
             icon="icons/full/ctool16/metadata_search.gif"
             extensions="xmi:1"
-            class="com.metamatrix.modeler.ui.search.MetadataSearchPage"
+            class="org.teiid.designer.ui.search.MetadataSearchPage"
             id="metadataSearchPage">
       </page>
    </extension>
@@ -82,8 +82,8 @@
       point="org.eclipse.search.searchResultViewPages">
       <viewPage 
       	 id="MetadataSearchResultPage"
-         searchResultClass="com.metamatrix.modeler.ui.search.MetadataSearchResult"
-         class="com.metamatrix.modeler.ui.search.MetadataSearchResultPage">
+         searchResultClass="org.teiid.designer.ui.search.MetadataSearchResult"
+         class="org.teiid.designer.ui.search.MetadataSearchResultPage">
      </viewPage>
    </extension>
 
@@ -95,30 +95,30 @@
 			type="java.lang.Object"
 			namespace="org.teiid.designer.ui"
 			properties="CLONE_ALLOWED,EDITABLE_OBJECT,MODEL_PROJECT_OBJECT,PASTE_SPECIAL_ALLOWED,READONLY_MODEL_OBJECT,RENAME_ALLOWED"
-			class="com.metamatrix.modeler.internal.ui.actions.DesignerUiPropertyTester">
+			class="org.teiid.designer.ui.actions.DesignerUiPropertyTester">
 		</propertyTester>
 	</extension>
 
 	<extension
 		point="org.eclipse.ui.handlers">
 		<handler
-			class="com.metamatrix.modeler.internal.ui.search.OpenMetadataSearchPageHandler"
-            commandId="com.metamatrix.modeler.ui.search.openMetadataSearchPageCommand">
+			class="org.teiid.designer.ui.search.OpenMetadataSearchPageHandler"
+            commandId="org.teiid.designer.ui.search.openMetadataSearchPageCommand">
 		</handler>
 		<handler
-			class="com.metamatrix.modeler.internal.ui.actions.FindModelObjectHandler"
-            commandId="com.metamatrix.modeler.ui.actions.findModelObjectCommand">
+			class="org.teiid.designer.ui.actions.FindModelObjectHandler"
+            commandId="org.teiid.designer.ui.actions.findModelObjectCommand">
 		</handler>
 		<handler
-			class="com.metamatrix.modeler.internal.ui.actions.CloneHandler"
-            commandId="com.metamatrix.modeler.ui.actions.cloneCommand">
+			class="org.teiid.designer.ui.actions.CloneHandler"
+            commandId="org.teiid.designer.ui.actions.cloneCommand">
 			<enabledWhen>
 				<test property="org.teiid.designer.ui.CLONE_ALLOWED" value="true"/>
 			</enabledWhen>
 		</handler>
 		<handler
-			class="com.metamatrix.modeler.internal.ui.actions.PasteSpecialHandler"
-            commandId="com.metamatrix.modeler.ui.actions.pasteSpecialCommand">
+			class="org.teiid.designer.ui.actions.PasteSpecialHandler"
+            commandId="org.teiid.designer.ui.actions.pasteSpecialCommand">
 			<enabledWhen>
 				<and>
 					<count value="1"/>
@@ -133,8 +133,8 @@
 			</enabledWhen>
 		</handler>
 		<handler
-			class="com.metamatrix.modeler.internal.ui.actions.OpenHandler"
-            commandId="com.metamatrix.modeler.ui.actions.openCommand">
+			class="org.teiid.designer.ui.actions.OpenHandler"
+            commandId="org.teiid.designer.ui.actions.openCommand">
 			<enabledWhen>
 				<and>
 					<count value="1"/>
@@ -150,8 +150,8 @@
 			</enabledWhen>
 		</handler>
 		<handler
-			class="com.metamatrix.modeler.internal.ui.actions.EditHandler"
-            commandId="com.metamatrix.modeler.ui.actions.editCommand">
+			class="org.teiid.designer.ui.actions.EditHandler"
+            commandId="org.teiid.designer.ui.actions.editCommand">
 			<enabledWhen>
 				<and>
 					<count value="1"/>
@@ -163,8 +163,8 @@
 			</enabledWhen>
 		</handler>
 		<handler
-			class="com.metamatrix.modeler.internal.ui.actions.RenameHandler"
-            commandId="com.metamatrix.modeler.ui.actions.renameCommand">
+			class="org.teiid.designer.ui.actions.RenameHandler"
+            commandId="org.teiid.designer.ui.actions.renameCommand">
 			<enabledWhen>
 				<and>
 					<count value="1"/>
@@ -182,41 +182,41 @@
       <category
             name="%category.modeler.name"
             description="%category.modeler.description"
-            id="com.metamatrix.modeler.ui.category.modeler">
+            id="org.teiid.designer.ui.category.modeler">
       </category>
 	  <command
-			categoryId="com.metamatrix.modeler.ui.category.modeler"
-			id="com.metamatrix.modeler.ui.search.openMetadataSearchPageCommand"
+			categoryId="org.teiid.designer.ui.category.modeler"
+			id="org.teiid.designer.ui.search.openMetadataSearchPageCommand"
 			name="%openMetadataSearchAction.text">
 	  </command>
 	  <command
-			categoryId="com.metamatrix.modeler.ui.category.modeler"
-			id="com.metamatrix.modeler.ui.actions.findModelObjectCommand"
+			categoryId="org.teiid.designer.ui.category.modeler"
+			id="org.teiid.designer.ui.actions.findModelObjectCommand"
 			name="%findModelObject.name">
 	  </command>
 	  <command
-			categoryId="com.metamatrix.modeler.ui.category.modeler"
-			id="com.metamatrix.modeler.ui.actions.cloneCommand"
+			categoryId="org.teiid.designer.ui.category.modeler"
+			id="org.teiid.designer.ui.actions.cloneCommand"
 			name="%cloneAction.name">
 	  </command>
 	  <command
-			categoryId="com.metamatrix.modeler.ui.category.modeler"
-			id="com.metamatrix.modeler.ui.actions.pasteSpecialCommand"
+			categoryId="org.teiid.designer.ui.category.modeler"
+			id="org.teiid.designer.ui.actions.pasteSpecialCommand"
 			name="%pasteSpecialAction.name">
 	  </command>
 	  <command
-			categoryId="com.metamatrix.modeler.ui.category.modeler"
-			id="com.metamatrix.modeler.ui.actions.openCommand"
+			categoryId="org.teiid.designer.ui.category.modeler"
+			id="org.teiid.designer.ui.actions.openCommand"
 			name="%openAction.name">
 	  </command>
 	  <command
-			categoryId="com.metamatrix.modeler.ui.category.modeler"
-			id="com.metamatrix.modeler.ui.actions.editCommand"
+			categoryId="org.teiid.designer.ui.category.modeler"
+			id="org.teiid.designer.ui.actions.editCommand"
 			name="%editAction.name">
 	  </command>
 	  <command
-			categoryId="com.metamatrix.modeler.ui.category.modeler"
-			id="com.metamatrix.modeler.ui.actions.renameCommand"
+			categoryId="org.teiid.designer.ui.category.modeler"
+			id="org.teiid.designer.ui.actions.renameCommand"
 			name="%renameCommand.name"
 			description="%renameCommand.description"> 
 	  </command>
@@ -240,12 +240,12 @@
 		</menuContribution>
 		<menuContribution locationURI="menu:org.eclipse.search.menu?after=teiidDesignerSearchMenuActionsGroup">
 			<menu id="designerSearchSubMenu" label="%designerSearchSubMenu.label">
-				<command commandId="com.metamatrix.modeler.ui.search.openMetadataSearchPageCommand"
+				<command commandId="org.teiid.designer.ui.search.openMetadataSearchPageCommand"
 					label="%openMetadataSearchAction.text"
                  	icon="icons/full/ctool16/metadata_search.gif"
                  	tooltip="%openMetadataSearchAction.tip">
         		</command>
-				<command commandId="com.metamatrix.modeler.ui.actions.findModelObjectCommand"
+				<command commandId="org.teiid.designer.ui.actions.findModelObjectCommand"
 					label="%findModelObject.name"
                  	icon="icons/full/ctool16/opentype.gif"
                  	tooltip="%findModelObject.tooltip">
@@ -253,7 +253,7 @@
 			</menu>
 		</menuContribution>
 		<menuContribution locationURI="menu:edit?after=paste">
-			<command commandId="com.metamatrix.modeler.ui.actions.pasteSpecialCommand"
+			<command commandId="org.teiid.designer.ui.actions.pasteSpecialCommand"
 				label="%pasteSpecialAction.name"
              	tooltip="%pasteSpecialAction.description">
             	<visibleWhen
@@ -263,7 +263,7 @@
 					</iterate>
             	</visibleWhen>
     		</command>
-			<command commandId="com.metamatrix.modeler.ui.actions.cloneCommand"
+			<command commandId="org.teiid.designer.ui.actions.cloneCommand"
 				label="%cloneAction.name"
              	tooltip="%cloneAction.description">
             	<visibleWhen
@@ -275,7 +275,7 @@
     		</command>
 		</menuContribution>
 		<menuContribution locationURI="menu:edit?before=find.ext">
-			<command commandId="com.metamatrix.modeler.ui.actions.openCommand"
+			<command commandId="org.teiid.designer.ui.actions.openCommand"
 				label="%openAction.name"
              	tooltip="%openAction.description">
             	<visibleWhen
@@ -285,7 +285,7 @@
 					</iterate>
             	</visibleWhen>
     		</command>
-			<command commandId="com.metamatrix.modeler.ui.actions.editCommand"
+			<command commandId="org.teiid.designer.ui.actions.editCommand"
 				label="%editAction.name"
              	tooltip="%editAction.description">
             	<visibleWhen
@@ -299,8 +299,8 @@
 		<menuContribution locationURI="menu:edit?before=editStart">
 			<menu id="org.teiid.designer.ui.newChildMenu"
                 label="%newChildMenu.label">
-            	<dynamic class="com.metamatrix.modeler.internal.ui.actions.NewChildMenu"
-                    id="com.metamatrix.modeler.ui.actions.newChildMenu">
+            	<dynamic class="org.teiid.designer.ui.actions.NewChildMenu"
+                    id="org.teiid.designer.ui.actions.newChildMenu">
             	</dynamic>
             	<visibleWhen
                    checkEnabled="false">
@@ -311,8 +311,8 @@
         	</menu>
 			<menu id="org.teiid.designer.ui.newSiblingMenu"
                 label="%newSiblingMenu.label">
-            	<dynamic class="com.metamatrix.modeler.internal.ui.actions.NewSiblingMenu"
-                    id="com.metamatrix.modeler.ui.actions.newSiblingMenu">
+            	<dynamic class="org.teiid.designer.ui.actions.NewSiblingMenu"
+                    id="org.teiid.designer.ui.actions.newSiblingMenu">
             	</dynamic>
             	<visibleWhen
                    checkEnabled="false">
@@ -323,8 +323,8 @@
         	</menu>
 			<menu id="org.teiid.designer.ui.newAssociationMenu"
                 label="%newAssociationMenu.label">
-            	<dynamic class="com.metamatrix.modeler.internal.ui.actions.NewAssociationMenu"
-                    id="com.metamatrix.modeler.ui.actions.newAssociationMenu">
+            	<dynamic class="org.teiid.designer.ui.actions.NewAssociationMenu"
+                    id="org.teiid.designer.ui.actions.newAssociationMenu">
             	</dynamic>
             	<visibleWhen
                    checkEnabled="false">
@@ -335,8 +335,8 @@
         	</menu>
 			<menu id="org.teiid.designer.ui.modelingActionsMenu"
                 label="%modelingActionsMenu.label">
-            	<dynamic class="com.metamatrix.modeler.internal.ui.actions.ModelingActionsMenu"
-                    id="com.metamatrix.modeler.ui.actions.modelingActionsMenu">
+            	<dynamic class="org.teiid.designer.ui.actions.ModelingActionsMenu"
+                    id="org.teiid.designer.ui.actions.modelingActionsMenu">
             	</dynamic>
             	<visibleWhen
                    checkEnabled="false">
@@ -348,7 +348,7 @@
  		    <separator name="internalDialogGroup" visible="true" />
 		</menuContribution>
 		<menuContribution locationURI="menu:edit?after=delete">
-			<command commandId="com.metamatrix.modeler.ui.actions.renameCommand"
+			<command commandId="org.teiid.designer.ui.actions.renameCommand"
 				label="%renameCommand.name"
              	tooltip="%renameCommand.description">
             	<visibleWhen
@@ -389,7 +389,7 @@
                   name="slot4">
             </separator>
             <groupMarker
-                  name="com.metamatrix.modeler.ui.groupMarker1">
+                  name="org.teiid.designer.ui.groupMarker1">
             </groupMarker>
          </menu>
          <action
@@ -397,7 +397,7 @@
                icon="platform:/plugin/org.teiid.designer.jdbc.ui/icons/full/ctool16/jdbc_import.gif"
                helpContextId="refreshAction.helpContext"
                tooltip="%refreshModelAction.tooltip"
-               class="com.metamatrix.modeler.internal.ui.actions.RefreshAction"
+               class="org.teiid.designer.ui.actions.RefreshAction"
                menubarPath="metadataMenu/slot1"
                enablesFor="1"
                id="refreshAction">
@@ -406,7 +406,7 @@
                label="%showSQLReservedWordsAction.label"
                helpContextId="showSQLReservedWordsAction.helpContext"
                tooltip="%showSQLReservedWordsAction.tooltip"
-               class="com.metamatrix.modeler.internal.ui.actions.ShowSQLReservedWordsAction"
+               class="org.teiid.designer.ui.actions.ShowSQLReservedWordsAction"
                menubarPath="metadataMenu/slot2"
                id="showSQLReservedWordsAction">
          </action>
@@ -415,7 +415,7 @@
                icon="icons/full/cview16/typeHierarchy.gif"
                helpContextId="showDatatypeHierarchyAction.helpContext"
                tooltip="%showDatatypeHierarchyAction.tooltip"
-               class="com.metamatrix.modeler.internal.ui.actions.ShowDatatypeHierarchyAction"
+               class="org.teiid.designer.ui.actions.ShowDatatypeHierarchyAction"
                menubarPath="metadataMenu/slot2"
                id="showDatatypeHierarchyAction">
          </action>
@@ -424,7 +424,7 @@
                icon="icons/full/cview16/system_model.gif"
                helpContextId="showSystemCatalogAction.helpContext"
                tooltip="%showSystemCatalogAction.tooltip"
-               class="com.metamatrix.modeler.internal.ui.actions.ShowSystemCatalogAction"
+               class="org.teiid.designer.ui.actions.ShowSystemCatalogAction"
                menubarPath="metadataMenu/slot2"
                id="showSystemCatalogAction">
          </action>
@@ -433,7 +433,7 @@
                icon="icons/full/obj16/Imports.gif"
                helpContextId="buildImportsAction.helpContext"
                tooltip="%buildImportsAction.tooltip"
-               class="com.metamatrix.modeler.internal.ui.actions.BuildImportsAction"
+               class="org.teiid.designer.ui.actions.BuildImportsAction"
                menubarPath="metadataMenu/slot3"
                enablesFor="*"
                id="buildImportsAction">
@@ -443,7 +443,7 @@
                icon="icons/full/obj16/Imports.gif"
                helpContextId="buildImportsAllAction.helpContext"
                tooltip="%buildImportsAllAction.tooltip"
-               class="com.metamatrix.modeler.internal.ui.actions.BuildImportsAllAction"
+               class="org.teiid.designer.ui.actions.BuildImportsAllAction"
                menubarPath="project/additions"
                enablesFor="*"
                id="buildImportsAllAction">
@@ -453,7 +453,7 @@
                icon="icons/full/obj16/Imports.gif"
                helpContextId="buildImportsProjectAction.helpContext"
                tooltip="%buildImportsProjectAction.tooltip"
-               class="com.metamatrix.modeler.internal.ui.actions.BuildImportsProjectAction"
+               class="org.teiid.designer.ui.actions.BuildImportsProjectAction"
                menubarPath="project/additions"
                enablesFor="*"
                id="buildImportsProjectAction">
@@ -463,7 +463,7 @@
                icon="icons/full/cview16/statistics.gif"
                helpContextId="modelStatisticsAction.helpContext"
                tooltip="%modelStatisticsAction.tooltip"
-               class="com.metamatrix.modeler.internal.ui.actions.ModelStatisticsAction"
+               class="org.teiid.designer.ui.actions.ModelStatisticsAction"
                menubarPath="metadataMenu/slot3"
                enablesFor="1"
                id="modelStatisticsAction">
@@ -471,7 +471,7 @@
          <action
                label="%convertToEnterpriseTypesAction.label"
                tooltip="%convertToEnterpriseTypesAction.tooltip"
-               class="com.metamatrix.modeler.internal.ui.actions.ConvertToEnterpriseDatatypesAction"
+               class="org.teiid.designer.ui.actions.ConvertToEnterpriseDatatypesAction"
                menubarPath="metadataMenu/slot3"
                enablesFor="1"
                id="convertToEnterpriseTypesAction">
@@ -479,19 +479,19 @@
          <!-- Defect 23006 - Close Model Action really doesn't do much anymore. Commenting out the contribution     
          <action
                label="%closeModelAction.label"
-               helpContextId="com.metamatrix.modeler.internal.ui.actions.CloseModelAction.helpContext"
+               helpContextId="org.teiid.designer.ui.actions.CloseModelAction.helpContext"
                tooltip="%closeModelAction.tooltip"
-               class="com.metamatrix.modeler.internal.ui.actions.CloseModelAction"
+               class="org.teiid.designer.ui.actions.CloseModelAction"
                menubarPath="metadataMenu/slot3"
                enablesFor="+"
-               id="com.metamatrix.modeler.ui.actions.closeModelAction">
+               id="org.teiid.designer.ui.actions.closeModelAction">
          </action>
          -->
          <action
                label="%cloneProjectAction.label"
                tooltip="%cloneProjectAction.tooltip"
                icon="icons/full/cview16/clone_project.png"
-               class="com.metamatrix.modeler.internal.ui.actions.CloneProjectAction"
+               class="org.teiid.designer.ui.actions.CloneProjectAction"
                menubarPath="project/additions"
                enablesFor="1"
                id="cloneProjectAction">
@@ -525,14 +525,14 @@
 <!-- undo/redo group  -->
          <action
                label="%refactoring.redoAction.label"
-               class="com.metamatrix.modeler.internal.ui.refactor.actions.RedoRefactoringAction"
+               class="org.teiid.designer.ui.refactor.actions.RedoRefactoringAction"
                menubarPath="org.teiid.designer.ui.refactoring.menu/undoRedoGroup"
                id="RedoAction">
          </action>
 <!--definitionId="org.eclipse.jdt.ui.edit.text.java.refactor.redo"-->
          <action
                label="%refactoring.undoAction.label"
-               class="com.metamatrix.modeler.internal.ui.refactor.actions.UndoRefactoringAction"
+               class="org.teiid.designer.ui.refactor.actions.UndoRefactoringAction"
                menubarPath="org.teiid.designer.ui.refactoring.menu/undoRedoGroup"
                id="UndoAction">
          </action>
@@ -540,16 +540,16 @@
 <!-- reorg group  -->
          <action
                label="%refactoring.moveAction.label"
-               class="com.metamatrix.modeler.internal.ui.refactor.actions.MoveRefactorAction"
+               class="org.teiid.designer.ui.refactor.actions.MoveRefactorAction"
                menubarPath="org.teiid.designer.ui.refactoring.menu/reorgGroup"
                id="Move">
          </action>
 <!--
-			definitionId="com.metamatrix.modeler.ui.edit.text.java.move.element"
+			definitionId="org.teiid.designer.ui.edit.text.java.move.element"
 			retarget="true" /> -->
          <action
                label="%refactoring.renameAction.label"
-               class="com.metamatrix.modeler.internal.ui.refactor.actions.RenameRefactorAction"
+               class="org.teiid.designer.ui.refactor.actions.RenameRefactorAction"
                menubarPath="org.teiid.designer.ui.refactoring.menu/reorgGroup"
                id="Rename">
          </action>
@@ -579,7 +579,7 @@
             adaptable="true"
             label="%modelResourceProblemDecorator"
             state="true"
-            class="com.metamatrix.modeler.internal.ui.explorer.ModelExplorerLabelProvider"
+            class="org.teiid.designer.ui.explorer.ModelExplorerLabelProvider"
             id="modelExplorerLabelProvider">
          <description>
             %problemDecorator.desc
@@ -596,7 +596,7 @@
             adaptable="true"
             label="%modelObjectProblemDecorator"
             state="true"
-            class="com.metamatrix.modeler.internal.ui.viewsupport.ModelObjectLabelProvider"
+            class="org.teiid.designer.ui.viewsupport.ModelObjectLabelProvider"
             id="modelObjectLabelProvider">
          <description>
             %problemDecorator.desc
@@ -616,8 +616,8 @@
             default="true"
             icon="icons/full/obj16/GeneralModel.gif"
             extensions="xmi"
-            contributorClass="com.metamatrix.modeler.internal.ui.editors.ModelEditorActionContributor"
-            class="com.metamatrix.modeler.internal.ui.editors.ModelEditor"
+            contributorClass="org.teiid.designer.ui.editors.ModelEditorActionContributor"
+            class="org.teiid.designer.ui.editors.ModelEditor"
             id="modelEditor">
       </editor>
 <!-- Schema Editor -->
@@ -625,27 +625,27 @@
             name="%modelEditor"
             icon="icons/full/obj16/XSDSchema.gif"
             extensions="xsd"
-            contributorClass="com.metamatrix.modeler.internal.ui.editors.ModelEditorActionContributor"
-            class="com.metamatrix.modeler.internal.ui.editors.ModelEditor"
+            contributorClass="org.teiid.designer.ui.editors.ModelEditorActionContributor"
+            class="org.teiid.designer.ui.editors.ModelEditor"
             id="schemaEditor">
       </editor>
    </extension>
 <!-- Eclipse Import Wizards -->
    <extension
          point="org.eclipse.ui.importWizards">
-         <category name="%modelCategory" id="com.metamatrix.modeler.ui" />
+         <category name="%modelCategory" id="org.teiid.designer.ui" />
    </extension>
 
 <!-- Eclipse Export Wizards -->
    <extension
          point="org.eclipse.ui.exportWizards">
-         <category name="%modelCategory" id="com.metamatrix.modeler.ui" />
+         <category name="%modelCategory" id="org.teiid.designer.ui" />
 <!-- DDL Export Wizard -->
       <wizard
             name="%exportDdlWizard.name"
             icon="icons/full/ctool16/exportddl_wiz.gif"
-            category="com.metamatrix.modeler.ui"
-            class="com.metamatrix.modeler.internal.ui.wizards.ExportDdlWizard"
+            category="org.teiid.designer.ui"
+            class="org.teiid.designer.ui.wizards.ExportDdlWizard"
             id="exportDdlWizard">
          <description>
             %exportDdlWizard.description
@@ -659,8 +659,8 @@
       <wizard
             name="%exportModelerProjectSetWizard.name"
             icon="icons/full/cview16/export_projectset.gif"
-            category="com.metamatrix.modeler.ui"
-            class="com.metamatrix.modeler.internal.ui.wizards.ExportModelerProjectSetWizard"
+            category="org.teiid.designer.ui"
+            class="org.teiid.designer.ui.wizards.ExportModelerProjectSetWizard"
             id="exportModelerProjectSetWizard">
          <description>
             %exportModelerProjectSetWizard.description
@@ -673,12 +673,12 @@
          point="org.eclipse.ui.newWizards">
       <category
             name="%modelCategory"
-            id="com.metamatrix.modeler.ui">
+            id="org.teiid.designer.ui">
       </category>
 <!-- New model project wizard -->
       <wizard
-            category="com.metamatrix.modeler.ui"
-            class="com.metamatrix.modeler.ui.wizards.NewModelProjectWizard"
+            category="org.teiid.designer.ui"
+            class="org.teiid.designer.ui.wizards.NewModelProjectWizard"
             finalPerspective="modelerPerspective"
             icon="icons/full/ctool16/newproject_wiz.gif"
             id="newModelProject"
@@ -693,8 +693,8 @@
       <wizard
             name="%newModelWizard"
             icon="icons/full/ctool16/newmodel_wiz.gif"
-            category="com.metamatrix.modeler.ui"
-            class="com.metamatrix.modeler.internal.ui.wizards.NewModelWizard"
+            category="org.teiid.designer.ui"
+            class="org.teiid.designer.ui.wizards.NewModelWizard"
             id="newModel">
          <description>
             %newModelWizardDescription
@@ -707,7 +707,7 @@
       <perspective
             name="%perspectiveName"
             icon="icons/full/cview16/perspective.gif"
-            class="com.metamatrix.modeler.internal.ui.ModelerPerspectiveFactory"
+            class="org.teiid.designer.ui.ModelerPerspectiveFactory"
             id="modelerPerspective">
       </perspective>
    </extension>
@@ -716,13 +716,13 @@
          point="org.eclipse.ui.preferencePages">
       <page
             name="%modelerPreferences"
-            class="com.metamatrix.modeler.internal.ui.preferences.GeneralPreferencePage"
+            class="org.teiid.designer.ui.preferences.GeneralPreferencePage"
             id="modelerPreferencePage">
       </page>
       <page
             name="%modelerValidationPreferences"
             category="modelerPreferencePage"
-            class="com.metamatrix.modeler.internal.ui.preferences.ValidationPreferencePage"
+            class="org.teiid.designer.ui.preferences.ValidationPreferencePage"
             id="validationPreferencePage">
       </page>
    </extension>
@@ -767,69 +767,69 @@
          point="org.eclipse.ui.views">
       <category
             name="%modelerViewCategory"
-            id="com.metamatrix.modeler.ui">
+            id="org.teiid.designer.ui">
       </category>
 <!-- Model Explorer view -->
       <view
             name="%modelNavigator"
             icon="icons/full/cview16/projects.gif"
-            category="com.metamatrix.modeler.ui"
-            class="com.metamatrix.modeler.internal.ui.explorer.ModelExplorerResourceNavigator"
+            category="org.teiid.designer.ui"
+            class="org.teiid.designer.ui.explorer.ModelExplorerResourceNavigator"
             id="explorer.view">
       </view>
 <!-- Description view -->
       <view
             name="%descriptionView"
             icon="icons/full/cview16/descriptionView.gif"
-            category="com.metamatrix.modeler.ui"
-            class="com.metamatrix.modeler.internal.ui.views.DescriptionView"
+            category="org.teiid.designer.ui"
+            class="org.teiid.designer.ui.views.DescriptionView"
             id="views.descriptionView">
       </view>
 <!-- Datatype Hierarchy view -->
       <view
             name="%datatypeHierarchyView.name"
             icon="icons/full/cview16/typeHierarchy.gif"
-            category="com.metamatrix.modeler.ui"
-            class="com.metamatrix.modeler.internal.ui.views.DatatypeHierarchyView"
+            category="org.teiid.designer.ui"
+            class="org.teiid.designer.ui.views.DatatypeHierarchyView"
             id="views.datatypeHierarchyView">
       </view>
 <!-- Metamodel Tree view -->
       <view
             name="%metamodelsView.name"
             icon="icons/full/cview16/metamodels.gif"
-            category="com.metamatrix.modeler.ui"
-            class="com.metamatrix.modeler.internal.ui.views.MetamodelsView"
+            category="org.teiid.designer.ui"
+            class="org.teiid.designer.ui.views.MetamodelsView"
             id="views.metamodelsView">
       </view>
 <!-- Tags view -->
       <view
             name="%tagsView.name"
             icon="icons/full/cview16/tags.gif"
-            category="com.metamatrix.modeler.ui"
-            class="com.metamatrix.modeler.internal.ui.views.TagsView"
+            category="org.teiid.designer.ui"
+            class="org.teiid.designer.ui.views.TagsView"
             id="views.tagsView">
       </view>
 <!-- Favorites view -->
       <view
             name="%favoritesView.name"
             icon="icons/full/cview16/metadata_favorites.gif"
-            category="com.metamatrix.modeler.ui"
-            class="com.metamatrix.modeler.internal.ui.favorites.FavoritesView"
+            category="org.teiid.designer.ui"
+            class="org.teiid.designer.ui.favorites.FavoritesView"
             id="views.favoritesView">
       </view>
 <!-- System Models view -->
       <view
             name="%systemModelView.name"
             icon="icons/full/cview16/system_model.gif"
-            category="com.metamatrix.modeler.ui"
-            class="com.metamatrix.modeler.internal.ui.views.SystemModelView"
+            category="org.teiid.designer.ui"
+            class="org.teiid.designer.ui.views.SystemModelView"
             id="views.systemModelView">
       </view>
 <!-- SQL Reserved Words view -->
       <view
             name="%sqlReservedWordsView.name"
-            category="com.metamatrix.modeler.ui"
-            class="com.metamatrix.modeler.internal.ui.views.SQLReservedWordsView"
+            category="org.teiid.designer.ui"
+            class="org.teiid.designer.ui.views.SQLReservedWordsView"
             id="views.sqlReservedWordsView">
       </view>
    </extension>
@@ -839,11 +839,11 @@
          point="org.eclipse.ui.popupMenus">
 <!-- Action to Refresh Import List in the Outline view -->
       <objectContribution
-            objectClass="com.metamatrix.modeler.internal.ui.viewsupport.ImportContainer"
+            objectClass="org.teiid.designer.ui.viewsupport.ImportContainer"
             id="updateImports">
          <action
                label="%organizeImportsAction.label"
-               class="com.metamatrix.modeler.internal.ui.actions.OrganizeImportsAction"
+               class="org.teiid.designer.ui.actions.OrganizeImportsAction"
                id="organizeImportsAction">
          </action>
       </objectContribution>
@@ -853,7 +853,7 @@
          id="designerModelObjectActionContributor"
          point="org.teiid.designer.ui.modelObjectActionContributor">
       <class
-            name="com.metamatrix.modeler.internal.ui.actions.DesignerPermanentActionContributor">
+            name="org.teiid.designer.ui.actions.DesignerPermanentActionContributor">
       </class>
    </extension>
    <extension
@@ -863,13 +863,13 @@
       <class
             label="%refreshModelContribution.label"
             description="%refreshModelContribution.description"
-            classname="com.metamatrix.modeler.internal.ui.actions.RefreshModelAction">
+            classname="org.teiid.designer.ui.actions.RefreshModelAction">
       </class>
    </extension>
    <extension
          point="org.teiid.designer.ui.common.editorPreferences">
          <editorPreferenceComponent
-         	class="com.metamatrix.modeler.internal.ui.preferences.TableEditorPreferencesComponent"/>
+         	class="org.teiid.designer.ui.preferences.TableEditorPreferencesComponent"/>
    </extension>
 <!-- Custom properties factory/editor for the Core metamodel Namespace URI feature -->   
    <extension
@@ -877,7 +877,7 @@
          name="%coreModelPropertyEditorFactory"
          point="org.teiid.designer.ui.propertyEditorFactory">
       <class
-            name="com.metamatrix.modeler.internal.ui.properties.CoreModelPropertyEditorFactory">
+            name="org.teiid.designer.ui.properties.CoreModelPropertyEditorFactory">
       </class>
    </extension>
 
@@ -891,7 +891,7 @@
 		name="%showModelStatisticsAction.name"
         point="org.teiid.designer.ui.modelResourceAction">
       <resourceAction
-         name="com.metamatrix.modeler.internal.ui.actions.ShowModelStatisticsAction"
+         name="org.teiid.designer.ui.actions.ShowModelStatisticsAction"
          label="%showModelStatisticsAction.label">
       </resourceAction>
    </extension>
@@ -900,7 +900,7 @@
 		name="%buildModelImportsAction.name"
         point="org.teiid.designer.ui.modelResourceAction">
       <resourceAction
-         name="com.metamatrix.modeler.internal.ui.actions.BuildModelImportsAction"
+         name="org.teiid.designer.ui.actions.BuildModelImportsAction"
          label="%buildModelImportsAction.label">
       </resourceAction>
    </extension>
@@ -909,7 +909,7 @@
 		name="%convertToEnterpriseTypesAction.name"
         point="org.teiid.designer.ui.modelResourceAction">
       <resourceAction
-         name="com.metamatrix.modeler.internal.ui.actions.ConvertToEnterpriseTypesAction"
+         name="org.teiid.designer.ui.actions.ConvertToEnterpriseTypesAction"
          label="%convertToEnterpriseTypesAction.label">
       </resourceAction>
    </extension>
@@ -919,7 +919,7 @@
 		name="%generateXsdSchemaAction.name"
         point="org.teiid.designer.ui.modelObjectSpecialAction">
       <specialAction
-         name="com.metamatrix.modeler.internal.ui.actions.GenerateXsdSchemaAction2"
+         name="org.teiid.designer.ui.actions.GenerateXsdSchemaAction2"
          label="%generateXsdSchemaAction.label">
       </specialAction>
    </extension>
@@ -928,7 +928,7 @@
 		name="%setDatatypeModelingAction.name"
         point="org.teiid.designer.ui.modelObjectSpecialAction">
       <specialAction
-         name="com.metamatrix.modeler.internal.ui.actions.SetDatatypeModelingAction"
+         name="org.teiid.designer.ui.actions.SetDatatypeModelingAction"
          label="%setDatatypeModelingAction.label">
       </specialAction>
    </extension>
@@ -937,7 +937,7 @@
          name="%newChildPushdownFunction"
          point="org.teiid.designer.ui.newChildAction">
       <class
-            name="com.metamatrix.modeler.internal.ui.actions.CreatePushdownFunctionAction">
+            name="org.teiid.designer.ui.actions.CreatePushdownFunctionAction">
       </class>
    </extension>
 
@@ -946,7 +946,7 @@
          name="%newSiblingPushdownFunction"
          point="org.teiid.designer.ui.newSiblingAction">
       <class
-            name="com.metamatrix.modeler.internal.ui.actions.CreatePushdownFunctionAction">
+            name="org.teiid.designer.ui.actions.CreatePushdownFunctionAction">
       </class>
    </extension>
 <!-- Actions contributed to the Model Projects -->
@@ -955,7 +955,7 @@
         name="%cloneProjectAction2.name"
         point="org.teiid.designer.ui.modelProjectAction">
       <projectAction
-         name="com.metamatrix.modeler.internal.ui.actions.CloneProjectAction2"
+         name="org.teiid.designer.ui.actions.CloneProjectAction2"
          label="%cloneProjectAction2.label">
       </projectAction>
    </extension>
@@ -971,7 +971,7 @@
 				style="toggle"
 				menubarPath="menuStart"
 				tooltip="%showNonModelsAction.tooltip" 
-				class="com.metamatrix.modeler.internal.ui.actions.ShowNonModelsAction" 
+				class="org.teiid.designer.ui.actions.ShowNonModelsAction" 
 				enablesFor="*"> 
 			</action>
 		</viewContribution>
@@ -987,22 +987,22 @@
       <preference
             id="autoOpenEditorPreferenceContributor"
             categoryId="modeler.ui.modelCategory"
-            class="com.metamatrix.modeler.internal.ui.preferences.AutoOpenEditorPreferenceContributor">
+            class="org.teiid.designer.ui.preferences.AutoOpenEditorPreferenceContributor">
       </preference>
             <preference
             id="autoUpdateImportsPreferenceContributor"
             categoryId="modeler.ui.modelCategory"
-            class="com.metamatrix.modeler.internal.ui.preferences.AutoUpdateImportsPreferenceContributor">
+            class="org.teiid.designer.ui.preferences.AutoUpdateImportsPreferenceContributor">
       </preference>
       <preference
             id="logicalAsRelationalPreferenceContributor"
             categoryId="modeler.ui.modelCategory"
-            class="com.metamatrix.modeler.internal.ui.preferences.LogicalAsRelationalPreferenceContributor">
+            class="org.teiid.designer.ui.preferences.LogicalAsRelationalPreferenceContributor">
       </preference>      
       <preference
             id="autoOpenPerspectiveContributor"
             categoryId="modeler.ui.modelCategory"
-            class="com.metamatrix.modeler.internal.ui.preferences.AutoOpenPerspectivePreferenceContributor">
+            class="org.teiid.designer.ui.preferences.AutoOpenPerspectivePreferenceContributor">
       </preference>      
 	</extension>
 

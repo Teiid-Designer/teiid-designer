@@ -12,8 +12,8 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.swt.graphics.Image;
 import org.teiid.designer.advisor.ui.AdvisorUiPlugin;
 import org.teiid.designer.advisor.ui.core.InfoPopAction;
+import org.teiid.designer.ui.common.actions.GlobalActionsMap;
 
-import com.metamatrix.ui.actions.GlobalActionsMap;
 
 /**
  * 

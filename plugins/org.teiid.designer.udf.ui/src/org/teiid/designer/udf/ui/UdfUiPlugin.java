@@ -17,18 +17,18 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchPage;
 import org.osgi.framework.BundleContext;
+import org.teiid.core.PluginUtil;
+import org.teiid.core.event.EventObjectListener;
+import org.teiid.core.event.EventSourceException;
+import org.teiid.core.util.PluginUtilImpl;
+import org.teiid.designer.core.workspace.ModelResource;
+import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.udf.UdfManager;
+import org.teiid.designer.ui.common.AbstractUiPlugin;
+import org.teiid.designer.ui.common.actions.ActionService;
+import org.teiid.designer.ui.event.ModelResourceEvent;
+import org.teiid.designer.ui.viewsupport.ModelIdentifier;
 
-import com.metamatrix.core.PluginUtil;
-import com.metamatrix.core.event.EventObjectListener;
-import com.metamatrix.core.event.EventSourceException;
-import com.metamatrix.core.util.PluginUtilImpl;
-import com.metamatrix.modeler.core.workspace.ModelResource;
-import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
-import com.metamatrix.modeler.internal.ui.viewsupport.ModelIdentifier;
-import com.metamatrix.modeler.ui.event.ModelResourceEvent;
-import com.metamatrix.ui.AbstractUiPlugin;
-import com.metamatrix.ui.actions.ActionService;
 
 /**
  * 
@@ -50,7 +50,7 @@ public final class UdfUiPlugin extends AbstractUiPlugin implements EventObjectLi
     /**
      * {@inheritDoc}
      * 
-     * @see com.metamatrix.ui.AbstractUiPlugin#createActionService(org.eclipse.ui.IWorkbenchPage)
+     * @see org.teiid.designer.ui.common.AbstractUiPlugin#createActionService(org.eclipse.ui.IWorkbenchPage)
      */
     @Override
     protected ActionService createActionService( IWorkbenchPage page ) {
@@ -60,7 +60,7 @@ public final class UdfUiPlugin extends AbstractUiPlugin implements EventObjectLi
     /**
      * {@inheritDoc}
      * 
-     * @see com.metamatrix.ui.AbstractUiPlugin#getPluginUtil()
+     * @see org.teiid.designer.ui.common.AbstractUiPlugin#getPluginUtil()
      */
     @Override
     public PluginUtil getPluginUtil() {
@@ -79,7 +79,7 @@ public final class UdfUiPlugin extends AbstractUiPlugin implements EventObjectLi
         ((PluginUtilImpl)UTIL).initializePlatformLogger(this);
         
         try {
-            com.metamatrix.modeler.ui.UiPlugin.getDefault().getEventBroker().addListener(ModelResourceEvent.class, this);
+            org.teiid.designer.ui.UiPlugin.getDefault().getEventBroker().addListener(ModelResourceEvent.class, this);
         } catch (EventSourceException e) {
         	((PluginUtilImpl)UTIL).log(IStatus.ERROR, e, e.getMessage());
         }
@@ -87,12 +87,12 @@ public final class UdfUiPlugin extends AbstractUiPlugin implements EventObjectLi
     
     @Override
 	public void stop(BundleContext context) throws Exception {
-    	com.metamatrix.modeler.ui.UiPlugin.getDefault().getEventBroker().removeListener(ModelResourceEvent.class, this);
+    	org.teiid.designer.ui.UiPlugin.getDefault().getEventBroker().removeListener(ModelResourceEvent.class, this);
 		super.stop(context);
 	}
 
 	/**
-     * @see com.metamatrix.core.event.EventObjectListener#processEvent(java.util.EventObject)
+     * @see org.teiid.core.event.EventObjectListener#processEvent(java.util.EventObject)
      * @since 4.2
      */
     public void processEvent( EventObject obj ) {

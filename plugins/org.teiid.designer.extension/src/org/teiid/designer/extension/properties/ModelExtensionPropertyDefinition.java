@@ -17,10 +17,10 @@ import java.util.Set;
 
 import org.eclipse.osgi.util.NLS;
 import org.teiid.core.properties.PropertyDefinition;
+import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.util.CoreStringUtil;
 import org.teiid.designer.extension.Messages;
 
-import com.metamatrix.core.util.CoreArgCheck;
-import com.metamatrix.core.util.CoreStringUtil;
 
 /**
  * A <code>ModelExtensionPropertyDefinition</code> is the property definition of all extension properties.

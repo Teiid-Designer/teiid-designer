@@ -9,8 +9,8 @@ package org.teiid.designer.datatools.connection;
 
 import java.util.Properties;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
-import com.metamatrix.modeler.core.workspace.ModelResource;
-import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
+import org.teiid.designer.core.workspace.ModelResource;
+import org.teiid.designer.core.workspace.ModelWorkspaceException;
 
 /**
  * Provides Teiid Data Source specific capabilites for a Data Source Type.

@@ -7,7 +7,7 @@
  */
 package org.teiid.designer.runtime.ui.server;
 
-import static com.metamatrix.modeler.dqp.ui.DqpUiConstants.UTIL;
+import static org.teiid.designer.runtime.ui.DqpUiConstants.UTIL;
 
 import java.util.Collection;
 
@@ -20,10 +20,10 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Shell;
+import org.teiid.core.util.CoreArgCheck;
 import org.teiid.designer.runtime.Server;
+import org.teiid.designer.runtime.ui.DqpUiPlugin;
 
-import com.metamatrix.core.util.CoreArgCheck;
-import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
 
 /**
  * The <code>DeleteServerDialog</code> class provides a UI for deleting a {@link Server server}.

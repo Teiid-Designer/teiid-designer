@@ -24,10 +24,10 @@ import org.eclipse.ui.IActionDelegate;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.actions.MoveProjectAction;
 import org.eclipse.ui.actions.MoveResourceAction;
+import org.teiid.designer.ui.actions.DelegatableAction;
+import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
+import org.teiid.designer.ui.refactor.actions.MoveRefactorAction;
 
-import com.metamatrix.modeler.internal.ui.refactor.actions.MoveRefactorAction;
-import com.metamatrix.modeler.ui.actions.DelegatableAction;
-import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
 
 /**
  * 

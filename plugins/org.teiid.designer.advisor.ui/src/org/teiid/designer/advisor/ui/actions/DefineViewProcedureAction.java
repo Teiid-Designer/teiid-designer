@@ -16,8 +16,8 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.teiid.designer.advisor.ui.AdvisorUiConstants;
 import org.teiid.designer.advisor.ui.AdvisorUiPlugin;
 import org.teiid.designer.runtime.ui.extension.ApplyRestWarPropertiesAction;
+import org.teiid.designer.transformation.ui.editors.DefineViewProcedureDialog;
 
-import com.metamatrix.modeler.transformation.ui.editors.DefineViewProcedureDialog;
 
 public class DefineViewProcedureAction extends Action implements AdvisorUiConstants {
 

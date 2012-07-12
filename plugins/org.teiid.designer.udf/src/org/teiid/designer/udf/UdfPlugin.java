@@ -12,8 +12,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
 import org.osgi.framework.BundleContext;
-import com.metamatrix.core.PluginUtil;
-import com.metamatrix.core.util.PluginUtilImpl;
+import org.teiid.core.PluginUtil;
+import org.teiid.core.util.PluginUtilImpl;
+
 
 /**
  * 

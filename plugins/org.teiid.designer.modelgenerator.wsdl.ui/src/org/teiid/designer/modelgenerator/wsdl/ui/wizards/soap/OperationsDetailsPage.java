@@ -45,27 +45,27 @@ import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.provider.XSDSemanticItemProviderAdapterFactory;
+import org.teiid.core.event.IChangeListener;
+import org.teiid.core.event.IChangeNotifier;
+import org.teiid.core.util.CoreStringUtil;
+import org.teiid.designer.modelgenerator.wsdl.model.Operation;
 import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
+import org.teiid.designer.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstants;
+import org.teiid.designer.modelgenerator.wsdl.ui.util.ModelGeneratorWsdlUiUtil;
+import org.teiid.designer.modelgenerator.wsdl.ui.wizards.WSDLImportWizardManager;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.SchemaTreeModel.SchemaNode;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.panels.ColumnsInfoPanel;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.panels.ElementsInfoPanel;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.panels.RequestSchemaContentsGroup;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.panels.ResponseSchemaContentsGroup;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.panels.WrapperProcedurePanel;
+import org.teiid.designer.transformation.ui.editors.sqleditor.SqlTextViewer;
+import org.teiid.designer.ui.common.graphics.ColorManager;
+import org.teiid.designer.ui.common.util.WidgetFactory;
+import org.teiid.designer.ui.common.util.WidgetUtil;
+import org.teiid.designer.ui.common.util.WizardUtil;
+import org.teiid.designer.ui.common.wizard.AbstractWizardPage;
 
-import com.metamatrix.core.event.IChangeListener;
-import com.metamatrix.core.event.IChangeNotifier;
-import com.metamatrix.core.util.CoreStringUtil;
-import com.metamatrix.modeler.modelgenerator.wsdl.model.Operation;
-import com.metamatrix.modeler.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstants;
-import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.util.ModelGeneratorWsdlUiUtil;
-import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.wizards.WSDLImportWizardManager;
-import com.metamatrix.modeler.transformation.ui.editors.sqleditor.SqlTextViewer;
-import com.metamatrix.ui.graphics.ColorManager;
-import com.metamatrix.ui.internal.util.WidgetFactory;
-import com.metamatrix.ui.internal.util.WidgetUtil;
-import com.metamatrix.ui.internal.util.WizardUtil;
-import com.metamatrix.ui.internal.wizard.AbstractWizardPage;
 
 public class OperationsDetailsPage extends AbstractWizardPage implements
 	IChangeListener, ModelGeneratorWsdlUiConstants {

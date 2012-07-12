@@ -8,4 +8,4 @@ Fragment-Host: org.teiid.designer.metamodels.transformation
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Localization: plugin
 Require-Bundle: org.junit4
-Export-Package: com.metamatrix.metamodels.transformation.impl
+Export-Package: org.teiid.designer.metamodels.transformation.impl

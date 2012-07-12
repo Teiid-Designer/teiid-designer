@@ -21,14 +21,15 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IWorkbench;
+import org.teiid.designer.compare.DifferenceReport;
+import org.teiid.designer.compare.ui.wizard.IDifferencingWizard;
+import org.teiid.designer.compare.ui.wizard.ShowDifferencesPage;
+import org.teiid.designer.core.workspace.DotProjectUtils;
 import org.teiid.designer.ddl.importer.DdlImporter;
-import com.metamatrix.modeler.compare.DifferenceReport;
-import com.metamatrix.modeler.compare.ui.wizard.IDifferencingWizard;
-import com.metamatrix.modeler.compare.ui.wizard.ShowDifferencesPage;
-import com.metamatrix.modeler.internal.core.workspace.DotProjectUtils;
-import com.metamatrix.modeler.internal.ui.viewsupport.ModelerUiViewUtils;
-import com.metamatrix.ui.internal.util.WidgetUtil;
-import com.metamatrix.ui.internal.wizard.IPersistentWizardPage;
+import org.teiid.designer.ui.common.util.WidgetUtil;
+import org.teiid.designer.ui.common.wizard.IPersistentWizardPage;
+import org.teiid.designer.ui.viewsupport.ModelerUiViewUtils;
+
 
 /**
  * 
@@ -98,7 +99,7 @@ public class DdlImporterWizard extends Wizard implements IDifferencingWizard {
     /**
      * {@inheritDoc}
      * 
-     * @see com.metamatrix.modeler.compare.ui.wizard.IDifferencingWizard#getDifferenceReports()
+     * @see org.teiid.designer.compare.ui.wizard.IDifferencingWizard#getDifferenceReports()
      */
     @Override
     public List<DifferenceReport> getDifferenceReports() {

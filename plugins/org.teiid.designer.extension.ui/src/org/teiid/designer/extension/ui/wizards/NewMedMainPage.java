@@ -22,17 +22,18 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
+import org.teiid.core.util.CoreStringUtil;
+import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.core.validation.rules.StringNameValidator;
 import org.teiid.designer.extension.ui.Messages;
-import com.metamatrix.core.util.CoreStringUtil;
-import com.metamatrix.modeler.core.ModelerCore;
-import com.metamatrix.modeler.core.validation.rules.StringNameValidator;
-import com.metamatrix.modeler.internal.ui.viewsupport.ModelProjectSelectionStatusValidator;
-import com.metamatrix.modeler.ui.viewsupport.ModelingResourceFilter;
-import com.metamatrix.ui.internal.InternalUiConstants;
-import com.metamatrix.ui.internal.util.WidgetFactory;
-import com.metamatrix.ui.internal.util.WidgetUtil;
-import com.metamatrix.ui.internal.util.WizardUtil;
-import com.metamatrix.ui.internal.wizard.AbstractWizardPage;
+import org.teiid.designer.ui.common.InternalUiConstants;
+import org.teiid.designer.ui.common.util.WidgetFactory;
+import org.teiid.designer.ui.common.util.WidgetUtil;
+import org.teiid.designer.ui.common.util.WizardUtil;
+import org.teiid.designer.ui.common.wizard.AbstractWizardPage;
+import org.teiid.designer.ui.viewsupport.ModelProjectSelectionStatusValidator;
+import org.teiid.designer.ui.viewsupport.ModelingResourceFilter;
+
 
 /**
  * NewMedMainPage - first page of NewMedWizard, for selection of location and name of the MED

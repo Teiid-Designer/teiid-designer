@@ -7,8 +7,8 @@ Bundle-Vendor: %Bundle-Vendor.0
 Fragment-Host: org.teiid.designer.metamodels.relational
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Localization: plugin
-Export-Package: com.metamatrix.metamodels.relational.aspects.validation.rules,
- com.metamatrix.metamodels.relational.provider,
- com.metamatrix.metamodels.relational.util
+Export-Package: org.teiid.designer.metamodels.relational.aspects.validation.rules,
+ org.teiid.designer.metamodels.relational.provider,
+ org.teiid.designer.metamodels.relational.util
 Require-Bundle: org.junit4,
  org.teiid.designer.core.test.framework

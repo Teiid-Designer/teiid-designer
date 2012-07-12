@@ -10,7 +10,7 @@ package org.teiid.designer.advisor.ui.actions;
 import java.util.Properties;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.datatools.connectivity.IProfileListener;
-import com.metamatrix.modeler.ui.viewsupport.DesignerPropertiesUtil;
+import org.teiid.designer.ui.viewsupport.DesignerPropertiesUtil;
 
 public class PropertiesProfileChangedListener implements IProfileListener {
 	Properties designerProperties;

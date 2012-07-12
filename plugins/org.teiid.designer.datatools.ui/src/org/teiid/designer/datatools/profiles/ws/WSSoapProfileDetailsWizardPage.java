@@ -41,10 +41,10 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.progress.UIJob;
 import org.teiid.designer.datatools.ui.DatatoolsUiConstants;
+import org.teiid.designer.ui.common.ICredentialsCommon.SecurityType;
+import org.teiid.designer.ui.common.util.WidgetFactory;
+import org.teiid.designer.ui.wizards.wsdl.WsdlFileSelectionComposite;
 
-import com.metamatrix.modeler.ui.wizards.wsdl.WsdlFileSelectionComposite;
-import com.metamatrix.ui.ICredentialsCommon.SecurityType;
-import com.metamatrix.ui.internal.util.WidgetFactory;
 
 public class WSSoapProfileDetailsWizardPage  extends ConnectionProfileDetailsPage
 		implements Listener, DatatoolsUiConstants {

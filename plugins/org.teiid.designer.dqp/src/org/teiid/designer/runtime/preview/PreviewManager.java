@@ -8,8 +8,8 @@
 
 package org.teiid.designer.runtime.preview;
 
-import static com.metamatrix.modeler.dqp.DqpPlugin.PLUGIN_ID;
-import static com.metamatrix.modeler.dqp.DqpPlugin.Util;
+import static org.teiid.designer.runtime.DqpPlugin.PLUGIN_ID;
+import static org.teiid.designer.runtime.DqpPlugin.Util;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -55,14 +55,33 @@ import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.edit.provider.INotifyChangedListener;
 import org.eclipse.osgi.util.NLS;
+import org.teiid.designer.common.xmi.XMIHeader;
+import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.core.metamodel.MetamodelDescriptor;
+import org.teiid.designer.core.util.CoreModelObjectNotificationHelper;
+import org.teiid.designer.core.util.StringUtilities;
+import org.teiid.designer.core.workspace.ModelFileUtil;
+import org.teiid.designer.core.workspace.ModelResource;
+import org.teiid.designer.core.workspace.ModelUtil;
+import org.teiid.designer.core.workspace.ModelWorkspaceException;
+import org.teiid.designer.core.workspace.ResourceChangeUtilities;
+import org.teiid.designer.core.workspace.WorkspaceResourceFinderUtil;
 import org.teiid.designer.datatools.JdbcTranslatorHelper;
 import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
 import org.teiid.designer.datatools.connection.DataSourceConnectionConstants;
 import org.teiid.designer.datatools.connection.IConnectionInfoHelper;
+import org.teiid.designer.metamodels.core.Annotation;
+import org.teiid.designer.metamodels.core.ModelAnnotation;
+import org.teiid.designer.metamodels.core.ModelType;
+import org.teiid.designer.metamodels.function.FunctionPackage;
+import org.teiid.designer.metamodels.relational.RelationalPackage;
+import org.teiid.designer.metamodels.webservice.WebServicePackage;
+import org.teiid.designer.metamodels.xml.XmlDocumentPackage;
 import org.teiid.designer.runtime.ExecutionAdmin;
 import org.teiid.designer.runtime.ExecutionConfigurationEvent;
 import org.teiid.designer.runtime.ExecutionConfigurationEvent.EventType;
 import org.teiid.designer.runtime.ExecutionConfigurationEvent.TargetType;
+import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.IExecutionConfigurationListener;
 import org.teiid.designer.runtime.PreferenceConstants;
 import org.teiid.designer.runtime.Server;
@@ -80,25 +99,6 @@ import org.teiid.designer.vdb.Vdb;
 import org.teiid.designer.vdb.VdbModelEntry;
 import org.teiid.designer.vdb.VdbUtil;
 
-import com.metamatrix.common.xmi.XMIHeader;
-import com.metamatrix.core.util.StringUtilities;
-import com.metamatrix.metamodels.core.Annotation;
-import com.metamatrix.metamodels.core.ModelAnnotation;
-import com.metamatrix.metamodels.core.ModelType;
-import com.metamatrix.metamodels.function.FunctionPackage;
-import com.metamatrix.metamodels.relational.RelationalPackage;
-import com.metamatrix.metamodels.webservice.WebServicePackage;
-import com.metamatrix.metamodels.xml.XmlDocumentPackage;
-import com.metamatrix.modeler.core.ModelerCore;
-import com.metamatrix.modeler.core.metamodel.MetamodelDescriptor;
-import com.metamatrix.modeler.core.util.CoreModelObjectNotificationHelper;
-import com.metamatrix.modeler.core.workspace.ModelResource;
-import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
-import com.metamatrix.modeler.dqp.DqpPlugin;
-import com.metamatrix.modeler.internal.core.workspace.ModelFileUtil;
-import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
-import com.metamatrix.modeler.internal.core.workspace.ResourceChangeUtilities;
-import com.metamatrix.modeler.internal.core.workspace.WorkspaceResourceFinderUtil;
 
 /**
  * The <code>PreviewManager</code> is responsible for keeping the hidden Preview VDBs synchronized with the workspace. Also, the

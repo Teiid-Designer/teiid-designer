@@ -30,6 +30,10 @@ import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.osgi.util.NLS;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
+import org.teiid.core.PluginUtil;
+import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.util.CoreStringUtil;
+import org.teiid.core.util.LoggingUtil;
 import org.teiid.designer.extension.definition.ExtendableMetaclassNameProvider;
 import org.teiid.designer.extension.definition.ModelExtensionAssistant;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
@@ -38,10 +42,6 @@ import org.teiid.designer.extension.definition.ModelObjectExtensionAssistant;
 import org.teiid.designer.extension.definition.ModelObjectExtensionAssistantFactory;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 
-import com.metamatrix.core.PluginUtil;
-import com.metamatrix.core.util.CoreArgCheck;
-import com.metamatrix.core.util.CoreStringUtil;
-import com.metamatrix.core.util.LoggingUtil;
 
 public class ExtensionPlugin extends Plugin {
 

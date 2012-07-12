@@ -8,7 +8,8 @@
 
 package org.teiid.designer.runtime.preview.jobs;
 
-import static com.metamatrix.modeler.dqp.DqpPlugin.PLUGIN_ID;
+import static org.teiid.designer.runtime.DqpPlugin.PLUGIN_ID;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;

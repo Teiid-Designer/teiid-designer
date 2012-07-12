@@ -22,19 +22,19 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.teiid.adminapi.Admin;
 import org.teiid.adminapi.VDB;
+import org.teiid.core.util.I18nUtil;
 import org.teiid.datatools.connectivity.ConnectivityUtil;
 import org.teiid.designer.datatools.ui.dialogs.NewTeiidFilteredCPWizard;
 import org.teiid.designer.datatools.ui.dialogs.TeiidCPWizardDialog;
+import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.ExecutionAdmin;
 import org.teiid.designer.runtime.Server;
 import org.teiid.designer.runtime.TeiidJdbcInfo;
+import org.teiid.designer.runtime.ui.DqpUiConstants;
+import org.teiid.designer.runtime.ui.DqpUiPlugin;
 import org.teiid.designer.runtime.ui.actions.DeployVdbAction;
 import org.teiid.designer.runtime.ui.actions.OpenScrapbookEditorAction;
 
-import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.modeler.dqp.DqpPlugin;
-import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
-import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
 
 public class ExecuteVdbWorker implements VdbConstants {
 	protected static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(ExecuteVdbWorker.class);

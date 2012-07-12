@@ -11,18 +11,18 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.teiid.core.util.I18nUtil;
+import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.datatools.connection.ConnectionInfoProviderFactory;
 import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
 import org.teiid.designer.datatools.ui.DatatoolsUiConstants;
 import org.teiid.designer.datatools.ui.DatatoolsUiPlugin;
 import org.teiid.designer.datatools.ui.dialogs.ConnectionProfileSummaryDialog;
+import org.teiid.designer.ui.actions.SortableSelectionAction;
+import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
+import org.teiid.designer.ui.viewsupport.ModelIdentifier;
+import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
-import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.modeler.core.workspace.ModelResource;
-import com.metamatrix.modeler.internal.ui.viewsupport.ModelIdentifier;
-import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
-import com.metamatrix.modeler.ui.actions.SortableSelectionAction;
-import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
 
 public class ViewConnectionProfileAction extends SortableSelectionAction  {
     private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(ViewConnectionProfileAction.class);
@@ -49,7 +49,7 @@ public class ViewConnectionProfileAction extends SortableSelectionAction  {
     }
 
     /**
-     * @see com.metamatrix.modeler.ui.actions.SortableSelectionAction#isValidSelection(org.eclipse.jface.viewers.ISelection)
+     * @see org.teiid.designer.ui.actions.SortableSelectionAction#isValidSelection(org.eclipse.jface.viewers.ISelection)
      * @since 5.0
      */
     @Override
@@ -121,7 +121,7 @@ public class ViewConnectionProfileAction extends SortableSelectionAction  {
     }
 
     /**
-     * @see com.metamatrix.modeler.ui.actions.ISelectionAction#isApplicable(org.eclipse.jface.viewers.ISelection)
+     * @see org.teiid.designer.ui.actions.ISelectionAction#isApplicable(org.eclipse.jface.viewers.ISelection)
      * @since 5.0
      */
     @Override

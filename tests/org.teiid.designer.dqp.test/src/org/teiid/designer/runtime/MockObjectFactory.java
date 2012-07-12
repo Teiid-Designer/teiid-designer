@@ -23,11 +23,10 @@ import org.eclipse.emf.edit.provider.ChangeNotifier;
 import org.teiid.adminapi.Admin;
 import org.teiid.adminapi.PropertyDefinition;
 import org.teiid.adminapi.Translator;
+import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.core.container.Container;
+import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.runtime.connection.IConnectionProperties;
-import com.metamatrix.modeler.core.ModelerCore;
-import com.metamatrix.modeler.core.container.Container;
-import com.metamatrix.modeler.core.workspace.ModelResource;
-import com.metamatrix.modeler.dqp.DqpPlugin;
 
 /**
  *

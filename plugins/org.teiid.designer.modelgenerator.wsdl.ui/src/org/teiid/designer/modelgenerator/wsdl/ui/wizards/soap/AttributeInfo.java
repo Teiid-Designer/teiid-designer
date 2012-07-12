@@ -9,12 +9,12 @@ package org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.teiid.core.util.CoreArgCheck;
+import org.teiid.designer.core.validation.rules.StringNameValidator;
+import org.teiid.designer.metamodels.relational.aspects.validation.RelationalStringNameValidator;
 import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
+import org.teiid.designer.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstants;
 
-import com.metamatrix.core.util.CoreArgCheck;
-import com.metamatrix.metamodels.relational.aspects.validation.RelationalStringNameValidator;
-import com.metamatrix.modeler.core.validation.rules.StringNameValidator;
-import com.metamatrix.modeler.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstants;
 
 public class AttributeInfo implements ModelGeneratorWsdlUiConstants {
 	private static final StringNameValidator nameValidator = new RelationalStringNameValidator(false, true);

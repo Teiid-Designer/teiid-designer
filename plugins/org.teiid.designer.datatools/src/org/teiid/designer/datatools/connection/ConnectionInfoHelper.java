@@ -9,13 +9,13 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.datatools.connectivity.internal.ConnectionProfile;
+import org.teiid.core.util.CoreArgCheck;
 import org.teiid.core.util.StringUtil;
+import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.core.workspace.ModelResource;
+import org.teiid.designer.core.workspace.ModelWorkspaceException;
+import org.teiid.designer.core.workspace.ResourceAnnotationHelper;
 import org.teiid.designer.datatools.DatatoolsPlugin;
-import com.metamatrix.core.util.CoreArgCheck;
-import com.metamatrix.modeler.core.ModelerCore;
-import com.metamatrix.modeler.core.workspace.ModelResource;
-import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
-import com.metamatrix.modeler.internal.core.workspace.ResourceAnnotationHelper;
 
 public class ConnectionInfoHelper implements IConnectionInfoHelper {
 
@@ -191,7 +191,7 @@ public class ConnectionInfoHelper implements IConnectionInfoHelper {
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.designer.datatools.connection.IConnectionInfoHelper#getConnectionProperties(com.metamatrix.modeler.core.workspace.ModelResource)
+     * @see org.teiid.designer.datatools.connection.IConnectionInfoHelper#getConnectionProperties(org.teiid.designer.core.workspace.ModelResource)
      */
     @Override
     public Properties getConnectionProperties( ModelResource modelResource ) throws ModelWorkspaceException {
@@ -201,7 +201,7 @@ public class ConnectionInfoHelper implements IConnectionInfoHelper {
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.designer.datatools.connection.IConnectionInfoHelper#getConnectionProperties(com.metamatrix.modeler.core.workspace.ModelResource)
+     * @see org.teiid.designer.datatools.connection.IConnectionInfoHelper#getConnectionProperties(org.teiid.designer.core.workspace.ModelResource)
      */
     @Override
     public Properties getProfileProperties( ModelResource modelResource ) throws ModelWorkspaceException {
@@ -211,7 +211,7 @@ public class ConnectionInfoHelper implements IConnectionInfoHelper {
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.designer.datatools.connection.IConnectionInfoHelper#getTranslatorProperties(com.metamatrix.modeler.core.workspace.ModelResource)
+     * @see org.teiid.designer.datatools.connection.IConnectionInfoHelper#getTranslatorProperties(org.teiid.designer.core.workspace.ModelResource)
      */
     @Override
     public Properties getTranslatorProperties( ModelResource modelResource ) {

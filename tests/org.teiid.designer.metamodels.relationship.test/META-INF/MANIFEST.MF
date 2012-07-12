@@ -9,5 +9,5 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Localization: plugin
 Require-Bundle: org.junit4,
  org.teiid.designer.sdt
-Export-Package: com.metamatrix.metamodels.relationship,
- com.metamatrix.metamodels.relationship.util
+Export-Package: org.teiid.designer.metamodels.relationship,
+ org.teiid.designer.metamodels.relationship.util

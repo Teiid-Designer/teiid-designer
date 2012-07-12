@@ -13,28 +13,28 @@
          point="org.eclipse.emf.ecore.generated_package">
       <package
             uri="http://schemas.xmlsoap.org/wsdl/"
-            class="com.metamatrix.metamodels.wsdl.WsdlPackage">
+            class="org.teiid.designer.metamodels.wsdl.WsdlPackage">
       </package>
    </extension>
    <extension
          point="org.eclipse.emf.ecore.generated_package">
       <package
             uri="http://schemas.xmlsoap.org/wsdl/soap/"
-            class="com.metamatrix.metamodels.wsdl.soap.SoapPackage">
+            class="org.teiid.designer.metamodels.wsdl.soap.SoapPackage">
       </package>
    </extension>
    <extension
          point="org.eclipse.emf.ecore.generated_package">
       <package
             uri="http://schemas.xmlsoap.org/wsdl/http/"
-            class="com.metamatrix.metamodels.wsdl.http.HttpPackage">
+            class="org.teiid.designer.metamodels.wsdl.http.HttpPackage">
       </package>
    </extension>
    <extension
          point="org.eclipse.emf.ecore.generated_package">
       <package
             uri="http://schemas.xmlsoap.org/wsdl/mime/"
-            class="com.metamatrix.metamodels.wsdl.mime.MimePackage">
+            class="org.teiid.designer.metamodels.wsdl.mime.MimePackage">
       </package>
    </extension>
 
@@ -43,7 +43,7 @@
          id="wsdlResourceFactory"
          point="org.teiid.designer.core.resourceFactory">
       <class
-         name="com.metamatrix.metamodels.wsdl.io.WsdlResourceFactoryImpl">
+         name="org.teiid.designer.metamodels.wsdl.io.WsdlResourceFactoryImpl">
       </class>
       <fileExtension>
          wsdl

@@ -17,9 +17,9 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
 import org.teiid.designer.extension.ui.Activator;
+import org.teiid.designer.ui.actions.SortableSelectionAction;
+import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 
-import com.metamatrix.modeler.ui.actions.SortableSelectionAction;
-import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
 
 /**
  * 
@@ -53,7 +53,7 @@ public final class UpdateRegistryModelExtensionDefinitionAction extends Sortable
     /**
      * {@inheritDoc}
      *
-     * @see com.metamatrix.modeler.ui.actions.SortableSelectionAction#isValidSelection(org.eclipse.jface.viewers.ISelection)
+     * @see org.teiid.designer.ui.actions.SortableSelectionAction#isValidSelection(org.eclipse.jface.viewers.ISelection)
      */
     @Override
     protected boolean isValidSelection( ISelection selection ) {

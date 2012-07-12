@@ -7,10 +7,10 @@
  */
 package org.teiid.designer.ui.navigator.model;
 
-import static com.metamatrix.modeler.internal.ui.PluginConstants.Prefs.General.SHOW_IMPORTS_IN_MODEL_EXPLORER;
-import static com.metamatrix.modeler.internal.ui.PluginConstants.Prefs.General.SHOW_NON_MODELS_IN_MODEL_EXPLORER;
-import static com.metamatrix.modeler.internal.ui.PluginConstants.Prefs.General.SORT_MODEL_CONTENTS;
-import static com.metamatrix.modeler.ui.UiConstants.Util;
+import static org.teiid.designer.ui.PluginConstants.Prefs.General.SHOW_IMPORTS_IN_MODEL_EXPLORER;
+import static org.teiid.designer.ui.PluginConstants.Prefs.General.SHOW_NON_MODELS_IN_MODEL_EXPLORER;
+import static org.teiid.designer.ui.PluginConstants.Prefs.General.SORT_MODEL_CONTENTS;
+import static org.teiid.designer.ui.UiConstants.Util;
 import static org.teiid.designer.ui.navigator.model.ModelNavigatorMessages.createRenameActionErrorMessage;
 import static org.teiid.designer.ui.navigator.model.ModelNavigatorMessages.defaultCopyActionNotFoundMessage;
 import static org.teiid.designer.ui.navigator.model.ModelNavigatorMessages.refreshActionText;
@@ -67,38 +67,38 @@ import org.eclipse.ui.navigator.CommonNavigator;
 import org.eclipse.ui.navigator.ICommonActionExtensionSite;
 import org.eclipse.ui.navigator.ICommonViewerSite;
 import org.eclipse.ui.navigator.ICommonViewerWorkbenchSite;
+import org.teiid.core.event.EventObjectListener;
+import org.teiid.core.event.EventSourceException;
+import org.teiid.designer.core.workspace.DotProjectUtils;
+import org.teiid.designer.ui.PluginConstants;
+import org.teiid.designer.ui.UiPlugin;
+import org.teiid.designer.ui.UiConstants.Extensions;
+import org.teiid.designer.ui.actions.CloneProjectAction2;
+import org.teiid.designer.ui.actions.DelegatableAction;
+import org.teiid.designer.ui.actions.DeleteResourceAction;
+import org.teiid.designer.ui.actions.IModelerActionConstants;
+import org.teiid.designer.ui.actions.ModelResourceActionManager;
+import org.teiid.designer.ui.actions.ModelerActionBarIdManager;
+import org.teiid.designer.ui.actions.ModelerActionService;
+import org.teiid.designer.ui.actions.ModelerGlobalActionsMap;
+import org.teiid.designer.ui.actions.ModelerSpecialActionManager;
+import org.teiid.designer.ui.actions.PasteInResourceAction;
+import org.teiid.designer.ui.actions.PasteSpecialAction;
+import org.teiid.designer.ui.actions.PropertyDialogAction;
+import org.teiid.designer.ui.actions.RemoveProjectAction;
+import org.teiid.designer.ui.actions.IModelerActionConstants.ContextMenu;
+import org.teiid.designer.ui.common.actions.ActionService;
+import org.teiid.designer.ui.common.actions.GlobalActionsMap;
+import org.teiid.designer.ui.common.actions.IActionConstants.EclipseGlobalActions;
+import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
+import org.teiid.designer.ui.common.util.WidgetUtil;
+import org.teiid.designer.ui.editors.ModelEditor;
+import org.teiid.designer.ui.event.ModelResourceEvent;
+import org.teiid.designer.ui.refactor.actions.RenameRefactorAction;
+import org.teiid.designer.ui.viewsupport.IExtendedModelObject;
+import org.teiid.designer.ui.viewsupport.ModelUtilities;
+import org.teiid.designer.ui.viewsupport.NonModelViewerFilter;
 
-import com.metamatrix.core.event.EventObjectListener;
-import com.metamatrix.core.event.EventSourceException;
-import com.metamatrix.modeler.internal.core.workspace.DotProjectUtils;
-import com.metamatrix.modeler.internal.ui.PluginConstants;
-import com.metamatrix.modeler.internal.ui.actions.CloneProjectAction2;
-import com.metamatrix.modeler.internal.ui.actions.DeleteResourceAction;
-import com.metamatrix.modeler.internal.ui.actions.PasteInResourceAction;
-import com.metamatrix.modeler.internal.ui.actions.PasteSpecialAction;
-import com.metamatrix.modeler.internal.ui.actions.PropertyDialogAction;
-import com.metamatrix.modeler.internal.ui.actions.RemoveProjectAction;
-import com.metamatrix.modeler.internal.ui.editors.ModelEditor;
-import com.metamatrix.modeler.internal.ui.refactor.actions.RenameRefactorAction;
-import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
-import com.metamatrix.modeler.ui.UiConstants.Extensions;
-import com.metamatrix.modeler.ui.UiPlugin;
-import com.metamatrix.modeler.ui.actions.DelegatableAction;
-import com.metamatrix.modeler.ui.actions.IModelerActionConstants;
-import com.metamatrix.modeler.ui.actions.IModelerActionConstants.ContextMenu;
-import com.metamatrix.modeler.ui.actions.ModelResourceActionManager;
-import com.metamatrix.modeler.ui.actions.ModelerActionBarIdManager;
-import com.metamatrix.modeler.ui.actions.ModelerActionService;
-import com.metamatrix.modeler.ui.actions.ModelerGlobalActionsMap;
-import com.metamatrix.modeler.ui.actions.ModelerSpecialActionManager;
-import com.metamatrix.modeler.ui.event.ModelResourceEvent;
-import com.metamatrix.modeler.ui.viewsupport.IExtendedModelObject;
-import com.metamatrix.modeler.ui.viewsupport.NonModelViewerFilter;
-import com.metamatrix.ui.actions.ActionService;
-import com.metamatrix.ui.actions.GlobalActionsMap;
-import com.metamatrix.ui.actions.IActionConstants.EclipseGlobalActions;
-import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
-import com.metamatrix.ui.internal.util.WidgetUtil;
 
 /**
  * 
@@ -862,7 +862,7 @@ public class ModelActionProvider extends CommonActionProvider {
             /**
              * {@inheritDoc}
              * 
-             * @see com.metamatrix.core.event.EventObjectListener#processEvent(java.util.EventObject)
+             * @see org.teiid.core.event.EventObjectListener#processEvent(java.util.EventObject)
              */
             @Override
             public void processEvent( EventObject obj ) {

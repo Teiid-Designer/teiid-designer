@@ -13,11 +13,11 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IWorkbenchPage;
 import org.osgi.framework.BundleContext;
+import org.teiid.core.PluginUtil;
+import org.teiid.core.util.PluginUtilImpl;
+import org.teiid.designer.ui.common.AbstractUiPlugin;
+import org.teiid.designer.ui.common.actions.ActionService;
 
-import com.metamatrix.core.PluginUtil;
-import com.metamatrix.core.util.PluginUtilImpl;
-import com.metamatrix.ui.AbstractUiPlugin;
-import com.metamatrix.ui.actions.ActionService;
 
 /**
  * 
@@ -39,7 +39,7 @@ public final class RolesUiPlugin extends AbstractUiPlugin {
     /**
      * {@inheritDoc}
      * 
-     * @see com.metamatrix.ui.AbstractUiPlugin#createActionService(org.eclipse.ui.IWorkbenchPage)
+     * @see org.teiid.designer.ui.common.AbstractUiPlugin#createActionService(org.eclipse.ui.IWorkbenchPage)
      */
     @Override
     protected ActionService createActionService( IWorkbenchPage page ) {
@@ -49,7 +49,7 @@ public final class RolesUiPlugin extends AbstractUiPlugin {
     /**
      * {@inheritDoc}
      * 
-     * @see com.metamatrix.ui.AbstractUiPlugin#getPluginUtil()
+     * @see org.teiid.designer.ui.common.AbstractUiPlugin#getPluginUtil()
      */
     @Override
     public PluginUtil getPluginUtil() {

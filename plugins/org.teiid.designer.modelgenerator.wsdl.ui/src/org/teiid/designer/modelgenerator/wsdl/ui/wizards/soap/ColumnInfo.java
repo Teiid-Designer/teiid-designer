@@ -13,13 +13,13 @@ import java.util.Collection;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.osgi.util.NLS;
+import org.teiid.core.util.CoreArgCheck;
+import org.teiid.designer.core.util.StringUtilities;
+import org.teiid.designer.core.validation.rules.StringNameValidator;
+import org.teiid.designer.metamodels.relational.aspects.validation.RelationalStringNameValidator;
 import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
+import org.teiid.designer.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstants;
 
-import com.metamatrix.core.util.CoreArgCheck;
-import com.metamatrix.core.util.StringUtilities;
-import com.metamatrix.metamodels.relational.aspects.validation.RelationalStringNameValidator;
-import com.metamatrix.modeler.core.validation.rules.StringNameValidator;
-import com.metamatrix.modeler.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstants;
 
 public class ColumnInfo implements ModelGeneratorWsdlUiConstants {
 	public static final String DEFAULT_DATATYPE = "string"; //$NON-NLS-1$

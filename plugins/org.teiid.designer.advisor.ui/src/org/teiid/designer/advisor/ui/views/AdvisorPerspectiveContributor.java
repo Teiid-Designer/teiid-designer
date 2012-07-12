@@ -8,9 +8,9 @@
 package org.teiid.designer.advisor.ui.views;
 
 import org.teiid.designer.advisor.ui.AdvisorUiConstants;
+import org.teiid.designer.ui.util.IModelerPerspectiveContributor;
+import org.teiid.designer.ui.util.PerspectiveObject;
 
-import com.metamatrix.modeler.internal.ui.util.IModelerPerspectiveContributor;
-import com.metamatrix.modeler.internal.ui.util.PerspectiveObject;
 
 public class AdvisorPerspectiveContributor implements IModelerPerspectiveContributor {
     
@@ -25,7 +25,7 @@ public class AdvisorPerspectiveContributor implements IModelerPerspectiveContrib
     }
 
     /** 
-     * @see com.metamatrix.modeler.internal.ui.util.IModelerPerspectiveContributor#getContributions()
+     * @see org.teiid.designer.ui.util.IModelerPerspectiveContributor#getContributions()
      * @since 4.3
      */
     public PerspectiveObject[] getContributions() {

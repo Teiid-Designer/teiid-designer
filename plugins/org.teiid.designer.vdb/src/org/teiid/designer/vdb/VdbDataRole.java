@@ -17,13 +17,13 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlType;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.roles.DataRole;
 import org.teiid.designer.roles.Permission;
 import org.teiid.designer.vdb.Vdb.Event;
 import org.teiid.designer.vdb.manifest.DataRoleElement;
 import org.teiid.designer.vdb.manifest.PermissionElement;
 
-import com.metamatrix.core.util.StringUtilities;
 
 /**
  *

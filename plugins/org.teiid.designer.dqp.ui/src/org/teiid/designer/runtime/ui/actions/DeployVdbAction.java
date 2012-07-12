@@ -7,8 +7,8 @@
  */
 package org.teiid.designer.runtime.ui.actions;
 
-import static com.metamatrix.modeler.dqp.ui.DqpUiConstants.PLUGIN_ID;
-import static com.metamatrix.modeler.dqp.ui.DqpUiConstants.UTIL;
+import static org.teiid.designer.runtime.ui.DqpUiConstants.PLUGIN_ID;
+import static org.teiid.designer.runtime.ui.DqpUiConstants.UTIL;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -31,21 +31,21 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.teiid.adminapi.VDB;
+import org.teiid.core.util.I18nUtil;
+import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.PreferenceConstants;
 import org.teiid.designer.runtime.Server;
 import org.teiid.designer.runtime.ServerManager;
+import org.teiid.designer.runtime.ui.DqpUiConstants;
+import org.teiid.designer.runtime.ui.DqpUiPlugin;
 import org.teiid.designer.runtime.ui.server.RuntimeAssistant;
 import org.teiid.designer.runtime.ui.vdb.DeployVdbDialog;
 import org.teiid.designer.runtime.ui.vdb.VdbDeployer;
 import org.teiid.designer.runtime.ui.vdb.VdbRequiresSaveChecker;
+import org.teiid.designer.ui.actions.ISelectionAction;
+import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 import org.teiid.designer.vdb.Vdb;
 
-import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.modeler.dqp.DqpPlugin;
-import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
-import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
-import com.metamatrix.modeler.ui.actions.ISelectionAction;
-import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
 
 public class DeployVdbAction extends Action implements ISelectionListener, Comparable, ISelectionAction {
 
@@ -81,7 +81,7 @@ public class DeployVdbAction extends Action implements ISelectionListener, Compa
     /**
      * {@inheritDoc}
      * 
-     * @see com.metamatrix.modeler.ui.actions.ISelectionAction#isApplicable(org.eclipse.jface.viewers.ISelection)
+     * @see org.teiid.designer.ui.actions.ISelectionAction#isApplicable(org.eclipse.jface.viewers.ISelection)
      */
     @Override
     public boolean isApplicable( ISelection selection ) {

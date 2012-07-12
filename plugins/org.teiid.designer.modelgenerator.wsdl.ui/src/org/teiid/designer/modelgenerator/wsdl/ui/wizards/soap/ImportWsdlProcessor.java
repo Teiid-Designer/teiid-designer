@@ -26,39 +26,39 @@ import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
+import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.core.ModelerCoreException;
+import org.teiid.designer.core.query.QueryValidator;
+import org.teiid.designer.core.types.DatatypeManager;
+import org.teiid.designer.core.util.NewModelObjectHelperManager;
+import org.teiid.designer.core.workspace.ModelResource;
+import org.teiid.designer.core.workspace.ModelWorkspaceException;
+import org.teiid.designer.core.workspace.ModelWorkspaceItem;
+import org.teiid.designer.core.workspace.ModelWorkspaceManager;
 import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
+import org.teiid.designer.metamodels.relational.Column;
+import org.teiid.designer.metamodels.relational.Procedure;
+import org.teiid.designer.metamodels.relational.ProcedureParameter;
+import org.teiid.designer.metamodels.relational.ProcedureResult;
+import org.teiid.designer.metamodels.relational.RelationalFactory;
+import org.teiid.designer.metamodels.transformation.SqlTransformationMappingRoot;
+import org.teiid.designer.modelgenerator.wsdl.SOAPConnectionInfoProvider;
+import org.teiid.designer.modelgenerator.wsdl.model.Operation;
+import org.teiid.designer.modelgenerator.wsdl.model.Port;
 import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
+import org.teiid.designer.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstants;
+import org.teiid.designer.modelgenerator.wsdl.ui.util.ModelGeneratorWsdlUiUtil;
+import org.teiid.designer.modelgenerator.wsdl.ui.wizards.WSDLImportWizardManager;
+import org.teiid.designer.transformation.model.RelationalViewModelFactory;
+import org.teiid.designer.transformation.ui.wizards.file.FlatFileRelationalModelFactory;
+import org.teiid.designer.transformation.util.SqlMappingRootCache;
+import org.teiid.designer.transformation.util.TransformationHelper;
+import org.teiid.designer.transformation.util.TransformationMappingHelper;
+import org.teiid.designer.transformation.validation.TransformationValidator;
+import org.teiid.designer.ui.common.util.WidgetUtil;
+import org.teiid.designer.ui.editors.ModelEditorManager;
+import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
-import com.metamatrix.metamodels.relational.Column;
-import com.metamatrix.metamodels.relational.Procedure;
-import com.metamatrix.metamodels.relational.ProcedureParameter;
-import com.metamatrix.metamodels.relational.ProcedureResult;
-import com.metamatrix.metamodels.relational.RelationalFactory;
-import com.metamatrix.metamodels.transformation.SqlTransformationMappingRoot;
-import com.metamatrix.modeler.core.ModelerCore;
-import com.metamatrix.modeler.core.ModelerCoreException;
-import com.metamatrix.modeler.core.query.QueryValidator;
-import com.metamatrix.modeler.core.types.DatatypeManager;
-import com.metamatrix.modeler.core.util.NewModelObjectHelperManager;
-import com.metamatrix.modeler.core.workspace.ModelResource;
-import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
-import com.metamatrix.modeler.core.workspace.ModelWorkspaceItem;
-import com.metamatrix.modeler.internal.core.workspace.ModelWorkspaceManager;
-import com.metamatrix.modeler.internal.transformation.util.SqlMappingRootCache;
-import com.metamatrix.modeler.internal.transformation.util.TransformationHelper;
-import com.metamatrix.modeler.internal.transformation.util.TransformationMappingHelper;
-import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
-import com.metamatrix.modeler.modelgenerator.wsdl.SOAPConnectionInfoProvider;
-import com.metamatrix.modeler.modelgenerator.wsdl.model.Operation;
-import com.metamatrix.modeler.modelgenerator.wsdl.model.Port;
-import com.metamatrix.modeler.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstants;
-import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.util.ModelGeneratorWsdlUiUtil;
-import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.wizards.WSDLImportWizardManager;
-import com.metamatrix.modeler.transformation.model.RelationalViewModelFactory;
-import com.metamatrix.modeler.transformation.ui.wizards.file.FlatFileRelationalModelFactory;
-import com.metamatrix.modeler.transformation.validation.TransformationValidator;
-import com.metamatrix.modeler.ui.editors.ModelEditorManager;
-import com.metamatrix.ui.internal.util.WidgetUtil;
 
 public class ImportWsdlProcessor {
 	public static final RelationalFactory factory = RelationalFactory.eINSTANCE;
@@ -183,7 +183,7 @@ public class ImportWsdlProcessor {
             }
             theMonitor.worked(10);
             if( createStatus.isOK() && sourceModel != null ) {
-            	ModelEditorManager.openInEditMode(sourceModel, true, com.metamatrix.modeler.ui.UiConstants.ObjectEditor.IGNORE_OPEN_EDITOR);
+            	ModelEditorManager.openInEditMode(sourceModel, true, org.teiid.designer.ui.UiConstants.ObjectEditor.IGNORE_OPEN_EDITOR);
             }
         	succeeded = true;
         } catch (Exception e) {
@@ -285,7 +285,7 @@ public class ImportWsdlProcessor {
             monitor.worked(10);
 
             if( createStatus.isOK() && viewModel != null ) {
-            	ModelEditorManager.openInEditMode(viewModel, true, com.metamatrix.modeler.ui.UiConstants.ObjectEditor.IGNORE_OPEN_EDITOR);
+            	ModelEditorManager.openInEditMode(viewModel, true, org.teiid.designer.ui.UiConstants.ObjectEditor.IGNORE_OPEN_EDITOR);
             }
         	succeeded = true;
         } catch (Exception e) {

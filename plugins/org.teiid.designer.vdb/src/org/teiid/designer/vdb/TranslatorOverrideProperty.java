@@ -12,9 +12,9 @@ import java.beans.PropertyChangeListener;
 
 import org.eclipse.core.runtime.ListenerList;
 import org.teiid.core.properties.PropertyDefinition;
+import org.teiid.core.util.CoreArgCheck;
+import org.teiid.designer.core.util.StringUtilities;
 
-import com.metamatrix.core.util.CoreArgCheck;
-import com.metamatrix.core.util.StringUtilities;
 
 /**
  * A translator property that may or may not have an overridden value.

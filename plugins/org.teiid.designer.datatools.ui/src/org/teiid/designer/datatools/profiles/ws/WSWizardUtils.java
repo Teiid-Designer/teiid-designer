@@ -11,10 +11,10 @@ import java.net.URL;
 import java.util.Properties;
 
 import org.eclipse.datatools.connectivity.IConnectionProfile;
+import org.teiid.designer.core.util.URLHelper;
+import org.teiid.designer.ui.common.ICredentialsCommon;
+import org.teiid.designer.ui.common.ICredentialsCommon.SecurityType;
 
-import com.metamatrix.common.protocol.URLHelper;
-import com.metamatrix.ui.ICredentialsCommon;
-import com.metamatrix.ui.ICredentialsCommon.SecurityType;
 
 /**
  * Common utilities for the Web Service Wizards

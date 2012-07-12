@@ -18,16 +18,16 @@
          xmldoc
       </metamodelExtensionID>
       <factoryClass
-            name="com.metamatrix.modeler.internal.xml.aspects.sql.XmlSqlAspectFactory">
+            name="org.teiid.designer.xml.aspects.sql.XmlSqlAspectFactory">
       </factoryClass>
    </extension>
-<!-- Extension for Tree-Based Model To Relational Model Mapper (com.metamatrix.modeler.mapping.ui.ITreeToRelationalMapper) -->
+<!-- Extension for Tree-Based Model To Relational Model Mapper (org.teiid.designer.mapping.ui.ITreeToRelationalMapper) -->
    <extension
          id="xmlModelMapper"
          name="%xmlMapperName"
          point="org.teiid.designer.mapping.modelMapper">
       <class
-            name="com.metamatrix.modeler.internal.xml.factory.XmlFragmentMapper"
+            name="org.teiid.designer.xml.factory.XmlFragmentMapper"
             metamodelUri="http://www.metamatrix.com/metamodels/XmlDocument">
       </class>
    </extension>
@@ -37,7 +37,7 @@
          name="%xmlChoiceObjectHandlerName"
          point="org.teiid.designer.mapping.choiceObjectHandler">
       <class
-            factoryClass="com.metamatrix.modeler.internal.xml.choice.XmlChoiceFactory">
+            factoryClass="org.teiid.designer.xml.choice.XmlChoiceFactory">
       </class>
    </extension>
 

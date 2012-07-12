@@ -7,8 +7,8 @@
  */
 package org.teiid.designer.extension.ui.actions;
 
-import static com.metamatrix.modeler.ui.UiConstants.Util;
 import static org.teiid.designer.extension.ui.UiConstants.UTIL;
+import static org.teiid.designer.ui.UiConstants.Util;
 
 import java.io.InputStream;
 
@@ -29,6 +29,7 @@ import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.teiid.core.util.CoreArgCheck;
 import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.definition.ModelExtensionDefinitionParser;
@@ -37,7 +38,6 @@ import org.teiid.designer.extension.ui.Activator;
 import org.teiid.designer.extension.ui.Messages;
 import org.teiid.designer.extension.ui.UiConstants;
 
-import com.metamatrix.core.util.CoreArgCheck;
 
 /**
  * RegistryDeploymentValidator - has static methods for checking whether a ModelExtensionDefinition can safely be deployed to the

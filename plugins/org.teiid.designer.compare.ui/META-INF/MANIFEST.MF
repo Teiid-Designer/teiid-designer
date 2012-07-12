@@ -3,14 +3,14 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.teiid.designer.compare.ui;singleton:=true
 Bundle-Version: 7.7.1.qualifier
-Bundle-Activator: com.metamatrix.modeler.compare.ui.UiPlugin
+Bundle-Activator: org.teiid.designer.compare.ui.UiPlugin
 Bundle-Vendor: %pluginProvider
 Bundle-Localization: plugin
-Export-Package: com.metamatrix.modeler.compare.ui,
- com.metamatrix.modeler.compare.ui.actions,
- com.metamatrix.modeler.compare.ui.structure,
- com.metamatrix.modeler.compare.ui.tree,
- com.metamatrix.modeler.compare.ui.wizard
+Export-Package: org.teiid.designer.compare.ui,
+ org.teiid.designer.compare.ui.actions,
+ org.teiid.designer.compare.ui.structure,
+ org.teiid.designer.compare.ui.tree,
+ org.teiid.designer.compare.ui.wizard
 Require-Bundle: org.eclipse.ui.ide,
  org.eclipse.ui.views,
  org.eclipse.jface.text,

@@ -7,7 +7,7 @@
  */
 package org.teiid.designer.ui.navigator.model;
 
-import static com.metamatrix.modeler.internal.ui.PluginConstants.Prefs.General.SORT_MODEL_CONTENTS;
+import static org.teiid.designer.ui.PluginConstants.Prefs.General.SORT_MODEL_CONTENTS;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -15,11 +15,11 @@ import java.util.Comparator;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
+import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.metamodels.diagram.impl.PresentationEntityImpl;
+import org.teiid.designer.ui.UiPlugin;
+import org.teiid.designer.ui.viewsupport.ImportContainer;
 
-import com.metamatrix.metamodels.diagram.impl.PresentationEntityImpl;
-import com.metamatrix.modeler.core.ModelerCore;
-import com.metamatrix.modeler.internal.ui.viewsupport.ImportContainer;
-import com.metamatrix.modeler.ui.UiPlugin;
 
 /**
  * 

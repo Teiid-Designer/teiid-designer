@@ -14,8 +14,8 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.teiid.designer.advisor.ui.AdvisorUiConstants;
 import org.teiid.designer.advisor.ui.AdvisorUiPlugin;
+import org.teiid.designer.transformation.ui.editors.DefineViewTableDialog;
 
-import com.metamatrix.modeler.transformation.ui.editors.DefineViewTableDialog;
 
 public class DefineViewTableAction extends Action implements AdvisorUiConstants {
 

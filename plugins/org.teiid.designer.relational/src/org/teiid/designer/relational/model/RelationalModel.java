@@ -9,7 +9,8 @@ package org.teiid.designer.relational.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import com.metamatrix.core.util.CoreArgCheck;
+
+import org.teiid.core.util.CoreArgCheck;
 
 /**
  * 

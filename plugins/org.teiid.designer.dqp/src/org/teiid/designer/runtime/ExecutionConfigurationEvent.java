@@ -7,12 +7,12 @@
  */
 package org.teiid.designer.runtime;
 
-import static com.metamatrix.modeler.dqp.DqpPlugin.Util;
+import static org.teiid.designer.runtime.DqpPlugin.Util;
 
 import org.teiid.adminapi.VDB;
+import org.teiid.core.util.CoreArgCheck;
 import org.teiid.designer.runtime.connection.SourceConnectionBinding;
 
-import com.metamatrix.core.util.CoreArgCheck;
 
 /**
  * The <code>ExecutionConfigurationEvent</code> class is the event that is broadcast from the {@link ServerManager server manager}

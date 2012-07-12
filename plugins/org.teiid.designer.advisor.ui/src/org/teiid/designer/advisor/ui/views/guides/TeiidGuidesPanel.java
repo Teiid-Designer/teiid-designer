@@ -22,8 +22,8 @@ import org.teiid.designer.advisor.ui.AdvisorUiConstants;
 import org.teiid.designer.advisor.ui.AdvisorUiPlugin;
 import org.teiid.designer.advisor.ui.Messages;
 import org.teiid.designer.advisor.ui.actions.AdvisorActionFactory;
+import org.teiid.designer.ui.forms.FormUtil;
 
-import com.metamatrix.modeler.internal.ui.forms.FormUtil;
 
 /**
  * 

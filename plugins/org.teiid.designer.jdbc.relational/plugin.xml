@@ -22,7 +22,7 @@
             name="oracle">
       </processorType>
       <processorClass
-            name="com.metamatrix.modeler.jdbc.relational.impl.custom.OracleModelProcessor">
+            name="org.teiid.designer.jdbc.relational.impl.custom.OracleModelProcessor">
       </processorClass>
    </extension>
 <!-- Define the model processors for the MetaMatrix SQL Server drivers -->
@@ -34,7 +34,7 @@
             name="sqlserver">
       </processorType>
       <processorClass
-            name="com.metamatrix.modeler.jdbc.relational.impl.custom.SqlServerModelProcessor">
+            name="org.teiid.designer.jdbc.relational.impl.custom.SqlServerModelProcessor">
       </processorClass>
    </extension>
 <!-- Define the model processors for the MetaMatrix Sybase Server drivers -->
@@ -46,7 +46,7 @@
             name="sybase">
       </processorType>
       <processorClass
-            name="com.metamatrix.modeler.jdbc.relational.impl.custom.SybaseModelProcessor">
+            name="org.teiid.designer.jdbc.relational.impl.custom.SybaseModelProcessor">
       </processorClass>
    </extension>
 <!-- Define the model processors for the MetaMatrix Sybase Server drivers -->
@@ -58,7 +58,7 @@
             name="db2">
       </processorType>
       <processorClass
-            name="com.metamatrix.modeler.jdbc.relational.impl.custom.Db2ModelProcessor">
+            name="org.teiid.designer.jdbc.relational.impl.custom.Db2ModelProcessor">
       </processorClass>
    </extension>
 <!-- Define the model processors for the standard Postgres drivers -->
@@ -70,7 +70,7 @@
             name="postgres">
       </processorType>
       <processorClass
-            name="com.metamatrix.modeler.jdbc.relational.impl.custom.PostgresModelProcessor">
+            name="org.teiid.designer.jdbc.relational.impl.custom.PostgresModelProcessor">
       </processorClass>
    </extension>
 <!-- Define the model processors for the standard ODBC drivers -->
@@ -82,7 +82,7 @@
             name="excel">
       </processorType>
       <processorClass
-            name="com.metamatrix.modeler.jdbc.relational.impl.custom.ExcelModelProcessor">
+            name="org.teiid.designer.jdbc.relational.impl.custom.ExcelModelProcessor">
       </processorClass>
    </extension>
 <!-- Define the model processor for the ModeShape driver -->
@@ -94,7 +94,7 @@
             name="modeshape">
       </processorType>
       <processorClass
-            name="com.metamatrix.modeler.jdbc.relational.impl.custom.ModeShapeModelProcessor">
+            name="org.teiid.designer.jdbc.relational.impl.custom.ModeShapeModelProcessor">
       </processorClass>
    </extension>
 <!-- EObject Matcher extensions -->
@@ -102,7 +102,7 @@
          id="jdbcMatcherFactory"
          point="org.teiid.designer.core.eobjectMatcherFactory">
       <class
-            name="com.metamatrix.modeler.jdbc.relational.compare.JdbcMatcherFactory">
+            name="org.teiid.designer.jdbc.relational.compare.JdbcMatcherFactory">
       </class>
    </extension>
 <!-- MetamodelAspect extensions -->
@@ -113,7 +113,7 @@
          jdbcMetamodel
       </metamodelExtensionID>
       <factoryClass
-            name="com.metamatrix.modeler.jdbc.relational.aspects.sql.JdbcSqlAspectFactoryImpl">
+            name="org.teiid.designer.jdbc.relational.aspects.sql.JdbcSqlAspectFactoryImpl">
       </factoryClass>
    </extension>
 

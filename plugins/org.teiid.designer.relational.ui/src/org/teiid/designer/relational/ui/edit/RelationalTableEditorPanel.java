@@ -63,6 +63,12 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.teiid.core.types.DataTypeManager;
+import org.teiid.designer.core.workspace.ModelResource;
+import org.teiid.designer.core.workspace.ModelWorkspaceException;
+import org.teiid.designer.metamodels.core.ModelType;
+import org.teiid.designer.metamodels.relational.PrimaryKey;
+import org.teiid.designer.metamodels.relational.UniqueConstraint;
+import org.teiid.designer.metamodels.relational.util.RelationalUtil;
 import org.teiid.designer.relational.RelationalConstants;
 import org.teiid.designer.relational.model.RelationalColumn;
 import org.teiid.designer.relational.model.RelationalForeignKey;
@@ -70,21 +76,15 @@ import org.teiid.designer.relational.model.RelationalPrimaryKey;
 import org.teiid.designer.relational.model.RelationalTable;
 import org.teiid.designer.relational.model.RelationalUniqueConstraint;
 import org.teiid.designer.relational.ui.Messages;
+import org.teiid.designer.relational.ui.UiConstants;
+import org.teiid.designer.relational.ui.UiPlugin;
 import org.teiid.designer.relational.ui.util.RelationalUiUtil;
+import org.teiid.designer.ui.common.table.ComboBoxEditingSupport;
+import org.teiid.designer.ui.common.text.StyledTextEditor;
+import org.teiid.designer.ui.common.util.WidgetFactory;
+import org.teiid.designer.ui.common.util.WidgetUtil;
+import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
-import com.metamatrix.metamodels.core.ModelType;
-import com.metamatrix.metamodels.relational.PrimaryKey;
-import com.metamatrix.metamodels.relational.UniqueConstraint;
-import com.metamatrix.metamodels.relational.util.RelationalUtil;
-import com.metamatrix.modeler.core.workspace.ModelResource;
-import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
-import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
-import com.metamatrix.modeler.relational.ui.UiConstants;
-import com.metamatrix.modeler.relational.ui.UiPlugin;
-import com.metamatrix.ui.internal.util.WidgetFactory;
-import com.metamatrix.ui.internal.util.WidgetUtil;
-import com.metamatrix.ui.table.ComboBoxEditingSupport;
-import com.metamatrix.ui.text.StyledTextEditor;
 
 public class RelationalTableEditorPanel extends RelationalEditorPanel implements RelationalConstants {
 	private static final String EMPTY_STRING = ""; //$NON-NLS-1$

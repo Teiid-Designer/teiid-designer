@@ -10,8 +10,8 @@ package org.teiid.designer.advisor.ui.actions;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.teiid.designer.advisor.ui.AdvisorUiConstants;
+import org.teiid.designer.ui.viewsupport.ModelerUiViewUtils;
 
-import com.metamatrix.modeler.internal.ui.viewsupport.ModelerUiViewUtils;
 
 /**
  * @since 5.0.1

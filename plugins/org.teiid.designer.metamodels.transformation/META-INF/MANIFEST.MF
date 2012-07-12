@@ -3,13 +3,13 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.teiid.designer.metamodels.transformation;singleton:=true
 Bundle-Version: 7.7.1.qualifier
-Bundle-Activator: com.metamatrix.metamodels.transformation.TransformationPlugin
+Bundle-Activator: org.teiid.designer.metamodels.transformation.TransformationPlugin
 Bundle-Vendor: %pluginProvider
 Bundle-Localization: plugin
-Export-Package: com.metamatrix.metamodels.transformation,
- com.metamatrix.metamodels.transformation.impl,
- com.metamatrix.metamodels.transformation.provider,
- com.metamatrix.metamodels.transformation.util
+Export-Package: org.teiid.designer.metamodels.transformation,
+ org.teiid.designer.metamodels.transformation.impl,
+ org.teiid.designer.metamodels.transformation.provider,
+ org.teiid.designer.metamodels.transformation.util
 Require-Bundle: org.eclipse.emf.mapping,
  org.eclipse.emf.ecore,
  org.eclipse.emf.edit,

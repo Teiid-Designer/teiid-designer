@@ -28,15 +28,15 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.teiid.core.designer.CoreModelerPlugin;
+import org.teiid.core.designer.util.FileUtils;
+import org.teiid.core.designer.util.OperationUtil;
+import org.teiid.core.designer.util.ZipUtil;
+import org.teiid.core.util.ChecksumUtil;
+import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.vdb.manifest.EntryElement;
 import org.teiid.designer.vdb.manifest.PropertyElement;
 
-import com.metamatrix.core.modeler.CoreModelerPlugin;
-import com.metamatrix.core.modeler.util.FileUtils;
-import com.metamatrix.core.modeler.util.OperationUtil;
-import com.metamatrix.core.modeler.util.ZipUtil;
-import com.metamatrix.core.util.ChecksumUtil;
-import com.metamatrix.core.util.StringUtilities;
 
 /**
  *

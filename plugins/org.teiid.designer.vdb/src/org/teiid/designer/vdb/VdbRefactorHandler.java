@@ -13,10 +13,10 @@ import java.util.Map;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.teiid.designer.core.refactor.IRefactorModelHandler;
+import org.teiid.designer.core.refactor.IRefactorNonModelResourceHandler;
+import org.teiid.designer.core.workspace.ModelResource;
 
-import com.metamatrix.modeler.core.refactor.IRefactorModelHandler;
-import com.metamatrix.modeler.core.refactor.IRefactorNonModelResourceHandler;
-import com.metamatrix.modeler.core.workspace.ModelResource;
 
 /**
  * 
@@ -26,8 +26,8 @@ public class VdbRefactorHandler implements IRefactorNonModelResourceHandler {
     /**
      * {@inheritDoc}
      * 
-     * @see com.metamatrix.modeler.core.refactor.IRefactorModelHandler#helpUpdateDependentModelContents(int,
-     *      com.metamatrix.modeler.core.workspace.ModelResource, java.util.Map, org.eclipse.core.runtime.IProgressMonitor)
+     * @see org.teiid.designer.core.refactor.IRefactorModelHandler#helpUpdateDependentModelContents(int,
+     *      org.teiid.designer.core.workspace.ModelResource, java.util.Map, org.eclipse.core.runtime.IProgressMonitor)
      */
     @Override
     public void helpUpdateDependentModelContents( int type,
@@ -40,8 +40,8 @@ public class VdbRefactorHandler implements IRefactorNonModelResourceHandler {
     /**
      * {@inheritDoc}
      * 
-     * @see com.metamatrix.modeler.core.refactor.IRefactorModelHandler#helpUpdateModelContents(int,
-     *      com.metamatrix.modeler.core.workspace.ModelResource, java.util.Map, org.eclipse.core.runtime.IProgressMonitor)
+     * @see org.teiid.designer.core.refactor.IRefactorModelHandler#helpUpdateModelContents(int,
+     *      org.teiid.designer.core.workspace.ModelResource, java.util.Map, org.eclipse.core.runtime.IProgressMonitor)
      */
     @Override
     public void helpUpdateModelContents( int type,
@@ -54,7 +54,7 @@ public class VdbRefactorHandler implements IRefactorNonModelResourceHandler {
     /**
      * {@inheritDoc}
      * 
-     * @see com.metamatrix.modeler.core.refactor.IRefactorModelHandler#helpUpdateModelContentsForDelete(java.util.Collection,
+     * @see org.teiid.designer.core.refactor.IRefactorModelHandler#helpUpdateModelContentsForDelete(java.util.Collection,
      *      java.util.Collection, org.eclipse.core.runtime.IProgressMonitor)
      */
     @Override
@@ -67,7 +67,7 @@ public class VdbRefactorHandler implements IRefactorNonModelResourceHandler {
     /**
      * {@inheritDoc}
      * 
-     * @see com.metamatrix.modeler.core.refactor.IRefactorNonModelResourceHandler#processNonModel(int,
+     * @see org.teiid.designer.core.refactor.IRefactorNonModelResourceHandler#processNonModel(int,
      *      org.eclipse.core.resources.IResource, java.util.Map, org.eclipse.core.runtime.IProgressMonitor)
      */
     @Override

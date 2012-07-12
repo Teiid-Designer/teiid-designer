@@ -11,13 +11,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import org.teiid.core.util.CoreStringUtil;
 import org.teiid.designer.core.extension.EmfModelObjectExtensionAssistant;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
 import org.teiid.designer.extension.properties.Translation;
+import org.teiid.designer.modelgenerator.salesforce.SalesforceConstants.SF_Column;
+import org.teiid.designer.modelgenerator.salesforce.SalesforceConstants.SF_Table;
 
-import com.metamatrix.core.util.CoreStringUtil;
-import com.metamatrix.modeler.modelgenerator.salesforce.SalesforceConstants.SF_Column;
-import com.metamatrix.modeler.modelgenerator.salesforce.SalesforceConstants.SF_Table;
 
 /**
  * The <code>SalesforceModelExtensionAssistant</code> provides help when working with the Salesforce model extension properties.

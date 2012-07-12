@@ -16,16 +16,16 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
+import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.metamodels.function.FunctionParameter;
+import org.teiid.designer.ui.PluginConstants;
+import org.teiid.designer.ui.UiPlugin;
+import org.teiid.designer.ui.actions.SortableSelectionAction;
+import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
+import org.teiid.designer.ui.editors.ModelEditorManager;
+import org.teiid.designer.ui.viewsupport.DatatypeSelectionDialog;
+import org.teiid.designer.ui.viewsupport.ModelObjectUtilities;
 
-import com.metamatrix.metamodels.function.FunctionParameter;
-import com.metamatrix.modeler.core.ModelerCore;
-import com.metamatrix.modeler.internal.ui.PluginConstants;
-import com.metamatrix.modeler.internal.ui.viewsupport.DatatypeSelectionDialog;
-import com.metamatrix.modeler.internal.ui.viewsupport.ModelObjectUtilities;
-import com.metamatrix.modeler.ui.UiPlugin;
-import com.metamatrix.modeler.ui.actions.SortableSelectionAction;
-import com.metamatrix.modeler.ui.editors.ModelEditorManager;
-import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
 
 
 /** 
@@ -47,7 +47,7 @@ public class SetFunctionParameterTypeModelingAction extends SortableSelectionAct
     }
     /**
      *  
-     * @see com.metamatrix.modeler.ui.actions.SortableSelectionAction#isValidSelection(org.eclipse.jface.viewers.ISelection)
+     * @see org.teiid.designer.ui.actions.SortableSelectionAction#isValidSelection(org.eclipse.jface.viewers.ISelection)
      * @since 5.0
      */
     @Override
@@ -81,7 +81,7 @@ public class SetFunctionParameterTypeModelingAction extends SortableSelectionAct
     }
     
     /** 
-     * @see com.metamatrix.modeler.ui.actions.ISelectionAction#isApplicable(org.eclipse.jface.viewers.ISelection)
+     * @see org.teiid.designer.ui.actions.ISelectionAction#isApplicable(org.eclipse.jface.viewers.ISelection)
      * @since 5.0
      */
     @Override

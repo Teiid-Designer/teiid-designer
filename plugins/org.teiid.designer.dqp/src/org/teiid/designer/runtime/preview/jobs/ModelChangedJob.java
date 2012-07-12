@@ -11,11 +11,11 @@ package org.teiid.designer.runtime.preview.jobs;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.osgi.util.NLS;
+import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.Server;
 import org.teiid.designer.runtime.preview.Messages;
 import org.teiid.designer.runtime.preview.PreviewContext;
 import org.teiid.designer.runtime.preview.PreviewManager;
-import com.metamatrix.modeler.dqp.DqpPlugin;
 
 /**
  * The <code>ModelChangedJob</code> job synchronizes and saves the Preview VDB associated with the changed model. If the Preview

@@ -13,11 +13,10 @@ import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import org.eclipse.core.runtime.CoreException;
 import org.teiid.core.designer.EclipseMock;
 import org.teiid.core.util.ArgCheck;
-import com.metamatrix.modeler.core.ModelEditor;
-import com.metamatrix.modeler.core.ModelerCore;
-import com.metamatrix.modeler.core.container.Container;
-import com.metamatrix.modeler.core.container.ResourceFinder;
-import com.metamatrix.modeler.internal.core.workspace.ModelWorkspaceManager;
+import org.teiid.designer.core.container.Container;
+import org.teiid.designer.core.container.ResourceFinder;
+import org.teiid.designer.core.workspace.ModelWorkspaceManager;
+
 
 /**
  * 

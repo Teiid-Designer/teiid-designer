@@ -14,7 +14,7 @@
          name="%xmlVirtualDocumentBuilder"
          point="org.teiid.designer.ui.newModelWizardContributor">
       <class
-            name="com.metamatrix.modeler.internal.xml.ui.wizards.VirtualDocumentWizardContributor"
+            name="org.teiid.designer.xml.ui.wizards.VirtualDocumentWizardContributor"
             icon="icons/full/ctool16/newmodel_wiz.gif">
       </class>
       <metamodelDescriptorType
@@ -28,7 +28,7 @@
          name="%xmlChoiceEditorName"
          point="org.teiid.designer.ui.modelObjectEditorPage">
       <class
-            name="com.metamatrix.modeler.xml.ui.editor.XmlChoiceObjectEditorPage">
+            name="org.teiid.designer.xml.ui.editor.XmlChoiceObjectEditorPage">
       </class>
    </extension>
    <extension
@@ -36,10 +36,10 @@
          name="%xmlDocumentWizardName"
          point="org.teiid.designer.ui.newModelObjectWizard">
       <class
-            name="com.metamatrix.modeler.internal.xml.ui.wizards.XMLDocumentWizard">
+            name="org.teiid.designer.xml.ui.wizards.XMLDocumentWizard">
       </class>
       <descriptorType
-            name="com.metamatrix.metamodels.xml.XmlDocument">
+            name="org.teiid.designer.metamodels.xml.XmlDocument">
       </descriptorType>
    </extension>
    <extension
@@ -47,7 +47,7 @@
          name="%newChildFromSchema"
          point="org.teiid.designer.ui.newChildAction">
       <class
-            name="com.metamatrix.modeler.internal.xml.ui.actions.BuildFromSchemaAction">
+            name="org.teiid.designer.xml.ui.actions.BuildFromSchemaAction">
       </class>
    </extension>
 <!-- Actions contributed to the object/model generation -->
@@ -56,7 +56,7 @@
 		name="%createXmlViewFromXsdAction.name"
         point="org.teiid.designer.ui.modelObjectSpecialAction">
       <specialAction
-         name="com.metamatrix.modeler.internal.xml.ui.actions.CreateXmlViewFromXsdAction"
+         name="org.teiid.designer.xml.ui.actions.CreateXmlViewFromXsdAction"
          label="%createXmlViewFromXsdAction.label">
       </specialAction>
    </extension>
@@ -67,7 +67,7 @@
 		name="%viewXmlMessageStructureAction.name"
         point="org.teiid.designer.ui.modelObjectSpecialAction">
       <specialAction
-         name="com.metamatrix.modeler.internal.xml.ui.actions.ViewXmlMessageStructureAction"
+         name="org.teiid.designer.xml.ui.actions.ViewXmlMessageStructureAction"
          label="%viewXmlMessageStructureAction.label">
       </specialAction>
    </extension>

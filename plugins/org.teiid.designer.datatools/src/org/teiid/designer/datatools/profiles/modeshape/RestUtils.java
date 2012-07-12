@@ -13,8 +13,8 @@ import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.teiid.designer.core.util.StringUtilities;
 
-import com.metamatrix.core.util.StringUtilities;
 
 public class RestUtils {
 

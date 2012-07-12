@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.teiid.designer.modelgenerator.wsdl.ui;singleton:=true
 Bundle-Version: 7.7.1.qualifier
-Bundle-Activator: com.metamatrix.modeler.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiPlugin
+Bundle-Activator: org.teiid.designer.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiPlugin
 Bundle-Vendor: %pluginProvider
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
@@ -36,8 +36,13 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.emf.mapping,
  org.teiid.designer.transformation,
  org.teiid.designer.transformation.ui,
- org.teiid.designer.relational
+ org.teiid.designer.relational,
+ org.teiid.designer.legacy
 Bundle-ActivationPolicy: lazy
-Export-Package: com.metamatrix.modeler.modelgenerator.wsdl.ui
+Export-Package: org.teiid.designer.modelgenerator.wsdl.ui,
+ org.teiid.designer.modelgenerator.wsdl.ui.util,
+ org.teiid.designer.modelgenerator.wsdl.ui.wizards,
+ org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap,
+ org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.panels
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Import-Package: com.metamatrix.modeler.schema.tools.processing
+Import-Package: org.teiid.designer.schema.tools.processing

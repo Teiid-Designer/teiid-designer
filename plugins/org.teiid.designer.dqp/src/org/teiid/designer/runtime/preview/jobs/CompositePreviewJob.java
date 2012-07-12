@@ -8,8 +8,9 @@
 
 package org.teiid.designer.runtime.preview.jobs;
 
-import static com.metamatrix.modeler.dqp.DqpPlugin.PLUGIN_ID;
-import static com.metamatrix.modeler.dqp.DqpPlugin.Util;
+import static org.teiid.designer.runtime.DqpPlugin.PLUGIN_ID;
+import static org.teiid.designer.runtime.DqpPlugin.Util;
+
 import java.util.ArrayList;
 import java.util.List;
 import org.eclipse.core.resources.ResourcesPlugin;

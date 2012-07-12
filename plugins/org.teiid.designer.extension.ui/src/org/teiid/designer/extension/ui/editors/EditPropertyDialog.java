@@ -59,6 +59,8 @@ import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
+import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.util.CoreStringUtil;
 import org.teiid.designer.extension.definition.ModelExtensionDefinitionValidator;
 import org.teiid.designer.extension.definition.ValidationStatus;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
@@ -70,12 +72,10 @@ import org.teiid.designer.extension.properties.Translation;
 import org.teiid.designer.extension.ui.Activator;
 import org.teiid.designer.extension.ui.Messages;
 import org.teiid.designer.extension.ui.UiConstants.ImageIds;
+import org.teiid.designer.ui.common.util.WidgetUtil;
+import org.teiid.designer.ui.forms.FormUtil;
+import org.teiid.designer.ui.forms.MessageFormDialog;
 
-import com.metamatrix.core.util.CoreArgCheck;
-import com.metamatrix.core.util.CoreStringUtil;
-import com.metamatrix.modeler.internal.ui.forms.FormUtil;
-import com.metamatrix.modeler.internal.ui.forms.MessageFormDialog;
-import com.metamatrix.ui.internal.util.WidgetUtil;
 
 /**
  * The <code>EditPropertyDialog</code> is used to create or edit a property definition.

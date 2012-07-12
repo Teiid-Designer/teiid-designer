@@ -23,22 +23,22 @@
          http://www.metamatrix.com/metamodels/Relationship
       </uri>
       <alternateUri>
-         mtkplugin:///com.metamatrix.metamodels.Relationship
+         mtkplugin:///org.teiid.designer.metamodels.Relationship
       </alternateUri>
       <rootEntityClass
-            name="com.metamatrix.metamodels.relationship.RelationshipType">
+            name="org.teiid.designer.metamodels.relationship.RelationshipType">
       </rootEntityClass>
       <rootEntityClass
-            name="com.metamatrix.metamodels.relationship.Relationship">
+            name="org.teiid.designer.metamodels.relationship.Relationship">
       </rootEntityClass>
       <rootEntityClass
-            name="com.metamatrix.metamodels.relationship.RelationshipFolder">
+            name="org.teiid.designer.metamodels.relationship.RelationshipFolder">
       </rootEntityClass>
       <rootEntityClass
-            name="com.metamatrix.metamodels.relationship.FileReference">
+            name="org.teiid.designer.metamodels.relationship.FileReference">
       </rootEntityClass>
       <rootEntityClass
-            name="com.metamatrix.metamodels.relationship.UriReference">
+            name="org.teiid.designer.metamodels.relationship.UriReference">
       </rootEntityClass>
       <properties
       		createAsNewModel="false"
@@ -53,17 +53,17 @@
          LOGICAL
       </allowableModelType>
       <packageClass
-            name="com.metamatrix.metamodels.relationship.RelationshipPackage">
+            name="org.teiid.designer.metamodels.relationship.RelationshipPackage">
       </packageClass>
       <adapterClass
-            name="com.metamatrix.metamodels.relationship.provider.RelationshipItemProviderAdapterFactory">
+            name="org.teiid.designer.metamodels.relationship.provider.RelationshipItemProviderAdapterFactory">
       </adapterClass>
    </extension>
    <extension
          point="org.eclipse.emf.ecore.generated_package">
       <package
             uri="http://www.metamatrix.com/metamodels/Relationship"
-            class="com.metamatrix.metamodels.relationship.RelationshipPackage">
+            class="org.teiid.designer.metamodels.relationship.RelationshipPackage">
       </package>
    </extension>
    
@@ -76,7 +76,7 @@
          relationship
       </metamodelExtensionID>
       <factoryClass
-            name="com.metamatrix.metamodels.relationship.aspects.relationship.RelationshipAspectFactoryImpl">
+            name="org.teiid.designer.metamodels.relationship.aspects.relationship.RelationshipAspectFactoryImpl">
       </factoryClass>
    </extension>
    <extension
@@ -86,7 +86,7 @@
          relationship
       </metamodelExtensionID>
       <factoryClass
-            name="com.metamatrix.metamodels.relationship.aspects.validation.RelationshipValidationAspectFactoryImpl">
+            name="org.teiid.designer.metamodels.relationship.aspects.validation.RelationshipValidationAspectFactoryImpl">
       </factoryClass>
    </extension>
 
@@ -95,7 +95,7 @@
          id="relationshipMatcherFactory"
          point="org.teiid.designer.core.eobjectMatcherFactory">
       <class
-            name="com.metamatrix.metamodels.relationship.compare.RelationshipMatcherFactory">
+            name="org.teiid.designer.metamodels.relationship.compare.RelationshipMatcherFactory">
       </class>
    </extension>
 <!-- Assocation extensions -->
@@ -103,7 +103,7 @@
          id="relationshipAssociationProvider"
          point="org.teiid.designer.core.associationProvider">
       <providerClass
-            name="com.metamatrix.metamodels.relationship.provider.RelationshipAssociationProvider">
+            name="org.teiid.designer.metamodels.relationship.provider.RelationshipAssociationProvider">
       </providerClass>
    </extension>
 

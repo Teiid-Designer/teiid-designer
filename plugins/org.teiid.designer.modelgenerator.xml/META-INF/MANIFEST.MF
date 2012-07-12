@@ -3,18 +3,18 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.teiid.designer.modelgenerator.xml;singleton:=true
 Bundle-Version: 7.7.1.qualifier
-Bundle-Activator: com.metamatrix.modeler.modelgenerator.xml.XmlImporterUiPlugin
+Bundle-Activator: org.teiid.designer.modelgenerator.xml.XmlImporterUiPlugin
 Bundle-Vendor: %pluginProvider
 Bundle-Localization: plugin
-Export-Package: com.metamatrix.modeler.modelgenerator.xml,
- com.metamatrix.modeler.modelgenerator.xml.action,
- com.metamatrix.modeler.modelgenerator.xml.jdbc.ui.util,
- com.metamatrix.modeler.modelgenerator.xml.model,
- com.metamatrix.modeler.modelgenerator.xml.modelextension,
- com.metamatrix.modeler.modelgenerator.xml.modelextension.impl,
- com.metamatrix.modeler.modelgenerator.xml.wizards,
- com.metamatrix.modeler.modelgenerator.xml.wizards.jdbc,
- com.metamatrix.modeler.modelgenerator.xsd.procedures
+Export-Package: org.teiid.designer.modelgenerator.xml,
+ org.teiid.designer.modelgenerator.xml.action,
+ org.teiid.designer.modelgenerator.xml.jdbc.ui.util,
+ org.teiid.designer.modelgenerator.xml.model,
+ org.teiid.designer.modelgenerator.xml.modelextension,
+ org.teiid.designer.modelgenerator.xml.modelextension.impl,
+ org.teiid.designer.modelgenerator.xml.wizards,
+ org.teiid.designer.modelgenerator.xml.wizards.jdbc,
+ org.teiid.designer.modelgenerator.xsd.procedures
 Require-Bundle: org.teiid.designer.metamodels.relational,
  org.teiid.designer.compare,
  org.teiid.designer.compare.ui,
@@ -40,6 +40,7 @@ Require-Bundle: org.teiid.designer.metamodels.relational,
  org.teiid.designer.transformation.ui,
  org.teiid.designer.metamodels.transformation,
  org.eclipse.emf.mapping,
- org.eclipse.wst.xsd.ui
+ org.eclipse.wst.xsd.ui,
+ org.teiid.designer.legacy
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

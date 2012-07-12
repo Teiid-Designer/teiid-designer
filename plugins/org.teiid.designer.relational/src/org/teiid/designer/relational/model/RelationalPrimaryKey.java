@@ -14,10 +14,10 @@ import java.util.Properties;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.osgi.util.NLS;
+import org.teiid.designer.metamodels.relational.aspects.validation.RelationalStringNameValidator;
 import org.teiid.designer.relational.Messages;
 import org.teiid.designer.relational.RelationalPlugin;
 
-import com.metamatrix.metamodels.relational.aspects.validation.RelationalStringNameValidator;
 
 
 /**
@@ -60,7 +60,7 @@ public class RelationalPrimaryKey extends RelationalReference {
     
     public void addColumn(RelationalColumn column) {
     	if( this.columns.add(column) ) {
-    		column.setParent(this);
+    		//column.setParent(this);
     		handleInfoChanged();
     	} 
     }

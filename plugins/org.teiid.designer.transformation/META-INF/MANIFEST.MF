@@ -3,21 +3,21 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.teiid.designer.transformation;singleton:=true
 Bundle-Version: 7.7.1.qualifier
-Bundle-Activator: com.metamatrix.modeler.transformation.TransformationPlugin
+Bundle-Activator: org.teiid.designer.transformation.TransformationPlugin
 Bundle-Vendor: %pluginProvider
 Bundle-Localization: plugin
-Export-Package: com.metamatrix.modeler.internal.transformation.util,
- com.metamatrix.modeler.transformation,
- com.metamatrix.modeler.transformation.aspects.sql,
- com.metamatrix.modeler.transformation.aspects.uml,
- com.metamatrix.modeler.transformation.aspects.validation,
- com.metamatrix.modeler.transformation.aspects.validation.rules,
- com.metamatrix.modeler.transformation.compare,
- com.metamatrix.modeler.transformation.materialization,
- com.metamatrix.modeler.transformation.metadata,
- com.metamatrix.modeler.transformation.model,
- com.metamatrix.modeler.transformation.search,
- com.metamatrix.modeler.transformation.validation
+Export-Package: org.teiid.designer.transformation,
+ org.teiid.designer.transformation.aspects.sql,
+ org.teiid.designer.transformation.aspects.uml,
+ org.teiid.designer.transformation.aspects.validation,
+ org.teiid.designer.transformation.aspects.validation.rules,
+ org.teiid.designer.transformation.compare,
+ org.teiid.designer.transformation.materialization,
+ org.teiid.designer.transformation.metadata,
+ org.teiid.designer.transformation.model,
+ org.teiid.designer.transformation.search,
+ org.teiid.designer.transformation.util,
+ org.teiid.designer.transformation.validation
 Require-Bundle: org.teiid.designer.core,
  org.eclipse.core.runtime,
  org.teiid.designer.metamodels.relational,

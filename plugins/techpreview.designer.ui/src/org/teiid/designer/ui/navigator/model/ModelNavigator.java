@@ -21,11 +21,11 @@ import org.eclipse.ui.navigator.CommonNavigator;
 import org.eclipse.ui.navigator.CommonViewer;
 import org.eclipse.ui.part.ShowInContext;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
+import org.teiid.designer.ui.properties.ModelObjectPropertySourceProvider;
+import org.teiid.designer.ui.search.IModelObjectMatch;
+import org.teiid.designer.ui.search.MetadataMatchInfo;
+import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
-import com.metamatrix.modeler.internal.ui.properties.ModelObjectPropertySourceProvider;
-import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
-import com.metamatrix.modeler.ui.search.IModelObjectMatch;
-import com.metamatrix.modeler.ui.search.MetadataMatchInfo;
 
 /**
  * 

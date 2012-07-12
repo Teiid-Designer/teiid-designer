@@ -26,24 +26,24 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.teiid.core.types.DataTypeManager;
+import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.core.workspace.ModelResource;
+import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.relational.model.RelationalModel;
 import org.teiid.designer.relational.model.RelationalModelFactory;
 import org.teiid.designer.relational.model.RelationalTable;
 import org.teiid.designer.relational.ui.Messages;
+import org.teiid.designer.relational.ui.UiConstants;
+import org.teiid.designer.relational.ui.UiPlugin;
 import org.teiid.designer.relational.ui.edit.EditRelationalObjectDialog;
+import org.teiid.designer.ui.actions.INewChildAction;
+import org.teiid.designer.ui.actions.INewSiblingAction;
+import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
+import org.teiid.designer.ui.editors.ModelEditor;
+import org.teiid.designer.ui.editors.ModelEditorManager;
+import org.teiid.designer.ui.viewsupport.ModelIdentifier;
+import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
-import com.metamatrix.modeler.core.ModelerCore;
-import com.metamatrix.modeler.core.workspace.ModelResource;
-import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
-import com.metamatrix.modeler.internal.ui.editors.ModelEditor;
-import com.metamatrix.modeler.internal.ui.viewsupport.ModelIdentifier;
-import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
-import com.metamatrix.modeler.relational.ui.UiConstants;
-import com.metamatrix.modeler.relational.ui.UiPlugin;
-import com.metamatrix.modeler.ui.actions.INewChildAction;
-import com.metamatrix.modeler.ui.actions.INewSiblingAction;
-import com.metamatrix.modeler.ui.editors.ModelEditorManager;
-import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
 
 public class CreateRelationalTableAction extends Action implements INewChildAction, INewSiblingAction {
 	private IFile selectedModel;
@@ -66,21 +66,21 @@ public class CreateRelationalTableAction extends Action implements INewChildActi
 	}
 	
     /* (non-Javadoc)
-     * @see com.metamatrix.modeler.ui.actions.INewChildAction#canCreateChild(org.eclipse.emf.ecore.EObject)
+     * @See org.teiid.designer.ui.actions.INewChildAction#canCreateChild(org.eclipse.emf.ecore.EObject)
      */
     public boolean canCreateChild(EObject parent) {
     	return false;
     }
     
     /* (non-Javadoc)
-     * @see com.metamatrix.modeler.ui.actions.INewChildAction#canCreateChild(org.eclipse.core.resources.IFile)
+     * @See org.teiid.designer.ui.actions.INewChildAction#canCreateChild(org.eclipse.core.resources.IFile)
      */
     public boolean canCreateChild(IFile modelFile) {
     	return isApplicable(new StructuredSelection(modelFile));
     }
     
     /* (non-Javadoc)
-     * @see com.metamatrix.modeler.ui.actions.INewSiblingAction#canCreateChild(org.eclipse.emf.ecore.EObject)
+     * @See org.teiid.designer.ui.actions.INewSiblingAction#canCreateChild(org.eclipse.emf.ecore.EObject)
      */
     public boolean canCreateSibling(EObject parent) {
     	//Convert eObject selection to IFile

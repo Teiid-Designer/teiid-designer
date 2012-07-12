@@ -27,8 +27,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.teiid.designer.datatools.ui.DatatoolsUiConstants;
 import org.teiid.designer.datatools.ui.DatatoolsUiPlugin;
+import org.teiid.designer.ui.common.ICredentialsCommon.SecurityType;
 
-import com.metamatrix.ui.ICredentialsCommon.SecurityType;
 
 public class PropertyPage extends ProfileDetailsPropertyPage implements
 		IContextProvider, DatatoolsUiConstants {

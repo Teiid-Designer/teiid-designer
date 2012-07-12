@@ -7,8 +7,8 @@
  */
 package org.teiid.designer.runtime.ui.server;
 
-import static com.metamatrix.modeler.dqp.ui.DqpUiConstants.PLUGIN_ID;
-import static com.metamatrix.modeler.dqp.ui.DqpUiConstants.UTIL;
+import static org.teiid.designer.runtime.ui.DqpUiConstants.PLUGIN_ID;
+import static org.teiid.designer.runtime.ui.DqpUiConstants.UTIL;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -36,17 +36,17 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
+import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.runtime.EventManager;
 import org.teiid.designer.runtime.HostProvider;
 import org.teiid.designer.runtime.Server;
 import org.teiid.designer.runtime.ServerManager;
 import org.teiid.designer.runtime.TeiidAdminInfo;
 import org.teiid.designer.runtime.TeiidJdbcInfo;
+import org.teiid.designer.runtime.ui.DqpUiConstants;
+import org.teiid.designer.runtime.ui.DqpUiPlugin;
+import org.teiid.designer.ui.common.util.WidgetFactory;
 
-import com.metamatrix.core.util.StringUtilities;
-import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
-import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
-import com.metamatrix.ui.internal.util.WidgetFactory;
 
 /**
  * The <code>ServerPage</code> is used to create or modify a server.

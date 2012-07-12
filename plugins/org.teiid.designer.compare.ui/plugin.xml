@@ -13,7 +13,7 @@
    		<viewer
 			id="ModelObjectStructureViewer"
 			extensions="xmi,xsd,vdb"
-			class="com.metamatrix.modeler.compare.ui.structure.ModelObjectStructureViewerCreator">
+			class="org.teiid.designer.compare.ui.structure.ModelObjectStructureViewerCreator">
 		</viewer>
    </extension>
 

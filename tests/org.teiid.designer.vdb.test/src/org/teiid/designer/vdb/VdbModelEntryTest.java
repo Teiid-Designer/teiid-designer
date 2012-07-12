@@ -30,20 +30,21 @@ import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.teiid.core.designer.EclipseMock;
+import org.teiid.core.designer.util.FileUtils;
+import org.teiid.core.designer.util.OperationUtil;
+import org.teiid.core.designer.util.OperationUtil.ReturningUnreliable;
 import org.teiid.designer.core.ModelWorkspaceMock;
-import com.metamatrix.core.modeler.util.FileUtils;
-import com.metamatrix.core.modeler.util.OperationUtil;
-import com.metamatrix.core.modeler.util.OperationUtil.ReturningUnreliable;
-import com.metamatrix.internal.core.index.Index;
-import com.metamatrix.metamodels.core.ModelAnnotation;
-import com.metamatrix.modeler.core.ModelerCore;
-import com.metamatrix.modeler.core.workspace.ModelObjectAnnotations;
-import com.metamatrix.modeler.core.workspace.ModelResource;
-import com.metamatrix.modeler.internal.core.builder.ModelBuildUtil;
-import com.metamatrix.modeler.internal.core.index.IndexUtil;
-import com.metamatrix.modeler.internal.core.resource.EmfResource;
-import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
-import com.metamatrix.modeler.internal.core.workspace.ModelWorkspaceManager;
+import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.core.builder.ModelBuildUtil;
+import org.teiid.designer.core.index.Index;
+import org.teiid.designer.core.index.IndexUtil;
+import org.teiid.designer.core.resource.EmfResource;
+import org.teiid.designer.core.workspace.ModelObjectAnnotations;
+import org.teiid.designer.core.workspace.ModelResource;
+import org.teiid.designer.core.workspace.ModelUtil;
+import org.teiid.designer.core.workspace.ModelWorkspaceManager;
+import org.teiid.designer.metamodels.core.ModelAnnotation;
+
 
 /**
  * 

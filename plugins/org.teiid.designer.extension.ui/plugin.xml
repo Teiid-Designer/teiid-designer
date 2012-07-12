@@ -26,7 +26,7 @@
       <view
          name="%modelExtensionRegistryView"
          icon="icons/model-extension-registry-view.png"
-         category="com.metamatrix.modeler.ui"
+         category="org.teiid.designer.ui"
          class="org.teiid.designer.extension.ui.views.ModelExtensionRegistryView"
          id="org.teiid.designer.extension.ui.views.modelExtensionRegistryView">
       </view>
@@ -37,13 +37,13 @@
          point="org.eclipse.ui.newWizards">
       <category
             name="%modelCategory"
-            id="com.metamatrix.modeler.ui">
+            id="org.teiid.designer.ui">
       </category>
 <!-- New Model Extension Definition wizard -->
       <wizard
             name="%newMedWizard"
             icon="icons/new-med-wiz.png"
-            category="com.metamatrix.modeler.ui"
+            category="org.teiid.designer.ui"
             class="org.teiid.designer.extension.ui.wizards.NewMedWizard"
             id="newMedWizard">
          <description>

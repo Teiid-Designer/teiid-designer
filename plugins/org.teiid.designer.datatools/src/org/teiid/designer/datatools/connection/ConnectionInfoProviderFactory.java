@@ -14,9 +14,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.datatools.connectivity.ICategory;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
+import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.datatools.DatatoolsPlugin;
 
-import com.metamatrix.modeler.core.workspace.ModelResource;
 
 /**
  * Create instances of <code>IConnectionInfoProvider</code>.

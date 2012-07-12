@@ -7,9 +7,9 @@
  */
 package org.teiid.designer.extension.definition;
 
+import org.teiid.core.util.CoreArgCheck;
 import org.teiid.designer.extension.Messages;
 
-import com.metamatrix.core.util.CoreArgCheck;
 
 /**
  * A validation status that has a severity and a message.

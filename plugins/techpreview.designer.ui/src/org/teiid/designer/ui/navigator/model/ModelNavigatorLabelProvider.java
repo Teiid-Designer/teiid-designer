@@ -7,7 +7,7 @@
  */
 package org.teiid.designer.ui.navigator.model;
 
-import static com.metamatrix.modeler.ui.UiConstants.Util;
+import static org.teiid.designer.ui.UiConstants.Util;
 import static org.teiid.designer.ui.navigator.model.ModelNavigatorMessages.genericDiagramLabel;
 import static org.teiid.designer.ui.navigator.model.ModelNavigatorMessages.genericTransformationLabel;
 import static org.teiid.designer.ui.navigator.model.ModelNavigatorMessages.problemMarkerBrackets;
@@ -43,23 +43,23 @@ import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.eclipse.ui.navigator.IDescriptionProvider;
 import org.eclipse.xsd.XSDAttributeUse;
 import org.eclipse.xsd.XSDParticle;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.definition.ModelExtensionAssistant;
 import org.teiid.designer.extension.definition.ModelObjectExtensionAssistant;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
+import org.teiid.designer.metamodels.diagram.Diagram;
+import org.teiid.designer.metamodels.transformation.TransformationMappingRoot;
+import org.teiid.designer.ui.PluginConstants;
+import org.teiid.designer.ui.UiPlugin;
+import org.teiid.designer.ui.viewsupport.DiagramLabelProvider;
+import org.teiid.designer.ui.viewsupport.ExtendedModelObjectLabelProvider;
+import org.teiid.designer.ui.viewsupport.IExtendedModelObject;
+import org.teiid.designer.ui.viewsupport.ImportContainer;
+import org.teiid.designer.ui.viewsupport.MarkerUtilities;
+import org.teiid.designer.ui.viewsupport.ModelIdentifier;
+import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
-import com.metamatrix.metamodels.diagram.Diagram;
-import com.metamatrix.metamodels.transformation.TransformationMappingRoot;
-import com.metamatrix.modeler.core.ModelerCore;
-import com.metamatrix.modeler.internal.ui.PluginConstants;
-import com.metamatrix.modeler.internal.ui.viewsupport.DiagramLabelProvider;
-import com.metamatrix.modeler.internal.ui.viewsupport.ExtendedModelObjectLabelProvider;
-import com.metamatrix.modeler.internal.ui.viewsupport.ImportContainer;
-import com.metamatrix.modeler.internal.ui.viewsupport.MarkerUtilities;
-import com.metamatrix.modeler.internal.ui.viewsupport.ModelIdentifier;
-import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
-import com.metamatrix.modeler.ui.UiPlugin;
-import com.metamatrix.modeler.ui.viewsupport.IExtendedModelObject;
 
 public class ModelNavigatorLabelProvider extends LabelProvider implements IDescriptionProvider, ILightweightLabelDecorator,
         PluginConstants.Images {

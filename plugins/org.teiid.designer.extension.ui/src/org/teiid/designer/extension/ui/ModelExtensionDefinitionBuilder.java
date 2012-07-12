@@ -31,6 +31,7 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.texteditor.MarkerUtilities;
+import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.ModelExtensionAssistantAggregator;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
@@ -38,7 +39,6 @@ import org.teiid.designer.extension.definition.ModelExtensionDefinitionParser;
 import org.teiid.designer.extension.definition.ModelObjectExtensionAssistant;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 import org.teiid.designer.extension.ui.UiConstants.ExtensionIds;
-import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 
 /**
  * The <code>ModelExtensionDefinitionBuilder</code> is a project builder that creates resource problem markers for Model Extension

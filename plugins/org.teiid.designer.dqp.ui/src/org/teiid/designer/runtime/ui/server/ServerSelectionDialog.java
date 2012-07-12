@@ -29,17 +29,17 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
+import org.teiid.core.event.IChangeListener;
+import org.teiid.core.event.IChangeNotifier;
+import org.teiid.core.util.I18nUtil;
+import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.Server;
+import org.teiid.designer.runtime.ui.DqpUiConstants;
+import org.teiid.designer.runtime.ui.views.TeiidViewTreeProvider;
+import org.teiid.designer.ui.common.util.WidgetFactory;
+import org.teiid.designer.ui.common.util.WidgetUtil;
+import org.teiid.designer.ui.common.widget.Label;
 
-import com.metamatrix.core.event.IChangeListener;
-import com.metamatrix.core.event.IChangeNotifier;
-import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.modeler.dqp.DqpPlugin;
-import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
-import com.metamatrix.modeler.internal.dqp.ui.workspace.TeiidViewTreeProvider;
-import com.metamatrix.ui.internal.util.WidgetFactory;
-import com.metamatrix.ui.internal.util.WidgetUtil;
-import com.metamatrix.ui.internal.widget.Label;
 
 public class ServerSelectionDialog extends TitleAreaDialog implements
 		DqpUiConstants, IChangeListener {
@@ -147,7 +147,7 @@ public class ServerSelectionDialog extends TitleAreaDialog implements
 	}
 
 	/**
-	 * @see com.metamatrix.core.event.IChangeListener#stateChanged(com.metamatrix.core.event.IChangeNotifier)
+	 * @see org.teiid.core.event.IChangeListener#stateChanged(org.teiid.core.event.IChangeNotifier)
 	 * @since 5.5.3
 	 */
 	public void stateChanged(IChangeNotifier theSource) {

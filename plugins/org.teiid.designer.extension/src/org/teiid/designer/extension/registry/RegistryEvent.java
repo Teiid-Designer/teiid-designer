@@ -7,9 +7,9 @@
  */
 package org.teiid.designer.extension.registry;
 
+import org.teiid.core.util.CoreArgCheck;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 
-import com.metamatrix.core.util.CoreArgCheck;
 
 /**
  * A <code>RegistryEvent</code> is broadcast to all registered listeners when a model extension definition is added, changed, or

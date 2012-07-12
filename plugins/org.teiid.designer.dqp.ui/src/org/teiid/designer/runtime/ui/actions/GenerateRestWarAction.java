@@ -7,8 +7,8 @@
  */
 package org.teiid.designer.runtime.ui.actions;
 
-import static com.metamatrix.modeler.dqp.ui.DqpUiConstants.UTIL;
 import static org.teiid.designer.runtime.extension.rest.RestModelExtensionConstants.NAMESPACE_PROVIDER;
+import static org.teiid.designer.runtime.ui.DqpUiConstants.UTIL;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -34,29 +34,29 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.teiid.designer.dqp.webservice.war.objects.RestProcedure;
-import org.teiid.designer.dqp.webservice.war.ui.wizards.RestWarDeploymentInfoDialog;
+import org.teiid.core.designer.util.FileUtils;
+import org.teiid.core.util.CoreStringUtil;
+import org.teiid.core.util.I18nUtil;
+import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.core.metamodel.aspect.sql.SqlAspectHelper;
+import org.teiid.designer.core.workspace.ModelObjectAnnotationHelper;
+import org.teiid.designer.core.workspace.ModelResource;
+import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.definition.ModelObjectExtensionAssistant;
+import org.teiid.designer.metamodels.relational.Procedure;
+import org.teiid.designer.metamodels.relational.impl.ProcedureImpl;
 import org.teiid.designer.runtime.extension.rest.RestModelExtensionConstants;
+import org.teiid.designer.runtime.ui.DqpUiConstants;
+import org.teiid.designer.runtime.ui.DqpUiPlugin;
+import org.teiid.designer.runtime.ui.wizards.webservices.RestWarDeploymentInfoDialog;
+import org.teiid.designer.runtime.ui.wizards.webservices.util.RestProcedure;
+import org.teiid.designer.ui.actions.ISelectionAction;
+import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
+import org.teiid.designer.ui.viewsupport.ModelIdentifier;
 import org.teiid.designer.vdb.Vdb;
 import org.teiid.designer.vdb.VdbModelEntry;
 
-import com.metamatrix.core.modeler.util.FileUtils;
-import com.metamatrix.core.util.CoreStringUtil;
-import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.metamodels.relational.Procedure;
-import com.metamatrix.metamodels.relational.impl.ProcedureImpl;
-import com.metamatrix.modeler.core.ModelerCore;
-import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlAspectHelper;
-import com.metamatrix.modeler.core.workspace.ModelResource;
-import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
-import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
-import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
-import com.metamatrix.modeler.internal.core.workspace.ModelObjectAnnotationHelper;
-import com.metamatrix.modeler.internal.ui.viewsupport.ModelIdentifier;
-import com.metamatrix.modeler.ui.actions.ISelectionAction;
-import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
 
 public class GenerateRestWarAction extends Action implements ISelectionListener, Comparable, ISelectionAction {
     static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(GenerateRestWarAction.class);

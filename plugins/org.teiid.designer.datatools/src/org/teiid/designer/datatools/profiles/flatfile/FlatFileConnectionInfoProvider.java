@@ -3,13 +3,13 @@ package org.teiid.designer.datatools.profiles.flatfile;
 import java.util.Properties;
 
 import org.eclipse.datatools.connectivity.IConnectionProfile;
+import org.teiid.designer.core.workspace.ModelResource;
+import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.datatools.DatatoolsPlugin;
 import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
 import org.teiid.designer.datatools.connection.DataSourceConnectionConstants;
 import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
 
-import com.metamatrix.modeler.core.workspace.ModelResource;
-import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 
 public class FlatFileConnectionInfoProvider  extends ConnectionInfoHelper implements IConnectionInfoProvider {
 

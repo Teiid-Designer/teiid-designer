@@ -19,19 +19,19 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.core.notification.util.IgnorableNotificationSource;
+import org.teiid.designer.core.notification.util.NotificationUtilities;
+import org.teiid.designer.core.transaction.SourcedNotification;
+import org.teiid.designer.ui.UiConstants;
+import org.teiid.designer.ui.actions.ModelObjectAction;
+import org.teiid.designer.ui.actions.TreeViewerRenameAction;
+import org.teiid.designer.ui.actions.workers.ModelObjectWorker;
+import org.teiid.designer.ui.editors.IInlineRenameable;
+import org.teiid.designer.ui.util.ModelObjectNotificationHelper;
+import org.teiid.designer.ui.util.ModelObjectTreeViewerNotificationHandler;
+import org.teiid.designer.ui.wizards.INewModelObjectWizard;
 
-import com.metamatrix.modeler.core.ModelerCore;
-import com.metamatrix.modeler.core.notification.util.IgnorableNotificationSource;
-import com.metamatrix.modeler.core.notification.util.NotificationUtilities;
-import com.metamatrix.modeler.core.transaction.SourcedNotification;
-import com.metamatrix.modeler.internal.ui.actions.ModelObjectAction;
-import com.metamatrix.modeler.internal.ui.actions.TreeViewerRenameAction;
-import com.metamatrix.modeler.internal.ui.actions.workers.ModelObjectWorker;
-import com.metamatrix.modeler.internal.ui.util.ModelObjectNotificationHelper;
-import com.metamatrix.modeler.internal.ui.util.ModelObjectTreeViewerNotificationHandler;
-import com.metamatrix.modeler.ui.UiConstants;
-import com.metamatrix.modeler.ui.editors.IInlineRenameable;
-import com.metamatrix.modeler.ui.wizards.INewModelObjectWizard;
 
 class ModelNavigatorNotificationHandler extends ModelObjectTreeViewerNotificationHandler implements UiConstants {
 
@@ -56,7 +56,7 @@ class ModelNavigatorNotificationHandler extends ModelObjectTreeViewerNotificatio
     }
 
     /**
-     * @see com.metamatrix.modeler.internal.ui.util.ModelObjectTreeViewerNotificationHandler#handleNotification(org.eclipse.emf.common.notify.Notification)
+     * @see org.teiid.designer.ui.util.ModelObjectTreeViewerNotificationHandler#handleNotification(org.eclipse.emf.common.notify.Notification)
      */
     @Override
     protected ModelObjectNotificationHelper handleNotification( Notification notification ) {
@@ -160,7 +160,7 @@ class ModelNavigatorNotificationHandler extends ModelObjectTreeViewerNotificatio
     }
 
     /**
-     * @see com.metamatrix.modeler.internal.ui.util.ModelObjectTreeViewerNotificationHandler#shouldHandleNotification(org.eclipse.emf.common.notify.Notification)
+     * @see org.teiid.designer.ui.util.ModelObjectTreeViewerNotificationHandler#shouldHandleNotification(org.eclipse.emf.common.notify.Notification)
      */
     @Override
     public boolean shouldHandleNotification( Notification notification ) {

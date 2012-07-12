@@ -6,8 +6,8 @@ Bundle-Version: 7.7.1.qualifier
 Bundle-Vendor: %Bundle-Vendor.0
 Fragment-Host: org.teiid.designer.core.xslt
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Export-Package: com.metamatrix.core.xslt,
- com.metamatrix.core.xslt.impl
+Export-Package: org.teiid.designer.core.xslt,
+ org.teiid.designer.core.xslt.impl
 Require-Bundle: org.junit4,
  org.teiid.core.designer.test.framework
 Bundle-Localization: plugin

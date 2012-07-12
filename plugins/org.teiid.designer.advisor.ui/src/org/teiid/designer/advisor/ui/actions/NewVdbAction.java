@@ -15,8 +15,8 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.teiid.designer.advisor.ui.AdvisorUiConstants;
 import org.teiid.designer.advisor.ui.AdvisorUiPlugin;
+import org.teiid.designer.ui.viewsupport.ModelerUiViewUtils;
 
-import com.metamatrix.modeler.internal.ui.viewsupport.ModelerUiViewUtils;
 
 /**
  * @since 4.3

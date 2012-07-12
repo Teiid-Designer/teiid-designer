@@ -17,7 +17,7 @@
       <page
             name="%editorPreferences"
             category="modelerPreferencePage"
-            class="com.metamatrix.ui.internal.preferences.EditorPreferencePage"
+            class="org.teiid.designer.ui.common.preferences.EditorPreferencePage"
             id="editorPreferencePage">
       </page>   
    </extension>

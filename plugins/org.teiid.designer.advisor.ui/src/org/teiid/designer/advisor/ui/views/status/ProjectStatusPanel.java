@@ -21,15 +21,15 @@ import org.eclipse.ui.forms.ManagedForm;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
+import org.teiid.core.util.CoreArgCheck;
 import org.teiid.designer.advisor.ui.AdvisorUiPlugin;
 import org.teiid.designer.advisor.ui.actions.AdvisorActionFactory;
 import org.teiid.designer.advisor.ui.core.AdvisorHyperLinkListener;
 import org.teiid.designer.advisor.ui.core.InfoPopAction;
 import org.teiid.designer.advisor.ui.core.status.AdvisorStatus;
+import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.ui.forms.FormUtil;
 
-import com.metamatrix.core.util.CoreArgCheck;
-import com.metamatrix.modeler.core.ModelerCore;
-import com.metamatrix.modeler.internal.ui.forms.FormUtil;
 
 public class ProjectStatusPanel extends ManagedForm implements StatusListener {
     FormToolkit toolkit;

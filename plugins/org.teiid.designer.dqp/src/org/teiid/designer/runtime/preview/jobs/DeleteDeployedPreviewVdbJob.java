@@ -8,17 +8,18 @@
 
 package org.teiid.designer.runtime.preview.jobs;
 
-import static com.metamatrix.modeler.dqp.DqpPlugin.PLUGIN_ID;
+import static org.teiid.designer.runtime.DqpPlugin.PLUGIN_ID;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.osgi.util.NLS;
+import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.runtime.Server;
 import org.teiid.designer.runtime.preview.Messages;
 import org.teiid.designer.runtime.preview.PreviewContext;
-import com.metamatrix.core.util.StringUtilities;
 
 /**
  * The <code>DeleteDeployedPreviewVdbJob</code> deletes a Preview VDB from a Teiid server and also deletes its associated JNDI

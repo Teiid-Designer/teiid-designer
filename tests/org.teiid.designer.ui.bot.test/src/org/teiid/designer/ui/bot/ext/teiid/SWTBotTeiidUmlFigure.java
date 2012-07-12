@@ -5,8 +5,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swtbot.swt.finder.finders.UIThreadRunnable;
 import org.eclipse.swtbot.swt.finder.results.VoidResult;
+import org.teiid.designer.diagram.ui.notation.uml.figure.UmlClassifierFigure;
 
-import com.metamatrix.modeler.diagram.ui.notation.uml.figure.UmlClassifierFigure;
 
 public class SWTBotTeiidUmlFigure extends SWTBotTeiidFigure{
 

@@ -13,7 +13,7 @@
          name="%relationalModelTextImporter"
          point="org.teiid.designer.tools.textimport.ui.textImportContributor">
       <class
-        name="com.metamatrix.modeler.internal.relational.ui.wizards.RelationalModelTextImporterMainPage">
+        name="org.teiid.designer.relational.ui.wizards.RelationalModelTextImporterMainPage">
       </class>
    </extension>
      <!-- Text Importer Contribution -->
@@ -22,7 +22,7 @@
          name="%relationalUiTextImporter"
          point="org.teiid.designer.tools.textimport.ui.textImportContributor">
       <class
-        name="com.metamatrix.modeler.internal.relational.ui.wizards.ImportRelationalTablesMainPage">
+        name="org.teiid.designer.relational.ui.wizards.ImportRelationalTablesMainPage">
       </class>
    </extension>
    <extension
@@ -30,7 +30,7 @@
          name="%flatFileRelationalModelContributor"
          point="org.teiid.designer.ui.newModelWizardContributor">
       <class
-            name="com.metamatrix.modeler.relational.ui.flatfile.FlatFileRelationalModelContributor"
+            name="org.teiid.designer.relational.ui.flatfile.FlatFileRelationalModelContributor"
             icon="icons/full/ctool16/newmodel_wiz.gif">
       </class>
       <metamodelDescriptorType
@@ -44,7 +44,7 @@
          name="%webServiceRelationalModelContributor"
          point="org.teiid.designer.ui.newModelWizardContributor">
       <class
-            name="com.metamatrix.modeler.relational.ui.webservice.WebServiceRelationalModelContributor"
+            name="org.teiid.designer.relational.ui.webservice.WebServiceRelationalModelContributor"
             icon="icons/full/ctool16/newmodel_wiz.gif">
       </class>
       <metamodelDescriptorType

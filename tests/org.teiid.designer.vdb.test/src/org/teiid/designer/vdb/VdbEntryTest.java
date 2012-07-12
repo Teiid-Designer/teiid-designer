@@ -38,9 +38,9 @@ import org.mockito.ArgumentCaptor;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.teiid.core.designer.EclipseMock;
+import org.teiid.core.designer.util.FileUtils;
 import org.teiid.designer.vdb.VdbEntry.Synchronization;
 
-import com.metamatrix.core.modeler.util.FileUtils;
 
 /**
  * 

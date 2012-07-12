@@ -14,7 +14,7 @@
        point="org.teiid.designer.datatools.ConnectionInfoProvider">
        <ConnectionInfoProvider
             category="org.eclipse.datatools.enablement.oda.ws"
-            class="com.metamatrix.modeler.modelgenerator.wsdl.SOAPConnectionInfoProvider"/>
+            class="org.teiid.designer.modelgenerator.wsdl.SOAPConnectionInfoProvider"/>
    </extension>
       <extension
        id="org.teiid.designer.modelgenerator.wsdl.ConnectionInfoProvider"
@@ -22,6 +22,6 @@
        point="org.teiid.designer.datatools.ConnectionInfoProvider">
        <ConnectionInfoProvider
             profile="org.teiid.designer.datatools.profiles.ws.WSSoapConnectionProfile"
-            class="com.metamatrix.modeler.modelgenerator.wsdl.WSSoapConnectionInfoProvider"/>
+            class="org.teiid.designer.modelgenerator.wsdl.WSSoapConnectionInfoProvider"/>
    </extension>
 </plugin>

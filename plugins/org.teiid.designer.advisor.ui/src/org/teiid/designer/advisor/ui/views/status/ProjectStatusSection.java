@@ -23,17 +23,18 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
+import org.teiid.core.util.CoreArgCheck;
 import org.teiid.designer.advisor.ui.AdvisorUiConstants;
 import org.teiid.designer.advisor.ui.AdvisorUiPlugin;
 import org.teiid.designer.advisor.ui.Messages;
 import org.teiid.designer.advisor.ui.core.AdvisorHyperLinkListener;
 import org.teiid.designer.advisor.ui.util.DSPPluginImageHelper;
 import org.teiid.designer.advisor.ui.util.HyperLinkLabelRow;
-import com.metamatrix.core.util.CoreArgCheck;
-import com.metamatrix.modeler.internal.ui.forms.FormUtil;
-import com.metamatrix.modeler.internal.ui.viewsupport.ModelProjectSelectionStatusValidator;
-import com.metamatrix.modeler.ui.viewsupport.ModelingResourceFilter;
-import com.metamatrix.ui.internal.util.WidgetUtil;
+import org.teiid.designer.ui.common.util.WidgetUtil;
+import org.teiid.designer.ui.forms.FormUtil;
+import org.teiid.designer.ui.viewsupport.ModelProjectSelectionStatusValidator;
+import org.teiid.designer.ui.viewsupport.ModelingResourceFilter;
+
 
 /**
  * 

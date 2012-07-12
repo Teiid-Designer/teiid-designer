@@ -63,19 +63,19 @@
    <extension
          point="org.teiid.designer.core.resourceValidator">
       <class
-            name="com.metamatrix.modeler.internal.core.builder.XmiResourceValidator">
+            name="org.teiid.designer.core.builder.XmiResourceValidator">
       </class>
    </extension>
    <extension
          point="org.teiid.designer.core.resourceIndexer">
       <class
-            name="com.metamatrix.modeler.internal.core.index.ModelIndexer">
+            name="org.teiid.designer.core.index.ModelIndexer">
       </class>
    </extension>
    <extension
          point="org.teiid.designer.core.resourceIndexer">
       <class
-            name="com.metamatrix.modeler.internal.core.index.ModelSearchIndexer">
+            name="org.teiid.designer.core.index.ModelSearchIndexer">
       </class>
    </extension>
    <extension
@@ -83,7 +83,7 @@
          name="XMI"
          point="org.teiid.designer.core.streamReader">
       <class
-            name="com.metamatrix.modeler.internal.core.reader.XmiStreamReader">
+            name="org.teiid.designer.core.reader.XmiStreamReader">
       </class>
    </extension>
    <extension
@@ -91,7 +91,7 @@
          name="XMI"
          point="org.teiid.designer.core.streamWriter">
       <class
-            name="com.metamatrix.modeler.internal.core.writer.XmiStreamWriter">
+            name="org.teiid.designer.core.writer.XmiStreamWriter">
       </class>
    </extension>
    <extension
@@ -99,7 +99,7 @@
          name="EmfInvocationFactoryHelper"
          point="org.teiid.designer.core.invocationFactoryHelper">
       <class
-            name="com.metamatrix.modeler.internal.core.invocation.EmfInvocationFactoryHelper">
+            name="org.teiid.designer.core.invocation.EmfInvocationFactoryHelper">
       </class>
    </extension>
    <extension
@@ -107,22 +107,15 @@
          name="StandardInvocationFactoryHelper"
          point="org.teiid.designer.core.invocationFactoryHelper">
       <class
-            name="com.metamatrix.modeler.internal.core.invocation.StandardInvocationFactoryHelper">
+            name="org.teiid.designer.core.invocation.StandardInvocationFactoryHelper">
       </class>
    </extension>
    
-<!-- This is added programmatically to the MetamodelRegistry
-   <extension id="metamodelResourceFactory"
-         point="org.teiid.mtk.emf.resourceFactory">
-      <class name="com.metamatrix.mtk.emf.resource.metamodel.MetamodelResourceFactory"/>
-      <protocol>mtkplugin</protocol>
-   </extension>
-   -->
    <extension
          id="xmiResourceFactory"
          point="org.teiid.designer.core.resourceFactory">
       <class
-            name="com.metamatrix.modeler.internal.core.resource.xmi.MtkXmiResourceFactory">
+            name="org.teiid.designer.core.resource.xmi.MtkXmiResourceFactory">
       </class>
       <fileExtension>
          ecore
@@ -160,7 +153,7 @@
          point="org.eclipse.core.resources.natures">
       <runtime>
          <run
-               class="com.metamatrix.modeler.internal.core.workspace.ModelProjectImpl">
+               class="org.teiid.designer.core.workspace.ModelProjectImpl">
          </run>
       </runtime>
       <builder
@@ -177,7 +170,7 @@
          point="org.eclipse.core.resources.natures">
      <runtime>
          <run
-               class="com.metamatrix.modeler.internal.core.workspace.HiddenProjectNature">
+               class="org.teiid.designer.core.workspace.HiddenProjectNature">
          </run>
       </runtime>
    </extension>
@@ -186,28 +179,28 @@
          id="proxyMatcherFactory"
          point="org.teiid.designer.core.eobjectMatcherFactory">
       <class
-            name="com.metamatrix.modeler.core.compare.UuidMatcherFactory">
+            name="org.teiid.designer.core.compare.UuidMatcherFactory">
       </class>
    </extension>
    <extension
          id="coreMatcherFactory"
          point="org.teiid.designer.core.eobjectMatcherFactory">
       <class
-            name="com.metamatrix.modeler.core.compare.CoreMatcherFactory">
+            name="org.teiid.designer.core.compare.CoreMatcherFactory">
       </class>
    </extension>
    <extension
          id="ecoreMatcherFactory"
          point="org.teiid.designer.core.eobjectMatcherFactory">
       <class
-            name="com.metamatrix.modeler.core.compare.EcoreMatcherFactory">
+            name="org.teiid.designer.core.compare.EcoreMatcherFactory">
       </class>
    </extension>
    <extension
          id="diagramMatcherFactory"
          point="org.teiid.designer.core.eobjectMatcherFactory">
       <class
-            name="com.metamatrix.modeler.core.compare.diagram.DiagramMatcherFactory">
+            name="org.teiid.designer.core.compare.diagram.DiagramMatcherFactory">
       </class>
    </extension>
 <!-- Model builder extension -->
@@ -218,7 +211,7 @@
       <builder
             hasNature="true">
          <run
-               class="com.metamatrix.modeler.internal.core.builder.ModelBuilder">
+               class="org.teiid.designer.core.builder.ModelBuilder">
          </run>
       </builder>
    </extension>
@@ -230,7 +223,7 @@
          core
       </metamodelExtensionID>
       <factoryClass
-            name="com.metamatrix.modeler.core.metamodel.core.aspects.sql.CoreSqlAspectFactoryImpl">
+            name="org.teiid.designer.core.metamodel.aspect.core.aspects.sql.CoreSqlAspectFactoryImpl">
       </factoryClass>
    </extension>
    <extension
@@ -240,7 +233,7 @@
          extension
       </metamodelExtensionID>
       <factoryClass
-            name="com.metamatrix.modeler.core.metamodel.core.aspects.uml.ExtensionUmlAspectFactoryImpl">
+            name="org.teiid.designer.core.metamodel.aspect.core.aspects.uml.ExtensionUmlAspectFactoryImpl">
       </factoryClass>
    </extension>
    <extension
@@ -250,7 +243,7 @@
          core
       </metamodelExtensionID>
       <factoryClass
-            name="com.metamatrix.modeler.core.metamodel.core.aspects.validation.CoreValidationAspectFactoryImpl">
+            name="org.teiid.designer.core.metamodel.aspect.core.aspects.validation.CoreValidationAspectFactoryImpl">
       </factoryClass>
    </extension>
    <extension
@@ -260,7 +253,7 @@
          core
       </metamodelExtensionID>
       <factoryClass
-            name="com.metamatrix.modeler.core.metamodel.core.aspects.imports.CoreImportAspectFactoryImpl">
+            name="org.teiid.designer.core.metamodel.aspect.core.aspects.imports.CoreImportAspectFactoryImpl">
       </factoryClass>
    </extension>
       <extension
@@ -270,7 +263,7 @@
          extension
       </metamodelExtensionID>
       <factoryClass
-            name="com.metamatrix.modeler.core.metamodel.core.aspects.validation.ExtensionValidationAspectFactoryImpl">
+            name="org.teiid.designer.core.metamodel.aspect.core.aspects.validation.ExtensionValidationAspectFactoryImpl">
       </factoryClass>
    </extension>
 <!-- ResourceUpdator extensions -->
@@ -278,7 +271,7 @@
          id="modelImportReferenceUpdator"
          point="org.teiid.designer.core.referenceUpdator">
       <class
-            name="com.metamatrix.modeler.internal.core.refactor.ModelImportReferenceUpdator">
+            name="org.teiid.designer.core.refactor.ModelImportReferenceUpdator">
       </class>
    </extension>   
 

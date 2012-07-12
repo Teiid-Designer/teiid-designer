@@ -10,8 +10,8 @@ package org.teiid.designer.advisor.ui.scope;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectNature;
 import org.teiid.designer.advisor.ui.AdvisorUiConstants;
+import org.teiid.designer.core.ModelerCore;
 
-import com.metamatrix.modeler.core.ModelerCore;
 
 public class VdbNature implements IProjectNature {
 

@@ -52,6 +52,8 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.forms.IMessageManager;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
+import org.teiid.core.util.ArrayUtil;
+import org.teiid.core.util.CoreStringUtil;
 import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.definition.ExtendableMetaclassNameProvider;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition.PropertyName;
@@ -61,11 +63,10 @@ import org.teiid.designer.extension.ui.Activator;
 import org.teiid.designer.extension.ui.Messages;
 import org.teiid.designer.extension.ui.model.MedModelNode;
 import org.teiid.designer.extension.ui.model.MedModelNode.ModelType;
-import com.metamatrix.core.util.ArrayUtil;
-import com.metamatrix.core.util.CoreStringUtil;
-import com.metamatrix.modeler.internal.ui.forms.FormUtil;
-import com.metamatrix.modeler.internal.ui.forms.MessageFormDialog;
-import com.metamatrix.ui.internal.util.WidgetUtil;
+import org.teiid.designer.ui.common.util.WidgetUtil;
+import org.teiid.designer.ui.forms.FormUtil;
+import org.teiid.designer.ui.forms.MessageFormDialog;
+
 
 /**
  * 

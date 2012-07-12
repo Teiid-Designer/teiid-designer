@@ -10,7 +10,7 @@ package org.teiid.designer.advisor.ui.views.status;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
-import com.metamatrix.modeler.core.ModelerCore;
+import org.teiid.designer.core.ModelerCore;
 
 /**
  * 

@@ -20,8 +20,8 @@
       <wizard
             name="%importDatabaseViaJdbcWizard.name"
             icon="icons/full/ctool16/jdbc_import.gif"
-            category="com.metamatrix.modeler.ui"
-            class="com.metamatrix.modeler.internal.jdbc.ui.wizards.JdbcImportWizard"
+            category="org.teiid.designer.ui"
+            class="org.teiid.designer.jdbc.ui.wizards.JdbcImportWizard"
             id="jdbcImportWizard">
          <description>
             %importDatabaseViaJdbcWizard.description
@@ -34,17 +34,17 @@
 		name="%jdbcCostAnalysisAction.name"
         point="org.teiid.designer.ui.modelResourceAction">
       <resourceAction
-         name="com.metamatrix.modeler.internal.jdbc.ui.actions.JdbcCostAnalysisAction"
+         name="org.teiid.designer.jdbc.ui.actions.JdbcCostAnalysisAction"
          label="%jdbcCostAnalysisAction.label">
       </resourceAction>
    </extension>
    
       <extension
-       id="com.metamatrix.modeler.internal.jdbc.ui.wizard.JDBCConnectionInfoProvider"
+       id="org.teiid.designer.jdbc.ui.wizard.JDBCConnectionInfoProvider"
        name="%jDBCConnectionInfoProvider"
        point="org.teiid.designer.datatools.ConnectionInfoProvider">
        <ConnectionInfoProvider
             category="org.eclipse.datatools.connectivity.db.category"
-            class="com.metamatrix.modeler.internal.jdbc.ui.wizards.JDBCConnectionInfoProvider"/>
+            class="org.teiid.designer.jdbc.ui.wizards.JDBCConnectionInfoProvider"/>
    </extension>
 </plugin>

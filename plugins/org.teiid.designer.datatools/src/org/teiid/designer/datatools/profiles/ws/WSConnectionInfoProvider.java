@@ -3,12 +3,12 @@ package org.teiid.designer.datatools.profiles.ws;
 import java.util.Properties;
 
 import org.eclipse.datatools.connectivity.IConnectionProfile;
+import org.teiid.designer.core.workspace.ModelResource;
+import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
 import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
+import org.teiid.designer.ui.common.ICredentialsCommon.SecurityType;
 
-import com.metamatrix.modeler.core.workspace.ModelResource;
-import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
-import com.metamatrix.ui.ICredentialsCommon.SecurityType;
 
 public class WSConnectionInfoProvider extends ConnectionInfoHelper implements
 		IConnectionInfoProvider {

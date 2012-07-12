@@ -51,20 +51,21 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.teiid.core.I18n;
+import org.teiid.core.designer.CoreModelerPlugin;
 import org.teiid.core.exception.EmptyArgumentException;
+import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.core.util.FileUtil;
+import org.teiid.designer.core.util.StringUtilities;
+import org.teiid.designer.core.workspace.ModelResource;
+import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.ddl.importer.DdlImporter;
-import com.metamatrix.core.modeler.CoreModelerPlugin;
-import com.metamatrix.core.util.FileUtil;
-import com.metamatrix.core.util.StringUtilities;
-import com.metamatrix.metamodels.core.ModelType;
-import com.metamatrix.metamodels.relational.RelationalPackage;
-import com.metamatrix.modeler.core.ModelerCore;
-import com.metamatrix.modeler.core.workspace.ModelResource;
-import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
-import com.metamatrix.modeler.internal.ui.explorer.ModelExplorerLabelProvider;
-import com.metamatrix.ui.internal.util.WidgetFactory;
-import com.metamatrix.ui.internal.util.WidgetUtil;
-import com.metamatrix.ui.internal.wizard.IPersistentWizardPage;
+import org.teiid.designer.metamodels.core.ModelType;
+import org.teiid.designer.metamodels.relational.RelationalPackage;
+import org.teiid.designer.ui.common.util.WidgetFactory;
+import org.teiid.designer.ui.common.util.WidgetUtil;
+import org.teiid.designer.ui.common.wizard.IPersistentWizardPage;
+import org.teiid.designer.ui.explorer.ModelExplorerLabelProvider;
+
 
 class DdlImporterPage extends WizardPage implements IPersistentWizardPage {
 
@@ -466,7 +467,7 @@ class DdlImporterPage extends WizardPage implements IPersistentWizardPage {
     /**
      * {@inheritDoc}
      * 
-     * @see com.metamatrix.ui.internal.wizard.IPersistentWizardPage#saveSettings()
+     * @see org.teiid.designer.ui.common.wizard.IPersistentWizardPage#saveSettings()
      */
     @Override
     public void saveSettings() {

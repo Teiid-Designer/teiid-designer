@@ -23,13 +23,13 @@
          http://www.metamatrix.com/metamodels/XmlDocument
       </uri>
       <alternateUri>
-         mtkplugin:///com.metamatrix.metamodels.XmlDocument
+         mtkplugin:///org.teiid.designer.metamodels.XmlDocument
       </alternateUri>
       <rootEntityClass
-            name="com.metamatrix.metamodels.xml.XmlDocument">
+            name="org.teiid.designer.metamodels.xml.XmlDocument">
       </rootEntityClass>
 <!-- Fragments are not supported in 4.0
-      <rootEntityClass name="com.metamatrix.metamodels.xml.XmlFragment"/>
+      <rootEntityClass name="org.teiid.designer.metamodels.xml.XmlFragment"/>
       -->
       <properties
             createAsPhysical="false"
@@ -43,17 +43,17 @@
       	VIRTUAL
       </allowableModelType>
       <packageClass
-            name="com.metamatrix.metamodels.xml.XmlDocumentPackage">
+            name="org.teiid.designer.metamodels.xml.XmlDocumentPackage">
       </packageClass>
       <adapterClass
-            name="com.metamatrix.metamodels.xml.provider.XmlDocumentItemProviderAdapterFactory">
+            name="org.teiid.designer.metamodels.xml.provider.XmlDocumentItemProviderAdapterFactory">
       </adapterClass>
    </extension>
    <extension
          point="org.eclipse.emf.ecore.generated_package">
       <package
             uri="http://www.metamatrix.com/metamodels/XmlDocument"
-            class="com.metamatrix.metamodels.xml.XmlDocumentPackage">
+            class="org.teiid.designer.metamodels.xml.XmlDocumentPackage">
       </package>
    </extension>
    
@@ -67,7 +67,7 @@
          xmldoc
       </metamodelExtensionID>
       <factoryClass
-            name="com.metamatrix.metamodels.xml.aspects.uml.XmlUmlAspectFactoryImpl">
+            name="org.teiid.designer.metamodels.xml.aspects.uml.XmlUmlAspectFactoryImpl">
       </factoryClass>
    </extension>
       <extension
@@ -77,7 +77,7 @@
          xmldoc
       </metamodelExtensionID>
       <factoryClass
-            name="com.metamatrix.metamodels.xml.aspects.validation.XmlValidationAspectFactoryImpl">
+            name="org.teiid.designer.metamodels.xml.aspects.validation.XmlValidationAspectFactoryImpl">
       </factoryClass>
    </extension>
 <!-- This extension defines the XML Modeling Preferences -->
@@ -185,12 +185,12 @@
          id="xmlMatcherFactory"
          point="org.teiid.designer.core.eobjectMatcherFactory">
       <class
-            name="com.metamatrix.metamodels.xml.compare.XmlMatcherFactory">
+            name="org.teiid.designer.metamodels.xml.compare.XmlMatcherFactory">
       </class>
    </extension>
    <extension
          point="org.teiid.designer.core.pasteContributor">
-      <class name="com.metamatrix.metamodels.xml.PasteContributor"/>
+      <class name="org.teiid.designer.metamodels.xml.PasteContributor"/>
    </extension>
    
 <!-- Designates valid extensible metamodel -->
@@ -198,7 +198,7 @@
          point="org.teiid.designer.extension.extensibleMetamodelProvider">
       <definition 
             metamodelUri="http://www.metamatrix.com/metamodels/XmlDocument"
-            metaclassProviderClass="com.metamatrix.metamodels.xml.extension.XmlExtendableClassnameProvider">
+            metaclassProviderClass="org.teiid.designer.metamodels.xml.extension.XmlExtendableClassnameProvider">
       </definition>
    </extension>
    

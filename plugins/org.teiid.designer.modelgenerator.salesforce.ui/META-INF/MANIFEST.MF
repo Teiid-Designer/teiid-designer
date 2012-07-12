@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.teiid.designer.modelgenerator.salesforce.ui;singleton:=true
 Bundle-Version: 7.7.1.qualifier
-Bundle-Activator: com.metamatrix.modeler.modelgenerator.salesforce.ui.Activator
+Bundle-Activator: org.teiid.designer.modelgenerator.salesforce.ui.Activator
 Bundle-Vendor: %pluginProvider
 Bundle-Localization: plugin
 Require-Bundle: org.teiid.designer.modelgenerator.salesforce,
@@ -30,7 +30,8 @@ Require-Bundle: org.teiid.designer.modelgenerator.salesforce,
  org.eclipse.datatools.help,
  org.teiid.designer.extension
 Bundle-ActivationPolicy: lazy
-Export-Package:  com.metamatrix.modeler.modelgenerator.salesforce.ui,
- com.metamatrix.modeler.modelgenerator.salesforce.ui.util,
- com.metamatrix.modeler.modelgenerator.salesforce.ui.wizards
+Export-Package: org.teiid.designer.modelgenerator.salesforce.ui,
+ org.teiid.designer.modelgenerator.salesforce.ui.actions,
+ org.teiid.designer.modelgenerator.salesforce.ui.util,
+ org.teiid.designer.modelgenerator.salesforce.ui.wizards
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

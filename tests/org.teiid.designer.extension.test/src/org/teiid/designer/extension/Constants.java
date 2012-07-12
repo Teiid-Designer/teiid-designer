@@ -33,9 +33,9 @@ public interface Constants {
 
     String MED_SCHEMA = TESTDATA + File.separatorChar + ExtensionConstants.SCHEMA_FILENAME;
 
-    String TABLE_METACLASS_NAME = "com.metamatrix.metamodels.relational.impl.BaseTableImpl"; //$NON-NLS-1$
-    String COLUMN_METACLASS_NAME = "com.metamatrix.metamodels.relational.impl.ColumnImpl"; //$NON-NLS-1$
-    String PROCEDURE_METACLASS_NAME = "com.metamatrix.metamodels.relational.impl.ProcedureImpl"; //$NON-NLS-1$
+    String TABLE_METACLASS_NAME = "org.teiid.designer.metamodels.relational.impl.BaseTableImpl"; //$NON-NLS-1$
+    String COLUMN_METACLASS_NAME = "org.teiid.designer.metamodels.relational.impl.ColumnImpl"; //$NON-NLS-1$
+    String PROCEDURE_METACLASS_NAME = "org.teiid.designer.metamodels.relational.impl.ProcedureImpl"; //$NON-NLS-1$
 
     String SALESFORCE_MED_FILE_NAME = TESTDATA + File.separatorChar + "salesforce" + ExtensionConstants.DOT_MED_EXTENSION; //$NON-NLS-1$
     String SALESFORCE_MED_PREFIX = "salesforce"; //$NON-NLS-1$

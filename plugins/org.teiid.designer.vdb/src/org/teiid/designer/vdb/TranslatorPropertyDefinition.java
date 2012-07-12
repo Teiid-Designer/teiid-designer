@@ -10,10 +10,10 @@ package org.teiid.designer.vdb;
 import static org.teiid.designer.vdb.VdbPlugin.UTIL;
 
 import org.teiid.core.properties.PropertyDefinition;
+import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.util.I18nUtil;
+import org.teiid.designer.core.util.StringUtilities;
 
-import com.metamatrix.core.util.CoreArgCheck;
-import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.core.util.StringUtilities;
 
 /**
  * A property definition that either represents one that exists on the current Teiid default server or one that does not. If it does

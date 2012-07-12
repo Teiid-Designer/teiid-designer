@@ -3,19 +3,19 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.teiid.designer.metamodels.relational;singleton:=true
 Bundle-Version: 7.7.1.qualifier
-Bundle-Activator: com.metamatrix.metamodels.relational.RelationalPlugin
+Bundle-Activator: org.teiid.designer.metamodels.relational.RelationalPlugin
 Bundle-Vendor: %pluginProvider
 Bundle-Localization: plugin
-Export-Package: com.metamatrix.metamodels.relational,
- com.metamatrix.metamodels.relational.aspects.sql,
- com.metamatrix.metamodels.relational.aspects.uml,
- com.metamatrix.metamodels.relational.aspects.validation,
- com.metamatrix.metamodels.relational.aspects.validation.rules,
- com.metamatrix.metamodels.relational.compare,
- com.metamatrix.metamodels.relational.extension,
- com.metamatrix.metamodels.relational.impl,
- com.metamatrix.metamodels.relational.provider,
- com.metamatrix.metamodels.relational.util
+Export-Package: org.teiid.designer.metamodels.relational,
+ org.teiid.designer.metamodels.relational.aspects.sql,
+ org.teiid.designer.metamodels.relational.aspects.uml,
+ org.teiid.designer.metamodels.relational.aspects.validation,
+ org.teiid.designer.metamodels.relational.aspects.validation.rules,
+ org.teiid.designer.metamodels.relational.compare,
+ org.teiid.designer.metamodels.relational.extension,
+ org.teiid.designer.metamodels.relational.impl,
+ org.teiid.designer.metamodels.relational.provider,
+ org.teiid.designer.metamodels.relational.util
 Require-Bundle: org.eclipse.emf.ecore,
  org.eclipse.emf.edit,
  org.eclipse.emf.ecore.edit,

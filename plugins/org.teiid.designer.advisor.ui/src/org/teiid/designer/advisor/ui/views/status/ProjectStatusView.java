@@ -13,8 +13,8 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.eclipse.ui.part.ViewPart;
+import org.teiid.designer.ui.common.util.UiUtil;
 
-import com.metamatrix.ui.internal.util.UiUtil;
 
 public class ProjectStatusView  extends ViewPart {
     private static final String ACTION_LIBRARY_VIEW_HELP_ID = "org.teiid.designer.advisor.ui.actionLibraryView"; //$NON-NLS-1$

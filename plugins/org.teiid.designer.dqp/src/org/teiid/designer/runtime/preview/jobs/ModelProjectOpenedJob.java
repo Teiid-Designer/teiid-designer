@@ -13,11 +13,11 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.osgi.util.NLS;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.runtime.preview.Messages;
 import org.teiid.designer.runtime.preview.PreviewContext;
 import org.teiid.designer.runtime.preview.PreviewManager;
 
-import com.metamatrix.modeler.core.ModelerCore;
 
 /**
  * The <code>ModelProjectOpenedJob</code> ensures there is a Preview VDB for each model in the opened project.

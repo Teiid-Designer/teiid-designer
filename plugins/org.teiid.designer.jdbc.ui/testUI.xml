@@ -16,7 +16,7 @@
     <!--   test-data - The test data directory for this plugin -->
 
 	<!-- Declare any properties specific to this project -->
-    <property name="suite-name" value="com.metamatrix.modeler.jdbc.ui.AutomatedUITestSuite"/>
+    <property name="suite-name" value="org.teiid.designer.jdbc.ui.AutomatedUITestSuite"/>
 
 	<!-- This target holds all initialization code that needs to be done for -->
 	<!-- all tests that are to be run. Initialization for individual tests -->

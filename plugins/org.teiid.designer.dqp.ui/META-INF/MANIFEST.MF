@@ -3,23 +3,22 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.teiid.designer.dqp.ui;singleton:=true
 Bundle-Version: 7.7.1.qualifier
-Bundle-Activator: com.metamatrix.modeler.dqp.ui.DqpUiPlugin
+Bundle-Activator: org.teiid.designer.runtime.ui.DqpUiPlugin
 Bundle-Vendor: %pluginProvider
 Bundle-Localization: plugin
-Export-Package: com.metamatrix.modeler.dqp.ui,
- com.metamatrix.modeler.internal.dqp.ui.jdbc,
- com.metamatrix.modeler.internal.dqp.ui.preferences,
- com.metamatrix.modeler.internal.dqp.ui.views,
- com.metamatrix.modeler.internal.dqp.ui.workspace,
- com.metamatrix.modeler.internal.dqp.ui.workspace.actions,
- com.metamatrix.modeler.internal.dqp.ui.workspace.dialogs,
- org.teiid.designer.runtime.ui,
+Export-Package: org.teiid.designer.runtime.ui,
  org.teiid.designer.runtime.ui.actions,
  org.teiid.designer.runtime.ui.connection,
+ org.teiid.designer.runtime.ui.dialogs,
  org.teiid.designer.runtime.ui.extension,
+ org.teiid.designer.runtime.ui.jdbc,
+ org.teiid.designer.runtime.ui.preferences,
  org.teiid.designer.runtime.ui.preview,
  org.teiid.designer.runtime.ui.server,
- org.teiid.designer.runtime.ui.vdb
+ org.teiid.designer.runtime.ui.vdb,
+ org.teiid.designer.runtime.ui.views,
+ org.teiid.designer.runtime.ui.wizards.webservices,
+ org.teiid.designer.runtime.ui.wizards.webservices.util
 Require-Bundle: org.eclipse.ui.views,
  org.eclipse.jface.text,
  org.eclipse.ui.workbench.texteditor,

@@ -39,6 +39,18 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.teiid.core.designer.CoreModelerPlugin;
+import org.teiid.core.designer.util.FileUtils;
+import org.teiid.core.util.CoreStringUtil;
+import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.core.container.ResourceFinder;
+import org.teiid.designer.core.index.Index;
+import org.teiid.designer.core.index.IndexUtil;
+import org.teiid.designer.core.resource.EmfResource;
+import org.teiid.designer.core.util.StringUtilities;
+import org.teiid.designer.core.workspace.ModelResource;
+import org.teiid.designer.core.workspace.ModelUtil;
+import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
 import org.teiid.designer.vdb.manifest.ModelElement;
 import org.teiid.designer.vdb.manifest.ProblemElement;
@@ -46,18 +58,6 @@ import org.teiid.designer.vdb.manifest.PropertyElement;
 import org.teiid.designer.vdb.manifest.Severity;
 import org.teiid.designer.vdb.manifest.SourceElement;
 
-import com.metamatrix.core.modeler.CoreModelerPlugin;
-import com.metamatrix.core.modeler.util.FileUtils;
-import com.metamatrix.core.util.CoreStringUtil;
-import com.metamatrix.core.util.StringUtilities;
-import com.metamatrix.internal.core.index.Index;
-import com.metamatrix.modeler.core.ModelerCore;
-import com.metamatrix.modeler.core.container.ResourceFinder;
-import com.metamatrix.modeler.core.workspace.ModelResource;
-import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
-import com.metamatrix.modeler.internal.core.index.IndexUtil;
-import com.metamatrix.modeler.internal.core.resource.EmfResource;
-import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 
 /**
  *

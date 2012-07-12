@@ -13,16 +13,16 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.ui.IWorkbenchPart;
+import org.teiid.core.util.I18nUtil;
 import org.teiid.designer.runtime.Server;
+import org.teiid.designer.runtime.ui.DqpUiConstants;
+import org.teiid.designer.runtime.ui.DqpUiPlugin;
 import org.teiid.designer.runtime.ui.vdb.ExecuteVdbDialog;
 import org.teiid.designer.runtime.ui.vdb.ExecuteVdbWorker;
 import org.teiid.designer.runtime.ui.vdb.VdbConstants;
+import org.teiid.designer.ui.actions.SortableSelectionAction;
+import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 
-import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
-import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
-import com.metamatrix.modeler.ui.actions.SortableSelectionAction;
-import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
 
 /**
  * 

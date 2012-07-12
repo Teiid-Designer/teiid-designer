@@ -8,7 +8,7 @@
 
 package org.teiid.designer.runtime;
 
-import static com.metamatrix.modeler.dqp.DqpPlugin.PLUGIN_ID;
+import static org.teiid.designer.runtime.DqpPlugin.PLUGIN_ID;
 
 /**
  *

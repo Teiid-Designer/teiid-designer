@@ -14,8 +14,8 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.teiid.designer.advisor.ui.AdvisorUiConstants;
 import org.teiid.designer.advisor.ui.AdvisorUiPlugin;
+import org.teiid.designer.vdb.ui.wizards.DefineVdbDialog;
 
-import com.metamatrix.modeler.internal.vdb.ui.wizards.DefineVdbDialog;
 
 public class DefineVdbAction   extends Action implements AdvisorUiConstants {
 

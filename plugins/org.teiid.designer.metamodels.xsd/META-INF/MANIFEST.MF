@@ -3,18 +3,18 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.teiid.designer.metamodels.xsd;singleton:=true
 Bundle-Version: 7.7.1.qualifier
-Bundle-Activator: com.metamatrix.metamodels.xsd.XsdPlugin
+Bundle-Activator: org.teiid.designer.metamodels.xsd.XsdPlugin
 Bundle-Vendor: %pluginProvider
 Bundle-Localization: plugin
-Export-Package: com.metamatrix.metamodels.xsd,
- com.metamatrix.metamodels.xsd.aspects.imports,
- com.metamatrix.metamodels.xsd.aspects.sql,
- com.metamatrix.metamodels.xsd.aspects.uml,
- com.metamatrix.metamodels.xsd.aspects.validation,
- com.metamatrix.metamodels.xsd.aspects.validation.rules,
- com.metamatrix.metamodels.xsd.compare,
- com.metamatrix.metamodels.xsd.util,
- com.metamatrix.metamodels.xsd.validator
+Export-Package: org.teiid.designer.metamodels.xsd,
+ org.teiid.designer.metamodels.xsd.aspects.imports,
+ org.teiid.designer.metamodels.xsd.aspects.sql,
+ org.teiid.designer.metamodels.xsd.aspects.uml,
+ org.teiid.designer.metamodels.xsd.aspects.validation,
+ org.teiid.designer.metamodels.xsd.aspects.validation.rules,
+ org.teiid.designer.metamodels.xsd.compare,
+ org.teiid.designer.metamodels.xsd.util,
+ org.teiid.designer.metamodels.xsd.validator
 Require-Bundle: org.eclipse.xsd,
  org.eclipse.xsd.edit,
  org.eclipse.emf.ecore.xmi,

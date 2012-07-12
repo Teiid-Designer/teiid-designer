@@ -23,27 +23,27 @@
          http://www.metamatrix.com/metamodels/Relational
       </uri>
       <alternateUri>
-         mtkplugin:///com.metamatrix.metamodels.Relational
+         mtkplugin:///org.teiid.designer.metamodels.Relational
       </alternateUri>
       <!-- 
       <rootEntityClass
-            name="com.metamatrix.metamodels.relational.Catalog">
+            name="org.teiid.designer.metamodels.relational.Catalog">
       </rootEntityClass>
       <rootEntityClass
-            name="com.metamatrix.metamodels.relational.Schema">
+            name="org.teiid.designer.metamodels.relational.Schema">
       </rootEntityClass>
 	  -->
       <rootEntityClass
-            name="com.metamatrix.metamodels.relational.BaseTable">
+            name="org.teiid.designer.metamodels.relational.BaseTable">
       </rootEntityClass>
       <rootEntityClass
-            name="com.metamatrix.metamodels.relational.View">
+            name="org.teiid.designer.metamodels.relational.View">
       </rootEntityClass>
       <rootEntityClass
-            name="com.metamatrix.metamodels.relational.Index">
+            name="org.teiid.designer.metamodels.relational.Index">
       </rootEntityClass>
       <rootEntityClass
-            name="com.metamatrix.metamodels.relational.Procedure">
+            name="org.teiid.designer.metamodels.relational.Procedure">
       </rootEntityClass>
       <properties
             createAsPhysical="true"
@@ -60,17 +60,17 @@
       	VIRTUAL
       </allowableModelType>
       <packageClass
-            name="com.metamatrix.metamodels.relational.RelationalPackage">
+            name="org.teiid.designer.metamodels.relational.RelationalPackage">
       </packageClass>
       <adapterClass
-            name="com.metamatrix.metamodels.relational.provider.RelationalItemProviderAdapterFactory">
+            name="org.teiid.designer.metamodels.relational.provider.RelationalItemProviderAdapterFactory">
       </adapterClass>
    </extension>
    <extension
          point="org.eclipse.emf.ecore.generated_package">
       <package
             uri="http://www.metamatrix.com/metamodels/Relational"
-            class="com.metamatrix.metamodels.relational.RelationalPackage">
+            class="org.teiid.designer.metamodels.relational.RelationalPackage">
       </package>
    </extension>
    
@@ -83,7 +83,7 @@
          relational
       </metamodelExtensionID>
       <factoryClass
-            name="com.metamatrix.metamodels.relational.aspects.uml.RelationalUmlAspectFactoryImpl">
+            name="org.teiid.designer.metamodels.relational.aspects.uml.RelationalUmlAspectFactoryImpl">
       </factoryClass>
    </extension>
    <extension
@@ -93,7 +93,7 @@
          relational
       </metamodelExtensionID>
       <factoryClass
-            name="com.metamatrix.metamodels.relational.aspects.validation.RelationalValidationAspectFactoryImpl">
+            name="org.teiid.designer.metamodels.relational.aspects.validation.RelationalValidationAspectFactoryImpl">
       </factoryClass>
    </extension>
    <extension
@@ -103,7 +103,7 @@
          relational
       </metamodelExtensionID>
       <factoryClass
-            name="com.metamatrix.metamodels.relational.aspects.sql.RelationalSqlAspectFactoryImpl">
+            name="org.teiid.designer.metamodels.relational.aspects.sql.RelationalSqlAspectFactoryImpl">
       </factoryClass>
    </extension>
 <!-- EObject Matcher extensions -->
@@ -111,7 +111,7 @@
          id="relationalMatcherFactory"
          point="org.teiid.designer.core.eobjectMatcherFactory">
       <class
-            name="com.metamatrix.metamodels.relational.compare.RelationalMatcherFactory">
+            name="org.teiid.designer.metamodels.relational.compare.RelationalMatcherFactory">
       </class>
    </extension>
 <!-- Assocation extensions -->
@@ -119,7 +119,7 @@
          id="foreignKeyAssociationProvider"
          point="org.teiid.designer.core.associationProvider">
       <providerClass
-            name="com.metamatrix.metamodels.relational.provider.ForeignKeyAssociationProvider">
+            name="org.teiid.designer.metamodels.relational.provider.ForeignKeyAssociationProvider">
       </providerClass>
    </extension>
 <!-- This extension defines the Relational Modeling Preferences -->
@@ -186,7 +186,7 @@
    <extension
          point="org.teiid.designer.extension.modelExtensionProvider">
       <extensionDefinition
-            className="com.metamatrix.metamodels.relational.extension.SourceFunctionModelExtensionAssistant"
+            className="org.teiid.designer.metamodels.relational.extension.SourceFunctionModelExtensionAssistant"
             path="relational.mxd">
       </extensionDefinition>
    </extension>
@@ -196,7 +196,7 @@
          point="org.teiid.designer.extension.extensibleMetamodelProvider">
       <definition 
             metamodelUri="http://www.metamatrix.com/metamodels/Relational"
-            metaclassProviderClass="com.metamatrix.metamodels.relational.extension.RelationalExtendableClassnameProvider">
+            metaclassProviderClass="org.teiid.designer.metamodels.relational.extension.RelationalExtendableClassnameProvider">
       </definition>
    </extension>
    

@@ -31,23 +31,23 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.eclipse.ui.ide.IDE;
+import org.teiid.core.event.IChangeListener;
+import org.teiid.core.event.IChangeNotifier;
 import org.teiid.designer.advisor.ui.AdvisorUiConstants;
 import org.teiid.designer.advisor.ui.Messages;
+import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.runtime.ui.actions.GenerateRestWarAction;
+import org.teiid.designer.ui.UiPlugin;
+import org.teiid.designer.ui.common.util.WidgetFactory;
+import org.teiid.designer.ui.common.viewsupport.ClosedProjectFilter;
+import org.teiid.designer.ui.common.viewsupport.StatusInfo;
+import org.teiid.designer.ui.common.widget.Label;
+import org.teiid.designer.ui.explorer.ModelExplorerContentProvider;
+import org.teiid.designer.ui.explorer.ModelExplorerLabelProvider;
+import org.teiid.designer.ui.viewsupport.DesignerProperties;
+import org.teiid.designer.ui.viewsupport.ModelWorkspaceDialog;
+import org.teiid.designer.ui.viewsupport.SingleProjectFilter;
 
-import com.metamatrix.core.event.IChangeListener;
-import com.metamatrix.core.event.IChangeNotifier;
-import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
-import com.metamatrix.modeler.internal.ui.explorer.ModelExplorerContentProvider;
-import com.metamatrix.modeler.internal.ui.explorer.ModelExplorerLabelProvider;
-import com.metamatrix.modeler.internal.ui.viewsupport.ModelWorkspaceDialog;
-import com.metamatrix.modeler.internal.ui.viewsupport.SingleProjectFilter;
-import com.metamatrix.modeler.ui.UiPlugin;
-import com.metamatrix.modeler.ui.viewsupport.DesignerProperties;
-import com.metamatrix.ui.internal.util.WidgetFactory;
-import com.metamatrix.ui.internal.viewsupport.ClosedProjectFilter;
-import com.metamatrix.ui.internal.viewsupport.StatusInfo;
-import com.metamatrix.ui.internal.widget.Label;
 
 public class GenerateRestWarDialog extends TitleAreaDialog implements IChangeListener {
 
@@ -192,7 +192,7 @@ public class GenerateRestWarDialog extends TitleAreaDialog implements IChangeLis
 	}
 
 	/*
-	 * @see com.metamatrix.core.event.IChangeListener#stateChanged(com.metamatrix.core.event.IChangeNotifier)
+	 * @see org.teiid.core.event.IChangeListener#stateChanged(org.teiidcore.event.IChangeNotifier)
 	 * @since 5.5.3
 	 */
 	@Override

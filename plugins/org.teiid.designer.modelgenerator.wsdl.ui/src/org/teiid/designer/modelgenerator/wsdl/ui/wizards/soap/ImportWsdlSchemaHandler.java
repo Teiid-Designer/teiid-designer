@@ -35,27 +35,27 @@ import org.eclipse.xsd.impl.XSDAttributeUseImpl;
 import org.eclipse.xsd.impl.XSDElementDeclarationImpl;
 import org.eclipse.xsd.impl.XSDParticleImpl;
 import org.eclipse.xsd.impl.XSDSimpleTypeDefinitionImpl;
+import org.teiid.designer.core.ModelerCoreException;
+import org.teiid.designer.core.types.DatatypeConstants.RuntimeTypeNames;
+import org.teiid.designer.modelgenerator.wsdl.ModelGeneratorWsdlPlugin;
+import org.teiid.designer.modelgenerator.wsdl.model.Model;
+import org.teiid.designer.modelgenerator.wsdl.model.ModelGenerationException;
+import org.teiid.designer.modelgenerator.wsdl.model.Operation;
+import org.teiid.designer.modelgenerator.wsdl.model.Part;
+import org.teiid.designer.modelgenerator.wsdl.schema.extensions.SOAPSchemaProcessor;
 import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
+import org.teiid.designer.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstants;
+import org.teiid.designer.modelgenerator.wsdl.ui.wizards.WSDLImportWizardManager;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.SchemaTreeModel.SchemaNode;
+import org.teiid.designer.schema.tools.model.schema.SchemaModel;
+import org.teiid.designer.schema.tools.model.schema.SchemaObject;
+import org.teiid.designer.schema.tools.model.schema.impl.BaseSchemaObject;
+import org.teiid.designer.schema.tools.processing.SchemaProcessingException;
+import org.teiid.designer.schema.tools.processing.SchemaProcessor;
+import org.teiid.designer.transformation.util.SqlConstants;
+import org.teiid.designer.ui.viewsupport.DatatypeUtilities;
+import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
-import com.metamatrix.modeler.core.ModelerCoreException;
-import com.metamatrix.modeler.core.types.DatatypeConstants.RuntimeTypeNames;
-import com.metamatrix.modeler.internal.transformation.util.SqlConstants;
-import com.metamatrix.modeler.internal.ui.viewsupport.DatatypeUtilities;
-import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
-import com.metamatrix.modeler.modelgenerator.wsdl.ModelGeneratorWsdlPlugin;
-import com.metamatrix.modeler.modelgenerator.wsdl.model.Model;
-import com.metamatrix.modeler.modelgenerator.wsdl.model.ModelGenerationException;
-import com.metamatrix.modeler.modelgenerator.wsdl.model.Operation;
-import com.metamatrix.modeler.modelgenerator.wsdl.model.Part;
-import com.metamatrix.modeler.modelgenerator.wsdl.schema.extensions.SOAPSchemaProcessor;
-import com.metamatrix.modeler.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstants;
-import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.wizards.WSDLImportWizardManager;
-import com.metamatrix.modeler.schema.tools.model.schema.SchemaModel;
-import com.metamatrix.modeler.schema.tools.model.schema.SchemaObject;
-import com.metamatrix.modeler.schema.tools.model.schema.impl.BaseSchemaObject;
-import com.metamatrix.modeler.schema.tools.processing.SchemaProcessingException;
-import com.metamatrix.modeler.schema.tools.processing.SchemaProcessor;
 
 public class ImportWsdlSchemaHandler {
 

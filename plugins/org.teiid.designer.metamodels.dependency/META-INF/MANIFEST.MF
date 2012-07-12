@@ -3,13 +3,13 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.teiid.designer.metamodels.dependency;singleton:=true
 Bundle-Version: 7.7.1.qualifier
-Bundle-Activator: com.metamatrix.metamodels.dependency.DependencyPlugin
+Bundle-Activator: org.teiid.designer.metamodels.dependency.DependencyPlugin
 Bundle-Vendor: %pluginProvider
 Bundle-Localization: plugin
-Export-Package: com.metamatrix.metamodels.dependency,
- com.metamatrix.metamodels.dependency.impl,
- com.metamatrix.metamodels.dependency.provider,
- com.metamatrix.metamodels.dependency.util
+Export-Package: org.teiid.designer.metamodels.dependency,
+ org.teiid.designer.metamodels.dependency.impl,
+ org.teiid.designer.metamodels.dependency.provider,
+ org.teiid.designer.metamodels.dependency.util
 Require-Bundle: org.eclipse.emf.ecore,
  org.eclipse.emf.edit,
  org.eclipse.emf.ecore.edit,

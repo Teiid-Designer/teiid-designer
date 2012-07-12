@@ -14,8 +14,8 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.XmlValue;
 import org.eclipse.core.resources.IMarker;
+import org.teiid.core.designer.CoreModelerPlugin;
 import org.teiid.designer.vdb.VdbModelEntry.Problem;
-import com.metamatrix.core.modeler.CoreModelerPlugin;
 
 /**
  * 

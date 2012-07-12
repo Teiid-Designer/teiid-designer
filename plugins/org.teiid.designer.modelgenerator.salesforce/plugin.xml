@@ -14,7 +14,7 @@
        point="org.teiid.designer.datatools.ConnectionInfoProvider">
        <ConnectionInfoProvider
             profile="org.teiid.designer.datatools.salesforce.connectionProfile"
-            class="com.metamatrix.modeler.modelgenerator.salesforce.util.SalesForceConnectionInfoProvider"/>
+            class="org.teiid.designer.modelgenerator.salesforce.util.SalesForceConnectionInfoProvider"/>
    </extension>
    <extension
          point="org.eclipse.datatools.connectivity.connectionProfile">

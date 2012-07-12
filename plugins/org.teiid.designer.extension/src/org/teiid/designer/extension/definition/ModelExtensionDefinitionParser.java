@@ -22,6 +22,8 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
 import org.eclipse.osgi.util.NLS;
+import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.util.I18nUtil;
 import org.teiid.designer.extension.ExtensionConstants;
 import org.teiid.designer.extension.Messages;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
@@ -31,8 +33,6 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import com.metamatrix.core.util.CoreArgCheck;
-import com.metamatrix.core.util.I18nUtil;
 
 /**
  * The <code>ModelExtensionDefinitionParser</code> parses model extension definition input streams. Each input stream is validated

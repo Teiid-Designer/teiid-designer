@@ -11,9 +11,9 @@ import org.teiid.designer.advisor.ui.core.status.IStatusManager;
 import org.teiid.designer.advisor.ui.scope.RelationalModelingNature;
 import org.teiid.designer.advisor.ui.scope.WebServicesModelingNature;
 import org.teiid.designer.advisor.ui.scope.XmlModelingNature;
+import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.ui.viewsupport.ModelIdentifier;
 
-import com.metamatrix.modeler.core.ModelerCore;
-import com.metamatrix.modeler.internal.ui.viewsupport.ModelIdentifier;
 
 public class RelationalModelingSupplier implements IAdvisorSupplier {
 	private IStatusContentProvider statusProvider;

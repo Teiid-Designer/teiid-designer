@@ -29,10 +29,10 @@ import org.teiid.designer.advisor.ui.core.IAdvisorActionHandler;
 import org.teiid.designer.advisor.ui.core.InfoPopAction;
 import org.teiid.designer.advisor.ui.core.status.AdvisorStatus;
 import org.teiid.designer.advisor.ui.util.DSPPluginImageHelper;
+import org.teiid.designer.metamodels.core.ModelType;
+import org.teiid.designer.ui.common.util.UiUtil;
+import org.teiid.designer.ui.viewsupport.ModelerUiViewUtils;
 
-import com.metamatrix.metamodels.core.ModelType;
-import com.metamatrix.modeler.internal.ui.viewsupport.ModelerUiViewUtils;
-import com.metamatrix.ui.internal.util.UiUtil;
 
 /**
  * 

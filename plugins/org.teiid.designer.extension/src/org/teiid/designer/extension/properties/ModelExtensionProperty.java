@@ -15,9 +15,9 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.teiid.core.properties.Property;
 import org.teiid.core.properties.PropertyDefinition;
+import org.teiid.core.util.CoreArgCheck;
+import org.teiid.core.util.CoreStringUtil;
 
-import com.metamatrix.core.util.CoreArgCheck;
-import com.metamatrix.core.util.CoreStringUtil;
 
 /**
  * A <code>ModelExtensionProperty</code> is a model extension property that may have an overridden value.

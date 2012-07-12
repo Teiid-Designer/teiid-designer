@@ -40,10 +40,10 @@ import org.teiid.designer.advisor.ui.actions.AdvisorActionFactory;
 import org.teiid.designer.advisor.ui.actions.AdvisorActionInfo;
 import org.teiid.designer.advisor.ui.actions.AdvisorActionProvider;
 import org.teiid.designer.advisor.ui.actions.AdvisorGuides;
+import org.teiid.designer.ui.common.util.WidgetFactory;
+import org.teiid.designer.ui.common.util.WidgetUtil;
+import org.teiid.designer.ui.viewsupport.PropertiesContextManager;
 
-import com.metamatrix.modeler.ui.viewsupport.PropertiesContextManager;
-import com.metamatrix.ui.internal.util.WidgetFactory;
-import com.metamatrix.ui.internal.util.WidgetUtil;
 
 public class TeiidGuidesSection  implements AdvisorUiConstants {
 	private FormToolkit toolkit;

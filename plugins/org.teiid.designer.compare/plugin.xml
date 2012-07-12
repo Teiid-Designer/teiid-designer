@@ -23,10 +23,10 @@
          http://www.metamatrix.com/metamodels/Compare
       </uri>
       <alternateUri>
-         mtkplugin:///com.metamatrix.metamodels.Compare
+         mtkplugin:///org.teiid.designer.metamodels.Compare
       </alternateUri>
       <rootEntityClass
-            name="com.metamatrix.modeler.compare.DifferenceReport">
+            name="org.teiid.designer.compare.DifferenceReport">
       </rootEntityClass>
       <properties
             createAsPhysical="true"
@@ -37,17 +37,17 @@
             supportsExtension="false">
       </properties>
       <packageClass
-            name="com.metamatrix.modeler.compare.ComparePackage">
+            name="org.teiid.designer.compare.ComparePackage">
       </packageClass>
       <adapterClass
-            name="com.metamatrix.modeler.compare.provider.CompareItemProviderAdapterFactory">
+            name="org.teiid.designer.compare.provider.CompareItemProviderAdapterFactory">
       </adapterClass>
    </extension>
    <extension
          point="org.eclipse.emf.ecore.generated_package">
       <package
             uri="http://www.metamatrix.com/metamodels/Compare"
-            class="com.metamatrix.modeler.compare.ComparePackage">
+            class="org.teiid.designer.compare.ComparePackage">
       </package>
    </extension>
 

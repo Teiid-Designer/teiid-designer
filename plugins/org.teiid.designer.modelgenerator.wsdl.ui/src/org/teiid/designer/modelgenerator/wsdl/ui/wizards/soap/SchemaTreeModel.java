@@ -19,8 +19,8 @@ import org.eclipse.xsd.XSDTypeDefinition;
 import org.eclipse.xsd.impl.XSDElementDeclarationImpl;
 import org.eclipse.xsd.impl.XSDModelGroupImpl;
 import org.eclipse.xsd.impl.XSDParticleImpl;
+import org.teiid.designer.modelgenerator.wsdl.model.Part;
 
-import com.metamatrix.modeler.modelgenerator.wsdl.model.Part;
 
 public class SchemaTreeModel {
 
