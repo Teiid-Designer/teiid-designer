@@ -26,7 +26,7 @@ import junit.framework.TestSuite;
 public class TestPluginUtilImpl extends TestCase {
 
     public static final String PLUGIN_ID = CoreModelerPlugin.PLUGIN_ID;
-    public static final String I18N_NAME = "org.teiid.util.testResourceBundleUtil"; //$NON-NLS-1$
+    public static final String I18N_NAME = "org.teiid.core.util.testResourceBundleUtil"; //$NON-NLS-1$
 
     public static String KEY1 = "key1"; //$NON-NLS-1$
     public static String KEY2 = "key2"; //$NON-NLS-1$

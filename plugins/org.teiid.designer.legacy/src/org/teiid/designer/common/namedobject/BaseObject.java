@@ -38,7 +38,6 @@ public interface BaseObject extends Comparable, Cloneable {
      * Return a deep cloned instance of this object.  Subclasses must override
      * this method.
      * @return the object that is the clone of this instance.
-     * {@link com.metamatrix.metadata.api.Defaults Defaults} cannot be cloned).
      */
     Object clone();
 

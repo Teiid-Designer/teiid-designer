@@ -268,8 +268,7 @@ public abstract class BaseID implements Cloneable, Comparable, Serializable {
      * Return a deep cloned instance of this object. Subclasses must override this method.
      * 
      * @return the object that is the clone of this instance.
-     * @throws CloneNotSupportedException if this object cannot be cloned (i.e., only objects in
-     *         {@link com.metamatrix.metadata.api.Defaults Defaults} cannot be cloned).
+     * @throws CloneNotSupportedException if this object cannot be cloned.
      */
     @Override
 	public Object clone() throws CloneNotSupportedException {
