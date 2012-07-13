@@ -101,7 +101,7 @@ public class TestCoreXsltPlugin extends TestCase {
 
     public void testNonPlatformGetStringWithZeroLengthKey() {
         final String key = ""; //$NON-NLS-1$
-        final String expectedValue = "<Missing message for key \"\" in: org.teiid.core.xslt.i18n>"; //$NON-NLS-1$
+        final String expectedValue = "<Missing message for key \"\" in: org.teiid.designer.core.xslt.i18n>"; //$NON-NLS-1$
         helpTestGetString(key, expectedValue);
     }
 
