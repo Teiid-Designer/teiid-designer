@@ -150,7 +150,8 @@ public class NewVirtualDocumentWizardPage extends WizardPage implements ModelerX
     /**
      * @see IDialogPage#createControl(Composite)
      */
-    public void createControl( Composite parent ) {
+    @Override
+	public void createControl( Composite parent ) {
         model.setWizHolder(parent);
 
         panel = new NewVirtualDocumentWizardPanel(parent, model, this);
@@ -168,7 +169,8 @@ public class NewVirtualDocumentWizardPage extends WizardPage implements ModelerX
 
                 // Set up to use a wait-cursor
                 Runnable runnable = new Runnable() {
-                    public void run() {
+                    @Override
+					public void run() {
 
                         final boolean startedTxn = ModelerCore.startTxn(false,
                                                                         false,
@@ -230,7 +232,8 @@ public class NewVirtualDocumentWizardPage extends WizardPage implements ModelerX
         }
     }
 
-    public XmlFragment[] getFragments( ModelResource modelResource,
+    @Override
+	public XmlFragment[] getFragments( ModelResource modelResource,
                                        IProgressMonitor monitor ) {
         XmlFragment[] rv;
 
@@ -239,7 +242,8 @@ public class NewVirtualDocumentWizardPage extends WizardPage implements ModelerX
             // let the populator create the document
             final boolean[] buildEntire = new boolean[1];
             Display.getDefault().syncExec(new Runnable() {
-                public void run() {
+                @Override
+				public void run() {
                     // hack to change a variable in a anonymous class:
                     buildEntire[0] = model.getBuildEntireDocuments();
                 }
@@ -271,7 +275,8 @@ public class NewVirtualDocumentWizardPage extends WizardPage implements ModelerX
         return rv;
     }
 
-    public void updateSourceFragments( boolean isVisible,
+    @Override
+	public void updateSourceFragments( boolean isVisible,
                                        IProgressMonitor monitor ) {
         // do nothing; this is the source for other pages.
     }
@@ -619,7 +624,8 @@ class NewVirtualDocumentWizardPanel extends ScrolledComposite implements Modeler
 
             // Set up to use a wait-cursor
             Runnable runnable = new Runnable() {
-                public void run() {
+                @Override
+				public void run() {
                     setPopulator(thePopulator);
                 }
             };
@@ -704,7 +710,8 @@ class NewVirtualDocumentWizardPanel extends ScrolledComposite implements Modeler
         }
     }
 
-    public void accumulatedValuesChanged( AccumulatorPanel source ) {
+    @Override
+	public void accumulatedValuesChanged( AccumulatorPanel source ) {
         model.setSelectedFragmentCount(getChosenCount());
         /* this code does nothing, since the setPageComplete method is commented out.
         		boolean anyValuesAccumulated = false;
@@ -742,7 +749,8 @@ class NewVirtualDocumentWizardPanel extends ScrolledComposite implements Modeler
         dialog.addFilter(filter);
         dialog.setAllowMultiple(false);
         dialog.setValidator(new ISelectionStatusValidator() {
-            public IStatus validate( Object[] selection ) {
+            @Override
+			public IStatus validate( Object[] selection ) {
                 if (selection == null) {
                     return new StatusInfo(ModelerXmlUiConstants.PLUGIN_ID, IStatus.ERROR, NO_SCHEMA_SELECTED);
                 } else if (selection.length != 1) {
@@ -986,7 +994,8 @@ class NewVirtualDocumentWizardPanel extends ScrolledComposite implements Modeler
         }
 
         // Implementation of the IRunnableWithProgress interface:
-        public void run( IProgressMonitor monitor ) {
+        @Override
+		public void run( IProgressMonitor monitor ) {
             if (monitor == null) {
                 monitor = new NullProgressMonitor();
             } // endif
@@ -1018,7 +1027,8 @@ class NewVirtualDocumentAccumulatorSource implements IAccumulatorSource {
         this.whichAccumulator = accType;
     }
 
-    public void accumulatedValuesRemoved( Collection values ) {
+    @Override
+	public void accumulatedValuesRemoved( Collection values ) {
         switch (whichAccumulator) {
             case NewVirtualDocumentWizardPanel.DOCUMENTS:
                 caller.documentsAccumulatedValuesRemoved(values);
@@ -1031,7 +1041,8 @@ class NewVirtualDocumentAccumulatorSource implements IAccumulatorSource {
         }
     }
 
-    public void accumulatedValuesAdded( Collection values ) {
+    @Override
+	public void accumulatedValuesAdded( Collection values ) {
         switch (whichAccumulator) {
             case NewVirtualDocumentWizardPanel.DOCUMENTS:
                 caller.documentsAccumulatedValuesAdded(values);
@@ -1044,7 +1055,8 @@ class NewVirtualDocumentAccumulatorSource implements IAccumulatorSource {
         }
     }
 
-    public Collection getAvailableValues() {
+    @Override
+	public Collection getAvailableValues() {
         Collection values = null;
         switch (whichAccumulator) {
             case NewVirtualDocumentWizardPanel.DOCUMENTS:
@@ -1057,7 +1069,8 @@ class NewVirtualDocumentAccumulatorSource implements IAccumulatorSource {
         return values;
     }
 
-    public int getAvailableValuesCount() {
+    @Override
+	public int getAvailableValuesCount() {
         int count = -1;
         switch (whichAccumulator) {
             case NewVirtualDocumentWizardPanel.DOCUMENTS:
@@ -1070,7 +1083,8 @@ class NewVirtualDocumentAccumulatorSource implements IAccumulatorSource {
         return count;
     }
 
-    public Collection getSelectedAvailableValues() {
+    @Override
+	public Collection getSelectedAvailableValues() {
         Collection values = null;
         switch (whichAccumulator) {
             case NewVirtualDocumentWizardPanel.DOCUMENTS:
@@ -1083,7 +1097,8 @@ class NewVirtualDocumentAccumulatorSource implements IAccumulatorSource {
         return values;
     }
 
-    public int getSelectedAvailableValuesCount() {
+    @Override
+	public int getSelectedAvailableValuesCount() {
         int count = -1;
         switch (whichAccumulator) {
             case NewVirtualDocumentWizardPanel.DOCUMENTS:
@@ -1096,7 +1111,8 @@ class NewVirtualDocumentAccumulatorSource implements IAccumulatorSource {
         return count;
     }
 
-    public Control createControl( Composite parent ) {
+    @Override
+	public Control createControl( Composite parent ) {
         Control control = null;
         switch (whichAccumulator) {
             case NewVirtualDocumentWizardPanel.DOCUMENTS:
@@ -1109,7 +1125,8 @@ class NewVirtualDocumentAccumulatorSource implements IAccumulatorSource {
         return control;
     }
 
-    public void addSelectionListener( SelectionListener listener ) {
+    @Override
+	public void addSelectionListener( SelectionListener listener ) {
         switch (whichAccumulator) {
             case NewVirtualDocumentWizardPanel.DOCUMENTS:
                 caller.documentsAddSelectionListener(listener);
@@ -1123,14 +1140,16 @@ class NewVirtualDocumentAccumulatorSource implements IAccumulatorSource {
     /* (non-Javadoc)
      * @see org.teiid.designer.ui.common.widget.accumulator.IAccumulatorSource#supportsAddAll()
      */
-    public boolean supportsAddAll() {
+    @Override
+	public boolean supportsAddAll() {
         return true;
     }
 
     /* (non-Javadoc)
      * @see org.teiid.designer.ui.common.widget.accumulator.IAccumulatorSource#getSelectionStatus()
      */
-    public IStatus getSelectionStatus() {
+    @Override
+	public IStatus getSelectionStatus() {
         return OK_STATUS;
     }
 }

@@ -73,7 +73,8 @@ public class UUIDFactory implements ObjectIDFactory {
      * Return the description for the type of ObjectID described by this object.
      * @return the description
      */
-    public String getDescription() {
+    @Override
+	public String getDescription() {
         return CorePlugin.Util.getString("UUIDFactory.Description"); //$NON-NLS-1$
     }
 
@@ -90,7 +91,8 @@ public class UUIDFactory implements ObjectIDFactory {
      * @throws InvalidIDException if the parser is aware of this protocol, but it is of the wrong
      * format for this type of ObjectID.
      */
-    public ObjectID stringWithoutProtocolToObject(String value) throws InvalidIDException {
+    @Override
+	public ObjectID stringWithoutProtocolToObject(String value) throws InvalidIDException {
         return UUID.stringToObject(value);
     }
 
@@ -103,7 +105,8 @@ public class UUIDFactory implements ObjectIDFactory {
      * @throws InvalidIDException if the parser is aware of this protocol, but it is of the wrong
      * format for this type of ObjectID.
      */
-    public ObjectID stringToObject(String value) throws InvalidIDException {
+    @Override
+	public ObjectID stringToObject(String value) throws InvalidIDException {
         final ParsedObjectID parsedID = ParsedObjectID.parsedStringifiedObjectID(value,UUID.PROTOCOL);
         return UUID.stringToObject(parsedID.getRemainder());
     }
@@ -112,7 +115,8 @@ public class UUIDFactory implements ObjectIDFactory {
      * Return the name of the protocol that this factory uses.
      * @return the protocol name
      */
-    public String getProtocol() {
+    @Override
+	public String getProtocol() {
 	    return UUID.PROTOCOL;
     }
 
@@ -124,7 +128,8 @@ public class UUIDFactory implements ObjectIDFactory {
      * <p>Create a new ObjectID instance using this protocol. </p>
      * @return Universally unique ID (UUID)
      */
-    public ObjectID create() {
+    @Override
+	public ObjectID create() {
         return new UUID(java.util.UUID.randomUUID());
     }
 

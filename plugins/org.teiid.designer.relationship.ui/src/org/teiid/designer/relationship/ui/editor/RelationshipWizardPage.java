@@ -92,7 +92,8 @@ public class RelationshipWizardPage extends WizardPage implements IStatusListene
     /* (non-Javadoc)
      * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
      */
-    public void createControl( Composite parent ) {
+    @Override
+	public void createControl( Composite parent ) {
 
         // start the transaction (make it NOT undoable, since we will add our own undoable edit on commit)
 
@@ -152,7 +153,8 @@ public class RelationshipWizardPage extends WizardPage implements IStatusListene
         return (stStatus.isOK() || stStatus.getSeverity() == IStatus.INFO || stStatus.getSeverity() == IStatus.WARNING);
     }
 
-    public void setStatus( IStatus stStatus ) {
+    @Override
+	public void setStatus( IStatus stStatus ) {
 
         this.stStatus = stStatus;
 

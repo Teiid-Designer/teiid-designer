@@ -34,7 +34,8 @@ public abstract class AbstractEObjectNameMatcher extends AbstractEObjectMatcher 
      * @see org.teiid.designer.core.compare.EObjectMatcher#addMappingsForRoots(java.util.List, java.util.List, org.eclipse.emf.mapping.Mapping, org.eclipse.emf.mapping.MappingFactory)
      * @since 4.2
      */
-    public void addMappingsForRoots(final List inputs,
+    @Override
+	public void addMappingsForRoots(final List inputs,
                                     final List outputs,
                                     final Mapping mapping,
                                     final MappingFactory factory) {
@@ -45,7 +46,8 @@ public abstract class AbstractEObjectNameMatcher extends AbstractEObjectMatcher 
      * @see org.teiid.designer.core.compare.EObjectMatcher#addMappings(org.eclipse.emf.ecore.EReference, java.util.List, java.util.List, org.eclipse.emf.mapping.Mapping, org.eclipse.emf.mapping.MappingFactory)
      * @since 4.2
      */
-    public void addMappings(final EReference reference,
+    @Override
+	public void addMappings(final EReference reference,
                             final List inputs,
                             final List outputs,
                             final Mapping mapping,

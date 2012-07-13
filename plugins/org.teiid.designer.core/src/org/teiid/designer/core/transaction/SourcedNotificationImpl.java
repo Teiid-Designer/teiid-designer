@@ -43,210 +43,240 @@ public class SourcedNotificationImpl implements SourcedNotification {
     /* (non-Javadoc)
      * @See org.teiid.designer.core.transaction.SourcedNotification#getSource()
      */
-    public Object getSource() {
+    @Override
+	public Object getSource() {
         return this.source;
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.emf.common.notify.Notification#getNotifier()
      */
-    public Object getNotifier() {
+    @Override
+	public Object getNotifier() {
         return (this.notification == null ? null : this.notification.getNotifier());
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.emf.common.notify.Notification#getEventType()
      */
-    public int getEventType() {
+    @Override
+	public int getEventType() {
         return (this.notification == null ? 0 : this.notification.getEventType());
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.emf.common.notify.Notification#getFeatureID(java.lang.Class)
      */
-    public int getFeatureID(Class expectedClass) {
+    @Override
+	public int getFeatureID(Class expectedClass) {
         return (this.notification == null ? 0 : this.notification.getFeatureID(expectedClass));
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.emf.common.notify.Notification#getFeature()
      */
-    public Object getFeature() {
+    @Override
+	public Object getFeature() {
         return (this.notification == null ? null : this.notification.getFeature());
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.emf.common.notify.Notification#getOldValue()
      */
-    public Object getOldValue() {
+    @Override
+	public Object getOldValue() {
         return (this.notification == null ? null : this.notification.getOldValue());
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.emf.common.notify.Notification#getNewValue()
      */
-    public Object getNewValue() {
+    @Override
+	public Object getNewValue() {
         return (this.notification == null ? null : this.notification.getNewValue());
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.emf.common.notify.Notification#isTouch()
      */
-    public boolean isTouch() {
+    @Override
+	public boolean isTouch() {
         return (this.notification == null ? true : this.notification.isTouch());
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.emf.common.notify.Notification#isReset()
      */
-    public boolean isReset() {
+    @Override
+	public boolean isReset() {
         return (this.notification == null ? false : this.notification.isReset());
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.emf.common.notify.Notification#getPosition()
      */
-    public int getPosition() {
+    @Override
+	public int getPosition() {
         return (this.notification == null ? 0 : this.notification.getPosition());
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.emf.common.notify.Notification#merge(org.eclipse.emf.common.notify.Notification)
      */
-    public boolean merge(Notification notification) {
+    @Override
+	public boolean merge(Notification notification) {
         return (this.notification == null ? false : this.notification.merge(notification));
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.emf.common.notify.Notification#getOldBooleanValue()
      */
-    public boolean getOldBooleanValue() {
+    @Override
+	public boolean getOldBooleanValue() {
         return (this.notification == null ? false : this.notification.getOldBooleanValue());
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.emf.common.notify.Notification#getNewBooleanValue()
      */
-    public boolean getNewBooleanValue() {
+    @Override
+	public boolean getNewBooleanValue() {
         return (this.notification == null ? false : this.notification.getNewBooleanValue());
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.emf.common.notify.Notification#getOldByteValue()
      */
-    public byte getOldByteValue() {
+    @Override
+	public byte getOldByteValue() {
         return (this.notification == null ? 0 : this.notification.getOldByteValue());
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.emf.common.notify.Notification#getNewByteValue()
      */
-    public byte getNewByteValue() {
+    @Override
+	public byte getNewByteValue() {
         return (this.notification == null ? 0 : this.notification.getNewByteValue());
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.emf.common.notify.Notification#getOldCharValue()
      */
-    public char getOldCharValue() {
+    @Override
+	public char getOldCharValue() {
         return (this.notification == null ? ' ' : this.notification.getOldCharValue());
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.emf.common.notify.Notification#getNewCharValue()
      */
-    public char getNewCharValue() {
+    @Override
+	public char getNewCharValue() {
         return (this.notification == null ? ' ' : this.notification.getNewCharValue());
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.emf.common.notify.Notification#getOldDoubleValue()
      */
-    public double getOldDoubleValue() {
+    @Override
+	public double getOldDoubleValue() {
         return (this.notification == null ? 0 : this.notification.getOldDoubleValue());
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.emf.common.notify.Notification#getNewDoubleValue()
      */
-    public double getNewDoubleValue() {
+    @Override
+	public double getNewDoubleValue() {
         return (this.notification == null ? 0 : this.notification.getNewDoubleValue());
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.emf.common.notify.Notification#getOldFloatValue()
      */
-    public float getOldFloatValue() {
+    @Override
+	public float getOldFloatValue() {
         return (this.notification == null ? 0 : this.notification.getOldFloatValue());
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.emf.common.notify.Notification#getNewFloatValue()
      */
-    public float getNewFloatValue() {
+    @Override
+	public float getNewFloatValue() {
         return (this.notification == null ? 0 : this.notification.getNewFloatValue());
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.emf.common.notify.Notification#getOldIntValue()
      */
-    public int getOldIntValue() {
+    @Override
+	public int getOldIntValue() {
         return (this.notification == null ? 0 : this.notification.getOldIntValue());
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.emf.common.notify.Notification#getNewIntValue()
      */
-    public int getNewIntValue() {
+    @Override
+	public int getNewIntValue() {
         return (this.notification == null ? 0 : this.notification.getNewIntValue());
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.emf.common.notify.Notification#getOldLongValue()
      */
-    public long getOldLongValue() {
+    @Override
+	public long getOldLongValue() {
         return (this.notification == null ? 0 : this.notification.getOldLongValue());
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.emf.common.notify.Notification#getNewLongValue()
      */
-    public long getNewLongValue() {
+    @Override
+	public long getNewLongValue() {
         return (this.notification == null ? 0 : this.notification.getNewLongValue());
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.emf.common.notify.Notification#getOldShortValue()
      */
-    public short getOldShortValue() {
+    @Override
+	public short getOldShortValue() {
         return (this.notification == null ? 0 : this.notification.getOldShortValue());
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.emf.common.notify.Notification#getNewShortValue()
      */
-    public short getNewShortValue() {
+    @Override
+	public short getNewShortValue() {
         return (this.notification == null ? 0 : this.notification.getNewShortValue());
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.emf.common.notify.Notification#getOldStringValue()
      */
-    public String getOldStringValue() {
+    @Override
+	public String getOldStringValue() {
         return (this.notification == null ? null : this.notification.getOldStringValue());
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.emf.common.notify.Notification#getNewStringValue()
      */
-    public String getNewStringValue() {
+    @Override
+	public String getNewStringValue() {
         return (this.notification == null ? null : this.notification.getNewStringValue());
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.emf.common.notify.NotificationChain#add(org.eclipse.emf.common.notify.Notification)
      */
-    public boolean add(final Notification theNotification) {
+    @Override
+	public boolean add(final Notification theNotification) {
         if (theNotification == null || theNotification == this.notification) {
             return false;
         }
@@ -261,7 +291,8 @@ public class SourcedNotificationImpl implements SourcedNotification {
     /* (non-Javadoc)
      * @see org.eclipse.emf.common.notify.NotificationChain#dispatch()
      */
-    public void dispatch() {
+    @Override
+	public void dispatch() {
         for (Iterator i = this.notifications.iterator(); i.hasNext();) {
             ((NotificationImpl)i.next()).dispatch();
         }
@@ -270,7 +301,8 @@ public class SourcedNotificationImpl implements SourcedNotification {
     /* (non-Javadoc)
      * @See org.teiid.designer.core.transaction.SourcedNotification#getNotifications()
      */
-    public Collection getNotifications() {
+    @Override
+	public Collection getNotifications() {
         return this.notifications;
     }
 
@@ -278,7 +310,8 @@ public class SourcedNotificationImpl implements SourcedNotification {
      * @see org.eclipse.emf.common.notify.Notification#wasSet()
      * @since 4.3
      */
-    public boolean wasSet() {
+    @Override
+	public boolean wasSet() {
         return (this.notification == null ? false : this.notification.wasSet());
     }
     

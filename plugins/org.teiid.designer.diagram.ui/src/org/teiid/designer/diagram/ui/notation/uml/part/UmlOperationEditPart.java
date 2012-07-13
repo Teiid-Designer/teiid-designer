@@ -75,6 +75,7 @@ public class UmlOperationEditPart extends AbstractNotationEditPart implements Di
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.diagram.ui.part.EditableEditPart#edit()
 	 */
+	@Override
 	public void edit() {
 		if( getSelectionHandler().shouldRename(getModelObject()) ) {
 			if( ModelerCore.getModelEditor().hasName(getModelObject())  
@@ -83,6 +84,7 @@ public class UmlOperationEditPart extends AbstractNotationEditPart implements Di
 		}
 	}
     
+	@Override
 	public void performDirectEdit(){
 		if(manager == null)
 			manager = new DirectEditPartManager(this, 
@@ -113,14 +115,17 @@ public class UmlOperationEditPart extends AbstractNotationEditPart implements Di
 		getFigure().repaint();
 	}
     
+	@Override
 	public String getText() {
 		return ((DiagramModelNode)getModel()).getName();
 	}
 
+	@Override
 	public void setText(String newName) {
 		((DiagramModelNode)getModel()).setName(newName);
 	}
     
+	@Override
 	public String getEditString(){
 		return ((DiagramModelNode)getModel()).getName();
 	}
@@ -206,6 +211,7 @@ public class UmlOperationEditPart extends AbstractNotationEditPart implements Di
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.diagram.ui.util.directedit.DirectEditPart#getEditManager()
 	 */
+	@Override
 	public DirectEditPartManager getEditManager() {
 		return (DirectEditPartManager)manager;
 	}

@@ -33,7 +33,8 @@ public class ExternalResourceSetDescriptorImpl extends ExtensionDescriptorImpl i
     /**
      * @see org.teiid.designer.core.ExternalResourceSetDescriptor#getProperties()
      */
-    public Properties getProperties() {
+    @Override
+	public Properties getProperties() {
         return this.properties;
     }
 

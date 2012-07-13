@@ -130,7 +130,8 @@ public class ModelExplorerNotificationHandler extends ModelObjectTreeViewerNotif
                             this.renameAction.selectionChanged(this.viewer, selection);
                             if (renameablePart == null) {
                                 Display.getCurrent().asyncExec(new Runnable() {
-                                    public void run() {
+                                    @Override
+									public void run() {
                                         if (viewer.getViewer().getControl().isFocusControl()) renameAction.doRun(false);
                                     }
                                 });

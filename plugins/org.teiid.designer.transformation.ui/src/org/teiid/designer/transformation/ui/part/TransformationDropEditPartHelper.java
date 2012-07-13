@@ -83,7 +83,8 @@ public class TransformationDropEditPartHelper extends DropEditPartHelper {
      * @see org.teiid.designer.diagram.ui.part.DropEditPart#allowsDrop(org.eclipse.draw2d.geometry.Point, java.util.List)
      * @since 4.3
      */
-    public boolean allowsDrop(Object target,
+    @Override
+	public boolean allowsDrop(Object target,
                               List dropList) {
         if( TransformationSourceManager.canAdd((EObject)transformation, dropList, this) &&
             target instanceof DiagramEditPart ) {

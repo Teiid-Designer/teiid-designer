@@ -23,6 +23,7 @@ public class RelationshipRecordImpl extends AbstractRelationshipRecord implement
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.relationship.search.index.RelationshipRecord#getTypeUUID()
 	 */
+	@Override
 	public String getTypeUUID() {
 		return this.typeUUID;
 	}
@@ -37,6 +38,7 @@ public class RelationshipRecordImpl extends AbstractRelationshipRecord implement
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.relationship.search.index.SearchRecord#getRecordType()
 	 */
+	@Override
 	public char getRecordType() {
 		return IndexConstants.SEARCH_RECORD_TYPE.RELATIONSHIP;
 	}
@@ -44,6 +46,7 @@ public class RelationshipRecordImpl extends AbstractRelationshipRecord implement
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.core.relationship.search.index.RelationshipRecord#getTypeName()
 	 */
+	@Override
 	public String getTypeName() {
 		return this.typeName;
 	}
@@ -67,7 +70,8 @@ public class RelationshipRecordImpl extends AbstractRelationshipRecord implement
      * @see org.teiid.designer.core.search.runtime.RelationshipRecord#getResourcePath()
      * @since 4.2
      */
-    public String getResourcePath() {
+    @Override
+	public String getResourcePath() {
         return this.resourcePath;
     }
 }

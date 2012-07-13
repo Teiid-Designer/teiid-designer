@@ -22,14 +22,16 @@ public class SchemaAspect extends RelationalEntityAspect {
     /**
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlAspect#isRecordType(char)
      */
-    public boolean isRecordType( char recordType ) {
+    @Override
+	public boolean isRecordType( char recordType ) {
         return false;
     }
 
     /*
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlAspect#updateObject(org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject)
      */
-    public void updateObject( EObject targetObject,
+    @Override
+	public void updateObject( EObject targetObject,
                               EObject sourceObject ) {
 
     }

@@ -32,6 +32,7 @@ public final class FakeDecoration implements IDecoration {
 	 *
 	 * @see org.eclipse.jface.viewers.IDecoration#getDecorationContext()
 	 */
+	@Override
 	public IDecorationContext getDecorationContext() {
 		return null;
 	}
@@ -40,6 +41,7 @@ public final class FakeDecoration implements IDecoration {
 	 * @see org.eclipse.jface.viewers.IDecoration#addPrefix(java.lang.String)
 	 * @since 4.0
 	 */
+	@Override
 	public void addPrefix(final String prefix) {
         if (this.pfxs == null) {
             this.pfxs = new ArrayList(1);
@@ -51,6 +53,7 @@ public final class FakeDecoration implements IDecoration {
 	 * @see org.eclipse.jface.viewers.IDecoration#addSuffix(java.lang.String)
 	 * @since 4.0
 	 */
+	@Override
 	public void addSuffix(final String suffix) {
         if (this.sfxs == null) {
             this.sfxs = new ArrayList(1);
@@ -62,6 +65,7 @@ public final class FakeDecoration implements IDecoration {
 	 * @see org.eclipse.jface.viewers.IDecoration#addOverlay(org.eclipse.jface.resource.ImageDescriptor)
 	 * @since 4.0
 	 */
+	@Override
 	public void addOverlay(final ImageDescriptor overlay) {
         if (this.overlays == null) {
             this.overlays = new ArrayList(1);
@@ -69,21 +73,25 @@ public final class FakeDecoration implements IDecoration {
         this.overlays.add(overlay);
 	}
 
+	@Override
 	public void addOverlay(ImageDescriptor overlay, int quadrant) {
 		// TODO Auto-generated method stub
 
 	}
 
+	@Override
 	public void setBackgroundColor(Color color) {
 		// TODO Auto-generated method stub
 
 	}
 
+	@Override
 	public void setFont(Font color) {
 		// TODO Auto-generated method stub
 
 	}
 
+	@Override
 	public void setForegroundColor(Color color) {
 		// TODO Auto-generated method stub
 

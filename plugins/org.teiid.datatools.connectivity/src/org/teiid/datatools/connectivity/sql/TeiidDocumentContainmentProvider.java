@@ -33,6 +33,7 @@ public class TeiidDocumentContainmentProvider extends AbstractContainmentProvide
 	 * @see org.eclipse.datatools.connectivity.sqm.core.containment.
 	 * AbstractContainmentProvider#getContainer(org.eclipse.emf.ecore.EObject)
 	 */
+	@Override
 	public EObject getContainer(EObject obj) {
 		Schema schema = ((Document) obj).getSchema();
 		return schema;
@@ -45,6 +46,7 @@ public class TeiidDocumentContainmentProvider extends AbstractContainmentProvide
 	 * AbstractContainmentProvider
 	 * #getContainmentFeature(org.eclipse.emf.ecore.EObject)
 	 */
+	@Override
 	public EStructuralFeature getContainmentFeature(EObject obj) {
 		return SQLSchemaPackage.eINSTANCE.getCatalog_Schemas();
 	}
@@ -55,6 +57,7 @@ public class TeiidDocumentContainmentProvider extends AbstractContainmentProvide
 	 * @see org.eclipse.datatools.connectivity.sqm.internal.core.containment.
 	 * ContainmentProvider#getGroupId(org.eclipse.emf.ecore.EObject)
 	 */
+	@Override
 	public String getGroupId(EObject obj) {
 		return GroupID.SCHEMA;
 	}

@@ -184,7 +184,8 @@ public class SoapPackageImpl extends EPackageImpl implements SoapPackage {
      * 
      * @generated
      */
-    public EClass getSoapAddress() {
+    @Override
+	public EClass getSoapAddress() {
         return soapAddressEClass;
     }
 
@@ -193,7 +194,8 @@ public class SoapPackageImpl extends EPackageImpl implements SoapPackage {
      * 
      * @generated
      */
-    public EAttribute getSoapAddress_Location() {
+    @Override
+	public EAttribute getSoapAddress_Location() {
         return (EAttribute)soapAddressEClass.getEStructuralFeatures().get(1);
     }
 
@@ -202,7 +204,8 @@ public class SoapPackageImpl extends EPackageImpl implements SoapPackage {
      * 
      * @generated
      */
-    public EReference getSoapAddress_Port() {
+    @Override
+	public EReference getSoapAddress_Port() {
         return (EReference)soapAddressEClass.getEStructuralFeatures().get(0);
     }
 
@@ -211,7 +214,8 @@ public class SoapPackageImpl extends EPackageImpl implements SoapPackage {
      * 
      * @generated
      */
-    public EClass getSoapHeaderFault() {
+    @Override
+	public EClass getSoapHeaderFault() {
         return soapHeaderFaultEClass;
     }
 
@@ -220,7 +224,8 @@ public class SoapPackageImpl extends EPackageImpl implements SoapPackage {
      * 
      * @generated
      */
-    public EAttribute getSoapHeaderFault_Parts() {
+    @Override
+	public EAttribute getSoapHeaderFault_Parts() {
         return (EAttribute)soapHeaderFaultEClass.getEStructuralFeatures().get(2);
     }
 
@@ -229,7 +234,8 @@ public class SoapPackageImpl extends EPackageImpl implements SoapPackage {
      * 
      * @generated
      */
-    public EAttribute getSoapHeaderFault_Message() {
+    @Override
+	public EAttribute getSoapHeaderFault_Message() {
         return (EAttribute)soapHeaderFaultEClass.getEStructuralFeatures().get(3);
     }
 
@@ -238,7 +244,8 @@ public class SoapPackageImpl extends EPackageImpl implements SoapPackage {
      * 
      * @generated
      */
-    public EReference getSoapHeaderFault_MessagePart() {
+    @Override
+	public EReference getSoapHeaderFault_MessagePart() {
         return (EReference)soapHeaderFaultEClass.getEStructuralFeatures().get(0);
     }
 
@@ -247,7 +254,8 @@ public class SoapPackageImpl extends EPackageImpl implements SoapPackage {
      * 
      * @generated
      */
-    public EReference getSoapHeaderFault_SoapHeader() {
+    @Override
+	public EReference getSoapHeaderFault_SoapHeader() {
         return (EReference)soapHeaderFaultEClass.getEStructuralFeatures().get(1);
     }
 
@@ -256,7 +264,8 @@ public class SoapPackageImpl extends EPackageImpl implements SoapPackage {
      * 
      * @generated
      */
-    public EClass getSoapFault() {
+    @Override
+	public EClass getSoapFault() {
         return soapFaultEClass;
     }
 
@@ -265,7 +274,8 @@ public class SoapPackageImpl extends EPackageImpl implements SoapPackage {
      * 
      * @generated
      */
-    public EAttribute getSoapFault_Use() {
+    @Override
+	public EAttribute getSoapFault_Use() {
         return (EAttribute)soapFaultEClass.getEStructuralFeatures().get(1);
     }
 
@@ -274,7 +284,8 @@ public class SoapPackageImpl extends EPackageImpl implements SoapPackage {
      * 
      * @generated
      */
-    public EAttribute getSoapFault_Namespace() {
+    @Override
+	public EAttribute getSoapFault_Namespace() {
         return (EAttribute)soapFaultEClass.getEStructuralFeatures().get(2);
     }
 
@@ -283,7 +294,8 @@ public class SoapPackageImpl extends EPackageImpl implements SoapPackage {
      * 
      * @generated
      */
-    public EAttribute getSoapFault_EncodingStyles() {
+    @Override
+	public EAttribute getSoapFault_EncodingStyles() {
         return (EAttribute)soapFaultEClass.getEStructuralFeatures().get(3);
     }
 
@@ -292,7 +304,8 @@ public class SoapPackageImpl extends EPackageImpl implements SoapPackage {
      * 
      * @generated
      */
-    public EReference getSoapFault_BindingFault() {
+    @Override
+	public EReference getSoapFault_BindingFault() {
         return (EReference)soapFaultEClass.getEStructuralFeatures().get(0);
     }
 
@@ -301,7 +314,8 @@ public class SoapPackageImpl extends EPackageImpl implements SoapPackage {
      * 
      * @generated
      */
-    public EClass getSoapHeader() {
+    @Override
+	public EClass getSoapHeader() {
         return soapHeaderEClass;
     }
 
@@ -310,7 +324,8 @@ public class SoapPackageImpl extends EPackageImpl implements SoapPackage {
      * 
      * @generated
      */
-    public EAttribute getSoapHeader_Use() {
+    @Override
+	public EAttribute getSoapHeader_Use() {
         return (EAttribute)soapHeaderEClass.getEStructuralFeatures().get(3);
     }
 
@@ -319,7 +334,8 @@ public class SoapPackageImpl extends EPackageImpl implements SoapPackage {
      * 
      * @generated
      */
-    public EAttribute getSoapHeader_Namespace() {
+    @Override
+	public EAttribute getSoapHeader_Namespace() {
         return (EAttribute)soapHeaderEClass.getEStructuralFeatures().get(4);
     }
 
@@ -328,7 +344,8 @@ public class SoapPackageImpl extends EPackageImpl implements SoapPackage {
      * 
      * @generated
      */
-    public EAttribute getSoapHeader_EncodingStyles() {
+    @Override
+	public EAttribute getSoapHeader_EncodingStyles() {
         return (EAttribute)soapHeaderEClass.getEStructuralFeatures().get(5);
     }
 
@@ -337,7 +354,8 @@ public class SoapPackageImpl extends EPackageImpl implements SoapPackage {
      * 
      * @generated
      */
-    public EAttribute getSoapHeader_Parts() {
+    @Override
+	public EAttribute getSoapHeader_Parts() {
         return (EAttribute)soapHeaderEClass.getEStructuralFeatures().get(6);
     }
 
@@ -346,7 +364,8 @@ public class SoapPackageImpl extends EPackageImpl implements SoapPackage {
      * 
      * @generated
      */
-    public EAttribute getSoapHeader_Message() {
+    @Override
+	public EAttribute getSoapHeader_Message() {
         return (EAttribute)soapHeaderEClass.getEStructuralFeatures().get(7);
     }
 
@@ -355,7 +374,8 @@ public class SoapPackageImpl extends EPackageImpl implements SoapPackage {
      * 
      * @generated
      */
-    public EReference getSoapHeader_BindingParam() {
+    @Override
+	public EReference getSoapHeader_BindingParam() {
         return (EReference)soapHeaderEClass.getEStructuralFeatures().get(0);
     }
 
@@ -364,7 +384,8 @@ public class SoapPackageImpl extends EPackageImpl implements SoapPackage {
      * 
      * @generated
      */
-    public EReference getSoapHeader_MessagePart() {
+    @Override
+	public EReference getSoapHeader_MessagePart() {
         return (EReference)soapHeaderEClass.getEStructuralFeatures().get(1);
     }
 
@@ -373,7 +394,8 @@ public class SoapPackageImpl extends EPackageImpl implements SoapPackage {
      * 
      * @generated
      */
-    public EReference getSoapHeader_HeaderFault() {
+    @Override
+	public EReference getSoapHeader_HeaderFault() {
         return (EReference)soapHeaderEClass.getEStructuralFeatures().get(2);
     }
 
@@ -382,7 +404,8 @@ public class SoapPackageImpl extends EPackageImpl implements SoapPackage {
      * 
      * @generated
      */
-    public EClass getSoapBody() {
+    @Override
+	public EClass getSoapBody() {
         return soapBodyEClass;
     }
 
@@ -391,7 +414,8 @@ public class SoapPackageImpl extends EPackageImpl implements SoapPackage {
      * 
      * @generated
      */
-    public EAttribute getSoapBody_Use() {
+    @Override
+	public EAttribute getSoapBody_Use() {
         return (EAttribute)soapBodyEClass.getEStructuralFeatures().get(1);
     }
 
@@ -400,7 +424,8 @@ public class SoapPackageImpl extends EPackageImpl implements SoapPackage {
      * 
      * @generated
      */
-    public EAttribute getSoapBody_Namespace() {
+    @Override
+	public EAttribute getSoapBody_Namespace() {
         return (EAttribute)soapBodyEClass.getEStructuralFeatures().get(2);
     }
 
@@ -409,7 +434,8 @@ public class SoapPackageImpl extends EPackageImpl implements SoapPackage {
      * 
      * @generated
      */
-    public EAttribute getSoapBody_EncodingStyles() {
+    @Override
+	public EAttribute getSoapBody_EncodingStyles() {
         return (EAttribute)soapBodyEClass.getEStructuralFeatures().get(3);
     }
 
@@ -418,7 +444,8 @@ public class SoapPackageImpl extends EPackageImpl implements SoapPackage {
      * 
      * @generated
      */
-    public EAttribute getSoapBody_Parts() {
+    @Override
+	public EAttribute getSoapBody_Parts() {
         return (EAttribute)soapBodyEClass.getEStructuralFeatures().get(4);
     }
 
@@ -427,7 +454,8 @@ public class SoapPackageImpl extends EPackageImpl implements SoapPackage {
      * 
      * @generated
      */
-    public EReference getSoapBody_BindingParam() {
+    @Override
+	public EReference getSoapBody_BindingParam() {
         return (EReference)soapBodyEClass.getEStructuralFeatures().get(0);
     }
 
@@ -436,7 +464,8 @@ public class SoapPackageImpl extends EPackageImpl implements SoapPackage {
      * 
      * @generated
      */
-    public EClass getSoapOperation() {
+    @Override
+	public EClass getSoapOperation() {
         return soapOperationEClass;
     }
 
@@ -445,7 +474,8 @@ public class SoapPackageImpl extends EPackageImpl implements SoapPackage {
      * 
      * @generated
      */
-    public EAttribute getSoapOperation_Style() {
+    @Override
+	public EAttribute getSoapOperation_Style() {
         return (EAttribute)soapOperationEClass.getEStructuralFeatures().get(1);
     }
 
@@ -454,7 +484,8 @@ public class SoapPackageImpl extends EPackageImpl implements SoapPackage {
      * 
      * @generated
      */
-    public EAttribute getSoapOperation_Action() {
+    @Override
+	public EAttribute getSoapOperation_Action() {
         return (EAttribute)soapOperationEClass.getEStructuralFeatures().get(2);
     }
 
@@ -463,7 +494,8 @@ public class SoapPackageImpl extends EPackageImpl implements SoapPackage {
      * 
      * @generated
      */
-    public EReference getSoapOperation_BindingOperation() {
+    @Override
+	public EReference getSoapOperation_BindingOperation() {
         return (EReference)soapOperationEClass.getEStructuralFeatures().get(0);
     }
 
@@ -472,7 +504,8 @@ public class SoapPackageImpl extends EPackageImpl implements SoapPackage {
      * 
      * @generated
      */
-    public EClass getSoapBinding() {
+    @Override
+	public EClass getSoapBinding() {
         return soapBindingEClass;
     }
 
@@ -481,7 +514,8 @@ public class SoapPackageImpl extends EPackageImpl implements SoapPackage {
      * 
      * @generated
      */
-    public EAttribute getSoapBinding_Transport() {
+    @Override
+	public EAttribute getSoapBinding_Transport() {
         return (EAttribute)soapBindingEClass.getEStructuralFeatures().get(1);
     }
 
@@ -490,7 +524,8 @@ public class SoapPackageImpl extends EPackageImpl implements SoapPackage {
      * 
      * @generated
      */
-    public EAttribute getSoapBinding_Style() {
+    @Override
+	public EAttribute getSoapBinding_Style() {
         return (EAttribute)soapBindingEClass.getEStructuralFeatures().get(2);
     }
 
@@ -499,7 +534,8 @@ public class SoapPackageImpl extends EPackageImpl implements SoapPackage {
      * 
      * @generated
      */
-    public EReference getSoapBinding_Binding() {
+    @Override
+	public EReference getSoapBinding_Binding() {
         return (EReference)soapBindingEClass.getEStructuralFeatures().get(0);
     }
 
@@ -508,7 +544,8 @@ public class SoapPackageImpl extends EPackageImpl implements SoapPackage {
      * 
      * @generated
      */
-    public EEnum getSoapStyleType() {
+    @Override
+	public EEnum getSoapStyleType() {
         return soapStyleTypeEEnum;
     }
 
@@ -517,7 +554,8 @@ public class SoapPackageImpl extends EPackageImpl implements SoapPackage {
      * 
      * @generated
      */
-    public EEnum getSoapUseType() {
+    @Override
+	public EEnum getSoapUseType() {
         return soapUseTypeEEnum;
     }
 
@@ -526,7 +564,8 @@ public class SoapPackageImpl extends EPackageImpl implements SoapPackage {
      * 
      * @generated
      */
-    public SoapFactory getSoapFactory() {
+    @Override
+	public SoapFactory getSoapFactory() {
         return (SoapFactory)getEFactoryInstance();
     }
 

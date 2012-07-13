@@ -295,7 +295,8 @@ public class ModelerProjectZipOperation implements IRunnableWithProgress {
      *  Export the resources that were previously specified for export
      *  (or if a single resource was specified then export it recursively)
      */
-    public void run(IProgressMonitor monitor)
+    @Override
+	public void run(IProgressMonitor monitor)
         throws InvocationTargetException, InterruptedException {
         this.monitor = monitor;
 

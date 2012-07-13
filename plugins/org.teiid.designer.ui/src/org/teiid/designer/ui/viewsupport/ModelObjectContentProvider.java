@@ -200,7 +200,8 @@ final public class ModelObjectContentProvider
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
      */
-    public synchronized Object[] getChildren(Object parentElement) {
+    @Override
+	public synchronized Object[] getChildren(Object parentElement) {
         Object[] children = NO_CHILDREN;
 
         try {
@@ -411,28 +412,32 @@ final public class ModelObjectContentProvider
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
      */
-    public Object[] getElements(Object inputElement) {
+    @Override
+	public Object[] getElements(Object inputElement) {
         return getChildren(inputElement);
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.IContentProvider#dispose()
      */
-    public void dispose() {
+    @Override
+	public void dispose() {
         // don't dispose anything - this is a static instance.
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
      */
-    public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+    @Override
+	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object)
      */
-    public Object getParent(Object element) {
+    @Override
+	public Object getParent(Object element) {
         Object result = null;
         if ( element instanceof Diagram ) {
             String type = ((Diagram) element).getType();
@@ -468,7 +473,8 @@ final public class ModelObjectContentProvider
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(java.lang.Object)
      */
-    public boolean hasChildren(Object element) {
+    @Override
+	public boolean hasChildren(Object element) {
 		return hasChildren(element, false);
     	
 //        Object[] children= getChildren(element);
@@ -542,7 +548,8 @@ final public class ModelObjectContentProvider
             return this.eClassName;
         }
         
-        public int compareTo(Object o) {
+        @Override
+		public int compareTo(Object o) {
             int result = -1;
             if (o instanceof NameValuePair) {
                 NameValuePair col2 = (NameValuePair) o;

@@ -84,7 +84,8 @@ public class BasicWebServiceGenerator implements IWebServiceGenerator {
      * @see org.teiid.designer.webservice.IWebServiceGenerator#setWebServiceResource(org.eclipse.emf.ecore.resource.Resource)
      * @since 4.2
      */
-    public void setWebServiceResource( Resource wsModel ) {
+    @Override
+	public void setWebServiceResource( Resource wsModel ) {
         CoreArgCheck.isNotNull(wsModel);
         this.webServiceResource = wsModel;
     }
@@ -93,7 +94,8 @@ public class BasicWebServiceGenerator implements IWebServiceGenerator {
      * @see org.teiid.designer.webservice.IWebServiceGenerator#getWebServiceResource()
      * @since 4.2
      */
-    public Resource getWebServiceResource() {
+    @Override
+	public Resource getWebServiceResource() {
         return this.webServiceResource;
     }
 
@@ -101,7 +103,8 @@ public class BasicWebServiceGenerator implements IWebServiceGenerator {
      * @see org.teiid.designer.webservice.IWebServiceGenerator#addWsdlDefinitions(org.teiid.designer.metamodels.wsdl.Definitions)
      * @since 4.2
      */
-    public void addWsdlDefinitions( final Definitions wsdlDefinitions ) {
+    @Override
+	public void addWsdlDefinitions( final Definitions wsdlDefinitions ) {
         CoreArgCheck.isNotNull(wsdlDefinitions);
         if (!this.wsdlDefinitions.contains(wsdlDefinitions)) {
             this.wsdlDefinitions.add(wsdlDefinitions);
@@ -112,7 +115,8 @@ public class BasicWebServiceGenerator implements IWebServiceGenerator {
      * @see org.teiid.designer.webservice.IWebServiceGenerator#addWsdlDefinitions(java.util.List)
      * @since 4.2
      */
-    public void addWsdlDefinitions( List wsdlDefinitions ) {
+    @Override
+	public void addWsdlDefinitions( List wsdlDefinitions ) {
         CoreArgCheck.isNotNull(wsdlDefinitions);
         final Iterator iter = wsdlDefinitions.iterator();
         while (iter.hasNext()) {
@@ -127,7 +131,8 @@ public class BasicWebServiceGenerator implements IWebServiceGenerator {
      * @see org.teiid.designer.webservice.IWebServiceGenerator#getWsdlDefinitions()
      * @since 4.2
      */
-    public List getWsdlDefinitions() {
+    @Override
+	public List getWsdlDefinitions() {
         return this.wsdlDefinitions;
     }
 
@@ -135,7 +140,8 @@ public class BasicWebServiceGenerator implements IWebServiceGenerator {
      * @see org.teiid.designer.webservice.IWebServiceGenerator#addXsdSchema(org.eclipse.xsd.XSDSchema)
      * @since 4.2
      */
-    public void addXsdSchema( XSDSchema schema ) {
+    @Override
+	public void addXsdSchema( XSDSchema schema ) {
         CoreArgCheck.isNotNull(schema);
         if (!this.xsdSchemas.contains(schema)) {
             this.xsdSchemas.add(schema);
@@ -146,7 +152,8 @@ public class BasicWebServiceGenerator implements IWebServiceGenerator {
      * @see org.teiid.designer.webservice.IWebServiceGenerator#addXsdSchemas(java.util.List)
      * @since 4.2
      */
-    public void addXsdSchemas( List schemas ) {
+    @Override
+	public void addXsdSchemas( List schemas ) {
         CoreArgCheck.isNotNull(schemas);
         final Iterator iter = schemas.iterator();
         while (iter.hasNext()) {
@@ -159,7 +166,8 @@ public class BasicWebServiceGenerator implements IWebServiceGenerator {
      * @see org.teiid.designer.webservice.IWebServiceGenerator#getXsdSchemas()
      * @since 4.2
      */
-    public List getXsdSchemas() {
+    @Override
+	public List getXsdSchemas() {
         return this.xsdSchemas;
     }
 
@@ -167,7 +175,8 @@ public class BasicWebServiceGenerator implements IWebServiceGenerator {
      * @see org.teiid.designer.webservice.IWebServiceGenerator#setSelectedOperations(java.util.Collection)
      * @since 5.0
      */
-    public void setSelectedOperations( Collection operations ) {
+    @Override
+	public void setSelectedOperations( Collection operations ) {
         this.selectedWsdlOperations = operations;
     }
 
@@ -175,7 +184,8 @@ public class BasicWebServiceGenerator implements IWebServiceGenerator {
      * @see org.teiid.designer.webservice.IWebServiceGenerator#getSelectedOperations()
      * @since 5.0
      */
-    public Collection getSelectedOperations() {
+    @Override
+	public Collection getSelectedOperations() {
         return this.selectedWsdlOperations;
     }
 
@@ -183,7 +193,8 @@ public class BasicWebServiceGenerator implements IWebServiceGenerator {
      * @see org.teiid.designer.webservice.IWebServiceGenerator#generate(org.eclipse.core.runtime.IProgressMonitor)
      * @since 4.2
      */
-    public IStatus generate( IProgressMonitor monitor ) {
+    @Override
+	public IStatus generate( IProgressMonitor monitor ) {
         final List problems = new ArrayList();
         if (this.getWebServiceResource() == null) {
             final String msg = WebServicePlugin.Util.getString("BasicWebServiceGenerator.NoWebServiceModelSpecified"); //$NON-NLS-1$
@@ -232,7 +243,8 @@ public class BasicWebServiceGenerator implements IWebServiceGenerator {
      *      java.util.List)
      * @since 4.2
      */
-    public void generate( IProgressMonitor monitor,
+    @Override
+	public void generate( IProgressMonitor monitor,
                           List problems ) {
         doGenerate(monitor, problems);
     }
@@ -362,12 +374,14 @@ public class BasicWebServiceGenerator implements IWebServiceGenerator {
             this.problems.add(new Status(IStatus.WARNING, WebServicePlugin.PLUGIN_ID, code, msg, t));
         }
 
-        public boolean visit( EObject object ) {
+        @Override
+		public boolean visit( EObject object ) {
             doSwitch(object);
             return true;
         }
 
-        public boolean visit( Resource resource ) {
+        @Override
+		public boolean visit( Resource resource ) {
             return true;
         }
 

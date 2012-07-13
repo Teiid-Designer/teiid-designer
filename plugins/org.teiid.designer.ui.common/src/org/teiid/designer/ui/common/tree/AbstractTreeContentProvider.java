@@ -23,7 +23,8 @@ public abstract class AbstractTreeContentProvider extends DefaultContentProvider
      * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
      * @since 5.0.1
      */
-    public Object[] getChildren(Object parent) {
+    @Override
+	public Object[] getChildren(Object parent) {
         return super.getElements(parent);
     }
 
@@ -40,7 +41,8 @@ public abstract class AbstractTreeContentProvider extends DefaultContentProvider
      * @see org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(java.lang.Object)
      * @since 4.0
      */
-    public boolean hasChildren(Object element) {
+    @Override
+	public boolean hasChildren(Object element) {
         return (getChildren(element).length > 0);
     }
 }

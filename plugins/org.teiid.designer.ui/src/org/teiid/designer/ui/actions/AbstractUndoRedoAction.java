@@ -79,7 +79,8 @@ public abstract class AbstractUndoRedoAction extends AbstractAction implements I
 
         IRunnableWithProgress runnable = new IRunnableWithProgress() {
 
-            public void run( IProgressMonitor monitor ) throws InvocationTargetException {
+            @Override
+			public void run( IProgressMonitor monitor ) throws InvocationTargetException {
                 try {
                     performAction(finalUndoMgr, monitor);
                 } catch (Exception e) {
@@ -150,7 +151,8 @@ public abstract class AbstractUndoRedoAction extends AbstractAction implements I
      * @see org.eclipse.jface.action.IMenuListener#menuAboutToShow(org.eclipse.jface.action.IMenuManager)
      * @since 5.5
      */
-    public void menuAboutToShow(IMenuManager manager) {
+    @Override
+	public void menuAboutToShow(IMenuManager manager) {
         // when the menu is shown the current part temporarily loses focus to the menu so we need to save undo mgr to use to
         // when we perform the action
         this.undoMgr = getUndoManager();

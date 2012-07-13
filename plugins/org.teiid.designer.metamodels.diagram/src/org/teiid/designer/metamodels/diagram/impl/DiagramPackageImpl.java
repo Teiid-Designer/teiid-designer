@@ -166,7 +166,8 @@ public class DiagramPackageImpl extends EPackageImpl implements DiagramPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EClass getDiagramEntity() {
+    @Override
+	public EClass getDiagramEntity() {
         return diagramEntityEClass;
     }
 
@@ -175,7 +176,8 @@ public class DiagramPackageImpl extends EPackageImpl implements DiagramPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getDiagramEntity_XPosition() {
+    @Override
+	public EAttribute getDiagramEntity_XPosition() {
         return (EAttribute)diagramEntityEClass.getEStructuralFeatures().get(0);
     }
 
@@ -184,7 +186,8 @@ public class DiagramPackageImpl extends EPackageImpl implements DiagramPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getDiagramEntity_YPosition() {
+    @Override
+	public EAttribute getDiagramEntity_YPosition() {
         return (EAttribute)diagramEntityEClass.getEStructuralFeatures().get(1);
     }
 
@@ -193,7 +196,8 @@ public class DiagramPackageImpl extends EPackageImpl implements DiagramPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getDiagramEntity_Height() {
+    @Override
+	public EAttribute getDiagramEntity_Height() {
         return (EAttribute)diagramEntityEClass.getEStructuralFeatures().get(2);
     }
 
@@ -202,7 +206,8 @@ public class DiagramPackageImpl extends EPackageImpl implements DiagramPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getDiagramEntity_Width() {
+    @Override
+	public EAttribute getDiagramEntity_Width() {
         return (EAttribute)diagramEntityEClass.getEStructuralFeatures().get(3);
     }
 
@@ -211,7 +216,8 @@ public class DiagramPackageImpl extends EPackageImpl implements DiagramPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getDiagramEntity_Diagram() {
+    @Override
+	public EReference getDiagramEntity_Diagram() {
         return (EReference)diagramEntityEClass.getEStructuralFeatures().get(4);
     }
 
@@ -220,7 +226,8 @@ public class DiagramPackageImpl extends EPackageImpl implements DiagramPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EClass getPresentationEntity() {
+    @Override
+	public EClass getPresentationEntity() {
         return presentationEntityEClass;
     }
 
@@ -229,7 +236,8 @@ public class DiagramPackageImpl extends EPackageImpl implements DiagramPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getPresentationEntity_Name() {
+    @Override
+	public EAttribute getPresentationEntity_Name() {
         return (EAttribute)presentationEntityEClass.getEStructuralFeatures().get(0);
     }
 
@@ -238,7 +246,8 @@ public class DiagramPackageImpl extends EPackageImpl implements DiagramPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EClass getDiagram() {
+    @Override
+	public EClass getDiagram() {
         return diagramEClass;
     }
 
@@ -247,7 +256,8 @@ public class DiagramPackageImpl extends EPackageImpl implements DiagramPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getDiagram_Type() {
+    @Override
+	public EAttribute getDiagram_Type() {
         return (EAttribute)diagramEClass.getEStructuralFeatures().get(0);
     }
 
@@ -256,7 +266,8 @@ public class DiagramPackageImpl extends EPackageImpl implements DiagramPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getDiagram_Notation() {
+    @Override
+	public EAttribute getDiagram_Notation() {
         return (EAttribute)diagramEClass.getEStructuralFeatures().get(1);
     }
 
@@ -265,6 +276,7 @@ public class DiagramPackageImpl extends EPackageImpl implements DiagramPackage {
 	 * <!-- end-user-doc -->
      * @generated
      */
+	@Override
 	public EAttribute getDiagram_LinkType() {
         return (EAttribute)diagramEClass.getEStructuralFeatures().get(2);
     }
@@ -274,7 +286,8 @@ public class DiagramPackageImpl extends EPackageImpl implements DiagramPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getDiagram_DiagramEntity() {
+    @Override
+	public EReference getDiagram_DiagramEntity() {
         return (EReference)diagramEClass.getEStructuralFeatures().get(3);
     }
 
@@ -283,7 +296,8 @@ public class DiagramPackageImpl extends EPackageImpl implements DiagramPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getDiagram_Target() {
+    @Override
+	public EReference getDiagram_Target() {
         return (EReference)diagramEClass.getEStructuralFeatures().get(4);
     }
 
@@ -292,7 +306,8 @@ public class DiagramPackageImpl extends EPackageImpl implements DiagramPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getDiagram_DiagramContainer() {
+    @Override
+	public EReference getDiagram_DiagramContainer() {
         return (EReference)diagramEClass.getEStructuralFeatures().get(5);
     }
 
@@ -301,7 +316,8 @@ public class DiagramPackageImpl extends EPackageImpl implements DiagramPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getDiagram_DiagramLinks() {
+    @Override
+	public EReference getDiagram_DiagramLinks() {
         return (EReference)diagramEClass.getEStructuralFeatures().get(6);
     }
 
@@ -310,7 +326,8 @@ public class DiagramPackageImpl extends EPackageImpl implements DiagramPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EClass getDiagramContainer() {
+    @Override
+	public EClass getDiagramContainer() {
         return diagramContainerEClass;
     }
 
@@ -319,7 +336,8 @@ public class DiagramPackageImpl extends EPackageImpl implements DiagramPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getDiagramContainer_Diagram() {
+    @Override
+	public EReference getDiagramContainer_Diagram() {
         return (EReference)diagramContainerEClass.getEStructuralFeatures().get(0);
     }
 
@@ -328,7 +346,8 @@ public class DiagramPackageImpl extends EPackageImpl implements DiagramPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EClass getDiagramLink() {
+    @Override
+	public EClass getDiagramLink() {
         return diagramLinkEClass;
     }
 
@@ -337,6 +356,7 @@ public class DiagramPackageImpl extends EPackageImpl implements DiagramPackage {
 	 * <!-- end-user-doc -->
      * @generated
      */
+	@Override
 	public EAttribute getDiagramLink_Type() {
         return (EAttribute)diagramLinkEClass.getEStructuralFeatures().get(0);
     }
@@ -346,7 +366,8 @@ public class DiagramPackageImpl extends EPackageImpl implements DiagramPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getDiagramLink_Diagram() {
+    @Override
+	public EReference getDiagramLink_Diagram() {
         return (EReference)diagramLinkEClass.getEStructuralFeatures().get(1);
     }
 
@@ -355,7 +376,8 @@ public class DiagramPackageImpl extends EPackageImpl implements DiagramPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getDiagramLink_RoutePoints() {
+    @Override
+	public EReference getDiagramLink_RoutePoints() {
         return (EReference)diagramLinkEClass.getEStructuralFeatures().get(2);
     }
 
@@ -364,7 +386,8 @@ public class DiagramPackageImpl extends EPackageImpl implements DiagramPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EClass getAbstractDiagramEntity() {
+    @Override
+	public EClass getAbstractDiagramEntity() {
         return abstractDiagramEntityEClass;
     }
 
@@ -373,7 +396,8 @@ public class DiagramPackageImpl extends EPackageImpl implements DiagramPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getAbstractDiagramEntity_Alias() {
+    @Override
+	public EAttribute getAbstractDiagramEntity_Alias() {
         return (EAttribute)abstractDiagramEntityEClass.getEStructuralFeatures().get(0);
     }
 
@@ -382,7 +406,8 @@ public class DiagramPackageImpl extends EPackageImpl implements DiagramPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getAbstractDiagramEntity_UserString() {
+    @Override
+	public EAttribute getAbstractDiagramEntity_UserString() {
         return (EAttribute)abstractDiagramEntityEClass.getEStructuralFeatures().get(1);
     }
 
@@ -391,7 +416,8 @@ public class DiagramPackageImpl extends EPackageImpl implements DiagramPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getAbstractDiagramEntity_UserType() {
+    @Override
+	public EAttribute getAbstractDiagramEntity_UserType() {
         return (EAttribute)abstractDiagramEntityEClass.getEStructuralFeatures().get(2);
     }
 
@@ -400,7 +426,8 @@ public class DiagramPackageImpl extends EPackageImpl implements DiagramPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getAbstractDiagramEntity_ModelObject() {
+    @Override
+	public EReference getAbstractDiagramEntity_ModelObject() {
         return (EReference)abstractDiagramEntityEClass.getEStructuralFeatures().get(3);
     }
 
@@ -409,7 +436,8 @@ public class DiagramPackageImpl extends EPackageImpl implements DiagramPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EClass getDiagramPosition() {
+    @Override
+	public EClass getDiagramPosition() {
         return diagramPositionEClass;
     }
 
@@ -418,7 +446,8 @@ public class DiagramPackageImpl extends EPackageImpl implements DiagramPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getDiagramPosition_XPosition() {
+    @Override
+	public EAttribute getDiagramPosition_XPosition() {
         return (EAttribute)diagramPositionEClass.getEStructuralFeatures().get(0);
     }
 
@@ -427,7 +456,8 @@ public class DiagramPackageImpl extends EPackageImpl implements DiagramPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getDiagramPosition_YPosition() {
+    @Override
+	public EAttribute getDiagramPosition_YPosition() {
         return (EAttribute)diagramPositionEClass.getEStructuralFeatures().get(1);
     }
 
@@ -436,7 +466,8 @@ public class DiagramPackageImpl extends EPackageImpl implements DiagramPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getDiagramPosition_DiagramLink() {
+    @Override
+	public EReference getDiagramPosition_DiagramLink() {
         return (EReference)diagramPositionEClass.getEStructuralFeatures().get(2);
     }
 
@@ -445,6 +476,7 @@ public class DiagramPackageImpl extends EPackageImpl implements DiagramPackage {
 	 * <!-- end-user-doc -->
      * @generated
      */
+	@Override
 	public EEnum getDiagramLinkType() {
         return diagramLinkTypeEEnum;
     }
@@ -454,7 +486,8 @@ public class DiagramPackageImpl extends EPackageImpl implements DiagramPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public DiagramFactory getDiagramFactory() {
+    @Override
+	public DiagramFactory getDiagramFactory() {
         return (DiagramFactory)getEFactoryInstance();
     }
 

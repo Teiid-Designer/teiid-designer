@@ -46,151 +46,173 @@ public class FakeModelResource extends FakeModelWorkspaceItem implements ModelRe
     /**
      * @see org.teiid.designer.core.workspace.ModelResource#getModelType()
      */
-    public ModelType getModelType() {
+    @Override
+	public ModelType getModelType() {
         return null;
     }
 
     /**
      * @see org.teiid.designer.core.workspace.ModelResource#getDescription()
      */
-    public String getDescription() {
+    @Override
+	public String getDescription() {
         return null;
     }
 
     /**
      * @see org.teiid.designer.core.workspace.ModelResource#getUuid()
      */
-    public String getUuid() {
+    @Override
+	public String getUuid() {
         return null;
     }
 
-    public String getPrimaryMetamodelUri() {
+    @Override
+	public String getPrimaryMetamodelUri() {
         return null;
     }
 
     /**
      * @see org.teiid.designer.core.workspace.ModelResource#getModelAnnotation()
      */
-    public ModelAnnotation getModelAnnotation() {
+    @Override
+	public ModelAnnotation getModelAnnotation() {
         return null;
     }
 
     /**
      * @see org.teiid.designer.core.workspace.ModelResource#getModelDiagrams()
      */
-    public ModelDiagrams getModelDiagrams() {
+    @Override
+	public ModelDiagrams getModelDiagrams() {
         return null;
     }
 
     /**
      * @see org.teiid.designer.core.workspace.ModelResource#getModelTransformations()
      */
-    public ModelTransformations getModelTransformations() {
+    @Override
+	public ModelTransformations getModelTransformations() {
         return null;
     }
 
     /**
      * @see org.teiid.designer.core.workspace.ModelResource#getModelMappingClassSets()
      */
-    public ModelMappingClassSets getModelMappingClassSets() {
+    @Override
+	public ModelMappingClassSets getModelMappingClassSets() {
         return null;
     }
 
     /**
      * @see org.teiid.designer.core.workspace.ModelResource#isLoaded()
      */
-    public boolean isLoaded() {
+    @Override
+	public boolean isLoaded() {
         return false;
     }
 
     /**
      * @see org.teiid.designer.core.workspace.ModelResource#unload()
      */
-    public void unload() {
+    @Override
+	public void unload() {
 
     }
 
     /**
      * @see org.teiid.designer.core.workspace.ModelResource#getAnnotations()
      */
-    public ModelObjectAnnotations getAnnotations() {
+    @Override
+	public ModelObjectAnnotations getAnnotations() {
         return null;
     }
 
     /**
      * @see org.teiid.designer.core.workspace.ModelResource#getEObjects()
      */
-    public List getEObjects() {
+    @Override
+	public List getEObjects() {
         return null;
     }
 
     /**
      * @see org.teiid.designer.core.workspace.ModelResource#getAllRootEObjects()
      */
-    public List getAllRootEObjects() {
+    @Override
+	public List getAllRootEObjects() {
         return null;
     }
 
     /**
      * @see org.teiid.designer.core.workspace.ModelResource#getEmfResource()
      */
-    public Resource getEmfResource() {
+    @Override
+	public Resource getEmfResource() {
         return this.resource;
     }
 
     /**
      * @see org.teiid.designer.core.workspace.ModelResource#getPrimaryMetamodelDescriptor()
      */
-    public MetamodelDescriptor getPrimaryMetamodelDescriptor() {
+    @Override
+	public MetamodelDescriptor getPrimaryMetamodelDescriptor() {
         return this.descriptor;
     }
 
     /**
      * @see org.teiid.designer.core.workspace.ModelResource#getAllMetamodelDescriptors()
      */
-    public List getAllMetamodelDescriptors() {
+    @Override
+	public List getAllMetamodelDescriptors() {
         return Collections.singletonList(this.descriptor);
     }
 
     /**
      * @see org.teiid.designer.core.workspace.ModelResource#getModelImports()
      */
-    public List getModelImports() {
+    @Override
+	public List getModelImports() {
         return null;
     }
 
     /**
      * @see org.teiid.designer.core.workspace.Openable#close()
      */
-    public void close() {
+    @Override
+	public void close() {
 
     }
 
     /**
      * @see org.teiid.designer.core.workspace.Openable#hasUnsavedChanges()
      */
-    public boolean hasUnsavedChanges() {
+    @Override
+	public boolean hasUnsavedChanges() {
         return false;
     }
 
     /**
      * @see org.teiid.designer.core.workspace.Openable#isOpen()
      */
-    public boolean isOpen() {
+    @Override
+	public boolean isOpen() {
         return false;
     }
 
     /**
      * @see org.teiid.designer.core.workspace.Openable#open(org.eclipse.core.runtime.IProgressMonitor)
      */
-    public void open( IProgressMonitor progress ) {
+    @Override
+	public void open( IProgressMonitor progress ) {
 
     }
 
     /**
      * @see org.teiid.designer.core.workspace.Openable#save(org.eclipse.core.runtime.IProgressMonitor, boolean)
      */
-    public void save( IProgressMonitor progress,
+    @Override
+	public void save( IProgressMonitor progress,
                       boolean force ) {
 
     }
@@ -206,30 +228,35 @@ public class FakeModelResource extends FakeModelWorkspaceItem implements ModelRe
     /**
      * @see org.teiid.designer.core.workspace.ModelResource#isXsd()
      */
-    public boolean isXsd() {
+    @Override
+	public boolean isXsd() {
         return ModelUtil.isXsdFile(getEmfResource());
     }
 
     /**
      * @see org.teiid.designer.core.workspace.ModelResource#getIndexType()
      */
-    public int getIndexType() {
+    @Override
+	public int getIndexType() {
         return 0;
     }
 
     /**
      * @see org.teiid.designer.core.workspace.ModelResource#setIndexType(int)
      */
-    public void setIndexType( int indexType ) {
+    @Override
+	public void setIndexType( int indexType ) {
     }
 
-    public void refreshIndexType() {
+    @Override
+	public void refreshIndexType() {
     }
 
     /**
      * @see org.teiid.designer.core.workspace.ModelResource#getTargetNamespace()
      */
-    public String getTargetNamespace() {
+    @Override
+	public String getTargetNamespace() {
         return null;
     }
 
@@ -237,7 +264,8 @@ public class FakeModelResource extends FakeModelWorkspaceItem implements ModelRe
      * @see org.teiid.designer.core.workspace.ModelResource#hasErrors()
      * @since 4.2
      */
-    public boolean hasErrors() {
+    @Override
+	public boolean hasErrors() {
         return false;
     }
 
@@ -245,7 +273,8 @@ public class FakeModelResource extends FakeModelWorkspaceItem implements ModelRe
      * @see org.teiid.designer.core.workspace.ModelResource#getErrors()
      * @since 4.2
      */
-    public IStatus getErrors() {
+    @Override
+	public IStatus getErrors() {
         return null;
     }
 

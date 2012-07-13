@@ -71,7 +71,8 @@ public final class NewModelAction extends Action implements AdvisorUiConstants {
     /* (non-Javadoc)
      * @see org.eclipse.jface.action.IAction#run()
      */
-    public void run() {
+    @Override
+	public void run() {
         final IWorkbenchWindow iww = AdvisorUiPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow();
         boolean successful = false;
         try {

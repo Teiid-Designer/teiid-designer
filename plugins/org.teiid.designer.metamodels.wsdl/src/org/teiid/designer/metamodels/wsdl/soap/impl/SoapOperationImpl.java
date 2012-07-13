@@ -96,7 +96,8 @@ public class SoapOperationImpl extends EObjectImpl implements SoapOperation {
      * 
      * @generated
      */
-    public SoapStyleType getStyle() {
+    @Override
+	public SoapStyleType getStyle() {
         return style;
     }
 
@@ -105,7 +106,8 @@ public class SoapOperationImpl extends EObjectImpl implements SoapOperation {
      * 
      * @generated
      */
-    public void setStyle( SoapStyleType newStyle ) {
+    @Override
+	public void setStyle( SoapStyleType newStyle ) {
         SoapStyleType oldStyle = style;
         style = newStyle == null ? STYLE_EDEFAULT : newStyle;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, SoapPackage.SOAP_OPERATION__STYLE,
@@ -117,7 +119,8 @@ public class SoapOperationImpl extends EObjectImpl implements SoapOperation {
      * 
      * @generated
      */
-    public String getAction() {
+    @Override
+	public String getAction() {
         return action;
     }
 
@@ -126,7 +129,8 @@ public class SoapOperationImpl extends EObjectImpl implements SoapOperation {
      * 
      * @generated
      */
-    public void setAction( String newAction ) {
+    @Override
+	public void setAction( String newAction ) {
         String oldAction = action;
         action = newAction;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, SoapPackage.SOAP_OPERATION__ACTION,
@@ -138,7 +142,8 @@ public class SoapOperationImpl extends EObjectImpl implements SoapOperation {
      * 
      * @generated
      */
-    public BindingOperation getBindingOperation() {
+    @Override
+	public BindingOperation getBindingOperation() {
         if (eContainerFeatureID != SoapPackage.SOAP_OPERATION__BINDING_OPERATION) return null;
         return (BindingOperation)eContainer;
     }
@@ -148,7 +153,8 @@ public class SoapOperationImpl extends EObjectImpl implements SoapOperation {
      * 
      * @generated
      */
-    public void setBindingOperation( BindingOperation newBindingOperation ) {
+    @Override
+	public void setBindingOperation( BindingOperation newBindingOperation ) {
         if (newBindingOperation != eContainer
             || (eContainerFeatureID != SoapPackage.SOAP_OPERATION__BINDING_OPERATION && newBindingOperation != null)) {
             if (EcoreUtil.isAncestor(this, newBindingOperation)) throw new IllegalArgumentException(

@@ -161,7 +161,8 @@ public class XmlDocumentFactoryImpl extends EFactoryImpl implements XmlDocumentF
      * 
      * @generated
      */
-    public XmlFragment createXmlFragment() {
+    @Override
+	public XmlFragment createXmlFragment() {
         XmlFragmentImpl xmlFragment = new XmlFragmentImpl();
         return xmlFragment;
     }
@@ -171,7 +172,8 @@ public class XmlDocumentFactoryImpl extends EFactoryImpl implements XmlDocumentF
      * 
      * @generated
      */
-    public XmlDocument createXmlDocument() {
+    @Override
+	public XmlDocument createXmlDocument() {
         XmlDocumentImpl xmlDocument = new XmlDocumentImpl();
         return xmlDocument;
     }
@@ -181,7 +183,8 @@ public class XmlDocumentFactoryImpl extends EFactoryImpl implements XmlDocumentF
      * 
      * @generated
      */
-    public XmlElement createXmlElement() {
+    @Override
+	public XmlElement createXmlElement() {
         XmlElementImpl xmlElement = new XmlElementImpl();
         return xmlElement;
     }
@@ -191,7 +194,8 @@ public class XmlDocumentFactoryImpl extends EFactoryImpl implements XmlDocumentF
      * 
      * @generated
      */
-    public XmlAttribute createXmlAttribute() {
+    @Override
+	public XmlAttribute createXmlAttribute() {
         XmlAttributeImpl xmlAttribute = new XmlAttributeImpl();
         return xmlAttribute;
     }
@@ -201,7 +205,8 @@ public class XmlDocumentFactoryImpl extends EFactoryImpl implements XmlDocumentF
      * 
      * @generated
      */
-    public XmlRoot createXmlRoot() {
+    @Override
+	public XmlRoot createXmlRoot() {
         XmlRootImpl xmlRoot = new XmlRootImpl();
         return xmlRoot;
     }
@@ -211,7 +216,8 @@ public class XmlDocumentFactoryImpl extends EFactoryImpl implements XmlDocumentF
      * 
      * @generated
      */
-    public XmlComment createXmlComment() {
+    @Override
+	public XmlComment createXmlComment() {
         XmlCommentImpl xmlComment = new XmlCommentImpl();
         return xmlComment;
     }
@@ -221,7 +227,8 @@ public class XmlDocumentFactoryImpl extends EFactoryImpl implements XmlDocumentF
      * 
      * @generated
      */
-    public XmlNamespace createXmlNamespace() {
+    @Override
+	public XmlNamespace createXmlNamespace() {
         XmlNamespaceImpl xmlNamespace = new XmlNamespaceImpl();
         return xmlNamespace;
     }
@@ -231,7 +238,8 @@ public class XmlDocumentFactoryImpl extends EFactoryImpl implements XmlDocumentF
      * 
      * @generated
      */
-    public XmlSequence createXmlSequence() {
+    @Override
+	public XmlSequence createXmlSequence() {
         XmlSequenceImpl xmlSequence = new XmlSequenceImpl();
         return xmlSequence;
     }
@@ -241,7 +249,8 @@ public class XmlDocumentFactoryImpl extends EFactoryImpl implements XmlDocumentF
      * 
      * @generated
      */
-    public XmlAll createXmlAll() {
+    @Override
+	public XmlAll createXmlAll() {
         XmlAllImpl xmlAll = new XmlAllImpl();
         return xmlAll;
     }
@@ -251,7 +260,8 @@ public class XmlDocumentFactoryImpl extends EFactoryImpl implements XmlDocumentF
      * 
      * @generated
      */
-    public XmlChoice createXmlChoice() {
+    @Override
+	public XmlChoice createXmlChoice() {
         XmlChoiceImpl xmlChoice = new XmlChoiceImpl();
         return xmlChoice;
     }
@@ -261,7 +271,8 @@ public class XmlDocumentFactoryImpl extends EFactoryImpl implements XmlDocumentF
      * 
      * @generated
      */
-    public ProcessingInstruction createProcessingInstruction() {
+    @Override
+	public ProcessingInstruction createProcessingInstruction() {
         ProcessingInstructionImpl processingInstruction = new ProcessingInstructionImpl();
         return processingInstruction;
     }
@@ -271,7 +282,8 @@ public class XmlDocumentFactoryImpl extends EFactoryImpl implements XmlDocumentF
      * 
      * @generated
      */
-    public XmlFragmentUse createXmlFragmentUse() {
+    @Override
+	public XmlFragmentUse createXmlFragmentUse() {
         XmlFragmentUseImpl xmlFragmentUse = new XmlFragmentUseImpl();
         return xmlFragmentUse;
     }
@@ -301,7 +313,8 @@ public class XmlDocumentFactoryImpl extends EFactoryImpl implements XmlDocumentF
      * 
      * @generated
      */
-    public XmlDocumentPackage getXmlDocumentPackage() {
+    @Override
+	public XmlDocumentPackage getXmlDocumentPackage() {
         return (XmlDocumentPackage)getEPackage();
     }
 

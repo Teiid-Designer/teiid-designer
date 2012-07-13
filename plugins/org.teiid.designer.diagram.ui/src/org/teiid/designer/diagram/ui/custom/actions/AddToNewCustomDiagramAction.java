@@ -305,7 +305,8 @@ public class AddToNewCustomDiagramAction extends DiagramAction implements Diagra
 
         final ISelectionStatusValidator validator = new ISelectionStatusValidator() {
 
-            public IStatus validate( final Object[] selection ) {
+            @Override
+			public IStatus validate( final Object[] selection ) {
                 if (selection.length == 1) {
                     if (selection[0] instanceof IResource) {
                         if (ModelUtilities.isModelFile((IResource)selection[0]) && !ModelUtil.isXsdFile((IResource)selection[0])) {

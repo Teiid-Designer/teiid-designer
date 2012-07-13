@@ -125,7 +125,8 @@ public class WsdlLoader implements XMLLoad, WsdlConstants {
      * @see org.eclipse.emf.ecore.xmi.XMLLoad#load(org.eclipse.emf.ecore.xmi.XMLResource, java.io.InputStream, java.util.Map)
      * @since 4.2
      */
-    public void load( final XMLResource resource,
+    @Override
+	public void load( final XMLResource resource,
                       final InputStream inputStream,
                       final Map loadOptions ) throws IOException {
         CoreArgCheck.isNotNull(resource);
@@ -156,7 +157,8 @@ public class WsdlLoader implements XMLLoad, WsdlConstants {
      * @see org.eclipse.emf.ecore.xmi.XMLLoad#load(org.eclipse.emf.ecore.xmi.XMLResource, org.w3c.dom.Node, java.util.Map)
      * @since 4.3
      */
-    public void load( final XMLResource resource,
+    @Override
+	public void load( final XMLResource resource,
                       final Node node,
                       final Map options ) {
         throw new UnsupportedOperationException();
@@ -167,7 +169,8 @@ public class WsdlLoader implements XMLLoad, WsdlConstants {
      * 
      * @see org.eclipse.emf.ecore.xmi.XMLLoad#load(org.eclipse.emf.ecore.xmi.XMLResource, org.xml.sax.InputSource, java.util.Map)
      */
-    public void load( XMLResource resource,
+    @Override
+	public void load( XMLResource resource,
                       InputSource inputSource,
                       Map<?, ?> options ) throws IOException {
         load(resource, inputSource.getByteStream(), options);
@@ -1285,7 +1288,8 @@ public class WsdlLoader implements XMLLoad, WsdlConstants {
      * 
      * @see org.eclipse.emf.ecore.xmi.XMLLoad#createDefaultHandler()
      */
-    public XMLDefaultHandler createDefaultHandler() {
+    @Override
+	public XMLDefaultHandler createDefaultHandler() {
         throw new UnsupportedOperationException();
     }
 }

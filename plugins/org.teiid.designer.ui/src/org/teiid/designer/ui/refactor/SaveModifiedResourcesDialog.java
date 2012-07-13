@@ -465,13 +465,15 @@ public class SaveModifiedResourcesDialog extends SelectionDialog {
             /* (non-Javadoc)
              * @see org.eclipse.jface.viewers.IContentProvider#dispose()
              */
-            public void dispose() {
+            @Override
+			public void dispose() {
             }
 
             /* (non-Javadoc)
              * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
              */
-            public Object[] getElements( Object theInputElement ) {
+            @Override
+			public Object[] getElements( Object theInputElement ) {
                 Object[] result = null;
                 Collection colDirtyFiles = getResourcesToDisplay();
            
@@ -493,7 +495,8 @@ public class SaveModifiedResourcesDialog extends SelectionDialog {
             /* (non-Javadoc)
              * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
              */
-            public void inputChanged(Viewer theViewer, Object theOldInput, Object theNewInput) {
+            @Override
+			public void inputChanged(Viewer theViewer, Object theOldInput, Object theNewInput) {
                 if (theNewInput != null) {
                     theViewer.refresh();
                 }
@@ -506,7 +509,8 @@ public class SaveModifiedResourcesDialog extends SelectionDialog {
         // ======================================================
      
         protected class SaveModifiedResourcesTableLabelProvider extends LabelProvider implements ITableLabelProvider {
-            public Image getColumnImage( Object theElement,
+            @Override
+			public Image getColumnImage( Object theElement,
                                          int iColumnIndex ) {
                 return null;                
             }
@@ -514,7 +518,8 @@ public class SaveModifiedResourcesDialog extends SelectionDialog {
             /* (non-Javadoc)
              * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.lang.Object, int)
              */
-            public String getColumnText(Object theElement,
+            @Override
+			public String getColumnText(Object theElement,
                                         int iColumnIndex) {
                 SaveModifiedResourcesTableRow row = (SaveModifiedResourcesTableRow)theElement;
                 return row.getColumnText( iColumnIndex );

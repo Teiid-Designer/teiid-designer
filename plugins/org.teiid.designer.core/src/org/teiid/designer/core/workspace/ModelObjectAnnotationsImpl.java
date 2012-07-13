@@ -45,21 +45,24 @@ public class ModelObjectAnnotationsImpl extends NonOpenableModelWorkspaceItemImp
     /**
      * @see org.teiid.designer.core.workspace.ModelWorkspaceItem#getResource()
      */
-    public IResource getResource() {
+    @Override
+	public IResource getResource() {
         return this.getModelResource().getResource();
     }
 
     /**
      * @see org.teiid.designer.core.workspace.ModelWorkspaceItem#getUnderlyingResource()
      */
-    public IResource getUnderlyingResource() {
+    @Override
+	public IResource getUnderlyingResource() {
         return getResource();
     }
 
     /**
      * @see org.teiid.designer.core.workspace.ModelWorkspaceItem#getPath()
      */
-    public IPath getPath() {
+    @Override
+	public IPath getPath() {
         return this.getModelResource().getPath();
     }
 
@@ -80,7 +83,8 @@ public class ModelObjectAnnotationsImpl extends NonOpenableModelWorkspaceItemImp
      * @see org.teiid.designer.core.workspace.ModelObjectAnnotations#getAnnotation(org.eclipse.emf.ecore.EObject)
      * @since 4.3
      */
-    public Annotation getAnnotation( final EObject target ) throws ModelWorkspaceException {
+    @Override
+	public Annotation getAnnotation( final EObject target ) throws ModelWorkspaceException {
         return getModelBuffer().getModelContents().getAnnotation(target);
     }
 
@@ -93,7 +97,8 @@ public class ModelObjectAnnotationsImpl extends NonOpenableModelWorkspaceItemImp
      * @see org.teiid.designer.core.workspace.ModelObjectAnnotations#createNewAnnotation(org.eclipse.emf.ecore.EObject)
      * @since 4.3
      */
-    public Annotation createNewAnnotation( final EObject target ) throws ModelWorkspaceException {
+    @Override
+	public Annotation createNewAnnotation( final EObject target ) throws ModelWorkspaceException {
         return ModelResourceContainerFactory.createNewAnnotation(target, getModelResource().getEmfResource());
     }
 
@@ -104,7 +109,8 @@ public class ModelObjectAnnotationsImpl extends NonOpenableModelWorkspaceItemImp
      * @see org.teiid.designer.core.workspace.ModelObjectAnnotations#delete(org.teiid.designer.metamodels.core.Annotation)
      * @since 4.3
      */
-    public boolean delete( final Annotation annotation ) {
+    @Override
+	public boolean delete( final Annotation annotation ) {
         return ModelResourceContainerFactory.deleteAnnotation(annotation);
     }
 

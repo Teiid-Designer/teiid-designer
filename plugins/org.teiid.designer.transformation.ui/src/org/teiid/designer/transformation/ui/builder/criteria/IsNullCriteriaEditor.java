@@ -49,23 +49,27 @@ public class IsNullCriteriaEditor extends AbstractPredicateCriteriaTypeEditor {
         return title;
     }
 
-    public Control createLeftComponent( Composite parent ) {
+    @Override
+	public Control createLeftComponent( Composite parent ) {
         editor = new CriteriaExpressionEditor(parent, theModel.getExpressionModel());
         component = editor.getUi();
         return component;
     }
 
-    public Control createRightComponent( Composite parent ) {
+    @Override
+	public Control createRightComponent( Composite parent ) {
         // Unused
         return null;
     }
 
-    public Expression getLeftExpression() {
+    @Override
+	public Expression getLeftExpression() {
         Expression leftExpression = theModel.getLeftExpression();
         return leftExpression;
     }
 
-    public Expression getRightExpression() {
+    @Override
+	public Expression getRightExpression() {
         // Unused
         return null;
     }
@@ -76,7 +80,8 @@ public class IsNullCriteriaEditor extends AbstractPredicateCriteriaTypeEditor {
         theModel.setLanguageObject(obj);
     }
 
-    public String[] getOperators() {
+    @Override
+	public String[] getOperators() {
         return theModel.getOperators();
     }
 
@@ -85,11 +90,13 @@ public class IsNullCriteriaEditor extends AbstractPredicateCriteriaTypeEditor {
         editor.acceptFocus();
     }
 
-    public void setOperator( String op ) {
+    @Override
+	public void setOperator( String op ) {
         theModel.setCurrentOperator(op);
     }
 
-    public String getCurrentOperator() {
+    @Override
+	public String getCurrentOperator() {
         return theModel.getCurrentOperator();
     }
 
@@ -112,7 +119,8 @@ public class IsNullCriteriaEditor extends AbstractPredicateCriteriaTypeEditor {
 
         public void initialize() {
             Display.getDefault().asyncExec(new Runnable() {
-                public void run() {
+                @Override
+				public void run() {
                     modelChanged(new LanguageObjectEditorModelEvent(theModel, LanguageObjectEditorModelEvent.SAVED));
                 }
             });
@@ -121,7 +129,8 @@ public class IsNullCriteriaEditor extends AbstractPredicateCriteriaTypeEditor {
         /**
          * @see org.teiid.query.ui.builder.model.ILanguageObjectEditorModelListener#modelChanged(org.teiid.query.ui.builder.model.LanguageObjectEditorModelEvent)
          */
-        public void modelChanged( LanguageObjectEditorModelEvent theEvent ) {
+        @Override
+		public void modelChanged( LanguageObjectEditorModelEvent theEvent ) {
             String type = theEvent.getType();
             if (type.equals(IsNullCriteriaEditorModel.EXPRESSION)) {
                 displayExpression();

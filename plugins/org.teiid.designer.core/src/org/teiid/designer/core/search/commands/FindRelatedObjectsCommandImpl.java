@@ -40,6 +40,7 @@ public class FindRelatedObjectsCommandImpl implements FindRelatedObjectsCommand 
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.relationship.search.commands.RelationshipSearchCommand#canExecute()
 	 */
+	@Override
 	public boolean canExecute() {
 		return true;
 	}
@@ -47,6 +48,7 @@ public class FindRelatedObjectsCommandImpl implements FindRelatedObjectsCommand 
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.relationship.search.commands.RelationshipSearchCommand#execute()
 	 */
+	@Override
 	public IStatus execute() {
 
 		// uuid of the object whose related record is lookedup
@@ -82,6 +84,7 @@ public class FindRelatedObjectsCommandImpl implements FindRelatedObjectsCommand 
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.relationship.search.commands.FindRelatedObjectsCommand#getRelatedObjectInfo()
 	 */
+	@Override
 	public Collection getRelatedObjectInfo() {
 		if(this.relatedObjInfo == null) {
 			return Collections.EMPTY_LIST;			
@@ -92,6 +95,7 @@ public class FindRelatedObjectsCommandImpl implements FindRelatedObjectsCommand 
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.relationship.search.commands.FindRelatedObjectsCommand#setModelObjectUri(String)
 	 */
+	@Override
 	public void setModelObjectUri(String object) {
 		CoreArgCheck.isNotEmpty(object);
 		this.modelObjectUri = object;
@@ -111,6 +115,7 @@ public class FindRelatedObjectsCommandImpl implements FindRelatedObjectsCommand 
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.core.search.commands.FindRelatedObjectsCommand#setIndexSelector(org.teiid.designer.core.index.IndexSelector)
 	 */
+	@Override
 	public void setIndexSelector(IndexSelector selector) {
 		this.selector = selector;
 	}

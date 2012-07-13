@@ -37,6 +37,7 @@ public class ResourceDocumentImpl extends FileDocument implements ResourceDocume
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.core.index.ResourceDocument#getResource()
 	 */
+	@Override
 	public IResource getIResource() {
 		return this.resource;
 	}

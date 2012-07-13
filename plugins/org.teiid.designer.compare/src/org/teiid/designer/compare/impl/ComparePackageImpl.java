@@ -144,7 +144,8 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EClass getDifferenceDescriptor() {
+    @Override
+	public EClass getDifferenceDescriptor() {
         return differenceDescriptorEClass;
     }
 
@@ -153,7 +154,8 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getDifferenceDescriptor_Type() {
+    @Override
+	public EAttribute getDifferenceDescriptor_Type() {
         return (EAttribute)differenceDescriptorEClass.getEStructuralFeatures().get(0);
     }
 
@@ -162,7 +164,8 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getDifferenceDescriptor_Skip() {
+    @Override
+	public EAttribute getDifferenceDescriptor_Skip() {
         return (EAttribute)differenceDescriptorEClass.getEStructuralFeatures().get(1);
     }
 
@@ -171,7 +174,8 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getDifferenceDescriptor_PropertyDifferences() {
+    @Override
+	public EReference getDifferenceDescriptor_PropertyDifferences() {
         return (EReference)differenceDescriptorEClass.getEStructuralFeatures().get(2);
     }
 
@@ -180,7 +184,8 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EClass getDifferenceReport() {
+    @Override
+	public EClass getDifferenceReport() {
         return differenceReportEClass;
     }
 
@@ -189,7 +194,8 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getDifferenceReport_Title() {
+    @Override
+	public EAttribute getDifferenceReport_Title() {
         return (EAttribute)differenceReportEClass.getEStructuralFeatures().get(0);
     }
 
@@ -198,7 +204,8 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getDifferenceReport_TotalAdditions() {
+    @Override
+	public EAttribute getDifferenceReport_TotalAdditions() {
         return (EAttribute)differenceReportEClass.getEStructuralFeatures().get(1);
     }
 
@@ -207,7 +214,8 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getDifferenceReport_TotalDeletions() {
+    @Override
+	public EAttribute getDifferenceReport_TotalDeletions() {
         return (EAttribute)differenceReportEClass.getEStructuralFeatures().get(2);
     }
 
@@ -216,7 +224,8 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getDifferenceReport_TotalChanges() {
+    @Override
+	public EAttribute getDifferenceReport_TotalChanges() {
         return (EAttribute)differenceReportEClass.getEStructuralFeatures().get(3);
     }
 
@@ -225,7 +234,8 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getDifferenceReport_AnalysisTime() {
+    @Override
+	public EAttribute getDifferenceReport_AnalysisTime() {
         return (EAttribute)differenceReportEClass.getEStructuralFeatures().get(4);
     }
 
@@ -234,7 +244,8 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getDifferenceReport_SourceUri() {
+    @Override
+	public EAttribute getDifferenceReport_SourceUri() {
         return (EAttribute)differenceReportEClass.getEStructuralFeatures().get(5);
     }
 
@@ -243,7 +254,8 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getDifferenceReport_ResultUri() {
+    @Override
+	public EAttribute getDifferenceReport_ResultUri() {
         return (EAttribute)differenceReportEClass.getEStructuralFeatures().get(6);
     }
 
@@ -252,7 +264,8 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getDifferenceReport_Mapping() {
+    @Override
+	public EReference getDifferenceReport_Mapping() {
         return (EReference)differenceReportEClass.getEStructuralFeatures().get(7);
     }
 
@@ -261,7 +274,8 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EClass getPropertyDifference() {
+    @Override
+	public EClass getPropertyDifference() {
         return propertyDifferenceEClass;
     }
 
@@ -270,7 +284,8 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getPropertyDifference_NewValue() {
+    @Override
+	public EAttribute getPropertyDifference_NewValue() {
         return (EAttribute)propertyDifferenceEClass.getEStructuralFeatures().get(0);
     }
 
@@ -279,7 +294,8 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getPropertyDifference_OldValue() {
+    @Override
+	public EAttribute getPropertyDifference_OldValue() {
         return (EAttribute)propertyDifferenceEClass.getEStructuralFeatures().get(1);
     }
 
@@ -288,7 +304,8 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getPropertyDifference_Skip() {
+    @Override
+	public EAttribute getPropertyDifference_Skip() {
         return (EAttribute)propertyDifferenceEClass.getEStructuralFeatures().get(2);
     }
 
@@ -297,7 +314,8 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getPropertyDifference_AffectedFeature() {
+    @Override
+	public EReference getPropertyDifference_AffectedFeature() {
         return (EReference)propertyDifferenceEClass.getEStructuralFeatures().get(3);
     }
 
@@ -306,7 +324,8 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getPropertyDifference_Descriptor() {
+    @Override
+	public EReference getPropertyDifference_Descriptor() {
         return (EReference)propertyDifferenceEClass.getEStructuralFeatures().get(4);
     }
 
@@ -315,7 +334,8 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EEnum getDifferenceType() {
+    @Override
+	public EEnum getDifferenceType() {
         return differenceTypeEEnum;
     }
 
@@ -324,7 +344,8 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EDataType getAnyType() {
+    @Override
+	public EDataType getAnyType() {
         return anyTypeEDataType;
     }
 
@@ -333,7 +354,8 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public CompareFactory getCompareFactory() {
+    @Override
+	public CompareFactory getCompareFactory() {
         return (CompareFactory)getEFactoryInstance();
     }
 

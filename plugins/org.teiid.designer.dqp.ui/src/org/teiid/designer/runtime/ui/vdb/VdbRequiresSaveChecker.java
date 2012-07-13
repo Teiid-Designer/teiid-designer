@@ -70,7 +70,8 @@ public class VdbRequiresSaveChecker {
         		if( doSave ) {
         	        // create VDB resource
         	        final IRunnableWithProgress op = new IRunnableWithProgress() {
-        	            @SuppressWarnings("unchecked")
+        	            @Override
+						@SuppressWarnings("unchecked")
         				public void run( final IProgressMonitor monitor ) throws InvocationTargetException {
         	                try {
         	                	tmpVdbEditor.doSave(new NullProgressMonitor());

@@ -39,7 +39,8 @@ public abstract class AbstractAdvisorActionHandler implements IAdvisorActionHand
      * 
      * @see org.eclipse.ui.IAdvisorActionHandler.AdvisorActionHandler#setStatus(org.eclipse.core.runtime.IStatus)
      */
-    public void setStatus( AdvisorStatus status ) {
+    @Override
+	public void setStatus( AdvisorStatus status ) {
         this.status = status;
     }
 

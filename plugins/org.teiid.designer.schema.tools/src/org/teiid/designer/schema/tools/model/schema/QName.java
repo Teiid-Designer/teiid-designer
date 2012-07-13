@@ -9,10 +9,13 @@ package org.teiid.designer.schema.tools.model.schema;
 
 public interface QName {
 
+	@Override
 	public abstract boolean equals(Object o);
 
+	@Override
 	public abstract int hashCode();
 
+	@Override
 	public abstract String toString();
 
 	public abstract String getNamespace();

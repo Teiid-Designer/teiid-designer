@@ -98,7 +98,8 @@ public class CreateMaterializedViewWizard extends AbstractWizard
     @Override
     public boolean finish() {
         final IRunnableWithProgress op = new IRunnableWithProgress() {
-            @SuppressWarnings("unchecked")
+            @Override
+			@SuppressWarnings("unchecked")
 			public void run( final IProgressMonitor monitor ) throws InvocationTargetException {
                 try {
                     runAsJob();
@@ -127,14 +128,16 @@ public class CreateMaterializedViewWizard extends AbstractWizard
      * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench, org.eclipse.jface.viewers.IStructuredSelection)
      * @since 4.0
      */
-    public void init( final IWorkbench workbench,
+    @Override
+	public void init( final IWorkbench workbench,
                       final IStructuredSelection selection ) {
     	
         if (isAllVirtualTablesSelected(selection)) {
             initialSelection = new StructuredSelection(selection.toArray());
         }
         this.wizardPage = new WizardPage(CreateMaterializedViewWizard.class.getSimpleName(), PAGE_TITLE, null) {
-            public void createControl( final Composite parent ) {
+            @Override
+			public void createControl( final Composite parent ) {
                 setControl(createPageControl(parent));
             }
         };

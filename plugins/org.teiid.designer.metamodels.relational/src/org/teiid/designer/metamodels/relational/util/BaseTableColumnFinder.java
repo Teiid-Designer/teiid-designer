@@ -31,7 +31,8 @@ public class BaseTableColumnFinder extends RelationalEntityFinder {
      * 
      * @see org.teiid.designer.core.util.ModelVisitor#visit(org.eclipse.emf.ecore.EObject)
      */
-    public boolean visit( final EObject object ) {
+    @Override
+	public boolean visit( final EObject object ) {
         if (object instanceof BaseTable) {
             final ColumnSet columnSet = (ColumnSet)object;
             found(columnSet.getColumns());

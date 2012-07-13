@@ -20,7 +20,8 @@ import org.teiid.designer.jdbc.JdbcPackage;
 public class JdbcSqlAspectFactoryImpl implements MetamodelAspectFactory {
     
     
-    public MetamodelAspect create(EClassifier classifier, MetamodelEntity entity) {
+    @Override
+	public MetamodelAspect create(EClassifier classifier, MetamodelEntity entity) {
 
         switch (classifier.getClassifierID()) {
             case JdbcPackage.JDBC_SOURCE_PROPERTY: return null;

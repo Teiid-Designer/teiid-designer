@@ -120,7 +120,8 @@ public class TableFacetSet extends AbstractFacetSet implements MultiFacetSet {
         // edit:
         final Button edit = ftk.createButton(c, provider.getLaunchButtonText(), SWT.NONE);
         viewer.addSelectionChangedListener(new ISelectionChangedListener() {
-            public void selectionChanged( SelectionChangedEvent event ) {
+            @Override
+			public void selectionChanged( SelectionChangedEvent event ) {
                 edit.setEnabled(SelectionUtilities.isSingleSelection(event.getSelection()));// !event.getSelection().isEmpty());
             }
         });
@@ -135,7 +136,8 @@ public class TableFacetSet extends AbstractFacetSet implements MultiFacetSet {
         final Button remove = ftk.createButton(c, LABEL_REMOVE, SWT.NONE);
         remove.setEnabled(false);
         viewer.addSelectionChangedListener(new ISelectionChangedListener() {
-            public void selectionChanged( SelectionChangedEvent event ) {
+            @Override
+			public void selectionChanged( SelectionChangedEvent event ) {
                 remove.setEnabled(!event.getSelection().isEmpty());
             }
         });
@@ -167,7 +169,8 @@ public class TableFacetSet extends AbstractFacetSet implements MultiFacetSet {
         } // endif
     }
 
-    public void addValue( FacetValue fv,
+    @Override
+	public void addValue( FacetValue fv,
                           boolean reflow ) {
         init();
 
@@ -179,12 +182,14 @@ public class TableFacetSet extends AbstractFacetSet implements MultiFacetSet {
         } // endif
     }
 
-    public void reflow() {
+    @Override
+	public void reflow() {
         packColumns();
         getCategory().reflowForm();
     }
 
-    public void clear() {
+    @Override
+	public void clear() {
         init();
 
         dataList.clear();
@@ -244,7 +249,8 @@ public class TableFacetSet extends AbstractFacetSet implements MultiFacetSet {
         reflow();
 
         final TransactionRunnable runnable = new TransactionRunnable() {
-            public Object run( final UnitOfWork uow ) {
+            @Override
+			public Object run( final UnitOfWork uow ) {
                 Iterator itor = selected.iterator();
                 while (itor.hasNext()) {
                     FacetValue fv = (FacetValue)itor.next();
@@ -273,7 +279,8 @@ public class TableFacetSet extends AbstractFacetSet implements MultiFacetSet {
     }
 
     class MyListener implements IDoubleClickListener {
-        public void doubleClick( DoubleClickEvent event ) {
+        @Override
+		public void doubleClick( DoubleClickEvent event ) {
             editRowObject(((IStructuredSelection)event.getSelection()).getFirstElement());
         }
     }
@@ -298,7 +305,8 @@ public class TableFacetSet extends AbstractFacetSet implements MultiFacetSet {
         private static final int VALUE_COLUMN = 0;
         private static final int DESC_COLUMN = 1;
 
-        public String getColumnText( Object element,
+        @Override
+		public String getColumnText( Object element,
                                      int columnIndex ) {
             if (element instanceof FacetValue) {
                 FacetValue fv = (FacetValue)element;
@@ -318,11 +326,13 @@ public class TableFacetSet extends AbstractFacetSet implements MultiFacetSet {
             return null;
         }
 
-        public Image getImage( Object element ) {
+        @Override
+		public Image getImage( Object element ) {
             return null;
         }
 
-        public String getText( Object element ) {
+        @Override
+		public String getText( Object element ) {
             if (element instanceof FacetValue) {
                 FacetValue fv = (FacetValue)element;
                 return (fv.value != null) ? fv.value.toString() : fv.toString();
@@ -334,12 +344,14 @@ public class TableFacetSet extends AbstractFacetSet implements MultiFacetSet {
     }
 
     class MyClipActionHandler implements ClipboardActionHandler {
-        public void cut() {
+        @Override
+		public void cut() {
             copy();
             delete();
         }
 
-        public void copy() {
+        @Override
+		public void copy() {
             StringBuffer toClip = new StringBuffer();
             // TODO much of this code should be placed in SystemClipboardUtils...
             List l = ((IStructuredSelection)viewer.getSelection()).toList();
@@ -362,9 +374,11 @@ public class TableFacetSet extends AbstractFacetSet implements MultiFacetSet {
             SystemClipboardUtilities.setContents(toClip.toString());
         }
 
-        public void paste() {
+        @Override
+		public void paste() {
             final TransactionRunnable runnable = new TransactionRunnable() {
-                public Object run( final UnitOfWork uow ) {
+                @Override
+				public Object run( final UnitOfWork uow ) {
                     String contents = SystemClipboardUtilities.getContents();
                     if (contents != null) {
                         List toInsert = SystemClipboardUtilities.convertTableData(contents);
@@ -403,15 +417,18 @@ public class TableFacetSet extends AbstractFacetSet implements MultiFacetSet {
             reflow();
         }
 
-        public void delete() {
+        @Override
+		public void delete() {
             removeSelectedRows();
         }
 
-        public void selectAll() {
+        @Override
+		public void selectAll() {
             viewer.getTable().selectAll();
         }
 
-        public void addSelectionChangedListener( ISelectionChangedListener listener ) {
+        @Override
+		public void addSelectionChangedListener( ISelectionChangedListener listener ) {
             viewer.addSelectionChangedListener(listener);
         }
     } // endclass MyClipActionHandler

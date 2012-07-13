@@ -38,7 +38,8 @@ public class XsdMatcherFactory implements EObjectMatcherFactory {
     /**
      * @see org.teiid.designer.core.compare.EObjectMatcherFactory#createEObjectMatchersForRoots()
      */
-    public List createEObjectMatchersForRoots() {
+    @Override
+	public List createEObjectMatchersForRoots() {
         this.standardMatchers.add(new XsdQNameToQNameMatcher());
         this.standardMatchers.add(new XsdQNameToQNameIgnoreCaseMatcher());
         this.standardMatchers.add(new XsdTagNameToTagNameMatcher());
@@ -50,7 +51,8 @@ public class XsdMatcherFactory implements EObjectMatcherFactory {
     /**
      * @see org.teiid.designer.core.compare.EObjectMatcherFactory#createEObjectMatchers(org.eclipse.emf.ecore.EReference)
      */
-    public List createEObjectMatchers(final EReference reference) {
+    @Override
+	public List createEObjectMatchers(final EReference reference) {
         // Make sure the reference is in the xsd metamodel ...
         final EClass containingClass = reference.getEContainingClass();
         final EPackage metamodel = containingClass.getEPackage();

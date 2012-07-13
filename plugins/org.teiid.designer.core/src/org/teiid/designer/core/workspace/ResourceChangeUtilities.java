@@ -264,7 +264,8 @@ public class ResourceChangeUtilities {
         /**
          * @see org.eclipse.core.resources.IResourceDeltaVisitor#visit(org.eclipse.core.resources.IResourceDelta)
          */
-        public boolean visit( IResourceDelta theDelta ) {
+        @Override
+		public boolean visit( IResourceDelta theDelta ) {
             System.out.println("resource=" + theDelta.getResource()); //$NON-NLS-1$
             System.out.println("kind=" + theDelta.getKind()); //$NON-NLS-1$
             System.out.println("flags=" + theDelta.getFlags()); //$NON-NLS-1$

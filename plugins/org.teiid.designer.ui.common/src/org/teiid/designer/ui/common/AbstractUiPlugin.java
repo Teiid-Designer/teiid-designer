@@ -77,20 +77,24 @@ public abstract class AbstractUiPlugin extends org.eclipse.ui.plugin.AbstractUIP
 
         workbench.addWindowListener(new IWindowListener() {
 
-            public void windowActivated( IWorkbenchWindow theWindow ) {
+            @Override
+			public void windowActivated( IWorkbenchWindow theWindow ) {
                 lastActiveWorkbenchWindow = theWindow;
             }
 
-            public void windowDeactivated( IWorkbenchWindow theWindow ) {
+            @Override
+			public void windowDeactivated( IWorkbenchWindow theWindow ) {
             }
 
-            public void windowClosed( IWorkbenchWindow theWindow ) {
+            @Override
+			public void windowClosed( IWorkbenchWindow theWindow ) {
                 // remove the service from the map since the window closed
                 windowServiceMap.remove(theWindow);
                 windowList.remove(theWindow);
             }
 
-            public void windowOpened( IWorkbenchWindow theWindow ) {
+            @Override
+			public void windowOpened( IWorkbenchWindow theWindow ) {
                 if (!windowList.contains(theWindow)) {
                     // add a listener to synchronize the active editor with the perspective
                     theWindow.addPerspectiveListener(new EditorPerspectiveListener(theWindow));

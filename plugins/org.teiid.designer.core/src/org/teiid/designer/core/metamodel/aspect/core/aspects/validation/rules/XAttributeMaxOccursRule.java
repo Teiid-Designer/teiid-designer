@@ -39,7 +39,8 @@ public class XAttributeMaxOccursRule implements StructuralFeatureValidationRule 
      * @see org.teiid.designer.core.validation.ObjectValidationRule#validate(org.eclipse.emf.ecore.EObject, org.teiid.designer.core.validation.ValidationContext)
      * @since 4.2
      */
-    public void validate(EStructuralFeature eStructuralFeature, EObject eObject, Object value, ValidationContext context) {
+    @Override
+	public void validate(EStructuralFeature eStructuralFeature, EObject eObject, Object value, ValidationContext context) {
         CoreArgCheck.isInstanceOf(XAttribute.class, eObject);
         if ( eStructuralFeature.getFeatureID() != ExtensionPackage.XATTRIBUTE__UPPER_BOUND ) {
             return;

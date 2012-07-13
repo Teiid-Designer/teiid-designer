@@ -51,14 +51,16 @@ public class VirtualDocumentWizardContributor implements INewModelWizardContribu
      * @see org.teiid.designer.ui.wizards.INewModelWizardContributor#canFinishEarly(org.eclipse.jface.wizard.IWizardPage)
      * @since 4.2
      */
-    public boolean canFinishEarly(IWizardPage theCurrentPage) {
+    @Override
+	public boolean canFinishEarly(IWizardPage theCurrentPage) {
         return true; //theCurrentPage == newVirtualDocumentPage;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.ui.wizards.INewModelWizardContributor#createWizardPages(org.eclipse.swt.widgets.Composite, org.eclipse.core.resources.IProject, org.teiid.designer.core.MetamodelDescriptor, boolean)
      */
-    public void createWizardPages(ISelection selection,
+    @Override
+	public void createWizardPages(ISelection selection,
                                   IResource targetResource,
                                   IPath targetFilePath,
                                   MetamodelDescriptor descriptor,
@@ -86,13 +88,15 @@ public class VirtualDocumentWizardContributor implements INewModelWizardContribu
      * @see org.teiid.designer.ui.wizards.INewModelWizardContributor#doCancel()
      * @since 4.2
      */
-    public void doCancel() {
+    @Override
+	public void doCancel() {
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.ui.wizards.INewModelWizardContributor#doFinish(org.teiid.designer.core.workspace.ModelResource)
      */
-    public void doFinish(final ModelResource modelResource, final IProgressMonitor monitor) {
+    @Override
+	public void doFinish(final ModelResource modelResource, final IProgressMonitor monitor) {
         IWizardContainer container = previewVDocPage.getWizard().getContainer();
         XMLDocumentWizard.finishWizard(newVirtualDocumentPage, previewVDocPage, modelResource, container, model);
     }
@@ -100,21 +104,24 @@ public class VirtualDocumentWizardContributor implements INewModelWizardContribu
     /* (non-Javadoc)
      * @See org.teiid.designer.ui.wizards.INewModelWizardContributor#getWizardPages()
      */
-    public IWizardPage[] getWizardPages() {
+    @Override
+	public IWizardPage[] getWizardPages() {
         return pages;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.ui.wizards.INewModelWizardContributor#inputChanged(org.eclipse.swt.widgets.Composite, org.eclipse.core.resources.IProject, org.teiid.designer.core.MetamodelDescriptor, boolean)
      */
-    public void inputChanged(
+    @Override
+	public void inputChanged(
         ISelection selection,
         IResource targetResource,
         MetamodelDescriptor descriptor,
         boolean isVirtual) {
     }
 
-    public void currentPageChanged(IWizardPage page) {
+    @Override
+	public void currentPageChanged(IWizardPage page) {
         // set up progress monitor:
         IWizard wizard = page.getWizard(); // note that wizard can change through subsequent calls to this method
         if (wizard instanceof Wizard) {

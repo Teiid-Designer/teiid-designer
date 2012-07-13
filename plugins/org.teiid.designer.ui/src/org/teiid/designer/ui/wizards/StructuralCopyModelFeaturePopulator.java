@@ -78,7 +78,8 @@ public class StructuralCopyModelFeaturePopulator implements IStructuralCopyTreeP
      * @param theModel ModelResource for the model
      * @param targetIsVirtual flag indicating if target of copy is virtual
      */
-    public void populateModelFeaturesTree( TreeViewer viewer,
+    @Override
+	public void populateModelFeaturesTree( TreeViewer viewer,
                                            ModelResource theModel,
                                            boolean targetIsVirtual ) {
         ViewerFilter[] filters = viewer.getFilters();
@@ -127,7 +128,8 @@ public class StructuralCopyModelFeaturePopulator implements IStructuralCopyTreeP
      * @param monitor a progress monitor
      * @throws ModelerCoreException 
      */
-    public void copyModel( ModelResource sourceModelResource,
+    @Override
+	public void copyModel( ModelResource sourceModelResource,
                            ModelResource targetModelResource,
                            InheritanceCheckboxTreeViewer viewer,
                            Map extraProperties,
@@ -149,7 +151,8 @@ public class StructuralCopyModelFeaturePopulator implements IStructuralCopyTreeP
      * @param monitor a progress monitor
      * @throws ModelerCoreException 
      */
-    public void copyModel( ModelResource sourceModelResource,
+    @Override
+	public void copyModel( ModelResource sourceModelResource,
                            ModelResource targetModelResource,
                            Map extraProperties,
                            boolean copyAllDescriptions,

@@ -273,7 +273,8 @@ public class XmlDocumentModelObjectLabelProvider extends ModelExplorerLabelProvi
         // first, obtain gray from the system if we don't have it yet:
         if (gray == null) {
             Display.getDefault().syncExec(new Runnable() {
-                public void run() {
+                @Override
+				public void run() {
                     gray = UiUtil.getSystemColor(SWT.COLOR_GRAY);
                 }
             }); // endanon

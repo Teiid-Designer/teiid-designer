@@ -178,7 +178,8 @@ implements IMenuListener {
     /* (non-Javadoc)
      * @see org.eclipse.jface.action.IMenuListener#menuAboutToShow(org.eclipse.jface.action.IMenuManager)
      */
-    public void menuAboutToShow(IMenuManager theMenuMgr) {
+    @Override
+	public void menuAboutToShow(IMenuManager theMenuMgr) {
         // first put in common menu items and groups
         ActionService service = getActionService();
         ISelection selection = getEditorPage().getModelObjectSelectionProvider().getSelection();

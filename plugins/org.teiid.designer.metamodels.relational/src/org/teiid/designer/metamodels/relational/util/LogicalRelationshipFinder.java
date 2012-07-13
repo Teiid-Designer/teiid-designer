@@ -30,7 +30,8 @@ public class LogicalRelationshipFinder extends RelationalEntityFinder {
      * 
      * @see org.teiid.designer.core.util.ModelVisitor#visit(org.eclipse.emf.ecore.EObject)
      */
-    public boolean visit( final EObject object ) {
+    @Override
+	public boolean visit( final EObject object ) {
 
         // LogicalRelationship are contained by Catalog and Schema and Resources
         if (object instanceof LogicalRelationship) {

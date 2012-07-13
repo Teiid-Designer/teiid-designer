@@ -128,7 +128,8 @@ public class LayoutDebugger { // NO_UCD (Indicates this is ignored by unused cod
         /* (non-Javadoc)
          * @see org.eclipse.swt.events.PaintListener#paintControl(org.eclipse.swt.events.PaintEvent)
          */
-        public void paintControl(PaintEvent paintEvent)
+        @Override
+		public void paintControl(PaintEvent paintEvent)
         {
             GC gc = paintEvent.gc;
             gc.setForeground(color);
@@ -206,7 +207,8 @@ public class LayoutDebugger { // NO_UCD (Indicates this is ignored by unused cod
         /* (non-Javadoc)
          * @see org.eclipse.swt.events.DisposeListener#widgetDisposed(org.eclipse.swt.events.DisposeEvent)
          */
-        public void widgetDisposed(DisposeEvent arg0)
+        @Override
+		public void widgetDisposed(DisposeEvent arg0)
         {
             //color.dispose();
         }

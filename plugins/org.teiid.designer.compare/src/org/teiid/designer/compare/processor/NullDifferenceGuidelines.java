@@ -29,21 +29,24 @@ public class NullDifferenceGuidelines implements DifferenceGuidelines {
     /**
      * @see org.teiid.designer.compare.DifferenceGuidelines#includeMetamodel(java.lang.String)
      */
-    public boolean includeMetamodel(String metamodelUri) {
+    @Override
+	public boolean includeMetamodel(String metamodelUri) {
         return true;
     }
 
     /**
      * @see org.teiid.designer.compare.DifferenceGuidelines#includeFeature(org.eclipse.emf.ecore.EStructuralFeature)
      */
-    public boolean includeFeature(EStructuralFeature feature) {
+    @Override
+	public boolean includeFeature(EStructuralFeature feature) {
         return true;
     }
 
     /**
      * @see org.teiid.designer.compare.DifferenceGuidelines#includeMetaclass(org.eclipse.emf.ecore.EClass)
      */
-    public boolean includeMetaclass(EClass eclass) {
+    @Override
+	public boolean includeMetaclass(EClass eclass) {
         return true;
     }
 

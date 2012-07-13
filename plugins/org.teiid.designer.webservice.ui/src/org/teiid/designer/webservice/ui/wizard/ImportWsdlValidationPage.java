@@ -118,7 +118,8 @@ public class ImportWsdlValidationPage extends AbstractWizardPage
      * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
      * @since 4.2
      */
-    public void createControl( Composite theParent ) {
+    @Override
+	public void createControl( Composite theParent ) {
         //
         // create main container
         //
@@ -209,15 +210,18 @@ public class ImportWsdlValidationPage extends AbstractWizardPage
         WidgetFactory.createTableColumn(table, LINE_NUMBER_HEADER);
         this.viewer.setContentProvider(new IStructuredContentProvider() {
 
-            public void dispose() {
+            @Override
+			public void dispose() {
             }
 
-            public Object[] getElements( final Object inputElement ) {
+            @Override
+			public Object[] getElements( final Object inputElement ) {
 
                 return wsdlValidationMessages.toArray();
             }
 
-            public void inputChanged( final Viewer viewer,
+            @Override
+			public void inputChanged( final Viewer viewer,
                                       final Object oldInput,
                                       final Object newInput ) {
             }
@@ -233,7 +237,8 @@ public class ImportWsdlValidationPage extends AbstractWizardPage
                 return null;
             }
 
-            public String getColumnText( final Object element,
+            @Override
+			public String getColumnText( final Object element,
                                          final int column ) {
                 final IValidationMessage message = (IValidationMessage)element;
                 switch (column) {
@@ -258,7 +263,8 @@ public class ImportWsdlValidationPage extends AbstractWizardPage
         });
         this.viewer.addDoubleClickListener(new IDoubleClickListener() {
 
-            public void doubleClick( final DoubleClickEvent event ) {
+            @Override
+			public void doubleClick( final DoubleClickEvent event ) {
             }
         });
         this.viewer.setSorter(new TableViewerSorter(this.viewer, SEVERITY_COLUMN, TableViewerSorter.ASCENDING) {
@@ -277,7 +283,8 @@ public class ImportWsdlValidationPage extends AbstractWizardPage
 
         this.viewer.addSelectionChangedListener(new ISelectionChangedListener() {
 
-            public void selectionChanged( SelectionChangedEvent theEvent ) {
+            @Override
+			public void selectionChanged( SelectionChangedEvent theEvent ) {
                 handleTableSelectionChanged();
             }
         });

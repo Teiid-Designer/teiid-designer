@@ -39,7 +39,8 @@ public class XClassUniqueExtendedClassInXPackageRule implements ObjectValidation
      * @see org.teiid.designer.core.validation.ObjectValidationRule#validate(org.eclipse.emf.ecore.EObject, org.teiid.designer.core.validation.ValidationContext)
      * @since 4.2
      */
-    public void validate(EObject eObject, ValidationContext context) {
+    @Override
+	public void validate(EObject eObject, ValidationContext context) {
         CoreArgCheck.isInstanceOf(XPackage.class, eObject);
 
         final XPackage xpackage = (XPackage) eObject;

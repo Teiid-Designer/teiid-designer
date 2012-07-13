@@ -41,7 +41,8 @@ public class JdbcSourceAspect extends AbstractMetamodelAspect implements SqlMode
     /**
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlAspect#getName(org.eclipse.emf.ecore.EObject)
      */
-    public String getName(final EObject eObject) {
+    @Override
+	public String getName(final EObject eObject) {
         CoreArgCheck.isInstanceOf(JdbcSource.class, eObject); 
         JdbcSource entity = (JdbcSource) eObject;   
         return entity.getName();
@@ -50,7 +51,8 @@ public class JdbcSourceAspect extends AbstractMetamodelAspect implements SqlMode
     /**
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlAspect#getNameInSource(org.eclipse.emf.ecore.EObject)
      */
-    public String getNameInSource(final EObject eObject) {
+    @Override
+	public String getNameInSource(final EObject eObject) {
         CoreArgCheck.isInstanceOf(JdbcSource.class, eObject); 
         JdbcSource entity = (JdbcSource) eObject;       
         return entity.getName();
@@ -59,21 +61,24 @@ public class JdbcSourceAspect extends AbstractMetamodelAspect implements SqlMode
     /** 
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlAspect#isRecordType(char)
      */
-    public boolean isRecordType(final char recordType) {
+    @Override
+	public boolean isRecordType(final char recordType) {
         return false;
     }
 
     /** 
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlAspect#isQueryable(org.eclipse.emf.ecore.EObject)
      */
-    public boolean isQueryable(final EObject eObject) {
+    @Override
+	public boolean isQueryable(final EObject eObject) {
         return false;
     }
 
     /** 
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlModelSourceAspect#getProperties(org.eclipse.emf.ecore.EObject)
      */
-    public Properties getProperties(final EObject eObject) {
+    @Override
+	public Properties getProperties(final EObject eObject) {
         CoreArgCheck.isInstanceOf(JdbcSource.class, eObject); 
 
         Properties props = new Properties();
@@ -152,7 +157,8 @@ public class JdbcSourceAspect extends AbstractMetamodelAspect implements SqlMode
     /*
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlAspect#updateObject(org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject)
      */
-    public void updateObject(EObject targetObject, EObject sourceObject) {
+    @Override
+	public void updateObject(EObject targetObject, EObject sourceObject) {
 
     }
 

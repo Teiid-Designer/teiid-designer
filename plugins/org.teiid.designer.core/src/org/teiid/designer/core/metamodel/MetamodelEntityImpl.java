@@ -59,35 +59,40 @@ public class MetamodelEntityImpl implements MetamodelEntity {
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.MetamodelEntity#getDisplayName()
      */
-    public String getDisplayName() {
+    @Override
+	public String getDisplayName() {
         return null;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.MetamodelEntity#getPluralDisplayName()
      */
-    public String getPluralDisplayName() {
+    @Override
+	public String getPluralDisplayName() {
         return null;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.MetamodelEntity#getIconPath()
      */
-    public String getIconPath() {
+    @Override
+	public String getIconPath() {
         return null;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.MetamodelEntity#getTooltip()
      */
-    public String getTooltip() {
+    @Override
+	public String getTooltip() {
         return null;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.MetamodelEntity#getMetamodelAspect(java.lang.String)
      */
-    public MetamodelAspect getMetamodelAspect(final String id) {
+    @Override
+	public MetamodelAspect getMetamodelAspect(final String id) {
         if ( aspectMap == null ) {
             return null;
         }
@@ -97,7 +102,8 @@ public class MetamodelEntityImpl implements MetamodelEntity {
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.MetamodelEntity#getMetamodelAspects()
      */
-    public Collection getMetamodelAspects() {
+    @Override
+	public Collection getMetamodelAspects() {
         if ( aspectMap == null ) {
             return Collections.EMPTY_LIST;
         }
@@ -107,14 +113,16 @@ public class MetamodelEntityImpl implements MetamodelEntity {
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.MetamodelEntity#getEClass()
      */
-    public EClass getEClass() {
+    @Override
+	public EClass getEClass() {
         return this.eClass;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.MetamodelEntity#getAttributes()
      */
-    public List getAttributes() {
+    @Override
+	public List getAttributes() {
         final EClass metamodelClass = this.getEClass();
         if ( attributes == null ) {
             final List attribs = metamodelClass.getEAllAttributes();
@@ -126,7 +134,8 @@ public class MetamodelEntityImpl implements MetamodelEntity {
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.MetamodelEntity#getContainedClasses()
      */
-    public List getContainedClasses() {
+    @Override
+	public List getContainedClasses() {
         final EClass metamodelClass = this.getEClass();
         if ( containedClasses == null ) {
             final List refs = metamodelClass.getEAllContainments();
@@ -144,7 +153,8 @@ public class MetamodelEntityImpl implements MetamodelEntity {
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.MetamodelEntity#getReferencedClasses()
      */
-    public List getReferencedClasses() {
+    @Override
+	public List getReferencedClasses() {
         final EClass metamodelClass = this.getEClass();
         if ( referencedClasses == null ) {
             final List refs = metamodelClass.getEAllReferences();
@@ -163,6 +173,7 @@ public class MetamodelEntityImpl implements MetamodelEntity {
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.core.metamodel.aspect.MetamodelEntity#getUniDirectionalReferences()
 	 */
+	@Override
 	public List getUniDirectionalReferences() {
 		final EClass metamodelClass = this.getEClass();
 		if ( uniReferences == null ) {

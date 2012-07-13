@@ -33,7 +33,8 @@ public class UmlPartGenerator implements NotationPartGenerator {
     /**
      * @see org.eclipse.gef.EditPartFactory#createEditPart(EditPart, Object)
     **/
-    public EditPart createEditPart(EditPart iContext, Object iModel, String diagramTypeId) {
+    @Override
+	public EditPart createEditPart(EditPart iContext, Object iModel, String diagramTypeId) {
         EditPart editPart = null;
 
         if (iModel instanceof UmlPackageNode) {

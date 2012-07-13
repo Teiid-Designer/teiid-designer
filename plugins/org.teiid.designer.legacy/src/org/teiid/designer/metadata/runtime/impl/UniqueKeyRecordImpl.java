@@ -41,7 +41,8 @@ public class UniqueKeyRecordImpl extends ColumnSetRecordImpl implements UniqueKe
     /*
      * @See org.teiid.designer.core.metadata.runtime.UniqueKeyRecord#getForeignKeyIDs()
      */
-    public List getForeignKeyIDs() {
+    @Override
+	public List getForeignKeyIDs() {
         return foreignKeyIDs;
     }
 

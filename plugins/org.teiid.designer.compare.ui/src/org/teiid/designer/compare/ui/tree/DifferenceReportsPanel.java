@@ -391,7 +391,8 @@ public class DifferenceReportsPanel extends Composite implements CoreStringUtil.
         // Add a Selection Listener to Tree
         this.treePanel.getTreeViewer().addSelectionChangedListener(new ISelectionChangedListener() {
 
-            public void selectionChanged( SelectionChangedEvent event ) {
+            @Override
+			public void selectionChanged( SelectionChangedEvent event ) {
                 // if the selection is empty clear the label
                 if (event.getSelection().isEmpty()) {
                     updateDescriptorPanel(null);
@@ -800,7 +801,8 @@ public class DifferenceReportsPanel extends Composite implements CoreStringUtil.
             parent.addPaintListener(this);
         }
 
-        public void paintControl( PaintEvent e ) {
+        @Override
+		public void paintControl( PaintEvent e ) {
             if (!bCompletedInitialWiggle) {
                 // or do this dialog-level wiggle:
                 int iFudgeFactor = 3;

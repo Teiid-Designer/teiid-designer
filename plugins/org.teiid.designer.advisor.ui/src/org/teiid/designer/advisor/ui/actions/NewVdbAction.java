@@ -43,14 +43,16 @@ public final class NewVdbAction extends Action implements IWorkbenchWindowAction
      * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#dispose()
      * @since 4.3
      */
-    public void dispose() {
+    @Override
+	public void dispose() {
     }
 
     /**
      * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#init(org.eclipse.ui.IWorkbenchWindow)
      * @since 4.3
      */
-    public void init( IWorkbenchWindow theWindow ) {
+    @Override
+	public void init( IWorkbenchWindow theWindow ) {
     }
 
     /**
@@ -58,7 +60,8 @@ public final class NewVdbAction extends Action implements IWorkbenchWindowAction
      *      org.eclipse.jface.viewers.ISelection)
      * @since 4.3
      */
-    public void selectionChanged( IAction theAction,
+    @Override
+	public void selectionChanged( IAction theAction,
                                   ISelection theSelection ) {
         // always enabled
     }
@@ -67,7 +70,8 @@ public final class NewVdbAction extends Action implements IWorkbenchWindowAction
      * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
      * @since 4.3
      */
-    public void run( IAction theAction ) {
+    @Override
+	public void run( IAction theAction ) {
         run();
     }
 
@@ -75,7 +79,8 @@ public final class NewVdbAction extends Action implements IWorkbenchWindowAction
      * @see org.eclipse.jface.action.Action#run()
      * @since 4.4
      */
-    public void run() {
+    @Override
+	public void run() {
         ModelerUiViewUtils.launchWizard("newVdbWizard", new StructuredSelection(), true); //$NON-NLS-1$
     }
 

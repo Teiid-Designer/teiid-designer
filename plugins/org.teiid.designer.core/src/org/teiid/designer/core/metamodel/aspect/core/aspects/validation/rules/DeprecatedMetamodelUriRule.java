@@ -34,7 +34,8 @@ public class DeprecatedMetamodelUriRule implements ObjectValidationRule {
      * @see org.teiid.designer.core.validation.ObjectValidationRule#validate(org.eclipse.emf.ecore.EObject, org.teiid.designer.core.validation.ValidationContext)
      * @since 4.2
      */
-    public void validate(final EObject eObject, final ValidationContext context) {
+    @Override
+	public void validate(final EObject eObject, final ValidationContext context) {
         CoreArgCheck.isNotNull(context);
         CoreArgCheck.isInstanceOf(ModelAnnotation.class, eObject);
         

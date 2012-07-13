@@ -55,7 +55,8 @@ public class SqlTransformationMappingRootSqlAspect extends TransformationMapping
     /**
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlTransformationAspect#getTransformedObject(org.eclipse.emf.ecore.EObject)
      */
-    public Object getTransformedObject( EObject eObject ) {
+    @Override
+	public Object getTransformedObject( EObject eObject ) {
         CoreArgCheck.isInstanceOf(TransformationMappingRoot.class, eObject);
         final TransformationMappingRoot root = (TransformationMappingRoot)eObject;
         EObject targetEObj = root.getTarget();
@@ -70,7 +71,8 @@ public class SqlTransformationMappingRootSqlAspect extends TransformationMapping
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlTransformationAspect#getInputObjects(org.eclipse.emf.ecore.EObject)
      * @since 4.2
      */
-    public List getInputObjects( EObject eObject ) {
+    @Override
+	public List getInputObjects( EObject eObject ) {
         CoreArgCheck.isInstanceOf(TransformationMappingRoot.class, eObject);
         final TransformationMappingRoot root = (TransformationMappingRoot)eObject;
         return root.getInputs();
@@ -80,7 +82,8 @@ public class SqlTransformationMappingRootSqlAspect extends TransformationMapping
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlTransformationAspect#getNestedInputObjects(org.eclipse.emf.ecore.EObject)
      * @since 4.2
      */
-    public List getNestedInputObjects( EObject eObject ) {
+    @Override
+	public List getNestedInputObjects( EObject eObject ) {
         CoreArgCheck.isInstanceOf(TransformationMappingRoot.class, eObject);
         final TransformationMappingRoot root = (TransformationMappingRoot)eObject;
         if (root.getNested() == null) {
@@ -100,7 +103,8 @@ public class SqlTransformationMappingRootSqlAspect extends TransformationMapping
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlTransformationAspect#getNestedOutputObjects(org.eclipse.emf.ecore.EObject)
      * @since 4.2
      */
-    public List getNestedOutputObjects( EObject eObject ) {
+    @Override
+	public List getNestedOutputObjects( EObject eObject ) {
         CoreArgCheck.isInstanceOf(TransformationMappingRoot.class, eObject);
         final TransformationMappingRoot root = (TransformationMappingRoot)eObject;
         if (root.getNested() == null) {
@@ -121,7 +125,8 @@ public class SqlTransformationMappingRootSqlAspect extends TransformationMapping
      *      org.eclipse.emf.ecore.EObject)
      * @since 4.2
      */
-    public List getNestedInputsForOutput( EObject eObject,
+    @Override
+	public List getNestedInputsForOutput( EObject eObject,
                                           EObject output ) {
         CoreArgCheck.isInstanceOf(TransformationMappingRoot.class, eObject);
         final TransformationMappingRoot root = (TransformationMappingRoot)eObject;
@@ -141,7 +146,8 @@ public class SqlTransformationMappingRootSqlAspect extends TransformationMapping
      *      org.eclipse.emf.ecore.EObject)
      * @since 4.2
      */
-    public List getNestedOutputsForInput( EObject eObject,
+    @Override
+	public List getNestedOutputsForInput( EObject eObject,
                                           EObject input ) {
         CoreArgCheck.isInstanceOf(TransformationMappingRoot.class, eObject);
         final TransformationMappingRoot root = (TransformationMappingRoot)eObject;
@@ -160,7 +166,8 @@ public class SqlTransformationMappingRootSqlAspect extends TransformationMapping
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlTransformationAspect#getOutputObjects(org.eclipse.emf.ecore.EObject)
      * @since 4.2
      */
-    public List getOutputObjects( EObject eObject ) {
+    @Override
+	public List getOutputObjects( EObject eObject ) {
         CoreArgCheck.isInstanceOf(TransformationMappingRoot.class, eObject);
         final TransformationMappingRoot root = (TransformationMappingRoot)eObject;
         return root.getOutputs();
@@ -169,7 +176,8 @@ public class SqlTransformationMappingRootSqlAspect extends TransformationMapping
     /**
      * @see org.teiid.designer.transformation.aspects.sql.MappingClassObjectSqlAspect#isRecordType(char)
      */
-    public boolean isRecordType( char recordType ) {
+    @Override
+	public boolean isRecordType( char recordType ) {
         return ((recordType == IndexConstants.RECORD_TYPE.SELECT_TRANSFORM)
                 || (recordType == IndexConstants.RECORD_TYPE.INSERT_TRANSFORM)
                 || (recordType == IndexConstants.RECORD_TYPE.UPDATE_TRANSFORM)
@@ -179,14 +187,16 @@ public class SqlTransformationMappingRootSqlAspect extends TransformationMapping
     /**
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlAspect#isQueryable(org.eclipse.emf.ecore.EObject)
      */
-    public boolean isQueryable( final EObject eObject ) {
+    @Override
+	public boolean isQueryable( final EObject eObject ) {
         return true;
     }
 
     /**
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlAspect#getName(org.eclipse.emf.ecore.EObject)
      */
-    public String getName( EObject eObject ) {
+    @Override
+	public String getName( EObject eObject ) {
         final EObject transformedObject = (EObject)getTransformedObject(eObject);
         if (transformedObject == null) {
             return null;
@@ -217,7 +227,8 @@ public class SqlTransformationMappingRootSqlAspect extends TransformationMapping
     /**
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlAspect#getNameInSource(org.eclipse.emf.ecore.EObject)
      */
-    public String getNameInSource( EObject eObject ) {
+    @Override
+	public String getNameInSource( EObject eObject ) {
         final EObject transformedObject = (EObject)getTransformedObject(eObject);
         if (transformedObject == null) {
             return null;
@@ -232,7 +243,8 @@ public class SqlTransformationMappingRootSqlAspect extends TransformationMapping
     /**
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlTransformationAspect#getTransformationTypes(org.eclipse.emf.ecore.EObject)
      */
-    public String[] getTransformationTypes( final EObject eObject ) {
+    @Override
+	public String[] getTransformationTypes( final EObject eObject ) {
         CoreArgCheck.isInstanceOf(SqlTransformationMappingRoot.class, eObject);
         final SqlTransformationMappingRoot root = (SqlTransformationMappingRoot)eObject;
 
@@ -274,7 +286,8 @@ public class SqlTransformationMappingRootSqlAspect extends TransformationMapping
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlTransformationAspect#getTransformation(org.eclipse.emf.ecore.EObject,
      *      java.lang.String)
      */
-    public String getTransformation( EObject eObject,
+    @Override
+	public String getTransformation( EObject eObject,
                                      String type ) {
         CoreArgCheck.isInstanceOf(SqlTransformationMappingRoot.class, eObject);
         final SqlTransformationMappingRoot root = (SqlTransformationMappingRoot)eObject;
@@ -303,7 +316,8 @@ public class SqlTransformationMappingRootSqlAspect extends TransformationMapping
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlTransformationAspect#isDeleteAllowed(org.eclipse.emf.ecore.EObject)
      * @since 4.3
      */
-    public boolean isDeleteAllowed( EObject eObject ) {
+    @Override
+	public boolean isDeleteAllowed( EObject eObject ) {
         CoreArgCheck.isInstanceOf(SqlTransformationMappingRoot.class, eObject);
         final SqlTransformationMappingRoot root = (SqlTransformationMappingRoot)eObject;
         final SqlTransformation sqlTransformation = (SqlTransformation)root.getHelper();
@@ -314,7 +328,8 @@ public class SqlTransformationMappingRootSqlAspect extends TransformationMapping
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlTransformationAspect#isInsertAllowed(org.eclipse.emf.ecore.EObject)
      * @since 4.3
      */
-    public boolean isInsertAllowed( EObject eObject ) {
+    @Override
+	public boolean isInsertAllowed( EObject eObject ) {
         CoreArgCheck.isInstanceOf(SqlTransformationMappingRoot.class, eObject);
         final SqlTransformationMappingRoot root = (SqlTransformationMappingRoot)eObject;
         final SqlTransformation sqlTransformation = (SqlTransformation)root.getHelper();
@@ -325,7 +340,8 @@ public class SqlTransformationMappingRootSqlAspect extends TransformationMapping
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlTransformationAspect#isUpdateAllowed(org.eclipse.emf.ecore.EObject)
      * @since 4.3
      */
-    public boolean isUpdateAllowed( EObject eObject ) {
+    @Override
+	public boolean isUpdateAllowed( EObject eObject ) {
         CoreArgCheck.isInstanceOf(SqlTransformationMappingRoot.class, eObject);
         final SqlTransformationMappingRoot root = (SqlTransformationMappingRoot)eObject;
         final SqlTransformation sqlTransformation = (SqlTransformation)root.getHelper();
@@ -335,7 +351,8 @@ public class SqlTransformationMappingRootSqlAspect extends TransformationMapping
     /*
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlTransformationAspect#getTransformationInfo(org.eclipse.emf.ecore.EObject, org.teiid.designer.core.validation.ValidationContext, java.lang.String)
      */
-    public SqlTransformationInfo getTransformationInfo( final EObject eObject,
+    @Override
+	public SqlTransformationInfo getTransformationInfo( final EObject eObject,
                                                         final IndexingContext context,
                                                         final String type ) {
 
@@ -455,7 +472,8 @@ public class SqlTransformationMappingRootSqlAspect extends TransformationMapping
     /*
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlAspect#updateObject(org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject)
      */
-    public void updateObject( EObject targetObject,
+    @Override
+	public void updateObject( EObject targetObject,
                               EObject sourceObject ) {
     }
 

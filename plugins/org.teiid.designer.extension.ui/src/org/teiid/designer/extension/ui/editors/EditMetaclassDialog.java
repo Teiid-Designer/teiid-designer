@@ -153,7 +153,8 @@ final class EditMetaclassDialog extends FormDialog {
         treeViewer.setSelection(null, false);
 
         treeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
-            public void selectionChanged( SelectionChangedEvent event ) {
+            @Override
+			public void selectionChanged( SelectionChangedEvent event ) {
                 String selectedMetaclassStr = getSelectedMetaclass();
                 handleMetaclassNameSelectionChanged(selectedMetaclassStr);
             }

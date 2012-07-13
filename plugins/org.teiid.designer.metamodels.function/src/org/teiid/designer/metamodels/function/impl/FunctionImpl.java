@@ -116,7 +116,8 @@ public abstract class FunctionImpl extends EObjectImpl implements Function {
      * <!-- end-user-doc -->
      * @generated
      */
-    public String getName() {
+    @Override
+	public String getName() {
         return name;
     }
 
@@ -125,7 +126,8 @@ public abstract class FunctionImpl extends EObjectImpl implements Function {
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setName(String newName) {
+    @Override
+	public void setName(String newName) {
         String oldName = name;
         name = newName;
         if (eNotificationRequired())
@@ -137,7 +139,8 @@ public abstract class FunctionImpl extends EObjectImpl implements Function {
      * <!-- end-user-doc -->
      * @generated
      */
-    public String getCategory() {
+    @Override
+	public String getCategory() {
         return category;
     }
 
@@ -146,7 +149,8 @@ public abstract class FunctionImpl extends EObjectImpl implements Function {
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setCategory(String newCategory) {
+    @Override
+	public void setCategory(String newCategory) {
         String oldCategory = category;
         category = newCategory;
         if (eNotificationRequired())
@@ -158,7 +162,8 @@ public abstract class FunctionImpl extends EObjectImpl implements Function {
      * <!-- end-user-doc -->
      * @generated
      */
-    public PushDownType getPushDown() {
+    @Override
+	public PushDownType getPushDown() {
         return pushDown;
     }
 
@@ -167,7 +172,8 @@ public abstract class FunctionImpl extends EObjectImpl implements Function {
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setPushDown(PushDownType newPushDown) {
+    @Override
+	public void setPushDown(PushDownType newPushDown) {
         PushDownType oldPushDown = pushDown;
         pushDown = newPushDown == null ? PUSH_DOWN_EDEFAULT : newPushDown;
         if (eNotificationRequired())

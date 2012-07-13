@@ -536,7 +536,8 @@ public class UmlClassifierNode extends UmlModelNode implements ExpandableNode {
         this.expandedState = b;
     }
 
-    public boolean isExpanded() {
+    @Override
+	public boolean isExpanded() {
         // If classifier is contained on an expandable diagram
         // return the expanded state.
         if (canExpand()) return expandedState;
@@ -545,7 +546,8 @@ public class UmlClassifierNode extends UmlModelNode implements ExpandableNode {
         return true;
     }
 
-    public void expand() {
+    @Override
+	public void expand() {
         if (canExpand()) {
             expandedState = true;
             firePropertyChange(DiagramNodeProperties.EXPAND, null, null);
@@ -553,7 +555,8 @@ public class UmlClassifierNode extends UmlModelNode implements ExpandableNode {
         }
     }
 
-    public void collapse() {
+    @Override
+	public void collapse() {
         if (canExpand()) {
             expandedState = false;
             firePropertyChange(DiagramNodeProperties.COLLAPSE, null, null);

@@ -38,7 +38,8 @@ public class URIModelSelector extends TemporaryResourceModelSelector {
     /**
      * @See org.teiid.designer.compare.processor.ModelSelector#open()
      */
-    public void open() {
+    @Override
+	public void open() {
         if (this.resource == null) {
             this.resource = this.getResourceSet().getResource(modelUri, true);
             if (this.resource instanceof EmfResource) {
@@ -62,7 +63,8 @@ public class URIModelSelector extends TemporaryResourceModelSelector {
     /**
      * @see org.teiid.designer.compare.selector.ModelSelector#getRootObjects()
      */
-    public List getRootObjects() {
+    @Override
+	public List getRootObjects() {
         open();
         return this.resource.getContents();
     }
@@ -70,14 +72,16 @@ public class URIModelSelector extends TemporaryResourceModelSelector {
     /**
      * @See org.teiid.designer.compare.processor.ModelSelector#getUri()
      */
-    public URI getUri() {
+    @Override
+	public URI getUri() {
         return modelUri;
     }
 
     /**
      * @See org.teiid.designer.compare.processor.ModelSelector#close()
      */
-    public void close() {
+    @Override
+	public void close() {
         try {
             if (this.resource != null) {
                 this.resource.unload();
@@ -92,7 +96,8 @@ public class URIModelSelector extends TemporaryResourceModelSelector {
     /**
      * @see org.teiid.designer.compare.selector.ModelSelector#getModelAnnotation()
      */
-    public ModelAnnotation getModelAnnotation() {
+    @Override
+	public ModelAnnotation getModelAnnotation() {
         open();
         return this.contents.getModelAnnotation();
     }
@@ -100,7 +105,8 @@ public class URIModelSelector extends TemporaryResourceModelSelector {
     /**
      * @see org.teiid.designer.compare.selector.ModelSelector#getModelHelper()
      */
-    public ModelHelper getModelHelper() {
+    @Override
+	public ModelHelper getModelHelper() {
         if (this.helper == null) {
             open();
             this.helper = new ModelContentsModelHelper(this.contents);
@@ -111,7 +117,8 @@ public class URIModelSelector extends TemporaryResourceModelSelector {
     /**
      * @see org.teiid.designer.compare.selector.ModelSelector#getModelContents()
      */
-    public ModelContents getModelContents() {
+    @Override
+	public ModelContents getModelContents() {
         open();
         return this.contents;
     }

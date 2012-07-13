@@ -28,70 +28,99 @@ public class FakeSqlTableAspect implements SqlTableAspect {
     public Object primaryKey, uuid, parentUuid;
     public int cardinality, tableType;
 
-    public Collection getAccessPatterns(EObject eObject) { return accessPatterns; }
+    @Override
+	public Collection getAccessPatterns(EObject eObject) { return accessPatterns; }
 
-    public int getCardinality(EObject eObject) { return cardinality; }
+    @Override
+	public int getCardinality(EObject eObject) { return cardinality; }
 
-    public List getColumns(EObject eObject) { return columns; }
+    @Override
+	public List getColumns(EObject eObject) { return columns; }
 
-    public Collection getForeignKeys(EObject eObject) { return foreignKeys; }
+    @Override
+	public Collection getForeignKeys(EObject eObject) { return foreignKeys; }
 
-    public Collection getIndexes(EObject eObject) { return indexes; }
+    @Override
+	public Collection getIndexes(EObject eObject) { return indexes; }
 
-    public String getName(EObject eObject) { return name; }
+    @Override
+	public String getName(EObject eObject) { return name; }
 
-    public String getFullName(EObject eObject) { return fullName; }    
+    @Override
+	public String getFullName(EObject eObject) { return fullName; }    
 
-    public String getNameInSource(EObject eObject) { return nameInSource; }
+    @Override
+	public String getNameInSource(EObject eObject) { return nameInSource; }
 
-    public IPath getPath(EObject eObject) { return path; }
+    @Override
+	public IPath getPath(EObject eObject) { return path; }
 
-    public Object getObjectID(EObject eObject) { return uuid; }
+    @Override
+	public Object getObjectID(EObject eObject) { return uuid; }
 
-    public Object getPrimaryKey(EObject eObject) { return primaryKey; }
+    @Override
+	public Object getPrimaryKey(EObject eObject) { return primaryKey; }
 
-    public Collection getUniqueKeys(EObject eObject) { return uniqueKeys; }
+    @Override
+	public Collection getUniqueKeys(EObject eObject) { return uniqueKeys; }
 
-    public boolean isVirtual(EObject eObject) { return virtual; }
+    @Override
+	public boolean isVirtual(EObject eObject) { return virtual; }
 
-    public boolean isMaterialized(EObject eObject) { return materialized; }
+    @Override
+	public boolean isMaterialized(EObject eObject) { return materialized; }
     
-    public String getMaterializedTableId(EObject eObject) { return null; } 
+    @Override
+	public String getMaterializedTableId(EObject eObject) { return null; } 
 
-    public boolean isSystem(EObject eObject) { return system; }
+    @Override
+	public boolean isSystem(EObject eObject) { return system; }
 
-    public boolean supportsUpdate(EObject eObject) { return supportsUpdate; }
+    @Override
+	public boolean supportsUpdate(EObject eObject) { return supportsUpdate; }
 
-    public boolean isRecordType(char recordType) { return (recordType == IndexConstants.RECORD_TYPE.TABLE ); } 
+    @Override
+	public boolean isRecordType(char recordType) { return (recordType == IndexConstants.RECORD_TYPE.TABLE ); } 
 
-    public boolean isQueryable(EObject eObject) { return true; }
+    @Override
+	public boolean isQueryable(EObject eObject) { return true; }
 
-    public String getID() { return null; }
+    @Override
+	public String getID() { return null; }
 
-    public MetamodelEntity getMetamodelEntity() { return null; }
+    @Override
+	public MetamodelEntity getMetamodelEntity() { return null; }
 
-    public Object getParentObjectID(EObject eObject) { return parentUuid; }
+    @Override
+	public Object getParentObjectID(EObject eObject) { return parentUuid; }
 
-    public int getTableType(EObject eObject) { return tableType; }
+    @Override
+	public int getTableType(EObject eObject) { return tableType; }
 
-    public int getColumnSetType() { return MetadataConstants.COLUMN_SET_TYPES.TABLE; }
+    @Override
+	public int getColumnSetType() { return MetadataConstants.COLUMN_SET_TYPES.TABLE; }
 
-    public boolean isMappable(EObject eObject, int mappingType) { return false; }
+    @Override
+	public boolean isMappable(EObject eObject, int mappingType) { return false; }
 
-    public boolean canAcceptTransformationSource(EObject target, EObject source) { return false; }
+    @Override
+	public boolean canAcceptTransformationSource(EObject target, EObject source) { return false; }
 
-    public boolean canBeTransformationSource(EObject source, EObject target) { return false; }
+    @Override
+	public boolean canBeTransformationSource(EObject source, EObject target) { return false; }
     /*
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlAspect#updateObject(org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject)
      */
-    public void updateObject(EObject targetObject, EObject sourceObject) {
+    @Override
+	public void updateObject(EObject targetObject, EObject sourceObject) {
 
     }
 
     /*
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlTableAspect#setSupportsUpdate(org.eclipse.emf.ecore.EObject, boolean)
      */
-    public void setSupportsUpdate(EObject eObject, boolean supportsUpdate) {
+    @Override
+	public void setSupportsUpdate(EObject eObject, boolean supportsUpdate) {
         this.supportsUpdate = supportsUpdate;
     }
 

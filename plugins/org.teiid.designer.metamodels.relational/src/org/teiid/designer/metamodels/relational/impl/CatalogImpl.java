@@ -115,7 +115,8 @@ public class CatalogImpl extends RelationalEntityImpl implements Catalog {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EList getSchemas() {
+    @Override
+	public EList getSchemas() {
         if (schemas == null) {
             schemas = new EObjectContainmentWithInverseEList(Schema.class, this, RelationalPackage.CATALOG__SCHEMAS, RelationalPackage.SCHEMA__CATALOG);
         }
@@ -127,7 +128,8 @@ public class CatalogImpl extends RelationalEntityImpl implements Catalog {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EList getProcedures() {
+    @Override
+	public EList getProcedures() {
         if (procedures == null) {
             procedures = new EObjectContainmentWithInverseEList(Procedure.class, this, RelationalPackage.CATALOG__PROCEDURES, RelationalPackage.PROCEDURE__CATALOG);
         }
@@ -139,7 +141,8 @@ public class CatalogImpl extends RelationalEntityImpl implements Catalog {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EList getIndexes() {
+    @Override
+	public EList getIndexes() {
         if (indexes == null) {
             indexes = new EObjectContainmentWithInverseEList(Index.class, this, RelationalPackage.CATALOG__INDEXES, RelationalPackage.INDEX__CATALOG);
         }
@@ -151,7 +154,8 @@ public class CatalogImpl extends RelationalEntityImpl implements Catalog {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EList getTables() {
+    @Override
+	public EList getTables() {
         if (tables == null) {
             tables = new EObjectContainmentWithInverseEList(Table.class, this, RelationalPackage.CATALOG__TABLES, RelationalPackage.TABLE__CATALOG);
         }
@@ -163,7 +167,8 @@ public class CatalogImpl extends RelationalEntityImpl implements Catalog {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EList getLogicalRelationships() {
+    @Override
+	public EList getLogicalRelationships() {
         if (logicalRelationships == null) {
             logicalRelationships = new EObjectContainmentWithInverseEList(LogicalRelationship.class, this, RelationalPackage.CATALOG__LOGICAL_RELATIONSHIPS, RelationalPackage.LOGICAL_RELATIONSHIP__CATALOG);
         }

@@ -37,14 +37,16 @@ public abstract class AbstractNotationEditPart extends AbstractDefaultEditPart {
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.part.DiagramEditPart#getSelectionHandler()
      */
-    public IDiagramSelectionHandler getSelectionHandler() {
+    @Override
+	public IDiagramSelectionHandler getSelectionHandler() {
         return selectionHandler;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.part.DiagramEditPart#setSelectionHandler(org.teiid.designer.diagram.ui.editor.DiagramSelectionHandler)
      */
-    public void setSelectionHandler(IDiagramSelectionHandler selectionHandler) {
+    @Override
+	public void setSelectionHandler(IDiagramSelectionHandler selectionHandler) {
         this.selectionHandler = selectionHandler;
     }
 

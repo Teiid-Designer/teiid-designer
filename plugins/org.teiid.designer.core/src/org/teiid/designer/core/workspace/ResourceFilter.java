@@ -17,7 +17,8 @@ public interface ResourceFilter {
     
     // Class constants:
     public static final ResourceFilter ACCEPT_ALL = new ResourceFilter() {
-        public boolean accept(IResource res) {
+        @Override
+		public boolean accept(IResource res) {
             return true;
         }
     };

@@ -138,7 +138,8 @@ public final class UiPlugin extends AbstractUiPlugin implements Debug, PluginCon
         if (this.eObjectPropertiesOrderPreferences == null) {
             this.eObjectPropertiesOrderPreferences = new EObjectPropertiesOrderPreferences();
             this.tablePrefPropListener = new IPropertyChangeListener() {
-                public void propertyChange( PropertyChangeEvent event ) {
+                @Override
+				public void propertyChange( PropertyChangeEvent event ) {
                     // update if new prefs have been imported
                     if (event.getProperty().equals(COLUMN_ORDER)) {
                         initializeModelTableColumnUtilsFromPreferenceStore();
@@ -279,7 +280,8 @@ public final class UiPlugin extends AbstractUiPlugin implements Debug, PluginCon
         try {
             UiUtil.runInSwtThread(new Runnable() {
 
-                public void run() {
+                @Override
+				public void run() {
                     UiPlugin.this.errorDecoratorImage = getImageDescriptor(Images.ERROR_DECORATOR);
                     UiPlugin.this.warningDecoratorImage = getImageDescriptor(Images.WARNING_DECORATOR);
                     UiPlugin.this.extensionDecoratorImage = getImageDescriptor(Images.EXTENSION_DECORATOR);
@@ -318,7 +320,8 @@ public final class UiPlugin extends AbstractUiPlugin implements Debug, PluginCon
                 return ModelerCore.getModelWorkspace().findModelResource(resource);
             }
 
-            public void notifyAdd( final ModelWorkspaceNotification notification ) {
+            @Override
+			public void notifyAdd( final ModelWorkspaceNotification notification ) {
                 // act on event only if a "final," after-change event:
                 if (notification.isPostChange()) {
                     final ModelResource modelResource = getModelResource(notification);
@@ -330,7 +333,8 @@ public final class UiPlugin extends AbstractUiPlugin implements Debug, PluginCon
                 } // endif -- isPostChange
             }
 
-            public void notifyChanged( final Notification notification ) {
+            @Override
+			public void notifyChanged( final Notification notification ) {
                 if (notification instanceof ModelWorkspaceNotification
                     && ((ModelWorkspaceNotification)notification).isPreAutoBuild()) {
                     final ModelResource modelResource = getModelResource(notification);
@@ -342,11 +346,13 @@ public final class UiPlugin extends AbstractUiPlugin implements Debug, PluginCon
                 }
             }
 
-            public void notifyClean( final IProject proj ) {
+            @Override
+			public void notifyClean( final IProject proj ) {
                 // Project clean does nothing here...
             }
 
-            public void notifyClosing( final ModelWorkspaceNotification notification ) {
+            @Override
+			public void notifyClosing( final ModelWorkspaceNotification notification ) {
                 final ModelResource modelResource = getModelResource(notification);
                 // Fire a closing event ...if the modelResource != null
                 if (modelResource != null) {
@@ -355,7 +361,8 @@ public final class UiPlugin extends AbstractUiPlugin implements Debug, PluginCon
                 }
             }
 
-            public void notifyMove( final ModelWorkspaceNotification notification ) {
+            @Override
+			public void notifyMove( final ModelWorkspaceNotification notification ) {
                 // act on event only if a "final," after-change event:
                 if (notification.isPostChange()) {
                     final ModelResource modelResource = getModelResource(notification);
@@ -375,7 +382,8 @@ public final class UiPlugin extends AbstractUiPlugin implements Debug, PluginCon
                 } // endif -- isPostChange
             }
 
-            public void notifyOpen( final ModelWorkspaceNotification notification ) {
+            @Override
+			public void notifyOpen( final ModelWorkspaceNotification notification ) {
                 final ModelResource modelResource = getModelResource(notification);
                 // Fire an opening event ...if the modelResource != null
                 if (modelResource != null) {
@@ -384,7 +392,8 @@ public final class UiPlugin extends AbstractUiPlugin implements Debug, PluginCon
                 }
             }
 
-            public void notifyReloaded( final ModelWorkspaceNotification notification ) {
+            @Override
+			public void notifyReloaded( final ModelWorkspaceNotification notification ) {
                 final ModelResource modelResource = getModelResource(notification);
                 // Fire a closing event ...if the modelResource != null
                 if (modelResource != null) {
@@ -393,7 +402,8 @@ public final class UiPlugin extends AbstractUiPlugin implements Debug, PluginCon
                 }
             }
 
-            public void notifyRemove( final ModelWorkspaceNotification notification ) {
+            @Override
+			public void notifyRemove( final ModelWorkspaceNotification notification ) {
                 // act on event only if a "final," after-change event:
                 if (notification.isPostChange()) {
                     final Object notifier = notification.getNotifier();
@@ -407,7 +417,8 @@ public final class UiPlugin extends AbstractUiPlugin implements Debug, PluginCon
                 } // endif -- isPostChange
             }
 
-            public void notifyRename( final ModelWorkspaceNotification notification ) {
+            @Override
+			public void notifyRename( final ModelWorkspaceNotification notification ) {
                 // act on event only if a "final," after-change event:
                 if (notification.isPostChange()) {
                     final ModelResource modelResource = getModelResource(notification);
@@ -466,7 +477,8 @@ public final class UiPlugin extends AbstractUiPlugin implements Debug, PluginCon
      */
     class ViewSelectionCache implements ISelectionListener {
 
-        public void selectionChanged( final IWorkbenchPart part,
+        @Override
+		public void selectionChanged( final IWorkbenchPart part,
                                       final ISelection selection ) {
             if (!(part instanceof IEditorPart)) cachedSelection = selection;
         }

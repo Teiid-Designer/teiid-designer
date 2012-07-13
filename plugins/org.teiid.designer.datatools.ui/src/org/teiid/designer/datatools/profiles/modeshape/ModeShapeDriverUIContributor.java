@@ -361,7 +361,8 @@ public class ModeShapeDriverUIContributor implements IDriverUIContributor, Liste
         savePasswordButton.addListener(SWT.Selection, this);
     }
 
-    public void handleEvent( Event event ) {
+    @Override
+	public void handleEvent( Event event ) {
     	if (event.widget == savePasswordButton) {
     		savePasswordButton.setSelection(savePasswordButton.getSelection());
     	} else if (event.widget == protocolCheck) {

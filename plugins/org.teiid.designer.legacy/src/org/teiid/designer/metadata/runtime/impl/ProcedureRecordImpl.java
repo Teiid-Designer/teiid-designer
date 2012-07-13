@@ -42,35 +42,40 @@ public class ProcedureRecordImpl extends AbstractMetadataRecord implements Proce
     /*
      * @See org.teiid.designer.core.metadata.runtime.ProcedureRecord#getParameterIDs()
      */
-    public List getParameterIDs() {
+    @Override
+	public List getParameterIDs() {
         return parameterIDs;
     }
 
     /*
      * @See org.teiid.designer.core.metadata.runtime.ProcedureRecord#isFunction()
      */
-    public boolean isFunction() {
+    @Override
+	public boolean isFunction() {
         return isFunction;
     }
 
     /*
      * @See org.teiid.designer.core.metadata.runtime.ProcedureRecord#isVirtual()
      */
-    public boolean isVirtual() {
+    @Override
+	public boolean isVirtual() {
         return this.isVirtual;
     }
 
     /*
      * @See org.teiid.designer.core.metadata.runtime.ProcedureRecord#getResultSetID()
      */
-    public Object getResultSetID() {
+    @Override
+	public Object getResultSetID() {
         return resultSetID;
     }
 
     /*
      * @See org.teiid.designer.core.metadata.runtime.ProcedureRecord#getType()
      */
-    public short getType() {
+    @Override
+	public short getType() {
         return this.getProcedureType();
     }
     
@@ -78,7 +83,8 @@ public class ProcedureRecordImpl extends AbstractMetadataRecord implements Proce
      * @see org.teiid.designer.metadata.runtime.ProcedureRecord#getUpdateCount()
      * @since 5.5.3
      */
-    public int getUpdateCount() {
+    @Override
+	public int getUpdateCount() {
         return this.updateCount;
     }
 

@@ -38,6 +38,7 @@ public class Uml2GeneralizationUmlAspect
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.core.metamodel.aspect.uml.UmlGeneralization#getSpecific(java.lang.Object)
 	 */
+	@Override
 	public EObject getSpecific(Object eObject) {
 		final Generalization generalization = assertGeneralization(eObject);
 		return generalization.getSpecific();
@@ -46,6 +47,7 @@ public class Uml2GeneralizationUmlAspect
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.core.metamodel.aspect.uml.UmlGeneralization#getGeneral(java.lang.Object)
 	 */
+	@Override
 	public EObject getGeneral(Object eObject) {
 		final Generalization generalization = assertGeneralization(eObject);
 		return generalization.getGeneral();
@@ -59,6 +61,7 @@ public class Uml2GeneralizationUmlAspect
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.core.metamodel.aspect.uml.UmlDiagramAspect#getEditableSignature(java.lang.Object)
 	 */
+	@Override
 	public String getEditableSignature(Object eObject) {
 		return ""; //$NON-NLS-1$;
 	}
@@ -66,6 +69,7 @@ public class Uml2GeneralizationUmlAspect
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.core.metamodel.aspect.uml.UmlDiagramAspect#getSignature(java.lang.Object, int)
 	 */
+	@Override
 	public String getSignature(Object eObject, int showMask) {
 		return ""; //$NON-NLS-1$;
 	}
@@ -73,6 +77,7 @@ public class Uml2GeneralizationUmlAspect
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.core.metamodel.aspect.uml.UmlDiagramAspect#getStereotype(java.lang.Object)
 	 */
+	@Override
 	public String getStereotype(Object eObject) {
 		return Uml2Plugin.getPluginResourceLocator().getString("_UI_Generalization_type"); //$NON-NLS-1$;
 	}
@@ -80,6 +85,7 @@ public class Uml2GeneralizationUmlAspect
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.core.metamodel.aspect.uml.UmlDiagramAspect#setSignature(java.lang.Object, java.lang.String)
 	 */
+	@Override
 	public IStatus setSignature(Object eObject, String newSignature) {
 		throw new UnsupportedOperationException(Uml2Plugin.Util.getString("Uml2GeneralizationUmlAspect.Signature_may_not_be_set_on_a__1",getStereotype(eObject))); //$NON-NLS-1$
 	}
@@ -87,14 +93,16 @@ public class Uml2GeneralizationUmlAspect
     /** 
      * @see org.teiid.designer.core.metamodel.aspect.uml.UmlRelationship#getName(java.lang.Object)
      */
-    public String getName(Object eObject) {
+    @Override
+	public String getName(Object eObject) {
         return CoreStringUtil.Constants.EMPTY_STRING;
     }
 
     /** 
      * @see org.teiid.designer.core.metamodel.aspect.uml.UmlRelationship#getToolTip(java.lang.Object)
      */
-    public String getToolTip(Object eObject) {
+    @Override
+	public String getToolTip(Object eObject) {
         final StringBuffer sb = new StringBuffer(200);
         sb.append(this.getStereotype(eObject));
         sb.append(' ');

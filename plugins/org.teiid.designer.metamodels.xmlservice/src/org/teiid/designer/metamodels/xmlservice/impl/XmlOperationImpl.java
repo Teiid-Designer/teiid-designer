@@ -109,7 +109,8 @@ public class XmlOperationImpl extends XmlServiceComponentImpl implements XmlOper
      * <!-- end-user-doc -->
      * @generated
      */
-    public EList getInputs() {
+    @Override
+	public EList getInputs() {
         if (inputs == null) {
             inputs = new EObjectContainmentWithInverseEList(XmlInput.class, this, XmlServicePackage.XML_OPERATION__INPUTS, XmlServicePackage.XML_INPUT__OPERATION);
         }
@@ -121,7 +122,8 @@ public class XmlOperationImpl extends XmlServiceComponentImpl implements XmlOper
      * <!-- end-user-doc -->
      * @generated
      */
-    public XmlOutput getOutput() {
+    @Override
+	public XmlOutput getOutput() {
         return output;
     }
 
@@ -145,7 +147,8 @@ public class XmlOperationImpl extends XmlServiceComponentImpl implements XmlOper
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setOutput(XmlOutput newOutput) {
+    @Override
+	public void setOutput(XmlOutput newOutput) {
         if (newOutput != output) {
             NotificationChain msgs = null;
             if (output != null)
@@ -164,7 +167,8 @@ public class XmlOperationImpl extends XmlServiceComponentImpl implements XmlOper
      * <!-- end-user-doc -->
      * @generated
      */
-    public OperationUpdateCount getUpdateCount() {
+    @Override
+	public OperationUpdateCount getUpdateCount() {
         return updateCount;
     }
 
@@ -173,7 +177,8 @@ public class XmlOperationImpl extends XmlServiceComponentImpl implements XmlOper
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setUpdateCount(OperationUpdateCount newUpdateCount) {
+    @Override
+	public void setUpdateCount(OperationUpdateCount newUpdateCount) {
         OperationUpdateCount oldUpdateCount = updateCount;
         updateCount = newUpdateCount == null ? UPDATE_COUNT_EDEFAULT : newUpdateCount;
         if (eNotificationRequired())

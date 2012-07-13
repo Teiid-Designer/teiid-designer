@@ -506,7 +506,8 @@ public class ColumnInfo implements ModelGeneratorWsdlUiConstants {
             return count;
         }
         
-        public String toString() {
+        @Override
+		public String toString() {
             StringBuffer buf = new StringBuffer();
             
             int segCount = segmentCount();

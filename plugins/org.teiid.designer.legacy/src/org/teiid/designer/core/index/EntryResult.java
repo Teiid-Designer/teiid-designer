@@ -46,11 +46,13 @@ public class EntryResult implements IEntryResult {
 
     }
 
-    public int[] getFileReferences() {
+    @Override
+	public int[] getFileReferences() {
         return fileRefs;
     }
 
-    public char[] getWord() {
+    @Override
+	public char[] getWord() {
         return word;
     }
 

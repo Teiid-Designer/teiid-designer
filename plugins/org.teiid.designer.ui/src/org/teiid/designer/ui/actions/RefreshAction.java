@@ -131,7 +131,8 @@ public class RefreshAction
     /* (non-Javadoc)
      * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#init(org.eclipse.ui.IWorkbenchWindow)
      */
-    public void init(IWorkbenchWindow window) {
+    @Override
+	public void init(IWorkbenchWindow window) {
         Iterator iter = extensionList.iterator();
         while ( iter.hasNext() ) {
             IRefreshContributor irc = (IRefreshContributor) iter.next();
@@ -142,7 +143,8 @@ public class RefreshAction
     /* (non-Javadoc)
      * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#dispose()
      */
-    public void dispose() {
+    @Override
+	public void dispose() {
         Iterator iter = extensionList.iterator();
         while ( iter.hasNext() ) {
             IRefreshContributor irc = (IRefreshContributor) iter.next();
@@ -153,7 +155,8 @@ public class RefreshAction
     /* (non-Javadoc)
      * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
      */
-    public void run(IAction action) {
+    @Override
+	public void run(IAction action) {
         if ( enabledExtensionList.size() == 1 ) {
             ((IRefreshContributor) enabledExtensionList.get(0)).run(action);
         }
@@ -163,7 +166,8 @@ public class RefreshAction
     /* (non-Javadoc)
      * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction, org.eclipse.jface.viewers.ISelection)
      */
-    public void selectionChanged(IAction action, ISelection selection) {
+    @Override
+	public void selectionChanged(IAction action, ISelection selection) {
         determineEnablement(action, selection);
     }
 
@@ -184,42 +188,48 @@ class RefreshDescriptor implements IRefreshContributor {
     /* (non-Javadoc)
      * @See org.teiid.designer.ui.actions.IPasteSpecialContributor#canPaste()
      */
-    public boolean canRefresh() {
+    @Override
+	public boolean canRefresh() {
         return delegate.canRefresh();
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#dispose()
      */
-    public void dispose() {
+    @Override
+	public void dispose() {
         delegate.dispose();
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#init(org.eclipse.ui.IWorkbenchWindow)
      */
-    public void init(IWorkbenchWindow window) {
+    @Override
+	public void init(IWorkbenchWindow window) {
         delegate.init(window);
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
      */
-    public void run(IAction action) {
+    @Override
+	public void run(IAction action) {
         delegate.run(action);
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction, org.eclipse.jface.viewers.ISelection)
      */
-    public void selectionChanged(IAction action, ISelection selection) {
+    @Override
+	public void selectionChanged(IAction action, ISelection selection) {
         delegate.selectionChanged(action, selection);
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.ui.ISelectionListener#selectionChanged(org.eclipse.ui.IWorkbenchPart, org.eclipse.jface.viewers.ISelection)
      */
-    public void selectionChanged(IWorkbenchPart part, ISelection selection) {
+    @Override
+	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
         delegate.selectionChanged(part, selection);
     }
 

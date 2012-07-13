@@ -90,7 +90,8 @@ public class LogicalRelationshipEndImpl extends RelationalEntityImpl implements 
      * <!-- end-user-doc -->
      * @generated
      */
-    public MultiplicityKind getMultiplicity() {
+    @Override
+	public MultiplicityKind getMultiplicity() {
         return multiplicity;
     }
 
@@ -99,7 +100,8 @@ public class LogicalRelationshipEndImpl extends RelationalEntityImpl implements 
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setMultiplicity(MultiplicityKind newMultiplicity) {
+    @Override
+	public void setMultiplicity(MultiplicityKind newMultiplicity) {
         MultiplicityKind oldMultiplicity = multiplicity;
         multiplicity = newMultiplicity == null ? MULTIPLICITY_EDEFAULT : newMultiplicity;
         if (eNotificationRequired())
@@ -111,7 +113,8 @@ public class LogicalRelationshipEndImpl extends RelationalEntityImpl implements 
      * <!-- end-user-doc -->
      * @generated
      */
-    public Table getTable() {
+    @Override
+	public Table getTable() {
         if (table != null && table.eIsProxy()) {
             Table oldTable = table;
             table = (Table)eResolveProxy((InternalEObject)table);
@@ -152,7 +155,8 @@ public class LogicalRelationshipEndImpl extends RelationalEntityImpl implements 
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setTable(Table newTable) {
+    @Override
+	public void setTable(Table newTable) {
         if (newTable != table) {
             NotificationChain msgs = null;
             if (table != null)
@@ -171,7 +175,8 @@ public class LogicalRelationshipEndImpl extends RelationalEntityImpl implements 
      * <!-- end-user-doc -->
      * @generated
      */
-    public LogicalRelationship getRelationship() {
+    @Override
+	public LogicalRelationship getRelationship() {
         if (eContainerFeatureID != RelationalPackage.LOGICAL_RELATIONSHIP_END__RELATIONSHIP) return null;
         return (LogicalRelationship)eContainer;
     }
@@ -181,7 +186,8 @@ public class LogicalRelationshipEndImpl extends RelationalEntityImpl implements 
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setRelationship(LogicalRelationship newRelationship) {
+    @Override
+	public void setRelationship(LogicalRelationship newRelationship) {
         if (newRelationship != eContainer || (eContainerFeatureID != RelationalPackage.LOGICAL_RELATIONSHIP_END__RELATIONSHIP && newRelationship != null)) {
             if (EcoreUtil.isAncestor(this, newRelationship))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$

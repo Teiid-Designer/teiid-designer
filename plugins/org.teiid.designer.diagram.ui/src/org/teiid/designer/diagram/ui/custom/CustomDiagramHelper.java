@@ -79,6 +79,7 @@ public class CustomDiagramHelper extends DiagramHelper {
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.ui.actions.IDiagramHelper#canPaste(org.teiid.designer.metamodels.diagram.Diagram, org.eclipse.emf.ecore.EObject)
 	 */
+	@Override
 	public boolean canPaste(Diagram diagram, EObject pasteParent) {
 		boolean pasteOK = true;
 		
@@ -99,6 +100,7 @@ public class CustomDiagramHelper extends DiagramHelper {
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.ui.actions.IDiagramHelper#paste(org.teiid.designer.metamodels.diagram.Diagram, org.eclipse.emf.ecore.EObject)
 	 */
+	@Override
 	public void paste(Diagram diagram, EObject pasteParent) {
 		// This is a little tricky.
 		

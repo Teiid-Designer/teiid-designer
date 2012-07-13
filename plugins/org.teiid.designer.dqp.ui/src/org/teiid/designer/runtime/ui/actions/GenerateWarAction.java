@@ -54,6 +54,7 @@ public class GenerateWarAction extends Action implements ISelectionListener,
 		setEnabled(false);
 	}
 
+	@Override
 	public int compareTo(Object o) {
 		if (o instanceof String) {
 			return getText().compareTo((String) o);
@@ -69,6 +70,7 @@ public class GenerateWarAction extends Action implements ISelectionListener,
 	 * @param selection
 	 * @return
 	 */
+	@Override
 	public boolean isApplicable(ISelection selection) {
 		boolean result = false;
 		if (!SelectionUtilities.isMultiSelection(selection)) {
@@ -118,6 +120,7 @@ public class GenerateWarAction extends Action implements ISelectionListener,
 		boolean wasSuccessful = (rc == Window.OK);
 		if (wasSuccessful) {
 			Display.getDefault().asyncExec(new Runnable() {
+				@Override
 				public void run() {
 					MessageDialog.openInformation(window.getShell(),
 							DqpUiConstants.UTIL.getString(I18N_PREFIX + "creationCompleteTitle"),//$NON-NLS-1$ 
@@ -134,6 +137,7 @@ public class GenerateWarAction extends Action implements ISelectionListener,
 		notifyResult(rc == Window.OK);
 	}
 
+	@Override
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
 		boolean enable = false;
 		if (!SelectionUtilities.isMultiSelection(selection)) {

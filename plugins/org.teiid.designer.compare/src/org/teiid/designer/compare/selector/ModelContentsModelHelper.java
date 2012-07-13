@@ -33,7 +33,8 @@ public class ModelContentsModelHelper implements ModelHelper {
     /**
      * @see org.teiid.designer.compare.selector.ModelHelper#getAnnotation(org.eclipse.emf.ecore.EObject)
      */
-    public Annotation getAnnotation( final EObject eObject) {
+    @Override
+	public Annotation getAnnotation( final EObject eObject) {
         return contents.getAnnotation(eObject);
     }
 

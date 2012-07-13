@@ -46,102 +46,127 @@ class SOAPTableImpl implements SOAPTable {
 		return table;
 	}
 	
+	@Override
 	public boolean isRequest() {
 		return m_isRequestTable;
 	}
 	
+	@Override
 	public String getSoapAction() {
 		return m_soapAction;
 	}
 	
+	@Override
 	public SoapBindingInfo getSoapBindingInfo() {
 		return m_bindingInfo;
 	}
 	
+	@Override
 	public String getName() {
 		return table.getName();
 	}
 
+	@Override
 	public int getMaxOccurs() {
 		return table.getMaxOccurs();
 	}
 
+	@Override
 	public String getNamespaceDeclaration() {
 		return table.getNamespaceDeclaration();
 	}
 
+	@Override
 	public Table[] getParentTables() {
 		return table.getParentTables();
 	}
 
+	@Override
 	public int getRelationToParent() {
 		return table.getRelationToParent();
 	}
 
+	@Override
 	public String getSchema() {
 		return table.getSchema();
 	}
 
+	@Override
 	public void setSchema(String schema) {
 		table.setSchema(schema);
 	}
 
+	@Override
 	public String getInputXPath() {
 		return table.getInputXPath();
 	}
 
+	@Override
 	public String getOutputXPath() {
 		return table.getOutputXPath();
 	}
 
+	@Override
 	public void setInputXPath(String xpathIn) {
 		table.setInputXPath(xpathIn);
 	}
 
+	@Override
 	public void setName(String name) {
 		table.setName(name);
 	}
 
+	@Override
 	public void setOutputXPath(String xpath) {
 		table.setOutputXPath(xpath);
 	}
 
+	@Override
 	public Table[] getChildTables() {
 		return table.getChildTables();
 	}
 
+	@Override
 	public void addColumn(Column column) {
 		table.addColumn(column);
 	}
 
+	@Override
 	public void addNamespace(Namespace ns) {
 		table.addNamespace(ns);
 	}
 
+	@Override
 	public String getCatalog() {
 		return table.getCatalog();
 	}
 
+	@Override
 	public Column[] getColumns() {
 		return table.getColumns();
 	}
 
+	@Override
 	public void setCatalog(String catalog) {
 		table.setCatalog(catalog);
 	}
 
+	@Override
 	public void setSchemaModel(SchemaModel schemaModel) {
 		table.setSchemaModel(schemaModel);
 	}
 
+	@Override
 	public SchemaObject getElement() {
 		return table.getElement();
 	}
 
+	@Override
 	public void setBase(boolean b) {
 		table.setBase(b);
 	}
 
+	@Override
 	public void setElement(SchemaObject element) {
 		table.setElement(element);
 	}

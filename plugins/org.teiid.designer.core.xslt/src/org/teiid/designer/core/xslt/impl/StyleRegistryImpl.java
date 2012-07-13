@@ -34,7 +34,8 @@ public class StyleRegistryImpl implements StyleRegistry {
     /* (non-Javadoc)
      * @See org.teiid.designer.ddl.StyleRegistry#getStyle(java.lang.String)
      */
-    public Style getStyle(String name) {
+    @Override
+	public Style getStyle(String name) {
         final Iterator iter = styles.iterator();
         while (iter.hasNext()) {
             final Style style = (Style)iter.next();
@@ -48,7 +49,8 @@ public class StyleRegistryImpl implements StyleRegistry {
     /* (non-Javadoc)
      * @See org.teiid.designer.ddl.StyleRegistry#getStyles()
      */
-    public Collection getStyles() {
+    @Override
+	public Collection getStyles() {
         return styles;
     }
 

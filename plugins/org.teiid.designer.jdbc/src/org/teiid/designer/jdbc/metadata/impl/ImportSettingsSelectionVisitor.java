@@ -49,7 +49,8 @@ public class ImportSettingsSelectionVisitor implements JdbcNodeVisitor {
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.metadata.JdbcNodeVisitor#visit(org.teiid.designer.jdbc.metadata.JdbcNode)
      */
-    public boolean visit( final JdbcNode node ) {
+    @Override
+	public boolean visit( final JdbcNode node ) {
         if (node == null) {
             return false;
         }

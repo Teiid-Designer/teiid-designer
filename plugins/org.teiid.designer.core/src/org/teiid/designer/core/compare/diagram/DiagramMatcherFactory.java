@@ -43,7 +43,8 @@ public class DiagramMatcherFactory implements EObjectMatcherFactory {
      * @see org.teiid.designer.core.compare.EObjectMatcherFactory#createEObjectMatchersForRoots()
      * @since 4.2
      */
-    public List createEObjectMatchersForRoots() {
+    @Override
+	public List createEObjectMatchersForRoots() {
         // diagram entities are root level objects
         return standardMatchers;
     }
@@ -52,7 +53,8 @@ public class DiagramMatcherFactory implements EObjectMatcherFactory {
      * @see org.teiid.designer.core.compare.EObjectMatcherFactory#createEObjectMatchers(org.eclipse.emf.ecore.EReference)
      * @since 4.2
      */
-    public List createEObjectMatchers(EReference reference) {
+    @Override
+	public List createEObjectMatchers(EReference reference) {
 	    // Make sure the reference is in the diagram metamodel ...
 	    final EClass containingClass = reference.getEContainingClass();
 	    final EPackage metamodel = containingClass.getEPackage();

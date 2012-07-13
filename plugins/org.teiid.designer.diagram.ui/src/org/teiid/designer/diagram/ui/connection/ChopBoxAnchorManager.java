@@ -32,7 +32,8 @@ public class ChopBoxAnchorManager implements AnchorManager {
      * @see org.teiid.designer.diagram.ui.connection.AnchorManager#add(org.teiid.designer.diagram.ui.connection.NodeConnectionAnchor)
      * @since 4.3
      */
-    public boolean add(NodeConnectionAnchor targetAnchor) {
+    @Override
+	public boolean add(NodeConnectionAnchor targetAnchor) {
         return false;
     }
 
@@ -40,7 +41,8 @@ public class ChopBoxAnchorManager implements AnchorManager {
      * @see org.teiid.designer.diagram.ui.connection.AnchorManager#move(org.teiid.designer.diagram.ui.connection.NodeConnectionAnchor)
      * @since 4.3
      */
-    public boolean move(NodeConnectionAnchor targetAnchor) {
+    @Override
+	public boolean move(NodeConnectionAnchor targetAnchor) {
         return false;
     }
 
@@ -48,7 +50,8 @@ public class ChopBoxAnchorManager implements AnchorManager {
      * @see org.teiid.designer.diagram.ui.connection.AnchorManager#remove(org.teiid.designer.diagram.ui.connection.NodeConnectionAnchor)
      * @since 4.3
      */
-    public boolean remove(NodeConnectionAnchor targetAnchor) {
+    @Override
+	public boolean remove(NodeConnectionAnchor targetAnchor) {
         return false;
     }
 
@@ -56,28 +59,32 @@ public class ChopBoxAnchorManager implements AnchorManager {
      * @see org.teiid.designer.diagram.ui.connection.AnchorManager#resetSourceAnchors(boolean)
      * @since 4.3
      */
-    public void resetSourceAnchors(boolean updateTargetEnd) {
+    @Override
+	public void resetSourceAnchors(boolean updateTargetEnd) {
     }
 
     /** 
      * @see org.teiid.designer.diagram.ui.connection.AnchorManager#resetTargetAnchors(boolean)
      * @since 4.3
      */
-    public void resetTargetAnchors(boolean updateSourceEnd) {
+    @Override
+	public void resetTargetAnchors(boolean updateSourceEnd) {
     }
 
     /** 
      * @see org.teiid.designer.diagram.ui.connection.AnchorManager#reorderAllAnchors(boolean)
      * @since 4.3
      */
-    public void reorderAllAnchors(boolean updateBothEnds) {
+    @Override
+	public void reorderAllAnchors(boolean updateBothEnds) {
     }
 
     /** 
      * @see org.teiid.designer.diagram.ui.connection.AnchorManager#getSourceConnections()
      * @since 4.3
      */
-    public List getSourceConnections() {
+    @Override
+	public List getSourceConnections() {
         return null;
     }
 
@@ -85,7 +92,8 @@ public class ChopBoxAnchorManager implements AnchorManager {
      * @see org.teiid.designer.diagram.ui.connection.AnchorManager#getTargetConnections()
      * @since 4.3
      */
-    public List getTargetConnections() {
+    @Override
+	public List getTargetConnections() {
         return null;
     }
 
@@ -93,7 +101,8 @@ public class ChopBoxAnchorManager implements AnchorManager {
      * @see org.teiid.designer.diagram.ui.connection.AnchorManager#getSourceAnchor(org.teiid.designer.diagram.ui.connection.NodeConnectionEditPart)
      * @since 4.3
      */
-    public ConnectionAnchor getSourceAnchor(NodeConnectionEditPart connection) {
+    @Override
+	public ConnectionAnchor getSourceAnchor(NodeConnectionEditPart connection) {
         // This anchor manager belongs to the edit part.
         // This edit part knows about all it's target connections
         // An anchor is either target or source
@@ -112,7 +121,8 @@ public class ChopBoxAnchorManager implements AnchorManager {
      * @see org.teiid.designer.diagram.ui.connection.AnchorManager#getTargetAnchor(org.teiid.designer.diagram.ui.connection.NodeConnectionEditPart)
      * @since 4.3
      */
-    public ConnectionAnchor getTargetAnchor(NodeConnectionEditPart connection) {
+    @Override
+	public ConnectionAnchor getTargetAnchor(NodeConnectionEditPart connection) {
         // This anchor manager belongs to the edit part.
         // This edit part knows about all it's target connections
         // An anchor is either target or source
@@ -143,7 +153,8 @@ public class ChopBoxAnchorManager implements AnchorManager {
      * @see org.teiid.designer.diagram.ui.connection.AnchorManager#hasSourceAnchors()
      * @since 4.3
      */
-    public boolean hasSourceAnchors() {
+    @Override
+	public boolean hasSourceAnchors() {
         return true;
     }
 
@@ -151,7 +162,8 @@ public class ChopBoxAnchorManager implements AnchorManager {
      * @see org.teiid.designer.diagram.ui.connection.AnchorManager#hasTargetAnchors()
      * @since 4.3
      */
-    public boolean hasTargetAnchors() {
+    @Override
+	public boolean hasTargetAnchors() {
         return true;
     }
 
@@ -159,7 +171,8 @@ public class ChopBoxAnchorManager implements AnchorManager {
      * @see org.teiid.designer.diagram.ui.connection.AnchorManager#setAnchorPosition(org.teiid.designer.diagram.ui.connection.NodeConnectionAnchor, int)
      * @since 4.3
      */
-    public void setAnchorPosition(NodeConnectionAnchor theAnchor,
+    @Override
+	public void setAnchorPosition(NodeConnectionAnchor theAnchor,
                                   int direction) {
     }
 

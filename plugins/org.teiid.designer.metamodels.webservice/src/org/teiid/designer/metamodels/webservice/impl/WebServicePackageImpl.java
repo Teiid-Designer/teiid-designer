@@ -187,7 +187,8 @@ public class WebServicePackageImpl extends EPackageImpl implements WebServicePac
      * 
      * @generated
      */
-    public EClass getOperation() {
+    @Override
+	public EClass getOperation() {
         return operationEClass;
     }
 
@@ -196,7 +197,8 @@ public class WebServicePackageImpl extends EPackageImpl implements WebServicePac
      * 
      * @generated
      */
-    public EAttribute getOperation_Pattern() {
+    @Override
+	public EAttribute getOperation_Pattern() {
         return (EAttribute)operationEClass.getEStructuralFeatures().get(0);
     }
 
@@ -205,7 +207,8 @@ public class WebServicePackageImpl extends EPackageImpl implements WebServicePac
      * 
      * @generated
      */
-    public EAttribute getOperation_Safe() {
+    @Override
+	public EAttribute getOperation_Safe() {
         return (EAttribute)operationEClass.getEStructuralFeatures().get(1);
     }
 
@@ -214,7 +217,8 @@ public class WebServicePackageImpl extends EPackageImpl implements WebServicePac
      * 
      * @generated
      */
-    public EReference getOperation_Input() {
+    @Override
+	public EReference getOperation_Input() {
         return (EReference)operationEClass.getEStructuralFeatures().get(2);
     }
 
@@ -223,7 +227,8 @@ public class WebServicePackageImpl extends EPackageImpl implements WebServicePac
      * 
      * @generated
      */
-    public EReference getOperation_Output() {
+    @Override
+	public EReference getOperation_Output() {
         return (EReference)operationEClass.getEStructuralFeatures().get(3);
     }
 
@@ -232,7 +237,8 @@ public class WebServicePackageImpl extends EPackageImpl implements WebServicePac
      * 
      * @generated
      */
-    public EReference getOperation_Interface() {
+    @Override
+	public EReference getOperation_Interface() {
         return (EReference)operationEClass.getEStructuralFeatures().get(4);
     }
     
@@ -240,7 +246,8 @@ public class WebServicePackageImpl extends EPackageImpl implements WebServicePac
      * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getOperation_UpdateCount() {
+    @Override
+	public EAttribute getOperation_UpdateCount() {
         return (EAttribute)operationEClass.getEStructuralFeatures().get(5);
     }
 
@@ -249,7 +256,8 @@ public class WebServicePackageImpl extends EPackageImpl implements WebServicePac
      * 
      * @generated
      */
-    public EClass getMessage() {
+    @Override
+	public EClass getMessage() {
         return messageEClass;
     }
 
@@ -258,7 +266,8 @@ public class WebServicePackageImpl extends EPackageImpl implements WebServicePac
      * 
      * @generated
      */
-    public EReference getMessage_ContentElement() {
+    @Override
+	public EReference getMessage_ContentElement() {
         return (EReference)messageEClass.getEStructuralFeatures().get(0);
     }
 
@@ -267,7 +276,8 @@ public class WebServicePackageImpl extends EPackageImpl implements WebServicePac
      * 
      * @generated
      */
-    public EReference getMessage_Samples() {
+    @Override
+	public EReference getMessage_Samples() {
         return (EReference)messageEClass.getEStructuralFeatures().get(1);
     }
 
@@ -276,7 +286,8 @@ public class WebServicePackageImpl extends EPackageImpl implements WebServicePac
      * 
      * @generated
      */
-    public EReference getMessage_ContentComplexType() {
+    @Override
+	public EReference getMessage_ContentComplexType() {
         return (EReference)messageEClass.getEStructuralFeatures().get(2);
     }
 
@@ -285,7 +296,8 @@ public class WebServicePackageImpl extends EPackageImpl implements WebServicePac
      * 
      * @generated
      */
-    public EReference getMessage_ContentSimpleType() {
+    @Override
+	public EReference getMessage_ContentSimpleType() {
         return (EReference)messageEClass.getEStructuralFeatures().get(3);
     }
 
@@ -294,7 +306,8 @@ public class WebServicePackageImpl extends EPackageImpl implements WebServicePac
      * 
      * @generated
      */
-    public EClass getWebServiceComponent() {
+    @Override
+	public EClass getWebServiceComponent() {
         return webServiceComponentEClass;
     }
 
@@ -303,7 +316,8 @@ public class WebServicePackageImpl extends EPackageImpl implements WebServicePac
      * 
      * @generated
      */
-    public EAttribute getWebServiceComponent_Name() {
+    @Override
+	public EAttribute getWebServiceComponent_Name() {
         return (EAttribute)webServiceComponentEClass.getEStructuralFeatures().get(0);
     }
 
@@ -312,7 +326,8 @@ public class WebServicePackageImpl extends EPackageImpl implements WebServicePac
      * 
      * @generated
      */
-    public EClass getInput() {
+    @Override
+	public EClass getInput() {
         return inputEClass;
     }
 
@@ -321,7 +336,8 @@ public class WebServicePackageImpl extends EPackageImpl implements WebServicePac
      * 
      * @generated
      */
-    public EReference getInput_Operation() {
+    @Override
+	public EReference getInput_Operation() {
         return (EReference)inputEClass.getEStructuralFeatures().get(0);
     }
 
@@ -330,7 +346,8 @@ public class WebServicePackageImpl extends EPackageImpl implements WebServicePac
      * 
      * @generated
      */
-    public EClass getOutput() {
+    @Override
+	public EClass getOutput() {
         return outputEClass;
     }
 
@@ -339,7 +356,8 @@ public class WebServicePackageImpl extends EPackageImpl implements WebServicePac
      * 
      * @generated
      */
-    public EReference getOutput_Operation() {
+    @Override
+	public EReference getOutput_Operation() {
         return (EReference)outputEClass.getEStructuralFeatures().get(0);
     }
 
@@ -348,7 +366,8 @@ public class WebServicePackageImpl extends EPackageImpl implements WebServicePac
      * 
      * @generated
      */
-    public EReference getOutput_XmlDocument() {
+    @Override
+	public EReference getOutput_XmlDocument() {
         return (EReference)outputEClass.getEStructuralFeatures().get(1);
     }
 
@@ -357,7 +376,8 @@ public class WebServicePackageImpl extends EPackageImpl implements WebServicePac
      * 
      * @generated
      */
-    public EClass getInterface() {
+    @Override
+	public EClass getInterface() {
         return interfaceEClass;
     }
 
@@ -366,7 +386,8 @@ public class WebServicePackageImpl extends EPackageImpl implements WebServicePac
      * 
      * @generated
      */
-    public EReference getInterface_Operations() {
+    @Override
+	public EReference getInterface_Operations() {
         return (EReference)interfaceEClass.getEStructuralFeatures().get(0);
     }
 
@@ -375,7 +396,8 @@ public class WebServicePackageImpl extends EPackageImpl implements WebServicePac
      * 
      * @generated
      */
-    public EClass getSampleMessages() {
+    @Override
+	public EClass getSampleMessages() {
         return sampleMessagesEClass;
     }
 
@@ -384,7 +406,8 @@ public class WebServicePackageImpl extends EPackageImpl implements WebServicePac
      * 
      * @generated
      */
-    public EReference getSampleMessages_Message() {
+    @Override
+	public EReference getSampleMessages_Message() {
         return (EReference)sampleMessagesEClass.getEStructuralFeatures().get(0);
     }
 
@@ -393,7 +416,8 @@ public class WebServicePackageImpl extends EPackageImpl implements WebServicePac
      * 
      * @generated
      */
-    public EReference getSampleMessages_SampleFiles() {
+    @Override
+	public EReference getSampleMessages_SampleFiles() {
         return (EReference)sampleMessagesEClass.getEStructuralFeatures().get(1);
     }
 
@@ -402,7 +426,8 @@ public class WebServicePackageImpl extends EPackageImpl implements WebServicePac
      * 
      * @generated
      */
-    public EReference getSampleMessages_SampleFromXsd() {
+    @Override
+	public EReference getSampleMessages_SampleFromXsd() {
         return (EReference)sampleMessagesEClass.getEStructuralFeatures().get(2);
     }
 
@@ -411,7 +436,8 @@ public class WebServicePackageImpl extends EPackageImpl implements WebServicePac
      * 
      * @generated
      */
-    public EClass getSampleFile() {
+    @Override
+	public EClass getSampleFile() {
         return sampleFileEClass;
     }
 
@@ -420,7 +446,8 @@ public class WebServicePackageImpl extends EPackageImpl implements WebServicePac
      * 
      * @generated
      */
-    public EAttribute getSampleFile_Name() {
+    @Override
+	public EAttribute getSampleFile_Name() {
         return (EAttribute)sampleFileEClass.getEStructuralFeatures().get(0);
     }
 
@@ -429,7 +456,8 @@ public class WebServicePackageImpl extends EPackageImpl implements WebServicePac
      * 
      * @generated
      */
-    public EAttribute getSampleFile_Url() {
+    @Override
+	public EAttribute getSampleFile_Url() {
         return (EAttribute)sampleFileEClass.getEStructuralFeatures().get(1);
     }
 
@@ -438,7 +466,8 @@ public class WebServicePackageImpl extends EPackageImpl implements WebServicePac
      * 
      * @generated
      */
-    public EReference getSampleFile_SampleMessages() {
+    @Override
+	public EReference getSampleFile_SampleMessages() {
         return (EReference)sampleFileEClass.getEStructuralFeatures().get(2);
     }
 
@@ -447,7 +476,8 @@ public class WebServicePackageImpl extends EPackageImpl implements WebServicePac
      * 
      * @generated
      */
-    public EClass getSampleFromXsd() {
+    @Override
+	public EClass getSampleFromXsd() {
         return sampleFromXsdEClass;
     }
 
@@ -456,7 +486,8 @@ public class WebServicePackageImpl extends EPackageImpl implements WebServicePac
      * 
      * @generated
      */
-    public EAttribute getSampleFromXsd_MaxNumberOfLevelsToBuild() {
+    @Override
+	public EAttribute getSampleFromXsd_MaxNumberOfLevelsToBuild() {
         return (EAttribute)sampleFromXsdEClass.getEStructuralFeatures().get(0);
     }
 
@@ -465,7 +496,8 @@ public class WebServicePackageImpl extends EPackageImpl implements WebServicePac
      * 
      * @generated
      */
-    public EReference getSampleFromXsd_SampleFragment() {
+    @Override
+	public EReference getSampleFromXsd_SampleFragment() {
         return (EReference)sampleFromXsdEClass.getEStructuralFeatures().get(1);
     }
 
@@ -474,7 +506,8 @@ public class WebServicePackageImpl extends EPackageImpl implements WebServicePac
      * 
      * @generated
      */
-    public EReference getSampleFromXsd_SampleMessages() {
+    @Override
+	public EReference getSampleFromXsd_SampleMessages() {
         return (EReference)sampleFromXsdEClass.getEStructuralFeatures().get(2);
     }
 
@@ -492,7 +525,8 @@ public class WebServicePackageImpl extends EPackageImpl implements WebServicePac
      * 
      * @generated
      */
-    public EDataType getIStatus() {
+    @Override
+	public EDataType getIStatus() {
         return iStatusEDataType;
     }
 
@@ -501,7 +535,8 @@ public class WebServicePackageImpl extends EPackageImpl implements WebServicePac
      * 
      * @generated
      */
-    public WebServiceFactory getWebServiceFactory() {
+    @Override
+	public WebServiceFactory getWebServiceFactory() {
         return (WebServiceFactory)getEFactoryInstance();
     }
 

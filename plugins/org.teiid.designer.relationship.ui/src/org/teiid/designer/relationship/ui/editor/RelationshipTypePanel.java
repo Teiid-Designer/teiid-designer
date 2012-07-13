@@ -1151,11 +1151,13 @@ public class RelationshipTypePanel extends Composite
 
         // header:
         txtRelationshipTypeName.addFocusListener(new FocusListener() {
-            public void focusGained( final FocusEvent event ) {
+            @Override
+			public void focusGained( final FocusEvent event ) {
                 // no action
             }
 
-            public void focusLost( final FocusEvent event ) {
+            @Override
+			public void focusLost( final FocusEvent event ) {
 
                 // update the editor when user leaves.
                 getEditor().setName(txtRelationshipTypeName.getText());
@@ -1164,11 +1166,13 @@ public class RelationshipTypePanel extends Composite
         });
 
         txtAtoBExpression.addFocusListener(new FocusListener() {
-            public void focusGained( final FocusEvent event ) {
+            @Override
+			public void focusGained( final FocusEvent event ) {
                 // no action
             }
 
-            public void focusLost( final FocusEvent event ) {
+            @Override
+			public void focusLost( final FocusEvent event ) {
 
                 // update the editor when user leaves.
                 getEditor().setLabel(txtAtoBExpression.getText());
@@ -1177,11 +1181,13 @@ public class RelationshipTypePanel extends Composite
         });
 
         txtBtoAExpression.addFocusListener(new FocusListener() {
-            public void focusGained( final FocusEvent event ) {
+            @Override
+			public void focusGained( final FocusEvent event ) {
                 // no action
             }
 
-            public void focusLost( final FocusEvent event ) {
+            @Override
+			public void focusLost( final FocusEvent event ) {
 
                 // update the editor when user leaves.
                 getEditor().setOppositeLabel(txtBtoAExpression.getText());
@@ -1229,11 +1235,13 @@ public class RelationshipTypePanel extends Composite
         // lblRoleANameAsSubject
         // lblRoleANameAsObject
         txtRoleAName.addFocusListener(new FocusListener() {
-            public void focusGained( final FocusEvent event ) {
+            @Override
+			public void focusGained( final FocusEvent event ) {
                 // no action
             }
 
-            public void focusLost( final FocusEvent event ) {
+            @Override
+			public void focusLost( final FocusEvent event ) {
 
                 // update the editor when user leaves.
                 getEditor().setRoleName(getEditor().getSourceRole(), txtRoleAName.getText());
@@ -1251,10 +1259,12 @@ public class RelationshipTypePanel extends Composite
 
         txtRoleAName.addKeyListener(new KeyListener() {
 
-            public void keyPressed( final KeyEvent event ) {
+            @Override
+			public void keyPressed( final KeyEvent event ) {
             }
 
-            public void keyReleased( final KeyEvent event ) {
+            @Override
+			public void keyReleased( final KeyEvent event ) {
 
                 // update the other fields immediately, but only update the editor on focuslost
                 lblRoleANameAsObject.setText(getRoleAName());
@@ -1318,11 +1328,13 @@ public class RelationshipTypePanel extends Composite
         // lblRoleANameAsObject
 
         txtRoleBName.addFocusListener(new FocusListener() {
-            public void focusGained( final FocusEvent event ) {
+            @Override
+			public void focusGained( final FocusEvent event ) {
                 // no action
             }
 
-            public void focusLost( final FocusEvent event ) {
+            @Override
+			public void focusLost( final FocusEvent event ) {
 
                 // update the editor when user leaves.
                 getEditor().setRoleName(getEditor().getTargetRole(), txtRoleBName.getText());
@@ -1340,10 +1352,12 @@ public class RelationshipTypePanel extends Composite
 
         txtRoleBName.addKeyListener(new KeyListener() {
 
-            public void keyPressed( final KeyEvent event ) {
+            @Override
+			public void keyPressed( final KeyEvent event ) {
             }
 
-            public void keyReleased( final KeyEvent event ) {
+            @Override
+			public void keyReleased( final KeyEvent event ) {
 
                 // update the other fields immediately, but only update the editor on focuslost
                 // I could not get 'right justify' to work after a change to a lebel's text. might try
@@ -1489,7 +1503,8 @@ public class RelationshipTypePanel extends Composite
         if (txtRelationshipTypeName != null && !txtRelationshipTypeName.isDisposed()) {
 
             Display.getDefault().asyncExec(new Runnable() {
-                public void run() {
+                @Override
+				public void run() {
                     boolean bEnabledState = (!ModelObjectUtilities.isReadOnly(rtRelationshipTypeObject));
 
                     txtRelationshipTypeName.setEnabled(bEnabledState);
@@ -1533,7 +1548,8 @@ public class RelationshipTypePanel extends Composite
         }
     }
 
-    public void selectionChanged( SelectionChangedEvent event ) {
+    @Override
+	public void selectionChanged( SelectionChangedEvent event ) {
         setEnabledStates();
     }
 
@@ -1550,7 +1566,8 @@ public class RelationshipTypePanel extends Composite
         refreshFromBusinessObject();
     }
 
-    public void notifyChanged( Notification notification ) {
+    @Override
+	public void notifyChanged( Notification notification ) {
 
         setEnabledStates();
 
@@ -1582,10 +1599,12 @@ public class RelationshipTypePanel extends Composite
         }
     }
 
-    public void widgetSelected( SelectionEvent e ) {
+    @Override
+	public void widgetSelected( SelectionEvent e ) {
     }
 
-    public void widgetDefaultSelected( SelectionEvent e ) {
+    @Override
+	public void widgetDefaultSelected( SelectionEvent e ) {
         widgetSelected(e);
     }
 
@@ -1982,7 +2001,8 @@ public class RelationshipTypePanel extends Composite
          * @see org.teiid.designer.ui.viewsupport.IContentFilter#filter(java.lang.Object[])
          * @since 4.2
          */
-        public Object[] filter( final Object[] elements ) {
+        @Override
+		public Object[] filter( final Object[] elements ) {
             final Object[] elems = getContentProvider().getElements(null);
             final Object[] oppElems = this.oppPanel.getContentProvider().getElements(null);
             final List filteredElems = new ArrayList(elements.length);
@@ -2075,12 +2095,14 @@ public class RelationshipTypePanel extends Composite
          * we also need the RelationshipPanel code to listen to RolePanel so that they
          * can respond when selection changes in one of the 2 tables.
          */
-        public void widgetSelected( SelectionEvent e ) {
+        @Override
+		public void widgetSelected( SelectionEvent e ) {
             setButtonStates();
 
         }
 
-        public void widgetDefaultSelected( SelectionEvent e ) {
+        @Override
+		public void widgetDefaultSelected( SelectionEvent e ) {
             widgetSelected(e);
         }
 
@@ -2106,14 +2128,16 @@ public class RelationshipTypePanel extends Composite
         /**
          * @see org.eclipse.jface.viewers.IContentProvider#dispose()
          */
-        public void dispose() {
+        @Override
+		public void dispose() {
 
         }
 
         /**
          * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
          */
-        public Object[] getElements( Object theInputElement ) {
+        @Override
+		public Object[] getElements( Object theInputElement ) {
 
             // bail out if primary object is null
             if (rrRelationshipRoleObject2 == null) {
@@ -2148,7 +2172,8 @@ public class RelationshipTypePanel extends Composite
          * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object,
          *      java.lang.Object)
          */
-        public void inputChanged( Viewer theViewer,
+        @Override
+		public void inputChanged( Viewer theViewer,
                                   Object theOldInput,
                                   Object theNewInput ) {
             if (theNewInput != null) {
@@ -2161,7 +2186,8 @@ public class RelationshipTypePanel extends Composite
 
     class TableLabelProvider extends LabelProvider implements ITableLabelProvider {
 
-        public Image getColumnImage( Object theElement,
+        @Override
+		public Image getColumnImage( Object theElement,
                                      int theIndex ) {
             final WorkbenchLabelProvider workbenchProvider = new WorkbenchLabelProvider();
             Object oRealObject = ((TableRow)theElement).oObject;
@@ -2188,7 +2214,8 @@ public class RelationshipTypePanel extends Composite
         /**
          * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.lang.Object, int)
          */
-        public String getColumnText( Object theElement,
+        @Override
+		public String getColumnText( Object theElement,
                                      int theColumnIndex ) {
             TableRow row = (TableRow)theElement;
             return row.getColumnText(theColumnIndex);
@@ -2309,15 +2336,18 @@ public class RelationshipTypePanel extends Composite
             tblInheritanceTable.addSelectionListener(this);
 
             tblInheritanceTable.addMouseListener(new MouseListener() {
-                public void mouseDown( final MouseEvent event ) {
+                @Override
+				public void mouseDown( final MouseEvent event ) {
                     handleMouseEvent(event);
                 }
 
-                public void mouseUp( final MouseEvent event ) {
+                @Override
+				public void mouseUp( final MouseEvent event ) {
 
                 }
 
-                public void mouseDoubleClick( final MouseEvent event ) {
+                @Override
+				public void mouseDoubleClick( final MouseEvent event ) {
 
                 }
             });
@@ -2403,7 +2433,8 @@ public class RelationshipTypePanel extends Composite
 
                 // activate the Model Explorer view (must do this last)
                 Display.getCurrent().asyncExec(new Runnable() {
-                    public void run() {
+                    @Override
+					public void run() {
                         try {
 
                             ModelExplorerResourceNavigator view = (ModelExplorerResourceNavigator)UiUtil.getWorkbenchPage().showView(EXPLORER_VIEW);
@@ -2549,12 +2580,14 @@ public class RelationshipTypePanel extends Composite
          * can respond when selection changes in one of the 2 tables.
          */
 
-        public void widgetSelected( SelectionEvent e ) {
+        @Override
+		public void widgetSelected( SelectionEvent e ) {
             setButtonStates();
 
         }
 
-        public void widgetDefaultSelected( SelectionEvent e ) {
+        @Override
+		public void widgetDefaultSelected( SelectionEvent e ) {
             widgetSelected(e);
         }
 
@@ -2584,13 +2617,15 @@ public class RelationshipTypePanel extends Composite
         /**
          * @see org.eclipse.jface.viewers.IContentProvider#dispose()
          */
-        public void dispose() {
+        @Override
+		public void dispose() {
         }
 
         /**
          * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
          */
-        public Object[] getElements( Object theInputElement ) {
+        @Override
+		public Object[] getElements( Object theInputElement ) {
             Object[] result = null;
 
             List lstObjects = new ArrayList();
@@ -2617,7 +2652,8 @@ public class RelationshipTypePanel extends Composite
          * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object,
          *      java.lang.Object)
          */
-        public void inputChanged( Viewer theViewer,
+        @Override
+		public void inputChanged( Viewer theViewer,
                                   Object theOldInput,
                                   Object theNewInput ) {
             rtRelationshipTypeObject = (RelationshipType)theNewInput;
@@ -2630,7 +2666,8 @@ public class RelationshipTypePanel extends Composite
 
     class InheritanceTableLabelProvider extends LabelProvider implements ITableLabelProvider {
 
-        public Image getColumnImage( Object theElement,
+        @Override
+		public Image getColumnImage( Object theElement,
                                      int theIndex ) {
             final WorkbenchLabelProvider workbenchProvider = new WorkbenchLabelProvider();
             Object oRealObject = ((InheritanceTableRow)theElement).getObject();
@@ -2658,7 +2695,8 @@ public class RelationshipTypePanel extends Composite
         /**
          * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.lang.Object, int)
          */
-        public String getColumnText( Object theElement,
+        @Override
+		public String getColumnText( Object theElement,
                                      int theColumnIndex ) {
             InheritanceTableRow row = (InheritanceTableRow)theElement;
             return row.getColumnText(theColumnIndex);

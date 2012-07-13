@@ -170,7 +170,8 @@ public class BasicWsdlGenerator implements IWsdlGenerator {
      * @see org.teiid.designer.webservice.IWsdlGenerator#getName()
      * @since 4.2
      */
-    public String getName() {
+    @Override
+	public String getName() {
         return name;
     }
 
@@ -178,7 +179,8 @@ public class BasicWsdlGenerator implements IWsdlGenerator {
      * @see org.teiid.designer.webservice.IWsdlGenerator#getTargetNamespace()
      * @since 4.2
      */
-    public String getTargetNamespace() {
+    @Override
+	public String getTargetNamespace() {
         return targetNamespace;
     }
 
@@ -186,7 +188,8 @@ public class BasicWsdlGenerator implements IWsdlGenerator {
      * @see org.teiid.designer.webservice.IWsdlGenerator#setName(java.lang.String)
      * @since 4.2
      */
-    public void setName( String name ) {
+    @Override
+	public void setName( String name ) {
         this.name = name;
     }
 
@@ -194,7 +197,8 @@ public class BasicWsdlGenerator implements IWsdlGenerator {
      * @see org.teiid.designer.webservice.IWsdlGenerator#setTargetNamespace(java.lang.String)
      * @since 4.2
      */
-    public void setTargetNamespace( String targetNamspace ) {
+    @Override
+	public void setTargetNamespace( String targetNamspace ) {
         this.targetNamespace = targetNamspace;
     }
 
@@ -202,7 +206,8 @@ public class BasicWsdlGenerator implements IWsdlGenerator {
      * @see org.teiid.designer.webservice.IWsdlGenerator#getUrlRootForReferences()
      * @since 4.2
      */
-    public String getUrlRootForReferences() {
+    @Override
+	public String getUrlRootForReferences() {
         return urlRootForReferences;
     }
 
@@ -210,7 +215,8 @@ public class BasicWsdlGenerator implements IWsdlGenerator {
      * @see org.teiid.designer.webservice.IWsdlGenerator#setUrlRootForReferences(java.lang.String)
      * @since 4.2
      */
-    public void setUrlRootForReferences( String url ) {
+    @Override
+	public void setUrlRootForReferences( String url ) {
         this.urlRootForReferences = url;
     }
 
@@ -218,7 +224,8 @@ public class BasicWsdlGenerator implements IWsdlGenerator {
      * @see org.teiid.designer.webservice.IWsdlGenerator#getUrlSuffixForReferences()
      * @since 4.2
      */
-    public String getUrlSuffixForReferences() {
+    @Override
+	public String getUrlSuffixForReferences() {
         return this.urlSuffixForReferences;
     }
 
@@ -226,7 +233,8 @@ public class BasicWsdlGenerator implements IWsdlGenerator {
      * @see org.teiid.designer.webservice.IWsdlGenerator#setUrlSuffixForReferences(java.lang.String)
      * @since 4.2
      */
-    public void setUrlSuffixForReferences( String suffix ) {
+    @Override
+	public void setUrlSuffixForReferences( String suffix ) {
         this.urlSuffixForReferences = suffix;
     }
 
@@ -234,7 +242,8 @@ public class BasicWsdlGenerator implements IWsdlGenerator {
      * @see org.teiid.designer.webservice.IWsdlGenerator#getUrlForWsdlService()
      * @since 4.2
      */
-    public String getUrlForWsdlService() {
+    @Override
+	public String getUrlForWsdlService() {
         return this.urlForService;
     }
 
@@ -242,7 +251,8 @@ public class BasicWsdlGenerator implements IWsdlGenerator {
      * @see org.teiid.designer.webservice.IWsdlGenerator#setUrlForWsdlService(java.lang.String)
      * @since 4.2
      */
-    public void setUrlForWsdlService( final String serviceUrl ) {
+    @Override
+	public void setUrlForWsdlService( final String serviceUrl ) {
         this.urlForService = serviceUrl;
     }
 
@@ -250,7 +260,8 @@ public class BasicWsdlGenerator implements IWsdlGenerator {
      * @see org.teiid.designer.webservice.IWsdlGenerator#getDefaultNamespaceUri()
      * @since 4.2
      */
-    public String getDefaultNamespaceUri() {
+    @Override
+	public String getDefaultNamespaceUri() {
         return this.defaultNamespaceUri;
     }
 
@@ -258,7 +269,8 @@ public class BasicWsdlGenerator implements IWsdlGenerator {
      * @see org.teiid.designer.webservice.IWsdlGenerator#setDefaultNamespaceUri(java.lang.String)
      * @since 4.2
      */
-    public void setDefaultNamespaceUri( String namespaceUri ) {
+    @Override
+	public void setDefaultNamespaceUri( String namespaceUri ) {
         this.defaultNamespaceUri = namespaceUri;
     }
 
@@ -280,7 +292,8 @@ public class BasicWsdlGenerator implements IWsdlGenerator {
      * @see org.teiid.designer.webservice.IWsdlGenerator#getXmlEncoding()
      * @since 4.2
      */
-    public String getXmlEncoding() {
+    @Override
+	public String getXmlEncoding() {
         return this.xmlEncoding;
     }
 
@@ -288,7 +301,8 @@ public class BasicWsdlGenerator implements IWsdlGenerator {
      * @see org.teiid.designer.webservice.IWsdlGenerator#setXmlEncoding(java.lang.String)
      * @since 4.2
      */
-    public void setXmlEncoding( String xmlEncoding ) {
+    @Override
+	public void setXmlEncoding( String xmlEncoding ) {
         if (xmlEncoding == null || xmlEncoding.trim().length() == 0) {
             this.xmlEncoding = WsdlWriter.ENCODING_UTF8;
         } else {
@@ -300,7 +314,8 @@ public class BasicWsdlGenerator implements IWsdlGenerator {
      * @see org.teiid.designer.webservice.IWsdlGenerator#addWebServiceModel(org.eclipse.emf.ecore.resource.Resource)
      * @since 4.2
      */
-    public boolean addWebServiceModel( Resource resource ) {
+    @Override
+	public boolean addWebServiceModel( Resource resource ) {
         CoreArgCheck.isNotNull(resource);
 
         // See if already added ...
@@ -320,7 +335,8 @@ public class BasicWsdlGenerator implements IWsdlGenerator {
      * @see org.teiid.designer.webservice.IWsdlGenerator#addXsdModel(org.eclipse.xsd.XSDSchema)
      * @since 4.2
      */
-    public boolean addXsdModel( XSDSchema xmlSchema,
+    @Override
+	public boolean addXsdModel( XSDSchema xmlSchema,
                                 final IPath pathForLocation ) {
         CoreArgCheck.isNotNull(xmlSchema);
 
@@ -342,7 +358,8 @@ public class BasicWsdlGenerator implements IWsdlGenerator {
      * @see org.teiid.designer.webservice.IWsdlGenerator#getWebServiceModels()
      * @since 4.2
      */
-    public List getWebServiceModels() {
+    @Override
+	public List getWebServiceModels() {
         return this.webServiceModelsUnmodifiable;
     }
 
@@ -350,7 +367,8 @@ public class BasicWsdlGenerator implements IWsdlGenerator {
      * @see org.teiid.designer.webservice.IWsdlGenerator#getXSDSchemas()
      * @since 4.2
      */
-    public List getXSDSchemas() {
+    @Override
+	public List getXSDSchemas() {
         return this.xmlSchemasUnmodifiable;
     }
 
@@ -358,7 +376,8 @@ public class BasicWsdlGenerator implements IWsdlGenerator {
      * @see org.teiid.designer.webservice.IWsdlGenerator#generate(org.eclipse.core.runtime.IProgressMonitor)
      * @since 4.2
      */
-    public IStatus generate( IProgressMonitor monitor ) {
+    @Override
+	public IStatus generate( IProgressMonitor monitor ) {
         // See if there are any web service models ...
         if (this.webServiceModels.isEmpty()) {
             final String msg = WebServicePlugin.Util.getString("BasicWsdlGenerator.NoWebServiceModelsSupplied"); //$NON-NLS-1$
@@ -414,7 +433,8 @@ public class BasicWsdlGenerator implements IWsdlGenerator {
      * @see org.teiid.designer.webservice.IWsdlGenerator#write(java.io.OutputStream)
      * @since 4.2
      */
-    public void write( OutputStream stream ) throws IOException {
+    @Override
+	public void write( OutputStream stream ) throws IOException {
         if (this.wsdlResource != null && this.wsdlResource.getContents().size() != 0) {
             // Write out the resource to the supplied stream ...
             final Map options = new HashMap();
@@ -427,7 +447,8 @@ public class BasicWsdlGenerator implements IWsdlGenerator {
      * @see org.teiid.designer.webservice.IWsdlGenerator#close()
      * @since 4.2
      */
-    public void close() {
+    @Override
+	public void close() {
         this.webServiceModels.clear();
         this.xmlSchemas.clear();
     }
@@ -666,12 +687,14 @@ public class BasicWsdlGenerator implements IWsdlGenerator {
             this.problems.add(new Status(IStatus.WARNING, WebServicePlugin.PLUGIN_ID, code, msg, t));
         }
 
-        public boolean visit( EObject object ) {
+        @Override
+		public boolean visit( EObject object ) {
             doSwitch(object);
             return true;
         }
 
-        public boolean visit( Resource resource ) {
+        @Override
+		public boolean visit( Resource resource ) {
             return true;
         }
 
@@ -914,7 +937,8 @@ public class BasicWsdlGenerator implements IWsdlGenerator {
         }
 
         protected class XsdComparator implements Comparator {
-            public int compare( Object o1,
+            @Override
+			public int compare( Object o1,
                                 Object o2 ) {
                 if (o1 instanceof XSDSchema && o2 instanceof XSDSchema) {
                     final String tn1 = ((XSDSchema)o1).getTargetNamespace();

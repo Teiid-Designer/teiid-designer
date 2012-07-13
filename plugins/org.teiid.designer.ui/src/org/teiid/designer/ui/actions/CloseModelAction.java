@@ -129,14 +129,16 @@ public class CloseModelAction extends ActionDelegate implements IWorkbenchWindow
     /* (non-Javadoc)
      * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#init(org.eclipse.ui.IWorkbenchWindow)
      */
-    public void init(IWorkbenchWindow window) {
+    @Override
+	public void init(IWorkbenchWindow window) {
 
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.ui.IViewActionDelegate#init(org.eclipse.ui.IViewPart)
      */
-    public void init(IViewPart view) {
+    @Override
+	public void init(IViewPart view) {
     }
 
 }

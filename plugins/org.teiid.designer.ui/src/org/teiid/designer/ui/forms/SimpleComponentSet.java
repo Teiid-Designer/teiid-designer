@@ -59,11 +59,13 @@ public abstract class SimpleComponentSet implements LinkedComponentSet {
     //
     // Implementation of LinkedComponentSet methods:
     //
-    public String getID() {
+    @Override
+	public String getID() {
         return myid;
     }
 
-    public ComponentCategory getCategory() {
+    @Override
+	public ComponentCategory getCategory() {
         return cat;
     }
 
@@ -71,11 +73,13 @@ public abstract class SimpleComponentSet implements LinkedComponentSet {
         return labelText;
     }
 
-    public void setCategory( ComponentCategory category ) {
+    @Override
+	public void setCategory( ComponentCategory category ) {
         cat = category;
     }
 
-    public int getControlCount() {
+    @Override
+	public int getControlCount() {
         if (labelText == null) {
             // no label:
             return 1;
@@ -85,7 +89,8 @@ public abstract class SimpleComponentSet implements LinkedComponentSet {
         return 2;
     }
 
-    public void addFormControls( Composite parent,
+    @Override
+	public void addFormControls( Composite parent,
                                  FormToolkit ftk,
                                  int totalColumns ) {
         // capture current state of panel:
@@ -138,7 +143,8 @@ public abstract class SimpleComponentSet implements LinkedComponentSet {
         return (Control[])big.toArray(EMPTY_CONTROL_ARRAY);
     }
 
-    public void setEditible( boolean enabled ) {
+    @Override
+	public void setEditible( boolean enabled ) {
         if (lbl != null) {
             lbl.setEnabled(enabled);
         } // endif
@@ -152,7 +158,8 @@ public abstract class SimpleComponentSet implements LinkedComponentSet {
     //
     // Events:
     //
-    public void setMonitor( ComponentSetMonitor csl ) {
+    @Override
+	public void setMonitor( ComponentSetMonitor csl ) {
         if (monitor != null && monitor != csl) {
             // we are unsetting:
             removeMonitor(monitor);
@@ -171,7 +178,8 @@ public abstract class SimpleComponentSet implements LinkedComponentSet {
         return super.clone();
     }
 
-    public LinkedComponentSet cloneSet() {
+    @Override
+	public LinkedComponentSet cloneSet() {
         try {
             return (LinkedComponentSet)clone();
         } catch (CloneNotSupportedException e) {

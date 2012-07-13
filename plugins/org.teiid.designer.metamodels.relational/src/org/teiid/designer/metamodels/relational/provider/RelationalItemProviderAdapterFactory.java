@@ -424,7 +424,8 @@ public class RelationalItemProviderAdapterFactory extends RelationalAdapterFacto
      * <!-- end-user-doc -->
      * @generated
      */
-    public ComposeableAdapterFactory getRootAdapterFactory() {
+    @Override
+	public ComposeableAdapterFactory getRootAdapterFactory() {
         return parentAdapterFactory == null ? this : parentAdapterFactory.getRootAdapterFactory();
     }
 
@@ -434,7 +435,8 @@ public class RelationalItemProviderAdapterFactory extends RelationalAdapterFacto
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setParentAdapterFactory(ComposedAdapterFactory parentAdapterFactory) {
+    @Override
+	public void setParentAdapterFactory(ComposedAdapterFactory parentAdapterFactory) {
         this.parentAdapterFactory = parentAdapterFactory;
     }
 
@@ -482,7 +484,8 @@ public class RelationalItemProviderAdapterFactory extends RelationalAdapterFacto
      * <!-- end-user-doc -->
      * @generated
      */
-    public void addListener(INotifyChangedListener notifyChangedListener) {
+    @Override
+	public void addListener(INotifyChangedListener notifyChangedListener) {
         changeNotifier.addListener(notifyChangedListener);
     }
 
@@ -492,7 +495,8 @@ public class RelationalItemProviderAdapterFactory extends RelationalAdapterFacto
      * <!-- end-user-doc -->
      * @generated
      */
-    public void removeListener(INotifyChangedListener notifyChangedListener) {
+    @Override
+	public void removeListener(INotifyChangedListener notifyChangedListener) {
         changeNotifier.removeListener(notifyChangedListener);
     }
 
@@ -502,7 +506,8 @@ public class RelationalItemProviderAdapterFactory extends RelationalAdapterFacto
      * <!-- end-user-doc -->
      * @generated
      */
-    public void fireNotifyChanged(Notification notification) {
+    @Override
+	public void fireNotifyChanged(Notification notification) {
         changeNotifier.fireNotifyChanged(notification);
 
         if (parentAdapterFactory != null) {
@@ -516,7 +521,8 @@ public class RelationalItemProviderAdapterFactory extends RelationalAdapterFacto
      * <!-- end-user-doc -->
      * @generated
      */
-    public void dispose() {
+    @Override
+	public void dispose() {
         if (columnItemProvider != null) columnItemProvider.dispose();
         if (schemaItemProvider != null) schemaItemProvider.dispose();
         if (primaryKeyItemProvider != null) primaryKeyItemProvider.dispose();

@@ -34,7 +34,8 @@ public class ValidationRuleSetImpl implements ValidationRuleSet {
     /* (non-Javadoc)
      * @See org.teiid.designer.core.validation.ValidationRuleSet#addRule(org.teiid.designer.core.validation.ValidationRule)
      */
-    public void addRule(final ValidationRule rule) {
+    @Override
+	public void addRule(final ValidationRule rule) {
         if (rule == null) {
             return;
         }
@@ -56,7 +57,8 @@ public class ValidationRuleSetImpl implements ValidationRuleSet {
     /* (non-Javadoc)
      * @See org.teiid.designer.core.validation.ValidationRuleSet#getRules()
      */
-    public ValidationRule[] getRules() {
+    @Override
+	public ValidationRule[] getRules() {
         if ( !hasRules() ) {
             return EMPTY_ARRAY;
         }
@@ -68,14 +70,16 @@ public class ValidationRuleSetImpl implements ValidationRuleSet {
     /* (non-Javadoc)
      * @See org.teiid.designer.core.validation.ValidationRuleSet#hasRules()
      */
-    public boolean hasRules() {
+    @Override
+	public boolean hasRules() {
         return (ruleSet != null && ruleSet.size() > 0);
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.validation.ValidationRuleSet#validate(java.lang.Object, org.teiid.designer.core.validation.ValidationContext)
      */
-    public void validate(final IProgressMonitor progressMonitor, final Object object, final ValidationContext context) {
+    @Override
+	public void validate(final IProgressMonitor progressMonitor, final Object object, final ValidationContext context) {
         if ( !hasRules() ) {
             return;
         }

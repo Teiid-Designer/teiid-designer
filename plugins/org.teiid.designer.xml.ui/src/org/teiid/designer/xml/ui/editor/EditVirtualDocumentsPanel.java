@@ -116,25 +116,30 @@ public class EditVirtualDocumentsPanel extends Composite implements IVirtualDocu
         // expansion via the '*' (expand tree) key .
         Control tree = viewer.getControl();
         tree.addKeyListener(new KeyListener() {
-            public void keyPressed( KeyEvent e ) {
+            @Override
+			public void keyPressed( KeyEvent e ) {
                 stopExpansion = 0;
             }
 
-            public void keyReleased( KeyEvent e ) {
+            @Override
+			public void keyReleased( KeyEvent e ) {
                 stopExpansion = 0;
             }
         });
         // see note above.
         tree.addMouseListener(new MouseListener() {
-            public void mouseDoubleClick( MouseEvent e ) {
+            @Override
+			public void mouseDoubleClick( MouseEvent e ) {
                 stopExpansion = 0;
             }
 
-            public void mouseDown( MouseEvent e ) {
+            @Override
+			public void mouseDown( MouseEvent e ) {
                 stopExpansion = 0;
             }
 
-            public void mouseUp( MouseEvent e ) {
+            @Override
+			public void mouseUp( MouseEvent e ) {
                 stopExpansion = 0;
             }
         });
@@ -164,7 +169,8 @@ public class EditVirtualDocumentsPanel extends Composite implements IVirtualDocu
      * Note that calling this method sets in motion final processing; The fragments the editor is working with will be changed and
      * things not checked in the editor will be deleted.
      */
-    public XmlFragment[] getFragments( ModelResource modelResource,
+    @Override
+	public XmlFragment[] getFragments( ModelResource modelResource,
                                        IProgressMonitor monitor ) {
         // TODO this method should make use of a progress monitor!
         List rv = new ArrayList(roots.length);
@@ -203,7 +209,8 @@ public class EditVirtualDocumentsPanel extends Composite implements IVirtualDocu
     }
 
     /** Implemented to do nothing for now; the Preview WizardPage handles this */
-    public void updateSourceFragments( boolean isVisible,
+    @Override
+	public void updateSourceFragments( boolean isVisible,
                                        IProgressMonitor monitor ) {
     }
 
@@ -268,7 +275,8 @@ public class EditVirtualDocumentsPanel extends Composite implements IVirtualDocu
         if (viewer != null) {
             // do some init in the display thread:
             Display.getDefault().syncExec(new Runnable() {
-                public void run() {
+                @Override
+				public void run() {
                     if (isVisible) viewer.setInput(roots);
                 }
             });
@@ -283,7 +291,8 @@ public class EditVirtualDocumentsPanel extends Composite implements IVirtualDocu
             // Defect 18433 - Changed thread to SYNC because we want all work to be done on the SAME thread so the transaction
             // boundary is maintained and the creation of a new XML DOcument(s) is Undoable
             Display.getDefault().syncExec(new Runnable() {
-                public void run() {
+                @Override
+				public void run() {
                     if (roots.length > 0) {
                         viewer.setSelection(new StructuredSelection(roots[0]));
                         // make sure all roots are checked, regardless of this panel's isVisible status:
@@ -319,7 +328,8 @@ public class EditVirtualDocumentsPanel extends Composite implements IVirtualDocu
             // mark included:
             if (viewer != null) {
                 Display.getDefault().syncExec(new Runnable() {
-                    public void run() {
+                    @Override
+					public void run() {
                         viewer.setChecked(current, true); // this creates TreeItems...
                     }
                 });
@@ -350,7 +360,8 @@ public class EditVirtualDocumentsPanel extends Composite implements IVirtualDocu
         if (viewer != null && kids != null && kids.length > 0 && !onlyAttributeKids) {
             // parent of a non-attribute leaf node; make sure I am expanded:
             Display.getDefault().asyncExec(new Runnable() {
-                public void run() {
+                @Override
+				public void run() {
                     viewer.expandToLevel(current, 1); // this creates TreeItems...
                 }
             });
@@ -435,7 +446,8 @@ public class EditVirtualDocumentsPanel extends Composite implements IVirtualDocu
             return ((XmlDocumentEntity)element).eContents().toArray();
         }
 
-        public Object getParent( final Object element ) {
+        @Override
+		public Object getParent( final Object element ) {
             if (element == roots) {
                 return null;
             } // endif
@@ -508,7 +520,8 @@ public class EditVirtualDocumentsPanel extends Composite implements IVirtualDocu
             } // endif
             if (wasStopped.contains(nodeData)) {
                 Display.getCurrent().asyncExec(new Runnable() {
-                    public void run() {
+                    @Override
+					public void run() {
                         viewer.refresh(nodeData);
                     }
                 });
@@ -761,7 +774,8 @@ public class EditVirtualDocumentsPanel extends Composite implements IVirtualDocu
         /**
          * @see org.eclipse.swt.events.DisposeListener#widgetDisposed(org.eclipse.swt.events.DisposeEvent)
          */
-        public void widgetDisposed( DisposeEvent e ) {
+        @Override
+		public void widgetDisposed( DisposeEvent e ) {
             disposeNewDecoratedImages();
         }
     }
@@ -857,7 +871,8 @@ public class EditVirtualDocumentsPanel extends Composite implements IVirtualDocu
     class VDocSelectionListener implements ISelectionChangedListener {
         private TreeItem lastColored;
 
-        public void selectionChanged( SelectionChangedEvent event ) {
+        @Override
+		public void selectionChanged( SelectionChangedEvent event ) {
             // unhighlight previous:
             if (lastColored != null && !lastColored.isDisposed()) {
                 lastColored.setBackground(null);

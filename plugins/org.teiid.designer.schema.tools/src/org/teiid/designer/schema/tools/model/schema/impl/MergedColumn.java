@@ -27,7 +27,8 @@ public class MergedColumn extends BaseColumn {
         this.iOccurence = iOccurence;
     }
 
-    public String getXpath() {
+    @Override
+	public String getXpath() {
         StringBuffer retval = new StringBuffer();
         String tableXpath = tableRelationship.getChildRelativeXpath();
         retval.append(tableXpath);
@@ -40,7 +41,8 @@ public class MergedColumn extends BaseColumn {
         return retval.toString();
     }
 
-    public String getSimpleName() {
+    @Override
+	public String getSimpleName() {
         StringBuffer retval = new StringBuffer();
         String tableSimpleName = tableRelationship.getChild().getSimpleName();
         retval.append(tableSimpleName);
@@ -58,11 +60,13 @@ public class MergedColumn extends BaseColumn {
         return retval.toString();
     }
 
-    public Column copy() {
+    @Override
+	public Column copy() {
         return new MergedColumn(childCol, tableRelationship, iOccurence);
     }
 
-    public void printDebug() {
+    @Override
+	public void printDebug() {
         StringBuffer buff = new StringBuffer("\t \t"); //$NON-NLS-1$
         buff.append("MergedColumn: "); //$NON-NLS-1$
         buff.append("SimpleName = " + getSimpleName()); //$NON-NLS-1$
@@ -76,7 +80,8 @@ public class MergedColumn extends BaseColumn {
         System.out.println(buff.toString());
     }
 
-    public org.teiid.designer.schema.tools.model.jdbc.Column getColumnImplementation() {
+    @Override
+	public org.teiid.designer.schema.tools.model.jdbc.Column getColumnImplementation() {
         ColumnImpl newColumn = new ColumnImpl();
         newColumn.setDataAttributeName(getSimpleName());
         newColumn.setDataType(((BaseColumn)childCol).getDataType());

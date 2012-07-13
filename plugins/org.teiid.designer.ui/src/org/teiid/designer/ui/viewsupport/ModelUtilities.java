@@ -1673,7 +1673,8 @@ public abstract class ModelUtilities implements UiConstants {
             this.resources = new ArrayList();
         }
 
-        public boolean visit( IResource resource ) {
+        @Override
+		public boolean visit( IResource resource ) {
             if (resource.exists() && resource instanceof IFile) {
                 resources.add(resource);
             }

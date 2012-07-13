@@ -56,7 +56,8 @@ public class EntityProcessor extends AbstractProcessor implements MetamodelBuild
     /* (non-Javadoc)
      * @see org.teiid.designer.metamodels.builder.processor.Processor#getRecordCount(org.eclipse.core.runtime.IStatus)
      */
-    public int getRecordCount() {
+    @Override
+	public int getRecordCount() {
         int totalRows = 0;
 
         // ----------------------------------------------
@@ -94,7 +95,8 @@ public class EntityProcessor extends AbstractProcessor implements MetamodelBuild
     /* (non-Javadoc)
      * @see org.teiid.designer.metamodels.builder.processor.Processor#process(org.eclipse.core.runtime.IProgressMonitor)
      */
-    public IStatus process( IProgressMonitor monitor ) {
+    @Override
+	public IStatus process( IProgressMonitor monitor ) {
         if (monitor != null) {
             monitor.subTask("Processing Entities for " + this.modelAndSchemaName); //$NON-NLS-1$
         }

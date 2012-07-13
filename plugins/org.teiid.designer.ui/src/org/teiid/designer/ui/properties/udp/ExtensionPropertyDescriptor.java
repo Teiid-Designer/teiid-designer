@@ -96,7 +96,8 @@ public class ExtensionPropertyDescriptor implements IPropertyDescriptor {
      * that this is an extension property
      * @see org.eclipse.ui.views.properties.IPropertyDescriptor#getId()
      */
-    public Object getId() {
+    @Override
+	public Object getId() {
         return this;
     }
 
@@ -116,7 +117,8 @@ public class ExtensionPropertyDescriptor implements IPropertyDescriptor {
     /* (non-Javadoc)
      * @see org.eclipse.ui.views.properties.IPropertyDescriptor#createPropertyEditor(org.eclipse.swt.widgets.Composite)
      */
-    public CellEditor createPropertyEditor(Composite parent) {
+    @Override
+	public CellEditor createPropertyEditor(Composite parent) {
         // check failure conditions: ModelResource is null, or read-only, or not open in an editor 
         ModelResource modelResource = ModelUtilities.getModelResourceForModelObject(extendedObject);
 
@@ -177,7 +179,8 @@ public class ExtensionPropertyDescriptor implements IPropertyDescriptor {
     /* (non-Javadoc)
      * @see org.eclipse.ui.views.properties.IPropertyDescriptor#getCategory()
      */
-    public String getCategory() {
+    @Override
+	public String getCategory() {
         if ( delegate.getCategory() == null ) {
             return EXTENSIONS_CATEGORY;
         }
@@ -187,42 +190,48 @@ public class ExtensionPropertyDescriptor implements IPropertyDescriptor {
     /* (non-Javadoc)
      * @see org.eclipse.ui.views.properties.IPropertyDescriptor#getDescription()
      */
-    public String getDescription() {
+    @Override
+	public String getDescription() {
         return delegate.getDescription();
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.ui.views.properties.IPropertyDescriptor#getDisplayName()
      */
-    public String getDisplayName() {
+    @Override
+	public String getDisplayName() {
         return delegate.getDisplayName();
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.ui.views.properties.IPropertyDescriptor#getFilterFlags()
      */
-    public String[] getFilterFlags() {
+    @Override
+	public String[] getFilterFlags() {
         return delegate.getFilterFlags();
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.ui.views.properties.IPropertyDescriptor#getHelpContextIds()
      */
-    public Object getHelpContextIds() {
+    @Override
+	public Object getHelpContextIds() {
         return delegate.getFilterFlags();
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.ui.views.properties.IPropertyDescriptor#getLabelProvider()
      */
-    public ILabelProvider getLabelProvider() {
+    @Override
+	public ILabelProvider getLabelProvider() {
         return delegate.getLabelProvider();
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.ui.views.properties.IPropertyDescriptor#isCompatibleWith(org.eclipse.ui.views.properties.IPropertyDescriptor)
      */
-    public boolean isCompatibleWith(IPropertyDescriptor anotherProperty) {
+    @Override
+	public boolean isCompatibleWith(IPropertyDescriptor anotherProperty) {
         return delegate.isCompatibleWith(anotherProperty);
     }
 

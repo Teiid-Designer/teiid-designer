@@ -78,14 +78,16 @@ public final class NewRelationshipWizard extends AbstractWizard
         return true;                
     }
 
-    public void setAssociationDescriptor( AssociationDescriptor adAssociationDescriptor ) {
+    @Override
+	public void setAssociationDescriptor( AssociationDescriptor adAssociationDescriptor ) {
 //        System.out.println("[NewRelationshipWizard.setAssociationDescriptor] adAssociationDescriptor: " + adAssociationDescriptor.getClass().getName() );
         if ( adAssociationDescriptor instanceof RelationshipAssociationDescriptor ) {        
             this.radAssociationDescriptor = (RelationshipAssociationDescriptor)adAssociationDescriptor;
         }
     }
 
-    public void setCommand( Command cdCommand ) {
+    @Override
+	public void setCommand( Command cdCommand ) {
 //        System.out.println("[NewRelationshipWizard.setCommand] cdCommand: " + cdCommand.getClass().getName() );
         this.cdCommand = cdCommand;
     }
@@ -142,11 +144,13 @@ public final class NewRelationshipWizard extends AbstractWizard
     }
      
     
-    public void setModel( ModelResource model ) {
+    @Override
+	public void setModel( ModelResource model ) {
     
     }
 
-    public boolean completedOperation() {
+    @Override
+	public boolean completedOperation() {
         
         rwpRelationshipPage.endTxn( bWizardFinished );              
         
@@ -154,7 +158,8 @@ public final class NewRelationshipWizard extends AbstractWizard
         return bWizardFinished;            
     }
     
-    public void init( IWorkbench wb, IStructuredSelection selection ) {
+    @Override
+	public void init( IWorkbench wb, IStructuredSelection selection ) {
        if (selection != null) {
            this.parentTarget = selection.getFirstElement();
        }

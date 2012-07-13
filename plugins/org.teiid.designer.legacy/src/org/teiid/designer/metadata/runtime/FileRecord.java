@@ -108,7 +108,8 @@ public interface FileRecord extends MetadataRecord, VDBFile {
      * @return The name of the model for the file
      * @since 4.2
      */
-    String getModelName();
+    @Override
+	String getModelName();
 
     /**
      * Set the indexSelector on this record.

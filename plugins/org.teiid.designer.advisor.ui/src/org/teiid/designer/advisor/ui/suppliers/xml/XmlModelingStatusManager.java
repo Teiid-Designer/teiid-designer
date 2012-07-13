@@ -80,7 +80,8 @@ public class XmlModelingStatusManager extends AdvisorStatusManager {
     /**
      * 
      */
-    public AdvisorStatusUpdateJob getNewStatusUpdateJob() {
+    @Override
+	public AdvisorStatusUpdateJob getNewStatusUpdateJob() {
     	return new AdvisorStatusUpdateJob(getJobName(), this);
     }
 

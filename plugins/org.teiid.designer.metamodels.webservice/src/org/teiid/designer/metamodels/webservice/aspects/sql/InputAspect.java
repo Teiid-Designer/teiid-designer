@@ -49,7 +49,8 @@ public class InputAspect extends WebServiceComponentAspect implements SqlProcedu
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlProcedureParameterAspect#getDatatype(org.eclipse.emf.ecore.EObject)
      * @since 4.2
      */
-    public EObject getDatatype(final EObject eObject) {
+    @Override
+	public EObject getDatatype(final EObject eObject) {
         CoreArgCheck.isInstanceOf(Input.class, eObject);
         try {
             final DatatypeManager dtMgr = ModelerCore.getDatatypeManager(eObject,true);
@@ -65,7 +66,8 @@ public class InputAspect extends WebServiceComponentAspect implements SqlProcedu
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlProcedureParameterAspect#getDatatypeName(org.eclipse.emf.ecore.EObject)
      * @since 4.2
      */
-    public String getDatatypeName(final EObject eObject) {
+    @Override
+	public String getDatatypeName(final EObject eObject) {
         CoreArgCheck.isInstanceOf(Input.class, eObject);
         return DATATYPE_NAME;
     }
@@ -74,7 +76,8 @@ public class InputAspect extends WebServiceComponentAspect implements SqlProcedu
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlProcedureParameterAspect#getDatatypeObjectID(org.eclipse.emf.ecore.EObject)
      * @since 4.2
      */
-    public String getDatatypeObjectID(final EObject eObject) {
+    @Override
+	public String getDatatypeObjectID(final EObject eObject) {
         EObject datatype = getDatatype(eObject);
         if(datatype == null) {
             return null;
@@ -87,7 +90,8 @@ public class InputAspect extends WebServiceComponentAspect implements SqlProcedu
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlProcedureParameterAspect#getRuntimeType(org.eclipse.emf.ecore.EObject)
      * @since 4.2
      */
-    public String getRuntimeType(final EObject eObject) {
+    @Override
+	public String getRuntimeType(final EObject eObject) {
         CoreArgCheck.isInstanceOf(Input.class, eObject);
         return RUNTIME_TYPE;
     }
@@ -96,7 +100,8 @@ public class InputAspect extends WebServiceComponentAspect implements SqlProcedu
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlProcedureParameterAspect#getDefaultValue(org.eclipse.emf.ecore.EObject)
      * @since 4.2
      */
-    public Object getDefaultValue(final EObject eObject) {
+    @Override
+	public Object getDefaultValue(final EObject eObject) {
         CoreArgCheck.isInstanceOf(Input.class, eObject);
         return DEFAULT_VALUE;
     }
@@ -105,7 +110,8 @@ public class InputAspect extends WebServiceComponentAspect implements SqlProcedu
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlProcedureParameterAspect#getNullType(org.eclipse.emf.ecore.EObject)
      * @since 4.2
      */
-    public int getNullType(final EObject eObject) {
+    @Override
+	public int getNullType(final EObject eObject) {
         CoreArgCheck.isInstanceOf(Input.class, eObject);
         return NULL_TYPE;
     }
@@ -114,7 +120,8 @@ public class InputAspect extends WebServiceComponentAspect implements SqlProcedu
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlProcedureParameterAspect#getLength(org.eclipse.emf.ecore.EObject)
      * @since 4.2
      */
-    public int getLength(final EObject eObject) {
+    @Override
+	public int getLength(final EObject eObject) {
         CoreArgCheck.isInstanceOf(Input.class, eObject);
         return LENGTH;
     }
@@ -123,7 +130,8 @@ public class InputAspect extends WebServiceComponentAspect implements SqlProcedu
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlProcedureParameterAspect#getPosition(org.eclipse.emf.ecore.EObject)
      * @since 4.2
      */
-    public int getPosition(final EObject eObject) {
+    @Override
+	public int getPosition(final EObject eObject) {
         CoreArgCheck.isInstanceOf(Input.class, eObject);
         return POSITION;
     }
@@ -132,7 +140,8 @@ public class InputAspect extends WebServiceComponentAspect implements SqlProcedu
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlProcedureParameterAspect#getRadix(org.eclipse.emf.ecore.EObject)
      * @since 4.2
      */
-    public int getRadix(final EObject eObject) {
+    @Override
+	public int getRadix(final EObject eObject) {
         CoreArgCheck.isInstanceOf(Input.class, eObject);
         return RADIX;
     }
@@ -141,7 +150,8 @@ public class InputAspect extends WebServiceComponentAspect implements SqlProcedu
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlProcedureParameterAspect#getScale(org.eclipse.emf.ecore.EObject)
      * @since 4.2
      */
-    public int getScale(final EObject eObject) {
+    @Override
+	public int getScale(final EObject eObject) {
         CoreArgCheck.isInstanceOf(Input.class, eObject);
         return SCALE;
     }
@@ -150,7 +160,8 @@ public class InputAspect extends WebServiceComponentAspect implements SqlProcedu
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlProcedureParameterAspect#getPrecision(org.eclipse.emf.ecore.EObject)
      * @since 4.2
      */
-    public int getPrecision(final EObject eObject) {
+    @Override
+	public int getPrecision(final EObject eObject) {
         CoreArgCheck.isInstanceOf(Input.class, eObject);
         return PRECISION;
     }
@@ -159,7 +170,8 @@ public class InputAspect extends WebServiceComponentAspect implements SqlProcedu
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlProcedureParameterAspect#getType(org.eclipse.emf.ecore.EObject)
      * @since 4.2
      */
-    public int getType(final EObject eObject) {
+    @Override
+	public int getType(final EObject eObject) {
         CoreArgCheck.isInstanceOf(Input.class, eObject);
         return MetadataConstants.PARAMETER_TYPES.IN_PARM;
     }
@@ -168,7 +180,8 @@ public class InputAspect extends WebServiceComponentAspect implements SqlProcedu
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlProcedureParameterAspect#isOptional(org.eclipse.emf.ecore.EObject)
      * @since 4.2
      */
-    public boolean isOptional(final EObject eObject) {
+    @Override
+	public boolean isOptional(final EObject eObject) {
         CoreArgCheck.isInstanceOf(Input.class, eObject);
         return false;
     }
@@ -177,7 +190,8 @@ public class InputAspect extends WebServiceComponentAspect implements SqlProcedu
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlProcedureParameterAspect#isDatatypeFeature(org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EStructuralFeature)
      * @since 4.2
      */
-    public boolean isDatatypeFeature(final EObject eObject,
+    @Override
+	public boolean isDatatypeFeature(final EObject eObject,
                                      final EStructuralFeature eFeature) {
         CoreArgCheck.isInstanceOf(Input.class, eObject); 
         final EObjectImpl eObjectImpl = super.getEObjectImpl(eObject);
@@ -194,7 +208,8 @@ public class InputAspect extends WebServiceComponentAspect implements SqlProcedu
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlAspect#isRecordType(char)
      * @since 4.2
      */
-    public boolean isRecordType(final char recordType) {
+    @Override
+	public boolean isRecordType(final char recordType) {
         return (recordType == IndexConstants.RECORD_TYPE.CALLABLE_PARAMETER);
     }
 
@@ -202,14 +217,16 @@ public class InputAspect extends WebServiceComponentAspect implements SqlProcedu
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlProcedureParameterAspect#canSetDatatype()
      * @since 4.2
      */
-    public boolean canSetDatatype() {
+    @Override
+	public boolean canSetDatatype() {
         return false;
     }
     /** 
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlProcedureParameterAspect#setDatatype(org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject)
      * @since 4.2
      */
-    public void setDatatype(EObject eObject,
+    @Override
+	public void setDatatype(EObject eObject,
                             EObject datatype) {
         CoreArgCheck.isInstanceOf(Input.class, eObject);
         final String msg = WebServiceMetamodelPlugin.Util.getString("InputAspect.setDatatypeNotSupported"); //$NON-NLS-1$
@@ -219,7 +236,8 @@ public class InputAspect extends WebServiceComponentAspect implements SqlProcedu
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlProcedureParameterAspect#canSetLength()
      * @since 4.2
      */
-    public boolean canSetLength() {
+    @Override
+	public boolean canSetLength() {
         return false;
     }
     
@@ -227,7 +245,8 @@ public class InputAspect extends WebServiceComponentAspect implements SqlProcedu
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlProcedureParameterAspect#setLength(org.eclipse.emf.ecore.EObject, int)
      * @since 4.2
      */
-    public void setLength(EObject eObject, int length) {
+    @Override
+	public void setLength(EObject eObject, int length) {
         CoreArgCheck.isInstanceOf(Input.class, eObject);
         final String msg = WebServiceMetamodelPlugin.Util.getString("InputAspect.setLengthNotSupported"); //$NON-NLS-1$
         throw new UnsupportedOperationException(msg);
@@ -237,7 +256,8 @@ public class InputAspect extends WebServiceComponentAspect implements SqlProcedu
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlProcedureParameterAspect#canSetNullType()
      * @since 4.2
      */
-    public boolean canSetNullType() {
+    @Override
+	public boolean canSetNullType() {
         return false;
     }
     
@@ -245,7 +265,8 @@ public class InputAspect extends WebServiceComponentAspect implements SqlProcedu
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlProcedureParameterAspect#setNullType(org.eclipse.emf.ecore.EObject, int)
      * @since 4.2
      */
-    public void setNullType(EObject eObject, int nullType) {
+    @Override
+	public void setNullType(EObject eObject, int nullType) {
         CoreArgCheck.isInstanceOf(Input.class, eObject);
         final String msg = WebServiceMetamodelPlugin.Util.getString("InputAspect.setNullTypeNotSupported"); //$NON-NLS-1$
         throw new UnsupportedOperationException(msg);
@@ -255,7 +276,8 @@ public class InputAspect extends WebServiceComponentAspect implements SqlProcedu
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlProcedureParameterAspect#isInputParam(org.eclipse.emf.ecore.EObject)
      * @since 4.3
      */
-    public boolean isInputParam(EObject eObject) {
+    @Override
+	public boolean isInputParam(EObject eObject) {
         return true;
     }
     
@@ -263,7 +285,8 @@ public class InputAspect extends WebServiceComponentAspect implements SqlProcedu
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlProcedureParameterAspect#setDirection(org.eclipse.emf.ecore.EObject, int)
      * @since 4.3
      */
-    public void setDirection(EObject eObject,
+    @Override
+	public void setDirection(EObject eObject,
                              int dir) {
         CoreArgCheck.isInstanceOf(Input.class, eObject);
         final String msg = WebServiceMetamodelPlugin.Util.getString("InputAspect.setDirectionNotSupported"); //$NON-NLS-1$

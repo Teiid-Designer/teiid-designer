@@ -105,7 +105,8 @@ public class HyperlinkComponentSet extends SimpleComponentSet {
         mon = null;
     }
 
-    public boolean isUserSet() {
+    @Override
+	public boolean isUserSet() {
         if (linker != null) {
             return linker.getValue() != null;
         } // endif
@@ -113,14 +114,16 @@ public class HyperlinkComponentSet extends SimpleComponentSet {
         return false;
     }
 
-    public void setValue( Object o ) {
+    @Override
+	public void setValue( Object o ) {
         if (linker != null) {
             linker.setValue(o);
         } // endif
     }
 
     /** does nothing */
-    public void reset() {
+    @Override
+	public void reset() {
     }
 
     @Override

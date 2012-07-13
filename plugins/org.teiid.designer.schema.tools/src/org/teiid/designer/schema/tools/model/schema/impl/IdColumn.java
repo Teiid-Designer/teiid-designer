@@ -17,12 +17,14 @@ public class IdColumn extends BaseColumn {
         super(true, type);
     }
 
-    public String getXpath() {
+    @Override
+	public String getXpath() {
         String xpath = "@com.metamatrix.xml.xpathpart"; //$NON-NLS-1$
         return xpath;
     }
 
-    public String getSimpleName() {
+    @Override
+	public String getSimpleName() {
         String name = "mmid"; //$NON-NLS-1$
         return name;
     }
@@ -33,16 +35,19 @@ public class IdColumn extends BaseColumn {
         return null;
     }
 
-    public Column copy() {
+    @Override
+	public Column copy() {
         IdColumn copy = new IdColumn(getType());
         return copy;
     }
 
-    public void printDebug() {
+    @Override
+	public void printDebug() {
         System.out.println("\t \t IDColumn"); //$NON-NLS-1$
     }
 
-    public org.teiid.designer.schema.tools.model.jdbc.Column getColumnImplementation() {
+    @Override
+	public org.teiid.designer.schema.tools.model.jdbc.Column getColumnImplementation() {
         ColumnImpl newColumn = new ColumnImpl();
         newColumn.setDataAttributeName(getSimpleName());
         newColumn.setDataType(getDataType());

@@ -43,7 +43,8 @@ public class ModelImpl implements Model {
         modelableOperationsMaps = new HashMap<String, Map<String, Operation>>(); 
     }
 
-    public Service[] getServices() {
+    @Override
+	public Service[] getServices() {
         // defensive copy of Service array
         Service[] retSvc = new Service[m_services.length];
         for (int i = 0; i < m_services.length; i++) {
@@ -52,7 +53,8 @@ public class ModelImpl implements Model {
         return retSvc;
     }
 
-    public void setServices( Service[] services ) {
+    @Override
+	public void setServices( Service[] services ) {
         m_services = services;
         for (int i = 0; i < services.length; i++) {
             Service service = services[i];
@@ -82,7 +84,8 @@ public class ModelImpl implements Model {
     	}
     }
     
-    public Operation[] getModelableOperations(String portName) {
+    @Override
+	public Operation[] getModelableOperations(String portName) {
     	Map<String, Operation> existingMap = modelableOperationsMaps.get(portName);
     	
     	int nValues = existingMap.values().size();
@@ -91,7 +94,8 @@ public class ModelImpl implements Model {
     	return ops.toArray(new Operation[nValues]);
     }
     
-    public String[] getModelablePortNames() {
+    @Override
+	public String[] getModelablePortNames() {
     	int nPorts = modelableOperationsMaps.keySet().size();
     	
     	return modelableOperationsMaps.keySet().toArray(new String[nPorts]);
@@ -108,19 +112,23 @@ public class ModelImpl implements Model {
         return buff.toString();
     }
 
-    public XSDSchema[] getSchemas() {
+    @Override
+	public XSDSchema[] getSchemas() {
         return m_schemas;
     }
 
-    public void setSchemas( XSDSchema[] schemas ) {
+    @Override
+	public void setSchemas( XSDSchema[] schemas ) {
         m_schemas = schemas;
     }
 
-    public Map getNamespaces() {
+    @Override
+	public Map getNamespaces() {
         return m_namespaces;
     }
 
-    public void setNamespaces( Map collection ) {
+    @Override
+	public void setNamespaces( Map collection ) {
         m_namespaces = collection;
         m_reverseNamespaceLookup = new HashMap(collection.size());
         for (Iterator nsIter = collection.keySet().iterator(); nsIter.hasNext();) {
@@ -130,13 +138,15 @@ public class ModelImpl implements Model {
         }
     }
 
-    public void addNamespaceToMap( Namespace ns ) {
+    @Override
+	public void addNamespaceToMap( Namespace ns ) {
         String uri = ns.getURI();
         String prefix = ns.getPrefix();
         addNamespaceToMap(prefix, uri);
     }
 
-    public void addNamespaceToMap( String prefix,
+    @Override
+	public void addNamespaceToMap( String prefix,
                                    String namespaceURI ) {
         if (m_reverseNamespaceLookup.get(namespaceURI) != null) return;
         if (m_namespaces.get(prefix) != null) {
@@ -150,7 +160,8 @@ public class ModelImpl implements Model {
         m_reverseNamespaceLookup.put(namespaceURI, prefix);
     }
 
-    public void addNamespaceToMap( String namespaceURI ) {
+    @Override
+	public void addNamespaceToMap( String namespaceURI ) {
         addNamespaceToMap("mmn0", namespaceURI); //$NON-NLS-1$
     }
 
@@ -193,7 +204,8 @@ public class ModelImpl implements Model {
             super();
         }
 
-        public int compare( final Object oper1,
+        @Override
+		public int compare( final Object oper1,
                             final Object oper2 ) {
             CoreArgCheck.isInstanceOf(Operation.class, oper1);
             CoreArgCheck.isInstanceOf(Operation.class, oper2);

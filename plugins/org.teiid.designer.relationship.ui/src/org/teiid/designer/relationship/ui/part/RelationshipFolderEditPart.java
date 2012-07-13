@@ -101,11 +101,13 @@ public class RelationshipFolderEditPart extends AbstractDiagramEditPart implemen
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.diagram.ui.part.EditableEditPart#edit()
 	 */
+	@Override
 	public void edit() {
 		// Here's where we open it's package diagram.
 		((DiagramViewer)getViewer()).setInput( ((DiagramModelNode)getModel()).getModelObject() );
 	}
     
+	@Override
 	public void performDirectEdit(){
 		  if(manager == null)
 			  manager = new DirectEditPartManager(this, 
@@ -118,6 +120,7 @@ public class RelationshipFolderEditPart extends AbstractDiagramEditPart implemen
 		if (request.getType() == RequestConstants.REQ_DIRECT_EDIT) {
 			if( getViewer() != null ) {
 				UiBusyIndicator.showWhile(Display.getCurrent(), new Runnable() {
+					@Override
 					public void run() {
 						((DiagramViewer)getViewer()).getEditor().openContext( getModelObject() );
 					}
@@ -177,14 +180,17 @@ public class RelationshipFolderEditPart extends AbstractDiagramEditPart implemen
 		getDiagramFigure().updateForSize(((DiagramModelNode) getModel()).getSize());
 	}
     
+	@Override
 	public String getText() {
 		return ((DiagramModelNode)getModel()).getName();
 	}
 
+	@Override
 	public void setText(String newName) {
 		((DiagramModelNode)getModel()).setName(newName);
 	}
 
+	@Override
 	public String getEditString(){
 		return ((DiagramModelNode)getModel()).getName();
 	}
@@ -192,6 +198,7 @@ public class RelationshipFolderEditPart extends AbstractDiagramEditPart implemen
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.diagram.ui.util.directedit.DirectEditPart#getEditManager()
 	 */
+	@Override
 	public DirectEditPartManager getEditManager() {
 		return (DirectEditPartManager)manager;
 	}

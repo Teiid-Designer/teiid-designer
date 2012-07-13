@@ -43,7 +43,8 @@ public class ExtensionDescriptorImpl implements ExtensionDescriptor {
     /**
      * @see org.teiid.designer.core.ExtensionDescriptor#getId()
      */
-    public Object getId() {
+    @Override
+	public Object getId() {
         return this.id;
     }
 
@@ -51,49 +52,56 @@ public class ExtensionDescriptorImpl implements ExtensionDescriptor {
      * @see org.teiid.designer.core.ExtensionDescriptor#getClassName()
      * @since 4.3
      */
-    public String getClassName() {
+    @Override
+	public String getClassName() {
         return (this.extensionClassLoader != null ? this.extensionClassLoader.getClassName() : null);
     }
 
     /**
      * @see org.teiid.designer.core.ExtensionDescriptor#getExtensionClass()
      */
-    public Class getExtensionClass() {
+    @Override
+	public Class getExtensionClass() {
         return (this.extensionClassLoader != null ? this.extensionClassLoader.getLoadedClass() : null);
     }
 
     /**
      * @see org.teiid.designer.core.ExtensionDescriptor#getExtensionClassInstance()
      */
-    public Object getExtensionClassInstance() {
+    @Override
+	public Object getExtensionClassInstance() {
         return (this.extensionClassLoader != null ? this.extensionClassLoader.getClassInstance() : null);
     }
 
     /**
      * @see org.teiid.designer.core.ExtensionDescriptor#getNewExtensionClassInstance()
      */
-    public Object getNewExtensionClassInstance() {
+    @Override
+	public Object getNewExtensionClassInstance() {
         return (this.extensionClassLoader != null ? this.extensionClassLoader.getNewClassInstance() : null);
     }
 
     /**
      * @see org.teiid.designer.core.ExtensionDescriptor#getChildren()
      */
-    public ExtensionDescriptor[] getChildren() {
+    @Override
+	public ExtensionDescriptor[] getChildren() {
         return EMPTY_ARRAY;
     }
 
     /**
      * @see org.teiid.designer.core.ExtensionDescriptor#isMultiDescriptor()
      */
-    public boolean isMultiDescriptor() {
+    @Override
+	public boolean isMultiDescriptor() {
         return false;
     }
 
     /**
      * @see org.teiid.designer.core.ExtensionDescriptor#getChildDescriptor(java.lang.Object)
      */
-    public ExtensionDescriptor getChildDescriptor(final Object id) {
+    @Override
+	public ExtensionDescriptor getChildDescriptor(final Object id) {
         return null;
     }
 

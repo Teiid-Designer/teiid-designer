@@ -42,7 +42,8 @@ public class FunctionMatcherFactory implements
     /**
      * @see org.teiid.designer.core.compare.EObjectMatcherFactory#createEObjectMatchersForRoots()
      */
-    public List createEObjectMatchersForRoots() {
+    @Override
+	public List createEObjectMatchersForRoots() {
         // Relational objects can be roots, so return the matchers 
         return this.standardMatchers;
     }
@@ -50,7 +51,8 @@ public class FunctionMatcherFactory implements
     /**
      * @see org.teiid.designer.core.compare.EObjectMatcherFactory#createEObjectMatchers(org.eclipse.emf.ecore.EReference)
      */
-    public List createEObjectMatchers(final EReference reference) {
+    @Override
+	public List createEObjectMatchers(final EReference reference) {
         // Make sure the reference is in the function metamodel ...
         final EClass containingClass = reference.getEContainingClass();
         final EPackage metamodel = containingClass.getEPackage();

@@ -137,7 +137,8 @@ public abstract class AbstractCompositeExpressionEditor extends AbstractComposit
 
         // get first editor to show in stack layout
         Display.getDefault().asyncExec(new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 ILanguageObjectEditor editor = (ILanguageObjectEditor)editors.get(0);
                 stackLayout.topControl = editor.getUi();
                 WidgetUtil.selectRadioButton(getEditorButton(editor));

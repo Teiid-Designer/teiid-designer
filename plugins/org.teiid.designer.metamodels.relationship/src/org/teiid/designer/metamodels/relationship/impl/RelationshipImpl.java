@@ -139,7 +139,8 @@ public class RelationshipImpl extends RelationshipEntityImpl implements Relation
      * 
      * @generated
      */
-    public EList getOwnedRelationships() {
+    @Override
+	public EList getOwnedRelationships() {
         if (ownedRelationships == null) {
             ownedRelationships = new EObjectContainmentWithInverseEList(Relationship.class, this,
                                                                         RelationshipPackage.RELATIONSHIP__OWNED_RELATIONSHIPS,
@@ -153,7 +154,8 @@ public class RelationshipImpl extends RelationshipEntityImpl implements Relation
      * 
      * @generated
      */
-    public EMap getFeatureValues() {
+    @Override
+	public EMap getFeatureValues() {
         if (featureValues == null) {
             featureValues = new EcoreEMap(EcorePackage.eINSTANCE.getEStringToStringMapEntry(), EStringToStringMapEntryImpl.class,
                                           this, RelationshipPackage.RELATIONSHIP__FEATURE_VALUES);
@@ -166,7 +168,8 @@ public class RelationshipImpl extends RelationshipEntityImpl implements Relation
      * 
      * @generated
      */
-    public EList getTargets() {
+    @Override
+	public EList getTargets() {
         if (targets == null) {
             targets = new EObjectResolvingEList(EObject.class, this, RelationshipPackage.RELATIONSHIP__TARGETS);
         }
@@ -178,7 +181,8 @@ public class RelationshipImpl extends RelationshipEntityImpl implements Relation
      * 
      * @generated
      */
-    public EList getSources() {
+    @Override
+	public EList getSources() {
         if (sources == null) {
             sources = new EObjectResolvingEList(EObject.class, this, RelationshipPackage.RELATIONSHIP__SOURCES);
         }
@@ -190,7 +194,8 @@ public class RelationshipImpl extends RelationshipEntityImpl implements Relation
      * 
      * @generated
      */
-    public RelationshipType getType() {
+    @Override
+	public RelationshipType getType() {
         if (type != null && type.eIsProxy()) {
             RelationshipType oldType = type;
             type = (RelationshipType)eResolveProxy((InternalEObject)type);
@@ -216,7 +221,8 @@ public class RelationshipImpl extends RelationshipEntityImpl implements Relation
      * 
      * @generated
      */
-    public void setType( RelationshipType newType ) {
+    @Override
+	public void setType( RelationshipType newType ) {
         RelationshipType oldType = type;
         type = newType;
         boolean oldTypeESet = typeESet;
@@ -231,7 +237,8 @@ public class RelationshipImpl extends RelationshipEntityImpl implements Relation
      * 
      * @generated
      */
-    public void unsetType() {
+    @Override
+	public void unsetType() {
         RelationshipType oldType = type;
         boolean oldTypeESet = typeESet;
         type = null;
@@ -246,7 +253,8 @@ public class RelationshipImpl extends RelationshipEntityImpl implements Relation
      * 
      * @generated
      */
-    public boolean isSetType() {
+    @Override
+	public boolean isSetType() {
         return typeESet;
     }
 
@@ -255,7 +263,8 @@ public class RelationshipImpl extends RelationshipEntityImpl implements Relation
      * 
      * @generated
      */
-    public RelationshipContainer getRelationshipContainer() {
+    @Override
+	public RelationshipContainer getRelationshipContainer() {
         if (eContainerFeatureID != RelationshipPackage.RELATIONSHIP__RELATIONSHIP_CONTAINER) return null;
         return (RelationshipContainer)eContainer;
     }
@@ -265,7 +274,8 @@ public class RelationshipImpl extends RelationshipEntityImpl implements Relation
      * 
      * @generated
      */
-    public void setRelationshipContainer( RelationshipContainer newRelationshipContainer ) {
+    @Override
+	public void setRelationshipContainer( RelationshipContainer newRelationshipContainer ) {
         if (newRelationshipContainer != eContainer
             || (eContainerFeatureID != RelationshipPackage.RELATIONSHIP__RELATIONSHIP_CONTAINER && newRelationshipContainer != null)) {
             if (EcoreUtil.isAncestor(this, newRelationshipContainer)) throw new IllegalArgumentException(
@@ -292,7 +302,8 @@ public class RelationshipImpl extends RelationshipEntityImpl implements Relation
      * 
      * @generated NOT
      */
-    public RelationshipRole getSourceRole() {
+    @Override
+	public RelationshipRole getSourceRole() {
         if (this.type != null) {
             return this.type.getSourceRole();
         }
@@ -315,7 +326,8 @@ public class RelationshipImpl extends RelationshipEntityImpl implements Relation
      * 
      * @generated NOT
      */
-    public RelationshipRole getTargetRole() {
+    @Override
+	public RelationshipRole getTargetRole() {
         if (this.type != null) {
             return this.type.getTargetRole();
         }

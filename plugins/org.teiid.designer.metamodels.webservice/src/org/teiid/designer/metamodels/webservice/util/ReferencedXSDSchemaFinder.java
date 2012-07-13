@@ -41,7 +41,8 @@ public class ReferencedXSDSchemaFinder extends WebServiceComponentFinder {
      * 
      * @see org.teiid.designer.core.util.ModelVisitor#visit(org.eclipse.emf.ecore.EObject)
      */
-    public boolean visit( final EObject object ) {
+    @Override
+	public boolean visit( final EObject object ) {
         // Interface are contained by Resources
         if (object instanceof Message) {
             final Message msg = (Message)object;

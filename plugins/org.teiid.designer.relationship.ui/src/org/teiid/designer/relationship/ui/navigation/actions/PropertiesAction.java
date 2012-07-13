@@ -68,7 +68,8 @@ public class PropertiesAction extends Action implements ISelectionListener, UiCo
             selectionProvider.setSelection(selection);
             // activate the Properties view (must do this last)
             Display.getCurrent().asyncExec(new Runnable() {
-                public void run() {
+                @Override
+				public void run() {
                     try {
                         UiUtil.getWorkbenchPage().showView(org.teiid.designer.ui.UiConstants.Extensions.PROPERTY_VIEW);
                     } catch (PartInitException err) {
@@ -86,7 +87,8 @@ public class PropertiesAction extends Action implements ISelectionListener, UiCo
     /* (non-Javadoc)
      * @see org.eclipse.ui.ISelectionListener#selectionChanged(org.eclipse.ui.IWorkbenchPart, org.eclipse.jface.viewers.ISelection)
      */
-    public void selectionChanged(IWorkbenchPart part, ISelection selection) {
+    @Override
+	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
         setEnabled(false);
         if ( SelectionUtilities.isSingleSelection(selection) ) {
             Object selectedObject = SelectionUtilities.getSelectedObject(selection);

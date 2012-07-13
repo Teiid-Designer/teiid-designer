@@ -131,7 +131,8 @@ public class OrganizeImportCommand implements ModelRefactorCommand {
      * @see org.teiid.designer.core.refactor.ModelRefactorCommand#canExecute()
      * @since 4.3
      */
-    public IStatus canExecute() {
+    @Override
+	public IStatus canExecute() {
         if (this.resource == null) {
             final String msg = ModelerCore.Util.getString("OrganizeImportCommand.Organizing_imports_must_be_performed_on_a_Resource"); //$NON-NLS-1$
             final IStatus status = new Status(IStatus.ERROR, OrganizeImportCommandHelper.PID,
@@ -156,7 +157,8 @@ public class OrganizeImportCommand implements ModelRefactorCommand {
      * @see org.teiid.designer.core.refactor.ModelRefactorCommand#execute(org.eclipse.core.runtime.IProgressMonitor)
      * @since 4.3
      */
-    public IStatus execute( final IProgressMonitor monitor ) {
+    @Override
+	public IStatus execute( final IProgressMonitor monitor ) {
         resetOrganizeImportHelper();
         return organizeImportCommandHelper.execute(monitor);
     }
@@ -172,63 +174,72 @@ public class OrganizeImportCommand implements ModelRefactorCommand {
     /* (non-Javadoc)
      * @See org.teiid.designer.core.refactor.ModelRefactorCommand#canUndo()
      */
-    public boolean canUndo() {
+    @Override
+	public boolean canUndo() {
         return false;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.refactor.ModelRefactorCommand#getAffectedObjects()
      */
-    public Collection getAffectedObjects() {
+    @Override
+	public Collection getAffectedObjects() {
         return null;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.refactor.ModelRefactorCommand#getDescription()
      */
-    public String getDescription() {
+    @Override
+	public String getDescription() {
         return null;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.refactor.ModelRefactorCommand#getLabel()
      */
-    public String getLabel() {
+    @Override
+	public String getLabel() {
         return null;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.refactor.ModelRefactorCommand#getPostExecuteMessages()
      */
-    public Collection getPostExecuteMessages() {
+    @Override
+	public Collection getPostExecuteMessages() {
         return null;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.refactor.ModelRefactorCommand#getResult()
      */
-    public Collection getResult() {
+    @Override
+	public Collection getResult() {
         return null;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.refactor.ModelRefactorCommand#redo()
      */
-    public void redo() {
+    @Override
+	public void redo() {
 
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.refactor.ModelRefactorCommand#undo()
      */
-    public void undo() {
+    @Override
+	public void undo() {
 
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.refactor.ModelRefactorCommand#canRedo()
      */
-    public boolean canRedo() {
+    @Override
+	public boolean canRedo() {
         return false;
     }
 

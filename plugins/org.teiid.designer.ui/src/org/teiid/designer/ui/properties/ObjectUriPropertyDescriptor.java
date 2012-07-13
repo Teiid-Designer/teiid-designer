@@ -48,7 +48,8 @@ class ObjectUriPropertyDescriptor implements ITransientPropertyDescriptor,
      * @see org.eclipse.ui.views.properties.IPropertyDescriptor#createPropertyEditor(org.eclipse.swt.widgets.Composite)
      * @since 4.3
      */
-    public CellEditor createPropertyEditor(Composite theParent) {
+    @Override
+	public CellEditor createPropertyEditor(Composite theParent) {
         return null;
     }
 
@@ -56,7 +57,8 @@ class ObjectUriPropertyDescriptor implements ITransientPropertyDescriptor,
      * @see org.eclipse.ui.views.properties.IPropertyDescriptor#getCategory()
      * @since 4.3
      */
-    public String getCategory() {
+    @Override
+	public String getCategory() {
         return Util.getStringOrKey(PREFIX + "category"); //$NON-NLS-1$
     }
 
@@ -64,11 +66,13 @@ class ObjectUriPropertyDescriptor implements ITransientPropertyDescriptor,
      * @see org.eclipse.ui.views.properties.IPropertyDescriptor#getDescription()
      * @since 4.3
      */
-    public String getDescription() {
+    @Override
+	public String getDescription() {
         return Util.getStringOrKey(PREFIX + "description"); //$NON-NLS-1$
     }
 
-    public String getDisplayName() {
+    @Override
+	public String getDisplayName() {
         return Util.getStringOrKey(PREFIX + "displayName"); //$NON-NLS-1$
     }
 
@@ -76,7 +80,8 @@ class ObjectUriPropertyDescriptor implements ITransientPropertyDescriptor,
      * @see org.eclipse.ui.views.properties.IPropertyDescriptor#getFilterFlags()
      * @since 4.3
      */
-    public String[] getFilterFlags() {
+    @Override
+	public String[] getFilterFlags() {
         return null;
     }
 
@@ -84,7 +89,8 @@ class ObjectUriPropertyDescriptor implements ITransientPropertyDescriptor,
      * @see org.teiid.designer.ui.properties.ITransientPropertyDescriptor#getPropertyValue()
      * @since 4.3
      */
-    public Object getPropertyValue() {
+    @Override
+	public Object getPropertyValue() {
         Object result = null;
 
         if (this.obj == null) {
@@ -117,7 +123,8 @@ class ObjectUriPropertyDescriptor implements ITransientPropertyDescriptor,
      * @see org.eclipse.ui.views.properties.IPropertyDescriptor#getHelpContextIds()
      * @since 4.3
      */
-    public Object getHelpContextIds() {
+    @Override
+	public Object getHelpContextIds() {
         return null;
     }
 
@@ -125,7 +132,8 @@ class ObjectUriPropertyDescriptor implements ITransientPropertyDescriptor,
      * @see org.eclipse.ui.views.properties.IPropertyDescriptor#getId()
      * @since 4.3
      */
-    public Object getId() {
+    @Override
+	public Object getId() {
         return Util.getStringOrKey(PREFIX + "id"); //$NON-NLS-1$
     }
 
@@ -133,7 +141,8 @@ class ObjectUriPropertyDescriptor implements ITransientPropertyDescriptor,
      * @see org.eclipse.ui.views.properties.IPropertyDescriptor#getLabelProvider()
      * @since 4.3
      */
-    public ILabelProvider getLabelProvider() {
+    @Override
+	public ILabelProvider getLabelProvider() {
         if (labelProvider == null) {
             labelProvider = new LabelProvider();
         } // endif
@@ -145,7 +154,8 @@ class ObjectUriPropertyDescriptor implements ITransientPropertyDescriptor,
      * @see org.eclipse.ui.views.properties.IPropertyDescriptor#isCompatibleWith(org.eclipse.ui.views.properties.IPropertyDescriptor)
      * @since 4.3
      */
-    public boolean isCompatibleWith(IPropertyDescriptor theAnotherProperty) {
+    @Override
+	public boolean isCompatibleWith(IPropertyDescriptor theAnotherProperty) {
         return false;
     }
 
@@ -153,7 +163,8 @@ class ObjectUriPropertyDescriptor implements ITransientPropertyDescriptor,
      * @see org.teiid.designer.ui.properties.ITransientPropertyDescriptor#setObject(java.lang.Object)
      * @since 4.3
      */
-    public void setObject(Object theObject) {
+    @Override
+	public void setObject(Object theObject) {
         if ((theObject != null) && supports(theObject)) {
             this.obj = (EObject)theObject;
         } else {
@@ -165,7 +176,8 @@ class ObjectUriPropertyDescriptor implements ITransientPropertyDescriptor,
      * @see org.teiid.designer.ui.properties.ITransientPropertyDescriptor#supports(java.lang.Object)
      * @since 4.3
      */
-    public boolean supports(Object theObject) {
+    @Override
+	public boolean supports(Object theObject) {
         return (theObject instanceof EObject);
     }
 }

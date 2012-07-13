@@ -66,7 +66,8 @@ public class MappingClassColumnImpl extends MappingClassObjectImpl implements Ma
      * 
      * @generated
      */
-    public EObject getType() {
+    @Override
+	public EObject getType() {
         if (type != null && type.eIsProxy()) {
             EObject oldType = type;
             type = eResolveProxy((InternalEObject)type);
@@ -93,7 +94,8 @@ public class MappingClassColumnImpl extends MappingClassObjectImpl implements Ma
      * 
      * @generated
      */
-    public void setType( EObject newType ) {
+    @Override
+	public void setType( EObject newType ) {
         EObject oldType = type;
         type = newType;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
@@ -106,7 +108,8 @@ public class MappingClassColumnImpl extends MappingClassObjectImpl implements Ma
      * 
      * @generated
      */
-    public MappingClass getMappingClass() {
+    @Override
+	public MappingClass getMappingClass() {
         if (eContainerFeatureID != TransformationPackage.MAPPING_CLASS_COLUMN__MAPPING_CLASS) return null;
         return (MappingClass)eContainer;
     }
@@ -116,7 +119,8 @@ public class MappingClassColumnImpl extends MappingClassObjectImpl implements Ma
      * 
      * @generated
      */
-    public void setMappingClass( MappingClass newMappingClass ) {
+    @Override
+	public void setMappingClass( MappingClass newMappingClass ) {
         if (newMappingClass != eContainer
             || (eContainerFeatureID != TransformationPackage.MAPPING_CLASS_COLUMN__MAPPING_CLASS && newMappingClass != null)) {
             if (EcoreUtil.isAncestor(this, newMappingClass)) throw new IllegalArgumentException(

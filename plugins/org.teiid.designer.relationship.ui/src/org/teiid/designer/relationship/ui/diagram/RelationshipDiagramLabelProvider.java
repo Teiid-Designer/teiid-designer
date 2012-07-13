@@ -118,6 +118,7 @@ implements ILightweightLabelDecorator, UiConstants, PluginConstants.Images {
 	 * @see org.eclipse.jface.viewers.ILightweightLabelDecorator#decorate(java.lang.Object, org.eclipse.jface.viewers.IDecoration)
 	 * @since 4.0
 	 */
+	@Override
 	public void decorate(final Object element, final IDecoration decoration) {
 		final IResource resrc = getResource(element);
 		if (resrc == null 

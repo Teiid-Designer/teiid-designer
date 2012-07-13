@@ -50,7 +50,8 @@ public class LaunchExpressionBuilder extends AbstractAction implements EventObje
         panel.showExpressionBuilder();
     }
     
-    public void processEvent(EventObject e) {
+    @Override
+	public void processEvent(EventObject e) {
         //------------------------------------------------
         // respond to internal events from SqlEditorPanel
         //------------------------------------------------

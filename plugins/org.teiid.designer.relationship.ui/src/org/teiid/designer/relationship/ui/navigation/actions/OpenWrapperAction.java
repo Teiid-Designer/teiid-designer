@@ -48,7 +48,8 @@ public class OpenWrapperAction extends Action implements ISelectionListener {
     /* (non-Javadoc)
      * @see org.eclipse.ui.ISelectionListener#selectionChanged(IWorkbenchPart, ISelection)
      */
-    public void selectionChanged(IWorkbenchPart thePart,
+    @Override
+	public void selectionChanged(IWorkbenchPart thePart,
                                  ISelection theSelection) {
         
         boolean enable = false;

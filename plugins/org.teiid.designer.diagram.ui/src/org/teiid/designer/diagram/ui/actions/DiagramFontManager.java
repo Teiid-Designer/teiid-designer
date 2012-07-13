@@ -49,7 +49,8 @@ public class DiagramFontManager implements ScaledFont {
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.actions.ScaledFont#increase()
      */
-    public void increase() {
+    @Override
+	public void increase() {
         ScaledFontManager.increase();
 //        System.out.println(" ===>>> [DiagramFontManager.increase()] WOOOOOO WOOOOO!!!! "); //$NON-NLS-1$
         DiagramEditPart diagram = (DiagramEditPart)viewer.getContents();
@@ -63,7 +64,8 @@ public class DiagramFontManager implements ScaledFont {
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.actions.ScaledFont#decrease()
      */
-    public void decrease() {
+    @Override
+	public void decrease() {
         ScaledFontManager.decrease();
 //        System.out.println(" ===>>> [DiagramFontManager.decrease()] WOOOOOO WOOOOO!!!! "); //$NON-NLS-1$
         DiagramEditPart diagram = (DiagramEditPart)viewer.getContents();
@@ -77,60 +79,69 @@ public class DiagramFontManager implements ScaledFont {
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.actions.ScaledFont#canIncrease()
      */
-    public boolean canIncrease() {
+    @Override
+	public boolean canIncrease() {
         return ScaledFontManager.canIncrease();
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.actions.ScaledFont#canDecrease()
      */
-    public boolean canDecrease() {
+    @Override
+	public boolean canDecrease() {
         return ScaledFontManager.canDecrease();
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.actions.ScaledFont#getFont()
      */
-    public Font getFont() {
+    @Override
+	public Font getFont() {
         return ScaledFontManager.getFont();
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.actions.ScaledFont#getName()
      */
-    public String getName() {
+    @Override
+	public String getName() {
         return ScaledFontManager.getName();
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.actions.ScaledFont#getSize()
      */
-    public int getSize() {
+    @Override
+	public int getSize() {
         return ScaledFontManager.getSize();
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.actions.ScaledFont#getStyle()
      */
-    public int getStyle() {
+    @Override
+	public int getStyle() {
         return ScaledFontManager.getStyle();
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.actions.ScaledFont#setFont(org.eclipse.swt.graphics.Font)
      */
-    public void setFont(Font newFont) {
+    @Override
+	public void setFont(Font newFont) {
         ScaledFontManager.setFont(newFont);
     }
     
-    public void setFont(String typeName, int size, int style) {
+    @Override
+	public void setFont(String typeName, int size, int style) {
         ScaledFontManager.setFont(typeName, size, style);
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.actions.ScaledFont#setSize(int)
      */
-    public void setSize(int newSize) {
+    @Override
+	public void setSize(int newSize) {
         ScaledFontManager.setSize(newSize);
         fireFontChanged();
     }
@@ -139,7 +150,8 @@ public class DiagramFontManager implements ScaledFont {
      * Adds the given IFontChangeListener to this ZoomManager's list of listeners.
      * @param listener the IFontChangeListener to be added
      */
-    public void addFontChangeListener(IFontChangeListener listener) {
+    @Override
+	public void addFontChangeListener(IFontChangeListener listener) {
         listeners.add(listener);
     }
     
@@ -147,14 +159,16 @@ public class DiagramFontManager implements ScaledFont {
      * Removes the given IFontChangeListener from this ZoomManager's list of listeners.
      * @param listener the IFontChangeListener to be removed
      */
-    public void removeFontChangeListener(IFontChangeListener listener) {
+    @Override
+	public void removeFontChangeListener(IFontChangeListener listener) {
         listeners.remove(listener);
     }
 
     /**
      * Notifies listeners that the zoom level has changed.
      */
-    public void fireFontChanged() {
+    @Override
+	public void fireFontChanged() {
         final Object[] handlers = this.listeners.getListeners();
 
 		UiUtil.runInSwtThread(new Runnable() {
@@ -170,6 +184,7 @@ public class DiagramFontManager implements ScaledFont {
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.diagram.ui.actions.ScaledFont#getFont(int)
 	 */
+	@Override
 	public Font getFont(int style) {
 		return ScaledFontManager.getFont(style);
 	}

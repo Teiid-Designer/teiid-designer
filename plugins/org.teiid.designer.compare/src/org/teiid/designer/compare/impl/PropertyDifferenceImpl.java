@@ -131,7 +131,8 @@ public class PropertyDifferenceImpl extends EObjectImpl implements PropertyDiffe
      * <!-- end-user-doc -->
      * @generated
      */
-    public Object getNewValue() {
+    @Override
+	public Object getNewValue() {
         return newValue;
     }
 
@@ -140,7 +141,8 @@ public class PropertyDifferenceImpl extends EObjectImpl implements PropertyDiffe
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setNewValue(Object newNewValue) {
+    @Override
+	public void setNewValue(Object newNewValue) {
         Object oldNewValue = newValue;
         newValue = newNewValue;
         if (eNotificationRequired())
@@ -152,7 +154,8 @@ public class PropertyDifferenceImpl extends EObjectImpl implements PropertyDiffe
      * <!-- end-user-doc -->
      * @generated
      */
-    public Object getOldValue() {
+    @Override
+	public Object getOldValue() {
         return oldValue;
     }
 
@@ -161,7 +164,8 @@ public class PropertyDifferenceImpl extends EObjectImpl implements PropertyDiffe
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setOldValue(Object newOldValue) {
+    @Override
+	public void setOldValue(Object newOldValue) {
         Object oldOldValue = oldValue;
         oldValue = newOldValue;
         if (eNotificationRequired())
@@ -173,7 +177,8 @@ public class PropertyDifferenceImpl extends EObjectImpl implements PropertyDiffe
      * <!-- end-user-doc -->
      * @generated
      */
-    public boolean isSkip() {
+    @Override
+	public boolean isSkip() {
         return skip;
     }
 
@@ -182,7 +187,8 @@ public class PropertyDifferenceImpl extends EObjectImpl implements PropertyDiffe
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setSkip(boolean newSkip) {
+    @Override
+	public void setSkip(boolean newSkip) {
         boolean oldSkip = skip;
         skip = newSkip;
         if (eNotificationRequired())
@@ -194,7 +200,8 @@ public class PropertyDifferenceImpl extends EObjectImpl implements PropertyDiffe
      * <!-- end-user-doc -->
      * @generated
      */
-    public EStructuralFeature getAffectedFeature() {
+    @Override
+	public EStructuralFeature getAffectedFeature() {
         if (affectedFeature != null && affectedFeature.eIsProxy()) {
             EStructuralFeature oldAffectedFeature = affectedFeature;
             affectedFeature = (EStructuralFeature)eResolveProxy((InternalEObject)affectedFeature);
@@ -220,7 +227,8 @@ public class PropertyDifferenceImpl extends EObjectImpl implements PropertyDiffe
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setAffectedFeature(EStructuralFeature newAffectedFeature) {
+    @Override
+	public void setAffectedFeature(EStructuralFeature newAffectedFeature) {
         EStructuralFeature oldAffectedFeature = affectedFeature;
         affectedFeature = newAffectedFeature;
         if (eNotificationRequired())
@@ -232,7 +240,8 @@ public class PropertyDifferenceImpl extends EObjectImpl implements PropertyDiffe
      * <!-- end-user-doc -->
      * @generated
      */
-    public DifferenceDescriptor getDescriptor() {
+    @Override
+	public DifferenceDescriptor getDescriptor() {
         if (eContainerFeatureID != ComparePackage.PROPERTY_DIFFERENCE__DESCRIPTOR) return null;
         return (DifferenceDescriptor)eContainer;
     }
@@ -242,7 +251,8 @@ public class PropertyDifferenceImpl extends EObjectImpl implements PropertyDiffe
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setDescriptor(DifferenceDescriptor newDescriptor) {
+    @Override
+	public void setDescriptor(DifferenceDescriptor newDescriptor) {
         if (newDescriptor != eContainer || (eContainerFeatureID != ComparePackage.PROPERTY_DIFFERENCE__DESCRIPTOR && newDescriptor != null)) {
             if (EcoreUtil.isAncestor(this, newDescriptor))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$

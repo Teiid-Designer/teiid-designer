@@ -23,7 +23,8 @@ public class ValidationDescriptorImpl implements ValidationDescriptor {
     /* (non-Javadoc)
      * @See org.teiid.designer.core.ValidationDescriptor#getExtensionID()
      */
-    public String getExtensionID() {
+    @Override
+	public String getExtensionID() {
         return extensionID;
     }
     
@@ -37,7 +38,8 @@ public class ValidationDescriptorImpl implements ValidationDescriptor {
     /* (non-Javadoc)
      * @See org.teiid.designer.core.ValidationDescriptor#getName()
      */
-    public String getPreferenceName() {
+    @Override
+	public String getPreferenceName() {
         return this.name;
     }
 
@@ -51,7 +53,8 @@ public class ValidationDescriptorImpl implements ValidationDescriptor {
     /* (non-Javadoc)
      * @See org.teiid.designer.core.ValidationDescriptor#getName()
      */
-    public String getPreferenceLabel() {
+    @Override
+	public String getPreferenceLabel() {
         return this.label;
     }
 
@@ -65,7 +68,8 @@ public class ValidationDescriptorImpl implements ValidationDescriptor {
     /* (non-Javadoc)
      * @See org.teiid.designer.core.ValidationDescriptor#getName()
      */
-    public String getPreferenceToolTip() {
+    @Override
+	public String getPreferenceToolTip() {
         return this.toolTip;
     }
 
@@ -79,7 +83,8 @@ public class ValidationDescriptorImpl implements ValidationDescriptor {
     /* (non-Javadoc)
      * @See org.teiid.designer.core.ValidationDescriptor#getName()
      */
-    public String getPreferenceCategory() {
+    @Override
+	public String getPreferenceCategory() {
         return this.category;
     }
 
@@ -93,7 +98,8 @@ public class ValidationDescriptorImpl implements ValidationDescriptor {
     /*
      * @See org.teiid.designer.core.ValidationDescriptor#getDefaultOption()
      */
-    public String getDefaultOption() {
+    @Override
+	public String getDefaultOption() {
         if(this.defaultOption == null) {
             return ValidationDescriptor.IGNORE;
         }

@@ -131,7 +131,8 @@ public final class XsdResourceFactory extends XSDResourceFactoryImpl {
          * 
          * @see org.teiid.designer.core.resource.XResource#getUuid(org.eclipse.emf.ecore.EObject)
          */
-        public String getUuid( EObject object ) {
+        @Override
+		public String getUuid( EObject object ) {
             return delegate.getUuid(object);
         }
 
@@ -158,7 +159,8 @@ public final class XsdResourceFactory extends XSDResourceFactoryImpl {
          * @see org.teiid.designer.core.resource.XResource#isLoading()
          * @since 5.0.3
          */
-        public boolean isUnloading() {
+        @Override
+		public boolean isUnloading() {
             return delegate.isUnloading();
         }
 
@@ -167,7 +169,8 @@ public final class XsdResourceFactory extends XSDResourceFactoryImpl {
          * 
          * @see org.teiid.designer.core.resource.XResource#setUuid(org.eclipse.emf.ecore.EObject, java.lang.String)
          */
-        public void setUuid( EObject object,
+        @Override
+		public void setUuid( EObject object,
                              String uuid ) {
             delegate.setUuid(object, uuid);
         }

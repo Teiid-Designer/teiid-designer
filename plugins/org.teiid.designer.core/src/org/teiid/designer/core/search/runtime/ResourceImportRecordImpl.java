@@ -23,6 +23,7 @@ public class ResourceImportRecordImpl extends AbstractSearchRecord implements Re
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.core.search.runtime.ResourceImportRecord#getPath()
 	 */
+	@Override
 	public String getPath() {
 		return this.path;
 	}
@@ -30,6 +31,7 @@ public class ResourceImportRecordImpl extends AbstractSearchRecord implements Re
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.core.search.runtime.ResourceImportRecord#getImportedPath()
 	 */
+	@Override
 	public String getImportedPath() {
 		return this.importedPath;
 	}
@@ -37,6 +39,7 @@ public class ResourceImportRecordImpl extends AbstractSearchRecord implements Re
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.core.search.runtime.SearchRecord#getRecordType()
 	 */
+	@Override
 	public char getRecordType() {
 		return IndexConstants.SEARCH_RECORD_TYPE.MODEL_IMPORT;
 	}

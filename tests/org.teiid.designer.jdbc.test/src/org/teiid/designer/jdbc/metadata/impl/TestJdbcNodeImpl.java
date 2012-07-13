@@ -50,7 +50,8 @@ public class TestJdbcNodeImpl extends TestCase {
     protected class AccumulatingVisitor implements JdbcNodeVisitor {
         private List visitedNodes = new ArrayList();
 
-        public boolean visit( JdbcNode node ) {
+        @Override
+		public boolean visit( JdbcNode node ) {
             visitedNodes.add(node);
             return true;
         }

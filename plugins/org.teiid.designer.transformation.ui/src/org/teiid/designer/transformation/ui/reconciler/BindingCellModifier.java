@@ -32,6 +32,7 @@ public class BindingCellModifier implements ICellModifier {
 	/**
 	 * @see org.eclipse.jface.viewers.ICellModifier#canModify(java.lang.Object, java.lang.String)
 	 */
+	@Override
 	public boolean canModify(Object element, String property) {
         // Find the index of the column
         int columnIndex = bindingsTablePanel.getColumnNames().indexOf(property);
@@ -56,6 +57,7 @@ public class BindingCellModifier implements ICellModifier {
 	/**
 	 * @see org.eclipse.jface.viewers.ICellModifier#getValue(java.lang.Object, java.lang.String)
 	 */
+	@Override
 	public Object getValue(Object element, String property) {
 
 		// Find the index of the column
@@ -80,6 +82,7 @@ public class BindingCellModifier implements ICellModifier {
 	/**
 	 * @see org.eclipse.jface.viewers.ICellModifier#modify(java.lang.Object, java.lang.String, java.lang.Object)
 	 */
+	@Override
 	public void modify(Object element, String property, Object value) {	
 
 		// Find the index of the column 

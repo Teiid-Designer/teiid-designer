@@ -46,20 +46,24 @@ public abstract class AbstractDiagramFigure extends Figure implements DiagramFig
         diagramModelNode = diagramNode;
     }
 
-    public void setDiagramModelNode(DiagramModelNode diagramNode) {
+    @Override
+	public void setDiagramModelNode(DiagramModelNode diagramNode) {
         diagramModelNode = diagramNode;
     }
 
-    public void layoutFigure() {
+    @Override
+	public void layoutFigure() {
         super.layout();
         
     }
     
-    public void activate() {
+    @Override
+	public void activate() {
         // Default implementation does nothing;
     }
     
-    public void deactivate() {
+    @Override
+	public void deactivate() {
         // Default implementation does nothing;
     }
     
@@ -68,17 +72,20 @@ public abstract class AbstractDiagramFigure extends Figure implements DiagramFig
         return true;
     }
     
-    public void updateForSize(Dimension newSize ) {
+    @Override
+	public void updateForSize(Dimension newSize ) {
         this.setSize(newSize);
     }
     
-    public void updateForLocation(Point newLocation ) {
+    @Override
+	public void updateForLocation(Point newLocation ) {
         this.setLocation(newLocation);
     }
     
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.diagram.ui.figure.DiagramFigure#updateForName(java.lang.String, org.eclipse.swt.graphics.Image)
 	 */
+	@Override
 	public void updateForName(String newName, Image icon) {
 		// XXX Auto-generated method stub
 	}
@@ -87,7 +94,8 @@ public abstract class AbstractDiagramFigure extends Figure implements DiagramFig
 	 *  (non-Javadoc)
 	 * @See org.teiid.designer.diagram.ui.figure.DiagramFigure#updateForName(java.lang.String)
 	 */
-    public void updateForName(String newName ) {
+    @Override
+	public void updateForName(String newName ) {
         // Default implementation does nothing
     }
     
@@ -95,21 +103,24 @@ public abstract class AbstractDiagramFigure extends Figure implements DiagramFig
      *  (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.figure.DiagramFigure#updateForFont(org.eclipse.swt.graphics.Font)
      */
-    public void updateForFont( Font font ) {
+    @Override
+	public void updateForFont( Font font ) {
         // Default implementation does nothing
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.figure.DiagramFigure#updateForError(boolean)
      */
-    public void updateForError(boolean hasErrors) {
+    @Override
+	public void updateForError(boolean hasErrors) {
         // Default does nothing
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.figure.DiagramFigure#updateForWarning(boolean)
      */
-    public void updateForWarning(boolean hasWarnings) {
+    @Override
+	public void updateForWarning(boolean hasWarnings) {
         // Default does nothing
     }
 
@@ -117,7 +128,8 @@ public abstract class AbstractDiagramFigure extends Figure implements DiagramFig
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.figure.DiagramFigure#hiliteBackground(org.eclipse.swt.graphics.Color)
      */
-    public void hiliteBackground(Color hiliteColor) {
+    @Override
+	public void hiliteBackground(Color hiliteColor) {
         // Default does nothing
     }
     
@@ -132,7 +144,8 @@ public abstract class AbstractDiagramFigure extends Figure implements DiagramFig
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.figure.DiagramFigure#refreshFont()
      */
-    public void refreshFont( ) {
+    @Override
+	public void refreshFont( ) {
         // Default implementation does nothing
     }
     
@@ -148,14 +161,16 @@ public abstract class AbstractDiagramFigure extends Figure implements DiagramFig
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.figure.DiagramFigure#showSelected(int)
      */
-    public void showSelected(boolean selected) {
+    @Override
+	public void showSelected(boolean selected) {
         // Default does nothong.  Left to concrete classes.
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.figure.DiagramFigure#addFirstOverlayImage(org.eclipse.swt.graphics.Image)
      */
-    public void addEditButton(Image image) {
+    @Override
+	public void addEditButton(Image image) {
         // Default Does Nothing
     }
     
@@ -163,6 +178,7 @@ public abstract class AbstractDiagramFigure extends Figure implements DiagramFig
 	 *  (non-Javadoc)
 	 * @See org.teiid.designer.diagram.ui.figure.DiagramFigure#addUpperLeftButton(org.eclipse.swt.graphics.Image)
 	 */
+	@Override
 	public void addUpperLeftButton(Image image) {
 		// Default Does Nothing
 	}
@@ -170,14 +186,16 @@ public abstract class AbstractDiagramFigure extends Figure implements DiagramFig
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.figure.DiagramFigure#getDiagramModelNode()
      */
-    public DiagramModelNode getDiagramModelNode() {
+    @Override
+	public DiagramModelNode getDiagramModelNode() {
         return diagramModelNode;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.figure.DiagramFigure#addImage(org.eclipse.swt.graphics.Image, int)
      */
-    public void addImage(Image image, int positionIndex) {
+    @Override
+	public void addImage(Image image, int positionIndex) {
         // Default does nothing;
     }
     
@@ -203,8 +221,10 @@ public abstract class AbstractDiagramFigure extends Figure implements DiagramFig
 					new Dimension( 10, 10 ) );
 
 		editButton.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent event) {
 				Display.getCurrent().asyncExec(new Runnable() {
+					@Override
 					public void run() {
 						System.out.println(" Tooltip Button Pressed!!!"); //$NON-NLS-1$  
 					}
@@ -219,6 +239,7 @@ public abstract class AbstractDiagramFigure extends Figure implements DiagramFig
 	/**
 	 * @return
 	 */
+	@Override
 	public ColorPalette getColorPalette() {
 		return colorPalette;
 	}

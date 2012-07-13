@@ -56,7 +56,8 @@ public class TestAbstractProductCustomizer extends TestCase {
      */
     public void testAddContextSupport1() {
         FakeProductCustomizer customizer = new FakeProductCustomizer() {
-            public void loadCustomizations() {
+            @Override
+			public void loadCustomizations() {
                 result = addContextSupport(CONTEXT);
             }
         };
@@ -71,7 +72,8 @@ public class TestAbstractProductCustomizer extends TestCase {
      */
     public void testAddContextSupport2() {
         FakeProductCustomizer customizer = new FakeProductCustomizer() {
-            public void loadCustomizations() {
+            @Override
+			public void loadCustomizations() {
                 addContextSupport(CONTEXT);
                 result = addContextSupport(CONTEXT);
             }
@@ -87,7 +89,8 @@ public class TestAbstractProductCustomizer extends TestCase {
      */
     public void testAddContextSupport3() {
         FakeProductCustomizer customizer = new FakeProductCustomizer() {
-            public void loadCustomizations() {
+            @Override
+			public void loadCustomizations() {
                 removeContextSupport(CONTEXT);
                 result = addContextSupport(CONTEXT);
             }
@@ -103,7 +106,8 @@ public class TestAbstractProductCustomizer extends TestCase {
      */
     public void testRemoveContextSupport1() {
         FakeProductCustomizer customizer = new FakeProductCustomizer() {
-            public void loadCustomizations() {
+            @Override
+			public void loadCustomizations() {
                 result = removeContextSupport(CONTEXT);
             }
         };
@@ -118,7 +122,8 @@ public class TestAbstractProductCustomizer extends TestCase {
      */
     public void testRemoveContextSupport2() {
         FakeProductCustomizer customizer = new FakeProductCustomizer() {
-            public void loadCustomizations() {
+            @Override
+			public void loadCustomizations() {
                 removeContextSupport(CONTEXT);
                 result = removeContextSupport(CONTEXT);
             }
@@ -134,7 +139,8 @@ public class TestAbstractProductCustomizer extends TestCase {
      */
     public void testRemoveContextSupport3() {
         FakeProductCustomizer customizer = new FakeProductCustomizer() {
-            public void loadCustomizations() {
+            @Override
+			public void loadCustomizations() {
                 addContextSupport(CONTEXT);
                 result = removeContextSupport(CONTEXT);
             }
@@ -150,7 +156,8 @@ public class TestAbstractProductCustomizer extends TestCase {
      */
     public void testSupports1() {
         FakeProductCustomizer customizer = new FakeProductCustomizer() {
-            public void loadCustomizations() {
+            @Override
+			public void loadCustomizations() {
             }
         };
 
@@ -164,7 +171,8 @@ public class TestAbstractProductCustomizer extends TestCase {
      */
     public void testSupports2() {
         FakeProductCustomizer customizer = new FakeProductCustomizer() {
-            public void loadCustomizations() {
+            @Override
+			public void loadCustomizations() {
                 addContextSupport(CONTEXT);
             }
         };
@@ -179,7 +187,8 @@ public class TestAbstractProductCustomizer extends TestCase {
      */
     public void testSupports3() {
         FakeProductCustomizer customizer = new FakeProductCustomizer() {
-            public void loadCustomizations() {
+            @Override
+			public void loadCustomizations() {
                 removeContextSupport(CONTEXT);
             }
         };
@@ -194,7 +203,8 @@ public class TestAbstractProductCustomizer extends TestCase {
      */
     public void testSupports4() {
         FakeProductCustomizer customizer = new FakeProductCustomizer() {
-            public void loadCustomizations() {
+            @Override
+			public void loadCustomizations() {
                 addContextValueSupport(CONTEXT, VALUE1);
             }
         };
@@ -209,7 +219,8 @@ public class TestAbstractProductCustomizer extends TestCase {
      */
     public void testSupports5() {
         FakeProductCustomizer customizer = new FakeProductCustomizer() {
-            public void loadCustomizations() {
+            @Override
+			public void loadCustomizations() {
                 removeContextValueSupport(CONTEXT, VALUE1);
             }
         };
@@ -224,7 +235,8 @@ public class TestAbstractProductCustomizer extends TestCase {
      */
     public void testSupportsValue1() {
         FakeProductCustomizer customizer = new FakeProductCustomizer() {
-            public void loadCustomizations() {
+            @Override
+			public void loadCustomizations() {
             }
         };
 
@@ -238,7 +250,8 @@ public class TestAbstractProductCustomizer extends TestCase {
      */
     public void testSupportsValue2() {
         FakeProductCustomizer customizer = new FakeProductCustomizer() {
-            public void loadCustomizations() {
+            @Override
+			public void loadCustomizations() {
                 addContextSupport(CONTEXT);
             }
         };
@@ -253,7 +266,8 @@ public class TestAbstractProductCustomizer extends TestCase {
      */
     public void testSupportsValue3() {
         FakeProductCustomizer customizer = new FakeProductCustomizer() {
-            public void loadCustomizations() {
+            @Override
+			public void loadCustomizations() {
                 removeContextSupport(CONTEXT);
             }
         };
@@ -268,7 +282,8 @@ public class TestAbstractProductCustomizer extends TestCase {
      */
     public void testSupportsValue4() {
         FakeProductCustomizer customizer = new FakeProductCustomizer() {
-            public void loadCustomizations() {
+            @Override
+			public void loadCustomizations() {
                 addContextValueSupport(CONTEXT, VALUE1);
             }
         };
@@ -283,7 +298,8 @@ public class TestAbstractProductCustomizer extends TestCase {
      */
     public void testSupportsValue5() {
         FakeProductCustomizer customizer = new FakeProductCustomizer() {
-            public void loadCustomizations() {
+            @Override
+			public void loadCustomizations() {
                 removeContextValueSupport(CONTEXT, VALUE1);
             }
         };
@@ -298,7 +314,8 @@ public class TestAbstractProductCustomizer extends TestCase {
      */
     public void testSupportsValue6() {
         FakeProductCustomizer customizer = new FakeProductCustomizer() {
-            public void loadCustomizations() {
+            @Override
+			public void loadCustomizations() {
                 addContextValueSupport(CONTEXT, VALUE1);
             }
         };
@@ -313,7 +330,8 @@ public class TestAbstractProductCustomizer extends TestCase {
      */
     public void testSupportsValue7() {
         FakeProductCustomizer customizer = new FakeProductCustomizer() {
-            public void loadCustomizations() {
+            @Override
+			public void loadCustomizations() {
                 removeContextValueSupport(CONTEXT, VALUE1);
             }
         };
@@ -326,11 +344,13 @@ public class TestAbstractProductCustomizer extends TestCase {
     abstract class FakeProductCustomizer extends AbstractProductCustomizer {
         boolean result = true;
 
-        public String getProductId() {
+        @Override
+		public String getProductId() {
             return null;
         }
 
-        public IProductCharacteristics getProductCharacteristics() {
+        @Override
+		public IProductCharacteristics getProductCharacteristics() {
             return null;
         }
     }

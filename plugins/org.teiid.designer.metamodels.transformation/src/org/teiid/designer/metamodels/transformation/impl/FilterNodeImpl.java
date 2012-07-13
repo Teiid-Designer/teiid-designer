@@ -51,7 +51,8 @@ public class FilterNodeImpl extends OperationNodeImpl implements FilterNode {
      * 
      * @generated
      */
-    public String getCriteria() {
+    @Override
+	public String getCriteria() {
         // TODO: implement this method
         // Ensure that you remove @generated or mark it @generated NOT
         throw new UnsupportedOperationException();

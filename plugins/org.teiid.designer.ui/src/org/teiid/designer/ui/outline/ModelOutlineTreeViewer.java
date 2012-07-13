@@ -154,7 +154,8 @@ public class ModelOutlineTreeViewer extends ContentOutlinePage
         initDragAndDrop();
 
         modelResourceListener = new EventObjectListener() {
-            public void processEvent( EventObject obj ) {
+            @Override
+			public void processEvent( EventObject obj ) {
                 ModelResource modelResource = ((ModelResourceEvent)obj).getModelResource();
                 if (modelEditor.getModelResource().equals(modelResource)) {
                     refresh();
@@ -170,7 +171,8 @@ public class ModelOutlineTreeViewer extends ContentOutlinePage
 
     void refresh() {
         Display.getDefault().asyncExec(new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 handleRefresh();
             }
         });
@@ -221,7 +223,8 @@ public class ModelOutlineTreeViewer extends ContentOutlinePage
     /**
      * @See org.teiid.designer.ui.views.ModelViewer#addModelObjectDoubleClickListener(org.eclipse.jface.viewers.IDoubleClickListener)
      */
-    public void addModelObjectDoubleClickListener( IDoubleClickListener listener ) {
+    @Override
+	public void addModelObjectDoubleClickListener( IDoubleClickListener listener ) {
         getTreeViewer().addDoubleClickListener(listener);
     }
 
@@ -234,7 +237,8 @@ public class ModelOutlineTreeViewer extends ContentOutlinePage
         if (selectionListener == null) {
 
             selectionListener = new ISelectionListener() {
-                public void selectionChanged( IWorkbenchPart part,
+                @Override
+				public void selectionChanged( IWorkbenchPart part,
                                               ISelection selection ) {
                     if (!(part instanceof ContentOutline) && isSynchronized()) {
                         if ((selection instanceof IStructuredSelection) && !selection.isEmpty()
@@ -275,7 +279,8 @@ public class ModelOutlineTreeViewer extends ContentOutlinePage
     /**
      * @see org.eclipse.jface.action.IMenuListener#init(org.eclipse.jface.action..IMenuManager)
      */
-    public void menuAboutToShow( IMenuManager theMenuMgr ) {
+    @Override
+	public void menuAboutToShow( IMenuManager theMenuMgr ) {
         IWorkbenchWindow window = modelEditor.getSite().getWorkbenchWindow();
         ModelerActionService actionService = (ModelerActionService)UiPlugin.getDefault().getActionService(getSite().getPage());
         ISelection selection = getTreeViewer().getSelection();
@@ -287,7 +292,8 @@ public class ModelOutlineTreeViewer extends ContentOutlinePage
         }
     }
 
-    public void removeModelObjectDoubleClickListener( IDoubleClickListener listener ) {
+    @Override
+	public void removeModelObjectDoubleClickListener( IDoubleClickListener listener ) {
         getTreeViewer().removeDoubleClickListener(listener);
     }
 
@@ -315,28 +321,32 @@ public class ModelOutlineTreeViewer extends ContentOutlinePage
     /**
      * @see org.teiid.designer.ui.editors.ModelEditorPageOutline#getIcon()
      */
-    public ImageDescriptor getIcon() {
+    @Override
+	public ImageDescriptor getIcon() {
         return icon;
     }
 
     /**
      * @see org.teiid.designer.ui.editors.ModelEditorPageOutline#getToolTipText()
      */
-    public String getToolTipText() {
+    @Override
+	public String getToolTipText() {
         return UiPlugin.getDefault().getPluginUtil().getString(toolTipText);
     }
 
     /**
      * @see org.teiid.designer.ui.editors.ModelEditorPageOutline#isEnabled()
      */
-    public boolean isEnabled() {
+    @Override
+	public boolean isEnabled() {
         return true;
     }
 
     /**
      * @see org.teiid.designer.ui.editors.ModelEditorPageOutline#setVisible(boolean)
      */
-    public void setVisible( boolean isVisible ) {
+    @Override
+	public void setVisible( boolean isVisible ) {
     }
 
     private class OutlineDragAdapter extends ViewerDragAdapter {

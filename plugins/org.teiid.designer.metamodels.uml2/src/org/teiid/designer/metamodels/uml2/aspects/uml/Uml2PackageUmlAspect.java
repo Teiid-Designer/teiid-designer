@@ -27,7 +27,8 @@ public class Uml2PackageUmlAspect extends AbstractUml2NamedElementUmlAspect impl
         super(entity);
     }
     
-    public String getSignature(Object eObject, int showMask) {
+    @Override
+	public String getSignature(Object eObject, int showMask) {
         final Package pkg = assertPackage(eObject);
         StringBuffer result = new StringBuffer();
         //EClass stereotype = null;

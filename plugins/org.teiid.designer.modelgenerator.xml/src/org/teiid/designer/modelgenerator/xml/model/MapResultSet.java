@@ -74,81 +74,93 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#getConcurrency()
      */
-    public int getConcurrency() {
+    @Override
+	public int getConcurrency() {
         return CONCUR_READ_ONLY;
     }
 
     /**
      * @see java.sql.ResultSet#getFetchDirection()
      */
-    public int getFetchDirection() {
+    @Override
+	public int getFetchDirection() {
         return FETCH_FORWARD;
     }
 
     /**
      * @see java.sql.ResultSet#getFetchSize()
      */
-    public int getFetchSize() {
+    @Override
+	public int getFetchSize() {
         return 1;
     }
 
     /**
      * @see java.sql.ResultSet#getRow()
      */
-    public int getRow() {
+    @Override
+	public int getRow() {
         return row + 1;
     }
 
     /**
      * @see java.sql.ResultSet#getType()
      */
-    public int getType() {
+    @Override
+	public int getType() {
         return TYPE_FORWARD_ONLY;
     }
 
     /**
      * @see java.sql.ResultSet#afterLast()
      */
-    public void afterLast() {
+    @Override
+	public void afterLast() {
         row = values.size();
     }
 
     /**
      * @see java.sql.ResultSet#beforeFirst()
      */
-    public void beforeFirst() {
+    @Override
+	public void beforeFirst() {
         row = -1;
     }
 
     /**
      * @see java.sql.ResultSet#cancelRowUpdates()
      */
-    public void cancelRowUpdates() {
+    @Override
+	public void cancelRowUpdates() {
     }
 
     /**
      * @see java.sql.ResultSet#clearWarnings()
      */
-    public void clearWarnings() {
+    @Override
+	public void clearWarnings() {
     }
 
     /**
      * @see java.sql.ResultSet#close()
      */
-    public void close() {
+    @Override
+	public void close() {
     }
 
     /**
      * @see java.sql.ResultSet#deleteRow()
      */
-    public void deleteRow() throws SQLException {
+    @Override
+	public void deleteRow() throws SQLException {
         throwReadOnly();
     }
 
     /**
      * @see java.sql.ResultSet#insertRow()
      */
-    public void insertRow() throws SQLException {
+    @Override
+	public void insertRow() throws SQLException {
         throwReadOnly();
     }
 
@@ -163,34 +175,39 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#moveToCurrentRow()
      */
-    public void moveToCurrentRow() {
+    @Override
+	public void moveToCurrentRow() {
     }
 
     /**
      * @see java.sql.ResultSet#moveToInsertRow()
      */
-    public void moveToInsertRow() throws SQLException {
+    @Override
+	public void moveToInsertRow() throws SQLException {
         throwReadOnly();
     }
 
     /**
      * @see java.sql.ResultSet#refreshRow()
      */
-    public void refreshRow() throws SQLException {
+    @Override
+	public void refreshRow() throws SQLException {
         throwReadOnly();
     }
 
     /**
      * @see java.sql.ResultSet#updateRow()
      */
-    public void updateRow() throws SQLException {
+    @Override
+	public void updateRow() throws SQLException {
         throwReadOnly();
     }
 
     /**
      * @see java.sql.ResultSet#first()
      */
-    public boolean first() {
+    @Override
+	public boolean first() {
         row = 0;
         return values.size() > 0;
     }
@@ -198,35 +215,40 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#isAfterLast()
      */
-    public boolean isAfterLast() {
+    @Override
+	public boolean isAfterLast() {
         return row >= values.size();
     }
 
     /**
      * @see java.sql.ResultSet#isBeforeFirst()
      */
-    public boolean isBeforeFirst() {
+    @Override
+	public boolean isBeforeFirst() {
         return row < 0;
     }
 
     /**
      * @see java.sql.ResultSet#isFirst()
      */
-    public boolean isFirst() {
+    @Override
+	public boolean isFirst() {
         return row == 0;
     }
 
     /**
      * @see java.sql.ResultSet#isLast()
      */
-    public boolean isLast() {
+    @Override
+	public boolean isLast() {
         return row == values.size() - 1;
     }
 
     /**
      * @see java.sql.ResultSet#last()
      */
-    public boolean last() {
+    @Override
+	public boolean last() {
         row = values.size() - 1;
         return values.size() > 0;
     }
@@ -234,7 +256,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#next()
      */
-    public boolean next() {
+    @Override
+	public boolean next() {
         ++row;
         return !isAfterLast();
     }
@@ -242,7 +265,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#previous()
      */
-    public boolean previous() {
+    @Override
+	public boolean previous() {
         ++row;
         return !isBeforeFirst();
     }
@@ -250,35 +274,40 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#rowDeleted()
      */
-    public boolean rowDeleted() {
+    @Override
+	public boolean rowDeleted() {
         return false;
     }
 
     /**
      * @see java.sql.ResultSet#rowInserted()
      */
-    public boolean rowInserted() {
+    @Override
+	public boolean rowInserted() {
         return false;
     }
 
     /**
      * @see java.sql.ResultSet#rowUpdated()
      */
-    public boolean rowUpdated() {
+    @Override
+	public boolean rowUpdated() {
         return false;
     }
 
     /**
      * @see java.sql.ResultSet#wasNull()
      */
-    public boolean wasNull() {
+    @Override
+	public boolean wasNull() {
         return wasNull;
     }
 
     /**
      * @see java.sql.ResultSet#getByte(int)
      */
-    public byte getByte( int columnIndex ) {
+    @Override
+	public byte getByte( int columnIndex ) {
         String str = getString(columnIndex);
         wasNull = (str == null);
         if (wasNull) {
@@ -290,7 +319,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#getDouble(int)
      */
-    public double getDouble( int columnIndex ) {
+    @Override
+	public double getDouble( int columnIndex ) {
         String str = getString(columnIndex);
         wasNull = (str == null);
         if (wasNull) {
@@ -302,7 +332,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#getFloat(int)
      */
-    public float getFloat( int columnIndex ) {
+    @Override
+	public float getFloat( int columnIndex ) {
         String str = getString(columnIndex);
         wasNull = (str == null);
         if (wasNull) {
@@ -314,7 +345,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#getInt(int)
      */
-    public int getInt( int columnIndex ) {
+    @Override
+	public int getInt( int columnIndex ) {
         String str = getString(columnIndex);
         wasNull = (str == null);
         if (wasNull) {
@@ -326,7 +358,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#getLong(int)
      */
-    public long getLong( int columnIndex ) {
+    @Override
+	public long getLong( int columnIndex ) {
         String str = getString(columnIndex);
         wasNull = (str == null);
         if (wasNull) {
@@ -338,7 +371,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#getShort(int)
      */
-    public short getShort( int columnIndex ) {
+    @Override
+	public short getShort( int columnIndex ) {
         String str = getString(columnIndex);
         wasNull = (str == null);
         if (wasNull) {
@@ -350,26 +384,30 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#setFetchDirection(int)
      */
-    public void setFetchDirection( int direction ) {
+    @Override
+	public void setFetchDirection( int direction ) {
     }
 
     /**
      * @see java.sql.ResultSet#setFetchSize(int)
      */
-    public void setFetchSize( int rows ) {
+    @Override
+	public void setFetchSize( int rows ) {
     }
 
     /**
      * @see java.sql.ResultSet#updateNull(int)
      */
-    public void updateNull( int columnIndex ) throws SQLException {
+    @Override
+	public void updateNull( int columnIndex ) throws SQLException {
         throwReadOnly();
     }
 
     /**
      * @see java.sql.ResultSet#absolute(int)
      */
-    public boolean absolute( int row ) {
+    @Override
+	public boolean absolute( int row ) {
         if (row > 0) {
             this.row = row - 1;
         } else {
@@ -381,7 +419,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#getBoolean(int)
      */
-    public boolean getBoolean( int columnIndex ) {
+    @Override
+	public boolean getBoolean( int columnIndex ) {
         String str = getString(columnIndex);
         wasNull = (str == null);
         if (wasNull) {
@@ -393,7 +432,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#relative(int)
      */
-    public boolean relative( int rows ) {
+    @Override
+	public boolean relative( int rows ) {
         this.row += rows;
         return !isBeforeFirst() && !isAfterLast();
     }
@@ -401,7 +441,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#getBytes(int)
      */
-    public byte[] getBytes( int columnIndex ) {
+    @Override
+	public byte[] getBytes( int columnIndex ) {
 
         Object o = getObject(columnIndex);
         wasNull = (o == null);
@@ -417,7 +458,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#updateByte(int, byte)
      */
-    public void updateByte( int columnIndex,
+    @Override
+	public void updateByte( int columnIndex,
                             byte x ) throws SQLException {
         throwReadOnly();
     }
@@ -425,7 +467,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#updateDouble(int, double)
      */
-    public void updateDouble( int columnIndex,
+    @Override
+	public void updateDouble( int columnIndex,
                               double x ) throws SQLException {
         throwReadOnly();
     }
@@ -433,7 +476,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#updateFloat(int, float)
      */
-    public void updateFloat( int columnIndex,
+    @Override
+	public void updateFloat( int columnIndex,
                              float x ) throws SQLException {
         throwReadOnly();
     }
@@ -441,7 +485,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#updateInt(int, int)
      */
-    public void updateInt( int columnIndex,
+    @Override
+	public void updateInt( int columnIndex,
                            int x ) throws SQLException {
         throwReadOnly();
     }
@@ -449,7 +494,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#updateLong(int, long)
      */
-    public void updateLong( int columnIndex,
+    @Override
+	public void updateLong( int columnIndex,
                             long x ) throws SQLException {
         throwReadOnly();
     }
@@ -457,7 +503,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#updateShort(int, short)
      */
-    public void updateShort( int columnIndex,
+    @Override
+	public void updateShort( int columnIndex,
                              short x ) throws SQLException {
         throwReadOnly();
     }
@@ -465,7 +512,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#updateBoolean(int, boolean)
      */
-    public void updateBoolean( int columnIndex,
+    @Override
+	public void updateBoolean( int columnIndex,
                                boolean x ) throws SQLException {
         throwReadOnly();
     }
@@ -473,7 +521,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#updateBytes(int, byte[])
      */
-    public void updateBytes( int columnIndex,
+    @Override
+	public void updateBytes( int columnIndex,
                              byte[] x ) throws SQLException {
         throwReadOnly();
     }
@@ -523,7 +572,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#getAsciiStream(int)
      */
-    public InputStream getAsciiStream( int columnIndex ) throws SQLException {
+    @Override
+	public InputStream getAsciiStream( int columnIndex ) throws SQLException {
         Reader reader = getCharacterStream(columnIndex);
         wasNull = (reader == null);
         if (wasNull) {
@@ -536,7 +586,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#getBinaryStream(int)
      */
-    public InputStream getBinaryStream( int columnIndex ) {
+    @Override
+	public InputStream getBinaryStream( int columnIndex ) {
         Object o = getObject(columnIndex);
         wasNull = (o == null);
         if (wasNull) {
@@ -556,7 +607,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#getUnicodeStream(int)
      */
-    public InputStream getUnicodeStream( int columnIndex ) throws SQLException {
+    @Override
+	public InputStream getUnicodeStream( int columnIndex ) throws SQLException {
         Reader reader = getCharacterStream(columnIndex);
         wasNull = (reader == null);
         if (wasNull) {
@@ -569,7 +621,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#updateAsciiStream(int, java.io.InputStream, int)
      */
-    public void updateAsciiStream( int columnIndex,
+    @Override
+	public void updateAsciiStream( int columnIndex,
                                    InputStream x,
                                    int length ) throws SQLException {
         throwReadOnly();
@@ -578,7 +631,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#updateBinaryStream(int, java.io.InputStream, int)
      */
-    public void updateBinaryStream( int columnIndex,
+    @Override
+	public void updateBinaryStream( int columnIndex,
                                     InputStream x,
                                     int length ) throws SQLException {
         throwReadOnly();
@@ -587,7 +641,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#getCharacterStream(int)
      */
-    public Reader getCharacterStream( int columnIndex ) throws SQLException {
+    @Override
+	public Reader getCharacterStream( int columnIndex ) throws SQLException {
         Object o = getObject(columnIndex);
         wasNull = (o == null);
         if (wasNull) {
@@ -615,7 +670,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#updateCharacterStream(int, java.io.Reader, int)
      */
-    public void updateCharacterStream( int columnIndex,
+    @Override
+	public void updateCharacterStream( int columnIndex,
                                        Reader x,
                                        int length ) throws SQLException {
         throwReadOnly();
@@ -624,7 +680,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#getObject(int)
      */
-    public Object getObject( int columnIndex ) {
+    @Override
+	public Object getObject( int columnIndex ) {
         return getObjectFromRow(columnIndex, row);
     }
 
@@ -637,7 +694,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#updateObject(int, java.lang.Object)
      */
-    public void updateObject( int columnIndex,
+    @Override
+	public void updateObject( int columnIndex,
                               Object x ) throws SQLException {
         throwReadOnly();
     }
@@ -645,7 +703,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#updateObject(int, java.lang.Object, int)
      */
-    public void updateObject( int columnIndex,
+    @Override
+	public void updateObject( int columnIndex,
                               Object x,
                               int scale ) throws SQLException {
         throwReadOnly();
@@ -654,14 +713,16 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#getCursorName()
      */
-    public String getCursorName() {
+    @Override
+	public String getCursorName() {
         return ""; //$NON-NLS-1$
     }
 
     /**
      * @see java.sql.ResultSet#getString(int)
      */
-    public String getString( int columnIndex ) {
+    @Override
+	public String getString( int columnIndex ) {
         Object o = getObject(columnIndex);
         if (o == null) {
             return null;
@@ -672,7 +733,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#updateString(int, java.lang.String)
      */
-    public void updateString( int columnIndex,
+    @Override
+	public void updateString( int columnIndex,
                               String x ) throws SQLException {
         throwReadOnly();
     }
@@ -680,7 +742,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#getByte(java.lang.String)
      */
-    public byte getByte( String columnName ) {
+    @Override
+	public byte getByte( String columnName ) {
         int index = findColumn(columnName);
         return getByte(index);
     }
@@ -688,7 +751,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#getDouble(java.lang.String)
      */
-    public double getDouble( String columnName ) {
+    @Override
+	public double getDouble( String columnName ) {
         int index = findColumn(columnName);
         return getDouble(index);
     }
@@ -696,7 +760,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#getFloat(java.lang.String)
      */
-    public float getFloat( String columnName ) {
+    @Override
+	public float getFloat( String columnName ) {
         int index = findColumn(columnName);
         return getFloat(index);
     }
@@ -704,7 +769,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#findColumn(java.lang.String)
      */
-    public int findColumn( String columnName ) {
+    @Override
+	public int findColumn( String columnName ) {
         Object o = names.get(columnName);
         Number n = (Number)o;
         int index = n.intValue();
@@ -718,7 +784,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#getInt(java.lang.String)
      */
-    public int getInt( String columnName ) {
+    @Override
+	public int getInt( String columnName ) {
         int index = findColumn(columnName);
         return getInt(index);
     }
@@ -726,7 +793,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#getLong(java.lang.String)
      */
-    public long getLong( String columnName ) {
+    @Override
+	public long getLong( String columnName ) {
         int index = findColumn(columnName);
         return getLong(index);
     }
@@ -734,7 +802,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#getShort(java.lang.String)
      */
-    public short getShort( String columnName ) {
+    @Override
+	public short getShort( String columnName ) {
         int index = findColumn(columnName);
         return getShort(index);
     }
@@ -742,14 +811,16 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#updateNull(java.lang.String)
      */
-    public void updateNull( String columnName ) throws SQLException {
+    @Override
+	public void updateNull( String columnName ) throws SQLException {
         throwReadOnly();
     }
 
     /**
      * @see java.sql.ResultSet#getBoolean(java.lang.String)
      */
-    public boolean getBoolean( String columnName ) {
+    @Override
+	public boolean getBoolean( String columnName ) {
         int index = findColumn(columnName);
         return getBoolean(index);
     }
@@ -757,7 +828,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#getBytes(java.lang.String)
      */
-    public byte[] getBytes( String columnName ) {
+    @Override
+	public byte[] getBytes( String columnName ) {
         int index = findColumn(columnName);
         return getBytes(index);
     }
@@ -765,7 +837,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#updateByte(java.lang.String, byte)
      */
-    public void updateByte( String columnName,
+    @Override
+	public void updateByte( String columnName,
                             byte x ) throws SQLException {
         throwReadOnly();
     }
@@ -773,7 +846,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#updateDouble(java.lang.String, double)
      */
-    public void updateDouble( String columnName,
+    @Override
+	public void updateDouble( String columnName,
                               double x ) throws SQLException {
         throwReadOnly();
     }
@@ -781,7 +855,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#updateFloat(java.lang.String, float)
      */
-    public void updateFloat( String columnName,
+    @Override
+	public void updateFloat( String columnName,
                              float x ) throws SQLException {
         throwReadOnly();
     }
@@ -789,7 +864,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#updateInt(java.lang.String, int)
      */
-    public void updateInt( String columnName,
+    @Override
+	public void updateInt( String columnName,
                            int x ) throws SQLException {
         throwReadOnly();
     }
@@ -797,7 +873,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#updateLong(java.lang.String, long)
      */
-    public void updateLong( String columnName,
+    @Override
+	public void updateLong( String columnName,
                             long x ) throws SQLException {
         throwReadOnly();
     }
@@ -805,7 +882,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#updateShort(java.lang.String, short)
      */
-    public void updateShort( String columnName,
+    @Override
+	public void updateShort( String columnName,
                              short x ) throws SQLException {
         throwReadOnly();
     }
@@ -813,7 +891,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#updateBoolean(java.lang.String, boolean)
      */
-    public void updateBoolean( String columnName,
+    @Override
+	public void updateBoolean( String columnName,
                                boolean x ) throws SQLException {
         throwReadOnly();
     }
@@ -821,7 +900,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#updateBytes(java.lang.String, byte[])
      */
-    public void updateBytes( String columnName,
+    @Override
+	public void updateBytes( String columnName,
                              byte[] x ) throws SQLException {
         throwReadOnly();
     }
@@ -829,7 +909,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#getBigDecimal(int)
      */
-    public BigDecimal getBigDecimal( int columnIndex ) {
+    @Override
+	public BigDecimal getBigDecimal( int columnIndex ) {
         String str = getString(columnIndex);
         wasNull = (str == null);
         if (wasNull) {
@@ -841,7 +922,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#getBigDecimal(int, int)
      */
-    public BigDecimal getBigDecimal( int columnIndex,
+    @Override
+	public BigDecimal getBigDecimal( int columnIndex,
                                      int scale ) {
         return getBigDecimal(columnIndex);
     }
@@ -849,7 +931,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#updateBigDecimal(int, java.math.BigDecimal)
      */
-    public void updateBigDecimal( int columnIndex,
+    @Override
+	public void updateBigDecimal( int columnIndex,
                                   BigDecimal x ) throws SQLException {
         throwReadOnly();
     }
@@ -857,7 +940,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#getURL(int)
      */
-    public URL getURL( int columnIndex ) throws SQLException {
+    @Override
+	public URL getURL( int columnIndex ) throws SQLException {
         String str = getString(columnIndex);
         wasNull = (str == null);
         if (wasNull) {
@@ -873,7 +957,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#getArray(int)
      */
-    public Array getArray( int i ) throws SQLException {
+    @Override
+	public Array getArray( int i ) throws SQLException {
         throwNotImplemented();
         return null;
     }
@@ -881,7 +966,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#updateArray(int, java.sql.Array)
      */
-    public void updateArray( int columnIndex,
+    @Override
+	public void updateArray( int columnIndex,
                              Array x ) throws SQLException {
         throwReadOnly();
     }
@@ -889,7 +975,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#getBlob(int)
      */
-    public Blob getBlob( int i ) throws SQLException {
+    @Override
+	public Blob getBlob( int i ) throws SQLException {
         throwNotImplemented();
         return null;
     }
@@ -897,7 +984,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#updateBlob(int, java.sql.Blob)
      */
-    public void updateBlob( int columnIndex,
+    @Override
+	public void updateBlob( int columnIndex,
                             Blob x ) throws SQLException {
         throwReadOnly();
     }
@@ -905,7 +993,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#getClob(int)
      */
-    public Clob getClob( int i ) throws SQLException {
+    @Override
+	public Clob getClob( int i ) throws SQLException {
         throwNotImplemented();
         return null;
     }
@@ -913,7 +1002,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#updateClob(int, java.sql.Clob)
      */
-    public void updateClob( int columnIndex,
+    @Override
+	public void updateClob( int columnIndex,
                             Clob x ) throws SQLException {
         throwReadOnly();
     }
@@ -921,7 +1011,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#getDate(int)
      */
-    public Date getDate( int columnIndex ) {
+    @Override
+	public Date getDate( int columnIndex ) {
         String str = getString(columnIndex);
         if (str == null) return null;
 
@@ -935,7 +1026,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#updateDate(int, java.sql.Date)
      */
-    public void updateDate( int columnIndex,
+    @Override
+	public void updateDate( int columnIndex,
                             Date x ) throws SQLException {
         throwReadOnly();
     }
@@ -943,7 +1035,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#getRef(int)
      */
-    public Ref getRef( int i ) throws SQLException {
+    @Override
+	public Ref getRef( int i ) throws SQLException {
         throwNotImplemented();
         return null;
     }
@@ -951,7 +1044,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#updateRef(int, java.sql.Ref)
      */
-    public void updateRef( int columnIndex,
+    @Override
+	public void updateRef( int columnIndex,
                            Ref x ) throws SQLException {
         throwReadOnly();
     }
@@ -959,21 +1053,24 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#getMetaData()
      */
-    public ResultSetMetaData getMetaData() {
+    @Override
+	public ResultSetMetaData getMetaData() {
         return metaData;
     }
 
     /**
      * @see java.sql.ResultSet#getWarnings()
      */
-    public SQLWarning getWarnings() {
+    @Override
+	public SQLWarning getWarnings() {
         return null;
     }
 
     /**
      * @see java.sql.ResultSet#getStatement()
      */
-    public Statement getStatement() {
+    @Override
+	public Statement getStatement() {
 
         return null;
     }
@@ -981,7 +1078,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#getTime(int)
      */
-    public Time getTime( int columnIndex ) {
+    @Override
+	public Time getTime( int columnIndex ) {
         String str = getString(columnIndex);
         if (str == null) return null;
         try {
@@ -994,7 +1092,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#updateTime(int, java.sql.Time)
      */
-    public void updateTime( int columnIndex,
+    @Override
+	public void updateTime( int columnIndex,
                             Time x ) throws SQLException {
         throwReadOnly();
     }
@@ -1002,7 +1101,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#getTimestamp(int)
      */
-    public Timestamp getTimestamp( int columnIndex ) {
+    @Override
+	public Timestamp getTimestamp( int columnIndex ) {
         String str = getString(columnIndex);
         if (str == null) return null;
         try {
@@ -1015,7 +1115,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#updateTimestamp(int, java.sql.Timestamp)
      */
-    public void updateTimestamp( int columnIndex,
+    @Override
+	public void updateTimestamp( int columnIndex,
                                  Timestamp x ) throws SQLException {
         throwReadOnly();
     }
@@ -1023,7 +1124,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#getAsciiStream(java.lang.String)
      */
-    public InputStream getAsciiStream( String columnName ) throws SQLException {
+    @Override
+	public InputStream getAsciiStream( String columnName ) throws SQLException {
         int index = findColumn(columnName);
         return getAsciiStream(index);
     }
@@ -1031,7 +1133,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#getBinaryStream(java.lang.String)
      */
-    public InputStream getBinaryStream( String columnName ) {
+    @Override
+	public InputStream getBinaryStream( String columnName ) {
         int index = findColumn(columnName);
         return getBinaryStream(index);
     }
@@ -1039,7 +1142,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#getUnicodeStream(java.lang.String)
      */
-    public InputStream getUnicodeStream( String columnName ) throws SQLException {
+    @Override
+	public InputStream getUnicodeStream( String columnName ) throws SQLException {
         int index = findColumn(columnName);
         return getUnicodeStream(index);
     }
@@ -1047,7 +1151,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#updateAsciiStream(java.lang.String, java.io.InputStream, int)
      */
-    public void updateAsciiStream( String columnName,
+    @Override
+	public void updateAsciiStream( String columnName,
                                    InputStream x,
                                    int length ) throws SQLException {
         throwReadOnly();
@@ -1056,7 +1161,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#updateBinaryStream(java.lang.String, java.io.InputStream, int)
      */
-    public void updateBinaryStream( String columnName,
+    @Override
+	public void updateBinaryStream( String columnName,
                                     InputStream x,
                                     int length ) throws SQLException {
         throwReadOnly();
@@ -1065,7 +1171,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#getCharacterStream(java.lang.String)
      */
-    public Reader getCharacterStream( String columnName ) throws SQLException {
+    @Override
+	public Reader getCharacterStream( String columnName ) throws SQLException {
         int index = findColumn(columnName);
         return getCharacterStream(index);
     }
@@ -1073,7 +1180,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#updateCharacterStream(java.lang.String, java.io.Reader, int)
      */
-    public void updateCharacterStream( String columnName,
+    @Override
+	public void updateCharacterStream( String columnName,
                                        Reader reader,
                                        int length ) throws SQLException {
         throwReadOnly();
@@ -1082,7 +1190,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#getObject(java.lang.String)
      */
-    public Object getObject( String columnName ) {
+    @Override
+	public Object getObject( String columnName ) {
         int index = findColumn(columnName);
         return getObject(index);
     }
@@ -1090,7 +1199,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#updateObject(java.lang.String, java.lang.Object)
      */
-    public void updateObject( String columnName,
+    @Override
+	public void updateObject( String columnName,
                               Object x ) throws SQLException {
         throwReadOnly();
     }
@@ -1098,7 +1208,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#updateObject(java.lang.String, java.lang.Object, int)
      */
-    public void updateObject( String columnName,
+    @Override
+	public void updateObject( String columnName,
                               Object x,
                               int scale ) throws SQLException {
         throwReadOnly();
@@ -1107,7 +1218,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#getString(java.lang.String)
      */
-    public String getString( String columnName ) {
+    @Override
+	public String getString( String columnName ) {
         int index = findColumn(columnName);
         return getString(index);
     }
@@ -1115,7 +1227,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#updateString(java.lang.String, java.lang.String)
      */
-    public void updateString( String columnName,
+    @Override
+	public void updateString( String columnName,
                               String x ) throws SQLException {
         throwReadOnly();
     }
@@ -1123,7 +1236,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#getBigDecimal(java.lang.String)
      */
-    public BigDecimal getBigDecimal( String columnName ) {
+    @Override
+	public BigDecimal getBigDecimal( String columnName ) {
         int index = findColumn(columnName);
         return getBigDecimal(index);
     }
@@ -1131,7 +1245,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#getBigDecimal(java.lang.String, int)
      */
-    public BigDecimal getBigDecimal( String columnName,
+    @Override
+	public BigDecimal getBigDecimal( String columnName,
                                      int scale ) {
         return getBigDecimal(columnName);
     }
@@ -1139,7 +1254,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#updateBigDecimal(java.lang.String, java.math.BigDecimal)
      */
-    public void updateBigDecimal( String columnName,
+    @Override
+	public void updateBigDecimal( String columnName,
                                   BigDecimal x ) throws SQLException {
         throwReadOnly();
     }
@@ -1147,7 +1263,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#getURL(java.lang.String)
      */
-    public URL getURL( String columnName ) throws SQLException {
+    @Override
+	public URL getURL( String columnName ) throws SQLException {
         int index = findColumn(columnName);
         return getURL(index);
     }
@@ -1155,7 +1272,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#getArray(java.lang.String)
      */
-    public Array getArray( String colName ) throws SQLException {
+    @Override
+	public Array getArray( String colName ) throws SQLException {
         int index = findColumn(colName);
         return getArray(index);
     }
@@ -1163,7 +1281,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#updateArray(java.lang.String, java.sql.Array)
      */
-    public void updateArray( String columnName,
+    @Override
+	public void updateArray( String columnName,
                              Array x ) throws SQLException {
         throwReadOnly();
     }
@@ -1171,7 +1290,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#getBlob(java.lang.String)
      */
-    public Blob getBlob( String colName ) throws SQLException {
+    @Override
+	public Blob getBlob( String colName ) throws SQLException {
         int index = findColumn(colName);
         return getBlob(index);
     }
@@ -1179,7 +1299,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#updateBlob(java.lang.String, java.sql.Blob)
      */
-    public void updateBlob( String columnName,
+    @Override
+	public void updateBlob( String columnName,
                             Blob x ) throws SQLException {
         throwReadOnly();
     }
@@ -1187,7 +1308,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#getClob(java.lang.String)
      */
-    public Clob getClob( String colName ) throws SQLException {
+    @Override
+	public Clob getClob( String colName ) throws SQLException {
         int index = findColumn(colName);
         return getClob(index);
     }
@@ -1195,7 +1317,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#updateClob(java.lang.String, java.sql.Clob)
      */
-    public void updateClob( String columnName,
+    @Override
+	public void updateClob( String columnName,
                             Clob x ) throws SQLException {
         throwReadOnly();
     }
@@ -1203,7 +1326,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#getDate(java.lang.String)
      */
-    public Date getDate( String columnName ) {
+    @Override
+	public Date getDate( String columnName ) {
         int index = findColumn(columnName);
         return getDate(index);
     }
@@ -1211,7 +1335,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#updateDate(java.lang.String, java.sql.Date)
      */
-    public void updateDate( String columnName,
+    @Override
+	public void updateDate( String columnName,
                             Date x ) throws SQLException {
         throwReadOnly();
     }
@@ -1219,7 +1344,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#getDate(int, java.util.Calendar)
      */
-    public Date getDate( int columnIndex,
+    @Override
+	public Date getDate( int columnIndex,
                          Calendar cal ) {
         return getDate(columnIndex);
     }
@@ -1227,7 +1353,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#getRef(java.lang.String)
      */
-    public Ref getRef( String colName ) throws SQLException {
+    @Override
+	public Ref getRef( String colName ) throws SQLException {
         int index = findColumn(colName);
         return getRef(index);
     }
@@ -1235,7 +1362,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#updateRef(java.lang.String, java.sql.Ref)
      */
-    public void updateRef( String columnName,
+    @Override
+	public void updateRef( String columnName,
                            Ref x ) throws SQLException {
         throwReadOnly();
     }
@@ -1243,7 +1371,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#getTime(java.lang.String)
      */
-    public Time getTime( String columnName ) {
+    @Override
+	public Time getTime( String columnName ) {
         int index = findColumn(columnName);
         return getTime(index);
     }
@@ -1251,7 +1380,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#updateTime(java.lang.String, java.sql.Time)
      */
-    public void updateTime( String columnName,
+    @Override
+	public void updateTime( String columnName,
                             Time x ) throws SQLException {
         throwReadOnly();
     }
@@ -1259,7 +1389,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#getTime(int, java.util.Calendar)
      */
-    public Time getTime( int columnIndex,
+    @Override
+	public Time getTime( int columnIndex,
                          Calendar cal ) {
         return getTime(columnIndex);
     }
@@ -1267,7 +1398,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#getTimestamp(java.lang.String)
      */
-    public Timestamp getTimestamp( String columnName ) {
+    @Override
+	public Timestamp getTimestamp( String columnName ) {
         int index = findColumn(columnName);
         return getTimestamp(index);
     }
@@ -1275,7 +1407,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#updateTimestamp(java.lang.String, java.sql.Timestamp)
      */
-    public void updateTimestamp( String columnName,
+    @Override
+	public void updateTimestamp( String columnName,
                                  Timestamp x ) throws SQLException {
         throwReadOnly();
     }
@@ -1283,7 +1416,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#getTimestamp(int, java.util.Calendar)
      */
-    public Timestamp getTimestamp( int columnIndex,
+    @Override
+	public Timestamp getTimestamp( int columnIndex,
                                    Calendar cal ) {
         return getTimestamp(columnIndex);
     }
@@ -1291,7 +1425,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#getDate(java.lang.String, java.util.Calendar)
      */
-    public Date getDate( String columnName,
+    @Override
+	public Date getDate( String columnName,
                          Calendar cal ) {
         int index = findColumn(columnName);
         return getDate(index);
@@ -1300,7 +1435,8 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#getTime(java.lang.String, java.util.Calendar)
      */
-    public Time getTime( String columnName,
+    @Override
+	public Time getTime( String columnName,
                          Calendar cal ) {
         int index = findColumn(columnName);
         return getTime(index);
@@ -1309,18 +1445,21 @@ public class MapResultSet implements ResultSet {
     /**
      * @see java.sql.ResultSet#getTimestamp(java.lang.String, java.util.Calendar)
      */
-    public Timestamp getTimestamp( String columnName,
+    @Override
+	public Timestamp getTimestamp( String columnName,
                                    Calendar cal ) {
         int index = findColumn(columnName);
         return getTimestamp(index);
     }
 
     class MetaData implements ResultSetMetaData {
-        public String getCatalogName( int column ) {
+        @Override
+		public String getCatalogName( int column ) {
             return ""; //$NON-NLS-1$
         }
 
-        public String getColumnClassName( int column ) {
+        @Override
+		public String getColumnClassName( int column ) {
             Class cls = getColumnClass(column);
             return cls.getName();
         }
@@ -1340,23 +1479,28 @@ public class MapResultSet implements ResultSet {
             return retval;
         }
 
-        public int getColumnCount() {
+        @Override
+		public int getColumnCount() {
             return names.size();
         }
 
-        public int getColumnDisplaySize( int column ) {
+        @Override
+		public int getColumnDisplaySize( int column ) {
             return 32; // arbitrary number
         }
 
-        public String getColumnLabel( int column ) {
+        @Override
+		public String getColumnLabel( int column ) {
             return reverseFindColumn(column);
         }
 
-        public String getColumnName( int column ) {
+        @Override
+		public String getColumnName( int column ) {
             return reverseFindColumn(column);
         }
 
-        public int getColumnType( int column ) {
+        @Override
+		public int getColumnType( int column ) {
             Class cls = getColumnClass(column);
             if (cls == String.class) return Types.VARCHAR;
             if (cls == String.class) return Types.VARCHAR;
@@ -1380,60 +1524,74 @@ public class MapResultSet implements ResultSet {
 
         }
 
-        public String getColumnTypeName( int column ) {
+        @Override
+		public String getColumnTypeName( int column ) {
             Class cls = getColumnClass(column);
             return cls.getName();
         }
 
-        public int getPrecision( int column ) {
+        @Override
+		public int getPrecision( int column ) {
             return 10; // arbitrary number
         }
 
-        public int getScale( int column ) {
+        @Override
+		public int getScale( int column ) {
             return 10; // arbitrary number
         }
 
-        public String getSchemaName( int column ) {
+        @Override
+		public String getSchemaName( int column ) {
             return ""; //$NON-NLS-1$
         }
 
-        public String getTableName( int column ) {
+        @Override
+		public String getTableName( int column ) {
             return ""; //$NON-NLS-1$
         }
 
-        public boolean isAutoIncrement( int column ) {
+        @Override
+		public boolean isAutoIncrement( int column ) {
             return false;
         }
 
-        public boolean isCaseSensitive( int column ) {
+        @Override
+		public boolean isCaseSensitive( int column ) {
             return true;
         }
 
-        public boolean isCurrency( int column ) {
+        @Override
+		public boolean isCurrency( int column ) {
             return false;
         }
 
-        public boolean isDefinitelyWritable( int column ) {
+        @Override
+		public boolean isDefinitelyWritable( int column ) {
             return false;
         }
 
-        public int isNullable( int column ) {
+        @Override
+		public int isNullable( int column ) {
             return 0;
         }
 
-        public boolean isReadOnly( int column ) {
+        @Override
+		public boolean isReadOnly( int column ) {
             return true;
         }
 
-        public boolean isSearchable( int column ) {
+        @Override
+		public boolean isSearchable( int column ) {
             return false;
         }
 
-        public boolean isSigned( int column ) {
+        @Override
+		public boolean isSigned( int column ) {
             return false;
         }
 
-        public boolean isWritable( int column ) {
+        @Override
+		public boolean isWritable( int column ) {
             return false;
         }
 

@@ -87,7 +87,8 @@ public class TransformationDiagramModelFactory extends DiagramModelFactoryImpl i
      * Create a DiagramModelNode.
      */
 
-    public DiagramModelNode createModel( Object baseObject,
+    @Override
+	public DiagramModelNode createModel( Object baseObject,
                                          String sNotationId,
                                          IProgressMonitor monitor ) {
 

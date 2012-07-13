@@ -64,7 +64,8 @@ public abstract class RuntimeAction extends Action implements ISelectionChangedL
 //        return this.admin.getSourceConnectionBindingsManager();
 //    }
 
-    public void selectionChanged( SelectionChangedEvent theEvent ) {
+    @Override
+	public void selectionChanged( SelectionChangedEvent theEvent ) {
         this.admin = null;
         this.selection = theEvent.getSelection();
         this.selectionEvent = theEvent;

@@ -80,7 +80,8 @@ public class XsdFileSystemImportWizard extends AbstractWizard implements IImport
     /**
      * Method declared on IWorkbenchWizard.
      */
-    public void init( IWorkbench workbench,
+    @Override
+	public void init( IWorkbench workbench,
                       IStructuredSelection currentSelection ) {
         this.workbench = workbench;
         this.selection = currentSelection;
@@ -107,7 +108,8 @@ public class XsdFileSystemImportWizard extends AbstractWizard implements IImport
         } else {
             // Create empty page
             WizardPage page = new WizardPage(XsdFileSystemImportWizard.class.getSimpleName(), TITLE, null) {
-                public void createControl( final Composite parent ) {
+                @Override
+				public void createControl( final Composite parent ) {
                     setControl(createEmptyPageControl(parent));
                 }
             };

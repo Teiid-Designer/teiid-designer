@@ -60,7 +60,8 @@ public class RelationshipObjectEditorPage implements ModelObjectEditorPage,
      * @see org.teiid.designer.ui.editors.ModelObjectEditorPage#canClose()
      * @since 5.0.1
      */
-    public boolean canClose() {
+    @Override
+	public boolean canClose() {
         return true;
     }
 
@@ -69,7 +70,8 @@ public class RelationshipObjectEditorPage implements ModelObjectEditorPage,
      * only once.
      * @param parent the parent Composite to use for constructing the Control.
      */
-    public void createControl( Composite parent ) {
+    @Override
+	public void createControl( Composite parent ) {
 //        this.parent = parent;
 
         // pnlOuter
@@ -102,7 +104,8 @@ public class RelationshipObjectEditorPage implements ModelObjectEditorPage,
     /* (non-Javadoc)
      * @See org.teiid.designer.ui.editors.ModelObjectEditorPage#getControl()
      */
-    public Control getControl() {
+    @Override
+	public Control getControl() {
 
         return pnlOuter;
     }
@@ -110,7 +113,8 @@ public class RelationshipObjectEditorPage implements ModelObjectEditorPage,
     /* (non-Javadoc)
      * @See org.teiid.designer.ui.editors.ModelObjectEditorPage#getTitle()
      */
-    public String getTitle() {
+    @Override
+	public String getTitle() {
 
         String sTitle=  BASE_TITLE;  
         if ( rRelationshipObject != null ) {
@@ -122,14 +126,16 @@ public class RelationshipObjectEditorPage implements ModelObjectEditorPage,
     /* (non-Javadoc)
      * @See org.teiid.designer.ui.editors.ModelObjectEditorPage#getTitleToolTip()
      */
-    public String getTitleToolTip() {
+    @Override
+	public String getTitleToolTip() {
         return null;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.ui.editors.ModelObjectEditorPage#getTitleImage()
      */
-    public Image getTitleImage() {
+    @Override
+	public Image getTitleImage() {
         return null;
     }
 
@@ -137,7 +143,8 @@ public class RelationshipObjectEditorPage implements ModelObjectEditorPage,
      * @see org.teiid.designer.ui.editors.ModelObjectEditorPage#canEdit(java.lang.Object, org.eclipse.ui.IEditorPart)
      * @since 5.0.1
      */
-    public boolean canEdit(Object modelObject,
+    @Override
+	public boolean canEdit(Object modelObject,
                            IEditorPart editor) {
         return ( modelObject instanceof Relationship );
     }
@@ -145,7 +152,8 @@ public class RelationshipObjectEditorPage implements ModelObjectEditorPage,
     /**
      * @see org.teiid.designer.ui.editors.ModelObjectEditorPage#edit(java.lang.Object)
      */
-    public void edit(Object modelObject) {
+    @Override
+	public void edit(Object modelObject) {
         if( modelObject instanceof Relationship ) {
             rRelationshipObject = (Relationship)modelObject;
             
@@ -156,49 +164,56 @@ public class RelationshipObjectEditorPage implements ModelObjectEditorPage,
     /* (non-Javadoc)
      * @See org.teiid.designer.ui.editors.ModelObjectEditorPage#deactivate()
      */
-    public boolean deactivate() {
+    @Override
+	public boolean deactivate() {
         return true;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.ui.editors.ModelObjectEditorPage#doSave(boolean)
      */
-    public void doSave(boolean isClosing) {
+    @Override
+	public void doSave(boolean isClosing) {
 
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.ui.editors.ModelObjectEditorPage#isDirty()
      */
-    public boolean isDirty() {
+    @Override
+	public boolean isDirty() {
         return false;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.ui.editors.ModelObjectEditorPage#addPropertyListener(org.eclipse.ui.IPropertyListener)
      */
-    public void addPropertyListener(IPropertyListener listener) {
+    @Override
+	public void addPropertyListener(IPropertyListener listener) {
 
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.ui.editors.ModelObjectEditorPage#removePropertyListener(org.eclipse.ui.IPropertyListener)
      */
-    public void removePropertyListener(IPropertyListener listener) {
+    @Override
+	public void removePropertyListener(IPropertyListener listener) {
 
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.ui.editors.ModelObjectEditorPage#contributeToolbarActions(org.eclipse.jface.action.ToolBarManager)
      */
-    public void contributeToolbarActions(ToolBarManager toolBarMgr) {
+    @Override
+	public void contributeToolbarActions(ToolBarManager toolBarMgr) {
 
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.ui.editors.IEditorActionExporter#contributeExportedActions(org.eclipse.jface.action.IMenuManager)
      */
-    public void contributeExportedActions(IMenuManager theMenuMgr) {
+    @Override
+	public void contributeExportedActions(IMenuManager theMenuMgr) {
 
     }
     
@@ -207,11 +222,13 @@ public class RelationshipObjectEditorPage implements ModelObjectEditorPage,
      * @see org.teiid.designer.ui.editors.IEditorActionExporter#getAdditionalModelingActions(org.eclipse.jface.viewers.ISelection)
      * @since 5.0
      */
-    public List<IAction> getAdditionalModelingActions( ISelection selection ) {
+    @Override
+	public List<IAction> getAdditionalModelingActions( ISelection selection ) {
         // jhTODO: do we have any actions?  I do not think so...   
         return Collections.EMPTY_LIST;
     }
-    public void setStatus( IStatus isStatus ) {
+    @Override
+	public void setStatus( IStatus isStatus ) {
         if ( !isStatus.isOK() ) {
             // display the icon and message...
                     
@@ -224,7 +241,8 @@ public class RelationshipObjectEditorPage implements ModelObjectEditorPage,
      * @see org.teiid.designer.ui.editors.ModelObjectEditorPage#updateReadOnlyState()
      * @since 4.2
      */
-    public void updateReadOnlyState() {
+    @Override
+	public void updateReadOnlyState() {
     }
     
     /* (non-Javadoc)
@@ -232,7 +250,8 @@ public class RelationshipObjectEditorPage implements ModelObjectEditorPage,
      * @See org.teiid.designer.ui.editors.ModelObjectEditorPage#isEditingObject(java.lang.Object)
      * @since 4.2
      */
-    public boolean isEditingObject(Object modelObject) {
+    @Override
+	public boolean isEditingObject(Object modelObject) {
         if( rRelationshipObject != null && modelObject instanceof MappingClass ) {
             if( modelObject.equals(rRelationshipObject))
                 return true;
@@ -245,7 +264,8 @@ public class RelationshipObjectEditorPage implements ModelObjectEditorPage,
      * @see org.teiid.designer.ui.editors.ModelObjectEditorPage#getEditableObject(java.lang.Object)
      * @since 4.2
      */
-    public Object getEditableObject(Object modelObject) {
+    @Override
+	public Object getEditableObject(Object modelObject) {
         if( modelObject instanceof Relationship)
             return modelObject;
         
@@ -257,7 +277,8 @@ public class RelationshipObjectEditorPage implements ModelObjectEditorPage,
      * @see org.teiid.designer.ui.editors.ModelObjectEditorPage#isResourceValid()
      * @since 4.2
      */
-    public boolean isResourceValid() {
+    @Override
+	public boolean isResourceValid() {
         if( rRelationshipObject != null ) {
             ModelResource mr = ModelUtilities.getModelResourceForModelObject(rRelationshipObject);
             if( mr != null )
@@ -272,7 +293,8 @@ public class RelationshipObjectEditorPage implements ModelObjectEditorPage,
      * @see org.teiid.designer.ui.editors.ModelObjectEditorPage#initialize(org.teiid.designer.ui.editors.MultiPageModelEditor)
      * @since 5.0.1
      */
-    public void initialize(MultiPageModelEditor editor) {
+    @Override
+	public void initialize(MultiPageModelEditor editor) {
     	if( editor instanceof ModelEditor ) {
     		this.parentModelEditor = (ModelEditor)editor;
     	}
@@ -284,10 +306,12 @@ public class RelationshipObjectEditorPage implements ModelObjectEditorPage,
      * @see org.teiid.designer.ui.editors.ModelObjectEditorPage#setOverride(org.teiid.designer.ui.editors.ModelObjectEditorPage)
      * @since 5.0.1
      */
-    public void setOverride(ModelObjectEditorPage editor) {
+    @Override
+	public void setOverride(ModelObjectEditorPage editor) {
     }
 
-    public ModelEditor getParentModelEditor() {
+    @Override
+	public ModelEditor getParentModelEditor() {
     	return this.parentModelEditor;
     }
 }

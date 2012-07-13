@@ -29,7 +29,8 @@ public class TeiidVdb implements Comparable<TeiidVdb> {
      * 
      * @see java.lang.Comparable#compareTo(java.lang.Object)
      */
-    public int compareTo( TeiidVdb vdb ) {
+    @Override
+	public int compareTo( TeiidVdb vdb ) {
         CoreArgCheck.isNotNull(vdb, "vdb"); //$NON-NLS-1$
         return getName().compareTo(vdb.getName());
     }

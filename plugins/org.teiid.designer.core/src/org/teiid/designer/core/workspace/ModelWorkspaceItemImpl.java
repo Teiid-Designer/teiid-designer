@@ -92,21 +92,24 @@ public abstract class ModelWorkspaceItemImpl extends PlatformObject implements M
     /**
      * @see org.teiid.designer.core.workspace.ModelWorkspaceItem
      */
-    public String getItemName() {
+    @Override
+	public String getItemName() {
         return fName;
     }
 
     /**
      * @see org.teiid.designer.core.workspace.ModelWorkspaceItem
      */
-    public int getItemType() {
+    @Override
+	public int getItemType() {
         return fType;
     }
 
     /**
      * @see org.teiid.designer.core.workspace.ModelWorkspaceItem
      */
-    public ModelWorkspace getModelWorkspace() {
+    @Override
+	public ModelWorkspace getModelWorkspace() {
         ModelWorkspaceItem current = this;
         do {
             if (current instanceof ModelWorkspace) return (ModelWorkspace)current;
@@ -117,7 +120,8 @@ public abstract class ModelWorkspaceItemImpl extends PlatformObject implements M
     /**
      * @see org.teiid.designer.core.workspace.ModelWorkspaceItem
      */
-    public ModelProject getModelProject() {
+    @Override
+	public ModelProject getModelProject() {
         ModelWorkspaceItem current = this;
         do {
             if (current instanceof ModelProject) return (ModelProject)current;
@@ -128,7 +132,8 @@ public abstract class ModelWorkspaceItemImpl extends PlatformObject implements M
     /**
      * @see org.teiid.designer.core.workspace.ModelWorkspaceItem
      */
-    @SuppressWarnings( "unused" )
+    @Override
+	@SuppressWarnings( "unused" )
     public IResource getCorrespondingResource() throws ModelWorkspaceException {
         return null;
     }
@@ -136,7 +141,8 @@ public abstract class ModelWorkspaceItemImpl extends PlatformObject implements M
     /**
      * @see org.teiid.designer.core.workspace.ModelWorkspaceItem
      */
-    public Openable getOpenable() {
+    @Override
+	public Openable getOpenable() {
         return this.getOpenableParent();
     }
 
@@ -164,7 +170,8 @@ public abstract class ModelWorkspaceItemImpl extends PlatformObject implements M
     /**
      * @see org.teiid.designer.core.workspace.ModelWorkspaceItem
      */
-    public boolean isReadOnly() {
+    @Override
+	public boolean isReadOnly() {
         return false;
     }
 
@@ -188,14 +195,16 @@ public abstract class ModelWorkspaceItemImpl extends PlatformObject implements M
     /**
      * @see org.teiid.designer.core.workspace.ModelWorkspaceItem
      */
-    public ModelWorkspaceItem getParent() {
+    @Override
+	public ModelWorkspaceItem getParent() {
         return fParent;
     }
 
     /**
      * @see org.teiid.designer.core.workspace.ModelWorkspaceItem
      */
-    public ModelWorkspaceItem[] getChildren() throws ModelWorkspaceException {
+    @Override
+	public ModelWorkspaceItem[] getChildren() throws ModelWorkspaceException {
         return ((ModelWorkspaceItemInfo)getItemInfo()).getChildren();
     }
 
@@ -238,7 +247,8 @@ public abstract class ModelWorkspaceItemImpl extends PlatformObject implements M
     /**
      * @see org.teiid.designer.core.workspace.ModelWorkspaceItem
      */
-    public boolean isStructureKnown() throws ModelWorkspaceException {
+    @Override
+	public boolean isStructureKnown() throws ModelWorkspaceException {
         return ((ModelWorkspaceItemInfo)getItemInfo()).isStructureKnown();
     }
 
@@ -392,7 +402,8 @@ public abstract class ModelWorkspaceItemImpl extends PlatformObject implements M
     /**
      * @see ModelWorkspaceItem
      */
-    public boolean exists() {
+    @Override
+	public boolean exists() {
 
         try {
             getItemInfo(); // throws exception if cannot obtain info
@@ -517,7 +528,8 @@ public abstract class ModelWorkspaceItemImpl extends PlatformObject implements M
     /* (non-Javadoc)
      * @See org.teiid.designer.core.workspace.ModelWorkspaceItem#accept(org.teiid.designer.core.workspace.ModelWorkspaceVisitor, int)
      */
-    public void accept( ModelWorkspaceVisitor visitor,
+    @Override
+	public void accept( ModelWorkspaceVisitor visitor,
                         int depth ) throws ModelWorkspaceException {
         CoreArgCheck.isNotNull(visitor);
         if (depth != DEPTH_INFINITE && depth != DEPTH_ONE && depth != DEPTH_ZERO) {
@@ -538,7 +550,8 @@ public abstract class ModelWorkspaceItemImpl extends PlatformObject implements M
     /* (non-Javadoc)
      * @See org.teiid.designer.core.workspace.ModelWorkspaceItem#getChild(org.eclipse.core.resources.IResource)
      */
-    public ModelWorkspaceItem getChild( final IResource resource ) throws ModelWorkspaceException {
+    @Override
+	public ModelWorkspaceItem getChild( final IResource resource ) throws ModelWorkspaceException {
         CoreArgCheck.isNotNull(resource);
         final String resourceName = resource.getName();
         return getChild(resourceName);
@@ -547,7 +560,8 @@ public abstract class ModelWorkspaceItemImpl extends PlatformObject implements M
     /* (non-Javadoc)
      * @See org.teiid.designer.core.workspace.ModelWorkspaceItem#getChild(java.lang.String)
      */
-    public ModelWorkspaceItem getChild( final String childName ) throws ModelWorkspaceException {
+    @Override
+	public ModelWorkspaceItem getChild( final String childName ) throws ModelWorkspaceException {
         CoreArgCheck.isNotNull(childName);
         final ModelWorkspaceItem[] children = this.getChildren();
         for (int j = 0; j < children.length; ++j) {
@@ -559,11 +573,13 @@ public abstract class ModelWorkspaceItemImpl extends PlatformObject implements M
         return null;
     }
 
-    public boolean isClosing() {
+    @Override
+	public boolean isClosing() {
         return this.closing;
     }
 
-    public boolean isOpening() {
+    @Override
+	public boolean isOpening() {
         return this.opening;
     }
 

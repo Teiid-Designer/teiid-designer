@@ -34,6 +34,7 @@ public class Uml2EnumerationUmlAspect
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.core.metamodel.aspect.uml.UmlClassifier#getRelationships(java.lang.Object)
 	 */
+	@Override
 	public Collection getRelationships(Object eObject) {
 		return new ArrayList();
 	}
@@ -41,6 +42,7 @@ public class Uml2EnumerationUmlAspect
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.core.metamodel.aspect.uml.UmlClassifier#getSupertypes(java.lang.Object)
 	 */
+	@Override
 	public Collection getSupertypes(Object eObject) {
 		return new ArrayList();
 	}
@@ -48,6 +50,7 @@ public class Uml2EnumerationUmlAspect
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.core.metamodel.aspect.uml.UmlDiagramAspect#getSignature(java.lang.Object, int)
 	 */
+	@Override
 	public String getSignature(Object eObject, int showMask) {
 		final Enumeration umlClass = assertUmlEnumeration(eObject);
 		StringBuffer result = new StringBuffer();
@@ -88,6 +91,7 @@ public class Uml2EnumerationUmlAspect
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.core.metamodel.aspect.uml.UmlClassifier#isAbstract(java.lang.Object)
 	 */
+	@Override
 	public boolean isAbstract(Object eObject) {
 		return false;
 	}

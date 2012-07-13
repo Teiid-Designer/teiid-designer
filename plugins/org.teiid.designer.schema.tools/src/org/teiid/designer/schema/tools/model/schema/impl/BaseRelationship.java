@@ -14,10 +14,12 @@ public abstract class BaseRelationship implements Relationship {
 
 	private int relationshipType;
 
+	@Override
 	public void setType(int relationshipType) {
 		this.relationshipType = relationshipType;
 	}
 
+	@Override
 	public int getType() {
 		return relationshipType;
 	}
@@ -37,6 +39,7 @@ public abstract class BaseRelationship implements Relationship {
 		return retval;
 	}
 	
+	@Override
 	public void removeRelationship() {
 		SchemaObject parent = this.getParent();
 		SchemaObject child = this.getChild();
@@ -44,6 +47,7 @@ public abstract class BaseRelationship implements Relationship {
 		parent.getChildren().remove(this);
 	}
 
+	@Override
 	public void addNewRelationship() {
 		SchemaObject parent = this.getParent();
 		SchemaObject child = this.getChild();
@@ -51,6 +55,7 @@ public abstract class BaseRelationship implements Relationship {
 		parent.getChildren().add(this);
 	}
 	
+	@Override
 	public Relationship merge(Relationship grandChildRelation) {
 		return new MergedRelationship(this, grandChildRelation);
 	}

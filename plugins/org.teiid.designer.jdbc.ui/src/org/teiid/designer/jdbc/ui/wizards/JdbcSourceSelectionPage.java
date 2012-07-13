@@ -151,7 +151,8 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage
     /**
      * @since 4.0
      */
-    public void addChangeListener( final IChangeListener listener ) {
+    @Override
+	public void addChangeListener( final IChangeListener listener ) {
         this.notifier.add(listener);
     }
 
@@ -176,7 +177,8 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage
      * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
      * @since 4.0
      */
-    public void createControl( final Composite parent ) {
+    @Override
+	public void createControl( final Composite parent ) {
         // Create page
         final Composite pg = new Composite(parent, SWT.NONE);
         pg.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -214,7 +216,8 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage
                                                   true);
         this.srcCombo.addModifyListener(new ModifyListener() {
 
-            public void modifyText( final ModifyEvent event ) {
+            @Override
+			public void modifyText( final ModifyEvent event ) {
                 sourceModified();
             }
         });
@@ -269,7 +272,8 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage
                                                   true);
         this.processorCombo.addModifyListener(new ModifyListener() {
 
-            public void modifyText( final ModifyEvent event ) {
+            @Override
+			public void modifyText( final ModifyEvent event ) {
                 processorModified();
             }
         });
@@ -296,7 +300,8 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage
         this.pwdText.setEchoChar('*');
         this.pwdText.addModifyListener(new ModifyListener() {
 
-            public void modifyText( final ModifyEvent event ) {
+            @Override
+			public void modifyText( final ModifyEvent event ) {
                 passwordModified();
             }
         });
@@ -443,7 +448,8 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage
     /**
      * @since 4.0
      */
-    public void removeChangeListener( final IChangeListener listener ) {
+    @Override
+	public void removeChangeListener( final IChangeListener listener ) {
         this.notifier.remove(listener);
     }
     

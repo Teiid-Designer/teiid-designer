@@ -30,7 +30,8 @@ public class FakeUndoableListener implements UndoableListener {
     /* (non-Javadoc)
      * @See org.teiid.designer.core.transaction.UndoableListener#processEvent(org.teiid.designer.core.transaction.UndoableEditEvent)
      */
-    public void process(Undoable undoable) {
+    @Override
+	public void process(Undoable undoable) {
         if(undoable.isSignificant() ){
             undoables.add(undoable);
         }

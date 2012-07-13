@@ -162,7 +162,8 @@ public class XmlDocumentImpl extends XmlFragmentImpl implements XmlDocument {
      * <!-- end-user-doc -->
      * @generated
      */
-    public String getEncoding() {
+    @Override
+	public String getEncoding() {
         return encoding;
     }
 
@@ -171,7 +172,8 @@ public class XmlDocumentImpl extends XmlFragmentImpl implements XmlDocument {
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setEncoding(String newEncoding) {
+    @Override
+	public void setEncoding(String newEncoding) {
         String oldEncoding = encoding;
         encoding = newEncoding;
         if (eNotificationRequired())
@@ -183,7 +185,8 @@ public class XmlDocumentImpl extends XmlFragmentImpl implements XmlDocument {
      * <!-- end-user-doc -->
      * @generated
      */
-    public boolean isFormatted() {
+    @Override
+	public boolean isFormatted() {
         return formatted;
     }
 
@@ -192,7 +195,8 @@ public class XmlDocumentImpl extends XmlFragmentImpl implements XmlDocument {
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setFormatted(boolean newFormatted) {
+    @Override
+	public void setFormatted(boolean newFormatted) {
         boolean oldFormatted = formatted;
         formatted = newFormatted;
         if (eNotificationRequired())
@@ -204,7 +208,8 @@ public class XmlDocumentImpl extends XmlFragmentImpl implements XmlDocument {
      * <!-- end-user-doc -->
      * @generated
      */
-    public String getVersion() {
+    @Override
+	public String getVersion() {
         return version;
     }
 
@@ -213,7 +218,8 @@ public class XmlDocumentImpl extends XmlFragmentImpl implements XmlDocument {
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setVersion(String newVersion) {
+    @Override
+	public void setVersion(String newVersion) {
         String oldVersion = version;
         version = newVersion;
         if (eNotificationRequired())
@@ -225,7 +231,8 @@ public class XmlDocumentImpl extends XmlFragmentImpl implements XmlDocument {
      * <!-- end-user-doc -->
      * @generated
      */
-    public boolean isStandalone() {
+    @Override
+	public boolean isStandalone() {
         return standalone;
     }
 
@@ -234,7 +241,8 @@ public class XmlDocumentImpl extends XmlFragmentImpl implements XmlDocument {
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setStandalone(boolean newStandalone) {
+    @Override
+	public void setStandalone(boolean newStandalone) {
         boolean oldStandalone = standalone;
         standalone = newStandalone;
         if (eNotificationRequired())
@@ -246,7 +254,8 @@ public class XmlDocumentImpl extends XmlFragmentImpl implements XmlDocument {
      * <!-- end-user-doc -->
      * @generated
      */
-    public SoapEncoding getSoapEncoding() {
+    @Override
+	public SoapEncoding getSoapEncoding() {
         return soapEncoding;
     }
 
@@ -255,7 +264,8 @@ public class XmlDocumentImpl extends XmlFragmentImpl implements XmlDocument {
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setSoapEncoding(SoapEncoding newSoapEncoding) {
+    @Override
+	public void setSoapEncoding(SoapEncoding newSoapEncoding) {
         SoapEncoding oldSoapEncoding = soapEncoding;
         soapEncoding = newSoapEncoding == null ? SOAP_ENCODING_EDEFAULT : newSoapEncoding;
         if (eNotificationRequired())

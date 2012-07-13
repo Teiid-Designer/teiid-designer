@@ -32,7 +32,8 @@ public class ModelProjectSelectionStatusValidator implements ISelectionStatusVal
     private static final String NOT_MODELING_PROJECT = Util.getString("ModelProjectSelectionStatusValidator.notModelProject"); //$NON-NLS-1$
     private static final String NOT_FOLDER = Util.getString("ModelProjectSelectionStatusValidator.notFolderSelection");  //$NON-NLS-1$
     
-    public IStatus validate(Object[] selection) {
+    @Override
+	public IStatus validate(Object[] selection) {
         IStatus result = OK_STATUS;
         
         String message = null;

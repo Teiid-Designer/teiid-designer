@@ -232,7 +232,8 @@ public class CriteriaEditor extends AbstractCompositeLanguageObjectEditor {
         public void initialize() {
             // get first operator and criteria editor to show
             Display.getDefault().asyncExec(new Runnable() {
-                public void run() {
+                @Override
+				public void run() {
                     modelChanged(new LanguageObjectEditorModelEvent(model, CompositeLanguageObjectEditorModel.MODEL_CHANGE));
                 }
             });
@@ -241,7 +242,8 @@ public class CriteriaEditor extends AbstractCompositeLanguageObjectEditor {
         /**
          * @see org.teiid.query.ui.builder.model.ILanguageObjectEditorModelListener#modelChanged(org.teiid.query.ui.builder.model.LanguageObjectEditorModelEvent)
          */
-        public void modelChanged( LanguageObjectEditorModelEvent theEvent ) {
+        @Override
+		public void modelChanged( LanguageObjectEditorModelEvent theEvent ) {
             String type = theEvent.getType();
 
             if (type.equals(LanguageObjectEditorModelEvent.SAVED)) {

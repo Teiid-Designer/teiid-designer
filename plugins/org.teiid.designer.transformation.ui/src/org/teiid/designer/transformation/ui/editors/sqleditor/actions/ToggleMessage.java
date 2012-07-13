@@ -50,7 +50,8 @@ public class ToggleMessage extends AbstractAction implements EventObjectListener
         panel.showMessageArea(!isShowing);
     }
     
-    public void processEvent(EventObject e) {
+    @Override
+	public void processEvent(EventObject e) {
         //----------------------------------------------------------------------
         // respond to internal events from SqlEditorPanel
         //   - action here is to ensure that the button toggle state is correct

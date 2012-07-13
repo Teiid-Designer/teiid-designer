@@ -35,7 +35,8 @@ public class TeiidXmlFileImportProcessor extends TeiidMetadataImportProcessor {
 		super(info, shell);
 	}
 
-    protected ModelResource createViewsInExistingModel(String relationalModelName) throws ModelerCoreException  {
+    @Override
+	protected ModelResource createViewsInExistingModel(String relationalModelName) throws ModelerCoreException  {
     	if( getInfo().getViewModelLocation() != null && getInfo().getViewModelName() != null ) {
     		IPath modelPath = getInfo().getViewModelLocation().append(getInfo().getViewModelName());
     		if( !modelPath.toString().toUpperCase().endsWith(".XMI")) { //$NON-NLS-1$
@@ -73,7 +74,8 @@ public class TeiidXmlFileImportProcessor extends TeiidMetadataImportProcessor {
      * @param sourceModelName the name of the source model {@inheritDoc}
      * @see org.teiid.designer.transformation.ui.wizards.file.TeiidMetadataImportProcessor#createViewsInNewModel(java.lang.String)
      */
-    protected ModelResource createViewsInNewModel(String sourceModelName) throws ModelerCoreException {
+    @Override
+	protected ModelResource createViewsInNewModel(String sourceModelName) throws ModelerCoreException {
     	XmlFileViewModelFactory factory = new XmlFileViewModelFactory();
     	
         // View Model Name

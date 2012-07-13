@@ -33,6 +33,7 @@ public class IndexerOutput implements IIndexerOutput {
 	 * Adds the given document to the inMemoryIndex.
 	 */
 
+	@Override
 	public void addDocument(IDocument document) {
 		if (indexedFile == null) {
 			indexedFile= index.addDocument(document);
@@ -43,6 +44,7 @@ public class IndexerOutput implements IIndexerOutput {
 	/**
 	 * Adds a reference to the given word to the inMemoryIndex.
 	 */
+	@Override
 	public void addRef(char[] word) {
 		if (indexedFile == null) {
 			throw new IllegalStateException();
@@ -52,6 +54,7 @@ public class IndexerOutput implements IIndexerOutput {
 	/**
 	 * Adds a reference to the given word to the inMemoryIndex.
 	 */
+	@Override
 	public void addRef(String word) {
 		addRef(word.toCharArray());
 	}

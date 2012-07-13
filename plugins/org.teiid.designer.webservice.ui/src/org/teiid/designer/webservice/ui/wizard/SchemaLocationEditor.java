@@ -214,7 +214,8 @@ public class SchemaLocationEditor extends GridPanel
         this.cbxFolder = WidgetFactory.createCombo(pnl, SWT.READ_ONLY, GridData.FILL_HORIZONTAL);
         this.cbxFolder.setEnabled(false);
         this.cbxFolder.addModifyListener(new ModifyListener() {
-            public void modifyText( ModifyEvent theEvent ) {
+            @Override
+			public void modifyText( ModifyEvent theEvent ) {
                 handleFolderChanged();
             }
         });
@@ -252,7 +253,8 @@ public class SchemaLocationEditor extends GridPanel
         this.txfName = WidgetFactory.createTextField(pnl, GridData.HORIZONTAL_ALIGN_FILL, 2);
         this.txfName.setEnabled(false);
         this.txfName.addModifyListener(new ModifyListener() {
-            public void modifyText( ModifyEvent theEvent ) {
+            @Override
+			public void modifyText( ModifyEvent theEvent ) {
                 handleNameChanged();
             }
         });

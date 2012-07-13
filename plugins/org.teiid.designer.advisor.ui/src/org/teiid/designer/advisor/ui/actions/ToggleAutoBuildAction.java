@@ -37,6 +37,7 @@ public class ToggleAutoBuildAction extends Action implements
 	 * 
 	 * @see org.eclipse.ui.actions.ActionFactory.IWorkbenchAction#dispose()
 	 */
+	@Override
 	public void dispose() {
 		// nothing to dispose
 	}
@@ -46,6 +47,7 @@ public class ToggleAutoBuildAction extends Action implements
 	 * 
 	 * @see org.eclipse.jface.action.IAction#run()
 	 */
+	@Override
 	public void run() {
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
 		IWorkspaceDescription description = workspace.getDescription();

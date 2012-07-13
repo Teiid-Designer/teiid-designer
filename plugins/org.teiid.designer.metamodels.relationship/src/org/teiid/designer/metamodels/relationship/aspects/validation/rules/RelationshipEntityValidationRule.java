@@ -27,6 +27,7 @@ public class RelationshipEntityValidationRule implements ObjectValidationRule {
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.core.validation.ObjectValidationRule#validate(org.eclipse.emf.ecore.EObject, org.teiid.designer.core.validation.ValidationContext)
 	 */
+	@Override
 	public void validate(EObject eObject, ValidationContext context) {
 		CoreArgCheck.isInstanceOf(RelationshipEntity.class, eObject);
 		// validate the relationship		

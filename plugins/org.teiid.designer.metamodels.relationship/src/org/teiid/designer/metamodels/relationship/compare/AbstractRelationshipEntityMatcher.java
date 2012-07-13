@@ -36,7 +36,8 @@ public abstract class AbstractRelationshipEntityMatcher extends AbstractEObjectM
     /**
      * @see org.teiid.designer.core.compare.EObjectMatcher#addMappingsForRoots(java.util.List, java.util.List, org.eclipse.emf.mapping.Mapping, org.eclipse.emf.mapping.MappingFactory)
      */
-    public void addMappingsForRoots(final List inputs, final List outputs, 
+    @Override
+	public void addMappingsForRoots(final List inputs, final List outputs, 
                                     final Mapping mapping, final MappingFactory factory) {
         addMappings(null,inputs,outputs,mapping,factory);
     }
@@ -54,7 +55,8 @@ public abstract class AbstractRelationshipEntityMatcher extends AbstractEObjectM
     /**
      * @see org.teiid.designer.core.compare.EObjectMatcher#addMappings(org.eclipse.emf.ecore.EReference, java.util.List, java.util.List, org.eclipse.emf.mapping.Mapping, org.eclipse.emf.mapping.MappingFactory)
      */
-    public void addMappings( final EReference reference, final List inputs, final List outputs,
+    @Override
+	public void addMappings( final EReference reference, final List inputs, final List outputs,
                              final Mapping mapping, final MappingFactory factory) {
         // Loop over the inputs and accumulate the UUIDs ...
         final Map inputByName = new HashMap();

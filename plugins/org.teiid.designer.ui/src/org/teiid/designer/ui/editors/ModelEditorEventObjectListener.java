@@ -33,7 +33,8 @@ public class ModelEditorEventObjectListener implements EventObjectListener {
      * @see org.teiid.core.event.EventObjectListener#processEvent(java.util.EventObject)
      * @since 4.2
      */
-    public void processEvent( EventObject obj ) {
+    @Override
+	public void processEvent( EventObject obj ) {
         ModelResourceEvent event = (ModelResourceEvent)obj;
         // All the editor needs to do is take care of the object editor. If it's open, close it if the event
         // resource is same as editor's resource.
@@ -42,7 +43,8 @@ public class ModelEditorEventObjectListener implements EventObjectListener {
             final ModelResource evResource = event.getModelResource();
             if (evResource != null && evResource.equals(editorMR)) {
                 Display.getDefault().asyncExec(new Runnable() {
-                    public void run() {
+                    @Override
+					public void run() {
                         editor.closeObjectEditor();
                     }
                 });

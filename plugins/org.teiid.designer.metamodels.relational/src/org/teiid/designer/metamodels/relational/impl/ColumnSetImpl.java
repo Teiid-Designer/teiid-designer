@@ -67,7 +67,8 @@ public abstract class ColumnSetImpl extends RelationalEntityImpl implements Colu
      * <!-- end-user-doc -->
      * @generated
      */
-    public EList getColumns() {
+    @Override
+	public EList getColumns() {
         if (columns == null) {
             columns = new EObjectContainmentWithInverseEList(Column.class, this, RelationalPackage.COLUMN_SET__COLUMNS, RelationalPackage.COLUMN__OWNER);
         }

@@ -45,11 +45,13 @@ public class LaunchDesignerCommandAction extends Action implements ICheatSheetAc
     ///////////////////////////////////////////////////////////////////////////////////////////////
     // METHODS
     ///////////////////////////////////////////////////////////////////////////////////////////////
-    public void run() {
+    @Override
+	public void run() {
         throw new IllegalStateException();
     }
 
-    public void run(String[] params, ICheatSheetManager manager) {
+    @Override
+	public void run(String[] params, ICheatSheetManager manager) {
         final boolean[] result = {true};
         
         // Wire up the cheat sheet listener so it can be notified of restart

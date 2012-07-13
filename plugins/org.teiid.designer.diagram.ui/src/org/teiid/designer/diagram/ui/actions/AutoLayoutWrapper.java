@@ -45,7 +45,8 @@ public class AutoLayoutWrapper extends DiagramAction
         
     }
 
-    public void initialize() {
+    @Override
+	public void initialize() {
 
         setEnableState();
         addAsPartListener();        
@@ -128,35 +129,40 @@ public class AutoLayoutWrapper extends DiagramAction
     /* (non-Javadoc)
      * @see org.eclipse.ui.IPartListener#partActivated(org.eclipse.ui.IWorkbenchPart)
      */
-    public void partActivated(IWorkbenchPart part) {
+    @Override
+	public void partActivated(IWorkbenchPart part) {
         setEnableState();
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.ui.IPartListener#partBroughtToTop(org.eclipse.ui.IWorkbenchPart)
      */
-    public void partBroughtToTop(IWorkbenchPart part) {
+    @Override
+	public void partBroughtToTop(IWorkbenchPart part) {
         setEnableState();
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.ui.IPartListener#partClosed(org.eclipse.ui.IWorkbenchPart)
      */
-    public void partClosed(IWorkbenchPart part) {
+    @Override
+	public void partClosed(IWorkbenchPart part) {
         setEnabled( false );
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.ui.IPartListener#partDeactivated(org.eclipse.ui.IWorkbenchPart)
      */
-    public void partDeactivated(IWorkbenchPart part) {
+    @Override
+	public void partDeactivated(IWorkbenchPart part) {
         setEnabled( false );
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.ui.IPartListener#partOpened(org.eclipse.ui.IWorkbenchPart)
      */
-    public void partOpened(IWorkbenchPart part) {
+    @Override
+	public void partOpened(IWorkbenchPart part) {
         setEnableState();
     }
 }

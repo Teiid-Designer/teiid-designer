@@ -272,7 +272,8 @@ public class VariableEditorDialog extends Dialog
                 return getNodeChildren(element);
             }
 
-            public Object getParent( Object element ) {
+            @Override
+			public Object getParent( Object element ) {
                 return getNodeParent(element);
             }
 
@@ -297,7 +298,8 @@ public class VariableEditorDialog extends Dialog
         this.varSection.create();
         this.varSection.addSelectionChangedListener(new ISelectionChangedListener() {
 
-            public void selectionChanged( SelectionChangedEvent event ) {
+            @Override
+			public void selectionChanged( SelectionChangedEvent event ) {
                 variableSelected();
             }
         });

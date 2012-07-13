@@ -36,7 +36,8 @@ public class XmlOperationAspect extends XmlServiceComponentAspect implements Uml
      * @see org.teiid.designer.core.metamodel.aspect.uml.UmlClassifier#getRelationships(java.lang.Object)
      * @since 4.2
      */
-    public Collection getRelationships(Object eObject) {
+    @Override
+	public Collection getRelationships(Object eObject) {
         return Collections.EMPTY_LIST;
     }
 
@@ -44,7 +45,8 @@ public class XmlOperationAspect extends XmlServiceComponentAspect implements Uml
      * @see org.teiid.designer.core.metamodel.aspect.uml.UmlClassifier#getSupertypes(java.lang.Object)
      * @since 4.2
      */
-    public Collection getSupertypes(Object eObject) {
+    @Override
+	public Collection getSupertypes(Object eObject) {
         return Collections.EMPTY_LIST;
     }
 
@@ -52,7 +54,8 @@ public class XmlOperationAspect extends XmlServiceComponentAspect implements Uml
      * @see org.teiid.designer.core.metamodel.aspect.uml.UmlClassifier#isAbstract(java.lang.Object)
      * @since 4.2
      */
-    public boolean isAbstract(Object eObject) {
+    @Override
+	public boolean isAbstract(Object eObject) {
         return false;
     }
 
@@ -60,7 +63,8 @@ public class XmlOperationAspect extends XmlServiceComponentAspect implements Uml
      * @see org.teiid.designer.core.metamodel.aspect.uml.UmlDiagramAspect#getStereotype(java.lang.Object)
      * @since 4.2
      */
-    public String getStereotype(Object eObject) {
+    @Override
+	public String getStereotype(Object eObject) {
         return XmlServiceMetamodelPlugin.Util.getString("_UI_XmlOperation_type"); //$NON-NLS-1$
     }
 

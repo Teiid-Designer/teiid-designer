@@ -331,7 +331,8 @@ public final class RelationshipSearchPage extends DialogPage implements ISearchP
         // MRU for name
         this.cbxName = WidgetFactory.createCombo(theParent, SWT.NONE, GridData.FILL_HORIZONTAL);
         this.cbxName.addModifyListener(new ModifyListener() {
-            public void modifyText( ModifyEvent theEvent ) {
+            @Override
+			public void modifyText( ModifyEvent theEvent ) {
                 handleRelationshipNameModified();
             }
         });
@@ -453,7 +454,8 @@ public final class RelationshipSearchPage extends DialogPage implements ISearchP
         this.txfNamedType.setToolTipText(UTIL.getString(PREFIX + "text.typeName.tip")); //$NON-NLS-1$
         this.txfNamedType.setEditable(false);
         this.txfNamedType.addModifyListener(new ModifyListener() {
-            public void modifyText( ModifyEvent theEvent ) {
+            @Override
+			public void modifyText( ModifyEvent theEvent ) {
                 handleNamedTypeChange();
             }
         });
@@ -660,7 +662,8 @@ public final class RelationshipSearchPage extends DialogPage implements ISearchP
      */
     private void initButtonSelected( final Button theButton ) {
         Display.getDefault().syncExec(new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 theButton.setSelection(true);
                 Event event = new Event();
                 event.widget = theButton;

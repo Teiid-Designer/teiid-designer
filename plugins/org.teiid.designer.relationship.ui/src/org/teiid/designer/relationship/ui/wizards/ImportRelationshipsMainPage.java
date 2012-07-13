@@ -142,7 +142,8 @@ public class ImportRelationshipsMainPage extends WizardDataTransferPage
      * 
      * @param event Event
      */
-    public void handleEvent( Event event ) {
+    @Override
+	public void handleEvent( Event event ) {
         if (!initializing) {
             boolean validate = false;
 
@@ -210,7 +211,8 @@ public class ImportRelationshipsMainPage extends WizardDataTransferPage
      * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
      * @since 4.2
      */
-    public void createControl( Composite parent ) {
+    @Override
+	public void createControl( Composite parent ) {
 
         initializeDialogUnits(parent);
 
@@ -270,7 +272,8 @@ public class ImportRelationshipsMainPage extends WizardDataTransferPage
             /*
              * @see KeyListener.keyPressed
              */
-            public void keyPressed( KeyEvent e ) {
+            @Override
+			public void keyPressed( KeyEvent e ) {
                 // If there has been a key pressed then mark as dirty
                 entryChanged = true;
             }
@@ -278,7 +281,8 @@ public class ImportRelationshipsMainPage extends WizardDataTransferPage
             /*
              * @see KeyListener.keyReleased
              */
-            public void keyReleased( KeyEvent e ) {
+            @Override
+			public void keyReleased( KeyEvent e ) {
             }
         });
 
@@ -287,14 +291,16 @@ public class ImportRelationshipsMainPage extends WizardDataTransferPage
             /*
              * @see FocusListener.focusGained(FocusEvent)
              */
-            public void focusGained( FocusEvent e ) {
+            @Override
+			public void focusGained( FocusEvent e ) {
                 // Do nothing when getting focus
             }
 
             /*
              * @see FocusListener.focusLost(FocusEvent)
              */
-            public void focusLost( FocusEvent e ) {
+            @Override
+			public void focusLost( FocusEvent e ) {
                 // Clear the flag to prevent constant update
                 if (entryChanged) {
                     entryChanged = false;
@@ -507,7 +513,8 @@ public class ImportRelationshipsMainPage extends WizardDataTransferPage
      * 
      * @return boolean
      */
-    public boolean finish() {
+    @Override
+	public boolean finish() {
         saveWidgetValues();
 
         // Generate RowObjects from raw RowStrings
@@ -602,25 +609,31 @@ public class ImportRelationshipsMainPage extends WizardDataTransferPage
         }
     }
 
-    public Object[] addButtonSelected() {
+    @Override
+	public Object[] addButtonSelected() {
         return null;
     }
 
-    public void downButtonSelected( IStructuredSelection selection ) {
+    @Override
+	public void downButtonSelected( IStructuredSelection selection ) {
     }
 
-    public Object editButtonSelected( IStructuredSelection selection ) {
+    @Override
+	public Object editButtonSelected( IStructuredSelection selection ) {
         return null;
     }
 
-    public void itemsSelected( IStructuredSelection selection ) {
+    @Override
+	public void itemsSelected( IStructuredSelection selection ) {
     }
 
-    public Object[] removeButtonSelected( IStructuredSelection selection ) {
+    @Override
+	public Object[] removeButtonSelected( IStructuredSelection selection ) {
         return null;
     }
 
-    public void upButtonSelected( IStructuredSelection selection ) {
+    @Override
+	public void upButtonSelected( IStructuredSelection selection ) {
     }
 
     /**
@@ -658,22 +671,26 @@ public class ImportRelationshipsMainPage extends WizardDataTransferPage
         }
     }
 
-    public String getComboText() {
+    @Override
+	public String getComboText() {
         // TODO Auto-generated method stub
         return IMPORT_ID;
     }
 
-    public String getDescriptionText() {
+    @Override
+	public String getDescriptionText() {
         // TODO Auto-generated method stub
         return IMPORT_DESC;
     }
 
-    public String getSampleDataText() {
+    @Override
+	public String getSampleDataText() {
         // TODO Auto-generated method stub
         return IMPORT_DATA;
     }
 
-    public String getType() {
+    @Override
+	public String getType() {
         // TODO Auto-generated method stub
         return IMPORT_ID;
     }

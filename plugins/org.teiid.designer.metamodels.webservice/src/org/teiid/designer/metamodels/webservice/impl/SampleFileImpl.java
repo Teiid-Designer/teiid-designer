@@ -94,7 +94,8 @@ public class SampleFileImpl extends EObjectImpl implements SampleFile {
      * 
      * @generated
      */
-    public String getName() {
+    @Override
+	public String getName() {
         return name;
     }
 
@@ -103,7 +104,8 @@ public class SampleFileImpl extends EObjectImpl implements SampleFile {
      * 
      * @generated
      */
-    public void setName( String newName ) {
+    @Override
+	public void setName( String newName ) {
         String oldName = name;
         name = newName;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, WebServicePackage.SAMPLE_FILE__NAME,
@@ -115,7 +117,8 @@ public class SampleFileImpl extends EObjectImpl implements SampleFile {
      * 
      * @generated
      */
-    public String getUrl() {
+    @Override
+	public String getUrl() {
         return url;
     }
 
@@ -124,7 +127,8 @@ public class SampleFileImpl extends EObjectImpl implements SampleFile {
      * 
      * @generated
      */
-    public void setUrl( String newUrl ) {
+    @Override
+	public void setUrl( String newUrl ) {
         String oldUrl = url;
         url = newUrl;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, WebServicePackage.SAMPLE_FILE__URL,
@@ -136,7 +140,8 @@ public class SampleFileImpl extends EObjectImpl implements SampleFile {
      * 
      * @generated
      */
-    public SampleMessages getSampleMessages() {
+    @Override
+	public SampleMessages getSampleMessages() {
         if (eContainerFeatureID != WebServicePackage.SAMPLE_FILE__SAMPLE_MESSAGES) return null;
         return (SampleMessages)eContainer;
     }
@@ -146,7 +151,8 @@ public class SampleFileImpl extends EObjectImpl implements SampleFile {
      * 
      * @generated
      */
-    public void setSampleMessages( SampleMessages newSampleMessages ) {
+    @Override
+	public void setSampleMessages( SampleMessages newSampleMessages ) {
         if (newSampleMessages != eContainer
             || (eContainerFeatureID != WebServicePackage.SAMPLE_FILE__SAMPLE_MESSAGES && newSampleMessages != null)) {
             if (EcoreUtil.isAncestor(this, newSampleMessages)) throw new IllegalArgumentException(

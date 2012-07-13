@@ -54,7 +54,8 @@ public class Validate extends AbstractAction implements EventObjectListener {
      * @see org.teiid.core.event.EventObjectListener#processEvent(java.util.EventObject)
      * @since 4.2
      */
-    public void processEvent(EventObject e) {
+    @Override
+	public void processEvent(EventObject e) {
         //------------------------------------------------
         // respond to internal events from SqlEditorPanel
         //------------------------------------------------

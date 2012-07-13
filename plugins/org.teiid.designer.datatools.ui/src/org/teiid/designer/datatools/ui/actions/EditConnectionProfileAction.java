@@ -126,9 +126,11 @@ public class EditConnectionProfileAction extends Action {
 		// to store for the next time
 		this.mShell.addControlListener(new ControlListener(){
 
+			@Override
 			public void controlMoved(ControlEvent e) {
 			}
 
+			@Override
 			public void controlResized(ControlEvent e) {
 				if (e.getSource() instanceof Shell) {
 					Shell shell = (Shell) e.getSource();
@@ -201,6 +203,7 @@ public class EditConnectionProfileAction extends Action {
 		/* (non-Javadoc)
 		 * @see org.eclipse.jface.dialogs.IPageChangedListener#pageChanged(org.eclipse.jface.dialogs.PageChangedEvent)
 		 */
+		@Override
 		public void pageChanged(PageChangedEvent event) {
 			if (event.getSelectedPage() instanceof ConnectionProfileDetailsPage ||
 					event.getSelectedPage() instanceof ProfileDetailsPropertyPage) {

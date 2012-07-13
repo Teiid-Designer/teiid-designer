@@ -45,10 +45,12 @@ public class LaunchInstructionsAction extends Action implements AdvisorUiConstan
     /* (non-Javadoc)
      * @see org.eclipse.jface.action.IAction#run()
      */
-    public void run() {
+    @Override
+	public void run() {
 
         Display.getCurrent().asyncExec(new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 ListMessageDialog.openInformation(AdvisorUiPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getShell(), 
                 		Messages.DeployWarFile_title, null, 
                 		Messages.DeployWarFile_instructions, 

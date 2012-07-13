@@ -46,7 +46,8 @@ public abstract class AbstractXsdEntityAspect extends AbstractMetamodelAspect
      * @see org.teiid.designer.core.metamodel.aspect.uml.UmlDiagramAspect#getImage(java.lang.Object)
      * @since 5.0.2
      */
-    public Object getImage(Object theObject) {
+    @Override
+	public Object getImage(Object theObject) {
         AdapterFactory adapterFactory = ModelerCore.getMetamodelRegistry().getAdapterFactory();
         IItemLabelProvider provider = (IItemLabelProvider)adapterFactory.adapt(theObject,IItemLabelProvider.class);
         return provider.getImage(theObject);
@@ -56,7 +57,8 @@ public abstract class AbstractXsdEntityAspect extends AbstractMetamodelAspect
      * @see org.teiid.designer.core.metamodel.aspect.uml.UmlDiagramAspect#getVisibility(java.lang.Object)
      * @since 5.0.2
      */
-    public int getVisibility(Object theObject) {
+    @Override
+	public int getVisibility(Object theObject) {
         return VISIBILITY_PUBLIC;
     }
     

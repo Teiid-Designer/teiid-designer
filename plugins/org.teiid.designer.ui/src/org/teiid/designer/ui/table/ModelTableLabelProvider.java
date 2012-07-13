@@ -25,14 +25,16 @@ public class ModelTableLabelProvider extends ModelExplorerLabelProvider implemen
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang.Object, int)
      */
-    public Image getColumnImage(Object element, int columnIndex) {
+    @Override
+	public Image getColumnImage(Object element, int columnIndex) {
         return null;
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.lang.Object, int)
      */
-    public String getColumnText(Object element, int columnIndex) {
+    @Override
+	public String getColumnText(Object element, int columnIndex) {
         Object obj = ((ModelRowElement) element).getValue(columnIndex);
         if (obj != null ) {
             // defect 17935 - Replace unwanted characters with a space.

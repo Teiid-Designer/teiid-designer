@@ -165,7 +165,8 @@ public class NamespaceUriRenameDialog extends Dialog implements IHelpContextIds,
         Text txf = new Text(panel, SWT.BORDER);
         txf.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         txf.addModifyListener(new ModifyListener() {
-            public void modifyText( ModifyEvent theEvent ) {
+            @Override
+			public void modifyText( ModifyEvent theEvent ) {
                 handleModifyText(theEvent);
             }
         });
@@ -274,7 +275,8 @@ public class NamespaceUriRenameDialog extends Dialog implements IHelpContextIds,
          * @see org.eclipse.jface.viewers.ICellEditorValidator#isValid(java.lang.Object)
          * @since 4.3
          */
-        public String isValid( Object theValue ) {
+        @Override
+		public String isValid( Object theValue ) {
             String result = null;
 
             if (theValue instanceof String) {

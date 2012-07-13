@@ -51,7 +51,8 @@ public class AnnotationAspect extends AbstractMetamodelAspect implements SqlAnno
     /**
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlAspect#isRecordType(char)
      */
-    public boolean isRecordType(char recordType) {
+    @Override
+	public boolean isRecordType(char recordType) {
         switch ( recordType ) {
             case IndexConstants.RECORD_TYPE.ANNOTATION:
             case IndexConstants.RECORD_TYPE.PROPERTY:
@@ -63,14 +64,16 @@ public class AnnotationAspect extends AbstractMetamodelAspect implements SqlAnno
     /**
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlAspect#isQueryable(org.eclipse.emf.ecore.EObject)
      */
-    public boolean isQueryable(final EObject eObject) {
+    @Override
+	public boolean isQueryable(final EObject eObject) {
         return true;
     }
 
     /**
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlAspect#getName(org.eclipse.emf.ecore.EObject)
      */
-    public String getName(EObject eObject) {
+    @Override
+	public String getName(EObject eObject) {
         final EObject target = getTarget(eObject);
         if (target == null) {
             return null;
@@ -90,7 +93,8 @@ public class AnnotationAspect extends AbstractMetamodelAspect implements SqlAnno
     /**
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlAspect#getNameInSource(org.eclipse.emf.ecore.EObject)
      */
-    public String getNameInSource(EObject eObject) {
+    @Override
+	public String getNameInSource(EObject eObject) {
         final EObject target = getTarget(eObject);
         if (target == null) {
             return null;
@@ -159,7 +163,8 @@ public class AnnotationAspect extends AbstractMetamodelAspect implements SqlAnno
     /**
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlAnnotationAspect#getDescription(org.eclipse.emf.ecore.EObject)
      */
-    public String getDescription(EObject eObject) {
+    @Override
+	public String getDescription(EObject eObject) {
         final Annotation annotation = getAnnotation(eObject);
         return annotation.getDescription();
     }
@@ -167,7 +172,8 @@ public class AnnotationAspect extends AbstractMetamodelAspect implements SqlAnno
     /**
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlAnnotationAspect#getKeywords(org.eclipse.emf.ecore.EObject)
      */
-    public List getKeywords(EObject eObject) {
+    @Override
+	public List getKeywords(EObject eObject) {
         final Annotation annotation = getAnnotation(eObject);
         return annotation.getKeywords();
     }
@@ -175,7 +181,8 @@ public class AnnotationAspect extends AbstractMetamodelAspect implements SqlAnno
     /*
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlAnnotationAspect#getTags(org.eclipse.emf.ecore.EObject)
      */
-    public Map getTags(EObject eObject) {
+    @Override
+	public Map getTags(EObject eObject) {
         final Annotation annotation = getAnnotation(eObject);
         final EMap tags = annotation.getTags();
         if ( tags != null && tags.size() != 0 ) {
@@ -187,7 +194,8 @@ public class AnnotationAspect extends AbstractMetamodelAspect implements SqlAnno
     /*
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlAspect#updateObject(org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject)
      */
-    public void updateObject(EObject targetObject, EObject sourceObject) {
+    @Override
+	public void updateObject(EObject targetObject, EObject sourceObject) {
 
     }
 
@@ -195,7 +203,8 @@ public class AnnotationAspect extends AbstractMetamodelAspect implements SqlAnno
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlAnnotationAspect#getURI(org.eclipse.emf.ecore.EObject)
      * @since 4.2
      */
-    public URI getURI(EObject eObject) {
+    @Override
+	public URI getURI(EObject eObject) {
         final EObject target = getTarget(eObject);
         if (target == null) {
             return null;
@@ -207,7 +216,8 @@ public class AnnotationAspect extends AbstractMetamodelAspect implements SqlAnno
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlAnnotationAspect#getEClass(org.eclipse.emf.ecore.EObject)
      * @since 4.2
      */
-    public URI getMetaclassURI(EObject eObject) {
+    @Override
+	public URI getMetaclassURI(EObject eObject) {
         final EObject target = getTarget(eObject);
         if (target == null) {
             return null;

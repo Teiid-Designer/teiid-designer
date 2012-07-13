@@ -100,7 +100,8 @@ public class DiagramPositionImpl extends EObjectImpl implements DiagramPosition 
      * <!-- end-user-doc -->
      * @generated
      */
-    public int getXPosition() {
+    @Override
+	public int getXPosition() {
         return xPosition;
     }
 
@@ -109,7 +110,8 @@ public class DiagramPositionImpl extends EObjectImpl implements DiagramPosition 
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setXPosition(int newXPosition) {
+    @Override
+	public void setXPosition(int newXPosition) {
         int oldXPosition = xPosition;
         xPosition = newXPosition;
         if (eNotificationRequired())
@@ -121,7 +123,8 @@ public class DiagramPositionImpl extends EObjectImpl implements DiagramPosition 
      * <!-- end-user-doc -->
      * @generated
      */
-    public int getYPosition() {
+    @Override
+	public int getYPosition() {
         return yPosition;
     }
 
@@ -130,7 +133,8 @@ public class DiagramPositionImpl extends EObjectImpl implements DiagramPosition 
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setYPosition(int newYPosition) {
+    @Override
+	public void setYPosition(int newYPosition) {
         int oldYPosition = yPosition;
         yPosition = newYPosition;
         if (eNotificationRequired())
@@ -142,7 +146,8 @@ public class DiagramPositionImpl extends EObjectImpl implements DiagramPosition 
      * <!-- end-user-doc -->
      * @generated
      */
-    public DiagramLink getDiagramLink() {
+    @Override
+	public DiagramLink getDiagramLink() {
         if (eContainerFeatureID != DiagramPackage.DIAGRAM_POSITION__DIAGRAM_LINK) return null;
         return (DiagramLink)eContainer;
     }
@@ -152,7 +157,8 @@ public class DiagramPositionImpl extends EObjectImpl implements DiagramPosition 
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setDiagramLink(DiagramLink newDiagramLink) {
+    @Override
+	public void setDiagramLink(DiagramLink newDiagramLink) {
         if (newDiagramLink != eContainer || (eContainerFeatureID != DiagramPackage.DIAGRAM_POSITION__DIAGRAM_LINK && newDiagramLink != null)) {
             if (EcoreUtil.isAncestor(this, newDiagramLink))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$

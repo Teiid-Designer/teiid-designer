@@ -52,7 +52,8 @@ public class DiagramEditorSelectionProvider implements ISelectionProvider, ISele
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.ISelectionProvider#addSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
      */
-    public synchronized void addSelectionChangedListener(ISelectionChangedListener listener) {
+    @Override
+	public synchronized void addSelectionChangedListener(ISelectionChangedListener listener) {
         if ( ! listenerList.contains(listener) ) {
             listenerList.add(listener);
         }   
@@ -61,21 +62,24 @@ public class DiagramEditorSelectionProvider implements ISelectionProvider, ISele
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.ISelectionProvider#getSelection()
      */
-    public synchronized ISelection getSelection() {
+    @Override
+	public synchronized ISelection getSelection() {
         return currentSelection;
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.ISelectionProvider#removeSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
      */
-    public synchronized void removeSelectionChangedListener(ISelectionChangedListener listener) {
+    @Override
+	public synchronized void removeSelectionChangedListener(ISelectionChangedListener listener) {
         listenerList.remove(listener);
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.ISelectionProvider#setSelection(org.eclipse.jface.viewers.ISelection)
      */
-    public synchronized void setSelection(ISelection selection) {
+    @Override
+	public synchronized void setSelection(ISelection selection) {
         currentSelection = selection;
         fireSelectionChanged(new SelectionChangedEvent(this, selection));
     }
@@ -83,7 +87,8 @@ public class DiagramEditorSelectionProvider implements ISelectionProvider, ISele
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
      */
-    public synchronized void selectionChanged(SelectionChangedEvent event) {
+    @Override
+	public synchronized void selectionChanged(SelectionChangedEvent event) {
         currentSelection = event.getSelection();
         fireSelectionChanged(event);
     }

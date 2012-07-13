@@ -139,7 +139,8 @@ public class OperationImpl extends WebServiceComponentImpl implements Operation 
      * 
      * @generated
      */
-    public String getPattern() {
+    @Override
+	public String getPattern() {
         return pattern;
     }
 
@@ -148,7 +149,8 @@ public class OperationImpl extends WebServiceComponentImpl implements Operation 
      * 
      * @generated
      */
-    public void setPattern( String newPattern ) {
+    @Override
+	public void setPattern( String newPattern ) {
         String oldPattern = pattern;
         pattern = newPattern;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, WebServicePackage.OPERATION__PATTERN,
@@ -160,7 +162,8 @@ public class OperationImpl extends WebServiceComponentImpl implements Operation 
      * 
      * @generated
      */
-    public boolean isSafe() {
+    @Override
+	public boolean isSafe() {
         return safe;
     }
 
@@ -169,7 +172,8 @@ public class OperationImpl extends WebServiceComponentImpl implements Operation 
      * 
      * @generated
      */
-    public void setSafe( boolean newSafe ) {
+    @Override
+	public void setSafe( boolean newSafe ) {
         boolean oldSafe = safe;
         safe = newSafe;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, WebServicePackage.OPERATION__SAFE,
@@ -181,7 +185,8 @@ public class OperationImpl extends WebServiceComponentImpl implements Operation 
      * 
      * @generated
      */
-    public Input getInput() {
+    @Override
+	public Input getInput() {
         return input;
     }
 
@@ -208,7 +213,8 @@ public class OperationImpl extends WebServiceComponentImpl implements Operation 
      * 
      * @generated
      */
-    public void setInput( Input newInput ) {
+    @Override
+	public void setInput( Input newInput ) {
         if (newInput != input) {
             NotificationChain msgs = null;
             if (input != null) msgs = ((InternalEObject)input).eInverseRemove(this,
@@ -230,7 +236,8 @@ public class OperationImpl extends WebServiceComponentImpl implements Operation 
      * 
      * @generated
      */
-    public Output getOutput() {
+    @Override
+	public Output getOutput() {
         return output;
     }
 
@@ -257,7 +264,8 @@ public class OperationImpl extends WebServiceComponentImpl implements Operation 
      * 
      * @generated
      */
-    public void setOutput( Output newOutput ) {
+    @Override
+	public void setOutput( Output newOutput ) {
         if (newOutput != output) {
             NotificationChain msgs = null;
             if (output != null) msgs = ((InternalEObject)output).eInverseRemove(this,
@@ -280,7 +288,8 @@ public class OperationImpl extends WebServiceComponentImpl implements Operation 
      * 
      * @generated
      */
-    public Interface getInterface() {
+    @Override
+	public Interface getInterface() {
         if (eContainerFeatureID != WebServicePackage.OPERATION__INTERFACE) return null;
         return (Interface)eContainer;
     }
@@ -290,7 +299,8 @@ public class OperationImpl extends WebServiceComponentImpl implements Operation 
      * 
      * @generated
      */
-    public void setInterface( Interface newInterface ) {
+    @Override
+	public void setInterface( Interface newInterface ) {
         if (newInterface != eContainer || (eContainerFeatureID != WebServicePackage.OPERATION__INTERFACE && newInterface != null)) {
             if (EcoreUtil.isAncestor(this, newInterface)) throw new IllegalArgumentException(
                                                                                              "Recursive containment not allowed for " + toString()); //$NON-NLS-1$
@@ -312,7 +322,8 @@ public class OperationImpl extends WebServiceComponentImpl implements Operation 
      * <!-- end-user-doc -->
      * @generated
      */
-    public OperationUpdateCount getUpdateCount() {
+    @Override
+	public OperationUpdateCount getUpdateCount() {
         return updateCount;
     }
 
@@ -321,7 +332,8 @@ public class OperationImpl extends WebServiceComponentImpl implements Operation 
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setUpdateCount(OperationUpdateCount newUpdateCount) {
+    @Override
+	public void setUpdateCount(OperationUpdateCount newUpdateCount) {
         OperationUpdateCount oldUpdateCount = updateCount;
         updateCount = newUpdateCount == null ? UPDATE_COUNT_EDEFAULT : newUpdateCount;
         if (eNotificationRequired())

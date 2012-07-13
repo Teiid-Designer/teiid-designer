@@ -663,7 +663,8 @@ public class TestServerRuntimeMetadata extends TestCase {
     }
     
     static class MetadataRecordComparator implements Comparator {
-        public int compare( Object obj1,
+        @Override
+		public int compare( Object obj1,
                             Object obj2 ) {
             if (obj1 == null && obj2 == null) {
                 return 0;

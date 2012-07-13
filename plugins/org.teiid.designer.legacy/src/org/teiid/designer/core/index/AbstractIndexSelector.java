@@ -34,7 +34,8 @@ public abstract class AbstractIndexSelector implements IndexSelector {
      * @see org.teiid.designer.core.index.IndexSelector#getIndexes()
      * @since 4.2
      */
-    public abstract Index[] getIndexes() throws IOException;
+    @Override
+	public abstract Index[] getIndexes() throws IOException;
 
     
     
@@ -42,7 +43,8 @@ public abstract class AbstractIndexSelector implements IndexSelector {
      * @see org.teiid.designer.core.index.IndexSelector#getFilePaths()
      * @since 4.2
      */
-    public String[] getFilePaths() {
+    @Override
+	public String[] getFilePaths() {
         return null;
     }
 
@@ -50,7 +52,8 @@ public abstract class AbstractIndexSelector implements IndexSelector {
      * @see org.teiid.designer.core.index.IndexSelector#getFileContentsAsString(java.util.List)
      * @since 4.2
      */
-    public List getFileContentsAsString(final List paths) {
+    @Override
+	public List getFileContentsAsString(final List paths) {
         return Collections.EMPTY_LIST;
     }
 
@@ -58,7 +61,8 @@ public abstract class AbstractIndexSelector implements IndexSelector {
      * @see org.teiid.designer.core.index.IndexSelector#getFileContentAsString(java.lang.String)
      * @since 4.2
      */
-    public String getFileContentAsString(final String path) {
+    @Override
+	public String getFileContentAsString(final String path) {
         return null;
     }
 
@@ -66,7 +70,8 @@ public abstract class AbstractIndexSelector implements IndexSelector {
      * @see org.teiid.designer.core.index.IndexSelector#getFileContent(java.lang.String, java.lang.String[], java.lang.String[])
      * @since 4.2
      */
-    public InputStream getFileContent(final String path, final String[] tokens, final String[] tokenReplacements) {
+    @Override
+	public InputStream getFileContent(final String path, final String[] tokens, final String[] tokenReplacements) {
         return null;
     }
 
@@ -74,7 +79,8 @@ public abstract class AbstractIndexSelector implements IndexSelector {
      * @see org.teiid.designer.core.index.IndexSelector#getFileSize(java.lang.String)
      * @since 4.2
      */
-    public long getFileSize(String path) {
+    @Override
+	public long getFileSize(String path) {
         return 0;
     }
     
@@ -82,7 +88,8 @@ public abstract class AbstractIndexSelector implements IndexSelector {
      * @see org.teiid.designer.core.index.IndexSelector#getFile(java.lang.String)
      * @since 4.2
      */
-    public File getFile(String path) {
+    @Override
+	public File getFile(String path) {
         return null;
     }
 
@@ -90,7 +97,8 @@ public abstract class AbstractIndexSelector implements IndexSelector {
      * @see org.teiid.designer.core.index.IndexSelector#getFileContent(java.lang.String)
      * @since 4.2
      */
-    public InputStream getFileContent(final String path) {
+    @Override
+	public InputStream getFileContent(final String path) {
         return null;
     }
 
@@ -98,14 +106,16 @@ public abstract class AbstractIndexSelector implements IndexSelector {
      * @see org.teiid.designer.core.index.IndexSelector#isValid()
      * @since 4.2
      */
-    public boolean isValid() {
+    @Override
+	public boolean isValid() {
         return this.isValid;
     }
     /** 
      * @see org.teiid.designer.core.index.IndexSelector#setValid(boolean)
      * @since 4.2
      */
-    public void setValid(boolean valid) {
+    @Override
+	public void setValid(boolean valid) {
         this.isValid = valid;
     }
 }

@@ -62,13 +62,15 @@ public class ModelInitializerSelectionDialog extends ListDialog implements IStru
     /**
      * @see org.eclipse.jface.viewers.IContentProvider#dispose()
      */
-    public void dispose() {
+    @Override
+	public void dispose() {
     }
 
     /**
      * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
      */
-    public Object[] getElements( Object inputElement ) {
+    @Override
+	public Object[] getElements( Object inputElement ) {
         return descriptor.getModelInitializerNames().toArray();
     }
 
@@ -76,7 +78,8 @@ public class ModelInitializerSelectionDialog extends ListDialog implements IStru
      * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object,
      *      java.lang.Object)
      */
-    public void inputChanged( Viewer viewer,
+    @Override
+	public void inputChanged( Viewer viewer,
                               Object oldInput,
                               Object newInput ) {
 
@@ -86,7 +89,8 @@ public class ModelInitializerSelectionDialog extends ListDialog implements IStru
     protected Control createDialogArea( Composite parent ) {
         Control control = super.createDialogArea(parent);
         super.getTableViewer().addSelectionChangedListener(new ISelectionChangedListener() {
-            public void selectionChanged( SelectionChangedEvent event ) {
+            @Override
+			public void selectionChanged( SelectionChangedEvent event ) {
                 String name = (String)SelectionUtilities.getSelectedObject(event.getSelection());
                 if (name != null) {
                     description.setText(descriptor.getModelInitializerDescription(name));

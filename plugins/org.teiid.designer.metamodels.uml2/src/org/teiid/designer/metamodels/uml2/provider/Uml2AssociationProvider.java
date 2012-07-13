@@ -36,7 +36,8 @@ public class Uml2AssociationProvider implements AssociationProvider {
     /**
      * @see org.teiid.designer.core.association.AssociationProvider#getNewAssociationDescriptors(java.util.List)
      */
-    public Collection getNewAssociationDescriptors( final List eObjects ) {
+    @Override
+	public Collection getNewAssociationDescriptors( final List eObjects ) {
 
         // If the list of selected objects contains invalid entities then return
         if (!containsValidObjects(eObjects, VALID_CLASSES_TYPES)) {

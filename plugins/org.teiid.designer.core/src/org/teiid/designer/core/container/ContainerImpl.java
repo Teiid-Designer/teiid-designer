@@ -203,7 +203,8 @@ public class ContainerImpl implements Container, IEditingDomainProvider {
     /* (non-Javadoc)
      * @See org.teiid.designer.core.container.Container#getOrCreateResource(org.eclipse.emf.common.util.URI)
      */
-    public Resource getOrCreateResource( final URI uri ) throws ModelerCoreException {
+    @Override
+	public Resource getOrCreateResource( final URI uri ) throws ModelerCoreException {
         final ResourceAction action = ContainerImpl.getOrCreateResource(this, uri);
         return action.getResource();
     }
@@ -233,7 +234,8 @@ public class ContainerImpl implements Container, IEditingDomainProvider {
      * 
      * @param listener
      */
-    public void addUndoableEditListener( UndoableListener listener ) {
+    @Override
+	public void addUndoableEditListener( UndoableListener listener ) {
         this.emfTransactionProvider.addUndoableEditListener(listener);
     }
 
@@ -242,7 +244,8 @@ public class ContainerImpl implements Container, IEditingDomainProvider {
      * 
      * @param listener
      */
-    public void removeUndoableEditListener( UndoableListener listener ) {
+    @Override
+	public void removeUndoableEditListener( UndoableListener listener ) {
         this.emfTransactionProvider.removeUndoableEditListener(listener);
     }
 
@@ -294,7 +297,8 @@ public class ContainerImpl implements Container, IEditingDomainProvider {
      * @throws IllegalStateException if the container is currently running or is either initializing or shutting down.
      * @since 3.1
      */
-    public void setName( final String newName ) {
+    @Override
+	public void setName( final String newName ) {
         verifySetIsAllowed(this.name);
         if (!isValidName(newName)) {
             throw new IllegalArgumentException(
@@ -322,7 +326,8 @@ public class ContainerImpl implements Container, IEditingDomainProvider {
      * @see org.teiid.designer.core.container.api.mtk.core.Container#shutdown()
      * @since 3.1
      */
-    public final void shutdown() {
+    @Override
+	public final void shutdown() {
         if (this.state.isState(STOPPED)) {
             return; // do nothing
         }
@@ -339,7 +344,8 @@ public class ContainerImpl implements Container, IEditingDomainProvider {
      * @see org.teiid.designer.core.container.api.mtk.core.Container#start()
      * @since 3.1
      */
-    public final void start() {
+    @Override
+	public final void start() {
         if (this.state.isState(STARTED)) {
             return; // do nothing
         }
@@ -404,7 +410,8 @@ public class ContainerImpl implements Container, IEditingDomainProvider {
      * @see org.teiid.designer.core.container.api.mtk.core.Container#getName()
      * @since 3.1
      */
-    public String getName() {
+    @Override
+	public String getName() {
         return this.name;
     }
 
@@ -473,7 +480,8 @@ public class ContainerImpl implements Container, IEditingDomainProvider {
      * @return The container's EventBroker
      * @since 3.1
      */
-    public ChangeNotifier getChangeNotifier() {
+    @Override
+	public ChangeNotifier getChangeNotifier() {
         if (this.changeNotifier == null) {
             setChangeNotifier(createDefaultChangeNotifier());
         }
@@ -484,7 +492,8 @@ public class ContainerImpl implements Container, IEditingDomainProvider {
      * @see org.teiid.designer.core.container.api.mtk.core.Container#getEObjectFinder()
      * @since 3.1
      */
-    public EObjectFinder getEObjectFinder() {
+    @Override
+	public EObjectFinder getEObjectFinder() {
         if (this.finder == null) {
             setEObjectFinder(createDefaultEObjectFinder());
         }
@@ -495,7 +504,8 @@ public class ContainerImpl implements Container, IEditingDomainProvider {
      * @see org.teiid.designer.core.container.Container#getResourceFinder()
      * @since 4.2
      */
-    public ResourceFinder getResourceFinder() {
+    @Override
+	public ResourceFinder getResourceFinder() {
         if (this.resourceFinder == null) {
             setResourceFinder(createDefaultResourceFinder());
         }
@@ -506,7 +516,8 @@ public class ContainerImpl implements Container, IEditingDomainProvider {
      * @see org.teiid.designer.core.container.Container#setEObjectFinder(org.teiid.designer.core.container.EObjectFinder)
      * @since 4.3
      */
-    public void setEObjectFinder( EObjectFinder finder ) {
+    @Override
+	public void setEObjectFinder( EObjectFinder finder ) {
         CoreArgCheck.isNotNull(finder);
         verifySetIsAllowed(this.finder);
         this.finder = finder;
@@ -516,7 +527,8 @@ public class ContainerImpl implements Container, IEditingDomainProvider {
      * @see org.teiid.designer.core.container.Container#setResourceFinder(org.teiid.designer.core.container.ResourceFinder)
      * @since 4.3
      */
-    public void setResourceFinder( ResourceFinder finder ) {
+    @Override
+	public void setResourceFinder( ResourceFinder finder ) {
         CoreArgCheck.isNotNull(finder);
         verifySetIsAllowed(this.resourceFinder);
         this.resourceFinder = finder;
@@ -527,7 +539,8 @@ public class ContainerImpl implements Container, IEditingDomainProvider {
      * 
      * @return UnitOfWorkProvider
      */
-    public UnitOfWorkProvider getEmfTransactionProvider() {
+    @Override
+	public UnitOfWorkProvider getEmfTransactionProvider() {
         if (!isStarted()) {
             throw new ModelerCoreRuntimeException(
                                                   ModelerCore.Util.getString("ContainerImpl.Container_must_be_started_prior_to_use_7")); //$NON-NLS-1$
@@ -581,7 +594,8 @@ public class ContainerImpl implements Container, IEditingDomainProvider {
      * 
      * @return MetamodelRegistry
      */
-    public MetamodelRegistry getMetamodelRegistry() {
+    @Override
+	public MetamodelRegistry getMetamodelRegistry() {
         if (!isStarted()) {
             throw new ModelerCoreRuntimeException(
                                                   ModelerCore.Util.getString("ContainerImpl.Container_must_be_started_prior_to_use_10")); //$NON-NLS-1$
@@ -595,7 +609,8 @@ public class ContainerImpl implements Container, IEditingDomainProvider {
      * 
      * @param metamodelRegistry The metamodelRegistry to set
      */
-    public void setMetamodelRegistry( MetamodelRegistry metamodelRegistry ) {
+    @Override
+	public void setMetamodelRegistry( MetamodelRegistry metamodelRegistry ) {
         if (metamodelRegistry == null) {
             CoreArgCheck.isNotNull(metamodelRegistry,
                                    ModelerCore.Util.getString("ContainerImpl.The_reference_to_the_MetamodelRegistry_may_not_be_null_11")); //$NON-NLS-1$
@@ -607,7 +622,8 @@ public class ContainerImpl implements Container, IEditingDomainProvider {
      * @see org.teiid.designer.core.container.Container#getDatatypeManager()
      * @since 4.2
      */
-    public DatatypeManager getDatatypeManager() {
+    @Override
+	public DatatypeManager getDatatypeManager() {
         if (datatypeManager == null) {
             datatypeManager = ModelerCore.getBuiltInTypesManager();
         }
@@ -628,7 +644,8 @@ public class ContainerImpl implements Container, IEditingDomainProvider {
      * 
      * @see org.eclipse.emf.ecore.resource.ResourceSet#createResource(org.eclipse.emf.common.util.URI)
      */
-    public Resource createResource( final URI uri ) {
+    @Override
+	public Resource createResource( final URI uri ) {
         return this.resourceSet.createResource(uri);
     }
 
@@ -637,7 +654,8 @@ public class ContainerImpl implements Container, IEditingDomainProvider {
      * 
      * @see org.eclipse.emf.ecore.resource.ResourceSet#getAdapterFactories()
      */
-    public EList<AdapterFactory> getAdapterFactories() {
+    @Override
+	public EList<AdapterFactory> getAdapterFactories() {
         return this.resourceSet.getAdapterFactories();
     }
 
@@ -646,7 +664,8 @@ public class ContainerImpl implements Container, IEditingDomainProvider {
      * 
      * @see org.eclipse.emf.ecore.resource.ResourceSet#getAllContents()
      */
-    public TreeIterator<Notifier> getAllContents() {
+    @Override
+	public TreeIterator<Notifier> getAllContents() {
         return this.resourceSet.getAllContents();
     }
 
@@ -655,7 +674,8 @@ public class ContainerImpl implements Container, IEditingDomainProvider {
      * 
      * @see org.eclipse.emf.ecore.resource.ResourceSet#getEObject(org.eclipse.emf.common.util.URI, boolean)
      */
-    public EObject getEObject( final URI uri,
+    @Override
+	public EObject getEObject( final URI uri,
                                final boolean loadOnDemand ) {
         EObject result = null;
 
@@ -720,7 +740,8 @@ public class ContainerImpl implements Container, IEditingDomainProvider {
      * 
      * @see org.eclipse.emf.ecore.resource.ResourceSet#getLoadOptions()
      */
-    public Map<Object, Object> getLoadOptions() {
+    @Override
+	public Map<Object, Object> getLoadOptions() {
         return this.resourceSet.getLoadOptions();
     }
 
@@ -728,7 +749,8 @@ public class ContainerImpl implements Container, IEditingDomainProvider {
      * @see org.eclipse.emf.ecore.resource.ResourceSet#getPackageRegistry()
      * @since 4.3
      */
-    public org.eclipse.emf.ecore.EPackage.Registry getPackageRegistry() {
+    @Override
+	public org.eclipse.emf.ecore.EPackage.Registry getPackageRegistry() {
         return this.resourceSet.getPackageRegistry();
     }
 
@@ -736,7 +758,8 @@ public class ContainerImpl implements Container, IEditingDomainProvider {
      * @see org.eclipse.emf.ecore.resource.ResourceSet#setPackageRegistry(org.eclipse.emf.ecore.EPackage.Registry)
      * @since 4.3
      */
-    public void setPackageRegistry( org.eclipse.emf.ecore.EPackage.Registry packageRegistry ) {
+    @Override
+	public void setPackageRegistry( org.eclipse.emf.ecore.EPackage.Registry packageRegistry ) {
         this.resourceSet.setPackageRegistry(packageRegistry);
     }
 
@@ -747,7 +770,8 @@ public class ContainerImpl implements Container, IEditingDomainProvider {
      * @return ResourceSetImpl
      * @throws ModelerCoreException
      */
-    public Resource getResource( final URI uri,
+    @Override
+	public Resource getResource( final URI uri,
                                  final boolean loadOnDemand ) {
         if (uri == null) {
             CoreArgCheck.isNotNull(uri, ModelerCore.Util.getString("ContainerImpl.The_URI_to_load_may_not_be_null_12")); //$NON-NLS-1$
@@ -811,7 +835,8 @@ public class ContainerImpl implements Container, IEditingDomainProvider {
      * 
      * @see org.eclipse.emf.ecore.resource.ResourceSet#getResourceFactoryRegistry()
      */
-    public Registry getResourceFactoryRegistry() {
+    @Override
+	public Registry getResourceFactoryRegistry() {
         return this.resourceSet.getResourceFactoryRegistry();
     }
 
@@ -820,7 +845,8 @@ public class ContainerImpl implements Container, IEditingDomainProvider {
      * 
      * @see org.eclipse.emf.ecore.resource.ResourceSet#getResources()
      */
-    public EList<Resource> getResources() {
+    @Override
+	public EList<Resource> getResources() {
         return this.resourceSet.getResources();
     }
 
@@ -829,7 +855,8 @@ public class ContainerImpl implements Container, IEditingDomainProvider {
      * 
      * @see org.eclipse.emf.ecore.resource.ResourceSet#getURIConverter()
      */
-    public URIConverter getURIConverter() {
+    @Override
+	public URIConverter getURIConverter() {
         return this.resourceSet.getURIConverter();
     }
 
@@ -838,7 +865,8 @@ public class ContainerImpl implements Container, IEditingDomainProvider {
      * 
      * @see org.eclipse.emf.ecore.resource.ResourceSet#setResourceFactoryRegistry(org.eclipse.emf.ecore.resource.Resource.Factory.Registry)
      */
-    public void setResourceFactoryRegistry( final Registry resourceFactoryRegistry ) {
+    @Override
+	public void setResourceFactoryRegistry( final Registry resourceFactoryRegistry ) {
         this.resourceSet.setResourceFactoryRegistry(resourceFactoryRegistry);
     }
 
@@ -847,7 +875,8 @@ public class ContainerImpl implements Container, IEditingDomainProvider {
      * 
      * @see org.eclipse.emf.ecore.resource.ResourceSet#setURIConverter(org.eclipse.emf.ecore.resource.URIConverter)
      */
-    public void setURIConverter( final URIConverter converter ) {
+    @Override
+	public void setURIConverter( final URIConverter converter ) {
         this.resourceSet.setURIConverter(converter);
     }
 
@@ -856,7 +885,8 @@ public class ContainerImpl implements Container, IEditingDomainProvider {
      * 
      * @see org.eclipse.emf.common.notify.Notifier#eAdapters()
      */
-    public EList<Adapter> eAdapters() {
+    @Override
+	public EList<Adapter> eAdapters() {
         return this.resourceSet.eAdapters();
     }
 
@@ -865,7 +895,8 @@ public class ContainerImpl implements Container, IEditingDomainProvider {
      * 
      * @see org.eclipse.emf.common.notify.Notifier#eDeliver()
      */
-    public boolean eDeliver() {
+    @Override
+	public boolean eDeliver() {
         return this.resourceSet.eDeliver();
     }
 
@@ -874,7 +905,8 @@ public class ContainerImpl implements Container, IEditingDomainProvider {
      * 
      * @see org.eclipse.emf.common.notify.Notifier#eNotify(org.eclipse.emf.common.notify.Notification)
      */
-    public void eNotify( final Notification notification ) {
+    @Override
+	public void eNotify( final Notification notification ) {
         this.resourceSet.eNotify(notification);
     }
 
@@ -883,7 +915,8 @@ public class ContainerImpl implements Container, IEditingDomainProvider {
      * 
      * @see org.eclipse.emf.common.notify.Notifier#eSetDeliver(boolean)
      */
-    public void eSetDeliver( final boolean deliver ) {
+    @Override
+	public void eSetDeliver( final boolean deliver ) {
         this.resourceSet.eSetDeliver(deliver);
     }
 
@@ -894,7 +927,8 @@ public class ContainerImpl implements Container, IEditingDomainProvider {
     /* (non-Javadoc)
      * @see org.eclipse.emf.edit.domain.IEditingDomainProvider#getEditingDomain()
      */
-    public EditingDomain getEditingDomain() {
+    @Override
+	public EditingDomain getEditingDomain() {
         if (this.editingDomain == null) {
             this.setEditingDomain(createDefaultEditingDomain());
         }
@@ -1278,14 +1312,16 @@ public class ContainerImpl implements Container, IEditingDomainProvider {
     /**
      * @see org.teiid.designer.core.container.Container#addResourceDescriptor(org.teiid.designer.core.container.ResourceDescriptor)
      */
-    public void addResourceDescriptor( ResourceDescriptor resourceDescriptor ) throws ModelerCoreException {
+    @Override
+	public void addResourceDescriptor( ResourceDescriptor resourceDescriptor ) throws ModelerCoreException {
         ResourceDescriptorImpl.register(resourceDescriptor, resourceSet);
     }
 
     /**
      * @see org.teiid.designer.core.container.Container#addExternalResourceSet(org.eclipse.emf.ecore.resource.ResourceSet)
      */
-    public void addExternalResourceSet( final ResourceSet rsrcSet ) {
+    @Override
+	public void addExternalResourceSet( final ResourceSet rsrcSet ) {
         CoreArgCheck.isNotNull(rsrcSet);
         if (this.resourceSet instanceof EmfResourceSetImpl) {
             ((EmfResourceSetImpl)this.resourceSet).addExternalResourceSet(rsrcSet);
@@ -1296,7 +1332,8 @@ public class ContainerImpl implements Container, IEditingDomainProvider {
      * @see org.teiid.designer.core.container.Container#getExternalResourceSets()
      * @since 4.3
      */
-    public ResourceSet[] getExternalResourceSets() {
+    @Override
+	public ResourceSet[] getExternalResourceSets() {
         if (this.resourceSet instanceof EmfResourceSetImpl) {
             return ((EmfResourceSetImpl)this.resourceSet).getExternalResourceSets();
         }
@@ -1307,7 +1344,8 @@ public class ContainerImpl implements Container, IEditingDomainProvider {
      * @see org.teiid.designer.core.container.Container#getOptions()
      * @since 4.3
      */
-    public Map getOptions() {
+    @Override
+	public Map getOptions() {
         return (this.options == null ? Collections.EMPTY_MAP : this.options);
     }
 
@@ -1315,7 +1353,8 @@ public class ContainerImpl implements Container, IEditingDomainProvider {
      * @see org.teiid.designer.core.container.Container#setOptions(java.util.Map)
      * @since 4.3
      */
-    public void setOptions( Map options ) {
+    @Override
+	public void setOptions( Map options ) {
         verifySetIsAllowed(this.options);
         this.options = options;
     }
@@ -1325,7 +1364,8 @@ public class ContainerImpl implements Container, IEditingDomainProvider {
      * 
      * @see org.eclipse.emf.ecore.resource.ResourceSet#createResource(org.eclipse.emf.common.util.URI, java.lang.String)
      */
-    public Resource createResource( URI uri,
+    @Override
+	public Resource createResource( URI uri,
                                     String contentType ) {
         return this.resourceSet.createResource(uri, contentType);
     }

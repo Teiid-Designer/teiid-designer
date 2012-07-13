@@ -31,7 +31,8 @@ public abstract class NonOpenableModelWorkspaceItemImpl extends ModelWorkspaceIt
     /**
      * @see org.teiid.designer.core.workspace.ModelWorkspaceItem#hasChildren()
      */
-    public boolean hasChildren() {
+    @Override
+	public boolean hasChildren() {
         return false;
     }
 

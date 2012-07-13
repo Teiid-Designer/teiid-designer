@@ -68,7 +68,8 @@ public final class JdbcUiUtil
                                                    final String password ) {
         JdbcUiUtil.connection = null;
         final IRunnableWithProgress op = new IRunnableWithProgress() {
-            public void run( final IProgressMonitor monitor ) throws InvocationTargetException {
+            @Override
+			public void run( final IProgressMonitor monitor ) throws InvocationTargetException {
                 final Object[] params = new Object[] {""}; //$NON-NLS-1$
                 if (database.getUrl() != null && database.getUrl().trim().length() != 0) {
                     params[0] = database.getUrl();
@@ -116,7 +117,8 @@ public final class JdbcUiUtil
      */
     public static boolean saveChanges() {
         final IRunnableWithProgress op = new IRunnableWithProgress() {
-            public void run( final IProgressMonitor monitor ) throws InvocationTargetException {
+            @Override
+			public void run( final IProgressMonitor monitor ) throws InvocationTargetException {
                 monitor.setTaskName(SAVING_CHANGES_MESSAGE);
                 try {
                     getJdbcManager().saveChanges(monitor);

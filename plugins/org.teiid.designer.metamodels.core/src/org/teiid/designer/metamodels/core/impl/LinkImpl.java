@@ -123,7 +123,8 @@ public class LinkImpl extends EObjectImpl implements Link {
      * 
      * @generated
      */
-    public String getName() {
+    @Override
+	public String getName() {
         return name;
     }
 
@@ -132,7 +133,8 @@ public class LinkImpl extends EObjectImpl implements Link {
      * 
      * @generated
      */
-    public void setName( String newName ) {
+    @Override
+	public void setName( String newName ) {
         String oldName = name;
         name = newName;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, CorePackage.LINK__NAME, oldName, name));
@@ -143,7 +145,8 @@ public class LinkImpl extends EObjectImpl implements Link {
      * 
      * @generated
      */
-    public String getDescription() {
+    @Override
+	public String getDescription() {
         return description;
     }
 
@@ -152,7 +155,8 @@ public class LinkImpl extends EObjectImpl implements Link {
      * 
      * @generated
      */
-    public void setDescription( String newDescription ) {
+    @Override
+	public void setDescription( String newDescription ) {
         String oldDescription = description;
         description = newDescription;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, CorePackage.LINK__DESCRIPTION,
@@ -164,7 +168,8 @@ public class LinkImpl extends EObjectImpl implements Link {
      * 
      * @generated
      */
-    public EList getReferences() {
+    @Override
+	public EList getReferences() {
         if (references == null) {
             references = new EDataTypeUniqueEList(String.class, this, CorePackage.LINK__REFERENCES);
         }
@@ -176,7 +181,8 @@ public class LinkImpl extends EObjectImpl implements Link {
      * 
      * @generated
      */
-    public EList getLinkedObjects() {
+    @Override
+	public EList getLinkedObjects() {
         if (linkedObjects == null) {
             linkedObjects = new EObjectResolvingEList(EObject.class, this, CorePackage.LINK__LINKED_OBJECTS);
         }
@@ -188,7 +194,8 @@ public class LinkImpl extends EObjectImpl implements Link {
      * 
      * @generated
      */
-    public LinkContainer getLinkContainer() {
+    @Override
+	public LinkContainer getLinkContainer() {
         if (eContainerFeatureID != CorePackage.LINK__LINK_CONTAINER) return null;
         return (LinkContainer)eContainer;
     }
@@ -198,7 +205,8 @@ public class LinkImpl extends EObjectImpl implements Link {
      * 
      * @generated
      */
-    public void setLinkContainer( LinkContainer newLinkContainer ) {
+    @Override
+	public void setLinkContainer( LinkContainer newLinkContainer ) {
         if (newLinkContainer != eContainer
             || (eContainerFeatureID != CorePackage.LINK__LINK_CONTAINER && newLinkContainer != null)) {
             if (EcoreUtil.isAncestor(this, newLinkContainer)) throw new IllegalArgumentException(

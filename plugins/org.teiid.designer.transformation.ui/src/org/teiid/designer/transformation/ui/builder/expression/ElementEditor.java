@@ -89,12 +89,14 @@ public class ElementEditor extends AbstractLanguageObjectEditor {
 
         viewer = ElementViewerFactory.createElementViewer(pnlContent);
         viewer.addDoubleClickListener(new IDoubleClickListener() {
-            public void doubleClick( DoubleClickEvent theEvent ) {
+            @Override
+			public void doubleClick( DoubleClickEvent theEvent ) {
                 handleDoubleClick();
             }
         });
         viewer.addSelectionChangedListener(new ISelectionChangedListener() {
-            public void selectionChanged( SelectionChangedEvent theEvent ) {
+            @Override
+			public void selectionChanged( SelectionChangedEvent theEvent ) {
                 handleTreeSelection();
             }
         });
@@ -200,7 +202,8 @@ public class ElementEditor extends AbstractLanguageObjectEditor {
         /**
          * @see org.teiid.query.ui.builder.model.ILanguageObjectEditorModelListener#modelChanged(org.teiid.query.ui.builder.model.LanguageObjectEditorModelEvent)
          */
-        public void modelChanged( LanguageObjectEditorModelEvent theEvent ) {
+        @Override
+		public void modelChanged( LanguageObjectEditorModelEvent theEvent ) {
             displayElementSymbol();
         }
 

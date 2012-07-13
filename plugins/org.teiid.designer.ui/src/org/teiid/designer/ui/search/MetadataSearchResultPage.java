@@ -63,7 +63,8 @@ public class MetadataSearchResultPage extends AbstractTextSearchViewPage impleme
     static final String[] SHOW_IN_TARGETS = new String[] {Extensions.Explorer.VIEW};
 
     private static final IShowInTargetList SHOW_IN_TARGET_LIST = new IShowInTargetList() {
-        public String[] getShowInTargetIds() {
+        @Override
+		public String[] getShowInTargetIds() {
             return SHOW_IN_TARGETS;
         }
     };
@@ -427,7 +428,8 @@ public class MetadataSearchResultPage extends AbstractTextSearchViewPage impleme
          * 
          * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
          */
-        public Object[] getChildren( Object parentElement ) {
+        @Override
+		public Object[] getChildren( Object parentElement ) {
             return this.result.getMatches(parentElement);
         }
 
@@ -436,7 +438,8 @@ public class MetadataSearchResultPage extends AbstractTextSearchViewPage impleme
          * 
          * @see org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object)
          */
-        public Object getParent( Object element ) {
+        @Override
+		public Object getParent( Object element ) {
             if (element instanceof Match) {
                 return ((Match)element).getElement();
             }
@@ -449,7 +452,8 @@ public class MetadataSearchResultPage extends AbstractTextSearchViewPage impleme
          * 
          * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
          */
-        public Object[] getElements( Object inputElement ) {
+        @Override
+		public Object[] getElements( Object inputElement ) {
             // if the input element is a result the layout could be changing so make sure the model has been loaded
             ensureModelLoaded();
 
@@ -474,7 +478,8 @@ public class MetadataSearchResultPage extends AbstractTextSearchViewPage impleme
          * 
          * @see org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(java.lang.Object)
          */
-        public boolean hasChildren( Object element ) {
+        @Override
+		public boolean hasChildren( Object element ) {
             return (element instanceof MetadataMatchInfo ? true : false);
         }
 
@@ -484,7 +489,8 @@ public class MetadataSearchResultPage extends AbstractTextSearchViewPage impleme
          * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object,
          *      java.lang.Object)
          */
-        public void inputChanged( Viewer viewer,
+        @Override
+		public void inputChanged( Viewer viewer,
                                   Object oldInput,
                                   Object newInput ) {
             this.model.clear();

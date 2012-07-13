@@ -100,10 +100,12 @@ public class StructuredViewerTextFilterer extends StructuredViewerFilterer imple
         } // endif
         text.addModifyListener(new MyModifyListener());
         text.addFocusListener(new FocusListener() {
-            public void focusGained( FocusEvent e ) {
+            @Override
+			public void focusGained( FocusEvent e ) {
                 // do an invokeLater so that the select all will happen after the focus stuff completes:
                 Display.getDefault().asyncExec(new Runnable() {
-                    public void run() {
+                    @Override
+					public void run() {
                         if (!text.isDisposed()) {
                             text.selectAll();
                         } // endif
@@ -111,7 +113,8 @@ public class StructuredViewerTextFilterer extends StructuredViewerFilterer imple
                 }); // endanon runnable
             }
 
-            public void focusLost( FocusEvent e ) {
+            @Override
+			public void focusLost( FocusEvent e ) {
                 text.clearSelection();
             }
         }); // endanon FocusListener
@@ -151,7 +154,8 @@ public class StructuredViewerTextFilterer extends StructuredViewerFilterer imple
         return this;
     }
 
-    public synchronized boolean select( Object toTest ) {
+    @Override
+	public synchronized boolean select( Object toTest ) {
         if (filter != null) {
             // valid filter, use it:
             String itemValue = lProvider.getText(toTest);
@@ -163,18 +167,21 @@ public class StructuredViewerTextFilterer extends StructuredViewerFilterer imple
     }
 
     final class MyButtonListener implements SelectionListener {
-        public void widgetSelected( SelectionEvent e ) {
+        @Override
+		public void widgetSelected( SelectionEvent e ) {
             text.setText(""); //$NON-NLS-1$
             // TODO this should be scheduled after a delay:
             updateFilter();
         }
 
-        public void widgetDefaultSelected( SelectionEvent e ) {
+        @Override
+		public void widgetDefaultSelected( SelectionEvent e ) {
         }
     }
 
     final class MyModifyListener implements ModifyListener {
-        public void modifyText( ModifyEvent e ) {
+        @Override
+		public void modifyText( ModifyEvent e ) {
             String filterText = text.getText();
             synchronized (StructuredViewerTextFilterer.this) {
                 if (filterText.length() > 0) {

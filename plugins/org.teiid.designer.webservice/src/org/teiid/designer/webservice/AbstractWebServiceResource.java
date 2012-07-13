@@ -58,7 +58,8 @@ public abstract class AbstractWebServiceResource implements IWebServiceResource 
      * @see org.teiid.designer.webservice.IWebServiceResource#getFullPath()
      * @since 4.2
      */
-    public String getFullPath() {
+    @Override
+	public String getFullPath() {
         if ( this.fullPath != null && isResolvedToSelf() ) {
             return this.fullPath;
         }
@@ -73,7 +74,8 @@ public abstract class AbstractWebServiceResource implements IWebServiceResource 
      * @see org.teiid.designer.webservice.IWebServiceResource#getFile()
      * @since 4.2
      */
-    public File getFile() {
+    @Override
+	public File getFile() {
         if ( this.resolvedResource != null ) {
             return this.getResolvedResource().getFile();
         }
@@ -84,7 +86,8 @@ public abstract class AbstractWebServiceResource implements IWebServiceResource 
      * @see org.teiid.designer.webservice.IWebServiceResource#getNamespace()
      * @since 4.2
      */
-    public String getNamespace() {
+    @Override
+	public String getNamespace() {
         return namespace;
     }
 
@@ -92,7 +95,8 @@ public abstract class AbstractWebServiceResource implements IWebServiceResource 
      * @see org.teiid.designer.webservice.IWebServiceResource#isWsdl()
      * @since 4.2
      */
-    public boolean isWsdl() {
+    @Override
+	public boolean isWsdl() {
         final String path = this.getFullPath();
         if ( path != null && path.length() > EXTENSION_WSDL.length() ) {
             if ( path.toLowerCase().endsWith("." + EXTENSION_WSDL) ) { //$NON-NLS-1$
@@ -107,7 +111,8 @@ public abstract class AbstractWebServiceResource implements IWebServiceResource 
      * @see org.teiid.designer.webservice.IWebServiceResource#getInputStream()
      * @since 4.2
      */
-    public InputStream getInputStream() throws Exception {
+    @Override
+	public InputStream getInputStream() throws Exception {
         if ( this.isResolvedToSelf() ) {
             if ( this.exists() ) {
                 final InputStream rawStream = doGetRawInputStream();
@@ -125,7 +130,8 @@ public abstract class AbstractWebServiceResource implements IWebServiceResource 
      * @see org.teiid.designer.webservice.IWebServiceResource#isXsd()
      * @since 4.2
      */
-    public boolean isXsd() {
+    @Override
+	public boolean isXsd() {
         final String path = this.getFullPath();
         if ( path != null && path.length() > EXTENSION_XSD.length() ) {
             if ( path.toLowerCase().endsWith("." + EXTENSION_XSD) ) { //$NON-NLS-1$
@@ -139,7 +145,8 @@ public abstract class AbstractWebServiceResource implements IWebServiceResource 
      * @see org.teiid.designer.webservice.IWebServiceResource#getReferencingResources()
      * @since 4.2
      */
-    public Collection getReferencingResources() {
+    @Override
+	public Collection getReferencingResources() {
         return this.referencingResources;
     }
 
@@ -147,7 +154,8 @@ public abstract class AbstractWebServiceResource implements IWebServiceResource 
      * @see org.teiid.designer.webservice.IWebServiceResource#getReferencedResources()
      * @since 4.2
      */
-    public Collection getReferencedResources() {
+    @Override
+	public Collection getReferencedResources() {
         return this.referencedResources;
     }
     
@@ -214,7 +222,8 @@ public abstract class AbstractWebServiceResource implements IWebServiceResource 
      * @see org.teiid.designer.webservice.IWebServiceResource#getStatus()
      * @since 4.2
      */
-    public IStatus getStatus() {
+    @Override
+	public IStatus getStatus() {
         // Check that this is resolved ...
         if ( this.isResolvedToSelf() ) {
             final Object[] params = new Object[] {this.getNamespace(),this.getFullPath()};
@@ -242,7 +251,8 @@ public abstract class AbstractWebServiceResource implements IWebServiceResource 
      * @see org.teiid.designer.webservice.IWebServiceResource#isResolved()
      * @since 4.2
      */
-    public boolean isResolved() {
+    @Override
+	public boolean isResolved() {
         if ( isResolvedToSelf() ) {
             return true;
         }
@@ -259,7 +269,8 @@ public abstract class AbstractWebServiceResource implements IWebServiceResource 
      * @see org.teiid.designer.webservice.IWebServiceResource#isResolvedToSelf()
      * @since 4.2
      */
-    public boolean isResolvedToSelf() {
+    @Override
+	public boolean isResolvedToSelf() {
         return resolvedResource == null && this.exists();
     }
 
@@ -267,7 +278,8 @@ public abstract class AbstractWebServiceResource implements IWebServiceResource 
      * @see org.teiid.designer.webservice.IWebServiceResource#getResolvedResource()
      * @since 4.2
      */
-    public IWebServiceResource getResolvedResource() {
+    @Override
+	public IWebServiceResource getResolvedResource() {
         return exists() && resolvedResource == null ? this : resolvedResource;
     }
     
@@ -276,11 +288,13 @@ public abstract class AbstractWebServiceResource implements IWebServiceResource 
      * @see org.teiid.designer.webservice.IWebServiceResource#getResourcesResolved()
      * @since 4.2
      */
-    public Collection getResourcesResolved() {
+    @Override
+	public Collection getResourcesResolved() {
         return this.resolvedByThis;
     }
     
-    public IWebServiceResource getLastResolvedResource() {
+    @Override
+	public IWebServiceResource getLastResolvedResource() {
         IWebServiceResource result = this;
         while ( result != null ) {
             final IWebServiceResource resolved = result.getResolvedResource();
@@ -296,7 +310,8 @@ public abstract class AbstractWebServiceResource implements IWebServiceResource 
      * @see org.teiid.designer.webservice.IWebServiceResource#setResolvedResource(org.teiid.designer.webservice.IWebServiceResource)
      * @since 4.2
      */
-    public boolean setResolvedResource( final IWebServiceResource resource ) {
+    @Override
+	public boolean setResolvedResource( final IWebServiceResource resource ) {
         if ( resource == this.resolvedResource ) {
             return true;    // do nothing ...
         }

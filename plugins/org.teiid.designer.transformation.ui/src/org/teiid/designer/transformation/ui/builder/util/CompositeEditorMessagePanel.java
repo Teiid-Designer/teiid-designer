@@ -218,7 +218,8 @@ public class CompositeEditorMessagePanel extends Composite implements UiConstant
         /* (non-Javadoc)
          * @see org.teiid.query.ui.builder.model.ILanguageObjectEditorModelListener#modelChanged(org.teiid.query.ui.builder.model.LanguageObjectEditorModelEvent)
          */
-        public void modelChanged( LanguageObjectEditorModelEvent theEvent ) {
+        @Override
+		public void modelChanged( LanguageObjectEditorModelEvent theEvent ) {
             ILanguageObjectEditorModel model = (ILanguageObjectEditorModel)theEvent.getSource();
             Button btn = (Button)modelButtonMap.get(model);
 

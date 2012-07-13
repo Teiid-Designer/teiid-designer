@@ -76,7 +76,8 @@ public class XmlOutputImpl extends XmlMessageImpl implements XmlOutput {
      * <!-- end-user-doc -->
      * @generated
      */
-    public XmlOperation getOperation() {
+    @Override
+	public XmlOperation getOperation() {
         if (eContainerFeatureID != XmlServicePackage.XML_OUTPUT__OPERATION) return null;
         return (XmlOperation)eContainer;
     }
@@ -86,7 +87,8 @@ public class XmlOutputImpl extends XmlMessageImpl implements XmlOutput {
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setOperation(XmlOperation newOperation) {
+    @Override
+	public void setOperation(XmlOperation newOperation) {
         if (newOperation != eContainer || (eContainerFeatureID != XmlServicePackage.XML_OUTPUT__OPERATION && newOperation != null)) {
             if (EcoreUtil.isAncestor(this, newOperation))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
@@ -107,7 +109,8 @@ public class XmlOutputImpl extends XmlMessageImpl implements XmlOutput {
      * <!-- end-user-doc -->
      * @generated
      */
-    public XmlResult getResult() {
+    @Override
+	public XmlResult getResult() {
         return result;
     }
 
@@ -131,7 +134,8 @@ public class XmlOutputImpl extends XmlMessageImpl implements XmlOutput {
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setResult(XmlResult newResult) {
+    @Override
+	public void setResult(XmlResult newResult) {
         if (newResult != result) {
             NotificationChain msgs = null;
             if (result != null)

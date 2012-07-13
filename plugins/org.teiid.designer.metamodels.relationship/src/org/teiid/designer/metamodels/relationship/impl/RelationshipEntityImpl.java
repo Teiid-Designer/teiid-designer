@@ -71,7 +71,8 @@ public abstract class RelationshipEntityImpl extends EObjectImpl implements Rela
      * 
      * @generated
      */
-    public String getName() {
+    @Override
+	public String getName() {
         return name;
     }
 
@@ -80,7 +81,8 @@ public abstract class RelationshipEntityImpl extends EObjectImpl implements Rela
      * 
      * @generated
      */
-    public void setName( String newName ) {
+    @Override
+	public void setName( String newName ) {
         String oldName = name;
         name = newName;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
@@ -92,7 +94,8 @@ public abstract class RelationshipEntityImpl extends EObjectImpl implements Rela
      * 
      * @generated NOT
      */
-    public abstract IStatus isValid();
+    @Override
+	public abstract IStatus isValid();
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->

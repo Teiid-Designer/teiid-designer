@@ -25,7 +25,8 @@ public class XmlServiceValidationAspectFactoryImpl implements MetamodelAspectFac
      * @see org.teiid.designer.core.metamodel.aspect.MetamodelAspectFactory#create(org.eclipse.emf.ecore.EClassifier, org.teiid.designer.core.metamodel.aspect.MetamodelEntity)
      * @since 4.2
      */
-    public MetamodelAspect create(final EClassifier classifier, final MetamodelEntity entity) {
+    @Override
+	public MetamodelAspect create(final EClassifier classifier, final MetamodelEntity entity) {
         switch (classifier.getClassifierID()) {
             case XmlServicePackage.XML_OPERATION: return new XmlOperationAspect(entity);
             case XmlServicePackage.XML_INPUT: return new XmlInputAspect(entity);

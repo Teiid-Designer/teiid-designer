@@ -37,7 +37,8 @@ public class Uml2ClassUmlAspect extends AbstractUml2NamedElementUmlAspect implem
         super(entity);
     }
     
-    public Collection getRelationships(Object eObject) {
+    @Override
+	public Collection getRelationships(Object eObject) {
         final Class c = assertUmlClass(eObject);
         final Collection result = new ArrayList();
         // Iterate through the Classifier properties looking for association ends. 
@@ -79,6 +80,7 @@ public class Uml2ClassUmlAspect extends AbstractUml2NamedElementUmlAspect implem
         return result;
     }
 
+	@Override
 	public Collection getSupertypes(Object eObject) {
 		final Class c = assertUmlClass(eObject);
         final Collection result = new ArrayList();
@@ -93,7 +95,8 @@ public class Uml2ClassUmlAspect extends AbstractUml2NamedElementUmlAspect implem
         return super.getStereotype(c);
 	}
 
-    public String getSignature(Object eObject, int showMask) {
+    @Override
+	public String getSignature(Object eObject, int showMask) {
         final Class umlClass = assertUmlClass(eObject);
         StringBuffer result = new StringBuffer();
         switch (showMask) {
@@ -122,7 +125,8 @@ public class Uml2ClassUmlAspect extends AbstractUml2NamedElementUmlAspect implem
     /** 
      * @see org.teiid.designer.core.metamodel.aspect.uml.UmlClassifier#isAbstract(java.lang.Object)
      */
-    public boolean isAbstract(Object eObject) {
+    @Override
+	public boolean isAbstract(Object eObject) {
         final Class c = assertUmlClass(eObject);
         return c.isAbstract();
     }

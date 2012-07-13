@@ -66,7 +66,8 @@ public class SourceNodeImpl extends DataFlowNodeImpl implements SourceNode {
      * 
      * @generated
      */
-    public EObject getSource() {
+    @Override
+	public EObject getSource() {
         if (source != null && source.eIsProxy()) {
             EObject oldSource = source;
             source = eResolveProxy((InternalEObject)source);
@@ -93,7 +94,8 @@ public class SourceNodeImpl extends DataFlowNodeImpl implements SourceNode {
      * 
      * @generated
      */
-    public void setSource( EObject newSource ) {
+    @Override
+	public void setSource( EObject newSource ) {
         EObject oldSource = source;
         source = newSource;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,

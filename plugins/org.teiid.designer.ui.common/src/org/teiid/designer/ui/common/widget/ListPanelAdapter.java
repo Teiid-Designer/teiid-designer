@@ -23,6 +23,7 @@ implements IListPanelController, CoreStringUtil.Constants {
 	 * @see org.teiid.designer.ui.common.widget.IListPanelController#addButtonSelected()
 	 * @since 4.0
 	 */
+	@Override
 	public Object[] addButtonSelected() {
 		return EMPTY_STRING_ARRAY;
 	}
@@ -33,6 +34,7 @@ implements IListPanelController, CoreStringUtil.Constants {
 	 * @see org.teiid.designer.ui.common.widget.IListPanelController#downButtonSelected(org.eclipse.jface.viewers.IStructuredSelection)
 	 * @since 4.0
 	 */
+	@Override
 	public void downButtonSelected(final IStructuredSelection selection) {
 	}
 
@@ -42,6 +44,7 @@ implements IListPanelController, CoreStringUtil.Constants {
 	 * @see org.teiid.designer.ui.common.widget.IListPanelController#editButtonSelected(org.eclipse.jface.viewers.IStructuredSelection)
 	 * @since 4.0
 	 */
+	@Override
 	public Object editButtonSelected(IStructuredSelection selection) {
         return selection.getFirstElement();
 	}
@@ -52,6 +55,7 @@ implements IListPanelController, CoreStringUtil.Constants {
 	 * @see org.teiid.designer.ui.common.widget.IListPanelController#itemsSelected(org.eclipse.jface.viewers.IStructuredSelection)
 	 * @since 4.0
 	 */
+	@Override
 	public void itemsSelected(final IStructuredSelection selection) {
 	}
 
@@ -61,6 +65,7 @@ implements IListPanelController, CoreStringUtil.Constants {
 	 * @see org.teiid.designer.ui.common.widget.IListPanelController#removeButtonSelected(org.eclipse.jface.viewers.IStructuredSelection)
 	 * @since 4.0
 	 */
+	@Override
 	public Object[] removeButtonSelected(IStructuredSelection selection) {
 		return selection.toArray();
 	}
@@ -71,6 +76,7 @@ implements IListPanelController, CoreStringUtil.Constants {
 	 * @see org.teiid.designer.ui.common.widget.IListPanelController#upButtonSelected(org.eclipse.jface.viewers.IStructuredSelection)
 	 * @since 4.0
 	 */
+	@Override
 	public void upButtonSelected(IStructuredSelection selection) {
 	}
 }

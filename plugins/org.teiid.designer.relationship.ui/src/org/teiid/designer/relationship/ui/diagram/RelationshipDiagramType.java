@@ -82,6 +82,7 @@ public class RelationshipDiagramType extends AbstractDiagramType {
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.diagram.ui.IDiagramType#getEditPartFactory()
 	 */
+	@Override
 	public DiagramEditPartFactory getEditPartFactory() {
 		if( editPartFactory == null )
 			editPartFactory = new RelationshipDiagramPartFactory();
@@ -92,6 +93,7 @@ public class RelationshipDiagramType extends AbstractDiagramType {
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.diagram.ui.IDiagramType#getFigureFactory()
 	 */
+	@Override
 	public DiagramFigureFactory getFigureFactory() {
 		if( figureFactory == null )
 			figureFactory = new RelationshipDiagramFigureFactory();
@@ -102,6 +104,7 @@ public class RelationshipDiagramType extends AbstractDiagramType {
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.diagram.ui.IDiagramType#getModelFactory()
 	 */
+	@Override
 	public DiagramModelFactory getModelFactory() {
 		if( modelFactory == null )
 			modelFactory = new RelationshipDiagramModelFactory();
@@ -112,6 +115,7 @@ public class RelationshipDiagramType extends AbstractDiagramType {
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.diagram.ui.IDiagramType#getActionAdapter()
 	 */
+	@Override
 	public IDiagramActionAdapter getActionAdapter(ModelEditorPage editor) {
 //		if( actionAdapter == null )
 //			actionAdapter = new RelationshipDiagramActionAdapter(editor);
@@ -123,6 +127,7 @@ public class RelationshipDiagramType extends AbstractDiagramType {
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.diagram.ui.IDiagramType#getDisplayName()
 	 */
+	@Override
 	public String getDisplayName() {
 		return UiConstants.Util.getString("DiagramNames.relationshipDiagram"); //$NON-NLS-1$) ;
 	}
@@ -140,6 +145,7 @@ public class RelationshipDiagramType extends AbstractDiagramType {
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.diagram.ui.IDiagramType#canOpenContext(java.lang.Object)
 	 */
+	@Override
 	public boolean canOpenContext(Object input) {
 		boolean canOpen = false;
         if( input instanceof EObject ) {
@@ -166,6 +172,7 @@ public class RelationshipDiagramType extends AbstractDiagramType {
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.diagram.ui.IDiagramType#getDiagramForContext(java.lang.Object)
 	 */
+	@Override
 	public Diagram getDiagramForContext(Object actualInput) {
 		Diagram depDiagram = null;
         Object input = actualInput;
@@ -217,6 +224,7 @@ public class RelationshipDiagramType extends AbstractDiagramType {
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.diagram.ui.IDiagramType#getBackgroundColorObject()
 	 */
+	@Override
 	public DiagramColorObject getBackgroundColorObject(String extensionID) {
 		  if( bkgdColorObject == null ) {
 			  bkgdColorObject = new DiagramColorObject(getDisplayName(), PluginConstants.Prefs.Appearance.RELATIONSHIP_BKGD_COLOR);
@@ -227,6 +235,7 @@ public class RelationshipDiagramType extends AbstractDiagramType {
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.diagram.ui.IDiagramType#getDisplayedPath(org.teiid.designer.metamodels.diagram.Diagram, org.eclipse.emf.ecore.EObject)
 	 */
+	@Override
 	public String getDisplayedPath(Diagram diagram, EObject eObject) {
 		String path = null;
 		if( diagram.getType() != null && diagram.getType().equals(PluginConstants.RELATIONSHIP_DIAGRAM_TYPE_ID)) {

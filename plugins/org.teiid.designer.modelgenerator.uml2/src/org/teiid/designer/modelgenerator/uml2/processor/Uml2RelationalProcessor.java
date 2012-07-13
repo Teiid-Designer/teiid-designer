@@ -79,7 +79,8 @@ public class Uml2RelationalProcessor implements ModelProducer {
     /**
      * @see org.teiid.designer.compare.ModelProducer#execute(org.teiid.designer.compare.selector.ModelSelector, org.eclipse.core.runtime.IProgressMonitor, java.util.List)
      */
-    public void execute(final IProgressMonitor progressMonitor, 
+    @Override
+	public void execute(final IProgressMonitor progressMonitor, 
                         final List problems) throws Exception {
 
         // Set the primary metamodel URI ...
@@ -97,7 +98,8 @@ public class Uml2RelationalProcessor implements ModelProducer {
     /**
      * @see org.teiid.designer.compare.ModelProducer#getOutputSelector()
      */
-    public ModelSelector getOutputSelector() {
+    @Override
+	public ModelSelector getOutputSelector() {
         return this.relationalOutputModelSelector;
     }
 

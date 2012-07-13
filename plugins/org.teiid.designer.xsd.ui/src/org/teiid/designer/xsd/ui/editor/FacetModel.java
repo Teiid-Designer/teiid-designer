@@ -220,7 +220,8 @@ public class FacetModel implements ComponentSetMonitor{
 
         // change editible state later:
         Display.getDefault().asyncExec(new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 entcs.setEditible(isEnterprise && !isReadOnly);
             }
         });
@@ -304,10 +305,12 @@ public class FacetModel implements ComponentSetMonitor{
         return rv;
     }
 
-    public void update( final ComponentSetEvent event ) {
+    @Override
+	public void update( final ComponentSetEvent event ) {
         if (!ignoreEvents && simpleType != null) {
             final TransactionRunnable runnable = new TransactionRunnable() {
-                public Object run( final UnitOfWork uow ) {
+                @Override
+				public Object run( final UnitOfWork uow ) {
                     final String id = event.componentSet.getID();
                     if (event.value instanceof FacetValue && !GUIFacetHelper.FAKE_FACET_RUNTIME.equals(id)) {
                         FacetValue fv = (FacetValue)event.value;
@@ -413,7 +416,8 @@ public class FacetModel implements ComponentSetMonitor{
                                 uow.setDescription(ModelerXsdUiConstants.Util.getString("FacetModel.transaction_create", newType.getName())); //$NON-NLS-1$
                                 uow.setSource(schema);
                                 Display.getDefault().asyncExec(new Runnable() {
-                                    public void run() {
+                                    @Override
+									public void run() {
                                         // run later to help selection work right:
                                         GUIFacetHelper.showObject(newType);
                                     }
@@ -474,18 +478,21 @@ public class FacetModel implements ComponentSetMonitor{
     // Inner classes:
     //
     public class ListSCP implements IStructuredContentProvider {
-        public Object[] getElements( Object inputElement ) {
+        @Override
+		public Object[] getElements( Object inputElement ) {
             if (inputElement != null) {
                 return ((Collection)inputElement).toArray();
             } // endif
             return new Object[0];
         }
 
-        public void dispose() {
+        @Override
+		public void dispose() {
             // ignore
         }
 
-        public void inputChanged( Viewer viewer,
+        @Override
+		public void inputChanged( Viewer viewer,
                                   Object oldInput,
                                   Object newInput ) {
             // ignore

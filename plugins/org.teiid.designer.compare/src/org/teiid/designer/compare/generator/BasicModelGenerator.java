@@ -112,7 +112,8 @@ public class BasicModelGenerator extends AbstractModelGenerator {
             this.producer.getOutputSelector().open();
 
             final TransactionRunnable op = new TransactionRunnable() {
-                public Object run( UnitOfWork uow ) throws ModelerCoreException {
+                @Override
+				public Object run( UnitOfWork uow ) throws ModelerCoreException {
                     try {
                         producer.execute(monitor, problems);
                     } catch (Exception e) {

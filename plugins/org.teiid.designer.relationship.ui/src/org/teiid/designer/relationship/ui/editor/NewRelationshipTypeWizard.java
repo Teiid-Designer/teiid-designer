@@ -115,15 +115,18 @@ public final class NewRelationshipTypeWizard extends AbstractWizard
     /* (non-Javadoc)
      * @See org.teiid.designer.ui.wizards.INewModelObjectWizard#setCommand(org.eclipse.emf.common.command.Command)
      */
-    public void setCommand( Command cdCommand ) {
+    @Override
+	public void setCommand( Command cdCommand ) {
         this.cdCommand = cdCommand;
     }
 
-   public void setModel( ModelResource model ) {
+   @Override
+public void setModel( ModelResource model ) {
     
     }
 
-    public boolean completedOperation() {
+    @Override
+	public boolean completedOperation() {
 
         rtwpRelationshipTypePage.endTxn( bWizardFinished );              
         
@@ -131,7 +134,8 @@ public final class NewRelationshipTypeWizard extends AbstractWizard
         return bWizardFinished;            
     }
     
-    public void init( IWorkbench wb, IStructuredSelection selection ) {
+    @Override
+	public void init( IWorkbench wb, IStructuredSelection selection ) {
         this.selection = selection;
         init( wb );
      }

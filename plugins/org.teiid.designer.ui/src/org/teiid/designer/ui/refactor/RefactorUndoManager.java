@@ -177,7 +177,8 @@ public class RefactorUndoManager {
 
     private void undoCommand( final RefactorCommand command ) {
         IRunnableWithProgress runnable = new IRunnableWithProgress() {
-            public void run( IProgressMonitor monitor ) throws InvocationTargetException {
+            @Override
+			public void run( IProgressMonitor monitor ) throws InvocationTargetException {
                 try {
                     command.undo(monitor);
                 } catch (Exception e) {
@@ -203,7 +204,8 @@ public class RefactorUndoManager {
 
     private void redoCommand( final RefactorCommand command ) {
         IRunnableWithProgress runnable = new IRunnableWithProgress() {
-            public void run( IProgressMonitor monitor ) throws InvocationTargetException {
+            @Override
+			public void run( IProgressMonitor monitor ) throws InvocationTargetException {
                 try {
                     command.redo(monitor);
                 } catch (Exception e) {

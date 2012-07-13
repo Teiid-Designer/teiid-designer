@@ -18,7 +18,8 @@ public class ServiceImpl extends WSDLElementImpl implements Service {
     private Model m_model;
     private String catalogNamespace;
 
-    public Port[] getPorts() {
+    @Override
+	public Port[] getPorts() {
         if (m_ports == null) return null;
         // defensive copy of Port array
         int arrayLength = m_ports.length;
@@ -29,7 +30,8 @@ public class ServiceImpl extends WSDLElementImpl implements Service {
         return retPorts;
     }
 
-    public WSDLElement copy() {
+    @Override
+	public WSDLElement copy() {
         ServiceImpl newImpl = new ServiceImpl();
         newImpl.setId(getId());
         newImpl.setName(getName());
@@ -38,7 +40,8 @@ public class ServiceImpl extends WSDLElementImpl implements Service {
         return newImpl;
     }
 
-    public void setPorts( Port[] ports ) {
+    @Override
+	public void setPorts( Port[] ports ) {
         m_ports = ports;
     }
 
@@ -58,11 +61,13 @@ public class ServiceImpl extends WSDLElementImpl implements Service {
         return buff.toString();
     }
 
-    public void setModel( Model theModel ) {
+    @Override
+	public void setModel( Model theModel ) {
         m_model = theModel;
     }
 
-    public Model getModel() {
+    @Override
+	public Model getModel() {
         return m_model;
     }
 

@@ -367,11 +367,13 @@ public class TestPerformancePrefixAndPatternLookUp extends TestCase {
             nc = numColumns;
         }
 
-        public String[] getFileTypes() {
+        @Override
+		public String[] getFileTypes() {
             return null;
         }
 
-        public void index( IDocument document,
+        @Override
+		public void index( IDocument document,
                            IIndexerOutput output ) {
             // Stopwatch sw1 = new Stopwatch();
             // sw1.reset();
@@ -435,10 +437,12 @@ public class TestPerformancePrefixAndPatternLookUp extends TestCase {
             }
         }
 
-        public void setFileTypes( String[] fileTypes ) {
+        @Override
+		public void setFileTypes( String[] fileTypes ) {
         }
 
-        public boolean shouldIndex( IDocument document ) {
+        @Override
+		public boolean shouldIndex( IDocument document ) {
             return true;
         }
     }

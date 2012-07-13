@@ -31,7 +31,8 @@ public class DefaultContainerResourceSetFinder implements ResourceSetFinder {
     /* (non-Javadoc)
      * @see org.teiid.designer.core.workspace.ResourceSetFinder#getResourceSet(org.eclipse.core.resources.IResource)
      */
-    public ResourceSet getResourceSet(IResource resource) throws ModelWorkspaceException {
+    @Override
+	public ResourceSet getResourceSet(IResource resource) throws ModelWorkspaceException {
         try {
             return ModelerCore.getModelContainer();
         } catch (ModelWorkspaceException e) {

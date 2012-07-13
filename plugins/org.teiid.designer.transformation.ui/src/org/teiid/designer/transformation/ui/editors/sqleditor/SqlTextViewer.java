@@ -96,7 +96,8 @@ public class SqlTextViewer extends SourceViewer {
 
         partitioner = createSqlPartitioner();
         parent.addDisposeListener(new DisposeListener() {
-            public void widgetDisposed(DisposeEvent event) {
+            @Override
+			public void widgetDisposed(DisposeEvent event) {
                 contentAssistant.uninstall();
             }
         });

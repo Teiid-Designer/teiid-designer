@@ -276,7 +276,8 @@ public class AdvisorStatusManager implements IChangeListener, IStatusManager {
      * @see org.teiid.core.event.IChangeListener#stateChanged(org.teiid.core.event.IChangeNotifier)
      * @since 5.0
      */
-    public void stateChanged( IChangeNotifier theSource ) {
+    @Override
+	public void stateChanged( IChangeNotifier theSource ) {
         // Just update, don't worry about state of context because updateStatus() will take care of changes
         // System.out.println(" WebServicesValidationManager.stateChanged() calling updateStatus()");
         updateStatus(false);
@@ -324,7 +325,8 @@ public class AdvisorStatusManager implements IChangeListener, IStatusManager {
                 }
             } else {
                 Display.getDefault().asyncExec(new Runnable() {
-                    public void run() {
+                    @Override
+					public void run() {
                         // System.out.println("  ---->>>> WSVM.updateStatus(): scheduling new JOB");
                         statusRefreshJob.schedule(400);
                     }
@@ -366,7 +368,8 @@ public class AdvisorStatusManager implements IChangeListener, IStatusManager {
             } // endfor
         }
 
-        public void resourceChanged( IResourceChangeEvent event ) {
+        @Override
+		public void resourceChanged( IResourceChangeEvent event ) {
             // TODO find out if this handles both the enterprise and lightweight cases.
             boolean refreshNeeded = false;
 

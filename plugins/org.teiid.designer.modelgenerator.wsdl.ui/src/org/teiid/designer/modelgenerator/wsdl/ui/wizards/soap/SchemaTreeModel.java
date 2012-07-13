@@ -264,6 +264,7 @@ public class SchemaTreeModel {
 			}
 		}
 
+		@Override
 		public String toString() {
 			return "" + getElement(); //$NON-NLS-1$
 		}

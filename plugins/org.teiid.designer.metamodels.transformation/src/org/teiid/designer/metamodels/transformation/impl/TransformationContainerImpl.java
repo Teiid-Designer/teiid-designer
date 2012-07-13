@@ -150,7 +150,8 @@ public class TransformationContainerImpl extends EObjectImpl implements Transfor
      * 
      * @generated
      */
-    public EList getTransformationMappings() {
+    @Override
+	public EList getTransformationMappings() {
         if (transformationMappings == null) {
             transformationMappings = new EObjectContainmentEList(
                                                                  TransformationMappingRoot.class,

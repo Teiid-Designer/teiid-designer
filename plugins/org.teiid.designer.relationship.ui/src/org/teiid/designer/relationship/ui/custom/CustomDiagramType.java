@@ -53,7 +53,8 @@ public class CustomDiagramType extends AbstractDiagramType {
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.IDiagramType#getEditPartFactory()
      */
-    public DiagramEditPartFactory getEditPartFactory() {
+    @Override
+	public DiagramEditPartFactory getEditPartFactory() {
         if( editPartFactory == null )
             editPartFactory = new CustomDiagramPartFactory();
             
@@ -63,7 +64,8 @@ public class CustomDiagramType extends AbstractDiagramType {
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.IDiagramType#getFigureFactory()
      */
-    public DiagramFigureFactory getFigureFactory() {
+    @Override
+	public DiagramFigureFactory getFigureFactory() {
         if( figureFactory == null )
             figureFactory = new CustomDiagramFigureFactory();
             
@@ -73,7 +75,8 @@ public class CustomDiagramType extends AbstractDiagramType {
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.IDiagramType#getModelFactory()
      */
-    public DiagramModelFactory getModelFactory() {
+    @Override
+	public DiagramModelFactory getModelFactory() {
         if( modelFactory == null )
             modelFactory = new CustomDiagramModelFactory();
             
@@ -83,21 +86,24 @@ public class CustomDiagramType extends AbstractDiagramType {
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.IDiagramType#getActionAdapter()
      */
-    public IDiagramActionAdapter getActionAdapter(ModelEditorPage editor) {
+    @Override
+	public IDiagramActionAdapter getActionAdapter(ModelEditorPage editor) {
         return new CustomDiagramActionAdapter(editor);
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.IDiagramType#getDisplayName()
      */
-    public String getDisplayName() {
+    @Override
+	public String getDisplayName() {
         return UiConstants.Util.getString("DiagramNames.customRelationshipDiagram"); //$NON-NLS-1$) ;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.IDiagramType#canOpenContext(java.lang.Object)
      */
-    public boolean canOpenContext(Object input) {
+    @Override
+	public boolean canOpenContext(Object input) {
         boolean canOpen = false;
         
         if( input instanceof Diagram &&
@@ -111,7 +117,8 @@ public class CustomDiagramType extends AbstractDiagramType {
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.IDiagramType#getDiagramForContext(java.lang.Object)
      */
-    public Diagram getDiagramForContext(Object input) {
+    @Override
+	public Diagram getDiagramForContext(Object input) {
         Diagram customDiagram = null;
         
         if( input instanceof Diagram &&
@@ -125,7 +132,8 @@ public class CustomDiagramType extends AbstractDiagramType {
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.IDiagramType#getBackgroundColorObject()
      */
-    public DiagramColorObject getBackgroundColorObject(String extensionID) {
+    @Override
+	public DiagramColorObject getBackgroundColorObject(String extensionID) {
         if( bkgdColorObject == null ) {
             bkgdColorObject = new DiagramColorObject(getDisplayName(), PluginConstants.Prefs.Appearance.CUSTOM_RELATIONSHIP_BKGD_COLOR);
         }
@@ -136,7 +144,8 @@ public class CustomDiagramType extends AbstractDiagramType {
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.IDiagramType#getDisplayedPath(org.eclipse.emf.ecore.EObject)
      */
-    public String getDisplayedPath(Diagram diagram, EObject eObject) {
+    @Override
+	public String getDisplayedPath(Diagram diagram, EObject eObject) {
         String path = null;
         // BML 10/4/04 - Decided today to just put the full path name on all objects in custom diagram.
         if( diagram.getType() != null && diagram.getType().equals(PluginConstants.CUSTOM_RELATIONSHIP_DIAGRAM_TYPE_ID)) {

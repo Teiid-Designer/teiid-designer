@@ -165,7 +165,8 @@ public abstract class XmlDocumentNodeImpl extends XmlDocumentEntityImpl implemen
      * <!-- end-user-doc -->
      * @generated
      */
-    public BuildStatus getBuildState() {
+    @Override
+	public BuildStatus getBuildState() {
         return buildState;
     }
 
@@ -174,7 +175,8 @@ public abstract class XmlDocumentNodeImpl extends XmlDocumentEntityImpl implemen
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setBuildState(BuildStatus newBuildState) {
+    @Override
+	public void setBuildState(BuildStatus newBuildState) {
         BuildStatus oldBuildState = buildState;
         buildState = newBuildState == null ? BUILD_STATE_EDEFAULT : newBuildState;
         if (eNotificationRequired())
@@ -186,7 +188,8 @@ public abstract class XmlDocumentNodeImpl extends XmlDocumentEntityImpl implemen
      * <!-- end-user-doc -->
      * @generated
      */
-    public String getName() {
+    @Override
+	public String getName() {
         return name;
     }
 
@@ -195,7 +198,8 @@ public abstract class XmlDocumentNodeImpl extends XmlDocumentEntityImpl implemen
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setName(String newName) {
+    @Override
+	public void setName(String newName) {
         String oldName = name;
         name = newName;
         if (eNotificationRequired())
@@ -207,7 +211,8 @@ public abstract class XmlDocumentNodeImpl extends XmlDocumentEntityImpl implemen
      * <!-- end-user-doc -->
      * @generated
      */
-    public boolean isExcludeFromDocument() {
+    @Override
+	public boolean isExcludeFromDocument() {
         return excludeFromDocument;
     }
 
@@ -216,7 +221,8 @@ public abstract class XmlDocumentNodeImpl extends XmlDocumentEntityImpl implemen
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setExcludeFromDocument(boolean newExcludeFromDocument) {
+    @Override
+	public void setExcludeFromDocument(boolean newExcludeFromDocument) {
         boolean oldExcludeFromDocument = excludeFromDocument;
         excludeFromDocument = newExcludeFromDocument;
         if (eNotificationRequired())
@@ -228,7 +234,8 @@ public abstract class XmlDocumentNodeImpl extends XmlDocumentEntityImpl implemen
      * <!-- end-user-doc -->
      * @generated
      */
-    public XSDComponent getXsdComponent() {
+    @Override
+	public XSDComponent getXsdComponent() {
         if (xsdComponent != null && xsdComponent.eIsProxy()) {
             XSDComponent oldXsdComponent = xsdComponent;
             xsdComponent = (XSDComponent)eResolveProxy((InternalEObject)xsdComponent);
@@ -254,7 +261,8 @@ public abstract class XmlDocumentNodeImpl extends XmlDocumentEntityImpl implemen
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setXsdComponent(XSDComponent newXsdComponent) {
+    @Override
+	public void setXsdComponent(XSDComponent newXsdComponent) {
         XSDComponent oldXsdComponent = xsdComponent;
         xsdComponent = newXsdComponent;
         if (eNotificationRequired())
@@ -266,7 +274,8 @@ public abstract class XmlDocumentNodeImpl extends XmlDocumentEntityImpl implemen
      * <!-- end-user-doc -->
      * @generated
      */
-    public XmlNamespace getNamespace() {
+    @Override
+	public XmlNamespace getNamespace() {
         if (namespace != null && namespace.eIsProxy()) {
             XmlNamespace oldNamespace = namespace;
             namespace = (XmlNamespace)eResolveProxy((InternalEObject)namespace);
@@ -292,7 +301,8 @@ public abstract class XmlDocumentNodeImpl extends XmlDocumentEntityImpl implemen
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setNamespace(XmlNamespace newNamespace) {
+    @Override
+	public void setNamespace(XmlNamespace newNamespace) {
         XmlNamespace oldNamespace = namespace;
         namespace = newNamespace;
         if (eNotificationRequired())
@@ -303,7 +313,8 @@ public abstract class XmlDocumentNodeImpl extends XmlDocumentEntityImpl implemen
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      */
-    public int getMinOccurs() {
+    @Override
+	public int getMinOccurs() {
         final XSDComponent schemaComp = this.getXsdComponent();
         if ( schemaComp != null ) {
             return XsdUtil.getMinOccurs(schemaComp);
@@ -315,7 +326,8 @@ public abstract class XmlDocumentNodeImpl extends XmlDocumentEntityImpl implemen
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      */
-    public int getMaxOccurs() {
+    @Override
+	public int getMaxOccurs() {
         final XSDComponent schemaComp = this.getXsdComponent();
         if ( schemaComp != null ) {
             return XsdUtil.getMaxOccurs(schemaComp);

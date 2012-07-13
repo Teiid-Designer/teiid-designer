@@ -28,6 +28,7 @@ public class RelationTypeAspect extends RelationshipEntityAspect implements Rela
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.relationship.aspect.relationship.RelationshipMetamodelAspect#isRecordType(char)
 	 */
+	@Override
 	public boolean isRecordType(char recordType) {
 		return (recordType == IndexConstants.SEARCH_RECORD_TYPE.RELATIONSHIP_TYPE);
 	}
@@ -35,6 +36,7 @@ public class RelationTypeAspect extends RelationshipEntityAspect implements Rela
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.relationship.aspect.relationship.RelationshipTypeAspect#getConstraint(org.eclipse.emf.ecore.EObject)
 	 */
+	@Override
 	public String getConstraint(EObject eObject) {
 		CoreArgCheck.isInstanceOf(RelationshipType.class, eObject);
 		RelationshipType relationshipType = (RelationshipType) eObject;
@@ -44,6 +46,7 @@ public class RelationTypeAspect extends RelationshipEntityAspect implements Rela
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.relationship.aspect.relationship.RelationshipTypeAspect#getSourceRole(org.eclipse.emf.ecore.EObject)
 	 */
+	@Override
 	public Object getSourceRole(EObject eObject) {
 		CoreArgCheck.isInstanceOf(RelationshipType.class, eObject);
 		RelationshipType relationshipType = (RelationshipType) eObject;
@@ -53,6 +56,7 @@ public class RelationTypeAspect extends RelationshipEntityAspect implements Rela
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.relationship.aspect.relationship.RelationshipTypeAspect#getStereoType(org.eclipse.emf.ecore.EObject)
 	 */
+	@Override
 	public String getStereoType(EObject eObject) {
 		CoreArgCheck.isInstanceOf(RelationshipType.class, eObject);
 		RelationshipType relationshipType = (RelationshipType) eObject;
@@ -62,6 +66,7 @@ public class RelationTypeAspect extends RelationshipEntityAspect implements Rela
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.relationship.aspect.relationship.RelationshipTypeAspect#getSuperType(org.eclipse.emf.ecore.EObject)
 	 */
+	@Override
 	public Object getSuperType(EObject eObject) {
 		CoreArgCheck.isInstanceOf(RelationshipType.class, eObject);
 		RelationshipType relationshipType = (RelationshipType) eObject;
@@ -71,6 +76,7 @@ public class RelationTypeAspect extends RelationshipEntityAspect implements Rela
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.relationship.aspect.relationship.RelationshipTypeAspect#getTargetRole(org.eclipse.emf.ecore.EObject)
 	 */
+	@Override
 	public Object getTargetRole(EObject eObject) {
 		CoreArgCheck.isInstanceOf(RelationshipType.class, eObject);
 		RelationshipType relationshipType = (RelationshipType) eObject;
@@ -80,6 +86,7 @@ public class RelationTypeAspect extends RelationshipEntityAspect implements Rela
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.relationship.aspect.relationship.RelationshipTypeAspect#isAbstract(org.eclipse.emf.ecore.EObject)
 	 */
+	@Override
 	public boolean isAbstract(EObject eObject) {
 		CoreArgCheck.isInstanceOf(RelationshipType.class, eObject);
 		RelationshipType relationshipType = (RelationshipType) eObject;
@@ -89,6 +96,7 @@ public class RelationTypeAspect extends RelationshipEntityAspect implements Rela
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.relationship.aspect.relationship.RelationshipTypeAspect#isDirected(org.eclipse.emf.ecore.EObject)
 	 */
+	@Override
 	public boolean isDirected(EObject eObject) {
 		CoreArgCheck.isInstanceOf(RelationshipType.class, eObject);
 		RelationshipType relationshipType = (RelationshipType) eObject;
@@ -98,6 +106,7 @@ public class RelationTypeAspect extends RelationshipEntityAspect implements Rela
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.relationship.aspect.relationship.RelationshipTypeAspect#isExclusive(org.eclipse.emf.ecore.EObject)
 	 */
+	@Override
 	public boolean isExclusive(EObject eObject) {
 		CoreArgCheck.isInstanceOf(RelationshipType.class, eObject);
 		RelationshipType relationshipType = (RelationshipType) eObject;
@@ -107,6 +116,7 @@ public class RelationTypeAspect extends RelationshipEntityAspect implements Rela
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.relationship.aspect.relationship.RelationshipTypeAspect#isUserDefined(org.eclipse.emf.ecore.EObject)
 	 */
+	@Override
 	public boolean isUserDefined(EObject eObject) {
 		CoreArgCheck.isInstanceOf(RelationshipType.class, eObject);
 		RelationshipType relationshipType = (RelationshipType) eObject;
@@ -116,6 +126,7 @@ public class RelationTypeAspect extends RelationshipEntityAspect implements Rela
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.core.relationship.metamodel.aspect.relationship.RelationshipTypeAspect#getSourceRoleName(org.eclipse.emf.ecore.EObject)
 	 */
+	@Override
 	public String getSourceRoleName(EObject eObject) {
 		RelationshipRole sourceRole = (RelationshipRole) getSourceRole(eObject);
 		if(sourceRole != null) {
@@ -127,6 +138,7 @@ public class RelationTypeAspect extends RelationshipEntityAspect implements Rela
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.core.relationship.metamodel.aspect.relationship.RelationshipTypeAspect#getTargetRoleName(org.eclipse.emf.ecore.EObject)
 	 */
+	@Override
 	public String getTargetRoleName(EObject eObject) {
 		RelationshipRole targetRole = (RelationshipRole) getTargetRole(eObject);
 		if(targetRole != null) {

@@ -176,7 +176,8 @@ public class BindingImpl extends EObjectImpl implements Binding {
      * 
      * @generated
      */
-    public String getName() {
+    @Override
+	public String getName() {
         return name;
     }
 
@@ -185,7 +186,8 @@ public class BindingImpl extends EObjectImpl implements Binding {
      * 
      * @generated
      */
-    public void setName( String newName ) {
+    @Override
+	public void setName( String newName ) {
         String oldName = name;
         name = newName;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, WsdlPackage.BINDING__NAME, oldName,
@@ -197,7 +199,8 @@ public class BindingImpl extends EObjectImpl implements Binding {
      * 
      * @generated
      */
-    public Documentation getDocumentation() {
+    @Override
+	public Documentation getDocumentation() {
         return documentation;
     }
 
@@ -224,7 +227,8 @@ public class BindingImpl extends EObjectImpl implements Binding {
      * 
      * @generated
      */
-    public void setDocumentation( Documentation newDocumentation ) {
+    @Override
+	public void setDocumentation( Documentation newDocumentation ) {
         if (newDocumentation != documentation) {
             NotificationChain msgs = null;
             if (documentation != null) msgs = ((InternalEObject)documentation).eInverseRemove(this,
@@ -247,7 +251,8 @@ public class BindingImpl extends EObjectImpl implements Binding {
      * 
      * @generated
      */
-    public EList getDeclaredNamespaces() {
+    @Override
+	public EList getDeclaredNamespaces() {
         if (declaredNamespaces == null) {
             declaredNamespaces = new EObjectContainmentWithInverseEList(NamespaceDeclaration.class, this,
                                                                         WsdlPackage.BINDING__DECLARED_NAMESPACES,
@@ -261,7 +266,8 @@ public class BindingImpl extends EObjectImpl implements Binding {
      * 
      * @generated
      */
-    public EList getElements() {
+    @Override
+	public EList getElements() {
         if (elements == null) {
             elements = new EObjectContainmentWithInverseEList(Element.class, this, WsdlPackage.BINDING__ELEMENTS,
                                                               WsdlPackage.ELEMENT__ELEMENT_OWNER);
@@ -274,7 +280,8 @@ public class BindingImpl extends EObjectImpl implements Binding {
      * 
      * @generated
      */
-    public String getType() {
+    @Override
+	public String getType() {
         return type;
     }
 
@@ -283,7 +290,8 @@ public class BindingImpl extends EObjectImpl implements Binding {
      * 
      * @generated
      */
-    public void setType( String newType ) {
+    @Override
+	public void setType( String newType ) {
         String oldType = type;
         type = newType;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, WsdlPackage.BINDING__TYPE, oldType,
@@ -295,7 +303,8 @@ public class BindingImpl extends EObjectImpl implements Binding {
      * 
      * @generated
      */
-    public Definitions getDefinitions() {
+    @Override
+	public Definitions getDefinitions() {
         if (eContainerFeatureID != WsdlPackage.BINDING__DEFINITIONS) return null;
         return (Definitions)eContainer;
     }
@@ -305,7 +314,8 @@ public class BindingImpl extends EObjectImpl implements Binding {
      * 
      * @generated
      */
-    public void setDefinitions( Definitions newDefinitions ) {
+    @Override
+	public void setDefinitions( Definitions newDefinitions ) {
         if (newDefinitions != eContainer || (eContainerFeatureID != WsdlPackage.BINDING__DEFINITIONS && newDefinitions != null)) {
             if (EcoreUtil.isAncestor(this, newDefinitions)) throw new IllegalArgumentException(
                                                                                                "Recursive containment not allowed for " + toString()); //$NON-NLS-1$
@@ -327,7 +337,8 @@ public class BindingImpl extends EObjectImpl implements Binding {
      * 
      * @generated
      */
-    public EList getBindingOperations() {
+    @Override
+	public EList getBindingOperations() {
         if (bindingOperations == null) {
             bindingOperations = new EObjectContainmentWithInverseEList(BindingOperation.class, this,
                                                                        WsdlPackage.BINDING__BINDING_OPERATIONS,
@@ -341,7 +352,8 @@ public class BindingImpl extends EObjectImpl implements Binding {
      * 
      * @generated
      */
-    public SoapBinding getSoapBinding() {
+    @Override
+	public SoapBinding getSoapBinding() {
         return soapBinding;
     }
 
@@ -368,7 +380,8 @@ public class BindingImpl extends EObjectImpl implements Binding {
      * 
      * @generated
      */
-    public void setSoapBinding( SoapBinding newSoapBinding ) {
+    @Override
+	public void setSoapBinding( SoapBinding newSoapBinding ) {
         if (newSoapBinding != soapBinding) {
             NotificationChain msgs = null;
             if (soapBinding != null) msgs = ((InternalEObject)soapBinding).eInverseRemove(this,
@@ -391,7 +404,8 @@ public class BindingImpl extends EObjectImpl implements Binding {
      * 
      * @generated
      */
-    public HttpBinding getHttpBinding() {
+    @Override
+	public HttpBinding getHttpBinding() {
         return httpBinding;
     }
 
@@ -418,7 +432,8 @@ public class BindingImpl extends EObjectImpl implements Binding {
      * 
      * @generated
      */
-    public void setHttpBinding( HttpBinding newHttpBinding ) {
+    @Override
+	public void setHttpBinding( HttpBinding newHttpBinding ) {
         if (newHttpBinding != httpBinding) {
             NotificationChain msgs = null;
             if (httpBinding != null) msgs = ((InternalEObject)httpBinding).eInverseRemove(this,
@@ -441,7 +456,8 @@ public class BindingImpl extends EObjectImpl implements Binding {
      * 
      * @generated
      */
-    public boolean isNameValid() {
+    @Override
+	public boolean isNameValid() {
         // TODO: implement this method
         // Ensure that you remove @generated or mark it @generated NOT
         throw new UnsupportedOperationException();

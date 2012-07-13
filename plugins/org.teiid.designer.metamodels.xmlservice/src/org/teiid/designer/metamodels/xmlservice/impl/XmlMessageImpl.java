@@ -71,7 +71,8 @@ public class XmlMessageImpl extends XmlServiceComponentImpl implements XmlMessag
      * <!-- end-user-doc -->
      * @generated
      */
-    public XSDElementDeclaration getContentElement() {
+    @Override
+	public XSDElementDeclaration getContentElement() {
         if (contentElement != null && contentElement.eIsProxy()) {
             XSDElementDeclaration oldContentElement = contentElement;
             contentElement = (XSDElementDeclaration)eResolveProxy((InternalEObject)contentElement);
@@ -97,7 +98,8 @@ public class XmlMessageImpl extends XmlServiceComponentImpl implements XmlMessag
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setContentElement(XSDElementDeclaration newContentElement) {
+    @Override
+	public void setContentElement(XSDElementDeclaration newContentElement) {
         XSDElementDeclaration oldContentElement = contentElement;
         contentElement = newContentElement;
         if (eNotificationRequired())

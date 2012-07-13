@@ -30,6 +30,7 @@ NewConnectionProfileWizard {
 				.getString("ConnectionProfileWizard.WizardTitle")); //$NON-NLS-1$
 	}
 
+	@Override
 	public void createPageControls(Composite pageContainer) {
 		super.createPageControls(pageContainer);
 		getShell().setData(HelpUtil.CONTEXT_PROVIDER_KEY, this);
@@ -38,19 +39,23 @@ NewConnectionProfileWizard {
 				ConnectivityUIPlugin.getDefault().getBundle().getSymbolicName()));
 	}
 
+	@Override
 	public void addCustomPages() {
 		addPage(wizardPage);
 		setSkipProfileNamePage(true);
 	}
 
+	@Override
 	public Properties getProfileProperties() {
 		return wizardPage.getProperties();
 	}
 
+	@Override
 	public NewConnectionProfileWizardPage getProfilePage() {
 		return mProfilePage;
 	}
 
+	@Override
 	public boolean canFinish() {
 		// This guarantees the Ping button is correctly enabled/disabled.
 		if (isWizardPageCreated) {

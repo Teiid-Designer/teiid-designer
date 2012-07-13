@@ -154,7 +154,8 @@ public final class GeneralPreferencePage extends PreferencePage
      * @see org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
      * @since 5.0
      */
-    public void init( IWorkbench theWorkbench ) {
+    @Override
+	public void init( IWorkbench theWorkbench ) {
         // pass the workbench to the contributors
         Iterator<GeneralPreference> itr = this.preferenceMap.values().iterator();
 

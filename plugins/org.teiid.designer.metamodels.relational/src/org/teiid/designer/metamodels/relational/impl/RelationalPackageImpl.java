@@ -306,7 +306,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EClass getTable() {
+    @Override
+	public EClass getTable() {
         return tableEClass;
     }
 
@@ -315,7 +316,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getTable_System() {
+    @Override
+	public EAttribute getTable_System() {
         return (EAttribute)tableEClass.getEStructuralFeatures().get(0);
     }
 
@@ -324,7 +326,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getTable_Cardinality() {
+    @Override
+	public EAttribute getTable_Cardinality() {
         return (EAttribute)tableEClass.getEStructuralFeatures().get(1);
     }
 
@@ -333,7 +336,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getTable_SupportsUpdate() {
+    @Override
+	public EAttribute getTable_SupportsUpdate() {
         return (EAttribute)tableEClass.getEStructuralFeatures().get(2);
     }
 
@@ -342,6 +346,7 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
 	 * <!-- end-user-doc -->
      * @generated
      */
+	@Override
 	public EAttribute getTable_Materialized() {
         return (EAttribute)tableEClass.getEStructuralFeatures().get(3);
     }
@@ -351,7 +356,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getTable_Schema() {
+    @Override
+	public EReference getTable_Schema() {
         return (EReference)tableEClass.getEStructuralFeatures().get(4);
     }
 
@@ -360,7 +366,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getTable_AccessPatterns() {
+    @Override
+	public EReference getTable_AccessPatterns() {
         return (EReference)tableEClass.getEStructuralFeatures().get(5);
     }
 
@@ -369,7 +376,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getTable_Catalog() {
+    @Override
+	public EReference getTable_Catalog() {
         return (EReference)tableEClass.getEStructuralFeatures().get(6);
     }
 
@@ -378,7 +386,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getTable_LogicalRelationships() {
+    @Override
+	public EReference getTable_LogicalRelationships() {
         return (EReference)tableEClass.getEStructuralFeatures().get(7);
     }
     
@@ -387,7 +396,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getTable_MaterializedTable() {
+    @Override
+	public EReference getTable_MaterializedTable() {
         return (EReference)tableEClass.getEStructuralFeatures().get(8);
     }
 
@@ -396,7 +406,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EClass getColumn() {
+    @Override
+	public EClass getColumn() {
         return columnEClass;
     }
 
@@ -405,7 +416,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getColumn_NativeType() {
+    @Override
+	public EAttribute getColumn_NativeType() {
         return (EAttribute)columnEClass.getEStructuralFeatures().get(0);
     }
 
@@ -414,7 +426,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getColumn_Type() {
+    @Override
+	public EReference getColumn_Type() {
         return (EReference)columnEClass.getEStructuralFeatures().get(27);
     }
 
@@ -423,7 +436,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getColumn_Nullable() {
+    @Override
+	public EAttribute getColumn_Nullable() {
         return (EAttribute)columnEClass.getEStructuralFeatures().get(5);
     }
 
@@ -432,7 +446,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getColumn_AutoIncremented() {
+    @Override
+	public EAttribute getColumn_AutoIncremented() {
         return (EAttribute)columnEClass.getEStructuralFeatures().get(6);
     }
 
@@ -441,7 +456,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getColumn_DefaultValue() {
+    @Override
+	public EAttribute getColumn_DefaultValue() {
         return (EAttribute)columnEClass.getEStructuralFeatures().get(7);
     }
 
@@ -450,7 +466,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getColumn_MinimumValue() {
+    @Override
+	public EAttribute getColumn_MinimumValue() {
         return (EAttribute)columnEClass.getEStructuralFeatures().get(8);
     }
 
@@ -459,7 +476,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getColumn_MaximumValue() {
+    @Override
+	public EAttribute getColumn_MaximumValue() {
         return (EAttribute)columnEClass.getEStructuralFeatures().get(9);
     }
 
@@ -468,7 +486,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getColumn_Format() {
+    @Override
+	public EAttribute getColumn_Format() {
         return (EAttribute)columnEClass.getEStructuralFeatures().get(10);
     }
 
@@ -477,7 +496,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getColumn_Length() {
+    @Override
+	public EAttribute getColumn_Length() {
         return (EAttribute)columnEClass.getEStructuralFeatures().get(1);
     }
 
@@ -486,7 +506,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getColumn_FixedLength() {
+    @Override
+	public EAttribute getColumn_FixedLength() {
         return (EAttribute)columnEClass.getEStructuralFeatures().get(2);
     }
 
@@ -495,7 +516,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getColumn_Scale() {
+    @Override
+	public EAttribute getColumn_Scale() {
         return (EAttribute)columnEClass.getEStructuralFeatures().get(4);
     }
 
@@ -504,7 +526,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getColumn_Precision() {
+    @Override
+	public EAttribute getColumn_Precision() {
         return (EAttribute)columnEClass.getEStructuralFeatures().get(3);
     }
 
@@ -513,7 +536,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getColumn_CharacterSetName() {
+    @Override
+	public EAttribute getColumn_CharacterSetName() {
         return (EAttribute)columnEClass.getEStructuralFeatures().get(11);
     }
 
@@ -522,7 +546,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getColumn_CollationName() {
+    @Override
+	public EAttribute getColumn_CollationName() {
         return (EAttribute)columnEClass.getEStructuralFeatures().get(12);
     }
 
@@ -531,7 +556,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getColumn_Selectable() {
+    @Override
+	public EAttribute getColumn_Selectable() {
         return (EAttribute)columnEClass.getEStructuralFeatures().get(13);
     }
 
@@ -540,7 +566,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getColumn_Updateable() {
+    @Override
+	public EAttribute getColumn_Updateable() {
         return (EAttribute)columnEClass.getEStructuralFeatures().get(14);
     }
 
@@ -549,7 +576,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getColumn_CaseSensitive() {
+    @Override
+	public EAttribute getColumn_CaseSensitive() {
         return (EAttribute)columnEClass.getEStructuralFeatures().get(15);
     }
 
@@ -558,7 +586,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getColumn_Searchability() {
+    @Override
+	public EAttribute getColumn_Searchability() {
         return (EAttribute)columnEClass.getEStructuralFeatures().get(16);
     }
 
@@ -567,7 +596,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getColumn_Currency() {
+    @Override
+	public EAttribute getColumn_Currency() {
         return (EAttribute)columnEClass.getEStructuralFeatures().get(17);
     }
 
@@ -576,7 +606,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getColumn_Radix() {
+    @Override
+	public EAttribute getColumn_Radix() {
         return (EAttribute)columnEClass.getEStructuralFeatures().get(18);
     }
 
@@ -585,7 +616,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getColumn_Signed() {
+    @Override
+	public EAttribute getColumn_Signed() {
         return (EAttribute)columnEClass.getEStructuralFeatures().get(19);
     }
 
@@ -594,7 +626,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getColumn_DistinctValueCount() {
+    @Override
+	public EAttribute getColumn_DistinctValueCount() {
         return (EAttribute)columnEClass.getEStructuralFeatures().get(20);
     }
 
@@ -603,7 +636,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getColumn_NullValueCount() {
+    @Override
+	public EAttribute getColumn_NullValueCount() {
         return (EAttribute)columnEClass.getEStructuralFeatures().get(21);
     }
 
@@ -612,7 +646,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getColumn_UniqueKeys() {
+    @Override
+	public EReference getColumn_UniqueKeys() {
         return (EReference)columnEClass.getEStructuralFeatures().get(22);
     }
 
@@ -621,7 +656,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getColumn_Indexes() {
+    @Override
+	public EReference getColumn_Indexes() {
         return (EReference)columnEClass.getEStructuralFeatures().get(23);
     }
 
@@ -630,7 +666,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getColumn_ForeignKeys() {
+    @Override
+	public EReference getColumn_ForeignKeys() {
         return (EReference)columnEClass.getEStructuralFeatures().get(24);
     }
 
@@ -639,7 +676,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getColumn_AccessPatterns() {
+    @Override
+	public EReference getColumn_AccessPatterns() {
         return (EReference)columnEClass.getEStructuralFeatures().get(25);
     }
 
@@ -648,7 +686,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getColumn_Owner() {
+    @Override
+	public EReference getColumn_Owner() {
         return (EReference)columnEClass.getEStructuralFeatures().get(26);
     }
 
@@ -657,7 +696,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EClass getSchema() {
+    @Override
+	public EClass getSchema() {
         return schemaEClass;
     }
 
@@ -666,7 +706,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getSchema_Tables() {
+    @Override
+	public EReference getSchema_Tables() {
         return (EReference)schemaEClass.getEStructuralFeatures().get(0);
     }
 
@@ -675,7 +716,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getSchema_Catalog() {
+    @Override
+	public EReference getSchema_Catalog() {
         return (EReference)schemaEClass.getEStructuralFeatures().get(1);
     }
 
@@ -684,7 +726,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getSchema_Procedures() {
+    @Override
+	public EReference getSchema_Procedures() {
         return (EReference)schemaEClass.getEStructuralFeatures().get(2);
     }
 
@@ -693,7 +736,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getSchema_Indexes() {
+    @Override
+	public EReference getSchema_Indexes() {
         return (EReference)schemaEClass.getEStructuralFeatures().get(3);
     }
 
@@ -702,7 +746,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getSchema_LogicalRelationships() {
+    @Override
+	public EReference getSchema_LogicalRelationships() {
         return (EReference)schemaEClass.getEStructuralFeatures().get(4);
     }
 
@@ -711,7 +756,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EClass getPrimaryKey() {
+    @Override
+	public EClass getPrimaryKey() {
         return primaryKeyEClass;
     }
 
@@ -720,7 +766,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getPrimaryKey_Table() {
+    @Override
+	public EReference getPrimaryKey_Table() {
         return (EReference)primaryKeyEClass.getEStructuralFeatures().get(0);
     }
 
@@ -729,7 +776,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EClass getForeignKey() {
+    @Override
+	public EClass getForeignKey() {
         return foreignKeyEClass;
     }
 
@@ -738,7 +786,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getForeignKey_ForeignKeyMultiplicity() {
+    @Override
+	public EAttribute getForeignKey_ForeignKeyMultiplicity() {
         return (EAttribute)foreignKeyEClass.getEStructuralFeatures().get(0);
     }
 
@@ -747,7 +796,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getForeignKey_PrimaryKeyMultiplicity() {
+    @Override
+	public EAttribute getForeignKey_PrimaryKeyMultiplicity() {
         return (EAttribute)foreignKeyEClass.getEStructuralFeatures().get(1);
     }
 
@@ -756,7 +806,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getForeignKey_Table() {
+    @Override
+	public EReference getForeignKey_Table() {
         return (EReference)foreignKeyEClass.getEStructuralFeatures().get(4);
     }
 
@@ -765,7 +816,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getForeignKey_Columns() {
+    @Override
+	public EReference getForeignKey_Columns() {
         return (EReference)foreignKeyEClass.getEStructuralFeatures().get(2);
     }
 
@@ -774,7 +826,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getForeignKey_UniqueKey() {
+    @Override
+	public EReference getForeignKey_UniqueKey() {
         return (EReference)foreignKeyEClass.getEStructuralFeatures().get(3);
     }
 
@@ -783,7 +836,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EClass getRelationalEntity() {
+    @Override
+	public EClass getRelationalEntity() {
         return relationalEntityEClass;
     }
 
@@ -792,7 +846,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getRelationalEntity_Name() {
+    @Override
+	public EAttribute getRelationalEntity_Name() {
         return (EAttribute)relationalEntityEClass.getEStructuralFeatures().get(0);
     }
 
@@ -801,7 +856,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getRelationalEntity_NameInSource() {
+    @Override
+	public EAttribute getRelationalEntity_NameInSource() {
         return (EAttribute)relationalEntityEClass.getEStructuralFeatures().get(1);
     }
 
@@ -810,7 +866,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EClass getUniqueKey() {
+    @Override
+	public EClass getUniqueKey() {
         return uniqueKeyEClass;
     }
 
@@ -819,7 +876,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getUniqueKey_Columns() {
+    @Override
+	public EReference getUniqueKey_Columns() {
         return (EReference)uniqueKeyEClass.getEStructuralFeatures().get(0);
     }
 
@@ -828,7 +886,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getUniqueKey_ForeignKeys() {
+    @Override
+	public EReference getUniqueKey_ForeignKeys() {
         return (EReference)uniqueKeyEClass.getEStructuralFeatures().get(1);
     }
 
@@ -837,7 +896,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EClass getView() {
+    @Override
+	public EClass getView() {
         return viewEClass;
     }
 
@@ -846,7 +906,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EClass getCatalog() {
+    @Override
+	public EClass getCatalog() {
         return catalogEClass;
     }
 
@@ -855,7 +916,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getCatalog_Schemas() {
+    @Override
+	public EReference getCatalog_Schemas() {
         return (EReference)catalogEClass.getEStructuralFeatures().get(0);
     }
 
@@ -864,7 +926,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getCatalog_Procedures() {
+    @Override
+	public EReference getCatalog_Procedures() {
         return (EReference)catalogEClass.getEStructuralFeatures().get(1);
     }
 
@@ -873,7 +936,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getCatalog_Indexes() {
+    @Override
+	public EReference getCatalog_Indexes() {
         return (EReference)catalogEClass.getEStructuralFeatures().get(2);
     }
 
@@ -882,7 +946,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getCatalog_Tables() {
+    @Override
+	public EReference getCatalog_Tables() {
         return (EReference)catalogEClass.getEStructuralFeatures().get(3);
     }
 
@@ -891,7 +956,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getCatalog_LogicalRelationships() {
+    @Override
+	public EReference getCatalog_LogicalRelationships() {
         return (EReference)catalogEClass.getEStructuralFeatures().get(4);
     }
 
@@ -900,7 +966,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EClass getProcedure() {
+    @Override
+	public EClass getProcedure() {
         return procedureEClass;
     }
 
@@ -909,7 +976,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getProcedure_Function() {
+    @Override
+	public EAttribute getProcedure_Function() {
         return (EAttribute)procedureEClass.getEStructuralFeatures().get(0);
     }
 
@@ -918,7 +986,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getProcedure_Schema() {
+    @Override
+	public EReference getProcedure_Schema() {
         return (EReference)procedureEClass.getEStructuralFeatures().get(1);
     }
 
@@ -927,7 +996,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getProcedure_Parameters() {
+    @Override
+	public EReference getProcedure_Parameters() {
         return (EReference)procedureEClass.getEStructuralFeatures().get(2);
     }
 
@@ -936,7 +1006,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getProcedure_Catalog() {
+    @Override
+	public EReference getProcedure_Catalog() {
         return (EReference)procedureEClass.getEStructuralFeatures().get(3);
     }
 
@@ -945,7 +1016,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getProcedure_Result() {
+    @Override
+	public EReference getProcedure_Result() {
         return (EReference)procedureEClass.getEStructuralFeatures().get(4);
     }
 
@@ -954,7 +1026,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getProcedure_UpdateCount() {
+    @Override
+	public EAttribute getProcedure_UpdateCount() {
         return (EAttribute)procedureEClass.getEStructuralFeatures().get(5);
     }
 
@@ -963,7 +1036,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EClass getIndex() {
+    @Override
+	public EClass getIndex() {
         return indexEClass;
     }
 
@@ -972,7 +1046,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getIndex_FilterCondition() {
+    @Override
+	public EAttribute getIndex_FilterCondition() {
         return (EAttribute)indexEClass.getEStructuralFeatures().get(0);
     }
 
@@ -981,7 +1056,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getIndex_Nullable() {
+    @Override
+	public EAttribute getIndex_Nullable() {
         return (EAttribute)indexEClass.getEStructuralFeatures().get(1);
     }
 
@@ -990,7 +1066,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getIndex_AutoUpdate() {
+    @Override
+	public EAttribute getIndex_AutoUpdate() {
         return (EAttribute)indexEClass.getEStructuralFeatures().get(2);
     }
 
@@ -999,7 +1076,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getIndex_Unique() {
+    @Override
+	public EAttribute getIndex_Unique() {
         return (EAttribute)indexEClass.getEStructuralFeatures().get(3);
     }
 
@@ -1008,7 +1086,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getIndex_Schema() {
+    @Override
+	public EReference getIndex_Schema() {
         return (EReference)indexEClass.getEStructuralFeatures().get(4);
     }
 
@@ -1017,7 +1096,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getIndex_Columns() {
+    @Override
+	public EReference getIndex_Columns() {
         return (EReference)indexEClass.getEStructuralFeatures().get(5);
     }
 
@@ -1026,7 +1106,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getIndex_Catalog() {
+    @Override
+	public EReference getIndex_Catalog() {
         return (EReference)indexEClass.getEStructuralFeatures().get(6);
     }
 
@@ -1035,7 +1116,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EClass getProcedureParameter() {
+    @Override
+	public EClass getProcedureParameter() {
         return procedureParameterEClass;
     }
 
@@ -1044,7 +1126,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getProcedureParameter_Direction() {
+    @Override
+	public EAttribute getProcedureParameter_Direction() {
         return (EAttribute)procedureParameterEClass.getEStructuralFeatures().get(0);
     }
 
@@ -1053,7 +1136,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getProcedureParameter_DefaultValue() {
+    @Override
+	public EAttribute getProcedureParameter_DefaultValue() {
         return (EAttribute)procedureParameterEClass.getEStructuralFeatures().get(1);
     }
 
@@ -1062,7 +1146,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getProcedureParameter_NativeType() {
+    @Override
+	public EAttribute getProcedureParameter_NativeType() {
         return (EAttribute)procedureParameterEClass.getEStructuralFeatures().get(2);
     }
 
@@ -1071,7 +1156,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getProcedureParameter_Length() {
+    @Override
+	public EAttribute getProcedureParameter_Length() {
         return (EAttribute)procedureParameterEClass.getEStructuralFeatures().get(3);
     }
 
@@ -1080,7 +1166,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getProcedureParameter_Precision() {
+    @Override
+	public EAttribute getProcedureParameter_Precision() {
         return (EAttribute)procedureParameterEClass.getEStructuralFeatures().get(4);
     }
 
@@ -1089,7 +1176,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getProcedureParameter_Scale() {
+    @Override
+	public EAttribute getProcedureParameter_Scale() {
         return (EAttribute)procedureParameterEClass.getEStructuralFeatures().get(5);
     }
 
@@ -1098,7 +1186,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getProcedureParameter_Nullable() {
+    @Override
+	public EAttribute getProcedureParameter_Nullable() {
         return (EAttribute)procedureParameterEClass.getEStructuralFeatures().get(6);
     }
 
@@ -1107,7 +1196,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getProcedureParameter_Radix() {
+    @Override
+	public EAttribute getProcedureParameter_Radix() {
         return (EAttribute)procedureParameterEClass.getEStructuralFeatures().get(7);
     }
 
@@ -1116,7 +1206,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getProcedureParameter_Type() {
+    @Override
+	public EReference getProcedureParameter_Type() {
         return (EReference)procedureParameterEClass.getEStructuralFeatures().get(9);
     }
 
@@ -1125,7 +1216,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getProcedureParameter_Procedure() {
+    @Override
+	public EReference getProcedureParameter_Procedure() {
         return (EReference)procedureParameterEClass.getEStructuralFeatures().get(8);
     }
 
@@ -1134,7 +1226,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EClass getUniqueConstraint() {
+    @Override
+	public EClass getUniqueConstraint() {
         return uniqueConstraintEClass;
     }
 
@@ -1143,7 +1236,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getUniqueConstraint_Table() {
+    @Override
+	public EReference getUniqueConstraint_Table() {
         return (EReference)uniqueConstraintEClass.getEStructuralFeatures().get(0);
     }
 
@@ -1152,7 +1246,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EClass getAccessPattern() {
+    @Override
+	public EClass getAccessPattern() {
         return accessPatternEClass;
     }
 
@@ -1161,7 +1256,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getAccessPattern_Columns() {
+    @Override
+	public EReference getAccessPattern_Columns() {
         return (EReference)accessPatternEClass.getEStructuralFeatures().get(0);
     }
 
@@ -1170,7 +1266,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getAccessPattern_Table() {
+    @Override
+	public EReference getAccessPattern_Table() {
         return (EReference)accessPatternEClass.getEStructuralFeatures().get(1);
     }
 
@@ -1179,7 +1276,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EClass getRelationship() {
+    @Override
+	public EClass getRelationship() {
         return relationshipEClass;
     }
 
@@ -1188,7 +1286,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EClass getLogicalRelationship() {
+    @Override
+	public EClass getLogicalRelationship() {
         return logicalRelationshipEClass;
     }
 
@@ -1197,7 +1296,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getLogicalRelationship_Catalog() {
+    @Override
+	public EReference getLogicalRelationship_Catalog() {
         return (EReference)logicalRelationshipEClass.getEStructuralFeatures().get(0);
     }
 
@@ -1206,7 +1306,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getLogicalRelationship_Schema() {
+    @Override
+	public EReference getLogicalRelationship_Schema() {
         return (EReference)logicalRelationshipEClass.getEStructuralFeatures().get(1);
     }
 
@@ -1215,7 +1316,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getLogicalRelationship_Ends() {
+    @Override
+	public EReference getLogicalRelationship_Ends() {
         return (EReference)logicalRelationshipEClass.getEStructuralFeatures().get(2);
     }
 
@@ -1224,7 +1326,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EClass getLogicalRelationshipEnd() {
+    @Override
+	public EClass getLogicalRelationshipEnd() {
         return logicalRelationshipEndEClass;
     }
 
@@ -1233,7 +1336,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getLogicalRelationshipEnd_Multiplicity() {
+    @Override
+	public EAttribute getLogicalRelationshipEnd_Multiplicity() {
         return (EAttribute)logicalRelationshipEndEClass.getEStructuralFeatures().get(0);
     }
 
@@ -1242,7 +1346,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getLogicalRelationshipEnd_Table() {
+    @Override
+	public EReference getLogicalRelationshipEnd_Table() {
         return (EReference)logicalRelationshipEndEClass.getEStructuralFeatures().get(1);
     }
 
@@ -1251,7 +1356,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getLogicalRelationshipEnd_Relationship() {
+    @Override
+	public EReference getLogicalRelationshipEnd_Relationship() {
         return (EReference)logicalRelationshipEndEClass.getEStructuralFeatures().get(2);
     }
 
@@ -1260,7 +1366,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EClass getBaseTable() {
+    @Override
+	public EClass getBaseTable() {
         return baseTableEClass;
     }
 
@@ -1269,7 +1376,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getBaseTable_ForeignKeys() {
+    @Override
+	public EReference getBaseTable_ForeignKeys() {
         return (EReference)baseTableEClass.getEStructuralFeatures().get(0);
     }
 
@@ -1278,7 +1386,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getBaseTable_PrimaryKey() {
+    @Override
+	public EReference getBaseTable_PrimaryKey() {
         return (EReference)baseTableEClass.getEStructuralFeatures().get(1);
     }
 
@@ -1287,7 +1396,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getBaseTable_UniqueConstraints() {
+    @Override
+	public EReference getBaseTable_UniqueConstraints() {
         return (EReference)baseTableEClass.getEStructuralFeatures().get(2);
     }
 
@@ -1296,7 +1406,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EClass getColumnSet() {
+    @Override
+	public EClass getColumnSet() {
         return columnSetEClass;
     }
 
@@ -1305,7 +1416,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getColumnSet_Columns() {
+    @Override
+	public EReference getColumnSet_Columns() {
         return (EReference)columnSetEClass.getEStructuralFeatures().get(0);
     }
 
@@ -1314,7 +1426,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EClass getProcedureResult() {
+    @Override
+	public EClass getProcedureResult() {
         return procedureResultEClass;
     }
 
@@ -1323,7 +1436,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getProcedureResult_Procedure() {
+    @Override
+	public EReference getProcedureResult_Procedure() {
         return (EReference)procedureResultEClass.getEStructuralFeatures().get(0);
     }
 
@@ -1332,7 +1446,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EEnum getNullableType() {
+    @Override
+	public EEnum getNullableType() {
         return nullableTypeEEnum;
     }
 
@@ -1341,7 +1456,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EEnum getDirectionKind() {
+    @Override
+	public EEnum getDirectionKind() {
         return directionKindEEnum;
     }
 
@@ -1350,7 +1466,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EEnum getMultiplicityKind() {
+    @Override
+	public EEnum getMultiplicityKind() {
         return multiplicityKindEEnum;
     }
 
@@ -1359,7 +1476,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EEnum getSearchabilityType() {
+    @Override
+	public EEnum getSearchabilityType() {
         return searchabilityTypeEEnum;
     }
 
@@ -1368,7 +1486,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EEnum getProcedureUpdateCount() {
+    @Override
+	public EEnum getProcedureUpdateCount() {
         return procedureUpdateCountEEnum;
     }
 
@@ -1377,7 +1496,8 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public RelationalFactory getRelationalFactory() {
+    @Override
+	public RelationalFactory getRelationalFactory() {
         return (RelationalFactory)getEFactoryInstance();
     }
 

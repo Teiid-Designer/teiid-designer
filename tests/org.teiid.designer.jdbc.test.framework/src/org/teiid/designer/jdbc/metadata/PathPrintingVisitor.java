@@ -43,7 +43,8 @@ public class PathPrintingVisitor implements JdbcNodeVisitor {
     /**
      * @see org.teiid.designer.jdbc.metadata.JdbcNodeVisitor#visit(org.teiid.designer.jdbc.metadata.JdbcNode)
      */
-    public boolean visit( JdbcNode node ) {
+    @Override
+	public boolean visit( JdbcNode node ) {
         stream.println(this.prefix + node.getPath().toString());
         return true;
     }

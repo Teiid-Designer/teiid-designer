@@ -123,7 +123,8 @@ public class FindRelatedObjectsToDeleted implements ModelVisitor {
      * @see org.teiid.designer.core.util.ModelVisitor#visit(org.eclipse.emf.ecore.EObject)
      * @since 4.2
      */
-    public boolean visit( EObject object ) {
+    @Override
+	public boolean visit( EObject object ) {
         // clean up unidirectional references
         ModelEditorImpl modelEditor = (ModelEditorImpl)ModelerCore.getModelEditor();
         // get objectID and find uni-directional references for that ID
@@ -161,7 +162,8 @@ public class FindRelatedObjectsToDeleted implements ModelVisitor {
      * @see org.teiid.designer.core.util.ModelVisitor#visit(org.eclipse.emf.ecore.resource.Resource)
      * @since 4.2
      */
-    public boolean visit( Resource resource ) {
+    @Override
+	public boolean visit( Resource resource ) {
         return false;
     }
 

@@ -76,7 +76,8 @@ public class TableEditorPreferencesDialog extends Dialog implements IEditorPrefe
         this.tableEditorPreferencesComponent.validate();
     }
     
-    public void validationStatus(boolean status, String message) {
+    @Override
+	public void validationStatus(boolean status, String message) {
         if (getButton(IDialogConstants.OK_ID) != null) {
             getButton(IDialogConstants.OK_ID).setEnabled(status);
         	if (message == null) {

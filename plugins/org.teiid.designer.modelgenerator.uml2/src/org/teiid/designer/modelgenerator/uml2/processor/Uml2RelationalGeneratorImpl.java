@@ -144,7 +144,8 @@ public class Uml2RelationalGeneratorImpl implements Uml2RelationalGenerator {
      * Return the options for this generator.
      * @return the options; never null
      */
-    public Uml2RelationalOptions getOptions() {
+    @Override
+	public Uml2RelationalOptions getOptions() {
         return options;
     }
 
@@ -157,7 +158,8 @@ public class Uml2RelationalGeneratorImpl implements Uml2RelationalGenerator {
      * existing UML2 models that should be used by the generator as inputs.
      * @return the ModelWorkspaceSelections object; never null
      */
-    public ModelWorkspaceSelections getModelWorkspaceUmlInputSelections() {
+    @Override
+	public ModelWorkspaceSelections getModelWorkspaceUmlInputSelections() {
         return this.workspaceInputSelections;
     }
     
@@ -166,7 +168,8 @@ public class Uml2RelationalGeneratorImpl implements Uml2RelationalGenerator {
      * existing datatype models that should be used by the generator.
      * @return the ModelWorkspaceSelections object; never null
      */
-    public ModelWorkspaceSelections getModelWorkspaceDatatypeSelections() {
+    @Override
+	public ModelWorkspaceSelections getModelWorkspaceDatatypeSelections() {
         return this.workspaceDatatypesSelections;
     }
     
@@ -176,7 +179,8 @@ public class Uml2RelationalGeneratorImpl implements Uml2RelationalGenerator {
      * should be placed.
      * @return the reference to the relational model; may be null if not set
      */
-    public ModelResource getRelationalOutputModel() {
+    @Override
+	public ModelResource getRelationalOutputModel() {
         return this.relationalOutputModel;
     }
     
@@ -186,7 +190,8 @@ public class Uml2RelationalGeneratorImpl implements Uml2RelationalGenerator {
      * should be placed.
      * @param relationalOutputModel the reference to the relational model; may be null if not set
      */
-    public void setRelationalOutputModel( final ModelResource relationalOutputModel ) {
+    @Override
+	public void setRelationalOutputModel( final ModelResource relationalOutputModel ) {
         this.relationalOutputModel = relationalOutputModel;
         clearModelGenerator();
     }
@@ -196,7 +201,8 @@ public class Uml2RelationalGeneratorImpl implements Uml2RelationalGenerator {
      * by this generator should be placed.
      * @return the reference to the relationship model; may be null if not set
      */
-    public ModelResource getRelationshipModel() {
+    @Override
+	public ModelResource getRelationshipModel() {
         return relationshipModel;
     }
 
@@ -205,7 +211,8 @@ public class Uml2RelationalGeneratorImpl implements Uml2RelationalGenerator {
      * by this generator should be placed.
      * @param resource the relationship model; may be null
      */
-    public void setRelationshipModel(ModelResource resource) {
+    @Override
+	public void setRelationshipModel(ModelResource resource) {
         relationshipModel = resource;
         clearModelGenerator();
     }
@@ -215,7 +222,8 @@ public class Uml2RelationalGeneratorImpl implements Uml2RelationalGenerator {
      * UML Property (map key) to a corresponding relational PropertyDescriptor (map value)
      * @param customPropsMap the UML to relational property mappings
      */
-    public void setColumnCustomPropsMap(Map customPropsMap) {
+    @Override
+	public void setColumnCustomPropsMap(Map customPropsMap) {
         getOptions().setColumnCustomPropsMap(customPropsMap);
     }
 
@@ -224,7 +232,8 @@ public class Uml2RelationalGeneratorImpl implements Uml2RelationalGenerator {
      * UML Property (map key) to a corresponding relational PropertyDescriptor (map value)
      * @param customPropsMap the UML to relational property mappings
      */
-    public void setTableCustomPropsMap(Map customPropsMap) {
+    @Override
+	public void setTableCustomPropsMap(Map customPropsMap) {
         getOptions().setTableCustomPropsMap(customPropsMap);
     }
 
@@ -257,7 +266,8 @@ public class Uml2RelationalGeneratorImpl implements Uml2RelationalGenerator {
     /**
      * @see org.teiid.designer.modelgenerator.uml2.Uml2RelationalGenerator#getModelGenerator()
      */
-    public ModelGenerator getModelGenerator() throws CoreException {
+    @Override
+	public ModelGenerator getModelGenerator() throws CoreException {
         if ( this.generator == null ) {
             synchronized(this) {
                 if ( this.generator == null ) {
@@ -269,7 +279,8 @@ public class Uml2RelationalGeneratorImpl implements Uml2RelationalGenerator {
         return this.generator;
     }
     
-    public IStatus validate() {
+    @Override
+	public IStatus validate() {
         IStatus status = validateInputUmlSelection();
         if ( !status.isOK() ) {
             return status;
@@ -290,7 +301,8 @@ public class Uml2RelationalGeneratorImpl implements Uml2RelationalGenerator {
         return status;
     }
     
-    public IStatus validateInputUmlSelection() {
+    @Override
+	public IStatus validateInputUmlSelection() {
         try {
             doGetInputModelSelectors();
         } catch ( CoreException e ) {
@@ -301,7 +313,8 @@ public class Uml2RelationalGeneratorImpl implements Uml2RelationalGenerator {
         return new Status(IStatus.OK,pluginId,0,msg,null);
     }
     
-    public IStatus validateDatatypeSelection() {
+    @Override
+	public IStatus validateDatatypeSelection() {
         try {
             doGetDatatypeModelSelectors();
         } catch ( CoreException e ) {
@@ -312,7 +325,8 @@ public class Uml2RelationalGeneratorImpl implements Uml2RelationalGenerator {
         return new Status(IStatus.OK,pluginId,0,msg,null);
     }
     
-    public IStatus validateRelationalOutput() {
+    @Override
+	public IStatus validateRelationalOutput() {
         // Create a selector for the output model ...
         final ModelResource relationalResource = this.getRelationalOutputModel();
         final String pluginId = Uml2ModelGeneratorPlugin.PLUGIN_ID;
@@ -546,7 +560,8 @@ public class Uml2RelationalGeneratorImpl implements Uml2RelationalGenerator {
             // =========================================================================
             final ModelSelector generatedRelationSelector = transientRelationshipModelSelector;
             final ModelProducer relationProducer = new ModelProducer() {
-                public void execute(IProgressMonitor monitor, List problems) throws Exception {
+                @Override
+				public void execute(IProgressMonitor monitor, List problems) throws Exception {
                     // Make sure the metamodel URI and model type are set ...
                     if ( finalRelationModelSelector != null ) {
                         final ModelAnnotation annotation = finalRelationModelSelector.getModelAnnotation();
@@ -556,7 +571,8 @@ public class Uml2RelationalGeneratorImpl implements Uml2RelationalGenerator {
 
                     // do nothing else, since it is produced while the generator is creating the relational objects
                 }
-                public ModelSelector getOutputSelector() {
+                @Override
+				public ModelSelector getOutputSelector() {
                     return generatedRelationSelector;
                 }
             };
@@ -895,7 +911,8 @@ public class Uml2RelationalGeneratorImpl implements Uml2RelationalGenerator {
         // Create a filter that only allows UML2 models in the view ...
         final String uml2MetamodelUri = UMLPackage.eNS_URI;
         final ModelWorkspaceFilter viewFilter = new ModelWorkspaceFilter() {
-            public boolean select(final Object parent, final Object node) {
+            @Override
+			public boolean select(final Object parent, final Object node) {
                 if (node instanceof ModelResource) {
                     try {
                         final MetamodelDescriptor mmdesc = ((ModelResource)node).getPrimaryMetamodelDescriptor();
@@ -920,7 +937,8 @@ public class Uml2RelationalGeneratorImpl implements Uml2RelationalGenerator {
         
         // Create a filter for what objects in the view can be selected ...
         final ModelWorkspaceSelectionFilter selectionFilter = new ModelWorkspaceSelectionFilter() {
-            public boolean isSelectable(final Object node) {
+            @Override
+			public boolean isSelectable(final Object node) {
                 if ( node == null ) {
                     return false;
                 }
@@ -952,7 +970,8 @@ public class Uml2RelationalGeneratorImpl implements Uml2RelationalGenerator {
         // Create a filter that only allows UML2 models in the view ...
         view.setRestrictedToModelWorkspaceItemsOnly(false);
         final ModelWorkspaceFilter viewFilter = new ModelWorkspaceFilter() {
-            public boolean select(final Object parent, final Object node) {
+            @Override
+			public boolean select(final Object parent, final Object node) {
                 if (node instanceof IFile) {
                     final boolean xsdFile = ModelUtil.isXsdFile((IFile)node);
                     return xsdFile;
@@ -975,7 +994,8 @@ public class Uml2RelationalGeneratorImpl implements Uml2RelationalGenerator {
         
         // Create a filter for what objects in the view can be selected ...
         final ModelWorkspaceSelectionFilter selectionFilter = new ModelWorkspaceSelectionFilter() {
-            public boolean isSelectable(final Object node) {
+            @Override
+			public boolean isSelectable(final Object node) {
                 if ( node instanceof EObject ) {
                     // Objects within models cannot be selected
                     return false;

@@ -39,7 +39,8 @@ public class ValidatingRelationalObjectNameStrategy implements RelationalObjectN
     /**
      * @see org.teiid.designer.modelgenerator.uml2.util.RelationalObjectNamingStrategy#getNameForPrimaryKey(org.eclipse.uml2.Class, org.teiid.designer.metamodels.relational.BaseTable)
      */
-    public String getNameForPrimaryKey(Classifier klass, BaseTable table) {
+    @Override
+	public String getNameForPrimaryKey(Classifier klass, BaseTable table) {
         final String origName = this.delegate.getNameForPrimaryKey(klass,table);
         if ( origName == null ) {
             return null;
@@ -51,7 +52,8 @@ public class ValidatingRelationalObjectNameStrategy implements RelationalObjectN
     /**
      * @see org.teiid.designer.modelgenerator.uml2.util.RelationalObjectNamingStrategy#getNameForClassBaseTable(org.eclipse.uml2.Class)
      */
-    public String getNameForClassBaseTable(Classifier klass) {
+    @Override
+	public String getNameForClassBaseTable(Classifier klass) {
         final String origName = this.delegate.getNameForClassBaseTable(klass);
         if ( origName == null ) {
             return null;
@@ -63,7 +65,8 @@ public class ValidatingRelationalObjectNameStrategy implements RelationalObjectN
     /**
      * @see org.teiid.designer.modelgenerator.uml2.util.RelationalObjectNamingStrategy#getNameForDatatypeTable(org.eclipse.uml2.Property, org.eclipse.uml2.DataType)
      */
-    public String getNameForDatatypeTable(Property referringProperty, DataType datatype) {
+    @Override
+	public String getNameForDatatypeTable(Property referringProperty, DataType datatype) {
         final String origName = this.delegate.getNameForDatatypeTable(referringProperty,datatype);
         if ( origName == null ) {
             return null;
@@ -75,7 +78,8 @@ public class ValidatingRelationalObjectNameStrategy implements RelationalObjectN
     /**
      * @see org.teiid.designer.modelgenerator.uml2.util.RelationalObjectNamingStrategy#getNameForDatatypeValueColumn(org.eclipse.uml2.Property, org.eclipse.uml2.DataType)
      */
-    public String getNameForDatatypeValueColumn(Property referringProperty, DataType datatype, final String namingSuffix) {
+    @Override
+	public String getNameForDatatypeValueColumn(Property referringProperty, DataType datatype, final String namingSuffix) {
         final String origName = this.delegate.getNameForDatatypeValueColumn(referringProperty,datatype, namingSuffix);
         if ( origName == null ) {
             return null;
@@ -87,7 +91,8 @@ public class ValidatingRelationalObjectNameStrategy implements RelationalObjectN
     /**
      * @see org.teiid.designer.modelgenerator.uml2.util.RelationalObjectNamingStrategy#getNameForCopiedPKColumn(org.teiid.designer.metamodels.relational.BaseTable, int)
      */
-    public String getNameForCopiedPKColumn(BaseTable fromTable, int i) {
+    @Override
+	public String getNameForCopiedPKColumn(BaseTable fromTable, int i) {
         final String origName = this.delegate.getNameForCopiedPKColumn(fromTable,i);
         if ( origName == null ) {
             return null;
@@ -99,7 +104,8 @@ public class ValidatingRelationalObjectNameStrategy implements RelationalObjectN
     /**
      * @see org.teiid.designer.modelgenerator.uml2.util.RelationalObjectNamingStrategy#getNameForForeignKey(org.teiid.designer.metamodels.relational.BaseTable)
      */
-    public String getNameForForeignKey(BaseTable toTable) {
+    @Override
+	public String getNameForForeignKey(BaseTable toTable) {
         final String origName = this.delegate.getNameForForeignKey(toTable);
         if ( origName == null ) {
             return null;
@@ -111,7 +117,8 @@ public class ValidatingRelationalObjectNameStrategy implements RelationalObjectN
     /**
      * @see org.teiid.designer.modelgenerator.uml2.util.RelationalObjectNamingStrategy#getNameForForeignKey(org.eclipse.uml2.Property, org.teiid.designer.metamodels.relational.BaseTable)
      */
-    public String getNameForForeignKey(Property property, BaseTable table) {
+    @Override
+	public String getNameForForeignKey(Property property, BaseTable table) {
         final String origName = this.delegate.getNameForForeignKey(property,table);
         if ( origName == null ) {
             return null;
@@ -123,7 +130,8 @@ public class ValidatingRelationalObjectNameStrategy implements RelationalObjectN
     /**
      * @see org.teiid.designer.modelgenerator.uml2.util.RelationalObjectNamingStrategy#getNameForUnidirectionalIntersectTable(org.teiid.designer.metamodels.relational.BaseTable, org.teiid.designer.metamodels.relational.BaseTable, org.eclipse.uml2.Property)
      */
-    public String getNameForUnidirectionalIntersectTable( BaseTable fromTable, BaseTable toTable,
+    @Override
+	public String getNameForUnidirectionalIntersectTable( BaseTable fromTable, BaseTable toTable,
                                                           Property fromProperty) {
         final String origName = this.delegate.getNameForUnidirectionalIntersectTable(fromTable,toTable,fromProperty);
         if ( origName == null ) {
@@ -136,7 +144,8 @@ public class ValidatingRelationalObjectNameStrategy implements RelationalObjectN
     /**
      * @see org.teiid.designer.modelgenerator.uml2.util.RelationalObjectNamingStrategy#getNameForColumn(org.eclipse.uml2.Property)
      */
-    public String getNameForColumn(Property property) {
+    @Override
+	public String getNameForColumn(Property property) {
         final String origName = this.delegate.getNameForColumn(property);
         if ( origName == null ) {
             return null;
@@ -148,7 +157,8 @@ public class ValidatingRelationalObjectNameStrategy implements RelationalObjectN
     /**
      * @see org.teiid.designer.modelgenerator.uml2.util.RelationalObjectNamingStrategy#getNameForArtificialPKColumn(int)
      */
-    public String getNameForArtificialPKColumn(int i) {
+    @Override
+	public String getNameForArtificialPKColumn(int i) {
         final String origName = this.delegate.getNameForArtificialPKColumn(i);
         if ( origName == null ) {
             return null;
@@ -160,7 +170,8 @@ public class ValidatingRelationalObjectNameStrategy implements RelationalObjectN
     /**
      * @see org.teiid.designer.modelgenerator.uml2.util.RelationalObjectNamingStrategy#getNameForIntersectTableRepresentingAssociation(org.eclipse.uml2.Association)
      */
-    public String getNameForIntersectTableRepresentingAssociation(Association association) {
+    @Override
+	public String getNameForIntersectTableRepresentingAssociation(Association association) {
         final String origName = this.delegate.getNameForIntersectTableRepresentingAssociation(association);
         if ( origName == null ) {
             return null;

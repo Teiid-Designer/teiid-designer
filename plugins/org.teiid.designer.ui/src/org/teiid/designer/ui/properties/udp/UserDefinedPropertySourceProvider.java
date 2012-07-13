@@ -27,7 +27,8 @@ public class UserDefinedPropertySourceProvider implements IPropertySourceProvide
     /* (non-Javadoc)
      * @see org.eclipse.ui.views.properties.IPropertySourceProvider#getPropertySource(java.lang.Object)
      */
-    public IPropertySource getPropertySource(Object object) {
+    @Override
+	public IPropertySource getPropertySource(Object object) {
         if ( object instanceof EObject ) {
             return new UserDefinedPropertySource((EObject) object);
         }

@@ -29,7 +29,8 @@ public class FakeValidationRule implements ObjectValidationRule {
         this.isFatal = isFatal;
     }
 
-    public void validate(EObject eObject, ValidationContext context) {
+    @Override
+	public void validate(EObject eObject, ValidationContext context) {
         if (addResult) {
             final String timeStampedMessage   = message + " " + DateUtil.getCurrentDateAsString(); //$NON-NLS-1$
             final ValidationProblem problem   = new ValidationProblemImpl(code,severity,timeStampedMessage);

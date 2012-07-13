@@ -176,7 +176,8 @@ public class JdbcManagerImpl implements JdbcManager {
         return (Connection)connection.getRawConnection();
     }
 
-    public Connection createConnection( final JdbcSource jdbcSource,
+    @Override
+	public Connection createConnection( final JdbcSource jdbcSource,
                                         final String password,
                                         final IProgressMonitor monitor ) throws JdbcException, SQLException {
         return createConnection(jdbcSource, password);
@@ -220,7 +221,8 @@ public class JdbcManagerImpl implements JdbcManager {
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.JdbcManager#findDrivers(java.lang.String)
      */
-    public JdbcDriver[] findDrivers( final String driverName ) {
+    @Override
+	public JdbcDriver[] findDrivers( final String driverName ) {
         final List result = new ArrayList();
         final List instances = getJdbcDrivers();
         final Iterator iter = instances.iterator();
@@ -236,7 +238,8 @@ public class JdbcManagerImpl implements JdbcManager {
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.JdbcManager#findSources(java.lang.String)
      */
-    public JdbcSource[] findSources( final String sourceName ) {
+    @Override
+	public JdbcSource[] findSources( final String sourceName ) {
         final List result = new ArrayList();
         final List instances = getJdbcSources();
         final Iterator iter = instances.iterator();
@@ -252,14 +255,16 @@ public class JdbcManagerImpl implements JdbcManager {
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.JdbcManager#getFactory()
      */
-    public JdbcFactory getFactory() {
+    @Override
+	public JdbcFactory getFactory() {
         return JdbcFactory.eINSTANCE;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.JdbcManager#getJdbcDrivers()
      */
-    public List getJdbcDrivers() {
+    @Override
+	public List getJdbcDrivers() {
         if (drivers == null) {
             synchronized (driversLock) {
                 if (drivers == null) {
@@ -280,7 +285,8 @@ public class JdbcManagerImpl implements JdbcManager {
         return drivers.getJdbcDrivers();
     }
 
-    public JdbcSource getJdbcSource( final IConnectionProfile profile ) {
+    @Override
+	public JdbcSource getJdbcSource( final IConnectionProfile profile ) {
         final JdbcSource source = new JdbcFactoryImpl().createJdbcSource();
         source.setName(profile.getName());
         final Properties props = profile.getBaseProperties();
@@ -300,7 +306,8 @@ public class JdbcManagerImpl implements JdbcManager {
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.JdbcManager#getJdbcSources()
      */
-    public List getJdbcSources() {
+    @Override
+	public List getJdbcSources() {
         if (sources == null || sourcesUpdated) {
             synchronized (sourcesLock) {
                 if (sources == null) {
@@ -321,7 +328,8 @@ public class JdbcManagerImpl implements JdbcManager {
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.JdbcManager#getName()
      */
-    public String getName() {
+    @Override
+	public String getName() {
         return this.name;
     }
 
@@ -381,14 +389,16 @@ public class JdbcManagerImpl implements JdbcManager {
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.JdbcManager#hasChanges()
      */
-    public boolean hasChanges() {
+    @Override
+	public boolean hasChanges() {
         return true;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.JdbcManager#isValid(org.teiid.designer.jdbc.JdbcDriver)
      */
-    public IStatus isValid( final JdbcDriver driver ) {
+    @Override
+	public IStatus isValid( final JdbcDriver driver ) {
         CoreArgCheck.isNotNull(driver);
         return isValid(driver, true);
     }
@@ -520,7 +530,8 @@ public class JdbcManagerImpl implements JdbcManager {
         return createOK(code, JdbcPlugin.Util.getString("JdbcManagerImpl.The_driver_specification_is_valid", name)); //$NON-NLS-1$
     }
 
-    public IStatus isValid( final JdbcSource jdbcSource ) {
+    @Override
+	public IStatus isValid( final JdbcSource jdbcSource ) {
         CoreArgCheck.isNotNull(jdbcSource);
 
         // A JdbcDriver is considered valid if all of the following conditions are true:
@@ -578,7 +589,8 @@ public class JdbcManagerImpl implements JdbcManager {
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.JdbcManager#reload(org.eclipse.core.runtime.IProgressMonitor)
      */
-    public void reload( final IProgressMonitor monitor ) {
+    @Override
+	public void reload( final IProgressMonitor monitor ) {
         shutdown();
         start();
     }
@@ -586,7 +598,8 @@ public class JdbcManagerImpl implements JdbcManager {
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.JdbcManager#saveChanges(org.eclipse.core.runtime.IProgressMonitor)
      */
-    public void saveChanges( final IProgressMonitor monitor ) {
+    @Override
+	public void saveChanges( final IProgressMonitor monitor ) {
         // If there are no changes, then return
         if (!hasChanges()) {
             return;

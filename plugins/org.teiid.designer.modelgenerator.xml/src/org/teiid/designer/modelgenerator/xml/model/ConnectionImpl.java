@@ -61,21 +61,24 @@ public class ConnectionImpl implements Connection {
     /**
      * @see java.sql.Connection#getHoldability()
      */
-    public int getHoldability() {
+    @Override
+	public int getHoldability() {
         return ResultSet.CLOSE_CURSORS_AT_COMMIT;
     }
 
     /**
      * @see java.sql.Connection#getTransactionIsolation()
      */
-    public int getTransactionIsolation() {
+    @Override
+	public int getTransactionIsolation() {
         return TRANSACTION_READ_UNCOMMITTED;
     }
 
     /**
      * @see java.sql.Connection#clearWarnings()
      */
-    public void clearWarnings() {
+    @Override
+	public void clearWarnings() {
         warnings = null;
 
     }
@@ -83,20 +86,23 @@ public class ConnectionImpl implements Connection {
     /**
      * @see java.sql.Connection#close()
      */
-    public void close() {
+    @Override
+	public void close() {
     }
 
     /**
      * @see java.sql.Connection#commit()
      */
-    public void commit() {
+    @Override
+	public void commit() {
         // We don't care about data; only metadata retrieval
     }
 
     /**
      * @see java.sql.Connection#rollback()
      */
-    public void rollback() {
+    @Override
+	public void rollback() {
         // We don't care about data; only metadata retrieval
 
     }
@@ -104,7 +110,8 @@ public class ConnectionImpl implements Connection {
     /**
      * @see java.sql.Connection#getAutoCommit()
      */
-    public boolean getAutoCommit() {
+    @Override
+	public boolean getAutoCommit() {
         // We don't care about data; only metadata retrieval
         return true;
     }
@@ -112,49 +119,56 @@ public class ConnectionImpl implements Connection {
     /**
      * @see java.sql.Connection#isClosed()
      */
-    public boolean isClosed() {
+    @Override
+	public boolean isClosed() {
         return false;
     }
 
     /**
      * @see java.sql.Connection#isReadOnly()
      */
-    public boolean isReadOnly() {
+    @Override
+	public boolean isReadOnly() {
         return true;
     }
 
     /**
      * @see java.sql.Connection#setHoldability(int)
      */
-    public void setHoldability( int holdability ) {
+    @Override
+	public void setHoldability( int holdability ) {
         // We don't care about data; only metadata retrieval
     }
 
     /**
      * @see java.sql.Connection#setTransactionIsolation(int)
      */
-    public void setTransactionIsolation( int level ) {
+    @Override
+	public void setTransactionIsolation( int level ) {
         // We don't care about data; only metadata retrieval
     }
 
     /**
      * @see java.sql.Connection#setAutoCommit(boolean)
      */
-    public void setAutoCommit( boolean autoCommit ) {
+    @Override
+	public void setAutoCommit( boolean autoCommit ) {
         // We don't care about data; only metadata retrieval
     }
 
     /**
      * @see java.sql.Connection#setReadOnly(boolean)
      */
-    public void setReadOnly( boolean readOnly ) {
+    @Override
+	public void setReadOnly( boolean readOnly ) {
         // We don't care about data; only metadata retrieval
     }
 
     /**
      * @see java.sql.Connection#getCatalog()
      */
-    public String getCatalog() {
+    @Override
+	public String getCatalog() {
         String namespace = stateManager.getFirstCatalog();
         return namespace;
     }
@@ -162,34 +176,40 @@ public class ConnectionImpl implements Connection {
     /**
      * @see java.sql.Connection#setCatalog(java.lang.String)
      */
-    public void setCatalog( String catalog ) {
+    @Override
+	public void setCatalog( String catalog ) {
     }
 
     /**
      * @see java.sql.Connection#getMetaData()
      */
-    public DatabaseMetaData getMetaData() {
+    @Override
+	public DatabaseMetaData getMetaData() {
         return databaseMetaData;
     }
 
     /**
      * @see java.sql.Connection#getWarnings()
      */
-    public SQLWarning getWarnings() {
+    @Override
+	public SQLWarning getWarnings() {
         return warnings;
     }
 
     /**
      * @see java.sql.Connection#setSavepoint()
      */
-    public Savepoint setSavepoint() {
+    @Override
+	public Savepoint setSavepoint() {
         // We don't care about data; only metadata retrieval
         return new Savepoint() {
-            public int getSavepointId() {
+            @Override
+			public int getSavepointId() {
                 return 0;
             }
 
-            public String getSavepointName() {
+            @Override
+			public String getSavepointName() {
                 return "0"; //$NON-NLS-1$
             }
         };
@@ -198,21 +218,24 @@ public class ConnectionImpl implements Connection {
     /**
      * @see java.sql.Connection#releaseSavepoint(java.sql.Savepoint)
      */
-    public void releaseSavepoint( Savepoint savepoint ) {
+    @Override
+	public void releaseSavepoint( Savepoint savepoint ) {
         // We don't care about data; only metadata retrieval
     }
 
     /**
      * @see java.sql.Connection#rollback(java.sql.Savepoint)
      */
-    public void rollback( Savepoint savepoint ) {
+    @Override
+	public void rollback( Savepoint savepoint ) {
         // We don't care about data; only metadata retrieval
     }
 
     /**
      * @see java.sql.Connection#createStatement()
      */
-    public Statement createStatement() {
+    @Override
+	public Statement createStatement() {
         // We don't care about data; only metadata retrieval
         return null;
     }
@@ -220,7 +243,8 @@ public class ConnectionImpl implements Connection {
     /**
      * @see java.sql.Connection#createStatement(int, int)
      */
-    public Statement createStatement( int resultSetType,
+    @Override
+	public Statement createStatement( int resultSetType,
                                       int resultSetConcurrency ) {
         // We don't care about data; only metadata retrieval
         return null;
@@ -229,7 +253,8 @@ public class ConnectionImpl implements Connection {
     /**
      * @see java.sql.Connection#createStatement(int, int, int)
      */
-    public Statement createStatement( int resultSetType,
+    @Override
+	public Statement createStatement( int resultSetType,
                                       int resultSetConcurrency,
                                       int resultSetHoldability ) {
         // We don't care about data; only metadata retrieval
@@ -241,14 +266,16 @@ public class ConnectionImpl implements Connection {
     /**
      * @see java.sql.Connection#getTypeMap()
      */
-    public Map<String, Class<?>> getTypeMap() {
+    @Override
+	public Map<String, Class<?>> getTypeMap() {
         return typemap;
     }
 
     /**
      * @see java.sql.Connection#nativeSQL(java.lang.String)
      */
-    public String nativeSQL( String sql ) {
+    @Override
+	public String nativeSQL( String sql ) {
         // We don't care about data; only metadata retrieval
         return sql;
     }
@@ -256,7 +283,8 @@ public class ConnectionImpl implements Connection {
     /**
      * @see java.sql.Connection#prepareCall(java.lang.String)
      */
-    public CallableStatement prepareCall( String sql ) {
+    @Override
+	public CallableStatement prepareCall( String sql ) {
         // We don't care about data; only metadata retrieval
         return null;
     }
@@ -264,7 +292,8 @@ public class ConnectionImpl implements Connection {
     /**
      * @see java.sql.Connection#prepareCall(java.lang.String, int, int)
      */
-    public CallableStatement prepareCall( String sql,
+    @Override
+	public CallableStatement prepareCall( String sql,
                                           int resultSetType,
                                           int resultSetConcurrency ) {
         // We don't care about data; only metadata retrieval
@@ -274,7 +303,8 @@ public class ConnectionImpl implements Connection {
     /**
      * @see java.sql.Connection#prepareCall(java.lang.String, int, int, int)
      */
-    public CallableStatement prepareCall( String sql,
+    @Override
+	public CallableStatement prepareCall( String sql,
                                           int resultSetType,
                                           int resultSetConcurrency,
                                           int resultSetHoldability ) {
@@ -285,7 +315,8 @@ public class ConnectionImpl implements Connection {
     /**
      * @see java.sql.Connection#prepareStatement(java.lang.String)
      */
-    public PreparedStatement prepareStatement( String sql ) {
+    @Override
+	public PreparedStatement prepareStatement( String sql ) {
         // We don't care about data; only metadata retrieval
         return null;
     }
@@ -293,7 +324,8 @@ public class ConnectionImpl implements Connection {
     /**
      * @see java.sql.Connection#prepareStatement(java.lang.String, int)
      */
-    public PreparedStatement prepareStatement( String sql,
+    @Override
+	public PreparedStatement prepareStatement( String sql,
                                                int autoGeneratedKeys ) {
         // We don't care about data; only metadata retrieval
         return null;
@@ -302,7 +334,8 @@ public class ConnectionImpl implements Connection {
     /**
      * @see java.sql.Connection#prepareStatement(java.lang.String, int, int)
      */
-    public PreparedStatement prepareStatement( String sql,
+    @Override
+	public PreparedStatement prepareStatement( String sql,
                                                int resultSetType,
                                                int resultSetConcurrency ) {
         // We don't care about data; only metadata retrieval
@@ -312,7 +345,8 @@ public class ConnectionImpl implements Connection {
     /**
      * @see java.sql.Connection#prepareStatement(java.lang.String, int, int, int)
      */
-    public PreparedStatement prepareStatement( String sql,
+    @Override
+	public PreparedStatement prepareStatement( String sql,
                                                int resultSetType,
                                                int resultSetConcurrency,
                                                int resultSetHoldability ) {
@@ -323,7 +357,8 @@ public class ConnectionImpl implements Connection {
     /**
      * @see java.sql.Connection#prepareStatement(java.lang.String, int[])
      */
-    public PreparedStatement prepareStatement( String sql,
+    @Override
+	public PreparedStatement prepareStatement( String sql,
                                                int[] columnIndexes ) {
         // We don't care about data; only metadata retrieval
         return null;
@@ -332,14 +367,17 @@ public class ConnectionImpl implements Connection {
     /**
      * @see java.sql.Connection#setSavepoint(java.lang.String)
      */
-    public Savepoint setSavepoint( final String name ) {
+    @Override
+	public Savepoint setSavepoint( final String name ) {
         // We don't care about data; only metadata retrieval
         return new Savepoint() {
-            public int getSavepointId() {
+            @Override
+			public int getSavepointId() {
                 return 0;
             }
 
-            public String getSavepointName() {
+            @Override
+			public String getSavepointName() {
                 return name;
             }
         };
@@ -348,7 +386,8 @@ public class ConnectionImpl implements Connection {
     /**
      * @see java.sql.Connection#prepareStatement(java.lang.String, java.lang.String[])
      */
-    public PreparedStatement prepareStatement( String sql,
+    @Override
+	public PreparedStatement prepareStatement( String sql,
                                                String[] columnNames ) {
         // We don't care about data; only metadata retrieval
         return null;

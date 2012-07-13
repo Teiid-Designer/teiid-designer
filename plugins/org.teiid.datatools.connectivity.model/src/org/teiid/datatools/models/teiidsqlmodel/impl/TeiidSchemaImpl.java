@@ -65,6 +65,7 @@ public class TeiidSchemaImpl extends JDBCSchema implements TeiidSchema {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	protected EClass eStaticClass() {
 		return TeiidsqlmodelPackage.Literals.TEIID_SCHEMA;
 	}
@@ -74,6 +75,7 @@ public class TeiidSchemaImpl extends JDBCSchema implements TeiidSchema {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList getDocuments() {
 		if (documents == null) {
 			documents = new EObjectWithInverseResolvingEList(Document.class, this, TeiidsqlmodelPackage.TEIID_SCHEMA__DOCUMENTS, TeiidsqlmodelPackage.DOCUMENT__SCHEMA);
@@ -86,6 +88,7 @@ public class TeiidSchemaImpl extends JDBCSchema implements TeiidSchema {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case TeiidsqlmodelPackage.TEIID_SCHEMA__DOCUMENTS:
@@ -99,6 +102,7 @@ public class TeiidSchemaImpl extends JDBCSchema implements TeiidSchema {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case TeiidsqlmodelPackage.TEIID_SCHEMA__DOCUMENTS:
@@ -112,6 +116,7 @@ public class TeiidSchemaImpl extends JDBCSchema implements TeiidSchema {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case TeiidsqlmodelPackage.TEIID_SCHEMA__DOCUMENTS:
@@ -125,6 +130,7 @@ public class TeiidSchemaImpl extends JDBCSchema implements TeiidSchema {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case TeiidsqlmodelPackage.TEIID_SCHEMA__DOCUMENTS:
@@ -140,6 +146,7 @@ public class TeiidSchemaImpl extends JDBCSchema implements TeiidSchema {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case TeiidsqlmodelPackage.TEIID_SCHEMA__DOCUMENTS:
@@ -154,6 +161,7 @@ public class TeiidSchemaImpl extends JDBCSchema implements TeiidSchema {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case TeiidsqlmodelPackage.TEIID_SCHEMA__DOCUMENTS:

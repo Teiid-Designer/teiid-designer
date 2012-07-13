@@ -35,7 +35,8 @@ public class IntegerIDFactory implements ObjectIDFactory, Serializable {
      * Return the description for the type of ObjectID described by this object.
      * @return the description
      */
-    public String getDescription() {
+    @Override
+	public String getDescription() {
         return CorePlugin.Util.getString("IntegerIDFactory.Description"); //$NON-NLS-1$
     }
 
@@ -47,7 +48,8 @@ public class IntegerIDFactory implements ObjectIDFactory, Serializable {
      * Create a new ObjectID instance using this protocol.
      * @return the new instance
      */
-    public ObjectID create(){
+    @Override
+	public ObjectID create(){
 	    return new IntegerID( getNextValue() );
     }
     /**
@@ -75,7 +77,8 @@ public class IntegerIDFactory implements ObjectIDFactory, Serializable {
      * @throws InvalidIDException if the parser is aware of this protocol, but it is of the wrong
      * format for this type of ObjectID.
      */
-    public ObjectID stringToObject(String value) throws InvalidIDException {
+    @Override
+	public ObjectID stringToObject(String value) throws InvalidIDException {
         final ParsedObjectID parsedID = ParsedObjectID.parsedStringifiedObjectID(value,IntegerID.PROTOCOL);
         try {
 	        return new IntegerID( Integer.parseInt(parsedID.getRemainder()) );
@@ -97,7 +100,8 @@ public class IntegerIDFactory implements ObjectIDFactory, Serializable {
      * @throws InvalidIDException if the parser is aware of this protocol, but it is of the wrong
      * format for this type of ObjectID.
      */
-    public ObjectID stringWithoutProtocolToObject(String value) throws InvalidIDException {
+    @Override
+	public ObjectID stringWithoutProtocolToObject(String value) throws InvalidIDException {
         try {
             return new IntegerID( Integer.parseInt(value) );
         } catch ( NumberFormatException e ) {
@@ -109,7 +113,8 @@ public class IntegerIDFactory implements ObjectIDFactory, Serializable {
      * Return the name of the protocol that this factory uses.
      * @return the protocol name
      */
-    public String getProtocol() {
+    @Override
+	public String getProtocol() {
 	    return IntegerID.PROTOCOL;
     }
 }

@@ -27,7 +27,8 @@ public class ClassFinder extends UmlEntityFinder {
     /**
      * @see org.teiid.designer.core.util.ModelVisitor#visit(org.eclipse.emf.ecore.EObject)
      */
-    public boolean visit( final EObject object ) {
+    @Override
+	public boolean visit( final EObject object ) {
         if (object instanceof org.eclipse.uml2.uml.Class) {
             found(object);
             return true;

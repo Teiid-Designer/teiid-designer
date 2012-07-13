@@ -55,14 +55,16 @@ public class XmlResultAspect extends XmlServiceComponentAspect implements UmlPro
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodels.aspects.UmlDiagramAspect#getStereotype(java.lang.Object)
      */
-    public String getStereotype(Object eObject) {
+    @Override
+	public String getStereotype(Object eObject) {
         return XmlServiceMetamodelPlugin.Util.getString("_UI_Column_type"); //$NON-NLS-1$
     }
 
     /** 
      * @see org.teiid.designer.core.metamodel.aspect.uml.UmlProperty#isAssociationEnd(java.lang.Object)
      */
-    public boolean isAssociationEnd(Object property) {
+    @Override
+	public boolean isAssociationEnd(Object property) {
         return false;
     }
 

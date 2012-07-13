@@ -608,7 +608,8 @@ public class ModelEditor extends MultiPageModelEditor
             // Register this editor's veto listener with the workspace ...
             this.vetoListener = new ModelResourceReloadVetoListener() {
 
-                public boolean canReload( final ModelResource theModelResource ) {
+                @Override
+				public boolean canReload( final ModelResource theModelResource ) {
                     return handleCanReload(theModelResource);
                 }
             };
@@ -641,17 +642,21 @@ public class ModelEditor extends MultiPageModelEditor
         // check the readonly status of the editor resource each time the modeler window is activated
         getEditorSite().getWorkbenchWindow().getWorkbench().addWindowListener(new IWindowListener() {
 
-            public void windowActivated( IWorkbenchWindow theWindow ) {
+            @Override
+			public void windowActivated( IWorkbenchWindow theWindow ) {
                 getActionBarContributor().setReadOnlyState();
             }
 
-            public void windowOpened( IWorkbenchWindow theWindow ) {
+            @Override
+			public void windowOpened( IWorkbenchWindow theWindow ) {
             }
 
-            public void windowDeactivated( IWorkbenchWindow theWindow ) {
+            @Override
+			public void windowDeactivated( IWorkbenchWindow theWindow ) {
             }
 
-            public void windowClosed( IWorkbenchWindow theWindow ) {
+            @Override
+			public void windowClosed( IWorkbenchWindow theWindow ) {
             }
         });
 
@@ -683,7 +688,8 @@ public class ModelEditor extends MultiPageModelEditor
     /**
      * @see org.teiid.designer.ui.editors.IEditorActionExporter#contributeExportedActions(org.eclipse.jface.action.IMenuManager)
      */
-    public void contributeExportedActions( IMenuManager theMenuMgr ) {
+    @Override
+	public void contributeExportedActions( IMenuManager theMenuMgr ) {
         // called by action service contributeToContextMenu
         ModelEditorPage page = (ModelEditorPage)getCurrentPage();
         AbstractModelEditorPageActionBarContributor contributor = page.getActionBarContributor();
@@ -697,7 +703,8 @@ public class ModelEditor extends MultiPageModelEditor
      * @see org.teiid.designer.ui.editors.IEditorActionExporter#getAdditionalModelingActions(org.eclipse.jface.viewers.ISelection)
      * @since 5.0
      */
-    public List<IAction> getAdditionalModelingActions( ISelection selection ) {
+    @Override
+	public List<IAction> getAdditionalModelingActions( ISelection selection ) {
         // called by action service contributeToContextMenu
         ModelEditorPage page = (ModelEditorPage)getCurrentPage();
         AbstractModelEditorPageActionBarContributor contributor = page.getActionBarContributor();
@@ -1108,14 +1115,16 @@ public class ModelEditor extends MultiPageModelEditor
     /**
      * @see org.eclipse.emf.edit.provider.INotifyChangedListener#notifyChanged(org.eclipse.emf.common.notify.Notification)
      */
-    public void notifyChanged( final Notification notification ) {
+    @Override
+	public void notifyChanged( final Notification notification ) {
 
         if (this.modelResource.isOpen()) {
 
             // pass the notification on to all pages that have a NotifyChangeListener
             Display.getDefault().asyncExec(new Runnable() {
 
-                public void run() {
+                @Override
+				public void run() {
                     for (int i = 0; i < getPageCount(); ++i) {
                         ModelEditorPage page = (ModelEditorPage)getEditor(i);
                         if (page != null && hasInitialized(page)) {
@@ -1137,7 +1146,8 @@ public class ModelEditor extends MultiPageModelEditor
                             resourceDirty = true;
                             Display.getDefault().asyncExec(new Runnable() {
 
-                                public void run() {
+                                @Override
+								public void run() {
                                     dirtyProperty();
                                 }
                             });
@@ -1155,7 +1165,8 @@ public class ModelEditor extends MultiPageModelEditor
                             this.resourceDirty = rsrcDirty;
                             Display.getDefault().asyncExec(new Runnable() {
 
-                                public void run() {
+                                @Override
+								public void run() {
                                     dirtyProperty();
                                 }
                             });
@@ -1170,7 +1181,8 @@ public class ModelEditor extends MultiPageModelEditor
             // Need to ask the activeObjectEditor if it's resource is still valid
             if (getActiveObjectEditor() != null && !getActiveObjectEditor().isResourceValid()) Display.getDefault().asyncExec(new Runnable() {
 
-                public void run() {
+                @Override
+				public void run() {
                     closeObjectEditor();
                 }
             });
@@ -1203,7 +1215,8 @@ public class ModelEditor extends MultiPageModelEditor
     /**
      * @see org.eclipse.core.resources.IResourceChangeListener#resourceChanged(org.eclipse.core.resources.IResourceChangeEvent)
      */
-    public void resourceChanged( IResourceChangeEvent event ) {
+    @Override
+	public void resourceChanged( IResourceChangeEvent event ) {
         int type = event.getType();
         if (type == IResourceChangeEvent.POST_CHANGE) {
             try {
@@ -1211,11 +1224,13 @@ public class ModelEditor extends MultiPageModelEditor
                 if (delta != null) {
                     delta.accept(new IResourceDeltaVisitor() {
 
-                        public boolean visit( IResourceDelta delta ) {
+                        @Override
+						public boolean visit( IResourceDelta delta ) {
                             if (delta.getResource().equals(getModelFile()) && ((delta.getKind() & IResourceDelta.REMOVED) != 0)) {
                                 Display.getDefault().asyncExec(new Runnable() {
 
-                                    public void run() {
+                                    @Override
+									public void run() {
                                         if (Display.getDefault().isDisposed()) {
                                             return;
                                         }
@@ -1243,12 +1258,14 @@ public class ModelEditor extends MultiPageModelEditor
     // ITextEditorExtension2 interface methods
     // ===========================================
 
-    public boolean isEditorInputModifiable() {
+    @Override
+	public boolean isEditorInputModifiable() {
         IFindReplaceTarget target = (IFindReplaceTarget)getAdapter(IFindReplaceTarget.class);
         return (target == null ? false : target.isEditable());
     }
 
-    public boolean validateEditorInputState() {
+    @Override
+	public boolean validateEditorInputState() {
         return true;
     }
 
@@ -1259,7 +1276,8 @@ public class ModelEditor extends MultiPageModelEditor
      * @see org.eclipse.ui.INavigationLocationProvider#createEmptyNavigationLocation()
      * @since 4.0
      */
-    public INavigationLocation createEmptyNavigationLocation() {
+    @Override
+	public INavigationLocation createEmptyNavigationLocation() {
         // System.out.println("[ModelEditor.createEmptyNavigationLocation] TOP"); //$NON-NLS-1$
         return null;
         // Defect 22290 reflects memory (leaks) issues within designer. (See createNavigationLocation() comments below)
@@ -1273,7 +1291,8 @@ public class ModelEditor extends MultiPageModelEditor
      * @see org.eclipse.ui.INavigationLocationProvider#createNavigationLocation()
      * @since 4.0
      */
-    public INavigationLocation createNavigationLocation() {
+    @Override
+	public INavigationLocation createNavigationLocation() {
         // if no editor, return null (and no history entry will be created)
         return null;
     }
@@ -1281,7 +1300,8 @@ public class ModelEditor extends MultiPageModelEditor
     /**
      * @see org.teiid.designer.ui.editors.INavigationSupported
      */
-    public IMarker createMarker() {
+    @Override
+	public IMarker createMarker() {
         // System.out.println("[ModelEditor.createMarker] TOP"); //$NON-NLS-1$
 
         NavigationMarker nmMarker = new NavigationMarker();
@@ -1310,7 +1330,8 @@ public class ModelEditor extends MultiPageModelEditor
         Display display = getSite().getWorkbenchWindow().getShell().getDisplay();
         UiBusyIndicator.showWhile(display, new Runnable() {
 
-            public void run() {
+            @Override
+			public void run() {
                 for (int i = 0; i < getPageCount(); ++i) {
                     ModelEditorPage page = (ModelEditorPage)getEditor(i);
                     if (page != null && hasInitialized(page)) {
@@ -1330,7 +1351,8 @@ public class ModelEditor extends MultiPageModelEditor
      * @see org.teiid.designer.ui.editors.IInitializationCompleteListener#processInitializationComplete()
      * @since 4.3
      */
-    public void processInitializationComplete() {
+    @Override
+	public void processInitializationComplete() {
         // System.out.println(" ModelEditor.processInitComplete() called!!!!! isDirty = " + isDirty() + " isResourceDirty() = " +
         // isResourceDirty() + " isClosing = " + isClosing);
         if (nEditorsCompleted < completionEditors.size()) {
@@ -1340,7 +1362,8 @@ public class ModelEditor extends MultiPageModelEditor
                 // Initialization complete. Now fork off cleaning up the listeners and SAVE if dirty
                 Display.getCurrent().asyncExec(new Runnable() {
 
-                    public void run() {
+                    @Override
+					public void run() {
                         final List allEditors = getAllEditors();
                         for (Iterator iter = allEditors.iterator(); iter.hasNext();) {
                             Object nextEditor = iter.next();
@@ -1409,14 +1432,16 @@ public class ModelEditor extends MultiPageModelEditor
     /**
      * @see org.teiid.designer.ui.editors.INavigationSupported#setParent()
      */
-    public void setParent( ModelEditor meParentEditor ) {
+    @Override
+	public void setParent( ModelEditor meParentEditor ) {
     }
 
     /**
      * @see org.teiid.designer.ui.editors.IInlineRenameable#canRenameInline(org.eclipse.emf.ecore.EObject)
      * @since 5.0
      */
-    public IInlineRenameable getInlineRenameable( EObject theObj ) {
+    @Override
+	public IInlineRenameable getInlineRenameable( EObject theObj ) {
         // there may be more than one renameable editor, however only ONE can be in focus
         // Search the editors and return a single focused renameable editor or NULL
         final List allEditors = getAllEditors();
@@ -1436,7 +1461,8 @@ public class ModelEditor extends MultiPageModelEditor
      * @see org.teiid.designer.ui.editors.IInlineRenameable#renameInline(org.eclipse.emf.ecore.EObject)
      * @since 5.0
      */
-    public void renameInline( EObject theObj,
+    @Override
+	public void renameInline( EObject theObj,
                               IInlineRenameable renameable ) {
         IWorkbenchWindow window = getSite().getWorkbenchWindow();
         // find the renamable editor, set focus then call rename on it.
@@ -1464,7 +1490,8 @@ public class ModelEditor extends MultiPageModelEditor
             this.copyCommand = copyCommand;
         }
 
-        public void run() {
+        @Override
+		public void run() {
             result = Window.OK;
 
             // determine if there are any models dependent upon this one
@@ -1497,7 +1524,8 @@ public class ModelEditor extends MultiPageModelEditor
 
                     private Collection dirtyFiles = ModelEditorManager.getDirtyResources();
 
-                    public IStatus validate( Object[] selection ) {
+                    @Override
+					public IStatus validate( Object[] selection ) {
                         for (int i = 0; i < selection.length; ++i) {
                             if (((IFile)selection[i]).isReadOnly()) {
                                 final String name = ((IFile)selection[i]).getName();
@@ -1548,7 +1576,8 @@ public class ModelEditor extends MultiPageModelEditor
          * @see java.lang.Runnable#run()
          * @since 4.2
          */
-        public void run() {
+        @Override
+		public void run() {
             this.reload = MessageDialog.openQuestion(getSite().getShell(), Util.getString(PREFIX
                                                                                           + "dialog.fileSystemChange.title"), //$NON-NLS-1$
                                                      Util.getString(PREFIX + "dialog.fileSystemChange.msg", //$NON-NLS-1$

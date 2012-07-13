@@ -24,7 +24,8 @@ public abstract class AbstractUml2UmlAspect extends AbstractMetamodelAspect impl
         setID(ASPECT_ID);
     }
         
-    public int getVisibility(Object eObject) {
+    @Override
+	public int getVisibility(Object eObject) {
         return VISIBILITY_PUBLIC;
     }
     
@@ -32,7 +33,8 @@ public abstract class AbstractUml2UmlAspect extends AbstractMetamodelAspect impl
      * @see org.teiid.designer.core.metamodel.aspect.uml.UmlDiagramAspect#getImage(java.lang.Object)
      * @since 4.2
      */
-    public Object getImage(Object eObject) {
+    @Override
+	public Object getImage(Object eObject) {
         // get the adapter factory
         final AdapterFactory adapterFactory = ModelerCore.getMetamodelRegistry().getAdapterFactory();
 		// lookup item provider for the eobjet

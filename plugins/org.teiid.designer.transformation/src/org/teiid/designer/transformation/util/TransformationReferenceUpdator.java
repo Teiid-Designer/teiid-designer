@@ -26,7 +26,8 @@ public class TransformationReferenceUpdator implements ReferenceUpdator {
      * @see org.teiid.designer.core.refactor.ReferenceUpdator#updateEObject(org.eclipse.emf.ecore.EObject, java.util.Map)
      * @since 4.2
      */
-    public void updateEObject(final EObject eObject, final Map oldToNewObjects) {
+    @Override
+	public void updateEObject(final EObject eObject, final Map oldToNewObjects) {
 
         // reset the select/insert/update/delete sql on SqlTransformation        
         if(eObject instanceof SqlTransformation) {

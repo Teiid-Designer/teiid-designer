@@ -53,7 +53,8 @@ public class RefreshAction extends Action implements NavigationListener, UiConst
     /* (non-Javadoc)
      * @See org.teiid.designer.relationship.ui.navigation.NavigationListener#navigationChanged(org.teiid.designer.relationship.NavigationContext)
      */
-    public void navigationChanged(NavigationContext newContext) {
+    @Override
+	public void navigationChanged(NavigationContext newContext) {
         setEnabled(this.viewer.getCurrentNavigationContext() != null);
     }
 

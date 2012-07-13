@@ -175,7 +175,8 @@ public class ModelStatusImpl extends Status implements ModelStatus, ModelStatusC
     /**
      * @see IJavaModelStatus
      */
-    public ModelWorkspaceItem[] getModelWorkspaceItems() {
+    @Override
+	public ModelWorkspaceItem[] getModelWorkspaceItems() {
         return fElements;
     }
 
@@ -292,7 +293,8 @@ public class ModelStatusImpl extends Status implements ModelStatus, ModelStatusC
     /**
      * @see IJavaModelStatus#getPath()
      */
-    public IPath getPath() {
+    @Override
+	public IPath getPath() {
         return fPath;
     }
 
@@ -315,7 +317,8 @@ public class ModelStatusImpl extends Status implements ModelStatus, ModelStatusC
     /**
      * @see IJavaModelStatus#isDoesNotExist()
      */
-    public boolean isDoesNotExist() {
+    @Override
+	public boolean isDoesNotExist() {
         return getCode() == ITEM_DOES_NOT_EXIST;
     }
 

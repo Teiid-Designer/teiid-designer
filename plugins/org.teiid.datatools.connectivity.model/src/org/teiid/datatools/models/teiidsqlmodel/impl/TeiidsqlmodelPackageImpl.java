@@ -134,6 +134,7 @@ public class TeiidsqlmodelPackageImpl extends EPackageImpl implements Teiidsqlmo
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getTeiidSchema() {
 		return teiidSchemaEClass;
 	}
@@ -143,6 +144,7 @@ public class TeiidsqlmodelPackageImpl extends EPackageImpl implements Teiidsqlmo
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getTeiidSchema_Documents() {
 		return (EReference)teiidSchemaEClass.getEStructuralFeatures().get(0);
 	}
@@ -152,6 +154,7 @@ public class TeiidsqlmodelPackageImpl extends EPackageImpl implements Teiidsqlmo
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getDocument() {
 		return documentEClass;
 	}
@@ -161,6 +164,7 @@ public class TeiidsqlmodelPackageImpl extends EPackageImpl implements Teiidsqlmo
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getDocument_Schema() {
 		return (EReference)documentEClass.getEStructuralFeatures().get(0);
 	}
@@ -170,6 +174,7 @@ public class TeiidsqlmodelPackageImpl extends EPackageImpl implements Teiidsqlmo
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TeiidsqlmodelFactory getTeiidsqlmodelFactory() {
 		return (TeiidsqlmodelFactory)getEFactoryInstance();
 	}

@@ -106,7 +106,8 @@ public class XmlModelSelectionPage extends AbstractWizardPage
      * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
      * @since 4.2
      */
-    public void createControl( Composite theParent ) {
+    @Override
+	public void createControl( Composite theParent ) {
         //
         // create main container
         //
@@ -142,7 +143,8 @@ public class XmlModelSelectionPage extends AbstractWizardPage
         // folder combo
         this.cbxFolder = WidgetFactory.createCombo(pnl, SWT.READ_ONLY, GridData.FILL_HORIZONTAL);
         this.cbxFolder.addModifyListener(new ModifyListener() {
-            public void modifyText( ModifyEvent theEvent ) {
+            @Override
+			public void modifyText( ModifyEvent theEvent ) {
                 handleFolderChanged();
             }
         });
@@ -167,7 +169,8 @@ public class XmlModelSelectionPage extends AbstractWizardPage
         // model combo
         this.txfModel = WidgetFactory.createTextField(pnl, GridData.FILL_HORIZONTAL);
         this.txfModel.addModifyListener(new ModifyListener() {
-            public void modifyText( ModifyEvent theEvent ) {
+            @Override
+			public void modifyText( ModifyEvent theEvent ) {
                 handleModelChanged();
             }
         });

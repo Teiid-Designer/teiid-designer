@@ -23,7 +23,8 @@ public class RequestProcessorImpl extends BaseRelationshipProcessor {
 
     private Map tableRelationships; // key: Relationship, value Integer
 
-    public void calculateRelationshipTypes( SchemaModel model ) {
+    @Override
+	public void calculateRelationshipTypes( SchemaModel model ) {
         setSechemaModel(model);
         List elements = model.getElements();
 
@@ -63,15 +64,18 @@ public class RequestProcessorImpl extends BaseRelationshipProcessor {
 
     }
 
-    public int C_threshold() {
+    @Override
+	public int C_threshold() {
         return Integer.MAX_VALUE;
     }
 
-    public int P_threshold() {
+    @Override
+	public int P_threshold() {
         return Integer.MAX_VALUE;
     }
 
-    public int F_threshold() {
+    @Override
+	public int F_threshold() {
         return Integer.MAX_VALUE;
     }
 

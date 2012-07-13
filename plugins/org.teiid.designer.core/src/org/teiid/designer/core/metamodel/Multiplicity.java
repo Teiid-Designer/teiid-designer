@@ -552,7 +552,8 @@ public abstract class Multiplicity implements Serializable, Comparable {
      * @throws IllegalArgumentException if the specified object reference is null
      * @throws ClassCastException if the specified object's type prevents it from being compared to this instance.
      */
-    public abstract int compareTo( Object obj );
+    @Override
+	public abstract int compareTo( Object obj );
 
     protected int compareFlags( Multiplicity that ) {
         // Assumed to not be null ...

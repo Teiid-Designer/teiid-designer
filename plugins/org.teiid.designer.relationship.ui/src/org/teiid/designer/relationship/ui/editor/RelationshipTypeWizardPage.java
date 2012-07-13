@@ -85,7 +85,8 @@ public class RelationshipTypeWizardPage extends WizardPage
     /* (non-Javadoc)
      * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
      */
-    public void createControl( Composite parent ) {
+    @Override
+	public void createControl( Composite parent ) {
 
         requiredStart = ModelerCore.startTxn( true, true, cdCommand.getLabel(), this ); //$
 //        System.out.println("[RelationshipTypeWizardPage.createControl] requiredStart is:  " + requiredStart );  //$NON-NLS-1$        
@@ -128,7 +129,8 @@ public class RelationshipTypeWizardPage extends WizardPage
     }
     
     
-    public void setStatus( IStatus stStatus ) {
+    @Override
+	public void setStatus( IStatus stStatus ) {
         
         this.stStatus = stStatus;
         

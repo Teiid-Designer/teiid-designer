@@ -131,7 +131,8 @@ public class BindingFaultImpl extends EObjectImpl implements BindingFault {
      * 
      * @generated
      */
-    public Documentation getDocumentation() {
+    @Override
+	public Documentation getDocumentation() {
         return documentation;
     }
 
@@ -159,7 +160,8 @@ public class BindingFaultImpl extends EObjectImpl implements BindingFault {
      * 
      * @generated
      */
-    public void setDocumentation( Documentation newDocumentation ) {
+    @Override
+	public void setDocumentation( Documentation newDocumentation ) {
         if (newDocumentation != documentation) {
             NotificationChain msgs = null;
             if (documentation != null) msgs = ((InternalEObject)documentation).eInverseRemove(this,
@@ -182,7 +184,8 @@ public class BindingFaultImpl extends EObjectImpl implements BindingFault {
      * 
      * @generated
      */
-    public EList getDeclaredNamespaces() {
+    @Override
+	public EList getDeclaredNamespaces() {
         if (declaredNamespaces == null) {
             declaredNamespaces = new EObjectContainmentWithInverseEList(NamespaceDeclaration.class, this,
                                                                         WsdlPackage.BINDING_FAULT__DECLARED_NAMESPACES,
@@ -196,7 +199,8 @@ public class BindingFaultImpl extends EObjectImpl implements BindingFault {
      * 
      * @generated
      */
-    public EList getElements() {
+    @Override
+	public EList getElements() {
         if (elements == null) {
             elements = new EObjectContainmentWithInverseEList(Element.class, this, WsdlPackage.BINDING_FAULT__ELEMENTS,
                                                               WsdlPackage.ELEMENT__ELEMENT_OWNER);
@@ -209,7 +213,8 @@ public class BindingFaultImpl extends EObjectImpl implements BindingFault {
      * 
      * @generated
      */
-    public String getName() {
+    @Override
+	public String getName() {
         return name;
     }
 
@@ -218,7 +223,8 @@ public class BindingFaultImpl extends EObjectImpl implements BindingFault {
      * 
      * @generated
      */
-    public void setName( String newName ) {
+    @Override
+	public void setName( String newName ) {
         String oldName = name;
         name = newName;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, WsdlPackage.BINDING_FAULT__NAME,
@@ -230,7 +236,8 @@ public class BindingFaultImpl extends EObjectImpl implements BindingFault {
      * 
      * @generated
      */
-    public BindingOperation getBindingOperation() {
+    @Override
+	public BindingOperation getBindingOperation() {
         if (eContainerFeatureID != WsdlPackage.BINDING_FAULT__BINDING_OPERATION) return null;
         return (BindingOperation)eContainer;
     }
@@ -240,7 +247,8 @@ public class BindingFaultImpl extends EObjectImpl implements BindingFault {
      * 
      * @generated
      */
-    public void setBindingOperation( BindingOperation newBindingOperation ) {
+    @Override
+	public void setBindingOperation( BindingOperation newBindingOperation ) {
         if (newBindingOperation != eContainer
             || (eContainerFeatureID != WsdlPackage.BINDING_FAULT__BINDING_OPERATION && newBindingOperation != null)) {
             if (EcoreUtil.isAncestor(this, newBindingOperation)) throw new IllegalArgumentException(
@@ -263,7 +271,8 @@ public class BindingFaultImpl extends EObjectImpl implements BindingFault {
      * 
      * @generated
      */
-    public SoapFault getSoapFault() {
+    @Override
+	public SoapFault getSoapFault() {
         return soapFault;
     }
 
@@ -290,7 +299,8 @@ public class BindingFaultImpl extends EObjectImpl implements BindingFault {
      * 
      * @generated
      */
-    public void setSoapFault( SoapFault newSoapFault ) {
+    @Override
+	public void setSoapFault( SoapFault newSoapFault ) {
         if (newSoapFault != soapFault) {
             NotificationChain msgs = null;
             if (soapFault != null) msgs = ((InternalEObject)soapFault).eInverseRemove(this,
@@ -313,7 +323,8 @@ public class BindingFaultImpl extends EObjectImpl implements BindingFault {
      * 
      * @generated
      */
-    public boolean isNameValid() {
+    @Override
+	public boolean isNameValid() {
         // TODO: implement this method
         // Ensure that you remove @generated or mark it @generated NOT
         throw new UnsupportedOperationException();

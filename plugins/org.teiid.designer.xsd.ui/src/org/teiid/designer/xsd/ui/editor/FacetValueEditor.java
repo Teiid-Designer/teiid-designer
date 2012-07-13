@@ -28,7 +28,8 @@ public class FacetValueEditor implements DialogProvider {
     private FacetValueDialog dlg;
     private boolean wasCancelled;
 
-    public void showDialog( Shell shell,
+    @Override
+	public void showDialog( Shell shell,
                             Object initialValue ) {
         FacetValue fv;
         if (initialValue instanceof FacetValue) {
@@ -52,11 +53,13 @@ public class FacetValueEditor implements DialogProvider {
         wasCancelled = dlg.open() == Window.CANCEL;
     }
 
-    public boolean wasCancelled() {
+    @Override
+	public boolean wasCancelled() {
         return wasCancelled;
     }
 
-    public Object getValue() {
+    @Override
+	public Object getValue() {
         if (wasCancelled || dlg == null) {
             // cancelled or not init, return nothing:
             return null;
@@ -65,7 +68,8 @@ public class FacetValueEditor implements DialogProvider {
         return dlg.getValue();
     }
 
-    public String getLaunchButtonText() {
+    @Override
+	public String getLaunchButtonText() {
         return GUIFacetHelper.getString("FacetValueEditor.launch"); //$NON-NLS-1$
     }
 
@@ -103,7 +107,8 @@ public class FacetValueEditor implements DialogProvider {
             value.setText((String)fv.value);
             value.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
             value.addModifyListener(new ModifyListener() {
-                public void modifyText( ModifyEvent e ) {
+                @Override
+				public void modifyText( ModifyEvent e ) {
                     fv.value = value.getText();
                 }
             });
@@ -117,7 +122,8 @@ public class FacetValueEditor implements DialogProvider {
             desc.setText(fv.description);
             desc.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
             desc.addModifyListener(new ModifyListener() {
-                public void modifyText( ModifyEvent e ) {
+                @Override
+				public void modifyText( ModifyEvent e ) {
                     fv.description = desc.getText();
                 }
             });

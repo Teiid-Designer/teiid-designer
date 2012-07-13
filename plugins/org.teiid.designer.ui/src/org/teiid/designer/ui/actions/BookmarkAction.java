@@ -88,7 +88,8 @@ public class BookmarkAction extends AbstractAction implements UiConstants {
                        final String markerType ) {
         try {
             file.getWorkspace().run(new IWorkspaceRunnable() {
-                public void run( IProgressMonitor monitor ) throws CoreException {
+                @Override
+				public void run( IProgressMonitor monitor ) throws CoreException {
                     String markerMessage = file.getName();
                     if (promptForName) markerMessage = askForLabel(markerMessage);
                     if (markerMessage != null) {
@@ -144,7 +145,8 @@ public class BookmarkAction extends AbstractAction implements UiConstants {
         String message = UiConstants.Util.getString("AddBookmarkDialog.message"); //$NON-NLS-1$
 
         IInputValidator inputValidator = new IInputValidator() {
-            public String isValid( String newText ) {
+            @Override
+			public String isValid( String newText ) {
                 return (newText == null || newText.length() == 0) ? " " : null; //$NON-NLS-1$
             }
         };

@@ -52,7 +52,8 @@ public class XmlOperationAspect extends XmlServiceComponentAspect implements Sql
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlProcedureAspect#isVirtual(org.eclipse.emf.ecore.EObject)
      * @since 4.2
      */
-    public boolean isVirtual(final EObject eObject) {
+    @Override
+	public boolean isVirtual(final EObject eObject) {
         CoreArgCheck.isInstanceOf(XmlOperation.class, eObject);
         XmlOperation operation = (XmlOperation) eObject;    
         try {    
@@ -71,7 +72,8 @@ public class XmlOperationAspect extends XmlServiceComponentAspect implements Sql
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlProcedureAspect#isFunction(org.eclipse.emf.ecore.EObject)
      * @since 4.2
      */
-    public boolean isFunction(final EObject eObject) {
+    @Override
+	public boolean isFunction(final EObject eObject) {
         CoreArgCheck.isInstanceOf(XmlOperation.class, eObject);
         return false;
     }
@@ -80,7 +82,8 @@ public class XmlOperationAspect extends XmlServiceComponentAspect implements Sql
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlProcedureAspect#getParameters(org.eclipse.emf.ecore.EObject)
      * @since 4.2
      */
-    public List getParameters(final EObject eObject) {
+    @Override
+	public List getParameters(final EObject eObject) {
         CoreArgCheck.isInstanceOf(XmlOperation.class, eObject);
         XmlOperation operation = (XmlOperation) eObject;
         List params = new ArrayList();
@@ -94,7 +97,8 @@ public class XmlOperationAspect extends XmlServiceComponentAspect implements Sql
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlProcedureAspect#getResult(org.eclipse.emf.ecore.EObject)
      * @since 4.2
      */
-    public Object getResult(final EObject eObject) {
+    @Override
+	public Object getResult(final EObject eObject) {
         CoreArgCheck.isInstanceOf(XmlOperation.class, eObject);
         XmlOperation operation = (XmlOperation) eObject;
         return operation.getOutput();
@@ -104,7 +108,8 @@ public class XmlOperationAspect extends XmlServiceComponentAspect implements Sql
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlProcedureAspect#getUpdateCount(org.eclipse.emf.ecore.EObject)
      * @since 5.5.3
      */
-    public int getUpdateCount(EObject eObject) {
+    @Override
+	public int getUpdateCount(EObject eObject) {
         CoreArgCheck.isInstanceOf(XmlOperation.class, eObject);
         return ((XmlOperation)eObject).getUpdateCount().getValue();
     }
@@ -113,7 +118,8 @@ public class XmlOperationAspect extends XmlServiceComponentAspect implements Sql
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlAspect#isRecordType(char)
      * @since 4.2
      */
-    public boolean isRecordType(final char recordType) {
+    @Override
+	public boolean isRecordType(final char recordType) {
         return (recordType == IndexConstants.RECORD_TYPE.CALLABLE);
     }
 
@@ -121,7 +127,8 @@ public class XmlOperationAspect extends XmlServiceComponentAspect implements Sql
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlProcedureAspect#isMappable(org.eclipse.emf.ecore.EObject, int)
      * @since 4.2
      */
-    public boolean isMappable(final EObject eObject, final int mappingType) {
+    @Override
+	public boolean isMappable(final EObject eObject, final int mappingType) {
         return (mappingType == SqlProcedureAspect.MAPPINGS.SQL_TRANSFORM);
     }
 
@@ -129,7 +136,8 @@ public class XmlOperationAspect extends XmlServiceComponentAspect implements Sql
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlTableAspect#canAcceptTransformationSource(org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject)
      * @since 4.3
      */
-    public boolean canAcceptTransformationSource(EObject target, EObject source) {
+    @Override
+	public boolean canAcceptTransformationSource(EObject target, EObject source) {
         CoreArgCheck.isInstanceOf(XmlOperation.class, target);
         CoreArgCheck.isNotNull(source);
         // no object should be source of itself
@@ -147,7 +155,8 @@ public class XmlOperationAspect extends XmlServiceComponentAspect implements Sql
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlTableAspect#canBeTransformationSource(org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject)
      * @since 4.3
      */
-    public boolean canBeTransformationSource(EObject source, EObject target) {
+    @Override
+	public boolean canBeTransformationSource(EObject source, EObject target) {
         CoreArgCheck.isInstanceOf(XmlOperation.class, source);
         CoreArgCheck.isNotNull(target);
         // no object should be target of itself

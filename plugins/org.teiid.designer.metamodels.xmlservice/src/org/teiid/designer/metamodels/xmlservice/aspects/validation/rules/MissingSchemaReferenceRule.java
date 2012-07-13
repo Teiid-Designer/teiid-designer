@@ -52,7 +52,8 @@ public class MissingSchemaReferenceRule implements ObjectValidationRule {
      *      org.teiid.designer.core.validation.ValidationContext)
      * @since 5.1
      */
-    public void validate(final EObject eObject,
+    @Override
+	public void validate(final EObject eObject,
                          final ValidationContext context) {
         CoreArgCheck.isInstanceOf(XmlOperation.class, eObject);
         CoreArgCheck.isNotNull(context);

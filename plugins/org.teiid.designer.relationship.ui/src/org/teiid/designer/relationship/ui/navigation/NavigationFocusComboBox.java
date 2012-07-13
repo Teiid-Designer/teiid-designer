@@ -66,7 +66,8 @@ public class NavigationFocusComboBox extends ControlContribution implements Navi
 
     public void loadItems( final NavigationContext context ) {
         Display.getCurrent().asyncExec(new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 cbx.removeAll();
                 if (context != null) {
                     NavigationNode node = context.getFocusNode();
@@ -98,7 +99,8 @@ public class NavigationFocusComboBox extends ControlContribution implements Navi
     /**
      * @see org.teiid.designer.relationship.ui.navigation.NavigationListener#navigationChanged(org.teiid.designer.relationship.NavigationContext)
      */
-    public void navigationChanged( NavigationContext newContext ) {
+    @Override
+	public void navigationChanged( NavigationContext newContext ) {
         loadItems(newContext);
     }
 

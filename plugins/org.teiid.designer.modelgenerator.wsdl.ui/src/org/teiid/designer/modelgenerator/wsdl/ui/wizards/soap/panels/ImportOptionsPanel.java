@@ -115,7 +115,8 @@ public class ImportOptionsPanel implements IChangeListener, ModelGeneratorWsdlUi
     		this.sourceModelFileText.setToolTipText(Messages.SourceNameTooltip);
     		WidgetUtil.colorizeWidget(this.sourceModelFileText, WidgetUtil.TEXT_COLOR_BLUE, false);
     		this.sourceModelFileText.addModifyListener(new ModifyListener() {
-    			public void modifyText(ModifyEvent e) {
+    			@Override
+				public void modifyText(ModifyEvent e) {
     				// Check view file name for existing if "location" is already
     				// set
     				handleSourceModelTextChanged();
@@ -192,7 +193,8 @@ public class ImportOptionsPanel implements IChangeListener, ModelGeneratorWsdlUi
     		WidgetUtil.colorizeWidget(this.viewModelFileText, WidgetUtil.TEXT_COLOR_BLUE, false);
     		this.viewModelFileText.setForeground(WidgetUtil.getDarkBlueColor());
     		this.viewModelFileText.addModifyListener(new ModifyListener() {
-    			public void modifyText(ModifyEvent e) {
+    			@Override
+				public void modifyText(ModifyEvent e) {
     				// Check view file name for existing if "location" is already
     				// set
     				handleViewModelTextChanged();

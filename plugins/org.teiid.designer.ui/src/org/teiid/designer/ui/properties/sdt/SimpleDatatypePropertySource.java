@@ -106,14 +106,16 @@ public class SimpleDatatypePropertySource implements IPropertySource {
     /* (non-Javadoc)
      * @see org.eclipse.ui.views.properties.IPropertySource#getEditableValue()
      */
-    public Object getEditableValue() {
+    @Override
+	public Object getEditableValue() {
         return delegate.getEditableValue();
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.ui.views.properties.IPropertySource#getPropertyDescriptors()
      */
-    public IPropertyDescriptor[] getPropertyDescriptors() {
+    @Override
+	public IPropertyDescriptor[] getPropertyDescriptors() {
         if(descriptorList.isEmpty()) {
             updateDescriptorList();
         }
@@ -133,7 +135,8 @@ public class SimpleDatatypePropertySource implements IPropertySource {
     /* (non-Javadoc)
      * @see org.eclipse.ui.views.properties.IPropertySource#getPropertyValue(java.lang.Object)
      */
-    public Object getPropertyValue(Object id) {
+    @Override
+	public Object getPropertyValue(Object id) {
         if (id instanceof Node) {
             Object value = ((Node) id).getNodeValue();
             String nodeName = ((Node) id).getNodeName(); 
@@ -162,7 +165,8 @@ public class SimpleDatatypePropertySource implements IPropertySource {
     /* (non-Javadoc)
      * @see org.eclipse.ui.views.properties.IPropertySource#isPropertySet(java.lang.Object)
      */
-    public boolean isPropertySet(Object id) {
+    @Override
+	public boolean isPropertySet(Object id) {
         if ( id instanceof Node ) {
             return ((Node) id).getNodeValue() != null;
         }
@@ -172,7 +176,8 @@ public class SimpleDatatypePropertySource implements IPropertySource {
     /* (non-Javadoc)
      * @see org.eclipse.ui.views.properties.IPropertySource#resetPropertyValue(java.lang.Object)
      */
-    public void resetPropertyValue(Object id) {
+    @Override
+	public void resetPropertyValue(Object id) {
         if (id instanceof Node) {
             setPropertyValue(id, null);
             ((Node) id).setNodeValue(null);
@@ -197,7 +202,8 @@ public class SimpleDatatypePropertySource implements IPropertySource {
     /* (non-Javadoc)
      * @see org.eclipse.ui.views.properties.IPropertySource#setPropertyValue(java.lang.Object, java.lang.Object)
      */
-    public void setPropertyValue(Object id, Object value) {
+    @Override
+	public void setPropertyValue(Object id, Object value) {
         boolean started = ModelerCore.startTxn(ModelObjectPropertySource.SET + id.toString(), this);
         boolean succeeded = false;
         try {

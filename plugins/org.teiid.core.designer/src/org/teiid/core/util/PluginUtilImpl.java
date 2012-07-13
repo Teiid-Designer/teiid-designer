@@ -171,7 +171,8 @@ public class PluginUtilImpl extends BundleUtil implements PluginUtil {
      * @see org.teiid.core.PluginUtil#checkJre(java.lang.String)
      * @since 4.0
      */
-    public void checkJre( final String version ) throws CoreException {
+    @Override
+	public void checkJre( final String version ) throws CoreException {
         final String ver = System.getProperty(JAVA_VERSION);
         final StringTokenizer verIter = new StringTokenizer(ver, VERSION_DELIMITERS);
         boolean invalid = false;
@@ -211,7 +212,8 @@ public class PluginUtilImpl extends BundleUtil implements PluginUtil {
      * 
      * @param status the status to log; may not be null
      */
-    public void log( final IStatus status ) {
+    @Override
+	public void log( final IStatus status ) {
         this.logger.log(status);
     }
 
@@ -221,7 +223,8 @@ public class PluginUtilImpl extends BundleUtil implements PluginUtil {
      * @param severity the severity, which corresponds to the {@link IStatus#getSeverity() IStatus severity}.
      * @param message the message to be logged
      */
-    public void log( final int severity,
+    @Override
+	public void log( final int severity,
                      final String message ) {
         this.logger.log(new Status(severity, this.pluginId, message));
     }
@@ -233,7 +236,8 @@ public class PluginUtilImpl extends BundleUtil implements PluginUtil {
      * @param message the message to be logged
      * @param t the exception; may be null
      */
-    public void log( final int severity,
+    @Override
+	public void log( final int severity,
                      final Throwable t,
                      final String message ) {
         this.logger.log(new Status(severity, this.pluginId, message, t));
@@ -249,7 +253,8 @@ public class PluginUtilImpl extends BundleUtil implements PluginUtil {
      * 
      * @param obj the object to log; may not be null
      */
-    public void log( final Object obj ) {
+    @Override
+	public void log( final Object obj ) {
         if (obj != null) {
             log(IStatus.WARNING, obj.toString());
         }
@@ -265,7 +270,8 @@ public class PluginUtilImpl extends BundleUtil implements PluginUtil {
      * 
      * @param throwable the Throwable to log; may not be null
      */
-    public void log( final Throwable throwable ) {
+    @Override
+	public void log( final Throwable throwable ) {
         log(IStatus.ERROR, throwable, throwable.getLocalizedMessage());
     }
 
@@ -319,14 +325,16 @@ public class PluginUtilImpl extends BundleUtil implements PluginUtil {
         public void run( final ISafeRunnable code ) {
             // Wrap the runnable so we can log the exception
             final ISafeRunnable wrapper = new ISafeRunnable() {
-                public void handleException( Throwable exception ) {
+                @Override
+				public void handleException( Throwable exception ) {
                     // log and then call the code's handle method ...
                     String message = getString("PluginUtilImpl.Error_while_running", getPluginId()); //$NON-NLS-1$
                     PluginUtilImpl.this.log(IStatus.ERROR, message);
                     code.handleException(exception);
                 }
 
-                public void run() throws Exception {
+                @Override
+				public void run() throws Exception {
                     SafeRunner.run(code);
                 }
             };
@@ -341,7 +349,8 @@ public class PluginUtilImpl extends BundleUtil implements PluginUtil {
      * 
      * @since 2.1
      */
-    public String getString( final String key,
+    @Override
+	public String getString( final String key,
                              final Object parameter ) {
         if (parameter != null) {
             if (parameter.getClass().isArray()) {

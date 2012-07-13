@@ -139,7 +139,8 @@ public class FileReferenceImpl extends UriReferenceImpl implements FileReference
      * 
      * @generated
      */
-    public String getToolName() {
+    @Override
+	public String getToolName() {
         return toolName;
     }
 
@@ -148,7 +149,8 @@ public class FileReferenceImpl extends UriReferenceImpl implements FileReference
      * 
      * @generated
      */
-    public void setToolName( String newToolName ) {
+    @Override
+	public void setToolName( String newToolName ) {
         String oldToolName = toolName;
         toolName = newToolName;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
@@ -161,7 +163,8 @@ public class FileReferenceImpl extends UriReferenceImpl implements FileReference
      * 
      * @generated
      */
-    public String getToolVersion() {
+    @Override
+	public String getToolVersion() {
         return toolVersion;
     }
 
@@ -170,7 +173,8 @@ public class FileReferenceImpl extends UriReferenceImpl implements FileReference
      * 
      * @generated
      */
-    public void setToolVersion( String newToolVersion ) {
+    @Override
+	public void setToolVersion( String newToolVersion ) {
         String oldToolVersion = toolVersion;
         toolVersion = newToolVersion;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
@@ -183,7 +187,8 @@ public class FileReferenceImpl extends UriReferenceImpl implements FileReference
      * 
      * @generated
      */
-    public String getFormatName() {
+    @Override
+	public String getFormatName() {
         return formatName;
     }
 
@@ -192,7 +197,8 @@ public class FileReferenceImpl extends UriReferenceImpl implements FileReference
      * 
      * @generated
      */
-    public void setFormatName( String newFormatName ) {
+    @Override
+	public void setFormatName( String newFormatName ) {
         String oldFormatName = formatName;
         formatName = newFormatName;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
@@ -205,7 +211,8 @@ public class FileReferenceImpl extends UriReferenceImpl implements FileReference
      * 
      * @generated
      */
-    public String getFormatVersion() {
+    @Override
+	public String getFormatVersion() {
         return formatVersion;
     }
 
@@ -214,7 +221,8 @@ public class FileReferenceImpl extends UriReferenceImpl implements FileReference
      * 
      * @generated
      */
-    public void setFormatVersion( String newFormatVersion ) {
+    @Override
+	public void setFormatVersion( String newFormatVersion ) {
         String oldFormatVersion = formatVersion;
         formatVersion = newFormatVersion;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,

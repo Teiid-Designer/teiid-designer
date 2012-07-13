@@ -106,34 +106,39 @@ public abstract class JdbcNodeImpl implements JdbcNode, Comparable, InternalJdbc
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.metadata.JdbcNode#getPath()
      */
-    public IPath getPath() {
+    @Override
+	public IPath getPath() {
         return this.path;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.metadata.JdbcNode#getPathInSource()
      */
-    public abstract IPath getPathInSource();
+    @Override
+	public abstract IPath getPathInSource();
 
     /**
      * This method implementation returns true by default.
      * 
      * @see org.teiid.designer.jdbc.metadata.JdbcNode#isDatabaseObject()
      */
-    public boolean isDatabaseObject() {
+    @Override
+	public boolean isDatabaseObject() {
         return true;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.metadata.JdbcNode#getParentDatabaseObject(boolean, boolean)
      */
-    public abstract JdbcNode getParentDatabaseObject( boolean includeCatalog,
+    @Override
+	public abstract JdbcNode getParentDatabaseObject( boolean includeCatalog,
                                                       boolean includeSchema );
 
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.metadata.JdbcNode#findChild(java.lang.String)
      */
-    public JdbcNode findChild( String name ) {
+    @Override
+	public JdbcNode findChild( String name ) {
         final JdbcDatabase dbNode = getJdbcDatabase();
         CoreArgCheck.isNotNull(dbNode);
         return dbNode.findJdbcNode(this.getPath().append(name));
@@ -142,21 +147,24 @@ public abstract class JdbcNodeImpl implements JdbcNode, Comparable, InternalJdbc
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.metadata.JdbcNode#getName()
      */
-    public String getName() {
+    @Override
+	public String getName() {
         return this.name;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.metadata.JdbcNode#getParent()
      */
-    public JdbcNode getParent() {
+    @Override
+	public JdbcNode getParent() {
         return this.parent;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.metadata.JdbcNode#getType()
      */
-    public int getType() {
+    @Override
+	public int getType() {
         return this.type;
     }
 
@@ -166,14 +174,16 @@ public abstract class JdbcNodeImpl implements JdbcNode, Comparable, InternalJdbc
      * 
      * @see org.teiid.designer.jdbc.metadata.JdbcNode#allowsChildren()
      */
-    public boolean allowsChildren() {
+    @Override
+	public boolean allowsChildren() {
         return true;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.metadata.JdbcNode#getChildren()
      */
-    public JdbcNode[] getChildren() throws JdbcException {
+    @Override
+	public JdbcNode[] getChildren() throws JdbcException {
         // Check if null; this is a check that works fast if non-null
         if (children == null) {
             // If null, then obtain the lock
@@ -225,7 +235,8 @@ public abstract class JdbcNodeImpl implements JdbcNode, Comparable, InternalJdbc
     /**
      * Refresh this node by clearing any cached information, including {@link #getChildren() children}.
      */
-    public void refresh() {
+    @Override
+	public void refresh() {
         if (children != null) {
             synchronized (childrenLock) {
                 // Remove existing children from the cache and call refresh on them ...
@@ -328,7 +339,8 @@ public abstract class JdbcNodeImpl implements JdbcNode, Comparable, InternalJdbc
      *         specified object, respectively.
      * @throws ClassCastException if the specified object's type prevents it from being compared to this instance.
      */
-    public int compareTo( Object obj ) {
+    @Override
+	public int compareTo( Object obj ) {
         if (obj == null) {
             return 1; // this is > null
         }
@@ -349,7 +361,8 @@ public abstract class JdbcNodeImpl implements JdbcNode, Comparable, InternalJdbc
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.metadata.JdbcNode#accept(org.teiid.designer.jdbc.metadata.JdbcNodeVisitor, int)
      */
-    public void accept( final JdbcNodeVisitor visitor,
+    @Override
+	public void accept( final JdbcNodeVisitor visitor,
                         final int depth ) throws JdbcException {
         CoreArgCheck.isNotNull(visitor);
         CoreArgCheck.isTrue(depth == DEPTH_INFINITE || depth == DEPTH_ONE || depth == DEPTH_ZERO,
@@ -465,21 +478,24 @@ public abstract class JdbcNodeImpl implements JdbcNode, Comparable, InternalJdbc
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.metadata.JdbcTable#getNamesOfResults()
      */
-    public String[] getNamesOfResults() {
+    @Override
+	public String[] getNamesOfResults() {
         return getRequestContainer().getNamesOfResults();
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.metadata.JdbcTable#getResults(java.lang.String)
      */
-    public Request getRequest( String name ) {
+    @Override
+	public Request getRequest( String name ) {
         return getRequestContainer().getRequest(name);
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.metadata.JdbcTable#getResults(java.lang.String)
      */
-    public Request getRequest( String name,
+    @Override
+	public Request getRequest( String name,
                                final boolean includeMetadata ) {
         return getRequestContainer().getRequest(name, includeMetadata);
     }
@@ -504,14 +520,16 @@ public abstract class JdbcNodeImpl implements JdbcNode, Comparable, InternalJdbc
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.metadata.JdbcNode#getSelectionMode()
      */
-    public int getSelectionMode() {
+    @Override
+	public int getSelectionMode() {
         return this.selectionMode;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.metadata.JdbcNode#setSelectionMode(int)
      */
-    public void setSelected( final boolean selected ) {
+    @Override
+	public void setSelected( final boolean selected ) {
         final int newMode = (selected ? SELECTED : UNSELECTED);
         if (this.selectionMode == newMode) {
             // The value is the same, so simply return
@@ -585,7 +603,8 @@ public abstract class JdbcNodeImpl implements JdbcNode, Comparable, InternalJdbc
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.metadata.impl.InternalJdbcNode#checkSelectionMode(org.teiid.designer.jdbc.metadata.JdbcNode)
      */
-    public void checkSelectionMode( final JdbcNode childNodeWithChangedSelection ) {
+    @Override
+	public void checkSelectionMode( final JdbcNode childNodeWithChangedSelection ) {
 
         // If the current mode is that of the child ...
         if (this.selectionMode == childNodeWithChangedSelection.getSelectionMode()) {
@@ -657,14 +676,16 @@ public abstract class JdbcNodeImpl implements JdbcNode, Comparable, InternalJdbc
     /**
      * @see org.teiid.designer.jdbc.metadata.JdbcNode#getUnqualifiedName()
      */
-    public String getUnqualifiedName() {
+    @Override
+	public String getUnqualifiedName() {
         return getUnqualifiedName(getName());
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.JdbcNode#getUnqualifiedName(java.lang.String)
      */
-    public String getUnqualifiedName( final String originalName ) {
+    @Override
+	public String getUnqualifiedName( final String originalName ) {
         // Get the identifier quote string ...
         String quoteString = null;
         try {

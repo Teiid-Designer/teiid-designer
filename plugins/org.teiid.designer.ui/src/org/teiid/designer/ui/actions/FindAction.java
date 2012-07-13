@@ -146,7 +146,8 @@ public class FindAction extends AbstractAction
     /* (non-Javadoc)
      * @see org.eclipse.ui.IPartListener#partActivated(org.eclipse.ui.IWorkbenchPart)
      */
-    public void partActivated(IWorkbenchPart part) {
+    @Override
+	public void partActivated(IWorkbenchPart part) {
 //        System.out.println("\n\n + + + + + + [FindAction.partActivated] part hash: " + part.hashCode() ); //$NON-NLS-1$  part
 //        System.out.println(" + + + + + + [FindAction.partActivated] part is: " + part.getTitle() ); //$NON-NLS-1$  part
         
@@ -167,21 +168,24 @@ public class FindAction extends AbstractAction
     /* (non-Javadoc)
      * @see org.eclipse.ui.IPartListener#partBroughtToTop(org.eclipse.ui.IWorkbenchPart)
      */
-    public void partBroughtToTop(IWorkbenchPart part) {
+    @Override
+	public void partBroughtToTop(IWorkbenchPart part) {
         setEnableState();
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.ui.IPartListener#partClosed(org.eclipse.ui.IWorkbenchPart)
      */
-    public void partClosed(IWorkbenchPart part) {
+    @Override
+	public void partClosed(IWorkbenchPart part) {
         setEnabled( false );
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.ui.IPartListener#partDeactivated(org.eclipse.ui.IWorkbenchPart)
      */
-    public void partDeactivated(IWorkbenchPart part) {
+    @Override
+	public void partDeactivated(IWorkbenchPart part) {
 //        System.out.println("\n - - - - - -[FindAction.partDeactivated] part hash: " + part.hashCode() ); //$NON-NLS-1$  part
 //        System.out.println(" - - - - - -[FindAction.partDeactivated] part is: " + part.getTitle() ); //$NON-NLS-1$  part
         
@@ -202,7 +206,8 @@ public class FindAction extends AbstractAction
     /* (non-Javadoc)
      * @see org.eclipse.ui.IPartListener#partOpened(org.eclipse.ui.IWorkbenchPart)
      */
-    public void partOpened(IWorkbenchPart part) {
+    @Override
+	public void partOpened(IWorkbenchPart part) {
         setEnableState();
     }
     
@@ -211,7 +216,8 @@ public class FindAction extends AbstractAction
         return bHasFocus;        
     }
     
-    public void focusLost( FocusEvent fe ) {
+    @Override
+	public void focusLost( FocusEvent fe ) {
 //        System.out.println("[FindAction.focusLost] widget: " + fe.widget ); //$NON-NLS-1$
         
         // if this 'focusLost' is related to our current 'focusGain' widget,
@@ -229,7 +235,8 @@ public class FindAction extends AbstractAction
     }
     
     
-    public void focusGained( FocusEvent fe ) {
+    @Override
+	public void focusGained( FocusEvent fe ) {
         
 //        System.out.println("[FindAction.focusGained] widget: " + fe.widget ); //$NON-NLS-1$
         bHasFocus = true;   

@@ -34,7 +34,8 @@ public class FakeDatatypeFinder implements DatatypeFinder {
      * 
      * @See org.teiid.designer.modelgenerator.processor.DatatypeFinder#findDatatype(java.lang.String)
      */
-    public EObject findDatatype( String name ) {
+    @Override
+	public EObject findDatatype( String name ) {
         return getDatatypeForString(name);
     }
 
@@ -43,7 +44,8 @@ public class FakeDatatypeFinder implements DatatypeFinder {
      * 
      * @See org.teiid.designer.modelgenerator.processor.DatatypeFinder#findDatatype(org.eclipse.emf.common.util.URI)
      */
-    public EObject findDatatype( URI uri ) {
+    @Override
+	public EObject findDatatype( URI uri ) {
 
         return getDatatypeForString(uri.toString());
     }
@@ -53,7 +55,8 @@ public class FakeDatatypeFinder implements DatatypeFinder {
      * 
      * @See org.teiid.designer.modelgenerator.processor.DatatypeFinder#findAllDatatypes(java.lang.String)
      */
-    public List findAllDatatypes( String name ) {
+    @Override
+	public List findAllDatatypes( String name ) {
         return getDatatypesForString(name);
     }
 
@@ -62,7 +65,8 @@ public class FakeDatatypeFinder implements DatatypeFinder {
      * 
      * @See org.teiid.designer.modelgenerator.processor.DatatypeFinder#findAllDatatypes(org.eclipse.emf.common.util.URI)
      */
-    public List findAllDatatypes( URI uri ) {
+    @Override
+	public List findAllDatatypes( URI uri ) {
         return getDatatypesForString(uri.toString());
     }
 

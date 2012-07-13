@@ -77,7 +77,8 @@ public class HttpOperationImpl extends EObjectImpl implements HttpOperation {
      * 
      * @generated
      */
-    public String getLocation() {
+    @Override
+	public String getLocation() {
         return location;
     }
 
@@ -86,7 +87,8 @@ public class HttpOperationImpl extends EObjectImpl implements HttpOperation {
      * 
      * @generated
      */
-    public void setLocation( String newLocation ) {
+    @Override
+	public void setLocation( String newLocation ) {
         String oldLocation = location;
         location = newLocation;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, HttpPackage.HTTP_OPERATION__LOCATION,
@@ -98,7 +100,8 @@ public class HttpOperationImpl extends EObjectImpl implements HttpOperation {
      * 
      * @generated
      */
-    public BindingOperation getBindingOperation() {
+    @Override
+	public BindingOperation getBindingOperation() {
         if (eContainerFeatureID != HttpPackage.HTTP_OPERATION__BINDING_OPERATION) return null;
         return (BindingOperation)eContainer;
     }
@@ -108,7 +111,8 @@ public class HttpOperationImpl extends EObjectImpl implements HttpOperation {
      * 
      * @generated
      */
-    public void setBindingOperation( BindingOperation newBindingOperation ) {
+    @Override
+	public void setBindingOperation( BindingOperation newBindingOperation ) {
         if (newBindingOperation != eContainer
             || (eContainerFeatureID != HttpPackage.HTTP_OPERATION__BINDING_OPERATION && newBindingOperation != null)) {
             if (EcoreUtil.isAncestor(this, newBindingOperation)) throw new IllegalArgumentException(

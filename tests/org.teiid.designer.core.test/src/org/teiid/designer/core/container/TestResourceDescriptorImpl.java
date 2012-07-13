@@ -186,7 +186,8 @@ public class TestResourceDescriptorImpl extends TestCase {
 }
 
 class TestResourceFactory implements Resource.Factory {
-    public Resource createResource( URI uri ) {
+    @Override
+	public Resource createResource( URI uri ) {
         return null;
     }
 }

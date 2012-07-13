@@ -81,7 +81,8 @@ public class XmlFileContentsGroup {
                 return getNodeChildren(element);
             }
 
-            public Object getParent( Object element ) {
+            @Override
+			public Object getParent( Object element ) {
                 return getNodeParent(element);
             }
 

@@ -30,28 +30,34 @@ public class SimpleRelationship extends BaseRelationship {
         this.maxOccurs = maxOccurs;
     }
 
-    public String getParentRelativeXpath() {
+    @Override
+	public String getParentRelativeXpath() {
         return ".."; //$NON-NLS-1$
     }
 
-    public String getChildRelativeXpath() {
+    @Override
+	public String getChildRelativeXpath() {
         String xpath = child.getRelativeXpath();
         return xpath;
     }
 
-    public SchemaObject getParent() {
+    @Override
+	public SchemaObject getParent() {
         return parent;
     }
 
-    public SchemaObject getChild() {
+    @Override
+	public SchemaObject getChild() {
         return child;
     }
 
-    public int getMinOccurs() {
+    @Override
+	public int getMinOccurs() {
         return minOccurs;
     }
 
-    public int getMaxOccurs() {
+    @Override
+	public int getMaxOccurs() {
         return maxOccurs;
     }
 
@@ -76,7 +82,8 @@ public class SimpleRelationship extends BaseRelationship {
         return new SimpleRelationship(parentCopy, childCopy, minOccurs, maxOccurs);
     }
 
-    public void printDebug() {
+    @Override
+	public void printDebug() {
         StringBuffer buff = new StringBuffer();
         buff.append("\t \t SimpleRelationship:"); //$NON-NLS-1$
         buff.append("ParentSimpleName = " + parent.getSimpleName()); //$NON-NLS-1$

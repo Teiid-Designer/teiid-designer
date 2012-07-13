@@ -137,7 +137,8 @@ public class NavigationEditor extends GraphicalEditor implements ILabelProviderL
     /* (non-Javadoc)
      * @see org.eclipse.ui.IEditorPart#gotoMarker(org.eclipse.core.resources.IMarker)
      */
-    public void gotoMarker( IMarker marker ) {
+    @Override
+	public void gotoMarker( IMarker marker ) {
         // XXX Auto-generated method stub
 
     }
@@ -217,7 +218,8 @@ public class NavigationEditor extends GraphicalEditor implements ILabelProviderL
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.ILabelProviderListener#labelProviderChanged(org.eclipse.jface.viewers.LabelProviderChangedEvent)
      */
-    public void labelProviderChanged( LabelProviderChangedEvent event ) {
+    @Override
+	public void labelProviderChanged( LabelProviderChangedEvent event ) {
         // XXX Auto-generated method stub
 
     }

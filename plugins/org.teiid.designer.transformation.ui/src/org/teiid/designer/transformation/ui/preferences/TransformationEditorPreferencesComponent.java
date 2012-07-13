@@ -59,15 +59,18 @@ public class TransformationEditorPreferencesComponent implements IEditorPreferen
     public TransformationEditorPreferencesComponent() {
     }
 
-    public String getName() {
+    @Override
+	public String getName() {
         return name;
     }
 
-    public String getTooltip() {
+    @Override
+	public String getTooltip() {
         return name;
     }
 
-    public Composite createEditorPreferencesComponent( Composite parent ) {
+    @Override
+	public Composite createEditorPreferencesComponent( Composite parent ) {
         Label label = null;
         Composite comp = new Composite(parent, SWT.NONE);
         GridLayout layout = new GridLayout();
@@ -140,7 +143,8 @@ public class TransformationEditorPreferencesComponent implements IEditorPreferen
         defaultStringLength = new Text(grpMisc, SWT.BORDER);
 
         defaultStringLength.addModifyListener(new ModifyListener() {
-            public void modifyText( ModifyEvent e ) {
+            @Override
+			public void modifyText( ModifyEvent e ) {
                 validate();
             }
         });
@@ -165,7 +169,8 @@ public class TransformationEditorPreferencesComponent implements IEditorPreferen
         setButtonEnabling();
     }
 
-    public boolean performOk() {
+    @Override
+	public boolean performOk() {
         boolean changeMade = false;
         boolean isSelected = (startClausesOnNewLineButton.getEnabled() && startClausesOnNewLineButton.getSelection());
         boolean isSet = getPreferenceStore().getBoolean(UiConstants.Prefs.START_CLAUSES_ON_NEW_LINE);
@@ -205,7 +210,8 @@ public class TransformationEditorPreferencesComponent implements IEditorPreferen
         return true;
     }
 
-    public void performDefaults() {
+    @Override
+	public void performDefaults() {
         boolean select = getPreferenceStore().getDefaultBoolean(UiConstants.Prefs.START_CLAUSES_ON_NEW_LINE);
         startClausesOnNewLineButton.setSelection(select);
         select = getPreferenceStore().getDefaultBoolean(UiConstants.Prefs.INDENT_CLAUSE_CONTENT);
@@ -233,7 +239,8 @@ public class TransformationEditorPreferencesComponent implements IEditorPreferen
      * 
      * @see org.teiid.designer.ui.common.preferences.IEditorPreferencesComponent#addValidationListener(org.teiid.designer.ui.common.preferences.IEditorPreferencesValidationListener)
      */
-    public void addValidationListener( IEditorPreferencesValidationListener listener ) {
+    @Override
+	public void addValidationListener( IEditorPreferencesValidationListener listener ) {
         this.validationListeners.add(listener);
     }
 
@@ -242,7 +249,8 @@ public class TransformationEditorPreferencesComponent implements IEditorPreferen
      * 
      * @see org.teiid.designer.ui.common.preferences.IEditorPreferencesComponent#removeValidationListener(org.teiid.designer.ui.common.preferences.IEditorPreferencesValidationListener)
      */
-    public void removeValidationListener( IEditorPreferencesValidationListener listener ) {
+    @Override
+	public void removeValidationListener( IEditorPreferencesValidationListener listener ) {
         this.validationListeners.remove(listener);
     }
 
@@ -256,7 +264,8 @@ public class TransformationEditorPreferencesComponent implements IEditorPreferen
     /* (non-Javadoc)
      * @see org.teiid.designer.ui.common.preferences.IEditorPreferencesComponent#validate()
      */
-    public void validate() {
+    @Override
+	public void validate() {
         try {
             Integer val = new Integer(defaultStringLength.getText());
             if ((val.intValue() >= MIN_NUMBER && val.intValue() <= MAX_NUMBER)) {

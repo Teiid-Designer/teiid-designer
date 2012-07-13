@@ -30,7 +30,8 @@ public class XsdUmlAspectFactory implements MetamodelAspectFactory,
      * @see org.teiid.designer.core.metamodel.aspect.MetamodelAspectFactory#create(org.eclipse.emf.ecore.EClassifier, org.teiid.designer.core.metamodel.aspect.MetamodelEntity)
      * @since 5.0.2
      */
-    public MetamodelAspect create(EClassifier theClassifier,
+    @Override
+	public MetamodelAspect create(EClassifier theClassifier,
                                   MetamodelEntity theEntity) {
         switch (theClassifier.getClassifierID()) {
             case XSDPackage.XSD_ANNOTATION: return null;

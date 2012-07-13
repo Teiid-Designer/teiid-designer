@@ -45,76 +45,87 @@ public class ProcedureParameterRecordImpl extends AbstractMetadataRecord impleme
     /*
      * @See org.teiid.designer.core.metadata.runtime.ProcedureParameterRecord#getDefaultValue()
      */
-    public Object getDefaultValue() {
+    @Override
+	public Object getDefaultValue() {
         return defaultValue;
     }
 
     /*
      * @See org.teiid.designer.core.metadata.runtime.ProcedureParameterRecord#getType()
      */
-    public short getType() {
+    @Override
+	public short getType() {
         return (short)type;
     }
 
     /*
      * @See org.teiid.designer.core.metadata.runtime.ProcedureParameterRecord#getDatatypeUUID()
      */
-    public String getDatatypeUUID() {
+    @Override
+	public String getDatatypeUUID() {
         return datatypeUUID;
     }
 
     /*
      * @See org.teiid.designer.core.metadata.runtime.ProcedureParameterRecord#getRuntimeType()
      */
-    public String getRuntimeType() {
+    @Override
+	public String getRuntimeType() {
         return runtimeType;
     }
 
     /**
      * @return
      */
-    public int getLength() {
+    @Override
+	public int getLength() {
         return length;
     }
 
     /**
      * @return
      */
-    public int getPrecision() {
+    @Override
+	public int getPrecision() {
         return precision;
     }
 
     /**
      * @return
      */
-    public int getScale() {
+    @Override
+	public int getScale() {
         return scale;
     }
 
     /**
      * @return
      */
-    public int getRadix() {
+    @Override
+	public int getRadix() {
         return radix;
     }
 
     /**
      * @return
      */
-    public int getPosition() {
+    @Override
+	public int getPosition() {
         return position;
     }
 
     /**
      * @return
      */
-    public int getNullType() {
+    @Override
+	public int getNullType() {
         return nullType;
     }
 
 	/*
 	 * @See org.teiid.designer.core.metadata.runtime.ProcedureParameterRecord#isOptional()
 	 */
+	@Override
 	public boolean isOptional() {
 		return optional;
 	}

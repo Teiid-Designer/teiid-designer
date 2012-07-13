@@ -61,7 +61,8 @@ public interface NavigationNodeEditPart extends NodeEditPart {
      * @throws NullPointerException if the root is not found
      * @return the EditPartViewer
      */
-    EditPartViewer getViewer();
+    @Override
+	EditPartViewer getViewer();
 
     /**
      * Method used to return the EditPart's diagram selection handlerD
@@ -75,7 +76,8 @@ public interface NavigationNodeEditPart extends NodeEditPart {
      */
     void setSelectionHandler( NavigationSelectionHandler selectionHandler );
 
-    IFigure getFigure();
+    @Override
+	IFigure getFigure();
 
     NavigationNode getSelectedNavigationNode( MouseEvent me );
 

@@ -83,7 +83,8 @@ public class CreateVirtualModelFromSchemaWizard extends AbstractWizard {
     @Override
     public boolean finish() {
         final IRunnableWithProgress op = new IRunnableWithProgress() {
-            public void run( final IProgressMonitor monitor ) {
+            @Override
+			public void run( final IProgressMonitor monitor ) {
                 // Get the options and execute the build.
                 doFinish(monitor);
             }

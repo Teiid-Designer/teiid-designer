@@ -76,7 +76,8 @@ public class JoinNodeImpl extends OperationNodeImpl implements JoinNode {
      * 
      * @generated
      */
-    public JoinType getType() {
+    @Override
+	public JoinType getType() {
         return type;
     }
 
@@ -85,7 +86,8 @@ public class JoinNodeImpl extends OperationNodeImpl implements JoinNode {
      * 
      * @generated
      */
-    public void setType( JoinType newType ) {
+    @Override
+	public void setType( JoinType newType ) {
         JoinType oldType = type;
         type = newType == null ? TYPE_EDEFAULT : newType;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, TransformationPackage.JOIN_NODE__TYPE,
@@ -97,7 +99,8 @@ public class JoinNodeImpl extends OperationNodeImpl implements JoinNode {
      * 
      * @generated
      */
-    public String getCriteria() {
+    @Override
+	public String getCriteria() {
         // TODO: implement this method
         // Ensure that you remove @generated or mark it @generated NOT
         throw new UnsupportedOperationException();

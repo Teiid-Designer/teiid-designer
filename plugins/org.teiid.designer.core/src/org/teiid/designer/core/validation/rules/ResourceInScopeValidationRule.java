@@ -39,7 +39,8 @@ public class ResourceInScopeValidationRule implements StructuralFeatureValidatio
      * @see org.teiid.designer.core.validation.StructuralFeatureValidationRule#validate(org.eclipse.emf.ecore.EStructuralFeature, org.eclipse.emf.ecore.EObject, java.lang.Object, org.teiid.designer.core.validation.ValidationContext)
      * @since 4.2
      */
-    public void validate(EStructuralFeature theStructuralFeature,
+    @Override
+	public void validate(EStructuralFeature theStructuralFeature,
                          EObject theObject,
                          Object theValue,
                          ValidationContext theContext) {

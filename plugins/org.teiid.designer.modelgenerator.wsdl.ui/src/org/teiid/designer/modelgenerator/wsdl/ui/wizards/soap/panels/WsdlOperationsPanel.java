@@ -277,6 +277,7 @@ public class WsdlOperationsPanel implements FileUtils.Constants, CoreStringUtil.
 		this.operationsViewer.getTable().addSelectionListener(
 			new SelectionListener() {
 
+				@Override
 				public void widgetSelected(SelectionEvent e) {
 					updateTreeSelectionDetails();
 					if (e.detail == SWT.CHECK) {
@@ -285,6 +286,7 @@ public class WsdlOperationsPanel implements FileUtils.Constants, CoreStringUtil.
 					}
 				}
 				
+				@Override
 				public void widgetDefaultSelected(SelectionEvent e) {
 				}
 			});
@@ -503,9 +505,11 @@ public class WsdlOperationsPanel implements FileUtils.Constants, CoreStringUtil.
 
 	class CheckboxTreeContentProvider implements ITreeContentProvider {
 
+		@Override
 		public void dispose() {
 		}
 
+		@Override
 		public Object[] getChildren(final Object node) {
 			if (wsdlModel != null) {
 				if( node instanceof OperationsContainer ) {
@@ -515,6 +519,7 @@ public class WsdlOperationsPanel implements FileUtils.Constants, CoreStringUtil.
 			return EMPTY_STRING_ARRAY;
 		}
 
+		@Override
 		public Object[] getElements(final Object inputElement) {
 			if( inputElement instanceof OperationsContainer ) {
 				return ((OperationsContainer)inputElement).getOperations();
@@ -522,10 +527,12 @@ public class WsdlOperationsPanel implements FileUtils.Constants, CoreStringUtil.
 			return new Object[0];
 		}
 
+		@Override
 		public Object getParent(final Object node) {
 			return null;
 		}
 
+		@Override
 		public boolean hasChildren(final Object node) {
 			if (wsdlModel != null) {
 				if (node instanceof OperationsContainer) {
@@ -535,6 +542,7 @@ public class WsdlOperationsPanel implements FileUtils.Constants, CoreStringUtil.
 			return false;
 		}
 
+		@Override
 		public void inputChanged(final Viewer viewer, final Object oldInput, final Object newInput) {
 		}
 	}

@@ -33,14 +33,16 @@ public class AnnotatedObjectRecordImpl extends ResourceObjectRecordImpl implemen
      * @see org.teiid.designer.core.search.runtime.AnnotatedObjectRecord#getDescription()
      * @since 4.2
      */
-    public String getDescription() {
+    @Override
+	public String getDescription() {
         return this.description;
     }
     /** 
      * @see org.teiid.designer.core.search.runtime.AnnotatedObjectRecord#getProperties()
      * @since 4.2
      */
-    public Properties getProperties() {
+    @Override
+	public Properties getProperties() {
         return this.properties;
     }
     

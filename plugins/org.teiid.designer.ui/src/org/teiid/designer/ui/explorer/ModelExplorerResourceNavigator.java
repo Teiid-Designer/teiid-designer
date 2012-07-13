@@ -307,26 +307,32 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
         // register a part listener to refresh resource icons when ModelEditors open/close
         // use my page, not the active page:
         this.partListener = new IPartListener() {
-            public void partActivated( IWorkbenchPart part ) {
+            @Override
+			public void partActivated( IWorkbenchPart part ) {
             }
 
-            public void partBroughtToTop( IWorkbenchPart part ) {
+            @Override
+			public void partBroughtToTop( IWorkbenchPart part ) {
             }
 
-            public void partClosed( IWorkbenchPart part ) {
+            @Override
+			public void partClosed( IWorkbenchPart part ) {
             }
 
-            public void partDeactivated( IWorkbenchPart part ) {
+            @Override
+			public void partDeactivated( IWorkbenchPart part ) {
             }
 
-            public void partOpened( IWorkbenchPart part ) {
+            @Override
+			public void partOpened( IWorkbenchPart part ) {
                 checkResource(part);
             }
 
             private void checkResource( final IWorkbenchPart part ) {
                 if (part instanceof ModelEditor) {
                     Display.getCurrent().asyncExec(new Runnable() {
-                        public void run() {
+                        @Override
+						public void run() {
                             if (!getViewer().getTree().isDisposed()) {
                                 getViewer().refresh(((ModelEditor)part).getModelFile());
                             }
@@ -338,7 +344,8 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
         getSite().getPage().addPartListener(this.partListener);
 
         markerListener = new IResourceChangeListener() {
-            public void resourceChanged( IResourceChangeEvent event ) {
+            @Override
+			public void resourceChanged( IResourceChangeEvent event ) {
                 final IMarkerDelta[] deltas = event.findMarkerDeltas(null, true);
 
                 if (deltas != null && deltas.length > 0) {
@@ -350,7 +357,8 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
                     final Iterator<IProject> itr = projects.iterator();
 
                     Display.getDefault().asyncExec(new Runnable() {
-                        public void run() {
+                        @Override
+						public void run() {
                             if (!getTreeViewer().getTree().isDisposed()) {
                                 TreeViewer viewer = getTreeViewer();
 
@@ -377,12 +385,14 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
      */
     protected void addCustomListeners() {
         modelResourceListener = new EventObjectListener() {
-            public void processEvent( EventObject obj ) {
+            @Override
+			public void processEvent( EventObject obj ) {
                 ModelResourceEvent event = (ModelResourceEvent)obj;
                 if (event.getType() == ModelResourceEvent.CLOSING) {
                     final IResource file = event.getResource();
                     Display.getDefault().asyncExec(new Runnable() {
-                        public void run() {
+                        @Override
+						public void run() {
                             if (!getTreeViewer().getTree().isDisposed()) {
                                 getTreeViewer().collapseToLevel(file, AbstractTreeViewer.ALL_LEVELS);
                             }
@@ -391,7 +401,8 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
                 } else if (event.getType() == ModelResourceEvent.CLOSED) {
                     final IResource file = event.getResource();
                     Display.getDefault().asyncExec(new Runnable() {
-                        public void run() {
+                        @Override
+						public void run() {
                             if (!getTreeViewer().getTree().isDisposed()) {
                                 getTreeViewer().remove(file);
                                 getTreeViewer().refresh(file.getParent(), false);
@@ -401,7 +412,8 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
                 } else if (event.getType() == ModelResourceEvent.RELOADED) {
                     final IResource file = event.getResource();
                     Display.getDefault().asyncExec(new Runnable() {
-                        public void run() {
+                        @Override
+						public void run() {
                             if (!getTreeViewer().getTree().isDisposed()) {
                                 getTreeViewer().refresh(file.getParent(), false);
                             }
@@ -541,7 +553,8 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
     @Override
     protected IShowInTarget getShowInTarget() {
         return new IShowInTarget() {
-            public boolean show( ShowInContext context ) {
+            @Override
+			public boolean show( ShowInContext context ) {
                 Set<EObject> toSelect = new HashSet<EObject>();
                 ISelection sel = context.getSelection();
 
@@ -625,7 +638,8 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
         viewer.setContentProvider(new ModelExplorerContentProvider());
 
         viewer.addDoubleClickListener(new IDoubleClickListener() {
-            public void doubleClick( final DoubleClickEvent e ) {
+            @Override
+			public void doubleClick( final DoubleClickEvent e ) {
                 ISelection selection = e.getSelection();
                 if (SelectionUtilities.isSingleSelection(selection) && SelectionUtilities.getSelectedEObject(selection) != null) {
                     EObject eObj = SelectionUtilities.getSelectedEObject(selection);
@@ -674,7 +688,8 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
         this.menuMgr = new ExtendedMenuManager(UiConstants.Extensions.Explorer.CONTEXT_MENU);
         menuMgr.setRemoveAllWhenShown(true);
         menuMgr.addMenuListener(new IMenuListener() {
-            public void menuAboutToShow( IMenuManager theMenuMgr ) {
+            @Override
+			public void menuAboutToShow( IMenuManager theMenuMgr ) {
                 ModelExplorerResourceNavigator.this.fillContextMenu(theMenuMgr);
             }
         });
@@ -1025,7 +1040,8 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
             UiConstants.Util.log(ex);
             // run async to allow the GUI to come up first:
             Display.getDefault().asyncExec(new Runnable() {
-                public void run() {
+                @Override
+				public void run() {
                     MessageDialog.openError(getViewSite().getShell(),
                                             Util.getString("ModelExplorerResourceNavigator.restoreStateError.title"), //$NON-NLS-1$
                                             Util.getString("ModelExplorerResourceNavigator.restoreStateError.text", ex.getLocalizedMessage())); //$NON-NLS-1$
@@ -1037,7 +1053,8 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
     /**
      * @See org.teiid.designer.ui.views.ModelViewer#addModelObjectDoubleClickListener(org.eclipse.jface.viewers.IDoubleClickListener)
      */
-    public void addModelObjectDoubleClickListener( IDoubleClickListener listener ) {
+    @Override
+	public void addModelObjectDoubleClickListener( IDoubleClickListener listener ) {
         if (getTreeViewer() != null) {
             getTreeViewer().addDoubleClickListener(listener);
         }
@@ -1052,7 +1069,8 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
         if (selectionListener == null) {
 
             selectionListener = new ISelectionListener() {
-                public void selectionChanged( IWorkbenchPart part,
+                @Override
+				public void selectionChanged( IWorkbenchPart part,
                                               final ISelection selection ) {
                     if (part != ModelExplorerResourceNavigator.this && isSynchronized()) {
                         if ((selection instanceof IStructuredSelection) && !selection.isEmpty()) {
@@ -1066,7 +1084,8 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
                                 if ((nObj == 1) && (((IStructuredSelection)selection).getFirstElement() instanceof IResource)) {
                                     // do an async here to ensure the resource treeitem has been created first
                                     getTreeViewer().getControl().getDisplay().asyncExec(new Runnable() {
-                                        public void run() {
+                                        @Override
+										public void run() {
                                             if (!getTreeViewer().getControl().isDisposed()) {
                                                 getTreeViewer().setSelection(selection, true);
 
@@ -1110,7 +1129,8 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
      * 
      * @param theMarker the marker being processed
      */
-    public void gotoMarker( IMarker theMarker ) {
+    @Override
+	public void gotoMarker( IMarker theMarker ) {
         EObject targetEObject = ModelObjectUtilities.getMarkedEObject(theMarker);
 
         if (targetEObject != null) {
@@ -1128,7 +1148,8 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
     /**
      * @See org.teiid.designer.ui.views.ModelViewer#removeModelObjectDoubleClickListener(org.eclipse.jface.viewers.IDoubleClickListener)
      */
-    public void removeModelObjectDoubleClickListener( IDoubleClickListener listener ) {
+    @Override
+	public void removeModelObjectDoubleClickListener( IDoubleClickListener listener ) {
         getTreeViewer().removeDoubleClickListener(listener);
     }
 
@@ -1296,7 +1317,8 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
          *      org.eclipse.jface.viewers.ISelection)
          * @since 4.2
          */
-        public void selectionChanged( IWorkbenchPart thePart,
+        @Override
+		public void selectionChanged( IWorkbenchPart thePart,
                                       ISelection theSelection ) {
             IAction handler = (SelectionUtilities.isAllEObjects(theSelection)) ? this.modelerAction : this.defaultAction;
 

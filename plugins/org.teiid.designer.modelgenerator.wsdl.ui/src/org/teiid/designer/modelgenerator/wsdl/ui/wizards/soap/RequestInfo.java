@@ -35,6 +35,7 @@ public class RequestInfo extends ProcedureInfo {
 		return builder.toString();
 	}
 	
+	@Override
 	public String getDefaultProcedureName() {
 		return getOperation().getName() + "_request";//$NON-NLS-1$
 	}

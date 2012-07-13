@@ -104,7 +104,8 @@ public class DoubleClickTableViewer extends TableViewer {
 
         // disable the DoubleClickCellModifier's canModify method once the cell editor is finished
         Display.getDefault().asyncExec(new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 editEnabled = false;
             }
         });
@@ -129,7 +130,8 @@ public class DoubleClickTableViewer extends TableViewer {
             delegate = modifier;
         }
 
-        public boolean canModify( Object element,
+        @Override
+		public boolean canModify( Object element,
                                   String property ) {
             // check the outer class
             if (editEnabled) {
@@ -139,12 +141,14 @@ public class DoubleClickTableViewer extends TableViewer {
             return false;
         }
 
-        public Object getValue( Object element,
+        @Override
+		public Object getValue( Object element,
                                 String property ) {
             return delegate.getValue(element, property);
         }
 
-        public void modify( Object element,
+        @Override
+		public void modify( Object element,
                             String property,
                             Object value ) {
             delegate.modify(element, property, value);

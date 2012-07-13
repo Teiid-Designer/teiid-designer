@@ -28,14 +28,16 @@ public class DefaultResourceLoader implements EmfResourceLoader {
     /* (non-Javadoc)
      * @see com.metamatrix.mtk.emf.resource.active.EmfResourceLoader#loadFeature(org.eclipse.emf.common.util.EList, java.lang.Class, org.eclipse.emf.ecore.EObject, int)
      */
-    public void loadFeature(EList valueHolder, Class dataClass, EObject owner, int featureId) {
+    @Override
+	public void loadFeature(EList valueHolder, Class dataClass, EObject owner, int featureId) {
         // do nothing
     }
 
     /* (non-Javadoc)
      * @see com.metamatrix.mtk.emf.resource.active.EmfResourceLoader#loadFeature(org.eclipse.emf.common.util.EList, java.lang.Class, org.eclipse.emf.ecore.EObject, int, int)
      */
-    public void loadFeature(EList valueHolder, Class dataClass, EObject owner, int featureId, int reverseFeatureId) {
+    @Override
+	public void loadFeature(EList valueHolder, Class dataClass, EObject owner, int featureId, int reverseFeatureId) {
         // do nothing
     }
 

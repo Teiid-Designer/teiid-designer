@@ -200,7 +200,8 @@ public class RelationshipPackageImpl extends EPackageImpl implements Relationshi
      * 
      * @generated
      */
-    public EClass getRelationshipType() {
+    @Override
+	public EClass getRelationshipType() {
         return relationshipTypeEClass;
     }
 
@@ -209,7 +210,8 @@ public class RelationshipPackageImpl extends EPackageImpl implements Relationshi
      * 
      * @generated
      */
-    public EAttribute getRelationshipType_Directed() {
+    @Override
+	public EAttribute getRelationshipType_Directed() {
         return (EAttribute)relationshipTypeEClass.getEStructuralFeatures().get(0);
     }
 
@@ -218,7 +220,8 @@ public class RelationshipPackageImpl extends EPackageImpl implements Relationshi
      * 
      * @generated
      */
-    public EAttribute getRelationshipType_Exclusive() {
+    @Override
+	public EAttribute getRelationshipType_Exclusive() {
         return (EAttribute)relationshipTypeEClass.getEStructuralFeatures().get(1);
     }
 
@@ -227,7 +230,8 @@ public class RelationshipPackageImpl extends EPackageImpl implements Relationshi
      * 
      * @generated
      */
-    public EAttribute getRelationshipType_CrossModel() {
+    @Override
+	public EAttribute getRelationshipType_CrossModel() {
         return (EAttribute)relationshipTypeEClass.getEStructuralFeatures().get(2);
     }
 
@@ -236,7 +240,8 @@ public class RelationshipPackageImpl extends EPackageImpl implements Relationshi
      * 
      * @generated
      */
-    public EAttribute getRelationshipType_Abstract() {
+    @Override
+	public EAttribute getRelationshipType_Abstract() {
         return (EAttribute)relationshipTypeEClass.getEStructuralFeatures().get(3);
     }
 
@@ -245,7 +250,8 @@ public class RelationshipPackageImpl extends EPackageImpl implements Relationshi
      * 
      * @generated
      */
-    public EAttribute getRelationshipType_UserDefined() {
+    @Override
+	public EAttribute getRelationshipType_UserDefined() {
         return (EAttribute)relationshipTypeEClass.getEStructuralFeatures().get(4);
     }
 
@@ -254,7 +260,8 @@ public class RelationshipPackageImpl extends EPackageImpl implements Relationshi
      * 
      * @generated
      */
-    public EAttribute getRelationshipType_Status() {
+    @Override
+	public EAttribute getRelationshipType_Status() {
         return (EAttribute)relationshipTypeEClass.getEStructuralFeatures().get(5);
     }
 
@@ -263,7 +270,8 @@ public class RelationshipPackageImpl extends EPackageImpl implements Relationshi
      * 
      * @generated
      */
-    public EAttribute getRelationshipType_Stereotype() {
+    @Override
+	public EAttribute getRelationshipType_Stereotype() {
         return (EAttribute)relationshipTypeEClass.getEStructuralFeatures().get(6);
     }
 
@@ -272,7 +280,8 @@ public class RelationshipPackageImpl extends EPackageImpl implements Relationshi
      * 
      * @generated
      */
-    public EAttribute getRelationshipType_Constraint() {
+    @Override
+	public EAttribute getRelationshipType_Constraint() {
         return (EAttribute)relationshipTypeEClass.getEStructuralFeatures().get(7);
     }
 
@@ -281,7 +290,8 @@ public class RelationshipPackageImpl extends EPackageImpl implements Relationshi
      * 
      * @generated
      */
-    public EAttribute getRelationshipType_Label() {
+    @Override
+	public EAttribute getRelationshipType_Label() {
         return (EAttribute)relationshipTypeEClass.getEStructuralFeatures().get(8);
     }
 
@@ -290,7 +300,8 @@ public class RelationshipPackageImpl extends EPackageImpl implements Relationshi
      * 
      * @generated
      */
-    public EAttribute getRelationshipType_OppositeLabel() {
+    @Override
+	public EAttribute getRelationshipType_OppositeLabel() {
         return (EAttribute)relationshipTypeEClass.getEStructuralFeatures().get(9);
     }
 
@@ -299,7 +310,8 @@ public class RelationshipPackageImpl extends EPackageImpl implements Relationshi
      * 
      * @generated
      */
-    public EReference getRelationshipType_RelationshipFeatures() {
+    @Override
+	public EReference getRelationshipType_RelationshipFeatures() {
         return (EReference)relationshipTypeEClass.getEStructuralFeatures().get(10);
     }
 
@@ -308,7 +320,8 @@ public class RelationshipPackageImpl extends EPackageImpl implements Relationshi
      * 
      * @generated
      */
-    public EReference getRelationshipType_SuperType() {
+    @Override
+	public EReference getRelationshipType_SuperType() {
         return (EReference)relationshipTypeEClass.getEStructuralFeatures().get(11);
     }
 
@@ -317,7 +330,8 @@ public class RelationshipPackageImpl extends EPackageImpl implements Relationshi
      * 
      * @generated
      */
-    public EReference getRelationshipType_SubType() {
+    @Override
+	public EReference getRelationshipType_SubType() {
         return (EReference)relationshipTypeEClass.getEStructuralFeatures().get(12);
     }
 
@@ -326,7 +340,8 @@ public class RelationshipPackageImpl extends EPackageImpl implements Relationshi
      * 
      * @generated
      */
-    public EReference getRelationshipType_Roles() {
+    @Override
+	public EReference getRelationshipType_Roles() {
         return (EReference)relationshipTypeEClass.getEStructuralFeatures().get(13);
     }
 
@@ -335,7 +350,8 @@ public class RelationshipPackageImpl extends EPackageImpl implements Relationshi
      * 
      * @generated
      */
-    public EReference getRelationshipType_Owner() {
+    @Override
+	public EReference getRelationshipType_Owner() {
         return (EReference)relationshipTypeEClass.getEStructuralFeatures().get(14);
     }
 
@@ -344,7 +360,8 @@ public class RelationshipPackageImpl extends EPackageImpl implements Relationshi
      * 
      * @generated
      */
-    public EClass getRelationshipEntity() {
+    @Override
+	public EClass getRelationshipEntity() {
         return relationshipEntityEClass;
     }
 
@@ -353,7 +370,8 @@ public class RelationshipPackageImpl extends EPackageImpl implements Relationshi
      * 
      * @generated
      */
-    public EAttribute getRelationshipEntity_Name() {
+    @Override
+	public EAttribute getRelationshipEntity_Name() {
         return (EAttribute)relationshipEntityEClass.getEStructuralFeatures().get(0);
     }
 
@@ -362,7 +380,8 @@ public class RelationshipPackageImpl extends EPackageImpl implements Relationshi
      * 
      * @generated
      */
-    public EClass getRelationship() {
+    @Override
+	public EClass getRelationship() {
         return relationshipEClass;
     }
 
@@ -371,7 +390,8 @@ public class RelationshipPackageImpl extends EPackageImpl implements Relationshi
      * 
      * @generated
      */
-    public EReference getRelationship_FeatureValues() {
+    @Override
+	public EReference getRelationship_FeatureValues() {
         return (EReference)relationshipEClass.getEStructuralFeatures().get(0);
     }
 
@@ -380,7 +400,8 @@ public class RelationshipPackageImpl extends EPackageImpl implements Relationshi
      * 
      * @generated
      */
-    public EReference getRelationship_Targets() {
+    @Override
+	public EReference getRelationship_Targets() {
         return (EReference)relationshipEClass.getEStructuralFeatures().get(1);
     }
 
@@ -389,7 +410,8 @@ public class RelationshipPackageImpl extends EPackageImpl implements Relationshi
      * 
      * @generated
      */
-    public EReference getRelationship_Sources() {
+    @Override
+	public EReference getRelationship_Sources() {
         return (EReference)relationshipEClass.getEStructuralFeatures().get(2);
     }
 
@@ -398,7 +420,8 @@ public class RelationshipPackageImpl extends EPackageImpl implements Relationshi
      * 
      * @generated
      */
-    public EReference getRelationship_Type() {
+    @Override
+	public EReference getRelationship_Type() {
         return (EReference)relationshipEClass.getEStructuralFeatures().get(3);
     }
 
@@ -407,7 +430,8 @@ public class RelationshipPackageImpl extends EPackageImpl implements Relationshi
      * 
      * @generated
      */
-    public EReference getRelationship_RelationshipContainer() {
+    @Override
+	public EReference getRelationship_RelationshipContainer() {
         return (EReference)relationshipEClass.getEStructuralFeatures().get(4);
     }
 
@@ -416,7 +440,8 @@ public class RelationshipPackageImpl extends EPackageImpl implements Relationshi
      * 
      * @generated
      */
-    public EClass getFileReference() {
+    @Override
+	public EClass getFileReference() {
         return fileReferenceEClass;
     }
 
@@ -425,7 +450,8 @@ public class RelationshipPackageImpl extends EPackageImpl implements Relationshi
      * 
      * @generated
      */
-    public EAttribute getFileReference_ToolName() {
+    @Override
+	public EAttribute getFileReference_ToolName() {
         return (EAttribute)fileReferenceEClass.getEStructuralFeatures().get(0);
     }
 
@@ -434,7 +460,8 @@ public class RelationshipPackageImpl extends EPackageImpl implements Relationshi
      * 
      * @generated
      */
-    public EAttribute getFileReference_ToolVersion() {
+    @Override
+	public EAttribute getFileReference_ToolVersion() {
         return (EAttribute)fileReferenceEClass.getEStructuralFeatures().get(1);
     }
 
@@ -443,7 +470,8 @@ public class RelationshipPackageImpl extends EPackageImpl implements Relationshi
      * 
      * @generated
      */
-    public EAttribute getFileReference_FormatName() {
+    @Override
+	public EAttribute getFileReference_FormatName() {
         return (EAttribute)fileReferenceEClass.getEStructuralFeatures().get(2);
     }
 
@@ -452,7 +480,8 @@ public class RelationshipPackageImpl extends EPackageImpl implements Relationshi
      * 
      * @generated
      */
-    public EAttribute getFileReference_FormatVersion() {
+    @Override
+	public EAttribute getFileReference_FormatVersion() {
         return (EAttribute)fileReferenceEClass.getEStructuralFeatures().get(3);
     }
 
@@ -461,7 +490,8 @@ public class RelationshipPackageImpl extends EPackageImpl implements Relationshi
      * 
      * @generated
      */
-    public EClass getRelationshipRole() {
+    @Override
+	public EClass getRelationshipRole() {
         return relationshipRoleEClass;
     }
 
@@ -470,7 +500,8 @@ public class RelationshipPackageImpl extends EPackageImpl implements Relationshi
      * 
      * @generated
      */
-    public EAttribute getRelationshipRole_Stereotype() {
+    @Override
+	public EAttribute getRelationshipRole_Stereotype() {
         return (EAttribute)relationshipRoleEClass.getEStructuralFeatures().get(0);
     }
 
@@ -479,7 +510,8 @@ public class RelationshipPackageImpl extends EPackageImpl implements Relationshi
      * 
      * @generated
      */
-    public EAttribute getRelationshipRole_Ordered() {
+    @Override
+	public EAttribute getRelationshipRole_Ordered() {
         return (EAttribute)relationshipRoleEClass.getEStructuralFeatures().get(1);
     }
 
@@ -488,7 +520,8 @@ public class RelationshipPackageImpl extends EPackageImpl implements Relationshi
      * 
      * @generated
      */
-    public EAttribute getRelationshipRole_Unique() {
+    @Override
+	public EAttribute getRelationshipRole_Unique() {
         return (EAttribute)relationshipRoleEClass.getEStructuralFeatures().get(2);
     }
 
@@ -497,7 +530,8 @@ public class RelationshipPackageImpl extends EPackageImpl implements Relationshi
      * 
      * @generated
      */
-    public EAttribute getRelationshipRole_Navigable() {
+    @Override
+	public EAttribute getRelationshipRole_Navigable() {
         return (EAttribute)relationshipRoleEClass.getEStructuralFeatures().get(3);
     }
 
@@ -506,7 +540,8 @@ public class RelationshipPackageImpl extends EPackageImpl implements Relationshi
      * 
      * @generated
      */
-    public EAttribute getRelationshipRole_LowerBound() {
+    @Override
+	public EAttribute getRelationshipRole_LowerBound() {
         return (EAttribute)relationshipRoleEClass.getEStructuralFeatures().get(4);
     }
 
@@ -515,7 +550,8 @@ public class RelationshipPackageImpl extends EPackageImpl implements Relationshi
      * 
      * @generated
      */
-    public EAttribute getRelationshipRole_UpperBound() {
+    @Override
+	public EAttribute getRelationshipRole_UpperBound() {
         return (EAttribute)relationshipRoleEClass.getEStructuralFeatures().get(5);
     }
 
@@ -524,7 +560,8 @@ public class RelationshipPackageImpl extends EPackageImpl implements Relationshi
      * 
      * @generated
      */
-    public EAttribute getRelationshipRole_Constraint() {
+    @Override
+	public EAttribute getRelationshipRole_Constraint() {
         return (EAttribute)relationshipRoleEClass.getEStructuralFeatures().get(6);
     }
 
@@ -533,7 +570,8 @@ public class RelationshipPackageImpl extends EPackageImpl implements Relationshi
      * 
      * @generated
      */
-    public EReference getRelationshipRole_RelationshipType() {
+    @Override
+	public EReference getRelationshipRole_RelationshipType() {
         return (EReference)relationshipRoleEClass.getEStructuralFeatures().get(7);
     }
 
@@ -542,7 +580,8 @@ public class RelationshipPackageImpl extends EPackageImpl implements Relationshi
      * 
      * @generated
      */
-    public EReference getRelationshipRole_OppositeRole() {
+    @Override
+	public EReference getRelationshipRole_OppositeRole() {
         return (EReference)relationshipRoleEClass.getEStructuralFeatures().get(8);
     }
 
@@ -551,7 +590,8 @@ public class RelationshipPackageImpl extends EPackageImpl implements Relationshi
      * 
      * @generated
      */
-    public EReference getRelationshipRole_IncludeTypes() {
+    @Override
+	public EReference getRelationshipRole_IncludeTypes() {
         return (EReference)relationshipRoleEClass.getEStructuralFeatures().get(9);
     }
 
@@ -560,7 +600,8 @@ public class RelationshipPackageImpl extends EPackageImpl implements Relationshi
      * 
      * @generated
      */
-    public EReference getRelationshipRole_ExcludeTypes() {
+    @Override
+	public EReference getRelationshipRole_ExcludeTypes() {
         return (EReference)relationshipRoleEClass.getEStructuralFeatures().get(10);
     }
 
@@ -569,7 +610,8 @@ public class RelationshipPackageImpl extends EPackageImpl implements Relationshi
      * 
      * @generated
      */
-    public EClass getPlaceholderReference() {
+    @Override
+	public EClass getPlaceholderReference() {
         return placeholderReferenceEClass;
     }
 
@@ -578,7 +620,8 @@ public class RelationshipPackageImpl extends EPackageImpl implements Relationshi
      * 
      * @generated
      */
-    public EReference getPlaceholderReference_PlaceholderReferenceContainer() {
+    @Override
+	public EReference getPlaceholderReference_PlaceholderReferenceContainer() {
         return (EReference)placeholderReferenceEClass.getEStructuralFeatures().get(0);
     }
 
@@ -587,7 +630,8 @@ public class RelationshipPackageImpl extends EPackageImpl implements Relationshi
      * 
      * @generated
      */
-    public EClass getPlaceholderReferenceContainer() {
+    @Override
+	public EClass getPlaceholderReferenceContainer() {
         return placeholderReferenceContainerEClass;
     }
 
@@ -596,7 +640,8 @@ public class RelationshipPackageImpl extends EPackageImpl implements Relationshi
      * 
      * @generated
      */
-    public EReference getPlaceholderReferenceContainer_Placeholders() {
+    @Override
+	public EReference getPlaceholderReferenceContainer_Placeholders() {
         return (EReference)placeholderReferenceContainerEClass.getEStructuralFeatures().get(0);
     }
 
@@ -605,7 +650,8 @@ public class RelationshipPackageImpl extends EPackageImpl implements Relationshi
      * 
      * @generated
      */
-    public EClass getUriReference() {
+    @Override
+	public EClass getUriReference() {
         return uriReferenceEClass;
     }
 
@@ -614,7 +660,8 @@ public class RelationshipPackageImpl extends EPackageImpl implements Relationshi
      * 
      * @generated
      */
-    public EAttribute getUriReference_Name() {
+    @Override
+	public EAttribute getUriReference_Name() {
         return (EAttribute)uriReferenceEClass.getEStructuralFeatures().get(0);
     }
 
@@ -623,7 +670,8 @@ public class RelationshipPackageImpl extends EPackageImpl implements Relationshi
      * 
      * @generated
      */
-    public EAttribute getUriReference_Uri() {
+    @Override
+	public EAttribute getUriReference_Uri() {
         return (EAttribute)uriReferenceEClass.getEStructuralFeatures().get(1);
     }
 
@@ -632,7 +680,8 @@ public class RelationshipPackageImpl extends EPackageImpl implements Relationshi
      * 
      * @generated
      */
-    public EAttribute getUriReference_Resolvable() {
+    @Override
+	public EAttribute getUriReference_Resolvable() {
         return (EAttribute)uriReferenceEClass.getEStructuralFeatures().get(2);
     }
 
@@ -641,7 +690,8 @@ public class RelationshipPackageImpl extends EPackageImpl implements Relationshi
      * 
      * @generated
      */
-    public EAttribute getUriReference_Encoding() {
+    @Override
+	public EAttribute getUriReference_Encoding() {
         return (EAttribute)uriReferenceEClass.getEStructuralFeatures().get(3);
     }
 
@@ -650,7 +700,8 @@ public class RelationshipPackageImpl extends EPackageImpl implements Relationshi
      * 
      * @generated
      */
-    public EAttribute getUriReference_Abstract() {
+    @Override
+	public EAttribute getUriReference_Abstract() {
         return (EAttribute)uriReferenceEClass.getEStructuralFeatures().get(4);
     }
 
@@ -659,7 +710,8 @@ public class RelationshipPackageImpl extends EPackageImpl implements Relationshi
      * 
      * @generated
      */
-    public EAttribute getUriReference_Keywords() {
+    @Override
+	public EAttribute getUriReference_Keywords() {
         return (EAttribute)uriReferenceEClass.getEStructuralFeatures().get(5);
     }
 
@@ -668,7 +720,8 @@ public class RelationshipPackageImpl extends EPackageImpl implements Relationshi
      * 
      * @generated
      */
-    public EAttribute getUriReference_RelatedUris() {
+    @Override
+	public EAttribute getUriReference_RelatedUris() {
         return (EAttribute)uriReferenceEClass.getEStructuralFeatures().get(6);
     }
 
@@ -677,7 +730,8 @@ public class RelationshipPackageImpl extends EPackageImpl implements Relationshi
      * 
      * @generated
      */
-    public EReference getUriReference_Properties() {
+    @Override
+	public EReference getUriReference_Properties() {
         return (EReference)uriReferenceEClass.getEStructuralFeatures().get(7);
     }
 
@@ -686,7 +740,8 @@ public class RelationshipPackageImpl extends EPackageImpl implements Relationshi
      * 
      * @generated
      */
-    public EClass getRelationshipFolder() {
+    @Override
+	public EClass getRelationshipFolder() {
         return relationshipFolderEClass;
     }
 
@@ -695,7 +750,8 @@ public class RelationshipPackageImpl extends EPackageImpl implements Relationshi
      * 
      * @generated
      */
-    public EReference getRelationshipFolder_OwnedRelationshipTypes() {
+    @Override
+	public EReference getRelationshipFolder_OwnedRelationshipTypes() {
         return (EReference)relationshipFolderEClass.getEStructuralFeatures().get(0);
     }
 
@@ -704,7 +760,8 @@ public class RelationshipPackageImpl extends EPackageImpl implements Relationshi
      * 
      * @generated
      */
-    public EReference getRelationshipFolder_OwnedRelationshipFolders() {
+    @Override
+	public EReference getRelationshipFolder_OwnedRelationshipFolders() {
         return (EReference)relationshipFolderEClass.getEStructuralFeatures().get(1);
     }
 
@@ -713,7 +770,8 @@ public class RelationshipPackageImpl extends EPackageImpl implements Relationshi
      * 
      * @generated
      */
-    public EReference getRelationshipFolder_Owner() {
+    @Override
+	public EReference getRelationshipFolder_Owner() {
         return (EReference)relationshipFolderEClass.getEStructuralFeatures().get(2);
     }
 
@@ -722,7 +780,8 @@ public class RelationshipPackageImpl extends EPackageImpl implements Relationshi
      * 
      * @generated
      */
-    public EClass getRelationshipContainer() {
+    @Override
+	public EClass getRelationshipContainer() {
         return relationshipContainerEClass;
     }
 
@@ -731,7 +790,8 @@ public class RelationshipPackageImpl extends EPackageImpl implements Relationshi
      * 
      * @generated
      */
-    public EReference getRelationshipContainer_OwnedRelationships() {
+    @Override
+	public EReference getRelationshipContainer_OwnedRelationships() {
         return (EReference)relationshipContainerEClass.getEStructuralFeatures().get(0);
     }
 
@@ -740,7 +800,8 @@ public class RelationshipPackageImpl extends EPackageImpl implements Relationshi
      * 
      * @generated
      */
-    public EEnum getRelationshipTypeStatus() {
+    @Override
+	public EEnum getRelationshipTypeStatus() {
         return relationshipTypeStatusEEnum;
     }
 
@@ -749,7 +810,8 @@ public class RelationshipPackageImpl extends EPackageImpl implements Relationshi
      * 
      * @generated
      */
-    public EDataType getIStatus() {
+    @Override
+	public EDataType getIStatus() {
         return iStatusEDataType;
     }
 
@@ -758,7 +820,8 @@ public class RelationshipPackageImpl extends EPackageImpl implements Relationshi
      * 
      * @generated
      */
-    public EDataType getList() {
+    @Override
+	public EDataType getList() {
         return listEDataType;
     }
 
@@ -767,7 +830,8 @@ public class RelationshipPackageImpl extends EPackageImpl implements Relationshi
      * 
      * @generated
      */
-    public RelationshipFactory getRelationshipFactory() {
+    @Override
+	public RelationshipFactory getRelationshipFactory() {
         return (RelationshipFactory)getEFactoryInstance();
     }
 

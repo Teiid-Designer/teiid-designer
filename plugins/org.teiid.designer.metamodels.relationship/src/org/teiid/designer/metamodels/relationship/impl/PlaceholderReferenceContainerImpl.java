@@ -69,7 +69,8 @@ public class PlaceholderReferenceContainerImpl extends EObjectImpl implements Pl
      * 
      * @generated
      */
-    public EList getPlaceholders() {
+    @Override
+	public EList getPlaceholders() {
         if (placeholders == null) {
             placeholders = new EObjectContainmentWithInverseEList(
                                                                   PlaceholderReference.class,

@@ -31,7 +31,8 @@ public class Uml2UsageUmlAspect extends AbstractUml2DependencyUmlAspect {
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.uml.UmlDependency#getSource(java.lang.Object)
      */
-    public List getSource( Object relationship ) {
+    @Override
+	public List getSource( Object relationship ) {
         Usage u = assertUsage(relationship);
         return u.getSources();
     }
@@ -39,7 +40,8 @@ public class Uml2UsageUmlAspect extends AbstractUml2DependencyUmlAspect {
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.uml.UmlDependency#getTarget(java.lang.Object)
      */
-    public List getTarget( Object relationship ) {
+    @Override
+	public List getTarget( Object relationship ) {
         Usage u = assertUsage(relationship);
         return u.getTargets();
     }
@@ -47,7 +49,8 @@ public class Uml2UsageUmlAspect extends AbstractUml2DependencyUmlAspect {
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.uml.UmlDependency#getEndObjects(java.lang.Object, int)
      */
-    public List getEndObjects( Object relationship,
+    @Override
+	public List getEndObjects( Object relationship,
                                int end ) {
         Usage u = assertUsage(relationship);
         if (end == 0) {
@@ -61,49 +64,56 @@ public class Uml2UsageUmlAspect extends AbstractUml2DependencyUmlAspect {
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.uml.UmlDependency#isAbstraction(java.lang.Object)
      */
-    public boolean isAbstraction( Object relationship ) {
+    @Override
+	public boolean isAbstraction( Object relationship ) {
         return false;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.uml.UmlDependency#isUsage(java.lang.Object)
      */
-    public boolean isUsage( Object relationship ) {
+    @Override
+	public boolean isUsage( Object relationship ) {
         return true;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.uml.UmlDependency#isPermission(java.lang.Object)
      */
-    public boolean isPermission( Object relationship ) {
+    @Override
+	public boolean isPermission( Object relationship ) {
         return false;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.uml.UmlDependency#isRealization(java.lang.Object)
      */
-    public boolean isRealization( Object relationship ) {
+    @Override
+	public boolean isRealization( Object relationship ) {
         return false;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.uml.UmlDependency#isSubstitution(java.lang.Object)
      */
-    public boolean isSubstitution( Object relationship ) {
+    @Override
+	public boolean isSubstitution( Object relationship ) {
         return false;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.uml.UmlDiagramAspect#getStereotype(java.lang.Object)
      */
-    public String getStereotype( Object eObject ) {
+    @Override
+	public String getStereotype( Object eObject ) {
         return Uml2Plugin.getPluginResourceLocator().getString("_UI_Usage_type"); //$NON-NLS-1$;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.uml.UmlDiagramAspect#getSignature(java.lang.Object, int)
      */
-    public String getSignature( Object eObject,
+    @Override
+	public String getSignature( Object eObject,
                                 int showMask ) {
         return ""; //$NON-NLS-1$
     }
@@ -111,14 +121,16 @@ public class Uml2UsageUmlAspect extends AbstractUml2DependencyUmlAspect {
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.uml.UmlDiagramAspect#getEditableSignature(java.lang.Object)
      */
-    public String getEditableSignature( Object eObject ) {
+    @Override
+	public String getEditableSignature( Object eObject ) {
         return ""; //$NON-NLS-1$
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.uml.UmlDiagramAspect#setSignature(java.lang.Object, java.lang.String)
      */
-    public IStatus setSignature( Object eObject,
+    @Override
+	public IStatus setSignature( Object eObject,
                                  String newSignature ) {
         throw new UnsupportedOperationException(
                                                 Uml2Plugin.Util.getString("Uml2UsageUmlAspect.Signature_may_not_be_set_on_a__1", getStereotype(eObject))); //$NON-NLS-1$

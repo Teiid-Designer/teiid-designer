@@ -36,7 +36,8 @@ public class ProcedureAspect extends RelationalEntityAspect implements SqlProced
     /**
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlProcedureAspect#isVirtual(org.eclipse.emf.ecore.EObject)
      */
-    public boolean isVirtual(final EObject eObject) {
+    @Override
+	public boolean isVirtual(final EObject eObject) {
         CoreArgCheck.isInstanceOf(Procedure.class, eObject); 
         Procedure procedure = (Procedure) eObject;       
 		try {    
@@ -52,7 +53,8 @@ public class ProcedureAspect extends RelationalEntityAspect implements SqlProced
     /*
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlProcedureAspect#isFunction(org.eclipse.emf.ecore.EObject)
      */
-    public boolean isFunction(final EObject eObject) {
+    @Override
+	public boolean isFunction(final EObject eObject) {
         CoreArgCheck.isInstanceOf(Procedure.class, eObject);
         Procedure proc = (Procedure) eObject;
         return proc.isFunction();
@@ -61,7 +63,8 @@ public class ProcedureAspect extends RelationalEntityAspect implements SqlProced
     /*
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlProcedureAspect#getParameters(org.eclipse.emf.ecore.EObject)
      */
-    public List getParameters(final EObject eObject) {
+    @Override
+	public List getParameters(final EObject eObject) {
         CoreArgCheck.isInstanceOf(Procedure.class, eObject);
         Procedure proc = (Procedure) eObject;
         return proc.getParameters();
@@ -70,7 +73,8 @@ public class ProcedureAspect extends RelationalEntityAspect implements SqlProced
     /*
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlProcedureAspect#getResult(org.eclipse.emf.ecore.EObject)
      */
-    public Object getResult(final EObject eObject) {
+    @Override
+	public Object getResult(final EObject eObject) {
         CoreArgCheck.isInstanceOf(Procedure.class, eObject);
         Procedure proc = (Procedure) eObject;
         return proc.getResult();
@@ -80,7 +84,8 @@ public class ProcedureAspect extends RelationalEntityAspect implements SqlProced
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlProcedureAspect#getUpdateCount(org.eclipse.emf.ecore.EObject)
      * @since 5.5.3
      */
-    public int getUpdateCount(EObject eObject) {
+    @Override
+	public int getUpdateCount(EObject eObject) {
         CoreArgCheck.isInstanceOf(Procedure.class, eObject);
         return ((Procedure)eObject).getUpdateCount().getValue();
     }
@@ -88,14 +93,16 @@ public class ProcedureAspect extends RelationalEntityAspect implements SqlProced
     /*
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlAspect#isRecordType(char)
      */
-    public boolean isRecordType(final char recordType) {
+    @Override
+	public boolean isRecordType(final char recordType) {
         return (recordType == IndexConstants.RECORD_TYPE.CALLABLE);
     }
 
     /*
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlProcedureAspect#isMappable(org.eclipse.emf.ecore.EObject, int)
      */
-    public boolean isMappable(final EObject eObject, final int mappingType) {
+    @Override
+	public boolean isMappable(final EObject eObject, final int mappingType) {
         if(isVirtual(eObject)) {
             return (mappingType == SqlProcedureAspect.MAPPINGS.SQL_TRANSFORM);
         }
@@ -106,7 +113,8 @@ public class ProcedureAspect extends RelationalEntityAspect implements SqlProced
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlTableAspect#canAcceptTransformationSource(org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject)
      * @since 4.3
      */
-    public boolean canAcceptTransformationSource(EObject target, EObject source) {
+    @Override
+	public boolean canAcceptTransformationSource(EObject target, EObject source) {
         CoreArgCheck.isInstanceOf(Procedure.class, target);
         CoreArgCheck.isNotNull(source);
         // no object should be source of itself
@@ -126,7 +134,8 @@ public class ProcedureAspect extends RelationalEntityAspect implements SqlProced
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlTableAspect#canBeTransformationSource(org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject)
      * @since 4.3
      */
-    public boolean canBeTransformationSource(EObject source, EObject target) {
+    @Override
+	public boolean canBeTransformationSource(EObject source, EObject target) {
         CoreArgCheck.isInstanceOf(Procedure.class, source);
         CoreArgCheck.isNotNull(target);
         // no object should be source of itself
@@ -145,7 +154,8 @@ public class ProcedureAspect extends RelationalEntityAspect implements SqlProced
     /*
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlAspect#updateObject(org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject)
      */
-    public void updateObject(final EObject targetObject, final EObject sourceObject) {
+    @Override
+	public void updateObject(final EObject targetObject, final EObject sourceObject) {
 
     }
 

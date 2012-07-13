@@ -77,7 +77,8 @@ public class TagsView extends ModelerView implements INotifyChangedListener {
     /**
      * @see org.eclipse.emf.edit.provider.INotifyChangedListener#notifyChanged(org.eclipse.emf.common.notify.Notification)
      */
-    public void notifyChanged( Notification notification ) {
+    @Override
+	public void notifyChanged( Notification notification ) {
         // compare the current EObject with the notification target
         EObject target = NotificationUtilities.getEObject(notification);
 
@@ -94,7 +95,8 @@ public class TagsView extends ModelerView implements INotifyChangedListener {
         if (object != null) {
             if (object.equals(target)) {
                 Display.getCurrent().asyncExec(new Runnable() {
-                    public void run() {
+                    @Override
+					public void run() {
                         page.refresh();
                     }
                 });

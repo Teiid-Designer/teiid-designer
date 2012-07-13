@@ -50,7 +50,8 @@ public class XsdSchemaDerivativeAspect extends AbstractMetamodelAspect implement
      * @see org.teiid.designer.core.metamodel.aspect.ImportsAspect#getModelLocation(org.eclipse.emf.ecore.EObject)
      * @since 4.3
      */
-    public String getModelLocation(EObject eObject) {
+    @Override
+	public String getModelLocation(EObject eObject) {
         CoreArgCheck.isInstanceOf(XSDSchemaDirective.class, eObject);
         XSDSchemaDirective xsdDerivative = (XSDSchemaDirective) eObject;
         return xsdDerivative.getSchemaLocation();
@@ -60,7 +61,8 @@ public class XsdSchemaDerivativeAspect extends AbstractMetamodelAspect implement
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.ImportsAspect#getModelImportPaths(org.eclipse.emf.ecore.EObject)
      */
-    public IPath getModelPath(EObject eObject) {
+    @Override
+	public IPath getModelPath(EObject eObject) {
         
         CoreArgCheck.isInstanceOf(XSDSchemaDirective.class, eObject);
         XSDSchemaDirective xsdDerivative = (XSDSchemaDirective) eObject;
@@ -150,14 +152,16 @@ public class XsdSchemaDerivativeAspect extends AbstractMetamodelAspect implement
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.ImportsAspect#getModelType(org.eclipse.emf.ecore.EObject)
      */
-    public String getModelType(EObject eObject) {
+    @Override
+	public String getModelType(EObject eObject) {
         return ModelType.TYPE_LITERAL.getName();
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.ImportsAspect#getModelUuid(org.eclipse.emf.ecore.EObject)
      */
-    public String getModelUuid(EObject eObject) {
+    @Override
+	public String getModelUuid(EObject eObject) {
         CoreArgCheck.isInstanceOf(XSDSchemaDirective.class, eObject);
         XSDSchemaDirective xsdDerivative = (XSDSchemaDirective) eObject;
         XSDSchema schema = xsdDerivative.getResolvedSchema();
@@ -182,7 +186,8 @@ public class XsdSchemaDerivativeAspect extends AbstractMetamodelAspect implement
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.ImportsAspect#getPrimaryMetaModelUri(org.eclipse.emf.ecore.EObject)
      */
-    public String getPrimaryMetaModelUri(EObject eObject) {
+    @Override
+	public String getPrimaryMetaModelUri(EObject eObject) {
         return XSDPackage.eNS_URI;
     }
 
@@ -224,7 +229,8 @@ public class XsdSchemaDerivativeAspect extends AbstractMetamodelAspect implement
      * @see org.teiid.designer.core.metamodel.aspect.ImportsAspect#setModelLocation(org.eclipse.emf.ecore.EObject, org.eclipse.emf.common.util.URI)
      * @since 4.3
      */
-    public void setModelLocation(EObject eObject, URI uri) {
+    @Override
+	public void setModelLocation(EObject eObject, URI uri) {
         CoreArgCheck.isInstanceOf(XSDSchemaDirective.class, eObject);
         CoreArgCheck.isNotNull(uri);
 

@@ -49,7 +49,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#getConcurrency()
      * @since 4.3
      */
-    public int getConcurrency() {
+    @Override
+	public int getConcurrency() {
         return 0;
     }
 
@@ -57,7 +58,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#getFetchDirection()
      * @since 4.3
      */
-    public int getFetchDirection() {
+    @Override
+	public int getFetchDirection() {
         return 0;
     }
 
@@ -65,7 +67,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#getFetchSize()
      * @since 4.3
      */
-    public int getFetchSize() {
+    @Override
+	public int getFetchSize() {
         return 0;
     }
 
@@ -73,7 +76,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#getRow()
      * @since 4.3
      */
-    public int getRow() {
+    @Override
+	public int getRow() {
         return 0;
     }
 
@@ -81,7 +85,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#getType()
      * @since 4.3
      */
-    public int getType() {
+    @Override
+	public int getType() {
         return 0;
     }
 
@@ -89,84 +94,96 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#afterLast()
      * @since 4.3
      */
-    public void afterLast() {
+    @Override
+	public void afterLast() {
     }
 
     /**
      * @see java.sql.ResultSet#beforeFirst()
      * @since 4.3
      */
-    public void beforeFirst() {
+    @Override
+	public void beforeFirst() {
     }
 
     /**
      * @see java.sql.ResultSet#cancelRowUpdates()
      * @since 4.3
      */
-    public void cancelRowUpdates() {
+    @Override
+	public void cancelRowUpdates() {
     }
 
     /**
      * @see java.sql.ResultSet#clearWarnings()
      * @since 4.3
      */
-    public void clearWarnings() {
+    @Override
+	public void clearWarnings() {
     }
 
     /**
      * @see java.sql.ResultSet#close()
      * @since 4.3
      */
-    public void close() {
+    @Override
+	public void close() {
     }
 
     /**
      * @see java.sql.ResultSet#deleteRow()
      * @since 4.3
      */
-    public void deleteRow() {
+    @Override
+	public void deleteRow() {
     }
 
     /**
      * @see java.sql.ResultSet#insertRow()
      * @since 4.3
      */
-    public void insertRow() {
+    @Override
+	public void insertRow() {
     }
 
     /**
      * @see java.sql.ResultSet#moveToCurrentRow()
      * @since 4.3
      */
-    public void moveToCurrentRow() {
+    @Override
+	public void moveToCurrentRow() {
     }
 
     /**
      * @see java.sql.ResultSet#moveToInsertRow()
      * @since 4.3
      */
-    public void moveToInsertRow() {
+    @Override
+	public void moveToInsertRow() {
     }
 
     /**
      * @see java.sql.ResultSet#refreshRow()
      * @since 4.3
      */
-    public void refreshRow() {
+    @Override
+	public void refreshRow() {
     }
 
     /**
      * @see java.sql.ResultSet#updateRow()
      * @since 4.3
      */
-    public void updateRow() {
+    @Override
+	public void updateRow() {
     }
 
     /**
      * @see java.sql.ResultSet#first()
      * @since 4.3
      */
-    public boolean first() {
+    @Override
+	public boolean first() {
         return false;
     }
 
@@ -174,7 +191,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#isAfterLast()
      * @since 4.3
      */
-    public boolean isAfterLast() {
+    @Override
+	public boolean isAfterLast() {
         return false;
     }
 
@@ -182,7 +200,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#isBeforeFirst()
      * @since 4.3
      */
-    public boolean isBeforeFirst() {
+    @Override
+	public boolean isBeforeFirst() {
         return false;
     }
 
@@ -190,7 +209,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#isFirst()
      * @since 4.3
      */
-    public boolean isFirst() {
+    @Override
+	public boolean isFirst() {
         return false;
     }
 
@@ -198,7 +218,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#isLast()
      * @since 4.3
      */
-    public boolean isLast() {
+    @Override
+	public boolean isLast() {
         return false;
     }
 
@@ -206,7 +227,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#last()
      * @since 4.3
      */
-    public boolean last() {
+    @Override
+	public boolean last() {
         return false;
     }
 
@@ -214,7 +236,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#next()
      * @since 4.3
      */
-    public boolean next() {
+    @Override
+	public boolean next() {
         if (currentRow + 1 < this.results.size()) {
             currentRow++;
             return true;
@@ -226,7 +249,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#previous()
      * @since 4.3
      */
-    public boolean previous() {
+    @Override
+	public boolean previous() {
         return false;
     }
 
@@ -234,7 +258,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#rowDeleted()
      * @since 4.3
      */
-    public boolean rowDeleted() {
+    @Override
+	public boolean rowDeleted() {
         return false;
     }
 
@@ -242,7 +267,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#rowInserted()
      * @since 4.3
      */
-    public boolean rowInserted() {
+    @Override
+	public boolean rowInserted() {
         return false;
     }
 
@@ -250,7 +276,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#rowUpdated()
      * @since 4.3
      */
-    public boolean rowUpdated() {
+    @Override
+	public boolean rowUpdated() {
         return false;
     }
 
@@ -258,7 +285,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#wasNull()
      * @since 4.3
      */
-    public boolean wasNull() {
+    @Override
+	public boolean wasNull() {
         return false;
     }
 
@@ -266,7 +294,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#getByte(int)
      * @since 4.3
      */
-    public byte getByte( int columnIndex ) {
+    @Override
+	public byte getByte( int columnIndex ) {
         return 0;
     }
 
@@ -274,7 +303,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#getDouble(int)
      * @since 4.3
      */
-    public double getDouble( int columnIndex ) {
+    @Override
+	public double getDouble( int columnIndex ) {
         return 0;
     }
 
@@ -282,7 +312,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#getFloat(int)
      * @since 4.3
      */
-    public float getFloat( int columnIndex ) {
+    @Override
+	public float getFloat( int columnIndex ) {
         return 0;
     }
 
@@ -290,7 +321,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#getInt(int)
      * @since 4.3
      */
-    public int getInt( int columnIndex ) {
+    @Override
+	public int getInt( int columnIndex ) {
         return 0;
     }
 
@@ -298,7 +330,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#getLong(int)
      * @since 4.3
      */
-    public long getLong( int columnIndex ) {
+    @Override
+	public long getLong( int columnIndex ) {
         return 0;
     }
 
@@ -306,7 +339,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#getShort(int)
      * @since 4.3
      */
-    public short getShort( int columnIndex ) {
+    @Override
+	public short getShort( int columnIndex ) {
         return 0;
     }
 
@@ -314,28 +348,32 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#setFetchDirection(int)
      * @since 4.3
      */
-    public void setFetchDirection( int direction ) {
+    @Override
+	public void setFetchDirection( int direction ) {
     }
 
     /**
      * @see java.sql.ResultSet#setFetchSize(int)
      * @since 4.3
      */
-    public void setFetchSize( int rows ) {
+    @Override
+	public void setFetchSize( int rows ) {
     }
 
     /**
      * @see java.sql.ResultSet#updateNull(int)
      * @since 4.3
      */
-    public void updateNull( int columnIndex ) {
+    @Override
+	public void updateNull( int columnIndex ) {
     }
 
     /**
      * @see java.sql.ResultSet#absolute(int)
      * @since 4.3
      */
-    public boolean absolute( int row ) {
+    @Override
+	public boolean absolute( int row ) {
         return false;
     }
 
@@ -343,7 +381,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#getBoolean(int)
      * @since 4.3
      */
-    public boolean getBoolean( int columnIndex ) {
+    @Override
+	public boolean getBoolean( int columnIndex ) {
         return false;
     }
 
@@ -351,7 +390,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#relative(int)
      * @since 4.3
      */
-    public boolean relative( int rows ) {
+    @Override
+	public boolean relative( int rows ) {
         return false;
     }
 
@@ -359,7 +399,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#getBytes(int)
      * @since 4.3
      */
-    public byte[] getBytes( int columnIndex ) {
+    @Override
+	public byte[] getBytes( int columnIndex ) {
         return null;
     }
 
@@ -367,7 +408,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#updateByte(int, byte)
      * @since 4.3
      */
-    public void updateByte( int columnIndex,
+    @Override
+	public void updateByte( int columnIndex,
                             byte x ) {
     }
 
@@ -375,7 +417,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#updateDouble(int, double)
      * @since 4.3
      */
-    public void updateDouble( int columnIndex,
+    @Override
+	public void updateDouble( int columnIndex,
                               double x ) {
     }
 
@@ -383,7 +426,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#updateFloat(int, float)
      * @since 4.3
      */
-    public void updateFloat( int columnIndex,
+    @Override
+	public void updateFloat( int columnIndex,
                              float x ) {
     }
 
@@ -391,7 +435,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#updateInt(int, int)
      * @since 4.3
      */
-    public void updateInt( int columnIndex,
+    @Override
+	public void updateInt( int columnIndex,
                            int x ) {
     }
 
@@ -399,7 +444,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#updateLong(int, long)
      * @since 4.3
      */
-    public void updateLong( int columnIndex,
+    @Override
+	public void updateLong( int columnIndex,
                             long x ) {
     }
 
@@ -407,7 +453,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#updateShort(int, short)
      * @since 4.3
      */
-    public void updateShort( int columnIndex,
+    @Override
+	public void updateShort( int columnIndex,
                              short x ) {
     }
 
@@ -415,7 +462,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#updateBoolean(int, boolean)
      * @since 4.3
      */
-    public void updateBoolean( int columnIndex,
+    @Override
+	public void updateBoolean( int columnIndex,
                                boolean x ) {
     }
 
@@ -423,7 +471,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#updateBytes(int, byte[])
      * @since 4.3
      */
-    public void updateBytes( int columnIndex,
+    @Override
+	public void updateBytes( int columnIndex,
                              byte[] x ) {
     }
 
@@ -431,7 +480,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#getAsciiStream(int)
      * @since 4.3
      */
-    public InputStream getAsciiStream( int columnIndex ) {
+    @Override
+	public InputStream getAsciiStream( int columnIndex ) {
         return null;
     }
 
@@ -439,7 +489,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#getBinaryStream(int)
      * @since 4.3
      */
-    public InputStream getBinaryStream( int columnIndex ) {
+    @Override
+	public InputStream getBinaryStream( int columnIndex ) {
         return null;
     }
 
@@ -447,7 +498,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#getUnicodeStream(int)
      * @since 4.3
      */
-    public InputStream getUnicodeStream( int columnIndex ) {
+    @Override
+	public InputStream getUnicodeStream( int columnIndex ) {
         return null;
     }
 
@@ -455,7 +507,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#updateAsciiStream(int, java.io.InputStream, int)
      * @since 4.3
      */
-    public void updateAsciiStream( int columnIndex,
+    @Override
+	public void updateAsciiStream( int columnIndex,
                                    InputStream x,
                                    int length ) {
     }
@@ -464,7 +517,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#updateBinaryStream(int, java.io.InputStream, int)
      * @since 4.3
      */
-    public void updateBinaryStream( int columnIndex,
+    @Override
+	public void updateBinaryStream( int columnIndex,
                                     InputStream x,
                                     int length ) {
     }
@@ -473,7 +527,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#getCharacterStream(int)
      * @since 4.3
      */
-    public Reader getCharacterStream( int columnIndex ) {
+    @Override
+	public Reader getCharacterStream( int columnIndex ) {
         return null;
     }
 
@@ -481,7 +536,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#updateCharacterStream(int, java.io.Reader, int)
      * @since 4.3
      */
-    public void updateCharacterStream( int columnIndex,
+    @Override
+	public void updateCharacterStream( int columnIndex,
                                        Reader x,
                                        int length ) {
     }
@@ -490,7 +546,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#getObject(int)
      * @since 4.3
      */
-    public Object getObject( int columnIndex ) {
+    @Override
+	public Object getObject( int columnIndex ) {
         return ((List)this.results.get(this.currentRow)).get(columnIndex - 1);
     }
 
@@ -498,7 +555,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#updateObject(int, java.lang.Object)
      * @since 4.3
      */
-    public void updateObject( int columnIndex,
+    @Override
+	public void updateObject( int columnIndex,
                               Object x ) {
     }
 
@@ -506,7 +564,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#updateObject(int, java.lang.Object, int)
      * @since 4.3
      */
-    public void updateObject( int columnIndex,
+    @Override
+	public void updateObject( int columnIndex,
                               Object x,
                               int scale ) {
     }
@@ -515,7 +574,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#getCursorName()
      * @since 4.3
      */
-    public String getCursorName() {
+    @Override
+	public String getCursorName() {
         return null;
     }
 
@@ -523,7 +583,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#getString(int)
      * @since 4.3
      */
-    public String getString( int columnIndex ) {
+    @Override
+	public String getString( int columnIndex ) {
         return (String)((List)this.results.get(this.currentRow)).get(columnIndex - 1);
     }
 
@@ -531,7 +592,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#updateString(int, java.lang.String)
      * @since 4.3
      */
-    public void updateString( int columnIndex,
+    @Override
+	public void updateString( int columnIndex,
                               String x ) {
     }
 
@@ -539,7 +601,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#getByte(java.lang.String)
      * @since 4.3
      */
-    public byte getByte( String columnName ) {
+    @Override
+	public byte getByte( String columnName ) {
         return 0;
     }
 
@@ -547,7 +610,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#getDouble(java.lang.String)
      * @since 4.3
      */
-    public double getDouble( String columnName ) {
+    @Override
+	public double getDouble( String columnName ) {
         return 0;
     }
 
@@ -555,7 +619,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#getFloat(java.lang.String)
      * @since 4.3
      */
-    public float getFloat( String columnName ) {
+    @Override
+	public float getFloat( String columnName ) {
         return 0;
     }
 
@@ -563,7 +628,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#findColumn(java.lang.String)
      * @since 4.3
      */
-    public int findColumn( String columnName ) {
+    @Override
+	public int findColumn( String columnName ) {
         return 0;
     }
 
@@ -571,7 +637,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#getInt(java.lang.String)
      * @since 4.3
      */
-    public int getInt( String columnName ) {
+    @Override
+	public int getInt( String columnName ) {
         return 0;
     }
 
@@ -579,7 +646,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#getLong(java.lang.String)
      * @since 4.3
      */
-    public long getLong( String columnName ) {
+    @Override
+	public long getLong( String columnName ) {
         return 0;
     }
 
@@ -587,7 +655,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#getShort(java.lang.String)
      * @since 4.3
      */
-    public short getShort( String columnName ) {
+    @Override
+	public short getShort( String columnName ) {
         return 0;
     }
 
@@ -595,14 +664,16 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#updateNull(java.lang.String)
      * @since 4.3
      */
-    public void updateNull( String columnName ) {
+    @Override
+	public void updateNull( String columnName ) {
     }
 
     /**
      * @see java.sql.ResultSet#getBoolean(java.lang.String)
      * @since 4.3
      */
-    public boolean getBoolean( String columnName ) {
+    @Override
+	public boolean getBoolean( String columnName ) {
         return false;
     }
 
@@ -610,7 +681,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#getBytes(java.lang.String)
      * @since 4.3
      */
-    public byte[] getBytes( String columnName ) {
+    @Override
+	public byte[] getBytes( String columnName ) {
         return null;
     }
 
@@ -618,7 +690,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#updateByte(java.lang.String, byte)
      * @since 4.3
      */
-    public void updateByte( String columnName,
+    @Override
+	public void updateByte( String columnName,
                             byte x ) {
     }
 
@@ -626,7 +699,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#updateDouble(java.lang.String, double)
      * @since 4.3
      */
-    public void updateDouble( String columnName,
+    @Override
+	public void updateDouble( String columnName,
                               double x ) {
     }
 
@@ -634,7 +708,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#updateFloat(java.lang.String, float)
      * @since 4.3
      */
-    public void updateFloat( String columnName,
+    @Override
+	public void updateFloat( String columnName,
                              float x ) {
     }
 
@@ -642,7 +717,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#updateInt(java.lang.String, int)
      * @since 4.3
      */
-    public void updateInt( String columnName,
+    @Override
+	public void updateInt( String columnName,
                            int x ) {
     }
 
@@ -650,7 +726,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#updateLong(java.lang.String, long)
      * @since 4.3
      */
-    public void updateLong( String columnName,
+    @Override
+	public void updateLong( String columnName,
                             long x ) {
     }
 
@@ -658,7 +735,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#updateShort(java.lang.String, short)
      * @since 4.3
      */
-    public void updateShort( String columnName,
+    @Override
+	public void updateShort( String columnName,
                              short x ) {
     }
 
@@ -666,7 +744,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#updateBoolean(java.lang.String, boolean)
      * @since 4.3
      */
-    public void updateBoolean( String columnName,
+    @Override
+	public void updateBoolean( String columnName,
                                boolean x ) {
     }
 
@@ -674,7 +753,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#updateBytes(java.lang.String, byte[])
      * @since 4.3
      */
-    public void updateBytes( String columnName,
+    @Override
+	public void updateBytes( String columnName,
                              byte[] x ) {
     }
 
@@ -682,7 +762,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#getBigDecimal(int)
      * @since 4.3
      */
-    public BigDecimal getBigDecimal( int columnIndex ) {
+    @Override
+	public BigDecimal getBigDecimal( int columnIndex ) {
         return null;
     }
 
@@ -690,7 +771,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#getBigDecimal(int, int)
      * @since 4.3
      */
-    public BigDecimal getBigDecimal( int columnIndex,
+    @Override
+	public BigDecimal getBigDecimal( int columnIndex,
                                      int scale ) {
         return null;
     }
@@ -699,7 +781,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#updateBigDecimal(int, java.math.BigDecimal)
      * @since 4.3
      */
-    public void updateBigDecimal( int columnIndex,
+    @Override
+	public void updateBigDecimal( int columnIndex,
                                   BigDecimal x ) {
     }
 
@@ -707,7 +790,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#getURL(int)
      * @since 4.3
      */
-    public URL getURL( int columnIndex ) {
+    @Override
+	public URL getURL( int columnIndex ) {
         return null;
     }
 
@@ -715,7 +799,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#getArray(int)
      * @since 4.3
      */
-    public Array getArray( int i ) {
+    @Override
+	public Array getArray( int i ) {
         return null;
     }
 
@@ -723,7 +808,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#updateArray(int, java.sql.Array)
      * @since 4.3
      */
-    public void updateArray( int columnIndex,
+    @Override
+	public void updateArray( int columnIndex,
                              Array x ) {
     }
 
@@ -731,7 +817,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#getBlob(int)
      * @since 4.3
      */
-    public Blob getBlob( int i ) {
+    @Override
+	public Blob getBlob( int i ) {
         return null;
     }
 
@@ -739,7 +826,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#updateBlob(int, java.sql.Blob)
      * @since 4.3
      */
-    public void updateBlob( int columnIndex,
+    @Override
+	public void updateBlob( int columnIndex,
                             Blob x ) {
     }
 
@@ -747,7 +835,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#getClob(int)
      * @since 4.3
      */
-    public Clob getClob( int i ) {
+    @Override
+	public Clob getClob( int i ) {
         return null;
     }
 
@@ -755,7 +844,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#updateClob(int, java.sql.Clob)
      * @since 4.3
      */
-    public void updateClob( int columnIndex,
+    @Override
+	public void updateClob( int columnIndex,
                             Clob x ) {
     }
 
@@ -763,7 +853,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#getDate(int)
      * @since 4.3
      */
-    public Date getDate( int columnIndex ) {
+    @Override
+	public Date getDate( int columnIndex ) {
         return null;
     }
 
@@ -771,7 +862,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#updateDate(int, java.sql.Date)
      * @since 4.3
      */
-    public void updateDate( int columnIndex,
+    @Override
+	public void updateDate( int columnIndex,
                             Date x ) {
     }
 
@@ -779,7 +871,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#getRef(int)
      * @since 4.3
      */
-    public Ref getRef( int i ) {
+    @Override
+	public Ref getRef( int i ) {
         return null;
     }
 
@@ -787,7 +880,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#updateRef(int, java.sql.Ref)
      * @since 4.3
      */
-    public void updateRef( int columnIndex,
+    @Override
+	public void updateRef( int columnIndex,
                            Ref x ) {
     }
 
@@ -795,7 +889,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#getMetaData()
      * @since 4.3
      */
-    public ResultSetMetaData getMetaData() {
+    @Override
+	public ResultSetMetaData getMetaData() {
         return (ResultSetMetaData)Proxy.newProxyInstance(this.getClass().getClassLoader(),
                                                          new Class[] {ResultSetMetaData.class},
                                                          new ExcelResultSetMetaDataHandler(this.columnNames));
@@ -805,7 +900,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#getWarnings()
      * @since 4.3
      */
-    public SQLWarning getWarnings() {
+    @Override
+	public SQLWarning getWarnings() {
         return null;
     }
 
@@ -813,7 +909,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#getStatement()
      * @since 4.3
      */
-    public Statement getStatement() {
+    @Override
+	public Statement getStatement() {
         return null;
     }
 
@@ -821,7 +918,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#getTime(int)
      * @since 4.3
      */
-    public Time getTime( int columnIndex ) {
+    @Override
+	public Time getTime( int columnIndex ) {
         return null;
     }
 
@@ -829,7 +927,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#updateTime(int, java.sql.Time)
      * @since 4.3
      */
-    public void updateTime( int columnIndex,
+    @Override
+	public void updateTime( int columnIndex,
                             Time x ) {
     }
 
@@ -837,7 +936,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#getTimestamp(int)
      * @since 4.3
      */
-    public Timestamp getTimestamp( int columnIndex ) {
+    @Override
+	public Timestamp getTimestamp( int columnIndex ) {
         return null;
     }
 
@@ -845,7 +945,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#updateTimestamp(int, java.sql.Timestamp)
      * @since 4.3
      */
-    public void updateTimestamp( int columnIndex,
+    @Override
+	public void updateTimestamp( int columnIndex,
                                  Timestamp x ) {
     }
 
@@ -853,7 +954,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#getAsciiStream(java.lang.String)
      * @since 4.3
      */
-    public InputStream getAsciiStream( String columnName ) {
+    @Override
+	public InputStream getAsciiStream( String columnName ) {
         return null;
     }
 
@@ -861,7 +963,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#getBinaryStream(java.lang.String)
      * @since 4.3
      */
-    public InputStream getBinaryStream( String columnName ) {
+    @Override
+	public InputStream getBinaryStream( String columnName ) {
         return null;
     }
 
@@ -869,7 +972,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#getUnicodeStream(java.lang.String)
      * @since 4.3
      */
-    public InputStream getUnicodeStream( String columnName ) {
+    @Override
+	public InputStream getUnicodeStream( String columnName ) {
         return null;
     }
 
@@ -877,7 +981,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#updateAsciiStream(java.lang.String, java.io.InputStream, int)
      * @since 4.3
      */
-    public void updateAsciiStream( String columnName,
+    @Override
+	public void updateAsciiStream( String columnName,
                                    InputStream x,
                                    int length ) {
     }
@@ -886,7 +991,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#updateBinaryStream(java.lang.String, java.io.InputStream, int)
      * @since 4.3
      */
-    public void updateBinaryStream( String columnName,
+    @Override
+	public void updateBinaryStream( String columnName,
                                     InputStream x,
                                     int length ) {
     }
@@ -895,7 +1001,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#getCharacterStream(java.lang.String)
      * @since 4.3
      */
-    public Reader getCharacterStream( String columnName ) {
+    @Override
+	public Reader getCharacterStream( String columnName ) {
         return null;
     }
 
@@ -903,7 +1010,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#updateCharacterStream(java.lang.String, java.io.Reader, int)
      * @since 4.3
      */
-    public void updateCharacterStream( String columnName,
+    @Override
+	public void updateCharacterStream( String columnName,
                                        Reader reader,
                                        int length ) {
     }
@@ -912,7 +1020,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#getObject(java.lang.String)
      * @since 4.3
      */
-    public Object getObject( String columnName ) {
+    @Override
+	public Object getObject( String columnName ) {
         return null;
     }
 
@@ -920,7 +1029,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#updateObject(java.lang.String, java.lang.Object)
      * @since 4.3
      */
-    public void updateObject( String columnName,
+    @Override
+	public void updateObject( String columnName,
                               Object x ) {
     }
 
@@ -928,7 +1038,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#updateObject(java.lang.String, java.lang.Object, int)
      * @since 4.3
      */
-    public void updateObject( String columnName,
+    @Override
+	public void updateObject( String columnName,
                               Object x,
                               int scale ) {
     }
@@ -937,7 +1048,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#getString(java.lang.String)
      * @since 4.3
      */
-    public String getString( String columnName ) {
+    @Override
+	public String getString( String columnName ) {
         return null;
     }
 
@@ -945,7 +1057,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#updateString(java.lang.String, java.lang.String)
      * @since 4.3
      */
-    public void updateString( String columnName,
+    @Override
+	public void updateString( String columnName,
                               String x ) {
     }
 
@@ -953,7 +1066,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#getBigDecimal(java.lang.String)
      * @since 4.3
      */
-    public BigDecimal getBigDecimal( String columnName ) {
+    @Override
+	public BigDecimal getBigDecimal( String columnName ) {
         return null;
     }
 
@@ -961,7 +1075,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#getBigDecimal(java.lang.String, int)
      * @since 4.3
      */
-    public BigDecimal getBigDecimal( String columnName,
+    @Override
+	public BigDecimal getBigDecimal( String columnName,
                                      int scale ) {
         return null;
     }
@@ -970,7 +1085,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#updateBigDecimal(java.lang.String, java.math.BigDecimal)
      * @since 4.3
      */
-    public void updateBigDecimal( String columnName,
+    @Override
+	public void updateBigDecimal( String columnName,
                                   BigDecimal x ) {
     }
 
@@ -978,7 +1094,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#getURL(java.lang.String)
      * @since 4.3
      */
-    public URL getURL( String columnName ) {
+    @Override
+	public URL getURL( String columnName ) {
         return null;
     }
 
@@ -986,7 +1103,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#getArray(java.lang.String)
      * @since 4.3
      */
-    public Array getArray( String colName ) {
+    @Override
+	public Array getArray( String colName ) {
         return null;
     }
 
@@ -994,7 +1112,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#updateArray(java.lang.String, java.sql.Array)
      * @since 4.3
      */
-    public void updateArray( String columnName,
+    @Override
+	public void updateArray( String columnName,
                              Array x ) {
     }
 
@@ -1002,7 +1121,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#getBlob(java.lang.String)
      * @since 4.3
      */
-    public Blob getBlob( String colName ) {
+    @Override
+	public Blob getBlob( String colName ) {
         return null;
     }
 
@@ -1010,7 +1130,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#updateBlob(java.lang.String, java.sql.Blob)
      * @since 4.3
      */
-    public void updateBlob( String columnName,
+    @Override
+	public void updateBlob( String columnName,
                             Blob x ) {
     }
 
@@ -1018,7 +1139,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#getClob(java.lang.String)
      * @since 4.3
      */
-    public Clob getClob( String colName ) {
+    @Override
+	public Clob getClob( String colName ) {
         return null;
     }
 
@@ -1026,7 +1148,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#updateClob(java.lang.String, java.sql.Clob)
      * @since 4.3
      */
-    public void updateClob( String columnName,
+    @Override
+	public void updateClob( String columnName,
                             Clob x ) {
     }
 
@@ -1034,7 +1157,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#getDate(java.lang.String)
      * @since 4.3
      */
-    public Date getDate( String columnName ) {
+    @Override
+	public Date getDate( String columnName ) {
         return null;
     }
 
@@ -1042,7 +1166,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#updateDate(java.lang.String, java.sql.Date)
      * @since 4.3
      */
-    public void updateDate( String columnName,
+    @Override
+	public void updateDate( String columnName,
                             Date x ) {
     }
 
@@ -1050,7 +1175,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#getDate(int, java.util.Calendar)
      * @since 4.3
      */
-    public Date getDate( int columnIndex,
+    @Override
+	public Date getDate( int columnIndex,
                          Calendar cal ) {
         return null;
     }
@@ -1059,7 +1185,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#getRef(java.lang.String)
      * @since 4.3
      */
-    public Ref getRef( String colName ) {
+    @Override
+	public Ref getRef( String colName ) {
         return null;
     }
 
@@ -1067,7 +1194,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#updateRef(java.lang.String, java.sql.Ref)
      * @since 4.3
      */
-    public void updateRef( String columnName,
+    @Override
+	public void updateRef( String columnName,
                            Ref x ) {
     }
 
@@ -1075,7 +1203,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#getTime(java.lang.String)
      * @since 4.3
      */
-    public Time getTime( String columnName ) {
+    @Override
+	public Time getTime( String columnName ) {
         return null;
     }
 
@@ -1083,7 +1212,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#updateTime(java.lang.String, java.sql.Time)
      * @since 4.3
      */
-    public void updateTime( String columnName,
+    @Override
+	public void updateTime( String columnName,
                             Time x ) {
     }
 
@@ -1091,7 +1221,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#getTime(int, java.util.Calendar)
      * @since 4.3
      */
-    public Time getTime( int columnIndex,
+    @Override
+	public Time getTime( int columnIndex,
                          Calendar cal ) {
         return null;
     }
@@ -1100,7 +1231,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#getTimestamp(java.lang.String)
      * @since 4.3
      */
-    public Timestamp getTimestamp( String columnName ) {
+    @Override
+	public Timestamp getTimestamp( String columnName ) {
         return null;
     }
 
@@ -1108,7 +1240,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#updateTimestamp(java.lang.String, java.sql.Timestamp)
      * @since 4.3
      */
-    public void updateTimestamp( String columnName,
+    @Override
+	public void updateTimestamp( String columnName,
                                  Timestamp x ) {
     }
 
@@ -1116,7 +1249,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#getTimestamp(int, java.util.Calendar)
      * @since 4.3
      */
-    public Timestamp getTimestamp( int columnIndex,
+    @Override
+	public Timestamp getTimestamp( int columnIndex,
                                    Calendar cal ) {
         return null;
     }
@@ -1125,7 +1259,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#getDate(java.lang.String, java.util.Calendar)
      * @since 4.3
      */
-    public Date getDate( String columnName,
+    @Override
+	public Date getDate( String columnName,
                          Calendar cal ) {
         return null;
     }
@@ -1134,7 +1269,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#getTime(java.lang.String, java.util.Calendar)
      * @since 4.3
      */
-    public Time getTime( String columnName,
+    @Override
+	public Time getTime( String columnName,
                          Calendar cal ) {
         return null;
     }
@@ -1143,7 +1279,8 @@ public class ResultSetImpl implements ResultSet {
      * @see java.sql.ResultSet#getTimestamp(java.lang.String, java.util.Calendar)
      * @since 4.3
      */
-    public Timestamp getTimestamp( String columnName,
+    @Override
+	public Timestamp getTimestamp( String columnName,
                                    Calendar cal ) {
         return null;
     }

@@ -163,7 +163,8 @@ public class ImportVdbMainPage extends WizardDataTransferPage implements VdbUiCo
 
     /** Validator that makes sure the selection containes all WSDL files. */
     private final ISelectionStatusValidator vdbValidator = new ISelectionStatusValidator() {
-        public IStatus validate( final Object[] theSelection ) {
+        @Override
+		public IStatus validate( final Object[] theSelection ) {
             IStatus result = null;
             boolean valid = true;
 
@@ -207,7 +208,8 @@ public class ImportVdbMainPage extends WizardDataTransferPage implements VdbUiCo
 
     /** Validator that makes sure the selection containes all WSDL files. */
     private final ISelectionStatusValidator vdbLocationValidator = new ISelectionStatusValidator() {
-        public IStatus validate( final Object[] theSelection ) {
+        @Override
+		public IStatus validate( final Object[] theSelection ) {
             IStatus result = null;
             boolean valid = true;
 
@@ -297,7 +299,8 @@ public class ImportVdbMainPage extends WizardDataTransferPage implements VdbUiCo
      * 
      * @param parent
      */
-    public void createControl( final Composite parent ) {
+    @Override
+	public void createControl( final Composite parent ) {
         initializing = true;
 
         initializeDialogUnits(parent);
@@ -414,23 +417,27 @@ public class ImportVdbMainPage extends WizardDataTransferPage implements VdbUiCo
 
         fileSystemSourceNameField.addKeyListener(new KeyListener() {
 
-            public void keyPressed( final KeyEvent e ) {
+            @Override
+			public void keyPressed( final KeyEvent e ) {
                 // If there has been a key pressed then mark as dirty
                 entryChanged = true;
                 setCompletionStatus();
             }
 
-            public void keyReleased( final KeyEvent e ) {
+            @Override
+			public void keyReleased( final KeyEvent e ) {
             }
         });
 
         fileSystemSourceNameField.addFocusListener(new FocusListener() {
 
-            public void focusGained( final FocusEvent e ) {
+            @Override
+			public void focusGained( final FocusEvent e ) {
                 // Do nothing when getting focus
             }
 
-            public void focusLost( final FocusEvent e ) {
+            @Override
+			public void focusLost( final FocusEvent e ) {
                 // Clear the flag to prevent constant update
                 if (entryChanged) {
                     entryChanged = false;
@@ -490,7 +497,8 @@ public class ImportVdbMainPage extends WizardDataTransferPage implements VdbUiCo
             /*
              * @see KeyListener.keyPressed
              */
-            public void keyPressed( final KeyEvent e ) {
+            @Override
+			public void keyPressed( final KeyEvent e ) {
                 // If there has been a key pressed then mark as dirty
                 entryChanged = true;
                 setCompletionStatus();
@@ -499,7 +507,8 @@ public class ImportVdbMainPage extends WizardDataTransferPage implements VdbUiCo
             /*
              * @see KeyListener.keyReleased
              */
-            public void keyReleased( final KeyEvent e ) {
+            @Override
+			public void keyReleased( final KeyEvent e ) {
             }
         });
 
@@ -508,14 +517,16 @@ public class ImportVdbMainPage extends WizardDataTransferPage implements VdbUiCo
             /*
              * @see FocusListener.focusGained(FocusEvent)
              */
-            public void focusGained( final FocusEvent e ) {
+            @Override
+			public void focusGained( final FocusEvent e ) {
                 // Do nothing when getting focus
             }
 
             /*
              * @see FocusListener.focusLost(FocusEvent)
              */
-            public void focusLost( final FocusEvent e ) {
+            @Override
+			public void focusLost( final FocusEvent e ) {
                 // Clear the flag to prevent constant update
                 if (entryChanged) {
                     entryChanged = false;
@@ -763,7 +774,8 @@ public class ImportVdbMainPage extends WizardDataTransferPage implements VdbUiCo
      */
     protected void handleContainerBrowseButtonPressed() {
         UiBusyIndicator.showWhile(getControl().getDisplay(), new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 final FileSystemDialog dialog = new FileSystemDialog(containerNameField.getShell());
                 dialog.setAllowMultiple(false);
                 dialog.setInitialSelection(getDefaultFolder().toFile());
@@ -788,7 +800,8 @@ public class ImportVdbMainPage extends WizardDataTransferPage implements VdbUiCo
      * 
      * @param event Event
      */
-    public void handleEvent( final Event event ) {
+    @Override
+	public void handleEvent( final Event event ) {
         if (!initializing) {
             boolean validate = false;
 
@@ -1206,29 +1219,35 @@ public class ImportVdbMainPage extends WizardDataTransferPage implements VdbUiCo
 
     class ProjectReferenceLabelProvider implements ILabelProvider {
 
-        public void addListener( final ILabelProviderListener listener ) {
+        @Override
+		public void addListener( final ILabelProviderListener listener ) {
         }
 
-        public void dispose() {
+        @Override
+		public void dispose() {
         }
 
-        public Image getImage( final Object element ) {
+        @Override
+		public Image getImage( final Object element ) {
             if (element instanceof IProject) return UiPlugin.getDefault().getProjectImage();
 
             return null;
         }
 
-        public String getText( final Object element ) {
+        @Override
+		public String getText( final Object element ) {
             if (element instanceof IProject) return ((IProject)element).getName();
             return null;
         }
 
-        public boolean isLabelProperty( final Object element,
+        @Override
+		public boolean isLabelProperty( final Object element,
                                         final String property ) {
             return false;
         }
 
-        public void removeListener( final ILabelProviderListener listener ) {
+        @Override
+		public void removeListener( final ILabelProviderListener listener ) {
         }
 
     }
@@ -1247,7 +1266,8 @@ public class ImportVdbMainPage extends WizardDataTransferPage implements VdbUiCo
          * @see org.eclipse.ui.dialogs.ISelectionStatusValidator#validate(java.lang.Object[])
          * @since 4.2
          */
-        public IStatus validate( final Object[] theSelection ) {
+        @Override
+		public IStatus validate( final Object[] theSelection ) {
             IStatus result = STATUS_OK;
 
             if (theSelection.length > 0) // need to make sure a ".project" does not exist in this and any ancestor directory

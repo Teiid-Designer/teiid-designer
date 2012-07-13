@@ -39,7 +39,8 @@ public class LogicalRelationshipAspect extends RelationalEntityAspect implements
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodels.aspects.UmlAssociation#getAggregation(java.lang.Object, int)
      */
-    public int getAggregation( Object assoc,
+    @Override
+	public int getAggregation( Object assoc,
                                int end ) {
         return AGGREGATION_NONE;
     }
@@ -47,16 +48,19 @@ public class LogicalRelationshipAspect extends RelationalEntityAspect implements
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodels.aspects.UmlDiagramAspect#getStereotype(java.lang.Object)
      */
-    public String getStereotype( Object eObject ) {
+    @Override
+	public String getStereotype( Object eObject ) {
         return RelationalPlugin.getPluginResourceLocator().getString("_UI_LogicalRelationship_type"); //$NON-NLS-1$
     }
 
-    public int getEndCount( Object assoc ) {
+    @Override
+	public int getEndCount( Object assoc ) {
         final LogicalRelationship lr = assertLogicalRelationship(assoc);
         return lr.getEnds().size();
     }
 
-    public EObject getEndTarget( Object assoc,
+    @Override
+	public EObject getEndTarget( Object assoc,
                                  int end ) {
         final LogicalRelationship lr = assertLogicalRelationship(assoc);
         if (end < 0 || end >= lr.getEnds().size()) {
@@ -66,7 +70,8 @@ public class LogicalRelationshipAspect extends RelationalEntityAspect implements
         return lre.getTable();
     }
 
-    public EObject getEnd( Object assoc,
+    @Override
+	public EObject getEnd( Object assoc,
                            int end ) {
         final LogicalRelationship lr = assertLogicalRelationship(assoc);
         if (end < 0 || end >= lr.getEnds().size()) {
@@ -76,11 +81,13 @@ public class LogicalRelationshipAspect extends RelationalEntityAspect implements
         return lre;
     }
 
-    public String getEditableSignature( Object eObject ) {
+    @Override
+	public String getEditableSignature( Object eObject ) {
         return getSignature(eObject, UmlAssociation.SIGNATURE_NAME);
     }
 
-    public String getSignature( Object eObject,
+    @Override
+	public String getSignature( Object eObject,
                                 int showMask ) {
         final LogicalRelationship lr = assertLogicalRelationship(eObject);
         StringBuffer result = new StringBuffer();
@@ -135,7 +142,8 @@ public class LogicalRelationshipAspect extends RelationalEntityAspect implements
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodels.aspects.UmlDiagramAspect#setSignature(java.lang.Object, java.lang.String)
      */
-    public IStatus setSignature( Object eObject,
+    @Override
+	public IStatus setSignature( Object eObject,
                                  String newSignature ) {
         try {
             final LogicalRelationship lr = assertLogicalRelationship(eObject);
@@ -151,7 +159,8 @@ public class LogicalRelationshipAspect extends RelationalEntityAspect implements
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodels.aspects.UmlAssociation#getNavigability(java.lang.Object, int)
      */
-    public int getNavigability( Object assoc,
+    @Override
+	public int getNavigability( Object assoc,
                                 int end ) {
         assertLogicalRelationship(assoc);
         return NAVIGABILITY_NAVIGABLE;
@@ -160,13 +169,15 @@ public class LogicalRelationshipAspect extends RelationalEntityAspect implements
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodels.aspects.UmlAssociation#setNavigability(java.lang.Object, int, int)
      */
-    public IStatus setNavigability( Object assoc,
+    @Override
+	public IStatus setNavigability( Object assoc,
                                     int end,
                                     int navigability ) {
         throw new UnsupportedOperationException();
     }
 
-    public String getRoleName( Object assoc,
+    @Override
+	public String getRoleName( Object assoc,
                                int end ) {
         final LogicalRelationship lr = assertLogicalRelationship(assoc);
         if (end < 0 || end >= lr.getEnds().size()) {
@@ -180,13 +191,15 @@ public class LogicalRelationshipAspect extends RelationalEntityAspect implements
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodels.aspects.UmlAssociation#setRoleName(java.lang.Object, int, java.lang.String)
      */
-    public IStatus setRoleName( Object assoc,
+    @Override
+	public IStatus setRoleName( Object assoc,
                                 int end,
                                 String name ) {
         throw new UnsupportedOperationException();
     }
 
-    public String getMultiplicity( Object eObject,
+    @Override
+	public String getMultiplicity( Object eObject,
                                    int end ) {
         final LogicalRelationship lr = assertLogicalRelationship(eObject);
         if (end < 0 || end >= lr.getEnds().size()) {
@@ -199,7 +212,8 @@ public class LogicalRelationshipAspect extends RelationalEntityAspect implements
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodels.aspects.UmlAssociation#setMultiplicity(java.lang.Object, int, java.lang.String)
      */
-    public IStatus setMultiplicity( Object assoc,
+    @Override
+	public IStatus setMultiplicity( Object assoc,
                                     int end,
                                     String mult ) {
         final LogicalRelationship lr = assertLogicalRelationship(assoc);
@@ -221,7 +235,8 @@ public class LogicalRelationshipAspect extends RelationalEntityAspect implements
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodels.aspects.UmlAssociation#getProperties(java.lang.Object, int)
      */
-    public String[] getProperties( Object assoc,
+    @Override
+	public String[] getProperties( Object assoc,
                                    int end ) {
         return CoreStringUtil.Constants.EMPTY_STRING_ARRAY;
     }
@@ -229,7 +244,8 @@ public class LogicalRelationshipAspect extends RelationalEntityAspect implements
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodels.aspects.UmlAssociation#setProperties(java.lang.Object, int, java.lang.String)
      */
-    public IStatus setProperties( Object assoc,
+    @Override
+	public IStatus setProperties( Object assoc,
                                   int end,
                                   String[] props ) {
         throw new UnsupportedOperationException();
@@ -244,14 +260,16 @@ public class LogicalRelationshipAspect extends RelationalEntityAspect implements
     /**
      * @see org.teiid.designer.core.metamodel.aspect.uml.UmlRelationship#getName(java.lang.Object)
      */
-    public String getName( Object eObject ) {
+    @Override
+	public String getName( Object eObject ) {
         return CoreStringUtil.Constants.EMPTY_STRING;
     }
 
     /**
      * @see org.teiid.designer.core.metamodel.aspect.uml.UmlRelationship#getToolTip(java.lang.Object)
      */
-    public String getToolTip( Object eObject ) {
+    @Override
+	public String getToolTip( Object eObject ) {
         final StringBuffer sb = new StringBuffer(200);
         sb.append(this.getStereotype(eObject));
         return sb.toString();

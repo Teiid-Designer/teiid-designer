@@ -118,7 +118,8 @@ public class ModelBuilder extends IncrementalProjectBuilder implements Ignorable
         getProject().accept(visitor);
 
         final TransactionRunnable runnable = new TransactionRunnable() {
-            public Object run( final UnitOfWork uow ) throws ModelerCoreException {
+            @Override
+			public Object run( final UnitOfWork uow ) throws ModelerCoreException {
                 // build the resources (index and validate)
                 final Container container = doGetContainer();
                 List resources = visitor.getResources();
@@ -169,7 +170,8 @@ public class ModelBuilder extends IncrementalProjectBuilder implements Ignorable
         class ResourceDeltaVisitor implements IResourceDeltaVisitor {
             List resources = new ArrayList();
 
-            public boolean visit( final IResourceDelta delta ) throws CoreException {
+            @Override
+			public boolean visit( final IResourceDelta delta ) throws CoreException {
                 IResource resource = delta.getResource();
                 if (isIncludedResource(resource)) {
                     resources.add(resource);
@@ -200,7 +202,8 @@ public class ModelBuilder extends IncrementalProjectBuilder implements Ignorable
         delta.accept(visitor);
 
         final TransactionRunnable runnable = new TransactionRunnable() {
-            public Object run( final UnitOfWork uow ) throws ModelerCoreException {
+            @Override
+			public Object run( final UnitOfWork uow ) throws ModelerCoreException {
                 // Collection of IResources to validate/index
                 final Collection iResources = visitor.getResources();
 

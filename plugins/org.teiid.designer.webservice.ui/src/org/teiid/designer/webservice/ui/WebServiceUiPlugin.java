@@ -102,7 +102,8 @@ public final class WebServiceUiPlugin extends AbstractUiPlugin implements
     protected ActionService createActionService(IWorkbenchPage page) {
         return new AbstractActionService(this, page) {
 
-            public IAction getDefaultAction(String theActionId) {
+            @Override
+			public IAction getDefaultAction(String theActionId) {
                 return null;
             }
         };

@@ -31,7 +31,8 @@ public class JdbcNodeMethodCallingVisitor implements JdbcNodeVisitor {
         super();
     }
 
-    public boolean visit( final JdbcNode node ) {
+    @Override
+	public boolean visit( final JdbcNode node ) {
         visitedNodes.add(node);
         // Call some of the methods of JdbcNode ...
         node.allowsChildren();

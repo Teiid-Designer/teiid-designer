@@ -29,14 +29,16 @@ public class ForeignKeyAspect extends RelationalEntityAspect implements SqlForei
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlAspect#isRecordType(char)
      */
-    public boolean isRecordType(char recordType) {
+    @Override
+	public boolean isRecordType(char recordType) {
         return (recordType == IndexConstants.RECORD_TYPE.FOREIGN_KEY);
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlForeignKeyAspect#getUniqueKey(org.eclipse.emf.ecore.EObject)
      */
-    public Object getUniqueKey(EObject eObject) {
+    @Override
+	public Object getUniqueKey(EObject eObject) {
         CoreArgCheck.isInstanceOf(ForeignKey.class, eObject); 
         ForeignKey foreignKey = (ForeignKey) eObject;
         return foreignKey.getUniqueKey();
@@ -45,7 +47,8 @@ public class ForeignKeyAspect extends RelationalEntityAspect implements SqlForei
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlColumnSetAspect#getColumns(org.eclipse.emf.ecore.EObject)
      */
-    public List getColumns(EObject eObject) {
+    @Override
+	public List getColumns(EObject eObject) {
         CoreArgCheck.isInstanceOf(ForeignKey.class, eObject); 
         ForeignKey foreignKey = (ForeignKey) eObject;
         return foreignKey.getColumns();
@@ -54,14 +57,16 @@ public class ForeignKeyAspect extends RelationalEntityAspect implements SqlForei
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlColumnSetAspect#getType()
      */
-    public int getColumnSetType() {
+    @Override
+	public int getColumnSetType() {
         return MetadataConstants.COLUMN_SET_TYPES.FOREIGN_KEY;
     }
     
     /*
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlAspect#updateObject(org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject)
      */
-    public void updateObject(EObject targetObject, EObject sourceObject) {
+    @Override
+	public void updateObject(EObject targetObject, EObject sourceObject) {
 
     }
 

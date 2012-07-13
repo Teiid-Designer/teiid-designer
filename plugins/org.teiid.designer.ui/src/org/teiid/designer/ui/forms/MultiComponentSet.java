@@ -118,7 +118,8 @@ public class MultiComponentSet extends SimpleComponentSet {
         } // endfor
     }
 
-    public boolean isUserSet() {
+    @Override
+	public boolean isUserSet() {
         for (int i = 0; i < sets.length; i++) {
             if (sets[i].isUserSet()) return true;
         } // endfor
@@ -126,7 +127,8 @@ public class MultiComponentSet extends SimpleComponentSet {
         return false;
     }
 
-    public void setValue(Object o) {
+    @Override
+	public void setValue(Object o) {
         if (o != null && o.getClass().isArray()) {
             // we have an array:
             Object[] array = (Object[]) o;
@@ -142,7 +144,8 @@ public class MultiComponentSet extends SimpleComponentSet {
         } // endif
     }
 
-    public void reset() {
+    @Override
+	public void reset() {
         for (int i = 0; i < sets.length; i++) {
             sets[i].reset();
         } // endfor

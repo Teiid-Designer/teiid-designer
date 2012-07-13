@@ -72,7 +72,8 @@ public class CriteriaStrategy implements ICriteriaStrategy {
     /* (non-Javadoc)
      * @see com.metamatrix.toolbox.ui.query.builder.criteria.SubqueryCommandOwner#getCommand(com.metamatrix.common.tree.TreeNode)
      */
-    public Command getCommand(Object theNode) {
+    @Override
+	public Command getCommand(Object theNode) {
         checkState();
         
         Command result = null;
@@ -91,14 +92,16 @@ public class CriteriaStrategy implements ICriteriaStrategy {
     /* (non-Javadoc)
      * @see com.metamatrix.toolbox.ui.query.builder.criteria.SubqueryCommandOwner#getInvalidMessage(com.metamatrix.common.tree.TreeNode)
      */
-    public String getInvalidMessage(Object theNode) {
+    @Override
+	public String getInvalidMessage(Object theNode) {
         return INVALID_SELECTION_MSG;
     }
     
     /* (non-Javadoc)
      * @see org.teiid.query.ui.builder.util.ICriteriaStrategy#getTreeViewer()
      */
-    public TreeViewer getTreeViewer() {
+    @Override
+	public TreeViewer getTreeViewer() {
         return viewer;
     }
 
@@ -106,7 +109,8 @@ public class CriteriaStrategy implements ICriteriaStrategy {
      * Uses the TreeViewer's ITreeContentProvider and ILabelProvider to build a full name.
      * @see com.metamatrix.toolbox.ui.query.builder.criteria.CriteriaStrategy#getRuntimeFullName(com.metamatrix.common.tree.TreeNode)
      */
-    public String getRuntimeFullName(Object theNode) {
+    @Override
+	public String getRuntimeFullName(Object theNode) {
         checkState();
 
         String result = labelProvider.getText(theNode);
@@ -125,7 +129,8 @@ public class CriteriaStrategy implements ICriteriaStrategy {
     /* (non-Javadoc)
      * @see org.teiid.query.ui.builder.util.ICriteriaStrategy#getNode(org.teiid.query.sql.LanguageObject)
      */
-    public Object getNode(LanguageObject theLangObj) {
+    @Override
+	public Object getNode(LanguageObject theLangObj) {
         Object result = null;
 
         if (isValid(theLangObj)) {
@@ -140,7 +145,8 @@ public class CriteriaStrategy implements ICriteriaStrategy {
     /* (non-Javadoc)
      * @see com.metamatrix.toolbox.ui.query.builder.criteria.SubqueryCommandOwner#isValid(com.metamatrix.common.tree.TreeNode)
      */
-    public boolean isValid(Object theNode) {
+    @Override
+	public boolean isValid(Object theNode) {
         checkState();
         
         return ((theNode == null) || (viewer == null) || (viewer.getContentProvider() == null))
@@ -165,7 +171,8 @@ public class CriteriaStrategy implements ICriteriaStrategy {
         return command;
     }
     
-    public void setTreeViewer(TreeViewer theViewer) {
+    @Override
+	public void setTreeViewer(TreeViewer theViewer) {
         viewer = theViewer;
         labelProvider =  (ILabelProvider) getTreeViewer().getLabelProvider();
         contentProvider = (ITreeContentProvider) getTreeViewer().getContentProvider();

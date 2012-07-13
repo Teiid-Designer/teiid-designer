@@ -17,26 +17,31 @@ public class TextColumn extends BaseColumn {
         super(pk, type);
     }
 
-    public String getXpath() {
+    @Override
+	public String getXpath() {
         String xpath = "text()"; //$NON-NLS-1$
         return xpath;
     }
 
-    public String getSimpleName() {
+    @Override
+	public String getSimpleName() {
         String name = "text"; //$NON-NLS-1$
         return name;
     }
 
-    public Column copy() {
+    @Override
+	public Column copy() {
         Column copy = new TextColumn(isPrimaryKey(), getType());
         return copy;
     }
 
-    public void printDebug() {
+    @Override
+	public void printDebug() {
         System.out.println("\t \t TextColumn"); //$NON-NLS-1$
     }
 
-    public org.teiid.designer.schema.tools.model.jdbc.Column getColumnImplementation() {
+    @Override
+	public org.teiid.designer.schema.tools.model.jdbc.Column getColumnImplementation() {
         ColumnImpl newColumn = new ColumnImpl();
         newColumn.setDataAttributeName(getSimpleName());
         newColumn.setDataType(getDataType());

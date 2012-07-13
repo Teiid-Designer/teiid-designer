@@ -27,273 +27,312 @@ public class FakeDatabaseMetaData implements DatabaseMetaData {
     /**
      * @see java.sql.DatabaseMetaData#allProceduresAreCallable()
      */
-    public boolean allProceduresAreCallable() {
+    @Override
+	public boolean allProceduresAreCallable() {
         return false;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#allTablesAreSelectable()
      */
-    public boolean allTablesAreSelectable() {
+    @Override
+	public boolean allTablesAreSelectable() {
         return false;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#getURL()
      */
-    public String getURL() {
+    @Override
+	public String getURL() {
         return "jdbc:fake:dbmetadata"; //$NON-NLS-1$
     }
 
     /**
      * @see java.sql.DatabaseMetaData#getUserName()
      */
-    public String getUserName() {
+    @Override
+	public String getUserName() {
         return "PARTSSUPPLIER"; //$NON-NLS-1$
     }
 
     /**
      * @see java.sql.DatabaseMetaData#isReadOnly()
      */
-    public boolean isReadOnly() {
+    @Override
+	public boolean isReadOnly() {
         return false;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#nullsAreSortedHigh()
      */
-    public boolean nullsAreSortedHigh() {
+    @Override
+	public boolean nullsAreSortedHigh() {
         return false;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#nullsAreSortedLow()
      */
-    public boolean nullsAreSortedLow() {
+    @Override
+	public boolean nullsAreSortedLow() {
         return false;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#nullsAreSortedAtStart()
      */
-    public boolean nullsAreSortedAtStart() {
+    @Override
+	public boolean nullsAreSortedAtStart() {
         return false;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#nullsAreSortedAtEnd()
      */
-    public boolean nullsAreSortedAtEnd() {
+    @Override
+	public boolean nullsAreSortedAtEnd() {
         return false;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#getDatabaseProductName()
      */
-    public String getDatabaseProductName() {
+    @Override
+	public String getDatabaseProductName() {
         return "FakeDatabase"; //$NON-NLS-1$
     }
 
     /**
      * @see java.sql.DatabaseMetaData#getDatabaseProductVersion()
      */
-    public String getDatabaseProductVersion() {
+    @Override
+	public String getDatabaseProductVersion() {
         return "1.1.1"; //$NON-NLS-1$
     }
 
     /**
      * @see java.sql.DatabaseMetaData#getDriverName()
      */
-    public String getDriverName() {
+    @Override
+	public String getDriverName() {
         return "FakeJDBCDriver"; //$NON-NLS-1$
     }
 
     /**
      * @see java.sql.DatabaseMetaData#getDriverVersion()
      */
-    public String getDriverVersion() {
+    @Override
+	public String getDriverVersion() {
         return "1.3"; //$NON-NLS-1$
     }
 
     /**
      * @see java.sql.DatabaseMetaData#getDriverMajorVersion()
      */
-    public int getDriverMajorVersion() {
+    @Override
+	public int getDriverMajorVersion() {
         return 1;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#getDriverMinorVersion()
      */
-    public int getDriverMinorVersion() {
+    @Override
+	public int getDriverMinorVersion() {
         return 3;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#usesLocalFiles()
      */
-    public boolean usesLocalFiles() {
+    @Override
+	public boolean usesLocalFiles() {
         return false;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#usesLocalFilePerTable()
      */
-    public boolean usesLocalFilePerTable() {
+    @Override
+	public boolean usesLocalFilePerTable() {
         return false;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#supportsMixedCaseIdentifiers()
      */
-    public boolean supportsMixedCaseIdentifiers() {
+    @Override
+	public boolean supportsMixedCaseIdentifiers() {
         return false;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#storesUpperCaseIdentifiers()
      */
-    public boolean storesUpperCaseIdentifiers() {
+    @Override
+	public boolean storesUpperCaseIdentifiers() {
         return false;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#storesLowerCaseIdentifiers()
      */
-    public boolean storesLowerCaseIdentifiers() {
+    @Override
+	public boolean storesLowerCaseIdentifiers() {
         return false;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#storesMixedCaseIdentifiers()
      */
-    public boolean storesMixedCaseIdentifiers() {
+    @Override
+	public boolean storesMixedCaseIdentifiers() {
         return false;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#supportsMixedCaseQuotedIdentifiers()
      */
-    public boolean supportsMixedCaseQuotedIdentifiers() {
+    @Override
+	public boolean supportsMixedCaseQuotedIdentifiers() {
         return false;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#storesUpperCaseQuotedIdentifiers()
      */
-    public boolean storesUpperCaseQuotedIdentifiers() {
+    @Override
+	public boolean storesUpperCaseQuotedIdentifiers() {
         return false;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#storesLowerCaseQuotedIdentifiers()
      */
-    public boolean storesLowerCaseQuotedIdentifiers() {
+    @Override
+	public boolean storesLowerCaseQuotedIdentifiers() {
         return false;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#storesMixedCaseQuotedIdentifiers()
      */
-    public boolean storesMixedCaseQuotedIdentifiers() {
+    @Override
+	public boolean storesMixedCaseQuotedIdentifiers() {
         return false;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#getIdentifierQuoteString()
      */
-    public String getIdentifierQuoteString() {
+    @Override
+	public String getIdentifierQuoteString() {
         return "\""; //$NON-NLS-1$
     }
 
     /**
      * @see java.sql.DatabaseMetaData#getSQLKeywords()
      */
-    public String getSQLKeywords() {
+    @Override
+	public String getSQLKeywords() {
         return null;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#getNumericFunctions()
      */
-    public String getNumericFunctions() {
+    @Override
+	public String getNumericFunctions() {
         return null;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#getStringFunctions()
      */
-    public String getStringFunctions() {
+    @Override
+	public String getStringFunctions() {
         return null;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#getSystemFunctions()
      */
-    public String getSystemFunctions() {
+    @Override
+	public String getSystemFunctions() {
         return null;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#getTimeDateFunctions()
      */
-    public String getTimeDateFunctions() {
+    @Override
+	public String getTimeDateFunctions() {
         return null;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#getSearchStringEscape()
      */
-    public String getSearchStringEscape() {
+    @Override
+	public String getSearchStringEscape() {
         return ""; //$NON-NLS-1$
     }
 
     /**
      * @see java.sql.DatabaseMetaData#getExtraNameCharacters()
      */
-    public String getExtraNameCharacters() {
+    @Override
+	public String getExtraNameCharacters() {
         return ""; //$NON-NLS-1$
     }
 
     /**
      * @see java.sql.DatabaseMetaData#supportsAlterTableWithAddColumn()
      */
-    public boolean supportsAlterTableWithAddColumn() {
+    @Override
+	public boolean supportsAlterTableWithAddColumn() {
         return false;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#supportsAlterTableWithDropColumn()
      */
-    public boolean supportsAlterTableWithDropColumn() {
+    @Override
+	public boolean supportsAlterTableWithDropColumn() {
         return false;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#supportsColumnAliasing()
      */
-    public boolean supportsColumnAliasing() {
+    @Override
+	public boolean supportsColumnAliasing() {
         return false;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#nullPlusNonNullIsNull()
      */
-    public boolean nullPlusNonNullIsNull() {
+    @Override
+	public boolean nullPlusNonNullIsNull() {
         return false;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#supportsConvert()
      */
-    public boolean supportsConvert() {
+    @Override
+	public boolean supportsConvert() {
         return false;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#supportsConvert(int, int)
      */
-    public boolean supportsConvert( int fromType,
+    @Override
+	public boolean supportsConvert( int fromType,
                                     int toType ) {
         return false;
     }
@@ -301,560 +340,640 @@ public class FakeDatabaseMetaData implements DatabaseMetaData {
     /**
      * @see java.sql.DatabaseMetaData#supportsTableCorrelationNames()
      */
-    public boolean supportsTableCorrelationNames() {
+    @Override
+	public boolean supportsTableCorrelationNames() {
         return false;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#supportsDifferentTableCorrelationNames()
      */
-    public boolean supportsDifferentTableCorrelationNames() {
+    @Override
+	public boolean supportsDifferentTableCorrelationNames() {
         return false;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#supportsExpressionsInOrderBy()
      */
-    public boolean supportsExpressionsInOrderBy() {
+    @Override
+	public boolean supportsExpressionsInOrderBy() {
         return false;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#supportsOrderByUnrelated()
      */
-    public boolean supportsOrderByUnrelated() {
+    @Override
+	public boolean supportsOrderByUnrelated() {
         return false;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#supportsGroupBy()
      */
-    public boolean supportsGroupBy() {
+    @Override
+	public boolean supportsGroupBy() {
         return false;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#supportsGroupByUnrelated()
      */
-    public boolean supportsGroupByUnrelated() {
+    @Override
+	public boolean supportsGroupByUnrelated() {
         return false;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#supportsGroupByBeyondSelect()
      */
-    public boolean supportsGroupByBeyondSelect() {
+    @Override
+	public boolean supportsGroupByBeyondSelect() {
         return false;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#supportsLikeEscapeClause()
      */
-    public boolean supportsLikeEscapeClause() {
+    @Override
+	public boolean supportsLikeEscapeClause() {
         return false;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#supportsMultipleResultSets()
      */
-    public boolean supportsMultipleResultSets() {
+    @Override
+	public boolean supportsMultipleResultSets() {
         return false;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#supportsMultipleTransactions()
      */
-    public boolean supportsMultipleTransactions() {
+    @Override
+	public boolean supportsMultipleTransactions() {
         return false;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#supportsNonNullableColumns()
      */
-    public boolean supportsNonNullableColumns() {
+    @Override
+	public boolean supportsNonNullableColumns() {
         return false;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#supportsMinimumSQLGrammar()
      */
-    public boolean supportsMinimumSQLGrammar() {
+    @Override
+	public boolean supportsMinimumSQLGrammar() {
         return false;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#supportsCoreSQLGrammar()
      */
-    public boolean supportsCoreSQLGrammar() {
+    @Override
+	public boolean supportsCoreSQLGrammar() {
         return false;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#supportsExtendedSQLGrammar()
      */
-    public boolean supportsExtendedSQLGrammar() {
+    @Override
+	public boolean supportsExtendedSQLGrammar() {
         return false;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#supportsANSI92EntryLevelSQL()
      */
-    public boolean supportsANSI92EntryLevelSQL() {
+    @Override
+	public boolean supportsANSI92EntryLevelSQL() {
         return false;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#supportsANSI92IntermediateSQL()
      */
-    public boolean supportsANSI92IntermediateSQL() {
+    @Override
+	public boolean supportsANSI92IntermediateSQL() {
         return false;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#supportsANSI92FullSQL()
      */
-    public boolean supportsANSI92FullSQL() {
+    @Override
+	public boolean supportsANSI92FullSQL() {
         return false;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#supportsIntegrityEnhancementFacility()
      */
-    public boolean supportsIntegrityEnhancementFacility() {
+    @Override
+	public boolean supportsIntegrityEnhancementFacility() {
         return false;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#supportsOuterJoins()
      */
-    public boolean supportsOuterJoins() {
+    @Override
+	public boolean supportsOuterJoins() {
         return false;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#supportsFullOuterJoins()
      */
-    public boolean supportsFullOuterJoins() {
+    @Override
+	public boolean supportsFullOuterJoins() {
         return false;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#supportsLimitedOuterJoins()
      */
-    public boolean supportsLimitedOuterJoins() {
+    @Override
+	public boolean supportsLimitedOuterJoins() {
         return false;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#getSchemaTerm()
      */
-    public String getSchemaTerm() {
+    @Override
+	public String getSchemaTerm() {
         return "Schema"; //$NON-NLS-1$
     }
 
     /**
      * @see java.sql.DatabaseMetaData#getProcedureTerm()
      */
-    public String getProcedureTerm() {
+    @Override
+	public String getProcedureTerm() {
         return "Procedure"; //$NON-NLS-1$
     }
 
     /**
      * @see java.sql.DatabaseMetaData#getCatalogTerm()
      */
-    public String getCatalogTerm() {
+    @Override
+	public String getCatalogTerm() {
         return "Catalog"; //$NON-NLS-1$
     }
 
     /**
      * @see java.sql.DatabaseMetaData#isCatalogAtStart()
      */
-    public boolean isCatalogAtStart() {
+    @Override
+	public boolean isCatalogAtStart() {
         return false;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#getCatalogSeparator()
      */
-    public String getCatalogSeparator() {
+    @Override
+	public String getCatalogSeparator() {
         return "."; //$NON-NLS-1$
     }
 
     /**
      * @see java.sql.DatabaseMetaData#supportsSchemasInDataManipulation()
      */
-    public boolean supportsSchemasInDataManipulation() {
+    @Override
+	public boolean supportsSchemasInDataManipulation() {
         return false;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#supportsSchemasInProcedureCalls()
      */
-    public boolean supportsSchemasInProcedureCalls() {
+    @Override
+	public boolean supportsSchemasInProcedureCalls() {
         return false;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#supportsSchemasInTableDefinitions()
      */
-    public boolean supportsSchemasInTableDefinitions() {
+    @Override
+	public boolean supportsSchemasInTableDefinitions() {
         return false;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#supportsSchemasInIndexDefinitions()
      */
-    public boolean supportsSchemasInIndexDefinitions() {
+    @Override
+	public boolean supportsSchemasInIndexDefinitions() {
         return false;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#supportsSchemasInPrivilegeDefinitions()
      */
-    public boolean supportsSchemasInPrivilegeDefinitions() {
+    @Override
+	public boolean supportsSchemasInPrivilegeDefinitions() {
         return false;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#supportsCatalogsInDataManipulation()
      */
-    public boolean supportsCatalogsInDataManipulation() {
+    @Override
+	public boolean supportsCatalogsInDataManipulation() {
         return false;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#supportsCatalogsInProcedureCalls()
      */
-    public boolean supportsCatalogsInProcedureCalls() {
+    @Override
+	public boolean supportsCatalogsInProcedureCalls() {
         return false;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#supportsCatalogsInTableDefinitions()
      */
-    public boolean supportsCatalogsInTableDefinitions() {
+    @Override
+	public boolean supportsCatalogsInTableDefinitions() {
         return false;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#supportsCatalogsInIndexDefinitions()
      */
-    public boolean supportsCatalogsInIndexDefinitions() {
+    @Override
+	public boolean supportsCatalogsInIndexDefinitions() {
         return false;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#supportsCatalogsInPrivilegeDefinitions()
      */
-    public boolean supportsCatalogsInPrivilegeDefinitions() {
+    @Override
+	public boolean supportsCatalogsInPrivilegeDefinitions() {
         return false;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#supportsPositionedDelete()
      */
-    public boolean supportsPositionedDelete() {
+    @Override
+	public boolean supportsPositionedDelete() {
         return false;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#supportsPositionedUpdate()
      */
-    public boolean supportsPositionedUpdate() {
+    @Override
+	public boolean supportsPositionedUpdate() {
         return false;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#supportsSelectForUpdate()
      */
-    public boolean supportsSelectForUpdate() {
+    @Override
+	public boolean supportsSelectForUpdate() {
         return false;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#supportsStoredProcedures()
      */
-    public boolean supportsStoredProcedures() {
+    @Override
+	public boolean supportsStoredProcedures() {
         return false;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#supportsSubqueriesInComparisons()
      */
-    public boolean supportsSubqueriesInComparisons() {
+    @Override
+	public boolean supportsSubqueriesInComparisons() {
         return false;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#supportsSubqueriesInExists()
      */
-    public boolean supportsSubqueriesInExists() {
+    @Override
+	public boolean supportsSubqueriesInExists() {
         return false;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#supportsSubqueriesInIns()
      */
-    public boolean supportsSubqueriesInIns() {
+    @Override
+	public boolean supportsSubqueriesInIns() {
         return false;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#supportsSubqueriesInQuantifieds()
      */
-    public boolean supportsSubqueriesInQuantifieds() {
+    @Override
+	public boolean supportsSubqueriesInQuantifieds() {
         return false;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#supportsCorrelatedSubqueries()
      */
-    public boolean supportsCorrelatedSubqueries() {
+    @Override
+	public boolean supportsCorrelatedSubqueries() {
         return false;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#supportsUnion()
      */
-    public boolean supportsUnion() {
+    @Override
+	public boolean supportsUnion() {
         return false;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#supportsUnionAll()
      */
-    public boolean supportsUnionAll() {
+    @Override
+	public boolean supportsUnionAll() {
         return false;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#supportsOpenCursorsAcrossCommit()
      */
-    public boolean supportsOpenCursorsAcrossCommit() {
+    @Override
+	public boolean supportsOpenCursorsAcrossCommit() {
         return false;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#supportsOpenCursorsAcrossRollback()
      */
-    public boolean supportsOpenCursorsAcrossRollback() {
+    @Override
+	public boolean supportsOpenCursorsAcrossRollback() {
         return false;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#supportsOpenStatementsAcrossCommit()
      */
-    public boolean supportsOpenStatementsAcrossCommit() {
+    @Override
+	public boolean supportsOpenStatementsAcrossCommit() {
         return false;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#supportsOpenStatementsAcrossRollback()
      */
-    public boolean supportsOpenStatementsAcrossRollback() {
+    @Override
+	public boolean supportsOpenStatementsAcrossRollback() {
         return false;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#getMaxBinaryLiteralLength()
      */
-    public int getMaxBinaryLiteralLength() {
+    @Override
+	public int getMaxBinaryLiteralLength() {
         return 0;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#getMaxCharLiteralLength()
      */
-    public int getMaxCharLiteralLength() {
+    @Override
+	public int getMaxCharLiteralLength() {
         return 0;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#getMaxColumnNameLength()
      */
-    public int getMaxColumnNameLength() {
+    @Override
+	public int getMaxColumnNameLength() {
         return 0;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#getMaxColumnsInGroupBy()
      */
-    public int getMaxColumnsInGroupBy() {
+    @Override
+	public int getMaxColumnsInGroupBy() {
         return 0;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#getMaxColumnsInIndex()
      */
-    public int getMaxColumnsInIndex() {
+    @Override
+	public int getMaxColumnsInIndex() {
         return 0;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#getMaxColumnsInOrderBy()
      */
-    public int getMaxColumnsInOrderBy() {
+    @Override
+	public int getMaxColumnsInOrderBy() {
         return 0;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#getMaxColumnsInSelect()
      */
-    public int getMaxColumnsInSelect() {
+    @Override
+	public int getMaxColumnsInSelect() {
         return 0;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#getMaxColumnsInTable()
      */
-    public int getMaxColumnsInTable() {
+    @Override
+	public int getMaxColumnsInTable() {
         return 0;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#getMaxConnections()
      */
-    public int getMaxConnections() {
+    @Override
+	public int getMaxConnections() {
         return 0;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#getMaxCursorNameLength()
      */
-    public int getMaxCursorNameLength() {
+    @Override
+	public int getMaxCursorNameLength() {
         return 0;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#getMaxIndexLength()
      */
-    public int getMaxIndexLength() {
+    @Override
+	public int getMaxIndexLength() {
         return 0;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#getMaxSchemaNameLength()
      */
-    public int getMaxSchemaNameLength() {
+    @Override
+	public int getMaxSchemaNameLength() {
         return 0;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#getMaxProcedureNameLength()
      */
-    public int getMaxProcedureNameLength() {
+    @Override
+	public int getMaxProcedureNameLength() {
         return 0;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#getMaxCatalogNameLength()
      */
-    public int getMaxCatalogNameLength() {
+    @Override
+	public int getMaxCatalogNameLength() {
         return 0;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#getMaxRowSize()
      */
-    public int getMaxRowSize() {
+    @Override
+	public int getMaxRowSize() {
         return 0;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#doesMaxRowSizeIncludeBlobs()
      */
-    public boolean doesMaxRowSizeIncludeBlobs() {
+    @Override
+	public boolean doesMaxRowSizeIncludeBlobs() {
         return false;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#getMaxStatementLength()
      */
-    public int getMaxStatementLength() {
+    @Override
+	public int getMaxStatementLength() {
         return 0;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#getMaxStatements()
      */
-    public int getMaxStatements() {
+    @Override
+	public int getMaxStatements() {
         return 0;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#getMaxTableNameLength()
      */
-    public int getMaxTableNameLength() {
+    @Override
+	public int getMaxTableNameLength() {
         return 0;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#getMaxTablesInSelect()
      */
-    public int getMaxTablesInSelect() {
+    @Override
+	public int getMaxTablesInSelect() {
         return 0;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#getMaxUserNameLength()
      */
-    public int getMaxUserNameLength() {
+    @Override
+	public int getMaxUserNameLength() {
         return 0;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#getDefaultTransactionIsolation()
      */
-    public int getDefaultTransactionIsolation() {
+    @Override
+	public int getDefaultTransactionIsolation() {
         return 0;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#supportsTransactions()
      */
-    public boolean supportsTransactions() {
+    @Override
+	public boolean supportsTransactions() {
         return false;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#supportsTransactionIsolationLevel(int)
      */
-    public boolean supportsTransactionIsolationLevel( int level ) {
+    @Override
+	public boolean supportsTransactionIsolationLevel( int level ) {
         return false;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#supportsDataDefinitionAndDataManipulationTransactions()
      */
-    public boolean supportsDataDefinitionAndDataManipulationTransactions() {
+    @Override
+	public boolean supportsDataDefinitionAndDataManipulationTransactions() {
         return false;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#supportsDataManipulationTransactionsOnly()
      */
-    public boolean supportsDataManipulationTransactionsOnly() {
+    @Override
+	public boolean supportsDataManipulationTransactionsOnly() {
         return false;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#dataDefinitionCausesTransactionCommit()
      */
-    public boolean dataDefinitionCausesTransactionCommit() {
+    @Override
+	public boolean dataDefinitionCausesTransactionCommit() {
         return false;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#dataDefinitionIgnoredInTransactions()
      */
-    public boolean dataDefinitionIgnoredInTransactions() {
+    @Override
+	public boolean dataDefinitionIgnoredInTransactions() {
         return false;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#getProcedures(java.lang.String, java.lang.String, java.lang.String)
      */
-    public ResultSet getProcedures( String catalog,
+    @Override
+	public ResultSet getProcedures( String catalog,
                                     String schemaPattern,
                                     String procedureNamePattern ) {
         return new FakeResultSet();
@@ -863,7 +982,8 @@ public class FakeDatabaseMetaData implements DatabaseMetaData {
     /**
      * @see java.sql.DatabaseMetaData#getProcedureColumns(java.lang.String, java.lang.String, java.lang.String, java.lang.String)
      */
-    public ResultSet getProcedureColumns( String catalog,
+    @Override
+	public ResultSet getProcedureColumns( String catalog,
                                           String schemaPattern,
                                           String procedureNamePattern,
                                           String columnNamePattern ) {
@@ -873,7 +993,8 @@ public class FakeDatabaseMetaData implements DatabaseMetaData {
     /**
      * @see java.sql.DatabaseMetaData#getTables(java.lang.String, java.lang.String, java.lang.String, java.lang.String[])
      */
-    public ResultSet getTables( String catalog,
+    @Override
+	public ResultSet getTables( String catalog,
                                 String schemaPattern,
                                 String tableNamePattern,
                                 String[] types ) {
@@ -883,28 +1004,32 @@ public class FakeDatabaseMetaData implements DatabaseMetaData {
     /**
      * @see java.sql.DatabaseMetaData#getSchemas()
      */
-    public ResultSet getSchemas() {
+    @Override
+	public ResultSet getSchemas() {
         return new FakeResultSet();
     }
 
     /**
      * @see java.sql.DatabaseMetaData#getCatalogs()
      */
-    public ResultSet getCatalogs() {
+    @Override
+	public ResultSet getCatalogs() {
         return new FakeResultSet();
     }
 
     /**
      * @see java.sql.DatabaseMetaData#getTableTypes()
      */
-    public ResultSet getTableTypes() {
+    @Override
+	public ResultSet getTableTypes() {
         return new FakeResultSet();
     }
 
     /**
      * @see java.sql.DatabaseMetaData#getColumns(java.lang.String, java.lang.String, java.lang.String, java.lang.String)
      */
-    public ResultSet getColumns( String catalog,
+    @Override
+	public ResultSet getColumns( String catalog,
                                  String schemaPattern,
                                  String tableNamePattern,
                                  String columnNamePattern ) {
@@ -914,7 +1039,8 @@ public class FakeDatabaseMetaData implements DatabaseMetaData {
     /**
      * @see java.sql.DatabaseMetaData#getColumnPrivileges(java.lang.String, java.lang.String, java.lang.String, java.lang.String)
      */
-    public ResultSet getColumnPrivileges( String catalog,
+    @Override
+	public ResultSet getColumnPrivileges( String catalog,
                                           String schema,
                                           String table,
                                           String columnNamePattern ) {
@@ -924,7 +1050,8 @@ public class FakeDatabaseMetaData implements DatabaseMetaData {
     /**
      * @see java.sql.DatabaseMetaData#getTablePrivileges(java.lang.String, java.lang.String, java.lang.String)
      */
-    public ResultSet getTablePrivileges( String catalog,
+    @Override
+	public ResultSet getTablePrivileges( String catalog,
                                          String schemaPattern,
                                          String tableNamePattern ) {
         return new FakeResultSet();
@@ -933,7 +1060,8 @@ public class FakeDatabaseMetaData implements DatabaseMetaData {
     /**
      * @see java.sql.DatabaseMetaData#getBestRowIdentifier(java.lang.String, java.lang.String, java.lang.String, int, boolean)
      */
-    public ResultSet getBestRowIdentifier( String catalog,
+    @Override
+	public ResultSet getBestRowIdentifier( String catalog,
                                            String schema,
                                            String table,
                                            int scope,
@@ -944,7 +1072,8 @@ public class FakeDatabaseMetaData implements DatabaseMetaData {
     /**
      * @see java.sql.DatabaseMetaData#getVersionColumns(java.lang.String, java.lang.String, java.lang.String)
      */
-    public ResultSet getVersionColumns( String catalog,
+    @Override
+	public ResultSet getVersionColumns( String catalog,
                                         String schema,
                                         String table ) {
         return new FakeResultSet();
@@ -953,7 +1082,8 @@ public class FakeDatabaseMetaData implements DatabaseMetaData {
     /**
      * @see java.sql.DatabaseMetaData#getPrimaryKeys(java.lang.String, java.lang.String, java.lang.String)
      */
-    public ResultSet getPrimaryKeys( String catalog,
+    @Override
+	public ResultSet getPrimaryKeys( String catalog,
                                      String schema,
                                      String table ) {
         return new FakeResultSet();
@@ -962,7 +1092,8 @@ public class FakeDatabaseMetaData implements DatabaseMetaData {
     /**
      * @see java.sql.DatabaseMetaData#getImportedKeys(java.lang.String, java.lang.String, java.lang.String)
      */
-    public ResultSet getImportedKeys( String catalog,
+    @Override
+	public ResultSet getImportedKeys( String catalog,
                                       String schema,
                                       String table ) {
         return new FakeResultSet();
@@ -971,7 +1102,8 @@ public class FakeDatabaseMetaData implements DatabaseMetaData {
     /**
      * @see java.sql.DatabaseMetaData#getExportedKeys(java.lang.String, java.lang.String, java.lang.String)
      */
-    public ResultSet getExportedKeys( String catalog,
+    @Override
+	public ResultSet getExportedKeys( String catalog,
                                       String schema,
                                       String table ) {
         return new FakeResultSet();
@@ -981,7 +1113,8 @@ public class FakeDatabaseMetaData implements DatabaseMetaData {
      * @see java.sql.DatabaseMetaData#getCrossReference(java.lang.String, java.lang.String, java.lang.String, java.lang.String,
      *      java.lang.String, java.lang.String)
      */
-    public ResultSet getCrossReference( String primaryCatalog,
+    @Override
+	public ResultSet getCrossReference( String primaryCatalog,
                                         String primarySchema,
                                         String primaryTable,
                                         String foreignCatalog,
@@ -993,14 +1126,16 @@ public class FakeDatabaseMetaData implements DatabaseMetaData {
     /**
      * @see java.sql.DatabaseMetaData#getTypeInfo()
      */
-    public ResultSet getTypeInfo() {
+    @Override
+	public ResultSet getTypeInfo() {
         return new FakeResultSet();
     }
 
     /**
      * @see java.sql.DatabaseMetaData#getIndexInfo(java.lang.String, java.lang.String, java.lang.String, boolean, boolean)
      */
-    public ResultSet getIndexInfo( String catalog,
+    @Override
+	public ResultSet getIndexInfo( String catalog,
                                    String schema,
                                    String table,
                                    boolean unique,
@@ -1011,14 +1146,16 @@ public class FakeDatabaseMetaData implements DatabaseMetaData {
     /**
      * @see java.sql.DatabaseMetaData#supportsResultSetType(int)
      */
-    public boolean supportsResultSetType( int type ) {
+    @Override
+	public boolean supportsResultSetType( int type ) {
         return false;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#supportsResultSetConcurrency(int, int)
      */
-    public boolean supportsResultSetConcurrency( int type,
+    @Override
+	public boolean supportsResultSetConcurrency( int type,
                                                  int concurrency ) {
         return false;
     }
@@ -1026,77 +1163,88 @@ public class FakeDatabaseMetaData implements DatabaseMetaData {
     /**
      * @see java.sql.DatabaseMetaData#ownUpdatesAreVisible(int)
      */
-    public boolean ownUpdatesAreVisible( int type ) {
+    @Override
+	public boolean ownUpdatesAreVisible( int type ) {
         return false;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#ownDeletesAreVisible(int)
      */
-    public boolean ownDeletesAreVisible( int type ) {
+    @Override
+	public boolean ownDeletesAreVisible( int type ) {
         return false;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#ownInsertsAreVisible(int)
      */
-    public boolean ownInsertsAreVisible( int type ) {
+    @Override
+	public boolean ownInsertsAreVisible( int type ) {
         return false;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#othersUpdatesAreVisible(int)
      */
-    public boolean othersUpdatesAreVisible( int type ) {
+    @Override
+	public boolean othersUpdatesAreVisible( int type ) {
         return false;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#othersDeletesAreVisible(int)
      */
-    public boolean othersDeletesAreVisible( int type ) {
+    @Override
+	public boolean othersDeletesAreVisible( int type ) {
         return false;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#othersInsertsAreVisible(int)
      */
-    public boolean othersInsertsAreVisible( int type ) {
+    @Override
+	public boolean othersInsertsAreVisible( int type ) {
         return false;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#updatesAreDetected(int)
      */
-    public boolean updatesAreDetected( int type ) {
+    @Override
+	public boolean updatesAreDetected( int type ) {
         return false;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#deletesAreDetected(int)
      */
-    public boolean deletesAreDetected( int type ) {
+    @Override
+	public boolean deletesAreDetected( int type ) {
         return false;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#insertsAreDetected(int)
      */
-    public boolean insertsAreDetected( int type ) {
+    @Override
+	public boolean insertsAreDetected( int type ) {
         return false;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#supportsBatchUpdates()
      */
-    public boolean supportsBatchUpdates() {
+    @Override
+	public boolean supportsBatchUpdates() {
         return false;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#getUDTs(java.lang.String, java.lang.String, java.lang.String, int[])
      */
-    public ResultSet getUDTs( String catalog,
+    @Override
+	public ResultSet getUDTs( String catalog,
                               String schemaPattern,
                               String typeNamePattern,
                               int[] types ) {
@@ -1106,14 +1254,16 @@ public class FakeDatabaseMetaData implements DatabaseMetaData {
     /**
      * @see java.sql.DatabaseMetaData#getConnection()
      */
-    public Connection getConnection() {
+    @Override
+	public Connection getConnection() {
         return null;
     }
 
     /**
      * @see java.sql.DatabaseMetaData#getAttributes(java.lang.String, java.lang.String, java.lang.String, java.lang.String)
      */
-    public ResultSet getAttributes( String catalog,
+    @Override
+	public ResultSet getAttributes( String catalog,
                                     String schemaPattern,
                                     String typeNamePattern,
                                     String attributeNamePattern ) {
@@ -1124,7 +1274,8 @@ public class FakeDatabaseMetaData implements DatabaseMetaData {
     /**
      * @see java.sql.DatabaseMetaData#getDatabaseMajorVersion()
      */
-    public int getDatabaseMajorVersion() {
+    @Override
+	public int getDatabaseMajorVersion() {
         /* Implement for JDBC 3.0 */
         return 0;
     }
@@ -1132,7 +1283,8 @@ public class FakeDatabaseMetaData implements DatabaseMetaData {
     /**
      * @see java.sql.DatabaseMetaData#getDatabaseMinorVersion()
      */
-    public int getDatabaseMinorVersion() {
+    @Override
+	public int getDatabaseMinorVersion() {
         /* Implement for JDBC 3.0 */
         return 0;
     }
@@ -1140,7 +1292,8 @@ public class FakeDatabaseMetaData implements DatabaseMetaData {
     /**
      * @see java.sql.DatabaseMetaData#getJDBCMajorVersion()
      */
-    public int getJDBCMajorVersion() {
+    @Override
+	public int getJDBCMajorVersion() {
         /* Implement for JDBC 3.0 */
         return 0;
     }
@@ -1148,7 +1301,8 @@ public class FakeDatabaseMetaData implements DatabaseMetaData {
     /**
      * @see java.sql.DatabaseMetaData#getJDBCMinorVersion()
      */
-    public int getJDBCMinorVersion() {
+    @Override
+	public int getJDBCMinorVersion() {
         /* Implement for JDBC 3.0 */
         return 0;
     }
@@ -1156,7 +1310,8 @@ public class FakeDatabaseMetaData implements DatabaseMetaData {
     /**
      * @see java.sql.DatabaseMetaData#getResultSetHoldability()
      */
-    public int getResultSetHoldability() {
+    @Override
+	public int getResultSetHoldability() {
         /* Implement for JDBC 3.0 */
         return 0;
     }
@@ -1164,7 +1319,8 @@ public class FakeDatabaseMetaData implements DatabaseMetaData {
     /**
      * @see java.sql.DatabaseMetaData#getSQLStateType()
      */
-    public int getSQLStateType() {
+    @Override
+	public int getSQLStateType() {
         /* Implement for JDBC 3.0 */
         return 0;
     }
@@ -1172,7 +1328,8 @@ public class FakeDatabaseMetaData implements DatabaseMetaData {
     /**
      * @see java.sql.DatabaseMetaData#getSuperTables(java.lang.String, java.lang.String, java.lang.String)
      */
-    public ResultSet getSuperTables( String catalog,
+    @Override
+	public ResultSet getSuperTables( String catalog,
                                      String schemaPattern,
                                      String tableNamePattern ) {
         /* Implement for JDBC 3.0 */
@@ -1182,7 +1339,8 @@ public class FakeDatabaseMetaData implements DatabaseMetaData {
     /**
      * @see java.sql.DatabaseMetaData#getSuperTypes(java.lang.String, java.lang.String, java.lang.String)
      */
-    public ResultSet getSuperTypes( String catalog,
+    @Override
+	public ResultSet getSuperTypes( String catalog,
                                     String schemaPattern,
                                     String typeNamePattern ) {
         /* Implement for JDBC 3.0 */
@@ -1192,7 +1350,8 @@ public class FakeDatabaseMetaData implements DatabaseMetaData {
     /**
      * @see java.sql.DatabaseMetaData#locatorsUpdateCopy()
      */
-    public boolean locatorsUpdateCopy() {
+    @Override
+	public boolean locatorsUpdateCopy() {
         /* Implement for JDBC 3.0 */
         return false;
     }
@@ -1200,7 +1359,8 @@ public class FakeDatabaseMetaData implements DatabaseMetaData {
     /**
      * @see java.sql.DatabaseMetaData#supportsGetGeneratedKeys()
      */
-    public boolean supportsGetGeneratedKeys() {
+    @Override
+	public boolean supportsGetGeneratedKeys() {
         /* Implement for JDBC 3.0 */
         return false;
     }
@@ -1208,7 +1368,8 @@ public class FakeDatabaseMetaData implements DatabaseMetaData {
     /**
      * @see java.sql.DatabaseMetaData#supportsMultipleOpenResults()
      */
-    public boolean supportsMultipleOpenResults() {
+    @Override
+	public boolean supportsMultipleOpenResults() {
         /* Implement for JDBC 3.0 */
         return false;
     }
@@ -1216,7 +1377,8 @@ public class FakeDatabaseMetaData implements DatabaseMetaData {
     /**
      * @see java.sql.DatabaseMetaData#supportsNamedParameters()
      */
-    public boolean supportsNamedParameters() {
+    @Override
+	public boolean supportsNamedParameters() {
         /* Implement for JDBC 3.0 */
         return false;
     }
@@ -1224,7 +1386,8 @@ public class FakeDatabaseMetaData implements DatabaseMetaData {
     /**
      * @see java.sql.DatabaseMetaData#supportsResultSetHoldability(int)
      */
-    public boolean supportsResultSetHoldability( int holdability ) {
+    @Override
+	public boolean supportsResultSetHoldability( int holdability ) {
         /* Implement for JDBC 3.0 */
         return false;
     }
@@ -1232,7 +1395,8 @@ public class FakeDatabaseMetaData implements DatabaseMetaData {
     /**
      * @see java.sql.DatabaseMetaData#supportsSavepoints()
      */
-    public boolean supportsSavepoints() {
+    @Override
+	public boolean supportsSavepoints() {
         /* Implement for JDBC 3.0 */
         return false;
     }
@@ -1240,7 +1404,8 @@ public class FakeDatabaseMetaData implements DatabaseMetaData {
     /**
      * @see java.sql.DatabaseMetaData#supportsStatementPooling()
      */
-    public boolean supportsStatementPooling() {
+    @Override
+	public boolean supportsStatementPooling() {
         /* Implement for JDBC 3.0 */
         return false;
     }

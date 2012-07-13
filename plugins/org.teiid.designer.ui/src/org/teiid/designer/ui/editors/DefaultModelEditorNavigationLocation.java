@@ -47,7 +47,8 @@ public class DefaultModelEditorNavigationLocation extends NavigationLocation {
     /* (non-Javadoc)
      * @see org.eclipse.ui.INavigationLocation#restoreLocation()
      */
-    public void restoreLocation() {
+    @Override
+	public void restoreLocation() {
         
         if ( editor == null ) {
 //            System.out.println("[DefaultModelEditorNavigationLocation.restoreLocation] Editor is NULL, will NOT call gotoMarker"); //$NON-NLS-1$
@@ -61,14 +62,16 @@ public class DefaultModelEditorNavigationLocation extends NavigationLocation {
     /* (non-Javadoc)
      * @see org.eclipse.ui.INavigationLocation#saveState(org.eclipse.ui.IMemento)
      */
-    public void saveState(IMemento arg0) {
+    @Override
+	public void saveState(IMemento arg0) {
 
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.ui.INavigationLocation#restoreState(org.eclipse.ui.IMemento)
      */
-    public void restoreState(IMemento arg0) {
+    @Override
+	public void restoreState(IMemento arg0) {
 
     }
 
@@ -76,14 +79,16 @@ public class DefaultModelEditorNavigationLocation extends NavigationLocation {
     /* (non-Javadoc)
      * @see org.eclipse.ui.INavigationLocation#mergeInto(org.eclipse.ui.INavigationLocation)
      */
-    public boolean mergeInto(INavigationLocation arg0) {
+    @Override
+	public boolean mergeInto(INavigationLocation arg0) {
         return false;
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.ui.INavigationLocation#update()
      */
-    public void update() {
+    @Override
+	public void update() {
 
     }
 

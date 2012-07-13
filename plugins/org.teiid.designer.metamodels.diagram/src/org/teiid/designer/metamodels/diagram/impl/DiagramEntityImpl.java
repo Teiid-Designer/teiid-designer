@@ -142,7 +142,8 @@ public class DiagramEntityImpl extends AbstractDiagramEntityImpl implements Diag
      * <!-- end-user-doc -->
      * @generated
      */
-    public int getXPosition() {
+    @Override
+	public int getXPosition() {
         return xPosition;
     }
 
@@ -151,7 +152,8 @@ public class DiagramEntityImpl extends AbstractDiagramEntityImpl implements Diag
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setXPosition(int newXPosition) {
+    @Override
+	public void setXPosition(int newXPosition) {
         int oldXPosition = xPosition;
         xPosition = newXPosition;
         if (eNotificationRequired())
@@ -163,7 +165,8 @@ public class DiagramEntityImpl extends AbstractDiagramEntityImpl implements Diag
      * <!-- end-user-doc -->
      * @generated
      */
-    public int getYPosition() {
+    @Override
+	public int getYPosition() {
         return yPosition;
     }
 
@@ -172,7 +175,8 @@ public class DiagramEntityImpl extends AbstractDiagramEntityImpl implements Diag
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setYPosition(int newYPosition) {
+    @Override
+	public void setYPosition(int newYPosition) {
         int oldYPosition = yPosition;
         yPosition = newYPosition;
         if (eNotificationRequired())
@@ -184,7 +188,8 @@ public class DiagramEntityImpl extends AbstractDiagramEntityImpl implements Diag
      * <!-- end-user-doc -->
      * @generated
      */
-    public int getHeight() {
+    @Override
+	public int getHeight() {
         return height;
     }
 
@@ -193,7 +198,8 @@ public class DiagramEntityImpl extends AbstractDiagramEntityImpl implements Diag
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setHeight(int newHeight) {
+    @Override
+	public void setHeight(int newHeight) {
         int oldHeight = height;
         height = newHeight;
         if (eNotificationRequired())
@@ -205,7 +211,8 @@ public class DiagramEntityImpl extends AbstractDiagramEntityImpl implements Diag
      * <!-- end-user-doc -->
      * @generated
      */
-    public int getWidth() {
+    @Override
+	public int getWidth() {
         return width;
     }
 
@@ -214,7 +221,8 @@ public class DiagramEntityImpl extends AbstractDiagramEntityImpl implements Diag
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setWidth(int newWidth) {
+    @Override
+	public void setWidth(int newWidth) {
         int oldWidth = width;
         width = newWidth;
         if (eNotificationRequired())
@@ -226,7 +234,8 @@ public class DiagramEntityImpl extends AbstractDiagramEntityImpl implements Diag
      * <!-- end-user-doc -->
      * @generated
      */
-    public Diagram getDiagram() {
+    @Override
+	public Diagram getDiagram() {
         if (eContainerFeatureID != DiagramPackage.DIAGRAM_ENTITY__DIAGRAM) return null;
         return (Diagram)eContainer;
     }
@@ -236,7 +245,8 @@ public class DiagramEntityImpl extends AbstractDiagramEntityImpl implements Diag
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setDiagram(Diagram newDiagram) {
+    @Override
+	public void setDiagram(Diagram newDiagram) {
         if (newDiagram != eContainer || (eContainerFeatureID != DiagramPackage.DIAGRAM_ENTITY__DIAGRAM && newDiagram != null)) {
             if (EcoreUtil.isAncestor(this, newDiagram))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$

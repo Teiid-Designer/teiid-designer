@@ -303,7 +303,8 @@ public final class BlockConnectionRouter extends AbstractRouter {
      * 
      * @see ConnectionRouter#route(Connection)
      */
-    public void route( Connection conn ) {
+    @Override
+	public void route( Connection conn ) {
         if ((conn.getTargetAnchor() == null) || (conn.getSourceAnchor() == null)) {
             return;
         }

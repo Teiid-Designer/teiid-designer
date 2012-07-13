@@ -28,23 +28,28 @@ public class TypeDefinition extends BaseSchemaObject implements ComplexSchemaObj
         this.doesNotHaveUniqueName = false;
     }
 
-    public SchemaObjectKey getKey() {
+    @Override
+	public SchemaObjectKey getKey() {
         return new TypeDefinitionKey(type);
     }
 
-    public XSDTypeDefinition getType() {
+    @Override
+	public XSDTypeDefinition getType() {
         return type;
     }
 
-    public String getNamespace() {
+    @Override
+	public String getNamespace() {
         return type.getTargetNamespace();
     }
 
-    public String getName() {
+    @Override
+	public String getName() {
         return type.getName();
     }
 
-    public String getSimpleName() {
+    @Override
+	public String getSimpleName() {
         String elemName = type.getName();
         String uniqueName;
         if (doesNotHaveUniqueName) {
@@ -65,32 +70,38 @@ public class TypeDefinition extends BaseSchemaObject implements ComplexSchemaObj
         return retval;
     }
 
-    public int getMinOccurs() {
+    @Override
+	public int getMinOccurs() {
         XSDParticle particle = type.getComplexType();
         if (particle == null) return 1;
         return particle.getMinOccurs();
     }
 
-    public int getMaxOccurs() {
+    @Override
+	public int getMaxOccurs() {
         XSDParticle particle = type.getComplexType();
         if (particle == null) return 1;
         return particle.getMaxOccurs();
     }
 
-    public SchemaObject copy( ISchemaModelCopyTraversalContext ctx ) {
+    @Override
+	public SchemaObject copy( ISchemaModelCopyTraversalContext ctx ) {
         TypeDefinition copy = new TypeDefinition(type, getNamespacePrefix(), schema);
         return copy;
     }
 
-    public String getElementTypeNamespace() {
+    @Override
+	public String getElementTypeNamespace() {
         return type.getTargetNamespace();
     }
 
-    public RootElement getRootRepresentation() {
+    @Override
+	public RootElement getRootRepresentation() {
         return new RootElementImpl(getKey(), getName(), getNamespace(), true);
     }
 
-    public String getCatalog() {
+    @Override
+	public String getCatalog() {
         return null;
     }
 

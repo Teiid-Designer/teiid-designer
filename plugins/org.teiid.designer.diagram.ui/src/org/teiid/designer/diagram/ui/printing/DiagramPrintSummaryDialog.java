@@ -403,7 +403,8 @@ public class DiagramPrintSummaryDialog extends Dialog implements DiagramUiConsta
         });
 
         spinRangeTo.addSelectionListener(new SelectionListener() {
-            public void widgetSelected( SelectionEvent e ) {
+            @Override
+			public void widgetSelected( SelectionEvent e ) {
 
                 // update the settings
                 applyModifiableSummaryValuesTo();
@@ -411,13 +412,15 @@ public class DiagramPrintSummaryDialog extends Dialog implements DiagramUiConsta
                 lblTotalPages.setText(String.valueOf(getTotalActualPageCount()));
             }
 
-            public void widgetDefaultSelected( SelectionEvent e ) {
+            @Override
+			public void widgetDefaultSelected( SelectionEvent e ) {
                 widgetSelected(e);
             }
         });
 
         spinRangeFrom.addSelectionListener(new SelectionListener() {
-            public void widgetSelected( SelectionEvent e ) {
+            @Override
+			public void widgetSelected( SelectionEvent e ) {
                 // adjust the 'To' spinner to have the current value of
                 // 'From' as its min value
                 // jhTODO: first capture the present value, then call setPossibleValues,
@@ -458,7 +461,8 @@ public class DiagramPrintSummaryDialog extends Dialog implements DiagramUiConsta
                 lblTotalPages.setText(String.valueOf(getTotalActualPageCount()));
             }
 
-            public void widgetDefaultSelected( SelectionEvent e ) {
+            @Override
+			public void widgetDefaultSelected( SelectionEvent e ) {
                 widgetSelected(e);
             }
         });

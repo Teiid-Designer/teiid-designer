@@ -33,7 +33,8 @@ import org.teiid.designer.core.validation.rules.StringNameValidator;
 public class Uml2StringNameRule implements
                                StructuralFeatureValidationRule {
 
-    public void validate(final EStructuralFeature eStructuralFeature,
+    @Override
+	public void validate(final EStructuralFeature eStructuralFeature,
                          final EObject eObject,
                          final Object value,
                          final ValidationContext context) {

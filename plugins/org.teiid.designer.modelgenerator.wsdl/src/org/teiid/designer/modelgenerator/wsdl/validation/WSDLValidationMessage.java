@@ -20,40 +20,49 @@ public class WSDLValidationMessage implements IStatus {
         m_severity = severity;
     }
 
-    public IStatus[] getChildren() {
+    @Override
+	public IStatus[] getChildren() {
         return new IStatus[0];
     }
 
-    public int getCode() {
+    @Override
+	public int getCode() {
         return 0;
     }
 
-    public Throwable getException() {
+    @Override
+	public Throwable getException() {
         return null;
     }
 
-    public String getMessage() {
+    @Override
+	public String getMessage() {
         return m_message;
     }
 
-    public String getPlugin() {
+    @Override
+	public String getPlugin() {
         return null;
     }
 
-    public int getSeverity() {
+    @Override
+	public int getSeverity() {
         return m_severity;
     }
 
-    public boolean isMultiStatus() {
+    @Override
+	public boolean isMultiStatus() {
         return false;
     }
 
-    public boolean isOK() {
+    @Override
+	public boolean isOK() {
         if (m_severity == OK) return true;
         return false;
     }
 
-    public boolean matches( int severityMask ) {
+    @Override
+	public boolean matches( int severityMask ) {
         return (m_severity & severityMask) != 0;
     }
 }

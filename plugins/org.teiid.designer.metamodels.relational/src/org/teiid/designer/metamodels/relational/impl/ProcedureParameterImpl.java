@@ -247,7 +247,8 @@ public class ProcedureParameterImpl extends RelationalEntityImpl implements Proc
      * <!-- end-user-doc -->
      * @generated
      */
-    public DirectionKind getDirection() {
+    @Override
+	public DirectionKind getDirection() {
         return direction;
     }
 
@@ -256,7 +257,8 @@ public class ProcedureParameterImpl extends RelationalEntityImpl implements Proc
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setDirection(DirectionKind newDirection) {
+    @Override
+	public void setDirection(DirectionKind newDirection) {
         DirectionKind oldDirection = direction;
         direction = newDirection == null ? DIRECTION_EDEFAULT : newDirection;
         if (eNotificationRequired())
@@ -268,7 +270,8 @@ public class ProcedureParameterImpl extends RelationalEntityImpl implements Proc
      * <!-- end-user-doc -->
      * @generated
      */
-    public String getDefaultValue() {
+    @Override
+	public String getDefaultValue() {
         return defaultValue;
     }
 
@@ -277,7 +280,8 @@ public class ProcedureParameterImpl extends RelationalEntityImpl implements Proc
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setDefaultValue(String newDefaultValue) {
+    @Override
+	public void setDefaultValue(String newDefaultValue) {
         String oldDefaultValue = defaultValue;
         defaultValue = newDefaultValue;
         if (eNotificationRequired())
@@ -289,7 +293,8 @@ public class ProcedureParameterImpl extends RelationalEntityImpl implements Proc
      * <!-- end-user-doc -->
      * @generated
      */
-    public String getNativeType() {
+    @Override
+	public String getNativeType() {
         return nativeType;
     }
 
@@ -298,7 +303,8 @@ public class ProcedureParameterImpl extends RelationalEntityImpl implements Proc
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setNativeType(String newNativeType) {
+    @Override
+	public void setNativeType(String newNativeType) {
         String oldNativeType = nativeType;
         nativeType = newNativeType;
         if (eNotificationRequired())
@@ -310,7 +316,8 @@ public class ProcedureParameterImpl extends RelationalEntityImpl implements Proc
      * <!-- end-user-doc -->
      * @generated
      */
-    public int getLength() {
+    @Override
+	public int getLength() {
         return length;
     }
 
@@ -319,7 +326,8 @@ public class ProcedureParameterImpl extends RelationalEntityImpl implements Proc
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setLength(int newLength) {
+    @Override
+	public void setLength(int newLength) {
         int oldLength = length;
         length = newLength;
         if (eNotificationRequired())
@@ -331,7 +339,8 @@ public class ProcedureParameterImpl extends RelationalEntityImpl implements Proc
      * <!-- end-user-doc -->
      * @generated
      */
-    public int getPrecision() {
+    @Override
+	public int getPrecision() {
         return precision;
     }
 
@@ -340,7 +349,8 @@ public class ProcedureParameterImpl extends RelationalEntityImpl implements Proc
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setPrecision(int newPrecision) {
+    @Override
+	public void setPrecision(int newPrecision) {
         int oldPrecision = precision;
         precision = newPrecision;
         if (eNotificationRequired())
@@ -352,7 +362,8 @@ public class ProcedureParameterImpl extends RelationalEntityImpl implements Proc
      * <!-- end-user-doc -->
      * @generated
      */
-    public int getScale() {
+    @Override
+	public int getScale() {
         return scale;
     }
 
@@ -361,7 +372,8 @@ public class ProcedureParameterImpl extends RelationalEntityImpl implements Proc
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setScale(int newScale) {
+    @Override
+	public void setScale(int newScale) {
         int oldScale = scale;
         scale = newScale;
         if (eNotificationRequired())
@@ -373,7 +385,8 @@ public class ProcedureParameterImpl extends RelationalEntityImpl implements Proc
      * <!-- end-user-doc -->
      * @generated
      */
-    public NullableType getNullable() {
+    @Override
+	public NullableType getNullable() {
         return nullable;
     }
 
@@ -382,7 +395,8 @@ public class ProcedureParameterImpl extends RelationalEntityImpl implements Proc
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setNullable(NullableType newNullable) {
+    @Override
+	public void setNullable(NullableType newNullable) {
         NullableType oldNullable = nullable;
         nullable = newNullable == null ? NULLABLE_EDEFAULT : newNullable;
         if (eNotificationRequired())
@@ -394,7 +408,8 @@ public class ProcedureParameterImpl extends RelationalEntityImpl implements Proc
      * <!-- end-user-doc -->
      * @generated
      */
-    public int getRadix() {
+    @Override
+	public int getRadix() {
         return radix;
     }
 
@@ -403,7 +418,8 @@ public class ProcedureParameterImpl extends RelationalEntityImpl implements Proc
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setRadix(int newRadix) {
+    @Override
+	public void setRadix(int newRadix) {
         int oldRadix = radix;
         radix = newRadix;
         if (eNotificationRequired())
@@ -415,7 +431,8 @@ public class ProcedureParameterImpl extends RelationalEntityImpl implements Proc
      * <!-- end-user-doc -->
      * @generated
      */
-    public Procedure getProcedure() {
+    @Override
+	public Procedure getProcedure() {
         if (eContainerFeatureID != RelationalPackage.PROCEDURE_PARAMETER__PROCEDURE) return null;
         return (Procedure)eContainer;
     }
@@ -425,7 +442,8 @@ public class ProcedureParameterImpl extends RelationalEntityImpl implements Proc
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setProcedure(Procedure newProcedure) {
+    @Override
+	public void setProcedure(Procedure newProcedure) {
         if (newProcedure != eContainer || (eContainerFeatureID != RelationalPackage.PROCEDURE_PARAMETER__PROCEDURE && newProcedure != null)) {
             if (EcoreUtil.isAncestor(this, newProcedure))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
@@ -446,7 +464,8 @@ public class ProcedureParameterImpl extends RelationalEntityImpl implements Proc
      * <!-- end-user-doc -->
      * @generated
      */
-    public EObject getType() {
+    @Override
+	public EObject getType() {
         if (type != null && type.eIsProxy()) {
             EObject oldType = type;
             type = eResolveProxy((InternalEObject)type);
@@ -472,7 +491,8 @@ public class ProcedureParameterImpl extends RelationalEntityImpl implements Proc
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setType(EObject newType) {
+    @Override
+	public void setType(EObject newType) {
         EObject oldType = type;
         type = newType;
         boolean oldTypeESet = typeESet;
@@ -486,7 +506,8 @@ public class ProcedureParameterImpl extends RelationalEntityImpl implements Proc
      * <!-- end-user-doc -->
      * @generated
      */
-    public void unsetType() {
+    @Override
+	public void unsetType() {
         EObject oldType = type;
         boolean oldTypeESet = typeESet;
         type = null;
@@ -500,7 +521,8 @@ public class ProcedureParameterImpl extends RelationalEntityImpl implements Proc
      * <!-- end-user-doc -->
      * @generated
      */
-    public boolean isSetType() {
+    @Override
+	public boolean isSetType() {
         return typeESet;
     }
 

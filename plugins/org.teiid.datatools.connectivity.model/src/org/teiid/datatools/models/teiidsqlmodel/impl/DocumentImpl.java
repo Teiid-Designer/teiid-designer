@@ -62,6 +62,7 @@ public class DocumentImpl extends ViewTableImpl implements Document {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	protected EClass eStaticClass() {
 		return TeiidsqlmodelPackage.Literals.DOCUMENT;
 	}
@@ -71,6 +72,7 @@ public class DocumentImpl extends ViewTableImpl implements Document {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TeiidSchema getSchema() {
 		if (schema != null && schema.eIsProxy()) {
 			InternalEObject oldSchema = (InternalEObject)schema;
@@ -88,6 +90,7 @@ public class DocumentImpl extends ViewTableImpl implements Document {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TeiidSchema basicGetSchema() {
 		return schema;
 	}
@@ -112,6 +115,7 @@ public class DocumentImpl extends ViewTableImpl implements Document {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setSchema(TeiidSchema newSchema) {
 		if (newSchema != schema) {
 			NotificationChain msgs = null;
@@ -131,6 +135,7 @@ public class DocumentImpl extends ViewTableImpl implements Document {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case TeiidsqlmodelPackage.DOCUMENT__SCHEMA:
@@ -146,6 +151,7 @@ public class DocumentImpl extends ViewTableImpl implements Document {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case TeiidsqlmodelPackage.DOCUMENT__SCHEMA:
@@ -159,6 +165,7 @@ public class DocumentImpl extends ViewTableImpl implements Document {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case TeiidsqlmodelPackage.DOCUMENT__SCHEMA:
@@ -173,6 +180,7 @@ public class DocumentImpl extends ViewTableImpl implements Document {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case TeiidsqlmodelPackage.DOCUMENT__SCHEMA:
@@ -187,6 +195,7 @@ public class DocumentImpl extends ViewTableImpl implements Document {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case TeiidsqlmodelPackage.DOCUMENT__SCHEMA:
@@ -201,6 +210,7 @@ public class DocumentImpl extends ViewTableImpl implements Document {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case TeiidsqlmodelPackage.DOCUMENT__SCHEMA:

@@ -27,7 +27,8 @@ public class IterationBasedBuilderStrategy implements MappingClassBuilderStrateg
      * @see org.teiid.designer.mapping.factory.MappingClassBuilderStrategy#buildMappingClassMap(org.eclipse.emf.ecore.EObject)
      * @since 4.3
      */
-    public Map buildMappingClassMap( EObject theTopNode,
+    @Override
+	public Map buildMappingClassMap( EObject theTopNode,
                                      IMappableTree tree,
                                      ITreeToRelationalMapper mapper ) {
         this.mapper = mapper;

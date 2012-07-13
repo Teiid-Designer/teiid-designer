@@ -212,6 +212,7 @@ public class TeiidMetadataImportViewModelPage extends AbstractWizardPage
 		gridData = new GridData(GridData.FILL_HORIZONTAL);
 		viewModelFileText.setLayoutData(gridData);
 		viewModelFileText.addModifyListener(new ModifyListener() {
+			@Override
 			public void modifyText(ModifyEvent e) {
 				// Check view file name for existing if "location" is already
 				// set
@@ -257,6 +258,7 @@ public class TeiidMetadataImportViewModelPage extends AbstractWizardPage
 			gridData = new GridData(GridData.FILL_HORIZONTAL);
 			viewTableNameText.setLayoutData(gridData);
 			viewTableNameText.addModifyListener(new ModifyListener() {
+				@Override
 				public void modifyText(ModifyEvent e) {
 					// Check view file name for existing if "location" is already
 					// set

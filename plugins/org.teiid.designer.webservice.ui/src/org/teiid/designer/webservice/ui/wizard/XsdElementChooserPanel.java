@@ -278,7 +278,8 @@ public class XsdElementChooserPanel extends Composite implements IInternalUiCons
      * validator for interface selection dialog
      */
     final ISelectionStatusValidator interfaceValidator = new ISelectionStatusValidator() {
-        public IStatus validate( final Object[] selection ) {
+        @Override
+		public IStatus validate( final Object[] selection ) {
             if (selection.length == 1) {
                 if (selection[0] instanceof XSDElementDeclaration) {
                     return new Status(IStatus.OK, PLUGIN_ID, 0, "", null); //$NON-NLS-1$

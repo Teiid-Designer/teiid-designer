@@ -28,7 +28,8 @@ public class ModelerNotificationHelper implements INotificationHelper {
     /* (non-Javadoc)
      * @see org.teiid.designer.ui.common.eventsupport.INotificationHelper#getNotifier(org.eclipse.emf.common.notify.Notification)
      */
-    public Object getNotifier(Notification notification) {
+    @Override
+	public Object getNotifier(Notification notification) {
         return ModelerCore.getModelEditor().getChangedObject(notification);
     }
 

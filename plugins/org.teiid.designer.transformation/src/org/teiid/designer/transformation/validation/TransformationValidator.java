@@ -274,7 +274,8 @@ public class TransformationValidator implements QueryValidator {
         return transformResult;
     }
 
-    public boolean isValidRoot() {
+    @Override
+	public boolean isValidRoot() {
         return mappingRoot != null && mappingRoot.eResource() != null;
     }
 
@@ -285,7 +286,8 @@ public class TransformationValidator implements QueryValidator {
      * @param sql the SQL String
      * @return the CommandValidationResult object
      */
-    public QueryValidationResult validateSql( final String sql,
+    @Override
+	public QueryValidationResult validateSql( final String sql,
                                               final int transformType,
                                               final boolean cacheResult ) {
         if (!isValidRoot()) {
@@ -580,7 +582,8 @@ public class TransformationValidator implements QueryValidator {
         return result;
     }
 
-    public QueryMetadataInterface getQueryMetadata() {
+    @Override
+	public QueryMetadataInterface getQueryMetadata() {
         return getDirectQueryMetadata();
 
     }

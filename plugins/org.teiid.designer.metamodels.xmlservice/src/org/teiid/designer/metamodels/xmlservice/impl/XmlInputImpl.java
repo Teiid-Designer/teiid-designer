@@ -76,7 +76,8 @@ public class XmlInputImpl extends XmlMessageImpl implements XmlInput {
      * <!-- end-user-doc -->
      * @generated
      */
-    public XmlOperation getOperation() {
+    @Override
+	public XmlOperation getOperation() {
         if (eContainerFeatureID != XmlServicePackage.XML_INPUT__OPERATION) return null;
         return (XmlOperation)eContainer;
     }
@@ -86,7 +87,8 @@ public class XmlInputImpl extends XmlMessageImpl implements XmlInput {
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setOperation(XmlOperation newOperation) {
+    @Override
+	public void setOperation(XmlOperation newOperation) {
         if (newOperation != eContainer || (eContainerFeatureID != XmlServicePackage.XML_INPUT__OPERATION && newOperation != null)) {
             if (EcoreUtil.isAncestor(this, newOperation))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
@@ -107,7 +109,8 @@ public class XmlInputImpl extends XmlMessageImpl implements XmlInput {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EObject getType() {
+    @Override
+	public EObject getType() {
         if (type != null && type.eIsProxy()) {
             EObject oldType = type;
             type = eResolveProxy((InternalEObject)type);
@@ -133,7 +136,8 @@ public class XmlInputImpl extends XmlMessageImpl implements XmlInput {
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setType(EObject newType) {
+    @Override
+	public void setType(EObject newType) {
         EObject oldType = type;
         type = newType;
         if (eNotificationRequired())

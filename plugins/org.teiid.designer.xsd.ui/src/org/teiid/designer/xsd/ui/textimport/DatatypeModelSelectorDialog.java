@@ -157,7 +157,8 @@ public class DatatypeModelSelectorDialog extends ModelWorkspaceDialog implements
 
         // listener for typing changes
         txtDatatypeModelName.addModifyListener(new ModifyListener() {
-            public void modifyText( final ModifyEvent event ) {
+            @Override
+			public void modifyText( final ModifyEvent event ) {
                 handleSetDatatypeModelName();
             }
         });

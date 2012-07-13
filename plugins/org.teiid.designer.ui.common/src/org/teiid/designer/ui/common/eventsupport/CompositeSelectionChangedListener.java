@@ -53,7 +53,8 @@ public class CompositeSelectionChangedListener implements ISelectionChangedListe
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
      */
-    public void selectionChanged(SelectionChangedEvent theEvent) {
+    @Override
+	public void selectionChanged(SelectionChangedEvent theEvent) {
         for (int size = subListeners.size(), i = 0; i < size; i++) {
             ISelectionChangedListener l = subListeners.get(i);
             l.selectionChanged(theEvent);

@@ -186,7 +186,8 @@ public abstract class TableImpl extends ColumnSetImpl implements Table {
      * <!-- end-user-doc -->
      * @generated
      */
-    public boolean isSystem() {
+    @Override
+	public boolean isSystem() {
         return system;
     }
 
@@ -195,7 +196,8 @@ public abstract class TableImpl extends ColumnSetImpl implements Table {
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setSystem(boolean newSystem) {
+    @Override
+	public void setSystem(boolean newSystem) {
         boolean oldSystem = system;
         system = newSystem;
         if (eNotificationRequired())
@@ -207,7 +209,8 @@ public abstract class TableImpl extends ColumnSetImpl implements Table {
      * <!-- end-user-doc -->
      * @generated
      */
-    public int getCardinality() {
+    @Override
+	public int getCardinality() {
         return cardinality;
     }
 
@@ -216,7 +219,8 @@ public abstract class TableImpl extends ColumnSetImpl implements Table {
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setCardinality(int newCardinality) {
+    @Override
+	public void setCardinality(int newCardinality) {
         int oldCardinality = cardinality;
         cardinality = newCardinality;
         if (eNotificationRequired())
@@ -228,7 +232,8 @@ public abstract class TableImpl extends ColumnSetImpl implements Table {
      * <!-- end-user-doc -->
      * @generated
      */
-    public boolean isSupportsUpdate() {
+    @Override
+	public boolean isSupportsUpdate() {
         return supportsUpdate;
     }
 
@@ -237,7 +242,8 @@ public abstract class TableImpl extends ColumnSetImpl implements Table {
      * <!-- end-user-doc -->
      * @generated NOT
      */
-    public void setSupportsUpdate(boolean newSupportsUpdate) {
+    @Override
+	public void setSupportsUpdate(boolean newSupportsUpdate) {
         boolean oldSupportsUpdate = supportsUpdate;
         supportsUpdate = newSupportsUpdate;
         if (eNotificationRequired())
@@ -272,6 +278,7 @@ public abstract class TableImpl extends ColumnSetImpl implements Table {
 	 * <!-- end-user-doc -->
      * @generated
      */
+	@Override
 	public boolean isMaterialized() {
         return materialized;
     }
@@ -281,6 +288,7 @@ public abstract class TableImpl extends ColumnSetImpl implements Table {
 	 * <!-- end-user-doc -->
      * @generated
      */
+	@Override
 	public void setMaterialized(boolean newMaterialized) {
         boolean oldMaterialized = materialized;
         materialized = newMaterialized;
@@ -302,7 +310,8 @@ public abstract class TableImpl extends ColumnSetImpl implements Table {
      * <!-- end-user-doc -->
      * @generated
      */
-    public Schema getSchema() {
+    @Override
+	public Schema getSchema() {
         if (eContainerFeatureID != RelationalPackage.TABLE__SCHEMA) return null;
         return (Schema)eContainer;
     }
@@ -312,7 +321,8 @@ public abstract class TableImpl extends ColumnSetImpl implements Table {
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setSchema(Schema newSchema) {
+    @Override
+	public void setSchema(Schema newSchema) {
         if (newSchema != eContainer || (eContainerFeatureID != RelationalPackage.TABLE__SCHEMA && newSchema != null)) {
             if (EcoreUtil.isAncestor(this, newSchema))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
@@ -333,7 +343,8 @@ public abstract class TableImpl extends ColumnSetImpl implements Table {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EList getAccessPatterns() {
+    @Override
+	public EList getAccessPatterns() {
         if (accessPatterns == null) {
             accessPatterns = new EObjectContainmentWithInverseEList(AccessPattern.class, this, RelationalPackage.TABLE__ACCESS_PATTERNS, RelationalPackage.ACCESS_PATTERN__TABLE);
         }
@@ -345,7 +356,8 @@ public abstract class TableImpl extends ColumnSetImpl implements Table {
      * <!-- end-user-doc -->
      * @generated
      */
-    public Catalog getCatalog() {
+    @Override
+	public Catalog getCatalog() {
         if (eContainerFeatureID != RelationalPackage.TABLE__CATALOG) return null;
         return (Catalog)eContainer;
     }
@@ -355,7 +367,8 @@ public abstract class TableImpl extends ColumnSetImpl implements Table {
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setCatalog(Catalog newCatalog) {
+    @Override
+	public void setCatalog(Catalog newCatalog) {
         if (newCatalog != eContainer || (eContainerFeatureID != RelationalPackage.TABLE__CATALOG && newCatalog != null)) {
             if (EcoreUtil.isAncestor(this, newCatalog))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
@@ -376,7 +389,8 @@ public abstract class TableImpl extends ColumnSetImpl implements Table {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EList getLogicalRelationships() {
+    @Override
+	public EList getLogicalRelationships() {
         if (logicalRelationships == null) {
             logicalRelationships = new EObjectWithInverseResolvingEList(LogicalRelationshipEnd.class, this, RelationalPackage.TABLE__LOGICAL_RELATIONSHIPS, RelationalPackage.LOGICAL_RELATIONSHIP_END__TABLE);
         }
@@ -388,7 +402,8 @@ public abstract class TableImpl extends ColumnSetImpl implements Table {
      * <!-- end-user-doc -->
      * @generated
      */
-    public Table getMaterializedTable() {
+    @Override
+	public Table getMaterializedTable() {
         if (materalizedTable != null && materalizedTable.eIsProxy()) {
             Table oldMateralizedTable = materalizedTable;
             materalizedTable = (Table)eResolveProxy((InternalEObject)materalizedTable);
@@ -414,7 +429,8 @@ public abstract class TableImpl extends ColumnSetImpl implements Table {
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setMaterializedTable(Table newMateralizedTable) {
+    @Override
+	public void setMaterializedTable(Table newMateralizedTable) {
         Table oldMateralizedTable = materalizedTable;
         materalizedTable = newMateralizedTable;
         if (eNotificationRequired())

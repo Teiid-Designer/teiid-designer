@@ -40,7 +40,8 @@ public class TestSelectionProvider extends TestCase {
         public ISelection selection;
         public Object source;
         public SelectionChangedEvent event;
-        public void selectionChanged(SelectionChangedEvent e) {
+        @Override
+		public void selectionChanged(SelectionChangedEvent e) {
             this.event = e;
             this.source = e.getSource();
             this.selection = e.getSelection();

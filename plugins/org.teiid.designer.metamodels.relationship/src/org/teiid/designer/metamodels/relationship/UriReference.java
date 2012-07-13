@@ -261,6 +261,7 @@ public interface UriReference extends PlaceholderReference{
      * @model parameters=""
      * @generated
      */
-    String getDisplayableName();
+    @Override
+	String getDisplayableName();
 
 } // UriReference

@@ -46,7 +46,8 @@ public class RuntimePropertySourceProvider implements IPropertySourceProvider {
      * @see org.eclipse.ui.views.properties.IPropertySourceProvider#getPropertySource(java.lang.Object)
      * @since 4.2
      */
-    public IPropertySource getPropertySource( Object object ) {
+    @Override
+	public IPropertySource getPropertySource( Object object ) {
         if (object instanceof TranslatorTemplate) {
             ConnectionPropertySource source = new ConnectionPropertySource((TeiidTranslator)object);
             source.setEditable(this.connectorsEditable);

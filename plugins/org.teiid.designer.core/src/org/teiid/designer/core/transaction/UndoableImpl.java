@@ -61,7 +61,8 @@ public class UndoableImpl implements Undoable {
     /* (non-Javadoc)
      * @See org.teiid.designer.core.transaction.Undoable#undo()
      */
-    public void undo() throws ModelerCoreException {
+    @Override
+	public void undo() throws ModelerCoreException {
         if(command.canUndo() ){
             boolean requiredStart = false;
             final UnitOfWork uow = container.getEmfTransactionProvider().getCurrent();
@@ -91,14 +92,16 @@ public class UndoableImpl implements Undoable {
     /* (non-Javadoc)
      * @See org.teiid.designer.core.transaction.Undoable#canUndo()
      */
-    public boolean canUndo() {
+    @Override
+	public boolean canUndo() {
         return command.canUndo();
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.transaction.Undoable#redo()
      */
-    public void redo() throws ModelerCoreException {
+    @Override
+	public void redo() throws ModelerCoreException {
         if(command.canExecute() ){
             boolean requiredStart = false;
             final UnitOfWork uow = container.getEmfTransactionProvider().getCurrent();
@@ -129,14 +132,16 @@ public class UndoableImpl implements Undoable {
     /* (non-Javadoc)
      * @See org.teiid.designer.core.transaction.Undoable#canRedo()
      */
-    public boolean canRedo() {
+    @Override
+	public boolean canRedo() {
         return command.canExecute();
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.transaction.Undoable#die()
      */
-    public void die() {
+    @Override
+	public void die() {
         resources.clear();
         significant = true;
     }
@@ -144,7 +149,8 @@ public class UndoableImpl implements Undoable {
     /* (non-Javadoc)
      * @See org.teiid.designer.core.transaction.Undoable#getPresentationName()
      */
-    public String getPresentationName() {
+    @Override
+	public String getPresentationName() {
         if(description == null){
             return command.getLabel();
         }
@@ -155,7 +161,8 @@ public class UndoableImpl implements Undoable {
     /* (non-Javadoc)
      * @See org.teiid.designer.core.transaction.Undoable#getUndoPresentationName()
      */
-    public String getUndoPresentationName() {
+    @Override
+	public String getUndoPresentationName() {
         String undoPresentationName = CoreStringUtil.Constants.EMPTY_STRING;
         
         if(description == null){
@@ -170,7 +177,8 @@ public class UndoableImpl implements Undoable {
     /* (non-Javadoc)
      * @See org.teiid.designer.core.transaction.Undoable#getRedoPresentationName()
      */
-    public String getRedoPresentationName() {
+    @Override
+	public String getRedoPresentationName() {
         String undoPresentationName = CoreStringUtil.Constants.EMPTY_STRING;
         
         if(description == null){
@@ -185,14 +193,16 @@ public class UndoableImpl implements Undoable {
     /* (non-Javadoc)
      * @See org.teiid.designer.core.transaction.Undoable#getId()
      */
-    public Object getId() {
+    @Override
+	public Object getId() {
         return this.id;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.transaction.Undoable#getResources()
      */
-    public Collection getResources() {
+    @Override
+	public Collection getResources() {
         return this.resources;
     }
 
@@ -215,21 +225,24 @@ public class UndoableImpl implements Undoable {
     /* (non-Javadoc)
      * @See org.teiid.designer.core.transaction.Undoable#isSignificant()
      */
-    public boolean isSignificant() {
+    @Override
+	public boolean isSignificant() {
         return significant;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.transaction.Undoable#setSignificant(boolean)
      */
-    public void setSignificant(final boolean isSignificant) {
+    @Override
+	public void setSignificant(final boolean isSignificant) {
         this.significant = isSignificant;
     }
 
     /**
      * @param string
      */
-    public void setDescription(String string) {
+    @Override
+	public void setDescription(String string) {
         description = string;
     }
 
@@ -237,7 +250,8 @@ public class UndoableImpl implements Undoable {
      * @see org.teiid.designer.core.transaction.Undoable#getSource()
      * @since 4.3
      */
-    public Object getSource() {
+    @Override
+	public Object getSource() {
         return source;
     }
 

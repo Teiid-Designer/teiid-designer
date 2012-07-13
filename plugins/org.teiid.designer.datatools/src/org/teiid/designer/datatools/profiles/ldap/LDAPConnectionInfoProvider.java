@@ -66,7 +66,8 @@ public class LDAPConnectionInfoProvider extends ConnectionInfoHelper implements 
      * 
      * @see org.teiid.designer.datatools.connection.IConnectionInfoHelper#getDataSourcePasswordPropertyKey()
      */
-    public String getDataSourcePasswordPropertyKey() {
+    @Override
+	public String getDataSourcePasswordPropertyKey() {
         return "LdapAdminUserPassword"; //$NON-NLS-1$
     }
 

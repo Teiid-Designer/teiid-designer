@@ -47,21 +47,24 @@ public class NavigationContextImpl implements NavigationContext {
 
     }
 
-    public NavigationContextInfo getInfo() {
+    @Override
+	public NavigationContextInfo getInfo() {
         return this.info;
     }
 
     /**
      * @see org.teiid.designer.relationship.NavigationContext#getAllNodes()
      */
-    public List getAllNodes() {
+    @Override
+	public List getAllNodes() {
         return nonFocusNodes;
     }
 
     /**
      * @see org.teiid.designer.relationship.NavigationContext#addNodeAndLink()
      */
-    public void addNodeAndLink( NavigationNode node,
+    @Override
+	public void addNodeAndLink( NavigationNode node,
                                 NavigationLink link ) {
 
         if (!nonFocusNodes.contains(node)) // Check for node
@@ -101,14 +104,16 @@ public class NavigationContextImpl implements NavigationContext {
     /**
      * @see org.teiid.designer.relationship.NavigationContext#getFocusNode()
      */
-    public NavigationNode getFocusNode() {
+    @Override
+	public NavigationNode getFocusNode() {
         return this.focusNode;
     }
 
     /**
      * @see org.teiid.designer.relationship.NavigationContext#getNonFocusNodes()
      */
-    public List getNonFocusNodes() {
+    @Override
+	public List getNonFocusNodes() {
         return this.readOnlyNonFocusNodes;
     }
 
@@ -122,21 +127,24 @@ public class NavigationContextImpl implements NavigationContext {
     /**
      * @see org.teiid.designer.relationship.NavigationContext#getNavigationLinks()
      */
-    public List getNavigationLinks() {
+    @Override
+	public List getNavigationLinks() {
         return this.links;
     }
 
     /**
      * @see org.teiid.designer.relationship.NavigationContext#getNavigationLinks(org.teiid.designer.relationship.NavigationNode)
      */
-    public List getNodes( NavigationLink link ) {
+    @Override
+	public List getNodes( NavigationLink link ) {
         return (List)this.linksMap.get(link);
     }
 
     /**
      * @see org.teiid.designer.relationship.NavigationContext#getLabel(org.teiid.designer.relationship.NavigationLink)
      */
-    public String getLabel( NavigationLink link ) {
+    @Override
+	public String getLabel( NavigationLink link ) {
         return ((NavigationLink)links.get(links.indexOf(link))).getLabel();
     }
 
@@ -144,7 +152,8 @@ public class NavigationContextImpl implements NavigationContext {
      * @see org.teiid.designer.relationship.NavigationContext#getLabelForEnd(org.teiid.designer.relationship.NavigationLink,
      *      org.eclipse.emf.ecore.EObject)
      */
-    public String getLabelForEnd( NavigationLink link,
+    @Override
+	public String getLabelForEnd( NavigationLink link,
                                   NavigationNode nodeForEnd ) {
         String role = ""; //$NON-NLS-1$ 
         if (nodeForEnd.equals(getFocusNode())) {
@@ -159,7 +168,8 @@ public class NavigationContextImpl implements NavigationContext {
     /**
      * @see org.teiid.designer.relationship.NavigationContext#getNonFocusNodeRole(org.teiid.designer.relationship.NavigationLink)
      */
-    public String getNonFocusNodeRole( NavigationLink link ) {
+    @Override
+	public String getNonFocusNodeRole( NavigationLink link ) {
         // TODO Check to make sure link and/or node are valid for this context.
         return ((NavigationLinkImpl)links.get(links.indexOf(link))).getNonFocusRole();
     }
@@ -167,14 +177,16 @@ public class NavigationContextImpl implements NavigationContext {
     /**
      * @see org.teiid.designer.relationship.NavigationContext#getTooltip(org.teiid.designer.relationship.NavigationLink)
      */
-    public String getTooltip( NavigationLink link ) {
+    @Override
+	public String getTooltip( NavigationLink link ) {
         return ((NavigationLinkImpl)links.get(links.indexOf(link))).getToolTip();
     }
 
     /**
      * @see org.teiid.designer.relationship.NavigationContext#getTooltip(org.teiid.designer.relationship.NavigationNode)
      */
-    public String getTooltip( NavigationNode node ) {
+    @Override
+	public String getTooltip( NavigationNode node ) {
         return ((NavigationNodeImpl)nonFocusNodes.get(nonFocusNodes.indexOf(node))).getToolTip();
     }
 

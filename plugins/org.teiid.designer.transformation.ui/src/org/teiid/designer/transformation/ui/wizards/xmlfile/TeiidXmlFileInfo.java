@@ -280,6 +280,7 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants, SqlC
 		validate();
 	}
 	
+	@Override
 	public void validate() {
 		// Validate XQuery Root Path Expression
 		if( this.getRootPath() == null || this.getRootPath().length() == 0 ) {

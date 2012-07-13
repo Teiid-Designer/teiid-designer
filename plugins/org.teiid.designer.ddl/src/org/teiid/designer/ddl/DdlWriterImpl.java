@@ -79,7 +79,8 @@ public class DdlWriterImpl implements DdlWriter {
      * @return the logger; never null, but may be a {@link org.teiid.designer.core.log.NullLogger NullLogger} if there is no logging.
      * @see DdlWriter#getLogger()
      */
-    public Logger getLogger() {
+    @Override
+	public Logger getLogger() {
         return logger;
     }
 
@@ -90,7 +91,8 @@ public class DdlWriterImpl implements DdlWriter {
      *        logging.
      * @see DdlWriter#setLogger(Logger)
      */
-    public void setLogger( final Logger logger ) {
+    @Override
+	public void setLogger( final Logger logger ) {
         this.logger = logger != null ? logger : new NullLogger();
     }
 
@@ -100,7 +102,8 @@ public class DdlWriterImpl implements DdlWriter {
      * @return the options; never null
      * @see DdlWriter#getOptions()
      */
-    public DdlOptions getOptions() {
+    @Override
+	public DdlOptions getOptions() {
         return options;
     }
 
@@ -117,7 +120,8 @@ public class DdlWriterImpl implements DdlWriter {
     /**
      * @see DdlWriter#write(Resource, OutputStream, IProgressMonitor)
      */
-    public IStatus write( final Resource emfResource,
+    @Override
+	public IStatus write( final Resource emfResource,
                           final String modelName,
                           final String modelFilename,
                           final OutputStream stream,
@@ -135,7 +139,8 @@ public class DdlWriterImpl implements DdlWriter {
     /**
      * @see DdlWriter#write(ModelResource, OutputStream, IProgressMonitor)
      */
-    public IStatus write( final ModelResource model,
+    @Override
+	public IStatus write( final ModelResource model,
                           final OutputStream stream,
                           final IProgressMonitor monitor ) {
         CoreArgCheck.isNotNull(model);
@@ -162,7 +167,8 @@ public class DdlWriterImpl implements DdlWriter {
     /**
      * @see DdlWriter#write(ModelWorkspaceSelections, OutputStream, IProgressMonitor)
      */
-    public IStatus write( final ModelWorkspaceSelections selections,
+    @Override
+	public IStatus write( final ModelWorkspaceSelections selections,
                           final OutputStream stream,
                           final IProgressMonitor monitor ) {
         CoreArgCheck.isNotNull(selections);

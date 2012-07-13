@@ -317,11 +317,13 @@ public class InputSetPanel extends SashForm implements SelectionListener, UiCons
         tableViewer.setLabelProvider(lpBindingLabelProvider);
 
         tableViewer.getTable().addSelectionListener(new SelectionListener() {
-            public void widgetDefaultSelected( SelectionEvent theEvent ) {
+            @Override
+			public void widgetDefaultSelected( SelectionEvent theEvent ) {
                 handleTableSelection();
             }
 
-            public void widgetSelected( SelectionEvent theEvent ) {
+            @Override
+			public void widgetSelected( SelectionEvent theEvent ) {
                 handleTableSelection();
             }
         });
@@ -340,11 +342,13 @@ public class InputSetPanel extends SashForm implements SelectionListener, UiCons
 
         Tree tree = tvTreeViewer.getTree();
         tree.addSelectionListener(new SelectionListener() {
-            public void widgetDefaultSelected( SelectionEvent theEvent ) {
+            @Override
+			public void widgetDefaultSelected( SelectionEvent theEvent ) {
                 handleTreeSelection();
             }
 
-            public void widgetSelected( SelectionEvent theEvent ) {
+            @Override
+			public void widgetSelected( SelectionEvent theEvent ) {
                 handleTreeSelection();
             }
         });
@@ -598,12 +602,14 @@ public class InputSetPanel extends SashForm implements SelectionListener, UiCons
     // SelectionListener Interface
     // ==========================================================
 
-    public void widgetSelected( SelectionEvent e ) {
+    @Override
+	public void widgetSelected( SelectionEvent e ) {
         //      System.out.println("[InputSetObjectEditorPage.widgetSelected]"); //$NON-NLS-1$
 
     }
 
-    public void widgetDefaultSelected( SelectionEvent e ) {
+    @Override
+	public void widgetDefaultSelected( SelectionEvent e ) {
         widgetSelected(e);
     }
 
@@ -617,34 +623,40 @@ public class InputSetPanel extends SashForm implements SelectionListener, UiCons
             super();
         }
 
-        public Object[] getChildren( Object parentElement ) {
+        @Override
+		public Object[] getChildren( Object parentElement ) {
             if (parentElement instanceof MappingClass) {
                 return ((MappingClass)parentElement).getColumns().toArray();
             }
             return new Object[0];
         }
 
-        public Object getParent( Object element ) {
+        @Override
+		public Object getParent( Object element ) {
             if (element instanceof MappingClassColumn) {
                 return ((MappingClassColumn)element).getMappingClass();
             }
             return null;
         }
 
-        public boolean hasChildren( Object element ) {
+        @Override
+		public boolean hasChildren( Object element ) {
             return (element instanceof MappingClass);
         }
 
-        public void inputChanged( Viewer v,
+        @Override
+		public void inputChanged( Viewer v,
                                   Object oldInput,
                                   Object newInput ) {
         }
 
-        public void dispose() {
+        @Override
+		public void dispose() {
         }
 
         // Return the bindings as an array of Objects
-        public Object[] getElements( Object parent ) {
+        @Override
+		public Object[] getElements( Object parent ) {
             return ((Collection)parent).toArray();
         }
 
@@ -658,33 +670,38 @@ public class InputSetPanel extends SashForm implements SelectionListener, UiCons
 
         // this will wrap the bindinglist in the Business Object (isoInputSetObject)
 
-        public void inputChanged( Viewer v,
+        @Override
+		public void inputChanged( Viewer v,
                                   Object oldInput,
                                   Object newInput ) {
             if (newInput != null) ((BindingList)newInput).addChangeListener(this);
             if (oldInput != null) ((BindingList)oldInput).removeChangeListener(this);
         }
 
-        public void dispose() {
+        @Override
+		public void dispose() {
             getBindingList().removeChangeListener(this);
         }
 
         // Return the bindings as an array of Objects
-        public Object[] getElements( Object parent ) {
+        @Override
+		public Object[] getElements( Object parent ) {
             return getBindingList().getAll().toArray();
         }
 
         /**
          * @see IBindingListViewer#addBinding(Binding)
          */
-        public void addBinding( BindingAdapter binding ) {
+        @Override
+		public void addBinding( BindingAdapter binding ) {
             tableViewer.add(binding);
         }
 
         /**
          * @see IBindingListViewer#addBinding(Binding)
          */
-        public void insertBinding( BindingAdapter binding,
+        @Override
+		public void insertBinding( BindingAdapter binding,
                                    int index ) {
             tableViewer.insert(binding, index);
         }
@@ -692,35 +709,40 @@ public class InputSetPanel extends SashForm implements SelectionListener, UiCons
         /**
          * @see IBindingListViewer#addBindings(Object[])
          */
-        public void addBindings( Object[] bindings ) {
+        @Override
+		public void addBindings( Object[] bindings ) {
             tableViewer.add(bindings);
         }
 
         /**
          * @see IBindingListViewer#removeBinding(Binding)
          */
-        public void removeBinding( BindingAdapter binding ) {
+        @Override
+		public void removeBinding( BindingAdapter binding ) {
             tableViewer.remove(binding);
         }
 
         /**
          * @see IBindingListViewer#removeBindings(Binding[])
          */
-        public void removeBindings( Object[] bindings ) {
+        @Override
+		public void removeBindings( Object[] bindings ) {
             tableViewer.remove(bindings);
         }
 
         /**
          * @see IBindingListViewer#updateBindings(Binding)
          */
-        public void updateBinding( BindingAdapter binding ) {
+        @Override
+		public void updateBinding( BindingAdapter binding ) {
             tableViewer.update(binding, null);
         }
 
         /**
          * @see IBindingListViewer#updateBindings(Binding)
          */
-        public void refresh( boolean updateLabels ) {
+        @Override
+		public void refresh( boolean updateLabels ) {
             tableViewer.refresh(updateLabels);
         }
 
@@ -733,7 +755,8 @@ public class InputSetPanel extends SashForm implements SelectionListener, UiCons
         /**
          * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.lang.Object, int)
          */
-        public String getColumnText( Object element,
+        @Override
+		public String getColumnText( Object element,
                                      int columnIndex ) {
             String result = EMPTY_STRING;
             BindingAdapter binding = (BindingAdapter)element;
@@ -764,7 +787,8 @@ public class InputSetPanel extends SashForm implements SelectionListener, UiCons
         /**
          * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang.Object, int)
          */
-        public Image getColumnImage( Object element,
+        @Override
+		public Image getColumnImage( Object element,
                                      int columnIndex ) {
             Image image = null;
             BindingAdapter binding = (BindingAdapter)element;
@@ -803,7 +827,8 @@ public class InputSetPanel extends SashForm implements SelectionListener, UiCons
          * 
          * @param binding
          */
-        public void addBinding( BindingAdapter binding ) {
+        @Override
+		public void addBinding( BindingAdapter binding ) {
         }
 
         /**
@@ -811,7 +836,8 @@ public class InputSetPanel extends SashForm implements SelectionListener, UiCons
          * 
          * @param binding
          */
-        public void insertBinding( BindingAdapter binding,
+        @Override
+		public void insertBinding( BindingAdapter binding,
                                    int index ) {
         }
 
@@ -820,7 +846,8 @@ public class InputSetPanel extends SashForm implements SelectionListener, UiCons
          * 
          * @param bindings
          */
-        public void addBindings( Object[] bindings ) {
+        @Override
+		public void addBindings( Object[] bindings ) {
         }
 
         /**
@@ -828,7 +855,8 @@ public class InputSetPanel extends SashForm implements SelectionListener, UiCons
          * 
          * @param binding
          */
-        public void removeBinding( BindingAdapter binding ) {
+        @Override
+		public void removeBinding( BindingAdapter binding ) {
         }
 
         /**
@@ -836,7 +864,8 @@ public class InputSetPanel extends SashForm implements SelectionListener, UiCons
          * 
          * @param binding
          */
-        public void removeBindings( Object[] bindings ) {
+        @Override
+		public void removeBindings( Object[] bindings ) {
             // Put the bound symbols back on the unmatched symbols list
 
         }
@@ -846,7 +875,8 @@ public class InputSetPanel extends SashForm implements SelectionListener, UiCons
          * 
          * @param binding
          */
-        public void updateBinding( BindingAdapter binding ) {
+        @Override
+		public void updateBinding( BindingAdapter binding ) {
         }
 
         /**
@@ -854,7 +884,8 @@ public class InputSetPanel extends SashForm implements SelectionListener, UiCons
          * 
          * @param updateLabels
          */
-        public void refresh( boolean updateLabels ) {
+        @Override
+		public void refresh( boolean updateLabels ) {
         }
     }
 
@@ -871,7 +902,8 @@ public class InputSetPanel extends SashForm implements SelectionListener, UiCons
         /**
          * @see org.eclipse.jface.viewers.ICellModifier#canModify(java.lang.Object, java.lang.String)
          */
-        public boolean canModify( Object element,
+        @Override
+		public boolean canModify( Object element,
                                   String property ) {
             return propertyName.equals(property) && (!ModelObjectUtilities.isReadOnly(isoInputSetObject.getInputSet()));
         }
@@ -879,7 +911,8 @@ public class InputSetPanel extends SashForm implements SelectionListener, UiCons
         /**
          * @see org.eclipse.jface.viewers.ICellModifier#getValue(java.lang.Object, java.lang.String)
          */
-        public Object getValue( Object element,
+        @Override
+		public Object getValue( Object element,
                                 String property ) {
             if (element instanceof BindingAdapter) {
                 Object input = ((BindingAdapter)element).getItem();
@@ -898,7 +931,8 @@ public class InputSetPanel extends SashForm implements SelectionListener, UiCons
         /**
          * @see org.eclipse.jface.viewers.ICellModifier#modify(java.lang.Object, java.lang.String, java.lang.Object)
          */
-        public void modify( Object element,
+        @Override
+		public void modify( Object element,
                             String property,
                             Object value ) {
             // Do not set Null or EmptyString as Name - results in badness

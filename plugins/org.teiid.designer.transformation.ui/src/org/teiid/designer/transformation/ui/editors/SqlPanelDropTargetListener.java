@@ -58,7 +58,8 @@ public class SqlPanelDropTargetListener implements
      * @see org.eclipse.ui.texteditor.ITextEditorDropTargetListener#getTransfers()
      * @since 4.3
      */
-    public Transfer getTransfer() {
+    @Override
+	public Transfer getTransfer() {
         return EObjectTransfer.getInstance();
     }
     
@@ -70,7 +71,8 @@ public class SqlPanelDropTargetListener implements
      * @see org.eclipse.swt.dnd.DropTargetListener#dragEnter(org.eclipse.swt.dnd.DropTargetEvent)
      * @since 4.3
      */
-    public void dragEnter(DropTargetEvent event) {
+    @Override
+	public void dragEnter(DropTargetEvent event) {
 //        System.out.println("SQLPDTL.dragEnter()");
     }
 
@@ -78,7 +80,8 @@ public class SqlPanelDropTargetListener implements
      * @see org.eclipse.swt.dnd.DropTargetListener#dragLeave(org.eclipse.swt.dnd.DropTargetEvent)
      * @since 4.3
      */
-    public void dragLeave(DropTargetEvent event) {
+    @Override
+	public void dragLeave(DropTargetEvent event) {
 //        System.out.println("SQLPDTL.dragLeave()");
     }
 
@@ -86,7 +89,8 @@ public class SqlPanelDropTargetListener implements
      * @see org.eclipse.swt.dnd.DropTargetListener#dragOperationChanged(org.eclipse.swt.dnd.DropTargetEvent)
      * @since 4.3
      */
-    public void dragOperationChanged(DropTargetEvent event) {
+    @Override
+	public void dragOperationChanged(DropTargetEvent event) {
 //        System.out.println("SQLPDTL.dragOperationChanged()");
     }
 
@@ -94,7 +98,8 @@ public class SqlPanelDropTargetListener implements
      * @see org.eclipse.swt.dnd.DropTargetListener#dragOver(org.eclipse.swt.dnd.DropTargetEvent)
      * @since 4.3
      */
-    public void dragOver(DropTargetEvent event) {
+    @Override
+	public void dragOver(DropTargetEvent event) {
         if( isEnabled(event) && isInsertOK(event) ) {
             event.detail = DND.DROP_COPY;
         } else {
@@ -238,14 +243,16 @@ public class SqlPanelDropTargetListener implements
      * @see org.eclipse.swt.dnd.DropTargetListener#drop(org.eclipse.swt.dnd.DropTargetEvent)
      * @since 4.3
      */
-    public void drop(DropTargetEvent event) {
+    @Override
+	public void drop(DropTargetEvent event) {
 //        System.out.println("SQLPDTL.drop()");
         event.detail = DND.DROP_COPY;
         final DropTargetEvent dtEvent = event;
         if( dragSourcesAreTables(event) ) {
             if( isMouseInFrom(event) || sqlIsEmpty() ) {
                 UiBusyIndicator.showWhile(null, new Runnable() {
-                    public void run() {
+                    @Override
+					public void run() {
                         executeDropInFrom(getEventEObjects(dtEvent));
                     }
                 });
@@ -273,14 +280,16 @@ public class SqlPanelDropTargetListener implements
      * @see org.eclipse.swt.dnd.DropTargetListener#dropAccept(org.eclipse.swt.dnd.DropTargetEvent)
      * @since 4.3
      */
-    public void dropAccept(DropTargetEvent event) {
+    @Override
+	public void dropAccept(DropTargetEvent event) {
     }
 
     /** 
      * @see org.eclipse.jface.util.TransferDropTargetListener#isEnabled(org.eclipse.swt.dnd.DropTargetEvent)
      * @since 4.3
      */
-    public boolean isEnabled(DropTargetEvent event) {
+    @Override
+	public boolean isEnabled(DropTargetEvent event) {
         if( dragSourcesAreTables(event) ) {
             if( isMouseInFrom(event) ) {
                 return true;

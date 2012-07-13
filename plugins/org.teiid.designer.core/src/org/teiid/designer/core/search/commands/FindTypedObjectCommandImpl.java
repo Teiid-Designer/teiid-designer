@@ -72,7 +72,8 @@ public class FindTypedObjectCommandImpl implements FindTypedObjectCommand {
      * @see org.teiid.designer.core.search.commands.FindTypedObjectCommand#getRecordInfo()
      * @since 4.1
      */
-    public Collection getRecordInfo() {
+    @Override
+	public Collection getRecordInfo() {
         return this.recordInfos;
     }
     
@@ -80,7 +81,8 @@ public class FindTypedObjectCommandImpl implements FindTypedObjectCommand {
      * @see org.teiid.designer.core.search.commands.FindTypedObjectCommand#setMetaClass(org.eclipse.emf.ecore.EClass)
      * @since 4.1
      */
-    public void setMetaClass(EClass metaClass) {
+    @Override
+	public void setMetaClass(EClass metaClass) {
         this.metaClass = metaClass;
     }
     
@@ -88,7 +90,8 @@ public class FindTypedObjectCommandImpl implements FindTypedObjectCommand {
      * @see org.teiid.designer.core.search.commands.FindTypedObjectCommand#setDatatype(org.eclipse.emf.ecore.EObject)
      * @since 4.1
      */
-    public void setDatatype(final EObject datatype) {
+    @Override
+	public void setDatatype(final EObject datatype) {
         this.datatype = datatype;
     }
     
@@ -96,7 +99,8 @@ public class FindTypedObjectCommandImpl implements FindTypedObjectCommand {
      * @see org.teiid.designer.core.search.commands.FindTypedObjectCommand#setRuntimeType(java.lang.String)
      * @since 4.1
      */
-    public void setRuntimeType(final String runtimeType) {
+    @Override
+	public void setRuntimeType(final String runtimeType) {
         this.runtimeType = runtimeType;
     }
     
@@ -104,14 +108,16 @@ public class FindTypedObjectCommandImpl implements FindTypedObjectCommand {
      * @see org.teiid.designer.core.search.commands.FindTypedObjectCommand#setSubTypes(org.eclipse.emf.ecore.EObject[])
      * @since 4.1
      */
-    public void setSubTypes(final EObject[] subTypes) {
+    @Override
+	public void setSubTypes(final EObject[] subTypes) {
         this.subtypes = subTypes;
     }
 
     /**
      * @see org.teiid.designer.core.search.commands.FindRelationshipsCommand#setIndexSelector(org.teiid.designer.core.index.IndexSelector)
      */
-    public void setIndexSelector(final IndexSelector selector) {
+    @Override
+	public void setIndexSelector(final IndexSelector selector) {
         this.selector = selector;
     }
     
@@ -119,14 +125,16 @@ public class FindTypedObjectCommandImpl implements FindTypedObjectCommand {
      * @see org.teiid.designer.core.search.commands.SearchCommand#canExecute()
      * @since 4.1
      */
-    public boolean canExecute() {
+    @Override
+	public boolean canExecute() {
         return (this.datatype != null || this.runtimeType != null);
     }
     /** 
      * @see org.teiid.designer.core.search.commands.SearchCommand#execute()
      * @since 4.1
      */
-    public IStatus execute() {
+    @Override
+	public IStatus execute() {
         if (!canExecute()) {
             return null;
         }

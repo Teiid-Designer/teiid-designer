@@ -89,7 +89,8 @@ public final class UiPlugin extends AbstractUiPlugin implements InternalUiConsta
 
         // Load Eclipse UI images into registry
         final Runnable op = new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 registerPluginImage(UI_IDE, Images.CHECKED_CHECKBOX);
                 registerPluginImage(UI_IDE, Images.UNCHECKED_CHECKBOX);
                 registerPluginImage(UI_IDE, Images.REFRESH);
@@ -134,7 +135,8 @@ public final class UiPlugin extends AbstractUiPlugin implements InternalUiConsta
         /**
          * @see org.teiid.designer.ui.common.actions.AbstractActionService#getDefaultAction(java.lang.String)
          */
-        public IAction getDefaultAction( final String theActionId ) {
+        @Override
+		public IAction getDefaultAction( final String theActionId ) {
             return null;
         }
     }

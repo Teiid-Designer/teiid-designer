@@ -127,14 +127,17 @@ public class ModelObjectListDialog extends ListDialog implements IFilter.IConsta
         if (virtual) {
             // set an empty provider for now:
             setContentProvider(new IStructuredContentProvider() {
-                public Object[] getElements( Object inputElement ) {
+                @Override
+				public Object[] getElements( Object inputElement ) {
                     return NULL_VALUE;
                 }
 
-                public void dispose() {
+                @Override
+				public void dispose() {
                 }
 
-                public void inputChanged( Viewer viewer,
+                @Override
+				public void inputChanged( Viewer viewer,
                                           Object oldInput,
                                           Object newInput ) {
                 }
@@ -289,7 +292,8 @@ public class ModelObjectListDialog extends ListDialog implements IFilter.IConsta
                     @Override
                     public void run() {
                         Display.getDefault().syncExec(new Runnable() {
-                            public void run() {
+                            @Override
+							public void run() {
                                 if (tableViewer.getTable().isDisposed() || !tableViewer.getSelection().isEmpty()) {
                                     // success, or the user changed selection
                                     t.cancel();
@@ -389,7 +393,8 @@ public class ModelObjectListDialog extends ListDialog implements IFilter.IConsta
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
      */
-    public void selectionChanged( SelectionChangedEvent event ) {
+    @Override
+	public void selectionChanged( SelectionChangedEvent event ) {
         // set path label text
         Object obj = SelectionUtilities.getSelectedObject(event.getSelection());
         if (obj instanceof EObject) {
@@ -432,15 +437,18 @@ public class ModelObjectListDialog extends ListDialog implements IFilter.IConsta
             this.labelProvider = labelProvider;
         }
 
-        public void inputChanged( Viewer viewer,
+        @Override
+		public void inputChanged( Viewer viewer,
                                   Object oldInput,
                                   Object newInput ) {
         }
 
-        public void dispose() {
+        @Override
+		public void dispose() {
         }
 
-        public Object[] getElements( Object inputElement ) {
+        @Override
+		public Object[] getElements( Object inputElement ) {
             // bail out if no input
             if (inputElement == null) {
                 return null;
@@ -539,7 +547,8 @@ public class ModelObjectListDialog extends ListDialog implements IFilter.IConsta
         }
 
         // implementation of AbstractConcurrentModel methods:
-        public void requestUpdate( final IConcurrentModelListener listener ) {
+        @Override
+		public void requestUpdate( final IConcurrentModelListener listener ) {
             // Note: the running flag may be more trouble than it's worth.
             // erratic typing can cause the filtered results to not be correct.
             if (!isRunningUpdate) {
@@ -561,7 +570,8 @@ public class ModelObjectListDialog extends ListDialog implements IFilter.IConsta
         }
 
         // implementation of Comparator methods:
-        public int compare( Object o1,
+        @Override
+		public int compare( Object o1,
                             Object o2 ) {
             // percolate selected to top:
             if (o1 == selected) {

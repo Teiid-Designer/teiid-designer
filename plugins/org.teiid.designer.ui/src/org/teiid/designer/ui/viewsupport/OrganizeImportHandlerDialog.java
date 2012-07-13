@@ -42,7 +42,8 @@ public class OrganizeImportHandlerDialog implements OrganizeImportHandler {
     /**
      * @see org.teiid.designer.core.refactor.OrganizeImportHandler#choose(java.util.List)
      */
-    public Object choose( List options ) {
+    @Override
+	public Object choose( List options ) {
         ChoiceRunnable cr = new ChoiceRunnable();
         cr.options = options;
         Display.getDefault().asyncExec(cr);
@@ -57,7 +58,8 @@ public class OrganizeImportHandlerDialog implements OrganizeImportHandler {
         public Object result;
         public List options;
 
-        public void run() {
+        @Override
+		public void run() {
             Shell shell = UiPlugin.getDefault().getCurrentWorkbenchWindow().getShell();
             ElementListSelectionDialog dialog = new ElementListSelectionDialog(shell, provider);
             dialog.setMessage(MESSAGE);
@@ -77,17 +79,21 @@ class Provider implements IStructuredContentProvider, ILabelProvider {
 
     private ILabelProvider labelProvider = new ModelExplorerLabelProvider();
 
-    public void addListener( ILabelProviderListener listener ) {
+    @Override
+	public void addListener( ILabelProviderListener listener ) {
     }
 
-    public void dispose() {
+    @Override
+	public void dispose() {
     }
 
-    public Object[] getElements( Object inputElement ) {
+    @Override
+	public Object[] getElements( Object inputElement ) {
         return ((List)inputElement).toArray();
     }
 
-    public Image getImage( Object element ) {
+    @Override
+	public Image getImage( Object element ) {
         if (element instanceof ModelResource) {
             return labelProvider.getImage(((ModelResource)element).getResource());
         }
@@ -95,23 +101,27 @@ class Provider implements IStructuredContentProvider, ILabelProvider {
         return labelProvider.getImage(element);
     }
 
-    public String getText( Object element ) {
+    @Override
+	public String getText( Object element ) {
         if (element instanceof ModelResource) {
             return ((ModelResource)element).getResource().getFullPath().makeRelative().toString();
         }
         return labelProvider.getText(element);
     }
 
-    public void inputChanged( Viewer viewer,
+    @Override
+	public void inputChanged( Viewer viewer,
                               Object oldInput,
                               Object newInput ) {
     }
 
-    public boolean isLabelProperty( Object element,
+    @Override
+	public boolean isLabelProperty( Object element,
                                     String property ) {
         return false;
     }
 
-    public void removeListener( ILabelProviderListener listener ) {
+    @Override
+	public void removeListener( ILabelProviderListener listener ) {
     }
 }

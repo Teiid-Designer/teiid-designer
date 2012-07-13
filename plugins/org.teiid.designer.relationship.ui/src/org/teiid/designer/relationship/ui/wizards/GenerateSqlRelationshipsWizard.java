@@ -125,6 +125,7 @@ public class GenerateSqlRelationshipsWizard extends AbstractWizard implements
 	 *      org.eclipse.jface.viewers.IStructuredSelection)
 	 * @since 4.0
 	 */
+	@Override
 	public void init(final IWorkbench workbench,
 			final IStructuredSelection selection) {
 		mainPage = new GenerateSqlRelationshipsMainPage();

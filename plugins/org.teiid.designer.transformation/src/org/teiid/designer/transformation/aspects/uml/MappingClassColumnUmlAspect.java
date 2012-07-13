@@ -45,14 +45,16 @@ public class MappingClassColumnUmlAspect extends AbstractTransformationUmlAspect
     /** 
      * @see org.teiid.designer.core.metamodel.aspect.uml.UmlProperty#isAssociationEnd(java.lang.Object)
      */
-    public boolean isAssociationEnd(Object property) {
+    @Override
+	public boolean isAssociationEnd(Object property) {
         return false;
     }
 
     /**
      * @see org.teiid.designer.core.metamodel.aspect.uml.UmlDiagramAspect#getStereotype(java.lang.Object)
      */
-    public String getStereotype(Object eObject) {
+    @Override
+	public String getStereotype(Object eObject) {
         // If Virtual, then use mapping class
         EmfResource emfResource = (EmfResource)((EObject)eObject).eResource();
         if (emfResource.getModelAnnotation() != null) {
@@ -70,7 +72,8 @@ public class MappingClassColumnUmlAspect extends AbstractTransformationUmlAspect
     /**
      * @see org.teiid.designer.core.metamodel.aspect.uml.UmlDiagramAspect#getEditableSignature(java.lang.Object)
      */
-    public String getEditableSignature(Object eObject) {
+    @Override
+	public String getEditableSignature(Object eObject) {
         return getSignature(eObject,UmlProperty.SIGNATURE_NAME);
     }
     
@@ -78,7 +81,8 @@ public class MappingClassColumnUmlAspect extends AbstractTransformationUmlAspect
     /**
      * @see org.teiid.designer.core.metamodel.aspect.uml.UmlDiagramAspect#setSignature(java.lang.Object, java.lang.String)
      */
-    public IStatus setSignature(Object eObject, String newSignature) {
+    @Override
+	public IStatus setSignature(Object eObject, String newSignature) {
         try {
             MappingClassColumn column = assertMappingClassColumn(eObject);
             column.setName(newSignature);
@@ -92,7 +96,8 @@ public class MappingClassColumnUmlAspect extends AbstractTransformationUmlAspect
     /**
      * @see org.teiid.designer.core.metamodel.aspect.uml.UmlDiagramAspect#getSignature(java.lang.Object, int)
      */
-    public String getSignature(Object eObject, int showMask) {
+    @Override
+	public String getSignature(Object eObject, int showMask) {
         final MappingClassColumn col = assertMappingClassColumn(eObject);
         
         // Get the name of the input parameter type

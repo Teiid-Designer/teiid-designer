@@ -187,7 +187,8 @@ public class DiagramEditor extends GraphicalEditor
      * @see org.teiid.designer.ui.editors.IInitializationCompleteNotifier#addListener(org.teiid.designer.ui.editors.IInitializationCompleteListener)
      * @since 4.3
      */
-    public void addListener( final IInitializationCompleteListener theListener ) {
+    @Override
+	public void addListener( final IInitializationCompleteListener theListener ) {
         if (completionListeners == null) completionListeners = new ArrayList();
 
         completionListeners.add(theListener);
@@ -196,7 +197,8 @@ public class DiagramEditor extends GraphicalEditor
     /**
      * @see org.teiid.designer.diagram.ui.actions.AutoLayout#autoLayout()
      */
-    public void autoLayout() {
+    @Override
+	public void autoLayout() {
         if (getCurrentModel() != null && getGraphicalViewer().getContents() instanceof DiagramEditPart) {
             final DiagramEditPart diagram = (DiagramEditPart)getGraphicalViewer().getContents();
 
@@ -225,14 +227,16 @@ public class DiagramEditor extends GraphicalEditor
     /**
      * @see org.teiid.designer.diagram.ui.actions.AutoLayout#canAutoLayout()
      */
-    public boolean canAutoLayout() {
+    @Override
+	public boolean canAutoLayout() {
         return true;
     }
 
     /**
      * @see org.teiid.designer.ui.editors.ModelEditorPage#canDisplay(org.eclipse.ui.IEditorInput)
      */
-    public boolean canDisplay( final IEditorInput input ) {
+    @Override
+	public boolean canDisplay( final IEditorInput input ) {
         boolean result = false;
         ModelResource mr = null;
 
@@ -260,7 +264,8 @@ public class DiagramEditor extends GraphicalEditor
     /**
      * @see org.teiid.designer.ui.editors.ModelEditorPage#canOpenContext(java.lang.Object)
      */
-    public boolean canOpenContext( final Object input ) {
+    @Override
+	public boolean canOpenContext( final Object input ) {
         return DiagramUiPlugin.getDiagramTypeManager().canOpenContext(input);
     }
 
@@ -336,7 +341,8 @@ public class DiagramEditor extends GraphicalEditor
      * @see org.eclipse.ui.INavigationLocationProvider#createEmptyNavigationLocation()
      * @since 4.0
      */
-    public INavigationLocation createEmptyNavigationLocation() {
+    @Override
+	public INavigationLocation createEmptyNavigationLocation() {
         //        System.out.println("[DiagramEditor.createEmptyNavigationLocation] TOP"); //$NON-NLS-1$
         return null;
         // return neNavigableEditor.createEmptyNavigationLocation();
@@ -366,7 +372,8 @@ public class DiagramEditor extends GraphicalEditor
     /**
      * @see org.teiid.designer.ui.editors.INavigationSupported
      **/
-    public IMarker createMarker() {
+    @Override
+	public IMarker createMarker() {
 
         final NavigationMarker nmMarker = new NavigationMarker();
         nmMarker.setAttribute(Navigation.MARKER_TYPE, Navigation.NAVIGATION);
@@ -406,7 +413,8 @@ public class DiagramEditor extends GraphicalEditor
      * @see org.eclipse.ui.INavigationLocationProvider#createNavigationLocation()
      * @since 4.0
      */
-    public INavigationLocation createNavigationLocation() {
+    @Override
+	public INavigationLocation createNavigationLocation() {
         //        System.out.println("[DiagramEditor.createNavigationLocation] TOP"); //$NON-NLS-1$
         final INavigationLocation newLocation = null;
 
@@ -444,7 +452,8 @@ public class DiagramEditor extends GraphicalEditor
 
         toolBarManager.update(true);
         parent.addDisposeListener(new DisposeListener() {
-            public void widgetDisposed( final DisposeEvent e ) {
+            @Override
+			public void widgetDisposed( final DisposeEvent e ) {
                 final DiagramController dController = getDiagramController();
                 if (dController != null) dController.dispose();
             }
@@ -513,7 +522,8 @@ public class DiagramEditor extends GraphicalEditor
     /**
      * @see org.teiid.designer.ui.editors.ModelEditorPage#getEditorActionBarContributor()
      */
-    public AbstractModelEditorPageActionBarContributor getActionBarContributor() {
+    @Override
+	public AbstractModelEditorPageActionBarContributor getActionBarContributor() {
         // jh experiment: commenting out the 'if null' logic.
         // this way, we'll always provide a new one, but that one will persist
         // until a new one is required...Whoa..that led to an NPE???
@@ -564,7 +574,8 @@ public class DiagramEditor extends GraphicalEditor
     /**
      * @see org.teiid.designer.ui.editors.ModelEditorPage#getControl()
      */
-    public Control getControl() {
+    @Override
+	public Control getControl() {
         return viewer.getControl();
     }
 
@@ -622,7 +633,8 @@ public class DiagramEditor extends GraphicalEditor
     /**
      * @see org.teiid.designer.diagram.ui.editor.ZoomableEditor#getDiagramEditor()
      */
-    public DiagramEditor getDiagramEditor() {
+    @Override
+	public DiagramEditor getDiagramEditor() {
         return this;
     }
 
@@ -644,7 +656,8 @@ public class DiagramEditor extends GraphicalEditor
      * @see org.teiid.designer.ui.editors.IInlineRenameable#canRenameInline(org.eclipse.emf.ecore.EObject)
      * @since 5.0
      */
-    public IInlineRenameable getInlineRenameable( final EObject theObj ) {
+    @Override
+	public IInlineRenameable getInlineRenameable( final EObject theObj ) {
         return this;
     }
 
@@ -662,14 +675,16 @@ public class DiagramEditor extends GraphicalEditor
     /**
      * @see org.teiid.designer.ui.editors.ModelEditorPage#getModelObjectSelectionChangedListener(java.lang.Object)
      */
-    public ISelectionChangedListener getModelObjectSelectionChangedListener() {
+    @Override
+	public ISelectionChangedListener getModelObjectSelectionChangedListener() {
         return this;
     }
 
     /**
      * @see org.teiid.designer.ui.editors.ModelEditorPage#getModelObjectSelectionProvider()
      */
-    public ISelectionProvider getModelObjectSelectionProvider() {
+    @Override
+	public ISelectionProvider getModelObjectSelectionProvider() {
         return selectionProvider;
     }
 
@@ -687,14 +702,16 @@ public class DiagramEditor extends GraphicalEditor
     /**
      * @see org.teiid.designer.ui.editors.ModelEditorPage#getNotifyChangedListener()
      */
-    public INotifyChangedListener getNotifyChangedListener() {
+    @Override
+	public INotifyChangedListener getNotifyChangedListener() {
         return this;
     }
 
     /**
      * @see org.teiid.designer.ui.editors.ModelEditorPage#getOutlineContribution()
      */
-    public ModelEditorPageOutline getOutlineContribution() {
+    @Override
+	public ModelEditorPageOutline getOutlineContribution() {
         if (overview == null) overview = new DiagramOverview(getGraphicalViewer(), getSelectionSynchronizer(), getCurrentModel());
         return overview;
     }
@@ -759,7 +776,8 @@ public class DiagramEditor extends GraphicalEditor
     /**
      * @see org.eclipse.ui.IEditorPart#gotoMarker(IMarker)
      **/
-    public void gotoMarker( final IMarker iMarker ) {
+    @Override
+	public void gotoMarker( final IMarker iMarker ) {
         /*
          *
          * 1.  the marker should also have SELECTED_OBJECT
@@ -855,7 +873,8 @@ public class DiagramEditor extends GraphicalEditor
         setInput(iInput);
 
         markerListener = new IResourceChangeListener() {
-            public void resourceChanged( final IResourceChangeEvent event ) {
+            @Override
+			public void resourceChanged( final IResourceChangeEvent event ) {
 
                 if (event.getType() == IResourceChangeEvent.POST_CHANGE) // Let's see if all dependencies are open in workspace.
                 if (getDiagram() != null && getDiagram().getTarget() != null
@@ -901,7 +920,8 @@ public class DiagramEditor extends GraphicalEditor
                         }
                     } else // We know that something happened that removed a dependent model
                     Display.getDefault().syncExec(new Runnable() {
-                        public void run() {
+                        @Override
+						public void run() {
                             openContext(getDiagram());
                             updateReadOnlyState();
                         }
@@ -918,7 +938,8 @@ public class DiagramEditor extends GraphicalEditor
         // Here's where we go ahead and if the input is an IFile and we can find the model resource
         // If we can find a model resource, we can open it's package diagram
         if (getEditorInput() instanceof IFileEditorInput) Display.getCurrent().asyncExec(new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 try {
                     Thread.sleep(100);
                 } catch (final InterruptedException e1) {
@@ -961,7 +982,8 @@ public class DiagramEditor extends GraphicalEditor
 
     }
 
-    public void initializeEditorPage() {
+    @Override
+	public void initializeEditorPage() {
     }
 
     /**
@@ -1022,14 +1044,16 @@ public class DiagramEditor extends GraphicalEditor
      * @see org.teiid.designer.ui.editors.ModelEditorPage#isSelectedFirst(org.eclipse.ui.IEditorInput)
      * @since 5.0.1
      */
-    public boolean isSelectedFirst( final IEditorInput input ) {
+    @Override
+	public boolean isSelectedFirst( final IEditorInput input ) {
         return false;
     }
 
     /**
      * @see org.eclipse.jface.viewers.ILabelProviderListener#labelProviderChanged(org.eclipse.jface.viewers.LabelProviderChangedEvent)
      */
-    public void labelProviderChanged( final LabelProviderChangedEvent event ) {
+    @Override
+	public void labelProviderChanged( final LabelProviderChangedEvent event ) {
 
         boolean modelChanged = false;
         final Object[] elements = event.getElements();
@@ -1058,7 +1082,8 @@ public class DiagramEditor extends GraphicalEditor
     /**
      * @see org.eclipse.emf.edit.provider.INotifyChangedListener#notifyChanged(org.eclipse.emf.common.notify.Notification)
      */
-    public void notifyChanged( final Notification notification ) {
+    @Override
+	public void notifyChanged( final Notification notification ) {
         boolean diagramStillValid = true;
         // DiagramModelFactory inherently wraps
         if (getModelFactory() != null && getCurrentModel() != null) diagramStillValid = getModelFactory().notifyModel(notification,
@@ -1104,7 +1129,8 @@ public class DiagramEditor extends GraphicalEditor
      * @see org.teiid.designer.ui.editors.IInitializationCompleteNotifier#notifyInitializationComplete()
      * @since 4.3
      */
-    public void notifyInitializationComplete() {
+    @Override
+	public void notifyInitializationComplete() {
         if (completionListeners != null && !completionListeners.isEmpty()) for (final Iterator iter = completionListeners.iterator(); iter.hasNext();)
             ((IInitializationCompleteListener)iter.next()).processInitializationComplete();
     }
@@ -1113,7 +1139,8 @@ public class DiagramEditor extends GraphicalEditor
      * @see org.teiid.designer.ui.editors.ModelEditorPage#openComplete()
      * @since 4.2
      */
-    public void openComplete() {
+    @Override
+	public void openComplete() {
         if (revealableEObject != null) {
             final EObject revealedObject = revealableEObject;
             getDiagramViewer().reveal(revealedObject);
@@ -1125,11 +1152,13 @@ public class DiagramEditor extends GraphicalEditor
      * non-Javadoc)
      * @See org.teiid.designer.ui.editors.ModelEditorPage#openContext(java.lang.Object)
      */
-    public void openContext( final Object input ) {
+    @Override
+	public void openContext( final Object input ) {
         openContext(input, false);
     }
 
-    public void openContext( final Object input,
+    @Override
+	public void openContext( final Object input,
                              final boolean forceRefresh ) {
         // System.out.println("  -->>  DE.openContext() already openin/gContext = " + openingContext + " NOpens = " + nOpens +
         // " Input = " + input);
@@ -1179,7 +1208,8 @@ public class DiagramEditor extends GraphicalEditor
 
                 if (requiresProgress) setDiagramWithProgress(newDiagram);
                 else UiBusyIndicator.showWhile(Display.getCurrent(), new Runnable() {
-                    public void run() {
+                    @Override
+					public void run() {
                         setDiagram(newDiagram, null);
                     }
                 });
@@ -1226,35 +1256,40 @@ public class DiagramEditor extends GraphicalEditor
     /**
      * @see org.eclipse.ui.IPartListener#partActivated(org.eclipse.ui.IWorkbenchPart)
      */
-    public void partActivated( final IWorkbenchPart part ) {
+    @Override
+	public void partActivated( final IWorkbenchPart part ) {
         // No action
     }
 
     /**
      * @see org.eclipse.ui.IPartListener#partBroughtToTop(org.eclipse.ui.IWorkbenchPart)
      */
-    public void partBroughtToTop( final IWorkbenchPart part ) {
+    @Override
+	public void partBroughtToTop( final IWorkbenchPart part ) {
         // No action
     }
 
     /**
      * @see org.eclipse.ui.IPartListener#partClosed(org.eclipse.ui.IWorkbenchPart)
      */
-    public void partClosed( final IWorkbenchPart part ) {
+    @Override
+	public void partClosed( final IWorkbenchPart part ) {
         // No action
     }
 
     /**
      * @see org.eclipse.ui.IPartListener#partDeactivated(org.eclipse.ui.IWorkbenchPart)
      */
-    public void partDeactivated( final IWorkbenchPart part ) {
+    @Override
+	public void partDeactivated( final IWorkbenchPart part ) {
         refreshFont();
     }
 
     /**
      * @see org.eclipse.ui.IPartListener#partOpened(org.eclipse.ui.IWorkbenchPart)
      */
-    public void partOpened( final IWorkbenchPart part ) {
+    @Override
+	public void partOpened( final IWorkbenchPart part ) {
         // No action
     }
 
@@ -1262,7 +1297,8 @@ public class DiagramEditor extends GraphicalEditor
      * @see org.teiid.designer.ui.editors.ModelEditorPage#preDispose()
      * @since 4.2
      */
-    public void preDispose() {
+    @Override
+	public void preDispose() {
         // Default Implementation
     }
 
@@ -1270,7 +1306,8 @@ public class DiagramEditor extends GraphicalEditor
      * @see org.teiid.core.event.EventObjectListener#processEvent(java.util.EventObject)
      * @since 4.2
      */
-    public void processEvent( final EventObject obj ) {
+    @Override
+	public void processEvent( final EventObject obj ) {
 
         final ModelResourceEvent event = (ModelResourceEvent)obj;
 
@@ -1288,7 +1325,8 @@ public class DiagramEditor extends GraphicalEditor
             final IResource res = event.getResource();
             if (isSameResource) // we are the editor for the reloaded file:
             Display.getDefault().asyncExec(new Runnable() {
-                public void run() {
+                @Override
+				public void run() {
                     final EObject realDiagram = ModelObjectUtilities.getRealEObject(currentDiagram);
                     ModelEditorManager.open(realDiagram, true);
                     if (res instanceof IFile) {
@@ -1325,7 +1363,8 @@ public class DiagramEditor extends GraphicalEditor
     void refreshDiagramSafe() {
         // redisplay contents:
         Display.getDefault().asyncExec(new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 // refresh the diagram:
                 // Since this is in an async, we need to really check if the model/workspace isn't closing???
                 if (!DiagramUiPlugin.getDefault().getWorkbench().isClosing() && getDiagramViewer().isValidViewer())
@@ -1377,7 +1416,8 @@ public class DiagramEditor extends GraphicalEditor
      * @see org.teiid.designer.ui.editors.IInitializationCompleteNotifier#removeListener(org.teiid.designer.ui.editors.IInitializationCompleteListener)
      * @since 4.3
      */
-    public void removeListener( final IInitializationCompleteListener theListener ) {
+    @Override
+	public void removeListener( final IInitializationCompleteListener theListener ) {
         if (completionListeners != null && !completionListeners.isEmpty()) completionListeners.remove(theListener);
     }
 
@@ -1385,12 +1425,14 @@ public class DiagramEditor extends GraphicalEditor
      * @see org.teiid.designer.ui.editors.IInlineRenameable#renameInline(org.eclipse.emf.ecore.EObject)
      * @since 5.0
      */
-    public void renameInline( final EObject theObj,
+    @Override
+	public void renameInline( final EObject theObj,
                               final IInlineRenameable renameable ) {
         if (renameable == this) // Set Selection
         // Let's asynch this off
         Display.getCurrent().asyncExec(new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 // Defect 19537 - replaced call to handleDoubleClick() to use a new renameInline() method
                 // since this is what we really want to do!!!!!
                 getSelectionHandler().renameInline(theObj);
@@ -1426,7 +1468,8 @@ public class DiagramEditor extends GraphicalEditor
     /**
      * @see org.eclipse.ui.ISelectionListener#selectionChanged(org.eclipse.ui.IWorkbenchPart, org.eclipse.jface.viewers.ISelection)
      */
-    public void selectionChanged( final SelectionChangedEvent sce ) {
+    @Override
+	public void selectionChanged( final SelectionChangedEvent sce ) {
         final ISelection selection = sce.getSelection();
         if (selection instanceof IStructuredSelection) {
 
@@ -1582,7 +1625,8 @@ public class DiagramEditor extends GraphicalEditor
         boolean success = false;
         final Diagram theDiagram = newDiagram;
         final IRunnableWithProgress op = new IRunnableWithProgress() {
-            public void run( final IProgressMonitor monitor ) {
+            @Override
+			public void run( final IProgressMonitor monitor ) {
                 monitor.beginTask("Constructing Diagram", 100); //$NON-NLS-1$
                 setDiagram(theDiagram, monitor);
             }
@@ -1624,7 +1668,8 @@ public class DiagramEditor extends GraphicalEditor
     /**
      * @see org.teiid.designer.ui.editors.ModelEditorPage#setLabelProvider(org.eclipse.jface.viewers.ILabelProvider)
      */
-    public void setLabelProvider( final ILabelProvider provider ) {
+    @Override
+	public void setLabelProvider( final ILabelProvider provider ) {
         DiagramUiPlugin.getDefault().getWorkbench().getDecoratorManager().getLabelDecorator().addListener(this);
         // provider.addListener(this);
         DiagramUiPlugin.getDiagramNotationManager().setLabelProvider(provider);
@@ -1640,7 +1685,8 @@ public class DiagramEditor extends GraphicalEditor
     /**
      * @see org.teiid.designer.ui.editors.ModelEditorPage#getEditorActionBarContributor()
      */
-    public void setNotationId( final String sNotationId ) {
+    @Override
+	public void setNotationId( final String sNotationId ) {
         //        Util.log( IStatus.INFO, "[DiagramEditor.setNotationId] TOP "  ); //$NON-NLS-1$
         if (!this.sNotationId.equals(sNotationId)) {
             this.sNotationId = sNotationId;
@@ -1661,7 +1707,8 @@ public class DiagramEditor extends GraphicalEditor
     /**
      * @see org.teiid.designer.ui.editors.ModelEditorPage#setParent()
      */
-    public void setParent( final ModelEditor meParentEditor ) {
+    @Override
+	public void setParent( final ModelEditor meParentEditor ) {
         this.meParentEditor = meParentEditor;
     }
 
@@ -1669,7 +1716,8 @@ public class DiagramEditor extends GraphicalEditor
      * @see org.teiid.designer.ui.editors.ModelEditorPage#setTitleText(java.lang.String)
      * @since 4.2
      */
-    public void setTitleText( final String newTitle ) {
+    @Override
+	public void setTitleText( final String newTitle ) {
         this.title = newTitle;
     }
 
@@ -1762,7 +1810,8 @@ public class DiagramEditor extends GraphicalEditor
     /**
      * @see org.teiid.designer.ui.editors.ModelEditorPage#updateReadOnlyState(boolean)
      */
-    public void updateReadOnlyState( final boolean isReadOnly ) {
+    @Override
+	public void updateReadOnlyState( final boolean isReadOnly ) {
         if (getCurrentModel() != null && getCurrentModel().isReadOnly() != isReadOnly) {
             getCurrentModel().setReadOnly(isReadOnly);
             final Iterator iter = getCurrentModel().getChildren().iterator();

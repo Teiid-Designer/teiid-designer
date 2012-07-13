@@ -410,18 +410,21 @@ public class ModelObjectSelectionPanel extends Composite implements IFinderPanel
         text.setText((fFilter == null ? "" : fFilter)); //$NON-NLS-1$
 
         Listener listener = new Listener() {
-            public void handleEvent( Event e ) {
+            @Override
+			public void handleEvent( Event e ) {
                 fFilteredList.setFilter(fFilterText.getText());
             }
         };
         text.addListener(SWT.Modify, listener);
 
         text.addKeyListener(new KeyListener() {
-            public void keyPressed( KeyEvent e ) {
+            @Override
+			public void keyPressed( KeyEvent e ) {
                 if (e.keyCode == SWT.ARROW_DOWN) fFilteredList.setFocus();
             }
 
-            public void keyReleased( KeyEvent e ) {
+            @Override
+			public void keyReleased( KeyEvent e ) {
             }
         });
 
@@ -451,11 +454,13 @@ public class ModelObjectSelectionPanel extends Composite implements IFinderPanel
         list.setFilter((fFilter == null ? "" : fFilter)); //$NON-NLS-1$
 
         list.addSelectionListener(new SelectionListener() {
-            public void widgetDefaultSelected( SelectionEvent e ) {
+            @Override
+			public void widgetDefaultSelected( SelectionEvent e ) {
                 handleDefaultSelected();
             }
 
-            public void widgetSelected( SelectionEvent e ) {
+            @Override
+			public void widgetSelected( SelectionEvent e ) {
                 handleWidgetSelected();
             }
         });
@@ -492,19 +497,22 @@ public class ModelObjectSelectionPanel extends Composite implements IFinderPanel
         Table list = new Table(parent, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
 
         list.addListener(SWT.Selection, new Listener() {
-            public void handleEvent( Event evt ) {
+            @Override
+			public void handleEvent( Event evt ) {
                 handleLowerSelectionChanged();
             }
         });
 
         list.addListener(SWT.MouseDoubleClick, new Listener() {
-            public void handleEvent( Event evt ) {
+            @Override
+			public void handleEvent( Event evt ) {
                 handleDefaultSelected();
             }
         });
 
         list.addDisposeListener(new DisposeListener() {
-            public void widgetDisposed( DisposeEvent e ) {
+            @Override
+			public void widgetDisposed( DisposeEvent e ) {
                 fQualifierRenderer.dispose();
             }
         });
@@ -606,7 +614,8 @@ public class ModelObjectSelectionPanel extends Composite implements IFinderPanel
         return status.isOK();
     }
 
-    public Object[] getResult() {
+    @Override
+	public Object[] getResult() {
         return new Object[] {getSelectedEObject()};
     }
 
@@ -736,19 +745,23 @@ public class ModelObjectSelectionPanel extends Composite implements IFinderPanel
     // interface: IFinderPanel
     // =================================
 
-    public void createButtonsForButtonBar( Composite parent ) {
+    @Override
+	public void createButtonsForButtonBar( Composite parent ) {
         // no action
     }
 
-    public void handleOkPressed() {
+    @Override
+	public void handleOkPressed() {
 
     }
 
-    public void handleCancelPressed() {
+    @Override
+	public void handleCancelPressed() {
 
     }
 
-    public void updateOKStatus() {
+    @Override
+	public void updateOKStatus() {
         /*
          * always update with an OK status, because there is no way to pick the 'wrong' thing
          * in this panel.
@@ -797,7 +810,8 @@ public class ModelObjectSelectionPanel extends Composite implements IFinderPanel
         return eObj;
     }
 
-    public String getTitle() {
+    @Override
+	public String getTitle() {
         return TITLE;
     }
 
@@ -806,7 +820,8 @@ public class ModelObjectSelectionPanel extends Composite implements IFinderPanel
      * 
      * @param validator the validator to validate the selection.
      */
-    public void setValidator( ISelectionStatusValidator validator ) {
+    @Override
+	public void setValidator( ISelectionStatusValidator validator ) {
         fValidator = validator;
     }
 

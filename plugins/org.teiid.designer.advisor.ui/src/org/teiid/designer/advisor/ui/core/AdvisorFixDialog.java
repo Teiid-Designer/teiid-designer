@@ -87,13 +87,15 @@ public class AdvisorFixDialog {
         // PlatformUI.getWorkbench().getHelpSystem().setHelp(shell, IHelpUIConstants.F1_SHELL);
 
         shell.addListener(SWT.Deactivate, new Listener() {
-            public void handleEvent( Event e ) {
+            @Override
+			public void handleEvent( Event e ) {
                 close();
             }
         });
 
         shell.addTraverseListener(new TraverseListener() {
-            public void keyTraversed( TraverseEvent e ) {
+            @Override
+			public void keyTraversed( TraverseEvent e ) {
                 if (e.detail == SWT.TRAVERSE_ESCAPE) {
                     e.doit = true;
                 }
@@ -177,7 +179,8 @@ public class AdvisorFixDialog {
 
         Description text = new Description(parent, SWT.MULTI | SWT.READ_ONLY);
         text.addTraverseListener(new TraverseListener() {
-            public void keyTraversed( TraverseEvent e ) {
+            @Override
+			public void keyTraversed( TraverseEvent e ) {
                 if (e.detail == SWT.TRAVERSE_ESCAPE) {
                     e.doit = true;
                 }

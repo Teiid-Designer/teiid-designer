@@ -39,7 +39,8 @@ public class XClassExtendedClassRule implements ObjectValidationRule {
      * @see org.teiid.designer.core.validation.ObjectValidationRule#validate(org.eclipse.emf.ecore.EObject, org.teiid.designer.core.validation.ValidationContext)
      * @since 4.2
      */
-    public void validate(EObject eObject, ValidationContext context) {
+    @Override
+	public void validate(EObject eObject, ValidationContext context) {
         CoreArgCheck.isInstanceOf(XClass.class, eObject);
 
         final XClass xclass = (XClass) eObject;

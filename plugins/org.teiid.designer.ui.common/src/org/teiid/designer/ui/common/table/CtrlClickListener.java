@@ -46,7 +46,8 @@ public class CtrlClickListener extends MouseAdapter implements SelectionListener
         if ((e.stateMask & SWT.CTRL) != 0) {
             clearNextSelection = true;
             Display.getDefault().asyncExec(new Runnable() {
-                public void run() {
+                @Override
+				public void run() {
                     if (SelectionUtilities.getSelectedObject(tableViewer.getSelection()) != null) {
                         tableViewer.setSelection(new StructuredSelection());
                     }
@@ -58,18 +59,21 @@ public class CtrlClickListener extends MouseAdapter implements SelectionListener
     /**
      * @see org.eclipse.swt.events.SelectionListener#widgetDefaultSelected(org.eclipse.swt.events.SelectionEvent)
      */
-    public void widgetDefaultSelected( SelectionEvent e ) {
+    @Override
+	public void widgetDefaultSelected( SelectionEvent e ) {
     }
 
     /**
      * @see org.eclipse.swt.events.SelectionListener#widgetSelected(org.eclipse.swt.events.SelectionEvent)
      */
-    public void widgetSelected( SelectionEvent e ) {
+    @Override
+	public void widgetSelected( SelectionEvent e ) {
 
         if (clearNextSelection) {
             clearNextSelection = false;
             Display.getCurrent().asyncExec(new Runnable() {
-                public void run() {
+                @Override
+				public void run() {
                     if (SelectionUtilities.getSelectedObject(tableViewer.getSelection()) != null) {
                         tableViewer.setSelection(new StructuredSelection());
                     }

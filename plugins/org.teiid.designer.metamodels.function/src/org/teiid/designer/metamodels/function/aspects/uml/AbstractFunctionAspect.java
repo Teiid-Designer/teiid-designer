@@ -27,7 +27,8 @@ public abstract class AbstractFunctionAspect extends AbstractMetamodelAspect imp
         setMetamodelEntity(entity);
     }
     
-    public int getVisibility(Object eObject) {
+    @Override
+	public int getVisibility(Object eObject) {
         return VISIBILITY_PUBLIC;
     }
 
@@ -35,7 +36,8 @@ public abstract class AbstractFunctionAspect extends AbstractMetamodelAspect imp
      * @see org.teiid.designer.core.metamodel.aspect.uml.UmlDiagramAspect#getImage(java.lang.Object)
      * @since 4.2
      */
-    public Object getImage(Object eObject) {
+    @Override
+	public Object getImage(Object eObject) {
         // get the adapter factory
         final AdapterFactory adapterFactory = ModelerCore.getMetamodelRegistry().getAdapterFactory();
 		// lookup item provider for the eobjet
@@ -44,7 +46,8 @@ public abstract class AbstractFunctionAspect extends AbstractMetamodelAspect imp
 		return provider.getImage(eObject);
     }
     
-    public String getEditableSignature(Object eObject) {
+    @Override
+	public String getEditableSignature(Object eObject) {
         return getSignature(eObject, UmlClassifier.SIGNATURE_NAME);
     }    
 

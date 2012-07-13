@@ -29,7 +29,8 @@ public final class CoreModelPropertyEditorFactory implements IPropertyEditorFact
      * @see org.teiid.designer.ui.properties.IPropertyEditorFactory#supportsStructuralFeature(org.eclipse.emf.ecore.EStructuralFeature)
      * @since 4.3
      */
-    public boolean supportsStructuralFeature(EStructuralFeature theFeature) {
+    @Override
+	public boolean supportsStructuralFeature(EStructuralFeature theFeature) {
         boolean result = false;
         
         if (ModelAnnotation.class == theFeature.getContainerClass()) {
@@ -51,7 +52,8 @@ public final class CoreModelPropertyEditorFactory implements IPropertyEditorFact
      * @see org.teiid.designer.ui.properties.IPropertyEditorFactory#createPropertyEditor(org.eclipse.swt.widgets.Composite, org.eclipse.emf.edit.provider.IItemPropertyDescriptor, org.eclipse.ui.views.properties.IPropertyDescriptor, java.lang.Object)
      * @since 4.3
      */
-    public CellEditor createPropertyEditor(Composite theComposite,
+    @Override
+	public CellEditor createPropertyEditor(Composite theComposite,
                                            IItemPropertyDescriptor theItemPropertyDescriptor,
                                            IPropertyDescriptor thePropertyDescriptor,
                                            Object theObject) {

@@ -43,7 +43,8 @@ public class BuildModelImportsAction extends Action implements ISelectionListene
         setImageDescriptor(UiPlugin.getDefault().getImageDescriptor(PluginConstants.Images.BUILD_MODEL_IMPORTS_ICON));
     }
 
-    public int compareTo( final Object o ) {
+    @Override
+	public int compareTo( final Object o ) {
         if (o instanceof String) {
             return getText().compareTo((String)o);
         }
@@ -54,7 +55,8 @@ public class BuildModelImportsAction extends Action implements ISelectionListene
         return 0;
     }
 
-    public boolean isApplicable( final ISelection selection ) {
+    @Override
+	public boolean isApplicable( final ISelection selection ) {
         boolean result = true;
         final List selectedObjs = SelectionUtilities.getSelectedObjects(selection);
         if (selectedObjs.isEmpty()) {
@@ -166,7 +168,8 @@ public class BuildModelImportsAction extends Action implements ISelectionListene
     /* (non-Javadoc)
      * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction, org.eclipse.jface.viewers.ISelection)
      */
-    public void selectionChanged( final IWorkbenchPart part,
+    @Override
+	public void selectionChanged( final IWorkbenchPart part,
                                   final ISelection selection ) {
         selectedModels = SelectionUtilities.getSelectedObjects(selection);
         boolean enable = true;

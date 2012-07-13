@@ -293,7 +293,8 @@ public class FunctionEditor extends AbstractLanguageObjectEditor {
         public void initialize() {
             // set first selection
             Display.getDefault().asyncExec(new Runnable() {
-                public void run() {
+                @Override
+				public void run() {
                     modelChanged(new LanguageObjectEditorModelEvent(model, FunctionEditorModel.CATEGORY));
                 }
             });
@@ -302,7 +303,8 @@ public class FunctionEditor extends AbstractLanguageObjectEditor {
         /**
          * @see org.teiid.query.ui.builder.model.ILanguageObjectEditorModelListener#modelChanged(org.teiid.query.ui.builder.model.LanguageObjectEditorModelEvent)
          */
-        public void modelChanged( LanguageObjectEditorModelEvent theEvent ) {
+        @Override
+		public void modelChanged( LanguageObjectEditorModelEvent theEvent ) {
             String type = theEvent.getType();
 
             if (type.equals(FunctionEditorModel.CATEGORY)) {
@@ -321,13 +323,15 @@ public class FunctionEditor extends AbstractLanguageObjectEditor {
         /**
          * @see org.eclipse.jface.viewers.IContentProvider#dispose()
          */
-        public void dispose() {
+        @Override
+		public void dispose() {
         }
 
         /**
          * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
          */
-        public Object[] getElements( Object theInputElement ) {
+        @Override
+		public Object[] getElements( Object theInputElement ) {
             Object[] result = null;
             List args = model.getFunctionArgNames();
 
@@ -348,7 +352,8 @@ public class FunctionEditor extends AbstractLanguageObjectEditor {
          * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object,
          *      java.lang.Object)
          */
-        public void inputChanged( Viewer theViewer,
+        @Override
+		public void inputChanged( Viewer theViewer,
                                   Object theOldInput,
                                   Object theNewInput ) {
         }
@@ -360,7 +365,8 @@ public class FunctionEditor extends AbstractLanguageObjectEditor {
         /**
          * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang.Object, int)
          */
-        public Image getColumnImage( Object theElement,
+        @Override
+		public Image getColumnImage( Object theElement,
                                      int theColumnIndex ) {
             return null;
         }
@@ -368,7 +374,8 @@ public class FunctionEditor extends AbstractLanguageObjectEditor {
         /**
          * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.lang.Object, int)
          */
-        public String getColumnText( Object theElement,
+        @Override
+		public String getColumnText( Object theElement,
                                      int theColumnIndex ) {
             TableRow row = (TableRow)theElement;
             return row.getColumnText(theColumnIndex);

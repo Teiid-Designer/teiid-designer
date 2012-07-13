@@ -58,7 +58,8 @@ public class AddGroupSelectionValidator implements ISelectionStatusValidator {
      * @see org.eclipse.ui.dialogs.ISelectionStatusValidator#validate(java.lang.Object[])
      * @since 4.2
      */
-    public IStatus validate(Object[] selection) {
+    @Override
+	public IStatus validate(Object[] selection) {
         this.isUnion = false;
         if ( selection.length != 1 ) {
             return INVALID_STATUS;

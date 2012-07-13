@@ -64,6 +64,7 @@ public class StructuralCopyWizardPage extends WizardPage implements UiConstants,
 	/**
 	 * @see IDialogPage#createControl(Composite)
 	 */
+	@Override
 	public void createControl(Composite parent) {
         
         ModelResource selectedResource = null;
@@ -106,6 +107,7 @@ public class StructuralCopyWizardPage extends WizardPage implements UiConstants,
 		return panel.getTreePopulator();
 	}
 	
+	@Override
 	public boolean deselectDescendants(Object node) {
 		boolean deselect;
 		switch (StructuralCopyWizardPage.deselectionInstruction) {

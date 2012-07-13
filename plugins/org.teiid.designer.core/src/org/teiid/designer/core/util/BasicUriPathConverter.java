@@ -41,7 +41,8 @@ public class BasicUriPathConverter implements UriPathConverter {
     /** 
      * @see org.teiid.designer.core.resource.EmfUriHelper#makeAbsolute(java.lang.String, java.lang.String)
      */
-    public String makeAbsolute(final String relativePath, final String basePath) {
+    @Override
+	public String makeAbsolute(final String relativePath, final String basePath) {
         CoreArgCheck.isNotNull(relativePath);
         
         final URI relativeURI = URI.createURI(relativePath);
@@ -62,7 +63,8 @@ public class BasicUriPathConverter implements UriPathConverter {
     /** 
      * @see org.teiid.designer.core.resource.EmfUriHelper#makeAbsolute(org.eclipse.emf.common.util.URI, org.eclipse.emf.common.util.URI)
      */
-    public URI makeAbsolute(final URI relativeURI, final URI baseURI) {
+    @Override
+	public URI makeAbsolute(final URI relativeURI, final URI baseURI) {
         CoreArgCheck.isNotNull(relativeURI);
         
         // If relativePath is a workspace relative path of the form "/Project/.../File"
@@ -89,7 +91,8 @@ public class BasicUriPathConverter implements UriPathConverter {
     /** 
      * @see org.teiid.designer.core.resource.EmfUriHelper#makeRelative(java.lang.String, java.lang.String)
      */
-    public String makeRelative(final String absolutePath, final String basePath) {
+    @Override
+	public String makeRelative(final String absolutePath, final String basePath) {
         CoreArgCheck.isNotNull(absolutePath);
         
         final URI absoluteURI = URI.createURI(absolutePath);
@@ -102,7 +105,8 @@ public class BasicUriPathConverter implements UriPathConverter {
     /** 
      * @see org.teiid.designer.core.resource.EmfUriHelper#makeRelative(org.eclipse.emf.common.util.URI, org.eclipse.emf.common.util.URI)
      */
-    public URI makeRelative(final URI absoluteURI, final URI baseURI) {
+    @Override
+	public URI makeRelative(final URI absoluteURI, final URI baseURI) {
         CoreArgCheck.isNotNull(absoluteURI);
         CoreArgCheck.isNotNull(baseURI);
         

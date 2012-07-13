@@ -33,6 +33,7 @@ public class Uml2CommentUmlAspect extends AbstractUml2UmlAspect implements UmlCo
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.core.metamodel.aspect.uml.UmlComment#getText(java.lang.Object)
 	 */
+	@Override
 	public String getText(Object eObject) {
 		final Comment c = assertComment(eObject);
 		return c.getBody();
@@ -41,6 +42,7 @@ public class Uml2CommentUmlAspect extends AbstractUml2UmlAspect implements UmlCo
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.core.metamodel.aspect.uml.UmlComment#getOwner(java.lang.Object)
 	 */
+	@Override
 	public EObject getOwner(Object eObject) {
 		final Comment c = assertComment(eObject);
 		return c.getOwner();
@@ -49,6 +51,7 @@ public class Uml2CommentUmlAspect extends AbstractUml2UmlAspect implements UmlCo
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.core.metamodel.aspect.uml.UmlDiagramAspect#getEditableSignature(java.lang.Object)
 	 */
+	@Override
 	public String getEditableSignature(Object eObject) {
 		return ""; //$NON-NLS-1$
 	}
@@ -56,6 +59,7 @@ public class Uml2CommentUmlAspect extends AbstractUml2UmlAspect implements UmlCo
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.core.metamodel.aspect.uml.UmlDiagramAspect#getSignature(java.lang.Object, int)
 	 */
+	@Override
 	public String getSignature(Object eObject, int showMask) {
 		return ""; //$NON-NLS-1$
 	}
@@ -63,6 +67,7 @@ public class Uml2CommentUmlAspect extends AbstractUml2UmlAspect implements UmlCo
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.core.metamodel.aspect.uml.UmlDiagramAspect#getStereotype(java.lang.Object)
 	 */
+	@Override
 	public String getStereotype(Object eObject) {
 		return Uml2Plugin.getPluginResourceLocator().getString("_UI_Comment_type"); //$NON-NLS-1$
 	}
@@ -70,6 +75,7 @@ public class Uml2CommentUmlAspect extends AbstractUml2UmlAspect implements UmlCo
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.core.metamodel.aspect.uml.UmlDiagramAspect#setSignature(java.lang.Object, java.lang.String)
 	 */
+	@Override
 	public IStatus setSignature(Object eObject, String newSignature) {
 		throw new UnsupportedOperationException(Uml2Plugin.Util.getString("Uml2CommentUmlAspect.Signature_may_not_be_set_on_a__1",getStereotype(eObject))); //$NON-NLS-1$
 	}

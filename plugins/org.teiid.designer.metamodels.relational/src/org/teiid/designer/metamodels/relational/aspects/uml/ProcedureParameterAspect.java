@@ -38,21 +38,24 @@ public class ProcedureParameterAspect extends RelationalEntityAspect implements 
     /** 
      * @see org.teiid.designer.core.metamodel.aspect.uml.UmlProperty#isAssociationEnd(java.lang.Object)
      */
-    public boolean isAssociationEnd(Object property) {
+    @Override
+	public boolean isAssociationEnd(Object property) {
         return false;
     }
     
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodels.aspects.UmlDiagramAspect#getStereotype(java.lang.Object)
      */
-    public String getStereotype(Object eObject) {
+    @Override
+	public String getStereotype(Object eObject) {
         return RelationalPlugin.getPluginResourceLocator().getString("_UI_ProcedureParameter_type"); //$NON-NLS-1$
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodels.aspects.UmlDiagramAspect#setSignature(java.lang.Object, java.lang.String)
      */
-    public IStatus setSignature(Object eObject, String newSignature) {
+    @Override
+	public IStatus setSignature(Object eObject, String newSignature) {
         try {
             ProcedureParameter param = assertProcedureParameter(eObject);
             param.setName(newSignature);
@@ -63,7 +66,8 @@ public class ProcedureParameterAspect extends RelationalEntityAspect implements 
         return new Status(IStatus.OK, RelationalMetamodelConstants.PLUGIN_ID, 0, RelationalPlugin.Util.getString("Aspect.ok"), null); //$NON-NLS-1$
     }
 
-    public String getSignature(Object eObject, int showMask) {
+    @Override
+	public String getSignature(Object eObject, int showMask) {
         ProcedureParameter param = assertProcedureParameter(eObject);
         StringBuffer result = new StringBuffer();
         EObject type = param.getType();
@@ -241,7 +245,8 @@ public class ProcedureParameterAspect extends RelationalEntityAspect implements 
         return result.toString();
     }
 
-    public String getEditableSignature(Object eObject) {
+    @Override
+	public String getEditableSignature(Object eObject) {
         return getSignature(eObject, UmlProperty.SIGNATURE_NAME);
     }
 

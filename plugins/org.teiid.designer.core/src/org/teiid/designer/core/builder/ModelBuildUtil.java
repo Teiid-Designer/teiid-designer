@@ -445,7 +445,8 @@ public class ModelBuildUtil {
 
             if (mr != null && !mr.isReadOnly()) {
                 final OrganizeImportHandler handler = new OrganizeImportHandler() {
-                    public Object choose( final List options ) {
+                    @Override
+					public Object choose( final List options ) {
                         return null;
                     }
                 };

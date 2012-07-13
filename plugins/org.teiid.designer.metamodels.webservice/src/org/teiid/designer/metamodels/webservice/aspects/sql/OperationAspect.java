@@ -34,7 +34,8 @@ public class OperationAspect extends WebServiceComponentAspect implements SqlPro
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlProcedureAspect#isVirtual(org.eclipse.emf.ecore.EObject)
      * @since 4.2
      */
-    public boolean isVirtual(final EObject eObject) {
+    @Override
+	public boolean isVirtual(final EObject eObject) {
         CoreArgCheck.isInstanceOf(Operation.class, eObject);
         return true;
     }
@@ -43,7 +44,8 @@ public class OperationAspect extends WebServiceComponentAspect implements SqlPro
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlProcedureAspect#isFunction(org.eclipse.emf.ecore.EObject)
      * @since 4.2
      */
-    public boolean isFunction(final EObject eObject) {
+    @Override
+	public boolean isFunction(final EObject eObject) {
         CoreArgCheck.isInstanceOf(Operation.class, eObject);
         return false;
     }
@@ -52,7 +54,8 @@ public class OperationAspect extends WebServiceComponentAspect implements SqlPro
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlProcedureAspect#getParameters(org.eclipse.emf.ecore.EObject)
      * @since 4.2
      */
-    public List getParameters(final EObject eObject) {
+    @Override
+	public List getParameters(final EObject eObject) {
         CoreArgCheck.isInstanceOf(Operation.class, eObject);
         Operation opearation = (Operation) eObject;
         List params = new ArrayList(1);
@@ -64,7 +67,8 @@ public class OperationAspect extends WebServiceComponentAspect implements SqlPro
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlProcedureAspect#getResult(org.eclipse.emf.ecore.EObject)
      * @since 4.2
      */
-    public Object getResult(final EObject eObject) {
+    @Override
+	public Object getResult(final EObject eObject) {
         CoreArgCheck.isInstanceOf(Operation.class, eObject);
         Operation opearation = (Operation) eObject;
         return opearation.getOutput();
@@ -74,7 +78,8 @@ public class OperationAspect extends WebServiceComponentAspect implements SqlPro
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlProcedureAspect#getUpdateCount(org.eclipse.emf.ecore.EObject)
      * @since 5.5.3
      */
-    public int getUpdateCount(EObject eObject) {
+    @Override
+	public int getUpdateCount(EObject eObject) {
         CoreArgCheck.isInstanceOf(Operation.class, eObject);
         return ((Operation)eObject).getUpdateCount().getValue();
     }
@@ -83,7 +88,8 @@ public class OperationAspect extends WebServiceComponentAspect implements SqlPro
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlAspect#isRecordType(char)
      * @since 4.2
      */
-    public boolean isRecordType(final char recordType) {
+    @Override
+	public boolean isRecordType(final char recordType) {
         return (recordType == IndexConstants.RECORD_TYPE.CALLABLE);
     }
 
@@ -91,7 +97,8 @@ public class OperationAspect extends WebServiceComponentAspect implements SqlPro
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlProcedureAspect#isMappable(org.eclipse.emf.ecore.EObject, int)
      * @since 4.2
      */
-    public boolean isMappable(final EObject eObject, final int mappingType) {
+    @Override
+	public boolean isMappable(final EObject eObject, final int mappingType) {
         return (mappingType == SqlProcedureAspect.MAPPINGS.SQL_TRANSFORM);
     }
 
@@ -99,7 +106,8 @@ public class OperationAspect extends WebServiceComponentAspect implements SqlPro
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlTableAspect#canAcceptTransformationSource(org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject)
      * @since 4.3
      */
-    public boolean canAcceptTransformationSource(EObject target, EObject source) {
+    @Override
+	public boolean canAcceptTransformationSource(EObject target, EObject source) {
         CoreArgCheck.isInstanceOf(Operation.class, target);
         CoreArgCheck.isNotNull(source);
         // no object should be source of itself
@@ -123,7 +131,8 @@ public class OperationAspect extends WebServiceComponentAspect implements SqlPro
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlTableAspect#canBeTransformationSource(org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject)
      * @since 4.3
      */
-    public boolean canBeTransformationSource(EObject source, EObject target) {
+    @Override
+	public boolean canBeTransformationSource(EObject source, EObject target) {
         CoreArgCheck.isInstanceOf(Operation.class, source);
         return false;
     }

@@ -74,7 +74,8 @@ public class DownFont extends AbstractAction implements IFontChangeListener {
         setEnabled( getFontManager().canDecrease() );        
     }
     
-    public void fontChanged() {
+    @Override
+	public void fontChanged() {
         setEnableState();
     }
 }

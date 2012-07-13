@@ -208,7 +208,8 @@ public final class NewMedWizard extends AbstractWizard
         if (folderLocation != null && !folderInModelProject(folderLocation)) {
             // Create empty page
             WizardPage page = new WizardPage(NewMedWizard.class.getSimpleName(), null, null) {
-                public void createControl( final Composite parent ) {
+                @Override
+				public void createControl( final Composite parent ) {
                     setControl(createEmptyPageControl(parent));
                 }
             };

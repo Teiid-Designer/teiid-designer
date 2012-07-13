@@ -31,7 +31,8 @@ public class DiagramUiNewModelObjectHelper implements INewModelObjectHelper {
      * @see org.teiid.designer.core.util.INewModelObjectHelper#canHelpCreate(java.lang.Object)
      * @since 4.3
      */
-    public boolean canHelpCreate( Object newObject ) {
+    @Override
+	public boolean canHelpCreate( Object newObject ) {
 
         // First case is a standard virtual table
         // If the createdObject is VirtualTable, set supportsUpdate to false
@@ -53,7 +54,8 @@ public class DiagramUiNewModelObjectHelper implements INewModelObjectHelper {
      * @see org.teiid.designer.core.util.INewModelObjectHelper#helpCreate(java.lang.Object, Map)
      * @since 4.3
      */
-    public boolean helpCreate( Object newObject,
+    @Override
+	public boolean helpCreate( Object newObject,
                                Map properties ) {
         if (newObject != null && newObject instanceof EObject && canHelpCreate(newObject)) {
             EObject newEObject = (EObject)newObject;

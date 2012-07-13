@@ -57,7 +57,8 @@ public abstract class PlaceholderReferenceImpl extends EObjectImpl implements Pl
      * 
      * @generated
      */
-    public PlaceholderReferenceContainer getPlaceholderReferenceContainer() {
+    @Override
+	public PlaceholderReferenceContainer getPlaceholderReferenceContainer() {
         if (eContainerFeatureID != RelationshipPackage.PLACEHOLDER_REFERENCE__PLACEHOLDER_REFERENCE_CONTAINER) return null;
         return (PlaceholderReferenceContainer)eContainer;
     }
@@ -67,7 +68,8 @@ public abstract class PlaceholderReferenceImpl extends EObjectImpl implements Pl
      * 
      * @generated
      */
-    public void setPlaceholderReferenceContainer( PlaceholderReferenceContainer newPlaceholderReferenceContainer ) {
+    @Override
+	public void setPlaceholderReferenceContainer( PlaceholderReferenceContainer newPlaceholderReferenceContainer ) {
         if (newPlaceholderReferenceContainer != eContainer
             || (eContainerFeatureID != RelationshipPackage.PLACEHOLDER_REFERENCE__PLACEHOLDER_REFERENCE_CONTAINER && newPlaceholderReferenceContainer != null)) {
             if (EcoreUtil.isAncestor(this, newPlaceholderReferenceContainer)) throw new IllegalArgumentException(
@@ -95,7 +97,8 @@ public abstract class PlaceholderReferenceImpl extends EObjectImpl implements Pl
      * 
      * @generated NOT
      */
-    public String getDisplayableName() {
+    @Override
+	public String getDisplayableName() {
         // TODO: implement this method
         // Ensure that you remove @generated or mark it @generated NOT
         throw new UnsupportedOperationException();

@@ -224,6 +224,7 @@ public class DeployVdbDialog extends TitleAreaDialog implements DqpUiConstants,
 	 * @see org.teiid.core.event.IChangeListener#stateChanged(org.teiid.core.event.IChangeNotifier)
 	 * @since 5.5.3
 	 */
+	@Override
 	public void stateChanged(IChangeNotifier theSource) {
 		updateState();
 	}
@@ -276,6 +277,7 @@ public class DeployVdbDialog extends TitleAreaDialog implements DqpUiConstants,
 		result.setInput(ResourcesPlugin.getWorkspace().getRoot());
 
 		result.setValidator(new ISelectionStatusValidator() {
+			@Override
 			public IStatus validate(Object[] selection) {
 				if (selection != null && selection.length == 1) {
 					if (selection[0] instanceof IFile) {

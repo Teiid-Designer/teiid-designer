@@ -84,15 +84,18 @@ public class FormTextComponentSet extends SimpleComponentSet {
         mon = null;
     }
 
-    public boolean isUserSet() {
+    @Override
+	public boolean isUserSet() {
         return fText.getValue() != null;
     }
 
-    public void setValue( Object o ) {
+    @Override
+	public void setValue( Object o ) {
         fText.setValue(o);
     }
 
-    public void reset() {
+    @Override
+	public void reset() {
         fText.setValue(null);
     }
 

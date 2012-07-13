@@ -51,7 +51,8 @@ public class ZoomOutWrapper extends DiagramAction
         super(theStyle);
     }
     
-    public void initialize() {
+    @Override
+	public void initialize() {
         ModelEditor editor = getActiveEditor();
         
         if ( editor != null && editor.getCurrentPage() instanceof ZoomableEditor) {
@@ -177,39 +178,45 @@ public class ZoomOutWrapper extends DiagramAction
     /* (non-Javadoc)
      * @see org.eclipse.ui.IPartListener#partActivated(org.eclipse.ui.IWorkbenchPart)
      */
-    public void partActivated(IWorkbenchPart part) {
+    @Override
+	public void partActivated(IWorkbenchPart part) {
         setEnableState();
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.ui.IPartListener#partBroughtToTop(org.eclipse.ui.IWorkbenchPart)
      */
-    public void partBroughtToTop(IWorkbenchPart part) {
+    @Override
+	public void partBroughtToTop(IWorkbenchPart part) {
         setEnableState();
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.ui.IPartListener#partClosed(org.eclipse.ui.IWorkbenchPart)
      */
-    public void partClosed(IWorkbenchPart part) {
+    @Override
+	public void partClosed(IWorkbenchPart part) {
         setEnabled( false );
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.ui.IPartListener#partDeactivated(org.eclipse.ui.IWorkbenchPart)
      */
-    public void partDeactivated(IWorkbenchPart part) {
+    @Override
+	public void partDeactivated(IWorkbenchPart part) {
         setEnabled( false );
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.ui.IPartListener#partOpened(org.eclipse.ui.IWorkbenchPart)
      */
-    public void partOpened(IWorkbenchPart part) {
+    @Override
+	public void partOpened(IWorkbenchPart part) {
         setEnableState();
     }
                 
-    public void zoomChanged( double d ) {
+    @Override
+	public void zoomChanged( double d ) {
         // reset enable state; a change in zoom IN may affect us here in zoom OUT
 //        System.out.println("[ZoomInWrapper.zoomChanged] !!!" ); //$NON-NLS-1$
         setEnableState();

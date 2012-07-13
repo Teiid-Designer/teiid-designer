@@ -123,7 +123,8 @@ public final class Uml2RelationalOptions implements GeneratorOptions {
     /**
      * @see org.teiid.designer.modelgenerator.GeneratorOptions#validate()
      */
-    public IStatus validate() {
+    @Override
+	public IStatus validate() {
         final String msg = Uml2ModelGeneratorPlugin.Util.getString("Uml2RelationalOptions.The_options_are_valid"); //$NON-NLS-1$
         return new Status(IStatus.OK,Uml2ModelGeneratorPlugin.PLUGIN_ID,0,msg,null);
     }

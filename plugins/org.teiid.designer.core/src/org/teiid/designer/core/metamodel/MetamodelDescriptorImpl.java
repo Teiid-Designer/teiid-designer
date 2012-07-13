@@ -132,7 +132,8 @@ public class MetamodelDescriptorImpl implements MetamodelDescriptor {
      * @see org.teiid.designer.core.metamodel.MetamodelDescriptor#getExtensionID()
      * @since 5.0
      */
-    public String getExtensionID() {
+    @Override
+	public String getExtensionID() {
         return this.extensionID;
     }
 
@@ -140,7 +141,8 @@ public class MetamodelDescriptorImpl implements MetamodelDescriptor {
      * @see org.teiid.designer.core.metamodel.MetamodelDescriptor#getDisplayName()
      * @since 5.0
      */
-    public String getDisplayName() {
+    @Override
+	public String getDisplayName() {
         return (this.displayName != null ? this.displayName : getName());
     }
 
@@ -148,7 +150,8 @@ public class MetamodelDescriptorImpl implements MetamodelDescriptor {
      * @See org.teiid.designer.core.metamodel.ProtoMetamodelDescriptor#getName()
      * @since 4.3
      */
-    public String getName() {
+    @Override
+	public String getName() {
         if (getEPackage() != null) {
             return getEPackage().getName();
         }
@@ -159,7 +162,8 @@ public class MetamodelDescriptorImpl implements MetamodelDescriptor {
      * @See org.teiid.designer.core.metamodel.ProtoMetamodelDescriptor#getNamespacePrefix()
      * @since 4.3
      */
-    public String getNamespacePrefix() {
+    @Override
+	public String getNamespacePrefix() {
         if (getEPackage() != null) {
             return getEPackage().getNsPrefix();
         }
@@ -170,7 +174,8 @@ public class MetamodelDescriptorImpl implements MetamodelDescriptor {
      * @See org.teiid.designer.core.metamodel.ProtoMetamodelDescriptor#getNamespaceURI()
      * @since 4.3
      */
-    public String getNamespaceURI() {
+    @Override
+	public String getNamespaceURI() {
         return this.namespaceURI;
     }
 
@@ -178,7 +183,8 @@ public class MetamodelDescriptorImpl implements MetamodelDescriptor {
      * @see org.teiid.designer.core.metamodel.MetamodelDescriptor#getFileExtension()
      * @since 5.0
      */
-    public String getFileExtension() {
+    @Override
+	public String getFileExtension() {
         if (this.fileExtension == null) {
             this.fileExtension = ModelerCore.MODEL_FILE_EXTENSION;
         }
@@ -189,7 +195,8 @@ public class MetamodelDescriptorImpl implements MetamodelDescriptor {
      * @See org.teiid.designer.core.metamodel.ProtoMetamodelDescriptor#getEPackage()
      * @since 4.3
      */
-    public EPackage getEPackage() {
+    @Override
+	public EPackage getEPackage() {
         return getPackageForURI( getNamespaceURI() );
     }
 
@@ -197,7 +204,8 @@ public class MetamodelDescriptorImpl implements MetamodelDescriptor {
      * @See org.teiid.designer.core.metamodel.ProtoMetamodelDescriptor#getAllowableModelTypes()
      * @since 4.3
      */
-    public ModelType[] getAllowableModelTypes() {
+    @Override
+	public ModelType[] getAllowableModelTypes() {
         if (this.allowableModelTypes == null || this.allowableModelTypes.isEmpty()) {
             return EMPTY_MODEL_TYPE_ARRAY;
         }
@@ -209,7 +217,8 @@ public class MetamodelDescriptorImpl implements MetamodelDescriptor {
      * @See org.teiid.designer.core.metamodel.ProtoMetamodelDescriptor#getAlternateNamespaceURIs()
      * @since 4.3
      */
-    public String[] getAlternateNamespaceURIs() {
+    @Override
+	public String[] getAlternateNamespaceURIs() {
         if (this.alternateNamespaceURIs == null || this.alternateNamespaceURIs.isEmpty()) {
             return CoreStringUtil.Constants.EMPTY_STRING_ARRAY;
         }
@@ -221,7 +230,8 @@ public class MetamodelDescriptorImpl implements MetamodelDescriptor {
      * @See org.teiid.designer.core.metamodel.ProtoMetamodelDescriptor#isPrimary()
      * @since 4.3
      */
-    public boolean isPrimary() {
+    @Override
+	public boolean isPrimary() {
         boolean isPrimary = IS_PRIMARY_DEFAULT_VALUE;
         if (this.properties != null) {
             String value = (String)this.properties.get(ModelerCore.EXTENSION_POINT.METAMODEL.ATTRIBUTES.PARTICIPATORY_ONLY);
@@ -236,7 +246,8 @@ public class MetamodelDescriptorImpl implements MetamodelDescriptor {
      * @See org.teiid.designer.core.metamodel.ProtoMetamodelDescriptor#supportsDiagrams()
      * @since 4.3
      */
-    public boolean supportsDiagrams() {
+    @Override
+	public boolean supportsDiagrams() {
         boolean supportsDiagrams = SUPPORTS_DIAGRAMS_DEFAULT_VALUE;
         if (this.properties != null) {
             String value = (String)this.properties.get(ModelerCore.EXTENSION_POINT.METAMODEL.ATTRIBUTES.SUPPORTS_DIAGRAMS);
@@ -251,7 +262,8 @@ public class MetamodelDescriptorImpl implements MetamodelDescriptor {
      * @See org.teiid.designer.core.metamodel.ProtoMetamodelDescriptor#supportsExtension()
      * @since 4.3
      */
-    public boolean supportsExtension() {
+    @Override
+	public boolean supportsExtension() {
         boolean supportsExtension = SUPPORTS_EXTENSION_DEFAULT_VALUE;
         if (this.properties != null) {
             String value = (String)this.properties.get(ModelerCore.EXTENSION_POINT.METAMODEL.ATTRIBUTES.SUPPORTS_EXTENSION);
@@ -266,7 +278,8 @@ public class MetamodelDescriptorImpl implements MetamodelDescriptor {
      * @See org.teiid.designer.core.metamodel.ProtoMetamodelDescriptor#supportsNewModel()
      * @since 4.3
      */
-    public boolean supportsNewModel() {
+    @Override
+	public boolean supportsNewModel() {
         boolean supportsNewModel = SUPPORTS_NEW_MODEL_DEFAULT_VALUE;
         if (this.properties != null) {
             String value = (String)this.properties.get(ModelerCore.EXTENSION_POINT.METAMODEL.ATTRIBUTES.CREATE_AS_NEW_MODEL);
@@ -281,7 +294,8 @@ public class MetamodelDescriptorImpl implements MetamodelDescriptor {
      * @See org.teiid.designer.core.metamodel.ProtoMetamodelDescriptor#getModelInitializer(java.lang.String)
      * @since 4.3
      */
-    public ModelInitializer getModelInitializer(final String name) {
+    @Override
+	public ModelInitializer getModelInitializer(final String name) {
         final DescriptorClassLoader loader = (DescriptorClassLoader)this.modelInitializerDescriptorClassLoadersByName.get(name);
         if ( loader != null ) {
             final Object instance = loader.getClassInstance();
@@ -296,7 +310,8 @@ public class MetamodelDescriptorImpl implements MetamodelDescriptor {
      * @See org.teiid.designer.core.metamodel.ProtoMetamodelDescriptor#getModelInitializerDescription(java.lang.String)
      * @since 4.3
      */
-    public String getModelInitializerDescription(final String name) {
+    @Override
+	public String getModelInitializerDescription(final String name) {
         return (String) this.modelInitializerDescriptionsByName.get(name);
     }
 
@@ -304,14 +319,16 @@ public class MetamodelDescriptorImpl implements MetamodelDescriptor {
      * @See org.teiid.designer.core.metamodel.ProtoMetamodelDescriptor#getModelInitializerNames()
      * @since 4.3
      */
-    public List getModelInitializerNames() {
+    @Override
+	public List getModelInitializerNames() {
         return this.readOnlyModelInitializerNames;
     }
     /**
      * @See org.teiid.designer.core.metamodel.ProtoMetamodelDescriptor#getRootClassDescriptors()
      * @since 5.0
      */
-    public MetamodelRootClassDescriptor[] getRootClassDescriptors() {
+    @Override
+	public MetamodelRootClassDescriptor[] getRootClassDescriptors() {
         if (this.rootClassDescriptors == null || this.rootClassDescriptors.isEmpty()) {
             return EMPTY_ROOT_CLASS_DESCRIPTOR_ARRAY;
         }
@@ -323,7 +340,8 @@ public class MetamodelDescriptorImpl implements MetamodelDescriptor {
      * @See org.teiid.designer.core.metamodel.ProtoMetamodelDescriptor#getAdapterFactories()
      * @since 5.0
      */
-    public AdapterFactory[] getAdapterFactories() {
+    @Override
+	public AdapterFactory[] getAdapterFactories() {
         if (this.adapterFactories.isEmpty()) {
             initializeAdapterFactoryList();
         }
@@ -335,7 +353,8 @@ public class MetamodelDescriptorImpl implements MetamodelDescriptor {
      * @See org.teiid.designer.core.metamodel.ProtoMetamodelDescriptor#getAspectFactories()
      * @since 5.0
      */
-    public MetamodelAspectFactory[] getAspectFactories() {
+    @Override
+	public MetamodelAspectFactory[] getAspectFactories() {
         if (this.aspectFactoryMap.isEmpty()) {
             initializeAspectFactoryMap();
         }
@@ -347,7 +366,8 @@ public class MetamodelDescriptorImpl implements MetamodelDescriptor {
      * @See org.teiid.designer.core.metamodel.ProtoMetamodelDescriptor#getAspectFactory(java.lang.Class)
      * @since 5.0
      */
-    public MetamodelAspectFactory getAspectFactory(final Class theType) {
+    @Override
+	public MetamodelAspectFactory getAspectFactory(final Class theType) {
         CoreArgCheck.isNotNull(theType);
         if (this.aspectFactoryMap.isEmpty()) {
             initializeAspectFactoryMap();
@@ -359,7 +379,8 @@ public class MetamodelDescriptorImpl implements MetamodelDescriptor {
      * @See org.teiid.designer.core.metamodel.ProtoMetamodelDescriptor#getAspectFactory(java.lang.String)
      * @since 5.0
      */
-    public MetamodelAspectFactory getAspectFactory(final String extensionID) {
+    @Override
+	public MetamodelAspectFactory getAspectFactory(final String extensionID) {
         CoreArgCheck.isNotZeroLength(extensionID);
         final Class type = (Class)EXTENSION_ID_TO_ASPECT_INTERFACE_MAP.get(extensionID);
         if (type == null) {

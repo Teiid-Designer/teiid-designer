@@ -237,7 +237,8 @@ public class ImportTransformationSqlFromTextAction extends SortableSelectionActi
     private Collection processRows( final ModelResource modelResource,
                                     final Collection sqlRows ) {
         final IRunnableWithProgress op = new IRunnableWithProgress() {
-            public void run( final IProgressMonitor monitor ) throws InvocationTargetException {
+            @Override
+			public void run( final IProgressMonitor monitor ) throws InvocationTargetException {
                 monitor.beginTask(UiConstants.Util.getString(MONITOR_MAIN_TASK_NAME_KEY, modelResource.getItemName()),
                                   10 * sqlRows.size() + 10);
                 try {
@@ -296,7 +297,8 @@ public class ImportTransformationSqlFromTextAction extends SortableSelectionActi
                                final String dialogTitle,
                                final String message ) {
         shell.getDisplay().syncExec(new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 MessageDialog.openError(shell, dialogTitle, message);
             }
         });
@@ -308,7 +310,8 @@ public class ImportTransformationSqlFromTextAction extends SortableSelectionActi
         if (!isTestingMode && !leftOverTables.isEmpty()) {
             final Shell shell = getShell();
             shell.getDisplay().syncExec(new Runnable() {
-                public void run() {
+                @Override
+				public void run() {
                     boolean result = ListMessageDialog.openQuestion(shell,
                                                                     UiConstants.Util.getString(UNUSED_SQL_DIALOG_TITLE_KEY),
                                                                     null,

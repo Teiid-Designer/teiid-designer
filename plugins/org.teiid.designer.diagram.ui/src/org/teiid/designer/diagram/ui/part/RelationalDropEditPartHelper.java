@@ -51,6 +51,7 @@ public class RelationalDropEditPartHelper extends DropEditPartHelper {
 		super.setLastHoverPoint(lastHoverPoint);
 	}
 
+	@Override
 	public boolean allowsDrop(Object target, List dropList) {
 		return false;
 //		return canCreateAssociation(dropList);

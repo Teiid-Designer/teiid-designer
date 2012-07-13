@@ -43,7 +43,8 @@ public class FakeJdbcNode extends JdbcNodeImpl {
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.metadata.JdbcNode#getPathInSource(boolean, boolean)
      */
-    public IPath getPathInSource( boolean includeCatalog,
+    @Override
+	public IPath getPathInSource( boolean includeCatalog,
                                   boolean includeSchema ) {
         return getPath();
     }
@@ -78,21 +79,24 @@ public class FakeJdbcNode extends JdbcNodeImpl {
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.metadata.impl.JdbcNodeImpl#getTypeName()
      */
-    public String getTypeName() {
+    @Override
+	public String getTypeName() {
         return "FakeJdbcNode"; //$NON-NLS-1$
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.metadata.JdbcNode#getFullyQualifiedName()
      */
-    public String getFullyQualifiedName() {
+    @Override
+	public String getFullyQualifiedName() {
         return getName();
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.metadata.JdbcNode#getJdbcDatabase()
      */
-    public JdbcDatabase getJdbcDatabase() {
+    @Override
+	public JdbcDatabase getJdbcDatabase() {
         return (getParent() != null ? getParent().getJdbcDatabase() : null);
     }
 

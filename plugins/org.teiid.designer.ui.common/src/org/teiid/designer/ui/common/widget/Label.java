@@ -68,7 +68,8 @@ public class Label extends CLabel {
             skippedSuperclassListener = !skippedSuperclassListener;
             super.addPaintListener(new PaintListener() {
 
-                public void paintControl(PaintEvent event) {
+                @Override
+				public void paintControl(PaintEvent event) {
                     paint(event);
                 }
             });

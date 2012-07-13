@@ -20,6 +20,7 @@ public class SqlWordDetector implements IWordDetector {
 	/**
 	 * @see org.eclipse.jface.text.rules.IWordDetector#isWordStart(char)
 	 */
+	@Override
 	public boolean isWordStart(char c) {
         return SqlSyntax.isSqlWordStart(c);
 	}
@@ -27,6 +28,7 @@ public class SqlWordDetector implements IWordDetector {
 	/**
 	 * @see org.eclipse.jface.text.rules.IWordDetector#isWordPart(char)
 	 */
+	@Override
 	public boolean isWordPart(char c) {
         return SqlSyntax.isSqlWordPart(c);
 	}

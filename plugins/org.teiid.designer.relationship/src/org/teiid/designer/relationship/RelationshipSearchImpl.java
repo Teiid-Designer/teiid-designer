@@ -81,21 +81,24 @@ public class RelationshipSearchImpl implements RelationshipSearch {
     /**
      * @see org.teiid.designer.relationship.RelationshipSearch#getModelWorkspace()
      */
-    public ModelWorkspace getModelWorkspace() {
+    @Override
+	public ModelWorkspace getModelWorkspace() {
         return this.workspace;
     }
 
     /**
      * @see org.teiid.designer.relationship.RelationshipSearch#getParticipantsCriteria()
      */
-    public List getParticipantsCriteria() {
+    @Override
+	public List getParticipantsCriteria() {
         return this.readOnlyParticipantCriteria;
     }
 
     /**
      * @see org.teiid.designer.relationship.RelationshipSearch#setParticipantsCriteria(java.util.List)
      */
-    public void setParticipantsCriteria( List modelWorkspaceItems ) {
+    @Override
+	public void setParticipantsCriteria( List modelWorkspaceItems ) {
         if (modelWorkspaceItems == null || modelWorkspaceItems.isEmpty()) {
             this.participantCriteria = modelWorkspaceItems;
             return;
@@ -138,21 +141,24 @@ public class RelationshipSearchImpl implements RelationshipSearch {
     /**
      * @see org.teiid.designer.relationship.RelationshipSearch#getNameCriteria()
      */
-    public String getNameCriteria() {
+    @Override
+	public String getNameCriteria() {
         return this.namePattern;
     }
 
     /**
      * @see org.teiid.designer.relationship.RelationshipSearch#isNameCriteriaCaseSensitive()
      */
-    public boolean isNameCriteriaCaseSensitive() {
+    @Override
+	public boolean isNameCriteriaCaseSensitive() {
         return this.namePatternCaseSensitive;
     }
 
     /**
      * @see org.teiid.designer.relationship.RelationshipSearch#setNameCriteria(java.lang.String, boolean)
      */
-    public void setNameCriteria( final String namePattern,
+    @Override
+	public void setNameCriteria( final String namePattern,
                                  final boolean caseSensitive ) {
         if (namePattern == null || namePattern.trim().length() == 0 || NAME_PATTERN_ANY_STRING.equals(namePattern)) {
             this.namePattern = NAME_PATTERN_ANY_STRING;
@@ -165,14 +171,16 @@ public class RelationshipSearchImpl implements RelationshipSearch {
     /**
      * @see org.teiid.designer.relationship.RelationshipSearch#getRelationshipTypeCriteria()
      */
-    public RelationshipType getRelationshipTypeCriteria() {
+    @Override
+	public RelationshipType getRelationshipTypeCriteria() {
         return this.typeCriteria;
     }
 
     /**
      * @see org.teiid.designer.relationship.RelationshipSearch#isIncludeSubtypes()
      */
-    public boolean isIncludeSubtypes() {
+    @Override
+	public boolean isIncludeSubtypes() {
         return this.includeSubtypes;
     }
 
@@ -180,7 +188,8 @@ public class RelationshipSearchImpl implements RelationshipSearch {
      * @see org.teiid.designer.relationship.RelationshipSearch#setRelationshipTypeCriteria(org.teiid.designer.metamodels.relationship.RelationshipType,
      *      boolean)
      */
-    public void setRelationshipTypeCriteria( final RelationshipType requiredType,
+    @Override
+	public void setRelationshipTypeCriteria( final RelationshipType requiredType,
                                              final boolean includeSubtypes ) {
         this.typeCriteria = requiredType;
         this.includeSubtypes = includeSubtypes;
@@ -189,14 +198,16 @@ public class RelationshipSearchImpl implements RelationshipSearch {
     /**
      * @see org.teiid.designer.relationship.RelationshipSearch#getRelationshipModelScope()
      */
-    public List getRelationshipModelScope() {
+    @Override
+	public List getRelationshipModelScope() {
         return this.readOnlyModelScope;
     }
 
     /**
      * @see org.teiid.designer.relationship.RelationshipSearch#setRelationshipModelScope(java.util.List)
      */
-    public void setRelationshipModelScope( final List modelWorkspaceItems ) {
+    @Override
+	public void setRelationshipModelScope( final List modelWorkspaceItems ) {
 
         CoreArgCheck.isNotNull(modelWorkspaceItems);
 
@@ -295,7 +306,8 @@ public class RelationshipSearchImpl implements RelationshipSearch {
     /**
      * @see org.teiid.designer.relationship.RelationshipSearch#canExecute()
      */
-    public IStatus canExecute() {
+    @Override
+	public IStatus canExecute() {
         if (this.typeCriteria == null) {
             final int code = 0;
             final String msg = RelationshipPlugin.Util.getString("RelationshipSearchImpl.MissingTypeCriteria"); //$NON-NLS-1$
@@ -316,7 +328,8 @@ public class RelationshipSearchImpl implements RelationshipSearch {
     /**
      * @see org.teiid.designer.relationship.RelationshipSearch#execute(org.eclipse.core.runtime.IProgressMonitor)
      */
-    public IStatus execute( final IProgressMonitor progressMonitor ) {
+    @Override
+	public IStatus execute( final IProgressMonitor progressMonitor ) {
         final IStatus canStatus = canExecute();
         if (!canStatus.isOK()) {
             return canStatus;
@@ -447,7 +460,8 @@ public class RelationshipSearchImpl implements RelationshipSearch {
     /**
      * @see org.teiid.designer.relationship.RelationshipSearch#getResults()
      */
-    public List getResults() {
+    @Override
+	public List getResults() {
         return this.readOnlyResults;
     }
 

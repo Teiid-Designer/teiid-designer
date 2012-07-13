@@ -84,6 +84,7 @@ public class ColumnsInfoPanel {
 		gd.grabExcessHorizontalSpace = true;
 		rootPathText.setLayoutData(gd);
 		rootPathText.addModifyListener(new ModifyListener() {
+			@Override
 			public void modifyText(final ModifyEvent event) {
 				handleRootPathChanged();
 			}

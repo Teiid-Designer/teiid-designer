@@ -35,7 +35,8 @@ public class DefaultProductCharacteristics implements IProductCharacteristics {
      * @see org.teiid.designer.ui.common.product.IProductCharacteristics#workspaceLocationExposed()
      * @since 4.3
      */
-    public boolean workspaceLocationExposed() {
+    @Override
+	public boolean workspaceLocationExposed() {
         return true;
     }
 
@@ -43,7 +44,8 @@ public class DefaultProductCharacteristics implements IProductCharacteristics {
      * @see org.teiid.designer.ui.common.product.IProductCharacteristics#getPrimaryNavigationViewId()
      * @since 4.3
      */
-    public String getPrimaryNavigationViewId() {
+    @Override
+	public String getPrimaryNavigationViewId() {
         return DEFAULT_EXPLORER_ID;
     }
     
@@ -51,7 +53,8 @@ public class DefaultProductCharacteristics implements IProductCharacteristics {
      * @see org.teiid.designer.ui.common.product.IProductCharacteristics#getDefaultPerspectiveId()
      * @since 5.0
      */
-    public String getDefaultPerspectiveId() {
+    @Override
+	public String getDefaultPerspectiveId() {
         return null;
     }
 
@@ -59,7 +62,8 @@ public class DefaultProductCharacteristics implements IProductCharacteristics {
      * @see org.teiid.designer.ui.common.product.IProductCharacteristics#getHiddenProject()
      * @since 4.3
      */
-    public IProject getHiddenProject() {
+    @Override
+	public IProject getHiddenProject() {
         return getHiddenProject(true);
     }
 
@@ -67,7 +71,8 @@ public class DefaultProductCharacteristics implements IProductCharacteristics {
      * @see org.teiid.designer.ui.common.product.IProductCharacteristics#getHiddenProject(boolean)
      * @since 4.3
      */
-    public IProject getHiddenProject(boolean theCreateProjectFlag) {
+    @Override
+	public IProject getHiddenProject(boolean theCreateProjectFlag) {
         return null;
     }
 
@@ -75,7 +80,8 @@ public class DefaultProductCharacteristics implements IProductCharacteristics {
      * @see org.teiid.designer.ui.common.product.IProductCharacteristics#isHiddenProjectCentric()
      * @since 4.3
      */
-    public boolean isHiddenProjectCentric() {
+    @Override
+	public boolean isHiddenProjectCentric() {
         return false;
     }
     
@@ -83,7 +89,8 @@ public class DefaultProductCharacteristics implements IProductCharacteristics {
      * @see org.teiid.designer.ui.common.product.IProductCharacteristics#getCreateHiddenProjectWizardPage()
      * @since 4.4
      */
-    public IWizardPage getCreateHiddenProjectWizardPage() {
+    @Override
+	public IWizardPage getCreateHiddenProjectWizardPage() {
         return null;
     }
     
@@ -119,7 +126,8 @@ public class DefaultProductCharacteristics implements IProductCharacteristics {
      * @see org.teiid.designer.ui.common.product.IProductCharacteristics#getNewModelInput(org.eclipse.jface.viewers.ISelection)
      * @since 5.0
      */
-    public Object getNewModelInput(ISelection theSelection) {
+    @Override
+	public Object getNewModelInput(ISelection theSelection) {
         return null;
     }
 
@@ -128,7 +136,8 @@ public class DefaultProductCharacteristics implements IProductCharacteristics {
      * @see org.teiid.designer.ui.common.product.IProductCharacteristics#preProcess(java.lang.Object, org.eclipse.swt.widgets.Shell)
      * @since 5.0
      */
-    public boolean preProcess(Object theSomeObject,
+    @Override
+	public boolean preProcess(Object theSomeObject,
                               Shell theShell) {
         // Default implementation is a pass-through:  TRUE
         return true;
@@ -139,7 +148,8 @@ public class DefaultProductCharacteristics implements IProductCharacteristics {
      * @see org.teiid.designer.ui.common.product.IProductCharacteristics#getObjectInfo(java.lang.Object, int)
      * @since 5.0
      */
-    public Object getObjectInfo( int infoType, 
+    @Override
+	public Object getObjectInfo( int infoType, 
                                   Object theSomeObject ) {
         // Default implementation is a no-op
         return null;
@@ -149,7 +159,8 @@ public class DefaultProductCharacteristics implements IProductCharacteristics {
      * @see org.teiid.designer.ui.common.product.IProductCharacteristics#setObjectInfo(java.lang.Object, int, java.lang.Object)
      * @since 5.0
      */
-    public void setObjectInfo(int infoType, 
+    @Override
+	public void setObjectInfo(int infoType, 
                                 Object theSomeObject, 
                                 Object theValue) {
         // Default implementation is a no-op        

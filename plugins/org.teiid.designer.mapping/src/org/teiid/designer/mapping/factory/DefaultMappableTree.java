@@ -48,14 +48,16 @@ public class DefaultMappableTree implements IMappableTree {
     /* (non-Javadoc)
      * @See org.teiid.designer.mapping.factory.MappableTree#getTreeRoot()
      */
-    public EObject getTreeRoot() {
+    @Override
+	public EObject getTreeRoot() {
         return treeRoot;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.mapping.factory.MappableTree#getParent(org.eclipse.emf.ecore.EObject)
      */
-    public EObject getParent(EObject node) {
+    @Override
+	public EObject getParent(EObject node) {
         Object parent = getModelContentProvider().getParent(node);
         if ( parent instanceof EObject ) {
             return (EObject) parent; 
@@ -66,14 +68,16 @@ public class DefaultMappableTree implements IMappableTree {
     /* (non-Javadoc)
      * @See org.teiid.designer.mapping.factory.MappableTree#getChildren(org.eclipse.emf.ecore.EObject)
      */
-    public Collection getChildren(EObject node) {
+    @Override
+	public Collection getChildren(EObject node) {
         return getModelContentProvider().getChildren(node);
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.mapping.factory.IMappableTree#isAncestorOf(org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject)
      */
-    public boolean isAncestorOf(EObject ancestor, EObject descendent) {
+    @Override
+	public boolean isAncestorOf(EObject ancestor, EObject descendent) {
         EObject parent = getParent(descendent);
         while ( parent != null ) {
             if ( parent.equals(ancestor) ) {
@@ -87,7 +91,8 @@ public class DefaultMappableTree implements IMappableTree {
     /* (non-Javadoc)
      * @See org.teiid.designer.mapping.factory.IMappableTree#isParentOf(org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject)
      */
-    public boolean isParentOf(EObject parent, EObject child) {
+    @Override
+	public boolean isParentOf(EObject parent, EObject child) {
         return getParent(child).equals(parent);
     }
 
@@ -95,21 +100,24 @@ public class DefaultMappableTree implements IMappableTree {
     /* (non-Javadoc)
      * @See org.teiid.designer.mapping.factory.IMappableTree#getExternalRoots(boolean)
      */
-    public List getExternalRoots(boolean recurseFragments) {
+    @Override
+	public List getExternalRoots(boolean recurseFragments) {
         return Collections.EMPTY_LIST;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.mapping.factory.IMappableTree#isExternal(org.eclipse.emf.ecore.EObject)
      */
-    public boolean isExternal(EObject node) {
+    @Override
+	public boolean isExternal(EObject node) {
         return false;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.mapping.factory.IMappableTree#getDatatype(org.eclipse.emf.ecore.EObject)
      */
-    public EObject getDatatype(EObject node) {
+    @Override
+	public EObject getDatatype(EObject node) {
         EObject result = null;
         MetamodelAspect aspect = AspectManager.getSqlAspect(node);
         if ( aspect instanceof SqlColumnAspect ) {
@@ -124,7 +132,8 @@ public class DefaultMappableTree implements IMappableTree {
     /* (non-Javadoc)
      * @See org.teiid.designer.mapping.factory.IMappableTree#isChoiceNode(org.eclipse.emf.ecore.EObject)
      */
-    public boolean isChoiceNode(EObject node) {
+    @Override
+	public boolean isChoiceNode(EObject node) {
         IChoiceFactory factory = ChoiceFactoryManager.getChoiceFactory(node);
         if ( factory != null && factory.supports(node) ) {
             return true;
@@ -135,7 +144,8 @@ public class DefaultMappableTree implements IMappableTree {
     /* (non-Javadoc)
      * @See org.teiid.designer.mapping.factory.IMappableTree#isSiblingOf(org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject, boolean)
      */
-    public boolean isSiblingOf(EObject instance, EObject possibleSibling, boolean higherOrderOnly) {
+    @Override
+	public boolean isSiblingOf(EObject instance, EObject possibleSibling, boolean higherOrderOnly) {
         boolean result = false;
         result = instance.eContainer().equals(possibleSibling.eContainer());
         if ( result && higherOrderOnly ) {
@@ -150,14 +160,16 @@ public class DefaultMappableTree implements IMappableTree {
     /* (non-Javadoc)
      * @See org.teiid.designer.mapping.factory.IMappableTree#areEquivalent(org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject)
      */
-    public boolean areEquivalent(EObject objA, EObject objB) {
+    @Override
+	public boolean areEquivalent(EObject objA, EObject objB) {
         return false;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.mapping.factory.IMappableTree#getUniqueName(org.eclipse.emf.ecore.EObject)
      */
-    public String getUniqueName(EObject node) {
+    @Override
+	public String getUniqueName(EObject node) {
         ModelEditor editor = ModelerCore.getModelEditor();
         String name = editor.getName(node);
         return name + '_' + editor.getName(node.eContainer());

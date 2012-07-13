@@ -63,13 +63,15 @@ public class StructuredViewerDatatypeFilterer extends StructuredViewerFilterer i
 
         // Add listener:
         SelectionListener sl = new SelectionListener() {
-            public void widgetSelected( SelectionEvent e ) {
+            @Override
+			public void widgetSelected( SelectionEvent e ) {
                 showUser = usrBtn.getSelection();
                 showBuiltin = bltBtn.getSelection();
                 scheduleUpdate();
             }
 
-            public void widgetDefaultSelected( SelectionEvent e ) {
+            @Override
+			public void widgetDefaultSelected( SelectionEvent e ) {
             }
         }; // endanon
         bltBtn.addSelectionListener(sl);
@@ -114,7 +116,8 @@ public class StructuredViewerDatatypeFilterer extends StructuredViewerFilterer i
     //
     // Implementation of IFilter methods:
     //
-    public boolean select( Object toTest ) {
+    @Override
+	public boolean select( Object toTest ) {
         // quick cases:
         if (showBuiltin && showUser && showSimple) {
             // keep all:

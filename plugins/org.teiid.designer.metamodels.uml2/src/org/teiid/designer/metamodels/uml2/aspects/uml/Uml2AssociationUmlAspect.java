@@ -41,14 +41,16 @@ public class Uml2AssociationUmlAspect extends AbstractUml2UmlAspect implements U
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.uml.UmlAssociation#getEndCount(java.lang.Object)
      */
-    public int getEndCount( Object assoc ) {
+    @Override
+	public int getEndCount( Object assoc ) {
         return 2; // associations are always binary
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.uml.UmlAssociation#getRoleName(java.lang.Object, int)
      */
-    public String getRoleName( final Object assoc,
+    @Override
+	public String getRoleName( final Object assoc,
                                final int end ) {
         final Association a = assertAssociation(assoc);
         final Property aEnd = getOppositeEnd(a, end);
@@ -62,7 +64,8 @@ public class Uml2AssociationUmlAspect extends AbstractUml2UmlAspect implements U
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.uml.UmlAssociation#getMultiplicity(java.lang.Object, int)
      */
-    public String getMultiplicity( Object assoc,
+    @Override
+	public String getMultiplicity( Object assoc,
                                    int end ) {
         final Association a = assertAssociation(assoc);
         final Property p = getOppositeEnd(a, end);
@@ -88,7 +91,8 @@ public class Uml2AssociationUmlAspect extends AbstractUml2UmlAspect implements U
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.uml.UmlAssociation#getAggregation(java.lang.Object, int)
      */
-    public int getAggregation( final Object assoc,
+    @Override
+	public int getAggregation( final Object assoc,
                                final int end ) {
         final Association a = assertAssociation(assoc);
         final Property aEnd = getAssociationEnd(a, end);
@@ -105,7 +109,8 @@ public class Uml2AssociationUmlAspect extends AbstractUml2UmlAspect implements U
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.uml.UmlAssociation#getProperties(java.lang.Object, int)
      */
-    public String[] getProperties( Object assoc,
+    @Override
+	public String[] getProperties( Object assoc,
                                    int end ) {
         final Association a = assertAssociation(assoc);
         final Property p = getOppositeEnd(a, end);
@@ -115,7 +120,8 @@ public class Uml2AssociationUmlAspect extends AbstractUml2UmlAspect implements U
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.uml.UmlAssociation#getNavigability(java.lang.Object, int)
      */
-    public int getNavigability( final Object assoc,
+    @Override
+	public int getNavigability( final Object assoc,
                                 final int end ) {
         final Association a = assertAssociation(assoc);
         final List ownedEnds = a.getOwnedEnds();
@@ -134,7 +140,8 @@ public class Uml2AssociationUmlAspect extends AbstractUml2UmlAspect implements U
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.uml.UmlAssociation#getEnd(java.lang.Object, int)
      */
-    public EObject getEnd( final Object assoc,
+    @Override
+	public EObject getEnd( final Object assoc,
                            final int end ) {
         final Association a = assertAssociation(assoc);
         final Property aEnd = getOppositeEnd(a, end);
@@ -145,7 +152,8 @@ public class Uml2AssociationUmlAspect extends AbstractUml2UmlAspect implements U
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.uml.UmlAssociation#getEndTarget(java.lang.Object, int)
      */
-    public EObject getEndTarget( final Object assoc,
+    @Override
+	public EObject getEndTarget( final Object assoc,
                                  final int end ) {
         final Association a = assertAssociation(assoc);
         final Property aEnd = getOppositeEnd(a, end);
@@ -158,7 +166,8 @@ public class Uml2AssociationUmlAspect extends AbstractUml2UmlAspect implements U
     /**
      * @see org.teiid.designer.core.metamodel.aspect.uml.UmlAssociation#setRoleName(java.lang.Object, int, java.lang.String)
      */
-    public IStatus setRoleName( Object assoc,
+    @Override
+	public IStatus setRoleName( Object assoc,
                                 int end,
                                 String name ) {
         throw new UnsupportedOperationException(
@@ -168,7 +177,8 @@ public class Uml2AssociationUmlAspect extends AbstractUml2UmlAspect implements U
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.uml.UmlAssociation#setMultiplicity(java.lang.Object, int, java.lang.String)
      */
-    public IStatus setMultiplicity( Object assoc,
+    @Override
+	public IStatus setMultiplicity( Object assoc,
                                     int end,
                                     String mult ) {
         // final Association a = assertAssociation(assoc);
@@ -187,7 +197,8 @@ public class Uml2AssociationUmlAspect extends AbstractUml2UmlAspect implements U
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.uml.UmlAssociation#setProperties(java.lang.Object, int, java.lang.String)
      */
-    public IStatus setProperties( Object assoc,
+    @Override
+	public IStatus setProperties( Object assoc,
                                   int end,
                                   String[] props ) {
         throw new UnsupportedOperationException(
@@ -197,7 +208,8 @@ public class Uml2AssociationUmlAspect extends AbstractUml2UmlAspect implements U
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.uml.UmlAssociation#setNavigability(java.lang.Object, int, int)
      */
-    public IStatus setNavigability( Object assoc,
+    @Override
+	public IStatus setNavigability( Object assoc,
                                     int end,
                                     int navigability ) {
         throw new UnsupportedOperationException(
@@ -223,14 +235,16 @@ public class Uml2AssociationUmlAspect extends AbstractUml2UmlAspect implements U
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.uml.UmlDiagramAspect#getStereotype(java.lang.Object)
      */
-    public String getStereotype( Object eObject ) {
+    @Override
+	public String getStereotype( Object eObject ) {
         return Uml2Plugin.getPluginResourceLocator().getString("_UI_Association_type"); //$NON-NLS-1$
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.uml.UmlDiagramAspect#getSignature(java.lang.Object, int)
      */
-    public String getSignature( Object eObject,
+    @Override
+	public String getSignature( Object eObject,
                                 int showMask ) {
         // return getSignature(eObject, UmlAssociation.SIGNATURE_NAME);
         final Association assoc = assertAssociation(eObject);
@@ -282,14 +296,16 @@ public class Uml2AssociationUmlAspect extends AbstractUml2UmlAspect implements U
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.uml.UmlDiagramAspect#getEditableSignature(java.lang.Object)
      */
-    public String getEditableSignature( Object eObject ) {
+    @Override
+	public String getEditableSignature( Object eObject ) {
         return getSignature(eObject, UmlAssociation.SIGNATURE_NAME);
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.uml.UmlDiagramAspect#setSignature(java.lang.Object, java.lang.String)
      */
-    public IStatus setSignature( Object eObject,
+    @Override
+	public IStatus setSignature( Object eObject,
                                  String newSignature ) {
         try {
             final Association assoc = assertAssociation(eObject);
@@ -305,7 +321,8 @@ public class Uml2AssociationUmlAspect extends AbstractUml2UmlAspect implements U
     /**
      * @see org.teiid.designer.core.metamodel.aspect.uml.UmlRelationship#getName(java.lang.Object)
      */
-    public String getName( Object eObject ) {
+    @Override
+	public String getName( Object eObject ) {
         final Association assoc = assertAssociation(eObject);
         return assoc.getName();
     }
@@ -313,7 +330,8 @@ public class Uml2AssociationUmlAspect extends AbstractUml2UmlAspect implements U
     /**
      * @see org.teiid.designer.core.metamodel.aspect.uml.UmlRelationship#getToolTip(java.lang.Object)
      */
-    public String getToolTip( Object eObject ) {
+    @Override
+	public String getToolTip( Object eObject ) {
         final StringBuffer sb = new StringBuffer(200);
         sb.append(this.getStereotype(eObject));
         sb.append(' ');

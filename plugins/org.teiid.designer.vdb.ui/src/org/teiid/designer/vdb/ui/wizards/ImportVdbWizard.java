@@ -105,7 +105,8 @@ public class ImportVdbWizard extends AbstractWizard
      * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench, org.eclipse.jface.viewers.IStructuredSelection)
      * @since 4.0
      */
-    public void init( final IWorkbench workbench,
+    @Override
+	public void init( final IWorkbench workbench,
                       final IStructuredSelection selection ) {
         if (importLicensed) {
             zipPage = createMainPage(selection);
@@ -113,7 +114,8 @@ public class ImportVdbWizard extends AbstractWizard
         } else {
             // Create empty page
             final WizardPage page = new WizardPage(ImportVdbWizard.class.getSimpleName(), TITLE, null) {
-                public void createControl( final Composite parent ) {
+                @Override
+				public void createControl( final Composite parent ) {
                     setControl(createEmptyPageControl(parent));
                 }
             };

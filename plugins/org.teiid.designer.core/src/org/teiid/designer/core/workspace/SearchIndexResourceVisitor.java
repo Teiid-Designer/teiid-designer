@@ -108,7 +108,8 @@ public class SearchIndexResourceVisitor implements IResourceVisitor {
      * @see org.eclipse.core.resources.IResourceVisitor#visit(org.eclipse.core.resources.IResource)
      * @since 5.0.1
      */
-    public boolean visit( IResource theResource ) {
+    @Override
+	public boolean visit( IResource theResource ) {
         if (isIncludedResource(theResource)) {
             this.resources.add(theResource);
             this.indexNames.add(IndexUtil.getRuntimeIndexFileName(theResource));

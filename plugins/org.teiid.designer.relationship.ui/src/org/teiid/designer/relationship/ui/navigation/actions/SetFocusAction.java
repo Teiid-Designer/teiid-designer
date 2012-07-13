@@ -50,7 +50,8 @@ public class SetFocusAction extends Action implements ISelectionListener, UiCons
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
      */
-    public void selectionChanged(IWorkbenchPart thePart, ISelection selection) {
+    @Override
+	public void selectionChanged(IWorkbenchPart thePart, ISelection selection) {
         setEnabled(false);
         if ( SelectionUtilities.isSingleSelection(selection) ) {
             Object selectedObject = SelectionUtilities.getSelectedObject(selection);

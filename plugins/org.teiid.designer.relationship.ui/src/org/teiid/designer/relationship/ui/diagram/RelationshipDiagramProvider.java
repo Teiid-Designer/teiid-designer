@@ -30,6 +30,7 @@ public class RelationshipDiagramProvider implements IPackageDiagramProvider {
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.diagram.ui.pakkage.IPackageDiagramProvider#getPackageDiagram(org.teiid.designer.core.workspace.ModelResource, org.eclipse.emf.ecore.EObject)
 	 */
+	@Override
 	public Diagram getPackageDiagram(ModelResource modelResource, EObject eObject, boolean forceCreate) {
 		Diagram relationshipDiagram = null;
 		
@@ -42,6 +43,7 @@ public class RelationshipDiagramProvider implements IPackageDiagramProvider {
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.diagram.ui.pakkage.IPackageDiagramProvider#getPackageDiagram(java.lang.Object)
 	 */
+	@Override
 	public Diagram getPackageDiagram(Object targetObject, boolean forceCreate) {
 		Diagram relationshipDiagram = null;
 		        

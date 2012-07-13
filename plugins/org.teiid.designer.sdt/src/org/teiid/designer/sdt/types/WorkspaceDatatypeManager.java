@@ -79,64 +79,74 @@ public class WorkspaceDatatypeManager extends AbstractDatatypeManager {
      * @see org.teiid.designer.core.types.DatatypeManager#getBuiltInTypeManager()
      * @since 4.3
      */
-    public DatatypeManager getBuiltInTypeManager() {
+    @Override
+	public DatatypeManager getBuiltInTypeManager() {
         return this.builtInTypesMgr;
     }
 
     /**
      * @see org.teiid.designer.core.types.DatatypeManager#getBuiltInDatatype(java.lang.String)
      */
-    public EObject getBuiltInDatatype( final String name ) {
+    @Override
+	public EObject getBuiltInDatatype( final String name ) {
         return this.builtInTypesMgr.getBuiltInDatatype(name);
     }
 
     /**
      * @see org.teiid.designer.core.types.DatatypeManager#getBuiltInPrimitiveTypes()
      */
-    public EObject[] getBuiltInPrimitiveTypes() {
+    @Override
+	public EObject[] getBuiltInPrimitiveTypes() {
         return this.builtInTypesMgr.getBuiltInPrimitiveTypes();
     }
 
     /**
      * @see org.teiid.designer.core.types.DatatypeManager#getBuiltInPrimitiveType(org.eclipse.emf.ecore.EObject)
      */
-    public EObject getBuiltInPrimitiveType( EObject type ) {
+    @Override
+	public EObject getBuiltInPrimitiveType( EObject type ) {
         return this.builtInTypesMgr.getBuiltInPrimitiveType(type);
     }
 
     /**
      * @see org.teiid.designer.core.types.DatatypeManager#isBinary(org.eclipse.emf.ecore.EObject)
      */
-    public boolean isBinary( EObject type ) {
+    @Override
+	public boolean isBinary( EObject type ) {
         return this.builtInTypesMgr.isBinary(type);
     }
 
     /**
      * @see org.teiid.designer.core.types.DatatypeManager#isCharacter(org.eclipse.emf.ecore.EObject)
      */
-    public boolean isCharacter( EObject type ) {
+    @Override
+	public boolean isCharacter( EObject type ) {
         return this.builtInTypesMgr.isCharacter(type);
     }
 
     /**
      * @see org.teiid.designer.core.types.DatatypeManager#isNumeric(org.eclipse.emf.ecore.EObject)
      */
-    public boolean isNumeric( EObject type ) {
+    @Override
+	public boolean isNumeric( EObject type ) {
         return this.builtInTypesMgr.isNumeric(type);
     }
 
-    public boolean isBounded( EObject type ) {
+    @Override
+	public boolean isBounded( EObject type ) {
         return this.builtInTypesMgr.isBounded(type);
     }
 
-    public boolean isEnumeration( EObject type ) {
+    @Override
+	public boolean isEnumeration( EObject type ) {
         return this.builtInTypesMgr.isEnumeration(type);
     }
 
     /**
      * @see org.teiid.designer.core.types.DatatypeManager#getUUID(org.eclipse.emf.ecore.EObject)
      */
-    public ObjectID getUuid( final EObject type ) {
+    @Override
+	public ObjectID getUuid( final EObject type ) {
         // If the datatype is a built-in type ...
         if (this.isBuiltInDatatype(type)) {
             return this.builtInTypesMgr.getUuid(type);
@@ -156,7 +166,8 @@ public class WorkspaceDatatypeManager extends AbstractDatatypeManager {
     /**
      * @see org.teiid.designer.core.types.DatatypeManager#getUuidString(org.eclipse.emf.ecore.EObject)
      */
-    public String getUuidString( EObject type ) {
+    @Override
+	public String getUuidString( EObject type ) {
         // If the datatype is a built-in type ...
         if (this.isBuiltInDatatype(type)) {
             return this.builtInTypesMgr.getUuidString(type);
@@ -173,7 +184,8 @@ public class WorkspaceDatatypeManager extends AbstractDatatypeManager {
     /**
      * @see org.teiid.designer.core.types.DatatypeManager#getRuntimeTypeName(org.eclipse.emf.ecore.EObject)
      */
-    public String getRuntimeTypeName( final EObject type ) {
+    @Override
+	public String getRuntimeTypeName( final EObject type ) {
         // If the datatype is a built-in type ...
         if (this.isBuiltInDatatype(type)) {
             return this.builtInTypesMgr.getRuntimeTypeName(type);
@@ -213,7 +225,8 @@ public class WorkspaceDatatypeManager extends AbstractDatatypeManager {
      * @see org.teiid.designer.core.types.DatatypeManager#getRuntimeTypeFixed(org.eclipse.emf.ecore.EObject)
      * @since 4.3
      */
-    public Boolean getRuntimeTypeFixed( EObject type ) {
+    @Override
+	public Boolean getRuntimeTypeFixed( EObject type ) {
         Boolean result = null;
         // If the datatype is a built-in type ...
         if (this.isBuiltInDatatype(type)) {
@@ -231,7 +244,8 @@ public class WorkspaceDatatypeManager extends AbstractDatatypeManager {
     /**
      * @see org.teiid.designer.core.types.DatatypeManager#getEnterpriseExtensionsMap(org.eclipse.emf.ecore.EObject)
      */
-    public Map getEnterpriseExtensionsMap( final EObject type ) {
+    @Override
+	public Map getEnterpriseExtensionsMap( final EObject type ) {
         // If the datatype is a built-in type ...
         if (this.isBuiltInDatatype(type)) {
             return this.builtInTypesMgr.getEnterpriseExtensionsMap(type);
@@ -248,7 +262,8 @@ public class WorkspaceDatatypeManager extends AbstractDatatypeManager {
     /**
      * @see org.teiid.designer.core.types.DatatypeManager#getName(org.eclipse.emf.ecore.EObject)
      */
-    public String getName( final EObject type ) {
+    @Override
+	public String getName( final EObject type ) {
         final SqlDatatypeAspect aspect = getSqlAspect(type);
         if (aspect != null) {
             return aspect.getName(type);
@@ -259,7 +274,8 @@ public class WorkspaceDatatypeManager extends AbstractDatatypeManager {
     /**
      * @see org.teiid.designer.core.types.DatatypeManager#isSimpleDatatype(org.eclipse.emf.ecore.EObject)
      */
-    public boolean isSimpleDatatype( final EObject type ) {
+    @Override
+	public boolean isSimpleDatatype( final EObject type ) {
         final SqlDatatypeAspect aspect = getSqlAspect(type);
         if (aspect != null) {
             return aspect.isSimpleDatatype(type);
@@ -270,28 +286,32 @@ public class WorkspaceDatatypeManager extends AbstractDatatypeManager {
     /**
      * @see org.teiid.designer.core.types.DatatypeManager#getAnySimpleType()
      */
-    public EObject getAnySimpleType() {
+    @Override
+	public EObject getAnySimpleType() {
         return this.builtInTypesMgr.getAnySimpleType();
     }
 
     /**
      * @see org.teiid.designer.core.types.DatatypeManager#getAnyType()
      */
-    public EObject getAnyType() {
+    @Override
+	public EObject getAnyType() {
         return this.builtInTypesMgr.getAnyType();
     }
 
     /**
      * @see org.teiid.designer.core.types.DatatypeManager#getDefaultDatatypeForRuntimeTypeName(java.lang.String)
      */
-    public EObject getDefaultDatatypeForRuntimeTypeName( final String runtimeTypeName ) {
+    @Override
+	public EObject getDefaultDatatypeForRuntimeTypeName( final String runtimeTypeName ) {
         return this.builtInTypesMgr.getDefaultDatatypeForRuntimeTypeName(runtimeTypeName);
     }
 
     /**
      * @see org.teiid.designer.core.types.DatatypeManager#isBuiltInDatatype(org.eclipse.emf.ecore.EObject)
      */
-    public boolean isBuiltInDatatype( final EObject datatype ) {
+    @Override
+	public boolean isBuiltInDatatype( final EObject datatype ) {
         final SqlDatatypeAspect aspect = getSqlAspect(datatype);
         if (aspect != null) {
             return aspect.isBuiltInDatatype(datatype);
@@ -302,7 +322,8 @@ public class WorkspaceDatatypeManager extends AbstractDatatypeManager {
     /**
      * @see org.teiid.designer.core.types.DatatypeManager#getBaseType(org.eclipse.emf.ecore.EObject)
      */
-    public EObject getBaseType( final EObject datatype ) {
+    @Override
+	public EObject getBaseType( final EObject datatype ) {
         // If the datatype is a built-in type ...
         if (this.isBuiltInDatatype(datatype)) {
             return this.builtInTypesMgr.getBaseType(datatype);
@@ -319,7 +340,8 @@ public class WorkspaceDatatypeManager extends AbstractDatatypeManager {
     /**
      * @see org.teiid.designer.core.types.DatatypeManager#getDatatypeForXsdType
      */
-    public EObject getDatatypeForXsdType( final EObject eObject ) {
+    @Override
+	public EObject getDatatypeForXsdType( final EObject eObject ) {
         CoreArgCheck.isNotNull(eObject);
 
         // If the object is a simple type ...
@@ -338,7 +360,8 @@ public class WorkspaceDatatypeManager extends AbstractDatatypeManager {
     /**
      * @see org.teiid.designer.core.types.DatatypeManager#getAllDatatypes()
      */
-    public EObject[] getAllDatatypes() {
+    @Override
+	public EObject[] getAllDatatypes() {
         EObject[] result = this.getDatatypes();
 
         // Create a list of results
@@ -360,7 +383,8 @@ public class WorkspaceDatatypeManager extends AbstractDatatypeManager {
     /**
      * @see org.teiid.designer.core.types.DatatypeManager#getAllowableBaseTypeValues(org.eclipse.emf.ecore.EObject)
      */
-    public EObject[] getAllowableBaseTypeValues( final EObject datatype ) {
+    @Override
+	public EObject[] getAllowableBaseTypeValues( final EObject datatype ) {
         // Get the array of all possible datatypes
         List tmp = new ArrayList();
         tmp.addAll(Arrays.asList(this.getAllDatatypes()));
@@ -377,7 +401,8 @@ public class WorkspaceDatatypeManager extends AbstractDatatypeManager {
     /**
      * @see org.teiid.designer.core.types.DatatypeManager#getAllowableItemTypeValues(org.eclipse.emf.ecore.EObject)
      */
-    public EObject[] getAllowableItemTypeValues( final EObject datatype ) {
+    @Override
+	public EObject[] getAllowableItemTypeValues( final EObject datatype ) {
         // Get the array of all possible datatypes
         List tmp = new ArrayList();
         tmp.addAll(Arrays.asList(this.getAllDatatypes()));
@@ -391,7 +416,8 @@ public class WorkspaceDatatypeManager extends AbstractDatatypeManager {
     /**
      * @see org.teiid.designer.core.types.DatatypeManager#getAllowableMemberTypeValues(org.eclipse.emf.ecore.EObject)
      */
-    public EObject[] getAllowableMemberTypeValues( final EObject datatype ) {
+    @Override
+	public EObject[] getAllowableMemberTypeValues( final EObject datatype ) {
         // Get the array of all possible datatypes
         List tmp = new ArrayList();
         tmp.addAll(Arrays.asList(this.getAllDatatypes()));
@@ -406,7 +432,8 @@ public class WorkspaceDatatypeManager extends AbstractDatatypeManager {
      * @see org.teiid.designer.core.types.DatatypeManager#getAllowableTypeValues(org.eclipse.emf.ecore.EObject,
      *      org.eclipse.emf.ecore.EStructuralFeature)
      */
-    public EObject[] getAllowableTypeValues( final EObject eObject,
+    @Override
+	public EObject[] getAllowableTypeValues( final EObject eObject,
                                              final EStructuralFeature feature ) {
         if (feature == null || eObject == null) {
             return this.getAllDatatypes();
@@ -426,7 +453,8 @@ public class WorkspaceDatatypeManager extends AbstractDatatypeManager {
     /**
      * @see org.teiid.designer.core.types.DatatypeManager#findDatatype(java.lang.String)
      */
-    public EObject findDatatype( final String id ) {
+    @Override
+	public EObject findDatatype( final String id ) {
         // Check the built-in types manager first ...
         EObject result = this.builtInTypesMgr.findDatatype(id);
         if (result != null) {
@@ -445,7 +473,8 @@ public class WorkspaceDatatypeManager extends AbstractDatatypeManager {
     /**
      * @see org.teiid.designer.core.types.DatatypeManager#getRuntimeTypeJavaClassName(java.lang.String)
      */
-    public String getRuntimeTypeJavaClassName( final String id ) {
+    @Override
+	public String getRuntimeTypeJavaClassName( final String id ) {
         // Check the built-in types manager first ...
         String result = this.builtInTypesMgr.getRuntimeTypeJavaClassName(id);
         if (result != null) {
@@ -467,7 +496,8 @@ public class WorkspaceDatatypeManager extends AbstractDatatypeManager {
     /**
      * @see org.teiid.designer.core.types.DatatypeManager#getRuntimeTypeName(java.lang.String)
      */
-    public String getRuntimeTypeName( final String id ) {
+    @Override
+	public String getRuntimeTypeName( final String id ) {
         // Check the built-in types manager first ...
         String result = this.builtInTypesMgr.getRuntimeTypeName(id);
         if (result != null) {
@@ -489,7 +519,8 @@ public class WorkspaceDatatypeManager extends AbstractDatatypeManager {
     /**
      * @see org.teiid.designer.core.types.DatatypeManager#getSubtypes(org.eclipse.emf.ecore.EObject)
      */
-    public EObject[] getSubtypes( final EObject datatype ) {
+    @Override
+	public EObject[] getSubtypes( final EObject datatype ) {
         CoreArgCheck.isInstanceOf(XSDSimpleTypeDefinition.class, datatype);
 
         // Create a collection of only the datatypes with the correct basetype
@@ -541,7 +572,8 @@ public class WorkspaceDatatypeManager extends AbstractDatatypeManager {
     /**
      * @see org.teiid.designer.core.types.DatatypeManager#getDescription(org.eclipse.emf.ecore.EObject)
      */
-    public String getDescription( final EObject type ) {
+    @Override
+	public String getDescription( final EObject type ) {
         String description = null;
         final SqlDatatypeAspect aspect = getSqlAspect(type);
         if (aspect != null) {
@@ -712,7 +744,8 @@ public class WorkspaceDatatypeManager extends AbstractDatatypeManager {
      * @see org.teiid.designer.core.types.DatatypeManager#getBuiltInDatatypes()
      * @since 4.3
      */
-    public EObject[] getBuiltInDatatypes() {
+    @Override
+	public EObject[] getBuiltInDatatypes() {
         return this.builtInTypesMgr.getBuiltInDatatypes();
     }
 
@@ -720,7 +753,8 @@ public class WorkspaceDatatypeManager extends AbstractDatatypeManager {
      * @see org.teiid.designer.core.types.DatatypeManager#isEnterpriseDatatype(org.eclipse.emf.ecore.EObject)
      * @since 4.3
      */
-    public boolean isEnterpriseDatatype( EObject simpleType ) {
+    @Override
+	public boolean isEnterpriseDatatype( EObject simpleType ) {
         return this.builtInTypesMgr.isEnterpriseDatatype(resolveWhenProxy(simpleType));
     }
 
@@ -728,7 +762,8 @@ public class WorkspaceDatatypeManager extends AbstractDatatypeManager {
      * @see org.teiid.designer.core.types.DatatypeManager#getEnterpriseDatatypeInfo(org.eclipse.xsd.XSDSimpleTypeDefinition)
      * @since 4.3
      */
-    public EnterpriseDatatypeInfo getEnterpriseDatatypeInfo( XSDSimpleTypeDefinition simpleType ) {
+    @Override
+	public EnterpriseDatatypeInfo getEnterpriseDatatypeInfo( XSDSimpleTypeDefinition simpleType ) {
         return this.builtInTypesMgr.getEnterpriseDatatypeInfo((XSDSimpleTypeDefinition)resolveWhenProxy(simpleType));
     }
 
@@ -736,7 +771,8 @@ public class WorkspaceDatatypeManager extends AbstractDatatypeManager {
      * @see org.teiid.designer.core.types.DatatypeManager#setBasetypeDefinition(org.eclipse.xsd.XSDSimpleTypeDefinition)
      * @since 4.3
      */
-    public void setBasetypeDefinition( final XSDSimpleTypeDefinition simpleType,
+    @Override
+	public void setBasetypeDefinition( final XSDSimpleTypeDefinition simpleType,
                                        final XSDSimpleTypeDefinition baseType ) {
         getSqlAspect(simpleType).setBasetype((XSDSimpleTypeDefinition)resolveWhenProxy(simpleType),
                                              (XSDSimpleTypeDefinition)resolveWhenProxy(baseType));

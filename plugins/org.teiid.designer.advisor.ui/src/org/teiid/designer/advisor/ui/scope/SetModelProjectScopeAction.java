@@ -32,7 +32,8 @@ public class SetModelProjectScopeAction extends Action implements ISelectionList
         setImageDescriptor(UiPlugin.getDefault().getImageDescriptor(PluginConstants.Images.MODEL));
     }
 
-    public int compareTo( Object o ) {
+    @Override
+	public int compareTo( Object o ) {
         if (o instanceof String) {
             return getText().compareTo((String)o);
         }
@@ -43,7 +44,8 @@ public class SetModelProjectScopeAction extends Action implements ISelectionList
         return 0;
     }
 
-    public boolean isApplicable( ISelection selection ) {
+    @Override
+	public boolean isApplicable( ISelection selection ) {
         boolean result = false;
         if (!SelectionUtilities.isMultiSelection(selection)) {
             Object obj = SelectionUtilities.getSelectedObject(selection);
@@ -64,7 +66,8 @@ public class SetModelProjectScopeAction extends Action implements ISelectionList
         }
     }
 
-    public void selectionChanged( IWorkbenchPart part,
+    @Override
+	public void selectionChanged( IWorkbenchPart part,
                                   ISelection selection ) {
         boolean enable = false;
         if (!SelectionUtilities.isMultiSelection(selection)) {

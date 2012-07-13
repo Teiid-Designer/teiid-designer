@@ -38,7 +38,8 @@ public class NodeConnectionAnchor extends AbstractConnectionAnchor {
      * This method is taken from FixedConnectionAnchor in Logical Diagram Editor
      * example.
     **/
-    public Point getLocation(Point iReference) {
+    @Override
+	public Point getLocation(Point iReference) {
 
         Rectangle r = getOwner().getBounds();
         int x, y;

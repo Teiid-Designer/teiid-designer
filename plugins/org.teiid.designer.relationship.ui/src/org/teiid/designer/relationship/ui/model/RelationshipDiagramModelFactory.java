@@ -85,7 +85,8 @@ public class RelationshipDiagramModelFactory extends DiagramModelFactoryImpl imp
      * Create a DiagramModelNode.
      */
 
-    public DiagramModelNode createModel( Object baseObject,
+    @Override
+	public DiagramModelNode createModel( Object baseObject,
                                          String sNotationId,
                                          IProgressMonitor monitor ) {
 

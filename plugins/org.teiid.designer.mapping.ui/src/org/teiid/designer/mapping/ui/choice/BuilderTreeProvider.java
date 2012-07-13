@@ -50,7 +50,8 @@ public class BuilderTreeProvider implements ITreeContentProvider, ILabelProvider
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
      */
-    public Object[] getChildren(Object parentElement) {
+    @Override
+	public Object[] getChildren(Object parentElement) {
         Object[] result = new Object[0];
         
         if ( parentElement instanceof MappingClass ) {
@@ -66,7 +67,8 @@ public class BuilderTreeProvider implements ITreeContentProvider, ILabelProvider
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object)
      */
-    public Object getParent( Object element ) {
+    @Override
+	public Object getParent( Object element ) {
         Object oResult = null;
 
         if ( element instanceof MappingClassColumn ) {
@@ -91,7 +93,8 @@ public class BuilderTreeProvider implements ITreeContentProvider, ILabelProvider
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(java.lang.Object)
      */
-    public boolean hasChildren(Object element) {
+    @Override
+	public boolean hasChildren(Object element) {
 //        System.out.println("[BuilderTreeProvider.hasChildren] TOP: element is: " + element ); //$NON-NLS-1$
         return getChildren(element).length > 0;
     }
@@ -99,7 +102,8 @@ public class BuilderTreeProvider implements ITreeContentProvider, ILabelProvider
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.ILabelProvider#getImage(java.lang.Object)
      */
-    public Image getImage(Object obj) {
+    @Override
+	public Image getImage(Object obj) {
 
         return emfLabelProvider.getImage( obj );
 
@@ -108,7 +112,8 @@ public class BuilderTreeProvider implements ITreeContentProvider, ILabelProvider
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.ILabelProvider#getText(java.lang.Object)
      */
-    public String getText(Object obj) {
+    @Override
+	public String getText(Object obj) {
 //        System.out.println("[BuilderTreeProvider.getText] TOP: Arg is: " + obj ); //$NON-NLS-1$
         
 //        System.out.println("[BuilderTreeProvider.getText] TOP: About to return: " + emfLabelProvider.getText( obj ) ); //$NON-NLS-1$        
@@ -137,7 +142,8 @@ public class BuilderTreeProvider implements ITreeContentProvider, ILabelProvider
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
      */
-    public Object[] getElements( Object inputElement ) {
+    @Override
+	public Object[] getElements( Object inputElement ) {
 //        System.out.println("[BuilderTreeProvider.getElements] TOP"); //$NON-NLS-1$
 //        Object[] result = new Object[] { mcCurrent };
 //        System.out.println("[BuilderTreeProvider.getElements] About to return" + result[0] ); //$NON-NLS-1$
@@ -148,14 +154,16 @@ public class BuilderTreeProvider implements ITreeContentProvider, ILabelProvider
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.IBaseLabelProvider#dispose()
      */
-    public void dispose() {
+    @Override
+	public void dispose() {
 
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
      */
-    public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+    @Override
+	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 //        System.out.println("[BuilderTreeProvider.inputChanged] TOP"); //$NON-NLS-1$
        
         if ( newInput != null  ) {
@@ -172,21 +180,24 @@ public class BuilderTreeProvider implements ITreeContentProvider, ILabelProvider
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.IBaseLabelProvider#addListener(org.eclipse.jface.viewers.ILabelProviderListener)
      */
-    public void addListener(ILabelProviderListener listener) {
+    @Override
+	public void addListener(ILabelProviderListener listener) {
 
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.IBaseLabelProvider#isLabelProperty(java.lang.Object, java.lang.String)
      */
-    public boolean isLabelProperty(Object element, String property) {
+    @Override
+	public boolean isLabelProperty(Object element, String property) {
         return emfLabelProvider.isLabelProperty(element, property);
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.IBaseLabelProvider#removeListener(org.eclipse.jface.viewers.ILabelProviderListener)
      */
-    public void removeListener(ILabelProviderListener listener) {
+    @Override
+	public void removeListener(ILabelProviderListener listener) {
 
     }
 

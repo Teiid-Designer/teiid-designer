@@ -170,7 +170,8 @@ public class TextTableFunctionOptionsDialog  extends TitleAreaDialog {
 	    	this.quoteText.setTextLimit(1);
 	    	this.quoteText.addModifyListener(new ModifyListener() {
 	
-	            public void modifyText( final ModifyEvent event ) {
+	            @Override
+				public void modifyText( final ModifyEvent event ) {
 	            	if( !synchronizing ) {
 		            	if( !quoteText.getText().isEmpty()) {
 		            		if( quoteText.getText().charAt(0) != dataFileInfo.getQuote() ) {
@@ -209,7 +210,8 @@ public class TextTableFunctionOptionsDialog  extends TitleAreaDialog {
 	    	this.escapeText.setTextLimit(1);
 	    	this.escapeText.addModifyListener(new ModifyListener() {
 	
-	            public void modifyText( final ModifyEvent event ) {
+	            @Override
+				public void modifyText( final ModifyEvent event ) {
 	            	if( !synchronizing ) {
 		            	if( !escapeText.getText().isEmpty()) {
 		            		if( escapeText.getText().charAt(0) != dataFileInfo.getEscape() ) {

@@ -29,7 +29,8 @@ public class Uml2UmlAspectFactoryImpl implements MetamodelAspectFactory {
     /**
      * @see org.teiid.designer.core.metamodel.aspect.MetamodelAspectFactory#create(org.eclipse.emf.ecore.EClassifier, org.teiid.designer.core.metamodel.aspect.MetamodelEntity)
      */
-    public MetamodelAspect create(EClassifier classifier, MetamodelEntity entity) {
+    @Override
+	public MetamodelAspect create(EClassifier classifier, MetamodelEntity entity) {
         switch (classifier.getClassifierID()) {
             case UMLPackage.CLASS:                 return new Uml2ClassUmlAspect(entity);
             case UMLPackage.PROPERTY:              return new Uml2PropertyUmlAspect(entity);

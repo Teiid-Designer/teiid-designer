@@ -139,7 +139,8 @@ public class ImportImpl extends EObjectImpl implements Import {
      * 
      * @generated
      */
-    public Documentation getDocumentation() {
+    @Override
+	public Documentation getDocumentation() {
         return documentation;
     }
 
@@ -166,7 +167,8 @@ public class ImportImpl extends EObjectImpl implements Import {
      * 
      * @generated
      */
-    public void setDocumentation( Documentation newDocumentation ) {
+    @Override
+	public void setDocumentation( Documentation newDocumentation ) {
         if (newDocumentation != documentation) {
             NotificationChain msgs = null;
             if (documentation != null) msgs = ((InternalEObject)documentation).eInverseRemove(this,
@@ -189,7 +191,8 @@ public class ImportImpl extends EObjectImpl implements Import {
      * 
      * @generated
      */
-    public EList getDeclaredNamespaces() {
+    @Override
+	public EList getDeclaredNamespaces() {
         if (declaredNamespaces == null) {
             declaredNamespaces = new EObjectContainmentWithInverseEList(NamespaceDeclaration.class, this,
                                                                         WsdlPackage.IMPORT__DECLARED_NAMESPACES,
@@ -203,7 +206,8 @@ public class ImportImpl extends EObjectImpl implements Import {
      * 
      * @generated
      */
-    public EList getAttributes() {
+    @Override
+	public EList getAttributes() {
         if (attributes == null) {
             attributes = new EObjectContainmentWithInverseEList(Attribute.class, this, WsdlPackage.IMPORT__ATTRIBUTES,
                                                                 WsdlPackage.ATTRIBUTE__ATTRIBUTE_OWNER);
@@ -216,7 +220,8 @@ public class ImportImpl extends EObjectImpl implements Import {
      * 
      * @generated
      */
-    public String getNamespace() {
+    @Override
+	public String getNamespace() {
         return namespace;
     }
 
@@ -225,7 +230,8 @@ public class ImportImpl extends EObjectImpl implements Import {
      * 
      * @generated
      */
-    public void setNamespace( String newNamespace ) {
+    @Override
+	public void setNamespace( String newNamespace ) {
         String oldNamespace = namespace;
         namespace = newNamespace;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, WsdlPackage.IMPORT__NAMESPACE,
@@ -237,7 +243,8 @@ public class ImportImpl extends EObjectImpl implements Import {
      * 
      * @generated
      */
-    public String getLocation() {
+    @Override
+	public String getLocation() {
         return location;
     }
 
@@ -246,7 +253,8 @@ public class ImportImpl extends EObjectImpl implements Import {
      * 
      * @generated
      */
-    public void setLocation( String newLocation ) {
+    @Override
+	public void setLocation( String newLocation ) {
         String oldLocation = location;
         location = newLocation;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, WsdlPackage.IMPORT__LOCATION,
@@ -258,7 +266,8 @@ public class ImportImpl extends EObjectImpl implements Import {
      * 
      * @generated
      */
-    public Definitions getDefinitions() {
+    @Override
+	public Definitions getDefinitions() {
         if (eContainerFeatureID != WsdlPackage.IMPORT__DEFINITIONS) return null;
         return (Definitions)eContainer;
     }
@@ -268,7 +277,8 @@ public class ImportImpl extends EObjectImpl implements Import {
      * 
      * @generated
      */
-    public void setDefinitions( Definitions newDefinitions ) {
+    @Override
+	public void setDefinitions( Definitions newDefinitions ) {
         if (newDefinitions != eContainer || (eContainerFeatureID != WsdlPackage.IMPORT__DEFINITIONS && newDefinitions != null)) {
             if (EcoreUtil.isAncestor(this, newDefinitions)) throw new IllegalArgumentException(
                                                                                                "Recursive containment not allowed for " + toString()); //$NON-NLS-1$

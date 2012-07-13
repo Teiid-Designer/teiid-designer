@@ -105,7 +105,8 @@ public class DataFlowNodeImpl extends EObjectImpl implements DataFlowNode {
      * 
      * @generated
      */
-    public String getName() {
+    @Override
+	public String getName() {
         return name;
     }
 
@@ -114,7 +115,8 @@ public class DataFlowNodeImpl extends EObjectImpl implements DataFlowNode {
      * 
      * @generated
      */
-    public void setName( String newName ) {
+    @Override
+	public void setName( String newName ) {
         String oldName = name;
         name = newName;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
@@ -126,7 +128,8 @@ public class DataFlowNodeImpl extends EObjectImpl implements DataFlowNode {
      * 
      * @generated
      */
-    public DataFlowMappingRoot getOwner() {
+    @Override
+	public DataFlowMappingRoot getOwner() {
         if (eContainerFeatureID != TransformationPackage.DATA_FLOW_NODE__OWNER) return null;
         return (DataFlowMappingRoot)eContainer;
     }
@@ -136,7 +139,8 @@ public class DataFlowNodeImpl extends EObjectImpl implements DataFlowNode {
      * 
      * @generated
      */
-    public void setOwner( DataFlowMappingRoot newOwner ) {
+    @Override
+	public void setOwner( DataFlowMappingRoot newOwner ) {
         if (newOwner != eContainer || (eContainerFeatureID != TransformationPackage.DATA_FLOW_NODE__OWNER && newOwner != null)) {
             if (EcoreUtil.isAncestor(this, newOwner)) throw new IllegalArgumentException(
                                                                                          "Recursive containment not allowed for " + toString()); //$NON-NLS-1$
@@ -158,7 +162,8 @@ public class DataFlowNodeImpl extends EObjectImpl implements DataFlowNode {
      * 
      * @generated
      */
-    public EList getInputLinks() {
+    @Override
+	public EList getInputLinks() {
         if (inputLinks == null) {
             inputLinks = new EObjectWithInverseResolvingEList(DataFlowLink.class, this,
                                                               TransformationPackage.DATA_FLOW_NODE__INPUT_LINKS,
@@ -172,7 +177,8 @@ public class DataFlowNodeImpl extends EObjectImpl implements DataFlowNode {
      * 
      * @generated
      */
-    public EList getOutputLinks() {
+    @Override
+	public EList getOutputLinks() {
         if (outputLinks == null) {
             outputLinks = new EObjectWithInverseResolvingEList(DataFlowLink.class, this,
                                                                TransformationPackage.DATA_FLOW_NODE__OUTPUT_LINKS,
@@ -186,7 +192,8 @@ public class DataFlowNodeImpl extends EObjectImpl implements DataFlowNode {
      * 
      * @generated NOT
      */
-    public List getInputNodes() {
+    @Override
+	public List getInputNodes() {
         final List result = new ArrayList();
         for (final Iterator iter = getInputLinks().iterator(); iter.hasNext();) {
             final DataFlowLink link = (DataFlowLink)iter.next();
@@ -203,7 +210,8 @@ public class DataFlowNodeImpl extends EObjectImpl implements DataFlowNode {
      * 
      * @generated NOT
      */
-    public List getOutputNodes() {
+    @Override
+	public List getOutputNodes() {
         final List result = new ArrayList();
         for (final Iterator iter = getOutputLinks().iterator(); iter.hasNext();) {
             final DataFlowLink link = (DataFlowLink)iter.next();
@@ -220,7 +228,8 @@ public class DataFlowNodeImpl extends EObjectImpl implements DataFlowNode {
      * 
      * @generated
      */
-    public List getProjectedSymbols() {
+    @Override
+	public List getProjectedSymbols() {
         // TODO: implement this method
         // Ensure that you remove @generated or mark it @generated NOT
         throw new UnsupportedOperationException();
@@ -231,7 +240,8 @@ public class DataFlowNodeImpl extends EObjectImpl implements DataFlowNode {
      * 
      * @generated
      */
-    public String getSqlString() {
+    @Override
+	public String getSqlString() {
         // TODO: implement this method
         // Ensure that you remove @generated or mark it @generated NOT
         throw new UnsupportedOperationException();

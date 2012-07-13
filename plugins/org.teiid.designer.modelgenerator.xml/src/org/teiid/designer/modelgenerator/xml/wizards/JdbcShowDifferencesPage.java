@@ -61,7 +61,8 @@ public class JdbcShowDifferencesPage extends WizardPage
      * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
      * @since 4.0
      */
-    public void createControl( final Composite parent ) {
+    @Override
+	public void createControl( final Composite parent ) {
 
         // Create page
         final Composite pg = new Composite(parent, SWT.NONE);
@@ -91,7 +92,8 @@ public class JdbcShowDifferencesPage extends WizardPage
 
         final TableViewer tableViewer = pnlDiffReport.getTableViewer();
         if (tableViewer instanceof CheckboxTableViewer) ((CheckboxTableViewer)tableViewer).addCheckStateListener(new ICheckStateListener() {
-            public void checkStateChanged( final CheckStateChangedEvent theEvent ) {
+            @Override
+			public void checkStateChanged( final CheckStateChangedEvent theEvent ) {
                 final Object checkedObject = theEvent.getElement();
                 final boolean isChecked = theEvent.getChecked();
                 if (checkedObject instanceof PropertyDifference) {

@@ -144,7 +144,8 @@ public class WsdlFactoryImpl extends EFactoryImpl implements WsdlFactory {
      * 
      * @generated
      */
-    public Definitions createDefinitions() {
+    @Override
+	public Definitions createDefinitions() {
         DefinitionsImpl definitions = new DefinitionsImpl();
         return definitions;
     }
@@ -154,7 +155,8 @@ public class WsdlFactoryImpl extends EFactoryImpl implements WsdlFactory {
      * 
      * @generated
      */
-    public Documentation createDocumentation() {
+    @Override
+	public Documentation createDocumentation() {
         DocumentationImpl documentation = new DocumentationImpl();
         return documentation;
     }
@@ -164,7 +166,8 @@ public class WsdlFactoryImpl extends EFactoryImpl implements WsdlFactory {
      * 
      * @generated
      */
-    public Attribute createAttribute() {
+    @Override
+	public Attribute createAttribute() {
         AttributeImpl attribute = new AttributeImpl();
         return attribute;
     }
@@ -174,7 +177,8 @@ public class WsdlFactoryImpl extends EFactoryImpl implements WsdlFactory {
      * 
      * @generated
      */
-    public Message createMessage() {
+    @Override
+	public Message createMessage() {
         MessageImpl message = new MessageImpl();
         return message;
     }
@@ -184,7 +188,8 @@ public class WsdlFactoryImpl extends EFactoryImpl implements WsdlFactory {
      * 
      * @generated
      */
-    public PortType createPortType() {
+    @Override
+	public PortType createPortType() {
         PortTypeImpl portType = new PortTypeImpl();
         return portType;
     }
@@ -194,7 +199,8 @@ public class WsdlFactoryImpl extends EFactoryImpl implements WsdlFactory {
      * 
      * @generated
      */
-    public Binding createBinding() {
+    @Override
+	public Binding createBinding() {
         BindingImpl binding = new BindingImpl();
         return binding;
     }
@@ -204,7 +210,8 @@ public class WsdlFactoryImpl extends EFactoryImpl implements WsdlFactory {
      * 
      * @generated
      */
-    public Service createService() {
+    @Override
+	public Service createService() {
         ServiceImpl service = new ServiceImpl();
         return service;
     }
@@ -214,7 +221,8 @@ public class WsdlFactoryImpl extends EFactoryImpl implements WsdlFactory {
      * 
      * @generated
      */
-    public Import createImport() {
+    @Override
+	public Import createImport() {
         ImportImpl import_ = new ImportImpl();
         return import_;
     }
@@ -224,7 +232,8 @@ public class WsdlFactoryImpl extends EFactoryImpl implements WsdlFactory {
      * 
      * @generated
      */
-    public Port createPort() {
+    @Override
+	public Port createPort() {
         PortImpl port = new PortImpl();
         return port;
     }
@@ -234,7 +243,8 @@ public class WsdlFactoryImpl extends EFactoryImpl implements WsdlFactory {
      * 
      * @generated
      */
-    public Element createElement() {
+    @Override
+	public Element createElement() {
         ElementImpl element = new ElementImpl();
         return element;
     }
@@ -244,7 +254,8 @@ public class WsdlFactoryImpl extends EFactoryImpl implements WsdlFactory {
      * 
      * @generated
      */
-    public Types createTypes() {
+    @Override
+	public Types createTypes() {
         TypesImpl types = new TypesImpl();
         return types;
     }
@@ -254,7 +265,8 @@ public class WsdlFactoryImpl extends EFactoryImpl implements WsdlFactory {
      * 
      * @generated
      */
-    public MessagePart createMessagePart() {
+    @Override
+	public MessagePart createMessagePart() {
         MessagePartImpl messagePart = new MessagePartImpl();
         return messagePart;
     }
@@ -264,7 +276,8 @@ public class WsdlFactoryImpl extends EFactoryImpl implements WsdlFactory {
      * 
      * @generated
      */
-    public Operation createOperation() {
+    @Override
+	public Operation createOperation() {
         OperationImpl operation = new OperationImpl();
         return operation;
     }
@@ -274,7 +287,8 @@ public class WsdlFactoryImpl extends EFactoryImpl implements WsdlFactory {
      * 
      * @generated
      */
-    public Input createInput() {
+    @Override
+	public Input createInput() {
         InputImpl input = new InputImpl();
         return input;
     }
@@ -284,7 +298,8 @@ public class WsdlFactoryImpl extends EFactoryImpl implements WsdlFactory {
      * 
      * @generated
      */
-    public Output createOutput() {
+    @Override
+	public Output createOutput() {
         OutputImpl output = new OutputImpl();
         return output;
     }
@@ -294,7 +309,8 @@ public class WsdlFactoryImpl extends EFactoryImpl implements WsdlFactory {
      * 
      * @generated
      */
-    public Fault createFault() {
+    @Override
+	public Fault createFault() {
         FaultImpl fault = new FaultImpl();
         return fault;
     }
@@ -304,7 +320,8 @@ public class WsdlFactoryImpl extends EFactoryImpl implements WsdlFactory {
      * 
      * @generated
      */
-    public BindingOperation createBindingOperation() {
+    @Override
+	public BindingOperation createBindingOperation() {
         BindingOperationImpl bindingOperation = new BindingOperationImpl();
         return bindingOperation;
     }
@@ -314,7 +331,8 @@ public class WsdlFactoryImpl extends EFactoryImpl implements WsdlFactory {
      * 
      * @generated
      */
-    public BindingInput createBindingInput() {
+    @Override
+	public BindingInput createBindingInput() {
         BindingInputImpl bindingInput = new BindingInputImpl();
         return bindingInput;
     }
@@ -324,7 +342,8 @@ public class WsdlFactoryImpl extends EFactoryImpl implements WsdlFactory {
      * 
      * @generated
      */
-    public BindingOutput createBindingOutput() {
+    @Override
+	public BindingOutput createBindingOutput() {
         BindingOutputImpl bindingOutput = new BindingOutputImpl();
         return bindingOutput;
     }
@@ -334,7 +353,8 @@ public class WsdlFactoryImpl extends EFactoryImpl implements WsdlFactory {
      * 
      * @generated
      */
-    public BindingFault createBindingFault() {
+    @Override
+	public BindingFault createBindingFault() {
         BindingFaultImpl bindingFault = new BindingFaultImpl();
         return bindingFault;
     }
@@ -344,7 +364,8 @@ public class WsdlFactoryImpl extends EFactoryImpl implements WsdlFactory {
      * 
      * @generated
      */
-    public NamespaceDeclaration createNamespaceDeclaration() {
+    @Override
+	public NamespaceDeclaration createNamespaceDeclaration() {
         NamespaceDeclarationImpl namespaceDeclaration = new NamespaceDeclarationImpl();
         return namespaceDeclaration;
     }
@@ -374,7 +395,8 @@ public class WsdlFactoryImpl extends EFactoryImpl implements WsdlFactory {
      * 
      * @generated
      */
-    public WsdlPackage getWsdlPackage() {
+    @Override
+	public WsdlPackage getWsdlPackage() {
         return (WsdlPackage)getEPackage();
     }
 

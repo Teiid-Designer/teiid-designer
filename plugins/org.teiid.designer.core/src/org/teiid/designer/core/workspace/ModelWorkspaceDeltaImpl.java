@@ -67,70 +67,80 @@ public class ModelWorkspaceDeltaImpl implements ModelWorkspaceDelta {
     /* (non-Javadoc)
      * @See org.teiid.designer.core.workspace.ModelWorkspaceDelta#getAddedChildren()
      */
-    public ModelWorkspaceDelta[] getAddedChildren() {
+    @Override
+	public ModelWorkspaceDelta[] getAddedChildren() {
         return getChildrenOfType(ADDED);
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.workspace.ModelWorkspaceDelta#getAffectedChildren()
      */
-    public ModelWorkspaceDelta[] getAffectedChildren() {
+    @Override
+	public ModelWorkspaceDelta[] getAffectedChildren() {
         return fAffectedChildren;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.workspace.ModelWorkspaceDelta#getChangedChildren()
      */
-    public ModelWorkspaceDelta[] getChangedChildren() {
+    @Override
+	public ModelWorkspaceDelta[] getChangedChildren() {
         return getChildrenOfType(CHANGED);
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.workspace.ModelWorkspaceDelta#getElement()
      */
-    public ModelWorkspaceItem getElement() {
+    @Override
+	public ModelWorkspaceItem getElement() {
         return this.fChangedElement;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.workspace.ModelWorkspaceDelta#getFlags()
      */
-    public int getFlags() {
+    @Override
+	public int getFlags() {
         return this.fChangeFlags;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.workspace.ModelWorkspaceDelta#getKind()
      */
-    public int getKind() {
+    @Override
+	public int getKind() {
         return fKind;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.workspace.ModelWorkspaceDelta#getMovedFromElement()
      */
-    public ModelWorkspaceItem getMovedFromElement() {
+    @Override
+	public ModelWorkspaceItem getMovedFromElement() {
         return fMovedFromHandle;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.workspace.ModelWorkspaceDelta#getMovedToElement()
      */
-    public ModelWorkspaceItem getMovedToElement() {
+    @Override
+	public ModelWorkspaceItem getMovedToElement() {
         return fMovedToHandle;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.workspace.ModelWorkspaceDelta#getRemovedChildren()
      */
-    public ModelWorkspaceDelta[] getRemovedChildren() {
+    @Override
+	public ModelWorkspaceDelta[] getRemovedChildren() {
         return getChildrenOfType(REMOVED);
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.workspace.ModelWorkspaceDelta#getResourceDeltas()
      */
-    public IResourceDelta[] getResourceDeltas() {
+    @Override
+	public IResourceDelta[] getResourceDeltas() {
         if (resourceDeltas == null) return null;
         if (resourceDeltas.length != resourceDeltasCounter) {
             System.arraycopy(resourceDeltas, 0, resourceDeltas = new IResourceDelta[resourceDeltasCounter], 0, resourceDeltasCounter);

@@ -370,7 +370,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EClass getDefinitions() {
+    @Override
+	public EClass getDefinitions() {
         return definitionsEClass;
     }
 
@@ -379,7 +380,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EAttribute getDefinitions_TargetNamespace() {
+    @Override
+	public EAttribute getDefinitions_TargetNamespace() {
         return (EAttribute)definitionsEClass.getEStructuralFeatures().get(0);
     }
 
@@ -388,7 +390,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EReference getDefinitions_Messages() {
+    @Override
+	public EReference getDefinitions_Messages() {
         return (EReference)definitionsEClass.getEStructuralFeatures().get(1);
     }
 
@@ -397,7 +400,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EReference getDefinitions_PortTypes() {
+    @Override
+	public EReference getDefinitions_PortTypes() {
         return (EReference)definitionsEClass.getEStructuralFeatures().get(2);
     }
 
@@ -406,7 +410,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EReference getDefinitions_Bindings() {
+    @Override
+	public EReference getDefinitions_Bindings() {
         return (EReference)definitionsEClass.getEStructuralFeatures().get(3);
     }
 
@@ -415,7 +420,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EReference getDefinitions_Services() {
+    @Override
+	public EReference getDefinitions_Services() {
         return (EReference)definitionsEClass.getEStructuralFeatures().get(4);
     }
 
@@ -424,7 +430,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EReference getDefinitions_Imports() {
+    @Override
+	public EReference getDefinitions_Imports() {
         return (EReference)definitionsEClass.getEStructuralFeatures().get(5);
     }
 
@@ -433,7 +440,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EReference getDefinitions_Types() {
+    @Override
+	public EReference getDefinitions_Types() {
         return (EReference)definitionsEClass.getEStructuralFeatures().get(6);
     }
 
@@ -442,7 +450,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EClass getDocumentation() {
+    @Override
+	public EClass getDocumentation() {
         return documentationEClass;
     }
 
@@ -451,7 +460,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EAttribute getDocumentation_TextContent() {
+    @Override
+	public EAttribute getDocumentation_TextContent() {
         return (EAttribute)documentationEClass.getEStructuralFeatures().get(0);
     }
 
@@ -460,7 +470,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EReference getDocumentation_Contents() {
+    @Override
+	public EReference getDocumentation_Contents() {
         return (EReference)documentationEClass.getEStructuralFeatures().get(1);
     }
 
@@ -469,7 +480,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EReference getDocumentation_Documented() {
+    @Override
+	public EReference getDocumentation_Documented() {
         return (EReference)documentationEClass.getEStructuralFeatures().get(2);
     }
 
@@ -478,7 +490,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EClass getDocumented() {
+    @Override
+	public EClass getDocumented() {
         return documentedEClass;
     }
 
@@ -487,7 +500,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EReference getDocumented_Documentation() {
+    @Override
+	public EReference getDocumented_Documentation() {
         return (EReference)documentedEClass.getEStructuralFeatures().get(0);
     }
 
@@ -496,7 +510,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EClass getExtensibleAttributesDocumented() {
+    @Override
+	public EClass getExtensibleAttributesDocumented() {
         return extensibleAttributesDocumentedEClass;
     }
 
@@ -505,7 +520,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EClass getAttribute() {
+    @Override
+	public EClass getAttribute() {
         return attributeEClass;
     }
 
@@ -514,7 +530,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EAttribute getAttribute_Name() {
+    @Override
+	public EAttribute getAttribute_Name() {
         return (EAttribute)attributeEClass.getEStructuralFeatures().get(0);
     }
 
@@ -523,7 +540,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EAttribute getAttribute_Prefix() {
+    @Override
+	public EAttribute getAttribute_Prefix() {
         return (EAttribute)attributeEClass.getEStructuralFeatures().get(1);
     }
 
@@ -532,7 +550,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EAttribute getAttribute_Value() {
+    @Override
+	public EAttribute getAttribute_Value() {
         return (EAttribute)attributeEClass.getEStructuralFeatures().get(2);
     }
 
@@ -541,7 +560,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EAttribute getAttribute_NamespaceUri() {
+    @Override
+	public EAttribute getAttribute_NamespaceUri() {
         return (EAttribute)attributeEClass.getEStructuralFeatures().get(3);
     }
 
@@ -550,7 +570,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EReference getAttribute_AttributeOwner() {
+    @Override
+	public EReference getAttribute_AttributeOwner() {
         return (EReference)attributeEClass.getEStructuralFeatures().get(4);
     }
 
@@ -559,7 +580,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EClass getMessage() {
+    @Override
+	public EClass getMessage() {
         return messageEClass;
     }
 
@@ -568,7 +590,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EReference getMessage_Definitions() {
+    @Override
+	public EReference getMessage_Definitions() {
         return (EReference)messageEClass.getEStructuralFeatures().get(0);
     }
 
@@ -577,7 +600,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EReference getMessage_Parts() {
+    @Override
+	public EReference getMessage_Parts() {
         return (EReference)messageEClass.getEStructuralFeatures().get(1);
     }
 
@@ -586,7 +610,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EClass getPortType() {
+    @Override
+	public EClass getPortType() {
         return portTypeEClass;
     }
 
@@ -595,7 +620,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EReference getPortType_Definitions() {
+    @Override
+	public EReference getPortType_Definitions() {
         return (EReference)portTypeEClass.getEStructuralFeatures().get(0);
     }
 
@@ -604,7 +630,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EReference getPortType_Operations() {
+    @Override
+	public EReference getPortType_Operations() {
         return (EReference)portTypeEClass.getEStructuralFeatures().get(1);
     }
 
@@ -613,7 +640,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EClass getBinding() {
+    @Override
+	public EClass getBinding() {
         return bindingEClass;
     }
 
@@ -622,7 +650,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EAttribute getBinding_Type() {
+    @Override
+	public EAttribute getBinding_Type() {
         return (EAttribute)bindingEClass.getEStructuralFeatures().get(0);
     }
 
@@ -631,7 +660,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EReference getBinding_Definitions() {
+    @Override
+	public EReference getBinding_Definitions() {
         return (EReference)bindingEClass.getEStructuralFeatures().get(1);
     }
 
@@ -640,7 +670,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EReference getBinding_BindingOperations() {
+    @Override
+	public EReference getBinding_BindingOperations() {
         return (EReference)bindingEClass.getEStructuralFeatures().get(2);
     }
 
@@ -649,7 +680,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EReference getBinding_SoapBinding() {
+    @Override
+	public EReference getBinding_SoapBinding() {
         return (EReference)bindingEClass.getEStructuralFeatures().get(3);
     }
 
@@ -658,7 +690,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EReference getBinding_HttpBinding() {
+    @Override
+	public EReference getBinding_HttpBinding() {
         return (EReference)bindingEClass.getEStructuralFeatures().get(4);
     }
 
@@ -667,7 +700,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EClass getService() {
+    @Override
+	public EClass getService() {
         return serviceEClass;
     }
 
@@ -676,7 +710,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EReference getService_Definitions() {
+    @Override
+	public EReference getService_Definitions() {
         return (EReference)serviceEClass.getEStructuralFeatures().get(0);
     }
 
@@ -685,7 +720,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EReference getService_Ports() {
+    @Override
+	public EReference getService_Ports() {
         return (EReference)serviceEClass.getEStructuralFeatures().get(1);
     }
 
@@ -694,7 +730,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EClass getImport() {
+    @Override
+	public EClass getImport() {
         return importEClass;
     }
 
@@ -703,7 +740,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EAttribute getImport_Namespace() {
+    @Override
+	public EAttribute getImport_Namespace() {
         return (EAttribute)importEClass.getEStructuralFeatures().get(0);
     }
 
@@ -712,7 +750,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EAttribute getImport_Location() {
+    @Override
+	public EAttribute getImport_Location() {
         return (EAttribute)importEClass.getEStructuralFeatures().get(1);
     }
 
@@ -721,7 +760,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EReference getImport_Definitions() {
+    @Override
+	public EReference getImport_Definitions() {
         return (EReference)importEClass.getEStructuralFeatures().get(2);
     }
 
@@ -730,7 +770,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EClass getPort() {
+    @Override
+	public EClass getPort() {
         return portEClass;
     }
 
@@ -739,7 +780,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EAttribute getPort_Binding() {
+    @Override
+	public EAttribute getPort_Binding() {
         return (EAttribute)portEClass.getEStructuralFeatures().get(0);
     }
 
@@ -748,7 +790,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EReference getPort_Service() {
+    @Override
+	public EReference getPort_Service() {
         return (EReference)portEClass.getEStructuralFeatures().get(1);
     }
 
@@ -757,7 +800,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EReference getPort_SoapAddress() {
+    @Override
+	public EReference getPort_SoapAddress() {
         return (EReference)portEClass.getEStructuralFeatures().get(2);
     }
 
@@ -766,7 +810,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EReference getPort_HttpAddress() {
+    @Override
+	public EReference getPort_HttpAddress() {
         return (EReference)portEClass.getEStructuralFeatures().get(3);
     }
 
@@ -775,7 +820,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EClass getElement() {
+    @Override
+	public EClass getElement() {
         return elementEClass;
     }
 
@@ -784,7 +830,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EAttribute getElement_Name() {
+    @Override
+	public EAttribute getElement_Name() {
         return (EAttribute)elementEClass.getEStructuralFeatures().get(0);
     }
 
@@ -793,7 +840,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EAttribute getElement_Prefix() {
+    @Override
+	public EAttribute getElement_Prefix() {
         return (EAttribute)elementEClass.getEStructuralFeatures().get(1);
     }
 
@@ -802,7 +850,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EAttribute getElement_TextContent() {
+    @Override
+	public EAttribute getElement_TextContent() {
         return (EAttribute)elementEClass.getEStructuralFeatures().get(2);
     }
 
@@ -811,7 +860,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EAttribute getElement_NamespaceUri() {
+    @Override
+	public EAttribute getElement_NamespaceUri() {
         return (EAttribute)elementEClass.getEStructuralFeatures().get(3);
     }
 
@@ -820,7 +870,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EReference getElement_ElementOwner() {
+    @Override
+	public EReference getElement_ElementOwner() {
         return (EReference)elementEClass.getEStructuralFeatures().get(4);
     }
 
@@ -829,7 +880,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EClass getAttributeOwner() {
+    @Override
+	public EClass getAttributeOwner() {
         return attributeOwnerEClass;
     }
 
@@ -838,7 +890,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EReference getAttributeOwner_Attributes() {
+    @Override
+	public EReference getAttributeOwner_Attributes() {
         return (EReference)attributeOwnerEClass.getEStructuralFeatures().get(0);
     }
 
@@ -847,7 +900,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EClass getElementOwner() {
+    @Override
+	public EClass getElementOwner() {
         return elementOwnerEClass;
     }
 
@@ -856,7 +910,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EReference getElementOwner_Elements() {
+    @Override
+	public EReference getElementOwner_Elements() {
         return (EReference)elementOwnerEClass.getEStructuralFeatures().get(0);
     }
 
@@ -865,7 +920,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EClass getWsdlNameRequiredEntity() {
+    @Override
+	public EClass getWsdlNameRequiredEntity() {
         return wsdlNameRequiredEntityEClass;
     }
 
@@ -874,7 +930,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EAttribute getWsdlNameRequiredEntity_Name() {
+    @Override
+	public EAttribute getWsdlNameRequiredEntity_Name() {
         return (EAttribute)wsdlNameRequiredEntityEClass.getEStructuralFeatures().get(0);
     }
 
@@ -883,7 +940,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EClass getTypes() {
+    @Override
+	public EClass getTypes() {
         return typesEClass;
     }
 
@@ -892,7 +950,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EReference getTypes_Definitions() {
+    @Override
+	public EReference getTypes_Definitions() {
         return (EReference)typesEClass.getEStructuralFeatures().get(0);
     }
 
@@ -901,7 +960,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EReference getTypes_Schemas() {
+    @Override
+	public EReference getTypes_Schemas() {
         return (EReference)typesEClass.getEStructuralFeatures().get(1);
     }
 
@@ -910,7 +970,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EClass getMessagePart() {
+    @Override
+	public EClass getMessagePart() {
         return messagePartEClass;
     }
 
@@ -919,7 +980,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EAttribute getMessagePart_Type() {
+    @Override
+	public EAttribute getMessagePart_Type() {
         return (EAttribute)messagePartEClass.getEStructuralFeatures().get(0);
     }
 
@@ -928,7 +990,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EAttribute getMessagePart_Element() {
+    @Override
+	public EAttribute getMessagePart_Element() {
         return (EAttribute)messagePartEClass.getEStructuralFeatures().get(1);
     }
 
@@ -937,7 +1000,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EReference getMessagePart_Message() {
+    @Override
+	public EReference getMessagePart_Message() {
         return (EReference)messagePartEClass.getEStructuralFeatures().get(2);
     }
 
@@ -946,7 +1010,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EClass getWsdlNameOptionalEntity() {
+    @Override
+	public EClass getWsdlNameOptionalEntity() {
         return wsdlNameOptionalEntityEClass;
     }
 
@@ -955,7 +1020,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EAttribute getWsdlNameOptionalEntity_Name() {
+    @Override
+	public EAttribute getWsdlNameOptionalEntity_Name() {
         return (EAttribute)wsdlNameOptionalEntityEClass.getEStructuralFeatures().get(0);
     }
 
@@ -964,7 +1030,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EClass getOperation() {
+    @Override
+	public EClass getOperation() {
         return operationEClass;
     }
 
@@ -973,7 +1040,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EAttribute getOperation_ParameterOrder() {
+    @Override
+	public EAttribute getOperation_ParameterOrder() {
         return (EAttribute)operationEClass.getEStructuralFeatures().get(0);
     }
 
@@ -982,7 +1050,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EReference getOperation_PortType() {
+    @Override
+	public EReference getOperation_PortType() {
         return (EReference)operationEClass.getEStructuralFeatures().get(1);
     }
 
@@ -991,7 +1060,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EReference getOperation_Input() {
+    @Override
+	public EReference getOperation_Input() {
         return (EReference)operationEClass.getEStructuralFeatures().get(2);
     }
 
@@ -1000,7 +1070,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EReference getOperation_Output() {
+    @Override
+	public EReference getOperation_Output() {
         return (EReference)operationEClass.getEStructuralFeatures().get(3);
     }
 
@@ -1009,7 +1080,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EReference getOperation_Faults() {
+    @Override
+	public EReference getOperation_Faults() {
         return (EReference)operationEClass.getEStructuralFeatures().get(4);
     }
 
@@ -1018,7 +1090,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EClass getInput() {
+    @Override
+	public EClass getInput() {
         return inputEClass;
     }
 
@@ -1027,7 +1100,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EReference getInput_Operation() {
+    @Override
+	public EReference getInput_Operation() {
         return (EReference)inputEClass.getEStructuralFeatures().get(0);
     }
 
@@ -1036,7 +1110,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EClass getOutput() {
+    @Override
+	public EClass getOutput() {
         return outputEClass;
     }
 
@@ -1045,7 +1120,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EReference getOutput_Operation() {
+    @Override
+	public EReference getOutput_Operation() {
         return (EReference)outputEClass.getEStructuralFeatures().get(0);
     }
 
@@ -1054,7 +1130,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EClass getFault() {
+    @Override
+	public EClass getFault() {
         return faultEClass;
     }
 
@@ -1063,7 +1140,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EAttribute getFault_Message() {
+    @Override
+	public EAttribute getFault_Message() {
         return (EAttribute)faultEClass.getEStructuralFeatures().get(0);
     }
 
@@ -1072,7 +1150,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EReference getFault_Operation() {
+    @Override
+	public EReference getFault_Operation() {
         return (EReference)faultEClass.getEStructuralFeatures().get(1);
     }
 
@@ -1081,7 +1160,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EClass getParamType() {
+    @Override
+	public EClass getParamType() {
         return paramTypeEClass;
     }
 
@@ -1090,7 +1170,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EAttribute getParamType_Message() {
+    @Override
+	public EAttribute getParamType_Message() {
         return (EAttribute)paramTypeEClass.getEStructuralFeatures().get(0);
     }
 
@@ -1099,7 +1180,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EClass getExtensibleDocumented() {
+    @Override
+	public EClass getExtensibleDocumented() {
         return extensibleDocumentedEClass;
     }
 
@@ -1108,7 +1190,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EClass getBindingOperation() {
+    @Override
+	public EClass getBindingOperation() {
         return bindingOperationEClass;
     }
 
@@ -1117,7 +1200,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EReference getBindingOperation_Binding() {
+    @Override
+	public EReference getBindingOperation_Binding() {
         return (EReference)bindingOperationEClass.getEStructuralFeatures().get(0);
     }
 
@@ -1126,7 +1210,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EReference getBindingOperation_BindingInput() {
+    @Override
+	public EReference getBindingOperation_BindingInput() {
         return (EReference)bindingOperationEClass.getEStructuralFeatures().get(1);
     }
 
@@ -1135,7 +1220,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EReference getBindingOperation_BindingFaults() {
+    @Override
+	public EReference getBindingOperation_BindingFaults() {
         return (EReference)bindingOperationEClass.getEStructuralFeatures().get(2);
     }
 
@@ -1144,7 +1230,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EReference getBindingOperation_BindingOutput() {
+    @Override
+	public EReference getBindingOperation_BindingOutput() {
         return (EReference)bindingOperationEClass.getEStructuralFeatures().get(3);
     }
 
@@ -1153,7 +1240,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EReference getBindingOperation_SoapOperation() {
+    @Override
+	public EReference getBindingOperation_SoapOperation() {
         return (EReference)bindingOperationEClass.getEStructuralFeatures().get(4);
     }
 
@@ -1162,7 +1250,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EReference getBindingOperation_HttpOperation() {
+    @Override
+	public EReference getBindingOperation_HttpOperation() {
         return (EReference)bindingOperationEClass.getEStructuralFeatures().get(5);
     }
 
@@ -1171,7 +1260,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EClass getBindingInput() {
+    @Override
+	public EClass getBindingInput() {
         return bindingInputEClass;
     }
 
@@ -1180,7 +1270,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EReference getBindingInput_BindingOperation() {
+    @Override
+	public EReference getBindingInput_BindingOperation() {
         return (EReference)bindingInputEClass.getEStructuralFeatures().get(0);
     }
 
@@ -1189,7 +1280,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EClass getBindingOutput() {
+    @Override
+	public EClass getBindingOutput() {
         return bindingOutputEClass;
     }
 
@@ -1198,7 +1290,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EReference getBindingOutput_BindingOperation() {
+    @Override
+	public EReference getBindingOutput_BindingOperation() {
         return (EReference)bindingOutputEClass.getEStructuralFeatures().get(0);
     }
 
@@ -1207,7 +1300,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EClass getBindingFault() {
+    @Override
+	public EClass getBindingFault() {
         return bindingFaultEClass;
     }
 
@@ -1216,7 +1310,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EReference getBindingFault_BindingOperation() {
+    @Override
+	public EReference getBindingFault_BindingOperation() {
         return (EReference)bindingFaultEClass.getEStructuralFeatures().get(0);
     }
 
@@ -1225,7 +1320,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EReference getBindingFault_SoapFault() {
+    @Override
+	public EReference getBindingFault_SoapFault() {
         return (EReference)bindingFaultEClass.getEStructuralFeatures().get(1);
     }
 
@@ -1234,7 +1330,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EClass getBindingParam() {
+    @Override
+	public EClass getBindingParam() {
         return bindingParamEClass;
     }
 
@@ -1243,7 +1340,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EReference getBindingParam_SoapHeader() {
+    @Override
+	public EReference getBindingParam_SoapHeader() {
         return (EReference)bindingParamEClass.getEStructuralFeatures().get(0);
     }
 
@@ -1252,7 +1350,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EReference getBindingParam_SoapBody() {
+    @Override
+	public EReference getBindingParam_SoapBody() {
         return (EReference)bindingParamEClass.getEStructuralFeatures().get(1);
     }
 
@@ -1261,7 +1360,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EClass getNamespaceDeclaration() {
+    @Override
+	public EClass getNamespaceDeclaration() {
         return namespaceDeclarationEClass;
     }
 
@@ -1270,7 +1370,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EAttribute getNamespaceDeclaration_Uri() {
+    @Override
+	public EAttribute getNamespaceDeclaration_Uri() {
         return (EAttribute)namespaceDeclarationEClass.getEStructuralFeatures().get(0);
     }
 
@@ -1279,7 +1380,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EAttribute getNamespaceDeclaration_Prefix() {
+    @Override
+	public EAttribute getNamespaceDeclaration_Prefix() {
         return (EAttribute)namespaceDeclarationEClass.getEStructuralFeatures().get(1);
     }
 
@@ -1288,7 +1390,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EReference getNamespaceDeclaration_Owner() {
+    @Override
+	public EReference getNamespaceDeclaration_Owner() {
         return (EReference)namespaceDeclarationEClass.getEStructuralFeatures().get(2);
     }
 
@@ -1297,7 +1400,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EClass getNamespaceDeclarationOwner() {
+    @Override
+	public EClass getNamespaceDeclarationOwner() {
         return namespaceDeclarationOwnerEClass;
     }
 
@@ -1306,7 +1410,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EReference getNamespaceDeclarationOwner_DeclaredNamespaces() {
+    @Override
+	public EReference getNamespaceDeclarationOwner_DeclaredNamespaces() {
         return (EReference)namespaceDeclarationOwnerEClass.getEStructuralFeatures().get(0);
     }
 
@@ -1315,7 +1420,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public EDataType getIStatus() {
+    @Override
+	public EDataType getIStatus() {
         return iStatusEDataType;
     }
 
@@ -1324,7 +1430,8 @@ public class WsdlPackageImpl extends EPackageImpl implements WsdlPackage {
      * 
      * @generated
      */
-    public WsdlFactory getWsdlFactory() {
+    @Override
+	public WsdlFactory getWsdlFactory() {
         return (WsdlFactory)getEFactoryInstance();
     }
 

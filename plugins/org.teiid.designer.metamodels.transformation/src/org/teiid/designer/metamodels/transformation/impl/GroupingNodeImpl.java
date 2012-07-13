@@ -51,7 +51,8 @@ public class GroupingNodeImpl extends OperationNodeImpl implements GroupingNode 
      * 
      * @generated
      */
-    public String getGroupingColumns() {
+    @Override
+	public String getGroupingColumns() {
         // TODO: implement this method
         // Ensure that you remove @generated or mark it @generated NOT
         throw new UnsupportedOperationException();

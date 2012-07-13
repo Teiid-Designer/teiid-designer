@@ -31,6 +31,7 @@ public class MessageImpl extends WSDLElementImpl implements Message {
 		m_fault = fault;
 	}
 	
+	@Override
 	public Part[] getParts() {
 		//defensive copy
 		Part[] newParts = new Part[m_parts.length];
@@ -40,35 +41,43 @@ public class MessageImpl extends WSDLElementImpl implements Message {
 		return newParts;
 	}
 
+	@Override
 	public void setParts(Part[] parts) {
 		m_parts = parts;
 	}
 
+	@Override
 	public Operation getOperation() {
 		return m_operation;
 	}
 
+	@Override
 	public boolean isRequest() {
 		return m_type == Message.REQUEST_TYPE;
 	}
 
+	@Override
 	public boolean isResponse() {
 		return m_type == Message.RESPONSE_TYPE;
 	}
 
+	@Override
 	public boolean isFault() {
 		return m_type == Message.FAULT_TYPE;
 	}
 
+	@Override
 	public void setType(int type) {
 		m_type = type;
 	}
 
+	@Override
 	public int getType() {
 		return m_type;
 	}
 	
 	
+	@Override
 	public WSDLElement copy() {
 		Message message;
 		if(m_operation != null) {
@@ -90,6 +99,7 @@ public class MessageImpl extends WSDLElementImpl implements Message {
 		return message;
 	}
 
+	@Override
 	public Fault getFault() {
 		return m_fault;
 	}
@@ -127,26 +137,32 @@ public class MessageImpl extends WSDLElementImpl implements Message {
 		return buff.toString();
 	}
 
+	@Override
 	public String getUse() {
 		return m_use;
 	}
 
+	@Override
 	public void setUse(String use) {
 		m_use = use;
 	}
 
+	@Override
 	public String getNamespaceURI() {
 		return m_namespace;
 	}
 
+	@Override
 	public void setNamespaceURI(String ns) {
 		m_namespace = ns;
 	}
 
+	@Override
 	public void setEncodingStyle(String style) {
 		m_encStyle = style;
 	}
 
+	@Override
 	public String getEncodingStyle() {
 		return m_encStyle;
 	}

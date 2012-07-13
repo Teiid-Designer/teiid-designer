@@ -30,37 +30,44 @@ public class UniqueConstraintAspect extends UniqueKeyAspect {
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodels.aspects.UmlDiagramAspect#getStereotype(java.lang.Object)
      */
-    public String getStereotype(Object eObject) {
+    @Override
+	public String getStereotype(Object eObject) {
         return RelationalPlugin.getPluginResourceLocator().getString("_UI_UniqueConstraint_type"); //$NON-NLS-1$
     }
 
-    public int getEndCount(Object obj) {
+    @Override
+	public int getEndCount(Object obj) {
         return 0;
     }
 
-    public String getRoleName(Object assoc, int end) {
+    @Override
+	public String getRoleName(Object assoc, int end) {
         return RelationalPlugin.getPluginResourceLocator().getString("_UI_UniqueConstraint_type"); //$NON-NLS-1$
     }
     
-    public EObject getEnd(Object constraint, int end){
+    @Override
+	public EObject getEnd(Object constraint, int end){
         return null;
     }
 
-    public EObject getEndTarget(Object constraint, int end){
+    @Override
+	public EObject getEndTarget(Object constraint, int end){
         return null;
     }
 
     /** 
      * @see org.teiid.designer.core.metamodel.aspect.uml.UmlRelationship#getName(java.lang.Object)
      */
-    public String getName(Object eObject) {
+    @Override
+	public String getName(Object eObject) {
         return CoreStringUtil.Constants.EMPTY_STRING;
     }
 
     /** 
      * @see org.teiid.designer.core.metamodel.aspect.uml.UmlRelationship#getToolTip(java.lang.Object)
      */
-    public String getToolTip(Object eObject) {
+    @Override
+	public String getToolTip(Object eObject) {
         final StringBuffer sb = new StringBuffer(200);
         sb.append(this.getStereotype(eObject));
         return sb.toString();

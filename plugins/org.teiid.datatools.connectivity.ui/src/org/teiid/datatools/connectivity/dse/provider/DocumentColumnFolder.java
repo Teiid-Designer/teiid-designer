@@ -23,7 +23,8 @@ public class DocumentColumnFolder extends VirtualNode implements ILabelProvider 
     /* (non-Javadoc)
      * @see org.eclipse.datatools.connectivity.sqm.core.ui.explorer.virtual.IVirtualNode#getGroupID()
      */
-    public String getGroupID() {
+    @Override
+	public String getGroupID() {
         return "core.sql.tables.BaseTable"; //$NON-NLS-1$
     }
 

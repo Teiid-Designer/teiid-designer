@@ -355,7 +355,8 @@ public class XmlDocumentItemProviderAdapterFactory extends XmlDocumentAdapterFac
      * <!-- end-user-doc -->
      * @generated
      */
-    public ComposeableAdapterFactory getRootAdapterFactory() {
+    @Override
+	public ComposeableAdapterFactory getRootAdapterFactory() {
         return parentAdapterFactory == null ? this : parentAdapterFactory.getRootAdapterFactory();
     }
 
@@ -365,7 +366,8 @@ public class XmlDocumentItemProviderAdapterFactory extends XmlDocumentAdapterFac
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setParentAdapterFactory(ComposedAdapterFactory parentAdapterFactory) {
+    @Override
+	public void setParentAdapterFactory(ComposedAdapterFactory parentAdapterFactory) {
         this.parentAdapterFactory = parentAdapterFactory;
     }
 
@@ -413,7 +415,8 @@ public class XmlDocumentItemProviderAdapterFactory extends XmlDocumentAdapterFac
      * <!-- end-user-doc -->
      * @generated
      */
-    public void addListener(INotifyChangedListener notifyChangedListener) {
+    @Override
+	public void addListener(INotifyChangedListener notifyChangedListener) {
         changeNotifier.addListener(notifyChangedListener);
     }
 
@@ -423,7 +426,8 @@ public class XmlDocumentItemProviderAdapterFactory extends XmlDocumentAdapterFac
      * <!-- end-user-doc -->
      * @generated
      */
-    public void removeListener(INotifyChangedListener notifyChangedListener) {
+    @Override
+	public void removeListener(INotifyChangedListener notifyChangedListener) {
         changeNotifier.removeListener(notifyChangedListener);
     }
 
@@ -433,7 +437,8 @@ public class XmlDocumentItemProviderAdapterFactory extends XmlDocumentAdapterFac
      * <!-- end-user-doc -->
      * @generated
      */
-    public void fireNotifyChanged(Notification notification) {
+    @Override
+	public void fireNotifyChanged(Notification notification) {
         changeNotifier.fireNotifyChanged(notification);
 
         if (parentAdapterFactory != null) {
@@ -447,7 +452,8 @@ public class XmlDocumentItemProviderAdapterFactory extends XmlDocumentAdapterFac
      * <!-- end-user-doc -->
      * @generated
      */
-    public void dispose() {
+    @Override
+	public void dispose() {
         if (xmlFragmentItemProvider != null) xmlFragmentItemProvider.dispose();
         if (xmlDocumentItemProvider != null) xmlDocumentItemProvider.dispose();
         if (xmlElementItemProvider != null) xmlElementItemProvider.dispose();

@@ -136,14 +136,16 @@ public class EResourceImpl extends XMIResourceImpl
     /**
      * @see org.teiid.designer.core.resource.MMXmiResource#getAnnotation(org.eclipse.emf.ecore.EObject)
      */
-    public Annotation getAnnotation( EObject eobj ) {
+    @Override
+	public Annotation getAnnotation( EObject eobj ) {
         return getModelContents().getAnnotation(eobj);
     }
 
     /**
      * @see org.teiid.designer.core.resource.MMXmiResource#getAnnotationContainer(boolean)
      */
-    public AnnotationContainer getAnnotationContainer( boolean createIfNeeded ) {
+    @Override
+	public AnnotationContainer getAnnotationContainer( boolean createIfNeeded ) {
         return getModelContents().getAnnotationContainer(createIfNeeded);
     }
 
@@ -327,7 +329,8 @@ public class EResourceImpl extends XMIResourceImpl
      * @see org.teiid.designer.core.resource.EmfResource#getContainer()
      * @since 5.0
      */
-    public Container getContainer() {
+    @Override
+	public Container getContainer() {
         return null;
     }
 
@@ -335,7 +338,8 @@ public class EResourceImpl extends XMIResourceImpl
      * @see org.teiid.designer.core.resource.EmfResource#getEObject(java.lang.Object)
      * @since 5.0
      */
-    public EObject getEObject( final Object key ) {
+    @Override
+	public EObject getEObject( final Object key ) {
         if (key instanceof URI) {
             return getResourceSet().getEObject(uri, true);
         } else if (key instanceof ObjectID) {
@@ -348,7 +352,8 @@ public class EResourceImpl extends XMIResourceImpl
      * @see org.teiid.designer.core.resource.EmfResource#isVisible()
      * @since 5.0
      */
-    public boolean isVisible() {
+    @Override
+	public boolean isVisible() {
         boolean isVisible = true;
         if (isLoaded() && getModelContents().getModelAnnotation() != null) {
             isVisible = getModelContents().getModelAnnotation().isVisible();
@@ -365,7 +370,8 @@ public class EResourceImpl extends XMIResourceImpl
      * @see org.teiid.designer.core.resource.EmfResource#getNamespacePrefixToUris()
      * @since 5.0
      */
-    public List getNamespacePrefixToUris() {
+    @Override
+	public List getNamespacePrefixToUris() {
         return null;
     }
 
@@ -373,7 +379,8 @@ public class EResourceImpl extends XMIResourceImpl
      * @see org.teiid.designer.core.resource.EResource#getLoadedCount()
      * @since 5.0
      */
-    public int getLoadedCount() {
+    @Override
+	public int getLoadedCount() {
         return this.loadedCount;
     }
 
@@ -381,7 +388,8 @@ public class EResourceImpl extends XMIResourceImpl
      * @see org.teiid.designer.core.resource.EResource#getDescription()
      * @since 5.0
      */
-    public String getDescription() {
+    @Override
+	public String getDescription() {
         String description = null;
         if (isLoaded() && getModelContents().getModelAnnotation() != null) {
             description = getModelContents().getModelAnnotation().getDescription();
@@ -398,7 +406,8 @@ public class EResourceImpl extends XMIResourceImpl
      * @see org.teiid.designer.core.resource.EResource#getModelType()
      * @since 5.0
      */
-    public ModelType getModelType() {
+    @Override
+	public ModelType getModelType() {
         ModelType type = null;
         if (isLoaded() && getModelContents().getModelAnnotation() != null) {
             type = getModelContents().getModelAnnotation().getModelType();
@@ -415,7 +424,8 @@ public class EResourceImpl extends XMIResourceImpl
      * @see org.teiid.designer.core.resource.EResource#getPrimaryMetamodelUri()
      * @since 5.0
      */
-    public URI getPrimaryMetamodelUri() {
+    @Override
+	public URI getPrimaryMetamodelUri() {
         String primaryMetamodelUri = null;
         if (isLoaded() && getModelContents().getModelAnnotation() != null) {
             primaryMetamodelUri = getModelContents().getModelAnnotation().getPrimaryMetamodelUri();
@@ -435,7 +445,8 @@ public class EResourceImpl extends XMIResourceImpl
      * @see org.teiid.designer.core.resource.EResource#getUuid()
      * @since 5.0
      */
-    public ObjectID getUuid() {
+    @Override
+	public ObjectID getUuid() {
         ObjectID uuid = null;
         if (isLoaded() && getModelContents().getModelAnnotation() != null) {
             uuid = ModelerCore.getObjectId(getModelContents().getModelAnnotation());
@@ -451,7 +462,8 @@ public class EResourceImpl extends XMIResourceImpl
     /**
      * @see org.teiid.designer.core.resource.EResource#getModelContents()
      */
-    public ModelContents getModelContents() {
+    @Override
+	public ModelContents getModelContents() {
         if (this.modelContents == null) {
             this.modelContents = new ModelContents(this);
         }
@@ -462,7 +474,8 @@ public class EResourceImpl extends XMIResourceImpl
      * @see org.teiid.designer.core.resource.EResource#getNamespacePrefixToUrisMap()
      * @since 5.0
      */
-    public Map getNamespacePrefixToUrisMap() {
+    @Override
+	public Map getNamespacePrefixToUrisMap() {
         return this.prefixesToURIs;
     }
 
@@ -470,7 +483,8 @@ public class EResourceImpl extends XMIResourceImpl
      * @see org.teiid.designer.core.resource.EObjectCacheHolder#getEObject((org.teiid.core.id.ObjectID)
      * @since 5.0
      */
-    public EObject getEObject( final ObjectID key ) {
+    @Override
+	public EObject getEObject( final ObjectID key ) {
         return findInEObjectCache(key);
     }
 
@@ -478,13 +492,15 @@ public class EResourceImpl extends XMIResourceImpl
      * @see org.teiid.designer.core.resource.EProxyCacheHolder#getEProxy((org.teiid.core.id.ObjectID)
      * @since 5.0
      */
-    public EObject getEProxy( final ObjectID key ) {
+    @Override
+	public EObject getEProxy( final ObjectID key ) {
         return findInEProxyCache(key);
     }
 
     // dffFIXME - change visibility back to protected after getting rid of EmfResource interface
     // protected ModelAnnotation getModelAnnotation() {
-    public ModelAnnotation getModelAnnotation() {
+    @Override
+	public ModelAnnotation getModelAnnotation() {
         ModelAnnotation modelAnnotation = null;
         for (Iterator iter = getContents().iterator(); iter.hasNext();) {
             EObject eObj = (EObject)iter.next();
@@ -903,7 +919,8 @@ public class EResourceImpl extends XMIResourceImpl
         }
     }
 
-    public String getUuid( EObject object ) {
+    @Override
+	public String getUuid( EObject object ) {
         // TODO: JBEDSP-407
         return null;
     }
@@ -914,12 +931,14 @@ public class EResourceImpl extends XMIResourceImpl
         return super.isLoading();
     }
 
-    public boolean isUnloading() {
+    @Override
+	public boolean isUnloading() {
         // TODO:JBEDSP-407
         return false;
     }
 
-    public void setUuid( EObject object,
+    @Override
+	public void setUuid( EObject object,
                          String uuid ) {
         // TODO:JBEDSP-407
         super.setID(object, uuid);

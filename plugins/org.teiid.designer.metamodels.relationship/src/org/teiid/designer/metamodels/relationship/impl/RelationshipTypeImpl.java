@@ -334,7 +334,8 @@ public class RelationshipTypeImpl extends RelationshipEntityImpl implements Rela
      * 
      * @generated
      */
-    public boolean isDirected() {
+    @Override
+	public boolean isDirected() {
         return directed;
     }
 
@@ -343,7 +344,8 @@ public class RelationshipTypeImpl extends RelationshipEntityImpl implements Rela
      * 
      * @generated
      */
-    public void setDirected( boolean newDirected ) {
+    @Override
+	public void setDirected( boolean newDirected ) {
         boolean oldDirected = directed;
         directed = newDirected;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
@@ -356,7 +358,8 @@ public class RelationshipTypeImpl extends RelationshipEntityImpl implements Rela
      * 
      * @generated
      */
-    public boolean isExclusive() {
+    @Override
+	public boolean isExclusive() {
         return exclusive;
     }
 
@@ -365,7 +368,8 @@ public class RelationshipTypeImpl extends RelationshipEntityImpl implements Rela
      * 
      * @generated
      */
-    public void setExclusive( boolean newExclusive ) {
+    @Override
+	public void setExclusive( boolean newExclusive ) {
         boolean oldExclusive = exclusive;
         exclusive = newExclusive;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
@@ -378,7 +382,8 @@ public class RelationshipTypeImpl extends RelationshipEntityImpl implements Rela
      * 
      * @generated
      */
-    public boolean isCrossModel() {
+    @Override
+	public boolean isCrossModel() {
         return crossModel;
     }
 
@@ -387,7 +392,8 @@ public class RelationshipTypeImpl extends RelationshipEntityImpl implements Rela
      * 
      * @generated
      */
-    public void setCrossModel( boolean newCrossModel ) {
+    @Override
+	public void setCrossModel( boolean newCrossModel ) {
         boolean oldCrossModel = crossModel;
         crossModel = newCrossModel;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
@@ -400,7 +406,8 @@ public class RelationshipTypeImpl extends RelationshipEntityImpl implements Rela
      * 
      * @generated
      */
-    public boolean isAbstract() {
+    @Override
+	public boolean isAbstract() {
         return abstract_;
     }
 
@@ -409,7 +416,8 @@ public class RelationshipTypeImpl extends RelationshipEntityImpl implements Rela
      * 
      * @generated
      */
-    public void setAbstract( boolean newAbstract ) {
+    @Override
+	public void setAbstract( boolean newAbstract ) {
         boolean oldAbstract = abstract_;
         abstract_ = newAbstract;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
@@ -422,7 +430,8 @@ public class RelationshipTypeImpl extends RelationshipEntityImpl implements Rela
      * 
      * @generated
      */
-    public boolean isUserDefined() {
+    @Override
+	public boolean isUserDefined() {
         return userDefined;
     }
 
@@ -431,7 +440,8 @@ public class RelationshipTypeImpl extends RelationshipEntityImpl implements Rela
      * 
      * @generated
      */
-    public void setUserDefined( boolean newUserDefined ) {
+    @Override
+	public void setUserDefined( boolean newUserDefined ) {
         boolean oldUserDefined = userDefined;
         userDefined = newUserDefined;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
@@ -444,7 +454,8 @@ public class RelationshipTypeImpl extends RelationshipEntityImpl implements Rela
      * 
      * @generated
      */
-    public RelationshipTypeStatus getStatus() {
+    @Override
+	public RelationshipTypeStatus getStatus() {
         return status;
     }
 
@@ -453,7 +464,8 @@ public class RelationshipTypeImpl extends RelationshipEntityImpl implements Rela
      * 
      * @generated
      */
-    public void setStatus( RelationshipTypeStatus newStatus ) {
+    @Override
+	public void setStatus( RelationshipTypeStatus newStatus ) {
         RelationshipTypeStatus oldStatus = status;
         status = newStatus == null ? STATUS_EDEFAULT : newStatus;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
@@ -466,7 +478,8 @@ public class RelationshipTypeImpl extends RelationshipEntityImpl implements Rela
      * 
      * @generated
      */
-    public String getStereotype() {
+    @Override
+	public String getStereotype() {
         return stereotype;
     }
 
@@ -475,7 +488,8 @@ public class RelationshipTypeImpl extends RelationshipEntityImpl implements Rela
      * 
      * @generated
      */
-    public void setStereotype( String newStereotype ) {
+    @Override
+	public void setStereotype( String newStereotype ) {
         String oldStereotype = stereotype;
         stereotype = newStereotype;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
@@ -488,7 +502,8 @@ public class RelationshipTypeImpl extends RelationshipEntityImpl implements Rela
      * 
      * @generated
      */
-    public String getConstraint() {
+    @Override
+	public String getConstraint() {
         return constraint;
     }
 
@@ -497,7 +512,8 @@ public class RelationshipTypeImpl extends RelationshipEntityImpl implements Rela
      * 
      * @generated
      */
-    public void setConstraint( String newConstraint ) {
+    @Override
+	public void setConstraint( String newConstraint ) {
         String oldConstraint = constraint;
         constraint = newConstraint;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
@@ -510,7 +526,8 @@ public class RelationshipTypeImpl extends RelationshipEntityImpl implements Rela
      * 
      * @generated
      */
-    public String getLabel() {
+    @Override
+	public String getLabel() {
         return label;
     }
 
@@ -519,7 +536,8 @@ public class RelationshipTypeImpl extends RelationshipEntityImpl implements Rela
      * 
      * @generated
      */
-    public void setLabel( String newLabel ) {
+    @Override
+	public void setLabel( String newLabel ) {
         String oldLabel = label;
         label = newLabel;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
@@ -531,7 +549,8 @@ public class RelationshipTypeImpl extends RelationshipEntityImpl implements Rela
      * 
      * @generated
      */
-    public String getOppositeLabel() {
+    @Override
+	public String getOppositeLabel() {
         return oppositeLabel;
     }
 
@@ -540,7 +559,8 @@ public class RelationshipTypeImpl extends RelationshipEntityImpl implements Rela
      * 
      * @generated
      */
-    public void setOppositeLabel( String newOppositeLabel ) {
+    @Override
+	public void setOppositeLabel( String newOppositeLabel ) {
         String oldOppositeLabel = oppositeLabel;
         oppositeLabel = newOppositeLabel;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
@@ -553,7 +573,8 @@ public class RelationshipTypeImpl extends RelationshipEntityImpl implements Rela
      * 
      * @generated
      */
-    public EList getRelationshipFeatures() {
+    @Override
+	public EList getRelationshipFeatures() {
         if (relationshipFeatures == null) {
             relationshipFeatures = new EObjectResolvingEList(EStructuralFeature.class, this,
                                                              RelationshipPackage.RELATIONSHIP_TYPE__RELATIONSHIP_FEATURES);
@@ -566,7 +587,8 @@ public class RelationshipTypeImpl extends RelationshipEntityImpl implements Rela
      * 
      * @generated
      */
-    public RelationshipType getSuperType() {
+    @Override
+	public RelationshipType getSuperType() {
         if (superType != null && superType.eIsProxy()) {
             RelationshipType oldSuperType = superType;
             superType = (RelationshipType)eResolveProxy((InternalEObject)superType);
@@ -614,7 +636,8 @@ public class RelationshipTypeImpl extends RelationshipEntityImpl implements Rela
      * 
      * @generated
      */
-    public void setSuperType( RelationshipType newSuperType ) {
+    @Override
+	public void setSuperType( RelationshipType newSuperType ) {
         if (newSuperType != superType) {
             NotificationChain msgs = null;
             if (superType != null) msgs = ((InternalEObject)superType).eInverseRemove(this,
@@ -661,7 +684,8 @@ public class RelationshipTypeImpl extends RelationshipEntityImpl implements Rela
      * 
      * @generated
      */
-    public void unsetSuperType() {
+    @Override
+	public void unsetSuperType() {
         if (superType != null) {
             NotificationChain msgs = null;
             msgs = ((InternalEObject)superType).eInverseRemove(this,
@@ -684,7 +708,8 @@ public class RelationshipTypeImpl extends RelationshipEntityImpl implements Rela
      * 
      * @generated
      */
-    public boolean isSetSuperType() {
+    @Override
+	public boolean isSetSuperType() {
         return superTypeESet;
     }
 
@@ -693,7 +718,8 @@ public class RelationshipTypeImpl extends RelationshipEntityImpl implements Rela
      * 
      * @generated
      */
-    public EList getSubType() {
+    @Override
+	public EList getSubType() {
         if (subType == null) {
             subType = new EObjectWithInverseResolvingEList(RelationshipType.class, this,
                                                            RelationshipPackage.RELATIONSHIP_TYPE__SUB_TYPE,
@@ -707,7 +733,8 @@ public class RelationshipTypeImpl extends RelationshipEntityImpl implements Rela
      * 
      * @generated
      */
-    public EList getRoles() {
+    @Override
+	public EList getRoles() {
         if (roles == null) {
             roles = new EObjectContainmentWithInverseEList(RelationshipRole.class, this,
                                                            RelationshipPackage.RELATIONSHIP_TYPE__ROLES,
@@ -721,7 +748,8 @@ public class RelationshipTypeImpl extends RelationshipEntityImpl implements Rela
      * 
      * @generated
      */
-    public RelationshipFolder getOwner() {
+    @Override
+	public RelationshipFolder getOwner() {
         if (eContainerFeatureID != RelationshipPackage.RELATIONSHIP_TYPE__OWNER) return null;
         return (RelationshipFolder)eContainer;
     }
@@ -731,7 +759,8 @@ public class RelationshipTypeImpl extends RelationshipEntityImpl implements Rela
      * 
      * @generated
      */
-    public void setOwner( RelationshipFolder newOwner ) {
+    @Override
+	public void setOwner( RelationshipFolder newOwner ) {
         if (newOwner != eContainer || (eContainerFeatureID != RelationshipPackage.RELATIONSHIP_TYPE__OWNER && newOwner != null)) {
             if (EcoreUtil.isAncestor(this, newOwner)) throw new IllegalArgumentException(
                                                                                          "Recursive containment not allowed for " + toString()); //$NON-NLS-1$
@@ -753,7 +782,8 @@ public class RelationshipTypeImpl extends RelationshipEntityImpl implements Rela
      * 
      * @generated NOT
      */
-    public RelationshipRole getSourceRole() {
+    @Override
+	public RelationshipRole getSourceRole() {
         final List roles = this.getRoles();
         final int numRoles = roles.size();
         if (numRoles < 1) {
@@ -779,7 +809,8 @@ public class RelationshipTypeImpl extends RelationshipEntityImpl implements Rela
      * 
      * @generated NOT
      */
-    public RelationshipRole getTargetRole() {
+    @Override
+	public RelationshipRole getTargetRole() {
         final List roles = this.getRoles();
         final int numRoles = roles.size();
         if (numRoles < 2) {
@@ -805,7 +836,8 @@ public class RelationshipTypeImpl extends RelationshipEntityImpl implements Rela
      * 
      * @generated NOT
      */
-    public List getAllRelationshipFeatures() {
+    @Override
+	public List getAllRelationshipFeatures() {
         // Short circuit ...
         if (this.superType == null) {
             return this.getRelationshipFeatures();

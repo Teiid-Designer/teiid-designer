@@ -84,14 +84,16 @@ public class JdbcTableTypeImpl extends JdbcNodeImpl implements JdbcTableType {
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.metadata.impl.JdbcNodeImpl#getTypeName()
      */
-    public String getTypeName() {
+    @Override
+	public String getTypeName() {
         return JdbcPlugin.Util.getString("JdbcTableTypeImpl.TableTypeName"); //$NON-NLS-1$
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.metadata.JdbcNode#getFullyQualifiedName()
      */
-    public String getFullyQualifiedName() {
+    @Override
+	public String getFullyQualifiedName() {
         return getParent().getFullyQualifiedName();
     }
 
@@ -106,7 +108,8 @@ public class JdbcTableTypeImpl extends JdbcNodeImpl implements JdbcTableType {
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.metadata.JdbcNode#getPathInSource(boolean, boolean)
      */
-    public IPath getPathInSource( final boolean includeCatalog, final boolean includeSchema) {
+    @Override
+	public IPath getPathInSource( final boolean includeCatalog, final boolean includeSchema) {
         return null;
     }
     
@@ -129,7 +132,8 @@ public class JdbcTableTypeImpl extends JdbcNodeImpl implements JdbcTableType {
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.metadata.JdbcNode#getJdbcDatabase()
      */
-    public JdbcDatabase getJdbcDatabase() {
+    @Override
+	public JdbcDatabase getJdbcDatabase() {
         return getParent().getJdbcDatabase();
     }
 }

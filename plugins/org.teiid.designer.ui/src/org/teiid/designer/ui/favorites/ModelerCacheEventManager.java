@@ -238,7 +238,8 @@ class ModelerCacheEventManager
      * @see org.eclipse.emf.edit.provider.INotifyChangedListener#notifyChanged(org.eclipse.emf.common.notify.Notification)
      * @since 4.2
      */
-    public void notifyChanged( Notification theNotification ) {
+    @Override
+	public void notifyChanged( Notification theNotification ) {
         // don't care about adds
         if (!this.cache.isEmpty()) {
             if (theNotification instanceof SourcedNotification) {
@@ -443,7 +444,8 @@ class ModelerCacheEventManager
      * @see org.eclipse.core.resources.IResourceChangeListener#resourceChanged(org.eclipse.core.resources.IResourceChangeEvent)
      * @since 4.2
      */
-    public void resourceChanged( IResourceChangeEvent theEvent ) {
+    @Override
+	public void resourceChanged( IResourceChangeEvent theEvent ) {
         if (!this.cache.isEmpty()) {
             IResource resource = theEvent.getResource();
 
@@ -533,7 +535,8 @@ class ModelerCacheEventManager
      * @see org.eclipse.core.resources.IResourceDeltaVisitor#visit(org.eclipse.core.resources.IResourceDelta)
      * @since 4.2
      */
-    public boolean visit( IResourceDelta theDelta ) {
+    @Override
+	public boolean visit( IResourceDelta theDelta ) {
         boolean result = true;
 
         // System.out.println("VISIT:resource="+theDelta.getResource()+", added="+ResourceChangeUtilities.isAdded(theDelta)+", removed="+ResourceChangeUtilities.isRemoved(theDelta)+", changed="+ResourceChangeUtilities.isChanged(theDelta)+", content changed="+ResourceChangeUtilities.isContentChanged(theDelta)+", repaced="+
@@ -569,7 +572,8 @@ class ModelerCacheEventManager
      * @see org.teiid.core.event.EventObjectListener#processEvent(java.util.EventObject)
      * @since 4.2
      */
-    public void processEvent( EventObject obj ) {
+    @Override
+	public void processEvent( EventObject obj ) {
         ModelResourceEvent event = (ModelResourceEvent)obj;
         if (event.getType() == ModelResourceEvent.RELOADED) {
             // we need to remove all objects in the cache that don't have a model resource anymore or who's model

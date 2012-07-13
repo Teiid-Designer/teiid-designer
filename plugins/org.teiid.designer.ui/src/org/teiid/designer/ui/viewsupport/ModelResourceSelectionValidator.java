@@ -64,7 +64,8 @@ public class ModelResourceSelectionValidator implements ISelectionStatusValidato
     /* (non-Javadoc)
      * @see org.eclipse.ui.dialogs.ISelectionStatusValidator#validate(java.lang.Object[])
      */
-    public IStatus validate(Object[] selection) {
+    @Override
+	public IStatus validate(Object[] selection) {
         IStatus result = OK_STATUS; 
         
         if ( selection == null || selection.length == 0 ) {

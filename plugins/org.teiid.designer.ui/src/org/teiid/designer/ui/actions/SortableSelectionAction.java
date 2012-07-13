@@ -54,6 +54,7 @@ public abstract class SortableSelectionAction extends Action
      * @see org.eclipse.ui.ISelectionListener#selectionChanged(org.eclipse.ui.IWorkbenchPart, org.eclipse.jface.viewers.ISelection)
      * @since 5.0
      */
+	@Override
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
 		boolean enable = isValidSelection(selection);
 		if( enable ) {
@@ -67,7 +68,8 @@ public abstract class SortableSelectionAction extends Action
      * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
      * @since 5.0
      */
-    public void selectionChanged(SelectionChangedEvent event) {
+    @Override
+	public void selectionChanged(SelectionChangedEvent event) {
         ISelection sel = event.getSelection();
         
         selectionChanged(null, sel);
@@ -78,6 +80,7 @@ public abstract class SortableSelectionAction extends Action
      * @see org.teiid.designer.ui.actions.ISelectionAction#isApplicable(org.eclipse.jface.viewers.ISelection)
      * @since 5.0
      */
+	@Override
 	public boolean isApplicable(ISelection selection) {
 		return true;
 	}
@@ -88,6 +91,7 @@ public abstract class SortableSelectionAction extends Action
      * @return
      * @since 5.0
      */
+	@Override
 	public int compareTo(Object o) {
 		if( o instanceof String) {
 			return getText().compareTo((String)o);

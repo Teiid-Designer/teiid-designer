@@ -65,7 +65,8 @@ public class XsdSemanticsNotificationHandler extends ModelObjectTreeViewerNotifi
                     if (part.getSite().getPage().getActivePart() == this.part) {
                         this.renameAction.selectionChanged(part, selection);
                         Display.getCurrent().asyncExec(new Runnable() {
-                            public void run() {
+                            @Override
+							public void run() {
                                 renameAction.doRun(false);
                             }
                         });

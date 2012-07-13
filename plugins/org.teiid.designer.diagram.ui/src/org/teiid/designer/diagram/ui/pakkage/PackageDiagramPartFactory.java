@@ -121,7 +121,8 @@ public class PackageDiagramPartFactory extends AbstractDiagramEditPartFactory im
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.part.DiagramEditPartFactory#getAnchorManager(org.teiid.designer.diagram.ui.part.DiagramEditPart)
      */
-    public AnchorManager getAnchorManager( DiagramEditPart editPart ) {
+    @Override
+	public AnchorManager getAnchorManager( DiagramEditPart editPart ) {
         return new BlockAnchorManager(editPart);
     }
 

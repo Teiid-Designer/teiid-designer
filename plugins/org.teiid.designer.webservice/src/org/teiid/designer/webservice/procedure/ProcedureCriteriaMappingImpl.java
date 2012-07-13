@@ -33,7 +33,8 @@ public class ProcedureCriteriaMappingImpl implements  ProcedureCriteriaMapping {
      * @see org.teiid.designer.webservice.procedure.ProcedureCriteriaMapping#getCriteriaElementName()
      * @since 4.3
      */
-    public String getCriteriaElementName() {
+    @Override
+	public String getCriteriaElementName() {
         return this.criteriaElementName;
     }
 
@@ -41,7 +42,8 @@ public class ProcedureCriteriaMappingImpl implements  ProcedureCriteriaMapping {
      * @see org.teiid.designer.webservice.procedure.ProcedureCriteriaMapping#getCriteriaElementUuid()
      * @since 4.3
      */
-    public String getCriteriaElementUuid() {
+    @Override
+	public String getCriteriaElementUuid() {
         return this.criteriaElementUuid;
     }
 
@@ -49,7 +51,8 @@ public class ProcedureCriteriaMappingImpl implements  ProcedureCriteriaMapping {
      * @see org.teiid.designer.webservice.procedure.ProcedureCriteriaMapping#getVariableName()
      * @since 4.3
      */
-    public String getVariableName() {
+    @Override
+	public String getVariableName() {
         return this.variableName;
     }
 
@@ -57,7 +60,8 @@ public class ProcedureCriteriaMappingImpl implements  ProcedureCriteriaMapping {
      * @see org.teiid.designer.webservice.procedure.ProcedureCriteriaMapping#getXPathExpression()
      * @since 4.3
      */
-    public String getXPathExpression() {
+    @Override
+	public String getXPathExpression() {
         return this.xPathExpression;
     }
 
@@ -73,7 +77,8 @@ public class ProcedureCriteriaMappingImpl implements  ProcedureCriteriaMapping {
      * @see org.teiid.designer.webservice.procedure.ProcedureCriteriaMapping#setCriteriaElementName(java.lang.String)
      * @since 4.3
      */
-    public void setCriteriaElementName(String elementName) {
+    @Override
+	public void setCriteriaElementName(String elementName) {
         this.criteriaElementName = elementName;
     }
 
@@ -81,7 +86,8 @@ public class ProcedureCriteriaMappingImpl implements  ProcedureCriteriaMapping {
      * @see org.teiid.designer.webservice.procedure.ProcedureCriteriaMapping#setCriteriaElementUuid(java.lang.String)
      * @since 4.3
      */
-    public void setCriteriaElementUuid(String elementuuid) {
+    @Override
+	public void setCriteriaElementUuid(String elementuuid) {
         this.criteriaElementUuid = elementuuid;
     }
 
@@ -89,7 +95,8 @@ public class ProcedureCriteriaMappingImpl implements  ProcedureCriteriaMapping {
      * @see org.teiid.designer.webservice.procedure.ProcedureCriteriaMapping#setVariableName(java.lang.String)
      * @since 4.3
      */
-    public void setVariableName(String variableName) {
+    @Override
+	public void setVariableName(String variableName) {
         this.variableName = variableName;
     }
 
@@ -97,7 +104,8 @@ public class ProcedureCriteriaMappingImpl implements  ProcedureCriteriaMapping {
      * @see org.teiid.designer.webservice.procedure.ProcedureCriteriaMapping#getFunctionOnCriteriaElement()
      * @since 4.3
      */
-    public String getFunctionOnCriteriaElement() {
+    @Override
+	public String getFunctionOnCriteriaElement() {
         return this.criteriaElementFunction;
     }
 
@@ -105,7 +113,8 @@ public class ProcedureCriteriaMappingImpl implements  ProcedureCriteriaMapping {
      * @see org.teiid.designer.webservice.procedure.ProcedureCriteriaMapping#getFunctionOnVariable()
      * @since 4.3
      */
-    public String getFunctionOnVariable() {
+    @Override
+	public String getFunctionOnVariable() {
         return this.variableFunction;
     }
 
@@ -113,7 +122,8 @@ public class ProcedureCriteriaMappingImpl implements  ProcedureCriteriaMapping {
      * @see org.teiid.designer.webservice.procedure.ProcedureCriteriaMapping#setFunctionOnCriteriaElement(java.lang.String)
      * @since 4.3
      */
-    public void setFunctionOnCriteriaElement(String criteriaElementFunction) {
+    @Override
+	public void setFunctionOnCriteriaElement(String criteriaElementFunction) {
         this.criteriaElementFunction = criteriaElementFunction;
     }
 
@@ -121,7 +131,8 @@ public class ProcedureCriteriaMappingImpl implements  ProcedureCriteriaMapping {
      * @see org.teiid.designer.webservice.procedure.ProcedureCriteriaMapping#setFunctionOnVariable(java.lang.String)
      * @since 4.3
      */
-    public void setFunctionOnVariable(String variableFunction) {
+    @Override
+	public void setFunctionOnVariable(String variableFunction) {
         this.variableFunction = variableFunction;
     }    
 }

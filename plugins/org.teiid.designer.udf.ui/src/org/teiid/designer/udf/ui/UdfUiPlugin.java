@@ -95,7 +95,8 @@ public final class UdfUiPlugin extends AbstractUiPlugin implements EventObjectLi
      * @see org.teiid.core.event.EventObjectListener#processEvent(java.util.EventObject)
      * @since 4.2
      */
-    public void processEvent( EventObject obj ) {
+    @Override
+	public void processEvent( EventObject obj ) {
     	// The UDF manager needs to know when Function Models are ADDED, REMOVED or RELOADED so the models can be
     	// registered or unregistered from the FunctionLibrary
         ModelResourceEvent event = (ModelResourceEvent)obj;
@@ -148,7 +149,8 @@ public final class UdfUiPlugin extends AbstractUiPlugin implements EventObjectLi
     
     private void registerFunctionModel(final ModelResource modelResource, final boolean isDelete) {
     	Display.getDefault().syncExec(new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
             	try {
             		UdfManager.INSTANCE.registerFunctionModel(modelResource, isDelete);
             	} catch (Exception e) {
@@ -160,7 +162,8 @@ public final class UdfUiPlugin extends AbstractUiPlugin implements EventObjectLi
     
     private void notifySourceModelChanged(final ModelResource modelResource, final boolean isDelete) {
     	Display.getDefault().syncExec(new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
             	try {
             		UdfManager.INSTANCE.notifySourceModelChanged(modelResource, isDelete);
             	} catch (Exception e) {

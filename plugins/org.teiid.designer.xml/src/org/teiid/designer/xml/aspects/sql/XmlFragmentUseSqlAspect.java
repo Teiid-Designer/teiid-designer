@@ -28,14 +28,16 @@ public class XmlFragmentUseSqlAspect extends XmlContainerNodeSqlAspect {
     /**
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlAspect#getName(org.eclipse.emf.ecore.EObject)
      */
-    public String getName(final EObject eObject) {
+    @Override
+	public String getName(final EObject eObject) {
         return XmlDocumentPlugin.getPluginResourceLocator().getString("_UI_XmlAll_type"); //$NON-NLS-1$
     }
 
     /*
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlAspect#updateObject(org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject)
      */
-    public void updateObject(EObject targetObject, EObject sourceObject) {
+    @Override
+	public void updateObject(EObject targetObject, EObject sourceObject) {
 
     }
 

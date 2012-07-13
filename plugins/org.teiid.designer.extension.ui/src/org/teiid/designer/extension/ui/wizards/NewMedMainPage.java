@@ -58,7 +58,8 @@ public class NewMedMainPage extends AbstractWizardPage implements InternalUiCons
         this.folderLocation = folderLocation;
     }
 
-    public void createControl( Composite theParent ) {
+    @Override
+	public void createControl( Composite theParent ) {
 
         Composite pnlMain = WidgetFactory.createPanel(theParent, SWT.NONE, GridData.FILL_BOTH);
         pnlMain.setLayout(new GridLayout(COLUMN_COUNT, false));

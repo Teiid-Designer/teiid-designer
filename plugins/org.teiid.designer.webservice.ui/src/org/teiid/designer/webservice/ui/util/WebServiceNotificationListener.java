@@ -93,7 +93,8 @@ public class WebServiceNotificationListener implements INotifyChangedListener, I
 
                             // put on SWT thread
                             UiUtil.runInSwtThread(new Runnable() {
-                                public void run() {
+                                @Override
+								public void run() {
                                     uiBooleanResult = confirmReplaceProcedure();
                                 }
                             }, true);
@@ -110,7 +111,8 @@ public class WebServiceNotificationListener implements INotifyChangedListener, I
 
                             // put on SWT thread
                             UiUtil.runInSwtThread(new Runnable() {
-                                public void run() {
+                                @Override
+								public void run() {
                                     uiBooleanResult = confirmReplaceProcedure();
                                 }
                             }, true);
@@ -175,7 +177,8 @@ public class WebServiceNotificationListener implements INotifyChangedListener, I
     /**
      * @see org.eclipse.emf.edit.provider.INotifyChangedListener#notifyChanged(org.eclipse.emf.common.notify.Notification)
      */
-    public void notifyChanged( Notification notification ) {
+    @Override
+	public void notifyChanged( Notification notification ) {
 
         // ----------------------------------------------------------------------------------------------
         // NOTE: Transaction boundaries are taken care of by the specific

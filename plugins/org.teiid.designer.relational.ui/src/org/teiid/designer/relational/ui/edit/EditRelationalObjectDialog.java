@@ -59,7 +59,8 @@ public class EditRelationalObjectDialog extends TitleAreaDialog implements IDial
         return mainPanel;
     }
     
-    public void notifyStatusChanged(IStatus status) {
+    @Override
+	public void notifyStatusChanged(IStatus status) {
     	if( status.isOK() ) {
     		setErrorMessage(null);
     		setMessage(Messages.validationOkCreateObject);

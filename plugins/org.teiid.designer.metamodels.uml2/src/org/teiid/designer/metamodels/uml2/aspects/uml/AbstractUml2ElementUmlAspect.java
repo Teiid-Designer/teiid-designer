@@ -32,7 +32,8 @@ public abstract class AbstractUml2ElementUmlAspect extends AbstractUml2UmlAspect
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodels.aspects.UmlDiagramAspect#getStereotype(java.lang.Object)
      */
-    public String getStereotype(Object eObject) {
+    @Override
+	public String getStereotype(Object eObject) {
         final Element element = assertElement(eObject);
         return getStereotype(element);
     }

@@ -62,7 +62,8 @@ public class QueryTreeContentProvider implements ITreeContentProvider {
      * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
      * @since 4.2
      */
-    public Object[] getChildren(Object obj) {
+    @Override
+	public Object[] getChildren(Object obj) {
         if ( obj instanceof SetQuery) {
             return SetQueryUtil.getQueryList((SetQuery)obj).toArray();
         } else if ( obj instanceof Query ) {
@@ -108,7 +109,8 @@ public class QueryTreeContentProvider implements ITreeContentProvider {
      * @see org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object)
      * @since 4.2
      */
-    public Object getParent(Object element) {
+    @Override
+	public Object getParent(Object element) {
         return null;
     }
 
@@ -116,7 +118,8 @@ public class QueryTreeContentProvider implements ITreeContentProvider {
      * @see org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(java.lang.Object)
      * @since 4.2
      */
-    public boolean hasChildren(Object element) {
+    @Override
+	public boolean hasChildren(Object element) {
         Object[] children = getChildren(element);
         if ( children == null || children.length == 0 ) {
             return false;
@@ -128,7 +131,8 @@ public class QueryTreeContentProvider implements ITreeContentProvider {
      * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
      * @since 4.2
      */
-    public Object[] getElements(Object inputElement) {
+    @Override
+	public Object[] getElements(Object inputElement) {
         if ( inputElement instanceof ArrayList ) {
             return ((ArrayList) inputElement).toArray();
         }
@@ -140,14 +144,16 @@ public class QueryTreeContentProvider implements ITreeContentProvider {
      * @see org.eclipse.jface.viewers.IContentProvider#dispose()
      * @since 4.2
      */
-    public void dispose() {
+    @Override
+	public void dispose() {
     }
 
     /** 
      * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
      * @since 4.2
      */
-    public void inputChanged(Viewer viewer,
+    @Override
+	public void inputChanged(Viewer viewer,
                              Object oldInput,
                              Object newInput) {
     }

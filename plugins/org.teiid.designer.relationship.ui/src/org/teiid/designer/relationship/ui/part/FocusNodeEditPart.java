@@ -99,6 +99,7 @@ public class FocusNodeEditPart extends AbstractDiagramEditPart implements Editab
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.diagram.ui.part.EditableEditPart#edit()
 	 */
+	@Override
 	public void edit() {
         
 //		if( ModelEditorManager.canEdit( ((DiagramModelNode)getModel()).getModelObject() ) )

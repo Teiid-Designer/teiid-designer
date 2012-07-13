@@ -220,7 +220,8 @@ public class NewModelProjectWizard extends BasicNewProjectResourceWizard impleme
     private void refreshModelExplorerResourceNavigatorTree() {
         // activate the Model Explorer view (must do this last)optionGroupLabel
         Display.getCurrent().asyncExec(new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 try {
                     ModelExplorerResourceNavigator view = 
                         (ModelExplorerResourceNavigator) UiUtil.getWorkbenchPage().showView(Extensions.Explorer.VIEW);
@@ -263,6 +264,7 @@ public class NewModelProjectWizard extends BasicNewProjectResourceWizard impleme
 		final IFolder newFolderHandle = ResourcesPlugin.getWorkspace().getRoot().getFolder(newFolderPath);
 		
 		IRunnableWithProgress op = new IRunnableWithProgress() {
+			@Override
 			public void run(IProgressMonitor monitor) {
 				AbstractOperation op;
 				op = new CreateFolderOperation(
@@ -278,6 +280,7 @@ public class NewModelProjectWizard extends BasicNewProjectResourceWizard impleme
 				} catch (final ExecutionException e) {
 					getShell().getDisplay().syncExec(
 							new Runnable() {
+								@Override
 								public void run() {
 									if (e.getCause() instanceof CoreException) {
 										ErrorDialog
@@ -366,7 +369,8 @@ public class NewModelProjectWizard extends BasicNewProjectResourceWizard impleme
             this.setDescription(getString("initialMessage")); //$NON-NLS-1$
         }
 
-        public void createControl( Composite theParent ) {
+        @Override
+		public void createControl( Composite theParent ) {
             final int COLUMNS = 1;
             Composite mainPanel = WidgetFactory.createPanel(theParent, SWT.NO_SCROLL, GridData.FILL_BOTH);
             mainPanel.setLayout(new GridLayout(COLUMNS, false));

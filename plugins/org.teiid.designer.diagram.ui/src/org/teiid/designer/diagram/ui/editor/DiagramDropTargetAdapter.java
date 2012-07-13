@@ -141,7 +141,8 @@ public class DiagramDropTargetAdapter extends AbstractTransferDropTargetListener
         currentEditPart = getViewer().findObjectAtExcluding(getDropLocation(),
                                                             getExclusionSet(),
                                                             new EditPartViewer.Conditional() {
-                                                                public boolean evaluate( EditPart editpart ) {
+                                                                @Override
+																public boolean evaluate( EditPart editpart ) {
                                                                     return editpart.getTargetEditPart(proxyGetTargetRequest()) != null;
                                                                 }
                                                             });

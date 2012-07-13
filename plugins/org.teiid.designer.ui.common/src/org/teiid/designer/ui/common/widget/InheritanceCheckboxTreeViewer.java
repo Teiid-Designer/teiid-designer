@@ -57,7 +57,8 @@ public class InheritanceCheckboxTreeViewer extends CheckboxTreeViewer implements
         this.checkController = theController;
     }
 
-    public void checkStateChanged( CheckStateChangedEvent event ) {
+    @Override
+	public void checkStateChanged( CheckStateChangedEvent event ) {
         // undo the event if needed
         if ((this.checkController != null) && !this.checkController.isEditable(event.getElement())) {
             setChecked(event.getElement(), !event.getChecked());
@@ -82,7 +83,8 @@ public class InheritanceCheckboxTreeViewer extends CheckboxTreeViewer implements
             }
             final boolean deselectingDescendants = deselecting;
             Runnable runnable = new Runnable() {
-                public void run() {
+                @Override
+				public void run() {
 
                     if (isChecked) {
                         viewer.setGrayed(node, false);

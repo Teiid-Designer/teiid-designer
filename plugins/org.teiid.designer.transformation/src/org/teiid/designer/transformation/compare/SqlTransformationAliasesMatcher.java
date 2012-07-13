@@ -34,14 +34,16 @@ public class SqlTransformationAliasesMatcher extends AbstractEObjectMatcher impl
     /**
      * @see org.teiid.designer.core.compare.EObjectMatcher#addMappingsForRoots(java.util.List, java.util.List, org.eclipse.emf.mapping.Mapping, org.eclipse.emf.mapping.MappingFactory)
      */
-    public void addMappingsForRoots(final List inputs, final List outputs,
+    @Override
+	public void addMappingsForRoots(final List inputs, final List outputs,
                                     final Mapping mapping, final MappingFactory factory) {
     }    
 
     /**
      * @see org.teiid.designer.core.compare.EObjectMatcher#addMappings(org.eclipse.emf.ecore.EReference, java.util.List, java.util.List, org.eclipse.emf.mapping.Mapping, org.eclipse.emf.mapping.MappingFactory)
      */
-    public void addMappings( final EReference reference, final List inputs, final List outputs, 
+    @Override
+	public void addMappings( final EReference reference, final List inputs, final List outputs, 
                              final Mapping mapping, final MappingFactory factory) {
     }
 
@@ -49,7 +51,8 @@ public class SqlTransformationAliasesMatcher extends AbstractEObjectMatcher impl
      * @see org.teiid.designer.core.compare.TwoPhaseEObjectMatcher#addMappings(org.eclipse.emf.ecore.EReference, java.util.List, java.util.List, java.util.Map, org.eclipse.emf.mapping.Mapping, org.eclipse.emf.mapping.MappingFactory)
      * @since 4.2
      */
-    public void addMappings(final EReference reference, final List inputs, final List outputs, final Map inputsToOutputs, final Mapping mapping, final MappingFactory factory) {
+    @Override
+	public void addMappings(final EReference reference, final List inputs, final List outputs, final Map inputsToOutputs, final Mapping mapping, final MappingFactory factory) {
         // Loop over the inputs and accumulate the select/insert/update/delete transforms ...
         final Map sqlAliasesByAliasInfo = new HashMap();
         for (final Iterator iter = inputs.iterator();iter.hasNext();) {
@@ -80,7 +83,8 @@ public class SqlTransformationAliasesMatcher extends AbstractEObjectMatcher impl
      * @see org.teiid.designer.core.compare.TwoPhaseEObjectMatcher#addMappingsForRoots(java.util.List, java.util.List, java.util.Map, org.eclipse.emf.mapping.Mapping, org.eclipse.emf.mapping.MappingFactory)
      * @since 4.2
      */
-    public void addMappingsForRoots(final List inputs,
+    @Override
+	public void addMappingsForRoots(final List inputs,
                                     final List outputs,
                                     final Map inputsToOutputs,
                                     final Mapping mapping,

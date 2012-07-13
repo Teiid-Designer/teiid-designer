@@ -43,7 +43,8 @@ public class ModelDocumentImpl extends ResourceDocumentImpl implements ModelDocu
     /* (non-Javadoc)
      * @See org.teiid.designer.search.index.ModelDocument#getResource()
      */
-    public Resource getResource() {
+    @Override
+	public Resource getResource() {
         return this.resource;
     }
 

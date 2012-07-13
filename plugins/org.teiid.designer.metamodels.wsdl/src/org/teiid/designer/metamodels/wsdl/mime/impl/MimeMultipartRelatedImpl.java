@@ -72,7 +72,8 @@ public class MimeMultipartRelatedImpl extends EObjectImpl implements MimeMultipa
      * 
      * @generated
      */
-    public MimeElementOwner getMimeElementOwner() {
+    @Override
+	public MimeElementOwner getMimeElementOwner() {
         if (eContainerFeatureID != MimePackage.MIME_MULTIPART_RELATED__MIME_ELEMENT_OWNER) return null;
         return (MimeElementOwner)eContainer;
     }
@@ -82,7 +83,8 @@ public class MimeMultipartRelatedImpl extends EObjectImpl implements MimeMultipa
      * 
      * @generated
      */
-    public void setMimeElementOwner( MimeElementOwner newMimeElementOwner ) {
+    @Override
+	public void setMimeElementOwner( MimeElementOwner newMimeElementOwner ) {
         if (newMimeElementOwner != eContainer
             || (eContainerFeatureID != MimePackage.MIME_MULTIPART_RELATED__MIME_ELEMENT_OWNER && newMimeElementOwner != null)) {
             if (EcoreUtil.isAncestor(this, newMimeElementOwner)) throw new IllegalArgumentException(
@@ -107,7 +109,8 @@ public class MimeMultipartRelatedImpl extends EObjectImpl implements MimeMultipa
      * 
      * @generated
      */
-    public EList getMimeParts() {
+    @Override
+	public EList getMimeParts() {
         if (mimeParts == null) {
             mimeParts = new EObjectContainmentWithInverseEList(MimePart.class, this,
                                                                MimePackage.MIME_MULTIPART_RELATED__MIME_PARTS,

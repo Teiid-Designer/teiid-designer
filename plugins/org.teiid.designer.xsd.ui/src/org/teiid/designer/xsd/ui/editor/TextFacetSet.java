@@ -95,7 +95,8 @@ public class TextFacetSet extends AbstractFacetSet {
         public ComponentSetMonitor mon;
         private String lastVal;
 
-        public void modifyText( ModifyEvent e ) {
+        @Override
+		public void modifyText( ModifyEvent e ) {
             if (mon != null) {
                 String newVal = text.getText();
                 if (!FormUtil.safeEquals(newVal, lastVal)) {

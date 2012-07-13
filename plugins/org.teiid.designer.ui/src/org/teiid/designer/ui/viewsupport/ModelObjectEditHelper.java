@@ -22,6 +22,7 @@ public abstract class ModelObjectEditHelper implements IModelObjectEditHelper {
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.ui.actions.IModelObjectEditHelper#canClone(java.lang.Object)
 	 */
+	@Override
 	public boolean canClone(Object obj) {
 		// XXX Auto-generated method stub
 		return true;
@@ -30,6 +31,7 @@ public abstract class ModelObjectEditHelper implements IModelObjectEditHelper {
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.ui.actions.IModelObjectEditHelper#canCopy(java.lang.Object)
 	 */
+	@Override
 	public boolean canCopy(Object obj) {
 		// XXX Auto-generated method stub
 		return true;
@@ -38,7 +40,8 @@ public abstract class ModelObjectEditHelper implements IModelObjectEditHelper {
     /* (non-Javadoc)
      * @See org.teiid.designer.ui.actions.IModelObjectEditHelper#canCopy(java.lang.Object)
      */
-    public boolean canUndoCopy(Object obj) {
+    @Override
+	public boolean canUndoCopy(Object obj) {
         // XXX Auto-generated method stub
         return true;
     }
@@ -46,6 +49,7 @@ public abstract class ModelObjectEditHelper implements IModelObjectEditHelper {
     /* (non-Javadoc)
 	 * @See org.teiid.designer.ui.actions.IModelObjectEditHelper#canCut(java.lang.Object)
 	 */
+	@Override
 	public boolean canCut(Object obj) {
 		// XXX Auto-generated method stub
 		return true;
@@ -54,7 +58,8 @@ public abstract class ModelObjectEditHelper implements IModelObjectEditHelper {
     /* (non-Javadoc)
      * @See org.teiid.designer.ui.actions.IModelObjectEditHelper#canCut(java.lang.Object)
      */
-    public boolean canUndoCut(Object obj) {
+    @Override
+	public boolean canUndoCut(Object obj) {
         // XXX Auto-generated method stub
         return true;
     }
@@ -62,6 +67,7 @@ public abstract class ModelObjectEditHelper implements IModelObjectEditHelper {
     /* (non-Javadoc)
 	 * @See org.teiid.designer.ui.actions.IModelObjectEditHelper#canDelete(java.lang.Object)
 	 */
+	@Override
 	public boolean canDelete(Object obj) {
 		// XXX Auto-generated method stub
 		return true;
@@ -70,7 +76,8 @@ public abstract class ModelObjectEditHelper implements IModelObjectEditHelper {
     /* (non-Javadoc)
      * @See org.teiid.designer.ui.actions.IModelObjectEditHelper#canDelete(java.lang.Object)
      */
-    public boolean canUndoDelete(Object obj) {
+    @Override
+	public boolean canUndoDelete(Object obj) {
         // XXX Auto-generated method stub
         return true;
     }
@@ -79,6 +86,7 @@ public abstract class ModelObjectEditHelper implements IModelObjectEditHelper {
     /* (non-Javadoc)
 	 * @See org.teiid.designer.ui.actions.IModelObjectEditHelper#canPaste(java.lang.Object, java.lang.Object)
 	 */
+	@Override
 	public boolean canPaste(Object obj, Object pasteParent) {
 		// XXX Auto-generated method stub
 		return true;
@@ -87,7 +95,8 @@ public abstract class ModelObjectEditHelper implements IModelObjectEditHelper {
     /* (non-Javadoc)
      * @See org.teiid.designer.ui.actions.IModelObjectEditHelper#canPaste(java.lang.Object, java.lang.Object)
      */
-    public boolean canUndoPaste(Object obj, Object pasteParent) {
+    @Override
+	public boolean canUndoPaste(Object obj, Object pasteParent) {
         // XXX Auto-generated method stub
         return true;
     }
@@ -96,6 +105,7 @@ public abstract class ModelObjectEditHelper implements IModelObjectEditHelper {
     /* (non-Javadoc)
 	 * @See org.teiid.designer.ui.actions.IModelObjectEditHelper#canRename(java.lang.Object)
 	 */
+	@Override
 	public boolean canRename(Object obj) {
 		// XXX Auto-generated method stub
 		return true;

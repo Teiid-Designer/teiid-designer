@@ -109,7 +109,8 @@ public class ReconcileTransformationAction extends TransformationAction implemen
      * 
      * @param e the eventObject
      */
-    public void processEvent( EventObject e ) {
+    @Override
+	public void processEvent( EventObject e ) {
         // ----------------------------------------------------------------------
         // respond to SqlTransformationStatusChangeEvent for the current
         // Transformation. This event is fired whenever the SQL for a
@@ -291,7 +292,8 @@ public class ReconcileTransformationAction extends TransformationAction implemen
                 final boolean requiredStartPre = ModelerCore.startTxn(true, canUndo, "Reconcile Transformation", this); //$NON-NLS-1$
 
                 UiBusyIndicator.showWhile(UiUtil.getWorkbenchShellOnlyIfUiThread().getDisplay(), new Runnable() {
-                    public void run() {
+                    @Override
+					public void run() {
                         boolean succeeded = false;
 
                         try {
@@ -323,7 +325,8 @@ public class ReconcileTransformationAction extends TransformationAction implemen
                 final boolean requiredStart = ModelerCore.startTxn(true, canUndo, "Reconcile Transformation", this); //$NON-NLS-1$
                 // show busy cursor while applying modifications and committing transaction
                 UiBusyIndicator.showWhile(UiUtil.getWorkbenchShellOnlyIfUiThread().getDisplay(), new Runnable() {
-                    public void run() {
+                    @Override
+					public void run() {
                         boolean succeeded = false;
 
                         try {

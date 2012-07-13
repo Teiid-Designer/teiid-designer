@@ -26,7 +26,8 @@ public class FakeEObjectUtil implements EObjectUtil {
     /**
      * @see org.teiid.designer.modelgenerator.util.EObjectUtil#clone(org.eclipse.emf.ecore.EObject)
      */
-    public EObject clone( EObject object ) {
+    @Override
+	public EObject clone( EObject object ) {
         return object;
     }
 

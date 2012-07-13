@@ -40,7 +40,8 @@ public class ChainingResourceLoader implements EmfResourceLoader {
     /* (non-Javadoc)
      * @see com.metamatrix.mtk.emf.resource.active.ResourceLoader#loadFeature(org.eclipse.emf.common.util.EList, java.lang.Class, org.eclipse.emf.ecore.EObject, int)
      */
-    public void loadFeature(final EList valueHolder, final Class dataClass,
+    @Override
+	public void loadFeature(final EList valueHolder, final Class dataClass,
                             final EObject owner, final int featureId) {
         final Iterator iter = this.loaders.iterator();
         while (iter.hasNext()) {
@@ -55,7 +56,8 @@ public class ChainingResourceLoader implements EmfResourceLoader {
     /* (non-Javadoc)
      * @see com.metamatrix.mtk.emf.resource.active.ResourceLoader#loadFeature(org.eclipse.emf.common.util.EList, java.lang.Class, org.eclipse.emf.ecore.EObject, int)
      */
-    public void loadFeature(final EList valueHolder, final Class dataClass,
+    @Override
+	public void loadFeature(final EList valueHolder, final Class dataClass,
                             final EObject owner, final int featureId,
                             final int reverseFeatureId) {
         final Iterator iter = this.loaders.iterator();

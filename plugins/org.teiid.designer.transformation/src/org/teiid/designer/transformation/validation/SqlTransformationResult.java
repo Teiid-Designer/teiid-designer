@@ -123,7 +123,8 @@ public class SqlTransformationResult implements QueryValidationResult {
      * get the Parsable status
      * @return 'true' if parsable, 'false' if not
      */
-    public boolean isParsable( ) {
+    @Override
+	public boolean isParsable( ) {
         return this.isParsable;
     }
     
@@ -131,7 +132,8 @@ public class SqlTransformationResult implements QueryValidationResult {
      * get the Resolvable status
      * @return 'true' if resolvable, 'false' if not
      */
-    public boolean isResolvable( ) {
+    @Override
+	public boolean isResolvable( ) {
         return this.isResolvable;
     }
     
@@ -139,7 +141,8 @@ public class SqlTransformationResult implements QueryValidationResult {
      * get the Validatable status
      * @return 'true' if validatable, 'false' if not
      */
-    public boolean isValidatable( ) {
+    @Override
+	public boolean isValidatable( ) {
         return this.isValidatable;
     }
     
@@ -164,6 +167,7 @@ public class SqlTransformationResult implements QueryValidationResult {
 	 * SQL String was not parsable.
 	 * @return the SQL command
 	 */
+	@Override
 	public Command getCommand( ) {
 		return this.command;
 	}
@@ -224,7 +228,8 @@ public class SqlTransformationResult implements QueryValidationResult {
      * @see org.teiid.designer.core.query.query.resolver.util.QueryValidationResult#getStatusList()
      * @since 4.2
      */
-    public Collection<IStatus> getStatusList() {
+    @Override
+	public Collection<IStatus> getStatusList() {
         return this.statuses;
     }
 
@@ -232,7 +237,8 @@ public class SqlTransformationResult implements QueryValidationResult {
      * @see org.teiid.designer.core.query.query.resolver.util.QueryValidationResult#getUpdateStatusList()
      * @since 4.2
      */
-    public Collection<IStatus> getUpdateStatusList() {
+    @Override
+	public Collection<IStatus> getUpdateStatusList() {
         return this.updateStatuses;
     }	
 
@@ -257,7 +263,8 @@ public class SqlTransformationResult implements QueryValidationResult {
 	 * @see org.teiid.designer.core.query.query.resolver.util.QueryValidationResult#getUpdateStatusList(int cmdType)
      * @since 7.3
      */
-    public Collection<IStatus> getUpdateStatusList(int cmdType) {
+    @Override
+	public Collection<IStatus> getUpdateStatusList(int cmdType) {
     	if( getUpdateStatusList() == null || getUpdateStatusList().isEmpty() )  return getUpdateStatusList();
     	
     	LinkedList<IStatus> cmdStatusList = new LinkedList<IStatus>();

@@ -93,7 +93,8 @@ public class FunctionFactoryImpl extends EFactoryImpl implements FunctionFactory
      * 
      * @generated
      */
-    public ScalarFunction createScalarFunction() {
+    @Override
+	public ScalarFunction createScalarFunction() {
         ScalarFunctionImpl scalarFunction = new ScalarFunctionImpl();
         return scalarFunction;
     }
@@ -103,7 +104,8 @@ public class FunctionFactoryImpl extends EFactoryImpl implements FunctionFactory
      * 
      * @generated
      */
-    public FunctionParameter createFunctionParameter() {
+    @Override
+	public FunctionParameter createFunctionParameter() {
         FunctionParameterImpl functionParameter = new FunctionParameterImpl();
         return functionParameter;
     }
@@ -113,7 +115,8 @@ public class FunctionFactoryImpl extends EFactoryImpl implements FunctionFactory
      * 
      * @generated
      */
-    public ReturnParameter createReturnParameter() {
+    @Override
+	public ReturnParameter createReturnParameter() {
         ReturnParameterImpl returnParameter = new ReturnParameterImpl();
         return returnParameter;
     }
@@ -123,7 +126,8 @@ public class FunctionFactoryImpl extends EFactoryImpl implements FunctionFactory
      * 
      * @generated
      */
-    public FunctionPackage getFunctionPackage() {
+    @Override
+	public FunctionPackage getFunctionPackage() {
         return (FunctionPackage)getEPackage();
     }
 

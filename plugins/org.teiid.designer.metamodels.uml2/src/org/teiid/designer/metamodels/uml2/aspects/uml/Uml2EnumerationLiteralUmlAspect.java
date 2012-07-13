@@ -37,14 +37,16 @@ public class Uml2EnumerationLiteralUmlAspect extends AbstractUml2NamedElementUml
     /**
      * @see org.teiid.designer.core.metamodel.aspect.uml.UmlProperty#isAssociationEnd(java.lang.Object)
      */
-    public boolean isAssociationEnd( Object property ) {
+    @Override
+	public boolean isAssociationEnd( Object property ) {
         return false;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.uml.UmlDiagramAspect#getSignature(java.lang.Object, int)
      */
-    public String getSignature( Object eObject,
+    @Override
+	public String getSignature( Object eObject,
                                 int showMask ) {
         EnumerationLiteral enumLiteral = assertEnumerationLiteral(eObject);
         StringBuffer result = new StringBuffer();

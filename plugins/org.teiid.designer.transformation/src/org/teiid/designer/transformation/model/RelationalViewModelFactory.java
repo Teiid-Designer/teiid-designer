@@ -90,7 +90,8 @@ public class RelationalViewModelFactory extends RelationalModelFactory {
         return resrc;
     }
 
-    public void build( ModelResource modelResource,
+    @Override
+	public void build( ModelResource modelResource,
                        RelationalModel model,
                        IProgressMonitor progressMonitor ) {
 
@@ -105,7 +106,8 @@ public class RelationalViewModelFactory extends RelationalModelFactory {
         }
     }
 
-    public EObject buildObject( RelationalReference obj,
+    @Override
+	public EObject buildObject( RelationalReference obj,
                                 ModelResource modelResource,
                                 IProgressMonitor progressMonitor ) throws ModelWorkspaceException {
         EObject newEObject = null;

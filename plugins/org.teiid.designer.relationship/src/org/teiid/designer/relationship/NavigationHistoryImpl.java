@@ -46,7 +46,8 @@ public class NavigationHistoryImpl implements NavigationHistory {
     /**
      * @see org.teiid.designer.relationship.NavigationHistory#refresh()
      */
-    public void refresh() throws NavigationContextException {
+    @Override
+	public void refresh() throws NavigationContextException {
         final NavigationContextInfo currentInfo = this.currentContext != null ?
                                                   this.currentContext.getInfo() :
                                                   null;
@@ -59,14 +60,16 @@ public class NavigationHistoryImpl implements NavigationHistory {
     /**
      * @see org.teiid.designer.relationship.NavigationHistory#getCurrent()
      */
-    public NavigationContext getCurrent() {
+    @Override
+	public NavigationContext getCurrent() {
         return this.currentContext;
     }
 
     /**
      * @see org.teiid.designer.relationship.NavigationHistory#getPrevious()
      */
-    public synchronized NavigationContext getPrevious() throws NavigationContextException {
+    @Override
+	public synchronized NavigationContext getPrevious() throws NavigationContextException {
         if (this.backInfos.isEmpty()) {
             return null;
         }
@@ -89,7 +92,8 @@ public class NavigationHistoryImpl implements NavigationHistory {
     /**
      * @see org.teiid.designer.relationship.NavigationHistory#getNext()
      */
-    public synchronized NavigationContext getNext() throws NavigationContextException {
+    @Override
+	public synchronized NavigationContext getNext() throws NavigationContextException {
         if (this.forwardInfos.isEmpty()) {
             return null;
         }
@@ -112,21 +116,24 @@ public class NavigationHistoryImpl implements NavigationHistory {
     /**
      * @see org.teiid.designer.relationship.NavigationHistory#hasPrevious()
      */
-    public boolean hasPrevious() {
+    @Override
+	public boolean hasPrevious() {
         return !this.backInfos.isEmpty();
     }
 
     /**
      * @see org.teiid.designer.relationship.NavigationHistory#hasNext()
      */
-    public boolean hasNext() {
+    @Override
+	public boolean hasNext() {
         return !this.forwardInfos.isEmpty();
     }
 
     /**
      * @see org.teiid.designer.relationship.NavigationHistory#clearHistory()
      */
-    public synchronized void clearHistory() {
+    @Override
+	public synchronized void clearHistory() {
         this.forwardInfos.clear();
         this.backInfos.clear();
     }
@@ -134,21 +141,24 @@ public class NavigationHistoryImpl implements NavigationHistory {
     /**
      * @see org.teiid.designer.relationship.NavigationHistory#getBackInfos()
      */
-    public List getBackInfos() {
+    @Override
+	public List getBackInfos() {
         return this.backInfos;
     }
 
     /**
      * @see org.teiid.designer.relationship.NavigationHistory#getForwardInfos()
      */
-    public List getForwardInfos() {
+    @Override
+	public List getForwardInfos() {
         return this.forwardInfos;
     }
 
     /**
      * @see org.teiid.designer.relationship.NavigationHistory#selectFromHistory(org.teiid.designer.relationship.NavigationContextInfo)
      */
-    public synchronized NavigationContext selectFromHistory(NavigationContextInfo info)
+    @Override
+	public synchronized NavigationContext selectFromHistory(NavigationContextInfo info)
         throws NavigationContextException {
         if (this.currentContext == null) {
             // Not contained by backs or forwards, so fail ...
@@ -220,7 +230,8 @@ public class NavigationHistoryImpl implements NavigationHistory {
     /**
      * @see org.teiid.designer.relationship.NavigationHistory#navigateTo(org.teiid.designer.relatoinship.NavigationNode)
      */
-    public NavigationContext navigateTo(NavigationNode focusObject) throws NavigationContextException {
+    @Override
+	public NavigationContext navigateTo(NavigationNode focusObject) throws NavigationContextException {
         CoreArgCheck.isNotNull(focusObject);
         final URI uri = focusObject.getModelObjectUri();
         if (uri == null) {
@@ -233,7 +244,8 @@ public class NavigationHistoryImpl implements NavigationHistory {
     /**
       * @see org.teiid.designer.relationship.NavigationHistory#navigateTo(org.eclipse.emf.ecore.EObject)
       */
-    public NavigationContext navigateTo(EObject focusObject) throws NavigationContextException {
+    @Override
+	public NavigationContext navigateTo(EObject focusObject) throws NavigationContextException {
         CoreArgCheck.isNotNull(focusObject);
         final URI uri = this.navContextCache.getResolver().getUri(focusObject);
         if (uri == null) {
@@ -246,7 +258,8 @@ public class NavigationHistoryImpl implements NavigationHistory {
     /**
      * @see org.teiid.designer.relationship.NavigationHistory#navigateTo(org.eclipse.emf.common.util.URI)
      */
-    public synchronized NavigationContext navigateTo(final URI focusObjectUri) throws NavigationContextException {
+    @Override
+	public synchronized NavigationContext navigateTo(final URI focusObjectUri) throws NavigationContextException {
         CoreArgCheck.isNotNull(focusObjectUri);
 
         EObject eObject = null;
@@ -281,7 +294,8 @@ public class NavigationHistoryImpl implements NavigationHistory {
      * @see org.teiid.designer.relationship.NavigationHistory#navigateTo(org.eclipse.emf.common.util.URI,
      *                                                                       org.eclipse.emf.ecore.EObject)
      */
-    public synchronized NavigationContext navigateTo(final URI focusObjectUri, final EObject eObject)
+    @Override
+	public synchronized NavigationContext navigateTo(final URI focusObjectUri, final EObject eObject)
         throws NavigationContextException {
         CoreArgCheck.isNotNull(focusObjectUri);
         final NavigationContextInfo info = new NavigationContextInfo(eObject,focusObjectUri.toString());
@@ -303,6 +317,7 @@ public class NavigationHistoryImpl implements NavigationHistory {
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.relationship.NavigationHistory#peakAtNext()
 	 */
+	@Override
 	public NavigationContext peakAtNext() throws NavigationContextException {
 		if (this.forwardInfos.isEmpty()) {
 			return null;
@@ -317,6 +332,7 @@ public class NavigationHistoryImpl implements NavigationHistory {
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.relationship.NavigationHistory#peakAtPrevious()
 	 */
+	@Override
 	public NavigationContext peakAtPrevious() throws NavigationContextException {
 		if (this.backInfos.isEmpty()) {
 			return null;

@@ -82,7 +82,8 @@ public class DiagramActionAdapter extends AbstractModelEditorPageActionBarContri
      * @see org.teiid.designer.diagram.ui.editor.IDiagramActionAdapter#setDiagramEditor(org.teiid.designer.ui.editors.ModelEditorPage)
      * @since 5.0
      */
-    public void setDiagramEditor( final ModelEditorPage editor ) {
+    @Override
+	public void setDiagramEditor( final ModelEditorPage editor ) {
         super.setActiveEditor(editor);
 
         if (!actionsInitialized) {
@@ -302,7 +303,8 @@ public class DiagramActionAdapter extends AbstractModelEditorPageActionBarContri
      * 
      * @See org.teiid.designer.diagram.ui.editor.IDiagramActionAdapter#disposeOfActions()
      */
-    public void disposeOfActions() {
+    @Override
+	public void disposeOfActions() {
         this.dispose();
     }
 
@@ -310,7 +312,8 @@ public class DiagramActionAdapter extends AbstractModelEditorPageActionBarContri
      * @see org.teiid.designer.diagram.ui.editor.IDiagramActionAdapter#contributeToDiagramToolBar()
      * @since 5.0
      */
-    public void contributeToDiagramToolBar() {
+    @Override
+	public void contributeToDiagramToolBar() {
     }
 
     /**
@@ -318,7 +321,8 @@ public class DiagramActionAdapter extends AbstractModelEditorPageActionBarContri
      *      org.eclipse.jface.viewers.ISelection)
      * @since 5.0
      */
-    public void contributeToMenuManager( IMenuManager theMenuMgr,
+    @Override
+	public void contributeToMenuManager( IMenuManager theMenuMgr,
                                          ISelection theSelection ) {
     }
 
@@ -326,21 +330,24 @@ public class DiagramActionAdapter extends AbstractModelEditorPageActionBarContri
      * @see org.teiid.designer.diagram.ui.editor.IDiagramActionAdapter#enableDiagramToolbarActions()
      * @since 5.0
      */
-    public void enableDiagramToolbarActions() {
+    @Override
+	public void enableDiagramToolbarActions() {
     }
 
     /**
      * @see org.teiid.designer.diagram.ui.editor.IDiagramActionAdapter#handleNotification(org.eclipse.emf.common.notify.Notification)
      * @since 5.0
      */
-    public void handleNotification( Notification theNotification ) {
+    @Override
+	public void handleNotification( Notification theNotification ) {
     }
 
     /**
      * @see org.teiid.designer.diagram.ui.editor.IDiagramActionAdapter#shouldOverrideMenu(org.eclipse.jface.viewers.ISelection)
      * @since 5.0
      */
-    public boolean shouldOverrideMenu( ISelection theSelection ) {
+    @Override
+	public boolean shouldOverrideMenu( ISelection theSelection ) {
         return false;
     }
 

@@ -305,7 +305,8 @@ public class DifferenceDescriptorImpl extends MappingHelperImpl implements Diffe
      * 
      * @generated
      */
-    public EList getPropertyDifferences() {
+    @Override
+	public EList getPropertyDifferences() {
         if (propertyDifferences == null) propertyDifferences = new EObjectContainmentWithInverseEList(
                                                                                                       PropertyDifference.class,
                                                                                                       this,
@@ -319,7 +320,8 @@ public class DifferenceDescriptorImpl extends MappingHelperImpl implements Diffe
      * 
      * @generated
      */
-    public DifferenceType getType() {
+    @Override
+	public DifferenceType getType() {
         return type;
     }
 
@@ -328,7 +330,8 @@ public class DifferenceDescriptorImpl extends MappingHelperImpl implements Diffe
      * 
      * @generated NOT
      */
-    public boolean isAddition() {
+    @Override
+	public boolean isAddition() {
         return DifferenceType.ADDITION_LITERAL.equals(this.type);
     }
 
@@ -346,7 +349,8 @@ public class DifferenceDescriptorImpl extends MappingHelperImpl implements Diffe
      * 
      * @generated NOT
      */
-    public boolean isChanged() {
+    @Override
+	public boolean isChanged() {
         return DifferenceType.CHANGE_LITERAL.equals(this.type);
     }
 
@@ -355,7 +359,8 @@ public class DifferenceDescriptorImpl extends MappingHelperImpl implements Diffe
      * 
      * @generated NOT
      */
-    public boolean isChangedBelow() {
+    @Override
+	public boolean isChangedBelow() {
         return DifferenceType.CHANGE_BELOW_LITERAL.equals(this.type);
     }
 
@@ -373,7 +378,8 @@ public class DifferenceDescriptorImpl extends MappingHelperImpl implements Diffe
      * 
      * @generated NOT
      */
-    public boolean isDeletion() {
+    @Override
+	public boolean isDeletion() {
         return DifferenceType.DELETION_LITERAL.equals(this.type);
     }
 
@@ -391,7 +397,8 @@ public class DifferenceDescriptorImpl extends MappingHelperImpl implements Diffe
      * 
      * @generated NOT
      */
-    public boolean isNoChange() {
+    @Override
+	public boolean isNoChange() {
         return DifferenceType.NO_CHANGE_LITERAL.equals(this.type);
     }
 
@@ -409,7 +416,8 @@ public class DifferenceDescriptorImpl extends MappingHelperImpl implements Diffe
      * 
      * @generated
      */
-    public boolean isSkip() {
+    @Override
+	public boolean isSkip() {
         return skip;
     }
 
@@ -418,7 +426,8 @@ public class DifferenceDescriptorImpl extends MappingHelperImpl implements Diffe
      * 
      * @generated
      */
-    public void setSkip( final boolean newSkip ) {
+    @Override
+	public void setSkip( final boolean newSkip ) {
         final boolean oldSkip = skip;
         skip = newSkip;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
@@ -430,7 +439,8 @@ public class DifferenceDescriptorImpl extends MappingHelperImpl implements Diffe
      * 
      * @generated
      */
-    public void setType( final DifferenceType newType ) {
+    @Override
+	public void setType( final DifferenceType newType ) {
         final DifferenceType oldType = type;
         type = newType == null ? TYPE_EDEFAULT : newType;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,

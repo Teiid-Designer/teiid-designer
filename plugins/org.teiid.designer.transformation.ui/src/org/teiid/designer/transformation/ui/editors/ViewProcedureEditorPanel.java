@@ -263,7 +263,8 @@ public class ViewProcedureEditorPanel  implements RelationalConstants {
         this.nameText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
         this.nameText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         this.nameText.addModifyListener(new ModifyListener() {
-            public void modifyText( final ModifyEvent event ) {
+            @Override
+			public void modifyText( final ModifyEvent event ) {
                 String value = nameText.getText();
                 if (value == null) {
                     value = EMPTY_STRING;
@@ -676,7 +677,8 @@ public class ViewProcedureEditorPanel  implements RelationalConstants {
          * 
          * @see org.eclipse.jface.viewers.EditingSupport#canEdit(java.lang.Object)
          */
-        protected boolean canEdit( Object element ) {
+        @Override
+		protected boolean canEdit( Object element ) {
             return true;
         }
 
@@ -685,7 +687,8 @@ public class ViewProcedureEditorPanel  implements RelationalConstants {
          * 
          * @see org.eclipse.jface.viewers.EditingSupport#getCellEditor(java.lang.Object)
          */
-        protected CellEditor getCellEditor( Object element ) {
+        @Override
+		protected CellEditor getCellEditor( Object element ) {
             return editor;
         }
 
@@ -694,7 +697,8 @@ public class ViewProcedureEditorPanel  implements RelationalConstants {
          * 
          * @see org.eclipse.jface.viewers.EditingSupport#getValue(java.lang.Object)
          */
-        protected Object getValue( Object element ) {
+        @Override
+		protected Object getValue( Object element ) {
             if (element instanceof RelationalParameter) {
                 return ((RelationalParameter)element).getName();
             }
@@ -707,7 +711,8 @@ public class ViewProcedureEditorPanel  implements RelationalConstants {
          * @see org.eclipse.jface.viewers.EditingSupport#setValue(java.lang.Object,
          *      java.lang.Object)
          */
-        protected void setValue( Object element,
+        @Override
+		protected void setValue( Object element,
                                  Object value ) {
             if (element instanceof RelationalParameter) {
                 String oldValue = ((RelationalParameter)element).getName();
@@ -741,7 +746,8 @@ public class ViewProcedureEditorPanel  implements RelationalConstants {
          * 
          * @see org.eclipse.jface.viewers.EditingSupport#canEdit(java.lang.Object)
          */
-        protected boolean canEdit( Object element ) {
+        @Override
+		protected boolean canEdit( Object element ) {
             return true;
         }
 
@@ -750,7 +756,8 @@ public class ViewProcedureEditorPanel  implements RelationalConstants {
          * 
          * @see org.eclipse.jface.viewers.EditingSupport#getCellEditor(java.lang.Object)
          */
-        protected CellEditor getCellEditor( Object element ) {
+        @Override
+		protected CellEditor getCellEditor( Object element ) {
             return editor;
         }
 
@@ -759,7 +766,8 @@ public class ViewProcedureEditorPanel  implements RelationalConstants {
          * 
          * @see org.eclipse.jface.viewers.EditingSupport#getValue(java.lang.Object)
          */
-        protected Object getValue( Object element ) {
+        @Override
+		protected Object getValue( Object element ) {
             if (element instanceof RelationalParameter) {
                 return Integer.toString(((RelationalParameter)element).getLength());
             }
@@ -772,7 +780,8 @@ public class ViewProcedureEditorPanel  implements RelationalConstants {
          * @see org.eclipse.jface.viewers.EditingSupport#setValue(java.lang.Object,
          *      java.lang.Object)
          */
-        protected void setValue( Object element,
+        @Override
+		protected void setValue( Object element,
                                  Object value ) {
             if (element instanceof RelationalParameter) {
                 int oldValue = ((RelationalParameter)element).getLength();

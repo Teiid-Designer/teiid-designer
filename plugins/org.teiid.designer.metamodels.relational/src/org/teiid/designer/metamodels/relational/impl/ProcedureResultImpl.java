@@ -58,7 +58,8 @@ public class ProcedureResultImpl extends ColumnSetImpl implements ProcedureResul
      * <!-- end-user-doc -->
      * @generated
      */
-    public Procedure getProcedure() {
+    @Override
+	public Procedure getProcedure() {
         if (eContainerFeatureID != RelationalPackage.PROCEDURE_RESULT__PROCEDURE) return null;
         return (Procedure)eContainer;
     }
@@ -68,7 +69,8 @@ public class ProcedureResultImpl extends ColumnSetImpl implements ProcedureResul
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setProcedure(Procedure newProcedure) {
+    @Override
+	public void setProcedure(Procedure newProcedure) {
         if (newProcedure != eContainer || (eContainerFeatureID != RelationalPackage.PROCEDURE_RESULT__PROCEDURE && newProcedure != null)) {
             if (EcoreUtil.isAncestor(this, newProcedure))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$

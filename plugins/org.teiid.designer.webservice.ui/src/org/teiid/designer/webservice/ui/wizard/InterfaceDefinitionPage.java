@@ -150,7 +150,8 @@ public class InterfaceDefinitionPage extends WizardPage
      * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
      * @since 4.2
      */
-    public void createControl( Composite theParent ) {
+    @Override
+	public void createControl( Composite theParent ) {
         Composite primaryContainer = WidgetFactory.createPanel(theParent, SWT.NONE, GridData.FILL_BOTH);
         primaryContainer.setLayout(new GridLayout(1, false));
         setControl(primaryContainer);
@@ -196,7 +197,8 @@ public class InterfaceDefinitionPage extends WizardPage
         GridData gd = new GridData(GridData.FILL_HORIZONTAL);
         locationContainerText.setLayoutData(gd);
         locationContainerText.addModifyListener(new ModifyListener() {
-            public void modifyText( ModifyEvent e ) {
+            @Override
+			public void modifyText( ModifyEvent e ) {
                 setPageStatus();
             }
         });
@@ -312,7 +314,8 @@ public class InterfaceDefinitionPage extends WizardPage
 
         /** ModelNameChangeListener */
         modelNameChangeListener = new ModifyListener() {
-            public void modifyText( ModifyEvent e ) {
+            @Override
+			public void modifyText( ModifyEvent e ) {
                 handleModelNameChanged();
             }
         };
@@ -341,7 +344,8 @@ public class InterfaceDefinitionPage extends WizardPage
 
         /** InterfaceNameChangeListener */
         interfaceNameChangeListener = new ModifyListener() {
-            public void modifyText( ModifyEvent e ) {
+            @Override
+			public void modifyText( ModifyEvent e ) {
                 handleInterfaceNameChanged();
             }
         };
@@ -370,7 +374,8 @@ public class InterfaceDefinitionPage extends WizardPage
 
         /** OperationNameChangeListener */
         operationNameChangeListener = new ModifyListener() {
-            public void modifyText( ModifyEvent e ) {
+            @Override
+			public void modifyText( ModifyEvent e ) {
                 handleOperationNameChanged();
             }
         };
@@ -582,7 +587,8 @@ public class InterfaceDefinitionPage extends WizardPage
      */
     final ISelectionStatusValidator interfaceValidator = new ISelectionStatusValidator() {
 
-        public IStatus validate( final Object[] selection ) {
+        @Override
+		public IStatus validate( final Object[] selection ) {
             if (selection.length == 1 && selection[0] instanceof EObject && WebServiceUtil.isWebServiceInterface(selection[0])) {
                 ModelResource mr = ModelUtilities.getModelResourceForModelObject((EObject)selection[0]);
                 if (mr != null && mr.isReadOnly()) return new Status(IStatus.ERROR, PLUGIN_ID, 0,
@@ -638,7 +644,8 @@ public class InterfaceDefinitionPage extends WizardPage
 
         /** InputMessageNameChangeListener */
         operationInputMessageNameChangeListener = new ModifyListener() {
-            public void modifyText( ModifyEvent e ) {
+            @Override
+			public void modifyText( ModifyEvent e ) {
                 handleOperationInputMessageNameChanged();
             }
         };
@@ -670,7 +677,8 @@ public class InterfaceDefinitionPage extends WizardPage
 
         /** InputMessageNameChangeListener */
         operationOutputMessageNameChangeListener = new ModifyListener() {
-            public void modifyText( ModifyEvent e ) {
+            @Override
+			public void modifyText( ModifyEvent e ) {
                 handleOperationOutputMessageNameChanged();
             }
         };
@@ -988,7 +996,8 @@ public class InterfaceDefinitionPage extends WizardPage
      * 
      * @param e the EventObject
      */
-    public void processEvent( EventObject e ) {
+    @Override
+	public void processEvent( EventObject e ) {
         Object source = e.getSource();
         if (source != null) {
             if (source.equals(this.operationInputElemChooser)) {

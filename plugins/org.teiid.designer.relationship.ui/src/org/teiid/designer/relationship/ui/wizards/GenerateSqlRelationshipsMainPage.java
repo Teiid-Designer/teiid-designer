@@ -158,7 +158,8 @@ public class GenerateSqlRelationshipsMainPage extends WizardDataTransferPage imp
      * 
      * @param event Event
      */
-    public void handleEvent( Event event ) {
+    @Override
+	public void handleEvent( Event event ) {
         if (!initializing) {
             boolean validate = false;
 
@@ -279,7 +280,8 @@ public class GenerateSqlRelationshipsMainPage extends WizardDataTransferPage imp
      * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
      * @since 4.2
      */
-    public void createControl( Composite parent ) {
+    @Override
+	public void createControl( Composite parent ) {
         initializeDialogUnits(parent);
 
         Composite composite = new Composite(parent, SWT.NULL);
@@ -806,25 +808,31 @@ public class GenerateSqlRelationshipsMainPage extends WizardDataTransferPage imp
         }
     }
 
-    public Object[] addButtonSelected() {
+    @Override
+	public Object[] addButtonSelected() {
         return null;
     }
 
-    public void downButtonSelected( IStructuredSelection selection ) {
+    @Override
+	public void downButtonSelected( IStructuredSelection selection ) {
     }
 
-    public Object editButtonSelected( IStructuredSelection selection ) {
+    @Override
+	public Object editButtonSelected( IStructuredSelection selection ) {
         return null;
     }
 
-    public void itemsSelected( IStructuredSelection selection ) {
+    @Override
+	public void itemsSelected( IStructuredSelection selection ) {
     }
 
-    public Object[] removeButtonSelected( IStructuredSelection selection ) {
+    @Override
+	public Object[] removeButtonSelected( IStructuredSelection selection ) {
         return null;
     }
 
-    public void upButtonSelected( IStructuredSelection selection ) {
+    @Override
+	public void upButtonSelected( IStructuredSelection selection ) {
     }
 
     public void setSelection( Object selection ) {

@@ -44,6 +44,7 @@ public class ObjectManagerImpl implements ObjectManager {
 	/**
 	 * @see org.teiid.designer.core.container.ObjectManager#findEObject(java.lang.String)
 	 */
+	@Override
 	public EObject findEObject( String id ) {
 		CoreArgCheck.isNotNull(id);
 
@@ -67,6 +68,7 @@ public class ObjectManagerImpl implements ObjectManager {
 	 *
 	 * @see org.teiid.designer.core.container.ObjectManager#findEObject(java.lang.String, org.eclipse.emf.ecore.resource.Resource)
 	 */
+	@Override
 	public EObject findEObject( String id,
 	                            Resource resource ) {
 		CoreArgCheck.isNotNull(resource);
@@ -78,6 +80,7 @@ public class ObjectManagerImpl implements ObjectManager {
 	 *
 	 * @see org.teiid.designer.core.container.ObjectManager#getObjectId(org.eclipse.emf.ecore.EObject)
 	 */
+	@Override
 	public String getObjectId( EObject object ) {
 		CoreArgCheck.isNotNull(object);
 		Resource resrc = object.eResource();
@@ -136,6 +139,7 @@ public class ObjectManagerImpl implements ObjectManager {
 	 *
 	 * @see org.teiid.designer.core.container.ObjectManager#setObjectId(org.eclipse.emf.ecore.EObject, java.lang.String)
 	 */
+	@Override
 	public void setObjectId( EObject object,
 	                         String uuid ) {
 		Resource resrc = object.eResource();

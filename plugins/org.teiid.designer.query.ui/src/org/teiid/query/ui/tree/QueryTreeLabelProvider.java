@@ -82,7 +82,8 @@ public class QueryTreeLabelProvider implements ILabelProvider, UiConstants {
      * @see org.eclipse.jface.viewers.ILabelProvider#getImage(java.lang.Object)
      * @since 4.2
      */
-    public Image getImage(Object element) {
+    @Override
+	public Image getImage(Object element) {
         
         if ( element instanceof LanguageObject ) {
             if ( element instanceof SetQuery ) {
@@ -126,7 +127,8 @@ public class QueryTreeLabelProvider implements ILabelProvider, UiConstants {
      * @see org.eclipse.jface.viewers.ILabelProvider#getText(java.lang.Object)
      * @since 4.2
      */
-    public String getText(Object element) {
+    @Override
+	public String getText(Object element) {
         if ( element instanceof LanguageObject ) {
             if ( element instanceof SetQuery ) {
                 return UNION;
@@ -146,21 +148,24 @@ public class QueryTreeLabelProvider implements ILabelProvider, UiConstants {
      * @see org.eclipse.jface.viewers.IBaseLabelProvider#dispose()
      * @since 4.2
      */
-    public void dispose() {
+    @Override
+	public void dispose() {
     }
 
     /** 
      * @see org.eclipse.jface.viewers.IBaseLabelProvider#addListener(org.eclipse.jface.viewers.ILabelProviderListener)
      * @since 4.2
      */
-    public void addListener(ILabelProviderListener listener) {
+    @Override
+	public void addListener(ILabelProviderListener listener) {
     }
 
     /** 
      * @see org.eclipse.jface.viewers.IBaseLabelProvider#isLabelProperty(java.lang.Object, java.lang.String)
      * @since 4.2
      */
-    public boolean isLabelProperty(Object element,
+    @Override
+	public boolean isLabelProperty(Object element,
                                    String property) {
         return false;
     }
@@ -169,7 +174,8 @@ public class QueryTreeLabelProvider implements ILabelProvider, UiConstants {
      * @see org.eclipse.jface.viewers.IBaseLabelProvider#removeListener(org.eclipse.jface.viewers.ILabelProviderListener)
      * @since 4.2
      */
-    public void removeListener(ILabelProviderListener listener) {
+    @Override
+	public void removeListener(ILabelProviderListener listener) {
     }
     
 

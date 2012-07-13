@@ -183,13 +183,15 @@ public final class ConstantEditor extends AbstractLanguageObjectEditor {
             txfValue.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
             txfValue.addModifyListener(new ModifyListener() {
-                public void modifyText( ModifyEvent theEvent ) {
+                @Override
+				public void modifyText( ModifyEvent theEvent ) {
                     handleTextChange();
                 }
             });
 
             txfValue.addVerifyListener(new VerifyListener() {
-                public void verifyText( VerifyEvent theEvent ) {
+                @Override
+				public void verifyText( VerifyEvent theEvent ) {
                     String text = theEvent.text;
 
                     if ((text != null) && (text.length() > 0)) {
@@ -207,7 +209,8 @@ public final class ConstantEditor extends AbstractLanguageObjectEditor {
             });
 
             txfValue.addTraverseListener(new TraverseListener() {
-                public void keyTraversed( TraverseEvent theEvent ) {
+                @Override
+				public void keyTraversed( TraverseEvent theEvent ) {
                     // stops the enter key from putting in invisible characters
                     if (theEvent.detail == SWT.TRAVERSE_RETURN) {
                         theEvent.detail = SWT.TRAVERSE_NONE;
@@ -504,7 +507,8 @@ public final class ConstantEditor extends AbstractLanguageObjectEditor {
         public void initialize() {
             // set first selection
             Display.getDefault().asyncExec(new Runnable() {
-                public void run() {
+                @Override
+				public void run() {
                     modelChanged(new LanguageObjectEditorModelEvent(model, ConstantEditorModel.TYPE));
                 }
             });
@@ -513,7 +517,8 @@ public final class ConstantEditor extends AbstractLanguageObjectEditor {
         /**
          * @see org.teiid.query.ui.builder.model.ILanguageObjectEditorModelListener#modelChanged(org.teiid.query.ui.builder.model.LanguageObjectEditorModelEvent)
          */
-        public void modelChanged( LanguageObjectEditorModelEvent theEvent ) {
+        @Override
+		public void modelChanged( LanguageObjectEditorModelEvent theEvent ) {
             String type = theEvent.getType();
 
             if (type.equals(LanguageObjectEditorModelEvent.SAVED)) {

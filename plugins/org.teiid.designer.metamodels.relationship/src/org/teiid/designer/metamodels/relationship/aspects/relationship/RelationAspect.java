@@ -33,6 +33,7 @@ public class RelationAspect
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.relationship.aspect.relationship.RelationshipAspect#getSources(org.eclipse.emf.ecore.EObject)
 	 */
+	@Override
 	public Collection getSources(EObject eObject) {
 		CoreArgCheck.isInstanceOf(Relationship.class, eObject);
 		Relationship relationship = (Relationship) eObject;
@@ -42,6 +43,7 @@ public class RelationAspect
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.relationship.aspect.relationship.RelationshipAspect#getTargets(org.eclipse.emf.ecore.EObject)
 	 */
+	@Override
 	public Collection getTargets(EObject eObject) {
 		CoreArgCheck.isInstanceOf(Relationship.class, eObject);
 		Relationship relationship = (Relationship) eObject;
@@ -51,6 +53,7 @@ public class RelationAspect
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.relationship.aspect.relationship.RelationshipAspect#getype(org.eclipse.emf.ecore.EObject)
 	 */
+	@Override
 	public Object getType(EObject eObject) {
 		CoreArgCheck.isInstanceOf(Relationship.class, eObject);
 		Relationship relationship = (Relationship) eObject;
@@ -60,6 +63,7 @@ public class RelationAspect
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.relationship.aspect.relationship.RelationshipAspect#getSourceRole(org.eclipse.emf.ecore.EObject)
 	 */
+	@Override
 	public Object getSourceRole(EObject eObject) {
 		CoreArgCheck.isInstanceOf(Relationship.class, eObject);
 		Relationship relationship = (Relationship) eObject;
@@ -69,6 +73,7 @@ public class RelationAspect
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.relationship.aspect.relationship.RelationshipAspect#getTargetRole(org.eclipse.emf.ecore.EObject)
 	 */
+	@Override
 	public Object getTargetRole(EObject eObject) {
 		CoreArgCheck.isInstanceOf(Relationship.class, eObject);
 		Relationship relationship = (Relationship) eObject;
@@ -78,6 +83,7 @@ public class RelationAspect
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.relationship.aspect.relationship.RelationshipAspect#isValid(org.eclipse.emf.ecore.EObject)
 	 */
+	@Override
 	public IStatus isValid(EObject eObject) {
 		CoreArgCheck.isInstanceOf(Relationship.class, eObject);
 		Relationship relationship = (Relationship) eObject;
@@ -87,6 +93,7 @@ public class RelationAspect
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.relationship.aspect.relationship.RelationshipMetamodelAspect#isRecordType(char)
 	 */
+	@Override
 	public boolean isRecordType(char recordType) {
 		return (recordType == IndexConstants.SEARCH_RECORD_TYPE.RELATIONSHIP || recordType == IndexConstants.SEARCH_RECORD_TYPE.RELATED_OBJECT);
 	}
@@ -94,6 +101,7 @@ public class RelationAspect
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.core.relationship.metamodel.aspect.relationship.RelationshipAspect#getSourceRoleName(org.eclipse.emf.ecore.EObject)
 	 */
+	@Override
 	public String getSourceRoleName(EObject eObject) {
 		RelationshipRole sourceRole = (RelationshipRole) getSourceRole(eObject);
 		if(sourceRole != null) {
@@ -105,6 +113,7 @@ public class RelationAspect
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.core.relationship.metamodel.aspect.relationship.RelationshipAspect#getTargetRoleName(org.eclipse.emf.ecore.EObject)
 	 */
+	@Override
 	public String getTargetRoleName(EObject eObject) {
 		RelationshipRole targetRole = (RelationshipRole) getTargetRole(eObject);
 		if(targetRole != null) {
@@ -116,6 +125,7 @@ public class RelationAspect
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.core.relationship.metamodel.aspect.relationship.RelationshipAspect#getTypeName(org.eclipse.emf.ecore.EObject)
 	 */
+	@Override
 	public String getTypeName(EObject eObject) {
 		RelationshipType type = (RelationshipType) getType(eObject);
 		if(type != null) {

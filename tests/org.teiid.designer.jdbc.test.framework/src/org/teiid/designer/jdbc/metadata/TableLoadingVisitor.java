@@ -46,7 +46,8 @@ public class TableLoadingVisitor implements JdbcNodeVisitor {
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.metadata.JdbcNodeVisitor#visit(org.teiid.designer.jdbc.metadata.JdbcNode)
      */
-    public boolean visit(JdbcNode node) throws JdbcException {
+    @Override
+	public boolean visit(JdbcNode node) throws JdbcException {
         if ( node instanceof JdbcTable ) {
             final JdbcTable table = (JdbcTable)node;
 

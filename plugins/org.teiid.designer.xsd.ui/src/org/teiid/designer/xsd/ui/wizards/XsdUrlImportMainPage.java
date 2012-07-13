@@ -96,7 +96,8 @@ public class XsdUrlImportMainPage extends AbstractWizardPage implements IOverwri
         return ModelerXsdUiConstants.Util.getString(I18N_PREFIX + SEPARATOR + id);
     }
 
-    public void createControl( Composite theParent ) {
+    @Override
+	public void createControl( Composite theParent ) {
         final int COLUMNS = 1;
         Composite pnlMain = WidgetFactory.createPanel(theParent, SWT.NONE, GridData.FILL_BOTH);
         pnlMain.setLayout(new GridLayout(COLUMNS, false));
@@ -178,7 +179,8 @@ public class XsdUrlImportMainPage extends AbstractWizardPage implements IOverwri
         // container name entry field
         containerNameField = new Text(containerGroup, SWT.SINGLE | SWT.BORDER);
         containerNameField.addModifyListener(new ModifyListener() {
-            public void modifyText( ModifyEvent e ) {
+            @Override
+			public void modifyText( ModifyEvent e ) {
                 handleModifyText();
             }
         });
@@ -191,11 +193,13 @@ public class XsdUrlImportMainPage extends AbstractWizardPage implements IOverwri
         containerBrowseButton.setText(getString("browse")); //$NON-NLS-1$
         containerBrowseButton.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
         containerBrowseButton.addSelectionListener(new SelectionListener() {
-            public void widgetSelected( SelectionEvent e ) {
+            @Override
+			public void widgetSelected( SelectionEvent e ) {
                 handleContainerBrowseButtonPressed();
             }
 
-            public void widgetDefaultSelected( SelectionEvent e ) {
+            @Override
+			public void widgetDefaultSelected( SelectionEvent e ) {
             }
         });
         containerBrowseButton.setFont(parent.getFont());
@@ -334,14 +338,17 @@ public class XsdUrlImportMainPage extends AbstractWizardPage implements IOverwri
         this.viewer = WidgetFactory.createTableViewer(pnl, SWT.V_SCROLL | SWT.H_SCROLL | SWT.MULTI);
         this.viewer.setContentProvider(new IStructuredContentProvider() {
 
-            public void dispose() {
+            @Override
+			public void dispose() {
             }
 
-            public Object[] getElements( Object theInputElement ) {
+            @Override
+			public Object[] getElements( Object theInputElement ) {
                 return urlToUserInfo.keySet().toArray();
             }
 
-            public void inputChanged( Viewer theViewer,
+            @Override
+			public void inputChanged( Viewer theViewer,
                                       Object theOldInput,
                                       Object theNewInput ) {
             }
@@ -354,7 +361,8 @@ public class XsdUrlImportMainPage extends AbstractWizardPage implements IOverwri
         };
         this.viewer.setLabelProvider(labelProvider);
         this.viewer.addSelectionChangedListener(new ISelectionChangedListener() {
-            public void selectionChanged( SelectionChangedEvent theEvent ) {
+            @Override
+			public void selectionChanged( SelectionChangedEvent theEvent ) {
                 handleTableSelectionChanged();
             }
         });
@@ -463,7 +471,8 @@ public class XsdUrlImportMainPage extends AbstractWizardPage implements IOverwri
         addDependentXsdsCheckbox.setSelection(true);
     }
 
-    public String queryOverwrite( String pathString ) {
+    @Override
+	public String queryOverwrite( String pathString ) {
 
         Path path = new Path(pathString);
 
@@ -486,7 +495,8 @@ public class XsdUrlImportMainPage extends AbstractWizardPage implements IOverwri
         // run in syncExec because callback is from an operation,
         // which is probably not running in the UI thread.
         getControl().getDisplay().syncExec(new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 dialog.open();
             }
         });

@@ -64,7 +64,8 @@ public class XmlResultImpl extends EObjectImpl implements XmlResult {
      * <!-- end-user-doc -->
      * @generated
      */
-    public XmlOutput getOutput() {
+    @Override
+	public XmlOutput getOutput() {
         if (eContainerFeatureID != XmlServicePackage.XML_RESULT__OUTPUT) return null;
         return (XmlOutput)eContainer;
     }
@@ -74,7 +75,8 @@ public class XmlResultImpl extends EObjectImpl implements XmlResult {
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setOutput(XmlOutput newOutput) {
+    @Override
+	public void setOutput(XmlOutput newOutput) {
         if (newOutput != eContainer || (eContainerFeatureID != XmlServicePackage.XML_RESULT__OUTPUT && newOutput != null)) {
             if (EcoreUtil.isAncestor(this, newOutput))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$

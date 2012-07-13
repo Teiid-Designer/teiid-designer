@@ -42,7 +42,8 @@ public class StringID implements ObjectID, Serializable {
      * Get hash code for object
      * @return Hash code
      */
-    public int hashCode() {
+    @Override
+	public int hashCode() {
         return id.hashCode();
     }
 
@@ -54,7 +55,8 @@ public class StringID implements ObjectID, Serializable {
      * @param obj the object that this instance is to be compared to.
      * @return whether the object is equal to this object.
      */
-    public boolean equals(Object obj) {
+    @Override
+	public boolean equals(Object obj) {
         // Check if instances are identical ...
         if ( this == obj ) {
             return true;
@@ -85,7 +87,8 @@ public class StringID implements ObjectID, Serializable {
      * @throws ClassCastException if the specified object's type prevents it
      *      from being compared to this instance.
      */
-    public int compareTo(Object obj) {
+    @Override
+	public int compareTo(Object obj) {
         StringID that = (StringID) obj;     // May throw ClassCastException
         Assertion.isNotNull(obj);
         return this.id.compareTo(that.id);
@@ -95,13 +98,15 @@ public class StringID implements ObjectID, Serializable {
      * Returns a string representing the current state of the object.
      * @return the string representation of this instance.
      */
-    public String toString(){
+    @Override
+	public String toString(){
         return PROTOCOL + ObjectID.DELIMITER + this.id;
     }
     /**
      * @see org.teiid.core.id.ObjectID#toString(char)
      */
-    public String toString(char delim) {
+    @Override
+	public String toString(char delim) {
         return PROTOCOL + delim + this.id;
     }
 
@@ -109,7 +114,8 @@ public class StringID implements ObjectID, Serializable {
      * Return the name of the protocol that this factory uses.
      * @return the protocol name
      */
-    public String getProtocol() {
+    @Override
+	public String getProtocol() {
 	    return PROTOCOL;
     }
 

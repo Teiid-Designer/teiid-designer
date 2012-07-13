@@ -74,7 +74,8 @@ class MappingLabelDecorator implements
      * 
      * @see org.eclipse.jface.viewers.ILabelDecorator#decorateImage(org.eclipse.swt.graphics.Image, java.lang.Object)
      */
-    public Image decorateImage(Image baseImage,
+    @Override
+	public Image decorateImage(Image baseImage,
                                Object object) {
         if (!(object instanceof Mapping)) {
             return baseImage;
@@ -124,7 +125,8 @@ class MappingLabelDecorator implements
      * 
      * @see org.eclipse.jface.viewers.ILabelDecorator#decorateText(java.lang.String, java.lang.Object)
      */
-    public String decorateText(String text,
+    @Override
+	public String decorateText(String text,
                                Object element) {
         return text;
     }
@@ -134,7 +136,8 @@ class MappingLabelDecorator implements
      * 
      * @see org.eclipse.jface.viewers.IBaseLabelProvider#addListener(org.eclipse.jface.viewers.ILabelProviderListener)
      */
-    public void addListener(ILabelProviderListener listener) {
+    @Override
+	public void addListener(ILabelProviderListener listener) {
 
     }
 
@@ -143,7 +146,8 @@ class MappingLabelDecorator implements
      * 
      * @see org.eclipse.jface.viewers.IBaseLabelProvider#dispose()
      */
-    public void dispose() {
+    @Override
+	public void dispose() {
 
     }
 
@@ -152,7 +156,8 @@ class MappingLabelDecorator implements
      * 
      * @see org.eclipse.jface.viewers.IBaseLabelProvider#isLabelProperty(java.lang.Object, java.lang.String)
      */
-    public boolean isLabelProperty(Object element,
+    @Override
+	public boolean isLabelProperty(Object element,
                                    String property) {
         return false;
     }
@@ -172,7 +177,8 @@ class MappingLabelDecorator implements
      * 
      * @see org.eclipse.jface.viewers.IBaseLabelProvider#removeListener(org.eclipse.jface.viewers.ILabelProviderListener)
      */
-    public void removeListener(ILabelProviderListener listener) {
+    @Override
+	public void removeListener(ILabelProviderListener listener) {
 
     }
 

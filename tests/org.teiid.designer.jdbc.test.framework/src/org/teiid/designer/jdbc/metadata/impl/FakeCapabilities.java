@@ -39,532 +39,608 @@ public class FakeCapabilities implements Capabilities {
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#supportsCatalogs()
      */
-    public boolean supportsCatalogs() {
+    @Override
+	public boolean supportsCatalogs() {
         return this.supportsCatalogs;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#supportsSchemas()
      */
-    public boolean supportsSchemas() {
+    @Override
+	public boolean supportsSchemas() {
         return this.supportsSchemas;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#getTableTypes()
      */
-    public String[] getTableTypes() {
+    @Override
+	public String[] getTableTypes() {
         return new String[] {"Table", "View"}; //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#allProceduresAreCallable()
      */
-    public boolean allProceduresAreCallable() {
+    @Override
+	public boolean allProceduresAreCallable() {
         return false;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#allTablesAreSelectable()
      */
-    public boolean allTablesAreSelectable() {
+    @Override
+	public boolean allTablesAreSelectable() {
         return false;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#dataDefinitionCausesTransactionCommit()
      */
-    public boolean dataDefinitionCausesTransactionCommit() {
+    @Override
+	public boolean dataDefinitionCausesTransactionCommit() {
         return false;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#dataDefinitionIgnoredInTransactions()
      */
-    public boolean dataDefinitionIgnoredInTransactions() {
+    @Override
+	public boolean dataDefinitionIgnoredInTransactions() {
         return false;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#deletesAreDetected(int)
      */
-    public boolean deletesAreDetected( int type ) {
+    @Override
+	public boolean deletesAreDetected( int type ) {
         return false;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#doesMaxRowSizeIncludeBlobs()
      */
-    public boolean doesMaxRowSizeIncludeBlobs() {
+    @Override
+	public boolean doesMaxRowSizeIncludeBlobs() {
         return false;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#getCatalogSeparator()
      */
-    public String getCatalogSeparator() {
+    @Override
+	public String getCatalogSeparator() {
         return null;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#getCatalogTerm()
      */
-    public String getCatalogTerm() {
+    @Override
+	public String getCatalogTerm() {
         return null;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#getExtraNameCharacters()
      */
-    public String getExtraNameCharacters() {
+    @Override
+	public String getExtraNameCharacters() {
         return null;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#getIdentifierQuoteString()
      */
-    public String getIdentifierQuoteString() {
+    @Override
+	public String getIdentifierQuoteString() {
         return null;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#getMaxBinaryLiteralLength()
      */
-    public int getMaxBinaryLiteralLength() {
+    @Override
+	public int getMaxBinaryLiteralLength() {
         return 0;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#getMaxCatalogNameLength()
      */
-    public int getMaxCatalogNameLength() {
+    @Override
+	public int getMaxCatalogNameLength() {
         return 0;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#getMaxCharLiteralLength()
      */
-    public int getMaxCharLiteralLength() {
+    @Override
+	public int getMaxCharLiteralLength() {
         return 0;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#getMaxColumnNameLength()
      */
-    public int getMaxColumnNameLength() {
+    @Override
+	public int getMaxColumnNameLength() {
         return 0;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#getMaxColumnsInGroupBy()
      */
-    public int getMaxColumnsInGroupBy() {
+    @Override
+	public int getMaxColumnsInGroupBy() {
         return 0;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#getMaxColumnsInIndex()
      */
-    public int getMaxColumnsInIndex() {
+    @Override
+	public int getMaxColumnsInIndex() {
         return 0;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#getMaxColumnsInOrderBy()
      */
-    public int getMaxColumnsInOrderBy() {
+    @Override
+	public int getMaxColumnsInOrderBy() {
         return 0;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#getMaxColumnsInSelect()
      */
-    public int getMaxColumnsInSelect() {
+    @Override
+	public int getMaxColumnsInSelect() {
         return 0;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#getMaxColumnsInTable()
      */
-    public int getMaxColumnsInTable() {
+    @Override
+	public int getMaxColumnsInTable() {
         return 0;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#getMaxConnections()
      */
-    public int getMaxConnections() {
+    @Override
+	public int getMaxConnections() {
         return 0;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#getMaxCursorNameLength()
      */
-    public int getMaxCursorNameLength() {
+    @Override
+	public int getMaxCursorNameLength() {
         return 0;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#getMaxIndexLength()
      */
-    public int getMaxIndexLength() {
+    @Override
+	public int getMaxIndexLength() {
         return 0;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#getMaxProcedureNameLength()
      */
-    public int getMaxProcedureNameLength() {
+    @Override
+	public int getMaxProcedureNameLength() {
         return 0;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#getMaxRowSize()
      */
-    public int getMaxRowSize() {
+    @Override
+	public int getMaxRowSize() {
         return 0;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#getMaxSchemaNameLength()
      */
-    public int getMaxSchemaNameLength() {
+    @Override
+	public int getMaxSchemaNameLength() {
         return 0;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#getMaxStatementLength()
      */
-    public int getMaxStatementLength() {
+    @Override
+	public int getMaxStatementLength() {
         return 0;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#getMaxStatements()
      */
-    public int getMaxStatements() {
+    @Override
+	public int getMaxStatements() {
         return 0;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#getMaxTableNameLength()
      */
-    public int getMaxTableNameLength() {
+    @Override
+	public int getMaxTableNameLength() {
         return 0;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#getMaxTablesInSelect()
      */
-    public int getMaxTablesInSelect() {
+    @Override
+	public int getMaxTablesInSelect() {
         return 0;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#getMaxUserNameLength()
      */
-    public int getMaxUserNameLength() {
+    @Override
+	public int getMaxUserNameLength() {
         return 0;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#getNumericFunctions()
      */
-    public String getNumericFunctions() {
+    @Override
+	public String getNumericFunctions() {
         return null;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#getProcedureTerm()
      */
-    public String getProcedureTerm() {
+    @Override
+	public String getProcedureTerm() {
         return null;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#getSchemaTerm()
      */
-    public String getSchemaTerm() {
+    @Override
+	public String getSchemaTerm() {
         return null;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#getSearchStringEscape()
      */
-    public String getSearchStringEscape() {
+    @Override
+	public String getSearchStringEscape() {
         return null;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#getSQLKeywords()
      */
-    public String getSQLKeywords() {
+    @Override
+	public String getSQLKeywords() {
         return null;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#getStringFunctions()
      */
-    public String getStringFunctions() {
+    @Override
+	public String getStringFunctions() {
         return null;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#getSystemFunctions()
      */
-    public String getSystemFunctions() {
+    @Override
+	public String getSystemFunctions() {
         return null;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#getTimeDateFunctions()
      */
-    public String getTimeDateFunctions() {
+    @Override
+	public String getTimeDateFunctions() {
         return null;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#getTypeInfo()
      */
-    public ResultSet getTypeInfo() {
+    @Override
+	public ResultSet getTypeInfo() {
         return null;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#insertsAreDetected(int)
      */
-    public boolean insertsAreDetected( int type ) {
+    @Override
+	public boolean insertsAreDetected( int type ) {
         return false;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#isCatalogAtStart()
      */
-    public boolean isCatalogAtStart() {
+    @Override
+	public boolean isCatalogAtStart() {
         return false;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#isReadOnly()
      */
-    public boolean isReadOnly() {
+    @Override
+	public boolean isReadOnly() {
         return false;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#nullPlusNonNullIsNull()
      */
-    public boolean nullPlusNonNullIsNull() {
+    @Override
+	public boolean nullPlusNonNullIsNull() {
         return false;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#nullsAreSortedAtEnd()
      */
-    public boolean nullsAreSortedAtEnd() {
+    @Override
+	public boolean nullsAreSortedAtEnd() {
         return false;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#nullsAreSortedAtStart()
      */
-    public boolean nullsAreSortedAtStart() {
+    @Override
+	public boolean nullsAreSortedAtStart() {
         return false;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#nullsAreSortedHigh()
      */
-    public boolean nullsAreSortedHigh() {
+    @Override
+	public boolean nullsAreSortedHigh() {
         return false;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#nullsAreSortedLow()
      */
-    public boolean nullsAreSortedLow() {
+    @Override
+	public boolean nullsAreSortedLow() {
         return false;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#othersDeletesAreVisible(int)
      */
-    public boolean othersDeletesAreVisible( int type ) {
+    @Override
+	public boolean othersDeletesAreVisible( int type ) {
         return false;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#othersInsertsAreVisible(int)
      */
-    public boolean othersInsertsAreVisible( int type ) {
+    @Override
+	public boolean othersInsertsAreVisible( int type ) {
         return false;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#othersUpdatesAreVisible(int)
      */
-    public boolean othersUpdatesAreVisible( int type ) {
+    @Override
+	public boolean othersUpdatesAreVisible( int type ) {
         return false;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#ownDeletesAreVisible(int)
      */
-    public boolean ownDeletesAreVisible( int type ) {
+    @Override
+	public boolean ownDeletesAreVisible( int type ) {
         return false;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#ownInsertsAreVisible(int)
      */
-    public boolean ownInsertsAreVisible( int type ) {
+    @Override
+	public boolean ownInsertsAreVisible( int type ) {
         return false;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#ownUpdatesAreVisible(int)
      */
-    public boolean ownUpdatesAreVisible( int type ) {
+    @Override
+	public boolean ownUpdatesAreVisible( int type ) {
         return false;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#storesLowerCaseIdentifiers()
      */
-    public boolean storesLowerCaseIdentifiers() {
+    @Override
+	public boolean storesLowerCaseIdentifiers() {
         return false;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#storesLowerCaseQuotedIdentifiers()
      */
-    public boolean storesLowerCaseQuotedIdentifiers() {
+    @Override
+	public boolean storesLowerCaseQuotedIdentifiers() {
         return false;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#storesMixedCaseIdentifiers()
      */
-    public boolean storesMixedCaseIdentifiers() {
+    @Override
+	public boolean storesMixedCaseIdentifiers() {
         return false;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#storesMixedCaseQuotedIdentifiers()
      */
-    public boolean storesMixedCaseQuotedIdentifiers() {
+    @Override
+	public boolean storesMixedCaseQuotedIdentifiers() {
         return false;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#storesUpperCaseIdentifiers()
      */
-    public boolean storesUpperCaseIdentifiers() {
+    @Override
+	public boolean storesUpperCaseIdentifiers() {
         return false;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#storesUpperCaseQuotedIdentifiers()
      */
-    public boolean storesUpperCaseQuotedIdentifiers() {
+    @Override
+	public boolean storesUpperCaseQuotedIdentifiers() {
         return false;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#supportsAlterTableWithAddColumn()
      */
-    public boolean supportsAlterTableWithAddColumn() {
+    @Override
+	public boolean supportsAlterTableWithAddColumn() {
         return false;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#supportsAlterTableWithDropColumn()
      */
-    public boolean supportsAlterTableWithDropColumn() {
+    @Override
+	public boolean supportsAlterTableWithDropColumn() {
         return false;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#supportsANSI92EntryLevelSQL()
      */
-    public boolean supportsANSI92EntryLevelSQL() {
+    @Override
+	public boolean supportsANSI92EntryLevelSQL() {
         return false;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#supportsANSI92FullSQL()
      */
-    public boolean supportsANSI92FullSQL() {
+    @Override
+	public boolean supportsANSI92FullSQL() {
         return false;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#supportsANSI92IntermediateSQL()
      */
-    public boolean supportsANSI92IntermediateSQL() {
+    @Override
+	public boolean supportsANSI92IntermediateSQL() {
         return false;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#supportsBatchUpdates()
      */
-    public boolean supportsBatchUpdates() {
+    @Override
+	public boolean supportsBatchUpdates() {
         return false;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#supportsCatalogsInDataManipulation()
      */
-    public boolean supportsCatalogsInDataManipulation() {
+    @Override
+	public boolean supportsCatalogsInDataManipulation() {
         return false;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#supportsCatalogsInIndexDefinitions()
      */
-    public boolean supportsCatalogsInIndexDefinitions() {
+    @Override
+	public boolean supportsCatalogsInIndexDefinitions() {
         return false;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#supportsCatalogsInPrivilegeDefinitions()
      */
-    public boolean supportsCatalogsInPrivilegeDefinitions() {
+    @Override
+	public boolean supportsCatalogsInPrivilegeDefinitions() {
         return false;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#supportsCatalogsInProcedureCalls()
      */
-    public boolean supportsCatalogsInProcedureCalls() {
+    @Override
+	public boolean supportsCatalogsInProcedureCalls() {
         return false;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#supportsCatalogsInTableDefinitions()
      */
-    public boolean supportsCatalogsInTableDefinitions() {
+    @Override
+	public boolean supportsCatalogsInTableDefinitions() {
         return false;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#supportsColumnAliasing()
      */
-    public boolean supportsColumnAliasing() {
+    @Override
+	public boolean supportsColumnAliasing() {
         return false;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#supportsConvert()
      */
-    public boolean supportsConvert() {
+    @Override
+	public boolean supportsConvert() {
         return false;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#supportsConvert(int, int)
      */
-    public boolean supportsConvert( int fromType,
+    @Override
+	public boolean supportsConvert( int fromType,
                                     int toType ) {
         return false;
     }
@@ -572,203 +648,232 @@ public class FakeCapabilities implements Capabilities {
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#supportsCoreSQLGrammar()
      */
-    public boolean supportsCoreSQLGrammar() {
+    @Override
+	public boolean supportsCoreSQLGrammar() {
         return false;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#supportsCorrelatedSubqueries()
      */
-    public boolean supportsCorrelatedSubqueries() {
+    @Override
+	public boolean supportsCorrelatedSubqueries() {
         return false;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#supportsDataDefinitionAndDataManipulationTransactions()
      */
-    public boolean supportsDataDefinitionAndDataManipulationTransactions() {
+    @Override
+	public boolean supportsDataDefinitionAndDataManipulationTransactions() {
         return false;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#supportsDataManipulationTransactionsOnly()
      */
-    public boolean supportsDataManipulationTransactionsOnly() {
+    @Override
+	public boolean supportsDataManipulationTransactionsOnly() {
         return false;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#supportsDifferentTableCorrelationNames()
      */
-    public boolean supportsDifferentTableCorrelationNames() {
+    @Override
+	public boolean supportsDifferentTableCorrelationNames() {
         return false;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#supportsExpressionsInOrderBy()
      */
-    public boolean supportsExpressionsInOrderBy() {
+    @Override
+	public boolean supportsExpressionsInOrderBy() {
         return false;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#supportsExtendedSQLGrammar()
      */
-    public boolean supportsExtendedSQLGrammar() {
+    @Override
+	public boolean supportsExtendedSQLGrammar() {
         return false;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#supportsFullOuterJoins()
      */
-    public boolean supportsFullOuterJoins() {
+    @Override
+	public boolean supportsFullOuterJoins() {
         return false;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#supportsGroupBy()
      */
-    public boolean supportsGroupBy() {
+    @Override
+	public boolean supportsGroupBy() {
         return false;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#supportsGroupByBeyondSelect()
      */
-    public boolean supportsGroupByBeyondSelect() {
+    @Override
+	public boolean supportsGroupByBeyondSelect() {
         return false;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#supportsGroupByUnrelated()
      */
-    public boolean supportsGroupByUnrelated() {
+    @Override
+	public boolean supportsGroupByUnrelated() {
         return false;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#supportsIntegrityEnhancementFacility()
      */
-    public boolean supportsIntegrityEnhancementFacility() {
+    @Override
+	public boolean supportsIntegrityEnhancementFacility() {
         return false;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#supportsLikeEscapeClause()
      */
-    public boolean supportsLikeEscapeClause() {
+    @Override
+	public boolean supportsLikeEscapeClause() {
         return false;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#supportsLimitedOuterJoins()
      */
-    public boolean supportsLimitedOuterJoins() {
+    @Override
+	public boolean supportsLimitedOuterJoins() {
         return false;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#supportsMinimumSQLGrammar()
      */
-    public boolean supportsMinimumSQLGrammar() {
+    @Override
+	public boolean supportsMinimumSQLGrammar() {
         return false;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#supportsMixedCaseIdentifiers()
      */
-    public boolean supportsMixedCaseIdentifiers() {
+    @Override
+	public boolean supportsMixedCaseIdentifiers() {
         return false;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#supportsMixedCaseQuotedIdentifiers()
      */
-    public boolean supportsMixedCaseQuotedIdentifiers() {
+    @Override
+	public boolean supportsMixedCaseQuotedIdentifiers() {
         return false;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#supportsMultipleResultSets()
      */
-    public boolean supportsMultipleResultSets() {
+    @Override
+	public boolean supportsMultipleResultSets() {
         return false;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#supportsMultipleTransactions()
      */
-    public boolean supportsMultipleTransactions() {
+    @Override
+	public boolean supportsMultipleTransactions() {
         return false;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#supportsNonNullableColumns()
      */
-    public boolean supportsNonNullableColumns() {
+    @Override
+	public boolean supportsNonNullableColumns() {
         return false;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#supportsOpenCursorsAcrossCommit()
      */
-    public boolean supportsOpenCursorsAcrossCommit() {
+    @Override
+	public boolean supportsOpenCursorsAcrossCommit() {
         return false;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#supportsOpenCursorsAcrossRollback()
      */
-    public boolean supportsOpenCursorsAcrossRollback() {
+    @Override
+	public boolean supportsOpenCursorsAcrossRollback() {
         return false;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#supportsOpenStatementsAcrossCommit()
      */
-    public boolean supportsOpenStatementsAcrossCommit() {
+    @Override
+	public boolean supportsOpenStatementsAcrossCommit() {
         return false;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#supportsOpenStatementsAcrossRollback()
      */
-    public boolean supportsOpenStatementsAcrossRollback() {
+    @Override
+	public boolean supportsOpenStatementsAcrossRollback() {
         return false;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#supportsOrderByUnrelated()
      */
-    public boolean supportsOrderByUnrelated() {
+    @Override
+	public boolean supportsOrderByUnrelated() {
         return false;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#supportsOuterJoins()
      */
-    public boolean supportsOuterJoins() {
+    @Override
+	public boolean supportsOuterJoins() {
         return false;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#supportsPositionedDelete()
      */
-    public boolean supportsPositionedDelete() {
+    @Override
+	public boolean supportsPositionedDelete() {
         return false;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#supportsPositionedUpdate()
      */
-    public boolean supportsPositionedUpdate() {
+    @Override
+	public boolean supportsPositionedUpdate() {
         return false;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#supportsResultSetConcurrency(int, int)
      */
-    public boolean supportsResultSetConcurrency( int type,
+    @Override
+	public boolean supportsResultSetConcurrency( int type,
                                                  int concurrency ) {
         return false;
     }
@@ -776,140 +881,160 @@ public class FakeCapabilities implements Capabilities {
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#supportsResultSetType(int)
      */
-    public boolean supportsResultSetType( int type ) {
+    @Override
+	public boolean supportsResultSetType( int type ) {
         return false;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#supportsSchemasInDataManipulation()
      */
-    public boolean supportsSchemasInDataManipulation() {
+    @Override
+	public boolean supportsSchemasInDataManipulation() {
         return false;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#supportsSchemasInIndexDefinitions()
      */
-    public boolean supportsSchemasInIndexDefinitions() {
+    @Override
+	public boolean supportsSchemasInIndexDefinitions() {
         return false;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#supportsSchemasInPrivilegeDefinitions()
      */
-    public boolean supportsSchemasInPrivilegeDefinitions() {
+    @Override
+	public boolean supportsSchemasInPrivilegeDefinitions() {
         return false;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#supportsSchemasInProcedureCalls()
      */
-    public boolean supportsSchemasInProcedureCalls() {
+    @Override
+	public boolean supportsSchemasInProcedureCalls() {
         return false;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#supportsSchemasInTableDefinitions()
      */
-    public boolean supportsSchemasInTableDefinitions() {
+    @Override
+	public boolean supportsSchemasInTableDefinitions() {
         return false;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#supportsSelectForUpdate()
      */
-    public boolean supportsSelectForUpdate() {
+    @Override
+	public boolean supportsSelectForUpdate() {
         return false;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#supportsStoredProcedures()
      */
-    public boolean supportsStoredProcedures() {
+    @Override
+	public boolean supportsStoredProcedures() {
         return false;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#supportsSubqueriesInComparisons()
      */
-    public boolean supportsSubqueriesInComparisons() {
+    @Override
+	public boolean supportsSubqueriesInComparisons() {
         return false;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#supportsSubqueriesInExists()
      */
-    public boolean supportsSubqueriesInExists() {
+    @Override
+	public boolean supportsSubqueriesInExists() {
         return false;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#supportsSubqueriesInIns()
      */
-    public boolean supportsSubqueriesInIns() {
+    @Override
+	public boolean supportsSubqueriesInIns() {
         return false;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#supportsSubqueriesInQuantifieds()
      */
-    public boolean supportsSubqueriesInQuantifieds() {
+    @Override
+	public boolean supportsSubqueriesInQuantifieds() {
         return false;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#supportsTableCorrelationNames()
      */
-    public boolean supportsTableCorrelationNames() {
+    @Override
+	public boolean supportsTableCorrelationNames() {
         return false;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#supportsTransactionIsolationLevel(int)
      */
-    public boolean supportsTransactionIsolationLevel( int level ) {
+    @Override
+	public boolean supportsTransactionIsolationLevel( int level ) {
         return false;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#supportsTransactions()
      */
-    public boolean supportsTransactions() {
+    @Override
+	public boolean supportsTransactions() {
         return false;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#supportsUnion()
      */
-    public boolean supportsUnion() {
+    @Override
+	public boolean supportsUnion() {
         return false;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#supportsUnionAll()
      */
-    public boolean supportsUnionAll() {
+    @Override
+	public boolean supportsUnionAll() {
         return false;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#updatesAreDetected(int)
      */
-    public boolean updatesAreDetected( int type ) {
+    @Override
+	public boolean updatesAreDetected( int type ) {
         return false;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#usesLocalFilePerTable()
      */
-    public boolean usesLocalFilePerTable() {
+    @Override
+	public boolean usesLocalFilePerTable() {
         return false;
     }
 
     /**
      * @see org.teiid.designer.jdbc.metadata.Capabilities#usesLocalFiles()
      */
-    public boolean usesLocalFiles() {
+    @Override
+	public boolean usesLocalFiles() {
         return false;
     }
 

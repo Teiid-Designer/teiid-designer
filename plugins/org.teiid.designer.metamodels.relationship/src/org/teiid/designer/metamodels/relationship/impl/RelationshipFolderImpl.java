@@ -113,7 +113,8 @@ public class RelationshipFolderImpl extends RelationshipEntityImpl implements Re
      * 
      * @generated
      */
-    public EList getPlaceholders() {
+    @Override
+	public EList getPlaceholders() {
         if (placeholders == null) {
             placeholders = new EObjectContainmentWithInverseEList(
                                                                   PlaceholderReference.class,
@@ -129,7 +130,8 @@ public class RelationshipFolderImpl extends RelationshipEntityImpl implements Re
      * 
      * @generated
      */
-    public EList getOwnedRelationships() {
+    @Override
+	public EList getOwnedRelationships() {
         if (ownedRelationships == null) {
             ownedRelationships = new EObjectContainmentWithInverseEList(
                                                                         Relationship.class,
@@ -145,7 +147,8 @@ public class RelationshipFolderImpl extends RelationshipEntityImpl implements Re
      * 
      * @generated
      */
-    public EList getOwnedRelationshipTypes() {
+    @Override
+	public EList getOwnedRelationshipTypes() {
         if (ownedRelationshipTypes == null) {
             ownedRelationshipTypes = new EObjectContainmentWithInverseEList(
                                                                             RelationshipType.class,
@@ -161,7 +164,8 @@ public class RelationshipFolderImpl extends RelationshipEntityImpl implements Re
      * 
      * @generated
      */
-    public EList getOwnedRelationshipFolders() {
+    @Override
+	public EList getOwnedRelationshipFolders() {
         if (ownedRelationshipFolders == null) {
             ownedRelationshipFolders = new EObjectContainmentWithInverseEList(
                                                                               RelationshipFolder.class,
@@ -177,7 +181,8 @@ public class RelationshipFolderImpl extends RelationshipEntityImpl implements Re
      * 
      * @generated
      */
-    public RelationshipFolder getOwner() {
+    @Override
+	public RelationshipFolder getOwner() {
         if (eContainerFeatureID != RelationshipPackage.RELATIONSHIP_FOLDER__OWNER) return null;
         return (RelationshipFolder)eContainer;
     }
@@ -187,7 +192,8 @@ public class RelationshipFolderImpl extends RelationshipEntityImpl implements Re
      * 
      * @generated
      */
-    public void setOwner( RelationshipFolder newOwner ) {
+    @Override
+	public void setOwner( RelationshipFolder newOwner ) {
         if (newOwner != eContainer || (eContainerFeatureID != RelationshipPackage.RELATIONSHIP_FOLDER__OWNER && newOwner != null)) {
             if (EcoreUtil.isAncestor(this, newOwner)) throw new IllegalArgumentException(
                                                                                          "Recursive containment not allowed for " + toString()); //$NON-NLS-1$

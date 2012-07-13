@@ -64,13 +64,15 @@ public class MatchCriteriaEditor extends AbstractPredicateCriteriaTypeEditor {
         return title;
     }
 
-    public Control createLeftComponent( Composite parent ) {
+    @Override
+	public Control createLeftComponent( Composite parent ) {
         leftEditor = new CriteriaExpressionEditor(parent, theModel.getLeftExpressionModel());
         leftComponent = leftEditor.getUi();
         return leftComponent;
     }
 
-    public Control createRightComponent( Composite parent ) {
+    @Override
+	public Control createRightComponent( Composite parent ) {
         rightComponent = new Composite(parent, SWT.NONE);
         GridLayout layout = new GridLayout();
         layout.marginWidth = 0;
@@ -90,7 +92,8 @@ public class MatchCriteriaEditor extends AbstractPredicateCriteriaTypeEditor {
         escCharText.setToolTipText(escCharToolTipText);
         escCharText.setTextLimit(1);
         escCharText.addModifyListener(new ModifyListener() {
-            public void modifyText( ModifyEvent ev ) {
+            @Override
+			public void modifyText( ModifyEvent ev ) {
                 escapeCharacterModified();
             }
         });
@@ -100,7 +103,8 @@ public class MatchCriteriaEditor extends AbstractPredicateCriteriaTypeEditor {
         return rightComponent;
     }
 
-    public Expression getLeftExpression() {
+    @Override
+	public Expression getLeftExpression() {
         Expression leftExpression = null;
         if (matchCriteria != null) {
             leftExpression = matchCriteria.getLeftExpression();
@@ -108,7 +112,8 @@ public class MatchCriteriaEditor extends AbstractPredicateCriteriaTypeEditor {
         return leftExpression;
     }
 
-    public Expression getRightExpression() {
+    @Override
+	public Expression getRightExpression() {
         Expression rightExpression = null;
         if (matchCriteria != null) {
             rightExpression = matchCriteria.getRightExpression();
@@ -128,7 +133,8 @@ public class MatchCriteriaEditor extends AbstractPredicateCriteriaTypeEditor {
         }
     }
 
-    public String[] getOperators() {
+    @Override
+	public String[] getOperators() {
         return theModel.getOperators();
     }
 
@@ -137,11 +143,13 @@ public class MatchCriteriaEditor extends AbstractPredicateCriteriaTypeEditor {
         leftEditor.acceptFocus();
     }
 
-    public void setOperator( String op ) {
+    @Override
+	public void setOperator( String op ) {
         theModel.setCurrentOperator(op);
     }
 
-    public String getCurrentOperator() {
+    @Override
+	public String getCurrentOperator() {
         return theModel.getCurrentOperator();
     }
 
@@ -195,7 +203,8 @@ public class MatchCriteriaEditor extends AbstractPredicateCriteriaTypeEditor {
 
         public void initialize() {
             Display.getDefault().asyncExec(new Runnable() {
-                public void run() {
+                @Override
+				public void run() {
                     modelChanged(new LanguageObjectEditorModelEvent(theModel, LanguageObjectEditorModelEvent.SAVED));
                 }
             });
@@ -204,7 +213,8 @@ public class MatchCriteriaEditor extends AbstractPredicateCriteriaTypeEditor {
         /**
          * @see org.teiid.query.ui.builder.model.ILanguageObjectEditorModelListener#modelChanged(org.teiid.query.ui.builder.model.LanguageObjectEditorModelEvent)
          */
-        public void modelChanged( LanguageObjectEditorModelEvent theEvent ) {
+        @Override
+		public void modelChanged( LanguageObjectEditorModelEvent theEvent ) {
             String type = theEvent.getType();
             if (type.equals(MatchCriteriaEditorModel.LEFT_EXPRESSION)) {
                 displayLeftExpression();

@@ -454,7 +454,8 @@ public class XmlDocumentPackageImpl extends EPackageImpl implements XmlDocumentP
      * 
      * @generated
      */
-    public EEnum getBuildStatus() {
+    @Override
+	public EEnum getBuildStatus() {
         return buildStatusEEnum;
     }
 
@@ -463,7 +464,8 @@ public class XmlDocumentPackageImpl extends EPackageImpl implements XmlDocumentP
      * 
      * @generated
      */
-    public EEnum getChoiceErrorMode() {
+    @Override
+	public EEnum getChoiceErrorMode() {
         return choiceErrorModeEEnum;
     }
 
@@ -472,7 +474,8 @@ public class XmlDocumentPackageImpl extends EPackageImpl implements XmlDocumentP
      * 
      * @generated
      */
-    public EClass getChoiceOption() {
+    @Override
+	public EClass getChoiceOption() {
         return choiceOptionEClass;
     }
 
@@ -481,7 +484,8 @@ public class XmlDocumentPackageImpl extends EPackageImpl implements XmlDocumentP
      * 
      * @generated
      */
-    public EAttribute getChoiceOption_ChoiceCriteria() {
+    @Override
+	public EAttribute getChoiceOption_ChoiceCriteria() {
         return (EAttribute)choiceOptionEClass.getEStructuralFeatures().get(0);
     }
 
@@ -490,7 +494,8 @@ public class XmlDocumentPackageImpl extends EPackageImpl implements XmlDocumentP
      * 
      * @generated
      */
-    public EAttribute getChoiceOption_ChoiceOrder() {
+    @Override
+	public EAttribute getChoiceOption_ChoiceOrder() {
         return (EAttribute)choiceOptionEClass.getEStructuralFeatures().get(1);
     }
 
@@ -499,7 +504,8 @@ public class XmlDocumentPackageImpl extends EPackageImpl implements XmlDocumentP
      * 
      * @generated
      */
-    public EReference getChoiceOption_DefaultFor() {
+    @Override
+	public EReference getChoiceOption_DefaultFor() {
         return (EReference)choiceOptionEClass.getEStructuralFeatures().get(2);
     }
 
@@ -508,7 +514,8 @@ public class XmlDocumentPackageImpl extends EPackageImpl implements XmlDocumentP
      * 
      * @generated
      */
-    public EDataType getList() {
+    @Override
+	public EDataType getList() {
         return listEDataType;
     }
 
@@ -517,7 +524,8 @@ public class XmlDocumentPackageImpl extends EPackageImpl implements XmlDocumentP
      * 
      * @generated
      */
-    public EEnum getNormalizationType() {
+    @Override
+	public EEnum getNormalizationType() {
         return normalizationTypeEEnum;
     }
 
@@ -526,7 +534,8 @@ public class XmlDocumentPackageImpl extends EPackageImpl implements XmlDocumentP
      * 
      * @generated
      */
-    public EClass getProcessingInstruction() {
+    @Override
+	public EClass getProcessingInstruction() {
         return processingInstructionEClass;
     }
 
@@ -535,7 +544,8 @@ public class XmlDocumentPackageImpl extends EPackageImpl implements XmlDocumentP
      * 
      * @generated
      */
-    public EReference getProcessingInstruction_Parent() {
+    @Override
+	public EReference getProcessingInstruction_Parent() {
         return (EReference)processingInstructionEClass.getEStructuralFeatures().get(2);
     }
 
@@ -544,7 +554,8 @@ public class XmlDocumentPackageImpl extends EPackageImpl implements XmlDocumentP
      * 
      * @generated
      */
-    public EAttribute getProcessingInstruction_RawText() {
+    @Override
+	public EAttribute getProcessingInstruction_RawText() {
         return (EAttribute)processingInstructionEClass.getEStructuralFeatures().get(0);
     }
 
@@ -553,7 +564,8 @@ public class XmlDocumentPackageImpl extends EPackageImpl implements XmlDocumentP
      * 
      * @generated
      */
-    public EAttribute getProcessingInstruction_Target() {
+    @Override
+	public EAttribute getProcessingInstruction_Target() {
         return (EAttribute)processingInstructionEClass.getEStructuralFeatures().get(1);
     }
 
@@ -562,7 +574,8 @@ public class XmlDocumentPackageImpl extends EPackageImpl implements XmlDocumentP
      * 
      * @generated
      */
-    public EClass getProcessingInstructionHolder() {
+    @Override
+	public EClass getProcessingInstructionHolder() {
         return processingInstructionHolderEClass;
     }
 
@@ -571,7 +584,8 @@ public class XmlDocumentPackageImpl extends EPackageImpl implements XmlDocumentP
      * 
      * @generated
      */
-    public EReference getProcessingInstructionHolder_ProcessingInstructions() {
+    @Override
+	public EReference getProcessingInstructionHolder_ProcessingInstructions() {
         return (EReference)processingInstructionHolderEClass.getEStructuralFeatures().get(0);
     }
 
@@ -580,7 +594,8 @@ public class XmlDocumentPackageImpl extends EPackageImpl implements XmlDocumentP
      * 
      * @generated
      */
-    public EEnum getSoapEncoding() {
+    @Override
+	public EEnum getSoapEncoding() {
         return soapEncodingEEnum;
     }
 
@@ -589,7 +604,8 @@ public class XmlDocumentPackageImpl extends EPackageImpl implements XmlDocumentP
      * 
      * @generated
      */
-    public EEnum getValueType() {
+    @Override
+	public EEnum getValueType() {
         return valueTypeEEnum;
     }
 
@@ -598,7 +614,8 @@ public class XmlDocumentPackageImpl extends EPackageImpl implements XmlDocumentP
      * 
      * @generated
      */
-    public EClass getXmlAll() {
+    @Override
+	public EClass getXmlAll() {
         return xmlAllEClass;
     }
 
@@ -607,7 +624,8 @@ public class XmlDocumentPackageImpl extends EPackageImpl implements XmlDocumentP
      * 
      * @generated
      */
-    public EClass getXmlAttribute() {
+    @Override
+	public EClass getXmlAttribute() {
         return xmlAttributeEClass;
     }
 
@@ -616,7 +634,8 @@ public class XmlDocumentPackageImpl extends EPackageImpl implements XmlDocumentP
      * 
      * @generated
      */
-    public EReference getXmlAttribute_Element() {
+    @Override
+	public EReference getXmlAttribute_Element() {
         return (EReference)xmlAttributeEClass.getEStructuralFeatures().get(1);
     }
 
@@ -625,7 +644,8 @@ public class XmlDocumentPackageImpl extends EPackageImpl implements XmlDocumentP
      * 
      * @generated
      */
-    public EAttribute getXmlAttribute_Use() {
+    @Override
+	public EAttribute getXmlAttribute_Use() {
         return (EAttribute)xmlAttributeEClass.getEStructuralFeatures().get(0);
     }
 
@@ -634,7 +654,8 @@ public class XmlDocumentPackageImpl extends EPackageImpl implements XmlDocumentP
      * 
      * @generated
      */
-    public EClass getXmlBaseElement() {
+    @Override
+	public EClass getXmlBaseElement() {
         return xmlBaseElementEClass;
     }
 
@@ -643,7 +664,8 @@ public class XmlDocumentPackageImpl extends EPackageImpl implements XmlDocumentP
      * 
      * @generated
      */
-    public EClass getXmlBuildable() {
+    @Override
+	public EClass getXmlBuildable() {
         return xmlBuildableEClass;
     }
 
@@ -652,7 +674,8 @@ public class XmlDocumentPackageImpl extends EPackageImpl implements XmlDocumentP
      * 
      * @generated
      */
-    public EAttribute getXmlBuildable_BuildState() {
+    @Override
+	public EAttribute getXmlBuildable_BuildState() {
         return (EAttribute)xmlBuildableEClass.getEStructuralFeatures().get(0);
     }
 
@@ -661,7 +684,8 @@ public class XmlDocumentPackageImpl extends EPackageImpl implements XmlDocumentP
      * 
      * @generated
      */
-    public EClass getXmlChoice() {
+    @Override
+	public EClass getXmlChoice() {
         return xmlChoiceEClass;
     }
 
@@ -670,7 +694,8 @@ public class XmlDocumentPackageImpl extends EPackageImpl implements XmlDocumentP
      * 
      * @generated
      */
-    public EAttribute getXmlChoice_DefaultErrorMode() {
+    @Override
+	public EAttribute getXmlChoice_DefaultErrorMode() {
         return (EAttribute)xmlChoiceEClass.getEStructuralFeatures().get(0);
     }
 
@@ -679,7 +704,8 @@ public class XmlDocumentPackageImpl extends EPackageImpl implements XmlDocumentP
      * 
      * @generated
      */
-    public EReference getXmlChoice_DefaultOption() {
+    @Override
+	public EReference getXmlChoice_DefaultOption() {
         return (EReference)xmlChoiceEClass.getEStructuralFeatures().get(1);
     }
 
@@ -688,7 +714,8 @@ public class XmlDocumentPackageImpl extends EPackageImpl implements XmlDocumentP
      * 
      * @generated
      */
-    public EClass getXmlComment() {
+    @Override
+	public EClass getXmlComment() {
         return xmlCommentEClass;
     }
 
@@ -697,7 +724,8 @@ public class XmlDocumentPackageImpl extends EPackageImpl implements XmlDocumentP
      * 
      * @generated
      */
-    public EReference getXmlComment_Parent() {
+    @Override
+	public EReference getXmlComment_Parent() {
         return (EReference)xmlCommentEClass.getEStructuralFeatures().get(1);
     }
 
@@ -706,7 +734,8 @@ public class XmlDocumentPackageImpl extends EPackageImpl implements XmlDocumentP
      * 
      * @generated
      */
-    public EAttribute getXmlComment_Text() {
+    @Override
+	public EAttribute getXmlComment_Text() {
         return (EAttribute)xmlCommentEClass.getEStructuralFeatures().get(0);
     }
 
@@ -715,7 +744,8 @@ public class XmlDocumentPackageImpl extends EPackageImpl implements XmlDocumentP
      * 
      * @generated
      */
-    public EClass getXmlCommentHolder() {
+    @Override
+	public EClass getXmlCommentHolder() {
         return xmlCommentHolderEClass;
     }
 
@@ -724,7 +754,8 @@ public class XmlDocumentPackageImpl extends EPackageImpl implements XmlDocumentP
      * 
      * @generated
      */
-    public EReference getXmlCommentHolder_Comments() {
+    @Override
+	public EReference getXmlCommentHolder_Comments() {
         return (EReference)xmlCommentHolderEClass.getEStructuralFeatures().get(0);
     }
 
@@ -733,7 +764,8 @@ public class XmlDocumentPackageImpl extends EPackageImpl implements XmlDocumentP
      * 
      * @generated
      */
-    public EClass getXmlContainerNode() {
+    @Override
+	public EClass getXmlContainerNode() {
         return xmlContainerNodeEClass;
     }
 
@@ -742,7 +774,8 @@ public class XmlDocumentPackageImpl extends EPackageImpl implements XmlDocumentP
      * 
      * @generated
      */
-    public EAttribute getXmlContainerNode_ExcludeFromDocument() {
+    @Override
+	public EAttribute getXmlContainerNode_ExcludeFromDocument() {
         return (EAttribute)xmlContainerNodeEClass.getEStructuralFeatures().get(0);
     }
 
@@ -751,7 +784,8 @@ public class XmlDocumentPackageImpl extends EPackageImpl implements XmlDocumentP
      * 
      * @generated
      */
-    public EAttribute getXmlContainerNode_MaxOccurs() {
+    @Override
+	public EAttribute getXmlContainerNode_MaxOccurs() {
         return (EAttribute)xmlContainerNodeEClass.getEStructuralFeatures().get(2);
     }
 
@@ -760,7 +794,8 @@ public class XmlDocumentPackageImpl extends EPackageImpl implements XmlDocumentP
      * 
      * @generated
      */
-    public EAttribute getXmlContainerNode_MinOccurs() {
+    @Override
+	public EAttribute getXmlContainerNode_MinOccurs() {
         return (EAttribute)xmlContainerNodeEClass.getEStructuralFeatures().get(1);
     }
 
@@ -769,7 +804,8 @@ public class XmlDocumentPackageImpl extends EPackageImpl implements XmlDocumentP
      * 
      * @generated
      */
-    public EReference getXmlContainerNode_XsdComponent() {
+    @Override
+	public EReference getXmlContainerNode_XsdComponent() {
         return (EReference)xmlContainerNodeEClass.getEStructuralFeatures().get(3);
     }
 
@@ -778,7 +814,8 @@ public class XmlDocumentPackageImpl extends EPackageImpl implements XmlDocumentP
      * 
      * @generated
      */
-    public EClass getXmlDocument() {
+    @Override
+	public EClass getXmlDocument() {
         return xmlDocumentEClass;
     }
 
@@ -787,7 +824,8 @@ public class XmlDocumentPackageImpl extends EPackageImpl implements XmlDocumentP
      * 
      * @generated
      */
-    public EAttribute getXmlDocument_Encoding() {
+    @Override
+	public EAttribute getXmlDocument_Encoding() {
         return (EAttribute)xmlDocumentEClass.getEStructuralFeatures().get(0);
     }
 
@@ -796,7 +834,8 @@ public class XmlDocumentPackageImpl extends EPackageImpl implements XmlDocumentP
      * 
      * @generated
      */
-    public EAttribute getXmlDocument_Formatted() {
+    @Override
+	public EAttribute getXmlDocument_Formatted() {
         return (EAttribute)xmlDocumentEClass.getEStructuralFeatures().get(1);
     }
 
@@ -805,7 +844,8 @@ public class XmlDocumentPackageImpl extends EPackageImpl implements XmlDocumentP
      * 
      * @generated
      */
-    public EAttribute getXmlDocument_SoapEncoding() {
+    @Override
+	public EAttribute getXmlDocument_SoapEncoding() {
         return (EAttribute)xmlDocumentEClass.getEStructuralFeatures().get(4);
     }
 
@@ -814,7 +854,8 @@ public class XmlDocumentPackageImpl extends EPackageImpl implements XmlDocumentP
      * 
      * @generated
      */
-    public EAttribute getXmlDocument_Standalone() {
+    @Override
+	public EAttribute getXmlDocument_Standalone() {
         return (EAttribute)xmlDocumentEClass.getEStructuralFeatures().get(3);
     }
 
@@ -823,7 +864,8 @@ public class XmlDocumentPackageImpl extends EPackageImpl implements XmlDocumentP
      * 
      * @generated
      */
-    public EAttribute getXmlDocument_Version() {
+    @Override
+	public EAttribute getXmlDocument_Version() {
         return (EAttribute)xmlDocumentEClass.getEStructuralFeatures().get(2);
     }
 
@@ -832,7 +874,8 @@ public class XmlDocumentPackageImpl extends EPackageImpl implements XmlDocumentP
      * 
      * @generated
      */
-    public EClass getXmlDocumentEntity() {
+    @Override
+	public EClass getXmlDocumentEntity() {
         return xmlDocumentEntityEClass;
     }
 
@@ -841,7 +884,8 @@ public class XmlDocumentPackageImpl extends EPackageImpl implements XmlDocumentP
      * 
      * @generated
      */
-    public XmlDocumentFactory getXmlDocumentFactory() {
+    @Override
+	public XmlDocumentFactory getXmlDocumentFactory() {
         return (XmlDocumentFactory)getEFactoryInstance();
     }
 
@@ -850,7 +894,8 @@ public class XmlDocumentPackageImpl extends EPackageImpl implements XmlDocumentP
      * 
      * @generated
      */
-    public EClass getXmlDocumentNode() {
+    @Override
+	public EClass getXmlDocumentNode() {
         return xmlDocumentNodeEClass;
     }
 
@@ -859,7 +904,8 @@ public class XmlDocumentPackageImpl extends EPackageImpl implements XmlDocumentP
      * 
      * @generated
      */
-    public EAttribute getXmlDocumentNode_ExcludeFromDocument() {
+    @Override
+	public EAttribute getXmlDocumentNode_ExcludeFromDocument() {
         return (EAttribute)xmlDocumentNodeEClass.getEStructuralFeatures().get(1);
     }
 
@@ -868,7 +914,8 @@ public class XmlDocumentPackageImpl extends EPackageImpl implements XmlDocumentP
      * 
      * @generated
      */
-    public EAttribute getXmlDocumentNode_MaxOccurs() {
+    @Override
+	public EAttribute getXmlDocumentNode_MaxOccurs() {
         return (EAttribute)xmlDocumentNodeEClass.getEStructuralFeatures().get(3);
     }
 
@@ -877,7 +924,8 @@ public class XmlDocumentPackageImpl extends EPackageImpl implements XmlDocumentP
      * 
      * @generated
      */
-    public EAttribute getXmlDocumentNode_MinOccurs() {
+    @Override
+	public EAttribute getXmlDocumentNode_MinOccurs() {
         return (EAttribute)xmlDocumentNodeEClass.getEStructuralFeatures().get(2);
     }
 
@@ -886,7 +934,8 @@ public class XmlDocumentPackageImpl extends EPackageImpl implements XmlDocumentP
      * 
      * @generated
      */
-    public EAttribute getXmlDocumentNode_Name() {
+    @Override
+	public EAttribute getXmlDocumentNode_Name() {
         return (EAttribute)xmlDocumentNodeEClass.getEStructuralFeatures().get(0);
     }
 
@@ -895,7 +944,8 @@ public class XmlDocumentPackageImpl extends EPackageImpl implements XmlDocumentP
      * 
      * @generated
      */
-    public EReference getXmlDocumentNode_Namespace() {
+    @Override
+	public EReference getXmlDocumentNode_Namespace() {
         return (EReference)xmlDocumentNodeEClass.getEStructuralFeatures().get(5);
     }
 
@@ -904,7 +954,8 @@ public class XmlDocumentPackageImpl extends EPackageImpl implements XmlDocumentP
      * 
      * @generated
      */
-    public EReference getXmlDocumentNode_XsdComponent() {
+    @Override
+	public EReference getXmlDocumentNode_XsdComponent() {
         return (EReference)xmlDocumentNodeEClass.getEStructuralFeatures().get(4);
     }
 
@@ -913,7 +964,8 @@ public class XmlDocumentPackageImpl extends EPackageImpl implements XmlDocumentP
      * 
      * @generated
      */
-    public EClass getXmlElement() {
+    @Override
+	public EClass getXmlElement() {
         return xmlElementEClass;
     }
 
@@ -922,7 +974,8 @@ public class XmlDocumentPackageImpl extends EPackageImpl implements XmlDocumentP
      * 
      * @generated
      */
-    public EReference getXmlElement_Attributes() {
+    @Override
+	public EReference getXmlElement_Attributes() {
         return (EReference)xmlElementEClass.getEStructuralFeatures().get(1);
     }
 
@@ -931,7 +984,8 @@ public class XmlDocumentPackageImpl extends EPackageImpl implements XmlDocumentP
      * 
      * @generated
      */
-    public EReference getXmlElement_DeclaredNamespaces() {
+    @Override
+	public EReference getXmlElement_DeclaredNamespaces() {
         return (EReference)xmlElementEClass.getEStructuralFeatures().get(2);
     }
 
@@ -940,7 +994,8 @@ public class XmlDocumentPackageImpl extends EPackageImpl implements XmlDocumentP
      * 
      * @generated
      */
-    public EAttribute getXmlElement_Recursive() {
+    @Override
+	public EAttribute getXmlElement_Recursive() {
         return (EAttribute)xmlElementEClass.getEStructuralFeatures().get(0);
     }
 
@@ -949,7 +1004,8 @@ public class XmlDocumentPackageImpl extends EPackageImpl implements XmlDocumentP
      * 
      * @generated
      */
-    public EClass getXmlEntityHolder() {
+    @Override
+	public EClass getXmlEntityHolder() {
         return xmlEntityHolderEClass;
     }
 
@@ -958,7 +1014,8 @@ public class XmlDocumentPackageImpl extends EPackageImpl implements XmlDocumentP
      * 
      * @generated
      */
-    public EReference getXmlEntityHolder_Entities() {
+    @Override
+	public EReference getXmlEntityHolder_Entities() {
         return (EReference)xmlEntityHolderEClass.getEStructuralFeatures().get(0);
     }
 
@@ -967,7 +1024,8 @@ public class XmlDocumentPackageImpl extends EPackageImpl implements XmlDocumentP
      * 
      * @generated
      */
-    public EClass getXmlFragment() {
+    @Override
+	public EClass getXmlFragment() {
         return xmlFragmentEClass;
     }
 
@@ -976,7 +1034,8 @@ public class XmlDocumentPackageImpl extends EPackageImpl implements XmlDocumentP
      * 
      * @generated
      */
-    public EAttribute getXmlFragment_Name() {
+    @Override
+	public EAttribute getXmlFragment_Name() {
         return (EAttribute)xmlFragmentEClass.getEStructuralFeatures().get(0);
     }
 
@@ -985,7 +1044,8 @@ public class XmlDocumentPackageImpl extends EPackageImpl implements XmlDocumentP
      * 
      * @generated
      */
-    public EReference getXmlFragment_Root() {
+    @Override
+	public EReference getXmlFragment_Root() {
         return (EReference)xmlFragmentEClass.getEStructuralFeatures().get(1);
     }
 
@@ -994,7 +1054,8 @@ public class XmlDocumentPackageImpl extends EPackageImpl implements XmlDocumentP
      * 
      * @generated
      */
-    public EClass getXmlFragmentUse() {
+    @Override
+	public EClass getXmlFragmentUse() {
         return xmlFragmentUseEClass;
     }
 
@@ -1003,7 +1064,8 @@ public class XmlDocumentPackageImpl extends EPackageImpl implements XmlDocumentP
      * 
      * @generated
      */
-    public EReference getXmlFragmentUse_Fragment() {
+    @Override
+	public EReference getXmlFragmentUse_Fragment() {
         return (EReference)xmlFragmentUseEClass.getEStructuralFeatures().get(0);
     }
 
@@ -1012,7 +1074,8 @@ public class XmlDocumentPackageImpl extends EPackageImpl implements XmlDocumentP
      * 
      * @generated
      */
-    public EClass getXmlHolderEntity() {
+    @Override
+	public EClass getXmlHolderEntity() {
         return xmlHolderEntityEClass;
     }
 
@@ -1021,7 +1084,8 @@ public class XmlDocumentPackageImpl extends EPackageImpl implements XmlDocumentP
      * 
      * @generated
      */
-    public EReference getXmlHolderEntity_Parent() {
+    @Override
+	public EReference getXmlHolderEntity_Parent() {
         return (EReference)xmlHolderEntityEClass.getEStructuralFeatures().get(0);
     }
 
@@ -1030,7 +1094,8 @@ public class XmlDocumentPackageImpl extends EPackageImpl implements XmlDocumentP
      * 
      * @generated
      */
-    public EClass getXmlNamespace() {
+    @Override
+	public EClass getXmlNamespace() {
         return xmlNamespaceEClass;
     }
 
@@ -1039,7 +1104,8 @@ public class XmlDocumentPackageImpl extends EPackageImpl implements XmlDocumentP
      * 
      * @generated
      */
-    public EReference getXmlNamespace_Element() {
+    @Override
+	public EReference getXmlNamespace_Element() {
         return (EReference)xmlNamespaceEClass.getEStructuralFeatures().get(2);
     }
 
@@ -1048,7 +1114,8 @@ public class XmlDocumentPackageImpl extends EPackageImpl implements XmlDocumentP
      * 
      * @generated
      */
-    public EAttribute getXmlNamespace_Prefix() {
+    @Override
+	public EAttribute getXmlNamespace_Prefix() {
         return (EAttribute)xmlNamespaceEClass.getEStructuralFeatures().get(0);
     }
 
@@ -1057,7 +1124,8 @@ public class XmlDocumentPackageImpl extends EPackageImpl implements XmlDocumentP
      * 
      * @generated
      */
-    public EAttribute getXmlNamespace_Uri() {
+    @Override
+	public EAttribute getXmlNamespace_Uri() {
         return (EAttribute)xmlNamespaceEClass.getEStructuralFeatures().get(1);
     }
 
@@ -1066,7 +1134,8 @@ public class XmlDocumentPackageImpl extends EPackageImpl implements XmlDocumentP
      * 
      * @generated
      */
-    public EClass getXmlRoot() {
+    @Override
+	public EClass getXmlRoot() {
         return xmlRootEClass;
     }
 
@@ -1075,7 +1144,8 @@ public class XmlDocumentPackageImpl extends EPackageImpl implements XmlDocumentP
      * 
      * @generated
      */
-    public EReference getXmlRoot_Fragment() {
+    @Override
+	public EReference getXmlRoot_Fragment() {
         return (EReference)xmlRootEClass.getEStructuralFeatures().get(0);
     }
 
@@ -1084,7 +1154,8 @@ public class XmlDocumentPackageImpl extends EPackageImpl implements XmlDocumentP
      * 
      * @generated
      */
-    public EClass getXmlSequence() {
+    @Override
+	public EClass getXmlSequence() {
         return xmlSequenceEClass;
     }
 
@@ -1093,7 +1164,8 @@ public class XmlDocumentPackageImpl extends EPackageImpl implements XmlDocumentP
      * 
      * @generated
      */
-    public EClass getXmlValueHolder() {
+    @Override
+	public EClass getXmlValueHolder() {
         return xmlValueHolderEClass;
     }
 
@@ -1102,7 +1174,8 @@ public class XmlDocumentPackageImpl extends EPackageImpl implements XmlDocumentP
      * 
      * @generated
      */
-    public EAttribute getXmlValueHolder_Value() {
+    @Override
+	public EAttribute getXmlValueHolder_Value() {
         return (EAttribute)xmlValueHolderEClass.getEStructuralFeatures().get(0);
     }
 
@@ -1111,7 +1184,8 @@ public class XmlDocumentPackageImpl extends EPackageImpl implements XmlDocumentP
      * 
      * @generated
      */
-    public EAttribute getXmlValueHolder_ValueType() {
+    @Override
+	public EAttribute getXmlValueHolder_ValueType() {
         return (EAttribute)xmlValueHolderEClass.getEStructuralFeatures().get(1);
     }
 

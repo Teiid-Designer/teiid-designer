@@ -38,6 +38,7 @@ public class Uml2InterfaceUmlAspect
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.core.metamodel.aspect.uml.UmlClassifier#getRelationships(java.lang.Object)
 	 */
+	@Override
 	public Collection getRelationships(Object eObject) {
 		final Collection result = new ArrayList();
 		final Interface i = assertUmlInterface(eObject);
@@ -59,6 +60,7 @@ public class Uml2InterfaceUmlAspect
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.core.metamodel.aspect.uml.UmlClassifier#getSupertypes(java.lang.Object)
 	 */
+	@Override
 	public Collection getSupertypes(Object eObject) {
 		Interface i = assertUmlInterface(eObject);
 		return i.getGeneralizations();
@@ -67,6 +69,7 @@ public class Uml2InterfaceUmlAspect
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.core.metamodel.aspect.uml.UmlClassifier#isAbstract(java.lang.Object)
 	 */
+	@Override
 	public boolean isAbstract(Object eObject) {
 		return false;
 	}
@@ -74,6 +77,7 @@ public class Uml2InterfaceUmlAspect
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.core.metamodel.aspect.uml.UmlDiagramAspect#getSignature(java.lang.Object, int)
 	 */
+	@Override
 	public String getSignature(Object eObject, int showMask) {
 		final Interface umlInterface = assertUmlInterface(eObject);
 		StringBuffer result = new StringBuffer();

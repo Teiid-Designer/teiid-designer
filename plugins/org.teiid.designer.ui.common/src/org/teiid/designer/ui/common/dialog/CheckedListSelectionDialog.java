@@ -177,7 +177,8 @@ public class CheckedListSelectionDialog extends SelectionDialog {
         if (!getInitialElementSelections().isEmpty()) checkInitialSelections();
 
         getViewer().addCheckStateListener(new ICheckStateListener() {
-            public void checkStateChanged( CheckStateChangedEvent event ) {
+            @Override
+			public void checkStateChanged( CheckStateChangedEvent event ) {
                 checkStatus();
             }
         });

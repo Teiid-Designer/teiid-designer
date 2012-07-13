@@ -32,7 +32,8 @@ public class TeiidContentProvider extends ServerExplorerContentProviderNav imple
      * 
      * @see org.eclipse.datatools.connectivity.sqm.server.internal.ui.explorer.providers.content.impl.ServerExplorerContentProviderNav#getChildren(java.lang.Object)
      */
-    public Object[] getChildren( Object parentElement ) {
+    @Override
+	public Object[] getChildren( Object parentElement ) {
         if (parentElement instanceof TeiidCatalogSchema) {
             TeiidDocumentsFolder folder = new TeiidDocumentsFolder("Documents", "Documents", //$NON-NLS-1$ //$NON-NLS-2$
                                                                    parentElement);
@@ -61,7 +62,8 @@ public class TeiidContentProvider extends ServerExplorerContentProviderNav imple
      * 
      * @see org.eclipse.ui.navigator.ICommonContentProvider#init(org.eclipse.ui.navigator.ICommonContentExtensionSite)
      */
-    public void init( ICommonContentExtensionSite config ) {
+    @Override
+	public void init( ICommonContentExtensionSite config ) {
     }
 
     /*
@@ -69,7 +71,8 @@ public class TeiidContentProvider extends ServerExplorerContentProviderNav imple
      * 
      * @see org.eclipse.ui.navigator.IMementoAware#restoreState(org.eclipse.ui.IMemento)
      */
-    public void restoreState( IMemento memento ) {
+    @Override
+	public void restoreState( IMemento memento ) {
     }
 
     /*
@@ -77,7 +80,8 @@ public class TeiidContentProvider extends ServerExplorerContentProviderNav imple
      * 
      * @see org.eclipse.ui.navigator.IMementoAware#saveState(org.eclipse.ui.IMemento)
      */
-    public void saveState( IMemento memento ) {
+    @Override
+	public void saveState( IMemento memento ) {
     }
 
 }

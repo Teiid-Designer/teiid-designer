@@ -43,7 +43,8 @@ public class BindingLabelProvider extends ModelExplorerLabelProvider
     /**
      * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.lang.Object, int)
      */
-    public String getColumnText(Object element, int columnIndex) {
+    @Override
+	public String getColumnText(Object element, int columnIndex) {
         String result = PluginConstants.EMPTY_STRING;
         Binding binding = (Binding) element;
         switch (columnIndex) {
@@ -62,7 +63,8 @@ public class BindingLabelProvider extends ModelExplorerLabelProvider
     /**
      * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang.Object, int)
      */
-    public Image getColumnImage(Object element, int columnIndex) {
+    @Override
+	public Image getColumnImage(Object element, int columnIndex) {
             Image image = null;
         Binding binding = (Binding) element;
         switch (columnIndex) {

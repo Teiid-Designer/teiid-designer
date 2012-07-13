@@ -72,7 +72,8 @@ public class InputVariableSection implements IInternalUiConstants {
         parentSection.setDescription(description);
         parentSection.getDescriptionControl().addPaintListener(new PaintListener() {
 
-            public void paintControl( PaintEvent event ) {
+            @Override
+			public void paintControl( PaintEvent event ) {
                 event.gc.setForeground(event.display.getSystemColor(SWT.COLOR_GRAY));
                 event.gc.drawLine(0, event.height - 1, event.width - 1, event.height - 1);
             }
@@ -99,7 +100,8 @@ public class InputVariableSection implements IInternalUiConstants {
         this.varViewer.setContentProvider(new DefaultContentProvider());
         this.varViewer.setLabelProvider(new AbstractTableLabelProvider() {
 
-            public String getColumnText( Object element,
+            @Override
+			public String getColumnText( Object element,
                                          int columnIndex ) {
 
                 DeclareStatement declaration = (DeclareStatement)((Entry)element).getKey();
@@ -158,7 +160,8 @@ public class InputVariableSection implements IInternalUiConstants {
     public void refresh() {
         // Defect 23414 & 23535 fixes a thread access problem...
         UiUtil.runInSwtThread(new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 varViewer.refresh();
             }
         }, true);

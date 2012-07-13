@@ -24,12 +24,14 @@ public class TestModelWorkspaceSelections extends TestCase {
     private static final String OBJECT_CONSIDERED_SELECTABLE_BY_FILTER1 = "This is some object1"; //$NON-NLS-1$
     private static final String OBJECT_CONSIDERED_SELECTABLE_BY_FILTER2 = "This is some object2"; //$NON-NLS-1$
     public static final ModelWorkspaceSelectionFilter TEST_FILTER1 = new ModelWorkspaceSelectionFilter() {
-        public boolean isSelectable( final Object element ) {
+        @Override
+		public boolean isSelectable( final Object element ) {
             return element == OBJECT_CONSIDERED_SELECTABLE_BY_FILTER1;
         }
     };
     public static final ModelWorkspaceSelectionFilter TEST_FILTER2 = new ModelWorkspaceSelectionFilter() {
-        public boolean isSelectable( final Object element ) {
+        @Override
+		public boolean isSelectable( final Object element ) {
             return element == OBJECT_CONSIDERED_SELECTABLE_BY_FILTER2;
         }
     };

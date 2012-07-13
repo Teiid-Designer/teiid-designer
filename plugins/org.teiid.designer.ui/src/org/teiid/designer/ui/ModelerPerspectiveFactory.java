@@ -68,7 +68,8 @@ implements Extensions, IPerspectiveFactory, ModelerPerspectiveContributorExtensi
     /* (non-Javadoc)
      * @see org.eclipse.ui.IPerspectiveFactory#createInitialLayout(org.eclipse.ui.IPageLayout)
      */
-    public void createInitialLayout(IPageLayout theLayout) {
+    @Override
+	public void createInitialLayout(IPageLayout theLayout) {
         theLayout.addPerspectiveShortcut(PERSPECTIVE);
 
         String editorArea = theLayout.getEditorArea();

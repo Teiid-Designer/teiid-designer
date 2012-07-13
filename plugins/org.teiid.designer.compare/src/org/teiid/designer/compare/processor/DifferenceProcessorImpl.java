@@ -162,21 +162,24 @@ public class DifferenceProcessorImpl implements DifferenceProcessor {
     /**
      * @see org.teiid.designer.compare.DifferenceProcessor#getDifferenceGuidelines()
      */
-    public DifferenceGuidelines getDifferenceGuidelines() {
+    @Override
+	public DifferenceGuidelines getDifferenceGuidelines() {
         return this.guidelines;
     }
 
     /**
      * @see org.teiid.designer.compare.DifferenceProcessor#setDifferenceGuidelines(org.teiid.designer.compare.DifferenceGuidelines)
      */
-    public void setDifferenceGuidelines( final DifferenceGuidelines guidelines ) {
+    @Override
+	public void setDifferenceGuidelines( final DifferenceGuidelines guidelines ) {
         this.guidelines = guidelines != null ? guidelines : NullDifferenceGuidelines.INSTANCE;
     }
 
     /**
      * @see org.teiid.designer.compare.DifferenceProcessor#execute(org.eclipse.core.runtime.IProgressMonitor)
      */
-    public IStatus execute( final IProgressMonitor progressMonitor ) {
+    @Override
+	public IStatus execute( final IProgressMonitor progressMonitor ) {
         if (closed) {
             final int code = PROCESSOR_ALREADY_CLOSED;
             final String msg = ModelerComparePlugin.Util.getString("DifferenceProcessorImpl.The_processor_has_already_been_closed_and_cannot_be_reused"); //$NON-NLS-1$
@@ -372,14 +375,16 @@ public class DifferenceProcessorImpl implements DifferenceProcessor {
     /**
      * @see org.teiid.designer.compare.DifferenceProcessor#getDifferenceReport()
      */
-    public DifferenceReport getDifferenceReport() {
+    @Override
+	public DifferenceReport getDifferenceReport() {
         return this.report;
     }
 
     /**
      * @see org.teiid.designer.compare.DifferenceProcessor#close()
      */
-    public void close() {
+    @Override
+	public void close() {
         if (this.closed) {
             return;
         }
@@ -855,7 +860,8 @@ public class DifferenceProcessorImpl implements DifferenceProcessor {
      * @return the mapping adapters; never null
      * @see #addMappingAdapters(List)
      */
-    public List getEObjectMatcherFactories() {
+    @Override
+	public List getEObjectMatcherFactories() {
         return this.matcherFactories;
     }
 
@@ -866,7 +872,8 @@ public class DifferenceProcessorImpl implements DifferenceProcessor {
      * @param adapters the new mapping adapters; may not be null
      * @see #getMappingAdapters()
      */
-    public synchronized void addEObjectMatcherFactories( final List factories ) {
+    @Override
+	public synchronized void addEObjectMatcherFactories( final List factories ) {
         final Iterator iter = factories.iterator();
         while (iter.hasNext()) {
             final Object obj = iter.next();

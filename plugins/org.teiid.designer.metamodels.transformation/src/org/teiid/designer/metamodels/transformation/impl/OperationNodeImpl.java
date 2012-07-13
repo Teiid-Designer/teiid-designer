@@ -51,7 +51,8 @@ public class OperationNodeImpl extends AbstractOperationNodeImpl implements Oper
      * 
      * @generated
      */
-    public int getMinInputs() {
+    @Override
+	public int getMinInputs() {
         // TODO: implement this method
         // Ensure that you remove @generated or mark it @generated NOT
         throw new UnsupportedOperationException();
@@ -62,7 +63,8 @@ public class OperationNodeImpl extends AbstractOperationNodeImpl implements Oper
      * 
      * @generated
      */
-    public int getMaxInputs() {
+    @Override
+	public int getMaxInputs() {
         // TODO: implement this method
         // Ensure that you remove @generated or mark it @generated NOT
         throw new UnsupportedOperationException();
@@ -73,7 +75,8 @@ public class OperationNodeImpl extends AbstractOperationNodeImpl implements Oper
      * 
      * @generated
      */
-    public int getMinOutputs() {
+    @Override
+	public int getMinOutputs() {
         // TODO: implement this method
         // Ensure that you remove @generated or mark it @generated NOT
         throw new UnsupportedOperationException();
@@ -84,7 +87,8 @@ public class OperationNodeImpl extends AbstractOperationNodeImpl implements Oper
      * 
      * @generated
      */
-    public int getMaxOutputs() {
+    @Override
+	public int getMaxOutputs() {
         // TODO: implement this method
         // Ensure that you remove @generated or mark it @generated NOT
         throw new UnsupportedOperationException();

@@ -167,7 +167,8 @@ public class ModelProjectImpl extends OpenableImpl implements IProjectNature, Mo
      * @see org.eclipse.core.resources.IProjectNature#configure()
      * @since 4.0
      */
-    public void configure() throws CoreException {
+    @Override
+	public void configure() throws CoreException {
         // builders get executed in reverse order
         addToBuildSpec(ModelerCore.BUILDER_ID);
         addToBuildSpec(ExtensionConstants.MED_BUILDER_ID); 
@@ -179,7 +180,8 @@ public class ModelProjectImpl extends OpenableImpl implements IProjectNature, Mo
      * @see org.eclipse.core.resources.IProjectNature#deconfigure()
      * @since 4.0
      */
-    public void deconfigure() throws CoreException {
+    @Override
+	public void deconfigure() throws CoreException {
         removeFromBuildSpec(ModelerCore.BUILDER_ID);
         removeFromBuildSpec(ExtensionConstants.MED_BUILDER_ID);
     }
@@ -232,7 +234,8 @@ public class ModelProjectImpl extends OpenableImpl implements IProjectNature, Mo
      * @see org.teiid.designer.core.workspace.ModelProject#getNonModelingResources()
      * @since 4.0
      */
-    public Object[] getNonModelingResources() throws ModelWorkspaceException {
+    @Override
+	public Object[] getNonModelingResources() throws ModelWorkspaceException {
         return ((ModelProjectInfo)getItemInfo()).getNonModelResources(this);
     }
 
@@ -240,7 +243,8 @@ public class ModelProjectImpl extends OpenableImpl implements IProjectNature, Mo
      * @see org.teiid.designer.core.workspace.ModelWorkspaceItem#getPath()
      * @since 4.0
      */
-    public IPath getPath() {
+    @Override
+	public IPath getPath() {
         if (this.path == null) {
             return this.getProject().getFullPath();
         }
@@ -259,7 +263,8 @@ public class ModelProjectImpl extends OpenableImpl implements IProjectNature, Mo
      * @see org.teiid.designer.core.workspace.ModelProject#getProject()
      * @since 4.0
      */
-    public IProject getProject() {
+    @Override
+	public IProject getProject() {
         return fProject;
     }
 
@@ -267,7 +272,8 @@ public class ModelProjectImpl extends OpenableImpl implements IProjectNature, Mo
      * @see org.teiid.designer.core.workspace.ModelWorkspaceItem#getResource()
      * @since 4.0
      */
-    public IResource getResource() {
+    @Override
+	public IResource getResource() {
         return this.getProject();
     }
 
@@ -297,7 +303,8 @@ public class ModelProjectImpl extends OpenableImpl implements IProjectNature, Mo
      * @see org.eclipse.core.resources.IProjectNature#setProject(org.eclipse.core.resources.IProject)
      * @since 4.0
      */
-    public void setProject( final IProject project ) {
+    @Override
+	public void setProject( final IProject project ) {
         this.fProject = project;
     }
 
@@ -338,7 +345,8 @@ public class ModelProjectImpl extends OpenableImpl implements IProjectNature, Mo
         }
     }
 
-    public ModelWorkspaceItem findModelWorkspaceItem( IResource resource ) throws ModelWorkspaceException {
+    @Override
+	public ModelWorkspaceItem findModelWorkspaceItem( IResource resource ) throws ModelWorkspaceException {
         CoreArgCheck.isNotNull(resource);
         return ModelWorkspaceManager.getModelWorkspaceManager().findModelWorkspaceItem(resource);
     }

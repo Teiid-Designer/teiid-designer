@@ -23,6 +23,7 @@ public class TeiidDocumentColumnLoader extends JDBCTableColumnLoader {
 		document = teiidDocument;
 	}
 	
+	@Override
 	protected ResultSet createResultSet() throws SQLException {
 		try {
 			return getCatalogObject().getConnection().getMetaData().getColumns(

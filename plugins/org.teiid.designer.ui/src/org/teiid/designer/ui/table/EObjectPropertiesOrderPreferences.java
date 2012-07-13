@@ -168,7 +168,8 @@ public class EObjectPropertiesOrderPreferences implements Serializable {
         /**
          * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
          */
-        public int compare( Object o1,
+        @Override
+		public int compare( Object o1,
                             Object o2 ) {
             int result = -1;
             if ((o1 instanceof PropertyOrder) & (o2 instanceof PropertyOrder)) {

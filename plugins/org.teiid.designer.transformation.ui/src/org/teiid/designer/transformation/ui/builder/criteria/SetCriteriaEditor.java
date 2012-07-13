@@ -110,13 +110,15 @@ public class SetCriteriaEditor extends AbstractPredicateCriteriaTypeEditor {
         return title;
     }
 
-    public Control createLeftComponent( Composite parent ) {
+    @Override
+	public Control createLeftComponent( Composite parent ) {
         editor = new CriteriaExpressionEditor(parent, theModel.getExpressionModel());
         component = editor.getUi();
         return component;
     }
 
-    public Control createRightComponent( Composite parent ) {
+    @Override
+	public Control createRightComponent( Composite parent ) {
         ViewForm rightComponentViewForm = new ViewForm(parent, SWT.BORDER);
         Composite rightComponent = new Composite(rightComponentViewForm, SWT.NONE);
         rightComponentViewForm.setContent(rightComponent);
@@ -196,21 +198,24 @@ public class SetCriteriaEditor extends AbstractPredicateCriteriaTypeEditor {
         GridData buttonsPanelGridData = new GridData(GridData.HORIZONTAL_ALIGN_CENTER);
         buttonsPanel.setLayoutData(buttonsPanelGridData);
         Runnable addRunnable = new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 addButtonPressed();
             }
         };
         addAction = new AddSetCriteriaItemAction(buttonsPanel, addRunnable);
         addAction.setEnabled(true);
         Runnable editRunnable = new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 editButtonPressed();
             }
         };
         editAction = new EditSetCriteriaItemAction(buttonsPanel, editRunnable);
         editAction.setEnabled(false);
         Runnable deleteRunnable = new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 deleteButtonPressed();
             }
         };
@@ -220,7 +225,8 @@ public class SetCriteriaEditor extends AbstractPredicateCriteriaTypeEditor {
         listButtonMenuManager = new MenuManager();
         listButtonMenuManager.setRemoveAllWhenShown(true);
         listButtonMenuManager.addMenuListener(new IMenuListener() {
-            public void menuAboutToShow( IMenuManager menuMgr ) {
+            @Override
+			public void menuAboutToShow( IMenuManager menuMgr ) {
                 fillListButtonMenu();
             }
         });
@@ -235,7 +241,8 @@ public class SetCriteriaEditor extends AbstractPredicateCriteriaTypeEditor {
         subquerySQLText.setLayoutData(sqlTextData);
         subqueryTreeViewer = ElementViewerFactory.createElementViewer(subquerySashForm);
         subqueryTreeViewer.addDoubleClickListener(new IDoubleClickListener() {
-            public void doubleClick( DoubleClickEvent theEvent ) {
+            @Override
+			public void doubleClick( DoubleClickEvent theEvent ) {
                 handleDoubleClick();
             }
         });
@@ -243,11 +250,13 @@ public class SetCriteriaEditor extends AbstractPredicateCriteriaTypeEditor {
 
         subqueryTree = subqueryTreeViewer.getTree();
         subqueryTree.addSelectionListener(new SelectionListener() {
-            public void widgetDefaultSelected( SelectionEvent theEvent ) {
+            @Override
+			public void widgetDefaultSelected( SelectionEvent theEvent ) {
                 handleTreeSelection();
             }
 
-            public void widgetSelected( SelectionEvent theEvent ) {
+            @Override
+			public void widgetSelected( SelectionEvent theEvent ) {
                 handleTreeSelection();
             }
 
@@ -365,7 +374,8 @@ public class SetCriteriaEditor extends AbstractPredicateCriteriaTypeEditor {
         theModel.setValues(newValues);
     }
 
-    public Expression getLeftExpression() {
+    @Override
+	public Expression getLeftExpression() {
         Expression leftExpression = null;
         if (setCriteria != null) {
             leftExpression = setCriteria.getExpression();
@@ -373,7 +383,8 @@ public class SetCriteriaEditor extends AbstractPredicateCriteriaTypeEditor {
         return leftExpression;
     }
 
-    public Expression getRightExpression() {
+    @Override
+	public Expression getRightExpression() {
         // Unused
         return null;
     }
@@ -385,7 +396,8 @@ public class SetCriteriaEditor extends AbstractPredicateCriteriaTypeEditor {
         editor.setLanguageObject(getLeftExpression());
     }
 
-    public String[] getOperators() {
+    @Override
+	public String[] getOperators() {
         return theModel.getOperators();
     }
 
@@ -394,11 +406,13 @@ public class SetCriteriaEditor extends AbstractPredicateCriteriaTypeEditor {
         editor.acceptFocus();
     }
 
-    public void setOperator( String op ) {
+    @Override
+	public void setOperator( String op ) {
         theModel.setCurrentOperator(op);
     }
 
-    public String getCurrentOperator() {
+    @Override
+	public String getCurrentOperator() {
         return theModel.getCurrentOperator();
     }
 
@@ -499,7 +513,8 @@ public class SetCriteriaEditor extends AbstractPredicateCriteriaTypeEditor {
 
         public void initialize() {
             Display.getDefault().asyncExec(new Runnable() {
-                public void run() {
+                @Override
+				public void run() {
                     modelChanged(new LanguageObjectEditorModelEvent(theModel, LanguageObjectEditorModelEvent.SAVED));
                 }
             });
@@ -508,7 +523,8 @@ public class SetCriteriaEditor extends AbstractPredicateCriteriaTypeEditor {
         /**
          * @see org.teiid.query.ui.builder.model.ILanguageObjectEditorModelListener#modelChanged(org.teiid.query.ui.builder.model.LanguageObjectEditorModelEvent)
          */
-        public void modelChanged( LanguageObjectEditorModelEvent theEvent ) {
+        @Override
+		public void modelChanged( LanguageObjectEditorModelEvent theEvent ) {
             String type = theEvent.getType();
             if (type.equals(SetCriteriaEditorModel.EXPRESSION)) {
                 displayExpression();

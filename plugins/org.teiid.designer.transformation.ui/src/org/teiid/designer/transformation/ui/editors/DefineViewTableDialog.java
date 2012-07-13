@@ -271,6 +271,7 @@ public class DefineViewTableDialog extends TitleAreaDialog implements
 	 * @see org.teiid.core.event.IChangeListener#stateChanged(org.teiid.core.event.IChangeNotifier)
 	 * @since 5.5.3
 	 */
+	@Override
 	public void stateChanged(IChangeNotifier theSource) {
 		updateState();
 	}
@@ -433,6 +434,7 @@ public class DefineViewTableDialog extends TitleAreaDialog implements
 		result.setInput(ResourcesPlugin.getWorkspace().getRoot());
 
 		result.setValidator(new ISelectionStatusValidator() {
+			@Override
 			public IStatus validate(Object[] selection) {
 				boolean ok = false;
 				if( selection != null && 
@@ -472,6 +474,7 @@ public class DefineViewTableDialog extends TitleAreaDialog implements
 		result.setInput(ResourcesPlugin.getWorkspace().getRoot());
 
 		result.setValidator(new ISelectionStatusValidator() {
+			@Override
 			public IStatus validate(Object[] selection) {
 				boolean ok = false;
 				if( selection != null && 

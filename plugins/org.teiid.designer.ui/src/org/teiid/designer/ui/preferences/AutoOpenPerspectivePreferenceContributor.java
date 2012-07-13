@@ -33,7 +33,8 @@ public class AutoOpenPerspectivePreferenceContributor implements IGeneralPrefere
      * 
      * @see org.teiid.designer.ui.preferences.IGeneralPreferencePageContributor#createPreferenceEditor(org.eclipse.swt.widgets.Composite)
      */
-    public void createPreferenceEditor( Composite parent ) {
+    @Override
+	public void createPreferenceEditor( Composite parent ) {
         Group pnlButtons = WidgetFactory.createGroup(parent,
                                                      Util.getStringOrKey(PREFIX + "lbl.text"), //$NON-NLS-1$
                                                      GridData.FILL_HORIZONTAL,
@@ -56,7 +57,8 @@ public class AutoOpenPerspectivePreferenceContributor implements IGeneralPrefere
      * 
      * @see org.teiid.designer.ui.preferences.IGeneralPreferencePageContributor#getName()
      */
-    public String getName() {
+    @Override
+	public String getName() {
         return Util.getStringOrKey(PREFIX + "name"); //$NON-NLS-1$
     }
 
@@ -97,7 +99,8 @@ public class AutoOpenPerspectivePreferenceContributor implements IGeneralPrefere
      * 
      * @see org.teiid.designer.ui.preferences.IGeneralPreferencePageContributor#getToolTip()
      */
-    public String getToolTip() {
+    @Override
+	public String getToolTip() {
         return Util.getStringOrKey(PREFIX + "toolTip"); //$NON-NLS-1$
     }
 
@@ -106,7 +109,8 @@ public class AutoOpenPerspectivePreferenceContributor implements IGeneralPrefere
      * 
      * @see org.teiid.designer.ui.preferences.IGeneralPreferencePageContributor#performCancel()
      */
-    public boolean performCancel() {
+    @Override
+	public boolean performCancel() {
         return true;
     }
 
@@ -115,7 +119,8 @@ public class AutoOpenPerspectivePreferenceContributor implements IGeneralPrefere
      * 
      * @see org.teiid.designer.ui.preferences.IGeneralPreferencePageContributor#performDefaults()
      */
-    public boolean performDefaults() {
+    @Override
+	public boolean performDefaults() {
         update(getPreferenceStoreValue(true));
         return true;
     }
@@ -125,7 +130,8 @@ public class AutoOpenPerspectivePreferenceContributor implements IGeneralPrefere
      * 
      * @see org.teiid.designer.ui.preferences.IGeneralPreferencePageContributor#performOk()
      */
-    public boolean performOk() {
+    @Override
+	public boolean performOk() {
         String value = MessageDialogWithToggle.PROMPT;
 
         if (this.btnAlways.getSelection()) {
@@ -144,7 +150,8 @@ public class AutoOpenPerspectivePreferenceContributor implements IGeneralPrefere
      * 
      * @see org.teiid.designer.ui.preferences.IGeneralPreferencePageContributor#refresh()
      */
-    public void refresh() {
+    @Override
+	public void refresh() {
         update(getPreferenceStoreValue(false));
     }
 
@@ -153,7 +160,8 @@ public class AutoOpenPerspectivePreferenceContributor implements IGeneralPrefere
      * 
      * @see org.teiid.designer.ui.preferences.IGeneralPreferencePageContributor#setWorkbench(org.eclipse.ui.IWorkbench)
      */
-    public void setWorkbench( IWorkbench theWorkbench ) {
+    @Override
+	public void setWorkbench( IWorkbench theWorkbench ) {
         // nothing to do
     }
 

@@ -217,7 +217,8 @@ public class ModelBufferManager implements ModelBufferFactory {
     /**
      * @see ModelBufferFactory#createBuffer(IOpenable)
      */
-    public ModelBuffer createBuffer( final Openable owner) throws ModelWorkspaceException {
+    @Override
+	public ModelBuffer createBuffer( final Openable owner) throws ModelWorkspaceException {
         CoreArgCheck.isInstanceOf(ModelWorkspaceItem.class,owner);
         ModelWorkspaceItem item = (ModelWorkspaceItem)owner;
         IResource resource = item.getResource();

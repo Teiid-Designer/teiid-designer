@@ -38,14 +38,16 @@ public class ViewAspect extends TableAspect {
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.uml.UmlClassifier#getRelationships(java.lang.Object)
      */
-    public Collection getRelationships( Object eObject ) {
+    @Override
+	public Collection getRelationships( Object eObject ) {
         return Collections.EMPTY_LIST;
     }
 
     /**
      * @see org.teiid.designer.core.metamodel.aspect.uml.UmlClassifier#isAbstract(java.lang.Object)
      */
-    public boolean isAbstract( Object eObject ) {
+    @Override
+	public boolean isAbstract( Object eObject ) {
         return false;
     }
 

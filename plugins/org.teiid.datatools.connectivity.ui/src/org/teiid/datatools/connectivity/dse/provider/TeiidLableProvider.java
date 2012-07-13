@@ -21,7 +21,8 @@ public class TeiidLableProvider extends LabelProvider {
      * 
      * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
      */
-    public String getText( Object element ) {
+    @Override
+	public String getText( Object element ) {
         if (element instanceof IVirtualNode) {
             return ((IVirtualNode)element).getDisplayName();
         } else if (element instanceof ENamedElement) {
@@ -36,7 +37,8 @@ public class TeiidLableProvider extends LabelProvider {
      * 
      * @see org.eclipse.jface.viewers.LabelProvider#getImage(java.lang.Object)
      */
-    public Image getImage( Object element ) {
+    @Override
+	public Image getImage( Object element ) {
     	if(element instanceof TeiidDocumentsFolder || element instanceof DocumentColumnFolder) {
     		return Activator.getDefault().getImageRegistry().get(Activator.CLOSED_FOLDER_ID);
     	}

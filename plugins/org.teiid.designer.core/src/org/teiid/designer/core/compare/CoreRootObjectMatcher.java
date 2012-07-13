@@ -34,7 +34,8 @@ public class CoreRootObjectMatcher extends AbstractEObjectMatcher {
     /**
      * @see org.teiid.designer.core.compare.EObjectMatcher#addMappingsForRoots(java.util.List, java.util.List, org.eclipse.emf.mapping.Mapping, org.eclipse.emf.mapping.MappingFactory)
      */
-    public void addMappingsForRoots(final List inputs, final List outputs,
+    @Override
+	public void addMappingsForRoots(final List inputs, final List outputs,
                                     final Mapping mapping, final MappingFactory factory) {
         ModelAnnotation inputModelAnnotation = null;
         AnnotationContainer inputAnnotationContainer = null;
@@ -82,7 +83,8 @@ public class CoreRootObjectMatcher extends AbstractEObjectMatcher {
     /**
      * @see org.teiid.designer.core.compare.EObjectMatcher#addMappings(org.eclipse.emf.ecore.EReference, java.util.List, java.util.List, org.eclipse.emf.mapping.Mapping, org.eclipse.emf.mapping.MappingFactory)
      */
-    public void addMappings( final EReference reference, final List inputs, final List outputs, 
+    @Override
+	public void addMappings( final EReference reference, final List inputs, final List outputs, 
                              final Mapping mapping, final MappingFactory factory) {
         // only processes roots ...
     }

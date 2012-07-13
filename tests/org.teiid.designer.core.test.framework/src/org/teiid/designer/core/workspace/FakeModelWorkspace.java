@@ -32,7 +32,8 @@ public class FakeModelWorkspace extends FakeModelWorkspaceItem implements ModelW
      * @see org.teiid.designer.core.workspace.ModelWorkspace#createModelProject(java.lang.String,
      *      org.eclipse.core.runtime.IPath, org.eclipse.core.runtime.IProgressMonitor)
      */
-    public ModelProject createModelProject( String name,
+    @Override
+	public ModelProject createModelProject( String name,
                                             IPath path,
                                             IProgressMonitor monitor ) {
         return null;
@@ -41,42 +42,48 @@ public class FakeModelWorkspace extends FakeModelWorkspaceItem implements ModelW
     /**
      * @see org.teiid.designer.core.workspace.ModelWorkspace#findModelProject(java.lang.String)
      */
-    public ModelProject findModelProject( String name ) {
+    @Override
+	public ModelProject findModelProject( String name ) {
         return null;
     }
 
     /**
      * @see org.teiid.designer.core.workspace.ModelWorkspace#findModelProject(org.eclipse.core.resources.IResource)
      */
-    public ModelProject findModelProject( IResource resource ) {
+    @Override
+	public ModelProject findModelProject( IResource resource ) {
         return null;
     }
 
     /**
      * @see org.teiid.designer.core.workspace.ModelWorkspace#getModelProject(org.eclipse.core.resources.IResource)
      */
-    public ModelProject getModelProject( IResource resource ) {
+    @Override
+	public ModelProject getModelProject( IResource resource ) {
         return null;
     }
 
     /**
      * @see org.teiid.designer.core.workspace.ModelWorkspace#getWorkspace()
      */
-    public IWorkspace getWorkspace() {
+    @Override
+	public IWorkspace getWorkspace() {
         return null;
     }
 
     /**
      * @see org.teiid.designer.core.workspace.ModelWorkspace#getModelProjects()
      */
-    public ModelProject[] getModelProjects() {
+    @Override
+	public ModelProject[] getModelProjects() {
         return null;
     }
 
     /**
      * @see org.teiid.designer.core.workspace.ModelWorkspace#getNonModelingResources()
      */
-    public Object[] getNonModelingResources() {
+    @Override
+	public Object[] getNonModelingResources() {
         return null;
     }
 
@@ -84,7 +91,8 @@ public class FakeModelWorkspace extends FakeModelWorkspaceItem implements ModelW
      * @see org.teiid.designer.core.workspace.ModelWorkspace#getEmfResources()
      * @since 4.2
      */
-    public Resource[] getEmfResources() {
+    @Override
+	public Resource[] getEmfResources() {
         return null;
     }
 
@@ -92,54 +100,62 @@ public class FakeModelWorkspace extends FakeModelWorkspaceItem implements ModelW
      * @see org.teiid.designer.core.workspace.ModelWorkspace#getModelResources()
      * @since 4.2
      */
-    public ModelResource[] getModelResources() {
+    @Override
+	public ModelResource[] getModelResources() {
         return null;
     }
 
     /**
      * @see org.teiid.designer.core.workspace.ModelWorkspace#findModelResource(org.eclipse.core.resources.IResource)
      */
-    public ModelResource findModelResource( IResource resource ) {
+    @Override
+	public ModelResource findModelResource( IResource resource ) {
         return null;
     }
 
     /**
      * @see org.teiid.designer.core.workspace.ModelWorkspace#findModelResource(org.eclipse.emf.ecore.resource.Resource)
      */
-    public ModelResource findModelResource( Resource resource ) {
+    @Override
+	public ModelResource findModelResource( Resource resource ) {
         return null;
     }
 
     /**
      * @see org.teiid.designer.core.workspace.ModelWorkspace#findModelResource(org.eclipse.core.runtime.IPath)
      */
-    public ModelResource findModelResource( IPath pathInWorkspace ) {
+    @Override
+	public ModelResource findModelResource( IPath pathInWorkspace ) {
         return null;
     }
 
     /**
      * @see org.teiid.designer.core.workspace.ModelWorkspace#findModelResource(org.eclipse.emf.ecore.EObject)
      */
-    public ModelResource findModelResource( EObject eObject ) {
+    @Override
+	public ModelResource findModelResource( EObject eObject ) {
         return null;
     }
 
     /**
      * @see org.teiid.designer.core.workspace.ModelWorkspace#addNotificationListener(org.teiid.designer.core.workspace.ModelWorkspaceNotificationListener)
      */
-    public void addNotificationListener( ModelWorkspaceNotificationListener listener ) {
+    @Override
+	public void addNotificationListener( ModelWorkspaceNotificationListener listener ) {
     }
 
     /**
      * @see org.teiid.designer.core.workspace.ModelWorkspace#removeNotificationListener(org.teiid.designer.core.workspace.ModelWorkspaceNotificationListener)
      */
-    public void removeNotificationListener( ModelWorkspaceNotificationListener listener ) {
+    @Override
+	public void removeNotificationListener( ModelWorkspaceNotificationListener listener ) {
     }
 
     /**
      * @see org.teiid.designer.core.workspace.ModelWorkspace#getParent(org.eclipse.core.resources.IResource)
      */
-    public ModelWorkspaceItem getParent( IResource resource ) {
+    @Override
+	public ModelWorkspaceItem getParent( IResource resource ) {
         return null;
     }
 
@@ -154,33 +170,38 @@ public class FakeModelWorkspace extends FakeModelWorkspaceItem implements ModelW
     /**
      * @see org.teiid.designer.core.workspace.Openable#close()
      */
-    public void close() {
+    @Override
+	public void close() {
     }
 
     /**
      * @see org.teiid.designer.core.workspace.Openable#hasUnsavedChanges()
      */
-    public boolean hasUnsavedChanges() {
+    @Override
+	public boolean hasUnsavedChanges() {
         return false;
     }
 
     /**
      * @see org.teiid.designer.core.workspace.Openable#isOpen()
      */
-    public boolean isOpen() {
+    @Override
+	public boolean isOpen() {
         return false;
     }
 
     /**
      * @see org.teiid.designer.core.workspace.Openable#open(org.eclipse.core.runtime.IProgressMonitor)
      */
-    public void open( IProgressMonitor progress ) {
+    @Override
+	public void open( IProgressMonitor progress ) {
     }
 
     /**
      * @see org.teiid.designer.core.workspace.Openable#save(org.eclipse.core.runtime.IProgressMonitor, boolean)
      */
-    public void save( IProgressMonitor progress,
+    @Override
+	public void save( IProgressMonitor progress,
                       boolean force ) {
     }
 
@@ -188,14 +209,16 @@ public class FakeModelWorkspace extends FakeModelWorkspaceItem implements ModelW
      * @see org.teiid.designer.core.workspace.ModelWorkspace#addModelResourceReloadVetoListener(org.teiid.designer.core.workspace.ModelResourceReloadVetoListener)
      * @since 4.2
      */
-    public void addModelResourceReloadVetoListener( ModelResourceReloadVetoListener listener ) {
+    @Override
+	public void addModelResourceReloadVetoListener( ModelResourceReloadVetoListener listener ) {
     }
 
     /**
      * @see org.teiid.designer.core.workspace.ModelWorkspace#removeModelResourceReloadVetoListener(org.teiid.designer.core.workspace.ModelResourceReloadVetoListener)
      * @since 4.2
      */
-    public void removeModelResourceReloadVetoListener( ModelResourceReloadVetoListener listener ) {
+    @Override
+	public void removeModelResourceReloadVetoListener( ModelResourceReloadVetoListener listener ) {
     }
 
 }

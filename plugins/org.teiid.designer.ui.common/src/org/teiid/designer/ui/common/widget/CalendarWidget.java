@@ -577,7 +577,8 @@ public class CalendarWidget extends Composite implements InternalUiConstants {
             m_RowSize = (int)(p.y * 1.2);
 
             addPaintListener(new PaintListener() {
-                public void paintControl( PaintEvent event ) {
+                @Override
+				public void paintControl( PaintEvent event ) {
                     onPaint(event);
                 }
             });

@@ -66,7 +66,8 @@ public class Activator extends AbstractUIPlugin {
         return plugin;
     }
     
-    protected void initializeImageRegistry(ImageRegistry registry) {
+    @Override
+	protected void initializeImageRegistry(ImageRegistry registry) {
         Bundle bundle = Platform.getBundle(PLUGIN_ID);
         IPath path = new Path("icons/closedFolder.gif"); //$NON-NLS-1$
         URL url = Platform.find(bundle, path);

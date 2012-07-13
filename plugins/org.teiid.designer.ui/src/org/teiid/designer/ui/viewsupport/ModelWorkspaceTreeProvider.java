@@ -39,7 +39,8 @@ public class ModelWorkspaceTreeProvider extends ModelExplorerLabelProvider imple
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
      */
-    public Object[] getChildren(Object parentElement) {
+    @Override
+	public Object[] getChildren(Object parentElement) {
         if ( parentElement instanceof IFolder ) {
             try { 
                 return ((IFolder) parentElement).members();
@@ -65,14 +66,16 @@ public class ModelWorkspaceTreeProvider extends ModelExplorerLabelProvider imple
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object)
      */
-    public Object getParent(Object element) {
+    @Override
+	public Object getParent(Object element) {
         return modelContentProvider.getParent(element);
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(java.lang.Object)
      */
-    public boolean hasChildren(Object element) {
+    @Override
+	public boolean hasChildren(Object element) {
         if ( element instanceof IFile ) {
             return false;
         }
@@ -82,7 +85,8 @@ public class ModelWorkspaceTreeProvider extends ModelExplorerLabelProvider imple
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
      */
-    public Object[] getElements(Object inputElement) {
+    @Override
+	public Object[] getElements(Object inputElement) {
         Object[] result = ((IWorkspaceRoot) inputElement).getProjects();
         return result;
     }
@@ -90,7 +94,8 @@ public class ModelWorkspaceTreeProvider extends ModelExplorerLabelProvider imple
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
      */
-    public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+    @Override
+	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
         modelContentProvider.inputChanged(viewer, oldInput, newInput);
     }
 

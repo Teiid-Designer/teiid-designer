@@ -65,6 +65,7 @@ public class TeiidsqlmodelFactoryImpl extends EFactoryImpl implements Teiidsqlmo
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
 			case TeiidsqlmodelPackage.DOCUMENT: return createDocument();
@@ -79,6 +80,7 @@ public class TeiidsqlmodelFactoryImpl extends EFactoryImpl implements Teiidsqlmo
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TeiidSchema createTeiidSchema() {
 		TeiidSchemaImpl teiidSchema = new TeiidSchemaImpl();
 		return teiidSchema;
@@ -89,6 +91,7 @@ public class TeiidsqlmodelFactoryImpl extends EFactoryImpl implements Teiidsqlmo
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Document createDocument() {
 		DocumentImpl document = new DocumentImpl();
 		return document;
@@ -99,6 +102,7 @@ public class TeiidsqlmodelFactoryImpl extends EFactoryImpl implements Teiidsqlmo
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TeiidsqlmodelPackage getTeiidsqlmodelPackage() {
 		return (TeiidsqlmodelPackage)getEPackage();
 	}

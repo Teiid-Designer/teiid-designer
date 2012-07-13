@@ -42,7 +42,8 @@ public class XmlOutputAspect extends XmlServiceComponentAspect implements SqlRes
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlColumnSetAspect#getColumns(org.eclipse.emf.ecore.EObject)
      * @since 4.2
      */
-    public List getColumns(final EObject eObject) {
+    @Override
+	public List getColumns(final EObject eObject) {
         CoreArgCheck.isInstanceOf(XmlOutput.class, eObject);
         final XmlOutput output = (XmlOutput)eObject;
         XmlResult result = output.getResult();
@@ -58,7 +59,8 @@ public class XmlOutputAspect extends XmlServiceComponentAspect implements SqlRes
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlColumnSetAspect#getColumnSetType()
      * @since 4.2
      */
-    public int getColumnSetType() {
+    @Override
+	public int getColumnSetType() {
         return MetadataConstants.COLUMN_SET_TYPES.PROCEDURE_RESULT;
     }
 
@@ -66,7 +68,8 @@ public class XmlOutputAspect extends XmlServiceComponentAspect implements SqlRes
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlAspect#isRecordType(char)
      * @since 4.2
      */
-    public boolean isRecordType(final char recordType) {
+    @Override
+	public boolean isRecordType(final char recordType) {
         return (recordType == IndexConstants.RECORD_TYPE.RESULT_SET);
     }
 
@@ -74,7 +77,8 @@ public class XmlOutputAspect extends XmlServiceComponentAspect implements SqlRes
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlDatatypeCheckerAspect#isDatatypeFeature(org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EStructuralFeature)
      * @since 4.3
      */
-    public boolean isDatatypeFeature(EObject eObject, EStructuralFeature eFeature) {
+    @Override
+	public boolean isDatatypeFeature(EObject eObject, EStructuralFeature eFeature) {
         CoreArgCheck.isInstanceOf(XmlOutput.class, eObject); 
         return false;
     }
@@ -84,7 +88,8 @@ public class XmlOutputAspect extends XmlServiceComponentAspect implements SqlRes
      * @return
      * @since 5.0.2
      */
-    public Object getProcedure(EObject eObject) {
+    @Override
+	public Object getProcedure(EObject eObject) {
         CoreArgCheck.isInstanceOf(XmlOutput.class, eObject); 
         return ((XmlOutput)eObject).getOperation();
     }

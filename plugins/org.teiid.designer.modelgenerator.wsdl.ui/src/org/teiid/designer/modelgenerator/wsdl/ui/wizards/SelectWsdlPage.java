@@ -162,7 +162,8 @@ public class SelectWsdlPage extends WizardPage
      * 
      * @param event the widget event
      */
-    public void handleEvent( Event event ) {
+    @Override
+	public void handleEvent( Event event ) {
         if (!initializing) {
             boolean validate = false;
 
@@ -211,7 +212,8 @@ public class SelectWsdlPage extends WizardPage
     /**
      * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
      */
-    public void createControl( Composite theParent ) {
+    @Override
+	public void createControl( Composite theParent ) {
         //
         // create main container
         //
@@ -382,7 +384,8 @@ public class SelectWsdlPage extends WizardPage
             textFieldTargetModelLocation.setText(name);
         }
         this.textFieldTargetModelLocation.addModifyListener(new ModifyListener() {
-            public void modifyText( final ModifyEvent event ) {
+            @Override
+			public void modifyText( final ModifyEvent event ) {
                 setPageStatus();
             }
         });
@@ -430,6 +433,7 @@ public class SelectWsdlPage extends WizardPage
 		sourceModelFileText.setLayoutData(gridData);
 		sourceModelFileText.setForeground(WidgetUtil.getDarkBlueColor());
 		sourceModelFileText.addModifyListener(new ModifyListener() {
+			@Override
 			public void modifyText(ModifyEvent e) {
 				handleSourceModelTextChanged();
 			}
@@ -612,7 +616,8 @@ public class SelectWsdlPage extends WizardPage
      */
     private void handleValidateWSDLButtonPressed() {
         final IRunnableWithProgress op = new IRunnableWithProgress() {
-            public void run( final IProgressMonitor monitor ) {
+            @Override
+			public void run( final IProgressMonitor monitor ) {
                 validateWSDL(monitor);
             }
         };
@@ -760,7 +765,8 @@ public class SelectWsdlPage extends WizardPage
         synchronizing = false;
     }
     
-    public void profileChanged(IConnectionProfile profile) {
+    @Override
+	public void profileChanged(IConnectionProfile profile) {
     	resetCPComboItems();
     	
     	selectConnectionProfile(profile.getName());
@@ -993,6 +999,7 @@ public class SelectWsdlPage extends WizardPage
 		return false;
 	}
 	
+	@Override
 	public void setVisible(boolean visible) {
 		super.setVisible(visible);
 

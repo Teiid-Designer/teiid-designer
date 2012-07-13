@@ -73,13 +73,15 @@ public class ModelExplorerContentProvider extends WorkbenchContentProvider imple
         this.extendedContentProvider = new ExtendedModelObjectContentProvider();
 
         this.deltaVisitor = new IResourceDeltaVisitor() {
-            public boolean visit( IResourceDelta theDelta ) {
+            @Override
+			public boolean visit( IResourceDelta theDelta ) {
                 return handleDeltaVisit(theDelta);
             }
         };
 
         this.modelListener = new EventObjectListener() {
-            public void processEvent( EventObject theEvent ) {
+            @Override
+			public void processEvent( EventObject theEvent ) {
                 handleModelEvents(theEvent);
             }
         };
@@ -90,7 +92,8 @@ public class ModelExplorerContentProvider extends WorkbenchContentProvider imple
         }
 
         this.resourceListener = new IResourceChangeListener() {
-            public void resourceChanged( IResourceChangeEvent theEvent ) {
+            @Override
+			public void resourceChanged( IResourceChangeEvent theEvent ) {
                 handleResourceEvent(theEvent);
             }
         };
@@ -118,7 +121,8 @@ public class ModelExplorerContentProvider extends WorkbenchContentProvider imple
     /**
      * handle preference change. This only responds to change in modelContents sort preference.
      */
-    public void propertyChange( PropertyChangeEvent e ) {
+    @Override
+	public void propertyChange( PropertyChangeEvent e ) {
         String propStr = e.getProperty();
         if (propStr != null && (propStr.equals(PluginConstants.Prefs.General.SORT_MODEL_CONTENTS))) {
             this.sortModelContent = getSortModelContentsPreferenceBooleanValue();

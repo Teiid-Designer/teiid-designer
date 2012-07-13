@@ -109,7 +109,8 @@ public class XmlServiceFactoryImpl extends EFactoryImpl implements XmlServiceFac
      * 
      * @generated
      */
-    public XmlOperation createXmlOperation() {
+    @Override
+	public XmlOperation createXmlOperation() {
         XmlOperationImpl xmlOperation = new XmlOperationImpl();
         return xmlOperation;
     }
@@ -119,7 +120,8 @@ public class XmlServiceFactoryImpl extends EFactoryImpl implements XmlServiceFac
      * 
      * @generated
      */
-    public XmlInput createXmlInput() {
+    @Override
+	public XmlInput createXmlInput() {
         XmlInputImpl xmlInput = new XmlInputImpl();
         return xmlInput;
     }
@@ -129,7 +131,8 @@ public class XmlServiceFactoryImpl extends EFactoryImpl implements XmlServiceFac
      * 
      * @generated
      */
-    public XmlServiceComponent createXmlServiceComponent() {
+    @Override
+	public XmlServiceComponent createXmlServiceComponent() {
         XmlServiceComponentImpl xmlServiceComponent = new XmlServiceComponentImpl();
         return xmlServiceComponent;
     }
@@ -139,7 +142,8 @@ public class XmlServiceFactoryImpl extends EFactoryImpl implements XmlServiceFac
      * 
      * @generated
      */
-    public XmlOutput createXmlOutput() {
+    @Override
+	public XmlOutput createXmlOutput() {
         XmlOutputImpl xmlOutput = new XmlOutputImpl();
         return xmlOutput;
     }
@@ -149,7 +153,8 @@ public class XmlServiceFactoryImpl extends EFactoryImpl implements XmlServiceFac
      * 
      * @generated
      */
-    public XmlMessage createXmlMessage() {
+    @Override
+	public XmlMessage createXmlMessage() {
         XmlMessageImpl xmlMessage = new XmlMessageImpl();
         return xmlMessage;
     }
@@ -159,7 +164,8 @@ public class XmlServiceFactoryImpl extends EFactoryImpl implements XmlServiceFac
      * 
      * @generated
      */
-    public XmlResult createXmlResult() {
+    @Override
+	public XmlResult createXmlResult() {
         XmlResultImpl xmlResult = new XmlResultImpl();
         return xmlResult;
     }
@@ -169,7 +175,8 @@ public class XmlServiceFactoryImpl extends EFactoryImpl implements XmlServiceFac
      * 
      * @generated
      */
-    public XmlServicePackage getXmlServicePackage() {
+    @Override
+	public XmlServicePackage getXmlServicePackage() {
         return (XmlServicePackage)getEPackage();
     }
 

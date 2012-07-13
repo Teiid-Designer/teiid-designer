@@ -59,7 +59,8 @@ public class CustomDiagramPermanentActionContributor implements IModelObjectActi
     /* (non-Javadoc)
      * @See org.teiid.designer.ui.actions.IModelObjectActionContributor#contributeToContextMenu(org.eclipse.jface.action.IMenuManager, org.eclipse.jface.viewers.ISelection)
      */
-    public void contributeToContextMenu(IMenuManager theMenuMgr, ISelection theSelection) {
+    @Override
+	public void contributeToContextMenu(IMenuManager theMenuMgr, ISelection theSelection) {
         // Need to check the selection first.
         
         if( SelectionUtilities.isSingleSelection(theSelection) ) {
@@ -100,7 +101,8 @@ public class CustomDiagramPermanentActionContributor implements IModelObjectActi
      * @see org.teiid.designer.ui.actions.IModelObjectActionContributor#getAdditionalModelingActions(org.eclipse.jface.viewers.ISelection)
      * @since 5.0
      */
-    public List<IAction> getAdditionalModelingActions(ISelection theSelection) {
+    @Override
+	public List<IAction> getAdditionalModelingActions(ISelection theSelection) {
         List addedActions = new ArrayList();
         
         // Need to check the selection first.

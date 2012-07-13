@@ -39,7 +39,8 @@ public class XAttributeFeatureRule implements ObjectValidationRule {
      * @see org.teiid.designer.core.validation.ObjectValidationRule#validate(org.eclipse.emf.ecore.EObject, org.teiid.designer.core.validation.ValidationContext)
      * @since 4.2
      */
-    public void validate(EObject eObject, ValidationContext context) {
+    @Override
+	public void validate(EObject eObject, ValidationContext context) {
         CoreArgCheck.isInstanceOf(XAttribute.class, eObject);
 
         final XAttribute xattribute = (XAttribute) eObject;

@@ -146,7 +146,8 @@ public class MappingClassAnchorManager implements AnchorManager {
         return false;
     }
 
-    public boolean add( NodeConnectionAnchor targetAnchor ) {
+    @Override
+	public boolean add( NodeConnectionAnchor targetAnchor ) {
         boolean added = false;
 
         if (targetAnchor.getDirection() == EAST) {
@@ -160,7 +161,8 @@ public class MappingClassAnchorManager implements AnchorManager {
         return added;
     }
 
-    public boolean move( NodeConnectionAnchor targetAnchor ) {
+    @Override
+	public boolean move( NodeConnectionAnchor targetAnchor ) {
         // Need to move the target anchor from one anchor list to another.
 
         // remove from any list.
@@ -174,7 +176,8 @@ public class MappingClassAnchorManager implements AnchorManager {
         return false;
     }
 
-    public boolean remove( NodeConnectionAnchor targetAnchor ) {
+    @Override
+	public boolean remove( NodeConnectionAnchor targetAnchor ) {
         boolean removed = false;
 
         if (targetAnchor.getDirection() != EAST && getEastAnchors() != null && getEastAnchors().contains(targetAnchor)) {
@@ -195,7 +198,8 @@ public class MappingClassAnchorManager implements AnchorManager {
         return removed;
     }
 
-    public void resetSourceAnchors( boolean updateTargetEnd ) {
+    @Override
+	public void resetSourceAnchors( boolean updateTargetEnd ) {
         cleanUpAnchors();
 
         List sConnections = getSourceConnections();
@@ -223,7 +227,8 @@ public class MappingClassAnchorManager implements AnchorManager {
         }
     }
 
-    public void resetTargetAnchors( boolean updateSourceEnd ) {
+    @Override
+	public void resetTargetAnchors( boolean updateSourceEnd ) {
         cleanUpAnchors();
 
         List tConnections = getTargetConnections();
@@ -252,21 +257,24 @@ public class MappingClassAnchorManager implements AnchorManager {
     /**
      * @return
      */
-    public List getSourceConnections() {
+    @Override
+	public List getSourceConnections() {
         return diagramEditPart.getSourceConnections();
     }
 
     /**
      * @return
      */
-    public List getTargetConnections() {
+    @Override
+	public List getTargetConnections() {
         return diagramEditPart.getTargetConnections();
     }
 
     /**
      * @return
      */
-    public ConnectionAnchor getSourceAnchor( NodeConnectionEditPart connection ) {
+    @Override
+	public ConnectionAnchor getSourceAnchor( NodeConnectionEditPart connection ) {
         // This anchor manager belongs to the edit part.
         // This edit part knows about all it's target connections
         // An anchor is either target or source
@@ -284,7 +292,8 @@ public class MappingClassAnchorManager implements AnchorManager {
     /**
      * @return
      */
-    public ConnectionAnchor getTargetAnchor( NodeConnectionEditPart connection ) {
+    @Override
+	public ConnectionAnchor getTargetAnchor( NodeConnectionEditPart connection ) {
         // This anchor manager belongs to the edit part.
         // This edit part knows about all it's target connections
         // An anchor is either target or source
@@ -314,7 +323,8 @@ public class MappingClassAnchorManager implements AnchorManager {
         return newAnchor;
     }
 
-    public boolean hasSourceAnchors() {
+    @Override
+	public boolean hasSourceAnchors() {
         NodeConnectionAnchor nextAnchor = null;
         Iterator iter = null;
 
@@ -345,7 +355,8 @@ public class MappingClassAnchorManager implements AnchorManager {
         return false;
     }
 
-    public boolean hasTargetAnchors() {
+    @Override
+	public boolean hasTargetAnchors() {
         NodeConnectionAnchor nextAnchor = null;
         Iterator iter = null;
 
@@ -434,7 +445,8 @@ public class MappingClassAnchorManager implements AnchorManager {
         return null;
     }
 
-    public void setAnchorPosition( NodeConnectionAnchor theAnchor,
+    @Override
+	public void setAnchorPosition( NodeConnectionAnchor theAnchor,
                                    int direction ) {
         if (diagramEditPart.getModel() != null) {
             Dimension partSize = ((DiagramModelNode)diagramEditPart.getModel()).getSize();
@@ -644,7 +656,8 @@ public class MappingClassAnchorManager implements AnchorManager {
      * @see org.teiid.designer.diagram.ui.connection.AnchorManager#reorderAllAnchors()
      * @since 4.2
      */
-    public void reorderAllAnchors( boolean updateBothEnds ) {
+    @Override
+	public void reorderAllAnchors( boolean updateBothEnds ) {
         resetSourceAnchors(updateBothEnds);
         resetTargetAnchors(updateBothEnds);
     }

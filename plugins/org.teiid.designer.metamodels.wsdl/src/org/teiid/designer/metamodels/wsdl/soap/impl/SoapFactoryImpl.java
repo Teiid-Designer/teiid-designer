@@ -115,7 +115,8 @@ public class SoapFactoryImpl extends EFactoryImpl implements SoapFactory {
      * 
      * @generated
      */
-    public SoapAddress createSoapAddress() {
+    @Override
+	public SoapAddress createSoapAddress() {
         SoapAddressImpl soapAddress = new SoapAddressImpl();
         return soapAddress;
     }
@@ -125,7 +126,8 @@ public class SoapFactoryImpl extends EFactoryImpl implements SoapFactory {
      * 
      * @generated
      */
-    public SoapHeaderFault createSoapHeaderFault() {
+    @Override
+	public SoapHeaderFault createSoapHeaderFault() {
         SoapHeaderFaultImpl soapHeaderFault = new SoapHeaderFaultImpl();
         return soapHeaderFault;
     }
@@ -135,7 +137,8 @@ public class SoapFactoryImpl extends EFactoryImpl implements SoapFactory {
      * 
      * @generated
      */
-    public SoapFault createSoapFault() {
+    @Override
+	public SoapFault createSoapFault() {
         SoapFaultImpl soapFault = new SoapFaultImpl();
         return soapFault;
     }
@@ -145,7 +148,8 @@ public class SoapFactoryImpl extends EFactoryImpl implements SoapFactory {
      * 
      * @generated
      */
-    public SoapHeader createSoapHeader() {
+    @Override
+	public SoapHeader createSoapHeader() {
         SoapHeaderImpl soapHeader = new SoapHeaderImpl();
         return soapHeader;
     }
@@ -155,7 +159,8 @@ public class SoapFactoryImpl extends EFactoryImpl implements SoapFactory {
      * 
      * @generated
      */
-    public SoapBody createSoapBody() {
+    @Override
+	public SoapBody createSoapBody() {
         SoapBodyImpl soapBody = new SoapBodyImpl();
         return soapBody;
     }
@@ -165,7 +170,8 @@ public class SoapFactoryImpl extends EFactoryImpl implements SoapFactory {
      * 
      * @generated
      */
-    public SoapOperation createSoapOperation() {
+    @Override
+	public SoapOperation createSoapOperation() {
         SoapOperationImpl soapOperation = new SoapOperationImpl();
         return soapOperation;
     }
@@ -175,7 +181,8 @@ public class SoapFactoryImpl extends EFactoryImpl implements SoapFactory {
      * 
      * @generated
      */
-    public SoapBinding createSoapBinding() {
+    @Override
+	public SoapBinding createSoapBinding() {
         SoapBindingImpl soapBinding = new SoapBindingImpl();
         return soapBinding;
     }
@@ -185,7 +192,8 @@ public class SoapFactoryImpl extends EFactoryImpl implements SoapFactory {
      * 
      * @generated
      */
-    public SoapPackage getSoapPackage() {
+    @Override
+	public SoapPackage getSoapPackage() {
         return (SoapPackage)getEPackage();
     }
 

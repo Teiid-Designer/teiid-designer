@@ -67,7 +67,8 @@ public class ModelOutlineNotificationHandler extends ModelObjectTreeViewerNotifi
                     if (this.window.getActivePage().getActivePart() == this.viewer.getWorkbenchPart()) {
                         this.renameAction.selectionChanged(this.viewer.getWorkbenchPart(), selection);
                         Display.getCurrent().asyncExec(new Runnable() {
-                            public void run() {
+                            @Override
+							public void run() {
                                 renameAction.doRun(false);
                             }
                         });

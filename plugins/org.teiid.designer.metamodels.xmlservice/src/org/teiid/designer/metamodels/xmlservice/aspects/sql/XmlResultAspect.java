@@ -121,7 +121,8 @@ public class XmlResultAspect extends XmlServiceComponentAspect implements SqlCol
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlColumnAspect#getCharOctetLength(org.eclipse.emf.ecore.EObject)
      * @since 4.2
      */
-    public int getCharOctetLength(EObject eObject) {
+    @Override
+	public int getCharOctetLength(EObject eObject) {
         return CHAR_OCTET_LENGTH;
     }
 
@@ -129,7 +130,8 @@ public class XmlResultAspect extends XmlServiceComponentAspect implements SqlCol
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlColumnAspect#getDatatype(org.eclipse.emf.ecore.EObject)
      * @since 4.2
      */
-    public EObject getDatatype(EObject eObject) {
+    @Override
+	public EObject getDatatype(EObject eObject) {
         try {
             final DatatypeManager dtMgr = ModelerCore.getDatatypeManager(eObject,true);
             return dtMgr.getBuiltInDatatype(DATATYPE_NAME);
@@ -143,7 +145,8 @@ public class XmlResultAspect extends XmlServiceComponentAspect implements SqlCol
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlColumnAspect#getDatatypeName(org.eclipse.emf.ecore.EObject)
      * @since 4.2
      */
-    public String getDatatypeName(EObject eObject) {
+    @Override
+	public String getDatatypeName(EObject eObject) {
         return DATATYPE_NAME;
     }
 
@@ -151,7 +154,8 @@ public class XmlResultAspect extends XmlServiceComponentAspect implements SqlCol
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlColumnAspect#getDatatypeObjectID(org.eclipse.emf.ecore.EObject)
      * @since 4.2
      */
-    public String getDatatypeObjectID(EObject eObject) {
+    @Override
+	public String getDatatypeObjectID(EObject eObject) {
         EObject datatype = getDatatype(eObject);
         if (datatype == null) {
             return null;
@@ -164,7 +168,8 @@ public class XmlResultAspect extends XmlServiceComponentAspect implements SqlCol
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlColumnAspect#getDefaultValue(org.eclipse.emf.ecore.EObject)
      * @since 4.2
      */
-    public Object getDefaultValue(EObject eObject) {
+    @Override
+	public Object getDefaultValue(EObject eObject) {
         return DEFAULT_VALUE;
     }
 
@@ -172,7 +177,8 @@ public class XmlResultAspect extends XmlServiceComponentAspect implements SqlCol
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlColumnAspect#getFormat(org.eclipse.emf.ecore.EObject)
      * @since 4.2
      */
-    public String getFormat(EObject eObject) {
+    @Override
+	public String getFormat(EObject eObject) {
         return FORMAT;
     }
 
@@ -180,7 +186,8 @@ public class XmlResultAspect extends XmlServiceComponentAspect implements SqlCol
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlColumnAspect#getLength(org.eclipse.emf.ecore.EObject)
      * @since 4.2
      */
-    public int getLength(EObject eObject) {
+    @Override
+	public int getLength(EObject eObject) {
         return LENGTH;
     }
 
@@ -188,7 +195,8 @@ public class XmlResultAspect extends XmlServiceComponentAspect implements SqlCol
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlColumnAspect#getMaxValue(org.eclipse.emf.ecore.EObject)
      * @since 4.2
      */
-    public Object getMaxValue(EObject eObject) {
+    @Override
+	public Object getMaxValue(EObject eObject) {
         return MAX_VALUE;
     }
 
@@ -196,7 +204,8 @@ public class XmlResultAspect extends XmlServiceComponentAspect implements SqlCol
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlColumnAspect#getMinValue(org.eclipse.emf.ecore.EObject)
      * @since 4.2
      */
-    public Object getMinValue(EObject eObject) {
+    @Override
+	public Object getMinValue(EObject eObject) {
         return MIN_VALUE;
     }
 
@@ -204,7 +213,8 @@ public class XmlResultAspect extends XmlServiceComponentAspect implements SqlCol
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlColumnAspect#getNullType(org.eclipse.emf.ecore.EObject)
      * @since 4.2
      */
-    public int getNullType(EObject eObject) {
+    @Override
+	public int getNullType(EObject eObject) {
         return NULL_TYPE;
     }
 
@@ -212,7 +222,8 @@ public class XmlResultAspect extends XmlServiceComponentAspect implements SqlCol
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlColumnAspect#getPosition(org.eclipse.emf.ecore.EObject)
      * @since 4.2
      */
-    public int getPosition(EObject eObject) {
+    @Override
+	public int getPosition(EObject eObject) {
         return POSITION;
     }
 
@@ -220,7 +231,8 @@ public class XmlResultAspect extends XmlServiceComponentAspect implements SqlCol
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlColumnAspect#getPrecision(org.eclipse.emf.ecore.EObject)
      * @since 4.2
      */
-    public int getPrecision(EObject eObject) {
+    @Override
+	public int getPrecision(EObject eObject) {
         return PRECISION;
     }
 
@@ -228,7 +240,8 @@ public class XmlResultAspect extends XmlServiceComponentAspect implements SqlCol
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlColumnAspect#getRadix(org.eclipse.emf.ecore.EObject)
      * @since 4.2
      */
-    public int getRadix(EObject eObject) {
+    @Override
+	public int getRadix(EObject eObject) {
         return RADIX;
     }
 
@@ -236,7 +249,8 @@ public class XmlResultAspect extends XmlServiceComponentAspect implements SqlCol
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlColumnAspect#getDistinctValues(org.eclipse.emf.ecore.EObject)
      * @since 4.3
      */
-    public int getDistinctValues(EObject eObject) {
+    @Override
+	public int getDistinctValues(EObject eObject) {
         return DISTINCT_VALUES;
     }
 
@@ -244,7 +258,8 @@ public class XmlResultAspect extends XmlServiceComponentAspect implements SqlCol
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlColumnAspect#getNullValues(org.eclipse.emf.ecore.EObject)
      * @since 4.3
      */
-    public int getNullValues(EObject eObject) {
+    @Override
+	public int getNullValues(EObject eObject) {
         return NULL_VALUES;
     }
 
@@ -252,7 +267,8 @@ public class XmlResultAspect extends XmlServiceComponentAspect implements SqlCol
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlColumnAspect#getNativeType(org.eclipse.emf.ecore.EObject)
      * @since 4.2
      */
-    public String getNativeType(EObject eObject) {
+    @Override
+	public String getNativeType(EObject eObject) {
         return null;
     }
 
@@ -260,7 +276,8 @@ public class XmlResultAspect extends XmlServiceComponentAspect implements SqlCol
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlColumnAspect#getRuntimeType(org.eclipse.emf.ecore.EObject)
      * @since 4.2
      */
-    public String getRuntimeType(EObject eObject) {
+    @Override
+	public String getRuntimeType(EObject eObject) {
         return RUNTIME_TYPE;
     }
 
@@ -268,7 +285,8 @@ public class XmlResultAspect extends XmlServiceComponentAspect implements SqlCol
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlColumnAspect#getScale(org.eclipse.emf.ecore.EObject)
      * @since 4.2
      */
-    public int getScale(EObject eObject) {
+    @Override
+	public int getScale(EObject eObject) {
         return SCALE;
     }
 
@@ -276,7 +294,8 @@ public class XmlResultAspect extends XmlServiceComponentAspect implements SqlCol
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlColumnAspect#getSearchType(org.eclipse.emf.ecore.EObject)
      * @since 4.2
      */
-    public int getSearchType(EObject eObject) {
+    @Override
+	public int getSearchType(EObject eObject) {
         return SEARCH_TYPE;
     }
 
@@ -284,7 +303,8 @@ public class XmlResultAspect extends XmlServiceComponentAspect implements SqlCol
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlColumnAspect#isAutoIncrementable(org.eclipse.emf.ecore.EObject)
      * @since 4.2
      */
-    public boolean isAutoIncrementable(EObject eObject) {
+    @Override
+	public boolean isAutoIncrementable(EObject eObject) {
         return AUTO_INCREMENT;
     }
 
@@ -292,7 +312,8 @@ public class XmlResultAspect extends XmlServiceComponentAspect implements SqlCol
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlColumnAspect#isCaseSensitive(org.eclipse.emf.ecore.EObject)
      * @since 4.2
      */
-    public boolean isCaseSensitive(EObject eObject) {
+    @Override
+	public boolean isCaseSensitive(EObject eObject) {
         return CASE_SENSITIVE;
     }
 
@@ -300,7 +321,8 @@ public class XmlResultAspect extends XmlServiceComponentAspect implements SqlCol
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlColumnAspect#isCurrency(org.eclipse.emf.ecore.EObject)
      * @since 4.2
      */
-    public boolean isCurrency(EObject eObject) {
+    @Override
+	public boolean isCurrency(EObject eObject) {
         return CURRENCY;
     }
 
@@ -309,7 +331,8 @@ public class XmlResultAspect extends XmlServiceComponentAspect implements SqlCol
      *      org.eclipse.emf.ecore.EStructuralFeature)
      * @since 4.2
      */
-    public boolean isDatatypeFeature(EObject eObject, EStructuralFeature eFeature) {
+    @Override
+	public boolean isDatatypeFeature(EObject eObject, EStructuralFeature eFeature) {
         // documents do not have datatype features
         return false;
     }
@@ -318,7 +341,8 @@ public class XmlResultAspect extends XmlServiceComponentAspect implements SqlCol
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlColumnAspect#isFixedLength(org.eclipse.emf.ecore.EObject)
      * @since 4.2
      */
-    public boolean isFixedLength(EObject eObject) {
+    @Override
+	public boolean isFixedLength(EObject eObject) {
         return FIXED_LENGTH;
     }
 
@@ -326,7 +350,8 @@ public class XmlResultAspect extends XmlServiceComponentAspect implements SqlCol
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlColumnAspect#isSelectable(org.eclipse.emf.ecore.EObject)
      * @since 4.2
      */
-    public boolean isSelectable(EObject eObject) {
+    @Override
+	public boolean isSelectable(EObject eObject) {
         return SELECTABLE;
     }
 
@@ -334,7 +359,8 @@ public class XmlResultAspect extends XmlServiceComponentAspect implements SqlCol
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlColumnAspect#isSigned(org.eclipse.emf.ecore.EObject)
      * @since 4.2
      */
-    public boolean isSigned(EObject eObject) {
+    @Override
+	public boolean isSigned(EObject eObject) {
         return SIGNED;
     }
 
@@ -342,7 +368,8 @@ public class XmlResultAspect extends XmlServiceComponentAspect implements SqlCol
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlColumnAspect#isTranformationInputParameter(org.eclipse.emf.ecore.EObject)
      * @since 4.2
      */
-    public boolean isTranformationInputParameter(EObject eObject) {
+    @Override
+	public boolean isTranformationInputParameter(EObject eObject) {
         return TRANSFORMATION_INPUT_PARAMETER;
     }
 
@@ -350,7 +377,8 @@ public class XmlResultAspect extends XmlServiceComponentAspect implements SqlCol
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlColumnAspect#isUpdatable(org.eclipse.emf.ecore.EObject)
      * @since 4.2
      */
-    public boolean isUpdatable(EObject eObject) {
+    @Override
+	public boolean isUpdatable(EObject eObject) {
         return UPDATABLE;
     }
     
@@ -358,7 +386,8 @@ public class XmlResultAspect extends XmlServiceComponentAspect implements SqlCol
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlColumnAspect#canSetDatatype()
      * @since 4.2
      */
-    public boolean canSetDatatype() {
+    @Override
+	public boolean canSetDatatype() {
         return false;
     }
 
@@ -367,7 +396,8 @@ public class XmlResultAspect extends XmlServiceComponentAspect implements SqlCol
      *      org.eclipse.emf.ecore.EObject)
      * @since 4.2
      */
-    public void setDatatype(EObject eObject, EObject datatype) {
+    @Override
+	public void setDatatype(EObject eObject, EObject datatype) {
         throw new UnsupportedOperationException(XmlServiceMetamodelPlugin.Util.getString("XmlResultAspect.setDatatypeNotSupported")); //$NON-NLS-1$
     }
     
@@ -375,7 +405,8 @@ public class XmlResultAspect extends XmlServiceComponentAspect implements SqlCol
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlColumnAspect#canSetLength()
      * @since 4.2
      */
-    public boolean canSetLength() {
+    @Override
+	public boolean canSetLength() {
         return false;
     }
 
@@ -383,7 +414,8 @@ public class XmlResultAspect extends XmlServiceComponentAspect implements SqlCol
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlColumnAspect#setLength(org.eclipse.emf.ecore.EObject, int)
      * @since 4.2
      */
-    public void setLength(EObject eObject, int length) {
+    @Override
+	public void setLength(EObject eObject, int length) {
         throw new UnsupportedOperationException(XmlServiceMetamodelPlugin.Util.getString("XmlResultAspect.setLengthNotSupported")); //$NON-NLS-1$
     }
     
@@ -391,7 +423,8 @@ public class XmlResultAspect extends XmlServiceComponentAspect implements SqlCol
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlColumnAspect#canSetNullType()
      * @since 4.2
      */
-    public boolean canSetNullType() {
+    @Override
+	public boolean canSetNullType() {
         return false;
     }
 
@@ -399,7 +432,8 @@ public class XmlResultAspect extends XmlServiceComponentAspect implements SqlCol
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlColumnAspect#setNullType(org.eclipse.emf.ecore.EObject, int)
      * @since 4.2
      */
-    public void setNullType(EObject eObject, int nullType) {
+    @Override
+	public void setNullType(EObject eObject, int nullType) {
         throw new UnsupportedOperationException(XmlServiceMetamodelPlugin.Util.getString("XmlResultAspect.setNullTypeNotSupported")); //$NON-NLS-1$
     }
 
@@ -407,7 +441,8 @@ public class XmlResultAspect extends XmlServiceComponentAspect implements SqlCol
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlAspect#isRecordType(char)
      * @since 4.2
      */
-    public boolean isRecordType(char recordType) {
+    @Override
+	public boolean isRecordType(char recordType) {
         return recordType == IndexConstants.RECORD_TYPE.COLUMN;
     }
 

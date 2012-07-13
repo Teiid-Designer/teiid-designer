@@ -43,7 +43,8 @@ public interface SqlAnnotationAspect extends SqlAspect {
      * @param eObject The <code>EObject</code> whose annotated object ID is obtained 
      * @return ObjectID of the annotated eobject.
      */
-    Object getObjectID(EObject eObject);
+    @Override
+	Object getObjectID(EObject eObject);
     
     /**
      * Get the URI of the annotated object

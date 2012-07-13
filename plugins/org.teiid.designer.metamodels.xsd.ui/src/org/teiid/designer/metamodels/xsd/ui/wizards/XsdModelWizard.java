@@ -93,7 +93,8 @@ public class XsdModelWizard extends Wizard implements
     /**
      *  Set the initial info.
      */
-    public void init(IWorkbench workbench,
+    @Override
+	public void init(IWorkbench workbench,
                      IStructuredSelection selection) {
         this.workbench = workbench;
         this.initialSelection = selection;
@@ -165,7 +166,8 @@ public class XsdModelWizard extends Wizard implements
                 final ISelection targetSelection = new StructuredSelection(modelFile);
                 getShell().getDisplay().asyncExec(new Runnable() {
 
-                    public void run() {
+                    @Override
+					public void run() {
                         ((ISetSelectionTarget)activePart).selectReveal(targetSelection);
                     }
                 });
@@ -284,7 +286,8 @@ public class XsdModelWizard extends Wizard implements
         /**
          * Create the page and all controls.
          */
-        public void createControl(Composite parent) {
+        @Override
+		public void createControl(Composite parent) {
         	GridData gd = null;
         	
         	// -------------------------------------------------------------------------------------------------------------------

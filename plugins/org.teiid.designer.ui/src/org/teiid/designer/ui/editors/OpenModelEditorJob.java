@@ -45,7 +45,8 @@ public class OpenModelEditorJob extends Job {
     protected IStatus run( IProgressMonitor theMonitor ) {
 
         UiBusyIndicator.showWhile(Display.getDefault(), new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 if (editableObject != null) {
                     ModelEditorManager.edit(editableObject);
                 } else {

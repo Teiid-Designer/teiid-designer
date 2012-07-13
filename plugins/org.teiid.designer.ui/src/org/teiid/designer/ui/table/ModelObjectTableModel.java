@@ -359,7 +359,8 @@ public class ModelObjectTableModel implements UiConstants, EObjectPropertiesOrde
     /* (non-Javadoc)
      * @see org.teiid.designer.ui.table.ModelTableColumnPreferencesListener#columnsChanged()
      */
-    public void propertiesChanged(List eObjects) {
+    @Override
+	public void propertiesChanged(List eObjects) {
         if (eObjects == null || eObjects.contains(this.eObject)) {
             this.columnsBuilt = false;
             buildPropertyIdMap();
@@ -389,7 +390,8 @@ public class ModelObjectTableModel implements UiConstants, EObjectPropertiesOrde
         }
     }
 
-    public void widgetDisposed(DisposeEvent e) {
+    @Override
+	public void widgetDisposed(DisposeEvent e) {
         UiPlugin.getDefault().getEObjectPropertiesOrderPreferences().removeEObjectPropertiesOrderPreferencesListener(this);
     }
 }

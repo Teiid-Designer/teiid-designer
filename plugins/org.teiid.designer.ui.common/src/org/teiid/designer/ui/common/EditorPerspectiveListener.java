@@ -41,37 +41,45 @@ public class EditorPerspectiveListener implements IPerspectiveListener3 {
     public EditorPerspectiveListener( IWorkbenchWindow window ) {
         // register a part listener to keep track of the current editor
         window.getPartService().addPartListener(new IPartListener2() {
-            public void partActivated( IWorkbenchPartReference ref ) {
+            @Override
+			public void partActivated( IWorkbenchPartReference ref ) {
                 if (ref instanceof IEditorReference) {
                     currentEditor = (IEditorReference)ref;
                 }
             }
 
-            public void partBroughtToTop( IWorkbenchPartReference ref ) {
+            @Override
+			public void partBroughtToTop( IWorkbenchPartReference ref ) {
                 if (ref instanceof IEditorReference) {
                     currentEditor = (IEditorReference)ref;
                 }
             }
 
-            public void partClosed( IWorkbenchPartReference ref ) {
+            @Override
+			public void partClosed( IWorkbenchPartReference ref ) {
                 if (ref != null && ref.equals(currentEditor)) {
                     currentEditor = null;
                 }
             }
 
-            public void partDeactivated( IWorkbenchPartReference ref ) {
+            @Override
+			public void partDeactivated( IWorkbenchPartReference ref ) {
             }
 
-            public void partOpened( IWorkbenchPartReference ref ) {
+            @Override
+			public void partOpened( IWorkbenchPartReference ref ) {
             }
 
-            public void partHidden( IWorkbenchPartReference ref ) {
+            @Override
+			public void partHidden( IWorkbenchPartReference ref ) {
             }
 
-            public void partVisible( IWorkbenchPartReference ref ) {
+            @Override
+			public void partVisible( IWorkbenchPartReference ref ) {
             }
 
-            public void partInputChanged( IWorkbenchPartReference ref ) {
+            @Override
+			public void partInputChanged( IWorkbenchPartReference ref ) {
             }
 
         });
@@ -82,7 +90,8 @@ public class EditorPerspectiveListener implements IPerspectiveListener3 {
      *      org.eclipse.ui.IPerspectiveDescriptor)
      * @since 5.0.2
      */
-    public void perspectiveClosed( IWorkbenchPage page,
+    @Override
+	public void perspectiveClosed( IWorkbenchPage page,
                                    IPerspectiveDescriptor perspective ) {
         activeEditorMap.remove(perspective);
     }
@@ -92,7 +101,8 @@ public class EditorPerspectiveListener implements IPerspectiveListener3 {
      *      org.eclipse.ui.IPerspectiveDescriptor)
      * @since 5.0.2
      */
-    public void perspectiveDeactivated( IWorkbenchPage page,
+    @Override
+	public void perspectiveDeactivated( IWorkbenchPage page,
                                         IPerspectiveDescriptor perspective ) {
         try {
             if (currentEditor != null && currentEditor.getEditorInput() != null) {
@@ -109,7 +119,8 @@ public class EditorPerspectiveListener implements IPerspectiveListener3 {
      *      org.eclipse.ui.IPerspectiveDescriptor)
      * @since 5.0.2
      */
-    public void perspectiveActivated( IWorkbenchPage page,
+    @Override
+	public void perspectiveActivated( IWorkbenchPage page,
                                       IPerspectiveDescriptor perspective ) {
         if (activeEditorMap.keySet().contains(perspective)) {
             IEditorInput editorInput = activeEditorMap.get(perspective);
@@ -134,7 +145,8 @@ public class EditorPerspectiveListener implements IPerspectiveListener3 {
      *      org.eclipse.ui.IPerspectiveDescriptor, org.eclipse.ui.IPerspectiveDescriptor)
      * @since 5.0.2
      */
-    public void perspectiveSavedAs( IWorkbenchPage page,
+    @Override
+	public void perspectiveSavedAs( IWorkbenchPage page,
                                     IPerspectiveDescriptor oldPerspective,
                                     IPerspectiveDescriptor newPerspective ) {
         IEditorInput editor = activeEditorMap.get(oldPerspective);
@@ -148,7 +160,8 @@ public class EditorPerspectiveListener implements IPerspectiveListener3 {
      *      org.eclipse.ui.IPerspectiveDescriptor, org.eclipse.ui.IWorkbenchPartReference, java.lang.String)
      * @since 5.0.2
      */
-    public void perspectiveChanged( IWorkbenchPage page,
+    @Override
+	public void perspectiveChanged( IWorkbenchPage page,
                                     IPerspectiveDescriptor perspective,
                                     IWorkbenchPartReference partRef,
                                     String changeId ) {
@@ -159,7 +172,8 @@ public class EditorPerspectiveListener implements IPerspectiveListener3 {
      *      org.eclipse.ui.IPerspectiveDescriptor, java.lang.String)
      * @since 5.0.2
      */
-    public void perspectiveChanged( IWorkbenchPage page,
+    @Override
+	public void perspectiveChanged( IWorkbenchPage page,
                                     IPerspectiveDescriptor perspective,
                                     String changeId ) {
     }
@@ -169,7 +183,8 @@ public class EditorPerspectiveListener implements IPerspectiveListener3 {
      *      org.eclipse.ui.IPerspectiveDescriptor)
      * @since 5.0.2
      */
-    public void perspectiveOpened( IWorkbenchPage page,
+    @Override
+	public void perspectiveOpened( IWorkbenchPage page,
                                    IPerspectiveDescriptor perspective ) {
     }
 }

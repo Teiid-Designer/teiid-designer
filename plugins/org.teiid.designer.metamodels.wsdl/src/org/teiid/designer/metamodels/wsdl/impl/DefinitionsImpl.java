@@ -210,7 +210,8 @@ public class DefinitionsImpl extends EObjectImpl implements Definitions {
      * 
      * @generated
      */
-    public String getName() {
+    @Override
+	public String getName() {
         return name;
     }
 
@@ -219,7 +220,8 @@ public class DefinitionsImpl extends EObjectImpl implements Definitions {
      * 
      * @generated
      */
-    public void setName( String newName ) {
+    @Override
+	public void setName( String newName ) {
         String oldName = name;
         name = newName;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, WsdlPackage.DEFINITIONS__NAME,
@@ -231,7 +233,8 @@ public class DefinitionsImpl extends EObjectImpl implements Definitions {
      * 
      * @generated
      */
-    public EList getDeclaredNamespaces() {
+    @Override
+	public EList getDeclaredNamespaces() {
         if (declaredNamespaces == null) {
             declaredNamespaces = new EObjectContainmentWithInverseEList(NamespaceDeclaration.class, this,
                                                                         WsdlPackage.DEFINITIONS__DECLARED_NAMESPACES,
@@ -245,7 +248,8 @@ public class DefinitionsImpl extends EObjectImpl implements Definitions {
      * 
      * @generated
      */
-    public EList getElements() {
+    @Override
+	public EList getElements() {
         if (elements == null) {
             elements = new EObjectContainmentWithInverseEList(Element.class, this, WsdlPackage.DEFINITIONS__ELEMENTS,
                                                               WsdlPackage.ELEMENT__ELEMENT_OWNER);
@@ -258,7 +262,8 @@ public class DefinitionsImpl extends EObjectImpl implements Definitions {
      * 
      * @generated
      */
-    public Documentation getDocumentation() {
+    @Override
+	public Documentation getDocumentation() {
         return documentation;
     }
 
@@ -286,7 +291,8 @@ public class DefinitionsImpl extends EObjectImpl implements Definitions {
      * 
      * @generated
      */
-    public void setDocumentation( Documentation newDocumentation ) {
+    @Override
+	public void setDocumentation( Documentation newDocumentation ) {
         if (newDocumentation != documentation) {
             NotificationChain msgs = null;
             if (documentation != null) msgs = ((InternalEObject)documentation).eInverseRemove(this,
@@ -309,7 +315,8 @@ public class DefinitionsImpl extends EObjectImpl implements Definitions {
      * 
      * @generated
      */
-    public String getTargetNamespace() {
+    @Override
+	public String getTargetNamespace() {
         return targetNamespace;
     }
 
@@ -318,7 +325,8 @@ public class DefinitionsImpl extends EObjectImpl implements Definitions {
      * 
      * @generated
      */
-    public void setTargetNamespace( String newTargetNamespace ) {
+    @Override
+	public void setTargetNamespace( String newTargetNamespace ) {
         String oldTargetNamespace = targetNamespace;
         targetNamespace = newTargetNamespace;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
@@ -331,7 +339,8 @@ public class DefinitionsImpl extends EObjectImpl implements Definitions {
      * 
      * @generated
      */
-    public EList getMessages() {
+    @Override
+	public EList getMessages() {
         if (messages == null) {
             messages = new EObjectContainmentWithInverseEList(Message.class, this, WsdlPackage.DEFINITIONS__MESSAGES,
                                                               WsdlPackage.MESSAGE__DEFINITIONS);
@@ -344,7 +353,8 @@ public class DefinitionsImpl extends EObjectImpl implements Definitions {
      * 
      * @generated
      */
-    public EList getPortTypes() {
+    @Override
+	public EList getPortTypes() {
         if (portTypes == null) {
             portTypes = new EObjectContainmentWithInverseEList(PortType.class, this, WsdlPackage.DEFINITIONS__PORT_TYPES,
                                                                WsdlPackage.PORT_TYPE__DEFINITIONS);
@@ -357,7 +367,8 @@ public class DefinitionsImpl extends EObjectImpl implements Definitions {
      * 
      * @generated
      */
-    public EList getBindings() {
+    @Override
+	public EList getBindings() {
         if (bindings == null) {
             bindings = new EObjectContainmentWithInverseEList(Binding.class, this, WsdlPackage.DEFINITIONS__BINDINGS,
                                                               WsdlPackage.BINDING__DEFINITIONS);
@@ -370,7 +381,8 @@ public class DefinitionsImpl extends EObjectImpl implements Definitions {
      * 
      * @generated
      */
-    public EList getServices() {
+    @Override
+	public EList getServices() {
         if (services == null) {
             services = new EObjectContainmentWithInverseEList(Service.class, this, WsdlPackage.DEFINITIONS__SERVICES,
                                                               WsdlPackage.SERVICE__DEFINITIONS);
@@ -383,7 +395,8 @@ public class DefinitionsImpl extends EObjectImpl implements Definitions {
      * 
      * @generated
      */
-    public EList getImports() {
+    @Override
+	public EList getImports() {
         if (imports == null) {
             imports = new EObjectContainmentWithInverseEList(Import.class, this, WsdlPackage.DEFINITIONS__IMPORTS,
                                                              WsdlPackage.IMPORT__DEFINITIONS);
@@ -396,7 +409,8 @@ public class DefinitionsImpl extends EObjectImpl implements Definitions {
      * 
      * @generated
      */
-    public Types getTypes() {
+    @Override
+	public Types getTypes() {
         return types;
     }
 
@@ -423,7 +437,8 @@ public class DefinitionsImpl extends EObjectImpl implements Definitions {
      * 
      * @generated
      */
-    public void setTypes( Types newTypes ) {
+    @Override
+	public void setTypes( Types newTypes ) {
         if (newTypes != types) {
             NotificationChain msgs = null;
             if (types != null) msgs = ((InternalEObject)types).eInverseRemove(this,
@@ -445,7 +460,8 @@ public class DefinitionsImpl extends EObjectImpl implements Definitions {
      * 
      * @generated
      */
-    public boolean isNameValid() {
+    @Override
+	public boolean isNameValid() {
         // TODO: implement this method
         // Ensure that you remove @generated or mark it @generated NOT
         throw new UnsupportedOperationException();
@@ -456,7 +472,8 @@ public class DefinitionsImpl extends EObjectImpl implements Definitions {
      * 
      * @generated
      */
-    public IStatus isValid() {
+    @Override
+	public IStatus isValid() {
         // TODO: implement this method
         // Ensure that you remove @generated or mark it @generated NOT
         throw new UnsupportedOperationException();

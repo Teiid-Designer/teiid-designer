@@ -83,7 +83,8 @@ public class UmlClassifierContainerFigure extends AbstractDiagramFigure implemen
         layoutFigure();
     }
     
-    public IFigure getContentsPane() {
+    @Override
+	public IFigure getContentsPane() {
         return pane;
     }
     

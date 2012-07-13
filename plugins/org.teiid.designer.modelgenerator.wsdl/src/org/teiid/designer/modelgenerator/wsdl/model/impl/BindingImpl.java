@@ -23,6 +23,7 @@ public class BindingImpl extends org.teiid.designer.modelgenerator.wsdl.model.im
 		m_port = port;
 	}
 	
+	@Override
 	public Operation[] getOperations() {
 		//defensive copy
 		int arrayLength = m_operations.length;
@@ -33,14 +34,17 @@ public class BindingImpl extends org.teiid.designer.modelgenerator.wsdl.model.im
 		return ops;
 	}
 
+	@Override
 	public Port getPort() {
 		return m_port;
 	}
 
+	@Override
 	public void setOperations(Operation[] operations) {
 		m_operations = operations;
 	}
 
+	@Override
 	public WSDLElement copy() {
 		Binding theBinding = new BindingImpl(m_port);
 		theBinding.setName(getName());
@@ -65,18 +69,22 @@ public class BindingImpl extends org.teiid.designer.modelgenerator.wsdl.model.im
 		return buff.toString();
 	}
 
+	@Override
 	public void setTransportURI(String uri) {
 		m_transportURI = uri;		
 	}
 
+	@Override
 	public String getTransportURI() {
 		return m_transportURI;
 	}
 
+	@Override
 	public void setStyle(String style) {
 		m_style = style;
 	}
 
+	@Override
 	public String getStyle() {
 		return m_style;
 	}

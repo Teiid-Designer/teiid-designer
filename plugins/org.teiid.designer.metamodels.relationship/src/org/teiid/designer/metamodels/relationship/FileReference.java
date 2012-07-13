@@ -157,6 +157,7 @@ public interface FileReference extends UriReference{
      * @model parameters=""
      * @generated
      */
-    String getDisplayableName();
+    @Override
+	String getDisplayableName();
 
 } // FileReference

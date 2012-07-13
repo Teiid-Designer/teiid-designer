@@ -48,7 +48,8 @@ public class SiblingNameInSourceRule implements ObjectValidationRule {
     /*
      * @See org.teiid.designer.core.validation.ObjectValidationRule#validate(org.eclipse.emf.ecore.EObject, org.teiid.designer.core.validation.ValidationContext)
      */
-    public void validate(final EObject eObject, final ValidationContext context) {
+    @Override
+	public void validate(final EObject eObject, final ValidationContext context) {
     	
         // nothing to validate if there are no siblings
         if(!shouldRun(eObject, context)) {

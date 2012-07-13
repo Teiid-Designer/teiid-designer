@@ -74,7 +74,8 @@ public class BuiltInTypesHrefConverter implements EObjectHrefConverter {
      * @see org.teiid.designer.core.resource.EObjectHrefConverter#getLogicalURI(org.eclipse.emf.ecore.EObject)
      * @since 5.0
      */
-    public URI getLogicalURI( final EObject eObject ) {
+    @Override
+	public URI getLogicalURI( final EObject eObject ) {
         CoreArgCheck.isNotNull(eObject);
         URI physicalURI = createPhysicalURI(eObject);
         return (URI)this.logicalUriMap.get(physicalURI);
@@ -84,7 +85,8 @@ public class BuiltInTypesHrefConverter implements EObjectHrefConverter {
      * @see org.teiid.designer.core.resource.EObjectHrefConverter#getLogicalURI(org.eclipse.emf.common.util.URI)
      * @since 5.0
      */
-    public URI getLogicalURI( final URI physicalURI ) {
+    @Override
+	public URI getLogicalURI( final URI physicalURI ) {
         CoreArgCheck.isNotNull(physicalURI);
         return (URI)this.logicalUriMap.get(physicalURI);
     }
@@ -93,7 +95,8 @@ public class BuiltInTypesHrefConverter implements EObjectHrefConverter {
      * @see org.teiid.designer.core.resource.EObjectHrefConverter#getPhysicalURI(org.eclipse.emf.ecore.EObject)
      * @since 5.0
      */
-    public URI getPhysicalURI( final EObject eObject ) {
+    @Override
+	public URI getPhysicalURI( final EObject eObject ) {
         CoreArgCheck.isNotNull(eObject);
         URI logicalURI = createLogicalURI(eObject);
         return (URI)this.physicalUriMap.get(logicalURI);
@@ -103,7 +106,8 @@ public class BuiltInTypesHrefConverter implements EObjectHrefConverter {
      * @see org.teiid.designer.core.resource.EObjectHrefConverter#getPhysicalURI(org.eclipse.emf.common.util.URI)
      * @since 5.0
      */
-    public URI getPhysicalURI( final URI logicalURI ) {
+    @Override
+	public URI getPhysicalURI( final URI logicalURI ) {
         CoreArgCheck.isNotNull(logicalURI);
         return (URI)this.physicalUriMap.get(logicalURI);
     }

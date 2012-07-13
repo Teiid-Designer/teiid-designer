@@ -31,7 +31,8 @@ public class ProcedureParametersRule implements ObjectValidationRule {
     /*
      * @See org.teiid.designer.core.validation.ObjectValidationRule#validate(org.eclipse.emf.ecore.EObject, org.teiid.designer.core.validation.ValidationContext)
      */
-    public void validate(EObject eObject, ValidationContext context) {
+    @Override
+	public void validate(EObject eObject, ValidationContext context) {
         CoreArgCheck.isInstanceOf(Procedure.class, eObject);
 
         Procedure procedure = (Procedure) eObject;

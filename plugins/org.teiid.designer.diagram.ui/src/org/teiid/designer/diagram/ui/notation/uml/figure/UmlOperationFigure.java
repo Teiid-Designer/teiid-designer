@@ -87,6 +87,7 @@ public class UmlOperationFigure extends LabeledRectangleFigure implements Direct
      *  (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.util.directedit.DirectEditFigure#getLabelFigure()
      */
+	@Override
 	public Label getLabelFigure() {
 		return this.getLabel();
 	}

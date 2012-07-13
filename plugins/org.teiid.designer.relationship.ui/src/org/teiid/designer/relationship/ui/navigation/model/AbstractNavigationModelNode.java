@@ -86,6 +86,7 @@ abstract public class AbstractNavigationModelNode implements NavigationModelNode
 	/**
 	 * Set the Model Object
 	 */
+	@Override
 	public void setModelObject(Object object) {
 		modelObject = object;
 	}
@@ -93,6 +94,7 @@ abstract public class AbstractNavigationModelNode implements NavigationModelNode
 	/**
 	 * Get the Model Object
 	 */
+	@Override
 	public Object getModelObject() {
 		return modelObject;
 	}
@@ -100,6 +102,7 @@ abstract public class AbstractNavigationModelNode implements NavigationModelNode
 	/**
 	 * Add a Child
 	 */
+	@Override
 	public void addChild(NavigationModelNode child) {
 		if (children == null) {
 			children = new ArrayList();
@@ -113,6 +116,7 @@ abstract public class AbstractNavigationModelNode implements NavigationModelNode
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.diagram.ui.model.DiagramModelNode#addChildren(java.util.List)
 	 */
+	@Override
 	public void addChildren(List newChildren) {
 		if (newChildren != null && !newChildren.isEmpty()) {
 			if (children == null) {
@@ -133,6 +137,7 @@ abstract public class AbstractNavigationModelNode implements NavigationModelNode
 	/**
 	 * Remove a Child
 	 */
+	@Override
 	public void removeChild(NavigationModelNode child) {
 		if (children == null) {
 			return;
@@ -146,6 +151,7 @@ abstract public class AbstractNavigationModelNode implements NavigationModelNode
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.diagram.ui.model.DiagramModelNode#removeChildren(java.util.List)
 	 */
+	@Override
 	public void removeChildren(List oldChildren) {
 		if (oldChildren != null && !oldChildren.isEmpty()) {
 			if (children == null) {
@@ -170,6 +176,7 @@ abstract public class AbstractNavigationModelNode implements NavigationModelNode
 	/**
 	 * Set the List of Children
 	 */
+	@Override
 	public void setChildren(List childList) {
 		children = childList;
 	}
@@ -177,6 +184,7 @@ abstract public class AbstractNavigationModelNode implements NavigationModelNode
 	/**
 	 * Get the List of Children
 	 */
+	@Override
 	public List getChildren() {
 		if (children == null || children.isEmpty()) {
 			return Collections.EMPTY_LIST;
@@ -195,10 +203,12 @@ abstract public class AbstractNavigationModelNode implements NavigationModelNode
 		return children.size();
 	}
 
+	@Override
 	public void setParent(NavigationModelNode parent) {
 		this.parent = parent;
 	}
 
+	@Override
 	public NavigationModelNode getParent() {
 		return this.parent;
 	}
@@ -207,6 +217,7 @@ abstract public class AbstractNavigationModelNode implements NavigationModelNode
 	 *  (non-Javadoc)
 	 * @See org.teiid.designer.diagram.ui.model.DiagramModelNode#setPosition(org.eclipse.draw2d.geometry.Point)
 	 */
+	@Override
 	public void setPosition(Point position) {
 		this.x = position.x;
 		this.y = position.y;
@@ -214,6 +225,7 @@ abstract public class AbstractNavigationModelNode implements NavigationModelNode
 		firePropertyChange(NavigationModelNodeProperties.LOCATION, null, position);
 	}
 
+	@Override
 	public void setCenterXY(int newCenterX, int newCenterY) {
 		int newX = newCenterX - this.getWidth() / 2;
 		int newY = newCenterY - this.getHeight() / 2;
@@ -224,6 +236,7 @@ abstract public class AbstractNavigationModelNode implements NavigationModelNode
 		firePropertyChange(NavigationModelNodeProperties.LOCATION, null, new Point(newX, newY));
 	}
 
+	@Override
 	public void setCenterX(int newCenterX) {
 		int newX = newCenterX - this.getWidth() / 2;
 
@@ -233,6 +246,7 @@ abstract public class AbstractNavigationModelNode implements NavigationModelNode
 
 	}
 
+	@Override
 	public void setCenterY(int newCenterY) {
 		int newY = newCenterY - this.getHeight() / 2;
 
@@ -241,10 +255,12 @@ abstract public class AbstractNavigationModelNode implements NavigationModelNode
 		firePropertyChange(NavigationModelNodeProperties.LOCATION, null, new Point(this.x, newY));
 	}
 
+	@Override
 	public Point getPosition() {
 		return new Point(this.x, this.y);
 	}
 
+	@Override
 	public void setSize(Dimension dimension) {
 		this.width = dimension.width;
 		this.height = dimension.height;
@@ -261,16 +277,19 @@ abstract public class AbstractNavigationModelNode implements NavigationModelNode
 		firePropertyChange(NavigationModelNodeProperties.SIZE, null, getSize()); 
 	}
 
+	@Override
 	public Dimension getSize() {
 		return new Dimension(this.width, this.height);
 	}
 
 	transient protected PropertyChangeSupport listeners = new PropertyChangeSupport(this);
 
+	@Override
 	public void addPropertyChangeListener(PropertyChangeListener l) {
 		listeners.addPropertyChangeListener(l);
 	}
 
+	@Override
 	public void removePropertyChangeListener(PropertyChangeListener l) {
 		listeners.removePropertyChangeListener(l);
 	}
@@ -289,22 +308,27 @@ abstract public class AbstractNavigationModelNode implements NavigationModelNode
 		return this;
 	}
 
+	@Override
 	public void update() {
 		firePropertyChange(NavigationModelNodeProperties.PROPERTIES, null, null);
 	}
 
+	@Override
 	public void update(String property) {
 		firePropertyChange(property, null, null);
 	}
 
+	@Override
 	public void setName(String name) {
 		this.name = name;
 	}
 
+	@Override
 	public String getName() {
 		return name;
 	}
 
+	@Override
 	public String getDisplayString() {
 		return getName();
 	}
@@ -321,26 +345,32 @@ abstract public class AbstractNavigationModelNode implements NavigationModelNode
 		return this.y;
 	}
 
+	@Override
 	public int getX() {
 		return this.x;
 	}
 
+	@Override
 	public int getY() {
 		return this.y;
 	}
 
+	@Override
 	public int getCenterX() {
 		return (this.x + this.width / 2);
 	}
 
+	@Override
 	public int getCenterY() {
 		return (this.y + this.height / 2);
 	}
 
+	@Override
 	public int getWidth() {
 		return this.width;
 	}
 
+	@Override
 	public int getHeight() {
 		return this.height;
 	}
@@ -367,6 +397,7 @@ abstract public class AbstractNavigationModelNode implements NavigationModelNode
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.diagram.ui.model.DiagramModelNode#hasErrors()
 	 */
+	@Override
 	public boolean hasErrors() {
 		return errorState;
 	}
@@ -374,6 +405,7 @@ abstract public class AbstractNavigationModelNode implements NavigationModelNode
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.diagram.ui.model.DiagramModelNode#hasWarnings()
 	 */
+	@Override
 	public boolean hasWarnings() {
 		return warningState;
 	}
@@ -381,6 +413,7 @@ abstract public class AbstractNavigationModelNode implements NavigationModelNode
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.diagram.ui.model.DiagramModelNode#updateForErrorsAndWarnings()
 	 */
+	@Override
 	public void updateForErrorsAndWarnings() {
 		setErrorState();
 		firePropertyChange(NavigationModelNodeProperties.ERRORS, null, null);
@@ -389,6 +422,7 @@ abstract public class AbstractNavigationModelNode implements NavigationModelNode
 	/**
 	 * @return
 	 */
+	@Override
 	public NavigationModelNode getLabelNode() {
 		return labelNode;
 	}
@@ -396,10 +430,12 @@ abstract public class AbstractNavigationModelNode implements NavigationModelNode
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.relationship.ui.navigation.model.NavigationModelNode#getBounds()
 	 */
+	@Override
 	public Rectangle getBounds() {
 		return new Rectangle(getPosition(), getSize());
 	}
 
+	@Override
 	public void printBounds(String prefix) {
 		System.out.println(prefix + " MODEL Bounds = " + getBounds()); //$NON-NLS-1$
 	}
@@ -408,27 +444,33 @@ abstract public class AbstractNavigationModelNode implements NavigationModelNode
 		return toolTip;
 	}
 	
+	@Override
 	public Vector getSourceConnections() {
 		return m_sourceConnections;
 	}
 
+	@Override
 	public Vector getTargetConnections() {
 		return m_targetConnections;
 	}
 
+	@Override
 	public void addSourceConnection(NodeConnectionModel iConnection) {
 		m_sourceConnections.addElement(iConnection);
 	}
 
+	@Override
 	public void addTargetConnection(NodeConnectionModel iConnection) {
 		m_targetConnections.addElement(iConnection);
 	}
     
 
+	@Override
 	public void removeSourceConnection(NodeConnectionModel iConnection) {
 		m_sourceConnections.removeElement(iConnection);
 	}
 
+	@Override
 	public void removeTargetConnection(NodeConnectionModel iConnection) {
 		m_targetConnections.removeElement(iConnection);
 	}

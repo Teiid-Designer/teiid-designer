@@ -91,7 +91,8 @@ public class SetExcludeFromDocumentSpecialAction extends SortableSelectionAction
 
     private void internalRun() {
         Display.getCurrent().asyncExec(new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 try {
                     List lstSelectedEObjects = SelectionUtilities.getSelectedEObjects(getSelection());
                     setExcluded(lstSelectedEObjects, bDefaultExcludeState);

@@ -49,7 +49,8 @@ public class DependencyFactoryImpl extends EFactoryImpl implements DependencyFac
      * 
      * @generated
      */
-    public DependencyInfo createDependencyInfo() {
+    @Override
+	public DependencyInfo createDependencyInfo() {
         DependencyInfoImpl dependencyInfo = new DependencyInfoImpl();
         return dependencyInfo;
     }
@@ -59,7 +60,8 @@ public class DependencyFactoryImpl extends EFactoryImpl implements DependencyFac
      * 
      * @generated
      */
-    public DependencyPackage getDependencyPackage() {
+    @Override
+	public DependencyPackage getDependencyPackage() {
         return (DependencyPackage)getEPackage();
     }
 

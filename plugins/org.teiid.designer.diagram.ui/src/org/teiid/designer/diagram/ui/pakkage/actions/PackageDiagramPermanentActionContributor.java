@@ -42,7 +42,8 @@ public class PackageDiagramPermanentActionContributor implements IModelObjectAct
     /* (non-Javadoc)
      * @See org.teiid.designer.ui.actions.IModelObjectActionContributor#contributeToContextMenu(org.eclipse.jface.action.IMenuManager, org.eclipse.jface.viewers.ISelection)
      */
-    public void contributeToContextMenu(IMenuManager theMenuMgr, ISelection theSelection) {
+    @Override
+	public void contributeToContextMenu(IMenuManager theMenuMgr, ISelection theSelection) {
 
     }
     
@@ -51,7 +52,8 @@ public class PackageDiagramPermanentActionContributor implements IModelObjectAct
      * @see org.teiid.designer.ui.actions.IModelObjectActionContributor#getAdditionalModelingActions(org.eclipse.jface.viewers.ISelection)
      * @since 5.0
      */
-    public List<IAction> getAdditionalModelingActions(ISelection theSelection) {
+    @Override
+	public List<IAction> getAdditionalModelingActions(ISelection theSelection) {
         return Collections.EMPTY_LIST;
     }
 

@@ -34,7 +34,8 @@ public abstract class AbstractUml2NamedElementUmlAspect extends AbstractUml2Elem
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodels.aspects.UmlDiagramAspect#setSignature(java.lang.Object, java.lang.String)
      */
-    public IStatus setSignature( Object eObject,
+    @Override
+	public IStatus setSignature( Object eObject,
                                  String newSignature ) {
         try {
             final NamedElement element = assertNamedElement(eObject);
@@ -47,7 +48,8 @@ public abstract class AbstractUml2NamedElementUmlAspect extends AbstractUml2Elem
         return new Status(IStatus.OK, ModelerCore.PLUGIN_ID, 0, msg, null);
     }
 
-    public String getEditableSignature( Object eObject ) {
+    @Override
+	public String getEditableSignature( Object eObject ) {
         return getSignature(eObject, UmlProperty.SIGNATURE_NAME);
     }
 

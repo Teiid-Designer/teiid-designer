@@ -15,7 +15,8 @@ import org.eclipse.gef.EditPartFactory;
  */
 public class DummyDiagramPartFactory implements EditPartFactory {
     
-    public EditPart createEditPart(EditPart iContext, Object iModel) {
+    @Override
+	public EditPart createEditPart(EditPart iContext, Object iModel) {
         EditPart editPart = null;
 
         if( iModel instanceof DummyDiagramNode )

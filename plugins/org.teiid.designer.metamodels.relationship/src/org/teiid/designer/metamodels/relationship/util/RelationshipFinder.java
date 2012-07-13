@@ -18,7 +18,8 @@ public class RelationshipFinder extends RelationshipEntityFinder {
     /* (non-Javadoc)
      * @See org.teiid.designer.core.util.ModelVisitor#visit(org.eclipse.emf.ecore.EObject)
      */
-    public boolean visit( EObject object ) {
+    @Override
+	public boolean visit( EObject object ) {
         if (object instanceof Relationship) {
             // collect the Relationship
             found((Relationship)object);

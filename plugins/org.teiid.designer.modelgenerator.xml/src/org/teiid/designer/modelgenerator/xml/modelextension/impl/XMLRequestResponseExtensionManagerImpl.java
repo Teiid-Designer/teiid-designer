@@ -218,7 +218,8 @@ public abstract class XMLRequestResponseExtensionManagerImpl extends BaseXMLRela
     /* (non-Javadoc)
      * @See org.teiid.designer.modelgenerator.wsdl.modelextension.IXMLRequestResponseExtensionManager#setColumnRoleAttribute(org.teiid.designer.metamodels.relational.Column, java.lang.Integer)
      */
-    public void setColumnRoleAttribute( Column column,
+    @Override
+	public void setColumnRoleAttribute( Column column,
                                         Integer role ) {
         ObjectExtension extension = new ObjectExtension(column, theColumnXClass, ModelerCore.getModelEditor());
         extension.eDynamicSet(roleColumnAttribute, columnRoleEnumLookup.get(role));
@@ -227,7 +228,8 @@ public abstract class XMLRequestResponseExtensionManagerImpl extends BaseXMLRela
     /* (non-Javadoc)
      * @See org.teiid.designer.modelgenerator.wsdl.modelextension.IXMLRequestResponseExtensionManager#setColumnInputParamAttribute(org.teiid.designer.metamodels.relational.Column, java.lang.Boolean)
      */
-    public void setColumnInputParamAttribute( Column column,
+    @Override
+	public void setColumnInputParamAttribute( Column column,
                                               Boolean input ) {
         ObjectExtension extension = new ObjectExtension(column, theColumnXClass, ModelerCore.getModelEditor());
         extension.eDynamicSet(isInputParameterColumnAttribute, input);
@@ -236,7 +238,8 @@ public abstract class XMLRequestResponseExtensionManagerImpl extends BaseXMLRela
     /* (non-Javadoc)
      * @See org.teiid.designer.modelgenerator.wsdl.modelextension.IXMLRequestResponseExtensionManager#setXPathRootForInputAttribute(org.teiid.designer.metamodels.relational.RelationalEntity, java.lang.String)
      */
-    public void setXPathRootForInputAttribute( RelationalEntity table,
+    @Override
+	public void setXPathRootForInputAttribute( RelationalEntity table,
                                                String xrfi_attribute_value ) {
         ObjectExtension extension = new ObjectExtension(table, theTableXClass, ModelerCore.getModelEditor());
         extension.eDynamicSet(xPathRootForInputTableAttribute, xrfi_attribute_value);
@@ -245,7 +248,8 @@ public abstract class XMLRequestResponseExtensionManagerImpl extends BaseXMLRela
     /* (non-Javadoc)
      * @See org.teiid.designer.modelgenerator.wsdl.modelextension.IXMLRequestResponseExtensionManager#setColumnXPathForInput(org.teiid.designer.metamodels.relational.Column, java.lang.String)
      */
-    public void setColumnXPathForInput( Column relColumn,
+    @Override
+	public void setColumnXPathForInput( Column relColumn,
                                         String xpath ) {
         ObjectExtension objectExtension2 = new ObjectExtension(relColumn, theColumnXClass, ModelerCore.getModelEditor());
         objectExtension2.eDynamicSet(xPathForInputParameterColumnAttribute, xpath);
@@ -254,7 +258,8 @@ public abstract class XMLRequestResponseExtensionManagerImpl extends BaseXMLRela
     /* (non-Javadoc)
      * @See org.teiid.designer.modelgenerator.wsdl.modelextension.IXMLRequestResponseExtensionManager#setAllowEmptyInputElement(org.teiid.designer.metamodels.relational.Column, boolean)
      */
-    public void setAllowEmptyInputElement( Column relCol,
+    @Override
+	public void setAllowEmptyInputElement( Column relCol,
                                            boolean request ) {
         ObjectExtension objectExtension2 = new ObjectExtension(relCol, theColumnXClass, ModelerCore.getModelEditor());
         objectExtension2.eDynamicSet(allowEmptyInputElementColumnAttribute, Boolean.FALSE);
@@ -265,7 +270,8 @@ public abstract class XMLRequestResponseExtensionManagerImpl extends BaseXMLRela
     /* (non-Javadoc)
      * @See org.teiid.designer.modelgenerator.wsdl.modelextension.IXMLRequestResponseExtensionManager#setMultipleValue(org.teiid.designer.metamodels.relational.Column, java.lang.Integer)
      */
-    public void setMultipleValue( Column relColumn,
+    @Override
+	public void setMultipleValue( Column relColumn,
                                   Integer value ) {
         ObjectExtension objectExtension = new ObjectExtension(relColumn, theColumnXClass, ModelerCore.getModelEditor());
         objectExtension.eDynamicSet(multipleValuesColumnAttribute, multipleValueEnumLookup.get(value));

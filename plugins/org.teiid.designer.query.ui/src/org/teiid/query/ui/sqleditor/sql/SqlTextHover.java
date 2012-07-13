@@ -22,7 +22,8 @@ public class SqlTextHover implements ITextHover {
     /* (non-Javadoc)
      * Method declared on ITextHover
      */
-    public String getHoverInfo(ITextViewer textViewer, IRegion hoverRegion) {
+    @Override
+	public String getHoverInfo(ITextViewer textViewer, IRegion hoverRegion) {
         if (hoverRegion != null) {
             try {
                 if (hoverRegion.getLength() > -1)
@@ -36,7 +37,8 @@ public class SqlTextHover implements ITextHover {
     /* (non-Javadoc)
      * Method declared on ITextHover
      */
-    public IRegion getHoverRegion(ITextViewer textViewer, int offset) {
+    @Override
+	public IRegion getHoverRegion(ITextViewer textViewer, int offset) {
         Point selection= textViewer.getSelectedRange();
         if (selection.x <= offset && offset < selection.x + selection.y)
             return new Region(selection.x, selection.y);

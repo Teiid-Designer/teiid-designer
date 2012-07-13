@@ -127,12 +127,14 @@ public class ProjectStatusPanel extends ManagedForm implements StatusListener {
         return this.actionHandler.getActions(groupType);
     }
 
-    public void notifyStatusChanged( final ModelProjectStatus theStatus ) {
+    @Override
+	public void notifyStatusChanged( final ModelProjectStatus theStatus ) {
     	if( this.statusSection.getSection().isDisposed() ) {
     		return;
     	}
         Display.getDefault().syncExec(new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 updateStatus(theStatus);
             }
         });

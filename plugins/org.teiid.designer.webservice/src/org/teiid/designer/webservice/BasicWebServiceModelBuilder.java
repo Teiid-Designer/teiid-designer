@@ -93,7 +93,8 @@ public class BasicWebServiceModelBuilder implements IWebServiceModelBuilder {
      * @see org.teiid.designer.webservice.IWebServiceModelBuilder#getXmlModel()
      * @since 4.2
      */
-    public IPath getXmlModel() {
+    @Override
+	public IPath getXmlModel() {
         return this.xmlModel;
     }
 
@@ -101,7 +102,8 @@ public class BasicWebServiceModelBuilder implements IWebServiceModelBuilder {
      * @see org.teiid.designer.webservice.IWebServiceModelBuilder#getParentResource()
      * @since 4.2
      */
-    public IResource getParentResource() {
+    @Override
+	public IResource getParentResource() {
         return this.parentResource;
     }
 
@@ -109,11 +111,13 @@ public class BasicWebServiceModelBuilder implements IWebServiceModelBuilder {
      * @see org.teiid.designer.webservice.IWebServiceModelBuilder#getModelPath()
      * @since 4.2
      */
-    public IPath getModelPath() {
+    @Override
+	public IPath getModelPath() {
         return this.modelPath;
     }
 
-    public Map getUrlMap() {
+    @Override
+	public Map getUrlMap() {
         return this.urlMap;
     }
 
@@ -121,7 +125,8 @@ public class BasicWebServiceModelBuilder implements IWebServiceModelBuilder {
      * @see org.teiid.designer.webservice.IWebServiceModelBuilder#setMetamodelDescriptor(org.teiid.designer.core.metamodel.MetamodelDescriptor)
      * @since 4.2
      */
-    public void setMetamodelDescriptor( MetamodelDescriptor theDescriptor ) {
+    @Override
+	public void setMetamodelDescriptor( MetamodelDescriptor theDescriptor ) {
         this.modelDescriptor = theDescriptor;
     }
 
@@ -129,7 +134,8 @@ public class BasicWebServiceModelBuilder implements IWebServiceModelBuilder {
      * @see org.teiid.designer.webservice.IWebServiceModelBuilder#setParentResource(org.eclipse.core.resources.IResource)
      * @since 4.2
      */
-    public void setParentResource( IResource theResource ) {
+    @Override
+	public void setParentResource( IResource theResource ) {
         this.parentResource = theResource;
     }
 
@@ -137,7 +143,8 @@ public class BasicWebServiceModelBuilder implements IWebServiceModelBuilder {
      * @see org.teiid.designer.webservice.IWebServiceModelBuilder#setModelPath(org.eclipse.core.runtime.IPath)
      * @since 4.2
      */
-    public void setModelPath( IPath thePath ) {
+    @Override
+	public void setModelPath( IPath thePath ) {
         this.modelPath = thePath;
     }
 
@@ -145,7 +152,8 @@ public class BasicWebServiceModelBuilder implements IWebServiceModelBuilder {
      * @see org.teiid.designer.webservice.IWebServiceModelBuilder#setXmlModel(org.eclipse.core.runtime.IPath)
      * @since 4.2
      */
-    public void setXmlModel( IPath theXmlModel ) {
+    @Override
+	public void setXmlModel( IPath theXmlModel ) {
         this.xmlModel = theXmlModel;
     }
 
@@ -170,7 +178,8 @@ public class BasicWebServiceModelBuilder implements IWebServiceModelBuilder {
      * @see org.teiid.designer.webservice.IWebServiceModelBuilder#addResource(java.io.File)
      * @since 4.2
      */
-    public IWebServiceResource addResource( File theFile ) throws CoreException {
+    @Override
+	public IWebServiceResource addResource( File theFile ) throws CoreException {
         CoreArgCheck.isNotNull(theFile);
 
         // Check whether the file exists ...
@@ -212,7 +221,8 @@ public class BasicWebServiceModelBuilder implements IWebServiceModelBuilder {
      * @see org.teiid.designer.webservice.IWebServiceModelBuilder#addResource(org.eclipse.core.resources.IFile)
      * @since 4.2
      */
-    public IWebServiceResource addResource( IFile theFile ) throws CoreException {
+    @Override
+	public IWebServiceResource addResource( IFile theFile ) throws CoreException {
         CoreArgCheck.isNotNull(theFile);
 
         // Check whether the file exists ...
@@ -255,7 +265,8 @@ public class BasicWebServiceModelBuilder implements IWebServiceModelBuilder {
      *      java.io.File)
      * @since 4.2
      */
-    public void resolve( IWebServiceResource resource,
+    @Override
+	public void resolve( IWebServiceResource resource,
                          File theFile ) {
         CoreArgCheck.isNotNull(resource);
         CoreArgCheck.isNotNull(theFile);
@@ -284,7 +295,8 @@ public class BasicWebServiceModelBuilder implements IWebServiceModelBuilder {
      * @see org.teiid.designer.webservice.IWebServiceModelBuilder#unresolve(org.teiid.designer.webservice.IWebServiceResource)
      * @since 4.2
      */
-    public void unresolve( IWebServiceResource resource ) {
+    @Override
+	public void unresolve( IWebServiceResource resource ) {
         CoreArgCheck.isNotNull(resource);
 
         if (resource.isResolved()) {
@@ -301,7 +313,8 @@ public class BasicWebServiceModelBuilder implements IWebServiceModelBuilder {
      *      org.eclipse.core.resources.IFile)
      * @since 4.2
      */
-    public void resolve( IWebServiceResource resource,
+    @Override
+	public void resolve( IWebServiceResource resource,
                          IFile theFile ) {
         CoreArgCheck.isNotNull(resource);
         CoreArgCheck.isNotNull(theFile);
@@ -330,7 +343,8 @@ public class BasicWebServiceModelBuilder implements IWebServiceModelBuilder {
      * @see org.teiid.designer.webservice.IWebServiceModelBuilder#remove(org.teiid.designer.webservice.IWebServiceResource)
      * @since 4.2
      */
-    public void remove( IWebServiceResource theResource ) {
+    @Override
+	public void remove( IWebServiceResource theResource ) {
         CoreArgCheck.isNotNull(theResource);
 
         // Remove this resource ...
@@ -372,7 +386,8 @@ public class BasicWebServiceModelBuilder implements IWebServiceModelBuilder {
      * @see org.teiid.designer.webservice.IWebServiceModelBuilder#getResources()
      * @since 4.2
      */
-    public Collection getResources() {
+    @Override
+	public Collection getResources() {
         return resources; // return is non-null
     }
 
@@ -380,7 +395,8 @@ public class BasicWebServiceModelBuilder implements IWebServiceModelBuilder {
      * @see org.teiid.designer.webservice.IWebServiceModelBuilder#getEmfResource(org.teiid.designer.webservice.IWebServiceResource)
      * @since 4.2
      */
-    public Resource getEmfResource( IWebServiceResource theResource ) {
+    @Override
+	public Resource getEmfResource( IWebServiceResource theResource ) {
         final URI uri = (URI)this.emfResourceUriByWebServiceResource.get(theResource.getFullPath());
         if (uri != null) {
             return this.resourceSet.get(uri);
@@ -399,7 +415,8 @@ public class BasicWebServiceModelBuilder implements IWebServiceModelBuilder {
      * 
      * @return a Collection of IWebServiceResource instances
      */
-    public Collection getWSDLResources() {
+    @Override
+	public Collection getWSDLResources() {
 
         /*
          * this list will collect all of the web service resources that are processed in this method so they can be returned from
@@ -516,7 +533,8 @@ public class BasicWebServiceModelBuilder implements IWebServiceModelBuilder {
      * @see org.teiid.designer.webservice.IWebServiceModelBuilder#getXsdDestinations()
      * @since 4.2
      */
-    public Collection getXsdDestinations() {
+    @Override
+	public Collection getXsdDestinations() {
         List xsdResources = this.xsdWorkspaceResources;
         if (!processedXsdResources) {
             synchronized (xsdWorkspaceResourcesLock) {
@@ -554,7 +572,8 @@ public class BasicWebServiceModelBuilder implements IWebServiceModelBuilder {
      *      org.eclipse.core.runtime.IPath)
      * @since 4.2
      */
-    public void setDestinationPath( final IWebServiceXsdResource xsdResource,
+    @Override
+	public void setDestinationPath( final IWebServiceXsdResource xsdResource,
                                     final IPath workspacePathForXsd ) {
         if (xsdResource instanceof IInternalWebServiceXsdResource) {
             // See if it is different than the existing one ...
@@ -1104,7 +1123,8 @@ public class BasicWebServiceModelBuilder implements IWebServiceModelBuilder {
      * @see org.teiid.designer.webservice.IWebServiceModelBuilder#validateWSDLNamespaces()
      * @since 5.0
      */
-    public IStatus validateWSDLNamespaces() {
+    @Override
+	public IStatus validateWSDLNamespaces() {
         final List problems = new LinkedList();
         boolean foundErrors = false;
 
@@ -1174,7 +1194,8 @@ public class BasicWebServiceModelBuilder implements IWebServiceModelBuilder {
      * @see org.teiid.designer.webservice.IWebServiceModelBuilder#validateWSDLNamespaces()
      * @since 5.0
      */
-    public IStatus validateXSDNamespaces() {
+    @Override
+	public IStatus validateXSDNamespaces() {
         final List problems = new LinkedList();
         boolean foundErrors = false;
 
@@ -1229,7 +1250,8 @@ public class BasicWebServiceModelBuilder implements IWebServiceModelBuilder {
      * @see org.teiid.designer.webservice.IWebServiceModelBuilder#getModelGenerator()
      * @since 4.2
      */
-    public ModelGenerator getModelGenerator( boolean isNewModel ) {
+    @Override
+	public ModelGenerator getModelGenerator( boolean isNewModel ) {
         // if ( this.generator == null ) {
         // synchronized(this) {
         // if ( this.generator == null ) {
@@ -1284,11 +1306,13 @@ public class BasicWebServiceModelBuilder implements IWebServiceModelBuilder {
         return generator;
     }
 
-    public void setSaveAllBeforeFinish( boolean theDoSave ) {
+    @Override
+	public void setSaveAllBeforeFinish( boolean theDoSave ) {
         this.saveAllBeforeFinish = theDoSave;
     }
 
-    public List getAllNewResources() {
+    @Override
+	public List getAllNewResources() {
         List resources = new ArrayList(10);
         if (!xsdWorkspaceResources.isEmpty()) {
             for (Iterator iter = xsdWorkspaceResources.iterator(); iter.hasNext();) {
@@ -1337,7 +1361,8 @@ public class BasicWebServiceModelBuilder implements IWebServiceModelBuilder {
      * @see org.teiid.designer.webservice.IWebServiceModelBuilder#setSelectedOperations(java.util.Collection)
      * @since 5.0
      */
-    public void setSelectedOperations( Collection operations ) {
+    @Override
+	public void setSelectedOperations( Collection operations ) {
         this.selectedWsdlOperations = operations;
     }
 
@@ -1345,7 +1370,8 @@ public class BasicWebServiceModelBuilder implements IWebServiceModelBuilder {
      * @see org.teiid.designer.webservice.IWebServiceModelBuilder#getSelectedOperations()
      * @since 5.0
      */
-    public Collection getSelectedOperations() {
+    @Override
+	public Collection getSelectedOperations() {
         return this.selectedWsdlOperations;
     }
 

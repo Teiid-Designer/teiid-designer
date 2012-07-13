@@ -27,14 +27,16 @@ public class DefaultContentProvider implements
      * @see org.eclipse.jface.viewers.IContentProvider#dispose()
      * @since 4.0
      */
-    public void dispose() {
+    @Override
+	public void dispose() {
     }
 
     /**
      * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
      * @since 5.0.1
      */
-    public Object[] getElements(Object inputElement) {
+    @Override
+	public Object[] getElements(Object inputElement) {
         if (inputElement instanceof Map) {
             inputElement = ((Map)inputElement).entrySet();
         }
@@ -55,7 +57,8 @@ public class DefaultContentProvider implements
      *      java.lang.Object)
      * @since 4.0
      */
-    public void inputChanged(final Viewer viewer,
+    @Override
+	public void inputChanged(final Viewer viewer,
                              final Object oldInput,
                              final Object newInput) {
     }

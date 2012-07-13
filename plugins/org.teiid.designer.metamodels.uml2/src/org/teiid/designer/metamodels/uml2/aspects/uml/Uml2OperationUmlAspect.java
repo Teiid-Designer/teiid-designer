@@ -37,7 +37,8 @@ public class Uml2OperationUmlAspect extends AbstractUml2NamedElementUmlAspect im
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.uml.UmlOperation#getOwnerClass(java.lang.Object)
      */
-    public EObject getOwnerClass( Object eObject ) {
+    @Override
+	public EObject getOwnerClass( Object eObject ) {
         Operation o = assertOperation(eObject);
         return o.getClass_();
     }
@@ -45,7 +46,8 @@ public class Uml2OperationUmlAspect extends AbstractUml2NamedElementUmlAspect im
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.uml.UmlOperation#getOwnedParameters(java.lang.Object)
      */
-    public List getOwnedParameters( Object eObject ) {
+    @Override
+	public List getOwnedParameters( Object eObject ) {
         Operation o = assertOperation(eObject);
         return o.getOwnedParameters();
     }
@@ -53,7 +55,8 @@ public class Uml2OperationUmlAspect extends AbstractUml2NamedElementUmlAspect im
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.uml.UmlOperation#getRaisedExceptions(java.lang.Object)
      */
-    public List getRaisedExceptions( Object eObject ) {
+    @Override
+	public List getRaisedExceptions( Object eObject ) {
         Operation o = assertOperation(eObject);
         return o.getRaisedExceptions();
     }
@@ -61,7 +64,8 @@ public class Uml2OperationUmlAspect extends AbstractUml2NamedElementUmlAspect im
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.uml.UmlOperation#getType(java.lang.Object)
      */
-    public Object getType( Object eObject ) {
+    @Override
+	public Object getType( Object eObject ) {
         Operation o = assertOperation(eObject);
         return o.getType();
     }
@@ -69,7 +73,8 @@ public class Uml2OperationUmlAspect extends AbstractUml2NamedElementUmlAspect im
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.uml.UmlDiagramAspect#getSignature(java.lang.Object, int)
      */
-    public String getSignature( Object eObject,
+    @Override
+	public String getSignature( Object eObject,
                                 int showMask ) {
         Operation operation = assertOperation(eObject);
         StringBuffer result = new StringBuffer();

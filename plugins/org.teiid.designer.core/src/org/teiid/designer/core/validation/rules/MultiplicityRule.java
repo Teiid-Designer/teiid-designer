@@ -38,7 +38,8 @@ public class MultiplicityRule implements StructuralFeatureValidationRule {
     /* (non-Javadoc)
      * @See org.teiid.designer.core.validation.StructuralFeatureValidationRule#validate(org.eclipse.emf.ecore.EStructuralFeature, org.eclipse.emf.ecore.EObject, java.lang.Object, org.teiid.designer.core.validation.ValidationContext)
      */
-    public void validate( EStructuralFeature eStructuralFeature,
+    @Override
+	public void validate( EStructuralFeature eStructuralFeature,
                           EObject eObject,
                           Object value,
                           ValidationContext context ) {

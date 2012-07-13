@@ -168,7 +168,8 @@ public class TreeExpansionMonitor implements TreeListener, IChangeNotifier {
     /* (non-Javadoc)
      * @see org.eclipse.swt.events.TreeListener#treeCollapsed(org.eclipse.swt.events.TreeEvent)
      */
-    public void treeCollapsed(TreeEvent e) {
+    @Override
+	public void treeCollapsed(TreeEvent e) {
         TreeItem item = (TreeItem) e.item;
         TreeItem[] children = item.getItems();
         for ( int i=0 ; i<children.length ; ++i ) {
@@ -181,7 +182,8 @@ public class TreeExpansionMonitor implements TreeListener, IChangeNotifier {
     /* (non-Javadoc)
      * @see org.eclipse.swt.events.TreeListener#treeExpanded(org.eclipse.swt.events.TreeEvent)
      */
-    public void treeExpanded(TreeEvent e) {
+    @Override
+	public void treeExpanded(TreeEvent e) {
 //        System.out.println("\n\nTreeExpansionMonitor.treeExpanded: TOP" );
 
         TreeItem item = (TreeItem) e.item;
@@ -264,7 +266,8 @@ public class TreeExpansionMonitor implements TreeListener, IChangeNotifier {
     /* (non-Javadoc)
      * @see com.metamatrix.core.event.IChangeNotifier#addChangeListener(com.metamatrix.core.event.IChangeListener)
      */
-    public void addChangeListener(IChangeListener listener) {
+    @Override
+	public void addChangeListener(IChangeListener listener) {
         if ( ! listenerList.contains(listener) ) {
             listenerList.add(listener);
         }
@@ -273,7 +276,8 @@ public class TreeExpansionMonitor implements TreeListener, IChangeNotifier {
     /* (non-Javadoc)
      * @see com.metamatrix.core.event.IChangeNotifier#removeChangeListener(com.metamatrix.core.event.IChangeListener)
      */
-    public void removeChangeListener(IChangeListener listener) {
+    @Override
+	public void removeChangeListener(IChangeListener listener) {
         listenerList.remove(listener);
     }
 

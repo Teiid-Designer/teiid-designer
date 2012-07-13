@@ -195,7 +195,8 @@ public class ConnectionProfileSummaryDialog extends Dialog {
     
     class TableContentProvider implements ITableLabelProvider {
 
-        public Image getColumnImage( Object theElement,
+        @Override
+		public Image getColumnImage( Object theElement,
                                      int theIndex ) {
             return null;
         }
@@ -203,7 +204,8 @@ public class ConnectionProfileSummaryDialog extends Dialog {
         /**
          * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.lang.Object, int)
          */
-        public String getColumnText( Object theElement,
+        @Override
+		public String getColumnText( Object theElement,
                                      int theColumnIndex ) {
             if (theElement instanceof StringKeyValuePair) {
                 StringKeyValuePair prop = (StringKeyValuePair)theElement;

@@ -59,14 +59,16 @@ public class ModelWorkspaceNotificationImpl extends NotificationImpl implements 
     /**
      * @return ResourceDelta instance
      */
-    public IResourceDelta getDelta() {
+    @Override
+	public IResourceDelta getDelta() {
         return delta;
     }
     
     /**
      * Return true if this a rename notification
      */
-    public boolean isRename(){
+    @Override
+	public boolean isRename(){
         return this.isRename;
     }
 
@@ -80,14 +82,16 @@ public class ModelWorkspaceNotificationImpl extends NotificationImpl implements 
     /**
      * Return true is event is an "autoBuild" event
      */
-    public boolean isAutoBuild() {
+    @Override
+	public boolean isAutoBuild() {
         return ResourceChangeUtilities.isAutoBuild(this.event);
     }
     
     /**
      * Return true is event is an "preAutoBuild" event
      */
-    public boolean isPreAutoBuild() {
+    @Override
+	public boolean isPreAutoBuild() {
         return ResourceChangeUtilities.isPreAutoBuild(this.event);
     }
     
@@ -99,70 +103,80 @@ public class ModelWorkspaceNotificationImpl extends NotificationImpl implements 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.workspace.ModelWorkspaceNotification#isPostAutoBuild()
      */
-    public boolean isPostAutoBuild() {
+    @Override
+	public boolean isPostAutoBuild() {
         return ResourceChangeUtilities.isPostAutoBuild(this.event);
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.workspace.ModelWorkspaceNotification#isPostChange()
      */
-    public boolean isPostChange() {
+    @Override
+	public boolean isPostChange() {
         return ResourceChangeUtilities.isPostChange(this.event);
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.workspace.ModelWorkspaceNotification#isPreClose()
      */
-    public boolean isPreClose() {
+    @Override
+	public boolean isPreClose() {
         return ResourceChangeUtilities.isPreClose(this.event);
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.workspace.ModelWorkspaceNotification#isPreDelete()
      */
-    public boolean isPreDelete() {
+    @Override
+	public boolean isPreDelete() {
         return ResourceChangeUtilities.isPreDelete(this.event);
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.workspace.ModelWorkspaceNotification#isOpen()
      */
-    public boolean isOpen() {
+    @Override
+	public boolean isOpen() {
         return ResourceChangeUtilities.isOpened(this.delta);
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.workspace.ModelWorkspaceNotification#isClose()
      */
-    public boolean isClose() {
+    @Override
+	public boolean isClose() {
         return getEventType() == CLOSING;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.workspace.ModelWorkspaceNotification#isPreNotification()
      */
-    public boolean isPreNotification() {
+    @Override
+	public boolean isPreNotification() {
         return ResourceChangeUtilities.isPreEvent(this.event);
     }       
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.workspace.ModelWorkspaceNotification#isPreNotification()
      */
-    public boolean isFile() {
+    @Override
+	public boolean isFile() {
         return ResourceChangeUtilities.isFile(this.delta);
     }       
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.workspace.ModelWorkspaceNotification#isPreNotification()
      */
-    public boolean isFolder() {
+    @Override
+	public boolean isFolder() {
         return ResourceChangeUtilities.isFolder(this.delta);
     }       
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.workspace.ModelWorkspaceNotification#isPreNotification()
      */
-    public boolean isProject() {
+    @Override
+	public boolean isProject() {
     	//return ResourceChangeUtilities.isProject(this.delta);
     	// TO DO: Handle project close notifications
     	if(!ResourceChangeUtilities.isProject(this.delta)) {

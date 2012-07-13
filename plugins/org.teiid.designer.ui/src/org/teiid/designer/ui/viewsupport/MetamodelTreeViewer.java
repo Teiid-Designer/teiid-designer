@@ -67,7 +67,8 @@ public class MetamodelTreeViewer extends TreeViewer {
                 new MetamodelLabelProvider(FACTORY),
                 new MetamodelTreeContentProvider(FACTORY, filter));
         dialog.setValidator(new ISelectionStatusValidator() {
-            public IStatus validate(Object[] selection) {
+            @Override
+			public IStatus validate(Object[] selection) {
                 if ( selection.length == 1 && selection[0] instanceof EClass ) {
                     return new StatusInfo(UiConstants.PLUGIN_ID, IStatus.OK, ""); //$NON-NLS-1$
                 }
@@ -110,21 +111,24 @@ class MetamodelLabelProvider implements ILabelProvider, PluginConstants.Images {
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.IBaseLabelProvider#addListener(org.eclipse.jface.viewers.ILabelProviderListener)
      */
-    public void addListener(ILabelProviderListener listener) {
+    @Override
+	public void addListener(ILabelProviderListener listener) {
         emfLabelProvider.addListener(listener);
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.IBaseLabelProvider#dispose()
      */
-    public void dispose() {
+    @Override
+	public void dispose() {
         emfLabelProvider.dispose();
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.ILabelProvider#getImage(java.lang.Object)
      */
-    public Image getImage(Object element) {
+    @Override
+	public Image getImage(Object element) {
         if (element instanceof EObject) {
             return emfLabelProvider.getImage(element);
         } else if (element instanceof Resource) {
@@ -136,7 +140,8 @@ class MetamodelLabelProvider implements ILabelProvider, PluginConstants.Images {
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.ILabelProvider#getText(java.lang.Object)
      */
-    public String getText(Object element) {
+    @Override
+	public String getText(Object element) {
         if (element instanceof EObject) {
             return emfLabelProvider.getText(element);
         } else if (element instanceof Resource) {
@@ -148,7 +153,8 @@ class MetamodelLabelProvider implements ILabelProvider, PluginConstants.Images {
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.IBaseLabelProvider#isLabelProperty(java.lang.Object, java.lang.String)
      */
-    public boolean isLabelProperty(Object element, String property) {
+    @Override
+	public boolean isLabelProperty(Object element, String property) {
         if (element instanceof EObject) {
             return emfLabelProvider.isLabelProperty(element, property);
         }
@@ -158,7 +164,8 @@ class MetamodelLabelProvider implements ILabelProvider, PluginConstants.Images {
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.IBaseLabelProvider#removeListener(org.eclipse.jface.viewers.ILabelProviderListener)
      */
-    public void removeListener(ILabelProviderListener listener) {
+    @Override
+	public void removeListener(ILabelProviderListener listener) {
         emfLabelProvider.removeListener(listener);
     }
 
@@ -179,14 +186,16 @@ class MetamodelTreeContentProvider implements ArrayUtil.Constants,
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.IContentProvider#dispose()
      */
-    public void dispose() {
+    @Override
+	public void dispose() {
         emfContentProvider.dispose();
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
      */
-    public Object[] getChildren(Object parentElement) {
+    @Override
+	public Object[] getChildren(Object parentElement) {
         Object[] elems;
         if (parentElement instanceof Resource) {
             EPackage ePackage = (EPackage) ((Resource)parentElement).getContents().get(0);
@@ -203,7 +212,8 @@ class MetamodelTreeContentProvider implements ArrayUtil.Constants,
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
      */
-    public Object[] getElements(Object inputElement) {
+    @Override
+	public Object[] getElements(Object inputElement) {
         Collection descriptorList = (Collection)inputElement;
         Collection visibleResults = new ArrayList();
 
@@ -231,14 +241,16 @@ class MetamodelTreeContentProvider implements ArrayUtil.Constants,
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object)
      */
-    public Object getParent(Object element) {
+    @Override
+	public Object getParent(Object element) {
         return emfContentProvider.getParent(element);
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(java.lang.Object)
      */
-    public boolean hasChildren(Object element) {
+    @Override
+	public boolean hasChildren(Object element) {
         if (element instanceof Resource) {
             return true;
         }
@@ -248,7 +260,8 @@ class MetamodelTreeContentProvider implements ArrayUtil.Constants,
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
      */
-    public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+    @Override
+	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
     }
 
 }

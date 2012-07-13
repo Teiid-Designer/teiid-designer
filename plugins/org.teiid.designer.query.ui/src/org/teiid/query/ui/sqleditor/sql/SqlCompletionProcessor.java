@@ -46,6 +46,7 @@ public class SqlCompletionProcessor
  */
  
 
+	@Override
 	public ICompletionProposal[] computeCompletionProposals(
 		ITextViewer viewer,
 		int documentOffset) {
@@ -120,6 +121,7 @@ public class SqlCompletionProcessor
 	 * demonstrate the action  
 	 * @see org.eclipse.jface.text.contentassist.IContentAssistProcessor#computeContextInformation(ITextViewer, int)
 	 */
+	@Override
 	public IContextInformation[] computeContextInformation(
 		ITextViewer viewer,
 		int documentOffset) {
@@ -142,6 +144,7 @@ public class SqlCompletionProcessor
 	/**
 	 * @see org.eclipse.jface.text.contentassist.IContentAssistProcessor#getCompletionProposalAutoActivationCharacters()
 	 */
+	@Override
 	public char[] getCompletionProposalAutoActivationCharacters() {
 		return null;
 	}
@@ -149,6 +152,7 @@ public class SqlCompletionProcessor
 	/**
 	 * @see org.eclipse.jface.text.contentassist.IContentAssistProcessor#getContextInformationAutoActivationCharacters()
 	 */
+	@Override
 	public char[] getContextInformationAutoActivationCharacters() {
 		return null;
 	}
@@ -156,6 +160,7 @@ public class SqlCompletionProcessor
 	/**
 	 * @see org.eclipse.jface.text.contentassist.IContentAssistProcessor#getErrorMessage()
 	 */
+	@Override
 	public String getErrorMessage() {
 		return null;
 	}
@@ -163,6 +168,7 @@ public class SqlCompletionProcessor
 	/**
 	 * @see org.eclipse.jface.text.contentassist.IContentAssistProcessor#getContextInformationValidator()
 	 */
+	@Override
 	public IContextInformationValidator getContextInformationValidator() {
 		return fValidator;
 	}
@@ -178,6 +184,7 @@ public class SqlCompletionProcessor
 		/*
 		 * @see IContextInformationValidator#isContextInformationValid(int)
 		 */
+		@Override
 		public boolean isContextInformationValid(int offset) {
 			return Math.abs(fInstallOffset - offset) < 5;
 		}
@@ -185,6 +192,7 @@ public class SqlCompletionProcessor
 		/*
 		 * @see IContextInformationValidator#install(IContextInformation, ITextViewer, int)
 		 */
+		@Override
 		public void install(
 			IContextInformation info,
 			ITextViewer viewer,
@@ -195,6 +203,7 @@ public class SqlCompletionProcessor
 		/*
 		 * @see org.eclipse.jface.text.contentassist.IContextInformationPresenter#updatePresentation(int, TextPresentation)
 		 */
+		@Override
 		public boolean updatePresentation(
 			int documentPosition,
 			TextPresentation presentation) {

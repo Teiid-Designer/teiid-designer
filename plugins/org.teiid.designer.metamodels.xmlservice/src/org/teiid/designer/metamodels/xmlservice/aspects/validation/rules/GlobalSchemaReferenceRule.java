@@ -44,7 +44,8 @@ public class GlobalSchemaReferenceRule implements ObjectValidationRule {
      *      org.teiid.designer.core.validation.ValidationContext)
      * @since 4.2
      */
-    public void validate(final EObject eObject,
+    @Override
+	public void validate(final EObject eObject,
                          final ValidationContext context) {
         CoreArgCheck.isInstanceOf(XmlMessage.class, eObject);
         CoreArgCheck.isNotNull(context);

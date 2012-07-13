@@ -31,7 +31,8 @@ public abstract class AbstractNodeConnectionModel implements
      * @see org.teiid.designer.diagram.ui.connection.NodeConnectionModel#getSourceNode()
      * @since 4.2
      */
-    public Object getSourceNode() {
+    @Override
+	public Object getSourceNode() {
         return null;
     }
 
@@ -39,7 +40,8 @@ public abstract class AbstractNodeConnectionModel implements
      * @see org.teiid.designer.diagram.ui.connection.NodeConnectionModel#getTargetNode()
      * @since 4.2
      */
-    public Object getTargetNode() {
+    @Override
+	public Object getTargetNode() {
         return null;
     }
 
@@ -47,28 +49,32 @@ public abstract class AbstractNodeConnectionModel implements
      * @see org.teiid.designer.diagram.ui.connection.NodeConnectionModel#setSourceNode(java.lang.Object)
      * @since 4.2
      */
-    public void setSourceNode(Object node) {
+    @Override
+	public void setSourceNode(Object node) {
     }
 
     /** 
      * @see org.teiid.designer.diagram.ui.connection.NodeConnectionModel#setTargetNode(java.lang.Object)
      * @since 4.2
      */
-    public void setTargetNode(Object node) {
+    @Override
+	public void setTargetNode(Object node) {
     }
 
     /** 
      * @see org.teiid.designer.diagram.ui.connection.NodeConnectionModel#setName(java.lang.String)
      * @since 4.2
      */
-    public void setName(String sName) {
+    @Override
+	public void setName(String sName) {
     }
 
     /** 
      * @see org.teiid.designer.diagram.ui.connection.NodeConnectionModel#getName()
      * @since 4.2
      */
-    public String getName() {
+    @Override
+	public String getName() {
         return null;
     }
 
@@ -76,7 +82,8 @@ public abstract class AbstractNodeConnectionModel implements
      * @see org.teiid.designer.diagram.ui.connection.NodeConnectionModel#getLineStyle()
      * @since 4.2
      */
-    public int getLineStyle() {
+    @Override
+	public int getLineStyle() {
         return BinaryAssociation.LINE_SOLID;
     }
 
@@ -84,7 +91,8 @@ public abstract class AbstractNodeConnectionModel implements
      * @see org.teiid.designer.diagram.ui.connection.NodeConnectionModel#getSourceDecoratorId()
      * @since 4.2
      */
-    public int getSourceDecoratorId() {
+    @Override
+	public int getSourceDecoratorId() {
         return BinaryAssociation.DECORATOR_NONE;
     }
 
@@ -92,7 +100,8 @@ public abstract class AbstractNodeConnectionModel implements
      * @see org.teiid.designer.diagram.ui.connection.NodeConnectionModel#getTargetDecoratorId()
      * @since 4.2
      */
-    public int getTargetDecoratorId() {
+    @Override
+	public int getTargetDecoratorId() {
         return BinaryAssociation.DECORATOR_NONE;
     }
 
@@ -100,7 +109,8 @@ public abstract class AbstractNodeConnectionModel implements
      * @see org.teiid.designer.diagram.ui.connection.NodeConnectionModel#getModelObject()
      * @since 4.2
      */
-    public EObject getModelObject() {
+    @Override
+	public EObject getModelObject() {
         return null;
     }
 
@@ -108,7 +118,8 @@ public abstract class AbstractNodeConnectionModel implements
      * @see org.teiid.designer.diagram.ui.connection.NodeConnectionModel#getLabelNodes()
      * @since 4.2
      */
-    public List getLabelNodes() {
+    @Override
+	public List getLabelNodes() {
         return Collections.EMPTY_LIST;
     }
 
@@ -116,14 +127,16 @@ public abstract class AbstractNodeConnectionModel implements
      * @see org.teiid.designer.diagram.ui.connection.NodeConnectionModel#updateLabels()
      * @since 4.2
      */
-    public void updateLabels() {
+    @Override
+	public void updateLabels() {
     }
 
     /** 
      * @see org.teiid.designer.diagram.ui.connection.NodeConnectionModel#getToolTipStrings()
      * @since 4.2
      */
-    public List getToolTipStrings() {
+    @Override
+	public List getToolTipStrings() {
         return Collections.EMPTY_LIST;
     }
 
@@ -131,14 +144,16 @@ public abstract class AbstractNodeConnectionModel implements
      * @see org.teiid.designer.diagram.ui.connection.NodeConnectionModel#layout()
      * @since 4.2
      */
-    public void layout() {
+    @Override
+	public void layout() {
     }
 
     /** 
      * @see org.teiid.designer.diagram.ui.connection.NodeConnectionModel#layout(org.eclipse.draw2d.ConnectionAnchor, org.eclipse.draw2d.ConnectionAnchor, org.teiid.designer.diagram.ui.part.DiagramEditPart)
      * @since 4.2
      */
-    public void layout(ConnectionAnchor ncaSourceAnchor,
+    @Override
+	public void layout(ConnectionAnchor ncaSourceAnchor,
                        ConnectionAnchor ncaTargetAnchor,
                        DiagramEditPart adepParentEditPart) {
     }
@@ -147,21 +162,24 @@ public abstract class AbstractNodeConnectionModel implements
      * @see org.teiid.designer.diagram.ui.connection.NodeConnectionModel#setRouterStyle(java.lang.String)
      * @since 4.2
      */
-    public void setRouterStyle(String sRouterStyle) {
+    @Override
+	public void setRouterStyle(String sRouterStyle) {
     }
 
     /** 
      * @see org.teiid.designer.diagram.ui.connection.NodeConnectionModel#setRouterStyle(int)
      * @since 4.2
      */
-    public void setRouterStyle(int iRouterStyle) {
+    @Override
+	public void setRouterStyle(int iRouterStyle) {
     }
 
     /** 
      * @see org.teiid.designer.diagram.ui.connection.NodeConnectionModel#getRouterStyle()
      * @since 4.2
      */
-    public int getRouterStyle() {
+    @Override
+	public int getRouterStyle() {
         return DiagramLinkType.DIRECTED;
     }
 
@@ -169,7 +187,8 @@ public abstract class AbstractNodeConnectionModel implements
      * @see org.teiid.designer.diagram.ui.connection.NodeConnectionModel#placeStereotypeAndName(int, int, org.eclipse.draw2d.geometry.PointList)
      * @since 4.2
      */
-    public void placeStereotypeAndName(int iSourceSide,
+    @Override
+	public void placeStereotypeAndName(int iSourceSide,
                                        int iTargetSide,
                                        PointList plConnectionPoints) {
     }
@@ -178,21 +197,24 @@ public abstract class AbstractNodeConnectionModel implements
      * @see org.teiid.designer.diagram.ui.connection.NodeConnectionModel#addPropertyChangeListener(java.beans.PropertyChangeListener)
      * @since 4.2
      */
-    public void addPropertyChangeListener(PropertyChangeListener l) {
+    @Override
+	public void addPropertyChangeListener(PropertyChangeListener l) {
     }
 
     /** 
      * @see org.teiid.designer.diagram.ui.connection.NodeConnectionModel#removePropertyChangeListener(java.beans.PropertyChangeListener)
      * @since 4.2
      */
-    public void removePropertyChangeListener(PropertyChangeListener l) {
+    @Override
+	public void removePropertyChangeListener(PropertyChangeListener l) {
     }
 
     /** 
      * @see org.teiid.designer.diagram.ui.connection.NodeConnectionModel#firePropertyChange(java.lang.String, java.lang.Object, java.lang.Object)
      * @since 4.2
      */
-    public void firePropertyChange(String prop,
+    @Override
+	public void firePropertyChange(String prop,
                                    Object old,
                                    Object newValue) {
     }
@@ -201,7 +223,8 @@ public abstract class AbstractNodeConnectionModel implements
      * @see org.teiid.designer.diagram.ui.connection.NodeConnectionModel#getDiagramLink()
      * @since 4.2
      */
-    public DiagramLink getDiagramLink() {
+    @Override
+	public DiagramLink getDiagramLink() {
         return null;
     }
 
@@ -209,7 +232,8 @@ public abstract class AbstractNodeConnectionModel implements
      * @see org.teiid.designer.diagram.ui.connection.NodeConnectionModel#getBendpoints()
      * @since 4.2
      */
-    public List getBendpoints() {
+    @Override
+	public List getBendpoints() {
         return Collections.EMPTY_LIST;
     }
 
@@ -217,7 +241,8 @@ public abstract class AbstractNodeConnectionModel implements
      * @see org.teiid.designer.diagram.ui.connection.NodeConnectionModel#insertBendpoint(int, org.eclipse.draw2d.Bendpoint)
      * @since 4.2
      */
-    public void insertBendpoint(int index,
+    @Override
+	public void insertBendpoint(int index,
                                 Bendpoint point) {
     }
 
@@ -225,14 +250,16 @@ public abstract class AbstractNodeConnectionModel implements
      * @see org.teiid.designer.diagram.ui.connection.NodeConnectionModel#removeBendpoint(int)
      * @since 4.2
      */
-    public void removeBendpoint(int index) {
+    @Override
+	public void removeBendpoint(int index) {
     }
 
     /** 
      * @see org.teiid.designer.diagram.ui.connection.NodeConnectionModel#setBendpoint(int, org.eclipse.draw2d.Bendpoint)
      * @since 4.2
      */
-    public void setBendpoint(int index,
+    @Override
+	public void setBendpoint(int index,
                              Bendpoint point) {
     }
 
@@ -240,21 +267,24 @@ public abstract class AbstractNodeConnectionModel implements
      * @see org.teiid.designer.diagram.ui.connection.NodeConnectionModel#setBendpoints(java.util.Vector)
      * @since 4.2
      */
-    public void setBendpoints(Vector points) {
+    @Override
+	public void setBendpoints(Vector points) {
     }
 
     /** 
      * @see org.teiid.designer.diagram.ui.connection.NodeConnectionModel#refreshBendPoints()
      * @since 4.2
      */
-    public void refreshBendPoints() {
+    @Override
+	public void refreshBendPoints() {
     }
 
     /** 
      * @see org.teiid.designer.diagram.ui.connection.NodeConnectionModel#clearBendpoints()
      * @since 4.2
      */
-    public void clearBendpoints() {
+    @Override
+	public void clearBendpoints() {
     }
 
 }

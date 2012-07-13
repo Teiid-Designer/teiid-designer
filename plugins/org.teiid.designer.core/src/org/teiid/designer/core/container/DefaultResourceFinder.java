@@ -78,7 +78,8 @@ public class DefaultResourceFinder implements ResourceFinder {
      * @see org.teiid.designer.modeler.core.container#findByUUID(org.teiid.core.id.ObjectID, boolean)
      * @since 4.3
      */
-    public Resource findByUUID( final ObjectID uuid,
+    @Override
+	public Resource findByUUID( final ObjectID uuid,
                                 final boolean searchExternal ) {
         Resource result = findResourceByUUID(uuid, new ArrayList(getContainer().getResources()));
         if (result == null && searchExternal) {
@@ -98,7 +99,8 @@ public class DefaultResourceFinder implements ResourceFinder {
      *      org.eclipse.emf.ecore.resource.Resource[])
      * @since 4.3
      */
-    public Resource findByUUID( final ObjectID uuid,
+    @Override
+	public Resource findByUUID( final ObjectID uuid,
                                 final Resource[] scope ) {
         return findResourceByUUID(uuid, Arrays.asList(scope));
     }
@@ -107,7 +109,8 @@ public class DefaultResourceFinder implements ResourceFinder {
      * @see org.teiid.designer.modeler.core.container#findByImport(org.teiid.designer.metamodels.core.ModelImport, boolean)
      * @since 4.3
      */
-    public Resource findByImport( final ModelImport theImport,
+    @Override
+	public Resource findByImport( final ModelImport theImport,
                                   final boolean searchExternal ) {
 
         Resource result = findResourceByImport(theImport, new ArrayList(getContainer().getResources()));
@@ -128,7 +131,8 @@ public class DefaultResourceFinder implements ResourceFinder {
      *      org.eclipse.emf.ecore.resource.Resource[])
      * @since 4.3
      */
-    public Resource findByImport( final ModelImport theImport,
+    @Override
+	public Resource findByImport( final ModelImport theImport,
                                   final Resource[] scope ) {
         return findResourceByImport(theImport, Arrays.asList(scope));
     }
@@ -137,7 +141,8 @@ public class DefaultResourceFinder implements ResourceFinder {
      * @see org.teiid.designer.core.container.ResourceFinder#findByImport(org.eclipse.xsd.XSDSchemaDirective, boolean)
      * @since 4.3
      */
-    public Resource findByImport( final XSDSchemaDirective theImport,
+    @Override
+	public Resource findByImport( final XSDSchemaDirective theImport,
                                   final boolean searchExternal ) {
         Resource result = findResourceByImport(theImport, new ArrayList(getContainer().getResources()));
         if (result == null && searchExternal) {
@@ -157,7 +162,8 @@ public class DefaultResourceFinder implements ResourceFinder {
      *      org.eclipse.emf.ecore.resource.Resource[])
      * @since 4.3
      */
-    public Resource findByImport( final XSDSchemaDirective theImport,
+    @Override
+	public Resource findByImport( final XSDSchemaDirective theImport,
                                   final Resource[] scope ) {
         return findResourceByImport(theImport, Arrays.asList(scope));
     }
@@ -166,7 +172,8 @@ public class DefaultResourceFinder implements ResourceFinder {
      * @see org.teiid.designer.modeler.core.container#findByName(java.lang.String, boolean, boolean)
      * @since 4.3
      */
-    public Resource[] findByName( final String theName,
+    @Override
+	public Resource[] findByName( final String theName,
                                   final boolean caseSensitive,
                                   final boolean searchExternal ) {
         Collection result = findResourcesByName(theName, caseSensitive, new ArrayList(getContainer().getResources()));
@@ -183,7 +190,8 @@ public class DefaultResourceFinder implements ResourceFinder {
      * @see org.teiid.designer.modeler.core.container#findByURI(org.eclipse.emf.common.util.URI, boolean)
      * @since 4.3
      */
-    public Resource findByURI( final URI theUri,
+    @Override
+	public Resource findByURI( final URI theUri,
                                final boolean searchExternal ) {
         Resource result = getContainer().getResource(theUri, false);
         if (result == null && searchExternal) {
@@ -209,7 +217,8 @@ public class DefaultResourceFinder implements ResourceFinder {
      *      org.eclipse.emf.ecore.resource.Resource)
      * @since 5.0.2
      */
-    public Resource findByWorkspaceUri( final URI theRelativeUri,
+    @Override
+	public Resource findByWorkspaceUri( final URI theRelativeUri,
                                         final Resource knownResource ) {
         try {
             // Defect 23396 - an NPE was thrown here because a relativeUri was provide (i.e. BooksDatatypes.xsd) which resulted
@@ -235,7 +244,8 @@ public class DefaultResourceFinder implements ResourceFinder {
      * @see org.teiid.designer.modeler.core.container#isExternalResource(org.eclipse.emf.common.util.URI)
      * @since 4.3
      */
-    public boolean isExternalResource( final URI theUri ) {
+    @Override
+	public boolean isExternalResource( final URI theUri ) {
         if (theUri != null) {
             return isExternalResource(findByURI(theUri, true));
         }
@@ -246,7 +256,8 @@ public class DefaultResourceFinder implements ResourceFinder {
      * @see org.teiid.designer.modeler.core.container#isExternalResource(org.eclipse.emf.ecore.resource.Resource)
      * @since 4.3
      */
-    public boolean isExternalResource( final Resource theResource ) {
+    @Override
+	public boolean isExternalResource( final Resource theResource ) {
         if (theResource != null && ModelerCore.getContainer(theResource) == getContainer()) {
             return false;
         }
@@ -257,7 +268,8 @@ public class DefaultResourceFinder implements ResourceFinder {
      * @see org.teiid.designer.modeler.core.container#isBuiltInResource(org.eclipse.emf.ecore.resource.Resource)
      * @since 4.3
      */
-    public boolean isBuiltInResource( final Resource theResource ) {
+    @Override
+	public boolean isBuiltInResource( final Resource theResource ) {
         if (theResource != null) {
             return isBuiltInResource(theResource.getURI());
         }
@@ -268,7 +280,8 @@ public class DefaultResourceFinder implements ResourceFinder {
      * @see org.teiid.designer.modeler.core.container#isBuiltInResource(org.eclipse.emf.common.util.URI)
      * @since 4.3
      */
-    public boolean isBuiltInResource( final URI theUri ) {
+    @Override
+	public boolean isBuiltInResource( final URI theUri ) {
         if (theUri == null) {
             return false;
         }
@@ -341,7 +354,8 @@ public class DefaultResourceFinder implements ResourceFinder {
      * @see org.teiid.designer.modeler.core.container#isBuiltInSystemResource(org.eclipse.emf.common.util.URI)
      * @since 4.3
      */
-    public boolean isBuiltInSystemResource( final URI theUri ) {
+    @Override
+	public boolean isBuiltInSystemResource( final URI theUri ) {
         if (theUri != null) {
             // If the models are not found in an external resource set then
             // they cannot be one of the built-in shared resources
@@ -363,7 +377,8 @@ public class DefaultResourceFinder implements ResourceFinder {
      * @see org.teiid.designer.modeler.core.container#isBuiltInSystemResource(org.eclipse.emf.ecore.resource.Resource)
      * @since 4.3
      */
-    public boolean isBuiltInSystemResource( final Resource theResource ) {
+    @Override
+	public boolean isBuiltInSystemResource( final Resource theResource ) {
         if (theResource != null) {
             return isBuiltInSystemResource(theResource.getURI());
         }
@@ -382,7 +397,8 @@ public class DefaultResourceFinder implements ResourceFinder {
      * @see org.teiid.designer.modeler.core.container#findByEObject(org.eclipse.emf.ecore.EObject)
      * @since 4.3
      */
-    public Resource findByEObject( final EObject eObject ) {
+    @Override
+	public Resource findByEObject( final EObject eObject ) {
         if (eObject == null) {
             return null;
         }
@@ -401,7 +417,8 @@ public class DefaultResourceFinder implements ResourceFinder {
      *      boolean, boolean)
      * @since 4.3
      */
-    public Resource[] findReferencesFrom( final Resource theResource,
+    @Override
+	public Resource[] findReferencesFrom( final Resource theResource,
                                           final boolean recurse,
                                           final boolean includeExternal ) {
 
@@ -424,7 +441,8 @@ public class DefaultResourceFinder implements ResourceFinder {
      *      boolean)
      * @since 4.3
      */
-    public Resource[] findReferencesTo( final Resource theResource,
+    @Override
+	public Resource[] findReferencesTo( final Resource theResource,
                                         final boolean recurse ) {
         final Collection result = new HashSet();
         if (theResource != null) {
@@ -457,7 +475,8 @@ public class DefaultResourceFinder implements ResourceFinder {
      * @see org.teiid.designer.core.container.ResourceFinder#findUnresolvedResourceLocations(org.eclipse.emf.ecore.resource.Resource)
      * @since 4.3
      */
-    public String[] findUnresolvedResourceLocations( final Resource theResource ) {
+    @Override
+	public String[] findUnresolvedResourceLocations( final Resource theResource ) {
         final Collection result = new HashSet();
         if (theResource != null) {
             List dummyList = new ArrayList();
@@ -480,7 +499,8 @@ public class DefaultResourceFinder implements ResourceFinder {
      * @see org.teiid.designer.core.container.ResourceFinder#findMissingImportLocations(org.eclipse.emf.ecore.resource.Resource)
      * @since 5.0.2
      */
-    public String[] findMissingImportLocations( final Resource theResource ) {
+    @Override
+	public String[] findMissingImportLocations( final Resource theResource ) {
         final Collection result = new HashSet();
         if (theResource != null && theResource instanceof MMXmiResource) {
 

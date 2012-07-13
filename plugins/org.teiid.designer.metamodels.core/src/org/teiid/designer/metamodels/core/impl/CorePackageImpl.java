@@ -170,7 +170,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
      * 
      * @generated
      */
-    public EClass getAnnotation() {
+    @Override
+	public EClass getAnnotation() {
         return annotationEClass;
     }
 
@@ -179,7 +180,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
      * 
      * @generated
      */
-    public EAttribute getAnnotation_Description() {
+    @Override
+	public EAttribute getAnnotation_Description() {
         return (EAttribute)annotationEClass.getEStructuralFeatures().get(0);
     }
 
@@ -188,7 +190,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
      * 
      * @generated
      */
-    public EAttribute getAnnotation_Keywords() {
+    @Override
+	public EAttribute getAnnotation_Keywords() {
         return (EAttribute)annotationEClass.getEStructuralFeatures().get(1);
     }
 
@@ -197,7 +200,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
      * 
      * @generated
      */
-    public EReference getAnnotation_AnnotatedObject() {
+    @Override
+	public EReference getAnnotation_AnnotatedObject() {
         return (EReference)annotationEClass.getEStructuralFeatures().get(4);
     }
 
@@ -206,7 +210,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
      * 
      * @generated
      */
-    public EReference getAnnotation_ExtensionObject() {
+    @Override
+	public EReference getAnnotation_ExtensionObject() {
         return (EReference)annotationEClass.getEStructuralFeatures().get(5);
     }
 
@@ -215,7 +220,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
      * 
      * @generated
      */
-    public EReference getAnnotation_Tags() {
+    @Override
+	public EReference getAnnotation_Tags() {
         return (EReference)annotationEClass.getEStructuralFeatures().get(2);
     }
 
@@ -224,7 +230,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
      * 
      * @generated
      */
-    public EReference getAnnotation_AnnotationContainer() {
+    @Override
+	public EReference getAnnotation_AnnotationContainer() {
         return (EReference)annotationEClass.getEStructuralFeatures().get(3);
     }
 
@@ -233,7 +240,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
      * 
      * @generated
      */
-    public EClass getAnnotationContainer() {
+    @Override
+	public EClass getAnnotationContainer() {
         return annotationContainerEClass;
     }
 
@@ -242,7 +250,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
      * 
      * @generated
      */
-    public EReference getAnnotationContainer_Annotations() {
+    @Override
+	public EReference getAnnotationContainer_Annotations() {
         return (EReference)annotationContainerEClass.getEStructuralFeatures().get(0);
     }
 
@@ -251,7 +260,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
      * 
      * @generated
      */
-    public EClass getModelAnnotation() {
+    @Override
+	public EClass getModelAnnotation() {
         return modelAnnotationEClass;
     }
 
@@ -260,7 +270,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
      * 
      * @generated
      */
-    public EAttribute getModelAnnotation_Description() {
+    @Override
+	public EAttribute getModelAnnotation_Description() {
         return (EAttribute)modelAnnotationEClass.getEStructuralFeatures().get(0);
     }
 
@@ -269,7 +280,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
      * 
      * @generated
      */
-    public EAttribute getModelAnnotation_NameInSource() {
+    @Override
+	public EAttribute getModelAnnotation_NameInSource() {
         return (EAttribute)modelAnnotationEClass.getEStructuralFeatures().get(1);
     }
 
@@ -278,7 +290,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
      * 
      * @generated
      */
-    public EAttribute getModelAnnotation_PrimaryMetamodelUri() {
+    @Override
+	public EAttribute getModelAnnotation_PrimaryMetamodelUri() {
         return (EAttribute)modelAnnotationEClass.getEStructuralFeatures().get(2);
     }
 
@@ -287,7 +300,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
      * 
      * @generated
      */
-    public EAttribute getModelAnnotation_ModelType() {
+    @Override
+	public EAttribute getModelAnnotation_ModelType() {
         return (EAttribute)modelAnnotationEClass.getEStructuralFeatures().get(3);
     }
 
@@ -296,7 +310,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
      * 
      * @generated
      */
-    public EAttribute getModelAnnotation_MaxSetSize() {
+    @Override
+	public EAttribute getModelAnnotation_MaxSetSize() {
         return (EAttribute)modelAnnotationEClass.getEStructuralFeatures().get(4);
     }
 
@@ -305,7 +320,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
      * 
      * @generated
      */
-    public EAttribute getModelAnnotation_Visible() {
+    @Override
+	public EAttribute getModelAnnotation_Visible() {
         return (EAttribute)modelAnnotationEClass.getEStructuralFeatures().get(5);
     }
 
@@ -314,7 +330,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
      * 
      * @generated
      */
-    public EAttribute getModelAnnotation_SupportsDistinct() {
+    @Override
+	public EAttribute getModelAnnotation_SupportsDistinct() {
         return (EAttribute)modelAnnotationEClass.getEStructuralFeatures().get(6);
     }
 
@@ -323,7 +340,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
      * 
      * @generated
      */
-    public EAttribute getModelAnnotation_SupportsJoin() {
+    @Override
+	public EAttribute getModelAnnotation_SupportsJoin() {
         return (EAttribute)modelAnnotationEClass.getEStructuralFeatures().get(7);
     }
 
@@ -332,7 +350,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
      * 
      * @generated
      */
-    public EAttribute getModelAnnotation_SupportsOrderBy() {
+    @Override
+	public EAttribute getModelAnnotation_SupportsOrderBy() {
         return (EAttribute)modelAnnotationEClass.getEStructuralFeatures().get(8);
     }
 
@@ -341,7 +360,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
      * 
      * @generated
      */
-    public EAttribute getModelAnnotation_SupportsOuterJoin() {
+    @Override
+	public EAttribute getModelAnnotation_SupportsOuterJoin() {
         return (EAttribute)modelAnnotationEClass.getEStructuralFeatures().get(9);
     }
 
@@ -350,7 +370,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
      * 
      * @generated
      */
-    public EAttribute getModelAnnotation_SupportsWhereAll() {
+    @Override
+	public EAttribute getModelAnnotation_SupportsWhereAll() {
         return (EAttribute)modelAnnotationEClass.getEStructuralFeatures().get(10);
     }
 
@@ -359,7 +380,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
      * 
      * @generated
      */
-    public EReference getModelAnnotation_Tags() {
+    @Override
+	public EReference getModelAnnotation_Tags() {
         return (EReference)modelAnnotationEClass.getEStructuralFeatures().get(11);
     }
 
@@ -368,7 +390,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
      * 
      * @generated
      */
-    public EAttribute getModelAnnotation_NamespaceUri() {
+    @Override
+	public EAttribute getModelAnnotation_NamespaceUri() {
         return (EAttribute)modelAnnotationEClass.getEStructuralFeatures().get(12);
     }
 
@@ -377,7 +400,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
      * 
      * @generated
      */
-    public EAttribute getModelAnnotation_ProducerName() {
+    @Override
+	public EAttribute getModelAnnotation_ProducerName() {
         return (EAttribute)modelAnnotationEClass.getEStructuralFeatures().get(13);
     }
 
@@ -386,7 +410,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
      * 
      * @generated
      */
-    public EAttribute getModelAnnotation_ProducerVersion() {
+    @Override
+	public EAttribute getModelAnnotation_ProducerVersion() {
         return (EAttribute)modelAnnotationEClass.getEStructuralFeatures().get(14);
     }
 
@@ -395,7 +420,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
      * 
      * @generated
      */
-    public EReference getModelAnnotation_ModelImports() {
+    @Override
+	public EReference getModelAnnotation_ModelImports() {
         return (EReference)modelAnnotationEClass.getEStructuralFeatures().get(15);
     }
 
@@ -404,7 +430,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
      * 
      * @generated
      */
-    public EReference getModelAnnotation_ExtensionPackage() {
+    @Override
+	public EReference getModelAnnotation_ExtensionPackage() {
         return (EReference)modelAnnotationEClass.getEStructuralFeatures().get(16);
     }
 
@@ -413,7 +440,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
      * 
      * @generated
      */
-    public EClass getLink() {
+    @Override
+	public EClass getLink() {
         return linkEClass;
     }
 
@@ -422,7 +450,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
      * 
      * @generated
      */
-    public EAttribute getLink_Name() {
+    @Override
+	public EAttribute getLink_Name() {
         return (EAttribute)linkEClass.getEStructuralFeatures().get(0);
     }
 
@@ -431,7 +460,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
      * 
      * @generated
      */
-    public EAttribute getLink_Description() {
+    @Override
+	public EAttribute getLink_Description() {
         return (EAttribute)linkEClass.getEStructuralFeatures().get(1);
     }
 
@@ -440,7 +470,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
      * 
      * @generated
      */
-    public EAttribute getLink_References() {
+    @Override
+	public EAttribute getLink_References() {
         return (EAttribute)linkEClass.getEStructuralFeatures().get(2);
     }
 
@@ -449,7 +480,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
      * 
      * @generated
      */
-    public EReference getLink_LinkedObjects() {
+    @Override
+	public EReference getLink_LinkedObjects() {
         return (EReference)linkEClass.getEStructuralFeatures().get(3);
     }
 
@@ -458,7 +490,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
      * 
      * @generated
      */
-    public EReference getLink_LinkContainer() {
+    @Override
+	public EReference getLink_LinkContainer() {
         return (EReference)linkEClass.getEStructuralFeatures().get(4);
     }
 
@@ -467,7 +500,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
      * 
      * @generated
      */
-    public EClass getLinkContainer() {
+    @Override
+	public EClass getLinkContainer() {
         return linkContainerEClass;
     }
 
@@ -476,7 +510,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
      * 
      * @generated
      */
-    public EReference getLinkContainer_Links() {
+    @Override
+	public EReference getLinkContainer_Links() {
         return (EReference)linkContainerEClass.getEStructuralFeatures().get(0);
     }
 
@@ -485,7 +520,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
      * 
      * @generated
      */
-    public EClass getDatatype() {
+    @Override
+	public EClass getDatatype() {
         return datatypeEClass;
     }
 
@@ -494,7 +530,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
      * 
      * @generated
      */
-    public EClass getIdentifiable() {
+    @Override
+	public EClass getIdentifiable() {
         return identifiableEClass;
     }
 
@@ -503,7 +540,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
      * 
      * @generated
      */
-    public EAttribute getIdentifiable_Uuid() {
+    @Override
+	public EAttribute getIdentifiable_Uuid() {
         return (EAttribute)identifiableEClass.getEStructuralFeatures().get(0);
     }
 
@@ -512,7 +550,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
      * 
      * @generated
      */
-    public EClass getModelImport() {
+    @Override
+	public EClass getModelImport() {
         return modelImportEClass;
     }
 
@@ -521,7 +560,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
      * 
      * @generated
      */
-    public EAttribute getModelImport_Name() {
+    @Override
+	public EAttribute getModelImport_Name() {
         return (EAttribute)modelImportEClass.getEStructuralFeatures().get(0);
     }
 
@@ -530,7 +570,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
      * 
      * @generated
      */
-    public EAttribute getModelImport_Path() {
+    @Override
+	public EAttribute getModelImport_Path() {
         return (EAttribute)modelImportEClass.getEStructuralFeatures().get(1);
     }
 
@@ -539,7 +580,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
      * 
      * @generated
      */
-    public EAttribute getModelImport_ModelLocation() {
+    @Override
+	public EAttribute getModelImport_ModelLocation() {
         return (EAttribute)modelImportEClass.getEStructuralFeatures().get(2);
     }
 
@@ -548,7 +590,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
      * 
      * @generated
      */
-    public EAttribute getModelImport_Uuid() {
+    @Override
+	public EAttribute getModelImport_Uuid() {
         return (EAttribute)modelImportEClass.getEStructuralFeatures().get(3);
     }
 
@@ -557,7 +600,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
      * 
      * @generated
      */
-    public EAttribute getModelImport_ModelType() {
+    @Override
+	public EAttribute getModelImport_ModelType() {
         return (EAttribute)modelImportEClass.getEStructuralFeatures().get(4);
     }
 
@@ -566,7 +610,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
      * 
      * @generated
      */
-    public EAttribute getModelImport_PrimaryMetamodelUri() {
+    @Override
+	public EAttribute getModelImport_PrimaryMetamodelUri() {
         return (EAttribute)modelImportEClass.getEStructuralFeatures().get(5);
     }
 
@@ -575,7 +620,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
      * 
      * @generated
      */
-    public EReference getModelImport_Model() {
+    @Override
+	public EReference getModelImport_Model() {
         return (EReference)modelImportEClass.getEStructuralFeatures().get(6);
     }
 
@@ -584,7 +630,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
      * 
      * @generated
      */
-    public EEnum getModelType() {
+    @Override
+	public EEnum getModelType() {
         return modelTypeEEnum;
     }
 
@@ -593,7 +640,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
      * 
      * @generated
      */
-    public CoreFactory getCoreFactory() {
+    @Override
+	public CoreFactory getCoreFactory() {
         return (CoreFactory)getEFactoryInstance();
     }
 

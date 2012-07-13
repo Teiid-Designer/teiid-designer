@@ -201,7 +201,8 @@ public class UriReferenceImpl extends PlaceholderReferenceImpl implements UriRef
      * 
      * @generated
      */
-    public String getName() {
+    @Override
+	public String getName() {
         return name;
     }
 
@@ -210,7 +211,8 @@ public class UriReferenceImpl extends PlaceholderReferenceImpl implements UriRef
      * 
      * @generated
      */
-    public void setName( String newName ) {
+    @Override
+	public void setName( String newName ) {
         String oldName = name;
         name = newName;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
@@ -222,7 +224,8 @@ public class UriReferenceImpl extends PlaceholderReferenceImpl implements UriRef
      * 
      * @generated
      */
-    public String getUri() {
+    @Override
+	public String getUri() {
         return uri;
     }
 
@@ -231,7 +234,8 @@ public class UriReferenceImpl extends PlaceholderReferenceImpl implements UriRef
      * 
      * @generated
      */
-    public void setUri( String newUri ) {
+    @Override
+	public void setUri( String newUri ) {
         String oldUri = uri;
         uri = newUri;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
@@ -243,7 +247,8 @@ public class UriReferenceImpl extends PlaceholderReferenceImpl implements UriRef
      * 
      * @generated
      */
-    public boolean isResolvable() {
+    @Override
+	public boolean isResolvable() {
         return resolvable;
     }
 
@@ -252,7 +257,8 @@ public class UriReferenceImpl extends PlaceholderReferenceImpl implements UriRef
      * 
      * @generated
      */
-    public void setResolvable( boolean newResolvable ) {
+    @Override
+	public void setResolvable( boolean newResolvable ) {
         boolean oldResolvable = resolvable;
         resolvable = newResolvable;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
@@ -265,7 +271,8 @@ public class UriReferenceImpl extends PlaceholderReferenceImpl implements UriRef
      * 
      * @generated
      */
-    public String getEncoding() {
+    @Override
+	public String getEncoding() {
         return encoding;
     }
 
@@ -274,7 +281,8 @@ public class UriReferenceImpl extends PlaceholderReferenceImpl implements UriRef
      * 
      * @generated
      */
-    public void setEncoding( String newEncoding ) {
+    @Override
+	public void setEncoding( String newEncoding ) {
         String oldEncoding = encoding;
         encoding = newEncoding;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
@@ -287,7 +295,8 @@ public class UriReferenceImpl extends PlaceholderReferenceImpl implements UriRef
      * 
      * @generated
      */
-    public String getAbstract() {
+    @Override
+	public String getAbstract() {
         return abstract_;
     }
 
@@ -296,7 +305,8 @@ public class UriReferenceImpl extends PlaceholderReferenceImpl implements UriRef
      * 
      * @generated
      */
-    public void setAbstract( String newAbstract ) {
+    @Override
+	public void setAbstract( String newAbstract ) {
         String oldAbstract = abstract_;
         abstract_ = newAbstract;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
@@ -309,7 +319,8 @@ public class UriReferenceImpl extends PlaceholderReferenceImpl implements UriRef
      * 
      * @generated
      */
-    public String getKeywords() {
+    @Override
+	public String getKeywords() {
         return keywords;
     }
 
@@ -318,7 +329,8 @@ public class UriReferenceImpl extends PlaceholderReferenceImpl implements UriRef
      * 
      * @generated
      */
-    public void setKeywords( String newKeywords ) {
+    @Override
+	public void setKeywords( String newKeywords ) {
         String oldKeywords = keywords;
         keywords = newKeywords;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
@@ -331,7 +343,8 @@ public class UriReferenceImpl extends PlaceholderReferenceImpl implements UriRef
      * 
      * @generated
      */
-    public EList getRelatedUris() {
+    @Override
+	public EList getRelatedUris() {
         if (relatedUris == null) {
             relatedUris = new EDataTypeUniqueEList(String.class, this, RelationshipPackage.URI_REFERENCE__RELATED_URIS);
         }
@@ -343,7 +356,8 @@ public class UriReferenceImpl extends PlaceholderReferenceImpl implements UriRef
      * 
      * @generated
      */
-    public EMap getProperties() {
+    @Override
+	public EMap getProperties() {
         if (properties == null) {
             properties = new EcoreEMap(EcorePackage.eINSTANCE.getEStringToStringMapEntry(), EStringToStringMapEntryImpl.class,
                                        this, RelationshipPackage.URI_REFERENCE__PROPERTIES);

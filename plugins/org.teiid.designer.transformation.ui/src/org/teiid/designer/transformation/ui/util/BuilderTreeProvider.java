@@ -54,7 +54,8 @@ public class BuilderTreeProvider implements ITreeContentProvider, ILabelProvider
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
      */
-    public Object[] getChildren(Object parentElement) {
+    @Override
+	public Object[] getChildren(Object parentElement) {
         Object[] result = new Object[0];
         if ( parentElement instanceof EObject ) {
             if (parentElement instanceof InputSet) {
@@ -165,7 +166,8 @@ public class BuilderTreeProvider implements ITreeContentProvider, ILabelProvider
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object)
      */
-    public Object getParent(Object element) {
+    @Override
+	public Object getParent(Object element) {
         Object result = null;
         if ( element instanceof EObject ) {
             result = ((EObject)element).eContainer();
@@ -188,14 +190,16 @@ public class BuilderTreeProvider implements ITreeContentProvider, ILabelProvider
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(java.lang.Object)
      */
-    public boolean hasChildren(Object element) {
+    @Override
+	public boolean hasChildren(Object element) {
         return getChildren(element).length > 0;
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.ILabelProvider#getImage(java.lang.Object)
      */
-    public Image getImage(Object obj) {
+    @Override
+	public Image getImage(Object obj) {
         if ( obj instanceof GroupSymbol ) {
             EObject group = TransformationSqlHelper.getGroupSymbolEObject((GroupSymbol) obj);
             return emfLabelProvider.getImage(group);
@@ -214,7 +218,8 @@ public class BuilderTreeProvider implements ITreeContentProvider, ILabelProvider
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.ILabelProvider#getText(java.lang.Object)
      */
-    public String getText(Object obj) {
+    @Override
+	public String getText(Object obj) {
         if ( obj instanceof GroupSymbol ) {
             GroupSymbol symbol = (GroupSymbol) obj;
             
@@ -252,7 +257,8 @@ public class BuilderTreeProvider implements ITreeContentProvider, ILabelProvider
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
      */
-    public Object[] getElements(Object inputElement) {
+    @Override
+	public Object[] getElements(Object inputElement) {
         Object[] result = new Object[0];
         if ( inputElement instanceof Collection ) {
             result = ((Collection) inputElement).toArray();
@@ -263,35 +269,40 @@ public class BuilderTreeProvider implements ITreeContentProvider, ILabelProvider
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.IBaseLabelProvider#dispose()
      */
-    public void dispose() {
+    @Override
+	public void dispose() {
 
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
      */
-    public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+    @Override
+	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.IBaseLabelProvider#addListener(org.eclipse.jface.viewers.ILabelProviderListener)
      */
-    public void addListener(ILabelProviderListener listener) {
+    @Override
+	public void addListener(ILabelProviderListener listener) {
 
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.IBaseLabelProvider#isLabelProperty(java.lang.Object, java.lang.String)
      */
-    public boolean isLabelProperty(Object element, String property) {
+    @Override
+	public boolean isLabelProperty(Object element, String property) {
         return emfLabelProvider.isLabelProperty(element, property);
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.IBaseLabelProvider#removeListener(org.eclipse.jface.viewers.ILabelProviderListener)
      */
-    public void removeListener(ILabelProviderListener listener) {
+    @Override
+	public void removeListener(ILabelProviderListener listener) {
 
     }
 

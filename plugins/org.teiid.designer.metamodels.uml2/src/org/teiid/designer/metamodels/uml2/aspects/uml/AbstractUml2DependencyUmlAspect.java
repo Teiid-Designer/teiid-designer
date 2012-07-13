@@ -28,7 +28,8 @@ public abstract class AbstractUml2DependencyUmlAspect extends AbstractUml2UmlAsp
     /** 
      * @see org.teiid.designer.core.metamodel.aspect.uml.UmlRelationship#getName(java.lang.Object)
      */
-    public String getName(Object eObject) {
+    @Override
+	public String getName(Object eObject) {
         Dependency d = assertDependency(eObject);
         final String name = d.getName();
         return ( name != null ? name : CoreStringUtil.Constants.EMPTY_STRING);
@@ -37,7 +38,8 @@ public abstract class AbstractUml2DependencyUmlAspect extends AbstractUml2UmlAsp
     /** 
      * @see org.teiid.designer.core.metamodel.aspect.uml.UmlRelationship#getToolTip(java.lang.Object)
      */
-    public String getToolTip(Object eObject) {
+    @Override
+	public String getToolTip(Object eObject) {
         final StringBuffer sb = new StringBuffer(200);
         sb.append(this.getStereotype(eObject));
         sb.append(' ');

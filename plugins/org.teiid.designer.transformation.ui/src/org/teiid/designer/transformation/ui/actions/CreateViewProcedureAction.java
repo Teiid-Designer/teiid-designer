@@ -79,7 +79,8 @@ public class CreateViewProcedureAction  extends Action implements INewChildActio
     /* (non-Javadoc)
      * @See org.teiid.designer.ui.actions.INewChildAction#canCreateChild(org.eclipse.emf.ecore.EObject)
      */
-    public boolean canCreateChild(EObject parent) {
+    @Override
+	public boolean canCreateChild(EObject parent) {
     	return false;
     }
     
@@ -87,14 +88,16 @@ public class CreateViewProcedureAction  extends Action implements INewChildActio
      * @See org.teiid.designer.ui.actions.INewChildAc
 				tion#canCreateChild(org.eclipse.core.resources.IFile)
      */
-    public boolean canCreateChild(IFile modelFile) {
+    @Override
+	public boolean canCreateChild(IFile modelFile) {
     	return isApplicable(new StructuredSelection(modelFile));
     }
     
     /* (non-Javadoc)
      * @See org.teiid.designer.ui.actions.INewSiblingAction#canCreateChild(org.eclipse.emf.ecore.EObject)
      */
-    public boolean canCreateSibling(EObject parent) {
+    @Override
+	public boolean canCreateSibling(EObject parent) {
     	//Convert eObject selection to IFile
     	ModelResource mr = ModelUtilities.getModelResourceForModelObject(parent);
     	if( mr != null ) {

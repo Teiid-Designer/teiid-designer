@@ -39,20 +39,24 @@ public class RootElementImpl implements RootElement {
         return retval;
     }
 
-    public boolean isUseAsRoot() {
+    @Override
+	public boolean isUseAsRoot() {
         return useAsRoot;
     }
 
-    public SchemaObjectKey getKey() {
+    @Override
+	public SchemaObjectKey getKey() {
         return key;
     }
 
-    public String getName() {
+    @Override
+	public String getName() {
         if (null != name) return name;
         return ""; //$NON-NLS-1$
     }
 
-    public String getNamespace() {
+    @Override
+	public String getNamespace() {
         if (null != targetNamespace) return targetNamespace;
         return ""; //$NON-NLS-1$
     }

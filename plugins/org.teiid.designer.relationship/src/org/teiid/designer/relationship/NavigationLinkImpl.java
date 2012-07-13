@@ -77,7 +77,8 @@ public class NavigationLinkImpl extends NavigationObjectImpl implements Navigati
      * Return the relationship type for this link. 
      * @return the relationship type.
      */
-    public String getType() {
+    @Override
+	public String getType() {
         return type;
     }
     

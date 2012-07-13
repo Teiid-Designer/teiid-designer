@@ -98,7 +98,8 @@ public class MetamodelEntityBuilderImpl implements MetamodelEntityBuilder, Metam
      * @param record - The MetamodelEntityRecord to use to drive creation - May not be null
      * @since 4.3
      */
-    public EObject create( MetamodelEntityRecord record,
+    @Override
+	public EObject create( MetamodelEntityRecord record,
                            IProgressMonitor monitor ) {
         CoreArgCheck.isNotNull(record);
         this.currentRecord = record;
@@ -176,7 +177,8 @@ public class MetamodelEntityBuilderImpl implements MetamodelEntityBuilder, Metam
      * @param records - the list of MetamodelEntityRecords to use to drive creation - May not be null
      * @since 4.3
      */
-    public List create( List records,
+    @Override
+	public List create( List records,
                         IProgressMonitor monitor ) {
         CoreArgCheck.isNotNull(records);
 

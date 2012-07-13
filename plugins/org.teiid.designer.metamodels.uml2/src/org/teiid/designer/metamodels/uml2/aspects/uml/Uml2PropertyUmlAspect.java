@@ -40,7 +40,8 @@ public class Uml2PropertyUmlAspect extends AbstractUml2NamedElementUmlAspect imp
     /**
      * @see org.teiid.designer.core.metamodel.aspect.uml.UmlProperty#isAssociationEnd(java.lang.Object)
      */
-    public boolean isAssociationEnd( Object eObject ) {
+    @Override
+	public boolean isAssociationEnd( Object eObject ) {
         Property property = assertProperty(eObject);
         return (property.getAssociation() != null);
     }
@@ -89,7 +90,8 @@ public class Uml2PropertyUmlAspect extends AbstractUml2NamedElementUmlAspect imp
      * 
      * @see org.teiid.designer.core.metamodel.aspect.uml.UmlDiagramAspect#getSignature(java.lang.Object, int)
      */
-    public String getSignature( Object eObject,
+    @Override
+	public String getSignature( Object eObject,
                                 int showMask ) {
         Property property = assertProperty(eObject);
         StringBuffer result = new StringBuffer();

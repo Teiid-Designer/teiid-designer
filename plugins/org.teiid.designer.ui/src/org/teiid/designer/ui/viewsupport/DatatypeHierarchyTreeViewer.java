@@ -66,14 +66,16 @@ public class DatatypeHierarchyTreeViewer extends TreeViewer {
         /* (non-Javadoc)
          * @see org.eclipse.jface.viewers.IContentProvider#dispose()
          */
-        public void dispose() {
+        @Override
+		public void dispose() {
 
         }
 
         /* (non-Javadoc)
          * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
          */
-        public Object[] getChildren(Object parentElement) {
+        @Override
+		public Object[] getChildren(Object parentElement) {
             Object[] result = new Object[0];
             try {
                 result = datatypeManager.getSubtypes((EObject)parentElement);
@@ -86,7 +88,8 @@ public class DatatypeHierarchyTreeViewer extends TreeViewer {
         /* (non-Javadoc)
          * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
          */
-        public Object[] getElements(Object inputElement) {
+        @Override
+		public Object[] getElements(Object inputElement) {
             Object[] result = new Object[1];
             try {
                 result[0] = datatypeManager.getAnySimpleType();
@@ -99,21 +102,24 @@ public class DatatypeHierarchyTreeViewer extends TreeViewer {
         /* (non-Javadoc)
          * @see org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object)
          */
-        public Object getParent(Object element) {
+        @Override
+		public Object getParent(Object element) {
             return datatypeManager.getBaseType((EObject) element);
         }
 
         /* (non-Javadoc)
          * @see org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(java.lang.Object)
          */
-        public boolean hasChildren(Object element) {
+        @Override
+		public boolean hasChildren(Object element) {
             return getChildren(element).length > 0;
         }
 
         /* (non-Javadoc)
          * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
          */
-        public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+        @Override
+		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 
         }
 

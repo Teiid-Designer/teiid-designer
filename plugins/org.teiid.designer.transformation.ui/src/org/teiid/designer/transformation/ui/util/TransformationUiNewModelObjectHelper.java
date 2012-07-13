@@ -32,7 +32,8 @@ public class TransformationUiNewModelObjectHelper implements INewModelObjectHelp
      * @see org.teiid.designer.core.util.INewModelObjectHelper#canHelpCreate(java.lang.Object)
      * @since 4.3
      */
-    public boolean canHelpCreate( Object newObject ) {
+    @Override
+	public boolean canHelpCreate( Object newObject ) {
         CoreArgCheck.isNotNull(newObject);
 
         // First case is a standard virtual table
@@ -61,7 +62,8 @@ public class TransformationUiNewModelObjectHelper implements INewModelObjectHelp
      * @see org.teiid.designer.core.util.INewModelObjectHelper#helpCreate(java.lang.Object, Map)
      * @since 4.3
      */
-    public boolean helpCreate( Object newObject,
+    @Override
+	public boolean helpCreate( Object newObject,
                                Map properties ) {
         CoreArgCheck.isNotNull(newObject);
 

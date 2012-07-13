@@ -56,7 +56,8 @@ public class ModelObjectWorker implements
      * @see org.teiid.designer.ui.common.actions.IActionWorker#getEnableState()
      * @since 4.2
      */
-    public boolean setEnabledState() {
+    @Override
+	public boolean setEnabledState() {
         return false;
     }
 
@@ -64,7 +65,8 @@ public class ModelObjectWorker implements
      * @see org.teiid.designer.ui.common.actions.IActionWorker#execute()
      * @since 4.2
      */
-    public boolean execute() {
+    @Override
+	public boolean execute() {
         return false;
     }
     
@@ -168,7 +170,8 @@ public class ModelObjectWorker implements
      * @see org.teiid.designer.ui.common.actions.IActionWorker#getSelection()
      * @since 4.2
      */
-    public Object getSelection() {
+    @Override
+	public Object getSelection() {
         return currentSelection;
     }
     
@@ -177,7 +180,8 @@ public class ModelObjectWorker implements
      * @see org.teiid.designer.ui.common.actions.IActionWorker#selectionChanged(java.lang.Object)
      * @since 4.2
      */
-    public boolean selectionChanged(Object selection) {
+    @Override
+	public boolean selectionChanged(Object selection) {
         currentSelection = selection;
         enabled = setEnabledState();
         return enabled;
@@ -188,7 +192,8 @@ public class ModelObjectWorker implements
      * @see org.teiid.designer.ui.common.actions.IActionWorker#getEnableAfterExecute()
      * @since 4.2
      */
-    public boolean getEnableAfterExecute() {
+    @Override
+	public boolean getEnableAfterExecute() {
         return this.enableAfterExecute;
     }
     
@@ -197,7 +202,8 @@ public class ModelObjectWorker implements
      * @see org.teiid.designer.ui.common.actions.IActionWorker#getWorkerProblem()
      * @since 4.2
      */
-    public WorkerProblem getWorkerProblem() {
+    @Override
+	public WorkerProblem getWorkerProblem() {
         return this.workerProblem;
     }
     

@@ -274,7 +274,8 @@ public class QueryTreeSelectionDialog extends ElementTreeSelectionDialog impleme
         });
         result.expandAll();
         result.addSelectionChangedListener(new ISelectionChangedListener() {
-            public void selectionChanged( SelectionChangedEvent event ) {
+            @Override
+			public void selectionChanged( SelectionChangedEvent event ) {
                 if (unionQuerySegmentSelected()) {
                     int indx = getSelectedUnionSegmentIndex();
                     setUnionAllCheckbox(indx);

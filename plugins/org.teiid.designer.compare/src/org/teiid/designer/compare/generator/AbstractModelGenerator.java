@@ -65,7 +65,8 @@ public abstract class AbstractModelGenerator implements ModelGenerator {
      * {@link #getDefaultDescription() default description} is used.
      * @return the description; may not be null
      */
-    public String getDescription() {
+    @Override
+	public String getDescription() {
         if ( this.description != null && this.description.trim().length() != 0 ) {
             return this.description;
         }
@@ -80,7 +81,8 @@ public abstract class AbstractModelGenerator implements ModelGenerator {
      * Set the description for this generator.
      * @param desc the description; may be null
      */
-    public void setDescription( final String desc ) {
+    @Override
+	public void setDescription( final String desc ) {
         this.description = desc;
     }
     
@@ -91,7 +93,8 @@ public abstract class AbstractModelGenerator implements ModelGenerator {
      * @param monitor the progress monitor; may be null
      * @return the status containing the result of the generation and merge process
      */
-    public IStatus execute( final IProgressMonitor progressMonitor ) {
+    @Override
+	public IStatus execute( final IProgressMonitor progressMonitor ) {
         final LinkedList problems = new LinkedList();
 
         // Start the progress monitor tasks ...
@@ -157,7 +160,8 @@ public abstract class AbstractModelGenerator implements ModelGenerator {
      * @param monitor the progress monitor; may be null
      * @return the status containing the result of the generation and merge process
      */
-    public IStatus generateOutput( final IProgressMonitor progressMonitor ) {
+    @Override
+	public IStatus generateOutput( final IProgressMonitor progressMonitor ) {
         final IProgressMonitor monitor = progressMonitor != null ? progressMonitor : new NullProgressMonitor();
         final LinkedList problems = new LinkedList();
         try {
@@ -182,7 +186,8 @@ public abstract class AbstractModelGenerator implements ModelGenerator {
      * @param monitor the progress monitor; may be null
      * @return the status containing the result of the generation and merge process
      */
-    public IStatus computeDifferenceReport( final IProgressMonitor progressMonitor ) {
+    @Override
+	public IStatus computeDifferenceReport( final IProgressMonitor progressMonitor ) {
         final IProgressMonitor monitor = progressMonitor != null ? progressMonitor : new NullProgressMonitor();
         final LinkedList problems = new LinkedList();
         try {
@@ -206,14 +211,16 @@ public abstract class AbstractModelGenerator implements ModelGenerator {
     /**
      * @see org.teiid.designer.compare.ModelGenerator#getAllDifferenceReports()
      */
-    public List getAllDifferenceReports() {
+    @Override
+	public List getAllDifferenceReports() {
         return this.differenceReports;
     }
 
     /**
      * @see org.teiid.designer.compare.ModelGenerator#getDifferenceReports()
      */
-    public List getDifferenceReports() {
+    @Override
+	public List getDifferenceReports() {
         return getAllDifferenceReports();
     }
     
@@ -235,7 +242,8 @@ public abstract class AbstractModelGenerator implements ModelGenerator {
      * @param monitor the progress monitor; may be null
      * @return the status containing the result of the generation and merge process
      */
-    public IStatus mergeOutputIntoOriginal( final IProgressMonitor progressMonitor ) {
+    @Override
+	public IStatus mergeOutputIntoOriginal( final IProgressMonitor progressMonitor ) {
         final IProgressMonitor monitor = progressMonitor != null ? progressMonitor : new NullProgressMonitor();
         final LinkedList problems = new LinkedList();
         try {
@@ -258,7 +266,8 @@ public abstract class AbstractModelGenerator implements ModelGenerator {
      * Close any resources that were opened by this generator.  This method should be called when finished
      * with this object.  Subclasses should override this method if they have resources that should be closed.
      */
-    public void close() {
+    @Override
+	public void close() {
     }
     
     // =========================================================================
@@ -396,7 +405,8 @@ public abstract class AbstractModelGenerator implements ModelGenerator {
      * @see org.teiid.designer.compare.ModelGenerator#isNewModelCase()
      * @since 5.0.2
      */
-    public boolean isNewModelCase() {
+    @Override
+	public boolean isNewModelCase() {
         return this.isNewModelCase;
     }
 
@@ -405,7 +415,8 @@ public abstract class AbstractModelGenerator implements ModelGenerator {
      * @see org.teiid.designer.compare.ModelGenerator#setNewModelCase(boolean)
      * @since 5.0.2
      */
-    public void setNewModelCase(boolean theIsNewModelCase) {
+    @Override
+	public void setNewModelCase(boolean theIsNewModelCase) {
         this.isNewModelCase = theIsNewModelCase;
     }
     
@@ -414,7 +425,8 @@ public abstract class AbstractModelGenerator implements ModelGenerator {
      * @see org.teiid.designer.compare.ModelGenerator#setSaveAllBeforeFinish(boolean)
      * @since 5.0.2
      */
-    public void setSaveAllBeforeFinish(boolean theDoSave) {
+    @Override
+	public void setSaveAllBeforeFinish(boolean theDoSave) {
         this.saveAllBeforeFinish = theDoSave;
     }
 
@@ -423,7 +435,8 @@ public abstract class AbstractModelGenerator implements ModelGenerator {
      * @see org.teiid.designer.compare.ModelGenerator#isSaveAllBeforeFinish()
      * @since 5.0.2
      */
-    public boolean isSaveAllBeforeFinish() {
+    @Override
+	public boolean isSaveAllBeforeFinish() {
         return this.saveAllBeforeFinish;
     }
     
@@ -432,7 +445,8 @@ public abstract class AbstractModelGenerator implements ModelGenerator {
      * @see org.teiid.designer.compare.ModelGenerator#saveModel()
      * @since 5.0.2
      */
-    public void saveModel() {
+    @Override
+	public void saveModel() {
         // No Op
     }
 }

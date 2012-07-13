@@ -63,6 +63,7 @@ public class WrapperProcedurePanel {
 			wrapperProcedureText.setForeground(WidgetUtil.getDarkBlueColor());
 			wrapperProcedureText.setEditable(true);
 			wrapperProcedureText.addModifyListener(new ModifyListener() {
+				@Override
 				public void modifyText(ModifyEvent e) {
 					handleWrapperProcedureNameChanged();
 				}

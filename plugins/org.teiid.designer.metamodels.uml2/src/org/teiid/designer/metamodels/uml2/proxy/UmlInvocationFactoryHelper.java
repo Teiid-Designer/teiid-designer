@@ -50,7 +50,8 @@ public class UmlInvocationFactoryHelper implements InvocationFactoryHelper {
      * {@link #READ_ONLY} if the invocation is known to <i>not</i> alter the state, 
      * or {@link #WRITABLE_UNKNOWN} if such a determination could not be made.
      */
-    public int isWrite(final Method method) {
+    @Override
+	public int isWrite(final Method method) {
         // Check the cache first to see if this method was checked before
         final Integer writableState = (Integer)this.methodWritableState.get(method);
         if (writableState != null) {

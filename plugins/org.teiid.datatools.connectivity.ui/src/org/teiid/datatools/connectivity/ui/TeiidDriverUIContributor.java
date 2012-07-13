@@ -110,7 +110,8 @@ public class TeiidDriverUIContributor implements IDriverUIContributor, Listener 
 
     private boolean isReadOnly = false;
 
-    public Composite getContributedDriverUI( Composite parent,
+    @Override
+	public Composite getContributedDriverUI( Composite parent,
                                              boolean isReadOnly ) {
 
         if ((parentComposite == null) || parentComposite.isDisposed() || (this.isReadOnly != isReadOnly)) {
@@ -309,7 +310,8 @@ public class TeiidDriverUIContributor implements IDriverUIContributor, Listener 
         addListeners();
     }
 
-    public void handleEvent( Event event ) {
+    @Override
+	public void handleEvent( Event event ) {
         if (isReadOnly) {
             if (event.widget == savePasswordButton) {
                 savePasswordButton.setSelection(!savePasswordButton.getSelection());
@@ -322,7 +324,8 @@ public class TeiidDriverUIContributor implements IDriverUIContributor, Listener 
         }
     }
 
-    public boolean determineContributorCompletion() {
+    @Override
+	public boolean determineContributorCompletion() {
         boolean isComplete = true;
         if (databaseText.getText().trim().length() < 1) {
             parentPage.setErrorMessage(Messages.getString("TeiidDriverUIContributor.VALIDATE_DATABASE_REQ_UI_")); //$NON-NLS-1$
@@ -345,11 +348,13 @@ public class TeiidDriverUIContributor implements IDriverUIContributor, Listener 
         return isComplete;
     }
 
-    public void setDialogPage( DialogPage parentPage ) {
+    @Override
+	public void setDialogPage( DialogPage parentPage ) {
         this.parentPage = parentPage;
     }
 
-    public void setDriverUIContributorInformation( IDriverUIContributorInformation contributorInformation ) {
+    @Override
+	public void setDriverUIContributorInformation( IDriverUIContributorInformation contributorInformation ) {
         this.contributorInformation = contributorInformation;
         this.properties = contributorInformation.getProperties();
         optionalPropsComposite.setDriverUIContributorInformation(contributorInformation);
@@ -359,7 +364,8 @@ public class TeiidDriverUIContributor implements IDriverUIContributor, Listener 
         }
     }
 
-    public void loadProperties() {
+    @Override
+	public void loadProperties() {
         removeListeners();
 		TeiidServerJDBCURL url = new TeiidServerJDBCURL(
 				this.properties
@@ -394,7 +400,8 @@ public class TeiidDriverUIContributor implements IDriverUIContributor, Listener 
         setConnectionInformation();
     }
 
-    public List getSummaryData() {
+    @Override
+	public List getSummaryData() {
         List summaryData = new ArrayList();
 
         summaryData.add(new String[] {DATABASE_SUMMARY_DATA_TEXT_, this.databaseText.getText().trim()});

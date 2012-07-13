@@ -233,6 +233,7 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 	 * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
 	 * @since 4.2
 	 */
+	@Override
 	public void createControl(Composite theParent) {
 		Composite pnlMain = WidgetFactory.createPanel(theParent, SWT.NONE,
 				GridData.FILL_BOTH);
@@ -786,9 +787,11 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 		private final Image OPERATION_ICON_IMG = ModelGeneratorWsdlUiUtil
 				.getImage(Images.OPERATION_ICON);
 
+		@Override
 		public void dispose() {
 		}
 
+		@Override
 		public Object[] getChildren(final Object node) {
 			if (node instanceof ArrayList) {
 				ArrayList theList = ((ArrayList) node);
@@ -798,18 +801,22 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 			return CoreStringUtil.Constants.EMPTY_STRING_ARRAY;
 		}
 
+		@Override
 		public Object[] getElements(final Object inputElement) {
 			return getChildren(inputElement);
 		}
 
+		@Override
 		public Object getParent(final Object node) {
 			return null;
 		}
 
+		@Override
 		public boolean hasChildren(final Object node) {
 			return false;
 		}
 
+		@Override
 		public void inputChanged(final Viewer viewer, final Object oldInput,
 				final Object newInput) {
 		}

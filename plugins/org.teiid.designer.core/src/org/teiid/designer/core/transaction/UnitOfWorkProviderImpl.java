@@ -47,7 +47,8 @@ public class UnitOfWorkProviderImpl implements UnitOfWorkProvider {
     /**
      * @see org.teiid.designer.core.transaction.mtk.emf.container.container.transaction.api.UnitOfWorkProvider#getCurrent()
      */
-    public UnitOfWork getCurrent() {
+    @Override
+	public UnitOfWork getCurrent() {
         UnitOfWork uow = null;
         synchronized (current) {
             final Iterator threads = current.entrySet().iterator();
@@ -80,7 +81,8 @@ public class UnitOfWorkProviderImpl implements UnitOfWorkProvider {
      * 
      * @param thread
      */
-    public void cleanup( final Thread thread ) {
+    @Override
+	public void cleanup( final Thread thread ) {
         synchronized (current) {
             if (DEBUG) {
                 System.out.println(ModelerCore.Util.getString("UnitOfWorkProviderImpl.Removing__2") + current.get(thread)); //$NON-NLS-1$
@@ -90,13 +92,15 @@ public class UnitOfWorkProviderImpl implements UnitOfWorkProvider {
         }
     }
 
-    public void addUndoableEditListener( final UndoableListener listener ) {
+    @Override
+	public void addUndoableEditListener( final UndoableListener listener ) {
         if (!undoableListeners.contains(listener)) {
             undoableListeners.add(listener);
         }
     }
 
-    public void removeUndoableEditListener( final UndoableListener listener ) {
+    @Override
+	public void removeUndoableEditListener( final UndoableListener listener ) {
         if (undoableListeners.contains(listener)) {
             undoableListeners.remove(listener);
         }

@@ -112,7 +112,8 @@ public class SoapFaultImpl extends EObjectImpl implements SoapFault {
      * 
      * @generated
      */
-    public SoapUseType getUse() {
+    @Override
+	public SoapUseType getUse() {
         return use;
     }
 
@@ -121,7 +122,8 @@ public class SoapFaultImpl extends EObjectImpl implements SoapFault {
      * 
      * @generated
      */
-    public void setUse( SoapUseType newUse ) {
+    @Override
+	public void setUse( SoapUseType newUse ) {
         SoapUseType oldUse = use;
         use = newUse == null ? USE_EDEFAULT : newUse;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, SoapPackage.SOAP_FAULT__USE, oldUse,
@@ -133,7 +135,8 @@ public class SoapFaultImpl extends EObjectImpl implements SoapFault {
      * 
      * @generated
      */
-    public String getNamespace() {
+    @Override
+	public String getNamespace() {
         return namespace;
     }
 
@@ -142,7 +145,8 @@ public class SoapFaultImpl extends EObjectImpl implements SoapFault {
      * 
      * @generated
      */
-    public void setNamespace( String newNamespace ) {
+    @Override
+	public void setNamespace( String newNamespace ) {
         String oldNamespace = namespace;
         namespace = newNamespace;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, SoapPackage.SOAP_FAULT__NAMESPACE,
@@ -154,7 +158,8 @@ public class SoapFaultImpl extends EObjectImpl implements SoapFault {
      * 
      * @generated
      */
-    public EList getEncodingStyles() {
+    @Override
+	public EList getEncodingStyles() {
         if (encodingStyles == null) {
             encodingStyles = new EDataTypeUniqueEList(String.class, this, SoapPackage.SOAP_FAULT__ENCODING_STYLES);
         }
@@ -166,7 +171,8 @@ public class SoapFaultImpl extends EObjectImpl implements SoapFault {
      * 
      * @generated
      */
-    public BindingFault getBindingFault() {
+    @Override
+	public BindingFault getBindingFault() {
         if (eContainerFeatureID != SoapPackage.SOAP_FAULT__BINDING_FAULT) return null;
         return (BindingFault)eContainer;
     }
@@ -176,7 +182,8 @@ public class SoapFaultImpl extends EObjectImpl implements SoapFault {
      * 
      * @generated
      */
-    public void setBindingFault( BindingFault newBindingFault ) {
+    @Override
+	public void setBindingFault( BindingFault newBindingFault ) {
         if (newBindingFault != eContainer
             || (eContainerFeatureID != SoapPackage.SOAP_FAULT__BINDING_FAULT && newBindingFault != null)) {
             if (EcoreUtil.isAncestor(this, newBindingFault)) throw new IllegalArgumentException(

@@ -91,7 +91,8 @@ public class ExternalReferenceVisitor implements ModelVisitor {
     /**
      * @see org.teiid.designer.core.util.ModelVisitor#visit(org.eclipse.emf.ecore.resource.Resource)
      */
-    public boolean visit( final Resource resource ) {
+    @Override
+	public boolean visit( final Resource resource ) {
         // Nothing to do for a resource, but we want to visit the children
         return true;
     }
@@ -101,7 +102,8 @@ public class ExternalReferenceVisitor implements ModelVisitor {
      * 
      * @see org.teiid.designer.core.util.ModelVisitor#visit(org.eclipse.emf.ecore.EObject)
      */
-    public boolean visit( final EObject object ) {
+    @Override
+	public boolean visit( final EObject object ) {
         // If we are ignoring external references by a DiagramEntry then return ...
         if (!this.includeDiagramReferences && (object instanceof DiagramEntity || object instanceof Diagram)) {
             return false;

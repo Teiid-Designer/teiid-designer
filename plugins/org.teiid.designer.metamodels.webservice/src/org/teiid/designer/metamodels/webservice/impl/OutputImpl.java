@@ -72,7 +72,8 @@ public class OutputImpl extends MessageImpl implements Output {
      * 
      * @generated
      */
-    public Operation getOperation() {
+    @Override
+	public Operation getOperation() {
         if (eContainerFeatureID != WebServicePackage.OUTPUT__OPERATION) return null;
         return (Operation)eContainer;
     }
@@ -82,7 +83,8 @@ public class OutputImpl extends MessageImpl implements Output {
      * 
      * @generated
      */
-    public void setOperation( Operation newOperation ) {
+    @Override
+	public void setOperation( Operation newOperation ) {
         if (newOperation != eContainer || (eContainerFeatureID != WebServicePackage.OUTPUT__OPERATION && newOperation != null)) {
             if (EcoreUtil.isAncestor(this, newOperation)) throw new IllegalArgumentException(
                                                                                              "Recursive containment not allowed for " + toString()); //$NON-NLS-1$
@@ -104,7 +106,8 @@ public class OutputImpl extends MessageImpl implements Output {
      * 
      * @generated
      */
-    public XmlDocument getXmlDocument() {
+    @Override
+	public XmlDocument getXmlDocument() {
         if (xmlDocument != null && xmlDocument.eIsProxy()) {
             XmlDocument oldXmlDocument = xmlDocument;
             xmlDocument = (XmlDocument)eResolveProxy((InternalEObject)xmlDocument);
@@ -131,7 +134,8 @@ public class OutputImpl extends MessageImpl implements Output {
      * 
      * @generated
      */
-    public void setXmlDocument( XmlDocument newXmlDocument ) {
+    @Override
+	public void setXmlDocument( XmlDocument newXmlDocument ) {
         XmlDocument oldXmlDocument = xmlDocument;
         xmlDocument = newXmlDocument;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,

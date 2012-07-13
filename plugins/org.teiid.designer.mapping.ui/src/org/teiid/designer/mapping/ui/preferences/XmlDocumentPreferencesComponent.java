@@ -52,15 +52,18 @@ public class XmlDocumentPreferencesComponent implements IEditorPreferencesCompon
     private boolean changeMade;
     private boolean isSelected;
 
-    public String getName() {
+    @Override
+	public String getName() {
         return name;
     }
 
-    public String getTooltip() {
+    @Override
+	public String getTooltip() {
         return name;
     }
 
-    public Composite createEditorPreferencesComponent( Composite parent ) {
+    @Override
+	public Composite createEditorPreferencesComponent( Composite parent ) {
         Composite comp = new Composite(parent, SWT.NONE);
         GridLayout layout = new GridLayout();
         layout.marginHeight = 8;
@@ -98,7 +101,8 @@ public class XmlDocumentPreferencesComponent implements IEditorPreferencesCompon
         }
         txfAutoExpandMappingClassMax.setText(sAutoExpandMappingClassMaxValue);
         txfAutoExpandMappingClassMax.addModifyListener(new ModifyListener() {
-            public void modifyText( ModifyEvent e ) {
+            @Override
+			public void modifyText( ModifyEvent e ) {
                 validate();
             }
         });
@@ -126,7 +130,8 @@ public class XmlDocumentPreferencesComponent implements IEditorPreferencesCompon
 
         txfAutoExpandTreeTargetLevel.setText(sAutoExpandTreeTargetLevelValue);
         txfAutoExpandTreeTargetLevel.addModifyListener(new ModifyListener() {
-            public void modifyText( ModifyEvent e ) {
+            @Override
+			public void modifyText( ModifyEvent e ) {
                 validate();
             }
         });
@@ -158,7 +163,8 @@ public class XmlDocumentPreferencesComponent implements IEditorPreferencesCompon
         upperRecursionLimit.setText("111"); //$NON-NLS-1$
 
         upperRecursionLimit.addModifyListener(new ModifyListener() {
-            public void modifyText( ModifyEvent e ) {
+            @Override
+			public void modifyText( ModifyEvent e ) {
                 validate();
             }
         });
@@ -182,7 +188,8 @@ public class XmlDocumentPreferencesComponent implements IEditorPreferencesCompon
         setButtonEnabling();
     }
 
-    public boolean performOk() {
+    @Override
+	public boolean performOk() {
 
         // ========================================
         // Mapping Diagram Tree Settings
@@ -228,7 +235,8 @@ public class XmlDocumentPreferencesComponent implements IEditorPreferencesCompon
 
     }
 
-    public void performDefaults() {
+    @Override
+	public void performDefaults() {
 
         String sAutoExpandMappingClassMaxValue = getPreferenceStore().getDefaultString(PluginConstants.Prefs.AUTO_EXPAND_MAX_MAPPING_CLASSES);
         txfAutoExpandMappingClassMax.setText(sAutoExpandMappingClassMaxValue);
@@ -255,7 +263,8 @@ public class XmlDocumentPreferencesComponent implements IEditorPreferencesCompon
      * 
      * @see org.teiid.designer.ui.common.preferences.IEditorPreferencesComponent#addValidationListener(org.teiid.designer.ui.common.preferences.IEditorPreferencesValidationListener)
      */
-    public void addValidationListener( IEditorPreferencesValidationListener listener ) {
+    @Override
+	public void addValidationListener( IEditorPreferencesValidationListener listener ) {
         this.validationListeners.add(listener);
     }
 
@@ -264,7 +273,8 @@ public class XmlDocumentPreferencesComponent implements IEditorPreferencesCompon
      * 
      * @see org.teiid.designer.ui.common.preferences.IEditorPreferencesComponent#removeValidationListener(org.teiid.designer.ui.common.preferences.IEditorPreferencesValidationListener)
      */
-    public void removeValidationListener( IEditorPreferencesValidationListener listener ) {
+    @Override
+	public void removeValidationListener( IEditorPreferencesValidationListener listener ) {
         this.validationListeners.remove(listener);
     }
 
@@ -278,7 +288,8 @@ public class XmlDocumentPreferencesComponent implements IEditorPreferencesCompon
     /**
      * @see org.teiid.designer.ui.common.preferences.IEditorPreferencesComponent#validate()
      */
-    public void validate() {
+    @Override
+	public void validate() {
         try {
             new Integer(txfAutoExpandTreeTargetLevel.getText());
             new Integer(txfAutoExpandMappingClassMax.getText());

@@ -42,12 +42,14 @@ public interface ObjectID extends Comparable {
      * @throws ClassCastException if the specified object's type prevents it
      *      from being compared to this instance.
      */
-    int compareTo(Object obj);
+    @Override
+	int compareTo(Object obj);
     /**
      * Returns a string representing the current state of the object.
      * @return the string representation of this instance.
      */
-    String toString();
+    @Override
+	String toString();
     /**
      * Returns a string representing the current state of the object.
      * @param delim the delimiter that should be used

@@ -78,7 +78,8 @@ public final class OperationEditorPage extends EditorPart implements ModelEditor
      * @see org.teiid.designer.ui.editors.ModelEditorPage#canDisplay(org.eclipse.ui.IEditorInput)
      * @since 5.0.1
      */
-    public boolean canDisplay( IEditorInput input ) {
+    @Override
+	public boolean canDisplay( IEditorInput input ) {
         // System.out.println("OperationEditorPage.canDisplay()"); //$NON-NLS-1$
         if (input instanceof IFileEditorInput) {
             IFileEditorInput fileInput = (IFileEditorInput)input;
@@ -111,7 +112,8 @@ public final class OperationEditorPage extends EditorPart implements ModelEditor
      * @see org.teiid.designer.ui.editors.ModelEditorPage#canOpenContext(java.lang.Object)
      * @since 5.0.1
      */
-    public boolean canOpenContext( Object input ) {
+    @Override
+	public boolean canOpenContext( Object input ) {
         if (input instanceof Diagram /*&& ((Diagram)input).getType().equals(PACKAGE_DIAGRAM_TYPE_ID)*/) {
             return false;
         }
@@ -162,7 +164,8 @@ public final class OperationEditorPage extends EditorPart implements ModelEditor
      * @see org.teiid.designer.ui.editors.ModelEditorPage#getControl()
      * @since 5.0.1
      */
-    public Control getControl() {
+    @Override
+	public Control getControl() {
         return this.ctrl;
     }
 
@@ -171,7 +174,8 @@ public final class OperationEditorPage extends EditorPart implements ModelEditor
      * @see org.teiid.designer.ui.editors.ModelEditorPage#getActionBarContributor()
      * @since 5.0.1
      */
-    public AbstractModelEditorPageActionBarContributor getActionBarContributor() {
+    @Override
+	public AbstractModelEditorPageActionBarContributor getActionBarContributor() {
         return null;
     }
 
@@ -180,7 +184,8 @@ public final class OperationEditorPage extends EditorPart implements ModelEditor
      * @see org.teiid.designer.ui.editors.ModelEditorPage#getModelObjectSelectionChangedListener()
      * @since 5.0.1
      */
-    public ISelectionChangedListener getModelObjectSelectionChangedListener() {
+    @Override
+	public ISelectionChangedListener getModelObjectSelectionChangedListener() {
         return getSelectionHandler();
     }
 
@@ -188,7 +193,8 @@ public final class OperationEditorPage extends EditorPart implements ModelEditor
      * @see org.teiid.designer.ui.editors.ModelEditorPage#getModelObjectSelectionProvider()
      * @since 5.0.1
      */
-    public ISelectionProvider getModelObjectSelectionProvider() {
+    @Override
+	public ISelectionProvider getModelObjectSelectionProvider() {
         return getSelectionHandler();
     }
 
@@ -197,7 +203,8 @@ public final class OperationEditorPage extends EditorPart implements ModelEditor
      * @see org.teiid.designer.ui.editors.ModelEditorPage#getNotifyChangedListener()
      * @since 5.0.1
      */
-    public INotifyChangedListener getNotifyChangedListener() {
+    @Override
+	public INotifyChangedListener getNotifyChangedListener() {
         // Lazily create the selection handler
         if (this.notifyChangedListener == null) {
             this.notifyChangedListener = new OperationEditorNotifyChangedListener();
@@ -210,7 +217,8 @@ public final class OperationEditorPage extends EditorPart implements ModelEditor
      * @see org.teiid.designer.ui.editors.ModelEditorPage#getOutlineContribution()
      * @since 5.0.1
      */
-    public ModelEditorPageOutline getOutlineContribution() {
+    @Override
+	public ModelEditorPageOutline getOutlineContribution() {
         return null;
     }
 
@@ -242,7 +250,8 @@ public final class OperationEditorPage extends EditorPart implements ModelEditor
      * @see org.teiid.designer.ui.editors.ModelEditorPage#isSelectedFirst(org.eclipse.ui.IEditorInput)
      * @since 5.0.1
      */
-    public boolean isSelectedFirst( IEditorInput input ) {
+    @Override
+	public boolean isSelectedFirst( IEditorInput input ) {
         // Can always return true since canDisplay only returns true when editing a WS model.
         return true;
     }
@@ -263,7 +272,8 @@ public final class OperationEditorPage extends EditorPart implements ModelEditor
      * @see org.teiid.designer.ui.editors.ModelEditorPage#openComplete()
      * @since 5.0.1
      */
-    public void openComplete() {
+    @Override
+	public void openComplete() {
         // System.out.println("OperationEditorPage.openComplete()"); //$NON-NLS-1$
     }
 
@@ -271,7 +281,8 @@ public final class OperationEditorPage extends EditorPart implements ModelEditor
      * @see org.teiid.designer.ui.editors.ModelEditorPage#initializeEditorPage()
      * @since 5.0.2
      */
-    public void initializeEditorPage() {
+    @Override
+	public void initializeEditorPage() {
         setEditingObject(null);
     }
 
@@ -309,11 +320,13 @@ public final class OperationEditorPage extends EditorPart implements ModelEditor
      * @see org.teiid.designer.ui.editors.ModelEditorPage#openContext(java.lang.Object)
      * @since 5.0.1
      */
-    public void openContext( Object input ) {
+    @Override
+	public void openContext( Object input ) {
         openContext(input, false);
     }
 
-    public void openContext( Object input,
+    @Override
+	public void openContext( Object input,
                              boolean forceRefresh ) {
 
         // System.out.println("OperationEditorPage.internalOpenContext(" + input + ")"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -378,7 +391,8 @@ public final class OperationEditorPage extends EditorPart implements ModelEditor
      * @see org.teiid.designer.ui.editors.ModelEditorPage#preDispose()
      * @since 5.0.1
      */
-    public void preDispose() {
+    @Override
+	public void preDispose() {
         if (this.wdw != null) {
             for (Iterator iter = this.workspaceSelectionListeners.iterator(); iter.hasNext();) {
                 ISelectionListener listener = (ISelectionListener)iter.next();
@@ -394,7 +408,8 @@ public final class OperationEditorPage extends EditorPart implements ModelEditor
      * @see org.teiid.core.event.EventObjectListener#processEvent(java.util.EventObject)
      * @since 5.0.1
      */
-    public void processEvent( EventObject event ) {
+    @Override
+	public void processEvent( EventObject event ) {
     }
 
     /**
@@ -413,7 +428,8 @@ public final class OperationEditorPage extends EditorPart implements ModelEditor
      * @see org.teiid.designer.ui.editors.ModelEditorPage#setLabelProvider(org.eclipse.jface.viewers.ILabelProvider)
      * @since 5.0.1
      */
-    public void setLabelProvider( ILabelProvider provider ) {
+    @Override
+	public void setLabelProvider( ILabelProvider provider ) {
     }
 
     /**
@@ -422,7 +438,8 @@ public final class OperationEditorPage extends EditorPart implements ModelEditor
      * @see org.teiid.designer.ui.editors.ModelEditorPage#setTitleText(java.lang.String)
      * @since 5.0.1
      */
-    public void setTitleText( String title ) {
+    @Override
+	public void setTitleText( String title ) {
         setPartName(title);
     }
 
@@ -432,7 +449,8 @@ public final class OperationEditorPage extends EditorPart implements ModelEditor
      * @see org.teiid.designer.ui.editors.ModelEditorPage#updateReadOnlyState(boolean)
      * @since 5.0.1
      */
-    public void updateReadOnlyState( boolean isReadOnly ) {
+    @Override
+	public void updateReadOnlyState( boolean isReadOnly ) {
     }
 
     void updateUi( Control control ) {
@@ -487,11 +505,13 @@ public final class OperationEditorPage extends EditorPart implements ModelEditor
         ModelEditorManager.autoSelectEditor(meParentEditor, this);
     }
 
-    public IMarker createMarker() {
+    @Override
+	public IMarker createMarker() {
         return null;
     }
 
-    public void setParent( ModelEditor theMeParent ) {
+    @Override
+	public void setParent( ModelEditor theMeParent ) {
         this.meParentEditor = theMeParent;
     }
 }

@@ -34,6 +34,7 @@ public class SqlDoubleClickStrategy implements ITextDoubleClickStrategy {
 	 * A simple method that selects the word when double clicked.
 	 * @see org.eclipse.jface.text.ITextDoubleClickStrategy#doubleClicked(ITextViewer)
 	 */
+	@Override
 	public void doubleClicked(ITextViewer viewer) {
 		fPos = viewer.getSelectedRange().x;
 

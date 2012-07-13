@@ -153,7 +153,8 @@ public class AdvisorStatusManager implements IChangeListener {
                 }
             } else {
                 Display.getDefault().asyncExec(new Runnable() {
-                    public void run() {
+                    @Override
+					public void run() {
                         // System.out.println("  ---->>>> WSVM.updateStatus(): scheduling new JOB");
                         statusRefreshJob.schedule(400);
                     }
@@ -260,7 +261,8 @@ public class AdvisorStatusManager implements IChangeListener {
      * @see org.teiid.core.event.IChangeListener#stateChanged(org.teiid.core.event.IChangeNotifier)
      * @since 5.0
      */
-    public void stateChanged( IChangeNotifier theSource ) {
+    @Override
+	public void stateChanged( IChangeNotifier theSource ) {
         // Just update, don't worry about state of context because updateStatus() will take care of changes
         // System.out.println(" WebServicesValidationManager.stateChanged() calling updateStatus()");
         updateStatus(false);
@@ -269,7 +271,8 @@ public class AdvisorStatusManager implements IChangeListener {
     // Helper methods
 
     private final class MarkerDeltaListener implements IResourceChangeListener {
-        public void resourceChanged( IResourceChangeEvent event ) {
+        @Override
+		public void resourceChanged( IResourceChangeEvent event ) {
             // TODO find out if this handles both the enterprise and lightweight cases.
             boolean refreshNeeded = false;
 
@@ -395,7 +398,8 @@ public class AdvisorStatusManager implements IChangeListener {
         // methods
         //
 
-        public void done( IJobChangeEvent theEvent ) {
+        @Override
+		public void done( IJobChangeEvent theEvent ) {
 
             if (!JobUtils.validationJobsExist() && theEvent.getJob().getName().equals(AUTOBUILD_JOB_NAME)) {
                 // System.out.println(" AutoBuildJobListener.done():  ##### validation Finished. #####         AUTOBUILD = " +

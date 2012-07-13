@@ -112,7 +112,8 @@ public class RelationalObjectGeneratorImpl implements RelationalObjectGenerator 
         this.annotationHelper = annotationHelper;
     }
 
-    public List createBaseTablesForClass( final Classifier klass,
+    @Override
+	public List createBaseTablesForClass( final Classifier klass,
                                           final List problems,
                                           final Set associationsToBeProcessed ) {
         final List tables = new LinkedList();
@@ -249,7 +250,8 @@ public class RelationalObjectGeneratorImpl implements RelationalObjectGenerator 
 
     }
 
-    public List createBaseTablesForAssociation( final Association association,
+    @Override
+	public List createBaseTablesForAssociation( final Association association,
                                                 final List problems ) {
         List returnTables = new LinkedList();
 

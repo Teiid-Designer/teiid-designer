@@ -29,7 +29,8 @@ public class TrivialRelationalFragmentGenerator implements RelationalFragmentGen
     /* (non-Javadoc)
      * @See org.teiid.designer.modelgenerator.uml2relational.RelationalFragmentGenerator#createModelFragments(org.teiid.designer.modelgenerator.uml2relational.Uml2RelationalProcessor, java.util.List, org.eclipse.core.runtime.IProgressMonitor)
      */
-    public void createModelFragments(
+    @Override
+	public void createModelFragments(
         Uml2RelationalProcessor processor,
         List problems,
         IProgressMonitor monitor) {

@@ -34,7 +34,8 @@ public class ModelImportAspect extends AbstractMetamodelAspect implements Import
      * @see org.teiid.designer.core.metamodel.aspect.ImportsAspect#getModelLocation(org.eclipse.emf.ecore.EObject)
      * @since 4.3
      */
-    public String getModelLocation(EObject eObject) {
+    @Override
+	public String getModelLocation(EObject eObject) {
         CoreArgCheck.isInstanceOf(ModelImport.class, eObject);
         // the modelImport object
         ModelImport modelImport = (ModelImport) eObject;
@@ -44,6 +45,7 @@ public class ModelImportAspect extends AbstractMetamodelAspect implements Import
     /* (non-Javadoc)
 	 * @See org.teiid.designer.core.metamodel.aspect.ImportsAspect#getModelImportPaths(org.eclipse.emf.ecore.EObject)
 	 */
+	@Override
 	public IPath getModelPath(EObject eObject) {
 		CoreArgCheck.isInstanceOf(ModelImport.class, eObject);
 		// the modelImport object
@@ -59,6 +61,7 @@ public class ModelImportAspect extends AbstractMetamodelAspect implements Import
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.core.metamodel.aspect.ImportsAspect#getImportedModelObjectID(org.eclipse.emf.ecore.EObject)
 	 */
+	@Override
 	public String getModelUuid(EObject eObject) {
 		CoreArgCheck.isInstanceOf(ModelImport.class, eObject);
 		// the modelImport object
@@ -68,6 +71,7 @@ public class ModelImportAspect extends AbstractMetamodelAspect implements Import
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.core.metamodel.aspect.ImportsAspect#getModelType(org.eclipse.emf.ecore.EObject)
 	 */
+	@Override
 	public String getModelType(EObject eObject) {
 		CoreArgCheck.isInstanceOf(ModelImport.class, eObject);
 		// the modelImport object
@@ -78,6 +82,7 @@ public class ModelImportAspect extends AbstractMetamodelAspect implements Import
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.core.metamodel.aspect.ImportsAspect#getPrimaryMetaModelUri(org.eclipse.emf.ecore.EObject)
 	 */
+	@Override
 	public String getPrimaryMetaModelUri(EObject eObject) {
 		CoreArgCheck.isInstanceOf(ModelImport.class, eObject);
 		// the modelImport object
@@ -100,7 +105,8 @@ public class ModelImportAspect extends AbstractMetamodelAspect implements Import
      * @see org.teiid.designer.core.metamodel.aspect.ImportsAspect#setModelLocation(org.eclipse.emf.ecore.EObject, org.eclipse.emf.common.util.URI)
      * @since 4.3
      */
-    public void setModelLocation(EObject eObject, URI uri) {
+    @Override
+	public void setModelLocation(EObject eObject, URI uri) {
         CoreArgCheck.isInstanceOf(ModelImport.class, eObject);
         CoreArgCheck.isNotNull(uri);
         // the modelImport object

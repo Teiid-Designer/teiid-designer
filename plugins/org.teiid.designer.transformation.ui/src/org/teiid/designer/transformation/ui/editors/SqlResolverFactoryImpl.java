@@ -21,12 +21,14 @@ public class SqlResolverFactoryImpl implements SqlResolverFactory {
     private EObject eObj;
     private QueryMetadataInterface metadata;
     
-    public void setCurrentEObject(EObject eObject) {
+    @Override
+	public void setCurrentEObject(EObject eObject) {
         this.eObj = eObject;
         this.metadata = null;
     }
     
-    public QueryMetadataInterface getQueryMetadata() {
+    @Override
+	public QueryMetadataInterface getQueryMetadata() {
     	if(metadata == null) {
     		metadata = TransformationMetadataFactory.getInstance().getModelerMetadata(this.eObj); 
     	}

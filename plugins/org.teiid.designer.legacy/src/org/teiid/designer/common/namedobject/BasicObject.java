@@ -71,7 +71,8 @@ public abstract class BasicObject implements BaseObject, Serializable {
      * 
      * @return the identifier for this metadata object.
      */
-    public BaseID getID() {
+    @Override
+	public BaseID getID() {
         return this.id;
     }
 
@@ -82,7 +83,8 @@ public abstract class BasicObject implements BaseObject, Serializable {
      * @return the name
      * @see getFullName
      */
-    public String getName() {
+    @Override
+	public String getName() {
         return getID().getName();
     }
 
@@ -91,7 +93,8 @@ public abstract class BasicObject implements BaseObject, Serializable {
      * 
      * @return the name
      */
-    public String getFullName() {
+    @Override
+	public String getFullName() {
         return getID().getFullName();
     }
 
@@ -161,7 +164,8 @@ public abstract class BasicObject implements BaseObject, Serializable {
      * @throws IllegalArgumentException if the specified object reference is null
      * @throws ClassCastException if the specified object's type prevents it from being compared to this instance.
      */
-    public int compareTo( Object obj ) {
+    @Override
+	public int compareTo( Object obj ) {
         // Check if instances are identical...
         if (this == obj) {
             return 0;

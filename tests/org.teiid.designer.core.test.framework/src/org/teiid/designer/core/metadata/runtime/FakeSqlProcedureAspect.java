@@ -30,85 +30,104 @@ public class FakeSqlProcedureAspect implements SqlProcedureAspect {
     /*
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlProcedureAspect#isVirtual(org.eclipse.emf.ecore.EObject)
      */
-    public boolean isVirtual(EObject eObject) { return virtual; }
+    @Override
+	public boolean isVirtual(EObject eObject) { return virtual; }
 
     /*
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlProcedureAspect#isFunction(org.eclipse.emf.ecore.EObject)
      */
-    public boolean isFunction(EObject eObject) { return function; }
+    @Override
+	public boolean isFunction(EObject eObject) { return function; }
 
     /*
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlProcedureAspect#getParameters(org.eclipse.emf.ecore.EObject)
      */
-    public List getParameters(EObject eObject) { return parameters; }
+    @Override
+	public List getParameters(EObject eObject) { return parameters; }
 
     /*
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlProcedureAspect#getResult(org.eclipse.emf.ecore.EObject)
      */
-    public Object getResult(EObject eObject) { return result; }
+    @Override
+	public Object getResult(EObject eObject) { return result; }
 
     /** 
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlProcedureAspect#getUpdateCount(org.eclipse.emf.ecore.EObject)
      * @since 5.5.3
      */
-    public int getUpdateCount(EObject eObject) {
+    @Override
+	public int getUpdateCount(EObject eObject) {
         return updateCount;
     }
     
     /*
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlAspect#isRecordType(char)
      */
-    public boolean isRecordType(char recordType) {return (recordType == IndexConstants.RECORD_TYPE.CALLABLE ); }
+    @Override
+	public boolean isRecordType(char recordType) {return (recordType == IndexConstants.RECORD_TYPE.CALLABLE ); }
 
-    public boolean isQueryable(EObject eObject) { return true; }
+    @Override
+	public boolean isQueryable(EObject eObject) { return true; }
 
     /*
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlAspect#getName(org.eclipse.emf.ecore.EObject)
      */
-    public String getName(EObject eObject) { return name; }
+    @Override
+	public String getName(EObject eObject) { return name; }
 
     /*
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlAspect#getFullName(org.eclipse.emf.ecore.EObject)
      */
-    public String getFullName(EObject eObject) { return fullName; }
+    @Override
+	public String getFullName(EObject eObject) { return fullName; }
 
     /*
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlAspect#getNameInSource(org.eclipse.emf.ecore.EObject)
      */
-    public String getNameInSource(EObject eObject) { return nameInSource; }
+    @Override
+	public String getNameInSource(EObject eObject) { return nameInSource; }
 
     /*
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlAspect#getObjectID(org.eclipse.emf.ecore.EObject)
      */
-    public Object getObjectID(EObject eObject) { return uuid; }
+    @Override
+	public Object getObjectID(EObject eObject) { return uuid; }
 
-    public Object getParentObjectID(EObject eObject) { return parentUuid; }
+    @Override
+	public Object getParentObjectID(EObject eObject) { return parentUuid; }
 
     /*
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlAspect#getPath(org.eclipse.emf.ecore.EObject)
      */
-    public IPath getPath(EObject eObject) { return path; }
+    @Override
+	public IPath getPath(EObject eObject) { return path; }
 
     /*
      * @See org.teiid.designer.core.metamodel.aspect.MetamodelAspect#getMetamodelEntity()
      */
-    public MetamodelEntity getMetamodelEntity() { return null; }
+    @Override
+	public MetamodelEntity getMetamodelEntity() { return null; }
 
     /*
      * @See org.teiid.designer.core.metamodel.aspect.MetamodelAspect#getID()
      */
-    public String getID() { return null; }
+    @Override
+	public String getID() { return null; }
 
-    public boolean isMappable(EObject eObject, int mappingType) { return false; }
+    @Override
+	public boolean isMappable(EObject eObject, int mappingType) { return false; }
     
-    public boolean canAcceptTransformationSource(EObject target, EObject source) { return false; }
+    @Override
+	public boolean canAcceptTransformationSource(EObject target, EObject source) { return false; }
 
-    public boolean canBeTransformationSource(EObject source, EObject target) { return false; }
+    @Override
+	public boolean canBeTransformationSource(EObject source, EObject target) { return false; }
 
     /*
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlAspect#updateObject(org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject)
      */
-    public void updateObject(EObject targetObject, EObject sourceObject) {
+    @Override
+	public void updateObject(EObject targetObject, EObject sourceObject) {
 
     }
 

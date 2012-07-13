@@ -431,7 +431,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EClass getTransformationContainer() {
+    @Override
+	public EClass getTransformationContainer() {
         return transformationContainerEClass;
     }
 
@@ -440,7 +441,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EReference getTransformationContainer_TransformationMappings() {
+    @Override
+	public EReference getTransformationContainer_TransformationMappings() {
         return (EReference)transformationContainerEClass.getEStructuralFeatures().get(0);
     }
 
@@ -449,7 +451,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EClass getSqlTransformation() {
+    @Override
+	public EClass getSqlTransformation() {
         return sqlTransformationEClass;
     }
 
@@ -458,7 +461,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EAttribute getSqlTransformation_SelectSql() {
+    @Override
+	public EAttribute getSqlTransformation_SelectSql() {
         return (EAttribute)sqlTransformationEClass.getEStructuralFeatures().get(0);
     }
 
@@ -467,7 +471,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EAttribute getSqlTransformation_InsertSql() {
+    @Override
+	public EAttribute getSqlTransformation_InsertSql() {
         return (EAttribute)sqlTransformationEClass.getEStructuralFeatures().get(1);
     }
 
@@ -476,7 +481,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EAttribute getSqlTransformation_UpdateSql() {
+    @Override
+	public EAttribute getSqlTransformation_UpdateSql() {
         return (EAttribute)sqlTransformationEClass.getEStructuralFeatures().get(2);
     }
 
@@ -485,7 +491,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EAttribute getSqlTransformation_DeleteSql() {
+    @Override
+	public EAttribute getSqlTransformation_DeleteSql() {
         return (EAttribute)sqlTransformationEClass.getEStructuralFeatures().get(3);
     }
 
@@ -494,7 +501,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EAttribute getSqlTransformation_InsertAllowed() {
+    @Override
+	public EAttribute getSqlTransformation_InsertAllowed() {
         return (EAttribute)sqlTransformationEClass.getEStructuralFeatures().get(4);
     }
 
@@ -503,7 +511,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EAttribute getSqlTransformation_UpdateAllowed() {
+    @Override
+	public EAttribute getSqlTransformation_UpdateAllowed() {
         return (EAttribute)sqlTransformationEClass.getEStructuralFeatures().get(5);
     }
 
@@ -512,7 +521,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EAttribute getSqlTransformation_DeleteAllowed() {
+    @Override
+	public EAttribute getSqlTransformation_DeleteAllowed() {
         return (EAttribute)sqlTransformationEClass.getEStructuralFeatures().get(6);
     }
 
@@ -521,7 +531,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EAttribute getSqlTransformation_OutputLocked() {
+    @Override
+	public EAttribute getSqlTransformation_OutputLocked() {
         return (EAttribute)sqlTransformationEClass.getEStructuralFeatures().get(7);
     }
 
@@ -530,7 +541,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EAttribute getSqlTransformation_InsertSqlDefault() {
+    @Override
+	public EAttribute getSqlTransformation_InsertSqlDefault() {
         return (EAttribute)sqlTransformationEClass.getEStructuralFeatures().get(8);
     }
 
@@ -539,7 +551,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EAttribute getSqlTransformation_UpdateSqlDefault() {
+    @Override
+	public EAttribute getSqlTransformation_UpdateSqlDefault() {
         return (EAttribute)sqlTransformationEClass.getEStructuralFeatures().get(9);
     }
 
@@ -548,7 +561,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EAttribute getSqlTransformation_DeleteSqlDefault() {
+    @Override
+	public EAttribute getSqlTransformation_DeleteSqlDefault() {
         return (EAttribute)sqlTransformationEClass.getEStructuralFeatures().get(10);
     }
 
@@ -557,7 +571,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EReference getSqlTransformation_Aliases() {
+    @Override
+	public EReference getSqlTransformation_Aliases() {
         return (EReference)sqlTransformationEClass.getEStructuralFeatures().get(11);
     }
 
@@ -566,7 +581,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EClass getTransformationMappingRoot() {
+    @Override
+	public EClass getTransformationMappingRoot() {
         return transformationMappingRootEClass;
     }
 
@@ -575,7 +591,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EReference getTransformationMappingRoot_Target() {
+    @Override
+	public EReference getTransformationMappingRoot_Target() {
         return (EReference)transformationMappingRootEClass.getEStructuralFeatures().get(0);
     }
 
@@ -584,7 +601,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EClass getFragmentMappingRoot() {
+    @Override
+	public EClass getFragmentMappingRoot() {
         return fragmentMappingRootEClass;
     }
 
@@ -593,7 +611,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EClass getTreeMappingRoot() {
+    @Override
+	public EClass getTreeMappingRoot() {
         return treeMappingRootEClass;
     }
 
@@ -602,7 +621,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EClass getMappingClass() {
+    @Override
+	public EClass getMappingClass() {
         return mappingClassEClass;
     }
 
@@ -611,7 +631,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EAttribute getMappingClass_Recursive() {
+    @Override
+	public EAttribute getMappingClass_Recursive() {
         return (EAttribute)mappingClassEClass.getEStructuralFeatures().get(0);
     }
 
@@ -620,7 +641,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EAttribute getMappingClass_RecursionAllowed() {
+    @Override
+	public EAttribute getMappingClass_RecursionAllowed() {
         return (EAttribute)mappingClassEClass.getEStructuralFeatures().get(1);
     }
 
@@ -629,7 +651,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EAttribute getMappingClass_RecursionCriteria() {
+    @Override
+	public EAttribute getMappingClass_RecursionCriteria() {
         return (EAttribute)mappingClassEClass.getEStructuralFeatures().get(2);
     }
 
@@ -638,7 +661,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EAttribute getMappingClass_RecursionLimit() {
+    @Override
+	public EAttribute getMappingClass_RecursionLimit() {
         return (EAttribute)mappingClassEClass.getEStructuralFeatures().get(3);
     }
 
@@ -647,7 +671,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EAttribute getMappingClass_RecursionLimitErrorMode() {
+    @Override
+	public EAttribute getMappingClass_RecursionLimitErrorMode() {
         return (EAttribute)mappingClassEClass.getEStructuralFeatures().get(4);
     }
 
@@ -656,7 +681,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EReference getMappingClass_Columns() {
+    @Override
+	public EReference getMappingClass_Columns() {
         return (EReference)mappingClassEClass.getEStructuralFeatures().get(5);
     }
 
@@ -665,7 +691,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EReference getMappingClass_MappingClassSet() {
+    @Override
+	public EReference getMappingClass_MappingClassSet() {
         return (EReference)mappingClassEClass.getEStructuralFeatures().get(6);
     }
 
@@ -674,7 +701,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EReference getMappingClass_InputSet() {
+    @Override
+	public EReference getMappingClass_InputSet() {
         return (EReference)mappingClassEClass.getEStructuralFeatures().get(7);
     }
 
@@ -683,7 +711,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EClass getMappingClassColumn() {
+    @Override
+	public EClass getMappingClassColumn() {
         return mappingClassColumnEClass;
     }
 
@@ -692,7 +721,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EReference getMappingClassColumn_Type() {
+    @Override
+	public EReference getMappingClassColumn_Type() {
         return (EReference)mappingClassColumnEClass.getEStructuralFeatures().get(1);
     }
 
@@ -701,7 +731,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EReference getMappingClassColumn_MappingClass() {
+    @Override
+	public EReference getMappingClassColumn_MappingClass() {
         return (EReference)mappingClassColumnEClass.getEStructuralFeatures().get(0);
     }
 
@@ -710,7 +741,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EClass getMappingClassObject() {
+    @Override
+	public EClass getMappingClassObject() {
         return mappingClassObjectEClass;
     }
 
@@ -719,7 +751,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EAttribute getMappingClassObject_Name() {
+    @Override
+	public EAttribute getMappingClassObject_Name() {
         return (EAttribute)mappingClassObjectEClass.getEStructuralFeatures().get(0);
     }
 
@@ -728,7 +761,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EClass getStagingTable() {
+    @Override
+	public EClass getStagingTable() {
         return stagingTableEClass;
     }
 
@@ -737,7 +771,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EClass getMappingClassSet() {
+    @Override
+	public EClass getMappingClassSet() {
         return mappingClassSetEClass;
     }
 
@@ -746,7 +781,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EReference getMappingClassSet_MappingClasses() {
+    @Override
+	public EReference getMappingClassSet_MappingClasses() {
         return (EReference)mappingClassSetEClass.getEStructuralFeatures().get(0);
     }
 
@@ -755,7 +791,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EReference getMappingClassSet_Target() {
+    @Override
+	public EReference getMappingClassSet_Target() {
         return (EReference)mappingClassSetEClass.getEStructuralFeatures().get(1);
     }
 
@@ -764,7 +801,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EReference getMappingClassSet_InputBinding() {
+    @Override
+	public EReference getMappingClassSet_InputBinding() {
         return (EReference)mappingClassSetEClass.getEStructuralFeatures().get(2);
     }
 
@@ -773,7 +811,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EClass getMappingClassSetContainer() {
+    @Override
+	public EClass getMappingClassSetContainer() {
         return mappingClassSetContainerEClass;
     }
 
@@ -782,7 +821,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EReference getMappingClassSetContainer_MappingClassSets() {
+    @Override
+	public EReference getMappingClassSetContainer_MappingClassSets() {
         return (EReference)mappingClassSetContainerEClass.getEStructuralFeatures().get(0);
     }
 
@@ -791,7 +831,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EClass getInputParameter() {
+    @Override
+	public EClass getInputParameter() {
         return inputParameterEClass;
     }
 
@@ -800,7 +841,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EAttribute getInputParameter_Name() {
+    @Override
+	public EAttribute getInputParameter_Name() {
         return (EAttribute)inputParameterEClass.getEStructuralFeatures().get(0);
     }
 
@@ -809,7 +851,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EReference getInputParameter_InputSet() {
+    @Override
+	public EReference getInputParameter_InputSet() {
         return (EReference)inputParameterEClass.getEStructuralFeatures().get(1);
     }
 
@@ -818,7 +861,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EReference getInputParameter_Type() {
+    @Override
+	public EReference getInputParameter_Type() {
         return (EReference)inputParameterEClass.getEStructuralFeatures().get(2);
     }
 
@@ -827,7 +871,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EClass getInputSet() {
+    @Override
+	public EClass getInputSet() {
         return inputSetEClass;
     }
 
@@ -836,7 +881,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EReference getInputSet_MappingClass() {
+    @Override
+	public EReference getInputSet_MappingClass() {
         return (EReference)inputSetEClass.getEStructuralFeatures().get(0);
     }
 
@@ -845,7 +891,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EReference getInputSet_InputParameters() {
+    @Override
+	public EReference getInputSet_InputParameters() {
         return (EReference)inputSetEClass.getEStructuralFeatures().get(1);
     }
 
@@ -854,7 +901,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EClass getInputBinding() {
+    @Override
+	public EClass getInputBinding() {
         return inputBindingEClass;
     }
 
@@ -863,7 +911,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EReference getInputBinding_MappingClassSet() {
+    @Override
+	public EReference getInputBinding_MappingClassSet() {
         return (EReference)inputBindingEClass.getEStructuralFeatures().get(0);
     }
 
@@ -872,7 +921,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EReference getInputBinding_InputParameter() {
+    @Override
+	public EReference getInputBinding_InputParameter() {
         return (EReference)inputBindingEClass.getEStructuralFeatures().get(1);
     }
 
@@ -881,7 +931,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EReference getInputBinding_MappingClassColumn() {
+    @Override
+	public EReference getInputBinding_MappingClassColumn() {
         return (EReference)inputBindingEClass.getEStructuralFeatures().get(2);
     }
 
@@ -890,7 +941,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EClass getDataFlowMappingRoot() {
+    @Override
+	public EClass getDataFlowMappingRoot() {
         return dataFlowMappingRootEClass;
     }
 
@@ -899,7 +951,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EAttribute getDataFlowMappingRoot_AllowsOptimization() {
+    @Override
+	public EAttribute getDataFlowMappingRoot_AllowsOptimization() {
         return (EAttribute)dataFlowMappingRootEClass.getEStructuralFeatures().get(0);
     }
 
@@ -908,7 +961,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EReference getDataFlowMappingRoot_Nodes() {
+    @Override
+	public EReference getDataFlowMappingRoot_Nodes() {
         return (EReference)dataFlowMappingRootEClass.getEStructuralFeatures().get(1);
     }
 
@@ -917,7 +971,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EReference getDataFlowMappingRoot_Links() {
+    @Override
+	public EReference getDataFlowMappingRoot_Links() {
         return (EReference)dataFlowMappingRootEClass.getEStructuralFeatures().get(2);
     }
 
@@ -926,7 +981,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EClass getDataFlowNode() {
+    @Override
+	public EClass getDataFlowNode() {
         return dataFlowNodeEClass;
     }
 
@@ -935,7 +991,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EAttribute getDataFlowNode_Name() {
+    @Override
+	public EAttribute getDataFlowNode_Name() {
         return (EAttribute)dataFlowNodeEClass.getEStructuralFeatures().get(0);
     }
 
@@ -944,7 +1001,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EReference getDataFlowNode_Owner() {
+    @Override
+	public EReference getDataFlowNode_Owner() {
         return (EReference)dataFlowNodeEClass.getEStructuralFeatures().get(1);
     }
 
@@ -953,7 +1011,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EReference getDataFlowNode_InputLinks() {
+    @Override
+	public EReference getDataFlowNode_InputLinks() {
         return (EReference)dataFlowNodeEClass.getEStructuralFeatures().get(2);
     }
 
@@ -962,7 +1021,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EReference getDataFlowNode_OutputLinks() {
+    @Override
+	public EReference getDataFlowNode_OutputLinks() {
         return (EReference)dataFlowNodeEClass.getEStructuralFeatures().get(3);
     }
 
@@ -971,7 +1031,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EClass getDataFlowLink() {
+    @Override
+	public EClass getDataFlowLink() {
         return dataFlowLinkEClass;
     }
 
@@ -980,7 +1041,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EReference getDataFlowLink_OutputNode() {
+    @Override
+	public EReference getDataFlowLink_OutputNode() {
         return (EReference)dataFlowLinkEClass.getEStructuralFeatures().get(0);
     }
 
@@ -989,7 +1051,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EReference getDataFlowLink_InputNode() {
+    @Override
+	public EReference getDataFlowLink_InputNode() {
         return (EReference)dataFlowLinkEClass.getEStructuralFeatures().get(1);
     }
 
@@ -998,7 +1061,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EReference getDataFlowLink_Owner() {
+    @Override
+	public EReference getDataFlowLink_Owner() {
         return (EReference)dataFlowLinkEClass.getEStructuralFeatures().get(2);
     }
 
@@ -1007,7 +1071,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EClass getExpression() {
+    @Override
+	public EClass getExpression() {
         return expressionEClass;
     }
 
@@ -1016,7 +1081,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EAttribute getExpression_Value() {
+    @Override
+	public EAttribute getExpression_Value() {
         return (EAttribute)expressionEClass.getEStructuralFeatures().get(0);
     }
 
@@ -1025,7 +1091,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EReference getExpression_Owner() {
+    @Override
+	public EReference getExpression_Owner() {
         return (EReference)expressionEClass.getEStructuralFeatures().get(1);
     }
 
@@ -1034,7 +1101,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EClass getTargetNode() {
+    @Override
+	public EClass getTargetNode() {
         return targetNodeEClass;
     }
 
@@ -1043,7 +1111,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EReference getTargetNode_Target() {
+    @Override
+	public EReference getTargetNode_Target() {
         return (EReference)targetNodeEClass.getEStructuralFeatures().get(0);
     }
 
@@ -1052,7 +1121,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EClass getSourceNode() {
+    @Override
+	public EClass getSourceNode() {
         return sourceNodeEClass;
     }
 
@@ -1061,7 +1131,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EReference getSourceNode_Source() {
+    @Override
+	public EReference getSourceNode_Source() {
         return (EReference)sourceNodeEClass.getEStructuralFeatures().get(0);
     }
 
@@ -1070,7 +1141,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EClass getAbstractOperationNode() {
+    @Override
+	public EClass getAbstractOperationNode() {
         return abstractOperationNodeEClass;
     }
 
@@ -1079,7 +1151,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EReference getAbstractOperationNode_NodeGroup() {
+    @Override
+	public EReference getAbstractOperationNode_NodeGroup() {
         return (EReference)abstractOperationNodeEClass.getEStructuralFeatures().get(0);
     }
 
@@ -1088,7 +1161,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EClass getOperationNodeGroup() {
+    @Override
+	public EClass getOperationNodeGroup() {
         return operationNodeGroupEClass;
     }
 
@@ -1097,7 +1171,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EReference getOperationNodeGroup_Contents() {
+    @Override
+	public EReference getOperationNodeGroup_Contents() {
         return (EReference)operationNodeGroupEClass.getEStructuralFeatures().get(0);
     }
 
@@ -1106,7 +1181,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EClass getOperationNode() {
+    @Override
+	public EClass getOperationNode() {
         return operationNodeEClass;
     }
 
@@ -1115,7 +1191,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EClass getJoinNode() {
+    @Override
+	public EClass getJoinNode() {
         return joinNodeEClass;
     }
 
@@ -1124,7 +1201,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EAttribute getJoinNode_Type() {
+    @Override
+	public EAttribute getJoinNode_Type() {
         return (EAttribute)joinNodeEClass.getEStructuralFeatures().get(0);
     }
 
@@ -1133,7 +1211,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EClass getUnionNode() {
+    @Override
+	public EClass getUnionNode() {
         return unionNodeEClass;
     }
 
@@ -1142,7 +1221,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EClass getProjectionNode() {
+    @Override
+	public EClass getProjectionNode() {
         return projectionNodeEClass;
     }
 
@@ -1151,7 +1231,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EClass getFilterNode() {
+    @Override
+	public EClass getFilterNode() {
         return filterNodeEClass;
     }
 
@@ -1160,7 +1241,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EClass getGroupingNode() {
+    @Override
+	public EClass getGroupingNode() {
         return groupingNodeEClass;
     }
 
@@ -1169,7 +1251,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EClass getDupRemovalNode() {
+    @Override
+	public EClass getDupRemovalNode() {
         return dupRemovalNodeEClass;
     }
 
@@ -1178,7 +1261,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EClass getSortNode() {
+    @Override
+	public EClass getSortNode() {
         return sortNodeEClass;
     }
 
@@ -1187,7 +1271,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EClass getSqlNode() {
+    @Override
+	public EClass getSqlNode() {
         return sqlNodeEClass;
     }
 
@@ -1196,7 +1281,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EClass getExpressionOwner() {
+    @Override
+	public EClass getExpressionOwner() {
         return expressionOwnerEClass;
     }
 
@@ -1205,7 +1291,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EReference getExpressionOwner_Expressions() {
+    @Override
+	public EReference getExpressionOwner_Expressions() {
         return (EReference)expressionOwnerEClass.getEStructuralFeatures().get(0);
     }
 
@@ -1214,7 +1301,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EClass getXQueryTransformationMappingRoot() {
+    @Override
+	public EClass getXQueryTransformationMappingRoot() {
         return xQueryTransformationMappingRootEClass;
     }
 
@@ -1223,7 +1311,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EClass getXQueryTransformation() {
+    @Override
+	public EClass getXQueryTransformation() {
         return xQueryTransformationEClass;
     }
 
@@ -1232,7 +1321,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EAttribute getXQueryTransformation_Expression() {
+    @Override
+	public EAttribute getXQueryTransformation_Expression() {
         return (EAttribute)xQueryTransformationEClass.getEStructuralFeatures().get(0);
     }
 
@@ -1241,7 +1331,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EEnum getRecursionErrorMode() {
+    @Override
+	public EEnum getRecursionErrorMode() {
         return recursionErrorModeEEnum;
     }
 
@@ -1250,7 +1341,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EEnum getJoinType() {
+    @Override
+	public EEnum getJoinType() {
         return joinTypeEEnum;
     }
 
@@ -1259,7 +1351,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EEnum getSortDirection() {
+    @Override
+	public EEnum getSortDirection() {
         return sortDirectionEEnum;
     }
 
@@ -1268,7 +1361,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EDataType getList() {
+    @Override
+	public EDataType getList() {
         return listEDataType;
     }
 
@@ -1277,7 +1371,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EClass getTransformationMapping() {
+    @Override
+	public EClass getTransformationMapping() {
         return transformationMappingEClass;
     }
 
@@ -1286,7 +1381,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EClass getSqlAlias() {
+    @Override
+	public EClass getSqlAlias() {
         return sqlAliasEClass;
     }
 
@@ -1295,7 +1391,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EAttribute getSqlAlias_Alias() {
+    @Override
+	public EAttribute getSqlAlias_Alias() {
         return (EAttribute)sqlAliasEClass.getEStructuralFeatures().get(0);
     }
 
@@ -1304,7 +1401,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EReference getSqlAlias_AliasedObject() {
+    @Override
+	public EReference getSqlAlias_AliasedObject() {
         return (EReference)sqlAliasEClass.getEStructuralFeatures().get(1);
     }
 
@@ -1313,7 +1411,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EReference getSqlAlias_SqlTransformation() {
+    @Override
+	public EReference getSqlAlias_SqlTransformation() {
         return (EReference)sqlAliasEClass.getEStructuralFeatures().get(2);
     }
 
@@ -1322,7 +1421,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public EClass getSqlTransformationMappingRoot() {
+    @Override
+	public EClass getSqlTransformationMappingRoot() {
         return sqlTransformationMappingRootEClass;
     }
 
@@ -1331,7 +1431,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
      * 
      * @generated
      */
-    public TransformationFactory getTransformationFactory() {
+    @Override
+	public TransformationFactory getTransformationFactory() {
         return (TransformationFactory)getEFactoryInstance();
     }
 

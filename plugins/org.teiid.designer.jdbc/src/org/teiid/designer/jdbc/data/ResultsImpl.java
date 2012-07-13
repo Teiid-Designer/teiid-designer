@@ -47,28 +47,32 @@ public class ResultsImpl implements Results {
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.data.Results#getMetadata()
      */
-    public ResultsMetadata getMetadata() {
+    @Override
+	public ResultsMetadata getMetadata() {
         return response.getMetadata();
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.Results#getRowCount()
      */
-    public int getRowCount() {
+    @Override
+	public int getRowCount() {
         return this.rowList.size();
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.Results#getTotalRowCount()
      */
-    public int getTotalRowCount() {
+    @Override
+	public int getTotalRowCount() {
         return this.response.getRecords().size();
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.Results#getAllRows()
      */
-    public Object[] getRows() {
+    @Override
+	public Object[] getRows() {
         if (this.rowArray == null) {
             this.rowArray = this.rowList.toArray();
         }
@@ -78,7 +82,8 @@ public class ResultsImpl implements Results {
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.Results#getCell(java.lang.Object, int)
      */
-    public Object getObject( Object row,
+    @Override
+	public Object getObject( Object row,
                              int columnIndex ) {
         CoreArgCheck.isNotNull(row);
         final List record = (List)row;
@@ -91,7 +96,8 @@ public class ResultsImpl implements Results {
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.data.Results#getBoolean(java.lang.Object, int)
      */
-    public String getString( Object row,
+    @Override
+	public String getString( Object row,
                              int columnIndex ) {
         final Object value = getObject(row, columnIndex);
         return (value == null ? null : value.toString());
@@ -100,7 +106,8 @@ public class ResultsImpl implements Results {
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.data.Results#getBoolean(java.lang.Object, int)
      */
-    public boolean getBoolean( Object row,
+    @Override
+	public boolean getBoolean( Object row,
                                int columnIndex ) throws JdbcConversionException {
         final Object value = getObject(row, columnIndex);
         if (value == null) {
@@ -118,7 +125,8 @@ public class ResultsImpl implements Results {
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.data.Results#getShort(java.lang.Object, int)
      */
-    public short getShort( Object row,
+    @Override
+	public short getShort( Object row,
                            int columnIndex ) throws JdbcConversionException {
         final Object value = getObject(row, columnIndex);
         if (value == null) {
@@ -150,7 +158,8 @@ public class ResultsImpl implements Results {
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.data.Results#getInt(java.lang.Object, int)
      */
-    public int getInt( Object row,
+    @Override
+	public int getInt( Object row,
                        int columnIndex ) throws JdbcConversionException {
         final Object value = getObject(row, columnIndex);
         if (value == null) {
@@ -184,7 +193,8 @@ public class ResultsImpl implements Results {
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.data.Results#getLong(java.lang.Object, int)
      */
-    public long getLong( Object row,
+    @Override
+	public long getLong( Object row,
                          int columnIndex ) throws JdbcConversionException {
         final Object value = getObject(row, columnIndex);
         if (value == null) {
@@ -216,7 +226,8 @@ public class ResultsImpl implements Results {
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.data.Results#getFloat(java.lang.Object, int)
      */
-    public float getFloat( Object row,
+    @Override
+	public float getFloat( Object row,
                            int columnIndex ) throws JdbcConversionException {
         final Object value = getObject(row, columnIndex);
         if (value == null) {
@@ -244,7 +255,8 @@ public class ResultsImpl implements Results {
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.data.Results#getDouble(java.lang.Object, int)
      */
-    public double getDouble( Object row,
+    @Override
+	public double getDouble( Object row,
                              int columnIndex ) throws JdbcConversionException {
         final Object value = getObject(row, columnIndex);
         if (value == null) {
@@ -272,7 +284,8 @@ public class ResultsImpl implements Results {
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.data.Results#getByte(java.lang.Object, int)
      */
-    public byte getByte( Object row,
+    @Override
+	public byte getByte( Object row,
                          int columnIndex ) throws JdbcConversionException {
         final Object value = getObject(row, columnIndex);
         if (value == null) {
@@ -302,7 +315,8 @@ public class ResultsImpl implements Results {
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.data.Results#getBytes(java.lang.Object, int)
      */
-    public byte[] getBytes( Object row,
+    @Override
+	public byte[] getBytes( Object row,
                             int columnIndex ) throws JdbcConversionException {
         final Object value = getObject(row, columnIndex);
         if (value == null) {
@@ -318,7 +332,8 @@ public class ResultsImpl implements Results {
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.data.Results#getDate(java.lang.Object, int)
      */
-    public Date getDate( Object row,
+    @Override
+	public Date getDate( Object row,
                          int columnIndex ) throws JdbcConversionException {
         final Object value = getObject(row, columnIndex);
         if (value == null) {
@@ -346,7 +361,8 @@ public class ResultsImpl implements Results {
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.data.Results#getTimestamp(java.lang.Object, int)
      */
-    public Timestamp getTimestamp( Object row,
+    @Override
+	public Timestamp getTimestamp( Object row,
                                    int columnIndex ) throws JdbcConversionException {
         final Object value = getObject(row, columnIndex);
         if (value == null) {
@@ -374,7 +390,8 @@ public class ResultsImpl implements Results {
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.Results#setCell(java.lang.Object, int, java.lang.Object)
      */
-    public void setObject( Object row,
+    @Override
+	public void setObject( Object row,
                            int columnIndex,
                            Object newValue ) {
         if (row == null) {
@@ -387,28 +404,32 @@ public class ResultsImpl implements Results {
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.Results#hasNextResults()
      */
-    public boolean hasNextResults() {
+    @Override
+	public boolean hasNextResults() {
         return this.next != null;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.Results#getNextResults()
      */
-    public Results getNextResults() {
+    @Override
+	public Results getNextResults() {
         return this.next;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.Results#hasPreviousResults()
      */
-    public boolean hasPreviousResults() {
+    @Override
+	public boolean hasPreviousResults() {
         return this.previous != null;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.Results#getPreviousResults()
      */
-    public Results getPreviousResults() {
+    @Override
+	public Results getPreviousResults() {
         return this.previous;
     }
 

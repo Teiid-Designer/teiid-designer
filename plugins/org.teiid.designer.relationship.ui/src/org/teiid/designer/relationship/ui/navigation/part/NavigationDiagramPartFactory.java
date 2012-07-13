@@ -116,7 +116,8 @@ public class NavigationDiagramPartFactory extends AbstractDiagramEditPartFactory
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.part.DiagramEditPartFactory#getAnchorManager(org.teiid.designer.diagram.ui.part.DiagramEditPart)
      */
-    public AnchorManager getAnchorManager( DiagramEditPart editPart ) {
+    @Override
+	public AnchorManager getAnchorManager( DiagramEditPart editPart ) {
         return null; // new TransformationAnchorManager(editPart);
     }
 }

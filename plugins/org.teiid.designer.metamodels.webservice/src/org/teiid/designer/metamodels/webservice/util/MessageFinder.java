@@ -30,7 +30,8 @@ public class MessageFinder extends WebServiceComponentFinder {
      * 
      * @see org.teiid.designer.core.util.ModelVisitor#visit(org.eclipse.emf.ecore.EObject)
      */
-    public boolean visit( final EObject object ) {
+    @Override
+	public boolean visit( final EObject object ) {
         // Inputs are contained by Operations directly, and Interfaces and Resources indirectly
         if (object instanceof Message) {
             found((Message)object);

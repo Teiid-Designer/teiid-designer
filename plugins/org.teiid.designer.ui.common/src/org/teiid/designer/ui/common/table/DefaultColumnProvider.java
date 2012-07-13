@@ -23,7 +23,8 @@ public abstract class DefaultColumnProvider<T, V> implements ColumnProvider<T, V
      * 
      * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
      */
-    @SuppressWarnings( "unchecked" )
+    @Override
+	@SuppressWarnings( "unchecked" )
     public int compare( final T element1,
                         final T element2 ) {
         final V value = getValue(element1);

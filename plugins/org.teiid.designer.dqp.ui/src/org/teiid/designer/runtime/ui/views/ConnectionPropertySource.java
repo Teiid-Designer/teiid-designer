@@ -63,7 +63,8 @@ public class ConnectionPropertySource implements IPropertySource {
      * @see org.eclipse.ui.views.properties.IPropertySource#getEditableValue()
      * @since 4.2
      */
-    public Object getEditableValue() {
+    @Override
+	public Object getEditableValue() {
         return this.translator;
     }
 
@@ -71,7 +72,8 @@ public class ConnectionPropertySource implements IPropertySource {
      * @see org.eclipse.ui.views.properties.IPropertySource#getPropertyDescriptors()
      * @since 4.2
      */
-    public IPropertyDescriptor[] getPropertyDescriptors() {
+    @Override
+	public IPropertyDescriptor[] getPropertyDescriptors() {
         IPropertyDescriptor[] result = new IPropertyDescriptor[0];
         Collection<PropertyDefinition> typeDefs = this.translator.getPropertyDefinitions();
         boolean showExpertProps = this.provider.isShowingExpertProperties();
@@ -143,7 +145,8 @@ public class ConnectionPropertySource implements IPropertySource {
      * @see org.eclipse.ui.views.properties.IPropertySource#getPropertyValue(java.lang.Object)
      * @since 4.2
      */
-    public Object getPropertyValue( Object id ) {
+    @Override
+	public Object getPropertyValue( Object id ) {
         String propName = (String)id;
         String result = this.translator.getPropertyValue(propName);
 
@@ -173,7 +176,8 @@ public class ConnectionPropertySource implements IPropertySource {
      * @see org.eclipse.ui.views.properties.IPropertySource#isPropertySet(java.lang.Object)
      * @since 4.2
      */
-    public boolean isPropertySet( Object id ) {
+    @Override
+	public boolean isPropertySet( Object id ) {
         return false;
     }
 
@@ -181,7 +185,8 @@ public class ConnectionPropertySource implements IPropertySource {
      * @see org.eclipse.ui.views.properties.IPropertySource#resetPropertyValue(java.lang.Object)
      * @since 4.2
      */
-    public void resetPropertyValue( Object id ) {
+    @Override
+	public void resetPropertyValue( Object id ) {
         PropertyDefinition propDefn = ((PropertyDefinition)id);
         setPropertyValue(id, this.initialValues.getProperty(propDefn.getName()));
     }
@@ -194,7 +199,8 @@ public class ConnectionPropertySource implements IPropertySource {
      * @see org.eclipse.ui.views.properties.IPropertySource#setPropertyValue(java.lang.Object, java.lang.Object)
      * @since 4.2
      */
-    public void setPropertyValue( Object id,
+    @Override
+	public void setPropertyValue( Object id,
                                   Object value ) {
         String propName = (String)id;
 
@@ -232,7 +238,8 @@ public class ConnectionPropertySource implements IPropertySource {
      * @since 5.5
      */
     class DescriptorSorter implements Comparator {
-        public int compare( Object theDescriptor,
+        @Override
+		public int compare( Object theDescriptor,
                             Object theOtherDescriptor ) {
             int result = 0;
             Object tempId = ((IPropertyDescriptor)theDescriptor).getId();

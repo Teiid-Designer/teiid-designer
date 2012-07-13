@@ -218,7 +218,8 @@ public class AccessPatternColumnsDialog extends TitleAreaDialog
      * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
      * @since 5.5.3
      */
-    public void selectionChanged( SelectionChangedEvent event ) {
+    @Override
+	public void selectionChanged( SelectionChangedEvent event ) {
         StructuredSelection selection = (StructuredSelection)this.viewer.getSelection();
 
         if (selection.isEmpty()) {
@@ -235,7 +236,8 @@ public class AccessPatternColumnsDialog extends TitleAreaDialog
      * @see org.teiid.core.event.IChangeListener#stateChanged(org.teiid.core.event.IChangeNotifier)
      * @since 5.5.3
      */
-    public void stateChanged( IChangeNotifier theSource ) {
+    @Override
+	public void stateChanged( IChangeNotifier theSource ) {
         updateState();
     }
 
@@ -263,7 +265,8 @@ public class AccessPatternColumnsDialog extends TitleAreaDialog
          * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
          * @since 5.5.3
          */
-        public Object[] getElements( Object inputElement ) {
+        @Override
+		public Object[] getElements( Object inputElement ) {
             return accessAccessPatterns();
         }
 
@@ -271,7 +274,8 @@ public class AccessPatternColumnsDialog extends TitleAreaDialog
          * @see org.eclipse.jface.viewers.IContentProvider#dispose()
          * @since 5.5.3
          */
-        public void dispose() {
+        @Override
+		public void dispose() {
         }
 
         /**
@@ -279,7 +283,8 @@ public class AccessPatternColumnsDialog extends TitleAreaDialog
          *      java.lang.Object)
          * @since 5.5.3
          */
-        public void inputChanged( Viewer viewer,
+        @Override
+		public void inputChanged( Viewer viewer,
                                   Object oldInput,
                                   Object newInput ) {
         }

@@ -56,7 +56,8 @@ public abstract class AbstractLanguageObjectEditorModel implements ILanguageObje
     /* (non-Javadoc)
      * @see org.teiid.query.ui.builder.model.ILanguageObjectEditorModel#addModelListeners(org.teiid.query.ui.builder.model.ILanguageObjectEditorModelListener)
      */
-    public boolean addModelListener( ILanguageObjectEditorModelListener theListener ) {
+    @Override
+	public boolean addModelListener( ILanguageObjectEditorModelListener theListener ) {
         CoreArgCheck.isNotNull(theListener);
 
         boolean result = false;
@@ -75,7 +76,8 @@ public abstract class AbstractLanguageObjectEditorModel implements ILanguageObje
     /* (non-Javadoc)
      * @see org.teiid.query.ui.builder.model.ILanguageObjectEditorModel#clear()
      */
-    public void clear() {
+    @Override
+	public void clear() {
         if (savedLangObj != null) {
             savedLangObj = null;
             fireModelChanged(LanguageObjectEditorModelEvent.SAVED);
@@ -102,12 +104,14 @@ public abstract class AbstractLanguageObjectEditorModel implements ILanguageObje
     /* (non-Javadoc)
      * @see org.teiid.query.ui.builder.model.ILanguageObjectEditorModel#getLanguageObject()
      */
-    public abstract LanguageObject getLanguageObject();
+    @Override
+	public abstract LanguageObject getLanguageObject();
 
     /* (non-Javadoc)
      * @see org.teiid.query.ui.builder.model.ILanguageObjectEditorModel#getType()
      */
-    public Class getModelType() {
+    @Override
+	public Class getModelType() {
         return modelType;
     }
 
@@ -123,7 +127,8 @@ public abstract class AbstractLanguageObjectEditorModel implements ILanguageObje
     /* (non-Javadoc)
      * @see org.teiid.query.ui.builder.model.ILanguageObjectEditorModel#hasChanged()
      */
-    public boolean hasChanged() {
+    @Override
+	public boolean hasChanged() {
         // if no saved language object return true if complete
         // if there is a saved language object return true if the current value is complete and different
         boolean result = false;
@@ -144,12 +149,14 @@ public abstract class AbstractLanguageObjectEditorModel implements ILanguageObje
     /* (non-Javadoc)
      * @see org.teiid.query.ui.builder.model.ILanguageObjectEditorModel#isComplete()
      */
-    public abstract boolean isComplete();
+    @Override
+	public abstract boolean isComplete();
 
     /* (non-Javadoc)
      * @see org.teiid.query.ui.builder.model.ILanguageObjectEditorModel#removeModelListener(org.teiid.query.ui.builder.model.ILanguageObjectEditorModelListener)
      */
-    public boolean removeModelListener( ILanguageObjectEditorModelListener theListener ) {
+    @Override
+	public boolean removeModelListener( ILanguageObjectEditorModelListener theListener ) {
         CoreArgCheck.isNotNull(theListener);
 
         boolean result = false;
@@ -168,14 +175,16 @@ public abstract class AbstractLanguageObjectEditorModel implements ILanguageObje
     /* (non-Javadoc)
      * @see org.teiid.query.ui.builder.model.ILanguageObjectEditorModel#reset()
      */
-    public void reset() {
+    @Override
+	public void reset() {
         setLanguageObject(savedLangObj);
     }
 
     /* (non-Javadoc)
      * @see org.teiid.query.ui.builder.model.ILanguageObjectEditorModel#save()
      */
-    public void save() {
+    @Override
+	public void save() {
         savedLangObj = getLanguageObject();
         fireModelChanged(LanguageObjectEditorModelEvent.SAVED);
     }
@@ -183,7 +192,8 @@ public abstract class AbstractLanguageObjectEditorModel implements ILanguageObje
     /* (non-Javadoc)
      * @see org.teiid.query.ui.builder.model.ILanguageObjectEditorModel#setLanguageObject(org.teiid.query.sql.LanguageObject)
      */
-    public void setLanguageObject( LanguageObject theLangObj ) {
+    @Override
+	public void setLanguageObject( LanguageObject theLangObj ) {
         if (theLangObj != null) {
             if (!modelType.isAssignableFrom(theLangObj.getClass())) {
                 CoreArgCheck.isTrue(modelType.isAssignableFrom(theLangObj.getClass()),
@@ -199,7 +209,8 @@ public abstract class AbstractLanguageObjectEditorModel implements ILanguageObje
     /* (non-Javadoc)
      * @see org.teiid.query.ui.builder.model.ILanguageObjectEditorModel#setType(java.lang.Class)
      */
-    public void setModelType( Class theLanguageObjectClass ) {
+    @Override
+	public void setModelType( Class theLanguageObjectClass ) {
         CoreArgCheck.isNotNull(theLanguageObjectClass, PREFIX + "nullType"); //$NON-NLS-1$
         CoreArgCheck.isTrue(LanguageObject.class.isAssignableFrom(theLanguageObjectClass), PREFIX + "modelTypeNotLangObj"); //$NON-NLS-1$
 

@@ -138,7 +138,8 @@ public class FaultImpl extends EObjectImpl implements Fault {
      * 
      * @generated
      */
-    public String getName() {
+    @Override
+	public String getName() {
         return name;
     }
 
@@ -147,7 +148,8 @@ public class FaultImpl extends EObjectImpl implements Fault {
      * 
      * @generated
      */
-    public void setName( String newName ) {
+    @Override
+	public void setName( String newName ) {
         String oldName = name;
         name = newName;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, WsdlPackage.FAULT__NAME, oldName, name));
@@ -158,7 +160,8 @@ public class FaultImpl extends EObjectImpl implements Fault {
      * 
      * @generated
      */
-    public Documentation getDocumentation() {
+    @Override
+	public Documentation getDocumentation() {
         return documentation;
     }
 
@@ -185,7 +188,8 @@ public class FaultImpl extends EObjectImpl implements Fault {
      * 
      * @generated
      */
-    public void setDocumentation( Documentation newDocumentation ) {
+    @Override
+	public void setDocumentation( Documentation newDocumentation ) {
         if (newDocumentation != documentation) {
             NotificationChain msgs = null;
             if (documentation != null) msgs = ((InternalEObject)documentation).eInverseRemove(this,
@@ -208,7 +212,8 @@ public class FaultImpl extends EObjectImpl implements Fault {
      * 
      * @generated
      */
-    public EList getDeclaredNamespaces() {
+    @Override
+	public EList getDeclaredNamespaces() {
         if (declaredNamespaces == null) {
             declaredNamespaces = new EObjectContainmentWithInverseEList(NamespaceDeclaration.class, this,
                                                                         WsdlPackage.FAULT__DECLARED_NAMESPACES,
@@ -222,7 +227,8 @@ public class FaultImpl extends EObjectImpl implements Fault {
      * 
      * @generated
      */
-    public EList getAttributes() {
+    @Override
+	public EList getAttributes() {
         if (attributes == null) {
             attributes = new EObjectContainmentWithInverseEList(Attribute.class, this, WsdlPackage.FAULT__ATTRIBUTES,
                                                                 WsdlPackage.ATTRIBUTE__ATTRIBUTE_OWNER);
@@ -235,7 +241,8 @@ public class FaultImpl extends EObjectImpl implements Fault {
      * 
      * @generated
      */
-    public String getMessage() {
+    @Override
+	public String getMessage() {
         return message;
     }
 
@@ -244,7 +251,8 @@ public class FaultImpl extends EObjectImpl implements Fault {
      * 
      * @generated
      */
-    public void setMessage( String newMessage ) {
+    @Override
+	public void setMessage( String newMessage ) {
         String oldMessage = message;
         message = newMessage;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, WsdlPackage.FAULT__MESSAGE,
@@ -256,7 +264,8 @@ public class FaultImpl extends EObjectImpl implements Fault {
      * 
      * @generated
      */
-    public Operation getOperation() {
+    @Override
+	public Operation getOperation() {
         if (eContainerFeatureID != WsdlPackage.FAULT__OPERATION) return null;
         return (Operation)eContainer;
     }
@@ -266,7 +275,8 @@ public class FaultImpl extends EObjectImpl implements Fault {
      * 
      * @generated
      */
-    public void setOperation( Operation newOperation ) {
+    @Override
+	public void setOperation( Operation newOperation ) {
         if (newOperation != eContainer || (eContainerFeatureID != WsdlPackage.FAULT__OPERATION && newOperation != null)) {
             if (EcoreUtil.isAncestor(this, newOperation)) throw new IllegalArgumentException(
                                                                                              "Recursive containment not allowed for " + toString()); //$NON-NLS-1$
@@ -287,7 +297,8 @@ public class FaultImpl extends EObjectImpl implements Fault {
      * 
      * @generated
      */
-    public boolean isNameValid() {
+    @Override
+	public boolean isNameValid() {
         // TODO: implement this method
         // Ensure that you remove @generated or mark it @generated NOT
         throw new UnsupportedOperationException();

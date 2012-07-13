@@ -37,7 +37,8 @@ public class BuildFromSchemaAction extends Action implements INewChildAction,
     /* (non-Javadoc)
      * @See org.teiid.designer.ui.actions.INewChildAction#canCreateChild(org.eclipse.emf.ecore.EObject)
      */
-    public boolean canCreateChild(EObject parent) {
+    @Override
+	public boolean canCreateChild(EObject parent) {
     	boolean canCreate = false;
 		if (parent instanceof XmlDocumentNode) {
 			if (parent.eContents().isEmpty()) {
@@ -54,7 +55,8 @@ public class BuildFromSchemaAction extends Action implements INewChildAction,
     /* (non-Javadoc)
      * @See org.teiid.designer.ui.actions.INewChildAction#canCreateChild(org.eclipse.core.resources.IFile)
      */
-    public boolean canCreateChild(IFile parent) {
+    @Override
+	public boolean canCreateChild(IFile parent) {
     	return false;
     }
 

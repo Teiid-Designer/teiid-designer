@@ -38,7 +38,8 @@ public class EmfResourceSelector extends AbstractModelSelector {
     /**
      * @See org.teiid.designer.compare.processor.ModelSelector#open()
      */
-    public void open() {
+    @Override
+	public void open() {
         if (this.resource instanceof EmfResource) {
             this.contents = ((EmfResource)this.resource).getModelContents();
         }
@@ -58,21 +59,24 @@ public class EmfResourceSelector extends AbstractModelSelector {
     /**
      * @see org.teiid.designer.compare.selector.ModelSelector#getRootObjects()
      */
-    public List getRootObjects() {
+    @Override
+	public List getRootObjects() {
         return this.resource.getContents();
     }
 
     /**
      * @See org.teiid.designer.compare.processor.ModelSelector#getUri()
      */
-    public URI getUri() {
+    @Override
+	public URI getUri() {
         return resource.getURI();
     }
 
     /**
      * @See org.teiid.designer.compare.processor.ModelSelector#close()
      */
-    public void close() {
+    @Override
+	public void close() {
         this.contents = null;
         this.helper = null;
     }
@@ -80,25 +84,29 @@ public class EmfResourceSelector extends AbstractModelSelector {
     /**
      * @see org.teiid.designer.compare.selector.ModelSelector#getLabel()
      */
-    public String getLabel() {
+    @Override
+	public String getLabel() {
         return this.label;
     }
 
-    public void setLabel( final String label ) {
+    @Override
+	public void setLabel( final String label ) {
         this.label = label;
     }
 
     /**
      * @see org.teiid.designer.compare.selector.ModelSelector#getModelAnnotation()
      */
-    public ModelAnnotation getModelAnnotation() {
+    @Override
+	public ModelAnnotation getModelAnnotation() {
         return this.contents.getModelAnnotation();
     }
 
     /**
      * @see org.teiid.designer.compare.selector.ModelSelector#getModelHelper()
      */
-    public ModelHelper getModelHelper() {
+    @Override
+	public ModelHelper getModelHelper() {
         if (this.helper == null) {
             this.helper = new ModelContentsModelHelper(this.contents);
         }
@@ -108,7 +116,8 @@ public class EmfResourceSelector extends AbstractModelSelector {
     /**
      * @see org.teiid.designer.compare.selector.ModelSelector#getModelContents()
      */
-    public ModelContents getModelContents() {
+    @Override
+	public ModelContents getModelContents() {
         return this.contents;
     }
 

@@ -46,6 +46,7 @@ public class FreeNavigationModelNode implements NavigationModelNode, UiConstants
 	/**
 	 * Get the List of Children
 	 */
+	@Override
 	public List getChildren() {
 		return Collections.EMPTY_LIST;
 	}
@@ -54,6 +55,7 @@ public class FreeNavigationModelNode implements NavigationModelNode, UiConstants
 	 *  (non-Javadoc)
 	 * @See org.teiid.designer.diagram.ui.model.DiagramModelNode#setPosition(org.eclipse.draw2d.geometry.Point)
 	 */
+	@Override
 	public void setPosition(Point position) {
 		this.x = position.x;
 		this.y = position.y;
@@ -62,6 +64,7 @@ public class FreeNavigationModelNode implements NavigationModelNode, UiConstants
 	}
     
 
+	@Override
 	public void setCenterXY(int newCenterX, int newCenterY) {
 		int newX = newCenterX - this.getWidth() / 2;
 		int newY = newCenterY - this.getHeight() / 2;
@@ -72,6 +75,7 @@ public class FreeNavigationModelNode implements NavigationModelNode, UiConstants
 		firePropertyChange(NavigationModelNodeProperties.LOCATION,null, new Point(newX, newY));
 	}
 
+	@Override
 	public void setCenterX(int newCenterX) {
 		int newX = newCenterX - this.getWidth() / 2;
 
@@ -84,6 +88,7 @@ public class FreeNavigationModelNode implements NavigationModelNode, UiConstants
 
 	}
 
+	@Override
 	public void setCenterY(int newCenterY) {
 		int newY = newCenterY - this.getHeight() / 2;
         
@@ -95,10 +100,12 @@ public class FreeNavigationModelNode implements NavigationModelNode, UiConstants
 			new Point(this.x, newY));
 	}
 
+	@Override
 	public Point getPosition() {
 		return new Point(this.x, this.y);
 	}
 
+	@Override
 	public void setSize(Dimension dimension) {
 		this.width = dimension.width;
 		this.height = dimension.height;
@@ -115,16 +122,19 @@ public class FreeNavigationModelNode implements NavigationModelNode, UiConstants
 		firePropertyChange(NavigationModelNodeProperties.SIZE, null, getSize()); 
 	}
 
+	@Override
 	public Dimension getSize() {
 		return new Dimension(this.width, this.height);
 	}
 
 	transient protected PropertyChangeSupport listeners = new PropertyChangeSupport(this);
 
+	@Override
 	public void addPropertyChangeListener(PropertyChangeListener l) {
 		listeners.addPropertyChangeListener(l);
 	}
 
+	@Override
 	public void removePropertyChangeListener(PropertyChangeListener l) {
 		listeners.removePropertyChangeListener(l);
 	}
@@ -140,22 +150,27 @@ public class FreeNavigationModelNode implements NavigationModelNode, UiConstants
 	}
 
 
+	@Override
 	public void update() {
 		firePropertyChange(NavigationModelNodeProperties.PROPERTIES, null, null);
 	}
     
+	@Override
 	public void update(String property) {
 		firePropertyChange(property, null, null);
 	}
 
+	@Override
 	public void setName(String name) {
 		this.name = name;
 	}
 
+	@Override
 	public String getName() {
 		return name;
 	}
 
+	@Override
 	public String getDisplayString() {
 		return getName();
 	}
@@ -172,26 +187,32 @@ public class FreeNavigationModelNode implements NavigationModelNode, UiConstants
 		return this.y;
 	}
 
+	@Override
 	public int getX() {
 		return this.x;
 	}
 
+	@Override
 	public int getY() {
 		return this.y;
 	}
 
+	@Override
 	public int getCenterX() {
 		return (this.x + this.width/2);
 	}
 
+	@Override
 	public int getCenterY() {
 		return (this.y + this.height/2);
 	}
 
+	@Override
 	public int getWidth() {
 		return this.width;
 	}
 
+	@Override
 	public int getHeight() {
 		return this.height;
 	}
@@ -218,6 +239,7 @@ public class FreeNavigationModelNode implements NavigationModelNode, UiConstants
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.relationship.ui.navigation.model.NavigationModelNode#addChild(org.teiid.designer.relationship.ui.navigation.model.NavigationModelNode)
 	 */
+	@Override
 	public void addChild(NavigationModelNode child) {
 		// XXX Auto-generated method stub
 
@@ -226,6 +248,7 @@ public class FreeNavigationModelNode implements NavigationModelNode, UiConstants
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.relationship.ui.navigation.model.NavigationModelNode#addChildren(java.util.List)
 	 */
+	@Override
 	public void addChildren(List children) {
 		// XXX Auto-generated method stub
 
@@ -234,6 +257,7 @@ public class FreeNavigationModelNode implements NavigationModelNode, UiConstants
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.relationship.ui.navigation.model.NavigationModelNode#getModelObject()
 	 */
+	@Override
 	public Object getModelObject() {
 		// XXX Auto-generated method stub
 		return null;
@@ -242,6 +266,7 @@ public class FreeNavigationModelNode implements NavigationModelNode, UiConstants
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.relationship.ui.navigation.model.NavigationModelNode#getParent()
 	 */
+	@Override
 	public NavigationModelNode getParent() {
 		// XXX Auto-generated method stub
 		return null;
@@ -250,6 +275,7 @@ public class FreeNavigationModelNode implements NavigationModelNode, UiConstants
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.relationship.ui.navigation.model.NavigationModelNode#hasErrors()
 	 */
+	@Override
 	public boolean hasErrors() {
 		// XXX Auto-generated method stub
 		return false;
@@ -258,6 +284,7 @@ public class FreeNavigationModelNode implements NavigationModelNode, UiConstants
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.relationship.ui.navigation.model.NavigationModelNode#hasWarnings()
 	 */
+	@Override
 	public boolean hasWarnings() {
 		// XXX Auto-generated method stub
 		return false;
@@ -266,6 +293,7 @@ public class FreeNavigationModelNode implements NavigationModelNode, UiConstants
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.relationship.ui.navigation.model.NavigationModelNode#removeChild(org.teiid.designer.relationship.ui.navigation.model.NavigationModelNode)
 	 */
+	@Override
 	public void removeChild(NavigationModelNode child) {
 		// XXX Auto-generated method stub
 
@@ -274,6 +302,7 @@ public class FreeNavigationModelNode implements NavigationModelNode, UiConstants
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.relationship.ui.navigation.model.NavigationModelNode#removeChildren(java.util.List)
 	 */
+	@Override
 	public void removeChildren(List children) {
 		// XXX Auto-generated method stub
 
@@ -282,6 +311,7 @@ public class FreeNavigationModelNode implements NavigationModelNode, UiConstants
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.relationship.ui.navigation.model.NavigationModelNode#setChildren(java.util.List)
 	 */
+	@Override
 	public void setChildren(List children) {
 		// XXX Auto-generated method stub
 
@@ -290,6 +320,7 @@ public class FreeNavigationModelNode implements NavigationModelNode, UiConstants
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.relationship.ui.navigation.model.NavigationModelNode#setModelObject(java.lang.Object)
 	 */
+	@Override
 	public void setModelObject(Object modelObject) {
 		// XXX Auto-generated method stub
 
@@ -298,6 +329,7 @@ public class FreeNavigationModelNode implements NavigationModelNode, UiConstants
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.relationship.ui.navigation.model.NavigationModelNode#setParent(org.teiid.designer.relationship.ui.navigation.model.NavigationModelNode)
 	 */
+	@Override
 	public void setParent(NavigationModelNode parent) {
 		// XXX Auto-generated method stub
 
@@ -306,6 +338,7 @@ public class FreeNavigationModelNode implements NavigationModelNode, UiConstants
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.relationship.ui.navigation.model.NavigationModelNode#updateForErrorsAndWarnings()
 	 */
+	@Override
 	public void updateForErrorsAndWarnings() {
 		// XXX Auto-generated method stub
 
@@ -314,6 +347,7 @@ public class FreeNavigationModelNode implements NavigationModelNode, UiConstants
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.relationship.ui.navigation.model.NavigationModelNode#getLabelNode()
 	 */
+	@Override
 	public NavigationModelNode getLabelNode() {
 		// XXX Auto-generated method stub
 		return null;
@@ -322,6 +356,7 @@ public class FreeNavigationModelNode implements NavigationModelNode, UiConstants
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.relationship.ui.navigation.model.NavigationModelNode#getBounds()
 	 */
+	@Override
 	public Rectangle getBounds() {
 		// XXX Auto-generated method stub
 		return null;
@@ -330,6 +365,7 @@ public class FreeNavigationModelNode implements NavigationModelNode, UiConstants
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.relationship.ui.navigation.model.NavigationModelNode#printBounds(java.lang.String)
 	 */
+	@Override
 	public void printBounds(String prefix) {
 		// XXX Auto-generated method stub
 
@@ -338,6 +374,7 @@ public class FreeNavigationModelNode implements NavigationModelNode, UiConstants
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.relationship.ui.navigation.model.NavigationModelNode#addSourceConnection(org.teiid.designer.diagram.ui.connection.NodeConnectionModel)
 	 */
+	@Override
 	public void addSourceConnection(NodeConnectionModel iConnection) {
 		// XXX Auto-generated method stub
 
@@ -346,6 +383,7 @@ public class FreeNavigationModelNode implements NavigationModelNode, UiConstants
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.relationship.ui.navigation.model.NavigationModelNode#addTargetConnection(org.teiid.designer.diagram.ui.connection.NodeConnectionModel)
 	 */
+	@Override
 	public void addTargetConnection(NodeConnectionModel iConnection) {
 		// XXX Auto-generated method stub
 
@@ -354,6 +392,7 @@ public class FreeNavigationModelNode implements NavigationModelNode, UiConstants
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.relationship.ui.navigation.model.NavigationModelNode#getSourceConnections()
 	 */
+	@Override
 	public Vector getSourceConnections() {
 		// XXX Auto-generated method stub
 		return null;
@@ -362,6 +401,7 @@ public class FreeNavigationModelNode implements NavigationModelNode, UiConstants
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.relationship.ui.navigation.model.NavigationModelNode#getTargetConnections()
 	 */
+	@Override
 	public Vector getTargetConnections() {
 		// XXX Auto-generated method stub
 		return null;
@@ -370,6 +410,7 @@ public class FreeNavigationModelNode implements NavigationModelNode, UiConstants
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.relationship.ui.navigation.model.NavigationModelNode#removeSourceConnection(org.teiid.designer.diagram.ui.connection.NodeConnectionModel)
 	 */
+	@Override
 	public void removeSourceConnection(NodeConnectionModel iConnection) {
 		// XXX Auto-generated method stub
 
@@ -378,6 +419,7 @@ public class FreeNavigationModelNode implements NavigationModelNode, UiConstants
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.relationship.ui.navigation.model.NavigationModelNode#removeTargetConnection(org.teiid.designer.diagram.ui.connection.NodeConnectionModel)
 	 */
+	@Override
 	public void removeTargetConnection(NodeConnectionModel iConnection) {
 		// XXX Auto-generated method stub
 

@@ -36,28 +36,32 @@ public class NavigationMarker implements IMarker {
     /* (non-Javadoc)
      * @see org.eclipse.core.resources.IMarker#delete()
      */
-    public void delete() {
+    @Override
+	public void delete() {
 
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.core.resources.IMarker#exists()
      */
-    public boolean exists() {
+    @Override
+	public boolean exists() {
         return true;
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.core.resources.IMarker#getAttribute(java.lang.String)
      */
-    public Object getAttribute( String attributeName ) {
+    @Override
+	public Object getAttribute( String attributeName ) {
         return getAttributeMap().get( attributeName );        
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.core.resources.IMarker#getAttribute(java.lang.String, int)
      */
-    public int getAttribute( String attributeName,
+    @Override
+	public int getAttribute( String attributeName,
                              int defaultValue ) {
                
         Object oValue =  getAttributeMap().get( attributeName );
@@ -70,7 +74,8 @@ public class NavigationMarker implements IMarker {
     /* (non-Javadoc)
      * @see org.eclipse.core.resources.IMarker#getAttribute(java.lang.String, java.lang.String)
      */
-    public String getAttribute( String attributeName,
+    @Override
+	public String getAttribute( String attributeName,
                                 String defaultValue ) {
         Object oValue =  getAttributeMap().get( attributeName );
         if ( oValue != null && oValue instanceof String ) {
@@ -82,7 +87,8 @@ public class NavigationMarker implements IMarker {
     /* (non-Javadoc)
      * @see org.eclipse.core.resources.IMarker#getAttribute(java.lang.String, boolean)
      */
-    public boolean getAttribute( String attributeName,
+    @Override
+	public boolean getAttribute( String attributeName,
                                  boolean defaultValue ) {
         Object oValue =  getAttributeMap().get( attributeName );
         if ( oValue != null && oValue instanceof Boolean ) {
@@ -94,56 +100,64 @@ public class NavigationMarker implements IMarker {
     /* (non-Javadoc)
      * @see org.eclipse.core.resources.IMarker#getAttributes()
      */
-    public Map getAttributes() {
+    @Override
+	public Map getAttributes() {
         return getAttributeMap();
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.core.resources.IMarker#getAttributes(java.lang.String[])
      */
-    public Object[] getAttributes( String[] attributeNames ) {
+    @Override
+	public Object[] getAttributes( String[] attributeNames ) {
         return null;
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.core.resources.IMarker#getCreationTime()
      */
-    public long getCreationTime() {
+    @Override
+	public long getCreationTime() {
         return 0;
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.core.resources.IMarker#getId()
      */
-    public long getId() {
+    @Override
+	public long getId() {
         return 0;
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.core.resources.IMarker#getResource()
      */
-    public IResource getResource() {
+    @Override
+	public IResource getResource() {
         return null;
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.core.resources.IMarker#getType()
      */
-    public String getType() {
+    @Override
+	public String getType() {
         return null;
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.core.resources.IMarker#isSubtypeOf(java.lang.String)
      */
-    public boolean isSubtypeOf( String superType ) {
+    @Override
+	public boolean isSubtypeOf( String superType ) {
         return false;
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.core.resources.IMarker#setAttribute(java.lang.String, int)
      */
-    public void setAttribute( String attributeName,
+    @Override
+	public void setAttribute( String attributeName,
                               int value ) {
         getAttributeMap().put( attributeName, new Integer( value ) );
     }
@@ -151,7 +165,8 @@ public class NavigationMarker implements IMarker {
     /* (non-Javadoc)
      * @see org.eclipse.core.resources.IMarker#setAttribute(java.lang.String, java.lang.Object)
      */
-    public void setAttribute( String attributeName,
+    @Override
+	public void setAttribute( String attributeName,
                               Object value ) {
         getAttributeMap().put( attributeName, value );
     }
@@ -159,7 +174,8 @@ public class NavigationMarker implements IMarker {
     /* (non-Javadoc)
      * @see org.eclipse.core.resources.IMarker#setAttribute(java.lang.String, boolean)
      */
-    public void setAttribute( String attributeName,
+    @Override
+	public void setAttribute( String attributeName,
                               boolean value ) {
         getAttributeMap().put( attributeName, new Boolean( value ) );
 
@@ -168,7 +184,8 @@ public class NavigationMarker implements IMarker {
     /* (non-Javadoc)
      * @see org.eclipse.core.resources.IMarker#setAttributes(java.lang.String[], java.lang.Object[])
      */
-    public void setAttributes( String[] attributeNames,
+    @Override
+	public void setAttributes( String[] attributeNames,
                                Object[] values ) {
 
     }
@@ -176,14 +193,16 @@ public class NavigationMarker implements IMarker {
     /* (non-Javadoc)
      * @see org.eclipse.core.resources.IMarker#setAttributes(java.util.Map)
      */
-    public void setAttributes( Map attributes ) {
+    @Override
+	public void setAttributes( Map attributes ) {
         mapAttributes = attributes;
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
      */
-    public Object getAdapter(Class adapter) {
+    @Override
+	public Object getAdapter(Class adapter) {
         return null;
     }
 

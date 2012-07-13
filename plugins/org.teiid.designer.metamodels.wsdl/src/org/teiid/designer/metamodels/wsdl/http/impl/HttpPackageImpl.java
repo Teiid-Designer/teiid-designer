@@ -135,7 +135,8 @@ public class HttpPackageImpl extends EPackageImpl implements HttpPackage {
      * 
      * @generated
      */
-    public EClass getHttpAddress() {
+    @Override
+	public EClass getHttpAddress() {
         return httpAddressEClass;
     }
 
@@ -144,7 +145,8 @@ public class HttpPackageImpl extends EPackageImpl implements HttpPackage {
      * 
      * @generated
      */
-    public EAttribute getHttpAddress_Location() {
+    @Override
+	public EAttribute getHttpAddress_Location() {
         return (EAttribute)httpAddressEClass.getEStructuralFeatures().get(1);
     }
 
@@ -153,7 +155,8 @@ public class HttpPackageImpl extends EPackageImpl implements HttpPackage {
      * 
      * @generated
      */
-    public EReference getHttpAddress_Port() {
+    @Override
+	public EReference getHttpAddress_Port() {
         return (EReference)httpAddressEClass.getEStructuralFeatures().get(0);
     }
 
@@ -162,7 +165,8 @@ public class HttpPackageImpl extends EPackageImpl implements HttpPackage {
      * 
      * @generated
      */
-    public EClass getHttpBinding() {
+    @Override
+	public EClass getHttpBinding() {
         return httpBindingEClass;
     }
 
@@ -171,7 +175,8 @@ public class HttpPackageImpl extends EPackageImpl implements HttpPackage {
      * 
      * @generated
      */
-    public EAttribute getHttpBinding_Verb() {
+    @Override
+	public EAttribute getHttpBinding_Verb() {
         return (EAttribute)httpBindingEClass.getEStructuralFeatures().get(1);
     }
 
@@ -180,7 +185,8 @@ public class HttpPackageImpl extends EPackageImpl implements HttpPackage {
      * 
      * @generated
      */
-    public EReference getHttpBinding_Binding() {
+    @Override
+	public EReference getHttpBinding_Binding() {
         return (EReference)httpBindingEClass.getEStructuralFeatures().get(0);
     }
 
@@ -189,7 +195,8 @@ public class HttpPackageImpl extends EPackageImpl implements HttpPackage {
      * 
      * @generated
      */
-    public EClass getHttpOperation() {
+    @Override
+	public EClass getHttpOperation() {
         return httpOperationEClass;
     }
 
@@ -198,7 +205,8 @@ public class HttpPackageImpl extends EPackageImpl implements HttpPackage {
      * 
      * @generated
      */
-    public EAttribute getHttpOperation_Location() {
+    @Override
+	public EAttribute getHttpOperation_Location() {
         return (EAttribute)httpOperationEClass.getEStructuralFeatures().get(1);
     }
 
@@ -207,7 +215,8 @@ public class HttpPackageImpl extends EPackageImpl implements HttpPackage {
      * 
      * @generated
      */
-    public EReference getHttpOperation_BindingOperation() {
+    @Override
+	public EReference getHttpOperation_BindingOperation() {
         return (EReference)httpOperationEClass.getEStructuralFeatures().get(0);
     }
 
@@ -216,7 +225,8 @@ public class HttpPackageImpl extends EPackageImpl implements HttpPackage {
      * 
      * @generated
      */
-    public HttpFactory getHttpFactory() {
+    @Override
+	public HttpFactory getHttpFactory() {
         return (HttpFactory)getEFactoryInstance();
     }
 

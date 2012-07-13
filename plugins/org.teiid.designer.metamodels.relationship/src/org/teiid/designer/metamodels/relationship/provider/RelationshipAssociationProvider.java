@@ -28,7 +28,8 @@ public class RelationshipAssociationProvider implements AssociationProvider {
     /**
      * @see org.teiid.designer.core.association.AssociationProvider#getNewAssociationDescriptors(java.util.List)
      */
-    public Collection getNewAssociationDescriptors( final List eObjects ) {
+    @Override
+	public Collection getNewAssociationDescriptors( final List eObjects ) {
         // There must be at least two objects to create a relationship ...
         if (eObjects == null || eObjects.size() < 2) {
             return Collections.EMPTY_LIST;

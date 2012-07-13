@@ -363,14 +363,16 @@ public class EmfResourceSetImpl extends ResourceSetImpl implements EmfResourceSe
     /**
      * @see org.teiid.designer.core.resource.EmfResourceSet#getContainer()
      */
-    public Container getContainer() {
+    @Override
+	public Container getContainer() {
         return this.container;
     }
 
     /**
      * @see org.eclipse.emf.edit.domain.IEditingDomainProvider#getEditingDomain()
      */
-    public EditingDomain getEditingDomain() {
+    @Override
+	public EditingDomain getEditingDomain() {
         return ((ContainerImpl)container).getEditingDomain();
     }
 

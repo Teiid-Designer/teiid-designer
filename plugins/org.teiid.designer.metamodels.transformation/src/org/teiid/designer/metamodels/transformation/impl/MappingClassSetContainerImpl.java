@@ -69,7 +69,8 @@ public class MappingClassSetContainerImpl extends EObjectImpl implements Mapping
      * 
      * @generated
      */
-    public EList getMappingClassSets() {
+    @Override
+	public EList getMappingClassSets() {
         if (mappingClassSets == null) {
             mappingClassSets = new EObjectContainmentEList(MappingClassSet.class, this,
                                                            TransformationPackage.MAPPING_CLASS_SET_CONTAINER__MAPPING_CLASS_SETS);

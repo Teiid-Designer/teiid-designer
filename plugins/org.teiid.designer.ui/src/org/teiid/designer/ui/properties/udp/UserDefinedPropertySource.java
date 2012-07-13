@@ -38,14 +38,16 @@ public class UserDefinedPropertySource implements IPropertySource {
     /* (non-Javadoc)
      * @see org.eclipse.ui.views.properties.IPropertySource#getEditableValue()
      */
-    public Object getEditableValue() {
+    @Override
+	public Object getEditableValue() {
         return this.object;
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.ui.views.properties.IPropertySource#getPropertyDescriptors()
      */
-    public IPropertyDescriptor[] getPropertyDescriptors() {
+    @Override
+	public IPropertyDescriptor[] getPropertyDescriptors() {
         final Collection temp = new ArrayList();
         final Iterator iter = tags.iterator();
         while(iter.hasNext() ) {
@@ -73,7 +75,8 @@ public class UserDefinedPropertySource implements IPropertySource {
     /* (non-Javadoc)
      * @see org.eclipse.ui.views.properties.IPropertySource#getPropertyValue(java.lang.Object)
      */
-    public Object getPropertyValue(Object id) {
+    @Override
+	public Object getPropertyValue(Object id) {
         if ( id instanceof EStringToStringMapEntryImpl ) {
             return ((EStringToStringMapEntryImpl) id).getValue();
         }
@@ -83,14 +86,16 @@ public class UserDefinedPropertySource implements IPropertySource {
     /* (non-Javadoc)
      * @see org.eclipse.ui.views.properties.IPropertySource#isPropertySet(java.lang.Object)
      */
-    public boolean isPropertySet(Object id) {
+    @Override
+	public boolean isPropertySet(Object id) {
         return getPropertyValue(id) != null;
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.ui.views.properties.IPropertySource#resetPropertyValue(java.lang.Object)
      */
-    public void resetPropertyValue(Object id) {
+    @Override
+	public void resetPropertyValue(Object id) {
         if ( id instanceof EStringToStringMapEntryImpl ) {
             EStringToStringMapEntryImpl entry = (EStringToStringMapEntryImpl) id;
             String name = entry.getKey();
@@ -114,7 +119,8 @@ public class UserDefinedPropertySource implements IPropertySource {
     /* (non-Javadoc)
      * @see org.eclipse.ui.views.properties.IPropertySource#setPropertyValue(java.lang.Object, java.lang.Object)
      */
-    public void setPropertyValue(Object id, Object value) {
+    @Override
+	public void setPropertyValue(Object id, Object value) {
         if ( id instanceof EStringToStringMapEntryImpl ) {
 
             EStringToStringMapEntryImpl entry = (EStringToStringMapEntryImpl) id;

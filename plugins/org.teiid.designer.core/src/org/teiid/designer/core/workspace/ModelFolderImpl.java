@@ -64,7 +64,8 @@ public class ModelFolderImpl extends OpenableImpl implements ModelFolder {
      * @see org.teiid.designer.core.workspace.ModelProject#getNonModelingResources()
      * @since 4.0
      */
-    public Object[] getNonModelingResources() throws ModelWorkspaceException {
+    @Override
+	public Object[] getNonModelingResources() throws ModelWorkspaceException {
         return ((ModelFolderInfo)getItemInfo()).getNonModelResources(this);
     }
 
@@ -72,7 +73,8 @@ public class ModelFolderImpl extends OpenableImpl implements ModelFolder {
      * @see org.teiid.designer.core.workspace.ModelWorkspaceItem#getPath()
      * @since 4.0
      */
-    public IPath getPath() {
+    @Override
+	public IPath getPath() {
         if (this.path == null) {
             return this.getFolder().getFullPath();
         }
@@ -91,7 +93,8 @@ public class ModelFolderImpl extends OpenableImpl implements ModelFolder {
      * @see org.teiid.designer.core.workspace.ModelProject#getProject()
      * @since 4.0
      */
-    public IFolder getFolder() {
+    @Override
+	public IFolder getFolder() {
         return ifolder;
     }
 
@@ -99,7 +102,8 @@ public class ModelFolderImpl extends OpenableImpl implements ModelFolder {
      * @see org.teiid.designer.core.workspace.ModelWorkspaceItem#getResource()
      * @since 4.0
      */
-    public IResource getResource() {
+    @Override
+	public IResource getResource() {
         return this.getFolder();
     }
 
@@ -262,7 +266,8 @@ public class ModelFolderImpl extends OpenableImpl implements ModelFolder {
      *         be null if the supplied resource doesn't represent a model or a folder
      * @throws ModelWorkspaceException
      */
-    public ModelWorkspaceItem getModelWorkspaceItem( IResource resource ) throws ModelWorkspaceException {
+    @Override
+	public ModelWorkspaceItem getModelWorkspaceItem( IResource resource ) throws ModelWorkspaceException {
         CoreArgCheck.isNotNull(resource);
         final ModelWorkspaceItem[] children = getChildren();
         for (int i = 0; i < children.length; i++) {

@@ -91,7 +91,8 @@ public class ValidationPreferencesImpl implements ValidationPreferences {
         return prefs.get(getFullName(theDescriptor), ""); //$NON-NLS-1$
     }
 
-    public List getValidationDescriptors() {
+    @Override
+	public List getValidationDescriptors() {
         return validationDescriptors;
     }
 
@@ -106,7 +107,8 @@ public class ValidationPreferencesImpl implements ValidationPreferences {
      * @param newOptions the new options (key type: <code>ValidationDescriptor</code>; value type: <code>String</code>),
      *   or <code>null</code> to reset all options to their default values
      */
-    public void setOptions(Map newOptions) {
+    @Override
+	public void setOptions(Map newOptions) {
 
         // see #initializeDefaultPluginPreferences() for changing default settings
         IEclipsePreferences preferences = ModelerCore.getPreferences(ModelerCore.PLUGIN_ID);
@@ -139,7 +141,8 @@ public class ValidationPreferencesImpl implements ValidationPreferences {
      * @return Map of current settings of all options 
      *   (key type: <code>String</code>; value type: <code>String</code>)
      */
-    public Map getOptions() {
+    @Override
+	public Map getOptions() {
         Map options = new HashMap();
 
         // see #initializeDefaultPluginPreferences() for changing default settings

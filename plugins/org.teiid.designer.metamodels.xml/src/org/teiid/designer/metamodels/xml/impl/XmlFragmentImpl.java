@@ -116,7 +116,8 @@ public class XmlFragmentImpl extends XmlDocumentEntityImpl implements XmlFragmen
      * <!-- end-user-doc -->
      * @generated
      */
-    public EList getComments() {
+    @Override
+	public EList getComments() {
         if (comments == null) {
             comments = new EObjectContainmentWithInverseEList(XmlComment.class, this, XmlDocumentPackage.XML_FRAGMENT__COMMENTS, XmlDocumentPackage.XML_COMMENT__PARENT);
         }
@@ -128,7 +129,8 @@ public class XmlFragmentImpl extends XmlDocumentEntityImpl implements XmlFragmen
      * <!-- end-user-doc -->
      * @generated
      */
-    public EList getProcessingInstructions() {
+    @Override
+	public EList getProcessingInstructions() {
         if (processingInstructions == null) {
             processingInstructions = new EObjectContainmentWithInverseEList(ProcessingInstruction.class, this, XmlDocumentPackage.XML_FRAGMENT__PROCESSING_INSTRUCTIONS, XmlDocumentPackage.PROCESSING_INSTRUCTION__PARENT);
         }
@@ -140,7 +142,8 @@ public class XmlFragmentImpl extends XmlDocumentEntityImpl implements XmlFragmen
      * <!-- end-user-doc -->
      * @generated
      */
-    public String getName() {
+    @Override
+	public String getName() {
         return name;
     }
 
@@ -149,7 +152,8 @@ public class XmlFragmentImpl extends XmlDocumentEntityImpl implements XmlFragmen
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setName(String newName) {
+    @Override
+	public void setName(String newName) {
         String oldName = name;
         name = newName;
         if (eNotificationRequired())
@@ -161,7 +165,8 @@ public class XmlFragmentImpl extends XmlDocumentEntityImpl implements XmlFragmen
      * <!-- end-user-doc -->
      * @generated
      */
-    public XmlRoot getRoot() {
+    @Override
+	public XmlRoot getRoot() {
         return root;
     }
 
@@ -185,7 +190,8 @@ public class XmlFragmentImpl extends XmlDocumentEntityImpl implements XmlFragmen
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setRoot(XmlRoot newRoot) {
+    @Override
+	public void setRoot(XmlRoot newRoot) {
         if (newRoot != root) {
             NotificationChain msgs = null;
             if (root != null)

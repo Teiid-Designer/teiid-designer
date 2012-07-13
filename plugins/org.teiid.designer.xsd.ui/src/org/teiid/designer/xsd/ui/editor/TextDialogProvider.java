@@ -41,7 +41,8 @@ public class TextDialogProvider implements DialogProvider {
         dialogDescriptionKey = descriptionKey;
     }
 
-    public void showDialog( Shell shell,
+    @Override
+	public void showDialog( Shell shell,
                             Object initialValue ) {
         value = initialValue;
         String desc = getDescriptionText(initialValue);
@@ -52,7 +53,8 @@ public class TextDialogProvider implements DialogProvider {
                 Control control = super.createDialogArea(parent);
                 // use a traverse listener to do this skip:
                 getText().addTraverseListener(new TraverseListener() {
-                    public void keyTraversed( TraverseEvent e ) {
+                    @Override
+					public void keyTraversed( TraverseEvent e ) {
                         handleKeyTraversed(e);
                     }
                 });
@@ -72,15 +74,18 @@ public class TextDialogProvider implements DialogProvider {
         value = idlg.getValue();
     }
 
-    public boolean wasCancelled() {
+    @Override
+	public boolean wasCancelled() {
         return value == null;
     }
 
-    public Object getValue() {
+    @Override
+	public Object getValue() {
         return value;
     }
 
-    public String getLaunchButtonText() {
+    @Override
+	public String getLaunchButtonText() {
         return buttonText;
     }
 

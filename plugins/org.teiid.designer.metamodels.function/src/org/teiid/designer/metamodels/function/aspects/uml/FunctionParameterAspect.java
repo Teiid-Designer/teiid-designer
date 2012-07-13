@@ -32,21 +32,24 @@ public class FunctionParameterAspect extends AbstractFunctionAspect implements U
     /** 
      * @see org.teiid.designer.core.metamodel.aspect.uml.UmlProperty#isAssociationEnd(java.lang.Object)
      */
-    public boolean isAssociationEnd(Object property) {
+    @Override
+	public boolean isAssociationEnd(Object property) {
         return false;
     }
     
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodels.aspects.UmlDiagramAspect#getStereotype(java.lang.Object)
      */
-    public String getStereotype(Object eObject) {
+    @Override
+	public String getStereotype(Object eObject) {
         return FunctionPlugin.getPluginResourceLocator().getString("_UI_FunctionParameter_type"); //$NON-NLS-1$
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodels.aspects.UmlDiagramAspect#setSignature(java.lang.Object, java.lang.String)
      */
-    public IStatus setSignature(Object eObject, String newSignature) {
+    @Override
+	public IStatus setSignature(Object eObject, String newSignature) {
         try {
             FunctionParameter param = assertFunctionParameter(eObject);
             param.setName(newSignature);
@@ -57,7 +60,8 @@ public class FunctionParameterAspect extends AbstractFunctionAspect implements U
         return new Status(IStatus.OK, FunctionPlugin.PLUGIN_ID, 0, FunctionPlugin.Util.getString("FunctionParameterAspect.ok"), null); //$NON-NLS-1$
     }
 
-    public String getSignature(Object eObject, int showMask) {
+    @Override
+	public String getSignature(Object eObject, int showMask) {
         FunctionParameter param = assertFunctionParameter(eObject);
         StringBuffer result = new StringBuffer();
         //case 16 is for properties, which should return an empty string, so 

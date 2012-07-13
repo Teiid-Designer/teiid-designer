@@ -18,7 +18,8 @@ public class CatalogFinder extends RelationalEntityFinder {
     /*
      * @See org.teiid.designer.core.util.ModelVisitor#visit(org.eclipse.emf.ecore.EObject)
      */
-    public boolean visit( EObject object ) {
+    @Override
+	public boolean visit( EObject object ) {
         if (object instanceof Catalog) {
             // collect the catalog
             found((Catalog)object);

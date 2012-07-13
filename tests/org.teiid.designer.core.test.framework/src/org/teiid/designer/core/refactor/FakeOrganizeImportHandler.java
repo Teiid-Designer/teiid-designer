@@ -50,7 +50,8 @@ public class FakeOrganizeImportHandler implements OrganizeImportHandler {
      * Always chooses the first option, or null if there aren't any
      * @see org.teiid.designer.core.refactor.OrganizeImportHandler#choose(java.util.List)
      */
-    public Object choose(final List options) {
+    @Override
+	public Object choose(final List options) {
         this.handlerCalled = true;
         if ( this.checkExpectedOptionCount ) {
             if ( options == null || options.isEmpty() ) {

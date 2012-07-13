@@ -306,20 +306,25 @@ public class XsdEditor extends MultiPageEditorPart
      * This listens for when things becomes active.
      */
     protected IPartListener partListener = new IPartListener() {
-        public void partActivated( IWorkbenchPart p ) {
+        @Override
+		public void partActivated( IWorkbenchPart p ) {
             handlePartActivated(p);
         }
 
-        public void partBroughtToTop( IWorkbenchPart p ) {
+        @Override
+		public void partBroughtToTop( IWorkbenchPart p ) {
         }
 
-        public void partClosed( IWorkbenchPart p ) {
+        @Override
+		public void partClosed( IWorkbenchPart p ) {
         }
 
-        public void partDeactivated( IWorkbenchPart p ) {
+        @Override
+		public void partDeactivated( IWorkbenchPart p ) {
         }
 
-        public void partOpened( IWorkbenchPart p ) {
+        @Override
+		public void partOpened( IWorkbenchPart p ) {
         }
     };
 
@@ -341,9 +346,11 @@ public class XsdEditor extends MultiPageEditorPart
         // Add a listener to set the most recent command's affected objects to be the selection of the viewer with focus.
         //
         commandStack.addCommandStackListener(new CommandStackListener() {
-            public void commandStackChanged( final EventObject event ) {
+            @Override
+			public void commandStackChanged( final EventObject event ) {
                 getParentComposite().getDisplay().asyncExec(new Runnable() {
-                    public void run() {
+                    @Override
+					public void run() {
                         firePropertyChange(IEditorPart.PROP_DIRTY);
 
                         // Try to select the affected objects.
@@ -485,7 +492,8 @@ public class XsdEditor extends MultiPageEditorPart
             //
             //
             Runnable runnable = new Runnable() {
-                public void run() {
+                @Override
+				public void run() {
                     // Try to select the items in the current content viewer of the editor.
                     //
                     if (currentViewer != null) {
@@ -501,7 +509,8 @@ public class XsdEditor extends MultiPageEditorPart
      * This returns the editing domain as required by the {@link IEditingDomainProvider} interface. This is important for
      * implementing the static methods of {@link AdapterFactoryEditingDomain} and for supporting {@link CommandAction}.
      */
-    public EditingDomain getEditingDomain() {
+    @Override
+	public EditingDomain getEditingDomain() {
         return editingDomain;
     }
 
@@ -532,7 +541,8 @@ public class XsdEditor extends MultiPageEditorPart
                 selectionChangedListener = new ISelectionChangedListener() {
                     // This just notifies those things that are affected by the section.
                     //
-                    public void selectionChanged( SelectionChangedEvent selectionChangedEvent ) {
+                    @Override
+					public void selectionChanged( SelectionChangedEvent selectionChangedEvent ) {
                         setSelection(selectionChangedEvent.getSelection());
                     }
                 };
@@ -652,7 +662,8 @@ public class XsdEditor extends MultiPageEditorPart
          * This implements {@link ISelectionChangedListener}, handling SelectionChangedEvents by querying for the children and
          * siblings that can be added to the selected object and updating the menus accordingly.
          */
-        public void selectionChanged( SelectionChangedEvent event ) {
+        @Override
+		public void selectionChanged( SelectionChangedEvent event ) {
             // remove any menu items for old selection
             if (createChildMenuManager != null) {
                 depopulateManager(createChildMenuManager, createChildActions);
@@ -827,20 +838,25 @@ public class XsdEditor extends MultiPageEditorPart
 
             // code to close the editor when the resource is deleted
             textEditor.getDocumentProvider().addElementStateListener(new IElementStateListener() {
-                public void elementDirtyStateChanged( Object element,
+                @Override
+				public void elementDirtyStateChanged( Object element,
                                                       boolean isDirty ) {
                 }
 
-                public void elementContentAboutToBeReplaced( Object element ) {
+                @Override
+				public void elementContentAboutToBeReplaced( Object element ) {
                 }
 
-                public void elementContentReplaced( Object element ) {
+                @Override
+				public void elementContentReplaced( Object element ) {
                 }
 
-                public void elementDeleted( Object element ) {
+                @Override
+				public void elementDeleted( Object element ) {
                     Display display = getSite().getShell().getDisplay();
                     display.asyncExec(new Runnable() {
-                        public void run() {
+                        @Override
+						public void run() {
                             if (sourceViewer != null) {
                                 getSite().getPage().closeEditor(XsdEditor.this, false);
                             }
@@ -848,7 +864,8 @@ public class XsdEditor extends MultiPageEditorPart
                     });
                 }
 
-                public void elementMoved( Object originalElement,
+                @Override
+				public void elementMoved( Object originalElement,
                                           Object movedElement ) {
                 }
             });
@@ -1059,10 +1076,12 @@ public class XsdEditor extends MultiPageEditorPart
                 protected Timer timer = new Timer();
                 protected TimerTask timerTask;
 
-                public void documentAboutToBeChanged( DocumentEvent documentEvent ) {
+                @Override
+				public void documentAboutToBeChanged( DocumentEvent documentEvent ) {
                 }
 
-                public void documentChanged( final DocumentEvent documentEvent ) {
+                @Override
+				public void documentChanged( final DocumentEvent documentEvent ) {
                     try {
                         // This is need for the Properties view.
                         //
@@ -1080,7 +1099,8 @@ public class XsdEditor extends MultiPageEditorPart
                                 @Override
                                 public void run() {
                                     getSite().getShell().getDisplay().asyncExec(new Runnable() {
-                                        public void run() {
+                                        @Override
+										public void run() {
                                             handleDocumentChange();
                                         }
                                     });
@@ -1127,7 +1147,8 @@ public class XsdEditor extends MultiPageEditorPart
             semanticSelectionViewer.addSelectionChangedListener(new ISelectionChangedListener() {
                 // This just notifies those things that are affected by the section.
                 //
-                public void selectionChanged( SelectionChangedEvent selectionChangedEvent ) {
+                @Override
+				public void selectionChanged( SelectionChangedEvent selectionChangedEvent ) {
                     if (currentViewer == semanticSelectionViewer && contentOutlineViewer != null) {
                         contentOutlineViewer.setSelection(selectionChangedEvent.getSelection(), true);
                     }
@@ -1213,7 +1234,8 @@ public class XsdEditor extends MultiPageEditorPart
             IWorkspaceRunnable operation = new IWorkspaceRunnable() {
                 // This is the method that gets invoked when the operation runs.
                 //
-                public void run( IProgressMonitor localProgressMonitor ) {
+                @Override
+				public void run( IProgressMonitor localProgressMonitor ) {
                     handleDiagnostics(localProgressMonitor);
                 }
             };
@@ -1297,7 +1319,8 @@ public class XsdEditor extends MultiPageEditorPart
             else if (newSelection != null) {
                 final IStructuredSelection errorSelection = new StructuredSelection(newSelection);
                 getSite().getShell().getDisplay().asyncExec(new Runnable() {
-                    public void run() {
+                    @Override
+					public void run() {
                         if (contentOutlineViewer != null) {
                             contentOutlineViewer.setSelection(errorSelection, true);
                         }
@@ -1510,7 +1533,8 @@ public class XsdEditor extends MultiPageEditorPart
                     this.addSelectionChangedListener(new ISelectionChangedListener() {
                         // This ensures that we handle selections correctly.
                         //
-                        public void selectionChanged( SelectionChangedEvent event ) {
+                        @Override
+						public void selectionChanged( SelectionChangedEvent event ) {
                             ISelection s = event.getSelection();
                             if (contentOutlineViewer == currentViewer) {
                                 handleContentOutlineSelection(s);
@@ -1553,7 +1577,8 @@ public class XsdEditor extends MultiPageEditorPart
             contentOutlinePage.addSelectionChangedListener(new ISelectionChangedListener() {
                 // This ensures that we handle selections correctly.
                 //
-                public void selectionChanged( SelectionChangedEvent event ) {
+                @Override
+				public void selectionChanged( SelectionChangedEvent event ) {
                     if (contentOutlineViewer == currentViewer) {
                         handleContentOutlineSelection(event.getSelection());
                     }
@@ -1581,7 +1606,8 @@ public class XsdEditor extends MultiPageEditorPart
                 @Override
                 public void notifyChanged( final Notification notification ) {
                     getParentComposite().getDisplay().asyncExec(new Runnable() {
-                        public void run() {
+                        @Override
+						public void run() {
                             propertySheetPage.refresh();
                         }
                     });
@@ -1788,7 +1814,8 @@ public class XsdEditor extends MultiPageEditorPart
         }
     }
 
-    public void gotoMarker( IMarker marker ) {
+    @Override
+	public void gotoMarker( IMarker marker ) {
         try {
             /*
                   if (marker.getType().equals(XSDDiagnostic.MARKER) && xsdSchema != null)
@@ -1859,21 +1886,24 @@ public class XsdEditor extends MultiPageEditorPart
     /**
      * This implements {@link org.eclipse.jface.viewers.ISelectionProvider}.
      */
-    public void addSelectionChangedListener( ISelectionChangedListener listener ) {
+    @Override
+	public void addSelectionChangedListener( ISelectionChangedListener listener ) {
         selectionChangedListeners.add(listener);
     }
 
     /**
      * This implements {@link org.eclipse.jface.viewers.ISelectionProvider}.
      */
-    public void removeSelectionChangedListener( ISelectionChangedListener listener ) {
+    @Override
+	public void removeSelectionChangedListener( ISelectionChangedListener listener ) {
         selectionChangedListeners.remove(listener);
     }
 
     /**
      * This implements {@link org.eclipse.jface.viewers.ISelectionProvider} to return this editor's overall selection.
      */
-    public ISelection getSelection() {
+    @Override
+	public ISelection getSelection() {
         return editorSelection;
     }
 
@@ -1881,7 +1911,8 @@ public class XsdEditor extends MultiPageEditorPart
      * This implements {@link org.eclipse.jface.viewers.ISelectionProvider} to set this editor's overall selection. Calling this
      * result will notify the listeners.
      */
-    public void setSelection( ISelection selection ) {
+    @Override
+	public void setSelection( ISelection selection ) {
         editorSelection = selection;
 
         SelectionChangedEvent selectionChangedEvent = new SelectionChangedEvent(this, selection);
@@ -1940,7 +1971,8 @@ public class XsdEditor extends MultiPageEditorPart
      * This implements {@link org.eclipse.jface.action.IMenuListener} to help fill the context menus with contributions from the
      * Edit menu.
      */
-    public void menuAboutToShow( IMenuManager menuManager ) {
+    @Override
+	public void menuAboutToShow( IMenuManager menuManager ) {
         ((IMenuListener)getEditorSite().getActionBarContributor()).menuAboutToShow(menuManager);
     }
 

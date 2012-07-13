@@ -99,7 +99,8 @@ public class JdbcImportOptionsImpl extends EObjectImpl implements JdbcImportOpti
      * <!-- end-user-doc -->
      * @generated
      */
-    public JdbcImportSettings getImportSettings() {
+    @Override
+	public JdbcImportSettings getImportSettings() {
         if (eContainerFeatureID != JdbcPackage.JDBC_IMPORT_OPTIONS__IMPORT_SETTINGS) return null;
         return (JdbcImportSettings)eContainer;
     }
@@ -109,7 +110,8 @@ public class JdbcImportOptionsImpl extends EObjectImpl implements JdbcImportOpti
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setImportSettings(JdbcImportSettings newImportSettings) {
+    @Override
+	public void setImportSettings(JdbcImportSettings newImportSettings) {
         if (newImportSettings != eContainer || (eContainerFeatureID != JdbcPackage.JDBC_IMPORT_OPTIONS__IMPORT_SETTINGS && newImportSettings != null)) {
             if (EcoreUtil.isAncestor(this, newImportSettings))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
@@ -130,7 +132,8 @@ public class JdbcImportOptionsImpl extends EObjectImpl implements JdbcImportOpti
      * <!-- end-user-doc -->
      * @generated
      */
-    public String getName() {
+    @Override
+	public String getName() {
         return name;
     }
 
@@ -139,7 +142,8 @@ public class JdbcImportOptionsImpl extends EObjectImpl implements JdbcImportOpti
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setName(String newName) {
+    @Override
+	public void setName(String newName) {
         String oldName = name;
         name = newName;
         if (eNotificationRequired())
@@ -151,7 +155,8 @@ public class JdbcImportOptionsImpl extends EObjectImpl implements JdbcImportOpti
      * <!-- end-user-doc -->
      * @generated
      */
-    public String getValue() {
+    @Override
+	public String getValue() {
         return value;
     }
 
@@ -160,7 +165,8 @@ public class JdbcImportOptionsImpl extends EObjectImpl implements JdbcImportOpti
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setValue(String newValue) {
+    @Override
+	public void setValue(String newValue) {
         String oldValue = value;
         value = newValue;
         if (eNotificationRequired())

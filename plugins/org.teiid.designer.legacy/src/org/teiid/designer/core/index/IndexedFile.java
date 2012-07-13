@@ -50,6 +50,7 @@ public class IndexedFile implements IQueryResult, Comparable<IndexedFile> {
 	/**
 	 * Returns the path.
 	 */
+	@Override
 	public String getPath() {
 		return path;
 	}
@@ -63,6 +64,7 @@ public class IndexedFile implements IQueryResult, Comparable<IndexedFile> {
     public String toString() {
 		return "IndexedFile(" + fileNumber + ": " + path + ")"; //$NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-3$
 	}
+	@Override
 	public int compareTo(IndexedFile other) {
 		return this.path.compareTo(other.path);
 	}

@@ -180,7 +180,8 @@ public class ModelWorkspacePanel extends Composite implements IFinderPanel, ISel
      * Method declared on Dialog.
      */
 
-    public void selectionChanged( SelectionChangedEvent event ) {
+    @Override
+	public void selectionChanged( SelectionChangedEvent event ) {
         IStructuredSelection sel = (IStructuredSelection)getTreeViewer().getSelection();
 
         if (sel.getFirstElement() instanceof EObject) {
@@ -286,7 +287,8 @@ public class ModelWorkspacePanel extends Composite implements IFinderPanel, ISel
      * 
      * @param validator the validator to validate the selection.
      */
-    public void setValidator( ISelectionStatusValidator validator ) {
+    @Override
+	public void setValidator( ISelectionStatusValidator validator ) {
         fValidator = validator;
     }
 
@@ -318,7 +320,8 @@ public class ModelWorkspacePanel extends Composite implements IFinderPanel, ISel
      */
     public void create() {
         BusyIndicator.showWhile(null, new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 fViewer.setSelection(new StructuredSelection(getInitialElementSelections()), true);
                 updateOKStatus();
             }
@@ -370,7 +373,8 @@ public class ModelWorkspacePanel extends Composite implements IFinderPanel, ISel
         fViewer.setContentProvider(fContentProvider);
         fViewer.setLabelProvider(fLabelProvider);
         fViewer.addSelectionChangedListener(new ISelectionChangedListener() {
-            public void selectionChanged( SelectionChangedEvent event ) {
+            @Override
+			public void selectionChanged( SelectionChangedEvent event ) {
                 access$setResult(((IStructuredSelection)event.getSelection()).toList());
                 updateOKStatus();
             }
@@ -395,7 +399,8 @@ public class ModelWorkspacePanel extends Composite implements IFinderPanel, ISel
             });
         }
         fViewer.addDoubleClickListener(new IDoubleClickListener() {
-            public void doubleClick( DoubleClickEvent event ) {
+            @Override
+			public void doubleClick( DoubleClickEvent event ) {
                 updateOKStatus();
 
                 // If it is not OK or if double click does not
@@ -434,7 +439,8 @@ public class ModelWorkspacePanel extends Composite implements IFinderPanel, ISel
         setResult(result);
     }
 
-    public void createButtonsForButtonBar( Composite parent ) {
+    @Override
+	public void createButtonsForButtonBar( Composite parent ) {
 
         // listen to selection in the tree
         if (getTreeViewer() != null) {
@@ -442,15 +448,18 @@ public class ModelWorkspacePanel extends Composite implements IFinderPanel, ISel
         }
     }
 
-    public void handleOkPressed() {
+    @Override
+	public void handleOkPressed() {
 
     }
 
-    public void handleCancelPressed() {
+    @Override
+	public void handleCancelPressed() {
 
     }
 
-    public void updateOKStatus() {
+    @Override
+	public void updateOKStatus() {
         //        System.out.println("[ModelWOrkspacePanel.updateOkStatus] TOP"); //$NON-NLS-1$
         if (!fIsEmpty) {
             if (fValidator != null) {
@@ -467,11 +476,13 @@ public class ModelWorkspacePanel extends Composite implements IFinderPanel, ISel
         getHost().updateTheStatus(fCurrStatus);
     }
 
-    public String getTitle() {
+    @Override
+	public String getTitle() {
         return TITLE;
     }
 
-    public Object[] getResult() {
+    @Override
+	public Object[] getResult() {
         return result;
     }
 }

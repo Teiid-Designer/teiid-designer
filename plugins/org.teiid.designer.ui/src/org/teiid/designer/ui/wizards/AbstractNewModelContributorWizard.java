@@ -145,7 +145,8 @@ public abstract class AbstractNewModelContributorWizard extends AbstractWizard i
     protected void doFinish(final ModelResource modelResource,
                              final IProgressMonitor theMonitor ) {
         getShell().getDisplay().syncExec(new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 getContributor().doFinish(modelResource, theMonitor);
             }
         });

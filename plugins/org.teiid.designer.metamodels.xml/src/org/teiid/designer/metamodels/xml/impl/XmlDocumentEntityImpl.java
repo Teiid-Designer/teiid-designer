@@ -47,7 +47,8 @@ public abstract class XmlDocumentEntityImpl extends EObjectImpl implements XmlDo
      * <!-- end-user-doc -->
      * @generated NOT
      */
-    public String getPathInDocument() {
+    @Override
+	public String getPathInDocument() {
         return XmlDocumentUtil.getPathInDocument(this);
     }
 
@@ -67,7 +68,8 @@ public abstract class XmlDocumentEntityImpl extends EObjectImpl implements XmlDo
      * <!-- end-user-doc -->
      * @generated NOT
      */
-    public String getXPath() {
+    @Override
+	public String getXPath() {
         return XmlDocumentUtil.getXPath(this);
     }
 

@@ -422,16 +422,19 @@ public class RelationshipNodeFigure extends AbstractDiagramFigure implements Dir
             editButton.setSize(new Dimension(image.getImageData().width + 6, image.getImageData().height + 4));
 
             editButton.addActionListener(new ActionListener() {
-                public void actionPerformed( ActionEvent event ) {
+                @Override
+				public void actionPerformed( ActionEvent event ) {
                     Display.getCurrent().asyncExec(new Runnable() {
-                        public void run() {
+                        @Override
+						public void run() {
                             // We need to call some generic edit event here
                             final Diagram diagram = RelationshipDiagramUtil.getRelationshipRelationshipDiagram(getDiagramModelNode().getModelObject(),
                                                                                                                editButton,
                                                                                                                true);
                             if (diagram != null) {
                                 UiBusyIndicator.showWhile(Display.getCurrent(), new Runnable() {
-                                    public void run() {
+                                    @Override
+									public void run() {
                                         RelationshipDiagramUtil.openDiagram(diagram);
                                     }
                                 });
@@ -461,16 +464,19 @@ public class RelationshipNodeFigure extends AbstractDiagramFigure implements Dir
             restoreButton.setSize(new Dimension(image.getImageData().width + 6, image.getImageData().height + 4));
 
             restoreButton.addActionListener(new ActionListener() {
-                public void actionPerformed( ActionEvent event ) {
+                @Override
+				public void actionPerformed( ActionEvent event ) {
                     Display.getCurrent().asyncExec(new Runnable() {
-                        public void run() {
+                        @Override
+						public void run() {
                             // We need to call some generic edit event here
                             final Diagram diagram = RelationshipDiagramUtil.getRelationshipDiagram(getDiagramModelNode().getModelObject(),
                                                                                                    editButton,
                                                                                                    true);
                             if (diagram != null) {
                                 UiBusyIndicator.showWhile(Display.getCurrent(), new Runnable() {
-                                    public void run() {
+                                    @Override
+									public void run() {
                                         factory.restoreRelationship(getDiagramModelNode().getModelObject(),
                                                                     getDiagramModelNode().getParent());
                                     }
@@ -524,7 +530,8 @@ public class RelationshipNodeFigure extends AbstractDiagramFigure implements Dir
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.util.directedit.DirectEditFigure#getLabelFigure()
      */
-    public Label getLabelFigure() {
+    @Override
+	public Label getLabelFigure() {
         if (nameLabel != null) return nameLabel.getLabel();
         return null;
     }

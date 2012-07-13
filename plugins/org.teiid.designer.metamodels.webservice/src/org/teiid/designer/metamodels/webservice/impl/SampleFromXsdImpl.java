@@ -100,7 +100,8 @@ public class SampleFromXsdImpl extends EObjectImpl implements SampleFromXsd {
      * 
      * @generated
      */
-    public int getMaxNumberOfLevelsToBuild() {
+    @Override
+	public int getMaxNumberOfLevelsToBuild() {
         return maxNumberOfLevelsToBuild;
     }
 
@@ -109,7 +110,8 @@ public class SampleFromXsdImpl extends EObjectImpl implements SampleFromXsd {
      * 
      * @generated NOT
      */
-    public void setMaxNumberOfLevelsToBuild( int newMaxNumberOfLevelsToBuild ) {
+    @Override
+	public void setMaxNumberOfLevelsToBuild( int newMaxNumberOfLevelsToBuild ) {
         int oldMaxNumberOfLevelsToBuild = maxNumberOfLevelsToBuild;
         if (oldMaxNumberOfLevelsToBuild != newMaxNumberOfLevelsToBuild) {
             maxNumberOfLevelsToBuild = newMaxNumberOfLevelsToBuild;
@@ -143,7 +145,8 @@ public class SampleFromXsdImpl extends EObjectImpl implements SampleFromXsd {
      * 
      * @generated NOT
      */
-    public XmlElement getSampleFragment() {
+    @Override
+	public XmlElement getSampleFragment() {
         if (sampleFragment == null) {
             this.setSampleFragment(generateSampleFragment());
         }
@@ -229,7 +232,8 @@ public class SampleFromXsdImpl extends EObjectImpl implements SampleFromXsd {
      * 
      * @generated
      */
-    public void setSampleFragment( XmlElement newSampleFragment ) {
+    @Override
+	public void setSampleFragment( XmlElement newSampleFragment ) {
         if (newSampleFragment != sampleFragment) {
             NotificationChain msgs = null;
             if (sampleFragment != null) msgs = ((InternalEObject)sampleFragment).eInverseRemove(this,
@@ -254,7 +258,8 @@ public class SampleFromXsdImpl extends EObjectImpl implements SampleFromXsd {
      * 
      * @generated
      */
-    public SampleMessages getSampleMessages() {
+    @Override
+	public SampleMessages getSampleMessages() {
         if (eContainerFeatureID != WebServicePackage.SAMPLE_FROM_XSD__SAMPLE_MESSAGES) return null;
         return (SampleMessages)eContainer;
     }
@@ -264,7 +269,8 @@ public class SampleFromXsdImpl extends EObjectImpl implements SampleFromXsd {
      * 
      * @generated
      */
-    public void setSampleMessages( SampleMessages newSampleMessages ) {
+    @Override
+	public void setSampleMessages( SampleMessages newSampleMessages ) {
         if (newSampleMessages != eContainer
             || (eContainerFeatureID != WebServicePackage.SAMPLE_FROM_XSD__SAMPLE_MESSAGES && newSampleMessages != null)) {
             if (EcoreUtil.isAncestor(this, newSampleMessages)) throw new IllegalArgumentException(

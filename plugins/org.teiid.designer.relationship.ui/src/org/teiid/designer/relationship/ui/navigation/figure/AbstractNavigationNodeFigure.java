@@ -78,19 +78,23 @@ abstract public class AbstractNavigationNodeFigure extends Ellipse implements Na
 		return true;
 	}
 	
+	@Override
 	public void layoutFigure() {
 		super.layout();
 	}
     
+	@Override
 	public void activate() {
 		// Default implementation does nothing;
 	}
     
+	@Override
 	public void deactivate() {
 		// Default implementation does nothing;
 	}
     
     
+	@Override
 	public void updateForSize(Dimension newSize ) {
 		setSize(newSize);
 //		circle.repaint();
@@ -99,6 +103,7 @@ abstract public class AbstractNavigationNodeFigure extends Ellipse implements Na
 	}
     
     
+	@Override
 	public void updateForLocation(Point newLocation ) {
 		this.setLocation(newLocation);
 	}
@@ -116,6 +121,7 @@ abstract public class AbstractNavigationNodeFigure extends Ellipse implements Na
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.relationship.ui.navigation.figure.NavigationNodeFigure#hiliteBackground(org.eclipse.swt.graphics.Color)
 	 */
+	@Override
 	public void hiliteBackground(Color hiliteColor) {
 		// XXX Auto-generated method stub
 
@@ -124,6 +130,7 @@ abstract public class AbstractNavigationNodeFigure extends Ellipse implements Na
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.relationship.ui.navigation.figure.NavigationNodeFigure#showSelected(boolean)
 	 */
+	@Override
 	public void showSelected(boolean selected) {
 		// XXX Auto-generated method stub
 
@@ -132,6 +139,7 @@ abstract public class AbstractNavigationNodeFigure extends Ellipse implements Na
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.relationship.ui.navigation.figure.NavigationNodeFigure#updateForError(boolean)
 	 */
+	@Override
 	public void updateForError(boolean hasErrors) {
 		// XXX Auto-generated method stub
 
@@ -140,6 +148,7 @@ abstract public class AbstractNavigationNodeFigure extends Ellipse implements Na
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.relationship.ui.navigation.figure.NavigationNodeFigure#updateForFont(org.eclipse.swt.graphics.Font)
 	 */
+	@Override
 	public void updateForFont(Font font) {
 		// XXX Auto-generated method stub
 
@@ -148,6 +157,7 @@ abstract public class AbstractNavigationNodeFigure extends Ellipse implements Na
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.relationship.ui.navigation.figure.NavigationNodeFigure#updateForName(java.lang.String)
 	 */
+	@Override
 	public void updateForName(String newName) {
 		// XXX Auto-generated method stub
 
@@ -156,6 +166,7 @@ abstract public class AbstractNavigationNodeFigure extends Ellipse implements Na
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.relationship.ui.navigation.figure.NavigationNodeFigure#updateForWarning(boolean)
 	 */
+	@Override
 	public void updateForWarning(boolean hasWarnings) {
 		// XXX Auto-generated method stub
 
@@ -163,12 +174,14 @@ abstract public class AbstractNavigationNodeFigure extends Ellipse implements Na
 	
 
 	
+	@Override
 	public void printBounds(String prefix) {
 		System.out.println(prefix + " FIGURE Bounds = " + getBounds()); //$NON-NLS-1$
 	}
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.relationship.ui.navigation.figure.NavigationNodeFigure#getNavigationModelNode()
 	 */
+	@Override
 	public NavigationModelNode getNavigationModelNode() {
 		return modelNode;
 	}
@@ -187,6 +200,7 @@ abstract public class AbstractNavigationNodeFigure extends Ellipse implements Na
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.relationship.ui.navigation.figure.NavigationNodeFigure#setSizeToMinimum()
 	 */
+	@Override
 	public void setSizeToMinimum() {
 		// Let's resize this figure to be just enough to wrap the icon
 		if( objectIcon != null ) {

@@ -38,28 +38,32 @@ public class FakeConcreteModelWorkspaceItemImpl extends ModelWorkspaceItemImpl i
     /**
      * @see org.teiid.designer.core.workspace.ModelWorkspaceItem#getResource()
      */
-    public IResource getResource() {
+    @Override
+	public IResource getResource() {
         throw new UnsupportedOperationException("getResource() is not implemented on " + this.getClass().getName()); //$NON-NLS-1$
     }
 
     /**
      * @see org.teiid.designer.core.workspace.ModelWorkspaceItem#getUnderlyingResource()
      */
-    public IResource getUnderlyingResource() {
+    @Override
+	public IResource getUnderlyingResource() {
         throw new UnsupportedOperationException("getUnderlyingResource() is not implemented on " + this.getClass().getName()); //$NON-NLS-1$
     }
 
     /**
      * @see org.teiid.designer.core.workspace.ModelWorkspaceItem#getPath()
      */
-    public IPath getPath() {
+    @Override
+	public IPath getPath() {
         throw new UnsupportedOperationException("getPath() is not implemented on " + this.getClass().getName()); //$NON-NLS-1$
     }
 
     /**
      * @see org.teiid.designer.core.workspace.ModelWorkspaceItem#hasChildren()
      */
-    public boolean hasChildren() {
+    @Override
+	public boolean hasChildren() {
         throw new UnsupportedOperationException("hasChildren() is not implemented on " + this.getClass().getName()); //$NON-NLS-1$
     }
 
@@ -75,21 +79,24 @@ public class FakeConcreteModelWorkspaceItemImpl extends ModelWorkspaceItemImpl i
     /**
      * @see org.teiid.designer.core.workspace.Openable#hasUnsavedChanges()
      */
-    public boolean hasUnsavedChanges() {
+    @Override
+	public boolean hasUnsavedChanges() {
         return this.hasUnsavedChanges;
     }
 
     /**
      * @see org.teiid.designer.core.workspace.Openable#isOpen()
      */
-    public boolean isOpen() {
+    @Override
+	public boolean isOpen() {
         return !this.closed;
     }
 
     /**
      * @see org.teiid.designer.core.workspace.Openable#open(org.eclipse.core.runtime.IProgressMonitor)
      */
-    public void open( IProgressMonitor progress ) {
+    @Override
+	public void open( IProgressMonitor progress ) {
         this.closed = false;
         this.hasUnsavedChanges = false;
     }
@@ -97,7 +104,8 @@ public class FakeConcreteModelWorkspaceItemImpl extends ModelWorkspaceItemImpl i
     /**
      * @see org.teiid.designer.core.workspace.Openable#save(org.eclipse.core.runtime.IProgressMonitor, boolean)
      */
-    public void save( IProgressMonitor progress,
+    @Override
+	public void save( IProgressMonitor progress,
                       boolean force ) {
         this.hasUnsavedChanges = false;
     }

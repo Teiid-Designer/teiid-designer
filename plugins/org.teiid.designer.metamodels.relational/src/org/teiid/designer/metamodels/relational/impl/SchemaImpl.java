@@ -108,7 +108,8 @@ public class SchemaImpl extends RelationalEntityImpl implements Schema {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EList getTables() {
+    @Override
+	public EList getTables() {
         if (tables == null) {
             tables = new EObjectContainmentWithInverseEList(Table.class, this, RelationalPackage.SCHEMA__TABLES, RelationalPackage.TABLE__SCHEMA);
         }
@@ -120,7 +121,8 @@ public class SchemaImpl extends RelationalEntityImpl implements Schema {
      * <!-- end-user-doc -->
      * @generated
      */
-    public Catalog getCatalog() {
+    @Override
+	public Catalog getCatalog() {
         if (eContainerFeatureID != RelationalPackage.SCHEMA__CATALOG) return null;
         return (Catalog)eContainer;
     }
@@ -130,7 +132,8 @@ public class SchemaImpl extends RelationalEntityImpl implements Schema {
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setCatalog(Catalog newCatalog) {
+    @Override
+	public void setCatalog(Catalog newCatalog) {
         if (newCatalog != eContainer || (eContainerFeatureID != RelationalPackage.SCHEMA__CATALOG && newCatalog != null)) {
             if (EcoreUtil.isAncestor(this, newCatalog))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
@@ -151,7 +154,8 @@ public class SchemaImpl extends RelationalEntityImpl implements Schema {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EList getProcedures() {
+    @Override
+	public EList getProcedures() {
         if (procedures == null) {
             procedures = new EObjectContainmentWithInverseEList(Procedure.class, this, RelationalPackage.SCHEMA__PROCEDURES, RelationalPackage.PROCEDURE__SCHEMA);
         }
@@ -163,7 +167,8 @@ public class SchemaImpl extends RelationalEntityImpl implements Schema {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EList getIndexes() {
+    @Override
+	public EList getIndexes() {
         if (indexes == null) {
             indexes = new EObjectContainmentWithInverseEList(Index.class, this, RelationalPackage.SCHEMA__INDEXES, RelationalPackage.INDEX__SCHEMA);
         }
@@ -175,7 +180,8 @@ public class SchemaImpl extends RelationalEntityImpl implements Schema {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EList getLogicalRelationships() {
+    @Override
+	public EList getLogicalRelationships() {
         if (logicalRelationships == null) {
             logicalRelationships = new EObjectContainmentWithInverseEList(LogicalRelationship.class, this, RelationalPackage.SCHEMA__LOGICAL_RELATIONSHIPS, RelationalPackage.LOGICAL_RELATIONSHIP__SCHEMA);
         }

@@ -108,14 +108,17 @@ public class NavigationView extends ViewPart
 
         createContextMenu(editor.getControl());
         parent.addControlListener(new ControlListener() {
-            public void controlMoved( ControlEvent e ) {
+            @Override
+			public void controlMoved( ControlEvent e ) {
             }
 
-            public void controlResized( ControlEvent e ) {
+            @Override
+			public void controlResized( ControlEvent e ) {
                 if (currentContext != null) {
                     // editor.setContents(currentContext);
                     final Runnable runnable = new Runnable() {
-                        public void run() {
+                        @Override
+						public void run() {
                             // Show dialog
                             editor.refreshLayout();
                         }
@@ -146,7 +149,8 @@ public class NavigationView extends ViewPart
         MenuManager mgr = new MenuManager(null, contextMenuId);
         mgr.setRemoveAllWhenShown(true);
         mgr.addMenuListener(new IMenuListener() {
-            public void menuAboutToShow( IMenuManager theMenuMgr ) {
+            @Override
+			public void menuAboutToShow( IMenuManager theMenuMgr ) {
                 fillContextMenu(theMenuMgr);
             }
         });
@@ -266,7 +270,8 @@ public class NavigationView extends ViewPart
     /**
      * @see org.eclipse.emf.edit.provider.INotifyChangedListener#notifyChanged(org.eclipse.emf.common.notify.Notification)
      */
-    public void notifyChanged( Notification notification ) {
+    @Override
+	public void notifyChanged( Notification notification ) {
         // if the target of the notification is this object's annotation, refresh the display
         EObject targetEObject = NotificationUtilities.getEObject(notification);
         if (targetEObject instanceof Annotation) {
@@ -280,7 +285,8 @@ public class NavigationView extends ViewPart
     /**
      * @see org.eclipse.core.resources.IResourceChangeListener#resourceChanged(org.eclipse.core.resources.IResourceChangeEvent)
      */
-    public void resourceChanged( IResourceChangeEvent event ) {
+    @Override
+	public void resourceChanged( IResourceChangeEvent event ) {
         // swjTODO: implement
     }
 
@@ -361,7 +367,8 @@ public class NavigationView extends ViewPart
      * 
      * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
      */
-    public void selectionChanged( SelectionChangedEvent event ) {
+    @Override
+	public void selectionChanged( SelectionChangedEvent event ) {
         openAction.selectionChanged(this, event.getSelection());
         focusAction.selectionChanged(this, event.getSelection());
         navigateToAction.selectionChanged(this, event.getSelection());
@@ -370,7 +377,8 @@ public class NavigationView extends ViewPart
         statusBarUpdater.selectionChanged(event);
     }
 
-    public void doubleClick( NavigationDoubleClickEvent event ) {
+    @Override
+	public void doubleClick( NavigationDoubleClickEvent event ) {
         Object obj = SelectionUtilities.getSelectedObject(event.getSelection());
         if (obj instanceof NavigationNode) {
             setCurrentObject((NavigationNode)obj);

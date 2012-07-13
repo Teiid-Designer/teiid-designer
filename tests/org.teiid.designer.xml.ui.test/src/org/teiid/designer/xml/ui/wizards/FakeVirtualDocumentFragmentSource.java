@@ -15,11 +15,13 @@ import org.teiid.designer.xml.IVirtualDocumentFragmentSource;
 
 public class FakeVirtualDocumentFragmentSource implements IVirtualDocumentFragmentSource {
 
-    public XmlFragment[] getFragments(ModelResource modelResource, IProgressMonitor monitor) {
+    @Override
+	public XmlFragment[] getFragments(ModelResource modelResource, IProgressMonitor monitor) {
         return new XmlFragment[0];
     }
 
-    public void updateSourceFragments(boolean isVisible, IProgressMonitor monitor) {
+    @Override
+	public void updateSourceFragments(boolean isVisible, IProgressMonitor monitor) {
         // do nothing
     }
 

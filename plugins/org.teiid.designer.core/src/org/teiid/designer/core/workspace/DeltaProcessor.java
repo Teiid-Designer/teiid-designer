@@ -39,7 +39,8 @@ public class DeltaProcessor implements IResourceChangeListener {
     /* (non-Javadoc)
      * @see org.eclipse.core.resources.IResourceChangeListener#resourceChanged(org.eclipse.core.resources.IResourceChangeEvent)
      */
-    public void resourceChanged( final IResourceChangeEvent event ) {
+    @Override
+	public void resourceChanged( final IResourceChangeEvent event ) {
         if (ModelerCore.DEBUG_NOTIFICATIONS) {
             ResourceChangeUtilities.debug(event);
         }

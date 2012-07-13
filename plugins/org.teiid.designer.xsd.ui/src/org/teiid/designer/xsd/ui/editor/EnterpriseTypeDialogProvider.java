@@ -49,26 +49,32 @@ public class EnterpriseTypeDialogProvider extends TextDialogProvider {
     }
 
     static final class StringLabelProvider implements ILabelProvider {
-        public Image getImage( Object element ) {
+        @Override
+		public Image getImage( Object element ) {
             return null;
         }
 
-        public String getText( Object element ) {
+        @Override
+		public String getText( Object element ) {
             return (String)element;
         }
 
-        public void addListener( ILabelProviderListener listener ) {
+        @Override
+		public void addListener( ILabelProviderListener listener ) {
         }
 
-        public void dispose() {
+        @Override
+		public void dispose() {
         }
 
-        public boolean isLabelProperty( Object element,
+        @Override
+		public boolean isLabelProperty( Object element,
                                         String property ) {
             return false;
         }
 
-        public void removeListener( ILabelProviderListener listener ) {
+        @Override
+		public void removeListener( ILabelProviderListener listener ) {
         }
     }
 }

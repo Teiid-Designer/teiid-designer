@@ -103,7 +103,8 @@ public class DependencyItemProviderAdapterFactory extends DependencyAdapterFacto
      * <!-- end-user-doc -->
      * @generated
      */
-    public ComposeableAdapterFactory getRootAdapterFactory()
+    @Override
+	public ComposeableAdapterFactory getRootAdapterFactory()
     {
         return parentAdapterFactory == null ? this : parentAdapterFactory.getRootAdapterFactory();
     }
@@ -114,7 +115,8 @@ public class DependencyItemProviderAdapterFactory extends DependencyAdapterFacto
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setParentAdapterFactory(ComposedAdapterFactory parentAdapterFactory)
+    @Override
+	public void setParentAdapterFactory(ComposedAdapterFactory parentAdapterFactory)
     {
         this.parentAdapterFactory = parentAdapterFactory;
     }
@@ -166,7 +168,8 @@ public class DependencyItemProviderAdapterFactory extends DependencyAdapterFacto
      * <!-- end-user-doc -->
      * @generated
      */
-    public void addListener(INotifyChangedListener notifyChangedListener)
+    @Override
+	public void addListener(INotifyChangedListener notifyChangedListener)
     {
         changeNotifier.addListener(notifyChangedListener);
     }
@@ -177,7 +180,8 @@ public class DependencyItemProviderAdapterFactory extends DependencyAdapterFacto
      * <!-- end-user-doc -->
      * @generated
      */
-    public void removeListener(INotifyChangedListener notifyChangedListener)
+    @Override
+	public void removeListener(INotifyChangedListener notifyChangedListener)
     {
         changeNotifier.removeListener(notifyChangedListener);
     }
@@ -188,7 +192,8 @@ public class DependencyItemProviderAdapterFactory extends DependencyAdapterFacto
      * <!-- end-user-doc -->
      * @generated
      */
-    public void fireNotifyChanged(Notification notification)
+    @Override
+	public void fireNotifyChanged(Notification notification)
     {
         changeNotifier.fireNotifyChanged(notification);
 

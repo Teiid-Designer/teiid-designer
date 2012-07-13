@@ -118,7 +118,8 @@ public class SelectWsdlOperationsPage extends AbstractWizardPage
      * 
      * @param event the Event
      */
-    public void handleEvent( Event event ) {
+    @Override
+	public void handleEvent( Event event ) {
         if (!initializing) {
             boolean validate = false;
 
@@ -155,7 +156,8 @@ public class SelectWsdlOperationsPage extends AbstractWizardPage
      * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
      * @since 4.2
      */
-    public void createControl( Composite theParent ) {
+    @Override
+	public void createControl( Composite theParent ) {
         final int COLUMNS = 1;
         Composite pnlMain = WidgetFactory.createPanel(theParent, SWT.NONE, GridData.FILL_BOTH);
         GridLayout layout = new GridLayout(COLUMNS, false);
@@ -544,10 +546,12 @@ public class SelectWsdlOperationsPage extends AbstractWizardPage
 
     class CheckboxTreeContentProvider implements ITreeContentProvider {
 
-        public void dispose() {
+        @Override
+		public void dispose() {
         }
 
-        public Object[] getChildren( final Object node ) {
+        @Override
+		public Object[] getChildren( final Object node ) {
             if (wsdlModel != null) {
                 if (node instanceof Model) {
                     return ((Model)node).getServices();
@@ -562,11 +566,13 @@ public class SelectWsdlOperationsPage extends AbstractWizardPage
             return EMPTY_STRING_ARRAY;
         }
 
-        public Object[] getElements( final Object inputElement ) {
+        @Override
+		public Object[] getElements( final Object inputElement ) {
             return getChildren(inputElement);
         }
 
-        public Object getParent( final Object node ) {
+        @Override
+		public Object getParent( final Object node ) {
             if (wsdlModel != null) {
                 if (node instanceof Model) {
                     return null;
@@ -583,7 +589,8 @@ public class SelectWsdlOperationsPage extends AbstractWizardPage
             return null;
         }
 
-        public boolean hasChildren( final Object node ) {
+        @Override
+		public boolean hasChildren( final Object node ) {
             if (wsdlModel != null) {
                 if (node instanceof Model) {
                     return (((Model)node).getServices().length > 0);
@@ -598,7 +605,8 @@ public class SelectWsdlOperationsPage extends AbstractWizardPage
             return false;
         }
 
-        public void inputChanged( final Viewer viewer,
+        @Override
+		public void inputChanged( final Viewer viewer,
                                   final Object oldInput,
                                   final Object newInput ) {
         }

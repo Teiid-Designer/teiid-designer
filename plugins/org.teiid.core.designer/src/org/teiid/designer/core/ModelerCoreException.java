@@ -177,7 +177,8 @@ public class ModelerCoreException extends CoreException implements Externalizabl
     /**
      * @see java.io.Externalizable#readExternal(java.io.ObjectInput)
      */
-    public void readExternal( ObjectInput in ) throws IOException, ClassNotFoundException {
+    @Override
+	public void readExternal( ObjectInput in ) throws IOException, ClassNotFoundException {
         final IStatus status = readIStatus(in);
         final IStatus currentStatus = getStatus();
         if (currentStatus instanceof StatusHolder && status != null) {
@@ -196,7 +197,8 @@ public class ModelerCoreException extends CoreException implements Externalizabl
     /**
      * @see java.io.Externalizable#writeExternal(java.io.ObjectOutput)
      */
-    public void writeExternal( ObjectOutput out ) throws IOException {
+    @Override
+	public void writeExternal( ObjectOutput out ) throws IOException {
         writeIStatus(out, this.getStatus());
         out.writeObject(this.getStackTrace());
 
@@ -219,39 +221,48 @@ public class ModelerCoreException extends CoreException implements Externalizabl
             this.status = status;
         }
 
-        public IStatus[] getChildren() {
+        @Override
+		public IStatus[] getChildren() {
             return status.getChildren();
         }
 
-        public int getCode() {
+        @Override
+		public int getCode() {
             return status.getCode();
         }
 
-        public Throwable getException() {
+        @Override
+		public Throwable getException() {
             return status.getException();
         }
 
-        public String getMessage() {
+        @Override
+		public String getMessage() {
             return status.getMessage();
         }
 
-        public String getPlugin() {
+        @Override
+		public String getPlugin() {
             return status.getPlugin();
         }
 
-        public int getSeverity() {
+        @Override
+		public int getSeverity() {
             return status.getSeverity();
         }
 
-        public boolean isMultiStatus() {
+        @Override
+		public boolean isMultiStatus() {
             return status.isMultiStatus();
         }
 
-        public boolean isOK() {
+        @Override
+		public boolean isOK() {
             return status.isOK();
         }
 
-        public boolean matches( int severityMask ) {
+        @Override
+		public boolean matches( int severityMask ) {
             return status.matches(severityMask);
         }
     }
@@ -352,39 +363,48 @@ public class ModelerCoreException extends CoreException implements Externalizabl
             this.ok = original.isOK();
         }
 
-        public IStatus[] getChildren() {
+        @Override
+		public IStatus[] getChildren() {
             return children;
         }
 
-        public int getCode() {
+        @Override
+		public int getCode() {
             return code;
         }
 
-        public Throwable getException() {
+        @Override
+		public Throwable getException() {
             return exception;
         }
 
-        public String getMessage() {
+        @Override
+		public String getMessage() {
             return message;
         }
 
-        public String getPlugin() {
+        @Override
+		public String getPlugin() {
             return plugin;
         }
 
-        public int getSeverity() {
+        @Override
+		public int getSeverity() {
             return severity;
         }
 
-        public boolean isMultiStatus() {
+        @Override
+		public boolean isMultiStatus() {
             return multiStatus;
         }
 
-        public boolean isOK() {
+        @Override
+		public boolean isOK() {
             return ok;
         }
 
-        public boolean matches( int severityMask ) {
+        @Override
+		public boolean matches( int severityMask ) {
             return (severity & severityMask) != 0;
         }
 
@@ -403,7 +423,8 @@ public class ModelerCoreException extends CoreException implements Externalizabl
 
         }
 
-        public void readExternal( ObjectInput in ) throws IOException, ClassNotFoundException {
+        @Override
+		public void readExternal( ObjectInput in ) throws IOException, ClassNotFoundException {
             final int length = in.readInt();
             children = new StatusImpl[length];
             for (int i = 0; i < length; i++) {
@@ -418,7 +439,8 @@ public class ModelerCoreException extends CoreException implements Externalizabl
             ok = in.readBoolean();
         }
 
-        public void writeExternal( ObjectOutput out ) throws IOException {
+        @Override
+		public void writeExternal( ObjectOutput out ) throws IOException {
             ExternalizeUtil.writeArray(out, children);
             out.writeInt(code);
             writeThrowable(out, exception);

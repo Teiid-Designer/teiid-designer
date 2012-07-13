@@ -40,66 +40,82 @@ public class ColumnImpl extends DatabaseElementImpl implements Column {
 		m_role = 0; //data role
 	}
 
+	@Override
 	public boolean isAttributeOfParent() {
 		return m_attrOfParent;
 	}
 
+	@Override
 	public void setIsAttributeOfParent(boolean isAttributeOfParent) {
 		m_attrOfParent = isAttributeOfParent;
 	}
 
+	@Override
 	public String getDataAttributeName() {
 		return m_attributeName;
 	}
 
+	@Override
 	public void setDataAttributeName(String name) {
 		m_attributeName = name;
 	}
 
+	@Override
 	public boolean isInputParameter() {
 		return m_inputParam;
 	}
 
+	@Override
 	public void setIsInputParameter(boolean isInputParameter) {
 		m_inputParam = isInputParameter;
 	}
 
+	@Override
 	public Integer getMultipleValues() {
 		return m_multiValues;
 	}
 
+	@Override
 	public void setMultipleValues(Integer multiValues) {
 		m_multiValues = multiValues;
 	}
 
+	@Override
 	public boolean isRequiredValue() {
 		return m_required;
 	}
 
+	@Override
 	public void setIsRequiredValue(boolean isRequired) {
 		m_required = isRequired;
 	}
 
+	@Override
 	public Integer getRole() {
 		return m_role;
 	}
 
+	@Override
 	public void setRole(Integer role) {
 		m_role = role;
 	}
 
+	@Override
 	public void setDataType(DataType type) {
 		m_dataType = type;
 	}
 
+	@Override
 	public DataType getDataType() {
 		return m_dataType;
 	}
 	
+	@Override
 	public void setIsForeignKey(boolean isForeignKey) {
 		m_isForeignKey = isForeignKey;
 	}
 	
+	@Override
 	public boolean isForeignKey() {
 		return m_isForeignKey;
 	}

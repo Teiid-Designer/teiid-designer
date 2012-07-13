@@ -265,7 +265,8 @@ public class JdbcImportWizard extends AbstractWizard
         // Save object selections from previous page
         final IRunnableWithProgress op = new IRunnableWithProgress() {
 
-            public void run( final IProgressMonitor monitor ) throws InvocationTargetException {
+            @Override
+			public void run( final IProgressMonitor monitor ) throws InvocationTargetException {
                 // Wrap in transaction so it doesn't result in Significant Undoable
                 boolean started = ModelerCore.startTxn(false, false, "Changing Sql Connections", //$NON-NLS-1$
                                                        new DefaultIgnorableNotificationSource(JdbcImportWizard.this, modelName));
@@ -316,7 +317,8 @@ public class JdbcImportWizard extends AbstractWizard
      * @see org.teiid.designer.jdbc.ui.wizards.IJdbcImportInfoProvider#getDatabase()
      * @since 5.0
      */
-    public JdbcDatabase getDatabase() {
+    @Override
+	public JdbcDatabase getDatabase() {
         return this.importer.getDatabase();
     }
 
@@ -324,14 +326,16 @@ public class JdbcImportWizard extends AbstractWizard
      * @see org.teiid.designer.jdbc.ui.wizards.IJdbcImportInfoProvider#getDifferenceReport()
      * @since 5.0
      */
-    public List getDifferenceReports() {
+    @Override
+	public List getDifferenceReports() {
         final List reports = new ArrayList();
         if (drDifferenceReport == null || diffTargetChanged(drDifferenceReport)) {
 
             // Save object selections from previous page
             final IRunnableWithProgress op = new IRunnableWithProgress() {
 
-                public void run( final IProgressMonitor monitor ) throws InvocationTargetException {
+                @Override
+				public void run( final IProgressMonitor monitor ) throws InvocationTargetException {
                     try {
                         final JdbcSource src = getSource();
                         final RelationalModelProcessor processor = JdbcModelProcessorManager.createRelationalModelProcessor(srcPg.getMetadataProcessor());
@@ -449,7 +453,8 @@ public class JdbcImportWizard extends AbstractWizard
      * @see org.teiid.designer.jdbc.ui.wizards.IJdbcImportInfoProvider#getModelName()
      * @since 5.0
      */
-    public String getModelName() {
+    @Override
+	public String getModelName() {
         return this.modelName;
     }
 
@@ -457,7 +462,8 @@ public class JdbcImportWizard extends AbstractWizard
      * @see org.teiid.designer.jdbc.ui.wizards.IJdbcImportInfoProvider#getModelResource()
      * @since 5.5.3
      */
-    public ModelResource getModelResource() {
+    @Override
+	public ModelResource getModelResource() {
         return this.ppProcessorPack.getModelResource();
     }
 
@@ -465,7 +471,8 @@ public class JdbcImportWizard extends AbstractWizard
      * @see org.teiid.designer.jdbc.ui.wizards.IJdbcImportInfoProvider#getPassword()
      * @since 5.0
      */
-    public String getPassword() {
+    @Override
+	public String getPassword() {
         String result = null;
         IWizardPage[] pages = getPages();
 
@@ -541,7 +548,8 @@ public class JdbcImportWizard extends AbstractWizard
      * @see org.teiid.designer.jdbc.ui.wizards.IJdbcImportInfoProvider#getSource()
      * @since 5.0
      */
-    public JdbcSource getSource() {
+    @Override
+	public JdbcSource getSource() {
         return this.importer.getSource();
     }
 
@@ -549,7 +557,8 @@ public class JdbcImportWizard extends AbstractWizard
      * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench, org.eclipse.jface.viewers.IStructuredSelection)
      * @since 4.0
      */
-    public void init( final IWorkbench workbench,
+    @Override
+	public void init( final IWorkbench workbench,
                       final IStructuredSelection inputSelection ) {
         IStructuredSelection selection = inputSelection;
 
@@ -627,7 +636,8 @@ public class JdbcImportWizard extends AbstractWizard
         this.srcPg = new JdbcSourceSelectionPage(this.importer.getSource());
         this.srcPg.addChangeListener(new IChangeListener() {
 
-            public void stateChanged( final IChangeNotifier notifier ) {
+            @Override
+			public void stateChanged( final IChangeNotifier notifier ) {
                 if (controlsHaveBeenCreated) {
                     // Wrap in transaction so it doesn't result in Significant Undoable
                     boolean started = ModelerCore.startTxn(false, false, "Changing Sql Connections", this); //$NON-NLS-1$

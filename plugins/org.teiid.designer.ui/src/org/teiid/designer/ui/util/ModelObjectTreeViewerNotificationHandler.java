@@ -63,13 +63,15 @@ public class ModelObjectTreeViewerNotificationHandler implements INotifyChangedL
     /* (non-Javadoc)
      * @see org.eclipse.emf.edit.provider.INotifyChangedListener#notifyChanged(org.eclipse.emf.common.notify.Notification)
      */
-    public void notifyChanged( final Notification notification ) {
+    @Override
+	public void notifyChanged( final Notification notification ) {
         // This check verifies that a tree exists, and it isn't disposed.
         if (!treeIsValid()) return;
 
         // for all other events, just refresh the tree in the UI thread.
         Display.getDefault().asyncExec(new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 handleNotification(notification);
             }
         });

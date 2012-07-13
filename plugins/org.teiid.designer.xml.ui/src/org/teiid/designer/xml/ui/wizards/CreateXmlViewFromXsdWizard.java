@@ -133,7 +133,8 @@ public class CreateXmlViewFromXsdWizard extends AbstractWizard implements
      * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench, org.eclipse.jface.viewers.IStructuredSelection)
      * @since 4.0
      */
-    public void init(final IWorkbench workbench,
+    @Override
+	public void init(final IWorkbench workbench,
                      final IStructuredSelection selection) {
         mainPage = new CreateXmlViewFromXsdMainPage(xsdRoots);
 

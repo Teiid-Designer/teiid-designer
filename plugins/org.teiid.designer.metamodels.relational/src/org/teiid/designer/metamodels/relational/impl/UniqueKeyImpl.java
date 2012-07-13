@@ -80,7 +80,8 @@ public abstract class UniqueKeyImpl extends RelationalEntityImpl implements Uniq
      * <!-- end-user-doc -->
      * @generated
      */
-    public EList getColumns() {
+    @Override
+	public EList getColumns() {
         if (columns == null) {
             columns = new EObjectWithInverseResolvingEList.ManyInverse(Column.class, this, RelationalPackage.UNIQUE_KEY__COLUMNS, RelationalPackage.COLUMN__UNIQUE_KEYS);
         }
@@ -92,7 +93,8 @@ public abstract class UniqueKeyImpl extends RelationalEntityImpl implements Uniq
      * <!-- end-user-doc -->
      * @generated
      */
-    public EList getForeignKeys() {
+    @Override
+	public EList getForeignKeys() {
         if (foreignKeys == null) {
             foreignKeys = new EObjectWithInverseResolvingEList(ForeignKey.class, this, RelationalPackage.UNIQUE_KEY__FOREIGN_KEYS, RelationalPackage.FOREIGN_KEY__UNIQUE_KEY);
         }
@@ -104,7 +106,8 @@ public abstract class UniqueKeyImpl extends RelationalEntityImpl implements Uniq
      * <!-- end-user-doc -->
      * @generated
      */
-    public BaseTable getTable() {
+    @Override
+	public BaseTable getTable() {
         // TODO: implement this method
         // Ensure that you remove @generated or mark it @generated NOT
         throw new UnsupportedOperationException();

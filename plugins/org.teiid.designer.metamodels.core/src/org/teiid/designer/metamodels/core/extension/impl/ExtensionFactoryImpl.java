@@ -81,7 +81,8 @@ public class ExtensionFactoryImpl extends EFactoryImpl implements ExtensionFacto
      * 
      * @generated
      */
-    public XClass createXClass() {
+    @Override
+	public XClass createXClass() {
         XClassImpl xClass = new XClassImpl();
         return xClass;
     }
@@ -91,7 +92,8 @@ public class ExtensionFactoryImpl extends EFactoryImpl implements ExtensionFacto
      * 
      * @generated
      */
-    public XPackage createXPackage() {
+    @Override
+	public XPackage createXPackage() {
         XPackageImpl xPackage = new XPackageImpl();
         return xPackage;
     }
@@ -101,7 +103,8 @@ public class ExtensionFactoryImpl extends EFactoryImpl implements ExtensionFacto
      * 
      * @generated
      */
-    public XAttribute createXAttribute() {
+    @Override
+	public XAttribute createXAttribute() {
         XAttributeImpl xAttribute = new XAttributeImpl();
         return xAttribute;
     }
@@ -111,7 +114,8 @@ public class ExtensionFactoryImpl extends EFactoryImpl implements ExtensionFacto
      * 
      * @generated
      */
-    public XEnum createXEnum() {
+    @Override
+	public XEnum createXEnum() {
         XEnumImpl xEnum = new XEnumImpl();
         return xEnum;
     }
@@ -121,7 +125,8 @@ public class ExtensionFactoryImpl extends EFactoryImpl implements ExtensionFacto
      * 
      * @generated
      */
-    public XEnumLiteral createXEnumLiteral() {
+    @Override
+	public XEnumLiteral createXEnumLiteral() {
         XEnumLiteralImpl xEnumLiteral = new XEnumLiteralImpl();
         return xEnumLiteral;
     }
@@ -131,7 +136,8 @@ public class ExtensionFactoryImpl extends EFactoryImpl implements ExtensionFacto
      * 
      * @generated
      */
-    public ExtensionPackage getExtensionPackage() {
+    @Override
+	public ExtensionPackage getExtensionPackage() {
         return (ExtensionPackage)getEPackage();
     }
 

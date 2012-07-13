@@ -32,14 +32,16 @@ public class UuidMatcherFactory implements EObjectMatcherFactory {
     /**
      * @see org.teiid.designer.core.compare.EObjectMatcherFactory#createEObjectMatchersForRoots()
      */
-    public List createEObjectMatchersForRoots() {
+    @Override
+	public List createEObjectMatchersForRoots() {
         return this.standardMatchers;
     }
 
     /**
      * @see org.teiid.designer.core.compare.EObjectMatcherFactory#createEObjectMatchers(org.eclipse.emf.ecore.EReference)
      */
-    public List createEObjectMatchers(final EReference reference) {
+    @Override
+	public List createEObjectMatchers(final EReference reference) {
         return this.standardMatchers;
     }
 

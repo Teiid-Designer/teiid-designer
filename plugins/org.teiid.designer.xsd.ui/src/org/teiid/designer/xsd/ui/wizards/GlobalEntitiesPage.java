@@ -108,7 +108,8 @@ public class GlobalEntitiesPage extends WizardPage implements InternalUiConstant
     /**
      * @see IDialogPage#createControl(Composite)
      */
-    public void createControl( Composite parent ) {
+    @Override
+	public void createControl( Composite parent ) {
         Composite container = new Composite(parent, SWT.NULL);
 
         GridLayout layout = new GridLayout();
@@ -129,7 +130,8 @@ public class GlobalEntitiesPage extends WizardPage implements InternalUiConstant
         gd = new GridData(GridData.FILL_HORIZONTAL);
         containerText.setLayoutData(gd);
         containerText.addModifyListener(new ModifyListener() {
-            public void modifyText( ModifyEvent e ) {
+            @Override
+			public void modifyText( ModifyEvent e ) {
                 checkStatus();
             }
         });
@@ -154,7 +156,8 @@ public class GlobalEntitiesPage extends WizardPage implements InternalUiConstant
         gd = new GridData(GridData.FILL_HORIZONTAL);
         fileText.setLayoutData(gd);
         fileText.addModifyListener(new ModifyListener() {
-            public void modifyText( ModifyEvent e ) {
+            @Override
+			public void modifyText( ModifyEvent e ) {
                 checkStatus();
             }
         });
@@ -178,7 +181,8 @@ public class GlobalEntitiesPage extends WizardPage implements InternalUiConstant
         checkStatus();
     }
 
-    public void accumulatedValuesChanged( AccumulatorPanel source ) {
+    @Override
+	public void accumulatedValuesChanged( AccumulatorPanel source ) {
         typesToCreate = source.getItemsMovedToSelected();
         checkStatus();
     }
@@ -205,7 +209,8 @@ public class GlobalEntitiesPage extends WizardPage implements InternalUiConstant
 
     private void setDefaults() {
         this.getControl().getDisplay().asyncExec(new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 if (xsdRsrc == null) {
                     return;
                 }
@@ -456,51 +461,61 @@ public class GlobalEntitiesPage extends WizardPage implements InternalUiConstant
             this.caller = cllr;
         }
 
-        public void accumulatedValuesRemoved( Collection values ) {
+        @Override
+		public void accumulatedValuesRemoved( Collection values ) {
             caller.typesToConvertRemoved(values);
             caller.typesToConvertChanged();
         }
 
-        public void accumulatedValuesAdded( Collection values ) {
+        @Override
+		public void accumulatedValuesAdded( Collection values ) {
             caller.typesToConvertAdded(values);
             caller.typesToConvertChanged();
         }
 
-        public Collection getAvailableValues() {
+        @Override
+		public Collection getAvailableValues() {
             return caller.getAvailableTypes();
         }
 
-        public int getAvailableValuesCount() {
+        @Override
+		public int getAvailableValuesCount() {
             return caller.getAvailableTypesCount();
         }
 
-        public Collection getSelectedAvailableValues() {
+        @Override
+		public Collection getSelectedAvailableValues() {
             return caller.getSelectedAvailableTypes();
         }
 
-        public int getSelectedAvailableValuesCount() {
+        @Override
+		public int getSelectedAvailableValuesCount() {
             return caller.getSelectedAvailableTypeCount();
         }
 
-        public Control createControl( Composite parent ) {
+        @Override
+		public Control createControl( Composite parent ) {
             return caller.createTypeControl(parent);
         }
 
-        public void addSelectionListener( SelectionListener listener ) {
+        @Override
+		public void addSelectionListener( SelectionListener listener ) {
             caller.addTypeSelectionListener(listener);
         }
 
         /**
          * @see org.teiid.designer.ui.common.widget.accumulator.IAccumulatorSource#supportsAddAll()
          */
-        public boolean supportsAddAll() {
+        @Override
+		public boolean supportsAddAll() {
             return true;
         }
 
         /**
          * @see org.teiid.designer.ui.common.widget.accumulator.IAccumulatorSource#getSelectionStatus()
          */
-        public IStatus getSelectionStatus() {
+        @Override
+		public IStatus getSelectionStatus() {
             return OK_STATUS;
         }
     }

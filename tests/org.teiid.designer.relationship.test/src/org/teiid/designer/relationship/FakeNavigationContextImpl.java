@@ -45,42 +45,48 @@ public class FakeNavigationContextImpl implements NavigationContext {
         this.readOnlyLinks = Collections.unmodifiableList(this.links);
     }
 
-    public NavigationContextInfo getInfo() {
+    @Override
+	public NavigationContextInfo getInfo() {
         return this.info;
     }
 
     /**
      * @see org.teiid.designer.relationship.NavigationContext#getNodes(org.teiid.designer.NavigationContext)
      */
-    public List getNodes( NavigationLink link ) {
+    @Override
+	public List getNodes( NavigationLink link ) {
         return null;
     }
 
     /**
      * @see org.teiid.designer.relationship.NavigationContext#getNodes(org.teiid.designer.NavigationContext)
      */
-    public List getAllNodes() {
+    @Override
+	public List getAllNodes() {
         return null;
     }
 
     /**
      * @see org.teiid.designer.relationship.NavigationContext#getFocusNode()
      */
-    public NavigationNode getFocusNode() {
+    @Override
+	public NavigationNode getFocusNode() {
         return this.focusNode;
     }
 
     /**
      * @see org.teiid.designer.relationship.NavigationContext#getNonFocusNodes()
      */
-    public List getNonFocusNodes() {
+    @Override
+	public List getNonFocusNodes() {
         return this.readOnlyNonFocusNodes;
     }
 
     /**
      * @see org.teiid.designer.relationship.NavigationContext#getNavigationLinks()
      */
-    public List getNavigationLinks() {
+    @Override
+	public List getNavigationLinks() {
         return this.readOnlyLinks;
     }
 
@@ -94,7 +100,8 @@ public class FakeNavigationContextImpl implements NavigationContext {
     /**
      * @see org.teiid.designer.relationship.NavigationContext#getLabel(org.teiid.designer.relationship.NavigationLink)
      */
-    public String getLabel( NavigationLink link ) {
+    @Override
+	public String getLabel( NavigationLink link ) {
         return null;
     }
 
@@ -110,7 +117,8 @@ public class FakeNavigationContextImpl implements NavigationContext {
     /**
      * @see org.teiid.designer.relationship.NavigationContext#getTooltip(org.teiid.designer.relationship.NavigationLink)
      */
-    public String getTooltip( NavigationLink link ) {
+    @Override
+	public String getTooltip( NavigationLink link ) {
         return null;
     }
 
@@ -125,7 +133,8 @@ public class FakeNavigationContextImpl implements NavigationContext {
      * @see org.teiid.designer.relationship.NavigationContext#addNodeAndLink(org.teiid.designer.relationship.NavigationNode,
      *      org.teiid.designer.relationship.NavigationLink)
      */
-    public void addNodeAndLink( NavigationNode node,
+    @Override
+	public void addNodeAndLink( NavigationNode node,
                                 NavigationLink link ) {
     }
 
@@ -140,7 +149,8 @@ public class FakeNavigationContextImpl implements NavigationContext {
      * @see org.teiid.designer.relationship.NavigationContext#getLabelForEnd(org.teiid.designer.relationship.NavigationLink,
      *      org.teiid.designer.relationship.NavigationNode)
      */
-    public String getLabelForEnd( NavigationLink link,
+    @Override
+	public String getLabelForEnd( NavigationLink link,
                                   NavigationNode nodeForEnd ) {
         return null;
     }
@@ -148,14 +158,16 @@ public class FakeNavigationContextImpl implements NavigationContext {
     /**
      * @see org.teiid.designer.relationship.NavigationContext#getNonFocusNodeRole(org.teiid.designer.relationship.NavigationLink)
      */
-    public String getNonFocusNodeRole( NavigationLink link ) {
+    @Override
+	public String getNonFocusNodeRole( NavigationLink link ) {
         return null;
     }
 
     /**
      * @see org.teiid.designer.relationship.NavigationContext#getTooltip(org.teiid.designer.relationship.NavigationNode)
      */
-    public String getTooltip( NavigationNode node ) {
+    @Override
+	public String getTooltip( NavigationNode node ) {
         return null;
     }
 

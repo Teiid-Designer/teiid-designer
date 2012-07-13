@@ -454,6 +454,7 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants 
 		validate();
 	}
 	
+	@Override
 	public void validate() {
 		if( this.useHeaderForColumnNames ) {
 			if( this.getHeaderString() == null || this.getHeaderString().length() == 0 ) {

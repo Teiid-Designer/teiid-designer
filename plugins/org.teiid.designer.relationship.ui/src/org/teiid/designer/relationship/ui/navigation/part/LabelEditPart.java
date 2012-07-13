@@ -71,6 +71,7 @@ public class LabelEditPart extends AbstractGraphicalEditPart implements Property
 	/* (non-JavaDoc)
 	 * @see java.beans.PropertyChangeListener#propertyChange(PropertyChangeEvent)
 	**/
+	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		String prop = evt.getPropertyName();
         

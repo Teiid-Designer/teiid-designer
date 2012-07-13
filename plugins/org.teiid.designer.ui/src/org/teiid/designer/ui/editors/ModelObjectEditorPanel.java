@@ -226,12 +226,14 @@ public class ModelObjectEditorPanel implements IAdaptable, FocusListener, IPrope
         return false;
     }
 
-    public void focusLost( FocusEvent fe ) {
+    @Override
+	public void focusLost( FocusEvent fe ) {
         //        System.out.println("[ModelObjectEditorPanel.focusLost]"); //$NON-NLS-1$
         firefocusLost(fe);
     }
 
-    public void focusGained( FocusEvent fe ) {
+    @Override
+	public void focusGained( FocusEvent fe ) {
         //        System.out.println("[ModelObjectEditorPanel.focusGained]"); //$NON-NLS-1$
         firefocusGained(fe);
     }
@@ -247,7 +249,8 @@ public class ModelObjectEditorPanel implements IAdaptable, FocusListener, IPrope
      * 
      * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
      */
-    public Object getAdapter( Class key ) {
+    @Override
+	public Object getAdapter( Class key ) {
         Object oResult = null;
 
         if (key.equals(IFindReplaceTarget.class)) {
@@ -503,7 +506,8 @@ public class ModelObjectEditorPanel implements IAdaptable, FocusListener, IPrope
      * 
      * @see org.eclipse.ui.IPropertyListener#propertyChanged(java.lang.Object, int)
      */
-    public void propertyChanged( Object source,
+    @Override
+	public void propertyChanged( Object source,
                                  int propId ) {
         if (propId == IEditorPart.PROP_DIRTY) {
             markDirty();
@@ -516,7 +520,8 @@ public class ModelObjectEditorPanel implements IAdaptable, FocusListener, IPrope
         if (titleLabel != null && !titleLabel.isDisposed()) {
             Runnable runnable = new Runnable() {
 
-                public void run() {
+                @Override
+				public void run() {
                     if (titleLabel != null && !titleLabel.isDisposed()) {
                         String title = PluginConstants.EMPTY_STRING;
                         if (activeEditor != null) {

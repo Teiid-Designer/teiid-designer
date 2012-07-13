@@ -147,7 +147,8 @@ public class SetAssociationCommand extends org.eclipse.gef.commands.Command impl
          *      java.lang.Object)
          * @since 4.3
          */
-        public void inputChanged( Viewer viewer,
+        @Override
+		public void inputChanged( Viewer viewer,
                                   Object oldInput,
                                   Object newInput ) {
         }
@@ -172,7 +173,8 @@ public class SetAssociationCommand extends org.eclipse.gef.commands.Command impl
          * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
          * @since 4.3
          */
-        public Object[] getElements( Object inputElement ) {
+        @Override
+		public Object[] getElements( Object inputElement ) {
             // We have a list
             return ((List)inputElement).toArray();
         }

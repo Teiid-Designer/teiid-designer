@@ -196,7 +196,8 @@ public class TransformationSearchPanel extends Composite implements ModifyListen
         searchResultsTreeViewer.getControl().setLayoutData(new GridData(GridData.FILL_BOTH));
 
         searchResultsTreeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
-            public void selectionChanged( SelectionChangedEvent theEvent ) {
+            @Override
+			public void selectionChanged( SelectionChangedEvent theEvent ) {
                 StructuredSelection selection = (StructuredSelection)theEvent.getSelection();
                 if (selection.getFirstElement() instanceof EObject || selection.getFirstElement() instanceof SUIDObject) {
                     setSqlText(selection.getFirstElement());
@@ -291,11 +292,13 @@ public class TransformationSearchPanel extends Composite implements ModifyListen
         fFindField.addModifyListener(this);
 
         SelectionListener selectionListener = new SelectionListener() {
-            public void widgetSelected( SelectionEvent e ) {
+            @Override
+			public void widgetSelected( SelectionEvent e ) {
                 searchHelper.setCaseSensitive(fCaseCheckBox.getSelection());
             }
 
-            public void widgetDefaultSelected( SelectionEvent e ) {
+            @Override
+			public void widgetDefaultSelected( SelectionEvent e ) {
                 searchHelper.setCaseSensitive(fCaseCheckBox.getSelection());
             }
         };
@@ -308,12 +311,14 @@ public class TransformationSearchPanel extends Composite implements ModifyListen
 
         performSearchButton = WidgetFactory.createButton(parent, PERFORM_SEARCH, GridData.BEGINNING, 1, SWT.NONE);
         SelectionListener searchButtonListener = new SelectionListener() {
-            public void widgetSelected( SelectionEvent e ) {
+            @Override
+			public void widgetSelected( SelectionEvent e ) {
                 performSearch();
                 updateFindHistory();
             }
 
-            public void widgetDefaultSelected( SelectionEvent e ) {
+            @Override
+			public void widgetDefaultSelected( SelectionEvent e ) {
             }
         };
         performSearchButton.addSelectionListener(searchButtonListener);
@@ -377,7 +382,8 @@ public class TransformationSearchPanel extends Composite implements ModifyListen
              * @see org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object)
              * @since 5.0
              */
-            public Object getParent( Object element ) {
+            @Override
+			public Object getParent( Object element ) {
                 if (element instanceof SUIDObject) {
                     return ((SUIDObject)element).getParent();
                 }
@@ -419,7 +425,8 @@ public class TransformationSearchPanel extends Composite implements ModifyListen
 
         viewer.getTree().addTraverseListener(new TraverseListener() {
 
-            public void keyTraversed( TraverseEvent event ) {
+            @Override
+			public void keyTraversed( TraverseEvent event ) {
                 if (event.keyCode == SWT.ESC) {
                     event.doit = false;
                     ((Tree)event.widget).getShell().setVisible(false);
@@ -431,7 +438,8 @@ public class TransformationSearchPanel extends Composite implements ModifyListen
         viewer.setLabelProvider(new MyLabelProvider());
 
         viewer.addSelectionChangedListener(new ISelectionChangedListener() {
-            public void selectionChanged( SelectionChangedEvent theEvent ) {
+            @Override
+			public void selectionChanged( SelectionChangedEvent theEvent ) {
                 StructuredSelection selection = (StructuredSelection)theEvent.getSelection();
                 if (selection.getFirstElement() instanceof EObject) {
                     parentDialog.setEditEnabled(true);
@@ -470,7 +478,8 @@ public class TransformationSearchPanel extends Composite implements ModifyListen
     /* (non-Javadoc)
      * @see org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.swt.events.ModifyEvent)
      */
-    public void modifyText( ModifyEvent e ) {
+    @Override
+	public void modifyText( ModifyEvent e ) {
 
         if (fFindField.getText().equals(CoreStringUtil.Constants.EMPTY_STRING)) { 
             // empty selection
@@ -549,7 +558,8 @@ public class TransformationSearchPanel extends Composite implements ModifyListen
     private void setSqlTextMessage( final String message ) {
 
         Display.getCurrent().asyncExec(new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 if (sqlMessageLabel != null && !sqlMessageLabel.isDisposed()) {
                     sqlMessageLabel.setText(message);
                     sqlMessageLabel.redraw();
@@ -561,7 +571,8 @@ public class TransformationSearchPanel extends Composite implements ModifyListen
     private void setSqlGroupMessage( final String message ) {
 
         Display.getCurrent().asyncExec(new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 if (sqlTextPanel != null && !sqlTextPanel.isDisposed()) {
                     sqlTextPanel.setText(message);
                     sqlTextPanel.redraw();
@@ -573,7 +584,8 @@ public class TransformationSearchPanel extends Composite implements ModifyListen
     private void setMessage( final String message ) {
 
         Display.getCurrent().asyncExec(new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 if (messageLabel != null && !messageLabel.isDisposed()) {
                     if (message == null) {
                         messageLabel.setImage(null);

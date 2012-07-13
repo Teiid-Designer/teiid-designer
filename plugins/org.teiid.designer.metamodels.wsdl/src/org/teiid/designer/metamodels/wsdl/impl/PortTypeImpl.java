@@ -131,7 +131,8 @@ public class PortTypeImpl extends EObjectImpl implements PortType {
      * 
      * @generated
      */
-    public String getName() {
+    @Override
+	public String getName() {
         return name;
     }
 
@@ -140,7 +141,8 @@ public class PortTypeImpl extends EObjectImpl implements PortType {
      * 
      * @generated
      */
-    public void setName( String newName ) {
+    @Override
+	public void setName( String newName ) {
         String oldName = name;
         name = newName;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, WsdlPackage.PORT_TYPE__NAME, oldName,
@@ -152,7 +154,8 @@ public class PortTypeImpl extends EObjectImpl implements PortType {
      * 
      * @generated
      */
-    public Documentation getDocumentation() {
+    @Override
+	public Documentation getDocumentation() {
         return documentation;
     }
 
@@ -179,7 +182,8 @@ public class PortTypeImpl extends EObjectImpl implements PortType {
      * 
      * @generated
      */
-    public void setDocumentation( Documentation newDocumentation ) {
+    @Override
+	public void setDocumentation( Documentation newDocumentation ) {
         if (newDocumentation != documentation) {
             NotificationChain msgs = null;
             if (documentation != null) msgs = ((InternalEObject)documentation).eInverseRemove(this,
@@ -202,7 +206,8 @@ public class PortTypeImpl extends EObjectImpl implements PortType {
      * 
      * @generated
      */
-    public EList getDeclaredNamespaces() {
+    @Override
+	public EList getDeclaredNamespaces() {
         if (declaredNamespaces == null) {
             declaredNamespaces = new EObjectContainmentWithInverseEList(NamespaceDeclaration.class, this,
                                                                         WsdlPackage.PORT_TYPE__DECLARED_NAMESPACES,
@@ -216,7 +221,8 @@ public class PortTypeImpl extends EObjectImpl implements PortType {
      * 
      * @generated
      */
-    public EList getAttributes() {
+    @Override
+	public EList getAttributes() {
         if (attributes == null) {
             attributes = new EObjectContainmentWithInverseEList(Attribute.class, this, WsdlPackage.PORT_TYPE__ATTRIBUTES,
                                                                 WsdlPackage.ATTRIBUTE__ATTRIBUTE_OWNER);
@@ -229,7 +235,8 @@ public class PortTypeImpl extends EObjectImpl implements PortType {
      * 
      * @generated
      */
-    public Definitions getDefinitions() {
+    @Override
+	public Definitions getDefinitions() {
         if (eContainerFeatureID != WsdlPackage.PORT_TYPE__DEFINITIONS) return null;
         return (Definitions)eContainer;
     }
@@ -239,7 +246,8 @@ public class PortTypeImpl extends EObjectImpl implements PortType {
      * 
      * @generated
      */
-    public void setDefinitions( Definitions newDefinitions ) {
+    @Override
+	public void setDefinitions( Definitions newDefinitions ) {
         if (newDefinitions != eContainer || (eContainerFeatureID != WsdlPackage.PORT_TYPE__DEFINITIONS && newDefinitions != null)) {
             if (EcoreUtil.isAncestor(this, newDefinitions)) throw new IllegalArgumentException(
                                                                                                "Recursive containment not allowed for " + toString()); //$NON-NLS-1$
@@ -261,7 +269,8 @@ public class PortTypeImpl extends EObjectImpl implements PortType {
      * 
      * @generated
      */
-    public EList getOperations() {
+    @Override
+	public EList getOperations() {
         if (operations == null) {
             operations = new EObjectContainmentWithInverseEList(Operation.class, this, WsdlPackage.PORT_TYPE__OPERATIONS,
                                                                 WsdlPackage.OPERATION__PORT_TYPE);
@@ -274,7 +283,8 @@ public class PortTypeImpl extends EObjectImpl implements PortType {
      * 
      * @generated
      */
-    public boolean isNameValid() {
+    @Override
+	public boolean isNameValid() {
         // TODO: implement this method
         // Ensure that you remove @generated or mark it @generated NOT
         throw new UnsupportedOperationException();

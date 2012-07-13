@@ -65,7 +65,8 @@ public class NavigateToAction extends Action implements ISelectionListener, UiCo
             selectionProvider.setSelection(selection);
             // activate the Model Explorer view (must do this last)
             Display.getCurrent().asyncExec(new Runnable() {
-                public void run() {
+                @Override
+				public void run() {
                     try {
                         ModelExplorerResourceNavigator view = 
                             (ModelExplorerResourceNavigator) UiUtil.getWorkbenchPage().showView(Extensions.Explorer.VIEW);
@@ -85,7 +86,8 @@ public class NavigateToAction extends Action implements ISelectionListener, UiCo
     /* (non-Javadoc)
      * @see org.eclipse.ui.ISelectionListener#selectionChanged(org.eclipse.ui.IWorkbenchPart, org.eclipse.jface.viewers.ISelection)
      */
-    public void selectionChanged(IWorkbenchPart part, ISelection selection) {
+    @Override
+	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
         setEnabled(false);
         if ( SelectionUtilities.isSingleSelection(selection) ) {
             Object selectedObject = SelectionUtilities.getSelectedObject(selection);

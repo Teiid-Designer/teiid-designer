@@ -128,7 +128,8 @@ public class ProcedureImpl extends RelationalEntityImpl implements Procedure {
      * <!-- end-user-doc -->
      * @generated
      */
-    public boolean isFunction() {
+    @Override
+	public boolean isFunction() {
         return function;
     }
 
@@ -137,7 +138,8 @@ public class ProcedureImpl extends RelationalEntityImpl implements Procedure {
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setFunction(boolean newFunction) {
+    @Override
+	public void setFunction(boolean newFunction) {
         boolean oldFunction = function;
         function = newFunction;
         if (eNotificationRequired())
@@ -149,7 +151,8 @@ public class ProcedureImpl extends RelationalEntityImpl implements Procedure {
      * <!-- end-user-doc -->
      * @generated
      */
-    public Schema getSchema() {
+    @Override
+	public Schema getSchema() {
         if (eContainerFeatureID != RelationalPackage.PROCEDURE__SCHEMA) return null;
         return (Schema)eContainer;
     }
@@ -159,7 +162,8 @@ public class ProcedureImpl extends RelationalEntityImpl implements Procedure {
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setSchema(Schema newSchema) {
+    @Override
+	public void setSchema(Schema newSchema) {
         if (newSchema != eContainer || (eContainerFeatureID != RelationalPackage.PROCEDURE__SCHEMA && newSchema != null)) {
             if (EcoreUtil.isAncestor(this, newSchema))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
@@ -180,7 +184,8 @@ public class ProcedureImpl extends RelationalEntityImpl implements Procedure {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EList getParameters() {
+    @Override
+	public EList getParameters() {
         if (parameters == null) {
             parameters = new EObjectContainmentWithInverseEList(ProcedureParameter.class, this, RelationalPackage.PROCEDURE__PARAMETERS, RelationalPackage.PROCEDURE_PARAMETER__PROCEDURE);
         }
@@ -192,7 +197,8 @@ public class ProcedureImpl extends RelationalEntityImpl implements Procedure {
      * <!-- end-user-doc -->
      * @generated
      */
-    public Catalog getCatalog() {
+    @Override
+	public Catalog getCatalog() {
         if (eContainerFeatureID != RelationalPackage.PROCEDURE__CATALOG) return null;
         return (Catalog)eContainer;
     }
@@ -202,7 +208,8 @@ public class ProcedureImpl extends RelationalEntityImpl implements Procedure {
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setCatalog(Catalog newCatalog) {
+    @Override
+	public void setCatalog(Catalog newCatalog) {
         if (newCatalog != eContainer || (eContainerFeatureID != RelationalPackage.PROCEDURE__CATALOG && newCatalog != null)) {
             if (EcoreUtil.isAncestor(this, newCatalog))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
@@ -223,7 +230,8 @@ public class ProcedureImpl extends RelationalEntityImpl implements Procedure {
      * <!-- end-user-doc -->
      * @generated
      */
-    public ProcedureResult getResult() {
+    @Override
+	public ProcedureResult getResult() {
         return result;
     }
 
@@ -247,7 +255,8 @@ public class ProcedureImpl extends RelationalEntityImpl implements Procedure {
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setResult(ProcedureResult newResult) {
+    @Override
+	public void setResult(ProcedureResult newResult) {
         if (newResult != result) {
             NotificationChain msgs = null;
             if (result != null)
@@ -266,7 +275,8 @@ public class ProcedureImpl extends RelationalEntityImpl implements Procedure {
      * <!-- end-user-doc -->
      * @generated
      */
-    public ProcedureUpdateCount getUpdateCount() {
+    @Override
+	public ProcedureUpdateCount getUpdateCount() {
         return updateCount;
     }
 
@@ -275,7 +285,8 @@ public class ProcedureImpl extends RelationalEntityImpl implements Procedure {
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setUpdateCount(ProcedureUpdateCount newUpdateCount) {
+    @Override
+	public void setUpdateCount(ProcedureUpdateCount newUpdateCount) {
         ProcedureUpdateCount oldUpdateCount = updateCount;
         updateCount = newUpdateCount == null ? UPDATE_COUNT_EDEFAULT : newUpdateCount;
         if (eNotificationRequired())

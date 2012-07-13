@@ -39,7 +39,8 @@ public abstract class XmlServiceComponentAspect extends AbstractMetamodelAspect 
      * @see org.teiid.designer.core.metamodel.aspect.uml.UmlDiagramAspect#getImage(java.lang.Object)
      * @since 4.2
      */
-    public Object getImage(final Object eObject) {
+    @Override
+	public Object getImage(final Object eObject) {
         // assert it is a webservice metamodel object
         final EObject xmlCompObj = assertXmlServiceComponent(eObject);
         // get the adapter factory
@@ -54,7 +55,8 @@ public abstract class XmlServiceComponentAspect extends AbstractMetamodelAspect 
      * @see org.teiid.designer.core.metamodel.aspect.uml.UmlDiagramAspect#getVisibility(java.lang.Object)
      * @since 4.2
      */
-    public int getVisibility(final Object eObject) {
+    @Override
+	public int getVisibility(final Object eObject) {
         return VISIBILITY_PUBLIC;
     }
     
@@ -62,7 +64,8 @@ public abstract class XmlServiceComponentAspect extends AbstractMetamodelAspect 
      * @see org.teiid.designer.core.metamodel.aspect.uml.UmlDiagramAspect#getSignature(java.lang.Object, int)
      * @since 4.2
      */
-    public String getSignature(final Object eObject,
+    @Override
+	public String getSignature(final Object eObject,
                                final int showMask) {
         XmlServiceComponent XmlServiceComponent = assertXmlServiceComponent(eObject);
         StringBuffer result = new StringBuffer();
@@ -94,7 +97,8 @@ public abstract class XmlServiceComponentAspect extends AbstractMetamodelAspect 
      * @see org.teiid.designer.core.metamodel.aspect.uml.UmlDiagramAspect#getEditableSignature(java.lang.Object)
      * @since 4.2
      */
-    public String getEditableSignature(final Object eObject) {
+    @Override
+	public String getEditableSignature(final Object eObject) {
         return getSignature(eObject, UmlClassifier.SIGNATURE_NAME);
     }    
 
@@ -102,7 +106,8 @@ public abstract class XmlServiceComponentAspect extends AbstractMetamodelAspect 
      * @see org.teiid.designer.core.metamodel.aspect.uml.UmlDiagramAspect#setSignature(java.lang.Object, java.lang.String)
      * @since 4.2
      */
-    public IStatus setSignature(final Object eObject,
+    @Override
+	public IStatus setSignature(final Object eObject,
                                 final String newSignature) {
         try {
             XmlServiceComponent XmlServiceComponent = assertXmlServiceComponent(eObject);

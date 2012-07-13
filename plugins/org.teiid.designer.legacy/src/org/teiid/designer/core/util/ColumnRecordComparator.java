@@ -25,7 +25,8 @@ public class ColumnRecordComparator implements Comparator<ColumnRecord>, Seriali
      *  This method compares the objects with respect to their position.
      *  @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
      */
-    public int compare(ColumnRecord colRec1, ColumnRecord colRec2) {
+    @Override
+	public int compare(ColumnRecord colRec1, ColumnRecord colRec2) {
         int position1 = colRec1.getPosition();
         int position2 = colRec2.getPosition();
 

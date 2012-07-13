@@ -37,7 +37,8 @@ public class WebServicesModelingNature implements IProjectNature {
      * 
      * @see org.eclipse.core.resources.IProjectNature#configure()
      */
-    public void configure() {
+    @Override
+	public void configure() {
     }
 
     /**
@@ -45,7 +46,8 @@ public class WebServicesModelingNature implements IProjectNature {
      * 
      * @see org.eclipse.core.resources.IProjectNature#deconfigure()
      */
-    public void deconfigure() {
+    @Override
+	public void deconfigure() {
     }
 
     /**
@@ -53,7 +55,8 @@ public class WebServicesModelingNature implements IProjectNature {
      * 
      * @see org.eclipse.core.resources.IProjectNature#getProject()
      */
-    public IProject getProject() {
+    @Override
+	public IProject getProject() {
         return this.project;
     }
 
@@ -62,7 +65,8 @@ public class WebServicesModelingNature implements IProjectNature {
      * 
      * @see org.eclipse.core.resources.IProjectNature#setProject(org.eclipse.core.resources.IProject)
      */
-    public void setProject( IProject project ) {
+    @Override
+	public void setProject( IProject project ) {
         this.project = project;
     }
 }

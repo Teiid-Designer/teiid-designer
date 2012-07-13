@@ -70,7 +70,8 @@ public abstract class MappingClassObjectImpl extends EObjectImpl implements Mapp
      * 
      * @generated
      */
-    public String getName() {
+    @Override
+	public String getName() {
         return name;
     }
 
@@ -79,7 +80,8 @@ public abstract class MappingClassObjectImpl extends EObjectImpl implements Mapp
      * 
      * @generated
      */
-    public void setName( String newName ) {
+    @Override
+	public void setName( String newName ) {
         String oldName = name;
         name = newName;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,

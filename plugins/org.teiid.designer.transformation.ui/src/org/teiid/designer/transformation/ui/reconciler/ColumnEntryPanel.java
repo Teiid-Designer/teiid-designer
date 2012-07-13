@@ -188,7 +188,8 @@ public class ColumnEntryPanel extends Composite implements ModifyListener {
     /**
      * @see org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.swt.events.ModifyEvent)
      */
-    public void modifyText( ModifyEvent e ) {
+    @Override
+	public void modifyText( ModifyEvent e ) {
         // call validation to set any error message and button states.
         validate();
     }

@@ -121,7 +121,8 @@ public class RelationalTypeMappingImpl implements RelationalTypeMapping {
      * @return the Datatype that best corresponds to the JDBC type name
      * @throws ModelerCoreException if there is a problem with the datatype manager
      */
-    public EObject getDatatype( final String jdbcTypeName ) throws ModelerCoreException {
+    @Override
+	public EObject getDatatype( final String jdbcTypeName ) throws ModelerCoreException {
     	EObject result = null;
         if (jdbcTypeName != null) {
         	Integer typeCode = SQL_TYPE_MAPPING.get(jdbcTypeName.toUpperCase());
@@ -143,7 +144,8 @@ public class RelationalTypeMappingImpl implements RelationalTypeMapping {
      *         ambiguous (such as {@link Types#OTHER}).
      * @throws ModelerCoreException if there is a problem with the datatype manager
      */
-    public EObject getDatatype( final int jdbcType ) throws ModelerCoreException {
+    @Override
+	public EObject getDatatype( final int jdbcType ) throws ModelerCoreException {
         if (jdbcType == Types.JAVA_OBJECT) {
         	return findDatatype(DatatypeConstants.BuiltInNames.OBJECT);
         }
@@ -155,7 +157,8 @@ public class RelationalTypeMappingImpl implements RelationalTypeMapping {
         return findDatatype(builtinName);
     }
 
-    public SearchabilityType getSearchabilityType( final EObject datatype ) {
+    @Override
+	public SearchabilityType getSearchabilityType( final EObject datatype ) {
         if (datatype == null) {
             return SearchabilityType.UNSEARCHABLE_LITERAL;
         }

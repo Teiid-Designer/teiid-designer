@@ -68,7 +68,8 @@ public class DiagramContainerImpl extends PresentationEntityImpl implements Diag
      * <!-- end-user-doc -->
      * @generated
      */
-    public EList getDiagram() {
+    @Override
+	public EList getDiagram() {
         if (diagram == null) {
             diagram = new EObjectContainmentWithInverseEList(Diagram.class, this, DiagramPackage.DIAGRAM_CONTAINER__DIAGRAM, DiagramPackage.DIAGRAM__DIAGRAM_CONTAINER);
         }

@@ -189,7 +189,8 @@ public class ModelImportImpl extends EObjectImpl implements ModelImport {
      * 
      * @generated
      */
-    public String getName() {
+    @Override
+	public String getName() {
         return name;
     }
 
@@ -198,7 +199,8 @@ public class ModelImportImpl extends EObjectImpl implements ModelImport {
      * 
      * @generated
      */
-    public void setName( String newName ) {
+    @Override
+	public void setName( String newName ) {
         String oldName = name;
         name = newName;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, CorePackage.MODEL_IMPORT__NAME,
@@ -210,7 +212,8 @@ public class ModelImportImpl extends EObjectImpl implements ModelImport {
      * 
      * @generated NOT
      */
-    public String getPath() {
+    @Override
+	public String getPath() {
         if (this.modelLocation != null) {
 
             // If the modelLocation value represents a logical location of a built-in resource
@@ -317,7 +320,8 @@ public class ModelImportImpl extends EObjectImpl implements ModelImport {
      * 
      * @generated
      */
-    public String getModelLocation() {
+    @Override
+	public String getModelLocation() {
         return modelLocation;
     }
 
@@ -326,7 +330,8 @@ public class ModelImportImpl extends EObjectImpl implements ModelImport {
      * 
      * @generated
      */
-    public void setModelLocation( String newModelLocation ) {
+    @Override
+	public void setModelLocation( String newModelLocation ) {
         String oldModelLocation = modelLocation;
         modelLocation = newModelLocation;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
@@ -339,7 +344,8 @@ public class ModelImportImpl extends EObjectImpl implements ModelImport {
      * 
      * @generated
      */
-    public String getUuid() {
+    @Override
+	public String getUuid() {
         return uuid;
     }
 
@@ -348,7 +354,8 @@ public class ModelImportImpl extends EObjectImpl implements ModelImport {
      * 
      * @generated
      */
-    public void setUuid( String newUuid ) {
+    @Override
+	public void setUuid( String newUuid ) {
         String oldUuid = uuid;
         uuid = newUuid;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, CorePackage.MODEL_IMPORT__UUID,
@@ -360,7 +367,8 @@ public class ModelImportImpl extends EObjectImpl implements ModelImport {
      * 
      * @generated
      */
-    public ModelType getModelType() {
+    @Override
+	public ModelType getModelType() {
         return modelType;
     }
 
@@ -369,7 +377,8 @@ public class ModelImportImpl extends EObjectImpl implements ModelImport {
      * 
      * @generated
      */
-    public void setModelType( ModelType newModelType ) {
+    @Override
+	public void setModelType( ModelType newModelType ) {
         ModelType oldModelType = modelType;
         modelType = newModelType == null ? MODEL_TYPE_EDEFAULT : newModelType;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, CorePackage.MODEL_IMPORT__MODEL_TYPE,
@@ -381,7 +390,8 @@ public class ModelImportImpl extends EObjectImpl implements ModelImport {
      * 
      * @generated
      */
-    public String getPrimaryMetamodelUri() {
+    @Override
+	public String getPrimaryMetamodelUri() {
         return primaryMetamodelUri;
     }
 
@@ -390,7 +400,8 @@ public class ModelImportImpl extends EObjectImpl implements ModelImport {
      * 
      * @generated
      */
-    public void setPrimaryMetamodelUri( String newPrimaryMetamodelUri ) {
+    @Override
+	public void setPrimaryMetamodelUri( String newPrimaryMetamodelUri ) {
         String oldPrimaryMetamodelUri = primaryMetamodelUri;
         primaryMetamodelUri = newPrimaryMetamodelUri;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
@@ -403,7 +414,8 @@ public class ModelImportImpl extends EObjectImpl implements ModelImport {
      * 
      * @generated
      */
-    public ModelAnnotation getModel() {
+    @Override
+	public ModelAnnotation getModel() {
         if (eContainerFeatureID != CorePackage.MODEL_IMPORT__MODEL) return null;
         return (ModelAnnotation)eContainer;
     }
@@ -413,7 +425,8 @@ public class ModelImportImpl extends EObjectImpl implements ModelImport {
      * 
      * @generated
      */
-    public void setModel( ModelAnnotation newModel ) {
+    @Override
+	public void setModel( ModelAnnotation newModel ) {
         if (newModel != eContainer || (eContainerFeatureID != CorePackage.MODEL_IMPORT__MODEL && newModel != null)) {
             if (EcoreUtil.isAncestor(this, newModel)) throw new IllegalArgumentException(
                                                                                          "Recursive containment not allowed for " + toString()); //$NON-NLS-1$

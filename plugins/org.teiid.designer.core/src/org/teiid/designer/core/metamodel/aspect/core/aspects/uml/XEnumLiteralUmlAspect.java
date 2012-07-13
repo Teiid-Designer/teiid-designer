@@ -34,21 +34,24 @@ public class XEnumLiteralUmlAspect extends AbstractExtensionUmlAspect implements
     /** 
      * @see org.teiid.designer.core.metamodel.aspect.uml.UmlProperty#isAssociationEnd(java.lang.Object)
      */
-    public boolean isAssociationEnd(Object property) {
+    @Override
+	public boolean isAssociationEnd(Object property) {
         return false;
     }
     
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodels.aspects.UmlDiagramAspect#getStereotype(java.lang.Object)
      */
-    public String getStereotype(Object eObject) {
+    @Override
+	public String getStereotype(Object eObject) {
         return CoreMetamodelPlugin.getPluginResourceLocator().getString("_UI_XEnumLiteral_type"); //$NON-NLS-1$
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodels.aspects.UmlDiagramAspect#setSignature(java.lang.Object, java.lang.String)
      */
-    public IStatus setSignature(Object eObject, String newSignature) {
+    @Override
+	public IStatus setSignature(Object eObject, String newSignature) {
         try {
             final XEnumLiteral xEnumLiteral = assertXEnumLiteral(eObject);
             xEnumLiteral.setName(newSignature);
@@ -59,7 +62,8 @@ public class XEnumLiteralUmlAspect extends AbstractExtensionUmlAspect implements
         return new Status(IStatus.OK, ModelerCore.PLUGIN_ID, 0, ModelerCore.Util.getString("XEnumLiteralUmlAspect.Signature_changed"), null); //$NON-NLS-1$
     }
 
-    public String getSignature(Object eObject, int showMask) {
+    @Override
+	public String getSignature(Object eObject, int showMask) {
         XEnumLiteral col = assertXEnumLiteral(eObject);
         StringBuffer result = new StringBuffer();
         //case 16 is for properties, which should return an empty string, so 
@@ -167,7 +171,8 @@ public class XEnumLiteralUmlAspect extends AbstractExtensionUmlAspect implements
         return result.toString();
     }
 
-    public String getEditableSignature(Object eObject) {
+    @Override
+	public String getEditableSignature(Object eObject) {
         return getSignature(eObject, UmlProperty.SIGNATURE_NAME);
     }
 

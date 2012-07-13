@@ -317,10 +317,12 @@ public class RefactorCommandProcessorDialog extends SelectionDialog implements P
             tvRoleTableViewer.setCellEditors(editors);
         }
 
-        public void widgetSelected( SelectionEvent e ) {
+        @Override
+		public void widgetSelected( SelectionEvent e ) {
         }
 
-        public void widgetDefaultSelected( SelectionEvent e ) {
+        @Override
+		public void widgetDefaultSelected( SelectionEvent e ) {
         }
 
     }
@@ -393,13 +395,15 @@ public class RefactorCommandProcessorDialog extends SelectionDialog implements P
         /**
          * @see org.eclipse.jface.viewers.IContentProvider#dispose()
          */
-        public void dispose() {
+        @Override
+		public void dispose() {
         }
 
         /**
          * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
          */
-        public Object[] getElements( Object theInputElement ) {
+        @Override
+		public Object[] getElements( Object theInputElement ) {
 
             Object[] result = null;
 
@@ -429,7 +433,8 @@ public class RefactorCommandProcessorDialog extends SelectionDialog implements P
          * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object,
          *      java.lang.Object)
          */
-        public void inputChanged( Viewer theViewer,
+        @Override
+		public void inputChanged( Viewer theViewer,
                                   Object theOldInput,
                                   Object theNewInput ) {
 
@@ -447,7 +452,8 @@ public class RefactorCommandProcessorDialog extends SelectionDialog implements P
 
     class ProblemTableLabelProvider extends LabelProvider implements ITableLabelProvider {
 
-        public Image getColumnImage( Object theElement,
+        @Override
+		public Image getColumnImage( Object theElement,
                                      int iColumnIndex ) {
             Object oRealObject = ((ProblemTableRow)theElement).getObject();
 
@@ -477,7 +483,8 @@ public class RefactorCommandProcessorDialog extends SelectionDialog implements P
         /**
          * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.lang.Object, int)
          */
-        public String getColumnText( Object theElement,
+        @Override
+		public String getColumnText( Object theElement,
                                      int iColumnIndex ) {
             ProblemTableRow row = (ProblemTableRow)theElement;
             return row.getColumnText(iColumnIndex);

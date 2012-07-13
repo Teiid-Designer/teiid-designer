@@ -86,7 +86,8 @@ public class InputParameterImpl extends EObjectImpl implements InputParameter {
      * 
      * @generated
      */
-    public String getName() {
+    @Override
+	public String getName() {
         return name;
     }
 
@@ -95,7 +96,8 @@ public class InputParameterImpl extends EObjectImpl implements InputParameter {
      * 
      * @generated
      */
-    public void setName( String newName ) {
+    @Override
+	public void setName( String newName ) {
         String oldName = name;
         name = newName;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
@@ -107,7 +109,8 @@ public class InputParameterImpl extends EObjectImpl implements InputParameter {
      * 
      * @generated
      */
-    public InputSet getInputSet() {
+    @Override
+	public InputSet getInputSet() {
         if (eContainerFeatureID != TransformationPackage.INPUT_PARAMETER__INPUT_SET) return null;
         return (InputSet)eContainer;
     }
@@ -117,7 +120,8 @@ public class InputParameterImpl extends EObjectImpl implements InputParameter {
      * 
      * @generated
      */
-    public void setInputSet( InputSet newInputSet ) {
+    @Override
+	public void setInputSet( InputSet newInputSet ) {
         if (newInputSet != eContainer
             || (eContainerFeatureID != TransformationPackage.INPUT_PARAMETER__INPUT_SET && newInputSet != null)) {
             if (EcoreUtil.isAncestor(this, newInputSet)) throw new IllegalArgumentException(
@@ -140,7 +144,8 @@ public class InputParameterImpl extends EObjectImpl implements InputParameter {
      * 
      * @generated
      */
-    public EObject getType() {
+    @Override
+	public EObject getType() {
         if (type != null && type.eIsProxy()) {
             EObject oldType = type;
             type = eResolveProxy((InternalEObject)type);
@@ -167,7 +172,8 @@ public class InputParameterImpl extends EObjectImpl implements InputParameter {
      * 
      * @generated
      */
-    public void setType( EObject newType ) {
+    @Override
+	public void setType( EObject newType ) {
         EObject oldType = type;
         type = newType;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,

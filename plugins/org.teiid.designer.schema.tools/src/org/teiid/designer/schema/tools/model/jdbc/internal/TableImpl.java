@@ -63,15 +63,18 @@ public class TableImpl extends DatabaseElementImpl implements Table {
         m_columns = new ArrayList();
     }
 
-    public void setElement( SchemaObject element ) {
+    @Override
+	public void setElement( SchemaObject element ) {
         this.element = element;
     }
 
-    public void setSchemaModel( SchemaModel schemaModel ) {
+    @Override
+	public void setSchemaModel( SchemaModel schemaModel ) {
         this.schemaModel = schemaModel;
     }
 
-    public String getNamespaceDeclaration() {
+    @Override
+	public String getNamespaceDeclaration() {
         StringBuffer buff = new StringBuffer();
         for (int i = 0; i < m_namespaces.size(); i++) {
             Namespace ns = (Namespace)m_namespaces.get(i);
@@ -98,23 +101,28 @@ public class TableImpl extends DatabaseElementImpl implements Table {
         return isWellKnown;
     }
 
-    public void addNamespace( Namespace ns ) {
+    @Override
+	public void addNamespace( Namespace ns ) {
         m_namespaces.add(ns);
     }
 
-    public String getCatalog() {
+    @Override
+	public String getCatalog() {
         return m_catalog;
     }
 
-    public void setCatalog( String catalog ) {
+    @Override
+	public void setCatalog( String catalog ) {
         m_catalog = catalog;
     }
 
-    public void addColumn( Column column ) {
+    @Override
+	public void addColumn( Column column ) {
         m_columns.add(column);
     }
 
-    public Column[] getColumns() {
+    @Override
+	public Column[] getColumns() {
         List columns = null;
         if (element != null && !isBase()) {
             columns = element.getAllModelColumns();
@@ -127,7 +135,8 @@ public class TableImpl extends DatabaseElementImpl implements Table {
         return column;
     }
 
-    public Table[] getChildTables() {
+    @Override
+	public Table[] getChildTables() {
         List children = new ArrayList();
         if (null != element) {
             for (Iterator iter = element.getChildren().iterator(); iter.hasNext();) {
@@ -142,7 +151,8 @@ public class TableImpl extends DatabaseElementImpl implements Table {
         return tables;
     }
 
-    public Table[] getParentTables() {
+    @Override
+	public Table[] getParentTables() {
         List parents = new ArrayList();
         for (Iterator iter = element.getParents().iterator(); iter.hasNext();) {
             Relationship relationship = (Relationship)iter.next();
@@ -157,7 +167,8 @@ public class TableImpl extends DatabaseElementImpl implements Table {
         return tables;
     }
 
-    public int getRelationToParent() {
+    @Override
+	public int getRelationToParent() {
         String key = element.getSimpleName() + ':' + element.getNamespace();
         return ((SchemaModelImpl)schemaModel).getRelationToParent(key);
     }
@@ -178,15 +189,18 @@ public class TableImpl extends DatabaseElementImpl implements Table {
         return result;
     }
 
-    public String getSchema() {
+    @Override
+	public String getSchema() {
         return m_schema;
     }
 
-    public void setSchema( String schema ) {
+    @Override
+	public void setSchema( String schema ) {
         m_schema = schema;
     }
 
-    public SchemaObject getElement() {
+    @Override
+	public SchemaObject getElement() {
         return element;
     }
 
@@ -194,11 +208,13 @@ public class TableImpl extends DatabaseElementImpl implements Table {
         return isBase;
     }
 
-    public void setBase( boolean isBase ) {
+    @Override
+	public void setBase( boolean isBase ) {
         this.isBase = isBase;
     }
 
-    public int getMaxOccurs() {
+    @Override
+	public int getMaxOccurs() {
         return element.getMaxOccurs();
     }
 

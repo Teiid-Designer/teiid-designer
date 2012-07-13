@@ -204,7 +204,8 @@ public abstract class BaseID implements Cloneable, Comparable, Serializable {
      * @throws IllegalArgumentException if the specified object reference is null
      * @throws ClassCastException if the specified object's type prevents it from being compared to this instance.
      */
-    public int compareTo( Object obj ) {
+    @Override
+	public int compareTo( Object obj ) {
         BaseID that = (BaseID)obj; // May throw ClassCastException
         if (obj == null) {
             throw new IllegalArgumentException(I18nUtil.getString(ErrorMessageKeys.NAMEDOBJECT_ERR_0003));

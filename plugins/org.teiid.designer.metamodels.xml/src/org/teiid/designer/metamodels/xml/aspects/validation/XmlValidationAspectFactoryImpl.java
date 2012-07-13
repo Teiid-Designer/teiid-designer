@@ -22,7 +22,8 @@ public class XmlValidationAspectFactoryImpl implements MetamodelAspectFactory {
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.MetamodelAspectFactory#create(org.eclipse.emf.ecore.EClassifier, org.teiid.designer.core.metamodel.aspect.MetamodelEntity)
      */
-    public MetamodelAspect create(EClassifier classifier, MetamodelEntity entity) {
+    @Override
+	public MetamodelAspect create(EClassifier classifier, MetamodelEntity entity) {
             switch (classifier.getClassifierID()) {
                 case XmlDocumentPackage.XML_NAMESPACE: return new XmlNamespaceAspect(entity);
 				case XmlDocumentPackage.XML_DOCUMENT:  return new XmlDocumentAspect(entity);

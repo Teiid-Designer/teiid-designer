@@ -42,7 +42,8 @@ public class RelationshipRoleAccumulatorSelectionValidator implements ISelection
     /* (non-Javadoc)
      * @see org.eclipse.ui.dialogs.ISelectionStatusValidator#validate(java.lang.Object[])
      */
-    public IStatus validate(Object[] selection) {
+    @Override
+	public IStatus validate(Object[] selection) {
         for ( int i=0 ; i<selection.length ; ++ i ) {
             
             if ( ! (selection[i] instanceof EObject) ) {

@@ -223,7 +223,8 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
      *      org.teiid.designer.jdbc.metadata.JdbcDatabase, org.teiid.designer.jdbc.metadata.JdbcNode[],
      *      org.teiid.designer.jdbc.JdbcImportSettings, org.eclipse.core.runtime.IProgressMonitor)
      */
-    public final IStatus execute( final Resource modelResource,
+    @Override
+	public final IStatus execute( final Resource modelResource,
                                   final JdbcDatabase jdbcDatabase,
                                   final JdbcImportSettings settings,
                                   final IProgressMonitor monitor ) {
@@ -236,7 +237,8 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
      *      org.teiid.designer.jdbc.JdbcImportSettings, org.eclipse.core.runtime.IProgressMonitor)
      * @since 4.4
      */
-    public final IStatus execute( final Resource modelResource,
+    @Override
+	public final IStatus execute( final Resource modelResource,
                                   final Container container,
                                   final JdbcDatabase jdbcDatabase,
                                   final JdbcImportSettings settings,
@@ -275,7 +277,8 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.RelationalModelProcessor#execute(org.teiid.designer.core.workspace.ModelResource, org.teiid.designer.jdbc.metadata.JdbcDatabase, org.teiid.designer.jdbc.metadata.JdbcNode[], org.teiid.designer.jdbc.JdbcImportSettings, org.eclipse.core.runtime.IProgressMonitor)
      */
-    public final IStatus execute( final ModelResource modelResource,
+    @Override
+	public final IStatus execute( final ModelResource modelResource,
                                   final JdbcDatabase jdbcDatabase,
                                   final JdbcImportSettings settings,
                                   final IProgressMonitor monitor ) throws ModelWorkspaceException {
@@ -325,7 +328,8 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
         // Perform the execute within a transaction ...
         try {
             final TransactionRunnable op = new TransactionRunnable() {
-                public Object run( UnitOfWork uow ) throws ModelerCoreException {
+                @Override
+				public Object run( UnitOfWork uow ) throws ModelerCoreException {
                     Stopwatch sWatch = new Stopwatch();
                     sWatch.start();
                     performExecute(workingArea.getContext(), problems);
@@ -443,7 +447,8 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
         // Perform the execute within a transaction ...
         try {
             final TransactionRunnable op = new TransactionRunnable() {
-                public Object run( UnitOfWork uow ) {
+                @Override
+				public Object run( UnitOfWork uow ) {
                     performExecute(workingArea.getContext(), problems);
 
                     /*
@@ -553,21 +558,24 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
      * @see org.teiid.designer.jdbc.relational.RelationalModelProcessor#setMoveRatherThanCopyAdds(boolean)
      * @since 4.3
      */
-    public void setMoveRatherThanCopyAdds( final boolean moveRatherThanCopyAdds ) {
+    @Override
+	public void setMoveRatherThanCopyAdds( final boolean moveRatherThanCopyAdds ) {
         this.moveRatherThanCopyAdds = moveRatherThanCopyAdds;
     }
 
     /**
      * @see org.teiid.designer.jdbc.relational.RelationalModelProcessor#setIncludeIncompleteFKs(boolean)
      */
-    public void setIncludeIncompleteFKs( final boolean includeIncompleteFKs ) {
+    @Override
+	public void setIncludeIncompleteFKs( final boolean includeIncompleteFKs ) {
         this.includeIncompleteFKs = includeIncompleteFKs;
     }
 
     /**
      * @see org.teiid.designer.jdbc.relational.RelationalModelProcessor#getIncludeIncompleteFKs
      */
-    public boolean getIncludeIncompleteFKs() {
+    @Override
+	public boolean getIncludeIncompleteFKs() {
         return this.includeIncompleteFKs;
     }
 
@@ -2682,7 +2690,8 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
      * @see org.teiid.designer.jdbc.relational.RelationalModelProcessor#getDebugLogTiming()
      * @since 4.3
      */
-    public boolean getDebugLogTiming() {
+    @Override
+	public boolean getDebugLogTiming() {
         return this.debugTimingEnabled;
     }
 
@@ -2690,7 +2699,8 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
      * @see org.teiid.designer.jdbc.relational.RelationalModelProcessor#setDebugLogTiming(boolean)
      * @since 4.3
      */
-    public void setDebugLogTiming( boolean logTiming ) {
+    @Override
+	public void setDebugLogTiming( boolean logTiming ) {
         this.debugTimingEnabled = logTiming;
     }
 }

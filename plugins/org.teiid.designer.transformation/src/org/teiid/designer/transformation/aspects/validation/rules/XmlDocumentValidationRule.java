@@ -104,7 +104,8 @@ public class XmlDocumentValidationRule implements ObjectValidationRule {
     /*
      * @See org.teiid.designer.core.validation.ObjectValidationRule#validate(org.eclipse.emf.ecore.EObject, org.teiid.designer.core.validation.ValidationContext)
      */
-    public synchronized void validate( final EObject eObject,
+    @Override
+	public synchronized void validate( final EObject eObject,
                                        final ValidationContext context ) {
         CoreArgCheck.isInstanceOf(TreeMappingRoot.class, eObject);
 
@@ -919,7 +920,8 @@ public class XmlDocumentValidationRule implements ObjectValidationRule {
         Collection choices = new ArrayList();
         Collection entities = new ArrayList();
 
-        public boolean visit( final EObject eObject ) {
+        @Override
+		public boolean visit( final EObject eObject ) {
             if (eObject instanceof XmlElement) {
                 elements.add(eObject);
             }
@@ -952,7 +954,8 @@ public class XmlDocumentValidationRule implements ObjectValidationRule {
         /**
          * @see org.teiid.designer.core.util.ModelVisitor#visit(org.eclipse.emf.ecore.resource.Resource)
          */
-        public boolean visit( final Resource resource ) {
+        @Override
+		public boolean visit( final Resource resource ) {
             return true;
         }
     }

@@ -41,7 +41,8 @@ public class NavigationContextBuilderImpl implements NavigationContextBuilder {
     /**
      * @see org.teiid.designer.relationship.NavigationContextBuilder#buildNavigationContext(org.teiid.designer.relationship.NavigationContextInfo)
      */
-    public NavigationContext buildNavigationContext( NavigationContextInfo info ) {
+    @Override
+	public NavigationContext buildNavigationContext( NavigationContextInfo info ) {
         CoreArgCheck.isNotNull(info);
         this.info = info;
 
@@ -54,7 +55,8 @@ public class NavigationContextBuilderImpl implements NavigationContextBuilder {
     /**
      * @see org.teiid.designer.relationship.NavigationContext#getAllNodes()
      */
-    public NavigationContext getAllNodes( String focusNodeURI ) {
+    @Override
+	public NavigationContext getAllNodes( String focusNodeURI ) {
         FindRelatedObjectsCommand command = RelationshipPlugin.createFindRelatedObjectsCommand();
         IStatus status = null;
         command.setModelObjectUri(focusNodeURI);

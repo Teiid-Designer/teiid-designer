@@ -25,7 +25,8 @@ public class FakeTreeSelection implements TreeSelection {
     /* (non-Javadoc)
      * @see com.metamatrix.core.selection.TreeSelection#getSelectionMode(java.lang.Object)
      */
-    public int getSelectionMode(Object node) {
+    @Override
+	public int getSelectionMode(Object node) {
         return SELECTED;
     }
 

@@ -66,14 +66,16 @@ public class ModelerUiViewUtils {
         	if( synchronous ) {
                 Display.getDefault().syncExec(new Runnable() {
 
-                    public void run() {
+                    @Override
+					public void run() {
                         openView(viewId, selection);
                     }
                 });
         	} else {
                 Display.getDefault().asyncExec(new Runnable() {
 
-                    public void run() {
+                    @Override
+					public void run() {
                         openView(viewId, selection);
                     }
                 });
@@ -113,7 +115,8 @@ public class ModelerUiViewUtils {
         // activate the Model Explorer view (must do this last)
         Display.getDefault().asyncExec(new Runnable() {
 
-            public void run() {
+            @Override
+			public void run() {
                 ModelExplorerResourceNavigator view = (ModelExplorerResourceNavigator)UiUtil.getViewPart(Extensions.Explorer.VIEW);
 
                 if (view != null) {
@@ -126,7 +129,8 @@ public class ModelerUiViewUtils {
     public static void refreshWorkspace() {
         // activate the Model Explorer view (must do this last)
         Display.getDefault().asyncExec(new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 RefreshAction refreshAction = new RefreshAction(UiPlugin.getDefault().getCurrentWorkbenchWindow());
                 
                 refreshAction.refreshAll();
@@ -156,7 +160,8 @@ public class ModelerUiViewUtils {
 		if( synchronous ) {
 	        Display.getDefault().syncExec(new Runnable() {
 	        	
-	            public void run() {
+	            @Override
+				public void run() {
 	        		// First see if this is a "new wizard".
 	        		IWizardDescriptor descriptor = PlatformUI.getWorkbench().getNewWizardRegistry().findWizard(id);
 	        		// If not check if it is an "import wizard".
@@ -181,7 +186,8 @@ public class ModelerUiViewUtils {
 		} else {
 	        Display.getDefault().asyncExec(new Runnable() {
 	
-	            public void run() {
+	            @Override
+				public void run() {
 	        		// First see if this is a "new wizard".
 	        		IWizardDescriptor descriptor = PlatformUI.getWorkbench().getNewWizardRegistry().findWizard(id);
 	        		// If not check if it is an "import wizard".
@@ -227,7 +233,8 @@ public class ModelerUiViewUtils {
 		if( synchronous ) {
 	        Display.getDefault().syncExec(new Runnable() {
 	        	
-	            public void run() {
+	            @Override
+				public void run() {
 	        		wizard.init(PlatformUI.getWorkbench(), selection);
 	        		if( properties != null && wizard instanceof IPropertiesContext ) {
 	        			((IPropertiesContext)wizard).setProperties(properties);
@@ -242,7 +249,8 @@ public class ModelerUiViewUtils {
 		} else  {
 	        Display.getDefault().asyncExec(new Runnable() {
 	
-	            public void run() {
+	            @Override
+				public void run() {
 	        		wizard.init(PlatformUI.getWorkbench(), selection);
 	        		if( properties != null && wizard instanceof IPropertiesContext ) {
 	        			((IPropertiesContext)wizard).setProperties(properties);

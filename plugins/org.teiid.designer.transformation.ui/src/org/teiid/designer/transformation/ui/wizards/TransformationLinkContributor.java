@@ -53,14 +53,16 @@ public class TransformationLinkContributor implements INewModelWizardContributor
      * @see org.teiid.designer.ui.wizards.INewModelWizardContributor#canFinishEarly(org.eclipse.jface.wizard.IWizardPage)
      * @since 4.2
      */
-    public boolean canFinishEarly(IWizardPage theCurrentPage) {
+    @Override
+	public boolean canFinishEarly(IWizardPage theCurrentPage) {
         return false;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.ui.wizards.INewModelWizardContributor#createWizardPages(org.eclipse.jface.viewers.ISelection, org.eclipse.core.resources.IProject, org.teiid.designer.core.MetamodelDescriptor, boolean)
      */
-    public void createWizardPages(
+    @Override
+	public void createWizardPages(
         	ISelection selection,
         	IResource targetResource,
             IPath targetFilePath,
@@ -77,14 +79,16 @@ public class TransformationLinkContributor implements INewModelWizardContributor
     /* (non-Javadoc)
      * @See org.teiid.designer.ui.wizards.INewModelWizardContributor#getWizardPages()
      */
-    public IWizardPage[] getWizardPages() {
+    @Override
+	public IWizardPage[] getWizardPages() {
         return pages;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.ui.wizards.INewModelWizardContributor#inputChanged(org.eclipse.jface.viewers.ISelection, org.eclipse.core.resources.IProject, org.teiid.designer.core.MetamodelDescriptor, boolean)
      */
-    public void inputChanged(
+    @Override
+	public void inputChanged(
         ISelection selection,
         IResource targetResource,
         MetamodelDescriptor descriptor,
@@ -96,13 +100,15 @@ public class TransformationLinkContributor implements INewModelWizardContributor
      * @see org.teiid.designer.ui.wizards.INewModelWizardContributor#doCancel()
      * @since 4.2
      */
-    public void doCancel() {
+    @Override
+	public void doCancel() {
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.ui.wizards.INewModelWizardContributor#doFinish(org.teiid.designer.core.workspace.ModelResource, org.eclipse.core.runtime.IProgressMonitor)
      */
-    public void doFinish(ModelResource modelResource, IProgressMonitor monitor) {
+    @Override
+	public void doFinish(ModelResource modelResource, IProgressMonitor monitor) {
 		String transactionName = Util.getString("TransformationLinkContributor.transactionName"); //$NON-NLS-1$
 		boolean started = ModelerCore.startTxn(transactionName, this);
         boolean succeeded = false;
@@ -131,7 +137,8 @@ public class TransformationLinkContributor implements INewModelWizardContributor
 		}
     }
 
-    public void currentPageChanged(IWizardPage page) {
+    @Override
+	public void currentPageChanged(IWizardPage page) {
         // unneeded, for now
     }
 }

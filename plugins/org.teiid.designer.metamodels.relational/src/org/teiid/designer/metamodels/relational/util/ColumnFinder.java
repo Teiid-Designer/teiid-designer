@@ -31,7 +31,8 @@ public class ColumnFinder extends RelationalEntityFinder {
      * 
      * @see org.teiid.designer.core.util.ModelVisitor#visit(org.eclipse.emf.ecore.EObject)
      */
-    public boolean visit( final EObject object ) {
+    @Override
+	public boolean visit( final EObject object ) {
         if (object instanceof Column) {
             found((Column)object);
             return false;

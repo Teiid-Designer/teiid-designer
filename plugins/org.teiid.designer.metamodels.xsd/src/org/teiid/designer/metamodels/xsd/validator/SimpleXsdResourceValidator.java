@@ -53,7 +53,8 @@ public class SimpleXsdResourceValidator implements ResourceValidator {
      * @see org.teiid.designer.core.builder.ResourceValidator#isValidatorForObject(java.lang.Object)
      * @since 4.2
      */
-    public boolean isValidatorForObject(final Object obj) {
+    @Override
+	public boolean isValidatorForObject(final Object obj) {
         if (obj instanceof IResource) {
             return ModelUtil.isXsdFile((IResource)obj);
         } else if (obj instanceof XSDResourceImpl) {
@@ -68,7 +69,8 @@ public class SimpleXsdResourceValidator implements ResourceValidator {
      * @see org.teiid.designer.core.builder.ResourceValidator#validate(org.eclipse.core.runtime.IProgressMonitor, java.lang.Object, org.teiid.designer.core.validation.ValidationContext)
      * @since 4.2
      */
-    public void validate(final IProgressMonitor theMonitor,
+    @Override
+	public void validate(final IProgressMonitor theMonitor,
                          final Object obj,
                          final ValidationContext context) throws ModelerCoreException {
 
@@ -110,7 +112,8 @@ public class SimpleXsdResourceValidator implements ResourceValidator {
     /**
      * @see org.teiid.designer.core.builder.ResourceValidator#validate(org.eclipse.emf.ecore.resource.Resource, org.eclipse.core.resources.IResource, org.teiid.designer.core.validation.ValidationContext)
      */
-    public void validate(final IProgressMonitor theMonitor, final Resource resource,
+    @Override
+	public void validate(final IProgressMonitor theMonitor, final Resource resource,
                          final IResource iResource, final ValidationContext context) throws ModelerCoreException {
 
         final IProgressMonitor monitor = (theMonitor != null ? theMonitor : new NullProgressMonitor());
@@ -145,7 +148,8 @@ public class SimpleXsdResourceValidator implements ResourceValidator {
      * @see org.teiid.designer.core.builder.ResourceValidator#addMarkers(org.teiid.designer.core.validation.ValidationContext, org.eclipse.core.resources.IResource)
      * @since 4.2
      */
-    public void addMarkers(final ValidationContext context,
+    @Override
+	public void addMarkers(final ValidationContext context,
                            final IResource iResource) throws ModelerCoreException {
 
         if (context != null && context.hasResults()) {
@@ -175,6 +179,7 @@ public class SimpleXsdResourceValidator implements ResourceValidator {
     /**
 	 * @see org.teiid.designer.core.builder.ResourceValidator#isValidatorForResource(org.eclipse.core.resources.IResource)
 	 */
+	@Override
 	public boolean isValidatorForResource( final IResource iResource ) {
 		return isValidatorForObject(iResource);
 	}
@@ -183,7 +188,8 @@ public class SimpleXsdResourceValidator implements ResourceValidator {
      * @see org.teiid.designer.core.builder.ResourceValidator#validationStarted(java.util.Collection, org.teiid.designer.core.validation.ValidationContext)
      * @since 4.3
      */
-    public void validationStarted(final Collection resources,
+    @Override
+	public void validationStarted(final Collection resources,
                                   final ValidationContext context) {
     }
 
@@ -191,7 +197,8 @@ public class SimpleXsdResourceValidator implements ResourceValidator {
      * @see org.teiid.designer.core.builder.ResourceValidator#validationEnded(org.teiid.designer.core.validation.ValidationContext)
      * @since 4.3
      */
-    public void validationEnded(final ValidationContext context) {
+    @Override
+	public void validationEnded(final ValidationContext context) {
     }
 
     // ==================================================================================

@@ -45,14 +45,16 @@ public class ColumnSetRecordImpl extends AbstractMetadataRecord implements Colum
     /** 
      * @see org.teiid.designer.metadata.runtime.ColumnSetRecord#getColumnIDs()
      */
-    public List getColumnIDs() {
+    @Override
+	public List getColumnIDs() {
         return columnIDs;
     }
 
     /** 
      * @see org.teiid.designer.metadata.runtime.ColumnSetRecord#getColumnIdEntries()
      */
-    public ListEntryRecord[] getColumnIdEntries() {
+    @Override
+	public ListEntryRecord[] getColumnIdEntries() {
         final List entryRecords = new ArrayList(columnIDs.size());
         for (int i = 0, n = columnIDs.size(); i < n; i++) {
             final String uuid  = (String)columnIDs.get(i);
@@ -65,7 +67,8 @@ public class ColumnSetRecordImpl extends AbstractMetadataRecord implements Colum
     /** 
      * @see org.teiid.designer.metadata.runtime.ColumnSetRecord#isAccessPattern()
      */
-    public boolean isAccessPattern() {
+    @Override
+	public boolean isAccessPattern() {
         if (super.getRecordType() == IndexConstants.RECORD_TYPE.ACCESS_PATTERN) {
             return true;
         }
@@ -75,7 +78,8 @@ public class ColumnSetRecordImpl extends AbstractMetadataRecord implements Colum
     /** 
      * @see org.teiid.designer.metadata.runtime.ColumnSetRecord#isIndex()
      */
-    public boolean isIndex() {
+    @Override
+	public boolean isIndex() {
         if (super.getRecordType() == IndexConstants.RECORD_TYPE.INDEX) {
             return true;
         }
@@ -85,7 +89,8 @@ public class ColumnSetRecordImpl extends AbstractMetadataRecord implements Colum
     /** 
      * @see org.teiid.designer.metadata.runtime.ColumnSetRecord#isPrimaryKey()
      */
-    public boolean isPrimaryKey() {
+    @Override
+	public boolean isPrimaryKey() {
         if (super.getRecordType() == IndexConstants.RECORD_TYPE.PRIMARY_KEY) {
             return true;
         }
@@ -95,7 +100,8 @@ public class ColumnSetRecordImpl extends AbstractMetadataRecord implements Colum
     /** 
      * @see org.teiid.designer.metadata.runtime.ColumnSetRecord#isUniqueKey()
      */
-    public boolean isUniqueKey() {
+    @Override
+	public boolean isUniqueKey() {
         if (super.getRecordType() == IndexConstants.RECORD_TYPE.UNIQUE_KEY) {
             return true;
         }
@@ -105,7 +111,8 @@ public class ColumnSetRecordImpl extends AbstractMetadataRecord implements Colum
     /**
      * @see org.teiid.designer.metadata.runtime.ColumnSetRecord#isResultSet()
      */
-    public boolean isResultSet() {
+    @Override
+	public boolean isResultSet() {
         if (super.getRecordType() == IndexConstants.RECORD_TYPE.RESULT_SET) {
             return true;
         }
@@ -115,7 +122,8 @@ public class ColumnSetRecordImpl extends AbstractMetadataRecord implements Colum
     /** 
      * @see org.teiid.designer.metadata.runtime.ColumnSetRecord#getType()
      */
-    public short getType() {
+    @Override
+	public short getType() {
         return this.getKeyTypeForRecordType(this.getRecordType());
     }
 

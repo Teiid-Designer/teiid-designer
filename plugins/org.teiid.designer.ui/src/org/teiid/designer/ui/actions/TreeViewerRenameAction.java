@@ -124,7 +124,8 @@ public class TreeViewerRenameAction extends RenameAction {
             // Defect 23413 - we only need one or the other or both
             if (currentObject != null || cachedSelection != null) {
                 Display.getCurrent().asyncExec(new Runnable() {
-                    public void run() {
+                    @Override
+					public void run() {
                         if (navigatorTree != null) {
                             isSignificant = true;
                             renameInline(currentObject);
@@ -150,7 +151,8 @@ public class TreeViewerRenameAction extends RenameAction {
         cachedSelection = navigatorTree.getSelection();
 
         Display.getCurrent().asyncExec(new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 if (navigatorTree != null) {
                     isSignificant = generateUndo;
                     if (ModelerCore.getModelEditor().hasName(currentObject)) {
@@ -224,7 +226,8 @@ public class TreeViewerRenameAction extends RenameAction {
         textEditorParent = createEditorParent();
         textEditorParent.setVisible(false);
         textEditorParent.addListener(SWT.Paint, new Listener() {
-            public void handleEvent( Event e ) {
+            @Override
+			public void handleEvent( Event e ) {
                 Point textSize = textEditor.getSize();
                 Point parentSize = textEditorParent.getSize();
                 e.gc.drawRectangle(0, 0, Math.min(textSize.x + 4, parentSize.x - 1), parentSize.y - 1);
@@ -235,7 +238,8 @@ public class TreeViewerRenameAction extends RenameAction {
         textEditor = new Text(textEditorParent, SWT.NONE);
         textEditorParent.setBackground(textEditor.getBackground());
         textEditor.addListener(SWT.Modify, new Listener() {
-            public void handleEvent( Event e ) {
+            @Override
+			public void handleEvent( Event e ) {
                 Point textSize = textEditor.computeSize(SWT.DEFAULT, SWT.DEFAULT);
                 textSize.x += textSize.y; // Add extra space for new characters.
                 Point parentSize = textEditorParent.getSize();
@@ -244,7 +248,8 @@ public class TreeViewerRenameAction extends RenameAction {
             }
         });
         textEditor.addListener(SWT.Traverse, new Listener() {
-            public void handleEvent( Event event ) {
+            @Override
+			public void handleEvent( Event event ) {
 
                 // Workaround for Bug 20214 due to extra
                 // traverse events
@@ -301,7 +306,8 @@ public class TreeViewerRenameAction extends RenameAction {
         // icon of the item being renamed is clicked (i.e., which causes the rename
         // text widget to lose focus and trigger this method).
         Runnable query = new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 // Dispose the text widget regardless
                 disposeTextWidget();
                 // String oldName = labelProvider.getText(currentObject);

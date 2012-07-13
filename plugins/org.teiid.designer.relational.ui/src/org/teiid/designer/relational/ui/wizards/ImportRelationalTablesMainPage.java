@@ -138,7 +138,8 @@ public class ImportRelationalTablesMainPage extends WizardDataTransferPage imple
      * 
      * @param event Event
      */
-    public void handleEvent( Event event ) {
+    @Override
+	public void handleEvent( Event event ) {
         if (!initializing) {
             boolean validate = false;
 
@@ -206,7 +207,8 @@ public class ImportRelationalTablesMainPage extends WizardDataTransferPage imple
      * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
      * @since 4.2
      */
-    public void createControl( Composite parent ) {
+    @Override
+	public void createControl( Composite parent ) {
 
         initializeDialogUnits(parent);
 
@@ -268,7 +270,8 @@ public class ImportRelationalTablesMainPage extends WizardDataTransferPage imple
             /*
              * @see KeyListener.keyPressed
              */
-            public void keyPressed( KeyEvent e ) {
+            @Override
+			public void keyPressed( KeyEvent e ) {
                 // If there has been a key pressed then mark as dirty
                 entryChanged = true;
             }
@@ -276,7 +279,8 @@ public class ImportRelationalTablesMainPage extends WizardDataTransferPage imple
             /*
              * @see KeyListener.keyReleased
              */
-            public void keyReleased( KeyEvent e ) {
+            @Override
+			public void keyReleased( KeyEvent e ) {
             }
         });
 
@@ -285,14 +289,16 @@ public class ImportRelationalTablesMainPage extends WizardDataTransferPage imple
             /*
              * @see FocusListener.focusGained(FocusEvent)
              */
-            public void focusGained( FocusEvent e ) {
+            @Override
+			public void focusGained( FocusEvent e ) {
                 // Do nothing when getting focus
             }
 
             /*
              * @see FocusListener.focusLost(FocusEvent)
              */
-            public void focusLost( FocusEvent e ) {
+            @Override
+			public void focusLost( FocusEvent e ) {
                 // Clear the flag to prevent constant update
                 if (entryChanged) {
                     entryChanged = false;
@@ -538,7 +544,8 @@ public class ImportRelationalTablesMainPage extends WizardDataTransferPage imple
      * 
      * @return boolean
      */
-    public boolean finish() {
+    @Override
+	public boolean finish() {
 
         saveWidgetValues();
 
@@ -640,25 +647,31 @@ public class ImportRelationalTablesMainPage extends WizardDataTransferPage imple
         }
     }
 
-    public Object[] addButtonSelected() {
+    @Override
+	public Object[] addButtonSelected() {
         return null;
     }
 
-    public void downButtonSelected( IStructuredSelection selection ) {
+    @Override
+	public void downButtonSelected( IStructuredSelection selection ) {
     }
 
-    public Object editButtonSelected( IStructuredSelection selection ) {
+    @Override
+	public Object editButtonSelected( IStructuredSelection selection ) {
         return null;
     }
 
-    public void itemsSelected( IStructuredSelection selection ) {
+    @Override
+	public void itemsSelected( IStructuredSelection selection ) {
     }
 
-    public Object[] removeButtonSelected( IStructuredSelection selection ) {
+    @Override
+	public Object[] removeButtonSelected( IStructuredSelection selection ) {
         return null;
     }
 
-    public void upButtonSelected( IStructuredSelection selection ) {
+    @Override
+	public void upButtonSelected( IStructuredSelection selection ) {
     }
 
     /**
@@ -699,28 +712,32 @@ public class ImportRelationalTablesMainPage extends WizardDataTransferPage imple
     /**
      * @see org.teiid.designer.tools.textimport.ui.wizards.ITextImportMainPage#getComboText()
      */
-    public String getComboText() {
+    @Override
+	public String getComboText() {
         return IMPORT_ID;
     }
 
     /**
      * @see org.teiid.designer.tools.textimport.ui.wizards.ITextImportMainPage#getDescriptionText()
      */
-    public String getDescriptionText() {
+    @Override
+	public String getDescriptionText() {
         return IMPORT_DESC;
     }
 
     /**
      * @see org.teiid.designer.tools.textimport.ui.wizards.ITextImportMainPage#getSampleDataText()
      */
-    public String getSampleDataText() {
+    @Override
+	public String getSampleDataText() {
         return IMPORT_DATA;
     }
 
     /**
      * @see org.teiid.designer.tools.textimport.ui.wizards.ITextImportMainPage#getType()
      */
-    public String getType() {
+    @Override
+	public String getType() {
         return IMPORT_ID;
     }
 }

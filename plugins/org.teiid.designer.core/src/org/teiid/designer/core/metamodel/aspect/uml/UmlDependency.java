@@ -125,7 +125,8 @@ public interface UmlDependency extends UmlRelationship {
      * @param eObject
      * @return the Sterotype string
      */
-    String getStereotype(Object eObject);
+    @Override
+	String getStereotype(Object eObject);
     
     /**
      * Return the Signature string for the given eObject
@@ -133,14 +134,16 @@ public interface UmlDependency extends UmlRelationship {
      * @param showMask the mask for which attributes constitue the signature
      * @return the Signature string using the mask
      */
-    String getSignature(Object eObject, int showMask);
+    @Override
+	String getSignature(Object eObject, int showMask);
     
     /**
      * Return the editable portion of the signature string for the given eObject
      * @param eObject
      * @return the editable portion of the signature string 
      */
-    String getEditableSignature(Object eObject);
+    @Override
+	String getEditableSignature(Object eObject);
     
     /**
      * Set the Signature string for the given eObject
@@ -148,6 +151,7 @@ public interface UmlDependency extends UmlRelationship {
      * @param newSignature
      * @return an IStatus object with the results of the set operation
      */
-    IStatus setSignature(Object eObject, String newSignature);
+    @Override
+	IStatus setSignature(Object eObject, String newSignature);
     
 }

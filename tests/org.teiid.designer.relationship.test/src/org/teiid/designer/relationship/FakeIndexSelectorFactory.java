@@ -28,7 +28,8 @@ public class FakeIndexSelectorFactory implements IndexSelectorFactory {
     /**
      * @see org.teiid.designer.core.index.IndexSelectorFactory#createIndexSelector(java.util.List)
      */
-    public IndexSelector createIndexSelector( List modelWorkspaceItems ) {
+    @Override
+	public IndexSelector createIndexSelector( List modelWorkspaceItems ) {
         return null;
     }
 

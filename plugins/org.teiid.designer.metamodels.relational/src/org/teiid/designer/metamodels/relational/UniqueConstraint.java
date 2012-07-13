@@ -41,7 +41,8 @@ public interface UniqueConstraint extends UniqueKey{
      * @model opposite="uniqueConstraints"
      * @generated
      */
-    BaseTable getTable();
+    @Override
+	BaseTable getTable();
 
     /**
      * Sets the value of the '{@link org.teiid.designer.metamodels.relational.UniqueConstraint#getTable <em>Table</em>}' container reference.

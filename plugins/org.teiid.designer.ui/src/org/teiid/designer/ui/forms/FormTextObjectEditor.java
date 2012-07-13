@@ -146,15 +146,18 @@ public class FormTextObjectEditor {
     }
 
     class MyHyperlinkListener implements IHyperlinkListener {
-        public void linkEntered( HyperlinkEvent e ) {
+        @Override
+		public void linkEntered( HyperlinkEvent e ) {
             // do nothing for now
         }
 
-        public void linkExited( HyperlinkEvent e ) {
+        @Override
+		public void linkExited( HyperlinkEvent e ) {
             // do nothing for now
         }
 
-        public void linkActivated( HyperlinkEvent e ) {
+        @Override
+		public void linkActivated( HyperlinkEvent e ) {
             Object link = e.getHref();
             if (LINK_CHANGE.equals(link)) {
                 setValue(changeValue(getValue()));

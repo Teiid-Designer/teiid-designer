@@ -229,7 +229,8 @@ public class SqlTablePanel extends Composite {
 
         // Implement a "fake" tooltip
         final Listener labelListener = new Listener() {
-            public void handleEvent( Event event ) {
+            @Override
+			public void handleEvent( Event event ) {
                 Label label = (Label)event.widget;
                 Shell shell = label.getShell();
                 switch (event.type) {
@@ -253,7 +254,8 @@ public class SqlTablePanel extends Composite {
             Shell tip = null;
             Label label = null;
 
-            public void handleEvent( Event event ) {
+            @Override
+			public void handleEvent( Event event ) {
                 switch (event.type) {
                     case SWT.Dispose:
                     case SWT.KeyDown:
@@ -597,33 +599,38 @@ public class SqlTablePanel extends Composite {
      * interface since it must register changeListeners with the BindingList
      */
     class SqlContentProvider implements IStructuredContentProvider, ISqlListViewer {
-        public void inputChanged( Viewer v,
+        @Override
+		public void inputChanged( Viewer v,
                                   Object oldInput,
                                   Object newInput ) {
             if (newInput != null) ((SqlList)newInput).addChangeListener(this);
             if (oldInput != null) ((SqlList)oldInput).removeChangeListener(this);
         }
 
-        public void dispose() {
+        @Override
+		public void dispose() {
             sqlList.removeChangeListener(this);
         }
 
         // Return the bindings as an array of Objects
-        public Object[] getElements( Object parent ) {
+        @Override
+		public Object[] getElements( Object parent ) {
             return sqlList.getAll().toArray();
         }
 
         /**
          * @see IBindingListViewer#addSymbol(SingleElementSymbol)
          */
-        public void addSymbol( SingleElementSymbol symbol ) {
+        @Override
+		public void addSymbol( SingleElementSymbol symbol ) {
             if (sqlList.containsSymbol(symbol)) tableViewer.add(symbol);
         }
 
         /**
          * @see IBindingListViewer#addSymbol(SingleElementSymbol)
          */
-        public void insertSymbol( SingleElementSymbol symbol,
+        @Override
+		public void insertSymbol( SingleElementSymbol symbol,
                                   int index ) {
             if (sqlList.containsSymbol(symbol)) tableViewer.insert(symbol, index);
         }
@@ -631,7 +638,8 @@ public class SqlTablePanel extends Composite {
         /**
          * @see IBindingListViewer#addSymbols(Object[])
          */
-        public void addSymbols( Object[] symbols ) {
+        @Override
+		public void addSymbols( Object[] symbols ) {
             for (int i = 0; i < symbols.length; i++) {
                 addSymbol((SingleElementSymbol)symbols[i]);
             }
@@ -640,28 +648,32 @@ public class SqlTablePanel extends Composite {
         /**
          * @see IBindingListViewer#removeSymbol(SingleElementSymbol)
          */
-        public void removeSymbol( SingleElementSymbol symbol ) {
+        @Override
+		public void removeSymbol( SingleElementSymbol symbol ) {
             tableViewer.remove(symbol);
         }
 
         /**
          * @see IBindingListViewer#removeSymbols(SingleElementSymbol[])
          */
-        public void removeSymbols( Object[] symbols ) {
+        @Override
+		public void removeSymbols( Object[] symbols ) {
             tableViewer.remove(symbols);
         }
 
         /**
          * @see IBindingListViewer#updateSymbols(SingleElementSymbol)
          */
-        public void updateSymbol( SingleElementSymbol symbol ) {
+        @Override
+		public void updateSymbol( SingleElementSymbol symbol ) {
             tableViewer.update(symbol, null);
         }
 
         /**
          * @see IBindingListViewer#updateSymbols(SingleElementSymbol)
          */
-        public void refresh( boolean updateLabels ) {
+        @Override
+		public void refresh( boolean updateLabels ) {
             tableViewer.refresh(updateLabels);
         }
 

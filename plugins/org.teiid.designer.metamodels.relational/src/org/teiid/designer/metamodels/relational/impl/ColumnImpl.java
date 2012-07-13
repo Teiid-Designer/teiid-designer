@@ -602,7 +602,8 @@ public class ColumnImpl extends RelationalEntityImpl implements Column {
      * <!-- end-user-doc -->
      * @generated
      */
-    public String getNativeType() {
+    @Override
+	public String getNativeType() {
         return nativeType;
     }
 
@@ -611,7 +612,8 @@ public class ColumnImpl extends RelationalEntityImpl implements Column {
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setNativeType(String newNativeType) {
+    @Override
+	public void setNativeType(String newNativeType) {
         String oldNativeType = nativeType;
         nativeType = newNativeType;
         boolean oldNativeTypeESet = nativeTypeESet;
@@ -625,7 +627,8 @@ public class ColumnImpl extends RelationalEntityImpl implements Column {
      * <!-- end-user-doc -->
      * @generated
      */
-    public void unsetNativeType() {
+    @Override
+	public void unsetNativeType() {
         String oldNativeType = nativeType;
         boolean oldNativeTypeESet = nativeTypeESet;
         nativeType = NATIVE_TYPE_EDEFAULT;
@@ -639,7 +642,8 @@ public class ColumnImpl extends RelationalEntityImpl implements Column {
      * <!-- end-user-doc -->
      * @generated
      */
-    public boolean isSetNativeType() {
+    @Override
+	public boolean isSetNativeType() {
         return nativeTypeESet;
     }
 
@@ -648,7 +652,8 @@ public class ColumnImpl extends RelationalEntityImpl implements Column {
      * <!-- end-user-doc -->
      * @generated
      */
-    public int getLength() {
+    @Override
+	public int getLength() {
         return length;
     }
 
@@ -657,7 +662,8 @@ public class ColumnImpl extends RelationalEntityImpl implements Column {
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setLength(int newLength) {
+    @Override
+	public void setLength(int newLength) {
         int oldLength = length;
         length = newLength;
         if (eNotificationRequired())
@@ -669,7 +675,8 @@ public class ColumnImpl extends RelationalEntityImpl implements Column {
      * <!-- end-user-doc -->
      * @generated
      */
-    public boolean isFixedLength() {
+    @Override
+	public boolean isFixedLength() {
         return fixedLength;
     }
 
@@ -678,7 +685,8 @@ public class ColumnImpl extends RelationalEntityImpl implements Column {
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setFixedLength(boolean newFixedLength) {
+    @Override
+	public void setFixedLength(boolean newFixedLength) {
         boolean oldFixedLength = fixedLength;
         fixedLength = newFixedLength;
         if (eNotificationRequired())
@@ -690,7 +698,8 @@ public class ColumnImpl extends RelationalEntityImpl implements Column {
      * <!-- end-user-doc -->
      * @generated
      */
-    public int getPrecision() {
+    @Override
+	public int getPrecision() {
         return precision;
     }
 
@@ -699,7 +708,8 @@ public class ColumnImpl extends RelationalEntityImpl implements Column {
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setPrecision(int newPrecision) {
+    @Override
+	public void setPrecision(int newPrecision) {
         int oldPrecision = precision;
         precision = newPrecision;
         if (eNotificationRequired())
@@ -711,7 +721,8 @@ public class ColumnImpl extends RelationalEntityImpl implements Column {
      * <!-- end-user-doc -->
      * @generated
      */
-    public int getScale() {
+    @Override
+	public int getScale() {
         return scale;
     }
 
@@ -720,7 +731,8 @@ public class ColumnImpl extends RelationalEntityImpl implements Column {
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setScale(int newScale) {
+    @Override
+	public void setScale(int newScale) {
         int oldScale = scale;
         scale = newScale;
         if (eNotificationRequired())
@@ -732,7 +744,8 @@ public class ColumnImpl extends RelationalEntityImpl implements Column {
      * <!-- end-user-doc -->
      * @generated
      */
-    public NullableType getNullable() {
+    @Override
+	public NullableType getNullable() {
         return nullable;
     }
 
@@ -741,7 +754,8 @@ public class ColumnImpl extends RelationalEntityImpl implements Column {
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setNullable(NullableType newNullable) {
+    @Override
+	public void setNullable(NullableType newNullable) {
         NullableType oldNullable = nullable;
         nullable = newNullable == null ? NULLABLE_EDEFAULT : newNullable;
         if (eNotificationRequired())
@@ -753,7 +767,8 @@ public class ColumnImpl extends RelationalEntityImpl implements Column {
      * <!-- end-user-doc -->
      * @generated
      */
-    public boolean isAutoIncremented() {
+    @Override
+	public boolean isAutoIncremented() {
         return autoIncremented;
     }
 
@@ -762,7 +777,8 @@ public class ColumnImpl extends RelationalEntityImpl implements Column {
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setAutoIncremented(boolean newAutoIncremented) {
+    @Override
+	public void setAutoIncremented(boolean newAutoIncremented) {
         boolean oldAutoIncremented = autoIncremented;
         autoIncremented = newAutoIncremented;
         if (eNotificationRequired())
@@ -774,7 +790,8 @@ public class ColumnImpl extends RelationalEntityImpl implements Column {
      * <!-- end-user-doc -->
      * @generated
      */
-    public String getDefaultValue() {
+    @Override
+	public String getDefaultValue() {
         return defaultValue;
     }
 
@@ -783,7 +800,8 @@ public class ColumnImpl extends RelationalEntityImpl implements Column {
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setDefaultValue(String newDefaultValue) {
+    @Override
+	public void setDefaultValue(String newDefaultValue) {
         String oldDefaultValue = defaultValue;
         defaultValue = newDefaultValue;
         if (eNotificationRequired())
@@ -795,7 +813,8 @@ public class ColumnImpl extends RelationalEntityImpl implements Column {
      * <!-- end-user-doc -->
      * @generated
      */
-    public String getMinimumValue() {
+    @Override
+	public String getMinimumValue() {
         return minimumValue;
     }
 
@@ -804,7 +823,8 @@ public class ColumnImpl extends RelationalEntityImpl implements Column {
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setMinimumValue(String newMinimumValue) {
+    @Override
+	public void setMinimumValue(String newMinimumValue) {
         String oldMinimumValue = minimumValue;
         minimumValue = newMinimumValue;
         if (eNotificationRequired())
@@ -816,7 +836,8 @@ public class ColumnImpl extends RelationalEntityImpl implements Column {
      * <!-- end-user-doc -->
      * @generated
      */
-    public String getMaximumValue() {
+    @Override
+	public String getMaximumValue() {
         return maximumValue;
     }
 
@@ -825,7 +846,8 @@ public class ColumnImpl extends RelationalEntityImpl implements Column {
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setMaximumValue(String newMaximumValue) {
+    @Override
+	public void setMaximumValue(String newMaximumValue) {
         String oldMaximumValue = maximumValue;
         maximumValue = newMaximumValue;
         if (eNotificationRequired())
@@ -837,7 +859,8 @@ public class ColumnImpl extends RelationalEntityImpl implements Column {
      * <!-- end-user-doc -->
      * @generated
      */
-    public String getFormat() {
+    @Override
+	public String getFormat() {
         return format;
     }
 
@@ -846,7 +869,8 @@ public class ColumnImpl extends RelationalEntityImpl implements Column {
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setFormat(String newFormat) {
+    @Override
+	public void setFormat(String newFormat) {
         String oldFormat = format;
         format = newFormat;
         if (eNotificationRequired())
@@ -858,7 +882,8 @@ public class ColumnImpl extends RelationalEntityImpl implements Column {
      * <!-- end-user-doc -->
      * @generated
      */
-    public String getCharacterSetName() {
+    @Override
+	public String getCharacterSetName() {
         return characterSetName;
     }
 
@@ -867,7 +892,8 @@ public class ColumnImpl extends RelationalEntityImpl implements Column {
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setCharacterSetName(String newCharacterSetName) {
+    @Override
+	public void setCharacterSetName(String newCharacterSetName) {
         String oldCharacterSetName = characterSetName;
         characterSetName = newCharacterSetName;
         if (eNotificationRequired())
@@ -879,7 +905,8 @@ public class ColumnImpl extends RelationalEntityImpl implements Column {
      * <!-- end-user-doc -->
      * @generated
      */
-    public String getCollationName() {
+    @Override
+	public String getCollationName() {
         return collationName;
     }
 
@@ -888,7 +915,8 @@ public class ColumnImpl extends RelationalEntityImpl implements Column {
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setCollationName(String newCollationName) {
+    @Override
+	public void setCollationName(String newCollationName) {
         String oldCollationName = collationName;
         collationName = newCollationName;
         if (eNotificationRequired())
@@ -900,7 +928,8 @@ public class ColumnImpl extends RelationalEntityImpl implements Column {
      * <!-- end-user-doc -->
      * @generated
      */
-    public boolean isSelectable() {
+    @Override
+	public boolean isSelectable() {
         return selectable;
     }
 
@@ -909,7 +938,8 @@ public class ColumnImpl extends RelationalEntityImpl implements Column {
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setSelectable(boolean newSelectable) {
+    @Override
+	public void setSelectable(boolean newSelectable) {
         boolean oldSelectable = selectable;
         selectable = newSelectable;
         if (eNotificationRequired())
@@ -921,7 +951,8 @@ public class ColumnImpl extends RelationalEntityImpl implements Column {
      * <!-- end-user-doc -->
      * @generated
      */
-    public boolean isUpdateable() {
+    @Override
+	public boolean isUpdateable() {
         return updateable;
     }
 
@@ -930,7 +961,8 @@ public class ColumnImpl extends RelationalEntityImpl implements Column {
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setUpdateable(boolean newUpdateable) {
+    @Override
+	public void setUpdateable(boolean newUpdateable) {
         boolean oldUpdateable = updateable;
         updateable = newUpdateable;
         if (eNotificationRequired())
@@ -942,7 +974,8 @@ public class ColumnImpl extends RelationalEntityImpl implements Column {
      * <!-- end-user-doc -->
      * @generated
      */
-    public boolean isCaseSensitive() {
+    @Override
+	public boolean isCaseSensitive() {
         return caseSensitive;
     }
 
@@ -951,7 +984,8 @@ public class ColumnImpl extends RelationalEntityImpl implements Column {
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setCaseSensitive(boolean newCaseSensitive) {
+    @Override
+	public void setCaseSensitive(boolean newCaseSensitive) {
         boolean oldCaseSensitive = caseSensitive;
         caseSensitive = newCaseSensitive;
         if (eNotificationRequired())
@@ -963,7 +997,8 @@ public class ColumnImpl extends RelationalEntityImpl implements Column {
      * <!-- end-user-doc -->
      * @generated
      */
-    public SearchabilityType getSearchability() {
+    @Override
+	public SearchabilityType getSearchability() {
         return searchability;
     }
 
@@ -972,7 +1007,8 @@ public class ColumnImpl extends RelationalEntityImpl implements Column {
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setSearchability(SearchabilityType newSearchability) {
+    @Override
+	public void setSearchability(SearchabilityType newSearchability) {
         SearchabilityType oldSearchability = searchability;
         searchability = newSearchability == null ? SEARCHABILITY_EDEFAULT : newSearchability;
         if (eNotificationRequired())
@@ -984,7 +1020,8 @@ public class ColumnImpl extends RelationalEntityImpl implements Column {
      * <!-- end-user-doc -->
      * @generated
      */
-    public boolean isCurrency() {
+    @Override
+	public boolean isCurrency() {
         return currency;
     }
 
@@ -993,7 +1030,8 @@ public class ColumnImpl extends RelationalEntityImpl implements Column {
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setCurrency(boolean newCurrency) {
+    @Override
+	public void setCurrency(boolean newCurrency) {
         boolean oldCurrency = currency;
         currency = newCurrency;
         if (eNotificationRequired())
@@ -1005,7 +1043,8 @@ public class ColumnImpl extends RelationalEntityImpl implements Column {
      * <!-- end-user-doc -->
      * @generated
      */
-    public int getRadix() {
+    @Override
+	public int getRadix() {
         return radix;
     }
 
@@ -1014,7 +1053,8 @@ public class ColumnImpl extends RelationalEntityImpl implements Column {
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setRadix(int newRadix) {
+    @Override
+	public void setRadix(int newRadix) {
         int oldRadix = radix;
         radix = newRadix;
         if (eNotificationRequired())
@@ -1026,7 +1066,8 @@ public class ColumnImpl extends RelationalEntityImpl implements Column {
      * <!-- end-user-doc -->
      * @generated
      */
-    public boolean isSigned() {
+    @Override
+	public boolean isSigned() {
         return signed;
     }
 
@@ -1035,7 +1076,8 @@ public class ColumnImpl extends RelationalEntityImpl implements Column {
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setSigned(boolean newSigned) {
+    @Override
+	public void setSigned(boolean newSigned) {
         boolean oldSigned = signed;
         signed = newSigned;
         if (eNotificationRequired())
@@ -1047,7 +1089,8 @@ public class ColumnImpl extends RelationalEntityImpl implements Column {
      * <!-- end-user-doc -->
      * @generated
      */
-    public int getDistinctValueCount() {
+    @Override
+	public int getDistinctValueCount() {
         return distinctValueCount;
     }
 
@@ -1056,7 +1099,8 @@ public class ColumnImpl extends RelationalEntityImpl implements Column {
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setDistinctValueCount(int newDistinctValueCount) {
+    @Override
+	public void setDistinctValueCount(int newDistinctValueCount) {
         int oldDistinctValueCount = distinctValueCount;
         distinctValueCount = newDistinctValueCount;
         if (eNotificationRequired())
@@ -1068,7 +1112,8 @@ public class ColumnImpl extends RelationalEntityImpl implements Column {
      * <!-- end-user-doc -->
      * @generated
      */
-    public int getNullValueCount() {
+    @Override
+	public int getNullValueCount() {
         return nullValueCount;
     }
 
@@ -1077,7 +1122,8 @@ public class ColumnImpl extends RelationalEntityImpl implements Column {
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setNullValueCount(int newNullValueCount) {
+    @Override
+	public void setNullValueCount(int newNullValueCount) {
         int oldNullValueCount = nullValueCount;
         nullValueCount = newNullValueCount;
         if (eNotificationRequired())
@@ -1089,7 +1135,8 @@ public class ColumnImpl extends RelationalEntityImpl implements Column {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EList getUniqueKeys() {
+    @Override
+	public EList getUniqueKeys() {
         if (uniqueKeys == null) {
             uniqueKeys = new EObjectWithInverseResolvingEList.ManyInverse(UniqueKey.class, this, RelationalPackage.COLUMN__UNIQUE_KEYS, RelationalPackage.UNIQUE_KEY__COLUMNS);
         }
@@ -1101,7 +1148,8 @@ public class ColumnImpl extends RelationalEntityImpl implements Column {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EList getIndexes() {
+    @Override
+	public EList getIndexes() {
         if (indexes == null) {
             indexes = new EObjectWithInverseResolvingEList.ManyInverse(Index.class, this, RelationalPackage.COLUMN__INDEXES, RelationalPackage.INDEX__COLUMNS);
         }
@@ -1113,7 +1161,8 @@ public class ColumnImpl extends RelationalEntityImpl implements Column {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EList getForeignKeys() {
+    @Override
+	public EList getForeignKeys() {
         if (foreignKeys == null) {
             foreignKeys = new EObjectWithInverseResolvingEList.ManyInverse(ForeignKey.class, this, RelationalPackage.COLUMN__FOREIGN_KEYS, RelationalPackage.FOREIGN_KEY__COLUMNS);
         }
@@ -1125,7 +1174,8 @@ public class ColumnImpl extends RelationalEntityImpl implements Column {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EList getAccessPatterns() {
+    @Override
+	public EList getAccessPatterns() {
         if (accessPatterns == null) {
             accessPatterns = new EObjectWithInverseResolvingEList.ManyInverse(AccessPattern.class, this, RelationalPackage.COLUMN__ACCESS_PATTERNS, RelationalPackage.ACCESS_PATTERN__COLUMNS);
         }
@@ -1137,7 +1187,8 @@ public class ColumnImpl extends RelationalEntityImpl implements Column {
      * <!-- end-user-doc -->
      * @generated
      */
-    public ColumnSet getOwner() {
+    @Override
+	public ColumnSet getOwner() {
         if (eContainerFeatureID != RelationalPackage.COLUMN__OWNER) return null;
         return (ColumnSet)eContainer;
     }
@@ -1147,7 +1198,8 @@ public class ColumnImpl extends RelationalEntityImpl implements Column {
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setOwner(ColumnSet newOwner) {
+    @Override
+	public void setOwner(ColumnSet newOwner) {
         if (newOwner != eContainer || (eContainerFeatureID != RelationalPackage.COLUMN__OWNER && newOwner != null)) {
             if (EcoreUtil.isAncestor(this, newOwner))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
@@ -1168,7 +1220,8 @@ public class ColumnImpl extends RelationalEntityImpl implements Column {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EObject getType() {
+    @Override
+	public EObject getType() {
         if (type != null && type.eIsProxy()) {
             EObject oldType = type;
             type = eResolveProxy((InternalEObject)type);
@@ -1194,7 +1247,8 @@ public class ColumnImpl extends RelationalEntityImpl implements Column {
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setType(EObject newType) {
+    @Override
+	public void setType(EObject newType) {
         EObject oldType = type;
         type = newType;
         boolean oldTypeESet = typeESet;
@@ -1208,7 +1262,8 @@ public class ColumnImpl extends RelationalEntityImpl implements Column {
      * <!-- end-user-doc -->
      * @generated
      */
-    public void unsetType() {
+    @Override
+	public void unsetType() {
         EObject oldType = type;
         boolean oldTypeESet = typeESet;
         type = null;
@@ -1222,7 +1277,8 @@ public class ColumnImpl extends RelationalEntityImpl implements Column {
      * <!-- end-user-doc -->
      * @generated
      */
-    public boolean isSetType() {
+    @Override
+	public boolean isSetType() {
         return typeESet;
     }
 

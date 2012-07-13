@@ -98,6 +98,7 @@ public class CriteriaTextViewer extends SourceViewer {
 
 		partitioner = createSqlPartitioner();
 		parent.addDisposeListener(new DisposeListener() {
+			@Override
 			public void widgetDisposed(DisposeEvent event) {
 					contentAssistant.uninstall();
 				}

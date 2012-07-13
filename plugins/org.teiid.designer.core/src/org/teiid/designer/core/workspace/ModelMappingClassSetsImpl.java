@@ -46,21 +46,24 @@ public class ModelMappingClassSetsImpl extends NonOpenableModelWorkspaceItemImpl
     /**
      * @see org.teiid.designer.core.workspace.ModelWorkspaceItem#getResource()
      */
-    public IResource getResource() {
+    @Override
+	public IResource getResource() {
         return this.getModelResource().getResource();
     }
 
     /**
      * @see org.teiid.designer.core.workspace.ModelWorkspaceItem#getUnderlyingResource()
      */
-    public IResource getUnderlyingResource() {
+    @Override
+	public IResource getUnderlyingResource() {
         return getResource();
     }
 
     /**
      * @see org.teiid.designer.core.workspace.ModelWorkspaceItem#getPath()
      */
-    public IPath getPath() {
+    @Override
+	public IPath getPath() {
         return this.getModelResource().getPath();
     }
 
@@ -80,28 +83,32 @@ public class ModelMappingClassSetsImpl extends NonOpenableModelWorkspaceItemImpl
     /**
      * @see org.teiid.designer.core.workspace.ModelMappingClassSets#createNewMappingClassSet(org.eclipse.emf.ecore.EObject)
      */
-    public MappingClassSet createNewMappingClassSet( EObject target ) throws ModelWorkspaceException {
+    @Override
+	public MappingClassSet createNewMappingClassSet( EObject target ) throws ModelWorkspaceException {
         return ModelResourceContainerFactory.createNewMappingClassSet(target, this.getModelResource().getEmfResource());
     }
 
     /**
      * @see org.teiid.designer.core.workspace.ModelMappingClassSets#getMappingClassSets(org.eclipse.emf.ecore.EObject)
      */
-    public List getMappingClassSets( EObject target ) throws ModelWorkspaceException {
+    @Override
+	public List getMappingClassSets( EObject target ) throws ModelWorkspaceException {
         return getModelBuffer().getModelContents().getMappingClassSets(target);
     }
 
     /**
      * @see org.teiid.designer.core.workspace.ModelMappingClassSets#getMappingClassSets()
      */
-    public List getMappingClassSets() throws ModelWorkspaceException {
+    @Override
+	public List getMappingClassSets() throws ModelWorkspaceException {
         return getModelBuffer().getModelContents().getMappingClassSets();
     }
 
     /**
      * @see org.teiid.designer.core.workspace.ModelMappingClassSets#delete(org.teiid.designer.metamodels.transformation.MappingClassSet)
      */
-    public boolean delete( MappingClassSet mappingClassSet ) {
+    @Override
+	public boolean delete( MappingClassSet mappingClassSet ) {
         return ModelResourceContainerFactory.deleteMappingClassSet(mappingClassSet);
     }
 

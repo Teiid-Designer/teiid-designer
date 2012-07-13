@@ -66,6 +66,7 @@ public class AbstractNavigationEditPart
 	/* (non-Javadoc)
 	 * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
 	 */
+	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		String prop = evt.getPropertyName();
 
@@ -189,6 +190,7 @@ public class AbstractNavigationEditPart
 		return children;
 	}
 	
+	@Override
 	public NavigationNodeFigure getNavigationNodeFigure() {
 		if( getFigure() instanceof NavigationNodeFigure) {	
 			return (NavigationNodeFigure)super.getFigure();
@@ -204,6 +206,7 @@ public class AbstractNavigationEditPart
 	/* (non-JavaDoc)
 	 * @See org.teiid.designer.diagram.ui.DiagramEditPart#updateModelLocation()
 	**/
+	@Override
 	public void updateModelPosition() {
 		((NavigationModelNode)getModel()).setPosition(
 			new Point(getFigure().getBounds().x, getFigure().getBounds().y));
@@ -211,6 +214,7 @@ public class AbstractNavigationEditPart
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.relationship.ui.navigation.part.NavigationNodeEditPart#getModelObject()
 	 */
+	@Override
 	public Object getModelObject() {
 		// XXX Auto-generated method stub
 		return null;
@@ -219,6 +223,7 @@ public class AbstractNavigationEditPart
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.relationship.ui.navigation.part.NavigationNodeEditPart#getSelectionHandler()
 	 */
+	@Override
 	public NavigationSelectionHandler getSelectionHandler() {
 		return ((NavigationGraphicalViewer)getViewer()).getSelectionHandler();
 	}
@@ -226,6 +231,7 @@ public class AbstractNavigationEditPart
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.relationship.ui.navigation.part.NavigationNodeEditPart#layout()
 	 */
+	@Override
 	public void layout() {
 	// Layout out it's children first
 		List editPartChildren = getChildren();
@@ -256,6 +262,7 @@ public class AbstractNavigationEditPart
 	 *  (non-Javadoc)
 	 * @See org.teiid.designer.relationship.ui.nabigation.part.NavigationNodeEditPart#layout(boolean)
 	 */
+	@Override
 	public void layout(boolean layoutChildren) {
 		if( layoutChildren ) {
 			// Layout out it's children first
@@ -288,6 +295,7 @@ public class AbstractNavigationEditPart
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.relationship.ui.navigation.part.NavigationNodeEditPart#setSelectionHandler(org.teiid.designer.relationship.ui.navigation.NavigationSelectionHandler)
 	 */
+	@Override
 	public void setSelectionHandler(NavigationSelectionHandler selectionHandler) {
 		// XXX Auto-generated method stub
 
@@ -296,6 +304,7 @@ public class AbstractNavigationEditPart
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.relationship.ui.navigation.part.NavigationNodeEditPart#updateModelSize()
 	 */
+	@Override
 	public void updateModelSize() {
 		((NavigationModelNode)getModel()).setSize(getFigure().getSize());
 
@@ -312,6 +321,7 @@ public class AbstractNavigationEditPart
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.relationship.ui.navigation.part.NavigationNodeEditPart#getSelectedNavigationNode(org.eclipse.swt.events.MouseEvent)
 	 */
+	@Override
 	public NavigationNode getSelectedNavigationNode(MouseEvent me) {
 		// XXX Auto-generated method stub
 		return (NavigationNode)((NavigationModelNode)getModel()).getModelObject();
@@ -320,6 +330,7 @@ public class AbstractNavigationEditPart
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.relationship.ui.navigation.part.NavigationNodeEditPart#getSelectedNavigationNode(org.eclipse.swt.events.MouseEvent)
 	 */
+	@Override
 	public NavigationNode getSelectedNavigationNode(Point lastMousePoint) {
 		// XXX Auto-generated method stub
 		return null;
@@ -351,6 +362,7 @@ public class AbstractNavigationEditPart
 	/**
 	 * @see org.eclipse.gef.NodeEditPart#getSourceConnectionAnchor(ConnectionEditPart)
 	**/
+	@Override
 	public ConnectionAnchor getSourceConnectionAnchor(ConnectionEditPart connection) {
 		return getAnchor();
 	}
@@ -358,6 +370,7 @@ public class AbstractNavigationEditPart
 	/**
 	 * @see org.eclipse.gef.NodeEditPart#getSourceConnectionAnchor(Request)
 	**/
+	@Override
 	public ConnectionAnchor getSourceConnectionAnchor(Request request) {
 		return getAnchor();
 	}
@@ -365,6 +378,7 @@ public class AbstractNavigationEditPart
 	/**
 	 * @see org.eclipse.gef.NodeEditPart#getTargetConnectionAnchor(ConnectionEditPart)
 	**/
+	@Override
 	public ConnectionAnchor getTargetConnectionAnchor(ConnectionEditPart connection) {
 		return getAnchor();
 	}
@@ -372,6 +386,7 @@ public class AbstractNavigationEditPart
 	/**
 	 * @see org.eclipse.gef.NodeEditPart#getTargetConnectionAnchor(Request)
 	**/
+	@Override
 	public ConnectionAnchor getTargetConnectionAnchor(Request request) {
 		return getAnchor();
 	}

@@ -84,7 +84,8 @@ public class NavigationNodeImpl extends NavigationObjectImpl implements Navigati
     /**
      * @return
      */
-    public EClass getMetaclass() {
+    @Override
+	public EClass getMetaclass() {
         return metaclass;
     }
     
@@ -100,7 +101,8 @@ public class NavigationNodeImpl extends NavigationObjectImpl implements Navigati
      * Return the path of this node relative to this node's model.
      * @return the path in this model.
      */
-    public String getPathInModel() {
+    @Override
+	public String getPathInModel() {
         return pathInModel;
     }
     

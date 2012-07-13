@@ -336,19 +336,22 @@ public class ModelObjectSelectionDialog extends AbstractElementListSelectionDial
         Table list = new Table(parent, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
 
         list.addListener(SWT.Selection, new Listener() {
-            public void handleEvent( Event evt ) {
+            @Override
+			public void handleEvent( Event evt ) {
                 handleLowerSelectionChanged();
             }
         });
 
         list.addListener(SWT.MouseDoubleClick, new Listener() {
-            public void handleEvent( Event evt ) {
+            @Override
+			public void handleEvent( Event evt ) {
                 handleDefaultSelected();
             }
         });
 
         list.addDisposeListener(new DisposeListener() {
-            public void widgetDisposed( DisposeEvent e ) {
+            @Override
+			public void widgetDisposed( DisposeEvent e ) {
                 fQualifierRenderer.dispose();
             }
         });

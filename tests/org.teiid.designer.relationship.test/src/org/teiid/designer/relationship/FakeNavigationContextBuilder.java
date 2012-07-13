@@ -31,7 +31,8 @@ public class FakeNavigationContextBuilder implements NavigationContextBuilder {
     /**
      * @see org.teiid.designer.relationship.NavigationContextBuilder#buildNavigationContext(org.teiid.designer.relationship.NavigationContextInfo)
      */
-    public NavigationContext buildNavigationContext( NavigationContextInfo info ) {
+    @Override
+	public NavigationContext buildNavigationContext( NavigationContextInfo info ) {
         final URI uri = URI.createURI(info.getFocusNodeUri());
         final NavigationNode node = new NavigationNodeImpl(uri,
                                                            "label", RelationshipPackage.eINSTANCE.getRelationshipType(), "path"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -41,7 +42,8 @@ public class FakeNavigationContextBuilder implements NavigationContextBuilder {
     /**
      * @see org.teiid.designer.relationship.NavigationContextBuilder#getAllNodes(java.lang.String)
      */
-    public NavigationContext getAllNodes( String uriString ) {
+    @Override
+	public NavigationContext getAllNodes( String uriString ) {
         final URI uri = URI.createURI(uriString);
         final NavigationNode node = new NavigationNodeImpl(uri,
                                                            "label", RelationshipPackage.eINSTANCE.getRelationshipType(), "path"); //$NON-NLS-1$ //$NON-NLS-2$

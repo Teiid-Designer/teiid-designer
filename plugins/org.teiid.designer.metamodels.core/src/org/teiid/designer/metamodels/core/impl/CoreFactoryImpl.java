@@ -103,7 +103,8 @@ public class CoreFactoryImpl extends EFactoryImpl implements CoreFactory {
      * 
      * @generated
      */
-    public Annotation createAnnotation() {
+    @Override
+	public Annotation createAnnotation() {
         AnnotationImpl annotation = new AnnotationImpl();
         return annotation;
     }
@@ -113,7 +114,8 @@ public class CoreFactoryImpl extends EFactoryImpl implements CoreFactory {
      * 
      * @generated
      */
-    public AnnotationContainer createAnnotationContainer() {
+    @Override
+	public AnnotationContainer createAnnotationContainer() {
         AnnotationContainerImpl annotationContainer = new AnnotationContainerImpl();
         return annotationContainer;
     }
@@ -123,7 +125,8 @@ public class CoreFactoryImpl extends EFactoryImpl implements CoreFactory {
      * 
      * @generated
      */
-    public ModelAnnotation createModelAnnotation() {
+    @Override
+	public ModelAnnotation createModelAnnotation() {
         ModelAnnotationImpl modelAnnotation = new ModelAnnotationImpl();
         return modelAnnotation;
     }
@@ -133,7 +136,8 @@ public class CoreFactoryImpl extends EFactoryImpl implements CoreFactory {
      * 
      * @generated
      */
-    public Link createLink() {
+    @Override
+	public Link createLink() {
         LinkImpl link = new LinkImpl();
         return link;
     }
@@ -143,7 +147,8 @@ public class CoreFactoryImpl extends EFactoryImpl implements CoreFactory {
      * 
      * @generated
      */
-    public LinkContainer createLinkContainer() {
+    @Override
+	public LinkContainer createLinkContainer() {
         LinkContainerImpl linkContainer = new LinkContainerImpl();
         return linkContainer;
     }
@@ -153,7 +158,8 @@ public class CoreFactoryImpl extends EFactoryImpl implements CoreFactory {
      * 
      * @generated
      */
-    public ModelImport createModelImport() {
+    @Override
+	public ModelImport createModelImport() {
         ModelImportImpl modelImport = new ModelImportImpl();
         return modelImport;
     }
@@ -163,7 +169,8 @@ public class CoreFactoryImpl extends EFactoryImpl implements CoreFactory {
      * 
      * @generated
      */
-    public CorePackage getCorePackage() {
+    @Override
+	public CorePackage getCorePackage() {
         return (CorePackage)getEPackage();
     }
 

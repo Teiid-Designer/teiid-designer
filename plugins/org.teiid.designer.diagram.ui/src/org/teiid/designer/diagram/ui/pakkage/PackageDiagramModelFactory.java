@@ -84,7 +84,8 @@ public class PackageDiagramModelFactory extends DiagramModelFactoryImpl implemen
     /**
      * Create a DiagramModelNode.
      */
-    public DiagramModelNode createModel( Object baseObject,
+    @Override
+	public DiagramModelNode createModel( Object baseObject,
                                          String sNotationId,
                                          IProgressMonitor monitor ) {
         // Return null if the baseObject is not a org.teiid.designer.metamodels.diagram.Diagram

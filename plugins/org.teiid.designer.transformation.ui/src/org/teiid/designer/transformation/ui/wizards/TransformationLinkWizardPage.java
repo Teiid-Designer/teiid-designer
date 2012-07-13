@@ -61,7 +61,8 @@ public class TransformationLinkWizardPage extends WizardPage implements UiConsta
     /* (non-Javadoc)
      * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
      */
-    public void createControl(Composite parent) {
+    @Override
+	public void createControl(Composite parent) {
 
         ModelResource selectedResource = null;
         if ( selection != null && SelectionUtilities.isSingleSelection(selection) ) {
@@ -114,7 +115,8 @@ public class TransformationLinkWizardPage extends WizardPage implements UiConsta
      * @see org.teiid.designer.ui.common.widget.INodeDescendantsDeselectionHandler#deselectDescendants(java.lang.Object)
      * @since 4.2
      */
-    public boolean deselectDescendants(Object theNode) {
+    @Override
+	public boolean deselectDescendants(Object theNode) {
         return true;
 	}
 

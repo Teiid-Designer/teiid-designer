@@ -31,7 +31,8 @@ public class RelationshipPerspectiveContributor implements
      * @see org.teiid.designer.ui.util.IModelerPerspectiveContributor#getContributions()
      * @since 4.3
      */
-    public PerspectiveObject[] getContributions() {
+    @Override
+	public PerspectiveObject[] getContributions() {
         return contributions;
     }
     

@@ -83,27 +83,31 @@ public class ModelIndexer implements ResourceIndexer {
     /* (non-Javadoc)
      * @See org.teiid.designer.core.index.ResourceIndexer#getIndexType()
      */
-    public String getIndexType() {
+    @Override
+	public String getIndexType() {
         return INDEX_TYPES;
     }
 
     /* (non-Javadoc)
      * @see org.teiid.core.index.IIndexer#getFileTypes()
      */
-    public String[] getFileTypes() {
+    @Override
+	public String[] getFileTypes() {
         return FILE_TYPES;
     }
 
     /* (non-Javadoc)
      * @see org.teiid.core.index.IIndexer#setFileTypes(java.lang.String[])
      */
-    public void setFileTypes( final String[] fileTypes ) {
+    @Override
+	public void setFileTypes( final String[] fileTypes ) {
     }
 
     /* (non-Javadoc)
      * @see org.teiid.designer.core.index.IIndexer#shouldIndex(org.teiid.designer.core.index.IDocument)
      */
-    public boolean shouldIndex( final IDocument document ) {
+    @Override
+	public boolean shouldIndex( final IDocument document ) {
         if (document instanceof ModelDocument) {
             return true;
         }
@@ -115,7 +119,8 @@ public class ModelIndexer implements ResourceIndexer {
      * <code>ModelIndex</code>.The caller should use <code>shouldIndex()</code> first to determine whether this indexer handles
      * the given type of EmfResource, and only call this method if so.
      */
-    public final void index( final IDocument document,
+    @Override
+	public final void index( final IDocument document,
                              final IIndexerOutput output ) {
         CoreArgCheck.isNotNull(document);
         CoreArgCheck.isNotNull(output);
@@ -182,7 +187,8 @@ public class ModelIndexer implements ResourceIndexer {
     /* (non-Javadoc)
      * @See org.teiid.designer.core.index.ResourceIndexer#indexResource(org.eclipse.core.runtime.IPath, boolean, boolean)
      */
-    public void indexResource( final IResource resource,
+    @Override
+	public void indexResource( final IResource resource,
                                final boolean reuseExistingFile,
                                final boolean addResource ) throws ModelerCoreException {
         CoreArgCheck.isNotNull(resource);
@@ -254,7 +260,8 @@ public class ModelIndexer implements ResourceIndexer {
     /* (non-Javadoc)
      * @See org.teiid.designer.core.index.ResourceIndexer#indexResource(org.eclipse.core.resources.IResource, boolean, boolean)
      */
-    public void indexResource( IPath path,
+    @Override
+	public void indexResource( IPath path,
                                boolean reuseExistingFile,
                                boolean addResource ) throws ModelerCoreException {
         CoreArgCheck.isNotNull(path);

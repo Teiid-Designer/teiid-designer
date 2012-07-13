@@ -53,7 +53,8 @@ public class RelationshipPropertyEditorFactory implements IPropertyEditorFactory
     /* (non-Javadoc)
      * @See org.teiid.designer.ui.properties.IPropertyEditorFactory#supportsStructuralFeature(org.eclipse.emf.ecore.EStructuralFeature)
      */
-    public boolean supportsStructuralFeature(EStructuralFeature feature) {
+    @Override
+	public boolean supportsStructuralFeature(EStructuralFeature feature) {
         if (Relationship.class == feature.getContainerClass()) {
             int id = feature.getFeatureID();
             if (id == RelationshipPackage.RELATIONSHIP__TARGETS) {
@@ -77,7 +78,8 @@ public class RelationshipPropertyEditorFactory implements IPropertyEditorFactory
     /* (non-Javadoc)
      * @See org.teiid.designer.ui.properties.IPropertyEditorFactory#createPropertyEditor(org.eclipse.swt.widgets.Composite, org.eclipse.emf.edit.provider.IItemPropertyDescriptor, org.eclipse.ui.views.properties.IPropertyDescriptor, java.lang.Object)
      */
-    public CellEditor createPropertyEditor(
+    @Override
+	public CellEditor createPropertyEditor(
         Composite composite,
         IItemPropertyDescriptor itemPropertyDescriptor,
         IPropertyDescriptor propertyDescriptor,
@@ -351,7 +353,8 @@ public class RelationshipPropertyEditorFactory implements IPropertyEditorFactory
         result.addFilter(new RelationshipTypeViewerFilter());
 
         result.setValidator(new ISelectionStatusValidator() {
-            public IStatus validate(Object[] selection) {
+            @Override
+			public IStatus validate(Object[] selection) {
                 if ( selection == null 
                     || selection.length == 0 
                     || selection[0] == null 
@@ -410,7 +413,8 @@ public class RelationshipPropertyEditorFactory implements IPropertyEditorFactory
         result.setInput(ResourcesPlugin.getWorkspace().getRoot());
 
         result.setValidator(new ISelectionStatusValidator() {
-            public IStatus validate(Object[] selection) {
+            @Override
+			public IStatus validate(Object[] selection) {
                 if ( selection == null 
                     || selection.length == 0 
                     || selection[0] == null 

@@ -236,6 +236,7 @@ public class NavigationSelectionHandler implements INavigationDoubleClickListene
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.viewers.IDoubleClickListener#doubleClick(org.eclipse.jface.viewers.DoubleClickEvent)
 	 */
+	@Override
 	public void doubleClick(NavigationDoubleClickEvent event) {
 		if( dClickListeners != null && !dClickListeners.isEmpty() ) {
 			((INavigationDoubleClickListener)dClickListeners.get(0)).doubleClick(event);

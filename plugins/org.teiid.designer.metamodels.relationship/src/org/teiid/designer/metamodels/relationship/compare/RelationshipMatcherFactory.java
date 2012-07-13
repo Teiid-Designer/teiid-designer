@@ -49,14 +49,16 @@ public class RelationshipMatcherFactory implements EObjectMatcherFactory {
     /**
      * @see org.teiid.designer.core.compare.EObjectMatcherFactory#createEObjectMatchersForRoots()
      */
-    public List createEObjectMatchersForRoots() {
+    @Override
+	public List createEObjectMatchersForRoots() {
         return allMatchersList;
     }
 
     /**
      * @see org.teiid.designer.core.compare.EObjectMatcherFactory#createEObjectMatchers(org.eclipse.emf.ecore.EReference)
      */
-    public List createEObjectMatchers(final EReference reference) {
+    @Override
+	public List createEObjectMatchers(final EReference reference) {
         // Make sure the reference is in the Relational metamodel ...
         final EClass containingClass = reference.getEContainingClass();
         final EPackage metamodel = containingClass.getEPackage();

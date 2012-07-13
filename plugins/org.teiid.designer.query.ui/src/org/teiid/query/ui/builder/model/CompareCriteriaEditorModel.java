@@ -59,7 +59,8 @@ public class CompareCriteriaEditorModel extends AbstractPredicateCriteriaTypeEdi
     /* (non-Javadoc)
      * @see org.teiid.query.internal.ui.builder.model.ILanguageObjectEditorModelListener#modelChanged(org.teiid.query.ui.builder.model.LanguageObjectEditorModelEvent)
      */
-    public void modelChanged( LanguageObjectEditorModelEvent theEvent ) {
+    @Override
+	public void modelChanged( LanguageObjectEditorModelEvent theEvent ) {
         String type = theEvent.getType();
 
         if (type.equals(CompositeLanguageObjectEditorModel.MODEL_CHANGE)) {

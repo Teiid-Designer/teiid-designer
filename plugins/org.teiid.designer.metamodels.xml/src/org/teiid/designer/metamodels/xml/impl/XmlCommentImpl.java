@@ -77,7 +77,8 @@ public class XmlCommentImpl extends XmlDocumentEntityImpl implements XmlComment 
      * <!-- end-user-doc -->
      * @generated
      */
-    public String getText() {
+    @Override
+	public String getText() {
         return text;
     }
 
@@ -86,7 +87,8 @@ public class XmlCommentImpl extends XmlDocumentEntityImpl implements XmlComment 
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setText(String newText) {
+    @Override
+	public void setText(String newText) {
         String oldText = text;
         text = newText;
         if (eNotificationRequired())
@@ -98,7 +100,8 @@ public class XmlCommentImpl extends XmlDocumentEntityImpl implements XmlComment 
      * <!-- end-user-doc -->
      * @generated
      */
-    public XmlCommentHolder getParent() {
+    @Override
+	public XmlCommentHolder getParent() {
         if (eContainerFeatureID != XmlDocumentPackage.XML_COMMENT__PARENT) return null;
         return (XmlCommentHolder)eContainer;
     }
@@ -108,7 +111,8 @@ public class XmlCommentImpl extends XmlDocumentEntityImpl implements XmlComment 
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setParent(XmlCommentHolder newParent) {
+    @Override
+	public void setParent(XmlCommentHolder newParent) {
         if (newParent != eContainer || (eContainerFeatureID != XmlDocumentPackage.XML_COMMENT__PARENT && newParent != null)) {
             if (EcoreUtil.isAncestor(this, newParent))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$

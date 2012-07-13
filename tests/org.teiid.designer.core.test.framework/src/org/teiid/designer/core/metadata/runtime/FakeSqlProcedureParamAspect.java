@@ -27,69 +27,102 @@ public class FakeSqlProcedureParamAspect implements SqlProcedureParameterAspect 
     public int length, scale, precision, position, type, radix, nullType;
     public boolean optional;
 
-    public EObject getDatatype(EObject eObject) { return datatype; }
+    @Override
+	public EObject getDatatype(EObject eObject) { return datatype; }
 
-    public String getDatatypeName(EObject eObject) { return datatypeName; }
+    @Override
+	public String getDatatypeName(EObject eObject) { return datatypeName; }
 
-    public String getDatatypeObjectID(EObject eObject) { return datatypeUUID; }
+    @Override
+	public String getDatatypeObjectID(EObject eObject) { return datatypeUUID; }
 
-    public String getRuntimeType(EObject eObject) { return runtimeType; }
+    @Override
+	public String getRuntimeType(EObject eObject) { return runtimeType; }
 
-    public Object getDefaultValue(EObject eObject) { return defaultValue; }
+    @Override
+	public Object getDefaultValue(EObject eObject) { return defaultValue; }
 
-    public int getNullType(EObject eObject) { return nullType; }
+    @Override
+	public int getNullType(EObject eObject) { return nullType; }
 
-    public int getLength(EObject eObject) { return length; }
+    @Override
+	public int getLength(EObject eObject) { return length; }
 
-    public int getRadix(EObject eObject) { return radix; }
+    @Override
+	public int getRadix(EObject eObject) { return radix; }
 
-    public int getPosition(EObject eObject) { return position; }
+    @Override
+	public int getPosition(EObject eObject) { return position; }
 
-    public int getScale(EObject eObject) { return scale; }
+    @Override
+	public int getScale(EObject eObject) { return scale; }
 
-    public int getPrecision(EObject eObject) { return precision; }
+    @Override
+	public int getPrecision(EObject eObject) { return precision; }
 
-    public int getType(EObject eObject) { return type; }
+    @Override
+	public int getType(EObject eObject) { return type; }
 
-    public boolean isRecordType(char recordType) {return (recordType == IndexConstants.RECORD_TYPE.CALLABLE_PARAMETER ); }
+    @Override
+	public boolean isRecordType(char recordType) {return (recordType == IndexConstants.RECORD_TYPE.CALLABLE_PARAMETER ); }
 
-    public boolean isQueryable(EObject eObject) { return true; }
+    @Override
+	public boolean isQueryable(EObject eObject) { return true; }
 
-    public String getName(EObject eObject) { return name; }
+    @Override
+	public String getName(EObject eObject) { return name; }
 
-    public String getFullName(EObject eObject) { return fullName; }
+    @Override
+	public String getFullName(EObject eObject) { return fullName; }
 
-    public String getNameInSource(EObject eObject) { return nameInSource; }
+    @Override
+	public String getNameInSource(EObject eObject) { return nameInSource; }
 
-    public Object getObjectID(EObject eObject) { return uuid; }
+    @Override
+	public Object getObjectID(EObject eObject) { return uuid; }
 
-    public Object getParentObjectID(EObject eObject) { return parentUuid; }
+    @Override
+	public Object getParentObjectID(EObject eObject) { return parentUuid; }
 
-    public IPath getPath(EObject eObject) { return path; }
+    @Override
+	public IPath getPath(EObject eObject) { return path; }
 
-    public MetamodelEntity getMetamodelEntity() { return null; }
+    @Override
+	public MetamodelEntity getMetamodelEntity() { return null; }
 
-    public String getID() { return null; }
+    @Override
+	public String getID() { return null; }
 
-    public boolean isOptional(EObject eObject) { return optional; }
+    @Override
+	public boolean isOptional(EObject eObject) { return optional; }
 
-    public void updateObject(EObject targetObject, EObject sourceObject) { }
+    @Override
+	public void updateObject(EObject targetObject, EObject sourceObject) { }
     
-    public boolean isDatatypeFeature(EObject eObject, EStructuralFeature eFeature) { return false; }
+    @Override
+	public boolean isDatatypeFeature(EObject eObject, EStructuralFeature eFeature) { return false; }
 
-    public boolean canSetDatatype() { return false; }
+    @Override
+	public boolean canSetDatatype() { return false; }
 
-    public void setDatatype(EObject eObject,  EObject datatype) {}
+    @Override
+	public void setDatatype(EObject eObject,  EObject datatype) {}
     
-    public boolean canSetLength() { return false; }
+    @Override
+	public boolean canSetLength() { return false; }
     
-    public boolean canSetNullType() { return false; }
+    @Override
+	public boolean canSetNullType() { return false; }
     
-    public void setLength(EObject eObject, int length) {}
+    @Override
+	public void setLength(EObject eObject, int length) {}
 
-    public void setNullType(EObject eObject, int nullType) {}
+    @Override
+	public void setNullType(EObject eObject, int nullType) {}
 
-    public boolean isInputParam(EObject eObject) { return false; }
+    @Override
+	public boolean isInputParam(EObject eObject) { return false; }
     
-    public void setDirection(EObject eObject, int dir) {}
+    @Override
+	public void setDirection(EObject eObject, int dir) {}
 }

@@ -167,7 +167,8 @@ public class XmlServicePackageImpl extends EPackageImpl implements XmlServicePac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EClass getXmlOperation() {
+    @Override
+	public EClass getXmlOperation() {
         return xmlOperationEClass;
     }
 
@@ -176,7 +177,8 @@ public class XmlServicePackageImpl extends EPackageImpl implements XmlServicePac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getXmlOperation_Inputs() {
+    @Override
+	public EReference getXmlOperation_Inputs() {
         return (EReference)xmlOperationEClass.getEStructuralFeatures().get(0);
     }
 
@@ -185,7 +187,8 @@ public class XmlServicePackageImpl extends EPackageImpl implements XmlServicePac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getXmlOperation_Output() {
+    @Override
+	public EReference getXmlOperation_Output() {
         return (EReference)xmlOperationEClass.getEStructuralFeatures().get(1);
     }
 
@@ -194,7 +197,8 @@ public class XmlServicePackageImpl extends EPackageImpl implements XmlServicePac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getXmlOperation_UpdateCount() {
+    @Override
+	public EAttribute getXmlOperation_UpdateCount() {
         return (EAttribute)xmlOperationEClass.getEStructuralFeatures().get(2);
     }
 
@@ -203,7 +207,8 @@ public class XmlServicePackageImpl extends EPackageImpl implements XmlServicePac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EClass getXmlInput() {
+    @Override
+	public EClass getXmlInput() {
         return xmlInputEClass;
     }
 
@@ -212,7 +217,8 @@ public class XmlServicePackageImpl extends EPackageImpl implements XmlServicePac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getXmlInput_Operation() {
+    @Override
+	public EReference getXmlInput_Operation() {
         return (EReference)xmlInputEClass.getEStructuralFeatures().get(0);
     }
 
@@ -221,7 +227,8 @@ public class XmlServicePackageImpl extends EPackageImpl implements XmlServicePac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getXmlInput_Type() {
+    @Override
+	public EReference getXmlInput_Type() {
         return (EReference)xmlInputEClass.getEStructuralFeatures().get(1);
     }
 
@@ -230,7 +237,8 @@ public class XmlServicePackageImpl extends EPackageImpl implements XmlServicePac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EClass getXmlServiceComponent() {
+    @Override
+	public EClass getXmlServiceComponent() {
         return xmlServiceComponentEClass;
     }
 
@@ -239,7 +247,8 @@ public class XmlServicePackageImpl extends EPackageImpl implements XmlServicePac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getXmlServiceComponent_Name() {
+    @Override
+	public EAttribute getXmlServiceComponent_Name() {
         return (EAttribute)xmlServiceComponentEClass.getEStructuralFeatures().get(0);
     }
 
@@ -248,7 +257,8 @@ public class XmlServicePackageImpl extends EPackageImpl implements XmlServicePac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getXmlServiceComponent_NameInSource() {
+    @Override
+	public EAttribute getXmlServiceComponent_NameInSource() {
         return (EAttribute)xmlServiceComponentEClass.getEStructuralFeatures().get(1);
     }
 
@@ -257,7 +267,8 @@ public class XmlServicePackageImpl extends EPackageImpl implements XmlServicePac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EClass getXmlOutput() {
+    @Override
+	public EClass getXmlOutput() {
         return xmlOutputEClass;
     }
 
@@ -266,7 +277,8 @@ public class XmlServicePackageImpl extends EPackageImpl implements XmlServicePac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getXmlOutput_Operation() {
+    @Override
+	public EReference getXmlOutput_Operation() {
         return (EReference)xmlOutputEClass.getEStructuralFeatures().get(0);
     }
 
@@ -275,7 +287,8 @@ public class XmlServicePackageImpl extends EPackageImpl implements XmlServicePac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getXmlOutput_Result() {
+    @Override
+	public EReference getXmlOutput_Result() {
         return (EReference)xmlOutputEClass.getEStructuralFeatures().get(1);
     }
 
@@ -284,7 +297,8 @@ public class XmlServicePackageImpl extends EPackageImpl implements XmlServicePac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EClass getXmlMessage() {
+    @Override
+	public EClass getXmlMessage() {
         return xmlMessageEClass;
     }
 
@@ -293,7 +307,8 @@ public class XmlServicePackageImpl extends EPackageImpl implements XmlServicePac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getXmlMessage_ContentElement() {
+    @Override
+	public EReference getXmlMessage_ContentElement() {
         return (EReference)xmlMessageEClass.getEStructuralFeatures().get(0);
     }
 
@@ -302,7 +317,8 @@ public class XmlServicePackageImpl extends EPackageImpl implements XmlServicePac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EClass getXmlResult() {
+    @Override
+	public EClass getXmlResult() {
         return xmlResultEClass;
     }
 
@@ -311,7 +327,8 @@ public class XmlServicePackageImpl extends EPackageImpl implements XmlServicePac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getXmlResult_Output() {
+    @Override
+	public EReference getXmlResult_Output() {
         return (EReference)xmlResultEClass.getEStructuralFeatures().get(0);
     }
 
@@ -320,7 +337,8 @@ public class XmlServicePackageImpl extends EPackageImpl implements XmlServicePac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EEnum getOperationUpdateCount() {
+    @Override
+	public EEnum getOperationUpdateCount() {
         return operationUpdateCountEEnum;
     }
 
@@ -329,7 +347,8 @@ public class XmlServicePackageImpl extends EPackageImpl implements XmlServicePac
      * <!-- end-user-doc -->
      * @generated
      */
-    public XmlServiceFactory getXmlServiceFactory() {
+    @Override
+	public XmlServiceFactory getXmlServiceFactory() {
         return (XmlServiceFactory)getEFactoryInstance();
     }
 

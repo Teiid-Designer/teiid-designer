@@ -65,7 +65,8 @@ public class RootElementsPage extends WizardPage implements IUiConstants, IUiCon
     /**
      * @see IDialogPage#createControl(Composite)
      */
-    public void createControl( Composite parent ) {
+    @Override
+	public void createControl( Composite parent ) {
         panel = new RootElementsPanel(parent, wizard);
         setControl(panel);
     }
@@ -144,20 +145,24 @@ class RootElementsPanel extends Composite
         useSchemaTypeButton.setText(USE_SCHEMA_TYPE);
 
         useSchemaTypeButton.addSelectionListener(new SelectionListener() {
-            public void widgetSelected( SelectionEvent e ) {
+            @Override
+			public void widgetSelected( SelectionEvent e ) {
                 wizard.setUseSchemaTypes(useSchemaTypeButton.getSelection());
             }
 
-            public void widgetDefaultSelected( SelectionEvent e ) {
+            @Override
+			public void widgetDefaultSelected( SelectionEvent e ) {
             }
         });
 
         useStringTypeButton.addSelectionListener(new SelectionListener() {
-            public void widgetSelected( SelectionEvent e ) {
+            @Override
+			public void widgetSelected( SelectionEvent e ) {
                 wizard.setUseSchemaTypes(useSchemaTypeButton.getSelection());
             }
 
-            public void widgetDefaultSelected( SelectionEvent e ) {
+            @Override
+			public void widgetDefaultSelected( SelectionEvent e ) {
             }
         });
     }
@@ -195,7 +200,8 @@ class RootElementsPanel extends Composite
         }
     }
 
-    public void accumulatedValuesChanged( AccumulatorPanel source ) {
+    @Override
+	public void accumulatedValuesChanged( AccumulatorPanel source ) {
     }
 
     private void emptyList( TableViewer listViewer ) {
@@ -294,61 +300,71 @@ class RootElementAccumulatorSource implements IAccumulatorSource {
         this.caller = cllr;
     }
 
-    public void accumulatedValuesRemoved( Collection values ) {
+    @Override
+	public void accumulatedValuesRemoved( Collection values ) {
         caller.documentsAccumulatedValuesRemoved(values);
         caller.selectedDocumentsChanged();
     }
 
-    public void accumulatedValuesAdded( Collection values ) {
+    @Override
+	public void accumulatedValuesAdded( Collection values ) {
         caller.documentsAccumulatedValuesAdded(values);
         caller.selectedDocumentsChanged();
     }
 
-    public Collection getAvailableValues() {
+    @Override
+	public Collection getAvailableValues() {
         Collection values = null;
         values = caller.getDocumentsAvailableValues();
         return values;
     }
 
-    public int getAvailableValuesCount() {
+    @Override
+	public int getAvailableValuesCount() {
         int count = -1;
         count = caller.getDocumentsAvailableValuesCount();
         return count;
     }
 
-    public Collection getSelectedAvailableValues() {
+    @Override
+	public Collection getSelectedAvailableValues() {
         Collection values = null;
         values = caller.getDocumentsSelectedAvailableValues();
         return values;
     }
 
-    public int getSelectedAvailableValuesCount() {
+    @Override
+	public int getSelectedAvailableValuesCount() {
         int count = -1;
         count = caller.getDocumentsSelectedAvailableValuesCount();
         return count;
     }
 
-    public Control createControl( Composite parent ) {
+    @Override
+	public Control createControl( Composite parent ) {
         Control control = null;
         control = caller.documentsCreateControl(parent);
         return control;
     }
 
-    public void addSelectionListener( SelectionListener listener ) {
+    @Override
+	public void addSelectionListener( SelectionListener listener ) {
         caller.documentsAddSelectionListener(listener);
     }
 
     /**
      * @see org.teiid.designer.ui.common.widget.accumulator.IAccumulatorSource#supportsAddAll()
      */
-    public boolean supportsAddAll() {
+    @Override
+	public boolean supportsAddAll() {
         return true;
     }
 
     /**
      * @see org.teiid.designer.ui.common.widget.accumulator.IAccumulatorSource#getSelectionStatus()
      */
-    public IStatus getSelectionStatus() {
+    @Override
+	public IStatus getSelectionStatus() {
         return OK_STATUS;
     }
 }

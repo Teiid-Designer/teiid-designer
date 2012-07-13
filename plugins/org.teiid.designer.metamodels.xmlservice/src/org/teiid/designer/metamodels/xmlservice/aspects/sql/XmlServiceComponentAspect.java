@@ -33,7 +33,8 @@ public abstract class XmlServiceComponentAspect extends AbstractMetamodelAspect 
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlAspect#isQueryable(org.eclipse.emf.ecore.EObject)
      * @since 4.2
      */
-    public boolean isQueryable(final EObject eObject) {
+    @Override
+	public boolean isQueryable(final EObject eObject) {
         CoreArgCheck.isInstanceOf(XmlServiceComponent.class, eObject);
         return true;
     }
@@ -42,7 +43,8 @@ public abstract class XmlServiceComponentAspect extends AbstractMetamodelAspect 
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlAspect#getName(org.eclipse.emf.ecore.EObject)
      * @since 4.2
      */
-    public String getName(final EObject eObject) {
+    @Override
+	public String getName(final EObject eObject) {
         CoreArgCheck.isInstanceOf(XmlServiceComponent.class, eObject); 
         XmlServiceComponent entity = (XmlServiceComponent) eObject;       
         return entity.getName();
@@ -52,7 +54,8 @@ public abstract class XmlServiceComponentAspect extends AbstractMetamodelAspect 
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlAspect#getNameInSource(org.eclipse.emf.ecore.EObject)
      * @since 4.2
      */
-    public String getNameInSource(final EObject eObject) {
+    @Override
+	public String getNameInSource(final EObject eObject) {
         CoreArgCheck.isInstanceOf(XmlServiceComponent.class, eObject); 
         XmlServiceComponent entity = (XmlServiceComponent) eObject;       
         return entity.getNameInSource();
@@ -62,7 +65,8 @@ public abstract class XmlServiceComponentAspect extends AbstractMetamodelAspect 
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlAspect#updateObject(org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject)
      * @since 4.2
      */
-    public void updateObject(final EObject targetObject, final EObject sourceObject) {
+    @Override
+	public void updateObject(final EObject targetObject, final EObject sourceObject) {
     }
 
 }

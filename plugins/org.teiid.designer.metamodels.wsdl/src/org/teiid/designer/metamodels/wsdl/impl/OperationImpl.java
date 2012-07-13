@@ -176,7 +176,8 @@ public class OperationImpl extends EObjectImpl implements Operation {
      * 
      * @generated
      */
-    public Documentation getDocumentation() {
+    @Override
+	public Documentation getDocumentation() {
         return documentation;
     }
 
@@ -203,7 +204,8 @@ public class OperationImpl extends EObjectImpl implements Operation {
      * 
      * @generated
      */
-    public void setDocumentation( Documentation newDocumentation ) {
+    @Override
+	public void setDocumentation( Documentation newDocumentation ) {
         if (newDocumentation != documentation) {
             NotificationChain msgs = null;
             if (documentation != null) msgs = ((InternalEObject)documentation).eInverseRemove(this,
@@ -226,7 +228,8 @@ public class OperationImpl extends EObjectImpl implements Operation {
      * 
      * @generated
      */
-    public EList getDeclaredNamespaces() {
+    @Override
+	public EList getDeclaredNamespaces() {
         if (declaredNamespaces == null) {
             declaredNamespaces = new EObjectContainmentWithInverseEList(NamespaceDeclaration.class, this,
                                                                         WsdlPackage.OPERATION__DECLARED_NAMESPACES,
@@ -240,7 +243,8 @@ public class OperationImpl extends EObjectImpl implements Operation {
      * 
      * @generated
      */
-    public EList getElements() {
+    @Override
+	public EList getElements() {
         if (elements == null) {
             elements = new EObjectContainmentWithInverseEList(Element.class, this, WsdlPackage.OPERATION__ELEMENTS,
                                                               WsdlPackage.ELEMENT__ELEMENT_OWNER);
@@ -253,7 +257,8 @@ public class OperationImpl extends EObjectImpl implements Operation {
      * 
      * @generated
      */
-    public String getParameterOrder() {
+    @Override
+	public String getParameterOrder() {
         return parameterOrder;
     }
 
@@ -262,7 +267,8 @@ public class OperationImpl extends EObjectImpl implements Operation {
      * 
      * @generated
      */
-    public void setParameterOrder( String newParameterOrder ) {
+    @Override
+	public void setParameterOrder( String newParameterOrder ) {
         String oldParameterOrder = parameterOrder;
         parameterOrder = newParameterOrder;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
@@ -275,7 +281,8 @@ public class OperationImpl extends EObjectImpl implements Operation {
      * 
      * @generated
      */
-    public String getName() {
+    @Override
+	public String getName() {
         return name;
     }
 
@@ -284,7 +291,8 @@ public class OperationImpl extends EObjectImpl implements Operation {
      * 
      * @generated
      */
-    public void setName( String newName ) {
+    @Override
+	public void setName( String newName ) {
         String oldName = name;
         name = newName;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, WsdlPackage.OPERATION__NAME, oldName,
@@ -296,7 +304,8 @@ public class OperationImpl extends EObjectImpl implements Operation {
      * 
      * @generated
      */
-    public PortType getPortType() {
+    @Override
+	public PortType getPortType() {
         if (eContainerFeatureID != WsdlPackage.OPERATION__PORT_TYPE) return null;
         return (PortType)eContainer;
     }
@@ -306,7 +315,8 @@ public class OperationImpl extends EObjectImpl implements Operation {
      * 
      * @generated
      */
-    public void setPortType( PortType newPortType ) {
+    @Override
+	public void setPortType( PortType newPortType ) {
         if (newPortType != eContainer || (eContainerFeatureID != WsdlPackage.OPERATION__PORT_TYPE && newPortType != null)) {
             if (EcoreUtil.isAncestor(this, newPortType)) throw new IllegalArgumentException(
                                                                                             "Recursive containment not allowed for " + toString()); //$NON-NLS-1$
@@ -328,7 +338,8 @@ public class OperationImpl extends EObjectImpl implements Operation {
      * 
      * @generated
      */
-    public Input getInput() {
+    @Override
+	public Input getInput() {
         return input;
     }
 
@@ -355,7 +366,8 @@ public class OperationImpl extends EObjectImpl implements Operation {
      * 
      * @generated
      */
-    public void setInput( Input newInput ) {
+    @Override
+	public void setInput( Input newInput ) {
         if (newInput != input) {
             NotificationChain msgs = null;
             if (input != null) msgs = ((InternalEObject)input).eInverseRemove(this,
@@ -377,7 +389,8 @@ public class OperationImpl extends EObjectImpl implements Operation {
      * 
      * @generated
      */
-    public Output getOutput() {
+    @Override
+	public Output getOutput() {
         return output;
     }
 
@@ -404,7 +417,8 @@ public class OperationImpl extends EObjectImpl implements Operation {
      * 
      * @generated
      */
-    public void setOutput( Output newOutput ) {
+    @Override
+	public void setOutput( Output newOutput ) {
         if (newOutput != output) {
             NotificationChain msgs = null;
             if (output != null) msgs = ((InternalEObject)output).eInverseRemove(this,
@@ -426,7 +440,8 @@ public class OperationImpl extends EObjectImpl implements Operation {
      * 
      * @generated
      */
-    public EList getFaults() {
+    @Override
+	public EList getFaults() {
         if (faults == null) {
             faults = new EObjectContainmentWithInverseEList(Fault.class, this, WsdlPackage.OPERATION__FAULTS,
                                                             WsdlPackage.FAULT__OPERATION);
@@ -439,7 +454,8 @@ public class OperationImpl extends EObjectImpl implements Operation {
      * 
      * @generated
      */
-    public boolean isNameValid() {
+    @Override
+	public boolean isNameValid() {
         // TODO: implement this method
         // Ensure that you remove @generated or mark it @generated NOT
         throw new UnsupportedOperationException();

@@ -38,6 +38,7 @@ public class NewTeiidFilteredCPWizard extends NewFilteredCPWizard {
 		this.profileDescription = profileDescription;
 	}
 	
+	@Override
 	public void addPages() {
 		super.addPages();
 		IWizardPage[] pages = getPages();
@@ -50,6 +51,7 @@ public class NewTeiidFilteredCPWizard extends NewFilteredCPWizard {
 		}
 	}
 	
+	@Override
 	public IWizardPage getStartingPage() {
 		IWizardPage page = super.getStartingPage();
 		CPWizardSelectionPage wizardSelectionPage = (CPWizardSelectionPage) page;

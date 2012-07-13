@@ -47,21 +47,24 @@ public class ModelDiagramsImpl extends NonOpenableModelWorkspaceItemImpl impleme
     /* (non-Javadoc)
      * @See org.teiid.designer.core.workspace.ModelWorkspaceItem#getResource()
      */
-    public IResource getResource() {
+    @Override
+	public IResource getResource() {
         return this.getModelResource().getResource();
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.workspace.ModelWorkspaceItem#getUnderlyingResource()
      */
-    public IResource getUnderlyingResource() {
+    @Override
+	public IResource getUnderlyingResource() {
         return getResource();
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.workspace.ModelWorkspaceItem#getPath()
      */
-    public IPath getPath() {
+    @Override
+	public IPath getPath() {
         return this.getModelResource().getPath();
     }
 
@@ -73,7 +76,8 @@ public class ModelDiagramsImpl extends NonOpenableModelWorkspaceItemImpl impleme
     /* (non-Javadoc)
      * @See org.teiid.designer.core.workspace.ModelResource#getDiagrams(org.eclipse.emf.ecore.EObject)
      */
-    public List getDiagrams( final EObject target ) throws ModelWorkspaceException {
+    @Override
+	public List getDiagrams( final EObject target ) throws ModelWorkspaceException {
         final ModelBufferImpl buffer = getModelBuffer();
         final ModelContents contents = buffer.getModelContents();
         if (contents == null) {
@@ -87,7 +91,8 @@ public class ModelDiagramsImpl extends NonOpenableModelWorkspaceItemImpl impleme
     /* (non-Javadoc)
      * @See org.teiid.designer.core.workspace.ModelResource#getDiagrams(org.eclipse.emf.ecore.EObject)
      */
-    public List getDiagrams() throws ModelWorkspaceException {
+    @Override
+	public List getDiagrams() throws ModelWorkspaceException {
         return getModelBuffer().getModelContents().getDiagrams();
     }
 
@@ -100,7 +105,8 @@ public class ModelDiagramsImpl extends NonOpenableModelWorkspaceItemImpl impleme
      * @see org.teiid.designer.core.workspace.ModelDiagrams#createNewDiagram(org.eclipse.emf.ecore.EObject, boolean)
      * @since 4.3
      */
-    public Diagram createNewDiagram( final EObject target,
+    @Override
+	public Diagram createNewDiagram( final EObject target,
                                      final boolean persistent ) throws ModelWorkspaceException {
         EObject finalTarget = target;
         if (finalTarget == null) finalTarget = getModelBuffer().getModelContents().getModelAnnotation();
@@ -111,14 +117,16 @@ public class ModelDiagramsImpl extends NonOpenableModelWorkspaceItemImpl impleme
     /* (non-Javadoc)
      * @See org.teiid.designer.core.workspace.ModelDiagrams#delete(org.teiid.designer.metamodels.diagram.Diagram)
      */
-    public boolean delete( final Diagram diagram ) {
+    @Override
+	public boolean delete( final Diagram diagram ) {
         return ModelResourceContainerFactory.deleteDiagram(diagram);
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.workspace.ModelDiagrams#isPersistent(org.teiid.designer.metamodels.diagram.Diagram)
      */
-    public boolean isPersistent( final Diagram diagram ) {
+    @Override
+	public boolean isPersistent( final Diagram diagram ) {
         return ModelResourceContainerFactory.isPersistent(diagram);
     }
 
@@ -128,7 +136,8 @@ public class ModelDiagramsImpl extends NonOpenableModelWorkspaceItemImpl impleme
      * @see org.teiid.designer.core.workspace.ModelDiagrams#setPersistent(org.teiid.designer.metamodels.diagram.Diagram, boolean)
      * @since 4.3
      */
-    public void setPersistent( final Diagram diagram,
+    @Override
+	public void setPersistent( final Diagram diagram,
                                boolean persistent ) throws ModelWorkspaceException {
         if (persistent == isPersistent(diagram)) {
             return;

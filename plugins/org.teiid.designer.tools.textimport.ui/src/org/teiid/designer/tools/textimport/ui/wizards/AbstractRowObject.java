@@ -35,7 +35,8 @@ public abstract class AbstractRowObject implements IRowObject {
     }
     
     
-    public abstract void parseRow();
+    @Override
+	public abstract void parseRow();
     
     protected String parseDescription(String subString) {
         // Remove unneeded double quotes
@@ -79,27 +80,33 @@ public abstract class AbstractRowObject implements IRowObject {
         return buffer.toString();
     }
     
-    public boolean isValid() {
+    @Override
+	public boolean isValid() {
         return this.valid;
     }
     
-    public String getDescription() {
+    @Override
+	public String getDescription() {
         return this.description;
     }
     
-    public void setDescription(String desc) {
+    @Override
+	public void setDescription(String desc) {
         this.description = desc;
     }
     
-    public String getName() {
+    @Override
+	public String getName() {
         return this.name;
     }
     
-    public void setName(String name) {
+    @Override
+	public void setName(String name) {
         this.name = createValidName(name, true);
     }
     
-    public String getLocation() {
+    @Override
+	public String getLocation() {
         return this.location;
     }
     
@@ -107,20 +114,24 @@ public abstract class AbstractRowObject implements IRowObject {
         this.location = location;
     }
     
-    public int getObjectType() {
+    @Override
+	public int getObjectType() {
         return this.type;
     }
     public void setObjectType(int type) {
         this.type = type;
     }
     
-    public String getDataString() {
+    @Override
+	public String getDataString() {
         return this.dataString;
     }
-    public String getRawString() {
+    @Override
+	public String getRawString() {
         return this.rawString;
     }
-    public void setRawString(String rawString) {
+    @Override
+	public void setRawString(String rawString) {
         this.rawString = rawString;
     }
     

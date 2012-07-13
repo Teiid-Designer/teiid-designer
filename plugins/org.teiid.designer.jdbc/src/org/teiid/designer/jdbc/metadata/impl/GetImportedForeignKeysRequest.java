@@ -59,7 +59,8 @@ public class GetImportedForeignKeysRequest extends MetadataRequest {
             resultSet = dbmd.getImportedKeys(catalogPattern,schemaPattern,tablePattern);
             Response.addResults(results,resultSet,this.isMetadataRequested(),
                                 new TupleValidator() {
-                                    public boolean isTupleValid(List tuple) {
+                                    @Override
+									public boolean isTupleValid(List tuple) {
                                         if(schemaPattern == null || schemaPattern.length() == 0) {
                                             return true;
                                         }                               

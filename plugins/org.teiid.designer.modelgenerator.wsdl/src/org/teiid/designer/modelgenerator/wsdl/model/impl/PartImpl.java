@@ -25,50 +25,62 @@ public class PartImpl extends WSDLElementImpl implements Part {
 		m_message = message;
 	}
 		
+	@Override
 	public String getElementName() {
 		return m_elementName;
 	}
 
+	@Override
 	public void setElementName(String name) {
 		m_elementName = name;
 	}
 
+	@Override
 	public String getElementNamespace() {
 		return m_elementNamespace;
 	}
 
+	@Override
 	public void setElementNamespace(String namespace) {
 		m_elementNamespace = namespace;
 	}
 
+	@Override
 	public String getTypeName() {
 		return m_typeName;
 	}
 
+	@Override
 	public void setTypeName(String name) {
 		m_typeName = name;
 	}
 
+	@Override
 	public String getTypeNamespace() {
 		return m_typeNamespace;
 	}
 
+	@Override
 	public void setTypeNamespace(String namespace) {
 		m_typeNamespace = namespace;
 	}
 	
+	@Override
 	public Message getMessage() {
 		return m_message;
 	}
 	
+	@Override
 	public boolean isType() {
 		return m_typeName != null;
 	}
 	
+	@Override
 	public boolean isElement() {
 		return m_elementName != null;
 	}
 
+	@Override
 	public WSDLElement copy() {
 		PartImpl newImpl = new PartImpl(getMessage());
 		newImpl.setName(getName());

@@ -26,36 +26,50 @@ public class FakeForeignKeyAspect implements SqlForeignKeyAspect {
     public List columns;
     public Object uniqueKey, uuid, parentUuid;
 
-    public Object getUniqueKey(EObject eObject) { return uniqueKey; }
+    @Override
+	public Object getUniqueKey(EObject eObject) { return uniqueKey; }
 
-    public List getColumns(EObject eObject) { return columns; }
+    @Override
+	public List getColumns(EObject eObject) { return columns; }
 
-    public int getColumnSetType() { return MetadataConstants.COLUMN_SET_TYPES.FOREIGN_KEY; }
+    @Override
+	public int getColumnSetType() { return MetadataConstants.COLUMN_SET_TYPES.FOREIGN_KEY; }
 
-    public boolean isRecordType(char recordType) { return (recordType == IndexConstants.RECORD_TYPE.FOREIGN_KEY ); }
+    @Override
+	public boolean isRecordType(char recordType) { return (recordType == IndexConstants.RECORD_TYPE.FOREIGN_KEY ); }
 
-    public boolean isQueryable(EObject eObject) { return true; }
+    @Override
+	public boolean isQueryable(EObject eObject) { return true; }
 
-    public String getName(EObject eObject) { return name; }
+    @Override
+	public String getName(EObject eObject) { return name; }
 
-    public String getFullName(EObject eObject) { return fullName; }
+    @Override
+	public String getFullName(EObject eObject) { return fullName; }
 
-    public String getNameInSource(EObject eObject) { return nameInSource; }
+    @Override
+	public String getNameInSource(EObject eObject) { return nameInSource; }
 
-    public Object getObjectID(EObject eObject) { return uuid; }
+    @Override
+	public Object getObjectID(EObject eObject) { return uuid; }
 
-    public Object getParentObjectID(EObject eObject) { return parentUuid; }
+    @Override
+	public Object getParentObjectID(EObject eObject) { return parentUuid; }
 
-    public String getID() { return null; }
+    @Override
+	public String getID() { return null; }
 
-    public MetamodelEntity getMetamodelEntity() { return null; }
+    @Override
+	public MetamodelEntity getMetamodelEntity() { return null; }
 
-    public IPath getPath(EObject eObject) { return path; }
+    @Override
+	public IPath getPath(EObject eObject) { return path; }
 
     /*
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlAspect#updateObject(org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject)
      */
-    public void updateObject(EObject targetObject, EObject sourceObject) {
+    @Override
+	public void updateObject(EObject targetObject, EObject sourceObject) {
 
     }
 

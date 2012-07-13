@@ -29,7 +29,8 @@ public class ProcedureResultAspect extends RelationalEntityAspect implements Sql
     /*
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlColumnSetAspect#getColumns(org.eclipse.emf.ecore.EObject)
      */
-    public List getColumns(EObject eObject) {
+    @Override
+	public List getColumns(EObject eObject) {
         CoreArgCheck.isInstanceOf(ProcedureResult.class, eObject);
         ProcedureResult procResult = (ProcedureResult) eObject;
         return procResult.getColumns();
@@ -38,21 +39,24 @@ public class ProcedureResultAspect extends RelationalEntityAspect implements Sql
     /*
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlColumnSetAspect#getType()
      */
-    public int getColumnSetType() {
+    @Override
+	public int getColumnSetType() {
         return MetadataConstants.COLUMN_SET_TYPES.PROCEDURE_RESULT;
     }
 
     /*
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlAspect#isRecordType(char)
      */
-    public boolean isRecordType(char recordType) {
+    @Override
+	public boolean isRecordType(char recordType) {
         return (recordType == IndexConstants.RECORD_TYPE.RESULT_SET);
     }
 
     /*
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlAspect#updateObject(org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject)
      */
-    public void updateObject(EObject targetObject, EObject sourceObject) {
+    @Override
+	public void updateObject(EObject targetObject, EObject sourceObject) {
 
     }
 
@@ -61,7 +65,8 @@ public class ProcedureResultAspect extends RelationalEntityAspect implements Sql
      * @return
      * @since 5.0.2
      */
-    public Object getProcedure(EObject eObject) {
+    @Override
+	public Object getProcedure(EObject eObject) {
         CoreArgCheck.isInstanceOf(ProcedureResult.class, eObject);
         return ((ProcedureResult)eObject).getProcedure();
     }

@@ -116,11 +116,13 @@ public class RelationshipTypeNodeEditPart extends AbstractDiagramEditPart implem
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.diagram.ui.part.EditableEditPart#edit()
 	 */
+	@Override
 	public void edit() {
 		if( ModelerCore.getModelEditor().hasName(getModelObject()) )
 			performDirectEdit();
 	}
     
+	@Override
 	public void performDirectEdit(){
 		if(manager == null)
 			manager = new DirectEditPartManager(this, 
@@ -140,14 +142,17 @@ public class RelationshipTypeNodeEditPart extends AbstractDiagramEditPart implem
 	// ----------------------------------
 	// DirectEditPart interface methods
 	//	----------------------------------
+	@Override
 	public String getText() {
 		return ((DiagramModelNode)getModel()).getName();
 	}
 
+	@Override
 	public String getEditString(){
 		return ((DiagramModelNode)getModel()).getName();
 	}
 
+	@Override
 	public void setText(String newName) {
 		((DiagramModelNode)getModel()).setName(newName);
 	}
@@ -258,6 +263,7 @@ public class RelationshipTypeNodeEditPart extends AbstractDiagramEditPart implem
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.diagram.ui.util.directedit.DirectEditPart#getEditManager()
 	 */
+	@Override
 	public DirectEditPartManager getEditManager() {
 		return (DirectEditPartManager)manager;
 	}

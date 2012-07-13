@@ -24,7 +24,8 @@ public class Uml2ResourceLoadOptionContributor implements ResourceLoadOptionCont
      * @see org.teiid.designer.core.metamodel.ResourceLoadOptionContributor#addMappings(org.eclipse.emf.ecore.xmi.XMLResource.XMLMap)
      * @since 4.3
      */
-    public void addMappings(XMLMap xmlMap) {
+    @Override
+	public void addMappings(XMLMap xmlMap) {
         if (xmlMap != null) {
             XMLResource.XMLInfo info = new XMLInfoImpl();
             info.setXMLRepresentation(XMLInfo.ELEMENT);

@@ -34,7 +34,8 @@ import org.eclipse.jface.text.TextViewer;
         /* (non-Javadoc)
          * @See org.teiid.designer.diagram.ui.actions.ScaledFont#increase()
          */
-        public void increase() {
+        @Override
+		public void increase() {
             if ( sfmManager.canIncrease() ) {            
                 sfmManager.increase();
                 updateTextWidget();
@@ -44,7 +45,8 @@ import org.eclipse.jface.text.TextViewer;
         /* (non-Javadoc)
          * @See org.teiid.designer.diagram.ui.actions.ScaledFont#decrease()
          */
-        public void decrease() {
+        @Override
+		public void decrease() {
             if ( sfmManager.canDecrease() ) {            
                 sfmManager.decrease();
                 updateTextWidget();
@@ -64,14 +66,16 @@ import org.eclipse.jface.text.TextViewer;
         /* (non-Javadoc)
          * @See org.teiid.designer.diagram.ui.actions.ScaledFont#canIncrease()
          */
-        public boolean canIncrease() {
+        @Override
+		public boolean canIncrease() {
             return sfmManager.canIncrease();
         }
 
         /* (non-Javadoc)
          * @See org.teiid.designer.diagram.ui.actions.ScaledFont#canDecrease()
          */
-        public boolean canDecrease() {
+        @Override
+		public boolean canDecrease() {
             return sfmManager.canDecrease();
         }
 
@@ -79,7 +83,8 @@ import org.eclipse.jface.text.TextViewer;
          * Adds the given IFontChangeListener to this ZoomManager's list of listeners.
          * @param listener the IFontChangeListener to be added
          */
-        public void addFontChangeListener(IFontChangeListener listener) {
+        @Override
+		public void addFontChangeListener(IFontChangeListener listener) {
             listeners.add(listener);
         }
     
@@ -87,14 +92,16 @@ import org.eclipse.jface.text.TextViewer;
          * Removes the given IFontChangeListener from this ZoomManager's list of listeners.
          * @param listener the IFontChangeListener to be removed
          */
-        public void removeFontChangeListener(IFontChangeListener listener) {
+        @Override
+		public void removeFontChangeListener(IFontChangeListener listener) {
             listeners.remove(listener);
         }
 
         /**
          * Notifies listeners that the zoom level has changed.
          */
-        public void fireFontChanged() {
+        @Override
+		public void fireFontChanged() {
 //            System.out.println("[TextFontManager.fireFontChanged]"); //$NON-NLS-1$            
             Iterator iter = listeners.iterator();
             while (iter.hasNext())

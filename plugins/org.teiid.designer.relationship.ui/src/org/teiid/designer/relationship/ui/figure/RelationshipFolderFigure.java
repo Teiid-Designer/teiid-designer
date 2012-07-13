@@ -292,6 +292,7 @@ public class RelationshipFolderFigure extends AbstractDiagramFigure implements D
 		}
 	}
 	
+	@Override
 	public Label getLabelFigure() {
 		return nameLabel.getLabel();
 	}

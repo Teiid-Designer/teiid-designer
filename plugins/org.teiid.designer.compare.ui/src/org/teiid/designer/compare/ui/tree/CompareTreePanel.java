@@ -646,7 +646,8 @@ public class CompareTreePanel implements UiConstants, PluginConstants {
 
         Display.getDefault().asyncExec(new Runnable() {
 
-            public void run() {
+            @Override
+			public void run() {
                 doTreeSelection(tiArray);
 
                 // Now do it again, in case it was not visible the first time.
@@ -666,7 +667,8 @@ public class CompareTreePanel implements UiConstants, PluginConstants {
         // System.out.println( "[CompareTreepanel.forceTreeSelection] ti to force is: " + tiArray[0].getData() ); //$NON-NLS-1$
         Display.getDefault().asyncExec(new Runnable() {
 
-            public void run() {
+            @Override
+			public void run() {
                 doTreeSelection(tiArray);
             }
         });

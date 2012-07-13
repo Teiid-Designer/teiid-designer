@@ -102,20 +102,23 @@ public class CreatePushdownFunctionAction extends Action implements INewChildAct
     /* (non-Javadoc)
      * @See org.teiid.designer.ui.actions.INewChildAction#canCreateChild(org.eclipse.emf.ecore.EObject)
      */
-    public boolean canCreateChild(EObject parent) {
+    @Override
+	public boolean canCreateChild(EObject parent) {
     	return false;
     }
     
     /* (non-Javadoc)
      * @See org.teiid.designer.ui.actions.INewChildAction#canCreateChild(org.eclipse.core.resources.IFile)
      */
-    public boolean canCreateChild(IFile modelFile) {
+    @Override
+	public boolean canCreateChild(IFile modelFile) {
     	return isApplicable(new StructuredSelection(modelFile));
     }
     /* (non-Javadoc)
      * @See org.teiid.designer.ui.actions.INewSiblingAction#canCreateChild(org.eclipse.emf.ecore.EObject)
      */
-    public boolean canCreateSibling(EObject parent) {
+    @Override
+	public boolean canCreateSibling(EObject parent) {
     	//Convert eObject selection to IFile
     	ModelResource mr = ModelUtilities.getModelResourceForModelObject(parent);
     	if( mr != null ) {
@@ -315,6 +318,7 @@ public class CreatePushdownFunctionAction extends Action implements INewChildAct
 	        }
 	        pdfName.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 	        pdfName.addModifyListener(new ModifyListener() {
+				@Override
 				public void modifyText(ModifyEvent e) {
 					data.setName(pdfName.getText());
 					validate();
@@ -372,6 +376,7 @@ public class CreatePushdownFunctionAction extends Action implements INewChildAct
 	        }
 	        nameInSourceText.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 	        nameInSourceText.addModifyListener(new ModifyListener() {
+				@Override
 				public void modifyText(ModifyEvent e) {
 					data.setNameInSource(nameInSourceText.getText());
 					validate();
@@ -613,6 +618,7 @@ public class CreatePushdownFunctionAction extends Action implements INewChildAct
 	        	this.nameText.setText(data.getName());
 	        }
 	        this.nameText.addModifyListener(new ModifyListener() {
+				@Override
 				public void modifyText(ModifyEvent e) {
 					data.setName(nameText.getText()); 
 					validate();
@@ -654,6 +660,7 @@ public class CreatePushdownFunctionAction extends Action implements INewChildAct
 	        	this.typeLengthText.setText(Integer.toString(defaultLength));
 	        }
 	        this.typeLengthText.addModifyListener(new ModifyListener() {
+				@Override
 				public void modifyText(ModifyEvent e) {
 					if( typeLengthText.getText().length() > 0 ) {
 						data.setLength(Integer.parseInt(typeLengthText.getText()) );

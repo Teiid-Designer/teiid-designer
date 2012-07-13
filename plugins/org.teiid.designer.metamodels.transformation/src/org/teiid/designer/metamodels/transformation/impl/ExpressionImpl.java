@@ -75,7 +75,8 @@ public class ExpressionImpl extends EObjectImpl implements Expression {
      * 
      * @generated
      */
-    public String getValue() {
+    @Override
+	public String getValue() {
         return value;
     }
 
@@ -84,7 +85,8 @@ public class ExpressionImpl extends EObjectImpl implements Expression {
      * 
      * @generated
      */
-    public void setValue( String newValue ) {
+    @Override
+	public void setValue( String newValue ) {
         String oldValue = value;
         value = newValue;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
@@ -96,7 +98,8 @@ public class ExpressionImpl extends EObjectImpl implements Expression {
      * 
      * @generated
      */
-    public ExpressionOwner getOwner() {
+    @Override
+	public ExpressionOwner getOwner() {
         if (eContainerFeatureID != TransformationPackage.EXPRESSION__OWNER) return null;
         return (ExpressionOwner)eContainer;
     }
@@ -106,7 +109,8 @@ public class ExpressionImpl extends EObjectImpl implements Expression {
      * 
      * @generated
      */
-    public void setOwner( ExpressionOwner newOwner ) {
+    @Override
+	public void setOwner( ExpressionOwner newOwner ) {
         if (newOwner != eContainer || (eContainerFeatureID != TransformationPackage.EXPRESSION__OWNER && newOwner != null)) {
             if (EcoreUtil.isAncestor(this, newOwner)) throw new IllegalArgumentException(
                                                                                          "Recursive containment not allowed for " + toString()); //$NON-NLS-1$

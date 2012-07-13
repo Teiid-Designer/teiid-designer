@@ -438,11 +438,13 @@ public class ClipboardPasteProblemDialog extends ExtendedTitleAreaDialog
                     textWidget.setSelection(0, textWidget.getText().length());
 
                     textWidget.addFocusListener(new FocusListener() {
-                        public void focusGained( FocusEvent theEvent ) {
+                        @Override
+						public void focusGained( FocusEvent theEvent ) {
                             setOkEnabledState(false);
                         }
 
-                        public void focusLost( FocusEvent theEvent ) {
+                        @Override
+						public void focusLost( FocusEvent theEvent ) {
                             String oldText = getPasteData(selectedRow, selectedColumn);
                             String newText = textWidget.getText();
                             boolean changed = false;
@@ -574,13 +576,15 @@ public class ClipboardPasteProblemDialog extends ExtendedTitleAreaDialog
         /**
          * @see org.eclipse.jface.viewers.IContentProvider#dispose()
          */
-        public void dispose() {
+        @Override
+		public void dispose() {
         }
 
         /**
          * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
          */
-        public Object[] getElements( Object theInputElement ) {
+        @Override
+		public Object[] getElements( Object theInputElement ) {
             return (rows == null) ? new Object[0] : rows;
         }
 
@@ -588,7 +592,8 @@ public class ClipboardPasteProblemDialog extends ExtendedTitleAreaDialog
          * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object,
          *      java.lang.Object)
          */
-        public void inputChanged( Viewer theViewer,
+        @Override
+		public void inputChanged( Viewer theViewer,
                                   Object theOldInput,
                                   Object theNewInput ) {
             boolean validInput = false;
@@ -624,7 +629,8 @@ public class ClipboardPasteProblemDialog extends ExtendedTitleAreaDialog
         /**
          * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang.Object, int)
          */
-        public Image getColumnImage( Object theElement,
+        @Override
+		public Image getColumnImage( Object theElement,
                                      int theColumnIndex ) {
             Image result = null;
 
@@ -642,7 +648,8 @@ public class ClipboardPasteProblemDialog extends ExtendedTitleAreaDialog
         /**
          * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.lang.Object, int)
          */
-        public String getColumnText( Object theElement,
+        @Override
+		public String getColumnText( Object theElement,
                                      int theColumnIndex ) {
             String result = null;
 
@@ -668,13 +675,15 @@ public class ClipboardPasteProblemDialog extends ExtendedTitleAreaDialog
         /**
          * @see org.eclipse.jface.viewers.IContentProvider#dispose()
          */
-        public void dispose() {
+        @Override
+		public void dispose() {
         }
 
         /**
          * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
          */
-        public Object[] getElements( Object theInputElement ) {
+        @Override
+		public Object[] getElements( Object theInputElement ) {
             return (rows == null) ? new Object[0] : rows;
         }
 
@@ -682,7 +691,8 @@ public class ClipboardPasteProblemDialog extends ExtendedTitleAreaDialog
          * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object,
          *      java.lang.Object)
          */
-        public void inputChanged( Viewer theViewer,
+        @Override
+		public void inputChanged( Viewer theViewer,
                                   Object theOldInput,
                                   Object theNewInput ) {
             boolean validInput = true;
@@ -734,7 +744,8 @@ public class ClipboardPasteProblemDialog extends ExtendedTitleAreaDialog
         /**
          * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang.Object, int)
          */
-        public Image getColumnImage( Object theElement,
+        @Override
+		public Image getColumnImage( Object theElement,
                                      int theColumnIndex ) {
             Image result = null;
 
@@ -748,7 +759,8 @@ public class ClipboardPasteProblemDialog extends ExtendedTitleAreaDialog
         /**
          * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.lang.Object, int)
          */
-        public String getColumnText( Object theElement,
+        @Override
+		public String getColumnText( Object theElement,
                                      int theColumnIndex ) {
             String result = null;
 

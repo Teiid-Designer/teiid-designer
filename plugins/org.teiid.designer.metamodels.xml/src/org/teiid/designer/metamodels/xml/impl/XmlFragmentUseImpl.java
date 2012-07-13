@@ -302,7 +302,8 @@ public class XmlFragmentUseImpl extends XmlBaseElementImpl implements XmlFragmen
      * 
      * @generated
      */
-    public XmlFragment getFragment() {
+    @Override
+	public XmlFragment getFragment() {
         if (fragment != null && fragment.eIsProxy()) {
             final XmlFragment oldFragment = fragment;
             fragment = (XmlFragment)eResolveProxy((InternalEObject)fragment);
@@ -320,7 +321,8 @@ public class XmlFragmentUseImpl extends XmlBaseElementImpl implements XmlFragmen
      * 
      * @generated
      */
-    public void setFragment( final XmlFragment newFragment ) {
+    @Override
+	public void setFragment( final XmlFragment newFragment ) {
         final XmlFragment oldFragment = fragment;
         fragment = newFragment;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,

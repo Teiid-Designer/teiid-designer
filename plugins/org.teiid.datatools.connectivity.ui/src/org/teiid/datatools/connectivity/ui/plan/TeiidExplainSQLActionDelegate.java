@@ -64,7 +64,8 @@ IEditorActionDelegate, ISelectionChangedListener, IUpdate {
         update();
     }
 
-    public void update() {
+    @Override
+	public void update() {
         String sql = getSQLStatements();
         setEnabled(_sqlEditor != null && (_sqlEditor.isConnected()) && super.canBeEnabled()
                 && (sql != null && sql.length() > 0));
@@ -110,7 +111,8 @@ IEditorActionDelegate, ISelectionChangedListener, IUpdate {
     @Override
     public Runnable getPostRun() {
         Runnable postRun = new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 _sqlEditor.getEditorSite().getPage().activate(_sqlEditor);
             }
         };
@@ -156,18 +158,21 @@ IEditorActionDelegate, ISelectionChangedListener, IUpdate {
      * 
      * @param event
      */
-    public void selectionChanged( SelectionChangedEvent event ) {
+    @Override
+	public void selectionChanged( SelectionChangedEvent event ) {
         if (event.getSelection() instanceof ITextSelection) {
             update();
         }
     }
 
-    public void setActiveEditor( IAction action,
+    @Override
+	public void setActiveEditor( IAction action,
                                  IEditorPart targetEditor ) {
         setActiveEditor((SQLEditor)targetEditor);
     }
 
-    public void run() {
+    @Override
+	public void run() {
         if (!isEnabled()) {
             return;
         }
@@ -241,10 +246,12 @@ IEditorActionDelegate, ISelectionChangedListener, IUpdate {
         return executionPlan;
     }
 
-    public void run( IAction action ) {
+    @Override
+	public void run( IAction action ) {
     }
 
-    public void selectionChanged( IAction action,
+    @Override
+	public void selectionChanged( IAction action,
                                   ISelection selection ) {
         if (selection instanceof ITextSelection) {
             update();

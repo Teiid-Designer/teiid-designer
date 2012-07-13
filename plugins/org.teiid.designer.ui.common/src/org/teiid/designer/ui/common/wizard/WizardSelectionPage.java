@@ -71,7 +71,8 @@ final class WizardSelectionPage extends WizardPage implements UiConstants {
      * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
      * @since 4.0
      */
-    public void createControl( final Composite parent ) {
+    @Override
+	public void createControl( final Composite parent ) {
         // Create page
         final Composite pg = WidgetFactory.createPanel(parent);
         setControl(pg);
@@ -80,14 +81,17 @@ final class WizardSelectionPage extends WizardPage implements UiConstants {
         label.setText(SELECT_LABEL);
         final TableViewer viewer = WidgetFactory.createTableViewer(pg);
         viewer.setContentProvider(new IStructuredContentProvider() {
-            public void dispose() {
+            @Override
+			public void dispose() {
             }
 
-            public Object[] getElements( final Object inputElement ) {
+            @Override
+			public Object[] getElements( final Object inputElement ) {
                 return WizardSelectionPage.this.elems;
             }
 
-            public void inputChanged( final Viewer viewer,
+            @Override
+			public void inputChanged( final Viewer viewer,
                                       final Object oldInput,
                                       final Object newInput ) {
             }
@@ -110,14 +114,16 @@ final class WizardSelectionPage extends WizardPage implements UiConstants {
                 return ImageDescriptor.getMissingImageDescriptor().createImage();
             }
 
-            public String getColumnText( final Object element,
+            @Override
+			public String getColumnText( final Object element,
                                          final int column ) {
                 final AbstractSelectionWizard wizard = (AbstractSelectionWizard)getWizard();
                 return wizard.getSelectedWizardName((IConfigurationElement)element);
             }
         });
         viewer.addSelectionChangedListener(new ISelectionChangedListener() {
-            public void selectionChanged( final SelectionChangedEvent event ) {
+            @Override
+			public void selectionChanged( final SelectionChangedEvent event ) {
                 IStructuredSelection sel = (IStructuredSelection)event.getSelection();
                 ((AbstractSelectionWizard)getWizard()).setSelectedWizard(sel);
 

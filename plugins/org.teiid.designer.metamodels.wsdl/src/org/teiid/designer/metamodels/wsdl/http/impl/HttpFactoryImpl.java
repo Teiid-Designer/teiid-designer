@@ -56,7 +56,8 @@ public class HttpFactoryImpl extends EFactoryImpl implements HttpFactory {
      * 
      * @generated
      */
-    public HttpAddress createHttpAddress() {
+    @Override
+	public HttpAddress createHttpAddress() {
         HttpAddressImpl httpAddress = new HttpAddressImpl();
         return httpAddress;
     }
@@ -66,7 +67,8 @@ public class HttpFactoryImpl extends EFactoryImpl implements HttpFactory {
      * 
      * @generated
      */
-    public HttpBinding createHttpBinding() {
+    @Override
+	public HttpBinding createHttpBinding() {
         HttpBindingImpl httpBinding = new HttpBindingImpl();
         return httpBinding;
     }
@@ -76,7 +78,8 @@ public class HttpFactoryImpl extends EFactoryImpl implements HttpFactory {
      * 
      * @generated
      */
-    public HttpOperation createHttpOperation() {
+    @Override
+	public HttpOperation createHttpOperation() {
         HttpOperationImpl httpOperation = new HttpOperationImpl();
         return httpOperation;
     }
@@ -86,7 +89,8 @@ public class HttpFactoryImpl extends EFactoryImpl implements HttpFactory {
      * 
      * @generated
      */
-    public HttpPackage getHttpPackage() {
+    @Override
+	public HttpPackage getHttpPackage() {
         return (HttpPackage)getEPackage();
     }
 

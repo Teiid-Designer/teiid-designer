@@ -23,7 +23,8 @@ public class AttributeColumn extends BaseColumn {
         this.prefix = prefix;
     }
 
-    public String getXpath() {
+    @Override
+	public String getXpath() {
         String xpath;
         String name = attr.getName();
         if (prefix != null && !prefix.equals("")) { //$NON-NLS-1$
@@ -34,16 +35,19 @@ public class AttributeColumn extends BaseColumn {
         return xpath;
     }
 
-    public String getSimpleName() {
+    @Override
+	public String getSimpleName() {
         String name = attr.getName();
         return name;
     }
 
-    public Column copy() {
+    @Override
+	public Column copy() {
         return new AttributeColumn(attr, prefix, super.isPrimaryKey());
     }
 
-    public void printDebug() {
+    @Override
+	public void printDebug() {
         StringBuffer buff = new StringBuffer("\t \t"); //$NON-NLS-1$
         buff.append("Attribute Column:"); //$NON-NLS-1$
         buff.append("SimpleName = " + getSimpleName()); //$NON-NLS-1$
@@ -54,7 +58,8 @@ public class AttributeColumn extends BaseColumn {
         System.out.println(buff.toString());
     }
 
-    public org.teiid.designer.schema.tools.model.jdbc.Column getColumnImplementation() {
+    @Override
+	public org.teiid.designer.schema.tools.model.jdbc.Column getColumnImplementation() {
         ColumnImpl newColumn = new ColumnImpl();
         newColumn.setDataAttributeName(getSimpleName());
         newColumn.setDataType(getDataType());

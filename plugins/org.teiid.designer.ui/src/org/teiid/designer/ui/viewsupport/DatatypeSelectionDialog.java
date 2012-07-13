@@ -105,7 +105,8 @@ public class DatatypeSelectionDialog extends ListDialog implements UiConstants {
                                     final EObject objectForType ) {
         super(parent);
         setContentProvider(new IStructuredContentProvider() {
-            public Object[] getElements( Object inputElement ) {
+            @Override
+			public Object[] getElements( Object inputElement ) {
                 Object[] result = new Object[0];
                 try {
                     // Use the Datatype Manager that corresponds to the container where 'objectForType' exists
@@ -121,10 +122,12 @@ public class DatatypeSelectionDialog extends ListDialog implements UiConstants {
                 return result;
             }
 
-            public void dispose() {
+            @Override
+			public void dispose() {
             }
 
-            public void inputChanged( Viewer v,
+            @Override
+			public void inputChanged( Viewer v,
                                       Object o,
                                       Object o2 ) {
             }
@@ -155,7 +158,8 @@ public class DatatypeSelectionDialog extends ListDialog implements UiConstants {
                                     final EStructuralFeature feature ) {
         super(parent);
         setContentProvider(new IStructuredContentProvider() {
-            public Object[] getElements( Object inputElement ) {
+            @Override
+			public Object[] getElements( Object inputElement ) {
                 Object[] result = new Object[0];
                 try {
                     // Use the Datatype Manager that corresponds to the container where 'objectForType' exists
@@ -171,10 +175,12 @@ public class DatatypeSelectionDialog extends ListDialog implements UiConstants {
                 return result;
             }
 
-            public void dispose() {
+            @Override
+			public void dispose() {
             }
 
-            public void inputChanged( Viewer v,
+            @Override
+			public void inputChanged( Viewer v,
                                       Object o,
                                       Object o2 ) {
             }
@@ -222,7 +228,8 @@ public class DatatypeSelectionDialog extends ListDialog implements UiConstants {
         super(parent);
         // modTODO: use the runtime typeName to narrow down the datatypes
         setContentProvider(new IStructuredContentProvider() {
-            public Object[] getElements( Object inputElement ) {
+            @Override
+			public Object[] getElements( Object inputElement ) {
                 Object[] result = new Object[0];
                 try {
                     // Use the Datatype Manager that corresponds to the container where 'objectForType' exists
@@ -238,10 +245,12 @@ public class DatatypeSelectionDialog extends ListDialog implements UiConstants {
                 return result;
             }
 
-            public void dispose() {
+            @Override
+			public void dispose() {
             }
 
-            public void inputChanged( Viewer v,
+            @Override
+			public void inputChanged( Viewer v,
                                       Object o,
                                       Object o2 ) {
             }
@@ -292,7 +301,8 @@ public class DatatypeSelectionDialog extends ListDialog implements UiConstants {
 
         // setup selection listening in order to enable OK button when selection occurs
         getTableViewer().addSelectionChangedListener(new ISelectionChangedListener() {
-            public void selectionChanged( SelectionChangedEvent theEvent ) {
+            @Override
+			public void selectionChanged( SelectionChangedEvent theEvent ) {
                 getOkButton().setEnabled(!getTableViewer().getSelection().isEmpty());
                 updateSpinner(getTableViewer().getSelection());
 
@@ -381,7 +391,8 @@ public class DatatypeSelectionDialog extends ListDialog implements UiConstants {
                                                             ispin.getMinimum(),
                                                             ispin.getMaximum()));
             ispin.addModifyListener(new ModifyListener() {
-                public void modifyText( ModifyEvent theEvent ) {
+                @Override
+				public void modifyText( ModifyEvent theEvent ) {
                     setLength();
                 }
             });

@@ -31,14 +31,16 @@ public class FakeEObjectMatcherFactory implements EObjectMatcherFactory {
     /**
      * @see org.teiid.designer.core.compare.EObjectMatcherFactory#createEObjectMatchersForRoots()
      */
-    public List createEObjectMatchersForRoots() {
+    @Override
+	public List createEObjectMatchersForRoots() {
         return Collections.singletonList(new FakeMappableObjectMatcher());
     }
 
     /**
      * @see org.teiid.designer.core.compare.EObjectMatcherFactory#createEObjectMatchers(org.eclipse.emf.ecore.EReference)
      */
-    public List createEObjectMatchers(EReference reference) {
+    @Override
+	public List createEObjectMatchers(EReference reference) {
         return Collections.singletonList(new FakeMappableObjectMatcher());
     }
 
@@ -47,14 +49,16 @@ public class FakeEObjectMatcherFactory implements EObjectMatcherFactory {
         /**
          * @see org.teiid.designer.core.compare.EObjectMatcher#addMappingsForRoots(java.util.List, java.util.List, org.eclipse.emf.mapping.Mapping, org.eclipse.emf.mapping.MappingFactory)
          */
-        public void addMappingsForRoots(List inputs, List outputs, Mapping mapping, MappingFactory factory) {
+        @Override
+		public void addMappingsForRoots(List inputs, List outputs, Mapping mapping, MappingFactory factory) {
             addMappings(null,inputs,outputs,mapping,factory);
         }
 
         /**
          * @see org.teiid.designer.core.compare.EObjectMatcher#addMappings(org.eclipse.emf.ecore.EReference, java.util.List, java.util.List, org.eclipse.emf.mapping.Mapping, org.eclipse.emf.mapping.MappingFactory)
          */
-        public void addMappings(EReference reference, List inputs, List outputs, Mapping mapping, MappingFactory factory) {
+        @Override
+		public void addMappings(EReference reference, List inputs, List outputs, Mapping mapping, MappingFactory factory) {
             // Return if nothing to match ...
             if ( inputs.isEmpty() || outputs.isEmpty() ) {
                 return;

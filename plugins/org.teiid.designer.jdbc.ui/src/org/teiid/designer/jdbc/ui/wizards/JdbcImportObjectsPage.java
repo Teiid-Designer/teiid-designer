@@ -152,7 +152,8 @@ public class JdbcImportObjectsPage extends WizardPage
      * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
      * @since 4.0
      */
-    public void createControl( final Composite parent ) {
+    @Override
+	public void createControl( final Composite parent ) {
         // Create page
         final Composite pg = new Composite(parent, SWT.NONE) {
 
@@ -202,7 +203,8 @@ public class JdbcImportObjectsPage extends WizardPage
                 // Also trigger selection of node in model.
                 this.treeViewer.getTree().addSelectionListener(new SelectionListener() {
 
-                    public void widgetSelected( SelectionEvent e ) {
+                    @Override
+					public void widgetSelected( SelectionEvent e ) {
                         if (e.detail == SWT.CHECK) {
                             TreeItem treeItem = (TreeItem)e.item;
                             JdbcNode jdbcNode = (JdbcNode)treeItem.getData();
@@ -212,7 +214,8 @@ public class JdbcImportObjectsPage extends WizardPage
                         }
                     }
 
-                    public void widgetDefaultSelected( SelectionEvent e ) {
+                    @Override
+					public void widgetDefaultSelected( SelectionEvent e ) {
                     }
                 });
 
@@ -226,7 +229,8 @@ public class JdbcImportObjectsPage extends WizardPage
                 // Add listener to display details when a node is selected.
                 this.treeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 
-                    public void selectionChanged( final SelectionChangedEvent event ) {
+                    @Override
+					public void selectionChanged( final SelectionChangedEvent event ) {
                         JdbcNode node = (JdbcNode)((IStructuredSelection)event.getSelection()).getFirstElement();
                         nodeSelected(node);
                     }
@@ -234,18 +238,21 @@ public class JdbcImportObjectsPage extends WizardPage
                 // Add listener to expand/collapse node when double-clicked
                 this.treeViewer.addDoubleClickListener(new IDoubleClickListener() {
 
-                    public void doubleClick( final DoubleClickEvent event ) {
+                    @Override
+					public void doubleClick( final DoubleClickEvent event ) {
                         nodeDoubleClicked(event);
                     }
                 });
                 // Add listener to select node when expanded/collapsed
                 this.treeViewer.addTreeListener(new ITreeViewerListener() {
 
-                    public void treeCollapsed( final TreeExpansionEvent event ) {
+                    @Override
+					public void treeCollapsed( final TreeExpansionEvent event ) {
                         // nodeExpandedOrCollapsed(event);
                     }
 
-                    public void treeExpanded( final TreeExpansionEvent event ) {
+                    @Override
+					public void treeExpanded( final TreeExpansionEvent event ) {
                         nodeExpanded(event);
                     }
                 });
@@ -470,7 +477,8 @@ public class JdbcImportObjectsPage extends WizardPage
                 // Create label provider
                 viewer.setLabelProvider(new AbstractTableLabelProvider() {
 
-                    public String getColumnText( final Object row,
+                    @Override
+					public String getColumnText( final Object row,
                                                  final int column ) {
                         final Object obj = ((List)row).get(column);
                         return (obj == null ? EMPTY_STRING : obj.toString());
@@ -479,14 +487,17 @@ public class JdbcImportObjectsPage extends WizardPage
                 // Create content provider
                 viewer.setContentProvider(new IStructuredContentProvider() {
 
-                    public Object[] getElements( final Object inputElement ) {
+                    @Override
+					public Object[] getElements( final Object inputElement ) {
                         return results.getRows();
                     }
 
-                    public void dispose() {
+                    @Override
+					public void dispose() {
                     }
 
-                    public void inputChanged( final Viewer viewer,
+                    @Override
+					public void inputChanged( final Viewer viewer,
                                               final Object oldInput,
                                               final Object newInput ) {
                     }
@@ -695,14 +706,16 @@ public class JdbcImportObjectsPage extends WizardPage
          * @see org.eclipse.jface.viewers.IContentProvider#dispose()
          * @since 4.0
          */
-        public void dispose() {
+        @Override
+		public void dispose() {
         }
 
         /**
          * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
          * @since 4.0
          */
-        public Object[] getChildren( final Object node ) {
+        @Override
+		public Object[] getChildren( final Object node ) {
             try {
                 if (showSelectedSchemasButton.getSelection()) {
                     if (node instanceof JdbcDatabase) return getSelectedChildren();
@@ -718,7 +731,8 @@ public class JdbcImportObjectsPage extends WizardPage
          * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
          * @since 4.0
          */
-        public Object[] getElements( final Object inputElement ) {
+        @Override
+		public Object[] getElements( final Object inputElement ) {
 
             try {
                 if (showSelectedSchemasButton.getSelection()) {
@@ -736,7 +750,8 @@ public class JdbcImportObjectsPage extends WizardPage
          * @see org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object)
          * @since 4.0
          */
-        public Object getParent( final Object node ) {
+        @Override
+		public Object getParent( final Object node ) {
             return ((JdbcNode)node).getParent();
         }
 
@@ -744,7 +759,8 @@ public class JdbcImportObjectsPage extends WizardPage
          * @see org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(java.lang.Object)
          * @since 4.0
          */
-        public boolean hasChildren( final Object node ) {
+        @Override
+		public boolean hasChildren( final Object node ) {
             try {
                 return (((JdbcNode)node).getChildren().length > 0);
             } catch (final JdbcException err) {
@@ -758,7 +774,8 @@ public class JdbcImportObjectsPage extends WizardPage
          *      java.lang.Object)
          * @since 4.0
          */
-        public void inputChanged( final Viewer viewer,
+        @Override
+		public void inputChanged( final Viewer viewer,
                                   final Object oldInput,
                                   final Object newInput ) {
         }

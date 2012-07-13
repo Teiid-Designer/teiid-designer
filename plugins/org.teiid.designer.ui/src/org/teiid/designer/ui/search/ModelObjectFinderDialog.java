@@ -275,7 +275,8 @@ public class ModelObjectFinderDialog extends SelectionStatusDialog implements IF
         return super.createButton(parent, iId, sText, isDefault);
     }
 
-    public void updateTheStatus( IStatus status ) {
+    @Override
+	public void updateTheStatus( IStatus status ) {
         this.updateStatus(status);
         computeResult();
         resetEnabledState();

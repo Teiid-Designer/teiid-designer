@@ -19,7 +19,8 @@ import org.teiid.designer.metamodels.relationship.RelationshipPackage;
  * RelationshipAspectFactoryImpl
  */
 public class RelationshipAspectFactoryImpl implements MetamodelAspectFactory {
-    public MetamodelAspect create(EClassifier classifier, MetamodelEntity entity) {
+    @Override
+	public MetamodelAspect create(EClassifier classifier, MetamodelEntity entity) {
         switch (classifier.getClassifierID()) {
             case RelationshipPackage.FILE_REFERENCE: return null;
 			case RelationshipPackage.ISTATUS: return null;

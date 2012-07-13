@@ -447,7 +447,8 @@ public abstract class XmlBaseElementImpl extends XmlDocumentNodeImpl implements 
      * 
      * @generated
      */
-    public String getChoiceCriteria() {
+    @Override
+	public String getChoiceCriteria() {
         return choiceCriteria;
     }
 
@@ -456,7 +457,8 @@ public abstract class XmlBaseElementImpl extends XmlDocumentNodeImpl implements 
      * 
      * @generated
      */
-    public int getChoiceOrder() {
+    @Override
+	public int getChoiceOrder() {
         return choiceOrder;
     }
 
@@ -465,7 +467,8 @@ public abstract class XmlBaseElementImpl extends XmlDocumentNodeImpl implements 
      * 
      * @generated
      */
-    public XmlChoice getDefaultFor() {
+    @Override
+	public XmlChoice getDefaultFor() {
         if (defaultFor != null && defaultFor.eIsProxy()) {
             final XmlChoice oldDefaultFor = defaultFor;
             defaultFor = (XmlChoice)eResolveProxy((InternalEObject)defaultFor);
@@ -483,7 +486,8 @@ public abstract class XmlBaseElementImpl extends XmlDocumentNodeImpl implements 
      * 
      * @generated
      */
-    public XmlEntityHolder getParent() {
+    @Override
+	public XmlEntityHolder getParent() {
         if (eContainerFeatureID != XmlDocumentPackage.XML_BASE_ELEMENT__PARENT) return null;
         return (XmlEntityHolder)eContainer;
     }
@@ -493,7 +497,8 @@ public abstract class XmlBaseElementImpl extends XmlDocumentNodeImpl implements 
      * 
      * @generated
      */
-    public void setChoiceCriteria( final String newChoiceCriteria ) {
+    @Override
+	public void setChoiceCriteria( final String newChoiceCriteria ) {
         final String oldChoiceCriteria = choiceCriteria;
         choiceCriteria = newChoiceCriteria;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
@@ -506,7 +511,8 @@ public abstract class XmlBaseElementImpl extends XmlDocumentNodeImpl implements 
      * 
      * @generated
      */
-    public void setChoiceOrder( final int newChoiceOrder ) {
+    @Override
+	public void setChoiceOrder( final int newChoiceOrder ) {
         final int oldChoiceOrder = choiceOrder;
         choiceOrder = newChoiceOrder;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
@@ -519,7 +525,8 @@ public abstract class XmlBaseElementImpl extends XmlDocumentNodeImpl implements 
      * 
      * @generated
      */
-    public void setDefaultFor( final XmlChoice newDefaultFor ) {
+    @Override
+	public void setDefaultFor( final XmlChoice newDefaultFor ) {
         if (newDefaultFor != defaultFor) {
             NotificationChain msgs = null;
             if (defaultFor != null) msgs = ((InternalEObject)defaultFor).eInverseRemove(this,
@@ -542,7 +549,8 @@ public abstract class XmlBaseElementImpl extends XmlDocumentNodeImpl implements 
      * 
      * @generated
      */
-    public void setParent( final XmlEntityHolder newParent ) {
+    @Override
+	public void setParent( final XmlEntityHolder newParent ) {
         if (newParent != eContainer || (eContainerFeatureID != XmlDocumentPackage.XML_BASE_ELEMENT__PARENT && newParent != null)) {
             if (EcoreUtil.isAncestor(this, newParent)) throw new IllegalArgumentException(
                                                                                           "Recursive containment not allowed for " + toString()); //$NON-NLS-1$

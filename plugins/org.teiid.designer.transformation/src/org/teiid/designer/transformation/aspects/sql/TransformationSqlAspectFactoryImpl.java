@@ -18,7 +18,8 @@ import org.teiid.designer.metamodels.transformation.TransformationPackage;
  * TransformationSqlAspectFactoryImpl
  */
 public class TransformationSqlAspectFactoryImpl implements MetamodelAspectFactory {
-    public MetamodelAspect create(EClassifier classifier, MetamodelEntity entity) {
+    @Override
+	public MetamodelAspect create(EClassifier classifier, MetamodelEntity entity) {
         switch (classifier.getClassifierID()) {
             case TransformationPackage.MAPPING_CLASS_COLUMN: 
                 return new MappingClassColumnSqlAspect(entity);

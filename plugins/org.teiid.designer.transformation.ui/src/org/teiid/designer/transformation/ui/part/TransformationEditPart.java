@@ -87,7 +87,8 @@ public class TransformationEditPart extends AbstractDiagramEditPart implements E
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.part.EditableEditPart#edit()
      */
-    public void edit() {
+    @Override
+	public void edit() {
 
         if (ModelEditorManager.canEdit(((DiagramModelNode)getModel()).getModelObject())) {
             ModelEditorManager.edit(((DiagramModelNode)getModel()).getModelObject());

@@ -108,7 +108,8 @@ public class CreateXmlViewFromXsdMainPage extends WizardDataTransferPage impleme
      * 
      * @param event Event
      */
-    public void handleEvent( Event event ) {
+    @Override
+	public void handleEvent( Event event ) {
         if (!initializing) {
             boolean validate = false;
 
@@ -167,7 +168,8 @@ public class CreateXmlViewFromXsdMainPage extends WizardDataTransferPage impleme
      * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
      * @since 4.2
      */
-    public void createControl( Composite parent ) {
+    @Override
+	public void createControl( Composite parent ) {
         initializeDialogUnits(parent);
 
         // container specification group

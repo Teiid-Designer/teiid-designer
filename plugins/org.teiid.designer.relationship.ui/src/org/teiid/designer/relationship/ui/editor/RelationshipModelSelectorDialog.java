@@ -143,7 +143,8 @@ public class RelationshipModelSelectorDialog extends ModelWorkspaceDialog implem
 
         // listener for typing changes
         txtRelationshipsModelName.addModifyListener(new ModifyListener() {
-            public void modifyText( final ModifyEvent event ) {
+            @Override
+			public void modifyText( final ModifyEvent event ) {
                 handleSetRelationshipModelName();
             }
         });

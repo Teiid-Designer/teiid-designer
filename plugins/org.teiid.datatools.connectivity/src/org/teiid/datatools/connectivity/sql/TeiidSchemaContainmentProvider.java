@@ -26,6 +26,7 @@ public class TeiidSchemaContainmentProvider extends AbstractContainmentProvider 
 	 * AbstractContainmentProvider
 	 * #getContainedElements(org.eclipse.emf.ecore.EObject)
 	 */
+	@Override
 	@SuppressWarnings({ "unchecked" })
 	public Collection getContainedElements(EObject obj) {
 		Collection children = super.getContainedElements(obj);
@@ -46,6 +47,7 @@ public class TeiidSchemaContainmentProvider extends AbstractContainmentProvider 
 	 * @see org.eclipse.datatools.connectivity.sqm.core.containment.
 	 * AbstractContainmentProvider#getContainer(org.eclipse.emf.ecore.EObject)
 	 */
+	@Override
 	public EObject getContainer(EObject obj) {
 		Catalog catalog = ((Schema) obj).getCatalog();
 		if (catalog != null) {
@@ -62,6 +64,7 @@ public class TeiidSchemaContainmentProvider extends AbstractContainmentProvider 
 	 * AbstractContainmentProvider
 	 * #getContainmentFeature(org.eclipse.emf.ecore.EObject)
 	 */
+	@Override
 	public EStructuralFeature getContainmentFeature(EObject obj) {
 		return SQLSchemaPackage.eINSTANCE.getCatalog_Schemas();
 	}
@@ -72,6 +75,7 @@ public class TeiidSchemaContainmentProvider extends AbstractContainmentProvider 
 	 * @see org.eclipse.datatools.connectivity.sqm.internal.core.containment.
 	 * ContainmentProvider#getGroupId(org.eclipse.emf.ecore.EObject)
 	 */
+	@Override
 	public String getGroupId(EObject obj) {
 		return GroupID.SCHEMA;
 	}

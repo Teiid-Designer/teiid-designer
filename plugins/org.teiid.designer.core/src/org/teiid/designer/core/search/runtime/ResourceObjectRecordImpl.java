@@ -24,6 +24,7 @@ public class ResourceObjectRecordImpl extends AbstractSearchRecord implements Re
 	/**
 	 * @see org.teiid.designer.core.search.runtime.ResourceObjectRecord#getMetaclassURI()
 	 */
+	@Override
 	public String getMetaclassURI() {
 		return this.metaclassURI;
 	}
@@ -31,6 +32,7 @@ public class ResourceObjectRecordImpl extends AbstractSearchRecord implements Re
 	/**
 	 * @see org.teiid.designer.core.search.runtime.SearchRecord#getRecordType()
 	 */
+	@Override
 	public char getRecordType() {
 		return IndexConstants.SEARCH_RECORD_TYPE.OBJECT;
 	}
@@ -46,7 +48,8 @@ public class ResourceObjectRecordImpl extends AbstractSearchRecord implements Re
      * @see org.teiid.designer.core.search.runtime.ResourceObjectRecord#getName()
      * @since 4.2
      */
-    public String getName() {
+    @Override
+	public String getName() {
         return this.name;
     }
     
@@ -54,7 +57,8 @@ public class ResourceObjectRecordImpl extends AbstractSearchRecord implements Re
      * @see org.teiid.designer.core.search.runtime.ResourceObjectRecord#getFullname()
      * @since 4.2
      */
-    public String getFullname() {
+    @Override
+	public String getFullname() {
         return this.fullname;
     }
     
@@ -62,14 +66,16 @@ public class ResourceObjectRecordImpl extends AbstractSearchRecord implements Re
      * @see org.teiid.designer.core.search.runtime.ResourceObjectRecord#getObjectURI()
      * @since 4.2
      */
-    public String getObjectURI() {
+    @Override
+	public String getObjectURI() {
         return this.objectURI;
     }
     /** 
      * @see org.teiid.designer.core.search.runtime.ResourceObjectRecord#getResourcePath()
      * @since 4.2
      */
-    public String getResourcePath() {
+    @Override
+	public String getResourcePath() {
         return this.resourcePath;
     }
     /** 

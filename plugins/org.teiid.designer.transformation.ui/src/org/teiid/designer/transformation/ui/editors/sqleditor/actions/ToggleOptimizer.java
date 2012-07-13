@@ -49,7 +49,8 @@ public class ToggleOptimizer extends AbstractAction implements EventObjectListen
     // METHODS
     ///////////////////////////////////////////////////////////////////////////////////////////////
     
-    public void processEvent(EventObject e) {
+    @Override
+	public void processEvent(EventObject e) {
         if( allowOptimization ) {
             //----------------------------------------------------------------------
             // respond to internal events from SqlEditorPanel

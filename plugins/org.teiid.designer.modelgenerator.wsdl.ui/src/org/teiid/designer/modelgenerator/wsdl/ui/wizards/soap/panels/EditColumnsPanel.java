@@ -271,6 +271,7 @@ public class EditColumnsPanel {
 		 * @see
 		 * org.eclipse.jface.viewers.EditingSupport#canEdit(java.lang.Object)
 		 */
+		@Override
 		protected boolean canEdit(Object element) {
 			return true;
 		}
@@ -282,6 +283,7 @@ public class EditColumnsPanel {
 		 * org.eclipse.jface.viewers.EditingSupport#getCellEditor(java.lang.
 		 * Object)
 		 */
+		@Override
 		protected CellEditor getCellEditor(Object element) {
 			return editor;
 		}
@@ -292,6 +294,7 @@ public class EditColumnsPanel {
 		 * @see
 		 * org.eclipse.jface.viewers.EditingSupport#getValue(java.lang.Object)
 		 */
+		@Override
 		protected Object getValue(Object element) {
 			if (element instanceof ColumnInfo) {
 				switch (this.columnNumber) {
@@ -317,6 +320,7 @@ public class EditColumnsPanel {
 		 * org.eclipse.jface.viewers.EditingSupport#setValue(java.lang.Object,
 		 * java.lang.Object)
 		 */
+		@Override
 		protected void setValue(Object element, Object value) {
 			if (element instanceof ColumnInfo) {
 				switch (this.columnNumber) {

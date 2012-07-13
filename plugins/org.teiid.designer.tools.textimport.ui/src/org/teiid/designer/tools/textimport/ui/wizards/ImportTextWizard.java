@@ -114,7 +114,8 @@ public class ImportTextWizard extends AbstractWizard
      * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench, org.eclipse.jface.viewers.IStructuredSelection)
      * @since 4.0
      */
-    public void init( final IWorkbench workbench,
+    @Override
+	public void init( final IWorkbench workbench,
                       final IStructuredSelection selection ) {
     	
     	IStructuredSelection finalSelection = selection;
@@ -137,7 +138,8 @@ public class ImportTextWizard extends AbstractWizard
             // Create empty page
             WizardPage page = new WizardPage(ImportTextWizard.class.getSimpleName(), TITLE, null) {
 
-                public void createControl( final Composite parent ) {
+                @Override
+				public void createControl( final Composite parent ) {
                     setControl(createEmptyPageControl(parent));
                 }
             };

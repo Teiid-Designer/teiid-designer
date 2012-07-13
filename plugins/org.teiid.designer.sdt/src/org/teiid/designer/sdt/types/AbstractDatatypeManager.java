@@ -64,14 +64,16 @@ public abstract class AbstractDatatypeManager implements DatatypeManager, Dataty
      * @see org.teiid.designer.core.types.DatatypeManagerLifecycle#initialize(org.teiid.designer.core.container.Container)
      * @since 4.2
      */
-    public void initialize( final ResourceSet container ) throws ModelerCoreException {
+    @Override
+	public void initialize( final ResourceSet container ) throws ModelerCoreException {
         this.container = container;
         doInitialize();
     }
 
     protected abstract void doInitialize() throws ModelerCoreException;
 
-    public ResourceSet getContainer() {
+    @Override
+	public ResourceSet getContainer() {
         return this.container;
     }
 
@@ -271,7 +273,8 @@ public abstract class AbstractDatatypeManager implements DatatypeManager, Dataty
      * @param type
      * @return EObject[]
      */
-    public EObject[] getTypeHierarchy( final EObject type ) {
+    @Override
+	public EObject[] getTypeHierarchy( final EObject type ) {
         CoreArgCheck.isInstanceOf(XSDSimpleTypeDefinition.class, type);
 
         // If the simple type is not atomic then cannot navigate the hierarchy
@@ -310,7 +313,8 @@ public abstract class AbstractDatatypeManager implements DatatypeManager, Dataty
     // ==================================================================================
 
     protected static class DatatypeNameComparator implements Comparator {
-        public int compare( Object obj1,
+        @Override
+		public int compare( Object obj1,
                             Object obj2 ) {
             if (obj1 == null && obj2 == null) {
                 return 0;

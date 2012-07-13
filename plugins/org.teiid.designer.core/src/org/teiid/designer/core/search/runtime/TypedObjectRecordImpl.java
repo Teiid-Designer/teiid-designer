@@ -33,21 +33,24 @@ public class TypedObjectRecordImpl extends ResourceObjectRecordImpl implements T
      * @see org.teiid.designer.core.search.runtime.TypedObjectRecord#getDatatypeID()
      * @since 4.2
      */
-    public String getDatatypeID() {
+    @Override
+	public String getDatatypeID() {
         return this.datatypeID;
     }
     /** 
      * @see org.teiid.designer.core.search.runtime.TypedObjectRecord#getDatatypeName()
      * @since 4.2
      */
-    public String getDatatypeName() {
+    @Override
+	public String getDatatypeName() {
         return this.datatypeName;
     }
     /** 
      * @see org.teiid.designer.core.search.runtime.TypedObjectRecord#getRuntimeType()
      * @since 4.2
      */
-    public String getRuntimeType() {
+    @Override
+	public String getRuntimeType() {
         return this.runtimeType;
     }
     

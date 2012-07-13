@@ -83,7 +83,8 @@ public class RelationalModelingStatusManager extends AdvisorStatusManager {
     /**
      * 
      */
-    public AdvisorStatusUpdateJob getNewStatusUpdateJob() {
+    @Override
+	public AdvisorStatusUpdateJob getNewStatusUpdateJob() {
     	return new AdvisorStatusUpdateJob(getJobName(), this);
     }
 

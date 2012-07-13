@@ -35,7 +35,8 @@ public class AnnotationRecordImpl extends AbstractMetadataRecord implements Anno
     /**
      * @see org.teiid.designer.metadata.runtime.AnnotationRecord#getDescription()
      */
-    public String getDescription() {
+    @Override
+	public String getDescription() {
         return this.description;
     }
 

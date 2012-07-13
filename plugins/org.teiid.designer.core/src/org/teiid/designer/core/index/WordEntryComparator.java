@@ -27,7 +27,8 @@ public class WordEntryComparator implements Comparator {
     /*
      * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
      */
-    public int compare(Object o1, Object o2) {
+    @Override
+	public int compare(Object o1, Object o2) {
 		if (o1 == null && o2 == null) {
 			return 0;
 		} else if (o1 == null && o2 != null) {

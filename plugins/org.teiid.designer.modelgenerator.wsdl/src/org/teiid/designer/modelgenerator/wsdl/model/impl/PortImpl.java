@@ -24,27 +24,33 @@ public class PortImpl extends WSDLElementImpl implements Port {
 		m_parent = parent;
 	}
 
+	@Override
 	public Binding getBinding() {
 		// defensive copy of bindings
 		return (Binding) m_binding.copy();
 	}
 
+	@Override
 	public void setBinding(Binding binding) {
 		m_binding = binding;
 	}
 
+	@Override
 	public Service getService() {
 		return m_parent;
 	}
 
+	@Override
 	public void setLocationURI(String uri) {
 		m_locationURI = uri;
 	}
 
+	@Override
 	public String getLocationURI() {
 		return m_locationURI;
 	}
 
+	@Override
 	public WSDLElement copy() {
 		PortImpl impl = new PortImpl(getService());
 		impl.setName(getName());

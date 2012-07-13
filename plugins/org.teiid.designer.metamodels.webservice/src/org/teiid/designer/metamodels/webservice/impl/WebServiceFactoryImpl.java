@@ -112,7 +112,8 @@ public class WebServiceFactoryImpl extends EFactoryImpl implements WebServiceFac
      * 
      * @generated
      */
-    public Operation createOperation() {
+    @Override
+	public Operation createOperation() {
         OperationImpl operation = new OperationImpl();
         return operation;
     }
@@ -122,7 +123,8 @@ public class WebServiceFactoryImpl extends EFactoryImpl implements WebServiceFac
      * 
      * @generated
      */
-    public Input createInput() {
+    @Override
+	public Input createInput() {
         InputImpl input = new InputImpl();
         return input;
     }
@@ -132,7 +134,8 @@ public class WebServiceFactoryImpl extends EFactoryImpl implements WebServiceFac
      * 
      * @generated
      */
-    public Output createOutput() {
+    @Override
+	public Output createOutput() {
         OutputImpl output = new OutputImpl();
         return output;
     }
@@ -142,7 +145,8 @@ public class WebServiceFactoryImpl extends EFactoryImpl implements WebServiceFac
      * 
      * @generated
      */
-    public Interface createInterface() {
+    @Override
+	public Interface createInterface() {
         InterfaceImpl interface_ = new InterfaceImpl();
         return interface_;
     }
@@ -152,7 +156,8 @@ public class WebServiceFactoryImpl extends EFactoryImpl implements WebServiceFac
      * 
      * @generated
      */
-    public SampleMessages createSampleMessages() {
+    @Override
+	public SampleMessages createSampleMessages() {
         SampleMessagesImpl sampleMessages = new SampleMessagesImpl();
         return sampleMessages;
     }
@@ -162,7 +167,8 @@ public class WebServiceFactoryImpl extends EFactoryImpl implements WebServiceFac
      * 
      * @generated
      */
-    public SampleFile createSampleFile() {
+    @Override
+	public SampleFile createSampleFile() {
         SampleFileImpl sampleFile = new SampleFileImpl();
         return sampleFile;
     }
@@ -172,7 +178,8 @@ public class WebServiceFactoryImpl extends EFactoryImpl implements WebServiceFac
      * 
      * @generated
      */
-    public SampleFromXsd createSampleFromXsd() {
+    @Override
+	public SampleFromXsd createSampleFromXsd() {
         SampleFromXsdImpl sampleFromXsd = new SampleFromXsdImpl();
         return sampleFromXsd;
     }
@@ -202,7 +209,8 @@ public class WebServiceFactoryImpl extends EFactoryImpl implements WebServiceFac
      * 
      * @generated
      */
-    public WebServicePackage getWebServicePackage() {
+    @Override
+	public WebServicePackage getWebServicePackage() {
         return (WebServicePackage)getEPackage();
     }
 

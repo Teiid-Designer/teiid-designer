@@ -36,42 +36,48 @@ public class DiagramEditorInput implements IEditorInput, DiagramUiConstants {
     }
     
     
-    public Object getAdapter(Class key) {
+    @Override
+	public Object getAdapter(Class key) {
         return null;
     }
     
     /* (non-Javadoc)
      * @see org.eclipse.ui.IEditorInput#exists()
      */
-    public boolean exists() {
+    @Override
+	public boolean exists() {
         return true;
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.ui.IEditorInput#getImageDescriptor()
      */
-    public ImageDescriptor getImageDescriptor() {
+    @Override
+	public ImageDescriptor getImageDescriptor() {
         return null;
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.ui.IEditorInput#getName()
      */
-    public String getName() {
+    @Override
+	public String getName() {
         return "Unknown Diagram"; //$NON-NLS-1$
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.ui.IEditorInput#getPersistable()
      */
-    public IPersistableElement getPersistable() {
+    @Override
+	public IPersistableElement getPersistable() {
         return null;
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.ui.IEditorInput#getToolTipText()
      */
-    public String getToolTipText() {    
+    @Override
+	public String getToolTipText() {    
         return "Unknown Diagram"; //$NON-NLS-1$
     }
 }

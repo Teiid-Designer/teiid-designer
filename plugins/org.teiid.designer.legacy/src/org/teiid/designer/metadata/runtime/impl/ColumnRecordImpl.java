@@ -63,112 +63,128 @@ public class ColumnRecordImpl extends AbstractMetadataRecord implements ColumnRe
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metadata.runtime.ColumnRecord#getCharOctetLength()
      */
-    public int getCharOctetLength() {
+    @Override
+	public int getCharOctetLength() {
         return charOctetLength;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metadata.runtime.ColumnRecord#getRuntimeType()
      */
-    public String getRuntimeType() {
+    @Override
+	public String getRuntimeType() {
         return runtimeTypeName;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metadata.runtime.ColumnRecord#getDatatypeUUID()
      */
-    public String getDatatypeUUID() {
+    @Override
+	public String getDatatypeUUID() {
         return datatypeUUID;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metadata.runtime.ColumnRecord#getDefaultValue()
      */
-    public Object getDefaultValue() {
+    @Override
+	public Object getDefaultValue() {
         return defaultValue;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metadata.runtime.ColumnRecord#getLength()
      */
-    public int getLength() {
+    @Override
+	public int getLength() {
         return length;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metadata.runtime.ColumnRecord#getMaxValue()
      */
-    public Object getMaxValue() {
+    @Override
+	public Object getMaxValue() {
         return maxValue;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metadata.runtime.ColumnRecord#getMinValue()
      */
-    public Object getMinValue() {
+    @Override
+	public Object getMinValue() {
         return minValue;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metadata.runtime.ColumnRecord#getPrecision()
      */
-    public int getPrecision() {
+    @Override
+	public int getPrecision() {
         return precision;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metadata.runtime.ColumnRecord#getPosition()
      */
-    public int getPosition() {
+    @Override
+	public int getPosition() {
         return position;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metadata.runtime.ColumnRecord#getScale()
      */
-    public int getScale() {
+    @Override
+	public int getScale() {
         return scale;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metadata.runtime.ColumnRecord#getSearchTye()
      */
-    public int getSearchType() {
+    @Override
+	public int getSearchType() {
         return searchType;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metadata.runtime.ColumnRecord#getFormat()
      */
-    public String getFormat() {
+    @Override
+	public String getFormat() {
         return format;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metadata.runtime.ColumnRecord#isAutoIncrementable()
      */
-    public boolean isAutoIncrementable() {
+    @Override
+	public boolean isAutoIncrementable() {
         return autoIncrementable;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metadata.runtime.ColumnRecord#isCaseSensitive()
      */
-    public boolean isCaseSensitive() {
+    @Override
+	public boolean isCaseSensitive() {
         return caseSensitive;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metadata.runtime.ColumnRecord#isCurrency()
      */
-    public boolean isCurrency() {
+    @Override
+	public boolean isCurrency() {
         return currency;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metadata.runtime.ColumnRecord#isFixedLength()
      */
-    public boolean isFixedLength() {
+    @Override
+	public boolean isFixedLength() {
         return fixedLength;
     }
 
@@ -176,42 +192,48 @@ public class ColumnRecordImpl extends AbstractMetadataRecord implements ColumnRe
      * @see org.teiid.designer.metadata.runtime.ColumnRecord#isTranformationInputParameter()
      * @since 4.2
      */
-    public boolean isTranformationInputParameter() {
+    @Override
+	public boolean isTranformationInputParameter() {
         return tranformationInputParameter;
     }
 
     /**
      * @return
      */
-    public int getNullType() {
+    @Override
+	public int getNullType() {
         return nullType;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metadata.runtime.ColumnRecord#isSelectable()
      */
-    public boolean isSelectable() {
+    @Override
+	public boolean isSelectable() {
         return selectable;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metadata.runtime.ColumnRecord#isSigned()
      */
-    public boolean isSigned() {
+    @Override
+	public boolean isSigned() {
         return signed;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metadata.runtime.ColumnRecord#isUpdatable()
      */
-    public boolean isUpdatable() {
+    @Override
+	public boolean isUpdatable() {
         return updatable;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metadata.runtime.ColumnRecord#getRadix()
      */
-    public int getRadix() {
+    @Override
+	public int getRadix() {
         return radix;
     }
 
@@ -219,7 +241,8 @@ public class ColumnRecordImpl extends AbstractMetadataRecord implements ColumnRe
      * @see org.teiid.designer.metadata.runtime.ColumnRecord#getNativeType()
      * @since 4.2
      */
-    public String getNativeType() {
+    @Override
+	public String getNativeType() {
         return nativeType;
     }
 
@@ -227,7 +250,8 @@ public class ColumnRecordImpl extends AbstractMetadataRecord implements ColumnRe
      * @see org.teiid.designer.metadata.runtime.ColumnRecord#getDistinctValues()
      * @since 4.3
      */
-    public int getDistinctValues() {
+    @Override
+	public int getDistinctValues() {
         return this.distinctValues;
     }
 
@@ -235,7 +259,8 @@ public class ColumnRecordImpl extends AbstractMetadataRecord implements ColumnRe
      * @see org.teiid.designer.metadata.runtime.ColumnRecord#getNullValues()
      * @since 4.3
      */
-    public int getNullValues() {
+    @Override
+	public int getNullValues() {
         return this.nullValues;
     }
 

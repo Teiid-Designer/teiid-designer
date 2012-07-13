@@ -226,7 +226,8 @@ public class SetCriteriaEditorModel extends AbstractPredicateCriteriaTypeEditorM
         return subqueryCommand;
     }
 
-    public void modelChanged( LanguageObjectEditorModelEvent theEvent ) {
+    @Override
+	public void modelChanged( LanguageObjectEditorModelEvent theEvent ) {
         String type = theEvent.getType();
         String eventType;
         if (type.equals(CompositeLanguageObjectEditorModel.MODEL_CHANGE)) {

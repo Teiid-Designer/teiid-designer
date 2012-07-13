@@ -206,7 +206,8 @@ public class WebServiceBuildOptions implements Comparable {
         this.operationOutputXmlDoc = operationOutputXmlDoc;
     }
     
-    public int compareTo(Object o) {
+    @Override
+	public int compareTo(Object o) {
         if( o instanceof String) {
             return getOperationName().compareTo((String)o);
         }

@@ -35,7 +35,8 @@ public class ModelWorkspaceView {
      * A reusable filter that shows everything in the view.
      */
     public static final ModelWorkspaceFilter SHOW_ALL_FILTER = new ModelWorkspaceFilter() {
-        public boolean select( Object parentElement,
+        @Override
+		public boolean select( Object parentElement,
                                Object element ) {
             return true;
         }

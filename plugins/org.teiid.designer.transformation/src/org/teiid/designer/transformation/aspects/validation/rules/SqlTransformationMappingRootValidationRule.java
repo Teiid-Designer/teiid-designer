@@ -98,7 +98,8 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
     /*
      * @See org.teiid.designer.core.validation.ObjectValidationRule#validate(org.eclipse.emf.ecore.EObject, org.teiid.designer.core.validation.ValidationContext)
      */
-    public void validate( final EObject eObject,
+    @Override
+	public void validate( final EObject eObject,
                           final ValidationContext context ) {
         CoreArgCheck.isInstanceOf(SqlTransformationMappingRoot.class, eObject);
         SqlTransformationMappingRoot transRoot = (SqlTransformationMappingRoot)eObject;

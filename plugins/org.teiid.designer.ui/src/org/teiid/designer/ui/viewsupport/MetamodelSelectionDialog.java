@@ -112,7 +112,8 @@ public class MetamodelSelectionDialog extends ElementTreeSelectionDialog {
             filter.enable = false;
         }
         Display.getCurrent().asyncExec(new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 treeViewer.refresh();
             }
         });

@@ -49,28 +49,32 @@ public class RelationshipEditorImpl implements RelationshipEditor {
     /**
      * @see org.teiid.designer.relationship.RelationshipEditor#getRelationshipType()
      */
-    public Relationship getRelationship() {
+    @Override
+	public Relationship getRelationship() {
         return relationship;
     }
 
     /**
      * @see org.teiid.designer.relationship.RelationshipEditor#validate()
      */
-    public IStatus validate() {
+    @Override
+	public IStatus validate() {
         return relationship.isValid();
     }
 
     /**
      * @see org.teiid.designer.relationship.RelationshipEditor#getName()
      */
-    public String getName() {
+    @Override
+	public String getName() {
         return relationship.getName();
     }
 
     /**
      * @see org.teiid.designer.relationship.RelationshipEditor#setName(java.lang.String)
      */
-    public void setName( final String name ) {
+    @Override
+	public void setName( final String name ) {
         if (name == null || name.trim().length() == 0) {
             this.relationship.setName(null);
         } else {
@@ -81,21 +85,24 @@ public class RelationshipEditorImpl implements RelationshipEditor {
     /**
      * @see org.teiid.designer.relationship.RelationshipEditor#getRelationshipType()
      */
-    public RelationshipType getRelationshipType() {
+    @Override
+	public RelationshipType getRelationshipType() {
         return this.relationship.getType();
     }
 
     /**
      * @see org.teiid.designer.relationship.RelationshipEditor#setRelationshipType(org.teiid.designer.metamodels.relationship.RelationshipType)
      */
-    public void setRelationshipType( final RelationshipType type ) {
+    @Override
+	public void setRelationshipType( final RelationshipType type ) {
         this.relationship.setType(type); // may be null
     }
 
     /**
      * @see org.teiid.designer.relationship.RelationshipEditor#getSourceRoleName()
      */
-    public String getSourceRoleName() {
+    @Override
+	public String getSourceRoleName() {
         final RelationshipRole role = this.relationship.getSourceRole();
         if (role != null) {
             return role.getName();
@@ -106,7 +113,8 @@ public class RelationshipEditorImpl implements RelationshipEditor {
     /**
      * @see org.teiid.designer.relationship.RelationshipEditor#getTargetRoleName()
      */
-    public String getTargetRoleName() {
+    @Override
+	public String getTargetRoleName() {
         final RelationshipRole role = this.relationship.getTargetRole();
         if (role != null) {
             return role.getName();
@@ -117,26 +125,30 @@ public class RelationshipEditorImpl implements RelationshipEditor {
     /**
      * @see org.teiid.designer.relationship.RelationshipEditor#getSourceParticipants()
      */
-    public List getSourceParticipants() {
+    @Override
+	public List getSourceParticipants() {
         return this.relationship.getSources();
     }
 
     /**
      * @see org.teiid.designer.relationship.RelationshipEditor#getTargetParticipants()
      */
-    public List getTargetParticipants() {
+    @Override
+	public List getTargetParticipants() {
         return this.relationship.getTargets();
     }
 
     /**
      * @see org.teiid.designer.relationship.RelationshipEditor#moveSourceParticipantToTargetParticipant(org.eclipse.emf.ecore.EObject)
      */
-    public boolean moveSourceParticipantToTargetParticipant( final EObject sourceParticipant ) {
+    @Override
+	public boolean moveSourceParticipantToTargetParticipant( final EObject sourceParticipant ) {
         if (!canMoveSourceParticipantToTargetParticipant(sourceParticipant)) {
             return false;
         }
         final TransactionRunnable runnable = new TransactionRunnable() {
-            public Object run( UnitOfWork uow ) {
+            @Override
+			public Object run( UnitOfWork uow ) {
                 relationship.getSources().remove(sourceParticipant);
                 relationship.getTargets().add(sourceParticipant);
                 return null;
@@ -149,12 +161,14 @@ public class RelationshipEditorImpl implements RelationshipEditor {
     /**
      * @see org.teiid.designer.relationship.RelationshipEditor#moveTargetParticipantToSourceParticipant(org.eclipse.emf.ecore.EObject)
      */
-    public boolean moveTargetParticipantToSourceParticipant( final EObject targetParticipant ) {
+    @Override
+	public boolean moveTargetParticipantToSourceParticipant( final EObject targetParticipant ) {
         if (!canMoveTargetParticipantToSourceParticipant(targetParticipant)) {
             return false;
         }
         final TransactionRunnable runnable = new TransactionRunnable() {
-            public Object run( UnitOfWork uow ) {
+            @Override
+			public Object run( UnitOfWork uow ) {
                 relationship.getTargets().remove(targetParticipant);
                 relationship.getSources().add(targetParticipant);
                 return null;
@@ -167,7 +181,8 @@ public class RelationshipEditorImpl implements RelationshipEditor {
     /**
      * @see org.teiid.designer.relationship.RelationshipEditor#canMoveSourceParticipantToTargetParticipant(org.eclipse.emf.ecore.EObject)
      */
-    public boolean canMoveSourceParticipantToTargetParticipant( final EObject object ) {
+    @Override
+	public boolean canMoveSourceParticipantToTargetParticipant( final EObject object ) {
         if (object == null) {
             return false;
         }
@@ -193,7 +208,8 @@ public class RelationshipEditorImpl implements RelationshipEditor {
     /**
      * @see org.teiid.designer.relationship.RelationshipEditor#canMoveTargetParticipantToSourceParticipant(org.eclipse.emf.ecore.EObject)
      */
-    public boolean canMoveTargetParticipantToSourceParticipant( final EObject object ) {
+    @Override
+	public boolean canMoveTargetParticipantToSourceParticipant( final EObject object ) {
         if (object == null) {
             return false;
         }
@@ -219,7 +235,8 @@ public class RelationshipEditorImpl implements RelationshipEditor {
     /**
      * @see org.teiid.designer.relationship.RelationshipEditor#canAddToTargetParticipants(org.eclipse.emf.ecore.EObject)
      */
-    public boolean canAddToTargetParticipants( final EObject object ) {
+    @Override
+	public boolean canAddToTargetParticipants( final EObject object ) {
         if (object == null) {
             return false;
         }
@@ -241,7 +258,8 @@ public class RelationshipEditorImpl implements RelationshipEditor {
     /**
      * @see org.teiid.designer.relationship.RelationshipEditor#canAddToSourceParticipants(org.eclipse.emf.ecore.EObject)
      */
-    public boolean canAddToSourceParticipants( final EObject object ) {
+    @Override
+	public boolean canAddToSourceParticipants( final EObject object ) {
         if (object == null) {
             return false;
         }
@@ -263,12 +281,14 @@ public class RelationshipEditorImpl implements RelationshipEditor {
     /**
      * @see org.teiid.designer.relationship.RelationshipEditor#moveSourceParticipantToTargetParticipant(java.util.List)
      */
-    public boolean moveSourceParticipantToTargetParticipant( final List sourceParticipants ) {
+    @Override
+	public boolean moveSourceParticipantToTargetParticipant( final List sourceParticipants ) {
         if (!canMoveSourceParticipantToTargetParticipant(sourceParticipants)) {
             return false;
         }
         final TransactionRunnable runnable = new TransactionRunnable() {
-            public Object run( UnitOfWork uow ) {
+            @Override
+			public Object run( UnitOfWork uow ) {
                 relationship.getSources().removeAll(sourceParticipants);
                 relationship.getTargets().addAll(sourceParticipants);
                 return null;
@@ -281,12 +301,14 @@ public class RelationshipEditorImpl implements RelationshipEditor {
     /**
      * @see org.teiid.designer.relationship.RelationshipEditor#moveTargetParticipantToSourceParticipant(java.util.List)
      */
-    public boolean moveTargetParticipantToSourceParticipant( final List targetParticipants ) {
+    @Override
+	public boolean moveTargetParticipantToSourceParticipant( final List targetParticipants ) {
         if (!canMoveTargetParticipantToSourceParticipant(targetParticipants)) {
             return false;
         }
         final TransactionRunnable runnable = new TransactionRunnable() {
-            public Object run( UnitOfWork uow ) {
+            @Override
+			public Object run( UnitOfWork uow ) {
                 relationship.getTargets().removeAll(targetParticipants);
                 relationship.getSources().addAll(targetParticipants);
                 return null;
@@ -299,7 +321,8 @@ public class RelationshipEditorImpl implements RelationshipEditor {
     /**
      * @see org.teiid.designer.relationship.RelationshipEditor#canMoveSourceParticipantToTargetParticipant(java.util.List)
      */
-    public boolean canMoveSourceParticipantToTargetParticipant( final List objects ) {
+    @Override
+	public boolean canMoveSourceParticipantToTargetParticipant( final List objects ) {
         final Iterator iter = objects.iterator();
         while (iter.hasNext()) {
             final EObject element = (EObject)iter.next();
@@ -313,7 +336,8 @@ public class RelationshipEditorImpl implements RelationshipEditor {
     /**
      * @see org.teiid.designer.relationship.RelationshipEditor#canMoveTargetParticipantToSourceParticipant(java.util.List)
      */
-    public boolean canMoveTargetParticipantToSourceParticipant( final List objects ) {
+    @Override
+	public boolean canMoveTargetParticipantToSourceParticipant( final List objects ) {
         final Iterator iter = objects.iterator();
         while (iter.hasNext()) {
             final EObject element = (EObject)iter.next();
@@ -327,7 +351,8 @@ public class RelationshipEditorImpl implements RelationshipEditor {
     /**
      * @see org.teiid.designer.relationship.RelationshipEditor#canAddToTargetParticipants(java.util.List)
      */
-    public boolean canAddToTargetParticipants( final List objects ) {
+    @Override
+	public boolean canAddToTargetParticipants( final List objects ) {
         final Iterator iter = objects.iterator();
         while (iter.hasNext()) {
             final EObject element = (EObject)iter.next();
@@ -341,7 +366,8 @@ public class RelationshipEditorImpl implements RelationshipEditor {
     /**
      * @see org.teiid.designer.relationship.RelationshipEditor#canAddToSourceParticipants(java.util.List)
      */
-    public boolean canAddToSourceParticipants( final List objects ) {
+    @Override
+	public boolean canAddToSourceParticipants( final List objects ) {
         final Iterator iter = objects.iterator();
         while (iter.hasNext()) {
             final EObject element = (EObject)iter.next();
@@ -355,7 +381,8 @@ public class RelationshipEditorImpl implements RelationshipEditor {
     /**
      * @see org.teiid.designer.relationship.RelationshipEditor#addSourceParticipant(org.eclipse.emf.ecore.EObject)
      */
-    public void addSourceParticipant( final EObject newSourceParticipant ) throws ModelerCoreException {
+    @Override
+	public void addSourceParticipant( final EObject newSourceParticipant ) throws ModelerCoreException {
         CoreArgCheck.isNotNull(newSourceParticipant);
         final EList values = this.relationship.getSources();
         ModelerCore.getModelEditor().addValue(this.relationship, newSourceParticipant, values);
@@ -364,13 +391,15 @@ public class RelationshipEditorImpl implements RelationshipEditor {
     /**
      * @see org.teiid.designer.relationship.RelationshipEditor#addSourceParticipants(java.util.List)
      */
-    public void addSourceParticipants( final List newSourceParticipants ) throws ModelerCoreException {
+    @Override
+	public void addSourceParticipants( final List newSourceParticipants ) throws ModelerCoreException {
         if (newSourceParticipants == null || newSourceParticipants.isEmpty()) {
             return;
         }
         final EList values = this.relationship.getSources();
         final TransactionRunnable runnable = new TransactionRunnable() {
-            public Object run( UnitOfWork uow ) throws ModelerCoreException {
+            @Override
+			public Object run( UnitOfWork uow ) throws ModelerCoreException {
                 final Iterator iter = new ArrayList(newSourceParticipants).iterator();
                 while (iter.hasNext()) {
                     final EObject newParticipant = (EObject)iter.next();
@@ -387,7 +416,8 @@ public class RelationshipEditorImpl implements RelationshipEditor {
     /**
      * @see org.teiid.designer.relationship.RelationshipEditor#removeSourceParticipant(org.eclipse.emf.ecore.EObject)
      */
-    public boolean removeSourceParticipant( final EObject sourceParticipant ) throws ModelerCoreException {
+    @Override
+	public boolean removeSourceParticipant( final EObject sourceParticipant ) throws ModelerCoreException {
         CoreArgCheck.isNotNull(sourceParticipant);
         final EList values = this.relationship.getSources();
         if (!values.contains(sourceParticipant)) {
@@ -400,13 +430,15 @@ public class RelationshipEditorImpl implements RelationshipEditor {
     /**
      * @see org.teiid.designer.relationship.RelationshipEditor#removeSourceParticipants(java.util.List)
      */
-    public boolean removeSourceParticipants( final List sourceParticipants ) throws ModelerCoreException {
+    @Override
+	public boolean removeSourceParticipants( final List sourceParticipants ) throws ModelerCoreException {
         if (sourceParticipants == null || sourceParticipants.isEmpty()) {
             return false;
         }
         final EList values = this.relationship.getSources();
         final TransactionRunnable runnable = new TransactionRunnable() {
-            public Object run( UnitOfWork uow ) throws ModelerCoreException {
+            @Override
+			public Object run( UnitOfWork uow ) throws ModelerCoreException {
                 final Iterator iter = new ArrayList(sourceParticipants).iterator();
                 while (iter.hasNext()) {
                     final EObject participant = (EObject)iter.next();
@@ -426,7 +458,8 @@ public class RelationshipEditorImpl implements RelationshipEditor {
     /**
      * @see org.teiid.designer.relationship.RelationshipEditor#addTargetParticipant(org.eclipse.emf.ecore.EObject)
      */
-    public void addTargetParticipant( final EObject newTargetParticipant ) throws ModelerCoreException {
+    @Override
+	public void addTargetParticipant( final EObject newTargetParticipant ) throws ModelerCoreException {
         CoreArgCheck.isNotNull(newTargetParticipant);
         final EList values = this.relationship.getTargets();
         ModelerCore.getModelEditor().addValue(this.relationship, newTargetParticipant, values);
@@ -435,13 +468,15 @@ public class RelationshipEditorImpl implements RelationshipEditor {
     /**
      * @see org.teiid.designer.relationship.RelationshipEditor#addTargetParticipants(java.util.List)
      */
-    public void addTargetParticipants( final List newTargetParticipants ) throws ModelerCoreException {
+    @Override
+	public void addTargetParticipants( final List newTargetParticipants ) throws ModelerCoreException {
         if (newTargetParticipants == null || newTargetParticipants.isEmpty()) {
             return;
         }
         final EList values = this.relationship.getTargets();
         final TransactionRunnable runnable = new TransactionRunnable() {
-            public Object run( UnitOfWork uow ) throws ModelerCoreException {
+            @Override
+			public Object run( UnitOfWork uow ) throws ModelerCoreException {
                 final Iterator iter = new ArrayList(newTargetParticipants).iterator();
                 while (iter.hasNext()) {
                     final EObject newParticipant = (EObject)iter.next();
@@ -458,7 +493,8 @@ public class RelationshipEditorImpl implements RelationshipEditor {
     /**
      * @see org.teiid.designer.relationship.RelationshipEditor#removeTargetParticipant(org.eclipse.emf.ecore.EObject)
      */
-    public boolean removeTargetParticipant( final EObject targetParticipant ) throws ModelerCoreException {
+    @Override
+	public boolean removeTargetParticipant( final EObject targetParticipant ) throws ModelerCoreException {
         CoreArgCheck.isNotNull(targetParticipant);
         final EList values = this.relationship.getTargets();
         if (!values.contains(targetParticipant)) {
@@ -471,13 +507,15 @@ public class RelationshipEditorImpl implements RelationshipEditor {
     /**
      * @see org.teiid.designer.relationship.RelationshipEditor#removeTargetParticipants(java.util.List)
      */
-    public boolean removeTargetParticipants( final List targetParticipants ) throws ModelerCoreException {
+    @Override
+	public boolean removeTargetParticipants( final List targetParticipants ) throws ModelerCoreException {
         if (targetParticipants == null || targetParticipants.isEmpty()) {
             return false;
         }
         final EList values = this.relationship.getTargets();
         final TransactionRunnable runnable = new TransactionRunnable() {
-            public Object run( UnitOfWork uow ) throws ModelerCoreException {
+            @Override
+			public Object run( UnitOfWork uow ) throws ModelerCoreException {
                 final Iterator iter = new ArrayList(targetParticipants).iterator();
                 while (iter.hasNext()) {
                     final EObject participant = (EObject)iter.next();
@@ -497,7 +535,8 @@ public class RelationshipEditorImpl implements RelationshipEditor {
     /**
      * @see org.teiid.designer.relationship.RelationshipEditor#canSwapParticipants()
      */
-    public boolean canSwapParticipants() {
+    @Override
+	public boolean canSwapParticipants() {
         final boolean sourcesToTargets = this.canAddToTargetParticipants(this.getSourceParticipants());
         if (!sourcesToTargets) {
             return false;
@@ -512,9 +551,11 @@ public class RelationshipEditorImpl implements RelationshipEditor {
     /**
      * @see org.teiid.designer.relationship.RelationshipEditor#swapParticipants()
      */
-    public void swapParticipants() throws ModelerCoreException {
+    @Override
+	public void swapParticipants() throws ModelerCoreException {
         final TransactionRunnable runnable = new TransactionRunnable() {
-            public Object run( UnitOfWork uow ) throws ModelerCoreException {
+            @Override
+			public Object run( UnitOfWork uow ) throws ModelerCoreException {
                 final EList sources = (EList)getSourceParticipants();
                 final EList targets = (EList)getTargetParticipants();
                 final List oldSources = new ArrayList(sources);

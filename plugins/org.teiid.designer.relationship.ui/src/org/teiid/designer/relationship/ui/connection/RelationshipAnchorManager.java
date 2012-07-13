@@ -45,22 +45,27 @@ public class RelationshipAnchorManager implements AnchorManager {
 	private void init() {
 	}
    
+	@Override
 	public boolean add(NodeConnectionAnchor targetAnchor) {
 		return false;
 	}
     
+	@Override
 	public boolean move(NodeConnectionAnchor targetAnchor) {
 		return false;
 	}
     
+	@Override
 	public boolean remove(NodeConnectionAnchor targetAnchor) {
 		return false;
 	}
     
+	@Override
 	public void resetSourceAnchors(boolean updateTargetEnd) {
 		setAnchorPositions();
 	}
     
+	@Override
 	public void resetTargetAnchors(boolean updateSourceEnd) {
 		setAnchorPositions();   
 	}
@@ -68,6 +73,7 @@ public class RelationshipAnchorManager implements AnchorManager {
 	/**
 	 * @return
 	 */
+	@Override
 	public List getSourceConnections() {
 		return diagramEditPart.getSourceConnections();
 	}
@@ -75,12 +81,14 @@ public class RelationshipAnchorManager implements AnchorManager {
 	/**
 	 * @return
 	 */
+	@Override
 	public List getTargetConnections() {
 		return diagramEditPart.getTargetConnections();
 	}
 	/**
 	 * @return
 	 */
+	@Override
 	public ConnectionAnchor getSourceAnchor(NodeConnectionEditPart connection) {
 		// This anchor manager  belongs to the edit part.
 		// This edit part knows about all it's target connections
@@ -113,6 +121,7 @@ public class RelationshipAnchorManager implements AnchorManager {
 	/**
 	 * @return
 	 */
+	@Override
 	public ConnectionAnchor getTargetAnchor(NodeConnectionEditPart connection) {
 		// This anchor manager  belongs to the edit part.
 		// This edit part knows about all it's target connections
@@ -158,15 +167,18 @@ public class RelationshipAnchorManager implements AnchorManager {
 		}
 	}
     
+	@Override
 	public boolean hasSourceAnchors() {
 		return (sourceAnchor != null);
 	}
     
     
+	@Override
 	public boolean hasTargetAnchors() {
 		return (targetAnchor != null);
 	}
     
+	@Override
 	public void setAnchorPosition(NodeConnectionAnchor theAnchor, int direction ) {
 
 	}
@@ -190,7 +202,8 @@ public class RelationshipAnchorManager implements AnchorManager {
 	 * @see org.teiid.designer.diagram.ui.connection.AnchorManager#reorderAllAnchors()
 	 * @since 4.2
 	 */
-    public void reorderAllAnchors(boolean updateBothEnds) {
+    @Override
+	public void reorderAllAnchors(boolean updateBothEnds) {
         resetSourceAnchors(updateBothEnds);
         resetTargetAnchors(updateBothEnds);
     }

@@ -47,14 +47,16 @@ public class RelationshipMatcher extends AbstractEObjectMatcher implements TwoPh
     /**
      * @see org.teiid.designer.core.compare.TwoPhaseEObjectMatcher#addMappingsForRoots(java.util.List, java.util.List, java.util.Map, org.eclipse.emf.mapping.Mapping, org.eclipse.emf.mapping.MappingFactory)
      */
-    public void addMappingsForRoots(List inputs, List outputs, Map inputsToOutputs, Mapping mapping, MappingFactory factory) {
+    @Override
+	public void addMappingsForRoots(List inputs, List outputs, Map inputsToOutputs, Mapping mapping, MappingFactory factory) {
         addMappings(null,inputs,outputs,inputsToOutputs,mapping,factory);
     }
 
     /**
      * @see org.teiid.designer.core.compare.TwoPhaseEObjectMatcher#addMappings(org.eclipse.emf.ecore.EReference, java.util.List, java.util.List, java.util.Map, org.eclipse.emf.mapping.Mapping, org.eclipse.emf.mapping.MappingFactory)
      */
-    public void addMappings(EReference reference, List inputs, List outputs, Map inputsToOutputs, Mapping mapping, MappingFactory factory) {
+    @Override
+	public void addMappings(EReference reference, List inputs, List outputs, Map inputsToOutputs, Mapping mapping, MappingFactory factory) {
         // Loop over the inputs and accumulate the UUIDs ...
         final Map inputByName = new HashMap();
         final Iterator iter = inputs.iterator();
@@ -203,14 +205,16 @@ public class RelationshipMatcher extends AbstractEObjectMatcher implements TwoPh
     /**
      * @see org.teiid.designer.core.compare.EObjectMatcher#addMappingsForRoots(java.util.List, java.util.List, org.eclipse.emf.mapping.Mapping, org.eclipse.emf.mapping.MappingFactory)
      */
-    public void addMappingsForRoots(List inputs, List outputs, Mapping mapping, MappingFactory factory) {
+    @Override
+	public void addMappingsForRoots(List inputs, List outputs, Mapping mapping, MappingFactory factory) {
         // Do nothing in phase 1
     }
 
     /**
      * @see org.teiid.designer.core.compare.EObjectMatcher#addMappings(org.eclipse.emf.ecore.EReference, java.util.List, java.util.List, org.eclipse.emf.mapping.Mapping, org.eclipse.emf.mapping.MappingFactory)
      */
-    public void addMappings(EReference reference, List inputs, List outputs, Mapping mapping, MappingFactory factory) {
+    @Override
+	public void addMappings(EReference reference, List inputs, List outputs, Mapping mapping, MappingFactory factory) {
         // Do nothing in phase 1
     }
 

@@ -52,6 +52,7 @@ public class PreviewVirtualDocumentWizardPage extends WizardPage
 	/////////////////////////////////////////////////////////////////////////////////
 	// Instance methods
 	/////////////////////////////////////////////////////////////////////////////////
+	@Override
 	public void createControl(Composite parent) {
 		panel = new EditVirtualDocumentsPanel(parent);
 		setControl(panel);
@@ -83,7 +84,8 @@ public class PreviewVirtualDocumentWizardPage extends WizardPage
     //
     // Implementation of the IVirtualDocumentSource inteface:
     //
-    public XmlFragment[] getFragments(ModelResource modelResource, IProgressMonitor monitor) {
+    @Override
+	public XmlFragment[] getFragments(ModelResource modelResource, IProgressMonitor monitor) {
         if (panel == null) {
             createControl(model.getWizHolder());
             panel.setVisible(false); // keep the thing hidden
@@ -92,7 +94,8 @@ public class PreviewVirtualDocumentWizardPage extends WizardPage
         return panel.getFragments(null, monitor);
     }
 
-    public void updateSourceFragments(final boolean isVisible, final IProgressMonitor monitor) {
+    @Override
+	public void updateSourceFragments(final boolean isVisible, final IProgressMonitor monitor) {
         monitor.subTask(Util.getString("PreviewVirtualDocumentPage.subtaskBuilding")); //$NON-NLS-1$
         final XmlFragment[] fragments = model.getFragments(null, monitor);
         if (panel != null

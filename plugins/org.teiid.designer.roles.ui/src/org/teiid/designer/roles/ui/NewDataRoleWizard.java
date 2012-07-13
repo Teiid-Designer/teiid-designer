@@ -525,7 +525,8 @@ public class NewDataRoleWizard extends AbstractWizard {
                 }
                 nameText.setSelection(0);
                 nameText.addModifyListener(new ModifyListener() {
-                    public void modifyText( final ModifyEvent event ) {
+                    @Override
+					public void modifyText( final ModifyEvent event ) {
                         handleModifyText(nameText);
                     }
                 });

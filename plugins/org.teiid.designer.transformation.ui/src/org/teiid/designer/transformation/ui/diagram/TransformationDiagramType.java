@@ -71,7 +71,8 @@ public class TransformationDiagramType extends AbstractDiagramType {
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.IDiagramType#getEditPartFactory()
      */
-    public DiagramEditPartFactory getEditPartFactory() {
+    @Override
+	public DiagramEditPartFactory getEditPartFactory() {
         if (editPartFactory == null) editPartFactory = new TransformationDiagramPartFactory();
 
         return editPartFactory;
@@ -80,7 +81,8 @@ public class TransformationDiagramType extends AbstractDiagramType {
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.IDiagramType#getFigureFactory()
      */
-    public DiagramFigureFactory getFigureFactory() {
+    @Override
+	public DiagramFigureFactory getFigureFactory() {
         if (figureFactory == null) figureFactory = new TransformationDiagramFigureFactory();
 
         return figureFactory;
@@ -89,7 +91,8 @@ public class TransformationDiagramType extends AbstractDiagramType {
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.IDiagramType#getModelFactory()
      */
-    public DiagramModelFactory getModelFactory() {
+    @Override
+	public DiagramModelFactory getModelFactory() {
         if (modelFactory == null) modelFactory = new TransformationDiagramModelFactory();
 
         return modelFactory;
@@ -98,14 +101,16 @@ public class TransformationDiagramType extends AbstractDiagramType {
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.IDiagramType#getActionAdapter()
      */
-    public IDiagramActionAdapter getActionAdapter( ModelEditorPage editor ) {
+    @Override
+	public IDiagramActionAdapter getActionAdapter( ModelEditorPage editor ) {
         return new TransformationActionAdapter(editor);
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.IDiagramType#getDisplayName()
      */
-    public String getDisplayName() {
+    @Override
+	public String getDisplayName() {
         return UiConstants.Util.getString("DiagramNames.transformationDiagram"); //$NON-NLS-1$) ;
     }
 
@@ -129,7 +134,8 @@ public class TransformationDiagramType extends AbstractDiagramType {
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.IDiagramType#canOpenContext(java.lang.Object)
      */
-    public boolean canOpenContext( Object input ) throws CanOpenContextException {
+    @Override
+	public boolean canOpenContext( Object input ) throws CanOpenContextException {
         boolean canOpen = false;
         boolean readOnlyFailure = false;
         if (input instanceof EObject) {
@@ -182,7 +188,8 @@ public class TransformationDiagramType extends AbstractDiagramType {
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.IDiagramType#getDiagramForContext(java.lang.Object)
      */
-    public Diagram getDiagramForContext( Object actualInput ) {
+    @Override
+	public Diagram getDiagramForContext( Object actualInput ) {
         Diagram transDiagram = null;
         Object input = actualInput;
         if (input instanceof DiagramProxy) {
@@ -242,7 +249,8 @@ public class TransformationDiagramType extends AbstractDiagramType {
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.IDiagramType#getBackgroundColorObject()
      */
-    public DiagramColorObject getBackgroundColorObject( String extensionID ) {
+    @Override
+	public DiagramColorObject getBackgroundColorObject( String extensionID ) {
         if (bkgdColorObject == null) {
             bkgdColorObject = new DiagramColorObject(getDisplayName(), PluginConstants.Prefs.Appearance.TRANSFORM_BKGD_COLOR);
         }
@@ -261,7 +269,8 @@ public class TransformationDiagramType extends AbstractDiagramType {
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.IDiagramType#getDisplayedPath(org.teiid.designer.metamodels.diagram.Diagram, org.eclipse.emf.ecore.EObject)
      */
-    public String getDisplayedPath( Diagram diagram,
+    @Override
+	public String getDisplayedPath( Diagram diagram,
                                     EObject eObject ) {
         String path = null;
         if (diagram.getType() != null && diagram.getType().equals(PluginConstants.TRANSFORMATION_DIAGRAM_TYPE_ID)) {

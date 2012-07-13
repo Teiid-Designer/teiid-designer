@@ -93,7 +93,8 @@ public class RenameAction extends ModelObjectAction implements UiConstants {
                     nameText.setSelection(0, oldName.length());
                 }
                 nameText.addModifyListener(new ModifyListener() {
-                    public void modifyText( final ModifyEvent event ) {
+                    @Override
+					public void modifyText( final ModifyEvent event ) {
                         handleModifyText(nameText);
                     }
                 });

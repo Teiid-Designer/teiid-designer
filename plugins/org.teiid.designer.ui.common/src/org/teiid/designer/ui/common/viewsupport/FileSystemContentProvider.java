@@ -31,14 +31,16 @@ public class FileSystemContentProvider implements ITreeContentProvider {
      * @see org.eclipse.jface.viewers.IContentProvider#dispose()
      * @since 4.2
      */
-    public void dispose() {
+    @Override
+	public void dispose() {
     }
 
     /** 
      * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
      * @since 4.2
      */
-    public Object[] getChildren(Object theParent) {
+    @Override
+	public Object[] getChildren(Object theParent) {
         Object[] result = null;
         
         if (theParent instanceof File) {
@@ -52,7 +54,8 @@ public class FileSystemContentProvider implements ITreeContentProvider {
      * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
      * @since 4.2
      */
-    public Object[] getElements(Object theInput) {
+    @Override
+	public Object[] getElements(Object theInput) {
         return File.listRoots();
     }
 
@@ -60,7 +63,8 @@ public class FileSystemContentProvider implements ITreeContentProvider {
      * @see org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object)
      * @since 4.2
      */
-    public Object getParent(Object theElement) {
+    @Override
+	public Object getParent(Object theElement) {
         return ((theElement instanceof File) ? ((File)theElement).getParentFile() : null);
     }
 
@@ -68,7 +72,8 @@ public class FileSystemContentProvider implements ITreeContentProvider {
      * @see org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(java.lang.Object)
      * @since 4.2
      */
-    public boolean hasChildren(Object theElement) {
+    @Override
+	public boolean hasChildren(Object theElement) {
         Object[] kids = getChildren(theElement);
         return ((kids != null) && (kids.length > 0));
     }
@@ -77,7 +82,8 @@ public class FileSystemContentProvider implements ITreeContentProvider {
      * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
      * @since 4.2
      */
-    public void inputChanged(Viewer theViewer,
+    @Override
+	public void inputChanged(Viewer theViewer,
                              Object theOldInput,
                              Object theNewInput) {
     }

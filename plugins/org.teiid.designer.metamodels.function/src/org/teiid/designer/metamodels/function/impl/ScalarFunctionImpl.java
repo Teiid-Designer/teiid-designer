@@ -145,7 +145,8 @@ public class ScalarFunctionImpl extends FunctionImpl implements ScalarFunction {
      * <!-- end-user-doc -->
      * @generated
      */
-    public String getInvocationClass() {
+    @Override
+	public String getInvocationClass() {
         return invocationClass;
     }
 
@@ -154,7 +155,8 @@ public class ScalarFunctionImpl extends FunctionImpl implements ScalarFunction {
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setInvocationClass(String newInvocationClass) {
+    @Override
+	public void setInvocationClass(String newInvocationClass) {
         String oldInvocationClass = invocationClass;
         invocationClass = newInvocationClass;
         if (eNotificationRequired())
@@ -166,7 +168,8 @@ public class ScalarFunctionImpl extends FunctionImpl implements ScalarFunction {
      * <!-- end-user-doc -->
      * @generated
      */
-    public String getInvocationMethod() {
+    @Override
+	public String getInvocationMethod() {
         return invocationMethod;
     }
 
@@ -175,7 +178,8 @@ public class ScalarFunctionImpl extends FunctionImpl implements ScalarFunction {
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setInvocationMethod(String newInvocationMethod) {
+    @Override
+	public void setInvocationMethod(String newInvocationMethod) {
         String oldInvocationMethod = invocationMethod;
         invocationMethod = newInvocationMethod;
         if (eNotificationRequired())
@@ -187,7 +191,8 @@ public class ScalarFunctionImpl extends FunctionImpl implements ScalarFunction {
      * <!-- end-user-doc -->
      * @generated
      */
-    public boolean isDeterministic() {
+    @Override
+	public boolean isDeterministic() {
         return deterministic;
     }
 
@@ -196,7 +201,8 @@ public class ScalarFunctionImpl extends FunctionImpl implements ScalarFunction {
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setDeterministic(boolean newDeterministic) {
+    @Override
+	public void setDeterministic(boolean newDeterministic) {
         boolean oldDeterministic = deterministic;
         deterministic = newDeterministic;
         if (eNotificationRequired())
@@ -208,7 +214,8 @@ public class ScalarFunctionImpl extends FunctionImpl implements ScalarFunction {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EList getInputParameters() {
+    @Override
+	public EList getInputParameters() {
         if (inputParameters == null) {
             inputParameters = new EObjectContainmentWithInverseEList(FunctionParameter.class, this, FunctionPackage.SCALAR_FUNCTION__INPUT_PARAMETERS, FunctionPackage.FUNCTION_PARAMETER__FUNCTION);
         }
@@ -220,7 +227,8 @@ public class ScalarFunctionImpl extends FunctionImpl implements ScalarFunction {
      * <!-- end-user-doc -->
      * @generated
      */
-    public ReturnParameter getReturnParameter() {
+    @Override
+	public ReturnParameter getReturnParameter() {
         return returnParameter;
     }
 
@@ -244,7 +252,8 @@ public class ScalarFunctionImpl extends FunctionImpl implements ScalarFunction {
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setReturnParameter(ReturnParameter newReturnParameter) {
+    @Override
+	public void setReturnParameter(ReturnParameter newReturnParameter) {
         if (newReturnParameter != returnParameter) {
             NotificationChain msgs = null;
             if (returnParameter != null)

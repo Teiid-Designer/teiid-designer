@@ -104,7 +104,8 @@ public class UmlPackageEditPart extends AbstractNotationEditPart implements Dire
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.part.EditableEditPart#edit()
      */
-    public void edit() {
+    @Override
+	public void edit() {
         // Here's where we open it's package diagram.
 
         if(  doubleClickedName() ) {
@@ -118,7 +119,8 @@ public class UmlPackageEditPart extends AbstractNotationEditPart implements Dire
         }
     }
     
-    public void performDirectEdit(){
+    @Override
+	public void performDirectEdit(){
         if(manager == null)
             manager = new DirectEditPartManager(this, 
                 TextCellEditor.class, new LabelCellEditorLocator(getLabel()));
@@ -234,15 +236,18 @@ public class UmlPackageEditPart extends AbstractNotationEditPart implements Dire
         ((UmlPackageFigure)getDiagramFigure()).updateForPath(((UmlPackageNode)getModel()).getPath());
     }   
     
-    public String getText() {
+    @Override
+	public String getText() {
         return ((DiagramModelNode)getModel()).getName();
     }
 
-    public void setText(String newName) {
+    @Override
+	public void setText(String newName) {
         ((DiagramModelNode)getModel()).setName(newName);
     }
 
-    public String getEditString(){
+    @Override
+	public String getEditString(){
         return ((DiagramModelNode)getModel()).getName();
     }
     
@@ -258,6 +263,7 @@ public class UmlPackageEditPart extends AbstractNotationEditPart implements Dire
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.diagram.ui.util.directedit.DirectEditPart#getEditManager()
 	 */
+	@Override
 	public DirectEditPartManager getEditManager() {
 		return (DirectEditPartManager)manager;
 	}

@@ -309,6 +309,7 @@ public class RelationshipTypeFigure extends AbstractDiagramFigure implements Dir
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.diagram.ui.util.directedit.DirectEditFigure#getLabelFigure()
 	 */
+	@Override
 	public Label getLabelFigure() {
 		return nameLabel.getLabel();
 	}

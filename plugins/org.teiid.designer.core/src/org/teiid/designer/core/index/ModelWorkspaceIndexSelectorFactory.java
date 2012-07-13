@@ -36,7 +36,8 @@ public class ModelWorkspaceIndexSelectorFactory implements IndexSelectorFactory 
     /**
      * @see org.teiid.designer.core.index.IndexSelectorFactory#createIndexSelector(java.util.List)
      */
-    public IndexSelector createIndexSelector( final List modelWorkspaceItems ) throws CoreException {
+    @Override
+	public IndexSelector createIndexSelector( final List modelWorkspaceItems ) throws CoreException {
         CoreArgCheck.isNotNull(modelWorkspaceItems);
         final int numItems = modelWorkspaceItems.size();
         if ( numItems == 0 ) {

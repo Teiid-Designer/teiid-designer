@@ -143,7 +143,8 @@ public class ClearReferencesUponDelete implements ModelVisitor {
      * @param object one of the objects being deleted
      * @see org.teiid.designer.core.util.ModelVisitor#visit(org.eclipse.emf.ecore.EObject)
      */
-    public boolean visit( final EObject object ) {
+    @Override
+	public boolean visit( final EObject object ) {
         // Find all references ...
         final EClass eclass = object.eClass();
         final Collection allRefs = eclass.getEAllReferences();
@@ -192,7 +193,8 @@ public class ClearReferencesUponDelete implements ModelVisitor {
      * @see org.teiid.designer.core.util.ModelVisitor#visit(org.eclipse.emf.ecore.resource.Resource)
      * @since 4.2
      */
-    public boolean visit( Resource resource ) {
+    @Override
+	public boolean visit( Resource resource ) {
         return resource != null;
     }
 

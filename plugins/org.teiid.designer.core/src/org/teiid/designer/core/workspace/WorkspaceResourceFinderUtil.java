@@ -1040,14 +1040,16 @@ public class WorkspaceResourceFinderUtil {
             return resources;
         }
 
-        public boolean visit( final IResource resource ) {
+        @Override
+		public boolean visit( final IResource resource ) {
             if (resource.exists() && resource.getType() == IResource.FILE && resFilt.accept(resource)) resources.add(resource);
             return true;
         }
     }
 
     static class VdbResourceFilter implements ResourceFilter {
-        public boolean accept( final IResource res ) {
+        @Override
+		public boolean accept( final IResource res ) {
             return ModelUtil.isVdbArchiveFile(res);
         }
 

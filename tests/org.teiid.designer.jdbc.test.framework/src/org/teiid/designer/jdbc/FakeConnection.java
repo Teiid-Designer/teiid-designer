@@ -38,140 +38,160 @@ public class FakeConnection implements Connection {
     /* (non-Javadoc)
      * @see java.sql.Connection#createStatement()
      */
-    public Statement createStatement() {
+    @Override
+	public Statement createStatement() {
         return null;
     }
 
     /* (non-Javadoc)
      * @see java.sql.Connection#prepareStatement(java.lang.String)
      */
-    public PreparedStatement prepareStatement( String sql ) {
+    @Override
+	public PreparedStatement prepareStatement( String sql ) {
         return null;
     }
 
     /* (non-Javadoc)
      * @see java.sql.Connection#prepareCall(java.lang.String)
      */
-    public CallableStatement prepareCall( String sql ) {
+    @Override
+	public CallableStatement prepareCall( String sql ) {
         return null;
     }
 
     /* (non-Javadoc)
      * @see java.sql.Connection#nativeSQL(java.lang.String)
      */
-    public String nativeSQL( String sql ) {
+    @Override
+	public String nativeSQL( String sql ) {
         return null;
     }
 
     /* (non-Javadoc)
      * @see java.sql.Connection#setAutoCommit(boolean)
      */
-    public void setAutoCommit( boolean autoCommit ) {
+    @Override
+	public void setAutoCommit( boolean autoCommit ) {
 
     }
 
     /* (non-Javadoc)
      * @see java.sql.Connection#getAutoCommit()
      */
-    public boolean getAutoCommit() {
+    @Override
+	public boolean getAutoCommit() {
         return false;
     }
 
     /* (non-Javadoc)
      * @see java.sql.Connection#commit()
      */
-    public void commit() {
+    @Override
+	public void commit() {
 
     }
 
     /* (non-Javadoc)
      * @see java.sql.Connection#rollback()
      */
-    public void rollback() {
+    @Override
+	public void rollback() {
 
     }
 
     /* (non-Javadoc)
      * @see java.sql.Connection#close()
      */
-    public void close() {
+    @Override
+	public void close() {
 
     }
 
     /* (non-Javadoc)
      * @see java.sql.Connection#isClosed()
      */
-    public boolean isClosed() {
+    @Override
+	public boolean isClosed() {
         return false;
     }
 
     /* (non-Javadoc)
      * @see java.sql.Connection#getMetaData()
      */
-    public DatabaseMetaData getMetaData() {
+    @Override
+	public DatabaseMetaData getMetaData() {
         return null;
     }
 
     /* (non-Javadoc)
      * @see java.sql.Connection#setReadOnly(boolean)
      */
-    public void setReadOnly( boolean readOnly ) {
+    @Override
+	public void setReadOnly( boolean readOnly ) {
 
     }
 
     /* (non-Javadoc)
      * @see java.sql.Connection#isReadOnly()
      */
-    public boolean isReadOnly() {
+    @Override
+	public boolean isReadOnly() {
         return false;
     }
 
     /* (non-Javadoc)
      * @see java.sql.Connection#setCatalog(java.lang.String)
      */
-    public void setCatalog( String catalog ) {
+    @Override
+	public void setCatalog( String catalog ) {
 
     }
 
     /* (non-Javadoc)
      * @see java.sql.Connection#getCatalog()
      */
-    public String getCatalog() {
+    @Override
+	public String getCatalog() {
         return null;
     }
 
     /* (non-Javadoc)
      * @see java.sql.Connection#setTransactionIsolation(int)
      */
-    public void setTransactionIsolation( int level ) {
+    @Override
+	public void setTransactionIsolation( int level ) {
 
     }
 
     /* (non-Javadoc)
      * @see java.sql.Connection#getTransactionIsolation()
      */
-    public int getTransactionIsolation() {
+    @Override
+	public int getTransactionIsolation() {
         return 0;
     }
 
     /* (non-Javadoc)
      * @see java.sql.Connection#getWarnings()
      */
-    public SQLWarning getWarnings() {
+    @Override
+	public SQLWarning getWarnings() {
         return null;
     }
 
     /* (non-Javadoc)
      * @see java.sql.Connection#clearWarnings()
      */
-    public void clearWarnings() {
+    @Override
+	public void clearWarnings() {
 
     }
 
     /* (non-Javadoc)
      * @see java.sql.Connection#createStatement(int, int)
      */
-    public Statement createStatement( int resultSetType,
+    @Override
+	public Statement createStatement( int resultSetType,
                                       int resultSetConcurrency ) {
         return null;
     }
@@ -179,7 +199,8 @@ public class FakeConnection implements Connection {
     /* (non-Javadoc)
      * @see java.sql.Connection#prepareStatement(java.lang.String, int, int)
      */
-    public PreparedStatement prepareStatement( String sql,
+    @Override
+	public PreparedStatement prepareStatement( String sql,
                                                int resultSetType,
                                                int resultSetConcurrency ) {
         return null;
@@ -188,7 +209,8 @@ public class FakeConnection implements Connection {
     /* (non-Javadoc)
      * @see java.sql.Connection#prepareCall(java.lang.String, int, int)
      */
-    public CallableStatement prepareCall( String sql,
+    @Override
+	public CallableStatement prepareCall( String sql,
                                           int resultSetType,
                                           int resultSetConcurrency ) {
         return null;
@@ -197,7 +219,8 @@ public class FakeConnection implements Connection {
     /* (non-Javadoc)
      * @see java.sql.Connection#getTypeMap()
      */
-    public Map<String, Class<?>> getTypeMap() {
+    @Override
+	public Map<String, Class<?>> getTypeMap() {
         return null;
     }
 
@@ -218,7 +241,8 @@ public class FakeConnection implements Connection {
      * @see java.sql.ResultSet
      * @since 1.4
      */
-    public void setHoldability( int holdability ) {
+    @Override
+	public void setHoldability( int holdability ) {
     }
 
     /**
@@ -230,7 +254,8 @@ public class FakeConnection implements Connection {
      * @see java.sql.ResultSet
      * @since 1.4
      */
-    public int getHoldability() {
+    @Override
+	public int getHoldability() {
         return 0;
     }
 
@@ -244,7 +269,8 @@ public class FakeConnection implements Connection {
      * @see java.sql.Savepoint
      * @since 1.4
      */
-    public Savepoint setSavepoint() {
+    @Override
+	public Savepoint setSavepoint() {
         return null;
     }
 
@@ -259,7 +285,8 @@ public class FakeConnection implements Connection {
      * @see java.sql.Savepoint
      * @since 1.4
      */
-    public Savepoint setSavepoint( String name ) {
+    @Override
+	public Savepoint setSavepoint( String name ) {
         return null;
     }
 
@@ -275,7 +302,8 @@ public class FakeConnection implements Connection {
      * @see #rollback
      * @since 1.4
      */
-    public void rollback( Savepoint savepoint ) {
+    @Override
+	public void rollback( Savepoint savepoint ) {
     }
 
     /**
@@ -287,7 +315,8 @@ public class FakeConnection implements Connection {
      *            savepoint in the current transaction
      * @since 1.4
      */
-    public void releaseSavepoint( Savepoint savepoint ) {
+    @Override
+	public void releaseSavepoint( Savepoint savepoint ) {
     }
 
     /**
@@ -308,7 +337,8 @@ public class FakeConnection implements Connection {
      * @see java.sql.ResultSet
      * @since 1.4
      */
-    public Statement createStatement( int resultSetType,
+    @Override
+	public Statement createStatement( int resultSetType,
                                       int resultSetConcurrency,
                                       int resultSetHoldability ) {
         return null;
@@ -336,7 +366,8 @@ public class FakeConnection implements Connection {
      * @see java.sql.ResultSet
      * @since 1.4
      */
-    public PreparedStatement prepareStatement( String sql,
+    @Override
+	public PreparedStatement prepareStatement( String sql,
                                                int resultSetType,
                                                int resultSetConcurrency,
                                                int resultSetHoldability ) {
@@ -363,7 +394,8 @@ public class FakeConnection implements Connection {
      * @see java.sql.ResultSet
      * @since 1.4
      */
-    public CallableStatement prepareCall( String sql,
+    @Override
+	public CallableStatement prepareCall( String sql,
                                           int resultSetType,
                                           int resultSetConcurrency,
                                           int resultSetHoldability ) {
@@ -393,7 +425,8 @@ public class FakeConnection implements Connection {
      *            indicating whether auto-generated keys should be returned
      * @since 1.4
      */
-    public PreparedStatement prepareStatement( String sql,
+    @Override
+	public PreparedStatement prepareStatement( String sql,
                                                int autoGeneratedKeys ) {
         return null;
     }
@@ -423,7 +456,8 @@ public class FakeConnection implements Connection {
      * @exception SQLException if a database access error occurs
      * @since 1.4
      */
-    public PreparedStatement prepareStatement( String sql,
+    @Override
+	public PreparedStatement prepareStatement( String sql,
                                                int columnIndexes[] ) {
         return null;
     }
@@ -452,7 +486,8 @@ public class FakeConnection implements Connection {
      * @exception SQLException if a database access error occurs
      * @since 1.4
      */
-    public PreparedStatement prepareStatement( String sql,
+    @Override
+	public PreparedStatement prepareStatement( String sql,
                                                String columnNames[] ) {
         return null;
     }

@@ -230,7 +230,8 @@ public class CopyFilesAndFoldersOperation implements UiConstants {
 
         // Dialogs need to be created and opened in the UI thread
         Runnable query = new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 String message;
                 int resultId[] = {IDialogConstants.YES_ID, IDialogConstants.YES_TO_ALL_ID, IDialogConstants.NO_ID,
                     IDialogConstants.CANCEL_ID};
@@ -623,7 +624,8 @@ public class CopyFilesAndFoldersOperation implements UiConstants {
      */
     void displayError( final String message ) {
         parentShell.getDisplay().syncExec(new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 MessageDialog.openError(parentShell, getProblemsTitle(), message);
             }
         });
@@ -685,9 +687,11 @@ public class CopyFilesAndFoldersOperation implements UiConstants {
         final String returnValue[] = {""}; //$NON-NLS-1$
 
         parentShell.getDisplay().syncExec(new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 IInputValidator validator = new IInputValidator() {
-                    public String isValid( String string ) {
+                    @Override
+					public String isValid( String string ) {
                         if (resource.getName().equals(string)) {
                             return UiConstants.Util.getString("CopyFilesAndFoldersOperation.nameMustBeDifferent"); //$NON-NLS-1$
                         }
@@ -917,7 +921,8 @@ public class CopyFilesAndFoldersOperation implements UiConstants {
                             IContainer target,
                             IProgressMonitor monitor ) {
         IOverwriteQuery query = new IOverwriteQuery() {
-            public String queryOverwrite( String pathString ) {
+            @Override
+			public String queryOverwrite( String pathString ) {
                 if (alwaysOverwrite) return ALL;
 
                 final String returnCode[] = {CANCEL};
@@ -925,7 +930,8 @@ public class CopyFilesAndFoldersOperation implements UiConstants {
                 final String[] options = {IDialogConstants.YES_LABEL, IDialogConstants.YES_TO_ALL_LABEL,
                     IDialogConstants.NO_LABEL, IDialogConstants.CANCEL_LABEL};
                 parentShell.getDisplay().syncExec(new Runnable() {
-                    public void run() {
+                    @Override
+					public void run() {
                         MessageDialog dialog = new MessageDialog(
                                                                  parentShell,
                                                                  UiConstants.Util.getString("CopyFilesAndFoldersOperation.question"), null, msg, MessageDialog.QUESTION, options, 0); //$NON-NLS-1$
@@ -956,7 +962,8 @@ public class CopyFilesAndFoldersOperation implements UiConstants {
             if (e.getTargetException() instanceof CoreException) {
                 final IStatus status = ((CoreException)e.getTargetException()).getStatus();
                 parentShell.getDisplay().syncExec(new Runnable() {
-                    public void run() {
+                    @Override
+					public void run() {
                         ErrorDialog.openError(parentShell,
                                               UiConstants.Util.getString("CopyFilesAndFoldersOperation.importErrorDialogTitle"), //$NON-NLS-1$
                                               null, // no special message
@@ -1211,7 +1218,8 @@ public class CopyFilesAndFoldersOperation implements UiConstants {
                 // Run it inside of a runnable to make sure we get to parent off of the shell as we are not
                 // in the UI thread.
                 Runnable notice = new Runnable() {
-                    public void run() {
+                    @Override
+					public void run() {
                         MessageDialog.openError(parentShell,
                                                 UiConstants.Util.getString("CopyFilesAndFoldersOperation.overwriteProblemTitle"), //$NON-NLS-1$
                                                 UiConstants.Util.getString("CopyFilesAndFoldersOperation.overwriteProblem", //$NON-NLS-1$

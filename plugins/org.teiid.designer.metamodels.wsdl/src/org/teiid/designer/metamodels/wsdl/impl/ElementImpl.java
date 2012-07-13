@@ -188,7 +188,8 @@ public class ElementImpl extends EObjectImpl implements Element {
      * 
      * @generated
      */
-    public EList getDeclaredNamespaces() {
+    @Override
+	public EList getDeclaredNamespaces() {
         if (declaredNamespaces == null) {
             declaredNamespaces = new EObjectContainmentWithInverseEList(NamespaceDeclaration.class, this,
                                                                         WsdlPackage.ELEMENT__DECLARED_NAMESPACES,
@@ -202,7 +203,8 @@ public class ElementImpl extends EObjectImpl implements Element {
      * 
      * @generated
      */
-    public EList getAttributes() {
+    @Override
+	public EList getAttributes() {
         if (attributes == null) {
             attributes = new EObjectContainmentWithInverseEList(Attribute.class, this, WsdlPackage.ELEMENT__ATTRIBUTES,
                                                                 WsdlPackage.ATTRIBUTE__ATTRIBUTE_OWNER);
@@ -215,7 +217,8 @@ public class ElementImpl extends EObjectImpl implements Element {
      * 
      * @generated
      */
-    public Documentation getDocumentation() {
+    @Override
+	public Documentation getDocumentation() {
         return documentation;
     }
 
@@ -242,7 +245,8 @@ public class ElementImpl extends EObjectImpl implements Element {
      * 
      * @generated
      */
-    public void setDocumentation( Documentation newDocumentation ) {
+    @Override
+	public void setDocumentation( Documentation newDocumentation ) {
         if (newDocumentation != documentation) {
             NotificationChain msgs = null;
             if (documentation != null) msgs = ((InternalEObject)documentation).eInverseRemove(this,
@@ -265,7 +269,8 @@ public class ElementImpl extends EObjectImpl implements Element {
      * 
      * @generated
      */
-    public EList getElements() {
+    @Override
+	public EList getElements() {
         if (elements == null) {
             elements = new EObjectContainmentWithInverseEList(Element.class, this, WsdlPackage.ELEMENT__ELEMENTS,
                                                               WsdlPackage.ELEMENT__ELEMENT_OWNER);
@@ -278,7 +283,8 @@ public class ElementImpl extends EObjectImpl implements Element {
      * 
      * @generated
      */
-    public String getName() {
+    @Override
+	public String getName() {
         return name;
     }
 
@@ -287,7 +293,8 @@ public class ElementImpl extends EObjectImpl implements Element {
      * 
      * @generated
      */
-    public void setName( String newName ) {
+    @Override
+	public void setName( String newName ) {
         String oldName = name;
         name = newName;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, WsdlPackage.ELEMENT__NAME, oldName,
@@ -299,7 +306,8 @@ public class ElementImpl extends EObjectImpl implements Element {
      * 
      * @generated
      */
-    public String getPrefix() {
+    @Override
+	public String getPrefix() {
         return prefix;
     }
 
@@ -308,7 +316,8 @@ public class ElementImpl extends EObjectImpl implements Element {
      * 
      * @generated
      */
-    public void setPrefix( String newPrefix ) {
+    @Override
+	public void setPrefix( String newPrefix ) {
         String oldPrefix = prefix;
         prefix = newPrefix;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, WsdlPackage.ELEMENT__PREFIX,
@@ -320,7 +329,8 @@ public class ElementImpl extends EObjectImpl implements Element {
      * 
      * @generated
      */
-    public String getTextContent() {
+    @Override
+	public String getTextContent() {
         return textContent;
     }
 
@@ -329,7 +339,8 @@ public class ElementImpl extends EObjectImpl implements Element {
      * 
      * @generated
      */
-    public void setTextContent( String newTextContent ) {
+    @Override
+	public void setTextContent( String newTextContent ) {
         String oldTextContent = textContent;
         textContent = newTextContent;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, WsdlPackage.ELEMENT__TEXT_CONTENT,
@@ -341,7 +352,8 @@ public class ElementImpl extends EObjectImpl implements Element {
      * 
      * @generated
      */
-    public String getNamespaceUri() {
+    @Override
+	public String getNamespaceUri() {
         return namespaceUri;
     }
 
@@ -350,7 +362,8 @@ public class ElementImpl extends EObjectImpl implements Element {
      * 
      * @generated
      */
-    public void setNamespaceUri( String newNamespaceUri ) {
+    @Override
+	public void setNamespaceUri( String newNamespaceUri ) {
         String oldNamespaceUri = namespaceUri;
         namespaceUri = newNamespaceUri;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, WsdlPackage.ELEMENT__NAMESPACE_URI,
@@ -362,7 +375,8 @@ public class ElementImpl extends EObjectImpl implements Element {
      * 
      * @generated
      */
-    public ElementOwner getElementOwner() {
+    @Override
+	public ElementOwner getElementOwner() {
         if (eContainerFeatureID != WsdlPackage.ELEMENT__ELEMENT_OWNER) return null;
         return (ElementOwner)eContainer;
     }
@@ -372,7 +386,8 @@ public class ElementImpl extends EObjectImpl implements Element {
      * 
      * @generated
      */
-    public void setElementOwner( ElementOwner newElementOwner ) {
+    @Override
+	public void setElementOwner( ElementOwner newElementOwner ) {
         if (newElementOwner != eContainer
             || (eContainerFeatureID != WsdlPackage.ELEMENT__ELEMENT_OWNER && newElementOwner != null)) {
             if (EcoreUtil.isAncestor(this, newElementOwner)) throw new IllegalArgumentException(

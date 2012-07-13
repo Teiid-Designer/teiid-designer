@@ -101,7 +101,8 @@ public abstract class MessageImpl extends WebServiceComponentImpl implements Mes
      * 
      * @generated
      */
-    public XSDElementDeclaration getContentElement() {
+    @Override
+	public XSDElementDeclaration getContentElement() {
         if (contentElement != null && contentElement.eIsProxy()) {
             XSDElementDeclaration oldContentElement = contentElement;
             contentElement = (XSDElementDeclaration)eResolveProxy((InternalEObject)contentElement);
@@ -128,7 +129,8 @@ public abstract class MessageImpl extends WebServiceComponentImpl implements Mes
      * 
      * @generated NOT
      */
-    public void setContentElement( XSDElementDeclaration newContentElement ) {
+    @Override
+	public void setContentElement( XSDElementDeclaration newContentElement ) {
         XSDElementDeclaration oldContentElement = contentElement;
         if (oldContentElement != newContentElement) {
             clearSampleFromXsd();
@@ -169,7 +171,8 @@ public abstract class MessageImpl extends WebServiceComponentImpl implements Mes
      * 
      * @generated
      */
-    public SampleMessages getSamples() {
+    @Override
+	public SampleMessages getSamples() {
         return samples;
     }
 
@@ -196,7 +199,8 @@ public abstract class MessageImpl extends WebServiceComponentImpl implements Mes
      * 
      * @generated
      */
-    public void setSamples( SampleMessages newSamples ) {
+    @Override
+	public void setSamples( SampleMessages newSamples ) {
         if (newSamples != samples) {
             NotificationChain msgs = null;
             if (samples != null) msgs = ((InternalEObject)samples).eInverseRemove(this,
@@ -219,7 +223,8 @@ public abstract class MessageImpl extends WebServiceComponentImpl implements Mes
      * 
      * @generated
      */
-    public XSDComplexTypeDefinition getContentComplexType() {
+    @Override
+	public XSDComplexTypeDefinition getContentComplexType() {
         if (contentComplexType != null && contentComplexType.eIsProxy()) {
             XSDComplexTypeDefinition oldContentComplexType = contentComplexType;
             contentComplexType = (XSDComplexTypeDefinition)eResolveProxy((InternalEObject)contentComplexType);
@@ -246,7 +251,8 @@ public abstract class MessageImpl extends WebServiceComponentImpl implements Mes
      * 
      * @generated NOT
      */
-    public void setContentComplexType( XSDComplexTypeDefinition newContentComplexType ) {
+    @Override
+	public void setContentComplexType( XSDComplexTypeDefinition newContentComplexType ) {
         XSDComplexTypeDefinition oldContentComplexType = contentComplexType;
         if (oldContentComplexType != newContentComplexType) {
             clearSampleFromXsd();
@@ -275,7 +281,8 @@ public abstract class MessageImpl extends WebServiceComponentImpl implements Mes
      * 
      * @generated
      */
-    public XSDSimpleTypeDefinition getContentSimpleType() {
+    @Override
+	public XSDSimpleTypeDefinition getContentSimpleType() {
         if (contentSimpleType != null && contentSimpleType.eIsProxy()) {
             XSDSimpleTypeDefinition oldContentSimpleType = contentSimpleType;
             contentSimpleType = (XSDSimpleTypeDefinition)eResolveProxy((InternalEObject)contentSimpleType);
@@ -302,7 +309,8 @@ public abstract class MessageImpl extends WebServiceComponentImpl implements Mes
      * 
      * @generated NOT
      */
-    public void setContentSimpleType( XSDSimpleTypeDefinition newContentSimpleType ) {
+    @Override
+	public void setContentSimpleType( XSDSimpleTypeDefinition newContentSimpleType ) {
         XSDSimpleTypeDefinition oldContentSimpleType = contentSimpleType;
         if (oldContentSimpleType != newContentSimpleType) {
             clearSampleFromXsd();

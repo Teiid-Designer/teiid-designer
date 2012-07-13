@@ -28,7 +28,8 @@ public class XmlNamespaceComparator implements Comparator {
     /**
      * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
      */
-    public int compare(final Object o1, final Object o2) {
+    @Override
+	public int compare(final Object o1, final Object o2) {
         if ( o1 == o2 ) {
             return 0;
         }

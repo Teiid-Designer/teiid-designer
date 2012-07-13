@@ -37,6 +37,7 @@ public class SqlLabelProvider
 	/**
 	 * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.lang.Object, int)
 	 */
+	@Override
 	public String getColumnText(Object element, int columnIndex) {
 		String result = PluginConstants.EMPTY_STRING;
         if(columnIndex==0) {
@@ -59,6 +60,7 @@ public class SqlLabelProvider
 	/**
 	 * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang.Object, int)
 	 */
+	@Override
 	public Image getColumnImage(Object element, int columnIndex) {
         Image image = null;
         if(columnIndex==0) {

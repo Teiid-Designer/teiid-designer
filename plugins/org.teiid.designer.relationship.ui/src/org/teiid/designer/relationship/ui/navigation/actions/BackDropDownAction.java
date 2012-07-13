@@ -47,18 +47,21 @@ public class BackDropDownAction extends Action implements IMenuCreator, Navigati
         viewer.addNavigationListener(this);
     }
 
-    public void dispose() {
+    @Override
+	public void dispose() {
         if (menu != null)
         menu.dispose();
         
         viewer= null;
     }
 
-    public Menu getMenu(Menu parent) {
+    @Override
+	public Menu getMenu(Menu parent) {
         return null;
     }
 
-    public Menu getMenu(Control parent) {
+    @Override
+	public Menu getMenu(Control parent) {
         if (menu != null) {
             menu.dispose();
         }
@@ -101,7 +104,8 @@ public class BackDropDownAction extends Action implements IMenuCreator, Navigati
     /* (non-Javadoc)
      * @See org.teiid.designer.relationship.ui.navigation.NavigationListener#navigationChanged(org.teiid.designer.relationship.NavigationContext)
      */
-    public void navigationChanged(NavigationContext newContext) {
+    @Override
+	public void navigationChanged(NavigationContext newContext) {
         NavigationHistory history = viewer.getNavigationHistory();
         if ( history != null ) {
             if ( history.getBackInfos().isEmpty() ) {

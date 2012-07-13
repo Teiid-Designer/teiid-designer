@@ -28,21 +28,24 @@ public class FlatRegistry implements Registry {
     /**
      * @see org.teiid.designer.core.api.mtk.core.Registry#lookup(String)
      */
-    public Object lookup(String name) {
+    @Override
+	public Object lookup(String name) {
         return this.entries.get(name);
     }
 
     /**
      * @see org.teiid.designer.core.api.mtk.core.Registry#register(String, Object)
      */
-    public Object register(String name, Object obj) {
+    @Override
+	public Object register(String name, Object obj) {
         return this.entries.put(name,obj);
     }
 
     /**
      * @see org.teiid.designer.core.api.mtk.core.Registry#unregister(String)
      */
-    public Object unregister(String name) {
+    @Override
+	public Object unregister(String name) {
         return this.entries.remove(name);
     }
     
