@@ -23,6 +23,8 @@ import org.teiid.core.TeiidComponentException;
 import org.teiid.core.TeiidRuntimeException;
 import org.teiid.core.types.DataTypeManager;
 import org.teiid.query.metadata.QueryMetadataInterface;
+import org.teiid.query.metadata.TempMetadataAdapter;
+import org.teiid.query.metadata.TempMetadataStore;
 import org.teiid.query.parser.QueryParser;
 import org.teiid.query.resolver.QueryResolver;
 import org.teiid.query.resolver.util.ResolverUtil;
@@ -69,6 +71,7 @@ import com.metamatrix.modeler.internal.transformation.util.TransformationHelper;
 import com.metamatrix.modeler.internal.transformation.util.TransformationSqlHelper;
 import com.metamatrix.modeler.transformation.TransformationPlugin;
 import com.metamatrix.modeler.transformation.metadata.QueryMetadataContext;
+import com.metamatrix.modeler.transformation.metadata.TransformationMetadata;
 import com.metamatrix.modeler.transformation.metadata.TransformationMetadataFacade;
 import com.metamatrix.modeler.transformation.metadata.TransformationMetadataFactory;
 import com.metamatrix.modeler.transformation.metadata.VdbMetadata;
@@ -541,7 +544,11 @@ public class TransformationValidator implements QueryValidator {
         		doUpdateValidation = true;
         	} 
         	if( doUpdateValidation ) {
-	        	UpdateValidator updateValidator = new UpdateValidator(metadata, insertType, updateType, deleteType );
+                QueryMetadataInterface realMetadata = metadata;
+                if( metadata instanceof TransformationMetadata) {
+                    realMetadata =  new TempMetadataAdapter(metadata, new TempMetadataStore());
+                }
+	        	UpdateValidator updateValidator = new UpdateValidator(realMetadata, insertType, updateType, deleteType );
 	        	List<ElementSymbol> elemSymbols = null;
 	        	
 	        	try {
