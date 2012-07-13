@@ -47,7 +47,6 @@ import org.teiid.designer.metadata.runtime.ModelRecord;
 import org.teiid.designer.metadata.runtime.ProcedureParameterRecord;
 import org.teiid.designer.metadata.runtime.ProcedureRecord;
 import org.teiid.designer.metadata.runtime.PropertyRecord;
-import org.teiid.designer.metadata.runtime.RuntimeMetadataPlugin;
 import org.teiid.designer.metadata.runtime.TableRecord;
 import org.teiid.designer.metadata.runtime.TransformationRecord;
 import org.teiid.designer.metadata.runtime.VdbRecord;
@@ -225,7 +224,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
         final Collection results = findChildRecords(tableRecord, IndexConstants.RECORD_TYPE.COLUMN);
         if (results.isEmpty()) {
             throw new QueryMetadataException(
-                                             RuntimeMetadataPlugin.Util.getString("TransformationMetadata.Group(0}_does_not_have_elements", groupName)); //$NON-NLS-1$
+                                             TransformationPlugin.Util.getString("TransformationMetadata.Group(0}_does_not_have_elements", groupName)); //$NON-NLS-1$
         }
 
         List columnRecords = new ArrayList(results);
@@ -289,7 +288,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
                 }
             } else {
                 // there should be only one for the full name
-                throw new QueryMetadataException(RuntimeMetadataPlugin.Util.getString("TransformationMetadata.0", procedureName)); //$NON-NLS-1$
+                throw new QueryMetadataException(TransformationPlugin.Util.getString("TransformationMetadata.0", procedureName)); //$NON-NLS-1$
             }
         }
         
@@ -307,7 +306,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
                 return null;
             } else {
                 // there should be only one for the UUID
-                throw new QueryMetadataException(RuntimeMetadataPlugin.Util.getString("TransformationMetadata.0", procedureName)); //$NON-NLS-1$
+                throw new QueryMetadataException(TransformationPlugin.Util.getString("TransformationMetadata.0", procedureName)); //$NON-NLS-1$
             }
         }
 
@@ -521,16 +520,16 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
             // no transfomation available
             if (resultSize == 0) {
                 throw new QueryMetadataException(
-                                                 RuntimeMetadataPlugin.Util.getString("TransformationMetadata.Could_not_find_query_plan_for_the_group__5") + groupName); //$NON-NLS-1$
+                                                 TransformationPlugin.Util.getString("TransformationMetadata.Could_not_find_query_plan_for_the_group__5") + groupName); //$NON-NLS-1$
             }
             // there should be only one result entry for a fully qualified name
             if (resultSize > 1) {
                 throw new TeiidComponentException(
-                                                       RuntimeMetadataPlugin.Util.getString("TransformationMetadata.GroupID_ambiguous_there_are_multiple_virtual_plans_available_for_this_groupID__1") + groupName); //$NON-NLS-1$
+                                                       TransformationPlugin.Util.getString("TransformationMetadata.GroupID_ambiguous_there_are_multiple_virtual_plans_available_for_this_groupID__1") + groupName); //$NON-NLS-1$
             }
         }
         throw new QueryMetadataException(
-                                         RuntimeMetadataPlugin.Util.getString("TransformationMetadata.QueryPlan_could_not_be_found_for_physical_group__6") + groupName); //$NON-NLS-1$
+                                         TransformationPlugin.Util.getString("TransformationMetadata.QueryPlan_could_not_be_found_for_physical_group__6") + groupName); //$NON-NLS-1$
     }
 
     /* (non-Javadoc)
@@ -558,11 +557,11 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
             // there should be only one result entry for a fully qualified name
             if (resultSize > 1) {
                 throw new TeiidComponentException(
-                                                       RuntimeMetadataPlugin.Util.getString("TransformationMetadata.GroupID_ambiguous_there_are_multiple_insert_plans_available_for_this_groupID__2") + groupName); //$NON-NLS-1$
+                                                       TransformationPlugin.Util.getString("TransformationMetadata.GroupID_ambiguous_there_are_multiple_insert_plans_available_for_this_groupID__2") + groupName); //$NON-NLS-1$
             }
         }
         throw new QueryMetadataException(
-                                         RuntimeMetadataPlugin.Util.getString("TransformationMetadata.InsertPlan_could_not_be_found_for_physical_group__8") + groupName); //$NON-NLS-1$
+                                         TransformationPlugin.Util.getString("TransformationMetadata.InsertPlan_could_not_be_found_for_physical_group__8") + groupName); //$NON-NLS-1$
     }
 
     /* (non-Javadoc)
@@ -590,12 +589,12 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
             // there should be only one result entry for a fully qualified name
             if (resultSize > 1) {
                 throw new TeiidComponentException(
-                                                       RuntimeMetadataPlugin.Util.getString("TransformationMetadata.GroupID_ambiguous_there_are_multiple_update_plans_available_for_this_groupID__3") + groupName); //$NON-NLS-1$
+                                                       TransformationPlugin.Util.getString("TransformationMetadata.GroupID_ambiguous_there_are_multiple_update_plans_available_for_this_groupID__3") + groupName); //$NON-NLS-1$
             }
         }
 
         throw new QueryMetadataException(
-                                         RuntimeMetadataPlugin.Util.getString("TransformationMetadata.InsertPlan_could_not_be_found_for_physical_group__10") + groupName); //$NON-NLS-1$
+                                         TransformationPlugin.Util.getString("TransformationMetadata.InsertPlan_could_not_be_found_for_physical_group__10") + groupName); //$NON-NLS-1$
     }
 
     /* (non-Javadoc)
@@ -623,11 +622,11 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
             // there should be only one result entry for a fully qualified name
             if (resultSize > 1) {
                 throw new TeiidComponentException(
-                                                       RuntimeMetadataPlugin.Util.getString("TransformationMetadata.GroupID_ambiguous_there_are_multiple_delete_plans_available_for_this_groupID__4") + groupName); //$NON-NLS-1$
+                                                       TransformationPlugin.Util.getString("TransformationMetadata.GroupID_ambiguous_there_are_multiple_delete_plans_available_for_this_groupID__4") + groupName); //$NON-NLS-1$
             }
         }
         throw new QueryMetadataException(
-                                         RuntimeMetadataPlugin.Util.getString("TransformationMetadata.DeletePlan_could_not_be_found_for_physical_group__12") + groupName); //$NON-NLS-1$
+                                         TransformationPlugin.Util.getString("TransformationMetadata.DeletePlan_could_not_be_found_for_physical_group__12") + groupName); //$NON-NLS-1$
     }
 
     /* (non-Javadoc)
@@ -641,7 +640,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
         switch (modelConstant) {
             default:
                 throw new UnsupportedOperationException(
-                                                        RuntimeMetadataPlugin.Util.getString("TransformationMetadata.Unknown_support_constant___12") + modelConstant); //$NON-NLS-1$
+                                                        TransformationPlugin.Util.getString("TransformationMetadata.Unknown_support_constant___12") + modelConstant); //$NON-NLS-1$
         }
     }
 
@@ -659,7 +658,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
                 return tableRecord.supportsUpdate();
             default:
                 throw new UnsupportedOperationException(
-                                                        RuntimeMetadataPlugin.Util.getString("TransformationMetadata.Unknown_support_constant___12") + groupConstant); //$NON-NLS-1$
+                                                        TransformationPlugin.Util.getString("TransformationMetadata.Unknown_support_constant___12") + groupConstant); //$NON-NLS-1$
         }
     }
 
@@ -703,7 +702,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
                     return columnRecord.isSigned();
                 default:
                     throw new UnsupportedOperationException(
-                                                            RuntimeMetadataPlugin.Util.getString("TransformationMetadata.Unknown_support_constant___12") + elementConstant); //$NON-NLS-1$
+                                                            TransformationPlugin.Util.getString("TransformationMetadata.Unknown_support_constant___12") + elementConstant); //$NON-NLS-1$
             }
         } else if (elementID instanceof ProcedureParameterRecord) {
             ProcedureParameterRecord columnRecord = (ProcedureParameterRecord)elementID;
@@ -740,7 +739,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
                     return true;
                 default:
                     throw new UnsupportedOperationException(
-                                                            RuntimeMetadataPlugin.Util.getString("TransformationMetadata.Unknown_support_constant___12") + elementConstant); //$NON-NLS-1$
+                                                            TransformationPlugin.Util.getString("TransformationMetadata.Unknown_support_constant___12") + elementConstant); //$NON-NLS-1$
             }
 
         } else {
@@ -750,7 +749,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
 
     private IllegalArgumentException createInvalidRecordTypeException( Object elementID ) {
         return new IllegalArgumentException(
-                                            RuntimeMetadataPlugin.Util.getString("TransformationMetadata.Invalid_type", elementID.getClass().getName())); //$NON-NLS-1$
+        		TransformationPlugin.Util.getString("TransformationMetadata.Invalid_type", elementID.getClass().getName())); //$NON-NLS-1$
     }
 
     /* (non-Javadoc)
@@ -784,10 +783,10 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
             if (results.size() != 1) {
                 if (results.isEmpty()) {
                     throw new QueryMetadataException(
-                                                     RuntimeMetadataPlugin.Util.getString("TransformationMetadata.No_metadata_info_available_for_the_index_with_UUID_{0}._1", indexID)); //$NON-NLS-1$
+                                                     TransformationPlugin.Util.getString("TransformationMetadata.No_metadata_info_available_for_the_index_with_UUID_{0}._1", indexID)); //$NON-NLS-1$
                 }
                 throw new QueryMetadataException(
-                                                 RuntimeMetadataPlugin.Util.getString("TransformationMetadata.Ambigous_index_with_UUID_{0},_found_multiple_indexes_with_the_given_UUID._2", indexID)); //$NON-NLS-1$
+                                                 TransformationPlugin.Util.getString("TransformationMetadata.Ambigous_index_with_UUID_{0},_found_multiple_indexes_with_the_given_UUID._2", indexID)); //$NON-NLS-1$
             }
             indexRecords.addAll(results);
         }
@@ -865,7 +864,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
 
         if (!recordMatch) {
             throw new QueryMetadataException(
-                                             RuntimeMetadataPlugin.Util.getString("TransformationMetadata.The_metadataID_passed_does_not_match_a_index_record._1")); //$NON-NLS-1$
+                                             TransformationPlugin.Util.getString("TransformationMetadata.The_metadataID_passed_does_not_match_a_index_record._1")); //$NON-NLS-1$
         }
 
         List uuids = indexRecord.getColumnIDs();
@@ -891,7 +890,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
                                || keyRecord.getRecordType() == IndexConstants.RECORD_TYPE.PRIMARY_KEY || keyRecord.getRecordType() == IndexConstants.RECORD_TYPE.UNIQUE_KEY);
         if (!recordMatch) {
             throw new QueryMetadataException(
-                                             RuntimeMetadataPlugin.Util.getString("TransformationMetadata.Expected_id_of_the_type_key_record_as_the_argument_2")); //$NON-NLS-1$
+                                             TransformationPlugin.Util.getString("TransformationMetadata.Expected_id_of_the_type_key_record_as_the_argument_2")); //$NON-NLS-1$
         }
 
         List uuids = keyRecord.getColumnIDs();
@@ -922,7 +921,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
         boolean recordMatch = (accessRecord.getRecordType() == IndexConstants.RECORD_TYPE.ACCESS_PATTERN);
         if (!recordMatch) {
             throw new QueryMetadataException(
-                                             RuntimeMetadataPlugin.Util.getString("TransformationMetadata.Expected_id_of_the_type_accesspattern_record_as_the_argument_3")); //$NON-NLS-1$
+                                             TransformationPlugin.Util.getString("TransformationMetadata.Expected_id_of_the_type_accesspattern_record_as_the_argument_3")); //$NON-NLS-1$
         }
 
         List uuids = accessRecord.getColumnIDs();
@@ -1030,12 +1029,12 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
             } else {
                 if (resultSize == 0) {
                     throw new QueryMetadataException(
-                                                     RuntimeMetadataPlugin.Util.getString("TransformationMetadata.Could_not_find_transformation_record_for_the_group__1") + groupName); //$NON-NLS-1$
+                                                     TransformationPlugin.Util.getString("TransformationMetadata.Could_not_find_transformation_record_for_the_group__1") + groupName); //$NON-NLS-1$
                 }
                 // there should be only one for a fully qualified elementName
                 if (resultSize > 1) {
                     throw new TeiidComponentException(
-                                                           RuntimeMetadataPlugin.Util.getString("TransformationMetadata.Multiple_transformation_records_found_for_the_group___1") + groupName); //$NON-NLS-1$
+                                                           TransformationPlugin.Util.getString("TransformationMetadata.Multiple_transformation_records_found_for_the_group___1") + groupName); //$NON-NLS-1$
                 }
             }
             // get mappin transform
@@ -1049,7 +1048,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
             } catch (Exception e) {
                 throw new TeiidComponentException(
                                                        e,
-                                                       RuntimeMetadataPlugin.Util.getString("TransformationMetadata.Error_trying_to_read_virtual_document_{0},_with_body__n{1}_1", groupName, mappingDoc)); //$NON-NLS-1$
+                                                       TransformationPlugin.Util.getString("TransformationMetadata.Error_trying_to_read_virtual_document_{0},_with_body__n{1}_1", groupName, mappingDoc)); //$NON-NLS-1$
             } finally {
                 try {
                     inputStream.close();
@@ -1136,12 +1135,12 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
         } else {
             if (resultSize == 0) {
                 throw new QueryMetadataException(
-                                                 RuntimeMetadataPlugin.Util.getString("TransformationMetadata.Could_not_find_transformation_record_for_the_group__1") + groupName); //$NON-NLS-1$
+                                                 TransformationPlugin.Util.getString("TransformationMetadata.Could_not_find_transformation_record_for_the_group__1") + groupName); //$NON-NLS-1$
             }
             // there should be only one for a fully qualified elementName
             if (resultSize > 1) {
                 throw new TeiidComponentException(
-                                                       RuntimeMetadataPlugin.Util.getString("TransformationMetadata.Multiple_transformation_records_found_for_the_group___1") + groupName); //$NON-NLS-1$
+                                                       TransformationPlugin.Util.getString("TransformationMetadata.Multiple_transformation_records_found_for_the_group___1") + groupName); //$NON-NLS-1$
             }
         }
 
@@ -1160,7 +1159,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
             schemas = getIndexSelector().getFileContentsAsString(schemaPaths);
             if (schemas == null || schemas.isEmpty()) {
                 throw new TeiidComponentException(
-                                                       RuntimeMetadataPlugin.Util.getString("TransformationMetadata.Error_trying_to_read_schemas_for_the_document/table____1") + groupName); //$NON-NLS-1$
+                                                       TransformationPlugin.Util.getString("TransformationMetadata.Error_trying_to_read_schemas_for_the_document/table____1") + groupName); //$NON-NLS-1$
             }
         }
 
@@ -1328,7 +1327,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
         } catch (IOException e) {
             throw new QueryMetadataException(
                                              e,
-                                             RuntimeMetadataPlugin.Util.getString("TransformationMetadata.error_intialize_selector")); //$NON-NLS-1$
+                                             TransformationPlugin.Util.getString("TransformationMetadata.error_intialize_selector")); //$NON-NLS-1$
         }
         // look for the resource in only the first available indexSelector
         // built in assumption is that first selector is always for the vdb logged in
@@ -1356,7 +1355,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
         } catch (IOException e) {
             throw new QueryMetadataException(
                                              e,
-                                             RuntimeMetadataPlugin.Util.getString("TransformationMetadata.error_intialize_selector")); //$NON-NLS-1$
+                                             TransformationPlugin.Util.getString("TransformationMetadata.error_intialize_selector")); //$NON-NLS-1$
         }
         // look for the resource in only the first available indexSelector
         // built in assumption is that first selector is always for the vdb logged in
@@ -1431,7 +1430,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
                     throw new QueryMetadataException(uuid + NOT_EXISTS_MESSAGE);
                 } else {
                     // there should be only one for the UUID
-                    throw new QueryMetadataException(RuntimeMetadataPlugin.Util.getString("TransformationMetadata.0", uuid)); //$NON-NLS-1$
+                    throw new QueryMetadataException(TransformationPlugin.Util.getString("TransformationMetadata.0", uuid)); //$NON-NLS-1$
                 }
             }
             return null;
@@ -1449,7 +1448,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
                     throw new QueryMetadataException(uuid + NOT_EXISTS_MESSAGE);
                 } else {
                     // there should be only one for the UUID
-                    throw new QueryMetadataException(RuntimeMetadataPlugin.Util.getString("TransformationMetadata.0", uuid)); //$NON-NLS-1$
+                    throw new QueryMetadataException(TransformationPlugin.Util.getString("TransformationMetadata.0", uuid)); //$NON-NLS-1$
                 }
             }
             return null;
@@ -1472,7 +1471,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
         } catch (IOException e) {
             throw new TeiidComponentException(
                                                    e,
-                                                   RuntimeMetadataPlugin.Util.getString("TransformationMetadata.Error_trying_to_obtain_index_file_using_IndexSelector_1", selector)); //$NON-NLS-1$
+                                                   TransformationPlugin.Util.getString("TransformationMetadata.Error_trying_to_obtain_index_file_using_IndexSelector_1", selector)); //$NON-NLS-1$
         }
     }
 
@@ -1632,7 +1631,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
             throw new QueryMetadataException(entityName + NOT_EXISTS_MESSAGE);
         } else {
             // there should be only one for the UUID
-            throw new QueryMetadataException(RuntimeMetadataPlugin.Util.getString("TransformationMetadata.0", entityName)); //$NON-NLS-1$
+            throw new QueryMetadataException(TransformationPlugin.Util.getString("TransformationMetadata.0", entityName)); //$NON-NLS-1$
         }
     }
 
@@ -1927,7 +1926,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
         // there should be only one result entry for a fully qualified name
         if (resultSize > 1) {
             throw new TeiidComponentException(
-                                                   RuntimeMetadataPlugin.Util.getString("TransformationMetadata.Procedure_ambiguous_there_are_multiple_procedure_plans_available_for_this_name___4") + procedureName); //$NON-NLS-1$
+                                                   TransformationPlugin.Util.getString("TransformationMetadata.Procedure_ambiguous_there_are_multiple_procedure_plans_available_for_this_name___4") + procedureName); //$NON-NLS-1$
         }
 
         // no transfomation available, this may not be a virtual procedure

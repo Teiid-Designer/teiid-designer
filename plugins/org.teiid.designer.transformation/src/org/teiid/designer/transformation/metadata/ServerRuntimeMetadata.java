@@ -14,6 +14,7 @@ import org.teiid.designer.core.index.Index;
 import org.teiid.designer.core.index.IndexSelector;
 import org.teiid.designer.core.index.SimpleIndexUtil;
 import org.teiid.designer.metadata.runtime.RuntimeMetadataPlugin;
+import org.teiid.designer.transformation.TransformationPlugin;
 
 /**
  * Metadata implementation used by server to resolve queries.
@@ -52,7 +53,7 @@ public class ServerRuntimeMetadata extends TransformationMetadata {
             final String indexName = SimpleIndexUtil.getIndexFileNameForRecordType(recordType);
             return SimpleIndexUtil.getIndexes(indexName, selector);            
         } catch(Exception e) {
-            throw new TeiidComponentException(e, RuntimeMetadataPlugin.Util.getString("TransformationMetadata.Error_trying_to_obtain_index_file_using_IndexSelector_1",selector)); //$NON-NLS-1$
+            throw new TeiidComponentException(e, TransformationPlugin.Util.getString("TransformationMetadata.Error_trying_to_obtain_index_file_using_IndexSelector_1",selector)); //$NON-NLS-1$
         }
     }
 
@@ -69,7 +70,7 @@ public class ServerRuntimeMetadata extends TransformationMetadata {
             return super.queryIndex(indexes, pattern, isPrefix, returnFirstMatch);
         } catch(TeiidComponentException e) {
             if(!this.getIndexSelector().isValid()) {
-                throw new TeiidComponentException(RuntimeMetadataPlugin.Util.getString("ServerRuntimeMetadata.invalid_selector")); //$NON-NLS-1$
+                throw new TeiidComponentException(TransformationPlugin.Util.getString("ServerRuntimeMetadata.invalid_selector")); //$NON-NLS-1$
             }
             throw e;
         }
