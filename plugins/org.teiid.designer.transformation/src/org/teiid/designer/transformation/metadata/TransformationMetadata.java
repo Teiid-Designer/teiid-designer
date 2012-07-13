@@ -52,6 +52,7 @@ import org.teiid.designer.metadata.runtime.TableRecord;
 import org.teiid.designer.metadata.runtime.TransformationRecord;
 import org.teiid.designer.metadata.runtime.VdbRecord;
 import org.teiid.designer.metadata.runtime.impl.RecordFactory;
+import org.teiid.designer.transformation.TransformationPlugin;
 import org.teiid.designer.transformation.util.UuidUtil;
 import org.teiid.query.mapping.relational.QueryNode;
 import org.teiid.query.mapping.xml.MappingDocument;
@@ -84,7 +85,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
 
     // error message cached to avaid i18n lookup each time
     public static String NOT_EXISTS_MESSAGE = StringUtil.Constants.SPACE
-                                              + RuntimeMetadataPlugin.Util.getString("TransformationMetadata.does_not_exist._1"); //$NON-NLS-1$
+                                              + TransformationPlugin.Util.getString("TransformationMetadata.does_not_exist._1"); //$NON-NLS-1$
 
     // context object all the info needed for metadata lookup
     private final QueryMetadataContext context;
@@ -1991,7 +1992,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
             throw new TeiidRuntimeException(e);
         }
         if (pk.size() > 1) {
-            throw new TeiidRuntimeException("Multiple primary keys for table");
+            throw new TeiidRuntimeException("Multiple primary keys for table"); //$NON-NLS-1$
         }
         return pk.iterator().next();
     }
