@@ -33,6 +33,10 @@ public class ModelFileUtil {
     public static final String EXTENSION_VDB = "vdb"; //$NON-NLS-1$
     public static final String EXTENSION_ECORE = "ecore"; //$NON-NLS-1$
     public static final String EXTENSION_WSDL = "wsdl"; //$NON-NLS-1$
+    
+    public static final String UML_MODEL_URI = "http://www.eclipse.org/uml2/3.0.0/UML"; //$NON-NLS-1$
+    public static final String XML_SERVICE_MODEL_URI = "http://www.metamatrix.com/metamodels/XmlService"; //$NON-NLS-1$
+    public static final String RELATIONSHIP_MODEL_URI = "http://www.metamatrix.com/metamodels/Relationship"; //$NON-NLS-1$
 
     private static XmiHeaderCache CACHE;
 
@@ -82,6 +86,18 @@ public class ModelFileUtil {
             // false if the file represents an older 1.X model file
             if (header.getXmiVersion() != null && header.getXmiVersion().startsWith("1.")) { //$NON-NLS-1$
                 return false;
+            }
+            
+            String uri = header.getPrimaryMetamodelURI();
+            
+            if( uri == null ) {
+            	return false;
+            }
+            
+            if( uri.equalsIgnoreCase(XML_SERVICE_MODEL_URI) || 
+            	uri.equalsIgnoreCase(RELATIONSHIP_MODEL_URI) ||
+            	uri.equalsIgnoreCase(UML_MODEL_URI) ) {
+            	return false;
             }
             // If the UUID for the header is not null, then the file is a
             // MetaMatrix model file containing a ModelAnnotation element.

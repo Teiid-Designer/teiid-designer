@@ -22,7 +22,6 @@ import org.teiid.designer.core.metamodel.aspect.MetamodelAspect;
 import org.teiid.designer.core.metamodel.aspect.sql.SqlColumnAspect;
 import org.teiid.designer.core.metamodel.aspect.sql.SqlProcedureParameterAspect;
 import org.teiid.designer.metamodels.relational.aspects.sql.ProcedureParameterAspect;
-import org.teiid.designer.metamodels.xmlservice.aspects.sql.XmlInputAspect;
 import org.teiid.designer.ui.PluginConstants;
 import org.teiid.designer.ui.UiPlugin;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
@@ -161,16 +160,8 @@ public class SetDatatypeModelingAction extends SortableSelectionAction  {
                 result = false;
             if( result ) {
                 mmAspect = ModelObjectUtilities.getSqlAspect(nextEObj);
-                if( mmAspect == null || !(mmAspect instanceof XmlInputAspect) ) {
+                if( mmAspect == null ) {
                     result = false;
-                } else {
-                    // --------------------
-                    // Defect 22275 - Needed to do one more check to see if the aspect supports setting datatype.
-                    // XML Document attributes do have a sqlColumnAspect but don't support datatypes
-                    // --------------------
-                    if( !((XmlInputAspect)mmAspect).canSetDatatype() ) {
-                        result = false;
-                    }
                 }
             }
         }

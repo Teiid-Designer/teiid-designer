@@ -116,8 +116,10 @@ public abstract class RefactorAction extends ActionDelegate implements IWorkbenc
 
             if (!ModelUtil.isIResourceReadOnly(resTemp) && !(resTemp instanceof IProject)
                 && ModelUtilities.isModelProjectResource(resTemp)) {
-                enable = true;
-                resSelectedResource = resTemp;
+            	if( ModelUtil.isModelFile(resTemp) || ModelUtil.isXsdFile(resTemp)) {
+	                enable = true;
+	                resSelectedResource = resTemp;
+            	}
             }
         }
         

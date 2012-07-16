@@ -10,6 +10,7 @@ package org.teiid.designer.metamodels.builder.execution;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.emf.common.util.URI;
@@ -27,7 +28,6 @@ import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.metamodels.core.extension.ExtensionPackage;
 import org.teiid.designer.metamodels.core.extension.XPackage;
 import org.teiid.designer.metamodels.relational.RelationalPackage;
-import org.teiid.designer.metamodels.relationship.RelationshipPackage;
 
 
 /**
@@ -157,14 +157,6 @@ public class ModelBuilderImpl implements ModelBuilder, MetamodelBuilderConstants
             }
             // --------------------------------
             // Relationship Model
-            // --------------------------------
-        } else if (RELATIONSHIP_STR.equalsIgnoreCase(modelType)) {
-            // Set primary metamodel type
-            annot.setPrimaryMetamodelUri(RelationshipPackage.eNS_URI);
-            // Set subType
-            annot.setModelType(ModelType.PHYSICAL_LITERAL);
-            // --------------------------------
-            // Extension Model
             // --------------------------------
         } else if (EXTENSION_STR.equalsIgnoreCase(modelType)) {
             // Set primary metamodel type
