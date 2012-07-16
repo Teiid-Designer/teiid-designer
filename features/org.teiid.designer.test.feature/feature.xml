@@ -41,17 +41,13 @@
       <import plugin="org.eclipse.emf.ecore.xmi"/>
       <import plugin="org.teiid.designer.mapping.ui"/>
       <import plugin="org.teiid.designer.metamodels.relational"/>
-      <import plugin="org.teiid.designer.metamodels.relationship"/>
       <import plugin="org.teiid.designer.metamodels.transformation"/>
-      <import plugin="org.teiid.designer.metamodels.uml2"/>
       <import plugin="org.teiid.designer.metamodels.wsdl"/>
       <import plugin="org.teiid.designer.metamodels.xml"/>
       <import plugin="org.teiid.designer.modelgenerator.salesforce"/>
       <import plugin="org.teiid.designer.modelgenerator"/>
-      <import plugin="org.teiid.designer.modelgenerator.uml2"/>
       <import plugin="org.teiid.designer.modelgenerator.wsdl"/>
       <import plugin="org.teiid.designer.query.ui"/>
-      <import plugin="org.teiid.designer.relationship"/>
       <import plugin="org.teiid.designer.schema.tools"/>
       <import plugin="org.teiid.designer.ui.common"/>
       <import plugin="org.teiid.designer.ui"/>
