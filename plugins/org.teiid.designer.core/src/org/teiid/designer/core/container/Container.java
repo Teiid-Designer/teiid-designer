@@ -8,12 +8,13 @@
 package org.teiid.designer.core.container;
 
 import java.util.Map;
+
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.edit.provider.ChangeNotifier;
 import org.teiid.designer.core.ModelerCoreException;
-import org.teiid.designer.core.container.EObjectFinder;
+import org.teiid.designer.core.PropertyChangePublisher;
 import org.teiid.designer.core.metamodel.MetamodelRegistry;
 import org.teiid.designer.core.transaction.UndoableListener;
 import org.teiid.designer.core.transaction.UnitOfWorkProvider;
@@ -23,7 +24,12 @@ import org.teiid.designer.core.types.DatatypeManager;
 /**
  * @since 3.1
  */
-public interface Container extends ResourceSet {
+public interface Container extends ResourceSet, PropertyChangePublisher {
+
+    /**
+     *  Property fired to property change listeners when the name of the container is changed
+     */
+	public static final String CONTAINER_NAME_PROPERTY = "container name property"; //$NON-NLS-1$
 
     /**
      * The identifiers for all extensions referenced within ModelerCore

@@ -2,15 +2,19 @@ package org.teiid.designer.core;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Properties;
 import java.util.Set;
 
 import org.eclipse.core.runtime.Path;
+import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.EMap;
+import org.eclipse.emf.ecore.EObject;
 import org.teiid.designer.core.resource.EmfResource;
 import org.teiid.designer.core.util.ModelContents;
 import org.teiid.designer.core.workspace.ModelObjectAnnotations;
@@ -19,18 +23,24 @@ import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.metamodels.core.Annotation;
 import org.teiid.designer.metamodels.core.AnnotationContainer;
 import org.teiid.designer.metamodels.core.ModelAnnotation;
-
+import org.teiid.designer.metamodels.core.ModelType;
 
 public class ModelResourceMockFactory {
 	public static ModelResource createModelResource(final String name,
-			final String parentPath) {
+			final String parentPath) throws ModelWorkspaceException {
 		final ModelResource parent = mock(ModelResource.class);
 		when(parent.getPath()).thenReturn(new Path(parentPath));
 
 		final ModelResource modelResource = mock(ModelResource.class);
 		when(modelResource.getItemName()).thenReturn(name);
 		when(modelResource.getParent()).thenReturn(parent);
-
+		
+		final EmfResource emfResource = mock(EmfResource.class);
+        when(modelResource.getEmfResource()).thenReturn(emfResource);
+        
+        EList<EObject> emptyEList = new BasicEList();
+        when(emfResource.getContents()).thenReturn(emptyEList);
+        
 		return modelResource;
 	}
 
@@ -42,8 +52,7 @@ public class ModelResourceMockFactory {
 			throws ModelWorkspaceException {
 		final ModelResource modelResource = createModelResource(name,
 				parentPath);
-		final EmfResource emfResource = mock(EmfResource.class);
-		when(modelResource.getEmfResource()).thenReturn(emfResource);
+		
 		ModelObjectAnnotations annotations = createAnnotations();
 		ModelAnnotation modelAnnotation = createModelAnnotation();
 		when(modelResource.getAnnotations()).thenReturn(annotations);
@@ -65,6 +74,9 @@ public class ModelResourceMockFactory {
 		when(modelResource.getAnnotations()).thenReturn(annotations);
 		when(modelResource.getModelAnnotation()).thenReturn(modelAnnotation);
 
+		EmfResource emfResource = (EmfResource) modelResource.getEmfResource();
+		when(emfResource.getModelAnnotation()).thenReturn(modelAnnotation);
+        
 		return modelResource;
 	}
 
@@ -73,7 +85,9 @@ public class ModelResourceMockFactory {
 	}
 
 	public static ModelAnnotation createModelAnnotation() {
-		return mock(ModelAnnotation.class);
+		ModelAnnotation modelAnnotation = mock(ModelAnnotation.class);
+		when(modelAnnotation.getModelType()).thenReturn(ModelType.VIRTUAL_LITERAL);
+        return modelAnnotation;
 	}
 
 	public static Annotation createAnnotation(final boolean createDescription,
@@ -113,9 +127,7 @@ public class ModelResourceMockFactory {
 	}
 
 	public static ModelerCore getModelerCore() {
-		mockStatic(ModelerCore.class);
 		return mock(ModelerCore.class);
-
 	}
 
 	public static ModelEditor getModelerEditor() {
@@ -135,4 +147,20 @@ public class ModelResourceMockFactory {
 	public static AnnotationContainer getAnnotationContainer() {
 		return mock(AnnotationContainer.class);
 	}
+	
+    /**
+     * @param string
+     * @param string2
+     * @param string3
+     * @return
+     */
+    public static File createTempFile(String name, String suffix, File tempDir, String contents) throws IOException {
+        File tempFile = File.createTempFile(name, suffix, tempDir);
+        tempFile.deleteOnExit();
+        FileWriter writer = new FileWriter(tempFile);
+        writer.write(contents);
+        writer.close();
+        
+        return tempFile;
+    }
 }

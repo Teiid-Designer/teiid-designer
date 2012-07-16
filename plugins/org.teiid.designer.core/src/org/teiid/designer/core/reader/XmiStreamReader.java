@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
@@ -25,7 +26,6 @@ import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.container.Container;
 import org.teiid.designer.core.metamodel.MetamodelRegistry;
 import org.teiid.designer.core.util.DateUtil;
-
 
 /**
  * @author dfuglsang
@@ -59,7 +59,7 @@ public class XmiStreamReader implements StreamReader {
         try {
             // Create a temporary container to hold the resource
             final String tmpCntrName = DateUtil.getCurrentDateAsString() + "TempContainer"; //$NON-NLS-1$
-            Container container = ModelerCore.createContainer(tmpCntrName);
+            Container container = ModelerCore.createContainer(tmpCntrName, ModelerCore.RegistryOption.NO_REGISTER);
 
             // Create a temporary resource in the container
             Resource temp = container.createResource(URI.createURI("XmiStreamReader.xmi")); //$NON-NLS-1$
@@ -75,7 +75,6 @@ public class XmiStreamReader implements StreamReader {
             // Clean up temporary resources
             container.getResources().remove(temp);
             temp = null;
-            ModelerCore.getRegistry().unregister(tmpCntrName);
             container = null;
 
         } catch (Exception e) {

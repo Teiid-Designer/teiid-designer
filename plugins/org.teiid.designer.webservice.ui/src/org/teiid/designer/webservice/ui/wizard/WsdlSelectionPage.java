@@ -378,7 +378,7 @@ public final class WsdlSelectionPage extends AbstractWizardPage
         if (CoreStringUtil.isEmpty(folderName)) {
             WizardUtil.setPageComplete(this, getString("page.selectProject.msg"), IMessageProvider.ERROR); //$NON-NLS-1$
         } else {
-            final IResource resrc = ResourcesPlugin.getWorkspace().getRoot().findMember(folderName);
+            final IResource resrc = ModelerCore.getWorkspace().getRoot().findMember(folderName);
 
             if (resrc == null || !(resrc instanceof IContainer) || resrc.getProject() == null) {
                 WizardUtil.setPageComplete(this, getString("invalidFolderMessage"), IMessageProvider.ERROR); //$NON-NLS-1$
@@ -1116,7 +1116,7 @@ public final class WsdlSelectionPage extends AbstractWizardPage
 
         // see if model exists or would be a new model
         String temp = null;
-        IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(fullModelPath);
+        IResource resource = ModelerCore.getWorkspace().getRoot().findMember(fullModelPath);
 
         if (resource != null) {
             IPath path = resource.getLocation();
@@ -1213,7 +1213,7 @@ public final class WsdlSelectionPage extends AbstractWizardPage
         dlg.addFilter(new ModelingResourceFilter(this.targetLocationFilter));
         dlg.setValidator(new ModelProjectSelectionStatusValidator());
         dlg.setAllowMultiple(false);
-        dlg.setInput(ResourcesPlugin.getWorkspace().getRoot());
+        dlg.setInput(ModelerCore.getWorkspace().getRoot());
 
         // display the dialog
         Object[] objs = new Object[1];

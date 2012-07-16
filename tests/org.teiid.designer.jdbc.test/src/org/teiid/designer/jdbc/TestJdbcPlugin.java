@@ -8,16 +8,17 @@
 package org.teiid.designer.jdbc;
 
 import java.util.Date;
+
 import junit.extensions.TestSetup;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.teiid.core.util.PluginUtilImpl;
-import org.teiid.designer.jdbc.JdbcPlugin;
-
+import org.teiid.core.util.SmartTestDesignerSuite;
 
 /**
  * TestJdbcPlugin
@@ -65,6 +66,7 @@ public class TestJdbcPlugin extends TestCase {
             @Override
             public void setUp() {
                 JdbcPlugin plugin = new JdbcPlugin();
+                SmartTestDesignerSuite.mockStartBundle(plugin, JdbcPlugin.PLUGIN_ID);
                 ((PluginUtilImpl)JdbcPlugin.Util).initializePlatformLogger(plugin);
             }
 

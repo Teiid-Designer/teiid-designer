@@ -267,7 +267,7 @@ public class ValidationPreferencePage extends PreferencePage implements IWorkben
                         public void run( IProgressMonitor monitor ) {
                             try {
                                 // defect 19634 - code below copied from CleanDialog:
-                                ResourcesPlugin.getWorkspace().build(IncrementalProjectBuilder.CLEAN_BUILD, monitor);
+                                ModelerCore.getWorkspace().build(IncrementalProjectBuilder.CLEAN_BUILD, monitor);
                                 GlobalBuildAction build = new GlobalBuildAction(window, IncrementalProjectBuilder.FULL_BUILD);
                                 build.doBuild();
                             } catch (CoreException ex) {

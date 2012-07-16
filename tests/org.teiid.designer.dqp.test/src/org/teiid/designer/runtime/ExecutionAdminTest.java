@@ -11,39 +11,29 @@ import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Properties;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.MockitoAnnotations;
 import org.teiid.adminapi.Admin;
 import org.teiid.adminapi.PropertyDefinition;
 import org.teiid.adminapi.Translator;
 import org.teiid.adminapi.VDB;
 import org.teiid.designer.core.ModelWorkspaceMock;
-import org.teiid.designer.core.ModelerCore;
-import org.teiid.designer.core.workspace.ModelWorkspaceManager;
-import org.teiid.designer.core.workspace.WorkspaceResourceFinderUtil;
 import org.teiid.designer.vdb.Vdb;
-
 
 /**
  * 
  */
-@RunWith( PowerMockRunner.class )
-@PrepareForTest( {ModelerCore.class, ModelWorkspaceManager.class, ResourcesPlugin.class, WorkspaceResourceFinderUtil.class} )
 public class ExecutionAdminTest {
 	
     private static Collection<PropertyDefinition> PROP_DEFS;
@@ -56,15 +46,24 @@ public class ExecutionAdminTest {
     
     @Mock
     private EventManager eventManager;
+
+    private ModelWorkspaceMock modelWorkspaceMock;
     
     @Before
     public void beforeEach() {
-    	new ModelWorkspaceMock();
+        MockitoAnnotations.initMocks(this);
+        
+    	modelWorkspaceMock = new ModelWorkspaceMock();
         
         PROP_DEFS = new ArrayList<PropertyDefinition>(1);
         PropertyDefinition propDef = mock(PropertyDefinition.class);
         when(propDef.getName()).thenReturn("name");
         PROP_DEFS.add(mock(PropertyDefinition.class));
+    }
+    
+    @After
+    public void afterEach() {
+        modelWorkspaceMock.dispose();
     }
 
     private ExecutionAdmin getNewAdmin() throws Exception {
@@ -181,8 +180,6 @@ public class ExecutionAdminTest {
 
     @Test
     public void shouldAllowRefresh() throws Exception {
-    	mockStatic(WorkspaceResourceFinderUtil.class);
-    	when(WorkspaceResourceFinderUtil.getAllWorkspaceResources()).thenReturn(Collections.EMPTY_LIST);
         getNewAdmin().refresh();
     }
 

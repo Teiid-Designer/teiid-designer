@@ -698,7 +698,7 @@ public class XsdAsRelationalImportWizard extends AbstractWizard implements IImpo
                 modelName = db.getName();
             }
             modelName = FileUtils.toFileNameWithExtension(modelName, ModelerCore.MODEL_FILE_EXTENSION);
-            if (!CoreStringUtil.isEmpty(modelName) && ResourcesPlugin.getWorkspace().validateName(modelName, IResource.FILE).isOK()) {
+            if (!CoreStringUtil.isEmpty(modelName) && ModelerCore.getWorkspace().validateName(modelName, IResource.FILE).isOK()) {
                 setModelName(modelName);
                 if (this.folder != null) {
                     final IResource resrc = this.folder.findMember(modelName);

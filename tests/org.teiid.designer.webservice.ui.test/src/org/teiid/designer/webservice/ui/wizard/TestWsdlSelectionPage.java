@@ -12,11 +12,11 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.teiid.core.util.CoreStringUtil;
-import org.teiid.designer.core.util.URLHelper;
-import org.teiid.designer.webservice.ui.wizard.WsdlSelectionPage;
-
 import junit.framework.TestCase;
+
+import org.teiid.core.util.CoreStringUtil;
+import org.teiid.core.util.SmartTestDesignerSuite;
+import org.teiid.designer.core.util.URLHelper;
 
 /**
  * @since 4.2
@@ -73,11 +73,12 @@ public class TestWsdlSelectionPage extends TestCase {
     }
 
     public void helpTestFormatPath( String pathSegment ) throws Exception {
-        String path = System.getProperty("user.dir").replace('\\', '/'); //$NON-NLS-1$
+        String path = SmartTestDesignerSuite.getTestDataPath(getClass());
         if (!path.endsWith("/")) { //$NON-NLS-1$
             path = path + '/';
         }
-        URL newUrl = new URL("file", "", path + pathSegment + "testdata/HelloService.wsdl"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        
+        URL newUrl = new URL("file", "", path + pathSegment + "HelloService.wsdl"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         String formattedPath = WsdlSelectionPage.formatPath(newUrl);
         File wsdlFile = URLHelper.createFileFromUrl(newUrl, CoreStringUtil.createFileName(formattedPath), XSD_SUFFIX);
         String name = wsdlFile.getName();

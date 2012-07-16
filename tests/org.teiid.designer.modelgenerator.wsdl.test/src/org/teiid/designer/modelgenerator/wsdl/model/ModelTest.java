@@ -7,20 +7,15 @@
  */
 package org.teiid.designer.modelgenerator.wsdl.model;
 
-import org.teiid.designer.modelgenerator.wsdl.WSDLReader;
-import org.teiid.designer.modelgenerator.wsdl.model.Model;
-import org.teiid.designer.modelgenerator.wsdl.model.ModelGenerationException;
-import org.teiid.designer.modelgenerator.wsdl.model.Port;
-import org.teiid.designer.modelgenerator.wsdl.model.Service;
-
 import junit.framework.TestCase;
+
+import org.teiid.designer.modelgenerator.wsdl.WSDLReader;
+import org.teiid.designer.modelgenerator.wsdl.WSDLReaderTest;
 
 /**
  * 
  */
 public class ModelTest extends TestCase {
-
-    public static final String CIS_WSDL = "./src/sources/CountryInfoService.wsdl"; //$NON-NLS-1$
 
     /**
      * {@inheritDoc}
@@ -36,7 +31,7 @@ public class ModelTest extends TestCase {
      * Test method for 'org.teiid.designer.modelgenerator.wsdl.WSDLReader.getModel()'
      */
     public void testGetModel() throws ModelGenerationException {
-        WSDLReader reader = new WSDLReader(CIS_WSDL);
+        WSDLReader reader = new WSDLReader(WSDLReaderTest.CIS_WSDL);
         Model model = reader.getModel();
         assertNotNull(model);
         assertEquals("Incorrect namespace count", 4, model.getNamespaces().size()); //$NON-NLS-1$

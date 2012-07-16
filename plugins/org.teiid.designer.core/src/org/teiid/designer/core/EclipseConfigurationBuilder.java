@@ -14,6 +14,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
+
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
@@ -27,7 +28,6 @@ import org.teiid.designer.core.container.ResourceDescriptorImpl;
 import org.teiid.designer.core.metamodel.MetamodelDescriptor;
 import org.teiid.designer.core.metamodel.MetamodelDescriptorImpl;
 import org.teiid.designer.core.metamodel.MetamodelRootClassDescriptorImpl;
-
 
 /**
  * EclipseConfigurationBuilder
@@ -827,16 +827,16 @@ public class EclipseConfigurationBuilder {
                 descriptor.setDefaultOption(defaultValue);
                 if (ModelerCore.DEBUG_VALIDATION) {
                     ModelerCore.Util.log(IStatus.INFO,
-                                         ModelerCore.Util.getString("EclipseConfigurationBuilder.DEBUG.__Set_the_NAME_to", new Object[] {prefName})); //$NON-NLS-1$
+                                         ModelerCore.Util.getString("EclipseConfigurationBuilder.DEBUG.__Set_the_name_to", new Object[] {prefName})); //$NON-NLS-1$
                     ModelerCore.Util.log(IStatus.INFO,
-                                         ModelerCore.Util.getString("EclipseConfigurationBuilder.DEBUG.__Set_the_LABEL_to", new Object[] {prefLabel})); //$NON-NLS-1$
+                                         ModelerCore.Util.getString("EclipseConfigurationBuilder.DEBUG.__Set_the_label_to", new Object[] {prefLabel})); //$NON-NLS-1$
                     if (prefCategory != null) {
                         ModelerCore.Util.log(IStatus.INFO,
-                                             ModelerCore.Util.getString("EclipseConfigurationBuilder.DEBUG.__Set_the_CATEGORY_to", new Object[] {prefCategory})); //$NON-NLS-1$
+                                             ModelerCore.Util.getString("EclipseConfigurationBuilder.DEBUG.__Set_the_category_to", new Object[] {prefCategory})); //$NON-NLS-1$
                     }
                     if (prefToolTip != null) {
                         ModelerCore.Util.log(IStatus.INFO,
-                                             ModelerCore.Util.getString("EclipseConfigurationBuilder.DEBUG.__Set_the_TOOLTIP_to", new Object[] {prefToolTip})); //$NON-NLS-1$
+                                             ModelerCore.Util.getString("EclipseConfigurationBuilder.DEBUG.__Set_the_tooltip_to", new Object[] {prefToolTip})); //$NON-NLS-1$
                     }
                     if (defaultValue != null) {
                         ModelerCore.Util.log(IStatus.INFO,

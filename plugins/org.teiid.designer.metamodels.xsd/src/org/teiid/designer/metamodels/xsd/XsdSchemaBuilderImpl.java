@@ -304,7 +304,7 @@ public class XsdSchemaBuilderImpl {
         }
 
         // check for existing file
-        IWorkspaceRoot wsroot = ResourcesPlugin.getWorkspace().getRoot();
+        IWorkspaceRoot wsroot = ModelerCore.getWorkspace().getRoot();
         File check = new File(fileName);
         if (reusableSchema == null && check.exists()) {
             final String fileExists = XsdPlugin.Util.getString("XsdSchemaBuilderImpl.nameExists", rootName, fileName); //$NON-NLS-1$

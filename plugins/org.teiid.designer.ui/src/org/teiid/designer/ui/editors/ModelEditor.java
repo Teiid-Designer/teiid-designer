@@ -313,7 +313,7 @@ public class ModelEditor extends MultiPageModelEditor
         // Register to listen for Change Notifications
         ModelUtilities.addNotifyChangedListener(this);
 
-        ResourcesPlugin.getWorkspace().addResourceChangeListener(this);
+        ModelerCore.getWorkspace().addResourceChangeListener(this);
 
         try {
             if (modelResource.getEmfResource().isModified()) {
@@ -844,7 +844,7 @@ public class ModelEditor extends MultiPageModelEditor
         ModelUtilities.removeNotifyChangedListener(this);
 
         // Un-Register this for Resource change events
-        ResourcesPlugin.getWorkspace().removeResourceChangeListener(this);
+        ModelerCore.getWorkspace().removeResourceChangeListener(this);
 
         // Un-Register this for Reload vetos ...
         modelResource.getModelWorkspace().removeModelResourceReloadVetoListener(this.vetoListener);

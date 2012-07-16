@@ -58,7 +58,7 @@ public class ProjectStatusPanel extends ManagedForm implements StatusListener {
 
         // ResourcesPlugin.getPlugin().getPluginPreferences().addPropertyChangeListener(this);
 
-        for (IProject proj : ResourcesPlugin.getWorkspace().getRoot().getProjects()) {
+        for (IProject proj : ModelerCore.getWorkspace().getRoot().getProjects()) {
             if (ModelerCore.hasModelNature(proj)) {
                 setCurrentProject(proj);
                 break;

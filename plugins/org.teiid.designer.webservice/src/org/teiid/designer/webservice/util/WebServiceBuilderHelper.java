@@ -722,7 +722,7 @@ public class WebServiceBuilderHelper {
         if (parentPath == null) {
             IPath relativeModelPath = null;
             if (useLocationContainer) {
-                final IWorkspaceRoot wsroot = ResourcesPlugin.getWorkspace().getRoot();
+                final IWorkspaceRoot wsroot = ModelerCore.getWorkspace().getRoot();
                 relativeModelPath = this.locationContainer.getFullPath();
                 modelFile = wsroot.getFileForLocation(wsroot.getRawLocation().append(relativeModelPath).append(fileName));
             } else {
@@ -734,7 +734,7 @@ public class WebServiceBuilderHelper {
             // case 4133: Add logic to create new WS model at a given parent path rather than always
             // as a root model.
             final IPath path = new Path(parentPath + File.separator + fileName);
-            final IWorkspaceRoot wsroot = ResourcesPlugin.getWorkspace().getRoot();
+            final IWorkspaceRoot wsroot = ModelerCore.getWorkspace().getRoot();
             modelFile = wsroot.getFileForLocation(path);
             exists = new File(path.toString()).exists();
         }

@@ -77,7 +77,7 @@ public final class FileUtil {
      * @since 4.2
      */
     public static String getExtension( File theFile ) {
-        return getExtension(theFile.getPath());
+        return getExtension(theFile.getName());
     }
 
     /**

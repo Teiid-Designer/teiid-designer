@@ -250,7 +250,7 @@ public class WsdlFileSystemImportWizard extends AbstractWizard implements IImpor
         /*
          * 'finish' will use the previously created 'processor' instead of creating a fresh one, if one was previously created.
          */
-        autoBuildOn = ResourcesPlugin.getWorkspace().isAutoBuilding();
+        autoBuildOn = ModelerCore.getWorkspace().isAutoBuilding();
 
         if (autoBuildOn) {
             JobUtils.setAutoBuild(false);

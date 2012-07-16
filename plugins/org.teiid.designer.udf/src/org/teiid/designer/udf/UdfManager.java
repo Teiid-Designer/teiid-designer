@@ -101,7 +101,7 @@ public final class UdfManager implements IResourceChangeListener {
         }
 
         // register to receive resource events so that we can notify listeners when a function model changes
-        ResourcesPlugin.getWorkspace().addResourceChangeListener(this);
+        ModelerCore.getWorkspace().addResourceChangeListener(this);
         
         Collection<IResource> allResources = WorkspaceResourceFinderUtil.getAllWorkspaceResources();
         try {
@@ -297,7 +297,7 @@ public final class UdfManager implements IResourceChangeListener {
      * @since 6.0.0
      */
     public void shutdown() {
-        ResourcesPlugin.getWorkspace().removeResourceChangeListener(this);
+        ModelerCore.getWorkspace().removeResourceChangeListener(this);
     }
 
     public FunctionLibrary getSystemFunctionLibrary() {

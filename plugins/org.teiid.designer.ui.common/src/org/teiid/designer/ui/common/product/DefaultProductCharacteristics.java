@@ -8,11 +8,11 @@
 package org.teiid.designer.ui.common.product;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.action.ContributionItem;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.swt.widgets.Shell;
+import org.teiid.designer.core.ModelerCore;
 
 
 /** 
@@ -118,7 +118,7 @@ public class DefaultProductCharacteristics implements IProductCharacteristics {
      * @since 5.0
      */
     public Object getRootWorkspaceContext() {
-        return ResourcesPlugin.getWorkspace().getRoot();
+        return ModelerCore.getWorkspace().getRoot();
     }
 
     /**

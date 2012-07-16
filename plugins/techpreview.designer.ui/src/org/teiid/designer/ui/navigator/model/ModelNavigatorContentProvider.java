@@ -107,7 +107,7 @@ public class ModelNavigatorContentProvider extends WorkbenchContentProvider impl
                 handleResourceEvent(theEvent);
             }
         };
-        ResourcesPlugin.getWorkspace().addResourceChangeListener(this.resourceListener);
+        ModelerCore.getWorkspace().addResourceChangeListener(this.resourceListener);
     }
 
     /**
@@ -117,7 +117,7 @@ public class ModelNavigatorContentProvider extends WorkbenchContentProvider impl
      */
     @Override
     public void dispose() {
-        ResourcesPlugin.getWorkspace().removeResourceChangeListener(this.resourceListener);
+        ModelerCore.getWorkspace().removeResourceChangeListener(this.resourceListener);
 
         try {
             UiPlugin.getDefault().getEventBroker().removeListener(ModelResourceEvent.class, this.modelListener);

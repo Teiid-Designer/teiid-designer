@@ -8,36 +8,34 @@
 package org.teiid.designer.core;
 
 /**
- * A Registry represents a single naming/directory service
- * through which objects can be registered and discovered.
+ * A Registry represents a single naming/directory service through which objects
+ * can be registered and discovered.
  */
 public interface Registry {
-    
-    /**
-     * Look up an object by name in the registry.
-     * @param name the name
-     * @return the Object registered under that name; may be null if no
-     * register entry could be found
-     */
-    public Object lookup( String name );
-    
-    /**
-     * Register the specified object under the supplied name.
-     * @param name the name under which the object is to be registered
-     * @param obj the object to be registered
-     * @return the object currently registered under the supplied name, or null
-     * if there is no object currently registered
-     */
-    public Object register( String name, Object obj );
-    
-    /**
-     * Unregister the object under the supplied name.
-     * @param name the registration name
-     * @return the object currently registered under the supplied name, or null
-     * if there is no object currently registered
-     */
-    public Object unregister( String name );
-    
-    
+
+	/**
+	 * Look up an object by key in the registry.
+	 * 
+	 * @param key
+	 *            the key the object is registered under. Cannot be null.
+	 *            
+	 * @return the Object registered under that key; may be null if no register
+	 *         entry could be found
+	 */
+	Object lookup(String key);
+
+	/**
+	 * Lookup an object registered to the given key and of the given class
+	 * 
+	 * @param key
+	 * 				the key the object is registered under. Cannot be null.
+	 * 
+	 * @param klazz
+	 * 				the class of the registered object. If the registered object is not an instance of this class
+	 * 				then nothing will be returned. Cannot be null.
+	 * 
+	 * @return the registered object or null
+	 */
+	<T> T lookup(String key, Class<T> klazz);
 
 }

@@ -195,7 +195,7 @@ public abstract class AbstractObjectProcessor implements UiConstants {
             String projSeg = path.segment(0);
             
             // Check if Project exists - if it doesnt, return -1
-            IProject existProj = ResourcesPlugin.getWorkspace().getRoot().getProject(projSeg);
+            IProject existProj = ModelerCore.getWorkspace().getRoot().getProject(projSeg);
             if( !existProj.exists() ) {
             	return -1;
             }

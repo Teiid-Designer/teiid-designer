@@ -121,7 +121,7 @@ public class ModelNavigatorLabelProvider extends LabelProvider implements IDescr
             }
         };
 
-        ResourcesPlugin.getWorkspace().addResourceChangeListener(this.resrcChgListener);
+        ModelerCore.getWorkspace().addResourceChangeListener(this.resrcChgListener);
         this.diagramLabelProvider = new DiagramLabelProvider();
         this.extendedModelObjectLabelProvider = new ExtendedModelObjectLabelProvider();
     }
@@ -228,7 +228,7 @@ public class ModelNavigatorLabelProvider extends LabelProvider implements IDescr
     @Override
     public void dispose() {
         if (this.resrcChgListener != null) {
-            ResourcesPlugin.getWorkspace().removeResourceChangeListener(this.resrcChgListener);
+            ModelerCore.getWorkspace().removeResourceChangeListener(this.resrcChgListener);
         }
     }
 

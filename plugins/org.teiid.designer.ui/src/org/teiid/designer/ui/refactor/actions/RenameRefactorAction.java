@@ -342,7 +342,7 @@ public class RenameRefactorAction extends RefactorAction {
      * @param context IVisualPart
      */
     protected String queryNewResourceName( final IResource resource ) {
-        final IWorkspace workspace = ResourcesPlugin.getWorkspace();
+        final IWorkspace workspace = ModelerCore.getWorkspace();
         final IPath prefix = resource.getFullPath().removeLastSegments(1);
         IInputValidator validator = new IInputValidator() {
             /**
@@ -422,7 +422,7 @@ public class RenameRefactorAction extends RefactorAction {
                           IFile destination,
                           Shell shell ) {
         if (destination.isReadOnly()) {
-            IWorkspace workspace = ResourcesPlugin.getWorkspace();
+            IWorkspace workspace = ModelerCore.getWorkspace();
             IStatus status;
             if (source.isReadOnly()) status = workspace.validateEdit(new IFile[] {source, destination}, shell);
             else status = workspace.validateEdit(new IFile[] {destination}, shell);

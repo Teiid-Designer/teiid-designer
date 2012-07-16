@@ -12,13 +12,13 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EContentsEList;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.teiid.designer.core.ModelerCore;
@@ -26,7 +26,6 @@ import org.teiid.designer.core.notification.util.NotificationUtilities;
 import org.teiid.designer.core.resource.EmfResource;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
-
 
 /** 
  * @since 5.0
@@ -216,19 +215,7 @@ public class ExternalResourceImportsHelper {
      * @since 5.0.2
      */
     private static boolean isExternalResourceSetMember(Resource theResource) {
-        boolean result = false;
-        ResourceSet[] sets = ModelerCore.getExternalResourceSets();
-
-        for (int ndx = sets.length; --ndx >= 0;) {
-            ResourceSet set = sets[ndx];
-        
-            if (theResource.getResourceSet() == set) {
-                result = true;
-                break;
-            }
-        }
-        
-        return result;
+        return ModelerCore.isResourceInExternalResourceSet(theResource);
     }
     
     /**

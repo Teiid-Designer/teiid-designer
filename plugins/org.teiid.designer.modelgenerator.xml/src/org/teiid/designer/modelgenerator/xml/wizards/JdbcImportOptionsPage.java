@@ -519,7 +519,7 @@ final class JdbcImportOptionsPage extends WizardPage implements
         dlg.addFilter( filter );
         dlg.setValidator( new ModelProjectSelectionStatusValidator() );
         dlg.setAllowMultiple( false );
-        dlg.setInput( ResourcesPlugin.getWorkspace().getRoot() );
+        dlg.setInput( ModelerCore.getWorkspace().getRoot() );
 
         // display the dialog
         Object[] objs = new Object[ 1 ];

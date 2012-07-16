@@ -34,7 +34,6 @@ import javax.tools.ToolProvider;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
@@ -50,6 +49,7 @@ import org.eclipse.xsd.XSDSchemaContent;
 import org.eclipse.xsd.util.XSDParser;
 import org.teiid.core.designer.util.FileUtils;
 import org.teiid.core.util.StringUtil;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.types.DatatypeConstants;
 import org.teiid.designer.core.util.TempDirectory;
 import org.teiid.designer.core.workspace.ModelUtil;
@@ -59,7 +59,6 @@ import org.teiid.designer.vdb.ui.util.VdbResourceFinder;
 import org.teiid.designer.webservice.WebServicePlugin;
 import org.teiid.designer.webservice.gen.BasicWsdlGenerator;
 import org.teiid.designer.webservice.util.AntTasks;
-
 
 /**
  * This is the default implementation of a WebArchiveBuilder.
@@ -671,7 +670,7 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
 
         String vdbFileName = properties.getProperty(WebArchiveBuilderConstants.PROPERTY_VDB_FILE_NAME);
         IPath vdbPath = new Path(vdbFileName);
-        IFile vdbFile = ResourcesPlugin.getWorkspace().getRoot().getFile(vdbPath);
+        IFile vdbFile = ModelerCore.getWorkspace().getRoot().getFile(vdbPath);
         
     	VdbResourceFinder vdbResourceFinder = new VdbResourceFinder(vdbFile);
         

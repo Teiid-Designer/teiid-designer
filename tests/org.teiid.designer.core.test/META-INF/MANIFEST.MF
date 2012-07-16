@@ -9,7 +9,6 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Localization: plugin
 Require-Bundle: org.junit4,
  org.mockito,
- org.powermock,
  org.teiid.core.designer.test.framework,
  org.teiid.designer.sdt,
  org.teiid.designer.core.test.framework

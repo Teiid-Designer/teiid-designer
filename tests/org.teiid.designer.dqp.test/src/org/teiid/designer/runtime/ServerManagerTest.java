@@ -21,22 +21,18 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import org.eclipse.core.resources.ResourcesPlugin;
+import java.io.File;
+
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
-import org.teiid.designer.core.ModelerCore;
-
+import org.teiid.core.util.SmartTestDesignerSuite;
 
 /**
  * 
  */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({ DqpPlugin.class, ModelerCore.class, ResourcesPlugin.class })
 public class ServerManagerTest {
 
     private static final String RESTORED_SERVER1_URL = "mm://localhost:8080";
@@ -59,6 +55,12 @@ public class ServerManagerTest {
     public void beforeEach() throws Exception {
         MockitoAnnotations.initMocks(this);
         this.mgr = new ServerManager(null);
+    }
+    
+        
+    @After
+    public void afterEach() throws Exception {
+    	MockObjectFactory.dispose();
     }
 
     @Test
@@ -191,10 +193,8 @@ public class ServerManagerTest {
     public void shouldOldRestoreServerRegistry() throws Exception {
         // setup
         MockObjectFactory.createModelContainer();
-        MockObjectFactory.createDqpPlugin();
-        MockObjectFactory.createResourcesPlugin();
 
-        this.mgr = new ServerManager("testdata/oldregistrydata");
+        this.mgr = new ServerManager(SmartTestDesignerSuite.getTestDataPath(getClass()) + File.separator + "oldregistrydata");
         this.mgr.restoreState();
         assertThat(this.mgr.getServers().size(), is(3));
 
@@ -218,10 +218,8 @@ public class ServerManagerTest {
     public void shouldRestoreServerRegistry() throws Exception {
         // setup
         MockObjectFactory.createModelContainer();
-        MockObjectFactory.createDqpPlugin();
-        MockObjectFactory.createResourcesPlugin();
 
-        this.mgr = new ServerManager("testdata");
+        this.mgr = new ServerManager(SmartTestDesignerSuite.getTestDataPath(getClass()));
         this.mgr.restoreState();
         assertThat(this.mgr.getServers().size(), is(2));
 

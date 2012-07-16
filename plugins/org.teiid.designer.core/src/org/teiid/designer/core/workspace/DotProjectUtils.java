@@ -297,7 +297,7 @@ public class DotProjectUtils {
      * @return array of Modeler <code>IProject</code>s
      */
     public static IProject[] getOpenModelProjects() {
-        IProject[] allProjects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
+        IProject[] allProjects = ModelerCore.getWorkspace().getRoot().getProjects();
 
         List<IProject> openModelProjectList = new ArrayList<IProject>(allProjects.length);
 

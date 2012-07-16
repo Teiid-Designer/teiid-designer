@@ -579,11 +579,11 @@ public final class PreviewManager extends JobChangeAdapter
     }
 
     private IProject[] getAllProjects() {
-        return ResourcesPlugin.getWorkspace().getRoot().getProjects();
+        return ModelerCore.getWorkspace().getRoot().getProjects();
     }
 
     private IFile getFile( IPath path ) {
-        return ResourcesPlugin.getWorkspace().getRoot().getFile(path);
+        return ModelerCore.getWorkspace().getRoot().getFile(path);
     }
 
     public TeiidDataSource getOrCreateDataSource( ExecutionAdmin admin,

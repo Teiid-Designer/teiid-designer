@@ -937,7 +937,8 @@ public class BuiltInTypesManager extends AbstractDatatypeManager {
             if (resource == null) {
                 final Object[] params = new Object[] {BUILTIN_DATATYPES_URI};
                 final String msg = ModelerSdtPlugin.Util.getString("BuiltInTypesManager.Error_obtain_the_built-in_datatypes_resource_from_the_container_using_URI_1", params); //$NON-NLS-1$
-                ModelerSdtPlugin.Util.log(IStatus.ERROR, msg);
+                
+                throw new RuntimeException(msg);
             }
 
             // Set the reference to the Emf resource

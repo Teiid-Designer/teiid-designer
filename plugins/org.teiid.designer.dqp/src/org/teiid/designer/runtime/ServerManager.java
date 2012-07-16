@@ -28,12 +28,12 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.teiid.core.util.Base64;
 import org.teiid.core.util.CoreArgCheck;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.runtime.preview.PreviewManager;
 import org.teiid.net.TeiidURL;
@@ -42,7 +42,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-
 
 /**
  * The <code>ServerManager</code> class manages the creation, deletion, and editing of servers hosting Teiid servers.
@@ -208,7 +207,7 @@ public final class ServerManager implements EventManager {
         if (stateLocationPath != null) {
             try {
                 tempPreviewManager = new PreviewManager();
-                ResourcesPlugin.getWorkspace().addResourceChangeListener(tempPreviewManager);
+                ModelerCore.getWorkspace().addResourceChangeListener(tempPreviewManager);
                 addListener(tempPreviewManager);
             } catch (Exception e) {
                 Util.log(IStatus.ERROR, e, Util.getString("serverManagerErrorConstructingPreviewManager")); //$NON-NLS-1$
@@ -768,7 +767,7 @@ public final class ServerManager implements EventManager {
 
             // shutdown PreviewManage
             if (this.previewManager != null) {
-                ResourcesPlugin.getWorkspace().removeResourceChangeListener(this.previewManager);
+                ModelerCore.getWorkspace().removeResourceChangeListener(this.previewManager);
 
                 try {
                     this.previewManager.shutdown(monitor);

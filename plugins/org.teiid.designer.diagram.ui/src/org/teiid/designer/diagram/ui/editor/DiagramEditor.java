@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IMarkerDelta;
@@ -120,7 +121,6 @@ import org.teiid.designer.ui.util.DiagramProxy;
 import org.teiid.designer.ui.viewsupport.MarkerUtilities;
 import org.teiid.designer.ui.viewsupport.ModelObjectUtilities;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
-
 
 /**
  * MM implementation of a GEF editor.
@@ -481,7 +481,7 @@ public class DiagramEditor extends GraphicalEditor
         }
 
         DiagramUiPlugin.getDefault().getWorkbench().getDecoratorManager().getLabelDecorator().removeListener(this);
-        ResourcesPlugin.getWorkspace().removeResourceChangeListener(markerListener);
+        ModelerCore.getWorkspace().removeResourceChangeListener(markerListener);
         ((AbstractActionService)DiagramUiPlugin.getDefault().getActionService(getEditorSite().getPage())).removePartListener(this);
         if (toolBarManager != null) {
             // System.out.println("  -->>  DE.dispose() calling toolBarManager.dispose() TBM = NULL");
@@ -929,7 +929,7 @@ public class DiagramEditor extends GraphicalEditor
                 }
             }
         };
-        ResourcesPlugin.getWorkspace().addResourceChangeListener(markerListener);
+        ModelerCore.getWorkspace().addResourceChangeListener(markerListener);
         ((AbstractActionService)DiagramUiPlugin.getDefault().getActionService(iSite.getPage())).addPartListener(this);
 
     }
@@ -1057,22 +1057,33 @@ public class DiagramEditor extends GraphicalEditor
 
         boolean modelChanged = false;
         final Object[] elements = event.getElements();
+        
+        if (elements == null) {
+        	return;
+        }
 
-        if (elements != null && elements.length > 1) for (final Object nextElement : elements) {
-            if (nextElement instanceof EObject) {
-                if (ModelUtilities.areModelResourcesSame((EObject)nextElement, getDiagram())) modelChanged = true;
-            } else if (nextElement instanceof IResource) if (ModelUtilities.isModelFile((IResource)nextElement)) {
-                ModelResource modelResource = null;
-                try {
-                    modelResource = ModelUtil.getModelResource((IFile)nextElement, false);
-                } catch (final ModelWorkspaceException e) {
-                    DiagramUiConstants.Util.log(IStatus.ERROR,
-                                                e,
-                                                "DiagramEditor.labelProviderChanged()  ERROR finding ModelResource"); //$NON-NLS-1$
-                }
-                if (modelResource != null && modelResource.equals(modelResource)) modelChanged = true;
-            }
-            if (modelChanged) break;
+        for (final Object nextElement : elements) {
+        	if (nextElement instanceof EObject && ModelUtilities.areModelResourcesSame((EObject)nextElement, getDiagram())) {
+        		modelChanged = true;
+        		break;
+        	} else if (nextElement instanceof IResource && ModelUtilities.isModelFile((IResource)nextElement)) {
+        		ModelResource modelResource = null;
+        		ModelResource diagramModelResource = null;
+        		try {
+        			modelResource = ModelUtil.getModelResource((IFile)nextElement, false);
+        			diagramModelResource = ModelUtil.getModel(getDiagram());
+        		} catch (final ModelWorkspaceException e) {
+        			DiagramUiConstants.Util.log(IStatus.ERROR,
+        					e,
+        					"DiagramEditor.labelProviderChanged()  ERROR finding ModelResource"); //$NON-NLS-1$
+        		}
+        		
+        		if (modelResource != null && diagramModelResource != null 
+        				&& modelResource.equals(diagramModelResource)) {
+        			modelChanged = true;
+        			break;
+        		}
+        	}
         }
 
         if (getModelFactory() != null && getCurrentModel() != null && modelChanged) getDecoratorHandler().handleLabelProviderChanged();

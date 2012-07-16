@@ -261,7 +261,7 @@ public class NewModelProjectWizard extends BasicNewProjectResourceWizard impleme
     private void createFolder(IProject project, String name) {
 		final IPath containerPath = project.getFullPath();
 		IPath newFolderPath = containerPath.append(name);
-		final IFolder newFolderHandle = ResourcesPlugin.getWorkspace().getRoot().getFolder(newFolderPath);
+		final IFolder newFolderHandle = ModelerCore.getWorkspace().getRoot().getFolder(newFolderPath);
 		
 		IRunnableWithProgress op = new IRunnableWithProgress() {
 			@Override

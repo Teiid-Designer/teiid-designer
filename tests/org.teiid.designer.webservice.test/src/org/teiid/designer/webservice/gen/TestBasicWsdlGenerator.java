@@ -83,7 +83,7 @@ public class TestBasicWsdlGenerator extends TestCase {
         this.webService2 = TestBasicWsdlGenerator.createMinimalWebServiceModel(uri2);
 
         final XSDResourceFactoryImpl xsdFactory = new XSDResourceFactoryImpl();
-        final File xsdFile = SmartTestDesignerSuite.getTestDataFile(PATH_TO_XSD1);
+        final File xsdFile = SmartTestDesignerSuite.getTestDataFile(getClass(), PATH_TO_XSD1);
         if (xsdFile.exists() == false) {
             System.out.println("Missing File " + xsdFile.getCanonicalPath()); //$NON-NLS-1$
         }
@@ -93,7 +93,7 @@ public class TestBasicWsdlGenerator extends TestCase {
         this.xsd1.load(options);
         this.schema1 = this.xsd1.getSchema();
 
-        final File xsdFile2 = SmartTestDesignerSuite.getTestDataFile(PATH_TO_XSD2);
+        final File xsdFile2 = SmartTestDesignerSuite.getTestDataFile(getClass(), PATH_TO_XSD2);
         if (xsdFile2.exists() == false) {
             System.out.println("Missing File " + xsdFile2.getCanonicalPath()); //$NON-NLS-1$
         }

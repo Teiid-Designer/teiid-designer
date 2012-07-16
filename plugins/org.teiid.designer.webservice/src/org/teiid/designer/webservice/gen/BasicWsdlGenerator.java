@@ -30,7 +30,6 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.xsd.XSDComplexTypeDefinition;
@@ -90,11 +89,6 @@ import org.teiid.designer.metamodels.wsdl.soap.SoapStyleType;
 import org.teiid.designer.metamodels.wsdl.soap.SoapUseType;
 import org.teiid.designer.metamodels.xml.XmlDocument;
 import org.teiid.designer.metamodels.xml.XmlRoot;
-import org.teiid.designer.metamodels.xmlservice.XmlInput;
-import org.teiid.designer.metamodels.xmlservice.XmlOperation;
-import org.teiid.designer.metamodels.xmlservice.XmlOutput;
-import org.teiid.designer.metamodels.xmlservice.XmlServiceComponent;
-import org.teiid.designer.metamodels.xmlservice.XmlServicePackage;
 import org.teiid.designer.webservice.IWsdlGenerator;
 import org.teiid.designer.webservice.WebServicePlugin;
 
@@ -324,7 +318,7 @@ public class BasicWsdlGenerator implements IWsdlGenerator {
         }
 
         // Check whether it is a valid model, and add only if it is ...
-        final boolean valid = (isValidWebServiceModel(resource) || isValidXmlServiceModel(resource));
+        final boolean valid = (isValidWebServiceModel(resource));
         if (valid) {
             this.webServiceModels.add(resource);
         }
@@ -485,41 +479,6 @@ public class BasicWsdlGenerator implements IWsdlGenerator {
         return false;
     }
 
-    protected boolean isValidXmlServiceModel( Resource resource ) {
-        // Look for root-level WebService objects ...
-        final Iterator iter = resource.getContents().iterator();
-        while (iter.hasNext()) {
-            final EObject root = (EObject)iter.next();
-            final EClass eclass = root.eClass();
-            if (eclass != null) {
-                final EPackage epackage = eclass.getEPackage();
-                if (XmlServicePackage.eINSTANCE.equals(epackage)) {
-                    if (root instanceof XmlOperation && exposeXmlOperationInWsdl((XmlOperation)root)) {
-                        return true;
-                    }
-                }
-            }
-        }
-
-        return false;
-    }
-
-    protected boolean exposeXmlOperationInWsdl( final XmlOperation op ) {
-        // Only XML Services that take a single input of type XMLLiteral should be exposed
-        if (op.getInputs().size() == 1) {
-            XmlInput input = (XmlInput)op.getInputs().get(0);
-            if (input != null && input.getType() != null) {
-                XSDSimpleTypeDefinition type = (XSDSimpleTypeDefinition)input.getType();
-                if (type.eIsProxy() && XML_LITERAL_TYPE_URI_STRING.equals(((InternalEObject)type).eProxyURI().toString())) {
-                    return true;
-                } else if (XML_LITERAL_TYPE_URI_STRING.equals(type.getURI())) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
     /**
      * Generate the WSDL into the WSDL resource. This method may be overridden to supply specific behavior
      * 
@@ -545,10 +504,6 @@ public class BasicWsdlGenerator implements IWsdlGenerator {
                     final EPackage epackage = eclass.getEPackage();
                     if (WebServicePackage.eINSTANCE.equals(epackage)) {
                         rootWsObjects.add(root);
-                    } else if (XmlServicePackage.eINSTANCE.equals(epackage)) {
-                        if (root instanceof XmlOperation && exposeXmlOperationInWsdl((XmlOperation)root)) {
-                            rootWsObjects.add(root);
-                        }
                     }
                 }
             }
@@ -713,12 +668,6 @@ public class BasicWsdlGenerator implements IWsdlGenerator {
         }
 
         protected void addDocumentation( WebServiceComponent component,
-                                         final Documented documented ) {
-            final String desc = getDescription(component);
-            addDocumentation(desc, documented);
-        }
-
-        protected void addDocumentation( XmlServiceComponent component,
                                          final Documented documented ) {
             final String desc = getDescription(component);
             addDocumentation(desc, documented);
@@ -995,8 +944,6 @@ public class BasicWsdlGenerator implements IWsdlGenerator {
                                    EObject theEObject ) {
             if (theEClass.eContainer() == WebServicePackage.eINSTANCE) {
                 return doWebServiceSwitch(theEClass.getClassifierID(), theEObject);
-            } else if (theEClass.eContainer() == XmlServicePackage.eINSTANCE) {
-                return doXmlServiceSwitch(theEClass.getClassifierID(), theEObject);
             }
             List eSuperTypes = theEClass.getESuperTypes();
             return eSuperTypes.isEmpty() ? defaultCase(theEObject) : doSwitch((EClass)eSuperTypes.get(0), theEObject);
@@ -1030,28 +977,6 @@ public class BasicWsdlGenerator implements IWsdlGenerator {
             }
         }
 
-        protected Object doXmlServiceSwitch( int classifierID,
-                                             EObject theEObject ) {
-            switch (classifierID) {
-                case XmlServicePackage.XML_OPERATION: {
-                    XmlOperation xmlOperation = (XmlOperation)theEObject;
-                    Object result = caseXmlOperation(xmlOperation);
-                    return result;
-                }
-                case XmlServicePackage.XML_INPUT: {
-                    XmlInput xmlInput = (XmlInput)theEObject;
-                    Object result = caseXmlInput(xmlInput);
-                    return result;
-                }
-                case XmlServicePackage.XML_OUTPUT: {
-                    XmlOutput xmlOutput = (XmlOutput)theEObject;
-                    Object result = caseXmlOutput(xmlOutput);
-                    return result;
-                }
-                default:
-                    return defaultCase(theEObject);
-            }
-        }
 
         // --------------------------------------------------------------------------------------------------------
         // Web Service Processing Methods
@@ -1379,237 +1304,6 @@ public class BasicWsdlGenerator implements IWsdlGenerator {
             soapBody.setUse(SoapUseType.LITERAL_LITERAL);
             bindingInput.setSoapBody(soapBody);
         }
-
-        // --------------------------------------------------------------------------------------------------------
-        // Web Service Processing Methods
-        // --------------------------------------------------------------------------------------------------------
-
-        /**
-         * @see org.teiid.designer.metamodels.webservice.util.WebServiceSwitch#caseOperation(org.teiid.designer.metamodels.webservice.Operation)
-         * @since 4.2
-         */
-        public Object caseXmlOperation( XmlOperation object ) {
-            final String opName = object.getName();
-
-            // Create a WSDL port type
-            this.portType = this.factory.createPortType();
-            this.portType.setName(opName);
-            this.portType.setDefinitions(this.getDefinitions()); // adds to parent
-
-            // Add the documentation, if it exists ...
-            addDocumentation(object, this.portType);
-
-            // --------------------------------------------------------------------------------------------------------
-            // Binding information
-            // --------------------------------------------------------------------------------------------------------
-            final String bindingType = doGetFullyQualifiedName(this.portType);
-
-            // Add a binding for this interface ...
-            this.binding = this.factory.createBinding();
-            this.binding.setName(opName);
-            this.binding.setType(bindingType);
-            this.binding.setDefinitions(getDefinitions());
-
-            // Add the SOAP binding ...
-            final SoapBinding soapBinding = this.soapFactory.createSoapBinding();
-            soapBinding.setStyle(SoapStyleType.DOCUMENT_LITERAL);
-            soapBinding.setTransport("http://schemas.xmlsoap.org/soap/http"); //$NON-NLS-1$
-            this.binding.setSoapBinding(soapBinding);
-
-            // --------------------------------------------------------------------------------------------------------
-            // Port information
-            // --------------------------------------------------------------------------------------------------------
-            final String portTypeName = this.doGetFullyQualifiedName(this.portType);
-
-            final Port port = this.factory.createPort();
-            port.setName(opName);
-            port.setBinding(portTypeName);
-            port.setService(this.service);
-
-            // Check that the URL location is a valid URI ...
-            if (this.urlService != null) {
-                final IStatus problem = doCheckValidUri(this.urlService);
-                if (problem != null) {
-                    problems.add(problem);
-                }
-            }
-
-            // Add the SOAP address ...
-            final SoapAddress address = this.soapFactory.createSoapAddress();
-            address.setLocation(this.urlService);
-            address.setPort(port);
-
-            // Create a WSDL operation
-            this.operation = this.factory.createOperation();
-            this.operation.setName(opName);
-            this.operation.setPortType(this.portType); // adds to parent
-
-            // Add the documentation, if it exists ...
-            addDocumentation(object, this.operation);
-
-            // Add the binding information ...
-            this.bindingOp = this.factory.createBindingOperation();
-            this.bindingOp.setName(opName);
-            this.bindingOp.setBinding(this.binding);
-
-            // Add the SOAP operation information ...
-            final SoapOperation soapOp = this.soapFactory.createSoapOperation();
-            final String action = StringUtil.Constants.EMPTY_STRING;
-            soapOp.setAction(action);
-            soapOp.setStyle(SoapStyleType.DOCUMENT_LITERAL);
-            soapOp.setBindingOperation(this.bindingOp);
-
-            // If the xml service operation we are processing has an XmlOutput but no corresponding XmlInputs
-            // then we need to create a dummy WSDL Input/Message construct to make it WS-I compliant
-            // (see defect 20554)
-            if (object.getInputs().isEmpty()) {
-                createDummyInput();
-            }
-
-            return object; // this method handled it, so return non-null
-        }
-
-        /**
-         * @see org.teiid.designer.metamodels.webservice.util.WebServiceSwitch#caseInput(org.teiid.designer.metamodels.webservice.Input)
-         * @since 4.2
-         */
-        public Object caseXmlInput( XmlInput object ) {
-            // Create a WSDL input ...
-            final org.teiid.designer.metamodels.wsdl.Input input = this.factory.createInput();
-
-            // Set the name on the input ...
-            String inputName = object.getName();
-            if (inputName == null || inputName.trim().length() == 0) {
-                inputName = WebServicePlugin.Util.getString("BasicWsdlGenerator.DefaultInputName"); //$NON-NLS-1$
-            }
-            // Defect 22988 - Removed optional attribute "name" since it can cause problems
-            // generating some clients if names are duplicated.
-            // input.setName(inputName);
-
-            // Create the corresponding message ...
-            final Object[] params = new Object[] {this.portType.getName(), this.operation.getName(), inputName};
-            final String msgName = WebServicePlugin.Util.getString("BasicWsdlGenerator.InputMessageName_PortTypeName_OperationName_InputName", params); //$NON-NLS-1$
-            final org.teiid.designer.metamodels.wsdl.Message message = this.factory.createMessage();
-            message.setName(msgName);
-            message.setDefinitions(getDefinitions()); // adds to parent
-
-            // And the message part ...
-            final MessagePart part = this.factory.createMessagePart();
-            final XSDElementDeclaration xsdElement = object.getContentElement();
-            if (xsdElement != null) {
-                this.addReference(xsdElement);
-                final String value = getXsdComponentIdentifier(xsdElement);
-                part.setElement(value);
-            }
-            part.setName(msgName);
-            part.setMessage(message);
-
-            // Set the message name on the input ...
-            this.messagePartNameByWebServiceMessage.put(object, msgName);
-            input.setMessage(this.doGetFullyQualifiedName(message));
-            input.setOperation(this.operation); // adds to parent
-
-            // Add the documentation, if it exists ...
-            addDocumentation(object, input);
-
-            // Add the documentation, if it exists ...
-            String inputMsg = null;
-            final String inputDesc = getDescription(object);
-            if (inputDesc != null && inputDesc.trim().length() != 0) {
-                final Object[] params2 = new Object[] {this.portType.getName(), this.operation.getName(), inputDesc};
-                inputMsg = WebServicePlugin.Util.getString("BasicWsdlGenerator.InputMsgDesc_PortTypeName_OperationName_InputDesc", params2); //$NON-NLS-1$
-            } else {
-                final Object[] params2 = new Object[] {this.portType.getName(), this.operation.getName()};
-                inputMsg = WebServicePlugin.Util.getString("BasicWsdlGenerator.InputMsgDesc_PortTypeName_OperationName", params2); //$NON-NLS-1$
-            }
-            addDocumentation(inputMsg, message);
-
-            // Create the binding operation input ...
-            final BindingInput bindingInput = this.factory.createBindingInput();
-            bindingInput.setBindingOperation(this.bindingOp);
-            // Defect 22988 - Removed optional attribute "name" since it can cause problems
-            // generating some clients if names are duplicated.
-            // bindingInput.setName(inputName); // must match portType/operation/input/@name
-            final SoapBody soapBody = this.soapFactory.createSoapBody();
-            // per Jim Poulsen this next line is not required. Also it doesn't need to be a qualified name.
-            // soapBody.getParts().add(this.doGetFullyQualifiedName(message));
-            soapBody.setUse(SoapUseType.LITERAL_LITERAL);
-            bindingInput.setSoapBody(soapBody);
-
-            return object; // this method handled it, so return non-null
-        }
-
-        /**
-         * @see org.teiid.designer.metamodels.webservice.util.WebServiceSwitch#caseOutput(org.teiid.designer.metamodels.webservice.Output)
-         * @since 4.2
-         */
-        public Object caseXmlOutput( XmlOutput object ) {
-            // Create a WSDL output ...
-            final org.teiid.designer.metamodels.wsdl.Output output = this.factory.createOutput();
-
-            // Set the name on the output ...
-            String outputName = object.getName();
-            if (outputName == null || outputName.trim().length() == 0) {
-                outputName = WebServicePlugin.Util.getString("BasicWsdlGenerator.DefaultOutputName"); //$NON-NLS-1$
-            }
-            // Defect 22988 - Removed optional attribute "name" since it can cause problems
-            // generating some clients if names are duplicated.
-            // output.setName(outputName);
-
-            // Create the corresponding message ...
-            final Object[] params = new Object[] {this.portType.getName(), this.operation.getName(), outputName};
-            final String msgName = WebServicePlugin.Util.getString("BasicWsdlGenerator.OutputMessageName_PortTypeName_OperationName_OutputName", params); //$NON-NLS-1$
-            final org.teiid.designer.metamodels.wsdl.Message message = this.factory.createMessage();
-            message.setName(msgName);
-            message.setDefinitions(getDefinitions()); // adds to parent
-
-            // And the message part ...
-            final MessagePart part = this.factory.createMessagePart();
-            XSDElementDeclaration xsdElement = object.getContentElement();
-            if (xsdElement != null) {
-                this.addReference(xsdElement);
-                final String value = getXsdComponentIdentifier(xsdElement);
-                part.setElement(value);
-            }
-            part.setName(msgName);
-            part.setMessage(message);
-
-            // Set the message name on the input ...
-            this.messagePartNameByWebServiceMessage.put(object, msgName);
-            output.setMessage(this.doGetFullyQualifiedName(message));
-            output.setOperation(this.operation); // adds to parent
-
-            // Add the documentation, if it exists ...
-            addDocumentation(object, output);
-
-            // Add the documentation, if it exists ...
-            String outputMsg = null;
-            final String outputDesc = getDescription(object);
-            if (outputDesc != null && outputDesc.trim().length() != 0) {
-                final Object[] params2 = new Object[] {this.portType.getName(), this.operation.getName(), outputDesc};
-                outputMsg = WebServicePlugin.Util.getString("BasicWsdlGenerator.OutputMsgDesc_PortTypeName_OperationName_OutputDesc", params2); //$NON-NLS-1$
-            } else {
-                final Object[] params2 = new Object[] {this.portType.getName(), this.operation.getName()};
-                outputMsg = WebServicePlugin.Util.getString("BasicWsdlGenerator.OutputMsgDesc_PortTypeName_OperationName", params2); //$NON-NLS-1$
-            }
-            addDocumentation(outputMsg, message);
-
-            // Create the binding operation input ...
-            final BindingOutput bindingOutput = this.factory.createBindingOutput();
-            bindingOutput.setBindingOperation(this.bindingOp);
-            // Defect 22988 - Removed optional attribute "name" since it can cause problems
-            // generating some clients if names are duplicated.
-            // bindingOutput.setName(outputName);
-            // must match portType/operation/output/@name
-            final SoapBody soapBody = this.soapFactory.createSoapBody();
-            // per Jim Poulsen this next line is not required. Also it doesn't need to be a qualified name.
-            // soapBody.getParts().add(this.doGetFullyQualifiedName(message));
-            soapBody.setUse(SoapUseType.LITERAL_LITERAL);
-            bindingOutput.setSoapBody(soapBody);
-
-            return object; // this method handled it, so return non-null
-        }
-
     }
 
     // ========================================================================================================

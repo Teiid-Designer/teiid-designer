@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.WeakHashMap;
+
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.teiid.designer.diagram.ui.connection.NodeConnectionModel;
 import org.teiid.designer.diagram.ui.layout.DefaultLayoutNode;
@@ -18,7 +19,6 @@ import org.teiid.designer.diagram.ui.layout.DiagramLayout;
 import org.teiid.designer.diagram.ui.layout.LayoutNode;
 import org.teiid.designer.diagram.ui.layout.LayoutUtilities;
 import org.teiid.designer.diagram.ui.model.DiagramModelNode;
-
 
 public class SpringLayout extends DiagramLayout {
     static final String CLASS_NAME = "SpringLayout"; //$NON-NLS-1$
@@ -213,7 +213,7 @@ public class SpringLayout extends DiagramLayout {
         
         String string = spring.compute(nodeArray, nNodes);
 
-        for (int i = 0; i < i; i++) {
+        for (int i = 0; i < nodeArray.length; i++) {
             LayoutNode nextNode = nodeArray[i];
             nextNode.setCenterXY(spring.centerX[i], spring.centerY[i]);
         }
@@ -225,9 +225,9 @@ public class SpringLayout extends DiagramLayout {
         double currentW = rectangle.width;
         double currentH = rectangle.height;
         
-        for (int i = 1; i < i; i++) {
+        for (int i = 1; i < nodeArray.length; i++) {
             double thisX = nodeArray[i].getX();
-            double thisY = nodeArray[i].getX();
+            double thisY = nodeArray[i].getY();
             double thisW = nodeArray[i].getBounds().width;
             double thisH = nodeArray[i].getBounds().height;
             startX = Math.min(thisX, startX);

@@ -787,7 +787,7 @@ public class WorkspaceResourceFinderUtil {
      * Returns the workbench associated with this object.
      */
     private static IWorkspace getWorkspace() {
-        return ResourcesPlugin.getWorkspace();
+        return ModelerCore.getWorkspace();
     }
 
     /**

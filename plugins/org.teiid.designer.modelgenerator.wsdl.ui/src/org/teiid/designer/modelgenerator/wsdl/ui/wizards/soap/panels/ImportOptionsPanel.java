@@ -12,7 +12,6 @@ import java.util.Properties;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.osgi.util.NLS;
@@ -30,6 +29,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.teiid.core.event.IChangeListener;
 import org.teiid.core.event.IChangeNotifier;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
@@ -46,7 +46,6 @@ import org.teiid.designer.ui.viewsupport.MetamodelSelectionUtilities;
 import org.teiid.designer.ui.viewsupport.ModelProjectSelectionStatusValidator;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
 import org.teiid.designer.ui.viewsupport.ModelingResourceFilter;
-
 
 public class ImportOptionsPanel implements IChangeListener, ModelGeneratorWsdlUiConstants {
 	// Source Model Definition
@@ -247,7 +246,7 @@ public class ImportOptionsPanel implements IChangeListener, ModelGeneratorWsdlUi
 	 * the container field.
 	 */
 	void handleSourceModelLocationBrowse() {
-		final IContainer folder = WidgetUtil.showFolderSelectionDialog(ResourcesPlugin.getWorkspace().getRoot(),
+		final IContainer folder = WidgetUtil.showFolderSelectionDialog(ModelerCore.getWorkspace().getRoot(),
 			new ModelingResourceFilter(), new ModelProjectSelectionStatusValidator());
 
 		if (folder != null && sourceModelContainerText != null) {
@@ -260,7 +259,7 @@ public class ImportOptionsPanel implements IChangeListener, ModelGeneratorWsdlUi
 	}
 	
 	void handleViewModelLocationBrowse() {
-		final IContainer folder = WidgetUtil.showFolderSelectionDialog(ResourcesPlugin.getWorkspace().getRoot(),
+		final IContainer folder = WidgetUtil.showFolderSelectionDialog(ModelerCore.getWorkspace().getRoot(),
 			new ModelingResourceFilter(), new ModelProjectSelectionStatusValidator());
 
 		if (folder != null && sourceModelContainerText != null) {

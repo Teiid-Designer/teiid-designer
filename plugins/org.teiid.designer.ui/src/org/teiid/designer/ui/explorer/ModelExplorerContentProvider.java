@@ -97,7 +97,7 @@ public class ModelExplorerContentProvider extends WorkbenchContentProvider imple
                 handleResourceEvent(theEvent);
             }
         };
-        ResourcesPlugin.getWorkspace().addResourceChangeListener(this.resourceListener);
+        ModelerCore.getWorkspace().addResourceChangeListener(this.resourceListener);
 
         this.enableModelSorting = false;
         this.sortModelContent = this.getSortModelContentsPreferenceBooleanValue();
@@ -263,7 +263,7 @@ public class ModelExplorerContentProvider extends WorkbenchContentProvider imple
      */
     @Override
     public void dispose() {
-        ResourcesPlugin.getWorkspace().removeResourceChangeListener(this.resourceListener);
+        ModelerCore.getWorkspace().removeResourceChangeListener(this.resourceListener);
 
         try {
             UiPlugin.getDefault().getEventBroker().removeListener(ModelResourceEvent.class, this.modelListener);

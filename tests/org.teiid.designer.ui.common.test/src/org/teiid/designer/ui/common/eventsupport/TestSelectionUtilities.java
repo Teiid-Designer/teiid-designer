@@ -8,16 +8,16 @@
 package org.teiid.designer.ui.common.eventsupport;
 
 import java.util.List;
+
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
+
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 import org.teiid.designer.ui.common.testsupport.FakeEObject;
-
 
 /**
  * TestSelectionUtilities
@@ -39,7 +39,7 @@ public final class TestSelectionUtilities extends TestCase {
         TestRunner.run(suite());
     }
 
-    protected static Test suite() {
+    public static Test suite() {
         return new TestSuite(TestSelectionUtilities.class);
     }
 

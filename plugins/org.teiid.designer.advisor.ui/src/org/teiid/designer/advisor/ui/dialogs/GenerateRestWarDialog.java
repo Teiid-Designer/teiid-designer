@@ -11,7 +11,6 @@ import java.util.Properties;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.viewers.ILabelProvider;
@@ -35,6 +34,7 @@ import org.teiid.core.event.IChangeListener;
 import org.teiid.core.event.IChangeNotifier;
 import org.teiid.designer.advisor.ui.AdvisorUiConstants;
 import org.teiid.designer.advisor.ui.Messages;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.runtime.ui.actions.GenerateRestWarAction;
 import org.teiid.designer.ui.UiPlugin;
@@ -47,7 +47,6 @@ import org.teiid.designer.ui.explorer.ModelExplorerLabelProvider;
 import org.teiid.designer.ui.viewsupport.DesignerProperties;
 import org.teiid.designer.ui.viewsupport.ModelWorkspaceDialog;
 import org.teiid.designer.ui.viewsupport.SingleProjectFilter;
-
 
 public class GenerateRestWarDialog extends TitleAreaDialog implements IChangeListener {
 
@@ -265,7 +264,7 @@ public class GenerateRestWarDialog extends TitleAreaDialog implements IChangeLis
 		result.setMessage(message);
 		result.setAllowMultiple(false);
 
-		result.setInput(ResourcesPlugin.getWorkspace().getRoot());
+		result.setInput(ModelerCore.getWorkspace().getRoot());
 
 		result.setValidator(new ISelectionStatusValidator() {
 			@Override

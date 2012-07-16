@@ -15,13 +15,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -74,7 +74,6 @@ import org.teiid.designer.metamodels.relational.Schema;
 import org.teiid.designer.metamodels.relational.Table;
 import org.teiid.designer.metamodels.relational.UniqueConstraint;
 import org.teiid.designer.metamodels.relational.util.RelationalTypeMappingImpl;
-
 
 /**
  * 
@@ -586,8 +585,8 @@ public class DdlImporter {
         if (modelFolderName.isEmpty() || modelFolderPath.segmentCount() == 0) throw new EmptyArgumentException("modelFolderName"); //$NON-NLS-1$
         // Verify project is valid
         final String projectName = modelFolderPath.segment(0);
-        final IWorkspace workspace = ResourcesPlugin.getWorkspace();
-        final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+        IWorkspace workspace = ModelerCore.getWorkspace();
+        final IWorkspaceRoot root = workspace.getRoot();
         if (root.findMember(projectName) != null) {
             boolean found = false;
             for (final IProject project : projects)
@@ -620,7 +619,7 @@ public class DdlImporter {
         modelName = modelName.trim();
         if (modelName.isEmpty()) throw new EmptyArgumentException("modelName"); //$NON-NLS-1$
         // Verify name is valid
-        final IWorkspace workspace = ResourcesPlugin.getWorkspace();
+        final IWorkspace workspace = ModelerCore.getWorkspace();
         if (!workspace.validateName(modelName, IResource.FILE).isOK()) throw new IllegalArgumentException(
                                                                                                           DdlImporterI18n.INVALID_MODEL_NAME_MSG);
         if (modelFolder != null) {

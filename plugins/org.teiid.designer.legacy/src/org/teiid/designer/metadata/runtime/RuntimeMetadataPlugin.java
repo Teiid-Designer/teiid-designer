@@ -20,9 +20,9 @@ public class RuntimeMetadataPlugin {
 
 	/**
      * The plug-in identifier of this plugin
-     * (value <code>"com.metamatrix.metadata.runtime"</code>).
+     * (value <code>"org.teiid.designer.metadata.runtime"</code>).
 	 */
-	public static final String PLUGIN_ID = "com.metamatrix.metadata.runtime"; //$NON-NLS-1$
+	public static final String PLUGIN_ID = RuntimeMetadataPlugin.class.getName();
 
 	public static final BundleUtil Util = new BundleUtil(PLUGIN_ID,
 	                                                         PLUGIN_ID + ".i18n", ResourceBundle.getBundle(PLUGIN_ID + ".i18n")); //$NON-NLS-1$ //$NON-NLS-2$

@@ -802,7 +802,7 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
      * Uses the standard container selection dialog to choose the new value for the container field.
      */
     void handleSourceModelLocationBrowse() {
-        final IContainer folder = WidgetUtil.showFolderSelectionDialog(ResourcesPlugin.getWorkspace().getRoot(),
+        final IContainer folder = WidgetUtil.showFolderSelectionDialog(ModelerCore.getWorkspace().getRoot(),
                                                                        new ModelingResourceFilter(),
                                                                        new ModelProjectSelectionStatusValidator());
 
@@ -1001,7 +1001,7 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 		
 		// Check for at least ONE open non-hidden Model Project
 		boolean validProj = false;
-		for (IProject proj : ResourcesPlugin.getWorkspace().getRoot().getProjects()) {
+		for (IProject proj : ModelerCore.getWorkspace().getRoot().getProjects()) {
 			try {
 				boolean result = proj.isOpen()
 						&& !proj.hasNature(ModelerCore.HIDDEN_PROJECT_NATURE_ID)
@@ -1069,7 +1069,7 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
         String containerName = getSourceContainerName();
 
         if (!CoreStringUtil.isEmpty(containerName)) {
-            IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+            IWorkspaceRoot root = ModelerCore.getWorkspace().getRoot();
             IResource resource = root.findMember(new Path(containerName));
 
             if (resource.exists()) {
@@ -1132,7 +1132,7 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 			modelPath = modelPath.addFileExtension("xmi"); //$NON-NLS-1$
 		}
     	
-    	IResource sourceModel = ResourcesPlugin.getWorkspace().getRoot().getFile(modelPath);
+    	IResource sourceModel = ModelerCore.getWorkspace().getRoot().getFile(modelPath);
     	ModelResource smr = ModelUtilities.getModelResourceForIFile((IFile)sourceModel, false);
     	if( smr != null ) {
     		try {
@@ -1161,7 +1161,7 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 			modelPath = modelPath.addFileExtension("xmi"); //$NON-NLS-1$
 		}
     	
-    	IResource sourceModel = ResourcesPlugin.getWorkspace().getRoot().getFile(modelPath);
+    	IResource sourceModel = ModelerCore.getWorkspace().getRoot().getFile(modelPath);
     	ModelResource smr = ModelUtilities.getModelResourceForIFile((IFile)sourceModel, false);
     	if( smr != null ) {
 			IConnectionProfile profile = connectionInfoHelper.getConnectionProfile(smr);

@@ -7,5 +7,6 @@ Bundle-Vendor: %Bundle-Vendor.0
 Fragment-Host: org.teiid.designer.webservice.ui
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.junit4,
- org.teiid.designer.sdt
+ org.teiid.designer.sdt,
+ org.teiid.core.designer.test.framework
 Bundle-Localization: plugin

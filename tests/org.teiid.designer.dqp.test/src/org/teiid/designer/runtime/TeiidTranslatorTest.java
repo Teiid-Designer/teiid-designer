@@ -24,10 +24,8 @@ import java.util.Properties;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.powermock.modules.junit4.PowerMockRunner;
 import org.teiid.adminapi.PropertyDefinition;
 import org.teiid.adminapi.Translator;
 import org.teiid.designer.runtime.connection.IConnectionProperties;
@@ -35,7 +33,6 @@ import org.teiid.designer.runtime.connection.IConnectionProperties;
 /**
  * 
  */
-@RunWith( PowerMockRunner.class )
 public class TeiidTranslatorTest {
 
     private static final String TRANSLATOR_NAME = "translatorName";

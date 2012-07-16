@@ -398,7 +398,7 @@ public class ModelSelectionPage extends AbstractWizardPage
         dlg.addFilter(this.targetLocationFilter);
         dlg.setValidator(new ModelProjectSelectionStatusValidator());
         dlg.setAllowMultiple(false);
-        dlg.setInput(ResourcesPlugin.getWorkspace().getRoot());
+        dlg.setInput(ModelerCore.getWorkspace().getRoot());
 
         // display the dialog
         Object[] objs = new Object[1];
@@ -533,7 +533,7 @@ public class ModelSelectionPage extends AbstractWizardPage
                 if (CoreStringUtil.isEmpty(folderName)) {
                     WizardUtil.setPageComplete(this, getString("missingFolderMessage"), IMessageProvider.ERROR); //$NON-NLS-1$
                 } else {
-                    final IResource resrc = ResourcesPlugin.getWorkspace().getRoot().findMember(folderName);
+                    final IResource resrc = ModelerCore.getWorkspace().getRoot().findMember(folderName);
                     if (resrc == null || !(resrc instanceof IContainer) || resrc.getProject() == null) {
                         WizardUtil.setPageComplete(this, getString("invalidFolderMessage"), IMessageProvider.ERROR); //$NON-NLS-1$
                     } else if (!resrc.getProject().isOpen()) {

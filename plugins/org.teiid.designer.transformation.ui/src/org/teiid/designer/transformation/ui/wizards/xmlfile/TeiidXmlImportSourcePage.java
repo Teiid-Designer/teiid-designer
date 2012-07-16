@@ -835,7 +835,7 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 	 */
 	void handleSourceModelLocationBrowse() {
 		final IContainer folder = WidgetUtil.showFolderSelectionDialog(
-				ResourcesPlugin.getWorkspace().getRoot(),
+				ModelerCore.getWorkspace().getRoot(),
 				new ModelingResourceFilter(),
 				new ModelProjectSelectionStatusValidator());
 
@@ -1035,7 +1035,7 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 
 		// Check for at least ONE open non-hidden Model Project
 		boolean validProj = false;
-		for (IProject proj : ResourcesPlugin.getWorkspace().getRoot()
+		for (IProject proj : ModelerCore.getWorkspace().getRoot()
 				.getProjects()) {
 			try {
 				boolean result = proj.isOpen()
@@ -1103,7 +1103,7 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 		String containerName = getSourceContainerName();
 
 		if (!CoreStringUtil.isEmpty(containerName)) {
-			IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+			IWorkspaceRoot root = ModelerCore.getWorkspace().getRoot();
 			IResource resource = root.findMember(new Path(containerName));
 
 			if (resource.exists()) {
@@ -1169,7 +1169,7 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 			modelPath = modelPath.addFileExtension("xmi"); //$NON-NLS-1$
 		}
 
-		IResource sourceModel = ResourcesPlugin.getWorkspace().getRoot().getFile(modelPath);
+		IResource sourceModel = ModelerCore.getWorkspace().getRoot().getFile(modelPath);
 		ModelResource smr = ModelUtilities.getModelResourceForIFile((IFile) sourceModel, false);
 		if (smr != null) {
 			if( info.isXmlLocalFileMode() ) {
@@ -1192,7 +1192,7 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 			modelPath = modelPath.addFileExtension("xmi"); //$NON-NLS-1$
 		}
 
-		IResource sourceModel = ResourcesPlugin.getWorkspace().getRoot().getFile(modelPath);
+		IResource sourceModel = ModelerCore.getWorkspace().getRoot().getFile(modelPath);
 		ModelResource smr = ModelUtilities.getModelResourceForIFile(
 				(IFile) sourceModel, false);
 		if (smr != null) {

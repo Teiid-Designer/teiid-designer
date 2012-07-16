@@ -336,7 +336,7 @@ public class SchemaLocationEditor extends GridPanel
     private IPath getNewPath( String theFolder,
                               String theName ) {
         IPath result = null;
-        IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(theFolder);
+        IResource resource = ModelerCore.getWorkspace().getRoot().findMember(theFolder);
 
         if ((resource != null) && (resource instanceof IContainer)) {
             IContainer folder = (IContainer)resource;
@@ -556,7 +556,7 @@ public class SchemaLocationEditor extends GridPanel
 
             for (int i = 0; i < theFolders.length; i++) {
                 // only add if folder exists
-                if (ResourcesPlugin.getWorkspace().getRoot().findMember(theFolders[i]) != null) {
+                if (ModelerCore.getWorkspace().getRoot().findMember(theFolders[i]) != null) {
                     folders.add(theFolders[i]);
                 }
             }

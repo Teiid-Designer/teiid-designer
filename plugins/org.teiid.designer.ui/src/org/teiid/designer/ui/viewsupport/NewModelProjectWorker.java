@@ -55,8 +55,8 @@ public class NewModelProjectWorker {
     public IProject createNewProject( IPath newPath,
                                       String name,
                                       IProgressMonitor monitor ) {
-        IProject newProject = ResourcesPlugin.getWorkspace().getRoot().getProject(name);
-        IWorkspace workspace = ResourcesPlugin.getWorkspace();
+        IProject newProject = ModelerCore.getWorkspace().getRoot().getProject(name);
+        IWorkspace workspace = ModelerCore.getWorkspace();
 
         final IProjectDescription description = workspace.newProjectDescription(newProject.getName());
         description.setLocation(newPath);
@@ -72,7 +72,7 @@ public class NewModelProjectWorker {
                     // check to see if path exists but case is different
                     IPath path = new Path(FileUiUtils.INSTANCE.getExistingCaseVariantFileName(newPath));
 
-                    newProject = ResourcesPlugin.getWorkspace().getRoot().getProject(path.lastSegment());
+                    newProject = ModelerCore.getWorkspace().getRoot().getProject(path.lastSegment());
                     description.setLocation(path);
                     doit = !newProject.exists();
                 } else {

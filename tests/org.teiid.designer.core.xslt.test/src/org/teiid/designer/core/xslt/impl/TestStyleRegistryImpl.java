@@ -10,13 +10,12 @@ package org.teiid.designer.core.xslt.impl;
 import java.io.File;
 import java.util.Collection;
 
+import junit.framework.TestCase;
+
 import org.teiid.core.util.SmartTestDesignerSuite;
 import org.teiid.designer.core.xslt.Style;
 import org.teiid.designer.core.xslt.StyleFromResource;
 import org.teiid.designer.core.xslt.StyleRegistry;
-import org.teiid.designer.core.xslt.impl.StyleRegistryImpl;
-
-import junit.framework.TestCase;
 
 /**
  * TestStyleRegistryImpl
@@ -59,7 +58,7 @@ public class TestStyleRegistryImpl extends TestCase {
         this.registry = new StyleRegistryImpl();
         this.registryWithNoDescriptions = new StyleRegistryImpl();
 
-        final File testDataFolder = new File(SmartTestDesignerSuite.getTestDataPath());
+        final File testDataFolder = new File(SmartTestDesignerSuite.getTestDataPath(getClass()));
 
         // Create some styles
         for (int i = 0; i < STYLE_NAMES.length; ++i) {

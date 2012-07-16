@@ -251,7 +251,7 @@ public class GenerateXsdHelper {
         }
 
         // create for existing file
-        IWorkspaceRoot wsroot = ResourcesPlugin.getWorkspace().getRoot();
+        IWorkspaceRoot wsroot = ModelerCore.getWorkspace().getRoot();
         File check = new File(fileName);
         if (check.exists()) {
             final String fileExists = Util.getString("GenerateXsdWizard.docExists", fileName); //$NON-NLS-1$

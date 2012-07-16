@@ -15,18 +15,18 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import org.eclipse.core.resources.ResourcesPlugin;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.teiid.core.event.EventSourceException;
 import org.teiid.core.util.CoreArgCheck;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.ui.IModelerCacheListener;
 import org.teiid.designer.ui.ModelerCacheEvent;
 import org.teiid.designer.ui.UiConstants;
 import org.teiid.designer.ui.UiPlugin;
 import org.teiid.designer.ui.event.ModelResourceEvent;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
-
 
 
 /** 
@@ -58,7 +58,7 @@ public final class EObjectModelerCache extends AbstractSet
         
         // hook up listener
         ModelUtilities.addNotifyChangedListener(this.eventMgr);
-        ResourcesPlugin.getWorkspace().addResourceChangeListener(this.eventMgr);
+        ModelerCore.getWorkspace().addResourceChangeListener(this.eventMgr);
         
         try {
             UiPlugin.getDefault().getEventBroker().addListener(ModelResourceEvent.class, this.eventMgr);

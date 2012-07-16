@@ -224,35 +224,7 @@
          unpack="false"/>
 
    <plugin
-         id="org.teiid.designer.metamodels.relationship"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.teiid.designer.relationship"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.teiid.designer.relationship.ui"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.teiid.designer.xsd.ui"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.teiid.designer.metamodels.uml2"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -339,13 +311,6 @@
          download-size="0"
          install-size="0"
          version="0.0.0"/>
-
-   <plugin
-         id="org.teiid.designer.metamodels.xmlservice"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
 
    <plugin
          id="org.teiid.designer.metamodels.builder"

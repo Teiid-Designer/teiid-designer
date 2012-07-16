@@ -27,7 +27,7 @@ public class ServerUtilsTest {
         ServerUtils.validateServerUrl("mms://hostA:12345");
     }
 
-    @Test( expected = IllegalArgumentException.class )
+    @Test( expected = MalformedURLException.class )
     public void shouldNotBeValidUrlWithInvalidProtocol() throws MalformedURLException {
         ServerUtils.validateServerUrl("m://hostA:12345");
     }

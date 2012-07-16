@@ -7,13 +7,12 @@
  */
 package org.teiid.designer.core.container;
 
-import org.teiid.designer.core.ModelerCoreException;
-import org.teiid.designer.core.container.FakeContainer;
-
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
+
+import org.teiid.designer.core.ModelerCoreException;
 
 /**
  * @since 3.1
@@ -37,7 +36,7 @@ public class TestAbstractProxyContainer extends TestCase {
 	/**
 	 * @since 3.1
 	 */
-	protected static Test suite() {
+	public static Test suite() {
 		return new TestSuite(TestAbstractProxyContainer.class);
 	}
 

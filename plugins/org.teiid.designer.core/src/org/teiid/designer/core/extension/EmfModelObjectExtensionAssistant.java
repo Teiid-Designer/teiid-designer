@@ -244,7 +244,7 @@ public class EmfModelObjectExtensionAssistant extends ModelObjectExtensionAssist
      */
     @Override
     public boolean hasExtensionProperties( File file ) throws Exception {
-        IWorkspace workspace = ResourcesPlugin.getWorkspace();
+        IWorkspace workspace = ModelerCore.getWorkspace();
         IPath location = Path.fromOSString(file.getAbsolutePath());
         IFile modelFile = workspace.getRoot().getFileForLocation(location);
 

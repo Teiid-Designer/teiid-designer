@@ -8,7 +8,6 @@
 package org.teiid.designer.ui.search;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.search.ui.ISearchQuery;
@@ -20,8 +19,8 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IFileEditorInput;
 import org.teiid.core.util.I18nUtil;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.ui.UiConstants;
-
 
 /**
  * The <code>NewMetadataSearchResult</code> class is the result object for a metadata search. A {@link MetadataSearchQuery} is
@@ -115,7 +114,7 @@ public class MetadataSearchResult extends AbstractTextSearchResult implements IE
     @Override
     public IFile getFile( Object element ) {
         if (element instanceof MetadataMatchInfo) {
-            return ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(((MetadataMatchInfo)element).getResourcePath()));
+            return ModelerCore.getWorkspace().getRoot().getFile(new Path(((MetadataMatchInfo)element).getResourcePath()));
         }
 
         return null;

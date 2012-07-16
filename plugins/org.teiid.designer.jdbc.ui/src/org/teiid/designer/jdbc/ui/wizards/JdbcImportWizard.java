@@ -867,7 +867,7 @@ public class JdbcImportWizard extends AbstractWizard
                     tempModelName = validName;
 
                     if (!CoreStringUtil.isEmpty(tempModelName)
-                        && ResourcesPlugin.getWorkspace().validateName(tempModelName, IResource.FILE).isOK()) {
+                        && ModelerCore.getWorkspace().validateName(tempModelName, IResource.FILE).isOK()) {
                         this.modelName = tempModelName;
                     }
                 }

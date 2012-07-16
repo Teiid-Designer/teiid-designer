@@ -8,7 +8,6 @@
 package org.teiid.designer.runtime.ui.actions;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.window.Window;
@@ -16,6 +15,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.eclipse.ui.ide.IDE;
 import org.teiid.core.util.I18nUtil;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
 import org.teiid.designer.runtime.ui.vdb.VdbConstants;
@@ -25,7 +25,6 @@ import org.teiid.designer.ui.common.viewsupport.StatusInfo;
 import org.teiid.designer.ui.explorer.ModelExplorerContentProvider;
 import org.teiid.designer.ui.explorer.ModelExplorerLabelProvider;
 import org.teiid.designer.ui.viewsupport.ModelWorkspaceDialog;
-
 
 public class EditVdbAction  extends Action implements VdbConstants {
 	private static final String PREFIX = I18nUtil.getPropertyPrefix(EditVdbAction.class);
@@ -77,7 +76,7 @@ public class EditVdbAction  extends Action implements VdbConstants {
 		result.setMessage(message);
 		result.setAllowMultiple(false);
 
-		result.setInput(ResourcesPlugin.getWorkspace().getRoot());
+		result.setInput(ModelerCore.getWorkspace().getRoot());
 
 		result.setValidator(new ISelectionStatusValidator() {
 			@Override

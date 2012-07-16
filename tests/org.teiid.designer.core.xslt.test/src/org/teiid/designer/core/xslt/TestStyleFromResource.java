@@ -9,16 +9,16 @@ package org.teiid.designer.core.xslt;
 
 import java.io.File;
 import java.io.IOException;
+
 import javax.xml.transform.stream.StreamSource;
+
 import junit.extensions.TestSetup;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
+
 import org.teiid.core.TeiidException;
 import org.teiid.core.util.SmartTestDesignerSuite;
-import org.teiid.designer.core.xslt.Style;
-import org.teiid.designer.core.xslt.StyleFromResource;
-
 
 /**
  * TestStyleFromResource
@@ -61,7 +61,7 @@ public class TestStyleFromResource extends TestCase {
         super.setUp();
 
         // Create the class loader ...
-		final File testDataFolder = new File(SmartTestDesignerSuite.getTestDataPath());
+		final File testDataFolder = new File(SmartTestDesignerSuite.getTestDataPath(getClass()));
 
         this.styleWithoutDescription = new StyleFromResource(new File(testDataFolder, PATH_STYLE1).toURI().toURL(), NAME_STYLE1);
         this.styleWithDescription = new StyleFromResource(new File(testDataFolder, PATH_STYLE2).toURI().toURL(), NAME_STYLE2,

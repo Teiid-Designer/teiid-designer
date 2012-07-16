@@ -2,15 +2,13 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.mockito
-Bundle-Version: 1.8.4
-Bundle-ClassPath: mockito-all-1.8.4.jar
+Bundle-Version: 1.9.0
+Bundle-ClassPath: com.springsource.org.objenesis-1.0.0.jar,
+ mockito-core-1.9.0.jar
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Export-Package: org.hamcrest,
- org.hamcrest.core,
- org.hamcrest.internal,
- org.mockito,
+Export-Package: org.mockito,
  org.mockito.asm,
  org.mockito.asm.signature,
  org.mockito.asm.tree,
@@ -31,13 +29,17 @@ Export-Package: org.hamcrest,
  org.mockito.exceptions.verification.junit,
  org.mockito.internal,
  org.mockito.internal.configuration,
+ org.mockito.internal.configuration.injection,
+ org.mockito.internal.configuration.injection.filter,
  org.mockito.internal.creation,
  org.mockito.internal.creation.cglib,
  org.mockito.internal.creation.jmock,
  org.mockito.internal.debugging,
  org.mockito.internal.exceptions,
  org.mockito.internal.exceptions.base,
+ org.mockito.internal.exceptions.util,
  org.mockito.internal.invocation,
+ org.mockito.internal.invocation.finder,
  org.mockito.internal.invocation.realmethod,
  org.mockito.internal.listeners,
  org.mockito.internal.matchers,
@@ -57,6 +59,7 @@ Export-Package: org.hamcrest,
  org.mockito.internal.verification.argumentmatching,
  org.mockito.internal.verification.checkers,
  org.mockito.invocation,
+ org.mockito.listeners,
  org.mockito.runners,
  org.mockito.stubbing,
  org.mockito.stubbing.answers,
@@ -68,3 +71,8 @@ Export-Package: org.hamcrest,
  org.objenesis.instantiator.jrockit,
  org.objenesis.instantiator.sun,
  org.objenesis.strategy
+Require-Bundle: org.hamcrest,
+ org.hamcrest.core,
+ org.hamcrest.integration,
+ org.hamcrest.library,
+ org.hamcrest.text

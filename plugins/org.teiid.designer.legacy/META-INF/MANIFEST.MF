@@ -27,7 +27,5 @@ Export-Package:
  org.teiid.designer.metadata.runtime.api,
  org.teiid.designer.metadata.runtime.exception,
  org.teiid.designer.metadata.runtime.impl,
- org.teiid.designer.metadata.util,
- org.teiid.designer.transformation.metadata,
- org.teiid.designer.transformation.util
+ org.teiid.designer.metadata.util
 Bundle-ActivationPolicy: lazy

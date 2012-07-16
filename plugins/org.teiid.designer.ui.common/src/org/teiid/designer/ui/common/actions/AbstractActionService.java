@@ -10,9 +10,9 @@ package org.teiid.designer.ui.common.actions;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -28,6 +28,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.internal.WorkbenchPage;
 import org.teiid.core.util.CoreArgCheck;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.ui.common.AbstractUiPlugin;
 import org.teiid.designer.ui.common.InternalUiConstants;
 
@@ -76,9 +77,8 @@ public abstract class AbstractActionService implements ActionService, InternalUi
      * @see org.teiid.designer.ui.common.actions.ActionService#addResourceChangeListener(org.eclipse.core.resources.IResourceChangeListener)
      */
     @Override
-	public void addResourceChangeListener( IResourceChangeListener theListener ) {
-        IWorkspace workspace = ResourcesPlugin.getWorkspace();
-
+    public void addResourceChangeListener( IResourceChangeListener theListener ) {
+        IWorkspace workspace = ModelerCore.getWorkspace();
         workspace.addResourceChangeListener(theListener);
     }
 
@@ -86,7 +86,7 @@ public abstract class AbstractActionService implements ActionService, InternalUi
      * @see org.teiid.designer.ui.common.actions.ActionService#addWorkbenchSelectionListener(ISelectionListener)
      */
     @Override
-	public void addWorkbenchSelectionListener( ISelectionListener theListener ) {
+	  public void addWorkbenchSelectionListener( ISelectionListener theListener ) {
         if (window == null) {
             throw new IllegalStateException(Util.getString(PREFIX + "WorkbenchWindowIsNullMessage")); //$NON-NLS-1$
         }
@@ -116,7 +116,7 @@ public abstract class AbstractActionService implements ActionService, InternalUi
      *      org.teiid.designer.ui.common.actions.GlobalActionsMap, org.eclipse.jface.viewers.ISelection)
      */
     @Override
-	public void contributeToContextMenu( IMenuManager theMenuMgr,
+	  public void contributeToContextMenu( IMenuManager theMenuMgr,
                                          GlobalActionsMap theActionsMap,
                                          ISelection theSelection ) {
         // must be overriden in order to contribute
@@ -127,7 +127,7 @@ public abstract class AbstractActionService implements ActionService, InternalUi
      *      org.eclipse.jface.viewers.ISelection)
      */
     @Override
-	public void contributePermanentActionsToContextMenu( IMenuManager theMenuMgr,
+	  public void contributePermanentActionsToContextMenu( IMenuManager theMenuMgr,
                                                          ISelection theSelection ) {
         // must be overriden in order to contribute
     }
@@ -139,7 +139,7 @@ public abstract class AbstractActionService implements ActionService, InternalUi
      * @see org.teiid.designer.ui.common.actions.ActionService#getAction(String)
      */
     @Override
-	public IAction getAction( String theActionId ) throws CoreException {
+	  public IAction getAction( String theActionId ) throws CoreException {
         CoreArgCheck.isNotNull(theActionId);
 
         IAction result = actionMap.get(theActionId);
@@ -351,9 +351,8 @@ public abstract class AbstractActionService implements ActionService, InternalUi
      * @see org.teiid.designer.ui.common.actions.ActionService#removeResourceChangeListener(org.eclipse.core.resources.IResourceChangeListener)
      */
     @Override
-	public void removeResourceChangeListener( IResourceChangeListener theListener ) {
-        IWorkspace workspace = ResourcesPlugin.getWorkspace();
-
+    public void removeResourceChangeListener( IResourceChangeListener theListener ) {
+        IWorkspace workspace = ModelerCore.getWorkspace();
         workspace.removeResourceChangeListener(theListener);
     }
 

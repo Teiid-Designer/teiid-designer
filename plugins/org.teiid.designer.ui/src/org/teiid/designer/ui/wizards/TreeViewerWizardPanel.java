@@ -8,7 +8,6 @@
 package org.teiid.designer.ui.wizards;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardPage;
@@ -25,6 +24,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.metamodel.MetamodelDescriptor;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
@@ -35,7 +35,6 @@ import org.teiid.designer.ui.common.viewsupport.DotProjectFilter;
 import org.teiid.designer.ui.viewsupport.ModelResourceSelectionValidator;
 import org.teiid.designer.ui.viewsupport.ModelWorkspaceTreeProvider;
 import org.teiid.designer.ui.viewsupport.ModelingResourceFilter;
-
 
 /**
  * Extension to Composite containing an InheritanceCheckboxTreeViewer, and intended only for the case where the Composite is the
@@ -205,7 +204,7 @@ public class TreeViewerWizardPanel extends Composite implements UiConstants {
 
         ModelWorkspaceTreeProvider provider = new ModelWorkspaceTreeProvider();
         ElementTreeSelectionDialog dialog = new ElementTreeSelectionDialog(getShell(), provider, provider);
-        dialog.setInput(ResourcesPlugin.getWorkspace().getRoot());
+        dialog.setInput(ModelerCore.getWorkspace().getRoot());
         dialog.setAllowMultiple(false);
         dialog.addFilter(new ClosedProjectFilter());
         dialog.addFilter(new DotProjectFilter());

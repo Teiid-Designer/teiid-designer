@@ -18,7 +18,6 @@ import java.util.Iterator;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -568,7 +567,7 @@ abstract public class ModelEditorManager {
                         // if the editor is null, all we can do is lookup the resource via the tooltip path
                         String pathString = editorRefs[i].getTitleToolTip();
                         IPath path = new Path(pathString);
-                        IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(path);
+                        IResource resource = ModelerCore.getWorkspace().getRoot().findMember(path);
                         if (resource instanceof IFile) {
                             result.add(resource);
                         }
@@ -591,14 +590,9 @@ abstract public class ModelEditorManager {
     }
 
     // =============================================
-    // Private Methods
-
+    
     public static ModelEditor getModelEditorForFile( final IFile file,
                                                      boolean forceOpen ) {
-        if (ModelerCore.HEADLESS) {
-            return null;
-        }
-
         ModelEditor result = null;
         staticEditor = null;
         if (file != null) {

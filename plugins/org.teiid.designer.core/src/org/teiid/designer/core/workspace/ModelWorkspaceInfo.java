@@ -30,7 +30,7 @@ public class ModelWorkspaceInfo extends OpenableModelWorkspaceItemInfo {
      * Compute the non-java resources contained in this java project.
      */
     private Object[] computeNonModelResources() {
-        IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
+        IProject[] projects = ModelerCore.getWorkspace().getRoot().getProjects();
         int length = projects.length;
         Object[] nonModelResourcesTemp = null;
         int index = 0;

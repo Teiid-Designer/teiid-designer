@@ -226,7 +226,7 @@ public class DefaultResourceFinder implements ResourceFinder {
             ModelResource mr = ModelerCore.getModelEditor().findModelResource(knownResource);
             if (mr != null && mr.getCorrespondingResource() != null) {
                 IPath thePath = mr.getCorrespondingResource().getFullPath().removeLastSegments(1).append(theRelativeUri.toString());
-                IResource iResrc = ResourcesPlugin.getWorkspace().getRoot().findMember(thePath);
+                IResource iResrc = ModelerCore.getWorkspace().getRoot().findMember(thePath);
                 if (iResrc instanceof IFile) {
                     ModelResource modelResource = ModelerCore.getModelEditor().findModelResource((IFile)iResrc);
                     if (modelResource != null) {

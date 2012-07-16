@@ -12,7 +12,6 @@ import java.util.Properties;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -35,6 +34,7 @@ import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.teiid.core.event.IChangeListener;
 import org.teiid.core.event.IChangeNotifier;
 import org.teiid.core.util.I18nUtil;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.DotProjectUtils;
 import org.teiid.designer.ui.UiConstants;
 import org.teiid.designer.ui.common.util.WidgetFactory;
@@ -43,7 +43,6 @@ import org.teiid.designer.ui.common.viewsupport.StatusInfo;
 import org.teiid.designer.ui.common.widget.Label;
 import org.teiid.designer.ui.explorer.ModelExplorerContentProvider;
 import org.teiid.designer.ui.explorer.ModelExplorerLabelProvider;
-
 
 /**
  * This dialog allows users to either SELECT or CREATE NEW Designer model
@@ -294,7 +293,7 @@ public class DefineModelProjectDialog extends TitleAreaDialog implements
 		result.setMessage(message);
 		result.setAllowMultiple(false);
 
-		result.setInput(ResourcesPlugin.getWorkspace().getRoot());
+		result.setInput(ModelerCore.getWorkspace().getRoot());
 
 		result.setValidator(new ISelectionStatusValidator() {
 			@Override

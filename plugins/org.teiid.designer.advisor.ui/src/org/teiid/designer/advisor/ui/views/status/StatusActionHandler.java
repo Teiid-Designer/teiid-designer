@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;
@@ -29,10 +28,10 @@ import org.teiid.designer.advisor.ui.core.IAdvisorActionHandler;
 import org.teiid.designer.advisor.ui.core.InfoPopAction;
 import org.teiid.designer.advisor.ui.core.status.AdvisorStatus;
 import org.teiid.designer.advisor.ui.util.DSPPluginImageHelper;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.ui.common.util.UiUtil;
 import org.teiid.designer.ui.viewsupport.ModelerUiViewUtils;
-
 
 /**
  * 
@@ -402,7 +401,7 @@ public class StatusActionHandler implements IAdvisorActionHandler, AdvisorUiCons
                     actions.add(showProblemsViewIPAction);
 //                }
                 String desc = Messages.Options_Action_TurnAutobiuldOn_description;
-                if (ResourcesPlugin.getWorkspace().isAutoBuilding()) {
+                if (ModelerCore.getWorkspace().isAutoBuilding()) {
                     desc = Messages.Options_Action_TurnAutobiuldOff_description;
                 }
                 toggleAutoBuildIPAction.setDescription(desc);

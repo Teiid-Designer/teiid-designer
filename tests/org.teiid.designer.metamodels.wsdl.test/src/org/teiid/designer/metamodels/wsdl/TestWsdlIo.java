@@ -179,7 +179,7 @@ public class TestWsdlIo extends TestCase {
     }
 
     public Resource helpRead( final String pathInTestData ) throws Exception {
-        final File wsdlFile = SmartTestDesignerSuite.getTestDataFile(pathInTestData);
+        final File wsdlFile = SmartTestDesignerSuite.getTestDataFile(getClass(), pathInTestData);
         final String wsdlPath = wsdlFile.getAbsolutePath();
         assertNotNull("File not found at " + wsdlPath, wsdlFile); //$NON-NLS-1$
         assertEquals("File doesn't exist at " + wsdlPath, true, wsdlFile.exists()); //$NON-NLS-1$
