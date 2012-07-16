@@ -98,6 +98,12 @@ sub process_pom {
 		elsif ($x =~ m/<\/build>/) {
 			$ignore--;
 		}
+		elsif ($x =~ m/<dependencies>/) {
+			$ignore++;
+		}
+		elsif ($x =~ m/<\/dependencies>/) {
+			$ignore--;
+		}
 		elsif ($x =~ m/<version>/ && $ignore == 0) {
 			my $old_version = $x;
 			$old_version =~ s/<.*?>//g;
