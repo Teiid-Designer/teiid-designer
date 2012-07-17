@@ -8,7 +8,7 @@ Fragment-Host: org.teiid.designer.dqp
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Localization: plugin
 Require-Bundle: org.junit4,
- org.mockito,
+ org.mockito;bundle-version="1.9.0",
  org.teiid.designer.core.test.framework,
  org.teiid.designer.sdt,
  org.teiid.core.designer.test.framework

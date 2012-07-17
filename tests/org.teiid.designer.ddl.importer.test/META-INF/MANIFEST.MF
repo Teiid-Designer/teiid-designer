@@ -8,6 +8,6 @@ Fragment-Host: org.teiid.designer.ddl.importer
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.teiid.core.designer.test.framework,
- org.mockito,
+ org.mockito;bundle-version="1.9.0",
  org.junit4,
  org.teiid.designer.sdt

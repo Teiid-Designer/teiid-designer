@@ -6,7 +6,7 @@ Bundle-Version: 8.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Vendor: %Bundle-Vendor
 Fragment-Host: org.teiid.designer.vdb
-Require-Bundle: org.mockito,
+Require-Bundle: org.mockito;bundle-version="1.9.0",
  org.junit4,
  org.teiid.core.designer.test.framework,
  org.teiid.designer.core.test.framework
