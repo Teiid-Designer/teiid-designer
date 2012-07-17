@@ -14,18 +14,22 @@ public abstract class WSDLElementImpl implements WSDLElement {
 	private String m_id;
 	private String m_name;
 	
+	@Override
 	public String getName() {
 		return m_name;
 	}
 
+	@Override
 	public void setName(String name) {
 		m_name = name;
 	}
 
+	@Override
 	public String getId() {
 		return m_id;		
 	}
 
+	@Override
 	public void setId(String id) {
 		m_id = id;
 	}

@@ -72,7 +72,8 @@ public class AccessPatternImpl extends RelationalEntityImpl implements AccessPat
      * <!-- end-user-doc -->
      * @generated
      */
-    public EList getColumns() {
+    @Override
+	public EList getColumns() {
         if (columns == null) {
             columns = new EObjectWithInverseResolvingEList.ManyInverse(Column.class, this, RelationalPackage.ACCESS_PATTERN__COLUMNS, RelationalPackage.COLUMN__ACCESS_PATTERNS);
         }
@@ -84,7 +85,8 @@ public class AccessPatternImpl extends RelationalEntityImpl implements AccessPat
      * <!-- end-user-doc -->
      * @generated
      */
-    public Table getTable() {
+    @Override
+	public Table getTable() {
         if (eContainerFeatureID != RelationalPackage.ACCESS_PATTERN__TABLE) return null;
         return (Table)eContainer;
     }
@@ -94,7 +96,8 @@ public class AccessPatternImpl extends RelationalEntityImpl implements AccessPat
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setTable(Table newTable) {
+    @Override
+	public void setTable(Table newTable) {
         if (newTable != eContainer || (eContainerFeatureID != RelationalPackage.ACCESS_PATTERN__TABLE && newTable != null)) {
             if (EcoreUtil.isAncestor(this, newTable))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$

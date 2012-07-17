@@ -23,7 +23,8 @@ public class InterfaceAspect extends WebServiceComponentAspect {
     /** 
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlAspect#isRecordType(char)
      */
-    public boolean isRecordType(final char recordType) {
+    @Override
+	public boolean isRecordType(final char recordType) {
         return false;
     }
 

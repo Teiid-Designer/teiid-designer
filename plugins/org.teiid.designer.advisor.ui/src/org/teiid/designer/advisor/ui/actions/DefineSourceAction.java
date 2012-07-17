@@ -39,7 +39,8 @@ public class DefineSourceAction extends Action implements AdvisorUiConstants {
     /* (non-Javadoc)
      * @see org.eclipse.jface.action.IAction#run()
      */
-    public void run() {
+    @Override
+	public void run() {
     	final IWorkbenchWindow iww = AdvisorUiPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow();
     	
 		DefineSourceDialog sdDialog = new DefineSourceDialog(iww.getShell(), this.designerProperties);

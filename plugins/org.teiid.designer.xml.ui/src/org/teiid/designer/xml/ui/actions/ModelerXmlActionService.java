@@ -39,7 +39,8 @@ public final class ModelerXmlActionService extends AbstractActionService impleme
     /* (non-Javadoc)
      * see org.teiid.designer.ui.common.actions.AbstractActionService#getDefaultAction(java.lang.String)
      */
-    public IAction getDefaultAction(String theActionId) {
+    @Override
+	public IAction getDefaultAction(String theActionId) {
         return null;
     }
 

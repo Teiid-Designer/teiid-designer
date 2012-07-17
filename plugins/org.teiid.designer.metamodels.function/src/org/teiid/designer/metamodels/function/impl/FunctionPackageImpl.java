@@ -136,7 +136,8 @@ public class FunctionPackageImpl extends EPackageImpl implements FunctionPackage
      * <!-- end-user-doc -->
      * @generated
      */
-    public EClass getFunction() {
+    @Override
+	public EClass getFunction() {
         return functionEClass;
     }
 
@@ -145,7 +146,8 @@ public class FunctionPackageImpl extends EPackageImpl implements FunctionPackage
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getFunction_Name() {
+    @Override
+	public EAttribute getFunction_Name() {
         return (EAttribute)functionEClass.getEStructuralFeatures().get(0);
     }
 
@@ -154,7 +156,8 @@ public class FunctionPackageImpl extends EPackageImpl implements FunctionPackage
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getFunction_Category() {
+    @Override
+	public EAttribute getFunction_Category() {
         return (EAttribute)functionEClass.getEStructuralFeatures().get(1);
     }
 
@@ -163,7 +166,8 @@ public class FunctionPackageImpl extends EPackageImpl implements FunctionPackage
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getFunction_PushDown() {
+    @Override
+	public EAttribute getFunction_PushDown() {
         return (EAttribute)functionEClass.getEStructuralFeatures().get(2);
     }
 
@@ -172,7 +176,8 @@ public class FunctionPackageImpl extends EPackageImpl implements FunctionPackage
      * <!-- end-user-doc -->
      * @generated
      */
-    public EClass getScalarFunction() {
+    @Override
+	public EClass getScalarFunction() {
         return scalarFunctionEClass;
     }
 
@@ -181,7 +186,8 @@ public class FunctionPackageImpl extends EPackageImpl implements FunctionPackage
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getScalarFunction_InvocationClass() {
+    @Override
+	public EAttribute getScalarFunction_InvocationClass() {
         return (EAttribute)scalarFunctionEClass.getEStructuralFeatures().get(2);
     }
 
@@ -190,7 +196,8 @@ public class FunctionPackageImpl extends EPackageImpl implements FunctionPackage
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getScalarFunction_InvocationMethod() {
+    @Override
+	public EAttribute getScalarFunction_InvocationMethod() {
         return (EAttribute)scalarFunctionEClass.getEStructuralFeatures().get(3);
     }
 
@@ -199,7 +206,8 @@ public class FunctionPackageImpl extends EPackageImpl implements FunctionPackage
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getScalarFunction_Deterministic() {
+    @Override
+	public EAttribute getScalarFunction_Deterministic() {
         return (EAttribute)scalarFunctionEClass.getEStructuralFeatures().get(4);
     }
 
@@ -208,7 +216,8 @@ public class FunctionPackageImpl extends EPackageImpl implements FunctionPackage
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getScalarFunction_InputParameters() {
+    @Override
+	public EReference getScalarFunction_InputParameters() {
         return (EReference)scalarFunctionEClass.getEStructuralFeatures().get(0);
     }
 
@@ -217,7 +226,8 @@ public class FunctionPackageImpl extends EPackageImpl implements FunctionPackage
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getScalarFunction_ReturnParameter() {
+    @Override
+	public EReference getScalarFunction_ReturnParameter() {
         return (EReference)scalarFunctionEClass.getEStructuralFeatures().get(1);
     }
 
@@ -226,7 +236,8 @@ public class FunctionPackageImpl extends EPackageImpl implements FunctionPackage
      * <!-- end-user-doc -->
      * @generated
      */
-    public EClass getFunctionParameter() {
+    @Override
+	public EClass getFunctionParameter() {
         return functionParameterEClass;
     }
 
@@ -235,7 +246,8 @@ public class FunctionPackageImpl extends EPackageImpl implements FunctionPackage
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getFunctionParameter_Name() {
+    @Override
+	public EAttribute getFunctionParameter_Name() {
         return (EAttribute)functionParameterEClass.getEStructuralFeatures().get(1);
     }
 
@@ -244,7 +256,8 @@ public class FunctionPackageImpl extends EPackageImpl implements FunctionPackage
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getFunctionParameter_Type() {
+    @Override
+	public EAttribute getFunctionParameter_Type() {
         return (EAttribute)functionParameterEClass.getEStructuralFeatures().get(2);
     }
 
@@ -253,7 +266,8 @@ public class FunctionPackageImpl extends EPackageImpl implements FunctionPackage
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getFunctionParameter_Function() {
+    @Override
+	public EReference getFunctionParameter_Function() {
         return (EReference)functionParameterEClass.getEStructuralFeatures().get(0);
     }
 
@@ -262,7 +276,8 @@ public class FunctionPackageImpl extends EPackageImpl implements FunctionPackage
      * <!-- end-user-doc -->
      * @generated
      */
-    public EClass getReturnParameter() {
+    @Override
+	public EClass getReturnParameter() {
         return returnParameterEClass;
     }
 
@@ -271,7 +286,8 @@ public class FunctionPackageImpl extends EPackageImpl implements FunctionPackage
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getReturnParameter_Type() {
+    @Override
+	public EAttribute getReturnParameter_Type() {
         return (EAttribute)returnParameterEClass.getEStructuralFeatures().get(1);
     }
 
@@ -280,7 +296,8 @@ public class FunctionPackageImpl extends EPackageImpl implements FunctionPackage
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getReturnParameter_Function() {
+    @Override
+	public EReference getReturnParameter_Function() {
         return (EReference)returnParameterEClass.getEStructuralFeatures().get(0);
     }
 
@@ -289,7 +306,8 @@ public class FunctionPackageImpl extends EPackageImpl implements FunctionPackage
      * <!-- end-user-doc -->
      * @generated
      */
-    public EEnum getPushDownType() {
+    @Override
+	public EEnum getPushDownType() {
         return pushDownTypeEEnum;
     }
 
@@ -298,7 +316,8 @@ public class FunctionPackageImpl extends EPackageImpl implements FunctionPackage
      * <!-- end-user-doc -->
      * @generated
      */
-    public FunctionFactory getFunctionFactory() {
+    @Override
+	public FunctionFactory getFunctionFactory() {
         return (FunctionFactory)getEFactoryInstance();
     }
 

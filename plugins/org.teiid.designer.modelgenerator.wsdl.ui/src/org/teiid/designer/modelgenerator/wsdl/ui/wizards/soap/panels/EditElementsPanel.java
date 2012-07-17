@@ -110,7 +110,7 @@ public class EditElementsPanel {
             public void mouseDown( MouseEvent theEvent ) {
                 if (theEvent.button == 1 ) {
                     if (isTextEditorActive() && selectedObject != null) {
-                        saveChangesAndDispose((AttributeInfo)selectedObject);
+                        saveChangesAndDispose(selectedObject);
                     }
                 }
             }
@@ -307,7 +307,8 @@ public class EditElementsPanel {
         textEditorParent = createEditorParent();
         textEditorParent.setVisible(false);
         textEditorParent.addListener(SWT.Paint, new Listener() {
-            public void handleEvent( Event e ) {
+            @Override
+			public void handleEvent( Event e ) {
                 Point textSize = textEditor.getSize();
                 Point parentSize = textEditorParent.getSize();
                 e.gc.drawRectangle(0, 0, Math.min(textSize.x + 4, parentSize.x - 1), parentSize.y - 1);
@@ -318,7 +319,8 @@ public class EditElementsPanel {
         textEditor = new Text(textEditorParent, SWT.NONE);
         textEditorParent.setBackground(textEditor.getBackground());
         textEditor.addListener(SWT.Modify, new Listener() {
-            public void handleEvent( Event e ) {
+            @Override
+			public void handleEvent( Event e ) {
                 Point textSize = textEditor.computeSize(SWT.DEFAULT, SWT.DEFAULT);
                 textSize.x += textSize.y; // Add extra space for new characters.
                 Point parentSize = textEditorParent.getSize();
@@ -327,7 +329,8 @@ public class EditElementsPanel {
             }
         });
         textEditor.addListener(SWT.Traverse, new Listener() {
-            public void handleEvent( Event event ) {
+            @Override
+			public void handleEvent( Event event ) {
 
                 // Workaround for Bug 20214 due to extra
                 // traverse events
@@ -410,7 +413,8 @@ public class EditElementsPanel {
         }
         
         Runnable query = new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 // Dispose the text widget regardless
                 disposeTextWidget();
                 notifyColumnDataChanged();

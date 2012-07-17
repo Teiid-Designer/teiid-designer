@@ -119,7 +119,8 @@ public class PreviewParameterPanel extends ScrolledComposite implements DqpUiCon
      * @see org.teiid.core.event.IChangeNotifier#addChangeListener(org.teiid.core.event.IChangeListener)
      * @since 5.5.3
      */
-    public void addChangeListener( IChangeListener listener ) {
+    @Override
+	public void addChangeListener( IChangeListener listener ) {
         if (this.listeners == null) {
             this.listeners = new ArrayList<IChangeListener>(1);
         }
@@ -194,7 +195,8 @@ public class PreviewParameterPanel extends ScrolledComposite implements DqpUiCon
 
         ModifyListener modifyListener = new ModifyListener() {
 
-            public void modifyText( ModifyEvent e ) {
+            @Override
+			public void modifyText( ModifyEvent e ) {
                 Text textField = (Text)e.widget;
                 IStatus status = ParameterValueValidator.isValidValue(column, getValue(textField));
                 setStatus(status, textField);
@@ -272,7 +274,8 @@ public class PreviewParameterPanel extends ScrolledComposite implements DqpUiCon
      * @see org.teiid.core.event.IChangeNotifier#removeChangeListener(org.teiid.core.event.IChangeListener)
      * @since 5.5.3
      */
-    public void removeChangeListener( IChangeListener listener ) {
+    @Override
+	public void removeChangeListener( IChangeListener listener ) {
         if (this.listeners != null) {
             this.listeners.remove(listener);
         }

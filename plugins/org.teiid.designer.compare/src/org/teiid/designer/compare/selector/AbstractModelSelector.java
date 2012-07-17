@@ -37,7 +37,8 @@ public abstract class AbstractModelSelector implements ModelSelector {
      * after the last {@link #getRootObjects() exposed root} object.
      * @see org.teiid.designer.compare.selector.ModelSelector#addRootObjects(java.util.List)
      */
-    public void addRootObjects(final List newRoots, final int startingIndex) throws ModelerCoreException {
+    @Override
+	public void addRootObjects(final List newRoots, final int startingIndex) throws ModelerCoreException {
         if ( newRoots == null || newRoots.isEmpty() ) {
             return;
         }
@@ -64,7 +65,8 @@ public abstract class AbstractModelSelector implements ModelSelector {
      * after the last {@link #getRootObjects() exposed root} object.
      * @see org.teiid.designer.compare.selector.ModelSelector#addRootObjects(java.util.List)
      */
-    public void addRootObjects(final List newRoots) throws ModelerCoreException {
+    @Override
+	public void addRootObjects(final List newRoots) throws ModelerCoreException {
         if ( newRoots == null || newRoots.isEmpty() ) {
             return;
         }
@@ -76,9 +78,11 @@ public abstract class AbstractModelSelector implements ModelSelector {
     /**
      * @see org.teiid.designer.compare.selector.ModelSelector#rebuildModelImports()
      */
-    public void rebuildModelImports() throws ModelerCoreException {
+    @Override
+	public void rebuildModelImports() throws ModelerCoreException {
         final OrganizeImportHandler handler = new OrganizeImportHandler() {
-            public Object choose(List options) {
+            @Override
+			public Object choose(List options) {
                 return null;
             }
         };

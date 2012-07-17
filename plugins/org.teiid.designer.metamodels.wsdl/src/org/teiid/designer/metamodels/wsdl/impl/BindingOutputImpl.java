@@ -157,7 +157,8 @@ public class BindingOutputImpl extends EObjectImpl implements BindingOutput {
      * 
      * @generated
      */
-    public Documentation getDocumentation() {
+    @Override
+	public Documentation getDocumentation() {
         return documentation;
     }
 
@@ -185,7 +186,8 @@ public class BindingOutputImpl extends EObjectImpl implements BindingOutput {
      * 
      * @generated
      */
-    public void setDocumentation( Documentation newDocumentation ) {
+    @Override
+	public void setDocumentation( Documentation newDocumentation ) {
         if (newDocumentation != documentation) {
             NotificationChain msgs = null;
             if (documentation != null) msgs = ((InternalEObject)documentation).eInverseRemove(this,
@@ -208,7 +210,8 @@ public class BindingOutputImpl extends EObjectImpl implements BindingOutput {
      * 
      * @generated
      */
-    public EList getDeclaredNamespaces() {
+    @Override
+	public EList getDeclaredNamespaces() {
         if (declaredNamespaces == null) {
             declaredNamespaces = new EObjectContainmentWithInverseEList(NamespaceDeclaration.class, this,
                                                                         WsdlPackage.BINDING_OUTPUT__DECLARED_NAMESPACES,
@@ -222,7 +225,8 @@ public class BindingOutputImpl extends EObjectImpl implements BindingOutput {
      * 
      * @generated
      */
-    public EList getElements() {
+    @Override
+	public EList getElements() {
         if (elements == null) {
             elements = new EObjectContainmentWithInverseEList(Element.class, this, WsdlPackage.BINDING_OUTPUT__ELEMENTS,
                                                               WsdlPackage.ELEMENT__ELEMENT_OWNER);
@@ -235,7 +239,8 @@ public class BindingOutputImpl extends EObjectImpl implements BindingOutput {
      * 
      * @generated
      */
-    public EList getMimeElements() {
+    @Override
+	public EList getMimeElements() {
         if (mimeElements == null) {
             mimeElements = new EObjectContainmentWithInverseEList(MimeElement.class, this,
                                                                   WsdlPackage.BINDING_OUTPUT__MIME_ELEMENTS,
@@ -249,7 +254,8 @@ public class BindingOutputImpl extends EObjectImpl implements BindingOutput {
      * 
      * @generated
      */
-    public String getName() {
+    @Override
+	public String getName() {
         return name;
     }
 
@@ -258,7 +264,8 @@ public class BindingOutputImpl extends EObjectImpl implements BindingOutput {
      * 
      * @generated
      */
-    public void setName( String newName ) {
+    @Override
+	public void setName( String newName ) {
         String oldName = name;
         name = newName;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, WsdlPackage.BINDING_OUTPUT__NAME,
@@ -270,7 +277,8 @@ public class BindingOutputImpl extends EObjectImpl implements BindingOutput {
      * 
      * @generated
      */
-    public SoapHeader getSoapHeader() {
+    @Override
+	public SoapHeader getSoapHeader() {
         return soapHeader;
     }
 
@@ -298,7 +306,8 @@ public class BindingOutputImpl extends EObjectImpl implements BindingOutput {
      * 
      * @generated
      */
-    public void setSoapHeader( SoapHeader newSoapHeader ) {
+    @Override
+	public void setSoapHeader( SoapHeader newSoapHeader ) {
         if (newSoapHeader != soapHeader) {
             NotificationChain msgs = null;
             if (soapHeader != null) msgs = ((InternalEObject)soapHeader).eInverseRemove(this,
@@ -321,7 +330,8 @@ public class BindingOutputImpl extends EObjectImpl implements BindingOutput {
      * 
      * @generated
      */
-    public SoapBody getSoapBody() {
+    @Override
+	public SoapBody getSoapBody() {
         return soapBody;
     }
 
@@ -348,7 +358,8 @@ public class BindingOutputImpl extends EObjectImpl implements BindingOutput {
      * 
      * @generated
      */
-    public void setSoapBody( SoapBody newSoapBody ) {
+    @Override
+	public void setSoapBody( SoapBody newSoapBody ) {
         if (newSoapBody != soapBody) {
             NotificationChain msgs = null;
             if (soapBody != null) msgs = ((InternalEObject)soapBody).eInverseRemove(this,
@@ -371,7 +382,8 @@ public class BindingOutputImpl extends EObjectImpl implements BindingOutput {
      * 
      * @generated
      */
-    public BindingOperation getBindingOperation() {
+    @Override
+	public BindingOperation getBindingOperation() {
         if (eContainerFeatureID != WsdlPackage.BINDING_OUTPUT__BINDING_OPERATION) return null;
         return (BindingOperation)eContainer;
     }
@@ -381,7 +393,8 @@ public class BindingOutputImpl extends EObjectImpl implements BindingOutput {
      * 
      * @generated
      */
-    public void setBindingOperation( BindingOperation newBindingOperation ) {
+    @Override
+	public void setBindingOperation( BindingOperation newBindingOperation ) {
         if (newBindingOperation != eContainer
             || (eContainerFeatureID != WsdlPackage.BINDING_OUTPUT__BINDING_OPERATION && newBindingOperation != null)) {
             if (EcoreUtil.isAncestor(this, newBindingOperation)) throw new IllegalArgumentException(
@@ -404,7 +417,8 @@ public class BindingOutputImpl extends EObjectImpl implements BindingOutput {
      * 
      * @generated
      */
-    public boolean isNameValid() {
+    @Override
+	public boolean isNameValid() {
         // TODO: implement this method
         // Ensure that you remove @generated or mark it @generated NOT
         throw new UnsupportedOperationException();

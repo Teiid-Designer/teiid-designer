@@ -119,10 +119,12 @@ public class XsdUrlDialog extends Dialog implements IHelpContextIds, ModelerXsdU
         }
 
         this.btnOk.addSelectionListener(new SelectionListener() {
-            public void widgetSelected( SelectionEvent theEvent ) {
+            @Override
+			public void widgetSelected( SelectionEvent theEvent ) {
             }
 
-            public void widgetDefaultSelected( SelectionEvent theEvent ) {
+            @Override
+			public void widgetDefaultSelected( SelectionEvent theEvent ) {
                 okPressed();
             }
         });
@@ -202,7 +204,8 @@ public class XsdUrlDialog extends Dialog implements IHelpContextIds, ModelerXsdU
         Text txf = new Text(panel, SWT.BORDER);
         txf.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         txf.addModifyListener(new ModifyListener() {
-            public void modifyText( ModifyEvent theEvent ) {
+            @Override
+			public void modifyText( ModifyEvent theEvent ) {
                 handleModifyText(theEvent);
             }
         });
@@ -237,7 +240,8 @@ public class XsdUrlDialog extends Dialog implements IHelpContextIds, ModelerXsdU
         WidgetFactory.createLabel(optionsGroup, getString("label.user"));//$NON-NLS-1$
         this.userText = WidgetFactory.createTextField(optionsGroup, GridData.FILL_HORIZONTAL);
         this.userText.addModifyListener(new ModifyListener() {
-            public void modifyText( final ModifyEvent event ) {
+            @Override
+			public void modifyText( final ModifyEvent event ) {
                 userModified();
             }
         });
@@ -246,7 +250,8 @@ public class XsdUrlDialog extends Dialog implements IHelpContextIds, ModelerXsdU
         this.pwdText.setEchoChar('*');
         this.pwdText.addModifyListener(new ModifyListener() {
 
-            public void modifyText( final ModifyEvent event ) {
+            @Override
+			public void modifyText( final ModifyEvent event ) {
                 passwordModified();
             }
         });
@@ -257,11 +262,13 @@ public class XsdUrlDialog extends Dialog implements IHelpContextIds, ModelerXsdU
         verifyHostnameCheckbox.setSelection(true);
         verifyHostnameCheckbox.addSelectionListener(new SelectionListener() {
 
-            public void widgetSelected( SelectionEvent e ) {
+            @Override
+			public void widgetSelected( SelectionEvent e ) {
                 verifyHostnameChanged();
             }
 
-            public void widgetDefaultSelected( SelectionEvent e ) {
+            @Override
+			public void widgetDefaultSelected( SelectionEvent e ) {
             }
         });
     }

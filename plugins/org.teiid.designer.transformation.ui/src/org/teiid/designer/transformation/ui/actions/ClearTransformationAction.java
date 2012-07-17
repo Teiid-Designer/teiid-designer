@@ -82,7 +82,8 @@ public class ClearTransformationAction extends TransformationAction implements E
      * handler for SqlTransformationStatusChangeEvents
      * @param e the eventObject
      */
-    public void processEvent(EventObject e) {
+    @Override
+	public void processEvent(EventObject e) {
         //----------------------------------------------------------------------
         // respond to SqlTransformationStatusChangeEvent for the current 
         // Transformation.  This event is fired whenever the SQL for a 

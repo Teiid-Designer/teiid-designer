@@ -22,7 +22,8 @@ public class TransformationValidationAspectFactoryImpl implements MetamodelAspec
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.MetamodelAspectFactory#create(org.eclipse.emf.ecore.EClassifier, org.teiid.designer.core.metamodel.aspect.MetamodelEntity)
      */
-    public MetamodelAspect create(EClassifier classifier, MetamodelEntity entity) {
+    @Override
+	public MetamodelAspect create(EClassifier classifier, MetamodelEntity entity) {
         switch (classifier.getClassifierID()) {
             case TransformationPackage.STAGING_TABLE:            
             case TransformationPackage.MAPPING_CLASS: return new MappingClassAspect(entity);

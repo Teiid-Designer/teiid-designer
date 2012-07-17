@@ -104,7 +104,7 @@ public class RelationalObjectFactory {
     		String description, 
     		boolean supportsUpdate) {
     	
-        BaseTable baseTable = (BaseTable)factory.createBaseTable();
+        BaseTable baseTable = factory.createBaseTable();
         if( baseTable != null ) {
             baseTable.setName(name);
             baseTable.setSupportsUpdate(supportsUpdate);
@@ -123,7 +123,7 @@ public class RelationalObjectFactory {
     		String description, 
     		boolean supportsUpdate) {
     	
-    	View view = (View)factory.createView();
+    	View view = factory.createView();
         if( view != null ) {
         	view.setName(name);
         	view.setSupportsUpdate(supportsUpdate);
@@ -140,7 +140,7 @@ public class RelationalObjectFactory {
     public Procedure createProcedure(
     		String name, 
     		String description) {
-    	Procedure procedure = (Procedure)factory.createProcedure();
+    	Procedure procedure = factory.createProcedure();
     	
         if( procedure != null ) {
         	procedure.setName(name);
@@ -157,7 +157,7 @@ public class RelationalObjectFactory {
     public Procedure createPushdownFunction(
     		String name, 
     		String description) {
-    	Procedure procedure = (Procedure)createProcedure(name, description);
+    	Procedure procedure = createProcedure(name, description);
     	procedure.setFunction(true);
         
         return procedure;
@@ -268,7 +268,7 @@ public class RelationalObjectFactory {
             }
             
             // SET PARENT
-            addValue(procedure, param, ((Procedure)procedure).getParameters());
+            addValue(procedure, param, procedure.getParameters());
 
             addDescription(param, description);
         }

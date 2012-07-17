@@ -162,7 +162,7 @@ public class AdvisorSupplierFactory {
         	AdvisorUiConstants.UTIL.log(e);
         }
 
-        return "NoNature";
+        return "NoNature"; //$NON-NLS-1$
     }
     
 	public static boolean hasPrimaryProjectScopeNature(IProject proj, String id) {

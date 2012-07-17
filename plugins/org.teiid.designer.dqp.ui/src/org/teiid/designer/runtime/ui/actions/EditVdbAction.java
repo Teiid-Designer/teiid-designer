@@ -43,7 +43,7 @@ public class EditVdbAction  extends Action implements VdbConstants {
 		ModelWorkspaceDialog vdbDialog = getSelectVdbDialog();
 
 		// add filters
-		((ModelWorkspaceDialog) vdbDialog).addFilter(new ClosedProjectFilter());
+		vdbDialog.addFilter(new ClosedProjectFilter());
 
 		vdbDialog.open();
 
@@ -79,6 +79,7 @@ public class EditVdbAction  extends Action implements VdbConstants {
 		result.setInput(ModelerCore.getWorkspace().getRoot());
 
 		result.setValidator(new ISelectionStatusValidator() {
+			@Override
 			public IStatus validate(Object[] selection) {
 				if (selection != null
 						&& selection.length == 1 ) {

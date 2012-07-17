@@ -106,7 +106,8 @@ public class MimeContentImpl extends EObjectImpl implements MimeContent {
      * 
      * @generated
      */
-    public MimeElementOwner getMimeElementOwner() {
+    @Override
+	public MimeElementOwner getMimeElementOwner() {
         if (eContainerFeatureID != MimePackage.MIME_CONTENT__MIME_ELEMENT_OWNER) return null;
         return (MimeElementOwner)eContainer;
     }
@@ -116,7 +117,8 @@ public class MimeContentImpl extends EObjectImpl implements MimeContent {
      * 
      * @generated
      */
-    public void setMimeElementOwner( MimeElementOwner newMimeElementOwner ) {
+    @Override
+	public void setMimeElementOwner( MimeElementOwner newMimeElementOwner ) {
         if (newMimeElementOwner != eContainer
             || (eContainerFeatureID != MimePackage.MIME_CONTENT__MIME_ELEMENT_OWNER && newMimeElementOwner != null)) {
             if (EcoreUtil.isAncestor(this, newMimeElementOwner)) throw new IllegalArgumentException(
@@ -139,7 +141,8 @@ public class MimeContentImpl extends EObjectImpl implements MimeContent {
      * 
      * @generated
      */
-    public String getType() {
+    @Override
+	public String getType() {
         return type;
     }
 
@@ -148,7 +151,8 @@ public class MimeContentImpl extends EObjectImpl implements MimeContent {
      * 
      * @generated
      */
-    public void setType( String newType ) {
+    @Override
+	public void setType( String newType ) {
         String oldType = type;
         type = newType;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, MimePackage.MIME_CONTENT__TYPE,
@@ -160,7 +164,8 @@ public class MimeContentImpl extends EObjectImpl implements MimeContent {
      * 
      * @generated
      */
-    public boolean isXml() {
+    @Override
+	public boolean isXml() {
         return xml;
     }
 
@@ -169,7 +174,8 @@ public class MimeContentImpl extends EObjectImpl implements MimeContent {
      * 
      * @generated
      */
-    public void setXml( boolean newXml ) {
+    @Override
+	public void setXml( boolean newXml ) {
         boolean oldXml = xml;
         xml = newXml;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, MimePackage.MIME_CONTENT__XML, oldXml,
@@ -181,7 +187,8 @@ public class MimeContentImpl extends EObjectImpl implements MimeContent {
      * 
      * @generated
      */
-    public MessagePart getMessagePart() {
+    @Override
+	public MessagePart getMessagePart() {
         if (messagePart != null && messagePart.eIsProxy()) {
             MessagePart oldMessagePart = messagePart;
             messagePart = (MessagePart)eResolveProxy((InternalEObject)messagePart);
@@ -208,7 +215,8 @@ public class MimeContentImpl extends EObjectImpl implements MimeContent {
      * 
      * @generated
      */
-    public void setMessagePart( MessagePart newMessagePart ) {
+    @Override
+	public void setMessagePart( MessagePart newMessagePart ) {
         MessagePart oldMessagePart = messagePart;
         messagePart = newMessagePart;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,

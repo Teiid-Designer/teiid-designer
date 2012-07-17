@@ -11,7 +11,6 @@ import static org.teiid.designer.runtime.DqpPlugin.PLUGIN_ID;
 import static org.teiid.designer.runtime.DqpPlugin.Util;
 
 import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Properties;
@@ -348,7 +347,7 @@ public class Server implements HostProvider {
 			
 			Admin adminApi = getAdmin().getAdminApi();
  
-			adminApi.deployVDB("ping-vdb.xml", (InputStream)new ByteArrayInputStream(ServerUtils.TEST_VDB.getBytes())); //$NON-NLS-1$
+			adminApi.deployVDB("ping-vdb.xml", new ByteArrayInputStream(ServerUtils.TEST_VDB.getBytes())); //$NON-NLS-1$
 			try{
 				String url = "jdbc:teiid:ping@mm://"+host+':'+port+";user="+username+";password="+password+';';  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				

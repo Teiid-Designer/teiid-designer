@@ -164,7 +164,8 @@ public class RelationalModelSelectorDialog extends ModelWorkspaceDialog implemen
 
         // listener for typing changes
         txtRelationalModelName.addModifyListener(new ModifyListener() {
-            public void modifyText( final ModifyEvent event ) {
+            @Override
+			public void modifyText( final ModifyEvent event ) {
                 handleSetRelationalModelName();
             }
         });

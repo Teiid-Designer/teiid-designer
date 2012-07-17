@@ -19,7 +19,8 @@ import org.teiid.designer.metamodels.relational.RelationalPlugin;
  * RelationalSqlAspectFactoryImpl
  */
 public class RelationalSqlAspectFactoryImpl implements MetamodelAspectFactory {
-    public MetamodelAspect create(EClassifier classifier, MetamodelEntity entity) {
+    @Override
+	public MetamodelAspect create(EClassifier classifier, MetamodelEntity entity) {
         switch (classifier.getClassifierID()) {
             case RelationalPackage.ACCESS_PATTERN: return createAccessPatternAspect(entity);
             case RelationalPackage.CATALOG: return createCatalogAspect(entity);

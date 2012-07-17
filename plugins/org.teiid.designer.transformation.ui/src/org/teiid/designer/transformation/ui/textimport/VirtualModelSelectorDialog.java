@@ -159,7 +159,8 @@ public class VirtualModelSelectorDialog extends ModelWorkspaceDialog implements 
 
         // listener for typing changes
         txtVirtualModelName.addModifyListener(new ModifyListener() {
-            public void modifyText( final ModifyEvent event ) {
+            @Override
+			public void modifyText( final ModifyEvent event ) {
                 handleSetVirtualModelName();
             }
         });

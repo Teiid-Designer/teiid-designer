@@ -29,7 +29,8 @@ public class EObjectUtilImpl implements EObjectUtil {
     /* (non-Javadoc)
      * @See org.teiid.designer.modelgenerator.util.EObjectUtil#clone(org.eclipse.emf.ecore.EObject)
      */
-    public EObject clone(EObject object) throws ModelerCoreException{
+    @Override
+	public EObject clone(EObject object) throws ModelerCoreException{
         ModelEditor editor = ModelerCore.getModelEditor();
         return editor.clone(object);
     }

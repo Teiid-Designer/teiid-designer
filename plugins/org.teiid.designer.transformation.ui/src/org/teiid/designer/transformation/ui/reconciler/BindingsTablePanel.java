@@ -341,7 +341,8 @@ public class BindingsTablePanel extends Composite {
 
         // Implement a "fake" tooltip
         final Listener labelListener = new Listener() {
-            public void handleEvent( Event event ) {
+            @Override
+			public void handleEvent( Event event ) {
                 Label label = (Label)event.widget;
                 Shell shell = label.getShell();
                 switch (event.type) {
@@ -366,7 +367,8 @@ public class BindingsTablePanel extends Composite {
             Shell tip = null;
             Label label = null;
 
-            public void handleEvent( Event event ) {
+            @Override
+			public void handleEvent( Event event ) {
                 switch (event.type) {
                     case SWT.Dispose:
                     case SWT.KeyDown:
@@ -451,33 +453,38 @@ public class BindingsTablePanel extends Composite {
      * interface since it must register changeListeners with the BindingList
      */
     class BindingContentProvider implements IStructuredContentProvider, IBindingListViewer {
-        public void inputChanged( Viewer v,
+        @Override
+		public void inputChanged( Viewer v,
                                   Object oldInput,
                                   Object newInput ) {
             if (newInput != null) ((BindingList)newInput).addChangeListener(this);
             if (oldInput != null) ((BindingList)oldInput).removeChangeListener(this);
         }
 
-        public void dispose() {
+        @Override
+		public void dispose() {
             bindingList.removeChangeListener(this);
         }
 
         // Return the bindings as an array of Objects
-        public Object[] getElements( Object parent ) {
+        @Override
+		public Object[] getElements( Object parent ) {
             return bindingList.getAll().toArray();
         }
 
         /**
          * @see IBindingListViewer#addBinding(Binding)
          */
-        public void addBinding( Binding binding ) {
+        @Override
+		public void addBinding( Binding binding ) {
             tableViewer.add(binding);
         }
 
         /**
          * @see IBindingListViewer#addBinding(Binding)
          */
-        public void insertBinding( Binding binding,
+        @Override
+		public void insertBinding( Binding binding,
                                    int index ) {
             tableViewer.insert(binding, index);
         }
@@ -485,35 +492,40 @@ public class BindingsTablePanel extends Composite {
         /**
          * @see IBindingListViewer#addBindings(Object[])
          */
-        public void addBindings( Object[] bindings ) {
+        @Override
+		public void addBindings( Object[] bindings ) {
             tableViewer.add(bindings);
         }
 
         /**
          * @see IBindingListViewer#removeBinding(Binding)
          */
-        public void removeBinding( Binding binding ) {
+        @Override
+		public void removeBinding( Binding binding ) {
             tableViewer.remove(binding);
         }
 
         /**
          * @see IBindingListViewer#removeBindings(Binding[])
          */
-        public void removeBindings( Object[] bindings ) {
+        @Override
+		public void removeBindings( Object[] bindings ) {
             tableViewer.remove(bindings);
         }
 
         /**
          * @see IBindingListViewer#updateBindings(Binding)
          */
-        public void updateBinding( Binding binding ) {
+        @Override
+		public void updateBinding( Binding binding ) {
             tableViewer.update(binding, null);
         }
 
         /**
          * @see IBindingListViewer#updateBindings(Binding)
          */
-        public void refresh( boolean updateLabels ) {
+        @Override
+		public void refresh( boolean updateLabels ) {
             tableViewer.refresh(updateLabels);
         }
 

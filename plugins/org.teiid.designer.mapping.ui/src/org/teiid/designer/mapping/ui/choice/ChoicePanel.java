@@ -214,15 +214,18 @@ public class ChoicePanel extends SashForm
         tblOptionTable.addSelectionListener(this);
 
         tblOptionTable.addMouseListener(new MouseListener() {
-            public void mouseDown( final MouseEvent event ) {
+            @Override
+			public void mouseDown( final MouseEvent event ) {
                 handleMouseEvent(event);
             }
 
-            public void mouseUp( final MouseEvent event ) {
+            @Override
+			public void mouseUp( final MouseEvent event ) {
 
             }
 
-            public void mouseDoubleClick( final MouseEvent event ) {
+            @Override
+			public void mouseDoubleClick( final MouseEvent event ) {
 
             }
         });
@@ -265,7 +268,8 @@ public class ChoicePanel extends SashForm
     public void refreshFromBusinessObject() {
         if (!tvOptionTableViewer.getControl().isDisposed()) {
             UiUtil.runInSwtThread(new Runnable() {
-                public void run() {
+                @Override
+				public void run() {
                     // load the table
                     tvOptionTableViewer.setInput(icoChoiceObject);
 
@@ -289,7 +293,8 @@ public class ChoicePanel extends SashForm
         ModelUtilities.removeNotifyChangedListener(this);
     }
 
-    public void notifyChanged( Notification n ) {
+    @Override
+	public void notifyChanged( Notification n ) {
         refreshFromBusinessObject();
     }
 
@@ -1084,7 +1089,8 @@ public class ChoicePanel extends SashForm
 
     }
 
-    public void selectionChanged( SelectionChangedEvent event ) {
+    @Override
+	public void selectionChanged( SelectionChangedEvent event ) {
         setButtonStates();
 
         getLaunchCriteriaBuilderAction().selectionChanged();
@@ -1145,7 +1151,8 @@ public class ChoicePanel extends SashForm
         }
     }
 
-    public void widgetSelected( SelectionEvent e ) {
+    @Override
+	public void widgetSelected( SelectionEvent e ) {
         if (e.getSource() == tblOptionTable) {
             handleTableSelection();
         } else if (e.getSource() == tabFolder) {
@@ -1164,7 +1171,8 @@ public class ChoicePanel extends SashForm
 
     }
 
-    public void widgetDefaultSelected( SelectionEvent e ) {
+    @Override
+	public void widgetDefaultSelected( SelectionEvent e ) {
         widgetSelected(e);
     }
 
@@ -1413,13 +1421,15 @@ public class ChoicePanel extends SashForm
         /**
          * @see org.eclipse.jface.viewers.IContentProvider#dispose()
          */
-        public void dispose() {
+        @Override
+		public void dispose() {
         }
 
         /**
          * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
          */
-        public Object[] getElements( Object theInputElement ) {
+        @Override
+		public Object[] getElements( Object theInputElement ) {
 
             icoChoiceObject = (IChoiceObject)theInputElement;
 
@@ -1459,7 +1469,8 @@ public class ChoicePanel extends SashForm
          * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object,
          *      java.lang.Object)
          */
-        public void inputChanged( Viewer theViewer,
+        @Override
+		public void inputChanged( Viewer theViewer,
                                   Object theOldInput,
                                   Object theNewInput ) {
 
@@ -1481,7 +1492,8 @@ public class ChoicePanel extends SashForm
 
         Image imgUncheckedCheckBox = org.teiid.designer.ui.common.UiPlugin.getDefault().getImage(org.teiid.designer.ui.common.UiConstants.Images.UNCHECKED_CHECKBOX);
 
-        public Image getColumnImage( Object theElement,
+        @Override
+		public Image getColumnImage( Object theElement,
                                      int theIndex ) {
             TableRow trRow = (TableRow)theElement;
 
@@ -1510,7 +1522,8 @@ public class ChoicePanel extends SashForm
         /**
          * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.lang.Object, int)
          */
-        public String getColumnText( Object theElement,
+        @Override
+		public String getColumnText( Object theElement,
                                      int theColumnIndex ) {
 
             TableRow row = (TableRow)theElement;

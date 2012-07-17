@@ -79,7 +79,8 @@ public class DataFlowLinkImpl extends EObjectImpl implements DataFlowLink {
      * 
      * @generated
      */
-    public DataFlowNode getOutputNode() {
+    @Override
+	public DataFlowNode getOutputNode() {
         if (outputNode != null && outputNode.eIsProxy()) {
             DataFlowNode oldOutputNode = outputNode;
             outputNode = (DataFlowNode)eResolveProxy((InternalEObject)outputNode);
@@ -125,7 +126,8 @@ public class DataFlowLinkImpl extends EObjectImpl implements DataFlowLink {
      * 
      * @generated
      */
-    public void setOutputNode( DataFlowNode newOutputNode ) {
+    @Override
+	public void setOutputNode( DataFlowNode newOutputNode ) {
         if (newOutputNode != outputNode) {
             NotificationChain msgs = null;
             if (outputNode != null) msgs = ((InternalEObject)outputNode).eInverseRemove(this,
@@ -148,7 +150,8 @@ public class DataFlowLinkImpl extends EObjectImpl implements DataFlowLink {
      * 
      * @generated
      */
-    public DataFlowNode getInputNode() {
+    @Override
+	public DataFlowNode getInputNode() {
         if (inputNode != null && inputNode.eIsProxy()) {
             DataFlowNode oldInputNode = inputNode;
             inputNode = (DataFlowNode)eResolveProxy((InternalEObject)inputNode);
@@ -194,7 +197,8 @@ public class DataFlowLinkImpl extends EObjectImpl implements DataFlowLink {
      * 
      * @generated
      */
-    public void setInputNode( DataFlowNode newInputNode ) {
+    @Override
+	public void setInputNode( DataFlowNode newInputNode ) {
         if (newInputNode != inputNode) {
             NotificationChain msgs = null;
             if (inputNode != null) msgs = ((InternalEObject)inputNode).eInverseRemove(this,
@@ -217,7 +221,8 @@ public class DataFlowLinkImpl extends EObjectImpl implements DataFlowLink {
      * 
      * @generated
      */
-    public DataFlowMappingRoot getOwner() {
+    @Override
+	public DataFlowMappingRoot getOwner() {
         if (eContainerFeatureID != TransformationPackage.DATA_FLOW_LINK__OWNER) return null;
         return (DataFlowMappingRoot)eContainer;
     }
@@ -227,7 +232,8 @@ public class DataFlowLinkImpl extends EObjectImpl implements DataFlowLink {
      * 
      * @generated
      */
-    public void setOwner( DataFlowMappingRoot newOwner ) {
+    @Override
+	public void setOwner( DataFlowMappingRoot newOwner ) {
         if (newOwner != eContainer || (eContainerFeatureID != TransformationPackage.DATA_FLOW_LINK__OWNER && newOwner != null)) {
             if (EcoreUtil.isAncestor(this, newOwner)) throw new IllegalArgumentException(
                                                                                          "Recursive containment not allowed for " + toString()); //$NON-NLS-1$

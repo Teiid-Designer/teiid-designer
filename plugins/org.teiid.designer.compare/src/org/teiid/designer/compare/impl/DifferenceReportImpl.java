@@ -213,7 +213,8 @@ public class DifferenceReportImpl extends EObjectImpl implements DifferenceRepor
      * <!-- end-user-doc -->
      * @generated
      */
-    public String getTitle() {
+    @Override
+	public String getTitle() {
         return title;
     }
 
@@ -222,7 +223,8 @@ public class DifferenceReportImpl extends EObjectImpl implements DifferenceRepor
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setTitle(String newTitle) {
+    @Override
+	public void setTitle(String newTitle) {
         String oldTitle = title;
         title = newTitle;
         if (eNotificationRequired())
@@ -234,7 +236,8 @@ public class DifferenceReportImpl extends EObjectImpl implements DifferenceRepor
      * <!-- end-user-doc -->
      * @generated
      */
-    public int getTotalAdditions() {
+    @Override
+	public int getTotalAdditions() {
         return totalAdditions;
     }
 
@@ -243,7 +246,8 @@ public class DifferenceReportImpl extends EObjectImpl implements DifferenceRepor
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setTotalAdditions(int newTotalAdditions) {
+    @Override
+	public void setTotalAdditions(int newTotalAdditions) {
         int oldTotalAdditions = totalAdditions;
         totalAdditions = newTotalAdditions;
         if (eNotificationRequired())
@@ -255,7 +259,8 @@ public class DifferenceReportImpl extends EObjectImpl implements DifferenceRepor
      * <!-- end-user-doc -->
      * @generated
      */
-    public int getTotalDeletions() {
+    @Override
+	public int getTotalDeletions() {
         return totalDeletions;
     }
 
@@ -264,7 +269,8 @@ public class DifferenceReportImpl extends EObjectImpl implements DifferenceRepor
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setTotalDeletions(int newTotalDeletions) {
+    @Override
+	public void setTotalDeletions(int newTotalDeletions) {
         int oldTotalDeletions = totalDeletions;
         totalDeletions = newTotalDeletions;
         if (eNotificationRequired())
@@ -276,7 +282,8 @@ public class DifferenceReportImpl extends EObjectImpl implements DifferenceRepor
      * <!-- end-user-doc -->
      * @generated
      */
-    public int getTotalChanges() {
+    @Override
+	public int getTotalChanges() {
         return totalChanges;
     }
 
@@ -285,7 +292,8 @@ public class DifferenceReportImpl extends EObjectImpl implements DifferenceRepor
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setTotalChanges(int newTotalChanges) {
+    @Override
+	public void setTotalChanges(int newTotalChanges) {
         int oldTotalChanges = totalChanges;
         totalChanges = newTotalChanges;
         if (eNotificationRequired())
@@ -297,7 +305,8 @@ public class DifferenceReportImpl extends EObjectImpl implements DifferenceRepor
      * <!-- end-user-doc -->
      * @generated
      */
-    public long getAnalysisTime() {
+    @Override
+	public long getAnalysisTime() {
         return analysisTime;
     }
 
@@ -306,7 +315,8 @@ public class DifferenceReportImpl extends EObjectImpl implements DifferenceRepor
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setAnalysisTime(long newAnalysisTime) {
+    @Override
+	public void setAnalysisTime(long newAnalysisTime) {
         long oldAnalysisTime = analysisTime;
         analysisTime = newAnalysisTime;
         if (eNotificationRequired())
@@ -318,7 +328,8 @@ public class DifferenceReportImpl extends EObjectImpl implements DifferenceRepor
      * <!-- end-user-doc -->
      * @generated
      */
-    public String getSourceUri() {
+    @Override
+	public String getSourceUri() {
         return sourceUri;
     }
 
@@ -327,7 +338,8 @@ public class DifferenceReportImpl extends EObjectImpl implements DifferenceRepor
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setSourceUri(String newSourceUri) {
+    @Override
+	public void setSourceUri(String newSourceUri) {
         String oldSourceUri = sourceUri;
         sourceUri = newSourceUri;
         if (eNotificationRequired())
@@ -339,7 +351,8 @@ public class DifferenceReportImpl extends EObjectImpl implements DifferenceRepor
      * <!-- end-user-doc -->
      * @generated
      */
-    public String getResultUri() {
+    @Override
+	public String getResultUri() {
         return resultUri;
     }
 
@@ -348,7 +361,8 @@ public class DifferenceReportImpl extends EObjectImpl implements DifferenceRepor
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setResultUri(String newResultUri) {
+    @Override
+	public void setResultUri(String newResultUri) {
         String oldResultUri = resultUri;
         resultUri = newResultUri;
         if (eNotificationRequired())
@@ -360,7 +374,8 @@ public class DifferenceReportImpl extends EObjectImpl implements DifferenceRepor
      * <!-- end-user-doc -->
      * @generated
      */
-    public Mapping getMapping() {
+    @Override
+	public Mapping getMapping() {
         return mapping;
     }
 
@@ -384,7 +399,8 @@ public class DifferenceReportImpl extends EObjectImpl implements DifferenceRepor
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setMapping(Mapping newMapping) {
+    @Override
+	public void setMapping(Mapping newMapping) {
         if (newMapping != mapping) {
             NotificationChain msgs = null;
             if (mapping != null)

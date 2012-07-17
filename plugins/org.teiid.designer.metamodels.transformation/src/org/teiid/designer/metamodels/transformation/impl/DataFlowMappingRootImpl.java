@@ -110,7 +110,8 @@ public class DataFlowMappingRootImpl extends TransformationMappingRootImpl imple
      * 
      * @generated
      */
-    public boolean isAllowsOptimization() {
+    @Override
+	public boolean isAllowsOptimization() {
         return allowsOptimization;
     }
 
@@ -119,7 +120,8 @@ public class DataFlowMappingRootImpl extends TransformationMappingRootImpl imple
      * 
      * @generated
      */
-    public void setAllowsOptimization( boolean newAllowsOptimization ) {
+    @Override
+	public void setAllowsOptimization( boolean newAllowsOptimization ) {
         boolean oldAllowsOptimization = allowsOptimization;
         allowsOptimization = newAllowsOptimization;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(
@@ -134,7 +136,8 @@ public class DataFlowMappingRootImpl extends TransformationMappingRootImpl imple
      * 
      * @generated
      */
-    public EList getNodes() {
+    @Override
+	public EList getNodes() {
         if (nodes == null) {
             nodes = new EObjectContainmentWithInverseEList(DataFlowNode.class, this,
                                                            TransformationPackage.DATA_FLOW_MAPPING_ROOT__NODES,
@@ -148,7 +151,8 @@ public class DataFlowMappingRootImpl extends TransformationMappingRootImpl imple
      * 
      * @generated
      */
-    public EList getLinks() {
+    @Override
+	public EList getLinks() {
         if (links == null) {
             links = new EObjectContainmentWithInverseEList(DataFlowLink.class, this,
                                                            TransformationPackage.DATA_FLOW_MAPPING_ROOT__LINKS,
@@ -162,7 +166,8 @@ public class DataFlowMappingRootImpl extends TransformationMappingRootImpl imple
      * 
      * @generated NOT
      */
-    public List getSourceNodes() {
+    @Override
+	public List getSourceNodes() {
         final List result = new ArrayList();
         addNodeTypeToList(getNodes(), TransformationPackage.SOURCE_NODE, result);
         return result;
@@ -173,7 +178,8 @@ public class DataFlowMappingRootImpl extends TransformationMappingRootImpl imple
      * 
      * @generated NOT
      */
-    public List getTargetNodes() {
+    @Override
+	public List getTargetNodes() {
         final List result = new ArrayList();
         addNodeTypeToList(getNodes(), TransformationPackage.TARGET_NODE, result);
         return result;
@@ -184,7 +190,8 @@ public class DataFlowMappingRootImpl extends TransformationMappingRootImpl imple
      * 
      * @generated
      */
-    public String getResultantSql() {
+    @Override
+	public String getResultantSql() {
         // TODO: implement this method
         // Ensure that you remove @generated or mark it @generated NOT
         throw new UnsupportedOperationException();

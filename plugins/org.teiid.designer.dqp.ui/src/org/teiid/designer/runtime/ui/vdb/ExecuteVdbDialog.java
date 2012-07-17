@@ -154,6 +154,7 @@ public class ExecuteVdbDialog extends TitleAreaDialog implements
 	 * @see org.teiid.core.event.IChangeListener#stateChanged(org.teiid.core.event.IChangeNotifier)
 	 * @since 5.5.3
 	 */
+	@Override
 	public void stateChanged(IChangeNotifier theSource) {
 		updateState();
 	}
@@ -175,7 +176,7 @@ public class ExecuteVdbDialog extends TitleAreaDialog implements
 		ModelWorkspaceDialog vdbDialog = createVdbSelector();
 
 		// add filters
-		((ModelWorkspaceDialog) vdbDialog).addFilter(new ClosedProjectFilter());
+		vdbDialog.addFilter(new ClosedProjectFilter());
 
 		vdbDialog.open();
 
@@ -205,6 +206,7 @@ public class ExecuteVdbDialog extends TitleAreaDialog implements
 		result.setInput(ModelerCore.getWorkspace().getRoot());
 
 		result.setValidator(new ISelectionStatusValidator() {
+			@Override
 			public IStatus validate(Object[] selection) {
 				if (selection != null
 						&& selection.length == 1 ) {

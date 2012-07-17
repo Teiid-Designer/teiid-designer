@@ -91,7 +91,8 @@ public class XMLDocumentWizard extends AbstractWizard implements INewModelObject
         super(ModelerXmlUiPlugin.getDefault(), Util.getString("XMLDocumentWizard.title"), null); //$NON-NLS-1$
     }
 
-    public void init( IWorkbench workbench,
+    @Override
+	public void init( IWorkbench workbench,
                       IStructuredSelection selection ) {
         setNeedsProgressMonitor(true);
         model = new NewDocumentWizardModel();
@@ -126,7 +127,8 @@ public class XMLDocumentWizard extends AbstractWizard implements INewModelObject
         }
     }
 
-    public void setModel( ModelResource model ) {
+    @Override
+	public void setModel( ModelResource model ) {
         this.modelResource = model;
     }
 
@@ -219,7 +221,8 @@ public class XMLDocumentWizard extends AbstractWizard implements INewModelObject
         final boolean[] completedOperation = new boolean[1];
         // build the documents:
         IRunnableWithProgress op = new IRunnableWithProgress() {
-            public void run( IProgressMonitor monitor ) {
+            @Override
+			public void run( IProgressMonitor monitor ) {
                 try {
                     IDocumentsAndFragmentsPopulator populator = docPage.getPopulator();
 
@@ -580,7 +583,8 @@ public class XMLDocumentWizard extends AbstractWizard implements INewModelObject
         return completedOperation[0];
     }
 
-    public boolean completedOperation() {
+    @Override
+	public boolean completedOperation() {
         return completedOperation;
     }
 
@@ -599,7 +603,8 @@ public class XMLDocumentWizard extends AbstractWizard implements INewModelObject
     /**
      * @see org.teiid.designer.ui.wizards.INewModelObjectWizard#setCommand(org.eclipse.emf.common.command.Command)
      */
-    public void setCommand( Command descriptor ) {
+    @Override
+	public void setCommand( Command descriptor ) {
     }
 
     public static class DocSrcUpdater implements IRunnableWithProgress {
@@ -618,7 +623,8 @@ public class XMLDocumentWizard extends AbstractWizard implements INewModelObject
         }
 
         // Implementation of the IRunnableWithProgress interface:
-        public void run( IProgressMonitor monitor ) {
+        @Override
+		public void run( IProgressMonitor monitor ) {
             if (monitor == null) {
                 monitor = new NullProgressMonitor();
             } // endif

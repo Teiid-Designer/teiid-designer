@@ -62,7 +62,8 @@ public class SqlEditorPanelWrapper extends SqlEditorPanel
 
         // point the font manager to the current editor's text viewer
         UiUtil.runInSwtThread(new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 refreshFontManager();
             }
         }, true);
@@ -193,7 +194,8 @@ public class SqlEditorPanelWrapper extends SqlEditorPanel
         }
     }
 
-    public void processEvent( EventObject e ) {
+    @Override
+	public void processEvent( EventObject e ) {
         //------------------------------------------------
         // respond to internal events from SqlEditorPanel
         // - responds to CARET_CHANGED

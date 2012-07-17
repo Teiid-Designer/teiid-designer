@@ -41,7 +41,8 @@ public class PropertyOrder implements Comparable, Cloneable {
         return this.name;
     }
         
-    public int compareTo(Object o) {
+    @Override
+	public int compareTo(Object o) {
         int result = -1;
         if (o instanceof PropertyOrder) {
            PropertyOrder col2 = (PropertyOrder) o; 

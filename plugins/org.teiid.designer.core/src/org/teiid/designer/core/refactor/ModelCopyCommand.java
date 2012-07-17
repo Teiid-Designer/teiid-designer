@@ -149,7 +149,8 @@ public class ModelCopyCommand implements RefactorCommand {
     /* (non-Javadoc)
      * @See org.teiid.designer.core.refactor.RefactorCommand#canExecute()
      */
-    public IStatus canExecute() {
+    @Override
+	public IStatus canExecute() {
         if (this.newModelName.length() == 0) {
             final String msg = ModelerCore.Util.getString("ModelCopyCommand.No_new_model_name"); //$NON-NLS-1$
             return new Status(IStatus.ERROR, PID, ERROR_MISSING_NAME, msg, null);
@@ -202,7 +203,8 @@ public class ModelCopyCommand implements RefactorCommand {
     /* (non-Javadoc)
      * @See org.teiid.designer.core.refactor.RefactorCommand#execute(org.eclipse.core.runtime.IProgressMonitor)
      */
-    public IStatus execute( final IProgressMonitor monitor ) {
+    @Override
+	public IStatus execute( final IProgressMonitor monitor ) {
         this.problemList.clear();
 
         // create the new file
@@ -269,63 +271,72 @@ public class ModelCopyCommand implements RefactorCommand {
     /* (non-Javadoc)
      * @See org.teiid.designer.core.refactor.RefactorCommand#canUndo()
      */
-    public boolean canUndo() {
+    @Override
+	public boolean canUndo() {
         return false;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.refactor.RefactorCommand#canRedo()
      */
-    public boolean canRedo() {
+    @Override
+	public boolean canRedo() {
         return false;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.refactor.RefactorCommand#undo(org.eclipse.core.runtime.IProgressMonitor)
      */
-    public IStatus undo( final IProgressMonitor monitor ) {
+    @Override
+	public IStatus undo( final IProgressMonitor monitor ) {
         return null;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.refactor.RefactorCommand#redo(org.eclipse.core.runtime.IProgressMonitor)
      */
-    public IStatus redo( final IProgressMonitor monitor ) {
+    @Override
+	public IStatus redo( final IProgressMonitor monitor ) {
         return null;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.refactor.RefactorCommand#getResult()
      */
-    public Collection getResult() {
+    @Override
+	public Collection getResult() {
         return null;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.refactor.RefactorCommand#getAffectedObjects()
      */
-    public Collection getAffectedObjects() {
+    @Override
+	public Collection getAffectedObjects() {
         return null;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.refactor.RefactorCommand#getLabel()
      */
-    public String getLabel() {
+    @Override
+	public String getLabel() {
         return ModelerCore.Util.getString("ModelCopyCommand.label"); //$NON-NLS-1$;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.refactor.RefactorCommand#getDescription()
      */
-    public String getDescription() {
+    @Override
+	public String getDescription() {
         return ModelerCore.Util.getString("ModelCopyCommand.description"); //$NON-NLS-1$;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.refactor.RefactorCommand#getPostExecuteMessages()
      */
-    public Collection getPostExecuteMessages() {
+    @Override
+	public Collection getPostExecuteMessages() {
         return problemList;
     }
 
@@ -651,7 +662,8 @@ public class ModelCopyCommand implements RefactorCommand {
          * @see org.teiid.designer.core.util.ModelVisitor#visit(org.eclipse.emf.ecore.EObject)
          * @since 4.2
          */
-        public boolean visit( final EObject eObj ) {
+        @Override
+		public boolean visit( final EObject eObj ) {
             // Get all EReference features for this EClass
             final List refs = eObj.eClass().getEAllReferences();
             for (final Iterator iter1 = refs.iterator(); iter1.hasNext();) {
@@ -726,7 +738,8 @@ public class ModelCopyCommand implements RefactorCommand {
          * @see org.teiid.designer.core.util.ModelVisitor#visit(org.eclipse.emf.ecore.resource.Resource)
          * @since 4.2
          */
-        public boolean visit( final Resource resource ) {
+        @Override
+		public boolean visit( final Resource resource ) {
             return (resource != null);
         }
     }

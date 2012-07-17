@@ -53,7 +53,7 @@ public class ModelValidationStatusRowProvider implements IStatusRowProvider {
      */
     @Override
     public String getImageTooltip( IStatus status ) {
-        return "Model Validation Tooltip";
+        return "Model Validation Tooltip"; //$NON-NLS-1$
     }
 
     /**
@@ -73,7 +73,7 @@ public class ModelValidationStatusRowProvider implements IStatusRowProvider {
      */
     @Override
     public String getLinkTooltip( IStatus status ) {
-        return "Model Validation Tooltip";
+        return "Model Validation Tooltip"; //$NON-NLS-1$
     }
 
     /**
@@ -83,7 +83,7 @@ public class ModelValidationStatusRowProvider implements IStatusRowProvider {
      */
     @Override
     public String getText( IStatus status ) {
-        return "Model Validation Text";
+        return "Model Validation Text"; //$NON-NLS-1$
     }
 
     /**
@@ -93,7 +93,7 @@ public class ModelValidationStatusRowProvider implements IStatusRowProvider {
      */
     @Override
     public String getTextTooltip( IStatus status ) {
-        return "Model Validation Text Tooltip";
+        return "Model Validation Text Tooltip"; //$NON-NLS-1$
     }
 
 }

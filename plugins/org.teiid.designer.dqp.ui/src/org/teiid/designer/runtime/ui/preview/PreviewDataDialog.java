@@ -186,6 +186,7 @@ public class PreviewDataDialog extends TitleAreaDialog implements
 	 * @see org.teiid.core.event.IChangeListener#stateChanged(org.teiid.core.event.IChangeNotifier)
 	 * @since 5.5.3
 	 */
+	@Override
 	public void stateChanged(IChangeNotifier theSource) {
 		updateState();
 	}
@@ -207,8 +208,8 @@ public class PreviewDataDialog extends TitleAreaDialog implements
 		ModelWorkspaceDialog sdDialog = createTableOrProcedureSelector();
 
 		// add filters
-		((ModelWorkspaceDialog)sdDialog).addFilter(new ClosedProjectFilter());
-		((ModelWorkspaceDialog) sdDialog).addFilter(new SingleProjectFilter(this.designerProperties));
+		sdDialog.addFilter(new ClosedProjectFilter());
+		sdDialog.addFilter(new SingleProjectFilter(this.designerProperties));
 		
 		sdDialog.open();
 
@@ -237,6 +238,7 @@ public class PreviewDataDialog extends TitleAreaDialog implements
 		result.setInput(ModelerCore.getWorkspace().getRoot());
 
 		result.setValidator(new ISelectionStatusValidator() {
+			@Override
 			public IStatus validate(Object[] selection) {
 				if (selection == null || selection.length == 0
 						|| selection[0] == null

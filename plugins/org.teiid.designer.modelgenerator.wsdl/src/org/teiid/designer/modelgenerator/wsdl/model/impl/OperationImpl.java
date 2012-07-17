@@ -37,11 +37,13 @@ public class OperationImpl extends WSDLElementImpl implements Operation {
         m_messages = new ArrayList();
     }
 
-    public Binding getBinding() {
+    @Override
+	public Binding getBinding() {
         return m_binding;
     }
 
-    public WSDLElement copy() {
+    @Override
+	public WSDLElement copy() {
         Operation oper = new OperationImpl(getBinding());
         oper.setName(getName());
         oper.setId(getId());
@@ -91,72 +93,88 @@ public class OperationImpl extends WSDLElementImpl implements Operation {
         return buff.toString();
     }
 
-    public Message getInputMessage() {
+    @Override
+	public Message getInputMessage() {
         return m_input;
     }
 
-    public void setInputMessage( Message inputMsg ) {
+    @Override
+	public void setInputMessage( Message inputMsg ) {
         m_input = inputMsg;
 
     }
 
-    public Message getOutputMessage() {
+    @Override
+	public Message getOutputMessage() {
         return m_output;
     }
 
-    public void setOutputMessage( Message outputMsg ) {
+    @Override
+	public void setOutputMessage( Message outputMsg ) {
         m_output = outputMsg;
 
     }
 
-    public String getStyle() {
+    @Override
+	public String getStyle() {
         return m_style;
     }
 
-    public void setStyle( String style ) {
+    @Override
+	public void setStyle( String style ) {
         m_style = style;
 
     }
 
-    public Fault[] getFaults() {
+    @Override
+	public Fault[] getFaults() {
         return m_faults;
     }
 
-    public void setFaults( Fault[] faults ) {
+    @Override
+	public void setFaults( Fault[] faults ) {
         m_faults = faults;
     }
 
-    public void setSOAPAction( String action ) {
+    @Override
+	public void setSOAPAction( String action ) {
         m_soapAction = action;
     }
 
-    public String getSOAPAction() {
+    @Override
+	public String getSOAPAction() {
         return m_soapAction;
     }
 
-    public boolean canModel() {
+    @Override
+	public boolean canModel() {
         return m_canModel;
     }
 
-    public void setCanModel( boolean canModel ) {
+    @Override
+	public void setCanModel( boolean canModel ) {
         m_canModel = canModel;
     }
 
-    public void addProblemMessage( String message ) {
+    @Override
+	public void addProblemMessage( String message ) {
         m_messages.add(message);
     }
 
-    public String[] getProblemMessages() {
+    @Override
+	public String[] getProblemMessages() {
         String[] retVal = new String[m_messages.size()];
         m_messages.toArray(retVal);
         return retVal;
     }
 
-    public SoapBindingInfo getSoapBindingInfo() {
+    @Override
+	public SoapBindingInfo getSoapBindingInfo() {
         return m_bindingInfo;
     }
 
-    public void setSoapBindingInfo( SoapBindingInfo info ) {
+    @Override
+	public void setSoapBindingInfo( SoapBindingInfo info ) {
         m_bindingInfo = info;
     }
 

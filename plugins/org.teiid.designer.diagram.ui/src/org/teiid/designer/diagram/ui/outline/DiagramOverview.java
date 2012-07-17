@@ -63,23 +63,27 @@ public class DiagramOverview implements IAdaptable, ModelEditorPageOutline {
     // ========================================
     // Methods
 
-    public void createControl(Composite parent) {
+    @Override
+	public void createControl(Composite parent) {
         overview = new Canvas(parent, SWT.NONE);
         initializeOverview();
     }
 
-    public void dispose() {
+    @Override
+	public void dispose() {
         if ( overview != null && !overview.isDisposed() )
             overview.dispose();
     }
 
-    public Object getAdapter(Class type) {
+    @Override
+	public Object getAdapter(Class type) {
         if (type == ZoomManager.class)
             return ((ScalableFreeformRootEditPart)graphicalViewer.getRootEditPart()).getZoomManager();
         return null;
     }
 
-    public Control getControl() {
+    @Override
+	public Control getControl() {
         return overview;
     }
     
@@ -118,28 +122,32 @@ public class DiagramOverview implements IAdaptable, ModelEditorPageOutline {
     /* (non-Javadoc)
      * @See org.teiid.designer.ui.editors.ModelEditorPageOutline#getIcon()
      */
-    public ImageDescriptor getIcon() {
+    @Override
+	public ImageDescriptor getIcon() {
         return icon;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.ui.editors.ModelEditorPageOutline#getToolTipText()
      */
-    public String getToolTipText() {
+    @Override
+	public String getToolTipText() {
         return DiagramUiConstants.Util.getString("DiagramOverview.toolTipText"); //$NON-NLS-1$
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.ui.editors.ModelEditorPageOutline#isEnabled()
      */
-    public boolean isEnabled() {
+    @Override
+	public boolean isEnabled() {
         return true;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.ui.editors.ModelEditorPageOutline#isVisible()
      */
-    public void setVisible(boolean visible) {
+    @Override
+	public void setVisible(boolean visible) {
         if ( thumbnail != null ) {
             thumbnail.setVisible(visible);
         }

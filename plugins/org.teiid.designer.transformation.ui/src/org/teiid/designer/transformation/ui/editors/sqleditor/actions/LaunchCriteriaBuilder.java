@@ -50,7 +50,8 @@ public class LaunchCriteriaBuilder extends AbstractAction implements EventObject
         panel.showCriteriaBuilder();
     }
     
-    public void processEvent(EventObject e) {
+    @Override
+	public void processEvent(EventObject e) {
         //------------------------------------------------
         // respond to internal events from SqlEditorPanel
         //------------------------------------------------

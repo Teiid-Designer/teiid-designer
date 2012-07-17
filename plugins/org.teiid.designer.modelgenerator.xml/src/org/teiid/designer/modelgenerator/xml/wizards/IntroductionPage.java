@@ -67,7 +67,8 @@ public class IntroductionPage extends WizardPage implements IUiConstants, IUiCon
     /**
      * @see IDialogPage#createControl(Composite)
      */
-    public void createControl( Composite parent ) {
+    @Override
+	public void createControl( Composite parent ) {
         panel = new IntroductionPanel(parent, wizard, manager);
         setControl(panel);
     }
@@ -147,38 +148,46 @@ class IntroductionPanel extends Composite implements IUiConstants, IUiConstants.
         httpRequestDocRadioButton.setText(SOURCE_TYPE_HTTP_REQUEST_DOC);
 
         documentRadioButton.addSelectionListener(new SelectionListener() {
-            public void widgetSelected( SelectionEvent e ) {
+            @Override
+			public void widgetSelected( SelectionEvent e ) {
                 userSettings.setSourceType(StateManager.SOURCE_DOCUMENT);
             }
 
-            public void widgetDefaultSelected( SelectionEvent e ) {
+            @Override
+			public void widgetDefaultSelected( SelectionEvent e ) {
             }
         });
 
         httpNoParamsRadioButton.addSelectionListener(new SelectionListener() {
-            public void widgetSelected( SelectionEvent e ) {
+            @Override
+			public void widgetSelected( SelectionEvent e ) {
                 userSettings.setSourceType(StateManager.SOURCE_HTTP_NO_PARAMS);
             }
 
-            public void widgetDefaultSelected( SelectionEvent e ) {
+            @Override
+			public void widgetDefaultSelected( SelectionEvent e ) {
             }
         });
 
         httpParamsRadioButton.addSelectionListener(new SelectionListener() {
-            public void widgetSelected( SelectionEvent e ) {
+            @Override
+			public void widgetSelected( SelectionEvent e ) {
                 userSettings.setSourceType(StateManager.SOURCE_HTTP_PARAMS);
             }
 
-            public void widgetDefaultSelected( SelectionEvent e ) {
+            @Override
+			public void widgetDefaultSelected( SelectionEvent e ) {
             }
         });
 
         httpRequestDocRadioButton.addSelectionListener(new SelectionListener() {
-            public void widgetSelected( SelectionEvent e ) {
+            @Override
+			public void widgetSelected( SelectionEvent e ) {
                 userSettings.setSourceType(StateManager.SOURCE_HTTP_REQUEST_DOC);
             }
 
-            public void widgetDefaultSelected( SelectionEvent e ) {
+            @Override
+			public void widgetDefaultSelected( SelectionEvent e ) {
             }
         });
 
@@ -299,7 +308,8 @@ class IntroductionPanel extends Composite implements IUiConstants, IUiConstants.
 
     class CustomTextListener implements ModifyListener {
 
-        public void modifyText( ModifyEvent event ) {
+        @Override
+		public void modifyText( ModifyEvent event ) {
             // TODO: do some validation
             m_custName = customCatalogText.getText();
             manager.setCustomCatalogName(m_custName);

@@ -372,7 +372,8 @@ public class ReconcilerPanel extends SashForm implements ISelectionChangedListen
     /**
      * handles selectionChanges on the BindingsTable
      */
-    public void selectionChanged( SelectionChangedEvent event ) {
+    @Override
+	public void selectionChanged( SelectionChangedEvent event ) {
         Object source = event.getSource();
         if (source.equals(bindingsPanel.getTableViewer())) {
             bindingsPanel.setButtonStates();
@@ -387,7 +388,8 @@ public class ReconcilerPanel extends SashForm implements ISelectionChangedListen
     /**
      * handles Locked CheckBox selection changes on the BindingsTable
      */
-    public void widgetSelected( SelectionEvent event ) {
+    @Override
+	public void widgetSelected( SelectionEvent event ) {
         // get the BindingTable checkbox state
         boolean isLocked = bindingsPanel.isTargetLocked();
         // Set reconciler lockState to agree with checkbox
@@ -396,7 +398,8 @@ public class ReconcilerPanel extends SashForm implements ISelectionChangedListen
         setButtonStates();
     }
 
-    public void widgetDefaultSelected( SelectionEvent event ) {
+    @Override
+	public void widgetDefaultSelected( SelectionEvent event ) {
     }
 
     public void showSqlArea( boolean show ) {
@@ -692,7 +695,8 @@ public class ReconcilerPanel extends SashForm implements ISelectionChangedListen
          * 
          * @param binding
          */
-        public void addBinding( Binding binding ) {
+        @Override
+		public void addBinding( Binding binding ) {
             updateSqlAndMessageDisplay();
         }
 
@@ -701,7 +705,8 @@ public class ReconcilerPanel extends SashForm implements ISelectionChangedListen
          * 
          * @param binding
          */
-        public void insertBinding( Binding binding,
+        @Override
+		public void insertBinding( Binding binding,
                                    int index ) {
             updateSqlAndMessageDisplay();
         }
@@ -711,7 +716,8 @@ public class ReconcilerPanel extends SashForm implements ISelectionChangedListen
          * 
          * @param bindings
          */
-        public void addBindings( Object[] bindings ) {
+        @Override
+		public void addBindings( Object[] bindings ) {
             updateSqlAndMessageDisplay();
         }
 
@@ -720,7 +726,8 @@ public class ReconcilerPanel extends SashForm implements ISelectionChangedListen
          * 
          * @param binding
          */
-        public void removeBinding( Binding binding ) {
+        @Override
+		public void removeBinding( Binding binding ) {
             // Put the bound symbol back on the unmatched symbols list
             Object sqlSymbol = binding.getCurrentSymbol();
             if (sqlSymbol != null && sqlSymbol instanceof SingleElementSymbol) {
@@ -735,7 +742,8 @@ public class ReconcilerPanel extends SashForm implements ISelectionChangedListen
          * 
          * @param binding
          */
-        public void removeBindings( Object[] bindings ) {
+        @Override
+		public void removeBindings( Object[] bindings ) {
             // Put the bound symbols back on the unmatched symbols list
             for (int i = 0; i < bindings.length; i++) {
                 Binding binding = (Binding)bindings[i];
@@ -753,7 +761,8 @@ public class ReconcilerPanel extends SashForm implements ISelectionChangedListen
          * 
          * @param binding
          */
-        public void updateBinding( Binding binding ) {
+        @Override
+		public void updateBinding( Binding binding ) {
             updateSqlAndMessageDisplay();
         }
 
@@ -762,7 +771,8 @@ public class ReconcilerPanel extends SashForm implements ISelectionChangedListen
          * 
          * @param updateLabels
          */
-        public void refresh( boolean updateLabels ) {
+        @Override
+		public void refresh( boolean updateLabels ) {
             updateSqlAndMessageDisplay();
         }
     }
@@ -778,7 +788,8 @@ public class ReconcilerPanel extends SashForm implements ISelectionChangedListen
          * 
          * @param symbol
          */
-        public void addSymbol( SingleElementSymbol symbol ) {
+        @Override
+		public void addSymbol( SingleElementSymbol symbol ) {
             updateSqlAndMessageDisplay();
         }
 
@@ -787,7 +798,8 @@ public class ReconcilerPanel extends SashForm implements ISelectionChangedListen
          * 
          * @param symbol
          */
-        public void insertSymbol( SingleElementSymbol symbol,
+        @Override
+		public void insertSymbol( SingleElementSymbol symbol,
                                   int index ) {
             updateSqlAndMessageDisplay();
         }
@@ -797,7 +809,8 @@ public class ReconcilerPanel extends SashForm implements ISelectionChangedListen
          * 
          * @param symbols
          */
-        public void addSymbols( Object[] symbols ) {
+        @Override
+		public void addSymbols( Object[] symbols ) {
             updateSqlAndMessageDisplay();
         }
 
@@ -806,7 +819,8 @@ public class ReconcilerPanel extends SashForm implements ISelectionChangedListen
          * 
          * @param symbol
          */
-        public void removeSymbol( SingleElementSymbol symbol ) {
+        @Override
+		public void removeSymbol( SingleElementSymbol symbol ) {
             updateSqlAndMessageDisplay();
         }
 
@@ -815,7 +829,8 @@ public class ReconcilerPanel extends SashForm implements ISelectionChangedListen
          * 
          * @param symbol
          */
-        public void removeSymbols( Object[] symbols ) {
+        @Override
+		public void removeSymbols( Object[] symbols ) {
             updateSqlAndMessageDisplay();
         }
 
@@ -824,7 +839,8 @@ public class ReconcilerPanel extends SashForm implements ISelectionChangedListen
          * 
          * @param symbol
          */
-        public void updateSymbol( SingleElementSymbol symbol ) {
+        @Override
+		public void updateSymbol( SingleElementSymbol symbol ) {
             updateSqlAndMessageDisplay();
         }
 
@@ -833,7 +849,8 @@ public class ReconcilerPanel extends SashForm implements ISelectionChangedListen
          * 
          * @param updateLabels
          */
-        public void refresh( boolean updateLabels ) {
+        @Override
+		public void refresh( boolean updateLabels ) {
             updateSqlAndMessageDisplay();
         }
     }

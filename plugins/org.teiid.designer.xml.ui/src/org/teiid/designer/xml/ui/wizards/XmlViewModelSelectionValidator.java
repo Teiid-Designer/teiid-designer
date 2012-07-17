@@ -47,7 +47,8 @@ public class XmlViewModelSelectionValidator implements ISelectionStatusValidator
     /* (non-Javadoc)
      * @see org.eclipse.ui.dialogs.ISelectionStatusValidator#validate(java.lang.Object[])
      */
-    public IStatus validate(Object[] selection) {
+    @Override
+	public IStatus validate(Object[] selection) {
 
 
         // deal with empty selection

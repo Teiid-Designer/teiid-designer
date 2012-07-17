@@ -93,6 +93,7 @@ public class TeiidXmlImportWizard extends TeiidMetadataImportWizard {
     	this.designerProperties = properties;
 	}
 	
+	@Override
 	protected void updateForProperties() {
 		if( this.designerProperties == null || this.designerProperties.isEmpty() ) {
 			return;

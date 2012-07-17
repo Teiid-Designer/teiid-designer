@@ -22,18 +22,22 @@ public class FaultImpl extends WSDLElementImpl implements Fault {
 		m_operation = oper;
 	}
 	
+	@Override
 	public Operation getOperation() {
 		return m_operation;
 	}
 	
+	@Override
 	public void setMessage(Message message) {
 		m_message = message;
 	}
 
+	@Override
 	public Message getMessage() {
 		return m_message;
 	}
 
+	@Override
 	public WSDLElement copy() {
 		FaultImpl fault = new FaultImpl(getOperation());
 		fault.setMessage(getMessage());

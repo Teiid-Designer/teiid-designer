@@ -428,8 +428,8 @@ public class DeleteResourceAction extends AbstractAction implements UiConstants 
                     	// may be been made "stale".
                     	// NOTE: This isn't a problem with delete "EObject" because of the inherent EMF framework.
                     	RefactorModelExtensionManager.helpUpdateModelContentsForDelete(
-                    			(Collection<Object>)deletedModelPaths, 
-                    			(Collection<Object>)allDependantModelFiles, 
+                    			deletedModelPaths, 
+                    			allDependantModelFiles, 
                     			new NullProgressMonitor());
                     	
                         // make a call to validate the dependent models so the appropriate problem markers are generated and

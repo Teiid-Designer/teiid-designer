@@ -274,7 +274,8 @@ public class TeiidMetadataImportFormatPage extends AbstractWizardPage implements
 
     	this.numberPreviewLinesText.setLayoutData(gd);
     	this.numberPreviewLinesText.addModifyListener(new ModifyListener() {
-    		public void modifyText( final ModifyEvent event ) {
+    		@Override
+			public void modifyText( final ModifyEvent event ) {
     			if( !synchronizing ) {
 	    			if( !numberPreviewLinesText.getText().isEmpty()) {
 	            		try {

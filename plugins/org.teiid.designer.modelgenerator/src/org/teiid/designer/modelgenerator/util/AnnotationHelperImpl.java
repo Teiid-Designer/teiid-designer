@@ -44,7 +44,8 @@ public class AnnotationHelperImpl implements AnnotationHelper {
     /* (non-Javadoc)
      * @See org.teiid.designer.modelgenerator.util.AnnotationHelper#createAnnotation(org.eclipse.emf.ecore.EObject, java.lang.String)
      */
-    public Annotation createAnnotation(final EObject targetObject, final String objectDescription)
+    @Override
+	public Annotation createAnnotation(final EObject targetObject, final String objectDescription)
         throws AnnotationHelperException {
         Annotation annotation = ModelResourceContainerFactory.createNewAnnotation(targetObject);
         if( annotation == null ) {
@@ -62,7 +63,8 @@ public class AnnotationHelperImpl implements AnnotationHelper {
     /* (non-Javadoc)
      * @See org.teiid.designer.modelgenerator.util.AnnotationHelper#setAnnotation(org.eclipse.emf.ecore.EObject, java.lang.String, java.lang.Object)
      */
-    public void setAnnotation(final EObject targetObject, final String key, final Object value)
+    @Override
+	public void setAnnotation(final EObject targetObject, final String key, final Object value)
         throws AnnotationHelperException {
         ModelContents modelContents = getModelContents();
 

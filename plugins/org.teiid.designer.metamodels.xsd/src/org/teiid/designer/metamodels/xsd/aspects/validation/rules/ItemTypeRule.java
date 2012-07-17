@@ -39,7 +39,8 @@ public class ItemTypeRule implements StructuralFeatureValidationRule {
     /* (non-Javadoc)
      * @See org.teiid.designer.core.validation.ValidationRule#validate(java.lang.Object, org.teiid.designer.core.validation.ValidationContext)
      */
-    public void validate(EStructuralFeature eStructuralFeature, EObject eObject, Object value, ValidationContext context) {
+    @Override
+	public void validate(EStructuralFeature eStructuralFeature, EObject eObject, Object value, ValidationContext context) {
         // check if the feature matches the given feature
         if (eStructuralFeature.getFeatureID() != this.featureID) {
             return;

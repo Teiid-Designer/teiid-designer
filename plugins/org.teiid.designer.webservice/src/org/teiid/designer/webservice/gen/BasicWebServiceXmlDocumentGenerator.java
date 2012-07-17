@@ -75,7 +75,8 @@ public class BasicWebServiceXmlDocumentGenerator implements IWebServiceXmlDocume
      * @see org.teiid.designer.webservice.IWebServiceXmlDocumentGenerator#addWebServiceComponent(org.teiid.designer.metamodels.webservice.WebServiceComponent)
      * @since 4.2
      */
-    public void addWebServiceComponent( WebServiceComponent webServiceComponent ) {
+    @Override
+	public void addWebServiceComponent( WebServiceComponent webServiceComponent ) {
         CoreArgCheck.isNotNull(webServiceComponent);
         if (!this.webServiceComponents.contains(webServiceComponent)) {
             this.webServiceComponents.add(webServiceComponent);
@@ -86,7 +87,8 @@ public class BasicWebServiceXmlDocumentGenerator implements IWebServiceXmlDocume
      * @see org.teiid.designer.webservice.IWebServiceXmlDocumentGenerator#addWebServiceComponents(java.util.List)
      * @since 4.2
      */
-    public void addWebServiceComponents( List webServiceComponents ) {
+    @Override
+	public void addWebServiceComponents( List webServiceComponents ) {
         CoreArgCheck.isNotNull(webServiceComponents);
         final Iterator iter = webServiceComponents.iterator();
         while (iter.hasNext()) {
@@ -101,7 +103,8 @@ public class BasicWebServiceXmlDocumentGenerator implements IWebServiceXmlDocume
      * @see org.teiid.designer.webservice.IWebServiceXmlDocumentGenerator#getWebServiceModelSelector()
      * @since 4.2
      */
-    public ModelSelector getWebServiceModelSelector() {
+    @Override
+	public ModelSelector getWebServiceModelSelector() {
         return this.webServiceModelSelector;
     }
 
@@ -109,7 +112,8 @@ public class BasicWebServiceXmlDocumentGenerator implements IWebServiceXmlDocume
      * @see org.teiid.designer.webservice.IWebServiceXmlDocumentGenerator#setWebServiceModelSelector(org.teiid.designer.compare.selector.ModelSelector)
      * @since 4.2
      */
-    public void setWebServiceModelSelector( ModelSelector wsModelSelector ) {
+    @Override
+	public void setWebServiceModelSelector( ModelSelector wsModelSelector ) {
         this.webServiceModelSelector = wsModelSelector;
     }
 
@@ -117,7 +121,8 @@ public class BasicWebServiceXmlDocumentGenerator implements IWebServiceXmlDocume
      * @see org.teiid.designer.webservice.IWebServiceXmlDocumentGenerator#getWebServiceComponents()
      * @since 4.2
      */
-    public List getWebServiceComponents() {
+    @Override
+	public List getWebServiceComponents() {
         return this.webServiceComponents;
     }
 
@@ -125,7 +130,8 @@ public class BasicWebServiceXmlDocumentGenerator implements IWebServiceXmlDocume
      * @see org.teiid.designer.webservice.IWebServiceXmlDocumentGenerator#setXmlDocumentResource(org.eclipse.emf.ecore.resource.Resource)
      * @since 4.2
      */
-    public void setXmlDocumentResource( Resource wsModel ) {
+    @Override
+	public void setXmlDocumentResource( Resource wsModel ) {
         CoreArgCheck.isNotNull(wsModel);
         this.xmlDocResource = wsModel;
     }
@@ -134,7 +140,8 @@ public class BasicWebServiceXmlDocumentGenerator implements IWebServiceXmlDocume
      * @see org.teiid.designer.webservice.IWebServiceXmlDocumentGenerator#getXmlDocumentResource()
      * @since 4.2
      */
-    public Resource getXmlDocumentResource() {
+    @Override
+	public Resource getXmlDocumentResource() {
         return this.xmlDocResource;
     }
 
@@ -142,7 +149,8 @@ public class BasicWebServiceXmlDocumentGenerator implements IWebServiceXmlDocume
      * @see org.teiid.designer.webservice.IWebServiceXmlDocumentGenerator#generate(org.eclipse.core.runtime.IProgressMonitor)
      * @since 4.2
      */
-    public IStatus generate( IProgressMonitor monitor ) {
+    @Override
+	public IStatus generate( IProgressMonitor monitor ) {
         final List problems = new ArrayList();
         if (this.getXmlDocumentResource() == null) {
             final String msg = WebServicePlugin.Util.getString("BasicWebServiceXmlDocumentGenerator.NoXmlDocumentModelSpecified"); //$NON-NLS-1$
@@ -191,7 +199,8 @@ public class BasicWebServiceXmlDocumentGenerator implements IWebServiceXmlDocume
      *      java.util.List)
      * @since 4.2
      */
-    public void generate( IProgressMonitor monitor,
+    @Override
+	public void generate( IProgressMonitor monitor,
                           List problems ) {
         doGenerate(monitor, problems);
     }
@@ -448,7 +457,8 @@ public class BasicWebServiceXmlDocumentGenerator implements IWebServiceXmlDocume
             this.outputs = outputs;
         }
 
-        public boolean visit( EObject object ) {
+        @Override
+		public boolean visit( EObject object ) {
             if (object instanceof Output) {
                 this.outputs.add(object);
                 return false;
@@ -462,7 +472,8 @@ public class BasicWebServiceXmlDocumentGenerator implements IWebServiceXmlDocume
             return false;
         }
 
-        public boolean visit( Resource resource ) {
+        @Override
+		public boolean visit( Resource resource ) {
             return true;
         }
     }

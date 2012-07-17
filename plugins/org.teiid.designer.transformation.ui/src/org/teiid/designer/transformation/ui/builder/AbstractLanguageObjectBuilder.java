@@ -112,7 +112,8 @@ public abstract class AbstractLanguageObjectBuilder extends Dialog implements Ui
 
         editor = createEditor(pnlEditorDetail);
         editor.getModel().addModelListener(new ILanguageObjectEditorModelListener() {
-            public void modelChanged( LanguageObjectEditorModelEvent theEvent ) {
+            @Override
+			public void modelChanged( LanguageObjectEditorModelEvent theEvent ) {
                 handleModelChanged();
             }
         });
@@ -153,7 +154,8 @@ public abstract class AbstractLanguageObjectBuilder extends Dialog implements Ui
 
         // select root tree node after all construction is finished
         Display.getDefault().asyncExec(new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 treeViewer.selectRoot();
             }
         });
@@ -270,7 +272,8 @@ public abstract class AbstractLanguageObjectBuilder extends Dialog implements Ui
 
         treeViewer = new LanguageObjectBuilderTreeViewer(pnlTree);
         treeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
-            public void selectionChanged( SelectionChangedEvent theEvent ) {
+            @Override
+			public void selectionChanged( SelectionChangedEvent theEvent ) {
                 handleTreeSelection();
             }
         });
@@ -278,7 +281,8 @@ public abstract class AbstractLanguageObjectBuilder extends Dialog implements Ui
         MenuManager menuMgr = new MenuManager();
         menuMgr.setRemoveAllWhenShown(true);
         menuMgr.addMenuListener(new IMenuListener() {
-            public void menuAboutToShow( IMenuManager theMenuMgr ) {
+            @Override
+			public void menuAboutToShow( IMenuManager theMenuMgr ) {
                 fillContextMenu(theMenuMgr);
             }
         });
@@ -312,7 +316,8 @@ public abstract class AbstractLanguageObjectBuilder extends Dialog implements Ui
      */
     protected void createTreeButtons( Composite theParent ) {
         Runnable deleteRunner = new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 handleDeleteSelected();
             }
         };
@@ -519,7 +524,8 @@ public abstract class AbstractLanguageObjectBuilder extends Dialog implements Ui
         }
         // select root tree node
         Display.getDefault().asyncExec(new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 treeViewer.selectRoot();
             }
         });

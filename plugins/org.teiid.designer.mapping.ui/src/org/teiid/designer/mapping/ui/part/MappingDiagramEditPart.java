@@ -426,20 +426,25 @@ public class MappingDiagramEditPart extends AbstractDiagramEditPart implements E
         public DiagramEditPart bottomPart;
     }
 
-    public boolean canExpand() {
+    @Override
+	public boolean canExpand() {
         return isCoarseMapping();
     }
 
-    public void collapseAll() {
+    @Override
+	public void collapseAll() {
     }
 
-    public void collapse( Object child ) {
+    @Override
+	public void collapse( Object child ) {
     }
 
-    public void expandAll() {
+    @Override
+	public void expandAll() {
     }
 
-    public void expand( Object child ) {
+    @Override
+	public void expand( Object child ) {
     }
 
     @Override

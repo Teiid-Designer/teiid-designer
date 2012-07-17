@@ -109,7 +109,8 @@ public class Index implements IIndex {
      * Indexes the given document, using the appropriate indexer registered in the indexerRegistry. If the document already exists
      * in the index, it overrides the previous one. The changes will be taken into account after a merge.
      */
-    public void add( IDocument document,
+    @Override
+	public void add( IDocument document,
                      IIndexer indexer ) throws IOException {
         if (timeToMerge()) {
             merge();
@@ -136,7 +137,8 @@ public class Index implements IIndex {
     /**
      * Initialises the indexGenerator.
      */
-    public void empty() throws IOException {
+    @Override
+	public void empty() throws IOException {
 
         if (indexFile.exists()) {
             // System.out.println(" Index.empty(): Deleting Index file = " + indexFile.getName());
@@ -159,14 +161,16 @@ public class Index implements IIndex {
     /**
      * @see IIndex#getIndexFile
      */
-    public File getIndexFile() {
+    @Override
+	public File getIndexFile() {
         return indexFile;
     }
 
     /**
      * @see IIndex#getNumDocuments
      */
-    public int getNumDocuments() throws IOException {
+    @Override
+	public int getNumDocuments() throws IOException {
         BlocksIndexInput input = getBlocksIndexInput();
         try {
             input.open();
@@ -181,7 +185,8 @@ public class Index implements IIndex {
     /**
      * @see IIndex#getNumWords
      */
-    public int getNumWords() throws IOException {
+    @Override
+	public int getNumWords() throws IOException {
         BlocksIndexInput input = getBlocksIndexInput();
         try {
             input.open();
@@ -196,7 +201,8 @@ public class Index implements IIndex {
     /**
      * Returns the path corresponding to a given document number
      */
-    public String getPath( int documentNumber ) throws IOException {
+    @Override
+	public String getPath( int documentNumber ) throws IOException {
         BlocksIndexInput input = getBlocksIndexInput();
         try {
             input.open();
@@ -213,7 +219,8 @@ public class Index implements IIndex {
     /**
      * see IIndex.hasChanged
      */
-    public boolean hasChanged() {
+    @Override
+	public boolean hasChanged() {
         return canMerge();
     }
 
@@ -302,7 +309,8 @@ public class Index implements IIndex {
     /**
      * @see IIndex#query
      */
-    public IQueryResult[] query( String word ) throws IOException {
+    @Override
+	public IQueryResult[] query( String word ) throws IOException {
         BlocksIndexInput input = getBlocksIndexInput();
         try {
             return input.query(word);
@@ -313,7 +321,8 @@ public class Index implements IIndex {
         }
     }
 
-    public IEntryResult[] queryEntries( char[] prefix ) throws IOException {
+    @Override
+	public IEntryResult[] queryEntries( char[] prefix ) throws IOException {
         BlocksIndexInput input = getBlocksIndexInput();
         try {
             return input.queryEntriesPrefixedBy(prefix);
@@ -327,7 +336,8 @@ public class Index implements IIndex {
     /**
      * @see IIndex#queryInDocumentNames
      */
-    public IQueryResult[] queryInDocumentNames( String word ) throws IOException {
+    @Override
+	public IQueryResult[] queryInDocumentNames( String word ) throws IOException {
         BlocksIndexInput input = getBlocksIndexInput();
         try {
             return input.queryInDocumentNames(word);
@@ -341,7 +351,8 @@ public class Index implements IIndex {
     /**
      * @see IIndex#queryPrefix
      */
-    public IQueryResult[] queryPrefix( char[] prefix ) throws IOException {
+    @Override
+	public IQueryResult[] queryPrefix( char[] prefix ) throws IOException {
         BlocksIndexInput input = getBlocksIndexInput();
         try {
             return input.queryFilesReferringToPrefix(prefix);
@@ -385,7 +396,8 @@ public class Index implements IIndex {
     /**
      * @see IIndex#remove
      */
-    public void remove( String documentName ) {
+    @Override
+	public void remove( String documentName ) {
         IndexedFile file = addsIndex.getIndexedFile(documentName);
         if (file != null) {
             // the file is in the adds Index, we remove it from this one
@@ -421,7 +433,8 @@ public class Index implements IIndex {
     /**
      * @see IIndex#save
      */
-    public void save() throws IOException {
+    @Override
+	public void save() throws IOException {
         if (canMerge()) {
             // System.out.println(" Index.save():  Index file = " + indexFile.getName() + "   Model = " + resourceFileName);
             merge();
@@ -454,7 +467,8 @@ public class Index implements IIndex {
         return new BlocksIndexInput(indexFile);
     }
 
-    public void close() {
+    @Override
+	public void close() {
         if (getCachedInput() != null) {
             try {
                 getCachedInput().close();
@@ -465,7 +479,8 @@ public class Index implements IIndex {
         }
     }
 
-    public void dispose() {
+    @Override
+	public void dispose() {
         close();
         if (!indexFile.delete()) {
             indexFile.deleteOnExit();
@@ -487,7 +502,8 @@ public class Index implements IIndex {
         return str;
     }
 
-    public void setDoCache( boolean theDoCache ) {
+    @Override
+	public void setDoCache( boolean theDoCache ) {
         this.doCache = theDoCache;
     }
 

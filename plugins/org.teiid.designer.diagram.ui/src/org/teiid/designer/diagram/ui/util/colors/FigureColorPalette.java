@@ -47,7 +47,8 @@ public class FigureColorPalette implements ColorPalette {
     }
     
     
-    public void setColors(
+    @Override
+	public void setColors(
         Color priBkgdColor, 
         Color secBkgdColor,
         Color fgdColor,
@@ -64,7 +65,8 @@ public class FigureColorPalette implements ColorPalette {
     }
     
     
-    public void setColor(int colorId, Color newColor ) {
+    @Override
+	public void setColor(int colorId, Color newColor ) {
         switch(colorId) {
             case PRIMARY_BKGD_COLOR_ID:     { primaryBkgdColor      = newColor; } break;
             case SECONDARY_BKGD_COLOR_ID:   { secondaryBkgdColor    = newColor; } break;
@@ -79,7 +81,8 @@ public class FigureColorPalette implements ColorPalette {
     }
     
     
-    public Color getColor(int colorId ) {
+    @Override
+	public Color getColor(int colorId ) {
         Color returnColor = ColorConstants.white;
         
         switch(colorId) {

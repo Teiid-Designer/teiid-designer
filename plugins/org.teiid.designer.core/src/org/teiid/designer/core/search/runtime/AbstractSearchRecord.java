@@ -18,6 +18,7 @@ public abstract class AbstractSearchRecord implements SearchRecord {
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.relationship.search.index.SearchRecord#getUUID()
 	 */
+	@Override
 	public String getUUID() {
 		return uuid;
 	}

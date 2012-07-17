@@ -155,7 +155,8 @@ public class MappingDiagramPartFactory extends AbstractDiagramEditPartFactory im
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.part.DiagramEditPartFactory#getAnchorManager(org.teiid.designer.diagram.ui.part.DiagramEditPart)
      */
-    public AnchorManager getAnchorManager( DiagramEditPart editPart ) {
+    @Override
+	public AnchorManager getAnchorManager( DiagramEditPart editPart ) {
         if (editPart instanceof UmlClassifierEditPart) {
             return new MappingClassAnchorManager(editPart);
         } else if (editPart instanceof MappingExtentEditPart) {

@@ -25,6 +25,7 @@ public class TeiidDocument extends DocumentImpl {
 		super();
 	}
 	
+	@Override
 	public EList getColumns() {
     	synchronized (documentColumns_LOCK) {
 			if (!columnsLoaded.booleanValue())

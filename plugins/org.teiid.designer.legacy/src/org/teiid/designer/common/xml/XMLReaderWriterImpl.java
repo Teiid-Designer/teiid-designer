@@ -36,7 +36,8 @@ public class XMLReaderWriterImpl implements XMLReaderWriter{
     * @param stream the output stream to be written to.
     * @throws IOException if there is a problem writing to the OutputStream
     */
-    public void writeDocument(Document doc, OutputStream stream) throws IOException{
+    @Override
+	public void writeDocument(Document doc, OutputStream stream) throws IOException{
         StringBuffer indentBuffer = new StringBuffer();
         for (int i = 0; i < indent; i++) {
             indentBuffer.append(" "); //$NON-NLS-1$
@@ -59,7 +60,8 @@ public class XMLReaderWriterImpl implements XMLReaderWriter{
     * @throws JDOMException if the InputStream does not represent a JDOM 
     * compliant XML document.
     */
-    public Document readDocument(InputStream stream) throws JDOMException, IOException{
+    @Override
+	public Document readDocument(InputStream stream) throws JDOMException, IOException{
         return JdomHelper.buildDocument(stream);
     }
     

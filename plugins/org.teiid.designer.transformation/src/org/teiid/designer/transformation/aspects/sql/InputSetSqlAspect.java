@@ -41,14 +41,16 @@ public class InputSetSqlAspect extends AbstractTransformationSqlAspect implement
     /**
      * @see org.teiid.designer.transformation.aspects.sql.MappingClassObjectSqlAspect#isRecordType(char)
      */
-    public boolean isRecordType(char recordType) {
+    @Override
+	public boolean isRecordType(char recordType) {
         return (recordType == IndexConstants.RECORD_TYPE.TABLE);
     }
 
     /** 
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlAspect#isQueryable(org.eclipse.emf.ecore.EObject)
      */
-    public boolean isQueryable(final EObject eObject) {
+    @Override
+	public boolean isQueryable(final EObject eObject) {
         return false;
     }
 
@@ -56,7 +58,8 @@ public class InputSetSqlAspect extends AbstractTransformationSqlAspect implement
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlTableAspect#isMaterialized(org.eclipse.emf.ecore.EObject)
      * @since 4.2
      */
-    public boolean isMaterialized(EObject eObject) {
+    @Override
+	public boolean isMaterialized(EObject eObject) {
         return false;
     }
     
@@ -64,28 +67,32 @@ public class InputSetSqlAspect extends AbstractTransformationSqlAspect implement
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlTableAspect#getMaterializedTableId(org.eclipse.emf.ecore.EObject)
      * @since 4.2
      */
-    public String getMaterializedTableId(EObject eObject) {
+    @Override
+	public String getMaterializedTableId(EObject eObject) {
         return null;
     } 
     
     /**
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlTableAspect#supportsUpdate(org.eclipse.emf.ecore.EObject)
      */
-    public boolean supportsUpdate(EObject eObject) {
+    @Override
+	public boolean supportsUpdate(EObject eObject) {
         return false;
     }
 
     /**
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlTableAspect#isVirtual(org.eclipse.emf.ecore.EObject)
      */
-    public boolean isVirtual(EObject eObject) {
+    @Override
+	public boolean isVirtual(EObject eObject) {
         return true;
     }
 
     /**
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlTableAspect#isSystem(org.eclipse.emf.ecore.EObject)
      */
-    public boolean isSystem(EObject eObject) {
+    @Override
+	public boolean isSystem(EObject eObject) {
         CoreArgCheck.isInstanceOf(InputSet.class, eObject);
         String modelName = getModelName(eObject);
         if (modelName != null && SystemVdbUtility.isSystemModelWithSystemTableType(modelName)) {
@@ -97,7 +104,8 @@ public class InputSetSqlAspect extends AbstractTransformationSqlAspect implement
     /**
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlTableAspect#getColumns(org.eclipse.emf.ecore.EObject)
      */
-    public List getColumns(EObject eObject) {
+    @Override
+	public List getColumns(EObject eObject) {
         CoreArgCheck.isInstanceOf(InputSet.class, eObject); 
         InputSet inputSet = (InputSet) eObject;       
         return inputSet.getInputParameters();
@@ -106,49 +114,56 @@ public class InputSetSqlAspect extends AbstractTransformationSqlAspect implement
     /**
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlTableAspect#getIndexes(org.eclipse.emf.ecore.EObject)
      */
-    public Collection getIndexes(EObject eObject) {
+    @Override
+	public Collection getIndexes(EObject eObject) {
         return Collections.EMPTY_LIST;
     }
 
     /**
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlTableAspect#getUniqueKeys(org.eclipse.emf.ecore.EObject)
      */
-    public Collection getUniqueKeys(EObject eObject) {
+    @Override
+	public Collection getUniqueKeys(EObject eObject) {
         return Collections.EMPTY_LIST;
     }
 
     /**
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlTableAspect#getForeignKeys(org.eclipse.emf.ecore.EObject)
      */
-    public Collection getForeignKeys(EObject eObject) {
+    @Override
+	public Collection getForeignKeys(EObject eObject) {
         return Collections.EMPTY_LIST;
     }
 
     /**
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlTableAspect#getPrimaryKey(org.eclipse.emf.ecore.EObject)
      */
-    public Object getPrimaryKey(EObject eObject) {
+    @Override
+	public Object getPrimaryKey(EObject eObject) {
         return null;
     }
 
     /**
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlTableAspect#getAccessPatterns(org.eclipse.emf.ecore.EObject)
      */
-    public Collection getAccessPatterns(EObject eObject) {
+    @Override
+	public Collection getAccessPatterns(EObject eObject) {
         return Collections.EMPTY_LIST;
     }
 
     /**
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlTableAspect#getCardinality(org.eclipse.emf.ecore.EObject)
      */
-    public int getCardinality(EObject eObject) {
+    @Override
+	public int getCardinality(EObject eObject) {
         return 0;
     }
 
     /*
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlTableAspect#getTableType(org.eclipse.emf.ecore.EObject)
      */
-    public int getTableType(EObject eObject) {
+    @Override
+	public int getTableType(EObject eObject) {
         CoreArgCheck.isInstanceOf(InputSet.class, eObject); 
         return MetadataConstants.TABLE_TYPES.XML_MAPPING_CLASS_TYPE;
     }
@@ -156,14 +171,16 @@ public class InputSetSqlAspect extends AbstractTransformationSqlAspect implement
     /*
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlColumnSetAspect#getColumnSetType()
      */
-    public int getColumnSetType() {
+    @Override
+	public int getColumnSetType() {
         return MetadataConstants.COLUMN_SET_TYPES.TABLE;
     }
 
     /*
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlTableAspect#isMappable(org.eclipse.emf.ecore.EObject, int)
      */
-    public boolean isMappable(EObject eObject, int mappingType) {
+    @Override
+	public boolean isMappable(EObject eObject, int mappingType) {
         return false;
     }
 
@@ -171,7 +188,8 @@ public class InputSetSqlAspect extends AbstractTransformationSqlAspect implement
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlTableAspect#canAcceptTransformationSource(org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject)
      * @since 4.3
      */
-    public boolean canAcceptTransformationSource(EObject target, EObject source) {
+    @Override
+	public boolean canAcceptTransformationSource(EObject target, EObject source) {
         CoreArgCheck.isInstanceOf(InputSet.class, target);
         CoreArgCheck.isNotNull(source);
         return false;
@@ -181,7 +199,8 @@ public class InputSetSqlAspect extends AbstractTransformationSqlAspect implement
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlTableAspect#canBeTransformationSource(org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject)
      * @since 4.3
      */
-    public boolean canBeTransformationSource(EObject source, EObject target) {
+    @Override
+	public boolean canBeTransformationSource(EObject source, EObject target) {
         CoreArgCheck.isInstanceOf(InputSet.class, source);
         CoreArgCheck.isNotNull(target);
         if(target instanceof MappingClass && !(target instanceof StagingTable)) {
@@ -193,21 +212,24 @@ public class InputSetSqlAspect extends AbstractTransformationSqlAspect implement
     /*
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlAspect#updateObject(org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject)
      */
-    public void updateObject(EObject targetObject, EObject sourceObject) {
+    @Override
+	public void updateObject(EObject targetObject, EObject sourceObject) {
 
     }
 
     /*
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlTableAspect#setSupportsUpdate(org.eclipse.emf.ecore.EObject, boolean)
      */
-    public void setSupportsUpdate(EObject eObject, boolean supportsUpdate) {
+    @Override
+	public void setSupportsUpdate(EObject eObject, boolean supportsUpdate) {
         // do nothis mapping class is never updatable
     }
 
     /** 
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlAspect#getName(org.eclipse.emf.ecore.EObject)
      */
-    public String getName(EObject eObject) {
+    @Override
+	public String getName(EObject eObject) {
         CoreArgCheck.isInstanceOf(InputSet.class, eObject); 
         return INPUT_SET_FULL_NAME;
     }
@@ -215,7 +237,8 @@ public class InputSetSqlAspect extends AbstractTransformationSqlAspect implement
     /** 
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlAspect#getNameInSource(org.eclipse.emf.ecore.EObject)
      */
-    public String getNameInSource(EObject eObject) {
+    @Override
+	public String getNameInSource(EObject eObject) {
         return null;
     }
 

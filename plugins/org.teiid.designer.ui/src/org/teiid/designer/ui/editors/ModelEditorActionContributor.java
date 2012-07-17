@@ -283,19 +283,24 @@ public class ModelEditorActionContributor extends MultiPageEditorActionBarContri
      */
     class EditorPartListener implements IPartListener {
 
-        public void partActivated( IWorkbenchPart thePart ) {
+        @Override
+		public void partActivated( IWorkbenchPart thePart ) {
         }
 
-        public void partBroughtToTop( IWorkbenchPart thePart ) {
+        @Override
+		public void partBroughtToTop( IWorkbenchPart thePart ) {
         }
 
-        public void partDeactivated( IWorkbenchPart thePart ) {
+        @Override
+		public void partDeactivated( IWorkbenchPart thePart ) {
         }
 
-        public void partOpened( IWorkbenchPart thePart ) {
+        @Override
+		public void partOpened( IWorkbenchPart thePart ) {
         }
 
-        public void partClosed( IWorkbenchPart thePart ) {
+        @Override
+		public void partClosed( IWorkbenchPart thePart ) {
             handlePartClosed(thePart);
         }
     }

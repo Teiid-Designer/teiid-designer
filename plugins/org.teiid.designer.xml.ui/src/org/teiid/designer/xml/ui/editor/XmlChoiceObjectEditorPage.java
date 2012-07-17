@@ -71,14 +71,16 @@ public class XmlChoiceObjectEditorPage
      * @see org.teiid.designer.ui.editors.ModelObjectEditorPage#canClose()
      * @since 5.0.1
      */
-    public boolean canClose() {
+    @Override
+	public boolean canClose() {
         return true;
     }
     
     /* (non-Javadoc)    
      * @See org.teiid.designer.ui.editors.ModelObjectEditor#createControl(org.eclipse.swt.widgets.Composite)
      */
-    public void createControl(Composite parent) {
+    @Override
+	public void createControl(Composite parent) {
         pnlChoicePanel  = new ChoicePanel( parent, icoChoiceObject );
         //       WHY DO WE NEED THIS LINE?: 
         pnlChoicePanel.setBusinessObject( icoChoiceObject );
@@ -91,14 +93,16 @@ public class XmlChoiceObjectEditorPage
     /* (non-Javadoc)
      * @See org.teiid.designer.ui.editors.ModelObjectEditor#getControl()
      */
-    public Control getControl() {
+    @Override
+	public Control getControl() {
         return pnlChoicePanel;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.ui.editors.ModelObjectEditor#getTitle()
      */
-    public String getTitle() {
+    @Override
+	public String getTitle() {
         XmlDocumentItemProviderAdapterFactory xdipaf
             = new XmlDocumentItemProviderAdapterFactory();
         XmlChoiceItemProvider ipChoiceItemProvider 
@@ -113,18 +117,21 @@ public class XmlChoiceObjectEditorPage
     /* (non-Javadoc)
      * @See org.teiid.designer.ui.editors.ModelObjectEditor#getTitleToolTip()
      */
-    public String getTitleToolTip() {
+    @Override
+	public String getTitleToolTip() {
         return TITLE_TOOLTIP;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.ui.editors.ModelObjectEditor#getTitleImage()
      */
-    public Image getTitleImage() {
+    @Override
+	public Image getTitleImage() {
         return null;
     }
 
-    public boolean isDirty() {
+    @Override
+	public boolean isDirty() {
         return false;
     }
 
@@ -132,7 +139,8 @@ public class XmlChoiceObjectEditorPage
      * @see org.teiid.designer.ui.editors.ModelObjectEditorPage#canEdit(java.lang.Object, org.eclipse.ui.IEditorPart)
      * @since 5.0.1
      */
-    public boolean canEdit(Object modelObject,
+    @Override
+	public boolean canEdit(Object modelObject,
                            IEditorPart editor) {
 //        System.out.println("[XmlChoiceObjectEditorPage.canEdit] object is: " + modelObject ); //$NON-NLS-1$
 //        System.out.println("[XmlChoiceObjectEditorPage.canEdit] object class is: " + modelObject.getClass().getName() ); //$NON-NLS-1$
@@ -177,7 +185,8 @@ public class XmlChoiceObjectEditorPage
     /**
      * @See org.teiid.designer.ui.editors.ModelObjectEditor#edit(org.eclipse.emf.ecore.EObject)
      */
-    public void edit( Object modelObject ) {
+    @Override
+	public void edit( Object modelObject ) {
         icoChoiceObject = getChoiceObjectForInput( modelObject );
         // jh fix for Defect 11991
         pnlChoicePanel.setBusinessObject(icoChoiceObject);
@@ -207,7 +216,8 @@ public class XmlChoiceObjectEditorPage
     /* (non-Javadoc)
      * @See org.teiid.designer.ui.editors.ModelObjectEditor#deactivate()
      */
-    public boolean deactivate() {
+    @Override
+	public boolean deactivate() {
         //Unregister for Change Notifications
         ModelUtilities.removeNotifyChangedListener( this );
 
@@ -217,14 +227,16 @@ public class XmlChoiceObjectEditorPage
     /* (non-Javadoc)
      * @See org.teiid.designer.ui.editors.ModelObjectEditor#addPropertyListener(org.eclipse.ui.IPropertyListener)
      */
-    public void addPropertyListener(IPropertyListener listener) {
+    @Override
+	public void addPropertyListener(IPropertyListener listener) {
 
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.ui.editors.ModelObjectEditor#removePropertyListener(org.eclipse.ui.IPropertyListener)
      */
-    public void removePropertyListener(IPropertyListener listener) {
+    @Override
+	public void removePropertyListener(IPropertyListener listener) {
 
     }
 
@@ -232,7 +244,8 @@ public class XmlChoiceObjectEditorPage
      *                          here in the controller (XmlChoiceObjectEditorPage).
      * @see org.eclipse.emf.edit.provider.INotifyChangedListener#notifyChanged(org.eclipse.emf.common.notify.Notification)
      */
-    public void notifyChanged(Notification notification) {
+    @Override
+	public void notifyChanged(Notification notification) {
 ////        System.out.println("[XmlChoiceObjectEditorPage.notifyChanged] TOP" ); //$NON-NLS-1$
         if( shouldProcessNotification(notification) && NotificationUtilities.isChanged(notification) ) {
             update();
@@ -276,7 +289,8 @@ public class XmlChoiceObjectEditorPage
     /* (non-Javadoc)
      * @See org.teiid.designer.ui.editors.ModelObjectEditor#contributeToolbarActions(org.eclipse.jface.action.ToolBarManager)
      */
-    public void contributeExportedActions( IMenuManager menu ) {
+    @Override
+	public void contributeExportedActions( IMenuManager menu ) {
         // jhTODO: do we have any actions?  I do not think so...   
         if(menu == null) return;
     }
@@ -287,7 +301,8 @@ public class XmlChoiceObjectEditorPage
      * @see org.teiid.designer.ui.editors.IEditorActionExporter#getAdditionalModelingActions(org.eclipse.jface.viewers.ISelection)
      * @since 5.0
      */
-    public List<IAction> getAdditionalModelingActions( ISelection selection ) {
+    @Override
+	public List<IAction> getAdditionalModelingActions( ISelection selection ) {
         // jhTODO: do we have any actions?  I do not think so...   
         return Collections.EMPTY_LIST;
     }
@@ -295,7 +310,8 @@ public class XmlChoiceObjectEditorPage
     /* (non-Javadoc)
      * @See org.teiid.designer.ui.editors.ModelObjectEditor#contributeToolbarActions(org.eclipse.jface.action.ToolBarManager)
      */
-    public void contributeToolbarActions(ToolBarManager toolBarMgr) {
+    @Override
+	public void contributeToolbarActions(ToolBarManager toolBarMgr) {
 //        System.out.println("[XmlChoiceObjectEditorPage.contributeToolbarActions] TOP"); //$NON-NLS-1$
 
         if(toolBarMgr == null) return;
@@ -308,12 +324,14 @@ public class XmlChoiceObjectEditorPage
     /* (non-Javadoc)
      * @See org.teiid.designer.ui.editors.ModelObjectEditorPage#doSave()
      */
-    public void doSave(boolean isClosing) {
+    @Override
+	public void doSave(boolean isClosing) {
         // there's no difference to this panel between isClosing true and false
         deactivate();
     }
     
-    public Object getAdapter( Class key ) {
+    @Override
+	public Object getAdapter( Class key ) {
 //        System.out.println("[TranformationObjectEditorPage.getAdapter]"); //$NON-NLS-1$ 
         Object oResult = null;
 //        if (key.equals(IFindReplaceTarget.class)) {
@@ -334,7 +352,8 @@ public class XmlChoiceObjectEditorPage
      * @see org.teiid.designer.ui.editors.ModelObjectEditorPage#updateReadOnlyState()
      * @since 4.2
      */
-    public void updateReadOnlyState() {
+    @Override
+	public void updateReadOnlyState() {
     }
 
     /* (non-Javadoc)
@@ -342,7 +361,8 @@ public class XmlChoiceObjectEditorPage
      * @See org.teiid.designer.ui.editors.ModelObjectEditorPage#isEditingObject(java.lang.Object)
      * @since 4.2
      */
-    public boolean isEditingObject(Object modelObject) {
+    @Override
+	public boolean isEditingObject(Object modelObject) {
         if( icoChoiceObject != null && modelObject != null ) {
             IChoiceObject tempChoiceObject = getChoiceObjectForInput( modelObject );
             if( tempChoiceObject != null && tempChoiceObject.equals(icoChoiceObject))
@@ -356,7 +376,8 @@ public class XmlChoiceObjectEditorPage
      * @see org.teiid.designer.ui.editors.ModelObjectEditorPage#getEditableObject(java.lang.Object)
      * @since 4.2
      */
-    public Object getEditableObject(Object modelObject) {
+    @Override
+	public Object getEditableObject(Object modelObject) {
         if (modelObject != null && modelObject instanceof XmlChoice) {
             return modelObject;
         }
@@ -369,7 +390,8 @@ public class XmlChoiceObjectEditorPage
      * @see org.teiid.designer.ui.editors.ModelObjectEditorPage#isResourceValid()
      * @since 4.2
      */
-    public boolean isResourceValid() {
+    @Override
+	public boolean isResourceValid() {
         if( icoChoiceObject != null ) {
             ModelResource mr = ModelUtilities.getModelResourceForModelObject(icoChoiceObject.getParent());
             if( mr != null )
@@ -382,7 +404,8 @@ public class XmlChoiceObjectEditorPage
      * Method that handles Events from the SqlEditorPanel.  
      * @param e the EventObject
      */
-    public void processEvent(EventObject e) {
+    @Override
+	public void processEvent(EventObject e) {
     }
     
     /**
@@ -391,7 +414,8 @@ public class XmlChoiceObjectEditorPage
      * @see org.teiid.designer.ui.editors.ModelObjectEditorPage#initialize(org.teiid.designer.ui.editors.MultiPageModelEditor)
      * @since 5.0.1
      */
-    public void initialize(MultiPageModelEditor editor) {
+    @Override
+	public void initialize(MultiPageModelEditor editor) {
     	if( editor instanceof ModelEditor ) {
     		this.parentModelEditor = (ModelEditor)editor;
     	}
@@ -403,10 +427,12 @@ public class XmlChoiceObjectEditorPage
      * @see org.teiid.designer.ui.editors.ModelObjectEditorPage#setOverride(org.teiid.designer.ui.editors.ModelObjectEditorPage)
      * @since 5.0.1
      */
-    public void setOverride(ModelObjectEditorPage editor) {
+    @Override
+	public void setOverride(ModelObjectEditorPage editor) {
     }
     
-    public ModelEditor getParentModelEditor() {
+    @Override
+	public ModelEditor getParentModelEditor() {
     	return this.parentModelEditor;
     }
 }

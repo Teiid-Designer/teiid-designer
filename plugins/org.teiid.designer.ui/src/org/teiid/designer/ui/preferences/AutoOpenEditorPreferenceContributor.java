@@ -50,7 +50,8 @@ public class AutoOpenEditorPreferenceContributor implements IGeneralPreferencePa
      * @see org.teiid.designer.ui.preferences.IGeneralPreferencePageContributor#createPreferenceEditor(org.eclipse.swt.widgets.Composite)
      * @since 5.0
      */
-    public void createPreferenceEditor(Composite theParent) {
+    @Override
+	public void createPreferenceEditor(Composite theParent) {
         this.btn = new Button(theParent, SWT.CHECK);
         this.btn.setText(Util.getStringOrKey(PREFIX + "btn.text")); //$NON-NLS-1$
         
@@ -95,7 +96,8 @@ public class AutoOpenEditorPreferenceContributor implements IGeneralPreferencePa
      * @see org.teiid.designer.ui.preferences.IGeneralPreferencePageContributor#getName()
      * @since 5.0
      */
-    public String getName() {
+    @Override
+	public String getName() {
         return Util.getStringOrKey(PREFIX + "name"); //$NON-NLS-1$
     }
 
@@ -103,7 +105,8 @@ public class AutoOpenEditorPreferenceContributor implements IGeneralPreferencePa
      * @see org.teiid.designer.ui.preferences.IGeneralPreferencePageContributor#getToolTip()
      * @since 5.0
      */
-    public String getToolTip() {
+    @Override
+	public String getToolTip() {
         return Util.getStringOrKey(PREFIX + "toolTip"); //$NON-NLS-1$
     }
 
@@ -111,7 +114,8 @@ public class AutoOpenEditorPreferenceContributor implements IGeneralPreferencePa
      * @see org.teiid.designer.ui.preferences.IGeneralPreferencePageContributor#performCancel()
      * @since 5.0
      */
-    public boolean performCancel() {
+    @Override
+	public boolean performCancel() {
         return true;
     }
 
@@ -119,7 +123,8 @@ public class AutoOpenEditorPreferenceContributor implements IGeneralPreferencePa
      * @see org.teiid.designer.ui.preferences.IGeneralPreferencePageContributor#performDefaults()
      * @since 5.0
      */
-    public boolean performDefaults() {
+    @Override
+	public boolean performDefaults() {
         this.btn.setSelection(getPreferenceStoreValue(true));
         return true;
     }
@@ -128,7 +133,8 @@ public class AutoOpenEditorPreferenceContributor implements IGeneralPreferencePa
      * @see org.teiid.designer.ui.preferences.IGeneralPreferencePageContributor#performOk()
      * @since 5.0
      */
-    public boolean performOk() {
+    @Override
+	public boolean performOk() {
         String value = MessageDialogWithToggle.NEVER;
         
         if (this.btn.getSelection()) {
@@ -143,7 +149,8 @@ public class AutoOpenEditorPreferenceContributor implements IGeneralPreferencePa
      * @see org.teiid.designer.ui.preferences.IGeneralPreferencePageContributor#refresh()
      * @since 5.0
      */
-    public void refresh() {
+    @Override
+	public void refresh() {
         this.btn.setSelection(getPreferenceStoreValue(false));
     }
     
@@ -151,7 +158,8 @@ public class AutoOpenEditorPreferenceContributor implements IGeneralPreferencePa
      * @see org.teiid.designer.ui.preferences.IGeneralPreferencePageContributor#setWorkbench(org.eclipse.ui.IWorkbench)
      * @since 5.0
      */
-    public void setWorkbench(IWorkbench theWorkbench) {
+    @Override
+	public void setWorkbench(IWorkbench theWorkbench) {
     }
 
 }

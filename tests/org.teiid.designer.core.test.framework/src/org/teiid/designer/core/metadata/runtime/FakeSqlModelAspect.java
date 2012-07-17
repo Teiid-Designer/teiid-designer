@@ -25,49 +25,69 @@ public class FakeSqlModelAspect implements SqlModelAspect {
     public boolean supportsOrderBy, supportsOuterJoin, supportsWhereAll, supportsDistinct, supportsJoin, isVisible;
     public int maxSetSize, modelType;
     
-    public String getPrimaryMetamodelUri(EObject eObject) { return primaryMetamodelUri; }
+    @Override
+	public String getPrimaryMetamodelUri(EObject eObject) { return primaryMetamodelUri; }
 
-    public boolean supportsOrderBy(EObject eObject) { return supportsOrderBy; }
+    @Override
+	public boolean supportsOrderBy(EObject eObject) { return supportsOrderBy; }
 
-    public boolean supportsOuterJoin(EObject eObject) { return supportsOuterJoin; }
+    @Override
+	public boolean supportsOuterJoin(EObject eObject) { return supportsOuterJoin; }
 
-    public boolean supportsWhereAll(EObject eObject) { return supportsWhereAll; }
+    @Override
+	public boolean supportsWhereAll(EObject eObject) { return supportsWhereAll; }
 
-    public boolean supportsDistinct(EObject eObject) { return supportsDistinct; }
+    @Override
+	public boolean supportsDistinct(EObject eObject) { return supportsDistinct; }
 
-    public boolean supportsJoin(EObject eObject) { return supportsJoin; }
+    @Override
+	public boolean supportsJoin(EObject eObject) { return supportsJoin; }
 
-    public boolean isVisible(EObject eObject) { return isVisible; }
+    @Override
+	public boolean isVisible(EObject eObject) { return isVisible; }
     
-    public int getModelType(EObject eObject) {return modelType;}
+    @Override
+	public int getModelType(EObject eObject) {return modelType;}
 
-    public int getMaxSetSize(EObject eObject) { return maxSetSize; }
+    @Override
+	public int getMaxSetSize(EObject eObject) { return maxSetSize; }
     
-    public String getName(EObject eObject) { return name; }
+    @Override
+	public String getName(EObject eObject) { return name; }
     
-    public String getFullName(EObject eObject) { return fullName; }    
+    @Override
+	public String getFullName(EObject eObject) { return fullName; }    
     
-    public String getNameInSource(EObject eObject) { return nameInSource; }
+    @Override
+	public String getNameInSource(EObject eObject) { return nameInSource; }
     
-    public IPath getPath(EObject eObject) { return path; }
+    @Override
+	public IPath getPath(EObject eObject) { return path; }
     
-    public Object getObjectID(EObject eObject) { return uuid; }
+    @Override
+	public Object getObjectID(EObject eObject) { return uuid; }
     
-    public boolean isRecordType(char recordType) { return (recordType == IndexConstants.RECORD_TYPE.MODEL ); } 
+    @Override
+	public boolean isRecordType(char recordType) { return (recordType == IndexConstants.RECORD_TYPE.MODEL ); } 
 
-    public boolean isQueryable(EObject eObject) { return true; }
+    @Override
+	public boolean isQueryable(EObject eObject) { return true; }
     
-    public String getID() { return null; }
+    @Override
+	public String getID() { return null; }
     
-    public MetamodelEntity getMetamodelEntity() { return null; }
+    @Override
+	public MetamodelEntity getMetamodelEntity() { return null; }
 
-    public Object getParentObjectID(EObject eObject) { return parentUuid; }
+    @Override
+	public Object getParentObjectID(EObject eObject) { return parentUuid; }
 
 
     /*
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlAspect#updateObject(org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject)
      */
-    public void updateObject(EObject targetObject, EObject sourceObject) {
+    @Override
+	public void updateObject(EObject targetObject, EObject sourceObject) {
 
     }
 

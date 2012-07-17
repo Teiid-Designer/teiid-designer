@@ -558,7 +558,8 @@ public class MappingTreeContentProvider implements ITreeContentProvider {
         return result;
     }
 
-    public Object[] getChildren( Object node ) {
+    @Override
+	public Object[] getChildren( Object node ) {
         Object[] result;
         if (node instanceof DifferenceReport) {
 
@@ -640,7 +641,8 @@ public class MappingTreeContentProvider implements ITreeContentProvider {
         return aryl.toArray();
     }
 
-    public boolean hasChildren( Object node ) {
+    @Override
+	public boolean hasChildren( Object node ) {
         boolean hasChildren = false;
         if (node instanceof DifferenceReport) {
             Mapping mapping = ((DifferenceReport)node).getMapping();
@@ -655,7 +657,8 @@ public class MappingTreeContentProvider implements ITreeContentProvider {
         return hasChildren;
     }
 
-    public Object[] getElements( Object node ) {
+    @Override
+	public Object[] getElements( Object node ) {
 
         Object[] array = null;
         if (node instanceof DifferenceReport) {
@@ -680,7 +683,8 @@ public class MappingTreeContentProvider implements ITreeContentProvider {
         return array;
     }
 
-    public Object getParent( Object node ) {
+    @Override
+	public Object getParent( Object node ) {
         Object result = null;
         if (node instanceof Mapping) {
             Mapping child = (Mapping)node;
@@ -689,10 +693,12 @@ public class MappingTreeContentProvider implements ITreeContentProvider {
         return result;
     }
 
-    public void dispose() {
+    @Override
+	public void dispose() {
     }
 
-    public void inputChanged( Viewer viewer,
+    @Override
+	public void inputChanged( Viewer viewer,
                               Object oldInput,
                               Object newInput ) {
     }

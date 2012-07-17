@@ -8,7 +8,6 @@
 package org.teiid.designer.advisor.ui.actions;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.INewWizard;
@@ -43,9 +42,9 @@ public class NewConnectionProfileAction extends Action implements AdvisorUiConst
     }
 	
 	public void execute(String profileCategoryId) {
-			INewWizard wiz = (INewWizard) new NewTeiidFilteredCPWizard(profileCategoryId);
+			INewWizard wiz = new NewTeiidFilteredCPWizard(profileCategoryId);
 
-			WizardDialog wizardDialog = new WizardDialog(Display.getCurrent().getActiveShell(), (Wizard) wiz);
+			WizardDialog wizardDialog = new WizardDialog(Display.getCurrent().getActiveShell(), wiz);
 			//wizardDialog.setBlockOnOpen(true);
 			wizardDialog.open();
 	}

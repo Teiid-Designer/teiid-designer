@@ -43,7 +43,8 @@ public abstract class ExtensionManagerImpl implements ExtensionManager {
     protected XClass theColumnXClass;
     protected XClass theSchemaXClass;
 
-    public XPackage getPackage() {
+    @Override
+	public XPackage getPackage() {
         return thePackage;
     }
 
@@ -51,7 +52,8 @@ public abstract class ExtensionManagerImpl implements ExtensionManager {
      * Loads the extension objects into memory so that they can be assigned to a physical model and values can be set. Creates the
      * model extension model in the project if it does not exist.
      */
-    public void loadModelExtensions( IContainer targetModelLocation,
+    @Override
+	public void loadModelExtensions( IContainer targetModelLocation,
                                      IProgressMonitor monitor ) throws ModelerCoreException {
 
         Path modelPath = new Path(validateFileName(getModelFileName()));
@@ -197,49 +199,60 @@ public abstract class ExtensionManagerImpl implements ExtensionManager {
         return result;
     }
 
-    public void assignAttribute( XAttribute attribute ) {
+    @Override
+	public void assignAttribute( XAttribute attribute ) {
 
     }
 
-    public void assignClassifier( EClassifier classifier ) {
+    @Override
+	public void assignClassifier( EClassifier classifier ) {
 
     }
 
-    public void createColumnExtensions( ExtensionFactory factory,
+    @Override
+	public void createColumnExtensions( ExtensionFactory factory,
                                         XClass column ) {
 
     }
 
-    public void createEnums( ExtensionFactory factory ) {
+    @Override
+	public void createEnums( ExtensionFactory factory ) {
 
     }
 
-    public void createTableExtensions( ExtensionFactory factory,
+    @Override
+	public void createTableExtensions( ExtensionFactory factory,
                                        XClass table ) {
 
     }
 
-    public void createCatalogExtensions( ExtensionFactory factory,
+    @Override
+	public void createCatalogExtensions( ExtensionFactory factory,
                                          XClass catalog ) {
     }
 
-    public void createSchemaExtensions( ExtensionFactory factory,
+    @Override
+	public void createSchemaExtensions( ExtensionFactory factory,
                                         XClass schema ) {
     }
 
-    public String getColumnName() {
+    @Override
+	public String getColumnName() {
         return ""; //$NON-NLS-1$
     }
 
-    public String getCatalogName() {
+    @Override
+	public String getCatalogName() {
         return ""; //$NON-NLS-1$
     }
 
-    public String getSchemaName() {
+    @Override
+	public String getSchemaName() {
         return ""; //$NON-NLS-1$
     }
 
-    public String getTableName() {
+    @Override
+	public String getTableName() {
         return ""; //$NON-NLS-1$
     }
 }

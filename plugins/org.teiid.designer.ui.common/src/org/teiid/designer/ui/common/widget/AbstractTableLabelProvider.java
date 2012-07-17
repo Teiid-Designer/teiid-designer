@@ -27,7 +27,8 @@ implements ITableLabelProvider {
      * @see org.eclipse.jface.viewers.IBaseLabelProvider#addListener(org.eclipse.jface.viewers.ILabelProviderListener)
      * @since 4.0
      */
-    public void addListener(final ILabelProviderListener listener) {
+    @Override
+	public void addListener(final ILabelProviderListener listener) {
     }
 
     /**<p>
@@ -35,7 +36,8 @@ implements ITableLabelProvider {
      * @see org.eclipse.jface.viewers.IBaseLabelProvider#dispose()
      * @since 4.0
      */
-    public void dispose() {
+    @Override
+	public void dispose() {
     }
 
 	/**<p>
@@ -43,6 +45,7 @@ implements ITableLabelProvider {
 	 * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang.Object, int)
 	 * @since 4.0
 	 */
+	@Override
 	public Image getColumnImage(final Object element, final int column) {
 		return null;
 	}
@@ -52,6 +55,7 @@ implements ITableLabelProvider {
 	 * @see org.eclipse.jface.viewers.IBaseLabelProvider#isLabelProperty(java.lang.Object, java.lang.String)
 	 * @since 4.0
 	 */
+	@Override
 	public boolean isLabelProperty(final Object element, final String property) {
 		return true;
 	}
@@ -61,6 +65,7 @@ implements ITableLabelProvider {
 	 * @see org.eclipse.jface.viewers.IBaseLabelProvider#removeListener(org.eclipse.jface.viewers.ILabelProviderListener)
 	 * @since 4.0
 	 */
+	@Override
 	public void removeListener(final ILabelProviderListener listener) {
 	}
 }

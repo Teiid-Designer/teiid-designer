@@ -176,7 +176,8 @@ public class SaveDiagramHelper implements DiagramUiConstants {
                 // final String sProgressMessage = Util.getString( "SaveDiagramDialog.progressMessage" );
 
                 final IRunnableWithProgress op = new IRunnableWithProgress() {
-                    public void run( final IProgressMonitor theMonitor ) {
+                    @Override
+					public void run( final IProgressMonitor theMonitor ) {
                         theMonitor.beginTask(sProgressMessage, 100);
                         theMonitor.worked(50);
 

@@ -68,7 +68,8 @@ public class SchemaProcessorImpl implements SchemaProcessor {
     /**
      * @See org.teiid.designer.schema.tools.processing.internal.SchemaProcessor#clear()
      */
-    public void clear() {
+    @Override
+	public void clear() {
         namespaces = new HashMap();
         duplicateNamespaceFilter = new HashMap();
         elements = new ArrayList();
@@ -78,7 +79,8 @@ public class SchemaProcessorImpl implements SchemaProcessor {
     /**
      * @See org.teiid.designer.schema.tools.processing.internal.SchemaProcessor#processSchemas(org.eclipse.xsd.XSDSchema[])
      */
-    public void processSchemas( XSDSchema[] schemas ) throws SchemaProcessingException {
+    @Override
+	public void processSchemas( XSDSchema[] schemas ) throws SchemaProcessingException {
 
         for (int i = 0; i < schemas.length; ++i) {
             XSDSchema schema = schemas[i];
@@ -94,7 +96,8 @@ public class SchemaProcessorImpl implements SchemaProcessor {
     /**
      * @See org.teiid.designer.schema.tools.processing.internal.SchemaProcessor#processSchemaURIs(java.util.List)
      */
-    public void processSchemaURIs( List schemaURIs ) throws SchemaProcessingException {
+    @Override
+	public void processSchemaURIs( List schemaURIs ) throws SchemaProcessingException {
         List schemas = new ArrayList();
         for (Iterator resourceIter = schemaURIs.iterator(); resourceIter.hasNext();) {
             Object o = resourceIter.next();
@@ -245,7 +248,8 @@ public class SchemaProcessorImpl implements SchemaProcessor {
         traverseCtx.putGlobalType(qname, type);
     }
 
-    public void processType( XSDTypeDefinition type,
+    @Override
+	public void processType( XSDTypeDefinition type,
                              ElementContentTraversalContext traverseCtx2,
                              XSDSchema schema ) throws SchemaProcessingException {
         String namespacePrefix = getNameSpacePrefix(type.getTargetNamespace());
@@ -260,7 +264,8 @@ public class SchemaProcessorImpl implements SchemaProcessor {
         processElementContents(typeDecl, traverseCtx);
     }
 
-    public void processElement( XSDElementDeclaration elem,
+    @Override
+	public void processElement( XSDElementDeclaration elem,
                                 ElementContentTraversalContext traverseCtx,
                                 XSDSchema schema ) throws SchemaProcessingException {
         String name = elem.getName();
@@ -386,7 +391,8 @@ public class SchemaProcessorImpl implements SchemaProcessor {
         return returnMap;
     }
 
-    public void processElementText( SchemaObject element ) {
+    @Override
+	public void processElementText( SchemaObject element ) {
         XSDSimpleTypeDefinition textType = element.getTextType();
         Column col;
 
@@ -479,24 +485,28 @@ public class SchemaProcessorImpl implements SchemaProcessor {
     /**
      * @See org.teiid.designer.schema.tools.processing.internal.SchemaProcessor#getNamespaces()
      */
-    public Map getNamespaces() {
+    @Override
+	public Map getNamespaces() {
         return namespaces;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.schema.tools.processing.internal.SchemaProcessor#getSchemaModel()
      */
-    public SchemaModel getSchemaModel() {
+    @Override
+	public SchemaModel getSchemaModel() {
         SchemaModelImpl model = new SchemaModelImpl(elements, namespaces, separator);
         model.setTypeAware(representTypes);
         return model;
     }
 
-    public void representTypes( boolean representTypes ) {
+    @Override
+	public void representTypes( boolean representTypes ) {
         this.representTypes = representTypes;
     }
 
-    public void setNamespaces( Map namespaces ) {
+    @Override
+	public void setNamespaces( Map namespaces ) {
         this.namespaces = namespaces;
     }
 

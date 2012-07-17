@@ -62,7 +62,8 @@ public class XClassImpl extends EClassImpl implements XClass {
      * 
      * @generated
      */
-    public EClass getExtendedClass() {
+    @Override
+	public EClass getExtendedClass() {
         if (extendedClass != null && extendedClass.eIsProxy()) {
             InternalEObject oldExtendedClass = (InternalEObject)extendedClass;
             extendedClass = (EClass)eResolveProxy(oldExtendedClass);
@@ -89,7 +90,8 @@ public class XClassImpl extends EClassImpl implements XClass {
      * 
      * @generated
      */
-    public void setExtendedClass( EClass newExtendedClass ) {
+    @Override
+	public void setExtendedClass( EClass newExtendedClass ) {
         EClass oldExtendedClass = extendedClass;
         extendedClass = newExtendedClass;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,

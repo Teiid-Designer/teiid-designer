@@ -128,6 +128,7 @@ final class JdbcImportMetadataPage extends WizardPage implements InternalUiConst
 	 * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
 	 * @since 4.0
 	 */
+	@Override
 	public void createControl(final Composite parent) {
         // Create page
         final Composite pg = new Composite(parent, SWT.NONE);
@@ -192,6 +193,7 @@ final class JdbcImportMetadataPage extends WizardPage implements InternalUiConst
         };
         this.listPanel = new ListPanel(pg, TABLE_TYPES_GROUP, ctrlr, SWT.READ_ONLY | SWT.MULTI, ITEMS_COMMONLY_ALL_SELECTED);
         this.listPanel.getViewer().addSelectionChangedListener(new ISelectionChangedListener() {
+			@Override
 			public void selectionChanged(final SelectionChangedEvent event) {
                 tableTypesSelected(event);
 			}
@@ -203,7 +205,8 @@ final class JdbcImportMetadataPage extends WizardPage implements InternalUiConst
      * @see org.teiid.designer.ui.common.wizard.IPersistentWizardPage#saveSettings()
      * @since 4.0
      */
-    public void saveSettings() {
+    @Override
+	public void saveSettings() {
         final IDialogSettings dlgSettings = getDialogSettings();
         // Information must be obtained from wizard, not local variables, since this method may be called w/o this page every
         // being set visible, via the user having pre-selected a destination folder and clicking on the "Finish" earlier in the

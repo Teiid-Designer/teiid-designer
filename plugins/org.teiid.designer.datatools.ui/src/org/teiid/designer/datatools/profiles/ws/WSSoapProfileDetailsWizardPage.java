@@ -41,10 +41,10 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.progress.UIJob;
 import org.teiid.designer.datatools.ui.DatatoolsUiConstants;
+import org.teiid.designer.ui.common.ICredentialsCommon;
 import org.teiid.designer.ui.common.ICredentialsCommon.SecurityType;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.wizards.wsdl.WsdlFileSelectionComposite;
-
 
 public class WSSoapProfileDetailsWizardPage  extends ConnectionProfileDetailsPage
 		implements Listener, DatatoolsUiConstants {
@@ -226,19 +226,19 @@ public class WSSoapProfileDetailsWizardPage  extends ConnectionProfileDetailsPag
                 .getProfileProperties();
         
         if (securityType != null) {
-            properties.setProperty(IWSProfileConstants.SECURITY_TYPE_ID, securityType.name());
+            properties.setProperty(ICredentialsCommon.SECURITY_TYPE_ID, securityType.name());
         }
         else {
-            properties.setProperty(IWSProfileConstants.SECURITY_TYPE_ID,
+            properties.setProperty(ICredentialsCommon.SECURITY_TYPE_ID,
                     SecurityType.None.name());
         }
         
         if (userName != null) {
-            properties.setProperty(IWSProfileConstants.USERNAME_PROP_ID, userName);
+            properties.setProperty(ICredentialsCommon.USERNAME_PROP_ID, userName);
         }
         
         if( password != null) {
-            properties.setProperty(IWSProfileConstants.PASSWORD_PROP_ID, password);
+            properties.setProperty(ICredentialsCommon.PASSWORD_PROP_ID, password);
         }
         
     }
@@ -330,7 +330,7 @@ public class WSSoapProfileDetailsWizardPage  extends ConnectionProfileDetailsPag
         List result = super.getSummaryData();
     
         Properties properties = ((NewConnectionProfileWizard) getWizard()).getProfileProperties();
-        String securityType = properties.getProperty(IWSProfileConstants.SECURITY_TYPE_ID);
+        String securityType = properties.getProperty(ICredentialsCommon.SECURITY_TYPE_ID);
         if (securityType == null) {
             securityType = SecurityType.None.name();
         }
@@ -339,10 +339,10 @@ public class WSSoapProfileDetailsWizardPage  extends ConnectionProfileDetailsPag
         
         if (! SecurityType.None.name().equals(securityType)) {
             result.add(new String[] { UTIL.getString("Common.SecurityType.Label"), securityType }); //$NON-NLS-1$
-            result.add(new String[] { UTIL.getString("Common.Username.Label"), properties.getProperty(IWSProfileConstants.USERNAME_PROP_ID) }); //$NON-NLS-1$
+            result.add(new String[] { UTIL.getString("Common.Username.Label"), properties.getProperty(ICredentialsCommon.USERNAME_PROP_ID) }); //$NON-NLS-1$
 
             // Mask the password
-            String password = properties.getProperty(IWSProfileConstants.PASSWORD_PROP_ID);
+            String password = properties.getProperty(ICredentialsCommon.PASSWORD_PROP_ID);
             StringBuffer masked = new StringBuffer(password.length());
             for (int i = 0; i < password.length(); ++i) {
                 masked.append("*"); //$NON-NLS-1$

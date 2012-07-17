@@ -509,7 +509,8 @@ public abstract class PropertyEditorFactory implements UiConstants.ExtensionPoin
                                                                          propertyDescriptor.getLabelProvider(), true, false);
                 dialog.setContentFilter(new IFilter() {
 
-                    public boolean passes( final Object object ) {
+                    @Override
+					public boolean passes( final Object object ) {
                         if (object instanceof XSDComponent) {
                             if (object instanceof XSDTypeDefinition || object instanceof XSDFeature) {
                                 return true;
@@ -619,7 +620,8 @@ class ModelObjectAccumulatorSourceImpl implements IAccumulatorSource {
         this.initialValues = initialValues;
     }
 
-    public void accumulatedValuesRemoved( Collection values ) {
+    @Override
+	public void accumulatedValuesRemoved( Collection values ) {
         // Any items that were originally in our table we will reinsert into the same relative
         // location. Any ones that did not start here we will insert at the end.
         Iterator it = values.iterator();
@@ -635,7 +637,8 @@ class ModelObjectAccumulatorSourceImpl implements IAccumulatorSource {
         }
     }
 
-    public void accumulatedValuesAdded( Collection values ) {
+    @Override
+	public void accumulatedValuesAdded( Collection values ) {
         Iterator it = values.iterator();
         while (it.hasNext()) {
             Object value = it.next();
@@ -645,7 +648,8 @@ class ModelObjectAccumulatorSourceImpl implements IAccumulatorSource {
         }
     }
 
-    public Collection getAvailableValues() {
+    @Override
+	public Collection getAvailableValues() {
         Collection itemsColl = new ArrayList(currentValues.size());
         Iterator it = currentValues.iterator();
         while (it.hasNext()) {
@@ -654,12 +658,14 @@ class ModelObjectAccumulatorSourceImpl implements IAccumulatorSource {
         return itemsColl;
     }
 
-    public int getAvailableValuesCount() {
+    @Override
+	public int getAvailableValuesCount() {
         int count = table.getItemCount();
         return count;
     }
 
-    public Collection getSelectedAvailableValues() {
+    @Override
+	public Collection getSelectedAvailableValues() {
         int[] itemIndices = table.getSelectionIndices();
         Collection itemsColl = new ArrayList(itemIndices.length);
         for (int i = 0; i < itemIndices.length; i++) {
@@ -669,12 +675,14 @@ class ModelObjectAccumulatorSourceImpl implements IAccumulatorSource {
         return itemsColl;
     }
 
-    public int getSelectedAvailableValuesCount() {
+    @Override
+	public int getSelectedAvailableValuesCount() {
         int count = table.getSelectionCount();
         return count;
     }
 
-    public Control createControl( Composite parent ) {
+    @Override
+	public Control createControl( Composite parent ) {
         // Create the table
         table = new Table(parent, SWT.MULTI | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
         GridData tableGridData = new GridData();
@@ -702,7 +710,8 @@ class ModelObjectAccumulatorSourceImpl implements IAccumulatorSource {
         return table;
     }
 
-    public void addSelectionListener( SelectionListener listener ) {
+    @Override
+	public void addSelectionListener( SelectionListener listener ) {
         table.addSelectionListener(listener);
     }
 
@@ -744,14 +753,16 @@ class ModelObjectAccumulatorSourceImpl implements IAccumulatorSource {
     /**
      * @see org.teiid.designer.ui.common.widget.accumulator.IAccumulatorSource#supportsAddAll()
      */
-    public boolean supportsAddAll() {
+    @Override
+	public boolean supportsAddAll() {
         return true;
     }
 
     /**
      * @see org.teiid.designer.ui.common.widget.accumulator.IAccumulatorSource#getSelectionStatus()
      */
-    public IStatus getSelectionStatus() {
+    @Override
+	public IStatus getSelectionStatus() {
         return OK_STATUS;
     }
 

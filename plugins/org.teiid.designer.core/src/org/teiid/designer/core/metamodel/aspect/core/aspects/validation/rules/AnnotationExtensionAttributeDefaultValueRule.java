@@ -35,7 +35,8 @@ public class AnnotationExtensionAttributeDefaultValueRule implements ObjectValid
      * @see org.teiid.designer.core.validation.ObjectValidationRule#validate(org.eclipse.emf.ecore.EObject, org.teiid.designer.core.validation.ValidationContext)
      * @since 4.2
      */
-    public void validate(EObject theObject,
+    @Override
+	public void validate(EObject theObject,
                          ValidationContext theContext) {
         CoreArgCheck.isNotNull(theContext);
         CoreArgCheck.isInstanceOf(Annotation.class, theObject);

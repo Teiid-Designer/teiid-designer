@@ -75,7 +75,8 @@ public class NotationChoiceRadioActionGroup extends MenuManager
     }
         
 
-    public void setNotationId( String sNotationId ) {
+    @Override
+	public void setNotationId( String sNotationId ) {
         //Util.log( IStatus.INFO, "[NotationChoiceRadioActionGroup.setNotationId] TOP" ); //$NON-NLS-1$
         
         // the action that was clicked will call our (the ActionGroup's)

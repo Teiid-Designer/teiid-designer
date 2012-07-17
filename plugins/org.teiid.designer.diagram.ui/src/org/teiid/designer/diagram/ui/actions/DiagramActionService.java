@@ -251,7 +251,8 @@ public final class DiagramActionService extends AbstractActionService implements
     /* (non-Javadoc)
      * see org.teiid.designer.ui.common.actions.AbstractActionService#getDefaultAction(java.lang.String)
      */
-    public IAction getDefaultAction( final String theActionId ) {
+    @Override
+	public IAction getDefaultAction( final String theActionId ) {
         //System.out.println("[DiagramActionService.getDefaultAction]"); //$NON-NLS-1$     
         try {
             // get the action from the ModelerActionService

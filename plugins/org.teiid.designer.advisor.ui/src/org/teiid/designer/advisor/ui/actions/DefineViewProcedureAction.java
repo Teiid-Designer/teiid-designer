@@ -42,7 +42,8 @@ public class DefineViewProcedureAction extends Action implements AdvisorUiConsta
     /* (non-Javadoc)
      * @see org.eclipse.jface.action.IAction#run()
      */
-    public void run() {
+    @Override
+	public void run() {
     	final IWorkbenchWindow iww = AdvisorUiPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow();
     	
     	DefineViewProcedureDialog sdDialog = new DefineViewProcedureDialog(iww.getShell(), this.designerProperties);

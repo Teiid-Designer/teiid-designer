@@ -78,7 +78,7 @@ public class TeiidGuidesSection  implements AdvisorUiConstants {
 	@SuppressWarnings("unused")
 	private void createSection(Composite theParent) {
 		SECTION : {
-	        section = this.toolkit.createSection(theParent, Section.TITLE_BAR | ExpandableComposite.TWISTIE | ExpandableComposite.EXPANDED );
+	        section = this.toolkit.createSection(theParent, ExpandableComposite.TITLE_BAR | ExpandableComposite.TWISTIE | ExpandableComposite.EXPANDED );
 	        Color bkgdColor = this.toolkit.getColors().getBackground();
 	        section.setText(Messages.ActionSets);
 	        section.setTitleBarForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));

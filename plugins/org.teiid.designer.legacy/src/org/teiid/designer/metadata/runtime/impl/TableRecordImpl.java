@@ -53,49 +53,56 @@ public class TableRecordImpl extends ColumnSetRecordImpl implements TableRecord 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metadata.runtime.TableRecord#getAccessPatternIDs()
      */
-    public Collection getAccessPatternIDs() {
+    @Override
+	public Collection getAccessPatternIDs() {
         return accessPatternIDs;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metadata.runtime.TableRecord#getCardinality()
      */
-    public int getCardinality() {
+    @Override
+	public int getCardinality() {
         return cardinality;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metadata.runtime.TableRecord#getForeignKeyIDs()
      */
-    public Collection getForeignKeyIDs() {
+    @Override
+	public Collection getForeignKeyIDs() {
         return foreignKeyIDs;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metadata.runtime.TableRecord#getIndexIDs()
      */
-    public Collection getIndexIDs() {
+    @Override
+	public Collection getIndexIDs() {
         return indexIDs;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metadata.runtime.TableRecord#getPrimaryKeyID()
      */
-    public Object getPrimaryKeyID() {
+    @Override
+	public Object getPrimaryKeyID() {
         return primaryKeyID;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metadata.runtime.TableRecord#getUniqueKeyIDs()
      */
-    public Collection getUniqueKeyIDs() {
+    @Override
+	public Collection getUniqueKeyIDs() {
         return uniqueKeyIDs;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metadata.runtime.TableRecord#isVirtual()
      */
-    public boolean isVirtual() {
+    @Override
+	public boolean isVirtual() {
         return isVirtual;
     }
 
@@ -103,28 +110,32 @@ public class TableRecordImpl extends ColumnSetRecordImpl implements TableRecord 
      * @see org.teiid.designer.metadata.runtime.TableRecord#isMaterialized()
      * @since 4.2
      */
-    public boolean isMaterialized() {
+    @Override
+	public boolean isMaterialized() {
         return isMaterialized;
     }
 
     /**
      * @see org.teiid.designer.metadata.runtime.TableRecord#isPhysical()
      */
-    public boolean isPhysical() {
+    @Override
+	public boolean isPhysical() {
         return !isVirtual();
     }
 
     /**
      * @see org.teiid.designer.metadata.runtime.TableRecord#isSystem()
      */
-    public boolean isSystem() {
+    @Override
+	public boolean isSystem() {
         return isSystem;
     }
 
     /*
      * @See org.teiid.designer.core.metadata.runtime.TableRecord#getTableType()
      */
-    public int getTableType() {
+    @Override
+	public int getTableType() {
         return tableType;
     }
 
@@ -132,21 +143,24 @@ public class TableRecordImpl extends ColumnSetRecordImpl implements TableRecord 
      * @see org.teiid.designer.metadata.runtime.TableRecord#getMaterializedStageTableID()
      * @since 4.2
      */
-    public Object getMaterializedStageTableID() {
+    @Override
+	public Object getMaterializedStageTableID() {
         return this.materializedStageTableID;
     }
     /**
      * @see org.teiid.designer.metadata.runtime.TableRecord#getMaterializedTableID()
      * @since 4.2
      */
-    public Object getMaterializedTableID() {
+    @Override
+	public Object getMaterializedTableID() {
         return this.materializedTableID;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metadata.runtime.TableRecord#supportsUpdate()
      */
-    public boolean supportsUpdate() {
+    @Override
+	public boolean supportsUpdate() {
         return supportsUpdate;
     }
 

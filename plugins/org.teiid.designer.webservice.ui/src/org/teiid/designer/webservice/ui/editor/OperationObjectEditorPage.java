@@ -224,7 +224,8 @@ public class OperationObjectEditorPage extends TransformationObjectEditorPage
                 return interfaces.toArray();
             }
 
-            public Object getParent( Object element ) {
+            @Override
+			public Object getParent( Object element ) {
                 return (element instanceof Operation ? ((Operation)element).getInterface() : null);
             }
         });
@@ -238,10 +239,12 @@ public class OperationObjectEditorPage extends TransformationObjectEditorPage
 
         this.opViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 
-            public void selectionChanged( final SelectionChangedEvent event ) {
+            @Override
+			public void selectionChanged( final SelectionChangedEvent event ) {
                 UiBusyIndicator.showWhile(Display.getCurrent(), new Runnable() {
 
-                    public void run() {
+                    @Override
+					public void run() {
                         operationSelected(event);
                     }
                 });
@@ -251,7 +254,8 @@ public class OperationObjectEditorPage extends TransformationObjectEditorPage
         this.vSplitter = new SashForm(this.hSplitter, SWT.VERTICAL);
         this.declarationsToAssignments = new TreeMap(new Comparator() {
 
-            public int compare( Object object1,
+            @Override
+			public int compare( Object object1,
                                 Object object2 ) {
                 if (object1 == null) {
                     return -1;
@@ -280,7 +284,8 @@ public class OperationObjectEditorPage extends TransformationObjectEditorPage
         sqlPanelSection.setClient(sqlEditorPanel);
         sqlEditorPanel.getQueryDisplayComponent().addPropertyListener(new PropertyChangeListener() {
 
-            public void propertyChange( PropertyChangeEvent event ) {
+            @Override
+			public void propertyChange( PropertyChangeEvent event ) {
                 displayNodeUpdated(((QueryDisplayComponent)event.getSource()).getDisplayNode());
             }
         });
@@ -516,7 +521,8 @@ public class OperationObjectEditorPage extends TransformationObjectEditorPage
                 this.opEditorPage = (OperationEditorPage)editorPg;
                 this.opEditorPage.addWorkspaceSelectionListener(new ISelectionListener() {
 
-                    public void selectionChanged( IWorkbenchPart part,
+                    @Override
+					public void selectionChanged( IWorkbenchPart part,
                                                   ISelection selection ) {
                         workspaceSelectionChanged(selection);
                     }
@@ -629,7 +635,8 @@ public class OperationObjectEditorPage extends TransformationObjectEditorPage
         // Ensure update occurs in UI thread
         UiUtil.runInSwtThread(new Runnable() {
 
-            public void run() {
+            @Override
+			public void run() {
                 updateOperationsInSwtThread();
             }
         }, true);
@@ -725,7 +732,8 @@ public class OperationObjectEditorPage extends TransformationObjectEditorPage
             if (dragSourceIsDocument(event)) {
                 UiBusyIndicator.showWhile(null, new Runnable() {
 
-                    public void run() {
+                    @Override
+					public void run() {
                         executeDropInFrom(getEventEObjects(dtEvent));
                         edit(selectedOp);
                     }

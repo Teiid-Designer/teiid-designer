@@ -99,7 +99,8 @@ public class FunctionParameterImpl extends EObjectImpl implements FunctionParame
      * <!-- end-user-doc -->
      * @generated
      */
-    public String getName() {
+    @Override
+	public String getName() {
         return name;
     }
 
@@ -108,7 +109,8 @@ public class FunctionParameterImpl extends EObjectImpl implements FunctionParame
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setName(String newName) {
+    @Override
+	public void setName(String newName) {
         String oldName = name;
         name = newName;
         if (eNotificationRequired())
@@ -120,7 +122,8 @@ public class FunctionParameterImpl extends EObjectImpl implements FunctionParame
      * <!-- end-user-doc -->
      * @generated
      */
-    public String getType() {
+    @Override
+	public String getType() {
         return type;
     }
 
@@ -129,7 +132,8 @@ public class FunctionParameterImpl extends EObjectImpl implements FunctionParame
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setType(String newType) {
+    @Override
+	public void setType(String newType) {
         String oldType = type;
         type = newType;
         if (eNotificationRequired())
@@ -141,7 +145,8 @@ public class FunctionParameterImpl extends EObjectImpl implements FunctionParame
      * <!-- end-user-doc -->
      * @generated
      */
-    public ScalarFunction getFunction() {
+    @Override
+	public ScalarFunction getFunction() {
         if (eContainerFeatureID != FunctionPackage.FUNCTION_PARAMETER__FUNCTION) return null;
         return (ScalarFunction)eContainer;
     }
@@ -151,7 +156,8 @@ public class FunctionParameterImpl extends EObjectImpl implements FunctionParame
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setFunction(ScalarFunction newFunction) {
+    @Override
+	public void setFunction(ScalarFunction newFunction) {
         if (newFunction != eContainer || (eContainerFeatureID != FunctionPackage.FUNCTION_PARAMETER__FUNCTION && newFunction != null)) {
             if (EcoreUtil.isAncestor(this, newFunction))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$

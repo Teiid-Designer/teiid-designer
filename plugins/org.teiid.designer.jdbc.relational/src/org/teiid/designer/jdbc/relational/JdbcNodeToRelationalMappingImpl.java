@@ -51,7 +51,8 @@ public class JdbcNodeToRelationalMappingImpl implements JdbcNodeToRelationalMapp
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.relational.JdbcNodeToRelationalMapping#getRelationalClassForJdbcNode(org.teiid.designer.jdbc.metadata.JdbcNode)
      */
-    public EClass getRelationalClassForJdbcNode(final JdbcNode jdbcNode) {
+    @Override
+	public EClass getRelationalClassForJdbcNode(final JdbcNode jdbcNode) {
         CoreArgCheck.isNotNull(jdbcNode);
         
         if ( jdbcNode instanceof JdbcCatalog ) {
@@ -83,7 +84,8 @@ public class JdbcNodeToRelationalMappingImpl implements JdbcNodeToRelationalMapp
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.relational.JdbcNodeToRelationalMapping#setRelationalClassForJdbcTableType(java.lang.String, java.lang.String)
      */
-    public void setRelationalClassForJdbcTableType(final String tableType, final String eClassName) {
+    @Override
+	public void setRelationalClassForJdbcTableType(final String tableType, final String eClassName) {
         CoreArgCheck.isNotNull(tableType);
         CoreArgCheck.isNotNull(eClassName);
         CoreArgCheck.isNotZeroLength(eClassName);
@@ -94,7 +96,8 @@ public class JdbcNodeToRelationalMappingImpl implements JdbcNodeToRelationalMapp
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.relational.JdbcNodeToRelationalMapping#getRelationalClassForJdbcTableType(java.lang.String)
      */
-    public String getRelationalClassForJdbcTableType( final String tableType) {
+    @Override
+	public String getRelationalClassForJdbcTableType( final String tableType) {
         if ( tableType == null ) {
             return null;
         }

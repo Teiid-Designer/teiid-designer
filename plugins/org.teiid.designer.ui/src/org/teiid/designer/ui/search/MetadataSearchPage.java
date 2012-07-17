@@ -196,7 +196,8 @@ public final class MetadataSearchPage extends DialogPage implements ISearchPage,
      * 
      * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
      */
-    public void createControl( Composite parent ) {
+    @Override
+	public void createControl( Composite parent ) {
         initializeDialogSettings();
         setControl(createControlImpl(parent));
         restoreState();
@@ -304,7 +305,8 @@ public final class MetadataSearchPage extends DialogPage implements ISearchPage,
         this.txfSimpleType.setEditable(false);
         this.txfSimpleType.setEnabled(false);
         this.txfSimpleType.addModifyListener(new ModifyListener() {
-            public void modifyText( ModifyEvent theEvent ) {
+            @Override
+			public void modifyText( ModifyEvent theEvent ) {
                 handleSimpleTypeChanged();
             }
         });
@@ -540,7 +542,8 @@ public final class MetadataSearchPage extends DialogPage implements ISearchPage,
         this.cbxTextPattern.setToolTipText(Util.getString(PREFIX + "combo.textPattern.tip")); //$NON-NLS-1$
         this.cbxTextPattern.setEnabled(enable);
         this.cbxTextPattern.addModifyListener(new ModifyListener() {
-            public void modifyText( ModifyEvent theEvent ) {
+            @Override
+			public void modifyText( ModifyEvent theEvent ) {
                 handleTextPatternModified();
             }
         });
@@ -930,7 +933,8 @@ public final class MetadataSearchPage extends DialogPage implements ISearchPage,
     private void initButtonSelected( final Button theButton,
                                      final boolean theSelectFlag ) {
         Display.getDefault().asyncExec(new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 theButton.setSelection(theSelectFlag);
                 Event event = new Event();
                 event.widget = theButton;
@@ -1148,7 +1152,8 @@ public final class MetadataSearchPage extends DialogPage implements ISearchPage,
 
                     // handle the selection
                     Display.getDefault().asyncExec(new Runnable() {
-                        public void run() {
+                        @Override
+						public void run() {
                             handlePropertySelected();
                         }
                     });

@@ -43,6 +43,7 @@ public class FindRelationshipTypesCommandImpl implements FindRelationshipTypesCo
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.relationship.search.commands.RelationshipSearchCommand#canExecute()
 	 */
+	@Override
 	public boolean canExecute() {
 		return true;
 	}
@@ -61,6 +62,7 @@ public class FindRelationshipTypesCommandImpl implements FindRelationshipTypesCo
 	/**
 	 * @see org.teiid.designer.core.search.commands.FindRelationshipsCommand#setIndexSelector(org.teiid.designer.core.index.IndexSelector)
 	 */
+	@Override
 	public void setIndexSelector(final IndexSelector selector) {
 		this.selector = selector;
 	}
@@ -68,6 +70,7 @@ public class FindRelationshipTypesCommandImpl implements FindRelationshipTypesCo
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.relationship.search.commands.RelationshipSearchCommand#execute()
 	 */
+	@Override
 	public IStatus execute() {
 		if(!canExecute()) {
 			return null;
@@ -143,6 +146,7 @@ public class FindRelationshipTypesCommandImpl implements FindRelationshipTypesCo
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.relationship.search.commands.FindRelationshipTypesCommand#getRelationShipInfo()
 	 */
+	@Override
 	public Collection getRelationShipTypeInfo() {
 		return this.relationTypeInfo;
 	}
@@ -150,6 +154,7 @@ public class FindRelationshipTypesCommandImpl implements FindRelationshipTypesCo
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.core.search.commands.FindRelationshipTypesCommand#setIncludeSubTypes(boolean)
 	 */
+	@Override
 	public void setIncludeSubTypes(boolean includeSubTypes) {
 		this.includeSubtypes = includeSubTypes;
 	}
@@ -157,6 +162,7 @@ public class FindRelationshipTypesCommandImpl implements FindRelationshipTypesCo
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.core.search.commands.FindRelationshipTypesCommand#setRelationshipTypeName(java.lang.String)
 	 */
+	@Override
 	public void setRelationshipTypeName(String namePattern) {
 		this.typeNamePattern = namePattern;
 	}

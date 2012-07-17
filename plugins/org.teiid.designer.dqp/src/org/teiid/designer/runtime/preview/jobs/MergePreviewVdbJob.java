@@ -14,6 +14,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.osgi.util.NLS;
 import org.teiid.designer.runtime.ExecutionAdmin;
 import org.teiid.designer.runtime.Server;
 import org.teiid.designer.runtime.preview.Messages;
@@ -58,7 +59,7 @@ public final class MergePreviewVdbJob extends TeiidPreviewVdbJob {
                                int targetVdbVersion,
                                PreviewContext context,
                                Server previewServer ) {
-        super(Messages.bind(Messages.MergePreviewVdbJob, sourceVdbName, targetVdbName), context, previewServer);
+        super(NLS.bind(Messages.MergePreviewVdbJob, sourceVdbName, targetVdbName), context, previewServer);
 
         assert (sourceVdbName != null && sourceVdbName.length() != 0) : "source VDB is null or empty"; //$NON-NLS-1$
         assert (targetVdbName != null && targetVdbName.length() != 0) : "target VDB is null or empty"; //$NON-NLS-1$
@@ -81,13 +82,13 @@ public final class MergePreviewVdbJob extends TeiidPreviewVdbJob {
         try {
             admin.mergeVdbs(this.sourceVdbName, this.sourceVdbVersion, this.targetVdbName, this.targetVdbVersion);
         } catch (Exception e) {
-            throw new CoreException(new Status(IStatus.ERROR, PLUGIN_ID, Messages.bind(Messages.MergePreviewVdbJobError,
+            throw new CoreException(new Status(IStatus.ERROR, PLUGIN_ID, NLS.bind(Messages.MergePreviewVdbJobError,
                                                                                        this.sourceVdbName,
                                                                                        this.targetVdbName), e));
         }
 
         // all good
-        return new Status(IStatus.INFO, PLUGIN_ID, Messages.bind(Messages.MergePreviewVdbJobSuccessfullyCompleted,
+        return new Status(IStatus.INFO, PLUGIN_ID, NLS.bind(Messages.MergePreviewVdbJobSuccessfullyCompleted,
                                                                  this.sourceVdbName,
                                                                  this.targetVdbName));
     }

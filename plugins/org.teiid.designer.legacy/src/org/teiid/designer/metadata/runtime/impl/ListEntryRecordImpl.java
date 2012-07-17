@@ -34,14 +34,16 @@ public class ListEntryRecordImpl implements ListEntryRecord {
     /** 
      * @see org.teiid.designer.metadata.runtime.ListEntryRecord#getPosition()
      */
-    public int getPosition() {
+    @Override
+	public int getPosition() {
         return this.position;
     }
 
     /** 
      * @see org.teiid.designer.metadata.runtime.ListEntryRecord#getUUID()
      */
-    public String getUUID() {
+    @Override
+	public String getUUID() {
         return this.uuid;
     }
 

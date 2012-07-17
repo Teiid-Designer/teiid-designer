@@ -404,7 +404,8 @@ public class ModelAnnotationImpl extends EObjectImpl implements ModelAnnotation 
      * 
      * @generated
      */
-    public String getDescription() {
+    @Override
+	public String getDescription() {
         return description;
     }
 
@@ -413,7 +414,8 @@ public class ModelAnnotationImpl extends EObjectImpl implements ModelAnnotation 
      * 
      * @generated
      */
-    public void setDescription( String newDescription ) {
+    @Override
+	public void setDescription( String newDescription ) {
         String oldDescription = description;
         description = newDescription;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
@@ -426,7 +428,8 @@ public class ModelAnnotationImpl extends EObjectImpl implements ModelAnnotation 
      * 
      * @generated
      */
-    public String getNameInSource() {
+    @Override
+	public String getNameInSource() {
         return nameInSource;
     }
 
@@ -435,7 +438,8 @@ public class ModelAnnotationImpl extends EObjectImpl implements ModelAnnotation 
      * 
      * @generated
      */
-    public void setNameInSource( String newNameInSource ) {
+    @Override
+	public void setNameInSource( String newNameInSource ) {
         String oldNameInSource = nameInSource;
         nameInSource = newNameInSource;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
@@ -448,7 +452,8 @@ public class ModelAnnotationImpl extends EObjectImpl implements ModelAnnotation 
      * 
      * @generated
      */
-    public String getPrimaryMetamodelUri() {
+    @Override
+	public String getPrimaryMetamodelUri() {
         return primaryMetamodelUri;
     }
 
@@ -457,7 +462,8 @@ public class ModelAnnotationImpl extends EObjectImpl implements ModelAnnotation 
      * 
      * @generated
      */
-    public void setPrimaryMetamodelUri( String newPrimaryMetamodelUri ) {
+    @Override
+	public void setPrimaryMetamodelUri( String newPrimaryMetamodelUri ) {
         String oldPrimaryMetamodelUri = primaryMetamodelUri;
         primaryMetamodelUri = newPrimaryMetamodelUri;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
@@ -470,7 +476,8 @@ public class ModelAnnotationImpl extends EObjectImpl implements ModelAnnotation 
      * 
      * @generated
      */
-    public ModelType getModelType() {
+    @Override
+	public ModelType getModelType() {
         return modelType;
     }
 
@@ -479,7 +486,8 @@ public class ModelAnnotationImpl extends EObjectImpl implements ModelAnnotation 
      * 
      * @generated
      */
-    public void setModelType( ModelType newModelType ) {
+    @Override
+	public void setModelType( ModelType newModelType ) {
         ModelType oldModelType = modelType;
         modelType = newModelType == null ? MODEL_TYPE_EDEFAULT : newModelType;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
@@ -492,7 +500,8 @@ public class ModelAnnotationImpl extends EObjectImpl implements ModelAnnotation 
      * 
      * @generated
      */
-    public int getMaxSetSize() {
+    @Override
+	public int getMaxSetSize() {
         return maxSetSize;
     }
 
@@ -501,7 +510,8 @@ public class ModelAnnotationImpl extends EObjectImpl implements ModelAnnotation 
      * 
      * @generated
      */
-    public void setMaxSetSize( int newMaxSetSize ) {
+    @Override
+	public void setMaxSetSize( int newMaxSetSize ) {
         int oldMaxSetSize = maxSetSize;
         maxSetSize = newMaxSetSize;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
@@ -514,7 +524,8 @@ public class ModelAnnotationImpl extends EObjectImpl implements ModelAnnotation 
      * 
      * @generated
      */
-    public boolean isVisible() {
+    @Override
+	public boolean isVisible() {
         return visible;
     }
 
@@ -523,7 +534,8 @@ public class ModelAnnotationImpl extends EObjectImpl implements ModelAnnotation 
      * 
      * @generated
      */
-    public void setVisible( boolean newVisible ) {
+    @Override
+	public void setVisible( boolean newVisible ) {
         boolean oldVisible = visible;
         visible = newVisible;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, CorePackage.MODEL_ANNOTATION__VISIBLE,
@@ -535,7 +547,8 @@ public class ModelAnnotationImpl extends EObjectImpl implements ModelAnnotation 
      * 
      * @generated
      */
-    public boolean isSupportsDistinct() {
+    @Override
+	public boolean isSupportsDistinct() {
         return supportsDistinct;
     }
 
@@ -544,7 +557,8 @@ public class ModelAnnotationImpl extends EObjectImpl implements ModelAnnotation 
      * 
      * @generated
      */
-    public void setSupportsDistinct( boolean newSupportsDistinct ) {
+    @Override
+	public void setSupportsDistinct( boolean newSupportsDistinct ) {
         boolean oldSupportsDistinct = supportsDistinct;
         supportsDistinct = newSupportsDistinct;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
@@ -557,7 +571,8 @@ public class ModelAnnotationImpl extends EObjectImpl implements ModelAnnotation 
      * 
      * @generated
      */
-    public boolean isSupportsJoin() {
+    @Override
+	public boolean isSupportsJoin() {
         return supportsJoin;
     }
 
@@ -566,7 +581,8 @@ public class ModelAnnotationImpl extends EObjectImpl implements ModelAnnotation 
      * 
      * @generated
      */
-    public void setSupportsJoin( boolean newSupportsJoin ) {
+    @Override
+	public void setSupportsJoin( boolean newSupportsJoin ) {
         boolean oldSupportsJoin = supportsJoin;
         supportsJoin = newSupportsJoin;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
@@ -579,7 +595,8 @@ public class ModelAnnotationImpl extends EObjectImpl implements ModelAnnotation 
      * 
      * @generated
      */
-    public boolean isSupportsOrderBy() {
+    @Override
+	public boolean isSupportsOrderBy() {
         return supportsOrderBy;
     }
 
@@ -588,7 +605,8 @@ public class ModelAnnotationImpl extends EObjectImpl implements ModelAnnotation 
      * 
      * @generated
      */
-    public void setSupportsOrderBy( boolean newSupportsOrderBy ) {
+    @Override
+	public void setSupportsOrderBy( boolean newSupportsOrderBy ) {
         boolean oldSupportsOrderBy = supportsOrderBy;
         supportsOrderBy = newSupportsOrderBy;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
@@ -601,7 +619,8 @@ public class ModelAnnotationImpl extends EObjectImpl implements ModelAnnotation 
      * 
      * @generated
      */
-    public boolean isSupportsOuterJoin() {
+    @Override
+	public boolean isSupportsOuterJoin() {
         return supportsOuterJoin;
     }
 
@@ -610,7 +629,8 @@ public class ModelAnnotationImpl extends EObjectImpl implements ModelAnnotation 
      * 
      * @generated
      */
-    public void setSupportsOuterJoin( boolean newSupportsOuterJoin ) {
+    @Override
+	public void setSupportsOuterJoin( boolean newSupportsOuterJoin ) {
         boolean oldSupportsOuterJoin = supportsOuterJoin;
         supportsOuterJoin = newSupportsOuterJoin;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
@@ -623,7 +643,8 @@ public class ModelAnnotationImpl extends EObjectImpl implements ModelAnnotation 
      * 
      * @generated
      */
-    public boolean isSupportsWhereAll() {
+    @Override
+	public boolean isSupportsWhereAll() {
         return supportsWhereAll;
     }
 
@@ -632,7 +653,8 @@ public class ModelAnnotationImpl extends EObjectImpl implements ModelAnnotation 
      * 
      * @generated
      */
-    public void setSupportsWhereAll( boolean newSupportsWhereAll ) {
+    @Override
+	public void setSupportsWhereAll( boolean newSupportsWhereAll ) {
         boolean oldSupportsWhereAll = supportsWhereAll;
         supportsWhereAll = newSupportsWhereAll;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
@@ -645,7 +667,8 @@ public class ModelAnnotationImpl extends EObjectImpl implements ModelAnnotation 
      * 
      * @generated
      */
-    public EMap getTags() {
+    @Override
+	public EMap getTags() {
         if (tags == null) {
             tags = new EcoreEMap(EcorePackage.eINSTANCE.getEStringToStringMapEntry(), EStringToStringMapEntryImpl.class, this,
                                  CorePackage.MODEL_ANNOTATION__TAGS);
@@ -658,7 +681,8 @@ public class ModelAnnotationImpl extends EObjectImpl implements ModelAnnotation 
      * 
      * @generated
      */
-    public String getNamespaceUri() {
+    @Override
+	public String getNamespaceUri() {
         return namespaceUri;
     }
 
@@ -669,7 +693,8 @@ public class ModelAnnotationImpl extends EObjectImpl implements ModelAnnotation 
      * @throws TeiidRuntimeException if the proposed value is not valid
      * @generated NOT
      */
-    public void setNamespaceUri( String theNewNamespaceUri ) throws TeiidRuntimeException {
+    @Override
+	public void setNamespaceUri( String theNewNamespaceUri ) throws TeiidRuntimeException {
         try {
             IStatus status = UriValidator.validate(theNewNamespaceUri);
 
@@ -703,7 +728,8 @@ public class ModelAnnotationImpl extends EObjectImpl implements ModelAnnotation 
      * 
      * @generated
      */
-    public String getProducerName() {
+    @Override
+	public String getProducerName() {
         return producerName;
     }
 
@@ -712,7 +738,8 @@ public class ModelAnnotationImpl extends EObjectImpl implements ModelAnnotation 
      * 
      * @generated
      */
-    public void setProducerName( String newProducerName ) {
+    @Override
+	public void setProducerName( String newProducerName ) {
         String oldProducerName = producerName;
         producerName = newProducerName;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
@@ -725,7 +752,8 @@ public class ModelAnnotationImpl extends EObjectImpl implements ModelAnnotation 
      * 
      * @generated
      */
-    public String getProducerVersion() {
+    @Override
+	public String getProducerVersion() {
         return producerVersion;
     }
 
@@ -734,7 +762,8 @@ public class ModelAnnotationImpl extends EObjectImpl implements ModelAnnotation 
      * 
      * @generated
      */
-    public void setProducerVersion( String newProducerVersion ) {
+    @Override
+	public void setProducerVersion( String newProducerVersion ) {
         String oldProducerVersion = producerVersion;
         producerVersion = newProducerVersion;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
@@ -747,7 +776,8 @@ public class ModelAnnotationImpl extends EObjectImpl implements ModelAnnotation 
      * 
      * @generated
      */
-    public EList getModelImports() {
+    @Override
+	public EList getModelImports() {
         if (modelImports == null) {
             modelImports = new EObjectContainmentWithInverseEList(ModelImport.class, this,
                                                                   CorePackage.MODEL_ANNOTATION__MODEL_IMPORTS,
@@ -761,7 +791,8 @@ public class ModelAnnotationImpl extends EObjectImpl implements ModelAnnotation 
      * 
      * @generated
      */
-    public XPackage getExtensionPackage() {
+    @Override
+	public XPackage getExtensionPackage() {
         if (extensionPackage != null && extensionPackage.eIsProxy()) {
             XPackage oldExtensionPackage = extensionPackage;
             extensionPackage = (XPackage)eResolveProxy((InternalEObject)extensionPackage);
@@ -788,7 +819,8 @@ public class ModelAnnotationImpl extends EObjectImpl implements ModelAnnotation 
      * 
      * @generated
      */
-    public void setExtensionPackage( XPackage newExtensionPackage ) {
+    @Override
+	public void setExtensionPackage( XPackage newExtensionPackage ) {
         XPackage oldExtensionPackage = extensionPackage;
         extensionPackage = newExtensionPackage;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,

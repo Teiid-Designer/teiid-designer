@@ -128,7 +128,8 @@ public abstract class AbstractDiagramEntityImpl extends PresentationEntityImpl i
      * <!-- end-user-doc -->
      * @generated
      */
-    public String getAlias() {
+    @Override
+	public String getAlias() {
         return alias;
     }
 
@@ -137,7 +138,8 @@ public abstract class AbstractDiagramEntityImpl extends PresentationEntityImpl i
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setAlias(String newAlias) {
+    @Override
+	public void setAlias(String newAlias) {
         String oldAlias = alias;
         alias = newAlias;
         if (eNotificationRequired())
@@ -149,7 +151,8 @@ public abstract class AbstractDiagramEntityImpl extends PresentationEntityImpl i
      * <!-- end-user-doc -->
      * @generated
      */
-    public String getUserString() {
+    @Override
+	public String getUserString() {
         return userString;
     }
 
@@ -158,7 +161,8 @@ public abstract class AbstractDiagramEntityImpl extends PresentationEntityImpl i
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setUserString(String newUserString) {
+    @Override
+	public void setUserString(String newUserString) {
         String oldUserString = userString;
         userString = newUserString;
         if (eNotificationRequired())
@@ -170,7 +174,8 @@ public abstract class AbstractDiagramEntityImpl extends PresentationEntityImpl i
      * <!-- end-user-doc -->
      * @generated
      */
-    public String getUserType() {
+    @Override
+	public String getUserType() {
         return userType;
     }
 
@@ -179,7 +184,8 @@ public abstract class AbstractDiagramEntityImpl extends PresentationEntityImpl i
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setUserType(String newUserType) {
+    @Override
+	public void setUserType(String newUserType) {
         String oldUserType = userType;
         userType = newUserType;
         if (eNotificationRequired())
@@ -191,7 +197,8 @@ public abstract class AbstractDiagramEntityImpl extends PresentationEntityImpl i
      * <!-- end-user-doc -->
      * @generated
      */
-    public EObject getModelObject() {
+    @Override
+	public EObject getModelObject() {
         if (modelObject != null && modelObject.eIsProxy()) {
             EObject oldModelObject = modelObject;
             modelObject = eResolveProxy((InternalEObject)modelObject);
@@ -217,7 +224,8 @@ public abstract class AbstractDiagramEntityImpl extends PresentationEntityImpl i
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setModelObject(EObject newModelObject) {
+    @Override
+	public void setModelObject(EObject newModelObject) {
         EObject oldModelObject = modelObject;
         modelObject = newModelObject;
         if (eNotificationRequired())

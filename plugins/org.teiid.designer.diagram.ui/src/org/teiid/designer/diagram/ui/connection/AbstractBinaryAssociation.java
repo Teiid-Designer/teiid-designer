@@ -86,7 +86,8 @@ public class AbstractBinaryAssociation
      * Set the association that the other methods will use
      * @param assoc
      */
-    public void setUmlAspect( UmlRelationship umlAspect ) {
+    @Override
+	public void setUmlAspect( UmlRelationship umlAspect ) {
         this.umlAspect = umlAspect;
     }
 
@@ -101,7 +102,8 @@ public class AbstractBinaryAssociation
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.connection.BinaryAssocation#getEndCount(java.lang.Object)
      */
-    public int getEndCount() {
+    @Override
+	public int getEndCount() {
         return UmlRelationshipHelper.getEndCount( getUmlAspect(), getEObject() );
         
     }
@@ -109,7 +111,8 @@ public class AbstractBinaryAssociation
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.connection.BinaryAssocation#getRoleName(java.lang.Object, int)
      */
-    public String getRoleName( int end ) {
+    @Override
+	public String getRoleName( int end ) {
         return UmlRelationshipHelper.getRoleName( getUmlAspect(), getEObject() , end );
 
     }
@@ -117,35 +120,40 @@ public class AbstractBinaryAssociation
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.connection.BinaryAssocation#getMultiplicity(java.lang.Object, int)
      */
-    public String getMultiplicity( int end ) {
+    @Override
+	public String getMultiplicity( int end ) {
         return UmlRelationshipHelper.getMultiplicity( getUmlAspect(), getEObject() , end );
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.connection.BinaryAssocation#getAggregation(java.lang.Object, int)
      */
-    public int getAggregation( int end ) {
+    @Override
+	public int getAggregation( int end ) {
         return UmlRelationshipHelper.getAggregation( getUmlAspect(), getEObject() , end );
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.connection.BinaryAssocation#getProperties(java.lang.Object, int)
      */
-    public String[] getProperties( int end ) {
+    @Override
+	public String[] getProperties( int end ) {
         return UmlRelationshipHelper.getProperties( getUmlAspect(), getEObject() , end );
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.connection.BinaryAssocation#getNavigability(java.lang.Object, int)
      */
-    public int getNavigability( int end ) {
+    @Override
+	public int getNavigability( int end ) {
         return UmlRelationshipHelper.getNavigability( getUmlAspect(), getEObject() , end );
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.connection.BinaryAssocation#getEnd(java.lang.Object, int)
      */
-    public EObject getEnd( int end ) {
+    @Override
+	public EObject getEnd( int end ) {
     	if( !(getUmlAspect() instanceof UmlAssociation) ) {
 	    	if( end == BinaryAssociation.SOURCE_END && sourceEObject != null )
 	    		return sourceEObject;
@@ -159,35 +167,40 @@ public class AbstractBinaryAssociation
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.connection.BinaryAssocation#getEndTarget(java.lang.Object, int)
      */
-    public EObject getEndTarget( int end ) {
+    @Override
+	public EObject getEndTarget( int end ) {
         return UmlRelationshipHelper.getEndTarget( getUmlAspect(), getEObject() , end );
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.connection.BinaryAssocation#setRoleName(java.lang.Object, int, java.lang.String)
      */
-    public IStatus setRoleName( int end, String name ) {
+    @Override
+	public IStatus setRoleName( int end, String name ) {
         return UmlRelationshipHelper.setRoleName( getUmlAspect(), getEObject() , end, name );
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.connection.BinaryAssocation#setMultiplicity(java.lang.Object, int, java.lang.String)
      */
-    public IStatus setMultiplicity( int end, String mult ) {
+    @Override
+	public IStatus setMultiplicity( int end, String mult ) {
         return UmlRelationshipHelper.setMultiplicity( getUmlAspect(), getEObject() , end, mult );
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.connection.BinaryAssocation#setProperties(java.lang.Object, int, java.lang.String)
      */
-    public IStatus setProperties( int end, String[] props ) {
+    @Override
+	public IStatus setProperties( int end, String[] props ) {
         return UmlRelationshipHelper.setProperties( getUmlAspect(), getEObject() , end, props );
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.connection.BinaryAssocation#setNavigability(java.lang.Object, int, int)
      */
-    public IStatus setNavigability( int end, int navigability ) {
+    @Override
+	public IStatus setNavigability( int end, int navigability ) {
         return UmlRelationshipHelper.setNavigability( getUmlAspect(), getEObject() , end, navigability );
     }
 
@@ -195,35 +208,40 @@ public class AbstractBinaryAssociation
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.connection.BinaryAssocation#getVisibility(java.lang.Object)
      */
-    public int getVisibility() {
+    @Override
+	public int getVisibility() {
         return UmlRelationshipHelper.getVisibility( getUmlAspect(), getEObject() );
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.connection.BinaryAssocation#getStereotype(java.lang.Object)
      */
-    public String getStereotype() {
+    @Override
+	public String getStereotype() {
         return UmlRelationshipHelper.getStereotype( getUmlAspect(), getEObject() );
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.connection.BinaryAssocation#getSignature(java.lang.Object, int)
      */
-    public String getSignature( int showMask ) {
+    @Override
+	public String getSignature( int showMask ) {
         return UmlRelationshipHelper.getSignature( getUmlAspect(), getEObject(), showMask );
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.connection.BinaryAssocation#getEditableSignature(java.lang.Object)
      */
-    public String getEditableSignature() {
+    @Override
+	public String getEditableSignature() {
         return UmlRelationshipHelper.getEditableSignature( getUmlAspect(), getEObject() );
     }
 
     /* (non-Javadoc) 
      * @See org.teiid.designer.diagram.ui.connection.BinaryAssocation#setSignature(java.lang.Object, java.lang.String)
      */
-    public IStatus setSignature( String newSignature ) {
+    @Override
+	public IStatus setSignature( String newSignature ) {
         return UmlRelationshipHelper.setSignature( getUmlAspect(), getEObject(), newSignature );
     }
 
@@ -281,6 +299,7 @@ public class AbstractBinaryAssociation
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.diagram.ui.connection.BinaryAssociation#getRelationshipType()
 	 */
+	@Override
 	public int getRelationshipType() {
 		return relationshipType;
 	}
@@ -295,6 +314,7 @@ public class AbstractBinaryAssociation
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.diagram.ui.connection.BinaryAssociation#getRelationshipAspect()
 	 */
+	@Override
 	public UmlRelationship getRelationshipAspect() {
 		// XXX Auto-generated method stub
 		return umlAspect;
@@ -303,6 +323,7 @@ public class AbstractBinaryAssociation
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.diagram.ui.connection.BinaryAssociation#getReference()
 	 */
+	@Override
 	public EObject getReference() {
 		// XXX Auto-generated method stub
 		return eObj;

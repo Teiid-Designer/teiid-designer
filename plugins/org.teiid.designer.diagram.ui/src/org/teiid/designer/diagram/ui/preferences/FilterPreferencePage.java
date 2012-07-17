@@ -182,6 +182,7 @@ public class FilterPreferencePage extends PreferencePage implements DiagramUiCon
      * 
      * @param desktop the current desktop
      */
-    public void init( IWorkbench workbench ) {
+    @Override
+	public void init( IWorkbench workbench ) {
     }
 }

@@ -76,16 +76,17 @@ public abstract class AbstractActionService implements ActionService, InternalUi
     /**
      * @see org.teiid.designer.ui.common.actions.ActionService#addResourceChangeListener(org.eclipse.core.resources.IResourceChangeListener)
      */
+    @Override
     public void addResourceChangeListener( IResourceChangeListener theListener ) {
         IWorkspace workspace = ModelerCore.getWorkspace();
-
         workspace.addResourceChangeListener(theListener);
     }
 
     /**
      * @see org.teiid.designer.ui.common.actions.ActionService#addWorkbenchSelectionListener(ISelectionListener)
      */
-    public void addWorkbenchSelectionListener( ISelectionListener theListener ) {
+    @Override
+	  public void addWorkbenchSelectionListener( ISelectionListener theListener ) {
         if (window == null) {
             throw new IllegalStateException(Util.getString(PREFIX + "WorkbenchWindowIsNullMessage")); //$NON-NLS-1$
         }
@@ -114,7 +115,8 @@ public abstract class AbstractActionService implements ActionService, InternalUi
      * @see org.teiid.designer.ui.common.actions.ActionService#contributeToContextMenu(org.eclipse.jface.action.IMenuManager,
      *      org.teiid.designer.ui.common.actions.GlobalActionsMap, org.eclipse.jface.viewers.ISelection)
      */
-    public void contributeToContextMenu( IMenuManager theMenuMgr,
+    @Override
+	  public void contributeToContextMenu( IMenuManager theMenuMgr,
                                          GlobalActionsMap theActionsMap,
                                          ISelection theSelection ) {
         // must be overriden in order to contribute
@@ -124,7 +126,8 @@ public abstract class AbstractActionService implements ActionService, InternalUi
      * @see org.teiid.designer.ui.common.actions.ActionService#contributePermanentActionsToContextMenu(org.eclipse.jface.action.IMenuManager,
      *      org.eclipse.jface.viewers.ISelection)
      */
-    public void contributePermanentActionsToContextMenu( IMenuManager theMenuMgr,
+    @Override
+	  public void contributePermanentActionsToContextMenu( IMenuManager theMenuMgr,
                                                          ISelection theSelection ) {
         // must be overriden in order to contribute
     }
@@ -135,7 +138,8 @@ public abstract class AbstractActionService implements ActionService, InternalUi
      * @param theActionId the fully qualified classname of the action
      * @see org.teiid.designer.ui.common.actions.ActionService#getAction(String)
      */
-    public IAction getAction( String theActionId ) throws CoreException {
+    @Override
+	  public IAction getAction( String theActionId ) throws CoreException {
         CoreArgCheck.isNotNull(theActionId);
 
         IAction result = actionMap.get(theActionId);
@@ -249,14 +253,16 @@ public abstract class AbstractActionService implements ActionService, InternalUi
      * 
      * @return the plugin
      */
-    public AbstractUiPlugin getPlugin() {
+    @Override
+	public AbstractUiPlugin getPlugin() {
         return plugin;
     }
 
     /**
      * @see org.teiid.designer.ui.common.actions.ActionService#getWorkbenchWindow()
      */
-    public IWorkbenchWindow getWorkbenchWindow() {
+    @Override
+	public IWorkbenchWindow getWorkbenchWindow() {
         if (window == null) {
             throw new IllegalStateException(Util.getString(PREFIX + "WorkbenchWindowIsNullMessage")); //$NON-NLS-1$
         }
@@ -274,7 +280,8 @@ public abstract class AbstractActionService implements ActionService, InternalUi
      * @param sActionKey the action's key
      * @param theAction the action to add
      */
-    public boolean registerAction( String sActionKey,
+    @Override
+	public boolean registerAction( String sActionKey,
                                    IAction theAction ) {
 
         if (actionMap.containsKey(sActionKey)) {
@@ -296,7 +303,8 @@ public abstract class AbstractActionService implements ActionService, InternalUi
      * @param theActionId the action identifier
      * @return <code>true</code> if the action is registered; <code>false</code> otherwise.
      */
-    public boolean isRegistered( String theActionId ) {
+    @Override
+	public boolean isRegistered( String theActionId ) {
         return actionMap.containsKey(theActionId);
     }
 
@@ -333,7 +341,8 @@ public abstract class AbstractActionService implements ActionService, InternalUi
      * @param theActionId the identifier of the action being removed
      * @throws com.metamatrix.core.util.AssertionError if input is null
      */
-    public void removeAction( String theActionId ) {
+    @Override
+	public void removeAction( String theActionId ) {
         CoreArgCheck.isNotNull(theActionId);
         actionMap.remove(theActionId);
     }
@@ -341,16 +350,17 @@ public abstract class AbstractActionService implements ActionService, InternalUi
     /**
      * @see org.teiid.designer.ui.common.actions.ActionService#removeResourceChangeListener(org.eclipse.core.resources.IResourceChangeListener)
      */
+    @Override
     public void removeResourceChangeListener( IResourceChangeListener theListener ) {
         IWorkspace workspace = ModelerCore.getWorkspace();
-
         workspace.removeResourceChangeListener(theListener);
     }
 
     /**
      * @see org.teiid.designer.ui.common.actions.ActionService#removeWorkbenchSelectionListener(ISelectionListener)
      */
-    public void removeWorkbenchSelectionListener( ISelectionListener theListener ) {
+    @Override
+	public void removeWorkbenchSelectionListener( ISelectionListener theListener ) {
         if (window == null) {
             throw new IllegalStateException(Util.getString(PREFIX + "WorkbenchWindowIsNullMessage")); //$NON-NLS-1$
         }
@@ -374,7 +384,8 @@ public abstract class AbstractActionService implements ActionService, InternalUi
     /**
      * @see org.teiid.designer.ui.common.actions.ActionService#setWorkbenchWindow(IWorkbenchWindow)
      */
-    public void setWorkbenchWindow( IWorkbenchWindow theWindow ) {
+    @Override
+	public void setWorkbenchWindow( IWorkbenchWindow theWindow ) {
         window = theWindow;
     }
 
@@ -389,7 +400,8 @@ public abstract class AbstractActionService implements ActionService, InternalUi
      * @see org.teiid.designer.ui.common.actions.ActionService#shutdown()
      * @see #shutdown(boolean)
      */
-    public void shutdown() {
+    @Override
+	public void shutdown() {
         Iterator<IAction> itr = actionMap.values().iterator();
 
         while (itr.hasNext()) {

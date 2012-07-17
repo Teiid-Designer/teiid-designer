@@ -73,14 +73,16 @@ public class ValidationProblemImpl implements ValidationProblem {
     /**
      * @return code
      */
-    public int getCode() {
+    @Override
+	public int getCode() {
         return code;
     }
 
     /**
      * @return msg
      */
-    public String getMessage() {
+    @Override
+	public String getMessage() {
         if(!hasPreference) {
             return message;
         }
@@ -90,7 +92,8 @@ public class ValidationProblemImpl implements ValidationProblem {
     /**
      * @return severity
      */
-    public int getSeverity() {
+    @Override
+	public int getSeverity() {
         return severity;
     }
     
@@ -98,7 +101,8 @@ public class ValidationProblemImpl implements ValidationProblem {
      * @param hasPreference The hasPreference to set.
      * @since 4.2
      */
-    public void setHasPreference(boolean hasPreference) {
+    @Override
+	public void setHasPreference(boolean hasPreference) {
         this.hasPreference = hasPreference;
     }
 
@@ -129,15 +133,18 @@ public class ValidationProblemImpl implements ValidationProblem {
      * @see org.teiid.designer.core.validation.ValidationProblem#getStatus()
      * @since 4.2
      */
-    public IStatus getStatus() {
+    @Override
+	public IStatus getStatus() {
         return new Status(severity, ModelerCore.PLUGIN_ID, code, message, null);
     }
 
-    public String getURI() {
+    @Override
+	public String getURI() {
         return uri;
     }
 
-    public String getLocation() {
+    @Override
+	public String getLocation() {
         return location;
     }
 }

@@ -22,7 +22,8 @@ public class XmlSqlAspectFactory implements MetamodelAspectFactory {
     /**
      * @see org.teiid.designer.core.metamodel.aspect.MetamodelAspectFactory#create(org.eclipse.emf.ecore.EClassifier, org.teiid.designer.core.metamodel.aspect.MetamodelEntity)
      */
-    public MetamodelAspect create(final EClassifier classifier, final MetamodelEntity entity) {
+    @Override
+	public MetamodelAspect create(final EClassifier classifier, final MetamodelEntity entity) {
         switch (classifier.getClassifierID()) {
             case XmlDocumentPackage.XML_ELEMENT:        return new XmlElementSqlAspect(entity);
             case XmlDocumentPackage.XML_ATTRIBUTE:      return new XmlAttributeSqlAspect(entity);

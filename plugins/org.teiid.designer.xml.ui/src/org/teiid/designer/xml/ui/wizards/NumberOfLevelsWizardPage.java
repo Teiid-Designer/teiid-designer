@@ -36,7 +36,8 @@ public class NumberOfLevelsWizardPage extends WizardPage implements ModelerXmlUi
         setDescription(description);
     }
 
-    public void createControl( Composite parent ) {
+    @Override
+	public void createControl( Composite parent ) {
         panel = new NumberOfLevelsPanel(parent);
         setControl(panel);
     }
@@ -82,10 +83,12 @@ class NumberOfLevelsPanel extends Composite implements ModelerXmlUiConstants {
         allLevelsChk.setText(Util.getString("NumberOfLevelsWizardPage.btnTxt")); //$NON-NLS-1$
         allLevelsChk.addSelectionListener(new SelectionListener() {
 
-            public void widgetDefaultSelected( SelectionEvent e ) {
+            @Override
+			public void widgetDefaultSelected( SelectionEvent e ) {
             }
 
-            public void widgetSelected( SelectionEvent e ) {
+            @Override
+			public void widgetSelected( SelectionEvent e ) {
                 allLevelsChkSelected();
             }
 

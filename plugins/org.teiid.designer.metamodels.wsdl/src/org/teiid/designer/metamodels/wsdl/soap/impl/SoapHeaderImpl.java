@@ -166,7 +166,8 @@ public class SoapHeaderImpl extends EObjectImpl implements SoapHeader {
      * 
      * @generated
      */
-    public SoapUseType getUse() {
+    @Override
+	public SoapUseType getUse() {
         return use;
     }
 
@@ -175,7 +176,8 @@ public class SoapHeaderImpl extends EObjectImpl implements SoapHeader {
      * 
      * @generated
      */
-    public void setUse( SoapUseType newUse ) {
+    @Override
+	public void setUse( SoapUseType newUse ) {
         SoapUseType oldUse = use;
         use = newUse == null ? USE_EDEFAULT : newUse;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, SoapPackage.SOAP_HEADER__USE, oldUse,
@@ -187,7 +189,8 @@ public class SoapHeaderImpl extends EObjectImpl implements SoapHeader {
      * 
      * @generated
      */
-    public String getNamespace() {
+    @Override
+	public String getNamespace() {
         return namespace;
     }
 
@@ -196,7 +199,8 @@ public class SoapHeaderImpl extends EObjectImpl implements SoapHeader {
      * 
      * @generated
      */
-    public void setNamespace( String newNamespace ) {
+    @Override
+	public void setNamespace( String newNamespace ) {
         String oldNamespace = namespace;
         namespace = newNamespace;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, SoapPackage.SOAP_HEADER__NAMESPACE,
@@ -208,7 +212,8 @@ public class SoapHeaderImpl extends EObjectImpl implements SoapHeader {
      * 
      * @generated
      */
-    public EList getEncodingStyles() {
+    @Override
+	public EList getEncodingStyles() {
         if (encodingStyles == null) {
             encodingStyles = new EDataTypeUniqueEList(String.class, this, SoapPackage.SOAP_HEADER__ENCODING_STYLES);
         }
@@ -220,7 +225,8 @@ public class SoapHeaderImpl extends EObjectImpl implements SoapHeader {
      * 
      * @generated
      */
-    public EList getParts() {
+    @Override
+	public EList getParts() {
         if (parts == null) {
             parts = new EDataTypeUniqueEList(String.class, this, SoapPackage.SOAP_HEADER__PARTS);
         }
@@ -232,7 +238,8 @@ public class SoapHeaderImpl extends EObjectImpl implements SoapHeader {
      * 
      * @generated
      */
-    public String getMessage() {
+    @Override
+	public String getMessage() {
         return message;
     }
 
@@ -241,7 +248,8 @@ public class SoapHeaderImpl extends EObjectImpl implements SoapHeader {
      * 
      * @generated
      */
-    public void setMessage( String newMessage ) {
+    @Override
+	public void setMessage( String newMessage ) {
         String oldMessage = message;
         message = newMessage;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, SoapPackage.SOAP_HEADER__MESSAGE,
@@ -253,7 +261,8 @@ public class SoapHeaderImpl extends EObjectImpl implements SoapHeader {
      * 
      * @generated
      */
-    public BindingParam getBindingParam() {
+    @Override
+	public BindingParam getBindingParam() {
         if (eContainerFeatureID != SoapPackage.SOAP_HEADER__BINDING_PARAM) return null;
         return (BindingParam)eContainer;
     }
@@ -263,7 +272,8 @@ public class SoapHeaderImpl extends EObjectImpl implements SoapHeader {
      * 
      * @generated
      */
-    public void setBindingParam( BindingParam newBindingParam ) {
+    @Override
+	public void setBindingParam( BindingParam newBindingParam ) {
         if (newBindingParam != eContainer
             || (eContainerFeatureID != SoapPackage.SOAP_HEADER__BINDING_PARAM && newBindingParam != null)) {
             if (EcoreUtil.isAncestor(this, newBindingParam)) throw new IllegalArgumentException(
@@ -286,7 +296,8 @@ public class SoapHeaderImpl extends EObjectImpl implements SoapHeader {
      * 
      * @generated
      */
-    public EList getMessagePart() {
+    @Override
+	public EList getMessagePart() {
         if (messagePart == null) {
             messagePart = new EObjectResolvingEList(MessagePart.class, this, SoapPackage.SOAP_HEADER__MESSAGE_PART);
         }
@@ -298,7 +309,8 @@ public class SoapHeaderImpl extends EObjectImpl implements SoapHeader {
      * 
      * @generated
      */
-    public SoapHeaderFault getHeaderFault() {
+    @Override
+	public SoapHeaderFault getHeaderFault() {
         return headerFault;
     }
 
@@ -325,7 +337,8 @@ public class SoapHeaderImpl extends EObjectImpl implements SoapHeader {
      * 
      * @generated
      */
-    public void setHeaderFault( SoapHeaderFault newHeaderFault ) {
+    @Override
+	public void setHeaderFault( SoapHeaderFault newHeaderFault ) {
         if (newHeaderFault != headerFault) {
             NotificationChain msgs = null;
             if (headerFault != null) msgs = ((InternalEObject)headerFault).eInverseRemove(this,

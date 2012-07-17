@@ -36,7 +36,8 @@ public class XmiStreamWriter implements StreamWriter {
      *      Warning: The objects collection input parameter will be added to a new Resource within the execution of this method,
      *      and thus will lose its relationship to any other resource that it is contained in.
      */
-    public void write( OutputStream outputstream,
+    @Override
+	public void write( OutputStream outputstream,
                        Map options,
                        Collection objects ) throws IOException {
         if (outputstream == null) {
@@ -54,7 +55,8 @@ public class XmiStreamWriter implements StreamWriter {
         temp.save(outputstream, options);
     }
 
-    public void write( OutputStream outputstream,
+    @Override
+	public void write( OutputStream outputstream,
                        Map options,
                        Resource resource ) {
         throw new UnsupportedOperationException(ModelerCore.Util.getString("XmiStreamWriter.Can_not_perform_operation_4")); //$NON-NLS-1$

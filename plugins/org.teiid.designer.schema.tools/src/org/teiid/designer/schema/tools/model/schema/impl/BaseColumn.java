@@ -28,33 +28,40 @@ public abstract class BaseColumn implements Column {
 		this.table = null;
 	}
 
+	@Override
 	public void setTable(SchemaObject table) {
 		this.table = table;
 	}
 
+	@Override
 	public SchemaObject getTable() {
 		return table;
 	}
 
+	@Override
 	public boolean isPrimaryKey() {
 		return pk;
 	}
 
+	@Override
 	public String getBaseType() {
 		XSDSimpleTypeDefinition primitiveType = type.getRootTypeDefinition();
 		String retval = primitiveType.getName();
 		return retval;
 	}
 
+	@Override
 	public QName getTypeName() {
 		QName retval = new QNameImpl(type.getTargetNamespace(), type.getName());
 		return retval;
 	}
 
+	@Override
 	public XSDSimpleTypeDefinition getType() {
 		return type;
 	}
 
+	@Override
 	public Column mergeIntoParent(Relationship tableRelationship, int iOccurence) {
 		Column mergedColumn = new MergedColumn(this, tableRelationship,
 				iOccurence);

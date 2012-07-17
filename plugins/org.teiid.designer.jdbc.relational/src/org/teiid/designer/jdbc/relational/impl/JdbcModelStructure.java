@@ -70,7 +70,8 @@ public class JdbcModelStructure {
 
         // Define the visitor
         final JdbcNodeVisitor visitor = new JdbcNodeVisitor() {
-            public boolean visit( final JdbcNode node ) {
+            @Override
+			public boolean visit( final JdbcNode node ) {
                 // if the node is unselected, return and don't visit children
                 if (node.getSelectionMode() == JdbcNode.UNSELECTED) {
                     return false;

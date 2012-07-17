@@ -70,7 +70,8 @@ public class ModelBuilderImpl implements ModelBuilder, MetamodelBuilderConstants
      * @param - ModelRecord - the record to use to drive creation - May not be null
      * @since 4.3
      */
-    public Resource create( ModelRecord record ) {
+    @Override
+	public Resource create( ModelRecord record ) {
         CoreArgCheck.isNotNull(record);
 
         // Construct absolute model path from record
@@ -102,7 +103,8 @@ public class ModelBuilderImpl implements ModelBuilder, MetamodelBuilderConstants
      * @param - ModelRecord - the record to use to drive creation - May not be null
      * @since 4.3
      */
-    public List create( List records ) {
+    @Override
+	public List create( List records ) {
         CoreArgCheck.isNotNull(records);
 
         List resources = new ArrayList(records.size());

@@ -125,11 +125,13 @@ public class DocumentTreeController implements ITreeViewerListener, ISelectionPr
     /**
      * @see org.eclipse.jface.viewers.ITreeViewerListener#treeCollapsed(org.eclipse.jface.viewers.TreeExpansionEvent)
      */
-    public void treeCollapsed( final TreeExpansionEvent event ) {
+    @Override
+	public void treeCollapsed( final TreeExpansionEvent event ) {
         // System.out.println("[DocumentTreeController.treeCollapsed] event: " + event.getElement().toString() );
 
         Display.getDefault().asyncExec(new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
 
                 IRevealHideListener rhl = diagramController.getRevealHideListener();
                 if (rhl != null && rhl.isRevealHideBehaviorEnabled()) {
@@ -152,11 +154,13 @@ public class DocumentTreeController implements ITreeViewerListener, ISelectionPr
     /**
      * @see org.eclipse.jface.viewers.ITreeViewerListener#treeExpanded(org.eclipse.jface.viewers.TreeExpansionEvent)
      */
-    public void treeExpanded( final TreeExpansionEvent event ) {
+    @Override
+	public void treeExpanded( final TreeExpansionEvent event ) {
         // System.out.println("[DocumentTreeController.treeExpanded] event: " + event.getElement().toString() );
 
         Display.getDefault().asyncExec(new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
 
                 IRevealHideListener rhl = diagramController.getRevealHideListener();
                 if (rhl != null && rhl.isRevealHideBehaviorEnabled()) {
@@ -192,28 +196,32 @@ public class DocumentTreeController implements ITreeViewerListener, ISelectionPr
     /**
      * @see org.eclipse.jface.viewers.ISelectionProvider#addSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
      */
-    public void addSelectionChangedListener( ISelectionChangedListener listener ) {
+    @Override
+	public void addSelectionChangedListener( ISelectionChangedListener listener ) {
         this.viewer.addSelectionChangedListener(listener);
     }
 
     /**
      * @see org.eclipse.jface.viewers.ISelectionProvider#getSelection()
      */
-    public ISelection getSelection() {
+    @Override
+	public ISelection getSelection() {
         return this.viewer.getSelection();
     }
 
     /**
      * @see org.eclipse.jface.viewers.ISelectionProvider#removeSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
      */
-    public void removeSelectionChangedListener( ISelectionChangedListener listener ) {
+    @Override
+	public void removeSelectionChangedListener( ISelectionChangedListener listener ) {
         this.viewer.removeSelectionChangedListener(listener);
     }
 
     /**
      * @see org.eclipse.jface.viewers.ISelectionProvider#setSelection(org.eclipse.jface.viewers.ISelection)
      */
-    public void setSelection( ISelection selection ) {
+    @Override
+	public void setSelection( ISelection selection ) {
         this.viewer.setSelection(selection, true);
     }
 
@@ -224,7 +232,8 @@ public class DocumentTreeController implements ITreeViewerListener, ISelectionPr
     /**
      * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
      */
-    public void selectionChanged( SelectionChangedEvent event ) {
+    @Override
+	public void selectionChanged( SelectionChangedEvent event ) {
 
         // System.out.println( "[DocumentTreeController.selectionChanged] TOP" );
 
@@ -289,7 +298,8 @@ public class DocumentTreeController implements ITreeViewerListener, ISelectionPr
      */
     public void refreshOnTreeSelection() {
         Display.getDefault().asyncExec(new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 /*
                  * jh fix: This isDisposed check protects us from the case of this method being 
                  *         called because of an tree select event that happens during a CLOSE.  
@@ -339,7 +349,8 @@ public class DocumentTreeController implements ITreeViewerListener, ISelectionPr
                  * @see org.eclipse.emf.edit.provider.INotifyChangedListener#notifyChanged(org.eclipse.emf.common.notify.Notification)
                  * @since 4.3
                  */
-                public void notifyChanged( Notification notification ) {
+                @Override
+				public void notifyChanged( Notification notification ) {
                     final Display display = Display.getDefault();
                     if (display.isDisposed()) {
                         return;
@@ -348,7 +359,8 @@ public class DocumentTreeController implements ITreeViewerListener, ISelectionPr
 
                     if (eo != null) {
                         display.asyncExec(new Runnable() {
-                            public void run() {
+                            @Override
+							public void run() {
                                 changeLabel();
                             }
                         });

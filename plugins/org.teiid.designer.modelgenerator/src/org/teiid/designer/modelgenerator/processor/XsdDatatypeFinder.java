@@ -51,7 +51,8 @@ public class XsdDatatypeFinder implements DatatypeFinder {
     /**
      * @See org.teiid.designer.modelgenerator.DatatypeFinder#findDatatype(java.lang.String)
      */
-    public EObject findDatatype(final String name) throws CoreException {
+    @Override
+	public EObject findDatatype(final String name) throws CoreException {
         if ( !initialized ) {
             initialize();
         }
@@ -67,7 +68,8 @@ public class XsdDatatypeFinder implements DatatypeFinder {
     /**
      * @See org.teiid.designer.modelgenerator.DatatypeFinder#findDatatype(org.eclipse.emf.common.util.URI)
      */
-    public EObject findDatatype(final URI uri) throws CoreException {
+    @Override
+	public EObject findDatatype(final URI uri) throws CoreException {
         if ( !initialized ) {
             initialize();
         }
@@ -83,7 +85,8 @@ public class XsdDatatypeFinder implements DatatypeFinder {
     /**
      * @See org.teiid.designer.modelgenerator.DatatypeFinder#findAllDatatypes(java.lang.String)
      */
-    public List findAllDatatypes(final String name) throws CoreException {
+    @Override
+	public List findAllDatatypes(final String name) throws CoreException {
         if ( !initialized ) {
             initialize();
         }
@@ -102,7 +105,8 @@ public class XsdDatatypeFinder implements DatatypeFinder {
     /**
      * @See org.teiid.designer.modelgenerator.DatatypeFinder#findAllDatatypes(org.eclipse.emf.common.util.URI)
      */
-    public List findAllDatatypes(final URI uri) throws CoreException {
+    @Override
+	public List findAllDatatypes(final URI uri) throws CoreException {
         if ( !initialized ) {
             initialize();
         }

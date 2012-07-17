@@ -158,7 +158,8 @@ public class IndexImpl extends RelationalEntityImpl implements Index {
      * <!-- end-user-doc -->
      * @generated
      */
-    public String getFilterCondition() {
+    @Override
+	public String getFilterCondition() {
         return filterCondition;
     }
 
@@ -167,7 +168,8 @@ public class IndexImpl extends RelationalEntityImpl implements Index {
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setFilterCondition(String newFilterCondition) {
+    @Override
+	public void setFilterCondition(String newFilterCondition) {
         String oldFilterCondition = filterCondition;
         filterCondition = newFilterCondition;
         if (eNotificationRequired())
@@ -179,7 +181,8 @@ public class IndexImpl extends RelationalEntityImpl implements Index {
      * <!-- end-user-doc -->
      * @generated
      */
-    public boolean isNullable() {
+    @Override
+	public boolean isNullable() {
         return nullable;
     }
 
@@ -188,7 +191,8 @@ public class IndexImpl extends RelationalEntityImpl implements Index {
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setNullable(boolean newNullable) {
+    @Override
+	public void setNullable(boolean newNullable) {
         boolean oldNullable = nullable;
         nullable = newNullable;
         if (eNotificationRequired())
@@ -200,7 +204,8 @@ public class IndexImpl extends RelationalEntityImpl implements Index {
      * <!-- end-user-doc -->
      * @generated
      */
-    public boolean isAutoUpdate() {
+    @Override
+	public boolean isAutoUpdate() {
         return autoUpdate;
     }
 
@@ -209,7 +214,8 @@ public class IndexImpl extends RelationalEntityImpl implements Index {
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setAutoUpdate(boolean newAutoUpdate) {
+    @Override
+	public void setAutoUpdate(boolean newAutoUpdate) {
         boolean oldAutoUpdate = autoUpdate;
         autoUpdate = newAutoUpdate;
         if (eNotificationRequired())
@@ -221,7 +227,8 @@ public class IndexImpl extends RelationalEntityImpl implements Index {
      * <!-- end-user-doc -->
      * @generated
      */
-    public boolean isUnique() {
+    @Override
+	public boolean isUnique() {
         return unique;
     }
 
@@ -230,7 +237,8 @@ public class IndexImpl extends RelationalEntityImpl implements Index {
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setUnique(boolean newUnique) {
+    @Override
+	public void setUnique(boolean newUnique) {
         boolean oldUnique = unique;
         unique = newUnique;
         if (eNotificationRequired())
@@ -242,7 +250,8 @@ public class IndexImpl extends RelationalEntityImpl implements Index {
      * <!-- end-user-doc -->
      * @generated
      */
-    public Schema getSchema() {
+    @Override
+	public Schema getSchema() {
         if (eContainerFeatureID != RelationalPackage.INDEX__SCHEMA) return null;
         return (Schema)eContainer;
     }
@@ -252,7 +261,8 @@ public class IndexImpl extends RelationalEntityImpl implements Index {
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setSchema(Schema newSchema) {
+    @Override
+	public void setSchema(Schema newSchema) {
         if (newSchema != eContainer || (eContainerFeatureID != RelationalPackage.INDEX__SCHEMA && newSchema != null)) {
             if (EcoreUtil.isAncestor(this, newSchema))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
@@ -273,7 +283,8 @@ public class IndexImpl extends RelationalEntityImpl implements Index {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EList getColumns() {
+    @Override
+	public EList getColumns() {
         if (columns == null) {
             columns = new EObjectWithInverseResolvingEList.ManyInverse(Column.class, this, RelationalPackage.INDEX__COLUMNS, RelationalPackage.COLUMN__INDEXES);
         }
@@ -285,7 +296,8 @@ public class IndexImpl extends RelationalEntityImpl implements Index {
      * <!-- end-user-doc -->
      * @generated
      */
-    public Catalog getCatalog() {
+    @Override
+	public Catalog getCatalog() {
         if (eContainerFeatureID != RelationalPackage.INDEX__CATALOG) return null;
         return (Catalog)eContainer;
     }
@@ -295,7 +307,8 @@ public class IndexImpl extends RelationalEntityImpl implements Index {
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setCatalog(Catalog newCatalog) {
+    @Override
+	public void setCatalog(Catalog newCatalog) {
         if (newCatalog != eContainer || (eContainerFeatureID != RelationalPackage.INDEX__CATALOG && newCatalog != null)) {
             if (EcoreUtil.isAncestor(this, newCatalog))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$

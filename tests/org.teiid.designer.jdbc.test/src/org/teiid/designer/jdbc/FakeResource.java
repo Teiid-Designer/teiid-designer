@@ -22,74 +22,93 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
  * FakeResource
  */
 public class FakeResource implements Resource {
-    public ResourceSet getResourceSet() {
+    @Override
+	public ResourceSet getResourceSet() {
         return null;
     }
 
-    public URI getURI() {
+    @Override
+	public URI getURI() {
         return null;
     }
 
-    public void setURI( URI uri ) {
+    @Override
+	public void setURI( URI uri ) {
     }
 
-    public EList getContents() {
+    @Override
+	public EList getContents() {
         return null;
     }
 
-    public TreeIterator getAllContents() {
+    @Override
+	public TreeIterator getAllContents() {
         return null;
     }
 
-    public String getURIFragment( EObject eObject ) {
+    @Override
+	public String getURIFragment( EObject eObject ) {
         return null;
     }
 
-    public EObject getEObject( String uriFragment ) {
+    @Override
+	public EObject getEObject( String uriFragment ) {
         return null;
     }
 
-    public boolean isTrackingModification() {
+    @Override
+	public boolean isTrackingModification() {
         return false;
     }
 
-    public void setTrackingModification( boolean isTrackingModification ) {
+    @Override
+	public void setTrackingModification( boolean isTrackingModification ) {
     }
 
-    public boolean isModified() {
+    @Override
+	public boolean isModified() {
         return false;
     }
 
-    public void setModified( boolean isModified ) {
+    @Override
+	public void setModified( boolean isModified ) {
     }
 
-    public boolean isLoaded() {
+    @Override
+	public boolean isLoaded() {
         return false;
     }
 
-    public void unload() {
+    @Override
+	public void unload() {
     }
 
-    public EList getErrors() {
+    @Override
+	public EList getErrors() {
         return null;
     }
 
-    public EList getWarnings() {
+    @Override
+	public EList getWarnings() {
         return null;
     }
 
-    public EList eAdapters() {
+    @Override
+	public EList eAdapters() {
         return null;
     }
 
-    public boolean eDeliver() {
+    @Override
+	public boolean eDeliver() {
         return false;
     }
 
-    public void eSetDeliver( boolean deliver ) {
+    @Override
+	public void eSetDeliver( boolean deliver ) {
     }
 
-    public void eNotify( Notification notification ) {
+    @Override
+	public void eNotify( Notification notification ) {
     }
 
     /**
@@ -97,7 +116,8 @@ public class FakeResource implements Resource {
      * 
      * @see org.eclipse.emf.ecore.resource.Resource#delete(java.util.Map)
      */
-    public void delete( Map<?, ?> options ) {
+    @Override
+	public void delete( Map<?, ?> options ) {
     }
 
     /**
@@ -105,7 +125,8 @@ public class FakeResource implements Resource {
      * 
      * @see org.eclipse.emf.ecore.resource.Resource#getTimeStamp()
      */
-    public long getTimeStamp() {
+    @Override
+	public long getTimeStamp() {
         return 0;
     }
 
@@ -114,7 +135,8 @@ public class FakeResource implements Resource {
      * 
      * @see org.eclipse.emf.ecore.resource.Resource#load(java.util.Map)
      */
-    public void load( Map<?, ?> options ) {
+    @Override
+	public void load( Map<?, ?> options ) {
     }
 
     /**
@@ -122,7 +144,8 @@ public class FakeResource implements Resource {
      * 
      * @see org.eclipse.emf.ecore.resource.Resource#load(java.io.InputStream, java.util.Map)
      */
-    public void load( InputStream inputStream,
+    @Override
+	public void load( InputStream inputStream,
                       Map<?, ?> options ) {
     }
 
@@ -131,7 +154,8 @@ public class FakeResource implements Resource {
      * 
      * @see org.eclipse.emf.ecore.resource.Resource#save(java.util.Map)
      */
-    public void save( Map<?, ?> options ) {
+    @Override
+	public void save( Map<?, ?> options ) {
     }
 
     /**
@@ -139,7 +163,8 @@ public class FakeResource implements Resource {
      * 
      * @see org.eclipse.emf.ecore.resource.Resource#save(java.io.OutputStream, java.util.Map)
      */
-    public void save( OutputStream outputStream,
+    @Override
+	public void save( OutputStream outputStream,
                       Map<?, ?> options ) {
     }
 
@@ -148,6 +173,7 @@ public class FakeResource implements Resource {
      * 
      * @see org.eclipse.emf.ecore.resource.Resource#setTimeStamp(long)
      */
-    public void setTimeStamp( long timeStamp ) {
+    @Override
+	public void setTimeStamp( long timeStamp ) {
     }
 }

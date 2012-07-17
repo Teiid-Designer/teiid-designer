@@ -53,14 +53,16 @@ public class RefreshModelAction
      * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#dispose()
      * @since 4.0
      */
-    public void dispose() {
+    @Override
+	public void dispose() {
     }
 
     /**
      * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#init(org.eclipse.ui.IWorkbenchWindow)
      * @since 4.0
      */
-    public void init( final IWorkbenchWindow window ) {
+    @Override
+	public void init( final IWorkbenchWindow window ) {
         this.wdw = window;
     }
 
@@ -68,7 +70,8 @@ public class RefreshModelAction
      * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
      * @since 4.0
      */
-    public void run( final IAction action ) {
+    @Override
+	public void run( final IAction action ) {
         if (this.model != null) {
             try {
                 // Make sure model is a physical, relational model
@@ -107,7 +110,8 @@ public class RefreshModelAction
      *      org.eclipse.jface.viewers.ISelection)
      * @since 4.0
      */
-    public void selectionChanged( final IAction action,
+    @Override
+	public void selectionChanged( final IAction action,
                                   final ISelection selection ) {
         determineEnablement(selection);
     }
@@ -118,7 +122,8 @@ public class RefreshModelAction
     boolean refresh( final String password ) {
         try {
             new ProgressMonitorDialog(this.wdw.getShell()).run(true, true, new IRunnableWithProgress() {
-                public void run( final IProgressMonitor monitor ) throws InvocationTargetException {
+                @Override
+				public void run( final IProgressMonitor monitor ) throws InvocationTargetException {
                     final JdbcImporter importer = new JdbcImporter();
                     try {
                         importer.setUpdatedModel(RefreshModelAction.this.model);
@@ -186,7 +191,8 @@ public class RefreshModelAction
     /**
      * @see org.teiid.designer.ui.actions.IRefreshContributor#canRefresh()
      */
-    public boolean canRefresh() {
+    @Override
+	public boolean canRefresh() {
         return this.enable;
     }
 
@@ -194,7 +200,8 @@ public class RefreshModelAction
      * @see org.eclipse.ui.ISelectionListener#selectionChanged(org.eclipse.ui.IWorkbenchPart,
      *      org.eclipse.jface.viewers.ISelection)
      */
-    public void selectionChanged( IWorkbenchPart part,
+    @Override
+	public void selectionChanged( IWorkbenchPart part,
                                   ISelection selection ) {
         determineEnablement(selection);
     }

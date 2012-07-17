@@ -26,7 +26,8 @@ public class Printable implements IPrintable {
     /* (non-Javadoc)
      * @see com.metamatrix.ui.print.IPrintable#getObject()
      */
-    public Object getObject() {
+    @Override
+	public Object getObject() {
         return oPrintable;
     }
 

@@ -73,7 +73,8 @@ public abstract class AbstractOperationNodeImpl extends DataFlowNodeImpl impleme
      * 
      * @generated
      */
-    public EList getExpressions() {
+    @Override
+	public EList getExpressions() {
         if (expressions == null) {
             expressions = new EObjectContainmentWithInverseEList(Expression.class, this,
                                                                  TransformationPackage.ABSTRACT_OPERATION_NODE__EXPRESSIONS,
@@ -87,7 +88,8 @@ public abstract class AbstractOperationNodeImpl extends DataFlowNodeImpl impleme
      * 
      * @generated
      */
-    public OperationNodeGroup getNodeGroup() {
+    @Override
+	public OperationNodeGroup getNodeGroup() {
         if (eContainerFeatureID != TransformationPackage.ABSTRACT_OPERATION_NODE__NODE_GROUP) return null;
         return (OperationNodeGroup)eContainer;
     }
@@ -97,7 +99,8 @@ public abstract class AbstractOperationNodeImpl extends DataFlowNodeImpl impleme
      * 
      * @generated
      */
-    public void setNodeGroup( OperationNodeGroup newNodeGroup ) {
+    @Override
+	public void setNodeGroup( OperationNodeGroup newNodeGroup ) {
         if (newNodeGroup != eContainer
             || (eContainerFeatureID != TransformationPackage.ABSTRACT_OPERATION_NODE__NODE_GROUP && newNodeGroup != null)) {
             if (EcoreUtil.isAncestor(this, newNodeGroup)) throw new IllegalArgumentException(

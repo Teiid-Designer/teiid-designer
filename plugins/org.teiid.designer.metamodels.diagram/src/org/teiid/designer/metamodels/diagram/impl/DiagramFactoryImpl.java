@@ -100,7 +100,8 @@ public class DiagramFactoryImpl extends EFactoryImpl implements DiagramFactory {
      * 
      * @generated
      */
-    public DiagramEntity createDiagramEntity() {
+    @Override
+	public DiagramEntity createDiagramEntity() {
         DiagramEntityImpl diagramEntity = new DiagramEntityImpl();
         return diagramEntity;
     }
@@ -110,7 +111,8 @@ public class DiagramFactoryImpl extends EFactoryImpl implements DiagramFactory {
      * 
      * @generated
      */
-    public Diagram createDiagram() {
+    @Override
+	public Diagram createDiagram() {
         DiagramImpl diagram = new DiagramImpl();
         return diagram;
     }
@@ -120,7 +122,8 @@ public class DiagramFactoryImpl extends EFactoryImpl implements DiagramFactory {
      * 
      * @generated
      */
-    public DiagramContainer createDiagramContainer() {
+    @Override
+	public DiagramContainer createDiagramContainer() {
         DiagramContainerImpl diagramContainer = new DiagramContainerImpl();
         return diagramContainer;
     }
@@ -130,7 +133,8 @@ public class DiagramFactoryImpl extends EFactoryImpl implements DiagramFactory {
      * 
      * @generated
      */
-    public DiagramLink createDiagramLink() {
+    @Override
+	public DiagramLink createDiagramLink() {
         DiagramLinkImpl diagramLink = new DiagramLinkImpl();
         return diagramLink;
     }
@@ -140,7 +144,8 @@ public class DiagramFactoryImpl extends EFactoryImpl implements DiagramFactory {
      * 
      * @generated
      */
-    public DiagramPosition createDiagramPosition() {
+    @Override
+	public DiagramPosition createDiagramPosition() {
         DiagramPositionImpl diagramPosition = new DiagramPositionImpl();
         return diagramPosition;
     }
@@ -150,7 +155,8 @@ public class DiagramFactoryImpl extends EFactoryImpl implements DiagramFactory {
      * 
      * @generated
      */
-    public DiagramPackage getDiagramPackage() {
+    @Override
+	public DiagramPackage getDiagramPackage() {
         return (DiagramPackage)getEPackage();
     }
 

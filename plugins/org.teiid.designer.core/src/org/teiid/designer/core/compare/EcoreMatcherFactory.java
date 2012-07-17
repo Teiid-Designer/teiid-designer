@@ -33,7 +33,8 @@ public class EcoreMatcherFactory implements EObjectMatcherFactory {
     /**
      * @see org.teiid.designer.core.compare.EObjectMatcherFactory#createEObjectMatchersForRoots()
      */
-    public List createEObjectMatchersForRoots() {
+    @Override
+	public List createEObjectMatchersForRoots() {
         final List results = new LinkedList();
         results.add(eAnnotationMatcher);
         results.add(eNamedElementMatcher);
@@ -43,7 +44,8 @@ public class EcoreMatcherFactory implements EObjectMatcherFactory {
     /**
      * @see org.teiid.designer.core.compare.EObjectMatcherFactory#createEObjectMatchers(org.eclipse.emf.ecore.EReference)
      */
-    public List createEObjectMatchers(final EReference reference) {
+    @Override
+	public List createEObjectMatchers(final EReference reference) {
         // Check to see whether the reference has a type that is EStringToStringMapEntry
         
         // Create the appropriate matchers ...

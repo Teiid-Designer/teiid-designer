@@ -25,10 +25,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
 import org.teiid.designer.datatools.ui.DatatoolsUiConstants;
-import org.teiid.designer.datatools.ui.DatatoolsUiPlugin;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.widget.MessageLabel;
-
 
 public class SelectConnectionProfileDialog extends ElementTreeSelectionDialog implements ISelectionChangedListener {
     private static final String DEFAULT_TITLE = DatatoolsUiConstants.UTIL.getString("SelectConnectionProfileDialog.title"); //$NON-NLS-1$ 
@@ -145,16 +143,16 @@ public class SelectConnectionProfileDialog extends ElementTreeSelectionDialog im
 	}
 	
 	private void updateOnSelection(Object selectedObject) {
-		IStatus status = new Status(IStatus.INFO, DatatoolsUiPlugin.PLUGIN_ID, DatatoolsUiConstants.UTIL.getString("SelectConnectionProfileDialog.okSelectionMessage")); //$NON-NLS-1$
+		IStatus status = new Status(IStatus.INFO, DatatoolsUiConstants.PLUGIN_ID, DatatoolsUiConstants.UTIL.getString("SelectConnectionProfileDialog.okSelectionMessage")); //$NON-NLS-1$
 		if( selectedObject != null ) {
 			if( selectedObject instanceof ICategory ) {
-				status = new Status(IStatus.ERROR, DatatoolsUiPlugin.PLUGIN_ID, DatatoolsUiConstants.UTIL.getString("SelectConnectionProfileDialog.categorySelectionMessage")); //$NON-NLS-1$
+				status = new Status(IStatus.ERROR, DatatoolsUiConstants.PLUGIN_ID, DatatoolsUiConstants.UTIL.getString("SelectConnectionProfileDialog.categorySelectionMessage")); //$NON-NLS-1$
 				getOkButton().setEnabled(false);
 			} else {
 				getOkButton().setEnabled(true);
 			}
 		} else {
-			status = new Status(IStatus.ERROR, DatatoolsUiPlugin.PLUGIN_ID, DatatoolsUiConstants.UTIL.getString("SelectConnectionProfileDialog.invalidSelectionMessage")); //$NON-NLS-1$
+			status = new Status(IStatus.ERROR, DatatoolsUiConstants.PLUGIN_ID, DatatoolsUiConstants.UTIL.getString("SelectConnectionProfileDialog.invalidSelectionMessage")); //$NON-NLS-1$
 			getOkButton().setEnabled(false);
 		}
 		

@@ -163,7 +163,8 @@ final class JdbcImportOptionsPage extends WizardPage implements
      * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
      * @since 4.0
      */
-    public void createControl(final Composite parent) {
+    @Override
+	public void createControl(final Composite parent) {
         // Create page
         final Composite pg = new Composite(parent, SWT.NONE);
         pg.setLayout(new GridLayout(COLUMN_COUNT, false));
@@ -178,7 +179,8 @@ final class JdbcImportOptionsPage extends WizardPage implements
         this.nameText = WidgetFactory.createTextField(pg, GridData.FILL_HORIZONTAL);
         this.nameText.addModifyListener(new ModifyListener() {
 
-            public void modifyText(final ModifyEvent event) {
+            @Override
+			public void modifyText(final ModifyEvent event) {
                 nameModified();
             }
         });
@@ -204,7 +206,8 @@ final class JdbcImportOptionsPage extends WizardPage implements
         this.folderText = WidgetFactory.createTextField(pg, GridData.FILL_HORIZONTAL, name);
         this.folderText.addModifyListener(new ModifyListener() {
 
-            public void modifyText(final ModifyEvent event) {
+            @Override
+			public void modifyText(final ModifyEvent event) {
                 folderModified();
             }
         });
@@ -314,7 +317,8 @@ final class JdbcImportOptionsPage extends WizardPage implements
      * @see org.teiid.designer.ui.common.wizard.IPersistentWizardPage#saveSettings()
      * @since 4.0
      */
-    public void saveSettings() {
+    @Override
+	public void saveSettings() {
         final IDialogSettings dlgSettings = getDialogSettings();
         final XsdAsRelationalImportWizard wizard = (XsdAsRelationalImportWizard)getWizard();
         // Information must be obtained from wizard, not local variables, since this method may be called w/o this page every

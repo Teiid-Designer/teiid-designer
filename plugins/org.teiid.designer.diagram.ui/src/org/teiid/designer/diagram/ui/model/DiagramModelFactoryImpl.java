@@ -26,7 +26,8 @@ import org.teiid.designer.metamodels.diagram.Diagram;
 abstract public class DiagramModelFactoryImpl implements DiagramModelFactory {
 //    private static final String THIS_CLASS = "DiagramModelFactoryImpl"; //$NON-NLS-1$
     
-    public DiagramModelNode createModel(Object oBaseObject, IProgressMonitor monitor) {
+    @Override
+	public DiagramModelNode createModel(Object oBaseObject, IProgressMonitor monitor) {
         return null;
     }
     
@@ -37,7 +38,8 @@ abstract public class DiagramModelFactoryImpl implements DiagramModelFactory {
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.model.DiagramModelFactory#notifyModel(org.eclipse.emf.common.notify.Notification)
      */
-    public boolean notifyModel(Notification notification, DiagramModelNode diagramModelNode, String sDiagramTypeId) {
+    @Override
+	public boolean notifyModel(Notification notification, DiagramModelNode diagramModelNode, String sDiagramTypeId) {
         // Default implementation does nothing;
         return true;
     }
@@ -170,7 +172,8 @@ abstract public class DiagramModelFactoryImpl implements DiagramModelFactory {
         return true;
     }
     
-    public void handleLabelProviderChanged(DiagramModelNode diagramModelNode, List eObjects) {
+    @Override
+	public void handleLabelProviderChanged(DiagramModelNode diagramModelNode, List eObjects) {
         HashMap updateNodes = new HashMap(eObjects.size());
         
         Iterator iter = eObjects.iterator();
@@ -200,14 +203,16 @@ abstract public class DiagramModelFactoryImpl implements DiagramModelFactory {
      * Method which determines whether this EObject can be represented in a diagram or not.
      * @return boolean
      */
-    public boolean isDrawable( EObject object ) {
+    @Override
+	public boolean isDrawable( EObject object ) {
         return true;
     }
     
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.model.DiagramModelFactory#shouldRefreshDiagram(org.eclipse.emf.common.notify.Notification, org.teiid.designer.diagram.ui.model.DiagramModelNode, java.lang.String)
      */
-    public boolean shouldRefreshDiagram(Notification notification, DiagramModelNode diagramModelNode, String sDiagramTypeId) {
+    @Override
+	public boolean shouldRefreshDiagram(Notification notification, DiagramModelNode diagramModelNode, String sDiagramTypeId) {
         // return false by default.
         return false;
     }

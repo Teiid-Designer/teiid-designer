@@ -23,7 +23,8 @@ public class FunctionValidationAspectFactoryImpl implements MetamodelAspectFacto
     /*
      * @See org.teiid.designer.core.metamodel.aspect.MetamodelAspectFactory#create(org.eclipse.emf.ecore.EClassifier, org.teiid.designer.core.metamodel.aspect.MetamodelEntity)
      */
-    public MetamodelAspect create(EClassifier classifier, MetamodelEntity entity) {
+    @Override
+	public MetamodelAspect create(EClassifier classifier, MetamodelEntity entity) {
         switch (classifier.getClassifierID()) {
             case FunctionPackage.FUNCTION:
             case FunctionPackage.SCALAR_FUNCTION:       return new ScalarFunctionAspect(entity);

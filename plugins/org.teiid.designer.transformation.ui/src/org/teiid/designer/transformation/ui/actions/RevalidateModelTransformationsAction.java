@@ -65,7 +65,8 @@ public class RevalidateModelTransformationsAction extends Action implements ISel
         setImageDescriptor(UiPlugin.getDefault().getImageDescriptor(PluginConstants.Images.REVALIDATE_TRANSFORMATION_ICON));
     }
 
-    public void selectionChanged( IWorkbenchPart part,
+    @Override
+	public void selectionChanged( IWorkbenchPart part,
                                   ISelection selection ) {
         Object selectedObject = SelectionUtilities.getSelectedObject(selection);
         boolean enable = false;
@@ -276,7 +277,8 @@ public class RevalidateModelTransformationsAction extends Action implements ISel
         }
     }
 
-    public int compareTo( Object o ) {
+    @Override
+	public int compareTo( Object o ) {
         if (o instanceof String) {
             return getText().compareTo((String)o);
         }
@@ -287,7 +289,8 @@ public class RevalidateModelTransformationsAction extends Action implements ISel
         return 0;
     }
 
-    public boolean isApplicable( ISelection selection ) {
+    @Override
+	public boolean isApplicable( ISelection selection ) {
         boolean result = false;
         Object selectedObject = SelectionUtilities.getSelectedObject(selection);
         if (selectedObject instanceof IResource && ModelUtilities.isModelFile((IResource)selectedObject)) {

@@ -54,7 +54,8 @@ public class RelationshipProcessorImpl extends BaseRelationshipProcessor {
     /* (non-Javadoc)
      * @See org.teiid.designer.schema.tools.processing.internal.RelationshipProcessor#calculateRelationshipTypes(org.teiid.designer.schema.tools.model.schema.SchemaModel)
      */
-    public void calculateRelationshipTypes( SchemaModel model ) {
+    @Override
+	public void calculateRelationshipTypes( SchemaModel model ) {
         setSechemaModel(model);
         List elements = model.getElements();
         PrintWriter debugWriter = null;
@@ -114,15 +115,18 @@ public class RelationshipProcessorImpl extends BaseRelationshipProcessor {
         return debugWriter;
     }
 
-    public int C_threshold() {
+    @Override
+	public int C_threshold() {
         return c_threshold;
     }
 
-    public int P_threshold() {
+    @Override
+	public int P_threshold() {
         return p_threshold;
     }
 
-    public int F_threshold() {
+    @Override
+	public int F_threshold() {
         return f_threshold;
     }
 }

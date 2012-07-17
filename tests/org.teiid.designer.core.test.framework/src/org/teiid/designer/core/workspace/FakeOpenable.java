@@ -34,7 +34,8 @@ public class FakeOpenable implements Openable {
     /**
      * @see org.teiid.designer.core.workspace.Openable#close()
      */
-    public void close() {
+    @Override
+	public void close() {
         this.closed = true;
         this.hasUnsavedChanges = false;
     }
@@ -42,21 +43,24 @@ public class FakeOpenable implements Openable {
     /**
      * @see org.teiid.designer.core.workspace.Openable#hasUnsavedChanges()
      */
-    public boolean hasUnsavedChanges() {
+    @Override
+	public boolean hasUnsavedChanges() {
         return this.hasUnsavedChanges;
     }
 
     /**
      * @see org.teiid.designer.core.workspace.Openable#isOpen()
      */
-    public boolean isOpen() {
+    @Override
+	public boolean isOpen() {
         return !this.closed;
     }
 
     /**
      * @see org.teiid.designer.core.workspace.Openable#open(org.eclipse.core.runtime.IProgressMonitor)
      */
-    public void open( IProgressMonitor progress ) {
+    @Override
+	public void open( IProgressMonitor progress ) {
         this.closed = false;
         this.hasUnsavedChanges = false;
     }
@@ -64,7 +68,8 @@ public class FakeOpenable implements Openable {
     /**
      * @see org.teiid.designer.core.workspace.Openable#save(org.eclipse.core.runtime.IProgressMonitor, boolean)
      */
-    public void save( IProgressMonitor progress,
+    @Override
+	public void save( IProgressMonitor progress,
                       boolean force ) {
         this.hasUnsavedChanges = false;
     }

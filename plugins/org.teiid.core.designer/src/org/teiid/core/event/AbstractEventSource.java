@@ -26,7 +26,8 @@ abstract public class AbstractEventSource implements EventSource {
     Map eventClassListeners = new HashMap(5);
     List eventListeners = new ArrayList(5);
 
-    public synchronized void addListener( Class eventClass,
+    @Override
+	public synchronized void addListener( Class eventClass,
                                           EventObjectListener listener ) {
         CoreArgCheck.isNotNull(listener, LISTENER_MAY_NOT_BE_NULL);
         CoreArgCheck.isNotNull(eventClass, EVENT_CLASS_MAY_NOT_BE_NULL);
@@ -50,7 +51,8 @@ abstract public class AbstractEventSource implements EventSource {
         }
     }
 
-    public synchronized void removeListener( Class eventClass,
+    @Override
+	public synchronized void removeListener( Class eventClass,
                                              EventObjectListener listener ) {
         CoreArgCheck.isNotNull(listener, LISTENER_MAY_NOT_BE_NULL);
         CoreArgCheck.isNotNull(eventClass, EVENT_CLASS_MAY_NOT_BE_NULL);
@@ -61,7 +63,8 @@ abstract public class AbstractEventSource implements EventSource {
         }
     }
 
-    public synchronized void removeListener( EventObjectListener listener ) {
+    @Override
+	public synchronized void removeListener( EventObjectListener listener ) {
         CoreArgCheck.isNotNull(listener, LISTENER_MAY_NOT_BE_NULL);
 
         eventListeners.remove(listener);

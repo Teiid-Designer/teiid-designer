@@ -102,7 +102,8 @@ public abstract class StructuredViewerFilterer {
                         try {
                             Thread.sleep(300);
                             Display.getDefault().asyncExec(new Runnable() {
-                                public void run() {
+                                @Override
+								public void run() {
                                     autoSelectIfNeeded(vi);
                                 }
                             }); // endAnon Runnable
@@ -166,7 +167,8 @@ public abstract class StructuredViewerFilterer {
                 @Override
                 public void run() {
                     Display.getDefault().syncExec(new Runnable() {
-                        public void run() {
+                        @Override
+						public void run() {
                             updateFilter();
                         }
                     });

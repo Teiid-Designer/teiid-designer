@@ -237,7 +237,8 @@ public class RecursionPanel extends SashForm implements SelectionListener, UiCon
         restoreRecursionLimit();
 
         spinCountLimit.addModifyListener(new ModifyListener() {
-            public void modifyText( ModifyEvent theEvent ) {
+            @Override
+			public void modifyText( ModifyEvent theEvent ) {
                 if (listenToTextChange) handleSpinnerChanged();
             }
         });
@@ -563,14 +564,16 @@ public class RecursionPanel extends SashForm implements SelectionListener, UiCon
         setButtonStates();
     }
 
-    public void widgetSelected( SelectionEvent e ) {
+    @Override
+	public void widgetSelected( SelectionEvent e ) {
         //      System.out.println("[RecursionPanel.widgetSelected] e.getSource() is: " + e.getSource() ); //$NON-NLS-1$
 
         // may not need a class-level widgetSelected
 
     }
 
-    public void widgetDefaultSelected( SelectionEvent e ) {
+    @Override
+	public void widgetDefaultSelected( SelectionEvent e ) {
         widgetSelected(e);
     }
 
@@ -602,7 +605,8 @@ public class RecursionPanel extends SashForm implements SelectionListener, UiCon
             // I call this solution evil and messy, but it matches pretty well how
             // the rest of the class is written.
             chkRecurseQuery.addDisposeListener(new DisposeListener() {
-                public void widgetDisposed( DisposeEvent e ) {
+                @Override
+				public void widgetDisposed( DisposeEvent e ) {
                     recurseContribution = null;
                 }
             });

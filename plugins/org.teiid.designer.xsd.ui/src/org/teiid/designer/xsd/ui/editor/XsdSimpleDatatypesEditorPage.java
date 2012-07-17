@@ -151,14 +151,16 @@ public class XsdSimpleDatatypesEditorPage extends EditorPart implements ModelEdi
         return PAGE_TOOLTIP;
     }
 
-    public boolean canDisplay( IEditorInput input ) {
+    @Override
+	public boolean canDisplay( IEditorInput input ) {
         if (input instanceof IFileEditorInput) {
             return ModelUtil.isXsdFile(((IFileEditorInput)input).getFile());
         }
         return false;
     }
 
-    public boolean canOpenContext( Object input ) {
+    @Override
+	public boolean canOpenContext( Object input ) {
         if (input instanceof XsdModelAnnotationImpl) {
             return ((XsdModelAnnotationImpl)input).getResource().equals(this.xsdResource);
         } else if (input instanceof XSDConcreteComponent) {
@@ -172,14 +174,16 @@ public class XsdSimpleDatatypesEditorPage extends EditorPart implements ModelEdi
      * @see org.teiid.designer.ui.editors.ModelEditorPage#initializeEditorPage(java.lang.Object, boolean)
      * @since 5.0.2
      */
-    public void initializeEditorPage() {
+    @Override
+	public void initializeEditorPage() {
         // openContext(input);
     }
 
     /**
      * @see org.teiid.designer.ui.editors.ModelEditorPage#openContext(java.lang.Object)
      */
-    public void openContext( Object input,
+    @Override
+	public void openContext( Object input,
                              boolean forceRefresh ) {
         // we have to ignore forceRefresh; in the most frequent case,
         // the user clicked a link to jump to a base type, which asks
@@ -191,13 +195,15 @@ public class XsdSimpleDatatypesEditorPage extends EditorPart implements ModelEdi
         openContext(input);
     }
 
-    public void openContext( final Object input ) {
+    @Override
+	public void openContext( final Object input ) {
         final Object resource = this.xsdResource;
 
         if (editorPanel != null) {
             // run async to allow time for a new type to get inserted, if need be:
             Display.getDefault().asyncExec(new Runnable() {
-                public void run() {
+                @Override
+				public void run() {
                     XSDSimpleTypeDefinition std = null;
                     if (input instanceof XSDSimpleTypeDefinition) {
                         std = (XSDSimpleTypeDefinition)ModelObjectUtilities.getRealEObject((XSDSimpleTypeDefinition)input);
@@ -240,36 +246,44 @@ public class XsdSimpleDatatypesEditorPage extends EditorPart implements ModelEdi
         } // endif
     }
 
-    public Control getControl() {
+    @Override
+	public Control getControl() {
         return mainControl;
     }
 
-    public ISelectionProvider getModelObjectSelectionProvider() {
+    @Override
+	public ISelectionProvider getModelObjectSelectionProvider() {
         return mySelProv;
     }
 
-    public ISelectionChangedListener getModelObjectSelectionChangedListener() {
+    @Override
+	public ISelectionChangedListener getModelObjectSelectionChangedListener() {
         // ignore, for now
         return null;
     }
 
-    public AbstractModelEditorPageActionBarContributor getActionBarContributor() {
+    @Override
+	public AbstractModelEditorPageActionBarContributor getActionBarContributor() {
         return null;
     }
 
-    public void setLabelProvider( ILabelProvider provider ) {
+    @Override
+	public void setLabelProvider( ILabelProvider provider ) {
         // do nothing
     }
 
-    public INotifyChangedListener getNotifyChangedListener() {
+    @Override
+	public INotifyChangedListener getNotifyChangedListener() {
         return myChgList;
     }
 
-    public ModelEditorPageOutline getOutlineContribution() {
+    @Override
+	public ModelEditorPageOutline getOutlineContribution() {
         return null;
     }
 
-    public void updateReadOnlyState( boolean isReadOnly ) {
+    @Override
+	public void updateReadOnlyState( boolean isReadOnly ) {
         if (editorPanel != null && !editorPanel.isDisposed()) {
             // assume if editor panel is good, so are buttons:
             editorPanel.setReadOnly(isReadOnly);
@@ -278,23 +292,28 @@ public class XsdSimpleDatatypesEditorPage extends EditorPart implements ModelEdi
         } // endif
     }
 
-    public void setTitleText( String title ) {
+    @Override
+	public void setTitleText( String title ) {
         // do nothing
     }
 
-    public void preDispose() {
+    @Override
+	public void preDispose() {
         // do nothing
     }
 
-    public void openComplete() {
+    @Override
+	public void openComplete() {
         // do nothing
     }
 
-    public void processEvent( EventObject obj ) {
+    @Override
+	public void processEvent( EventObject obj ) {
         ModelResourceEvent event = (ModelResourceEvent)obj;
         if (event.getType() == ModelResourceEvent.RELOADED) {
             Display.getDefault().asyncExec(new Runnable() {
-                public void run() {
+                @Override
+				public void run() {
                     refreshListAndEditor();
                 }
             });
@@ -458,7 +477,8 @@ public class XsdSimpleDatatypesEditorPage extends EditorPart implements ModelEdi
         // MyModelSelectionProvider for how I got around the issue.
         builtInTypes.addSelectionChangedListener(mySelProv); // to expose selection to world
         localTypes.addSelectionChangedListener(new ISelectionChangedListener() {
-            public void selectionChanged( SelectionChangedEvent event ) {
+            @Override
+			public void selectionChanged( SelectionChangedEvent event ) {
                 ISelection selection = event.getSelection();
                 if (!selection.isEmpty()) {
 
@@ -477,7 +497,8 @@ public class XsdSimpleDatatypesEditorPage extends EditorPart implements ModelEdi
                         builtInTypes.setSelection(null);
                         lastSel = resolvedSelected;
                         UiBusyIndicator.showWhile(Display.getDefault(), new Runnable() {
-                            public void run() {
+                            @Override
+							public void run() {
                                 editorPanel.setInput((XSDSimpleTypeDefinition)resolvedSelected);
                             }
                         }); // endanon
@@ -494,7 +515,8 @@ public class XsdSimpleDatatypesEditorPage extends EditorPart implements ModelEdi
             }
         });
         builtInTypes.addSelectionChangedListener(new ISelectionChangedListener() {
-            public void selectionChanged( SelectionChangedEvent event ) {
+            @Override
+			public void selectionChanged( SelectionChangedEvent event ) {
                 ISelection selection = event.getSelection();
                 if (!selection.isEmpty()) {
                     final EObject selected = ModelObjectUtilities.getRealEObject(SelectionUtilities.getSelectedEObject(selection));
@@ -502,7 +524,8 @@ public class XsdSimpleDatatypesEditorPage extends EditorPart implements ModelEdi
                         localTypes.setSelection(null);
                         lastSel = selected;
                         UiBusyIndicator.showWhile(Display.getDefault(), new Runnable() {
-                            public void run() {
+                            @Override
+							public void run() {
                                 editorPanel.setInput((XSDSimpleTypeDefinition)selected);
                             }
                         }); // endanon
@@ -519,11 +542,13 @@ public class XsdSimpleDatatypesEditorPage extends EditorPart implements ModelEdi
                 // defect 18444 - make sure things are wrapped in transactions
                 // run the new operation in a transaction to allow undo:
                 final TransactionRunnable runnable = new TransactionRunnable() {
-                    public Object run( final UnitOfWork uow ) {
+                    @Override
+					public Object run( final UnitOfWork uow ) {
                         final XSDSimpleTypeDefinition newType = GUIFacetHelper.createType(newBtn.getShell(), getXsdSchema(), null);
                         if (newType != null) {
                             Display.getDefault().asyncExec(new Runnable() {
-                                public void run() {
+                                @Override
+								public void run() {
                                     // a refresh is performed by model notification system
                                     // before this call
                                     localTypes.setSelection(new StructuredSelection(newType));
@@ -644,7 +669,8 @@ public class XsdSimpleDatatypesEditorPage extends EditorPart implements ModelEdi
     }
 
     class MyNotifyChangedListener implements INotifyChangedListener {
-        public void notifyChanged( Notification notification ) {
+        @Override
+		public void notifyChanged( Notification notification ) {
             // Defect 23150 ( NPE's when processing notifications of a deleted model )
             // Check Resource in case it is deleted.
             validateResource();
@@ -747,7 +773,8 @@ public class XsdSimpleDatatypesEditorPage extends EditorPart implements ModelEdi
         private void safeRefreshLocal() {
             if (localTypes != null && !localTypes.getControl().isDisposed()) {
                 Display.getDefault().asyncExec(new Runnable() {
-                    public void run() {
+                    @Override
+					public void run() {
                         localTypes.refresh();
                     }
                 });
@@ -787,7 +814,8 @@ public class XsdSimpleDatatypesEditorPage extends EditorPart implements ModelEdi
 
     class MyModelSelectionProvider extends SelectionProvider implements ISelectionChangedListener {
         // Listener:
-        public void selectionChanged( SelectionChangedEvent event ) {
+        @Override
+		public void selectionChanged( SelectionChangedEvent event ) {
             ISelection selection = event.getSelection();
             if (selection.isEmpty()) {
                 if (localTypes.getSelection().isEmpty() && builtInTypes.getSelection().isEmpty()) {
@@ -850,7 +878,8 @@ public class XsdSimpleDatatypesEditorPage extends EditorPart implements ModelEdi
      * @see org.teiid.designer.ui.editors.ModelEditorPage#isSelectedFirst(org.eclipse.ui.IEditorInput)
      * @since 5.0.1
      */
-    public boolean isSelectedFirst( IEditorInput input ) {
+    @Override
+	public boolean isSelectedFirst( IEditorInput input ) {
         return false;
     }
 }

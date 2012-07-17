@@ -845,7 +845,8 @@ public class ModelContents {
         // Create a new model annotation
         return (ModelAnnotation)TransactionUtil.executeNonUndoable(new ISafeReturningOperation() {
 
-            public Object execute() {
+            @Override
+			public Object execute() {
                 return createModelAnnotation();
             }
         }, this);

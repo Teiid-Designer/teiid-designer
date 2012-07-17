@@ -94,7 +94,8 @@ public class NamespaceDeclarationImpl extends EObjectImpl implements NamespaceDe
      * 
      * @generated
      */
-    public String getUri() {
+    @Override
+	public String getUri() {
         return uri;
     }
 
@@ -103,7 +104,8 @@ public class NamespaceDeclarationImpl extends EObjectImpl implements NamespaceDe
      * 
      * @generated
      */
-    public void setUri( String newUri ) {
+    @Override
+	public void setUri( String newUri ) {
         String oldUri = uri;
         uri = newUri;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
@@ -115,7 +117,8 @@ public class NamespaceDeclarationImpl extends EObjectImpl implements NamespaceDe
      * 
      * @generated
      */
-    public String getPrefix() {
+    @Override
+	public String getPrefix() {
         return prefix;
     }
 
@@ -124,7 +127,8 @@ public class NamespaceDeclarationImpl extends EObjectImpl implements NamespaceDe
      * 
      * @generated
      */
-    public void setPrefix( String newPrefix ) {
+    @Override
+	public void setPrefix( String newPrefix ) {
         String oldPrefix = prefix;
         prefix = newPrefix;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
@@ -136,7 +140,8 @@ public class NamespaceDeclarationImpl extends EObjectImpl implements NamespaceDe
      * 
      * @generated
      */
-    public NamespaceDeclarationOwner getOwner() {
+    @Override
+	public NamespaceDeclarationOwner getOwner() {
         if (eContainerFeatureID != WsdlPackage.NAMESPACE_DECLARATION__OWNER) return null;
         return (NamespaceDeclarationOwner)eContainer;
     }
@@ -146,7 +151,8 @@ public class NamespaceDeclarationImpl extends EObjectImpl implements NamespaceDe
      * 
      * @generated
      */
-    public void setOwner( NamespaceDeclarationOwner newOwner ) {
+    @Override
+	public void setOwner( NamespaceDeclarationOwner newOwner ) {
         if (newOwner != eContainer || (eContainerFeatureID != WsdlPackage.NAMESPACE_DECLARATION__OWNER && newOwner != null)) {
             if (EcoreUtil.isAncestor(this, newOwner)) throw new IllegalArgumentException(
                                                                                          "Recursive containment not allowed for " + toString()); //$NON-NLS-1$

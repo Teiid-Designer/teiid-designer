@@ -52,42 +52,49 @@ public abstract class AbstractAssociationDescriptor implements AssociationDescri
     /* (non-Javadoc)
      * @See org.teiid.designer.core.association.AssociationDescriptor#getImage()
      */
-    public abstract Object getImage();
+    @Override
+	public abstract Object getImage();
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.association.AssociationDescriptor#getText()
      */
-    public abstract String getText();
+    @Override
+	public abstract String getText();
 
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.association#isComplete()
      */
-    public abstract boolean isComplete();
+    @Override
+	public abstract boolean isComplete();
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.association#creationComplete()
      */
-    public boolean creationComplete() {
+    @Override
+	public boolean creationComplete() {
         return this.creationComplete;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.association#setCreationComplete()
      */
-    public void setCreationComplete(boolean complete) {
+    @Override
+	public void setCreationComplete(boolean complete) {
         this.creationComplete = complete;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.association#getType()
      */
-    public abstract String getType();
+    @Override
+	public abstract String getType();
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.association.AssociationDescriptor#getChildren()
      */
-    public AssociationDescriptor[] getChildren() {
+    @Override
+	public AssociationDescriptor[] getChildren() {
         if (children == null || children.size() == 0) {
             return EMPTY_ARRAY;
         }
@@ -99,14 +106,16 @@ public abstract class AbstractAssociationDescriptor implements AssociationDescri
     /* (non-Javadoc)
      * @See org.teiid.designer.core.association.AssociationDescriptor#getStatus()
      */
-    public IStatus getStatus() {
+    @Override
+	public IStatus getStatus() {
         return this.status;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.association.AssociationDescriptor#isAmbiguous()
      */
-    public boolean isAmbiguous() {
+    @Override
+	public boolean isAmbiguous() {
         return this.ambiguous;
     }
 
@@ -182,7 +191,8 @@ public abstract class AbstractAssociationDescriptor implements AssociationDescri
      * @see org.teiid.designer.core.association.AssociationDescriptor#getNewAssociation()
      * @since 4.3
      */
-    public EObject getNewAssociation() {
+    @Override
+	public EObject getNewAssociation() {
         return this.newAssociation;
     }
 

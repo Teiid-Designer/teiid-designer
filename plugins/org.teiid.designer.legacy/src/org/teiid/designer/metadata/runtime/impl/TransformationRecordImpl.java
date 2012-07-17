@@ -46,42 +46,48 @@ public class TransformationRecordImpl extends AbstractMetadataRecord implements 
     /**
      * @see org.teiid.designer.metadata.runtime.TransformationRecord#getTransformation()
      */
-    public String getTransformation() {
+    @Override
+	public String getTransformation() {
         return transformation;
     }
 
     /*
      * @See org.teiid.designer.core.metadata.runtime.TransformationRecord#getBindings()
      */
-    public List getBindings() {
+    @Override
+	public List getBindings() {
         return this.bindings;
     }
 
     /*
      * @See org.teiid.designer.core.metadata.runtime.TransformationRecord#getSchemaPaths()
      */
-    public List getSchemaPaths() {
+    @Override
+	public List getSchemaPaths() {
         return schemaPaths;
     }
 
     /*
      * @See org.teiid.designer.core.metadata.runtime.TransformationRecord#getTransformationType()
      */
-    public String getTransformationType() {
+    @Override
+	public String getTransformationType() {
         return transformationType;
     }
 
     /**
      * @see org.teiid.designer.metadata.runtime.TransformationRecord#getTransformedObjectID()
      */
-    public Object getTransformedObjectID() {
+    @Override
+	public Object getTransformedObjectID() {
         return transformedObjectID;
     }
 
     /**
      * @see org.teiid.designer.metadata.runtime.TransformationRecord#getType()
      */
-    public String getType() {
+    @Override
+	public String getType() {
         return this.getTransformTypeForRecordType(this.getRecordType());
     }
 

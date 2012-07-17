@@ -49,21 +49,24 @@ final public class MappingDiagramContentProvider implements ITreeContentProvider
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.IContentProvider#dispose()
      */
-    public void dispose() {
+    @Override
+	public void dispose() {
 
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
      */
-    public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+    @Override
+	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
      */
-    public synchronized Object[] getChildren(Object parentElement) {
+    @Override
+	public synchronized Object[] getChildren(Object parentElement) {
 
         Object[] children = NO_CHILDREN;
             
@@ -89,14 +92,16 @@ final public class MappingDiagramContentProvider implements ITreeContentProvider
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
      */
-    public Object[] getElements(Object inputElement) {
+    @Override
+	public Object[] getElements(Object inputElement) {
         return getChildren(inputElement);
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object)
      */
-    public Object getParent(Object element) {
+    @Override
+	public Object getParent(Object element) {
         Object result = null;
         if ( element instanceof Diagram ) {
             Object target = ((Diagram) element).getTarget();
@@ -114,7 +119,8 @@ final public class MappingDiagramContentProvider implements ITreeContentProvider
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(java.lang.Object)
      */
-    public boolean hasChildren(Object parentElement) {
+    @Override
+	public boolean hasChildren(Object parentElement) {
 //        Object[] children= getChildren(parentElement);
 //        return (children != null) && children.length > 0;
 		if ( parentElement instanceof PresentationEntity ) {
@@ -138,7 +144,8 @@ final public class MappingDiagramContentProvider implements ITreeContentProvider
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.IDiagramProvider#canDelete(org.teiid.designer.metamodels.diagram.Diagram)
      */
-    public boolean canDelete(Diagram diagram) {
+    @Override
+	public boolean canDelete(Diagram diagram) {
         return false;
     }
 }

@@ -23,6 +23,7 @@ public class RelationshipTypeRecordImpl extends AbstractRelationshipRecord imple
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.core.relationship.search.index.RelationshipTypeRecord#getSourceRoleName()
 	 */
+	@Override
 	public String getSourceRoleName() {
 		return this.sourceRoleName;
 	}
@@ -30,6 +31,7 @@ public class RelationshipTypeRecordImpl extends AbstractRelationshipRecord imple
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.core.relationship.search.index.RelationshipTypeRecord#getSuperTypeName()
 	 */
+	@Override
 	public String getSuperTypeUUID() {
 		return this.superTypeUUID;
 	}
@@ -37,6 +39,7 @@ public class RelationshipTypeRecordImpl extends AbstractRelationshipRecord imple
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.core.relationship.search.index.RelationshipTypeRecord#getTargetRoleName()
 	 */
+	@Override
 	public String getTargetRoleName() {
 		return this.targetRoleName;
 	}
@@ -44,6 +47,7 @@ public class RelationshipTypeRecordImpl extends AbstractRelationshipRecord imple
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.core.relationship.search.index.SearchRecord#getRecordType()
 	 */
+	@Override
 	public char getRecordType() {
 		return IndexConstants.SEARCH_RECORD_TYPE.RELATIONSHIP_TYPE;
 	}

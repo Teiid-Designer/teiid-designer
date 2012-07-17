@@ -80,7 +80,8 @@ public class XQueryTransformationImpl extends MappingHelperImpl implements XQuer
      * 
      * @generated
      */
-    public String getExpression() {
+    @Override
+	public String getExpression() {
         return expression;
     }
 
@@ -89,7 +90,8 @@ public class XQueryTransformationImpl extends MappingHelperImpl implements XQuer
      * 
      * @generated
      */
-    public void setExpression( String newExpression ) {
+    @Override
+	public void setExpression( String newExpression ) {
         String oldExpression = expression;
         expression = newExpression;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,

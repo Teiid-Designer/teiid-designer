@@ -46,7 +46,8 @@ public class QualifiedNameRequirementVisitor implements JdbcNodeVisitor {
     /**
      * @see org.teiid.designer.jdbc.metadata.JdbcNodeVisitor#visit(org.teiid.designer.jdbc.metadata.JdbcNode)
      */
-    public boolean visit( final JdbcNode node ) {
+    @Override
+	public boolean visit( final JdbcNode node ) {
         if (node == null || node.getSelectionMode() == JdbcNode.UNSELECTED) {
             return false; // no need to process further ...
         }

@@ -259,13 +259,15 @@ public class DependencyReportDialog extends Dialog implements UiConstants {
         this.txfColDelim.setToolTipText(getString("text.columnDelimeter")); //$NON-NLS-1$
         this.txfColDelim.addModifyListener(new ModifyListener() {
 
-            public void modifyText( ModifyEvent theEvent ) {
+            @Override
+			public void modifyText( ModifyEvent theEvent ) {
                 handleColumnDelimeterChanged();
             }
         });
         this.txfColDelim.addVerifyListener(new VerifyListener() {
 
-            public void verifyText( VerifyEvent theEvent ) {
+            @Override
+			public void verifyText( VerifyEvent theEvent ) {
                 handleVerifyDelimeterChanged(theEvent);
             }
         });
@@ -308,7 +310,8 @@ public class DependencyReportDialog extends Dialog implements UiConstants {
         this.txfNullVal.setToolTipText(getString("text.nullValue")); //$NON-NLS-1$
         this.txfNullVal.addModifyListener(new ModifyListener() {
 
-            public void modifyText( ModifyEvent theEvent ) {
+            @Override
+			public void modifyText( ModifyEvent theEvent ) {
                 handleNullValueChanged();
             }
         });
@@ -566,7 +569,8 @@ public class DependencyReportDialog extends Dialog implements UiConstants {
         // do this so the event handlers react
         Display.getDefault().asyncExec(new Runnable() {
 
-            public void run() {
+            @Override
+			public void run() {
                 btn.setSelection(checked);
                 Event event = new Event();
                 event.widget = btn;
@@ -582,7 +586,8 @@ public class DependencyReportDialog extends Dialog implements UiConstants {
         // do this so the event handlers react
         Display.getDefault().asyncExec(new Runnable() {
 
-            public void run() {
+            @Override
+			public void run() {
                 nullBtn.setSelection(nullButtonChecked);
                 Event event = new Event();
                 event.widget = nullBtn;
@@ -616,7 +621,8 @@ public class DependencyReportDialog extends Dialog implements UiConstants {
         // do this so the event handlers react
         Display.getDefault().asyncExec(new Runnable() {
 
-            public void run() {
+            @Override
+			public void run() {
                 colTxf.setText(colText);
                 nullTxf.setText(nullText);
                 nullTxf.setEnabled(nullButtonChecked);

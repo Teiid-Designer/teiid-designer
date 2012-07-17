@@ -121,7 +121,8 @@ public class InsertRowsDialog extends TitleAreaDialog
      }
 
      private ModifyListener modifyListener = new ModifyListener() {
-         public void modifyText( ModifyEvent theEvent ) {
+         @Override
+		public void modifyText( ModifyEvent theEvent ) {
              updateDynamicMessage();
          }
      };

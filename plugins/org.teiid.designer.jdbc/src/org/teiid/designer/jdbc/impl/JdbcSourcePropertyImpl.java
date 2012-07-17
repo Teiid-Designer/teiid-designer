@@ -99,7 +99,8 @@ public class JdbcSourcePropertyImpl extends EObjectImpl implements JdbcSourcePro
      * <!-- end-user-doc -->
      * @generated
      */
-    public JdbcSource getSource() {
+    @Override
+	public JdbcSource getSource() {
         if (eContainerFeatureID != JdbcPackage.JDBC_SOURCE_PROPERTY__SOURCE) return null;
         return (JdbcSource)eContainer;
     }
@@ -109,7 +110,8 @@ public class JdbcSourcePropertyImpl extends EObjectImpl implements JdbcSourcePro
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setSource(JdbcSource newSource) {
+    @Override
+	public void setSource(JdbcSource newSource) {
         if (newSource != eContainer || (eContainerFeatureID != JdbcPackage.JDBC_SOURCE_PROPERTY__SOURCE && newSource != null)) {
             if (EcoreUtil.isAncestor(this, newSource))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
@@ -130,7 +132,8 @@ public class JdbcSourcePropertyImpl extends EObjectImpl implements JdbcSourcePro
      * <!-- end-user-doc -->
      * @generated
      */
-    public String getName() {
+    @Override
+	public String getName() {
         return name;
     }
 
@@ -139,7 +142,8 @@ public class JdbcSourcePropertyImpl extends EObjectImpl implements JdbcSourcePro
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setName(String newName) {
+    @Override
+	public void setName(String newName) {
         String oldName = name;
         name = newName;
         if (eNotificationRequired())
@@ -151,7 +155,8 @@ public class JdbcSourcePropertyImpl extends EObjectImpl implements JdbcSourcePro
      * <!-- end-user-doc -->
      * @generated
      */
-    public String getValue() {
+    @Override
+	public String getValue() {
         return value;
     }
 
@@ -160,7 +165,8 @@ public class JdbcSourcePropertyImpl extends EObjectImpl implements JdbcSourcePro
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setValue(String newValue) {
+    @Override
+	public void setValue(String newValue) {
         String oldValue = value;
         value = newValue;
         if (eNotificationRequired())

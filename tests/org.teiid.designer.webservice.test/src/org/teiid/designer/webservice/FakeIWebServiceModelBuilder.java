@@ -68,7 +68,8 @@ public class FakeIWebServiceModelBuilder implements IWebServiceModelBuilder {
      * @see org.teiid.designer.webservice.IWebServiceModelBuilder#getXmlModel()
      * @since 4.2
      */
-    public IPath getXmlModel() {
+    @Override
+	public IPath getXmlModel() {
         return xmlModelPath;
     }
 
@@ -76,7 +77,8 @@ public class FakeIWebServiceModelBuilder implements IWebServiceModelBuilder {
      * @see org.teiid.designer.webservice.IWebServiceModelBuilder#getParentResource()
      * @since 4.2
      */
-    public IResource getParentResource() {
+    @Override
+	public IResource getParentResource() {
         return null;
     }
 
@@ -84,11 +86,13 @@ public class FakeIWebServiceModelBuilder implements IWebServiceModelBuilder {
      * @see org.teiid.designer.webservice.IWebServiceModelBuilder#getModelPath()
      * @since 4.2
      */
-    public IPath getModelPath() {
+    @Override
+	public IPath getModelPath() {
         return modelPath;
     }
 
-    public Map getUrlMap() {
+    @Override
+	public Map getUrlMap() {
         return null;
     }
 
@@ -154,28 +158,32 @@ public class FakeIWebServiceModelBuilder implements IWebServiceModelBuilder {
      * @see org.teiid.designer.webservice.IWebServiceModelBuilder#unresolve(org.teiid.designer.webservice.IWebServiceResource)
      * @since 4.2
      */
-    public void unresolve( IWebServiceResource theResource ) {
+    @Override
+	public void unresolve( IWebServiceResource theResource ) {
     }
 
     /**
      * @see org.teiid.designer.webservice.IWebServiceModelBuilder#setMetamodelDescriptor(org.teiid.designer.core.metamodel.MetamodelDescriptor)
      * @since 4.2
      */
-    public void setMetamodelDescriptor( MetamodelDescriptor theDescriptor ) {
+    @Override
+	public void setMetamodelDescriptor( MetamodelDescriptor theDescriptor ) {
     }
 
     /**
      * @see org.teiid.designer.webservice.IWebServiceModelBuilder#setParentResource(org.eclipse.core.resources.IResource)
      * @since 4.2
      */
-    public void setParentResource( IResource theResource ) {
+    @Override
+	public void setParentResource( IResource theResource ) {
     }
 
     /**
      * @see org.teiid.designer.webservice.IWebServiceModelBuilder#setModelPath(org.eclipse.core.runtime.IPath)
      * @since 4.2
      */
-    public void setModelPath( IPath thePath ) {
+    @Override
+	public void setModelPath( IPath thePath ) {
         this.modelPath = thePath;
     }
 
@@ -183,7 +191,8 @@ public class FakeIWebServiceModelBuilder implements IWebServiceModelBuilder {
      * @see org.teiid.designer.webservice.IWebServiceModelBuilder#setXmlModel(org.eclipse.core.runtime.IPath)
      * @since 4.2
      */
-    public void setXmlModel( IPath theXmlModel ) {
+    @Override
+	public void setXmlModel( IPath theXmlModel ) {
         this.xmlModelPath = theXmlModel;
     }
 
@@ -191,7 +200,8 @@ public class FakeIWebServiceModelBuilder implements IWebServiceModelBuilder {
      * @see org.teiid.designer.webservice.IWebServiceModelBuilder#getModelGenerator()
      * @since 4.2
      */
-    public ModelGenerator getModelGenerator( boolean isNewModel ) {
+    @Override
+	public ModelGenerator getModelGenerator( boolean isNewModel ) {
         return null;
     }
 
@@ -207,7 +217,8 @@ public class FakeIWebServiceModelBuilder implements IWebServiceModelBuilder {
      * @see org.teiid.designer.webservice.IWebServiceModelBuilder#addResource(java.io.File)
      * @since 4.2
      */
-    public IWebServiceResource addResource( File theFile ) {
+    @Override
+	public IWebServiceResource addResource( File theFile ) {
         return null;
     }
 
@@ -215,7 +226,8 @@ public class FakeIWebServiceModelBuilder implements IWebServiceModelBuilder {
      * @see org.teiid.designer.webservice.IWebServiceModelBuilder#addResource(org.eclipse.core.resources.IFile)
      * @since 4.2
      */
-    public IWebServiceResource addResource( IFile theFile ) {
+    @Override
+	public IWebServiceResource addResource( IFile theFile ) {
         return null;
     }
 
@@ -224,7 +236,8 @@ public class FakeIWebServiceModelBuilder implements IWebServiceModelBuilder {
      *      java.io.File)
      * @since 4.2
      */
-    public void resolve( IWebServiceResource resource,
+    @Override
+	public void resolve( IWebServiceResource resource,
                          File theFile ) {
     }
 
@@ -233,7 +246,8 @@ public class FakeIWebServiceModelBuilder implements IWebServiceModelBuilder {
      *      org.eclipse.core.resources.IFile)
      * @since 4.2
      */
-    public void resolve( IWebServiceResource resource,
+    @Override
+	public void resolve( IWebServiceResource resource,
                          IFile theFile ) {
     }
 
@@ -241,14 +255,16 @@ public class FakeIWebServiceModelBuilder implements IWebServiceModelBuilder {
      * @see org.teiid.designer.webservice.IWebServiceModelBuilder#remove(org.teiid.designer.webservice.IWebServiceResource)
      * @since 4.2
      */
-    public void remove( IWebServiceResource theResource ) {
+    @Override
+	public void remove( IWebServiceResource theResource ) {
     }
 
     /**
      * @see org.teiid.designer.webservice.IWebServiceModelBuilder#getResources()
      * @since 4.2
      */
-    public Collection getResources() {
+    @Override
+	public Collection getResources() {
         return null;
     }
 
@@ -256,7 +272,8 @@ public class FakeIWebServiceModelBuilder implements IWebServiceModelBuilder {
      * @see org.teiid.designer.webservice.IWebServiceModelBuilder#getEmfResource(org.teiid.designer.webservice.IWebServiceResource)
      * @since 4.2
      */
-    public Resource getEmfResource( IWebServiceResource theResource ) {
+    @Override
+	public Resource getEmfResource( IWebServiceResource theResource ) {
         return null;
     }
 
@@ -264,7 +281,8 @@ public class FakeIWebServiceModelBuilder implements IWebServiceModelBuilder {
      * @see org.teiid.designer.webservice.IWebServiceModelBuilder#getXsdDestinations()
      * @since 4.2
      */
-    public Collection getXsdDestinations() {
+    @Override
+	public Collection getXsdDestinations() {
         return null;
     }
 
@@ -273,37 +291,45 @@ public class FakeIWebServiceModelBuilder implements IWebServiceModelBuilder {
      *      org.eclipse.core.runtime.IPath)
      * @since 4.2
      */
-    public void setDestinationPath( IWebServiceXsdResource xsdResource,
+    @Override
+	public void setDestinationPath( IWebServiceXsdResource xsdResource,
                                     IPath workspacePathForXsd ) {
     }
 
-    public IStatus validateWSDLNamespaces() {
+    @Override
+	public IStatus validateWSDLNamespaces() {
         return null;
     }
 
-    public IStatus validateXSDNamespaces() {
+    @Override
+	public IStatus validateXSDNamespaces() {
         return null;
     }
 
     public void validateWSDLs() {
     }
 
-    public Collection getWSDLResources() {
+    @Override
+	public Collection getWSDLResources() {
         return null;
     }
 
-    public void setSaveAllBeforeFinish( boolean theDoSave ) {
+    @Override
+	public void setSaveAllBeforeFinish( boolean theDoSave ) {
     }
 
-    public List getAllNewResources() {
+    @Override
+	public List getAllNewResources() {
         return Collections.EMPTY_LIST;
     }
 
-    public Collection getSelectedOperations() {
+    @Override
+	public Collection getSelectedOperations() {
         return Collections.EMPTY_LIST;
     }
 
-    public void setSelectedOperations( Collection theOperations ) {
+    @Override
+	public void setSelectedOperations( Collection theOperations ) {
     }
 
 }

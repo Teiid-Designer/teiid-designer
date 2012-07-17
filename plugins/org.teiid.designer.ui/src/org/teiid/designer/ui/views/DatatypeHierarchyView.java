@@ -165,7 +165,8 @@ public class DatatypeHierarchyView extends ModelerView {
         typeTree.addSelectionChangedListener(new ISelectionChangedListener() {
             private Object lastSelected;
 
-            public void selectionChanged( SelectionChangedEvent event ) {
+            @Override
+			public void selectionChanged( SelectionChangedEvent event ) {
                 ISelection sel = event.getSelection();
                 if (!sel.isEmpty()) {
                     Object selectedObject = SelectionUtilities.getSelectedObject(sel);
@@ -183,7 +184,8 @@ public class DatatypeHierarchyView extends ModelerView {
         // Hook up this view to listen for resource change events. Basically need to refresh the tree whenever an XSD file is
         // being opened or closed?
         modelResourceListener = new EventObjectListener() {
-            public void processEvent( EventObject obj ) {
+            @Override
+			public void processEvent( EventObject obj ) {
                 ModelResourceEvent event = (ModelResourceEvent)obj;
                 final IResource file = event.getResource();
 
@@ -196,7 +198,8 @@ public class DatatypeHierarchyView extends ModelerView {
                         || type == ModelResourceEvent.ADDED || type == ModelResourceEvent.REMOVED
                         || type == ModelResourceEvent.CHANGED) {
                         Display.getDefault().asyncExec(new Runnable() {
-                            public void run() {
+                            @Override
+							public void run() {
                                 if (!typeTree.getTree().isDisposed()) {
                                     typeTree.refresh();
                                 }
@@ -263,7 +266,8 @@ public class DatatypeHierarchyView extends ModelerView {
         /* (non-Javadoc)
          * @see org.eclipse.emf.edit.provider.INotifyChangedListener#notifyChanged(org.eclipse.emf.common.notify.Notification)
          */
-        public void notifyChanged( Notification notification ) {
+        @Override
+		public void notifyChanged( Notification notification ) {
             if (typeTree != null && !typeTree.getTree().isDisposed()) {
                 EObject obj = NotificationUtilities.getEObject(notification);
                 if (obj instanceof XSDSimpleTypeDefinition) {
@@ -320,7 +324,8 @@ public class DatatypeHierarchyView extends ModelerView {
         private AdapterFactoryLabelProvider labelProv = new AdapterFactoryLabelProvider(
                                                                                         new XSDSemanticItemProviderAdapterFactory());
 
-        public String getColumnText( Object element,
+        @Override
+		public String getColumnText( Object element,
                                      int columnIndex ) {
             if (element instanceof XSDFacet) {
                 XSDFacet f = (XSDFacet)element;

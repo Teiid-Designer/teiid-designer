@@ -23,12 +23,10 @@ import org.teiid.core.util.CoreArgCheck;
 import org.teiid.core.util.I18nUtil;
 import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.transformation.ui.UiConstants;
-import org.teiid.designer.transformation.ui.UiPlugin;
 import org.teiid.designer.transformation.ui.wizards.file.TeiidFileInfo;
 import org.teiid.designer.transformation.util.SqlConstants;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.LocatorImpl;
-
 
 /**
  * Business object used to manage Teiid-specific XML Data File information used during import
@@ -282,6 +280,7 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants, SqlC
 		validate();
 	}
 	
+	@Override
 	public void validate() {
 		// Validate XQuery Root Path Expression
 		if( this.getRootPath() == null || this.getRootPath().length() == 0 ) {
@@ -572,7 +571,7 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants, SqlC
     	
     	if( isUrl() ) {
 	    	// SELECT {0} FROM (EXEC {1}.getTextFiles({2})) AS f, XMLTABLE('{3}' PASSING XMLPARSE(DOCUMENT f.file) AS d COLUMNS {4}) AS {5}
-	    	finalSQLString = UiPlugin.Util.getString(
+	    	finalSQLString = UiConstants.Util.getString(
 	    			"TeiidXmlFileInfo.xmlInvokeHttpTableSqlTemplate", //$NON-NLS-1$
 	    			string_0,
 	    			relationalModelName,
@@ -587,7 +586,7 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants, SqlC
 	//    			"XMLPARSE(DOCUMENT f.file) AS d " + 
 	//    			"COLUMNS pmid biginteger PATH 'PMID', journal string PATH 'Article/Journal/Title', title string PATH 'Article/ArticleTitle') AS title";
     	} else {
-    		finalSQLString = UiPlugin.Util.getString(
+    		finalSQLString = UiConstants.Util.getString(
 	    			"TeiidXmlFileInfo.xmlGetTextFilesTableSqlTemplate", //$NON-NLS-1$
 	    			string_0,
 	    			relationalModelName,

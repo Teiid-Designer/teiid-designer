@@ -28,21 +28,24 @@ public class FileDocument extends PropertyDocument {
     /**
      * @see org.teiid.designer.core.index.IDocument#getEncoding()
      */
-    public String getEncoding() {
+    @Override
+	public String getEncoding() {
         return null; // no custom encoding
     }
 
     /**
      * @see IDocument#getName
      */
-    public String getName() {
+    @Override
+	public String getName() {
         return file.getAbsolutePath().replace(File.separatorChar, IIndexConstants.FILE_SEPARATOR);
     }
 
     /**
      * @see IDocument#getType
      */
-    public String getType() {
+    @Override
+	public String getType() {
         int lastDot = file.getPath().lastIndexOf('.');
         if (lastDot == -1) return ""; //$NON-NLS-1$
         return file.getPath().substring(lastDot + 1);

@@ -273,7 +273,8 @@ public class SqlEditorPanel extends SashForm
         sqlViewForm.setContent(sqlTextViewer.getControl());
 
         sqlTextViewer.getTextWidget().addVerifyKeyListener(new VerifyKeyListener() {
-            public void verifyKey( VerifyEvent event ) {
+            @Override
+			public void verifyKey( VerifyEvent event ) {
                 if ((event.stateMask == SWT.CTRL && event.character == 127)
                     || (event.stateMask == SWT.CTRL && event.character == ' ')) {
                     event.doit = false;
@@ -283,21 +284,25 @@ public class SqlEditorPanel extends SashForm
         });
 
         sqlTextViewer.getTextWidget().addMouseListener(new MouseListener() {
-            public void mouseDoubleClick( MouseEvent event ) {
+            @Override
+			public void mouseDoubleClick( MouseEvent event ) {
                 sqlTextViewer.handleDoubleClick();
             }
 
-            public void mouseUp( MouseEvent event ) {
+            @Override
+			public void mouseUp( MouseEvent event ) {
             }
 
-            public void mouseDown( MouseEvent event ) {
+            @Override
+			public void mouseDown( MouseEvent event ) {
                 captureCaretInfo();
             }
         });
 
         sqlTextViewer.getTextWidget().addExtendedModifyListener(new ExtendedModifyListener() {
             // This method is invoked every time the text changes
-            public void modifyText( ExtendedModifyEvent event ) {
+            @Override
+			public void modifyText( ExtendedModifyEvent event ) {
                 fireEditorInternalEvent(SqlEditorInternalEvent.TEXT_CHANGED);
             }
         });
@@ -397,7 +402,8 @@ public class SqlEditorPanel extends SashForm
     /**
      * handle preference change. This only responds to change in formatting preference.
      */
-    public void propertyChange( PropertyChangeEvent e ) {
+    @Override
+	public void propertyChange( PropertyChangeEvent e ) {
         String propStr = e.getProperty();
         if (propStr != null
             && (propStr.equals(org.teiid.query.ui.UiConstants.Prefs.START_CLAUSES_ON_NEW_LINE) || 
@@ -499,7 +505,8 @@ public class SqlEditorPanel extends SashForm
                          final QueryValidationResult theResult ) {
         if (doResolveAndValidate) {
             final IRunnableWithProgress op = new IRunnableWithProgress() {
-                public void run( final IProgressMonitor theMonitor ) {
+                @Override
+				public void run( final IProgressMonitor theMonitor ) {
                     theMonitor.beginTask(MONITOR_VALIDATING_SQL, 100);
                     theMonitor.worked(20);
 
@@ -581,7 +588,8 @@ public class SqlEditorPanel extends SashForm
         // point the font manager to the current editor's text viewer
         if (threadIsNotDisplayThread()) {
             this.getDisplay().asyncExec(new Runnable() {
-                public void run() {
+                @Override
+				public void run() {
                     setMessage(queryDisplayComponent);
                     // Set the SQL Text displayed.
                     sqlDocument.set(queryDisplayComponent.toDisplayString());
@@ -745,7 +753,8 @@ public class SqlEditorPanel extends SashForm
             if (show != messageShowing) {
                 if (threadIsNotDisplayThread()) {
                     this.getDisplay().asyncExec(new Runnable() {
-                        public void run() {
+                        @Override
+						public void run() {
                             if (show) {
                                 setMaximizedControl(null);
                                 setMessage(currentMessage);
@@ -792,7 +801,8 @@ public class SqlEditorPanel extends SashForm
             // point the font manager to the current editor's text viewer
             if (threadIsNotDisplayThread()) {
                 this.getDisplay().asyncExec(new Runnable() {
-                    public void run() {
+                    @Override
+					public void run() {
                         if (currentMessage != null) {
                             messageArea.setText(currentMessage);
                         } else {
@@ -892,7 +902,8 @@ public class SqlEditorPanel extends SashForm
 
         if (threadIsNotDisplayThread()) {
             this.getDisplay().asyncExec(new Runnable() {
-                public void run() {
+                @Override
+				public void run() {
                     sqlTextViewer.setEditable(status);
                     setQueryTextBackground();
                 }
@@ -2131,48 +2142,59 @@ public class SqlEditorPanel extends SashForm
                                final String dialogTitle,
                                final String message ) {
         shell.getDisplay().syncExec(new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 MessageDialog.openError(shell, dialogTitle, message);
             }
         });
     }
 
-    public void widgetSelected( SelectionEvent e ) {
+    @Override
+	public void widgetSelected( SelectionEvent e ) {
         captureCaretInfo();
     }
 
-    public void widgetDefaultSelected( SelectionEvent e ) {
+    @Override
+	public void widgetDefaultSelected( SelectionEvent e ) {
         captureCaretInfo();
     }
 
-    public void selectionChanged( SelectionChangedEvent e ) {
+    @Override
+	public void selectionChanged( SelectionChangedEvent e ) {
     }
 
-    public void mouseUp( MouseEvent e ) {
+    @Override
+	public void mouseUp( MouseEvent e ) {
         captureCaretInfo();
     }
 
-    public void mouseDown( MouseEvent e ) {
+    @Override
+	public void mouseDown( MouseEvent e ) {
     }
 
-    public void mouseDoubleClick( MouseEvent e ) {
+    @Override
+	public void mouseDoubleClick( MouseEvent e ) {
         captureCaretInfo();
     }
 
-    public void keyPressed( KeyEvent e ) {
+    @Override
+	public void keyPressed( KeyEvent e ) {
     }
 
-    public void keyReleased( KeyEvent e ) {
+    @Override
+	public void keyReleased( KeyEvent e ) {
         captureCaretInfo();
     }
 
     // Handler for DocumentEvents -
     // Whenever the document changes, check vs previous SQL unless already pending changes
     class DocumentChangeListener implements IDocumentListener {
-        public void documentAboutToBeChanged( DocumentEvent event ) {
+        @Override
+		public void documentAboutToBeChanged( DocumentEvent event ) {
         }
 
-        public void documentChanged( DocumentEvent event ) {
+        @Override
+		public void documentChanged( DocumentEvent event ) {
             // --------------------------------------------------------------
             // If this is a validation, fire event regardless of SQL
             // --------------------------------------------------------------

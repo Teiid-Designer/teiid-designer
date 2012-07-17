@@ -16,11 +16,11 @@ import org.eclipse.datatools.connectivity.internal.ui.ProfileUIManager;
 import org.eclipse.datatools.connectivity.ui.wizards.ConnectionProfileDetailsPage;
 import org.eclipse.datatools.connectivity.ui.wizards.ProfileDetailsPropertyPage;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.IPageChangedListener;
 import org.eclipse.jface.dialogs.PageChangedEvent;
 import org.eclipse.jface.preference.PreferenceDialog;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
@@ -126,9 +126,11 @@ public class EditConnectionProfileAction extends Action {
 		// to store for the next time
 		this.mShell.addControlListener(new ControlListener(){
 
+			@Override
 			public void controlMoved(ControlEvent e) {
 			}
 
+			@Override
 			public void controlResized(ControlEvent e) {
 				if (e.getSource() instanceof Shell) {
 					Shell shell = (Shell) e.getSource();
@@ -143,7 +145,7 @@ public class EditConnectionProfileAction extends Action {
 		boolean inReadOnlyRepository = false;
 
 		if (profile.getParentProfile() != null) {
-			IManagedConnection imc = ((IConnectionProfile) profile.getParentProfile())
+			IManagedConnection imc = profile.getParentProfile()
 				.getManagedConnection(IConnectionProfileRepositoryConstants.REPOSITORY_CONNECTION_FACTORY_ID);
 			if (imc != null && imc.isConnected()) {
 				IConnectionProfileRepository repo = (IConnectionProfileRepository) imc
@@ -173,7 +175,7 @@ public class EditConnectionProfileAction extends Action {
 			}
 		}
 		int rtn_val = propertyDialog.open();
-		if (rtn_val == Dialog.OK) {
+		if (rtn_val == Window.OK) {
 			wasFinished = true;
 			saveState();
 		}
@@ -201,6 +203,7 @@ public class EditConnectionProfileAction extends Action {
 		/* (non-Javadoc)
 		 * @see org.eclipse.jface.dialogs.IPageChangedListener#pageChanged(org.eclipse.jface.dialogs.PageChangedEvent)
 		 */
+		@Override
 		public void pageChanged(PageChangedEvent event) {
 			if (event.getSelectedPage() instanceof ConnectionProfileDetailsPage ||
 					event.getSelectedPage() instanceof ProfileDetailsPropertyPage) {

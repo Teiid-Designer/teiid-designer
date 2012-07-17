@@ -138,7 +138,8 @@ public class DiagramViewForm extends Composite {
         setBorderVisible((style & SWT.BORDER) != 0);
 
         addPaintListener(new PaintListener() {
-            public void paintControl( PaintEvent event ) {
+            @Override
+			public void paintControl( PaintEvent event ) {
                 onPaint(event.gc);
             }
         });
@@ -150,7 +151,8 @@ public class DiagramViewForm extends Composite {
         });
 
         addListener(SWT.Dispose, new Listener() {
-            public void handleEvent( Event e ) {
+            @Override
+			public void handleEvent( Event e ) {
                 onDispose();
             }
         });

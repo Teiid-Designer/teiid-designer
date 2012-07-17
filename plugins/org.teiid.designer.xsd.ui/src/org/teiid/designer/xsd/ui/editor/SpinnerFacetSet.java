@@ -101,10 +101,12 @@ public class SpinnerFacetSet extends AbstractFacetSet {
     class MyListener implements ModifyListener, SelectionListener {
         public ComponentSetMonitor mon;
 
-        public void modifyText( ModifyEvent e ) {
+        @Override
+		public void modifyText( ModifyEvent e ) {
             if (mon != null) {
                 sp.getDisplay().asyncExec(new Runnable() {
-                    public void run() {
+                    @Override
+					public void run() {
                         if (!sp.isDisposed()) {
                             int newVal = sp.getSelection();
                             if (val.value != newVal) {
@@ -117,7 +119,8 @@ public class SpinnerFacetSet extends AbstractFacetSet {
             } // endif
         }
 
-        public void widgetSelected( SelectionEvent e ) {
+        @Override
+		public void widgetSelected( SelectionEvent e ) {
             if (mon != null) {
                 val.isInclusive = incl.getSelection();
                 fireUpdate();
@@ -129,7 +132,8 @@ public class SpinnerFacetSet extends AbstractFacetSet {
             mon.update(new ComponentSetEvent(SpinnerFacetSet.this, false, val.cloneValue()));
         }
 
-        public void widgetDefaultSelected( SelectionEvent e ) {
+        @Override
+		public void widgetDefaultSelected( SelectionEvent e ) {
         } // do nothing
     }
 }

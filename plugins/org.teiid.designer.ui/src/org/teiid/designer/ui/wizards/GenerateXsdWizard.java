@@ -200,7 +200,8 @@ public class GenerateXsdWizard extends AbstractWizard implements INewWizard, UiC
      * 
      * @see IWorkbenchWizard#init(IWorkbench, IStructuredSelection)
      */
-    public void init( IWorkbench workbench,
+    @Override
+	public void init( IWorkbench workbench,
                       IStructuredSelection selection ) {
         this.selection = selection;
     }

@@ -162,7 +162,8 @@ public class DelimiterOptionsDialog  extends TitleAreaDialog {
     	this.otherDelimiterText = WidgetFactory.createTextField(theGroup, SWT.NONE);
     	this.otherDelimiterText.addModifyListener(new ModifyListener() {
 
-            public void modifyText( final ModifyEvent event ) {
+            @Override
+			public void modifyText( final ModifyEvent event ) {
             	setDelimiterValue();
             }
         });

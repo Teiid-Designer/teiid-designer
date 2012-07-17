@@ -28,36 +28,50 @@ public class FakeSqlAnnotationAspect implements SqlAnnotationAspect {
     public List keywords;
     public Map tags;
 
-    public String getDescription(EObject eObject) { return description; }
+    @Override
+	public String getDescription(EObject eObject) { return description; }
 
-    public List getKeywords(EObject eObject) { return keywords; }
+    @Override
+	public List getKeywords(EObject eObject) { return keywords; }
 
-    public String getName(EObject eObject) { return name; }
+    @Override
+	public String getName(EObject eObject) { return name; }
 
-    public String getFullName(EObject eObject) { return fullName; }
+    @Override
+	public String getFullName(EObject eObject) { return fullName; }
 
-    public String getNameInSource(EObject eObject) { return nameInSource; }
+    @Override
+	public String getNameInSource(EObject eObject) { return nameInSource; }
 
-    public IPath getPath(EObject eObject) { return path; }
+    @Override
+	public IPath getPath(EObject eObject) { return path; }
 
-    public Object getObjectID(EObject eObject) { return uuid; }
+    @Override
+	public Object getObjectID(EObject eObject) { return uuid; }
 
-    public Object getParentObjectID(EObject eObject) { return parentUuid; }
+    @Override
+	public Object getParentObjectID(EObject eObject) { return parentUuid; }
 
-    public boolean isRecordType(char recordType) { return (recordType == IndexConstants.RECORD_TYPE.ANNOTATION ); }
+    @Override
+	public boolean isRecordType(char recordType) { return (recordType == IndexConstants.RECORD_TYPE.ANNOTATION ); }
 
-    public boolean isQueryable(EObject eObject) { return true; }
+    @Override
+	public boolean isQueryable(EObject eObject) { return true; }
 
-    public String getID() { return null; }
+    @Override
+	public String getID() { return null; }
 
-    public MetamodelEntity getMetamodelEntity() { return null; }
+    @Override
+	public MetamodelEntity getMetamodelEntity() { return null; }
 
-    public Map getTags(EObject eObject) { return tags; }
+    @Override
+	public Map getTags(EObject eObject) { return tags; }
 
     /*
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlAspect#updateObject(org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject)
      */
-    public void updateObject(EObject targetObject, EObject sourceObject) {
+    @Override
+	public void updateObject(EObject targetObject, EObject sourceObject) {
 
     }
 
@@ -65,7 +79,8 @@ public class FakeSqlAnnotationAspect implements SqlAnnotationAspect {
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlAnnotationAspect#getURI(org.eclipse.emf.ecore.EObject)
      * @since 4.2
      */
-    public URI getURI(EObject eObject) {
+    @Override
+	public URI getURI(EObject eObject) {
         return null;
     }
 
@@ -73,7 +88,8 @@ public class FakeSqlAnnotationAspect implements SqlAnnotationAspect {
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlAnnotationAspect#getEClass(org.eclipse.emf.ecore.EObject)
      * @since 4.2
      */
-    public URI getMetaclassURI(EObject eObject) {
+    @Override
+	public URI getMetaclassURI(EObject eObject) {
         return null;
     }
 

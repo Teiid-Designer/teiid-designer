@@ -31,7 +31,8 @@ public class FakeNotificationListener implements ModelWorkspaceNotificationListe
     /* (non-Javadoc)
      * @See org.teiid.designer.core.workspace.ModelWorkspaceNotificationListener#notifyAdd(org.eclipse.emf.common.notify.Notification)
      */
-    public void notifyAdd(ModelWorkspaceNotification notification) {
+    @Override
+	public void notifyAdd(ModelWorkspaceNotification notification) {
         addCnt++;
     }
     
@@ -62,21 +63,24 @@ public class FakeNotificationListener implements ModelWorkspaceNotificationListe
     /* (non-Javadoc)
      * @See org.teiid.designer.core.workspace.ModelWorkspaceNotificationListener#notifyRemove(org.eclipse.emf.common.notify.Notification)
      */
-    public void notifyRemove(ModelWorkspaceNotification notification) {
+    @Override
+	public void notifyRemove(ModelWorkspaceNotification notification) {
         removeCnt++;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.workspace.ModelWorkspaceNotificationListener#notifyMove(org.eclipse.emf.common.notify.Notification)
      */
-    public void notifyMove(ModelWorkspaceNotification notification) {
+    @Override
+	public void notifyMove(ModelWorkspaceNotification notification) {
         moveCnt++;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.workspace.ModelWorkspaceNotificationListener#notifyRename(org.eclipse.emf.common.notify.Notification)
      */
-    public void notifyRename(ModelWorkspaceNotification notification) {
+    @Override
+	public void notifyRename(ModelWorkspaceNotification notification) {
         renameCnt++;
     }
 
@@ -91,13 +95,15 @@ public class FakeNotificationListener implements ModelWorkspaceNotificationListe
      * @see org.teiid.designer.core.workspace.ModelWorkspaceNotificationListener#notifyReloaded(org.teiid.designer.core.workspace.ModelWorkspaceNotification)
      * @since 4.2
      */
-    public void notifyReloaded(ModelWorkspaceNotification notification) {
+    @Override
+	public void notifyReloaded(ModelWorkspaceNotification notification) {
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.emf.edit.provider.INotifyChangedListener#notifyChanged(org.eclipse.emf.common.notify.Notification)
      */
-    public void notifyChanged(Notification notification) {
+    @Override
+	public void notifyChanged(Notification notification) {
 
     }
     
@@ -115,7 +121,8 @@ public class FakeNotificationListener implements ModelWorkspaceNotificationListe
     /* (non-Javadoc)
      * @See org.teiid.designer.core.workspace.ModelWorkspaceNotificationListener#notifyClosing(org.eclipse.emf.common.notify.Notification)
      */
-    public void notifyClosing(ModelWorkspaceNotification notification) {
+    @Override
+	public void notifyClosing(ModelWorkspaceNotification notification) {
         closingCnt++;
 
     }
@@ -123,14 +130,16 @@ public class FakeNotificationListener implements ModelWorkspaceNotificationListe
     /* (non-Javadoc)
      * @See org.teiid.designer.core.workspace.ModelWorkspaceNotificationListener#notifyOpen(org.eclipse.emf.common.notify.Notification)
      */
-    public void notifyOpen(ModelWorkspaceNotification notification) {
+    @Override
+	public void notifyOpen(ModelWorkspaceNotification notification) {
         openCnt++;
     }
     
     /* (non-Javadoc)
      * @See org.teiid.designer.core.workspace.ModelWorkspaceNotificationListener#notifyClean(org.eclipse.core.resources.IProject)
      */
-    public void notifyClean(IProject proj) {
+    @Override
+	public void notifyClean(IProject proj) {
     	
     }
 

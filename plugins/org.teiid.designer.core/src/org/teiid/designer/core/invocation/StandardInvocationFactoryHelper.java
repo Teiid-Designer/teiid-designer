@@ -58,7 +58,8 @@ public class StandardInvocationFactoryHelper implements InvocationFactoryHelper 
      * {@link #READ_ONLY} if the invocation is known to <i>not</i> alter the state, 
      * or {@link #WRITABLE_UNKNOWN} if such a determination could not be made.
      */
-    public int isWrite(final Method method) {
+    @Override
+	public int isWrite(final Method method) {
         
         final String methodName = method.getName();
         if ( methodName.equals("toString") && //$NON-NLS-1$

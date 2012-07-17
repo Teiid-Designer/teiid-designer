@@ -40,7 +40,8 @@ public abstract class MappingClassObjectSqlAspect extends AbstractTransformation
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlAspect#getName(org.eclipse.emf.ecore.EObject)
      */
-    public String getName(EObject eObject) {
+    @Override
+	public String getName(EObject eObject) {
         CoreArgCheck.isInstanceOf(MappingClassObject.class, eObject); 
         MappingClassObject entity = (MappingClassObject) eObject;       
         return entity.getName();
@@ -49,7 +50,8 @@ public abstract class MappingClassObjectSqlAspect extends AbstractTransformation
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlAspect#getNameInSource(org.eclipse.emf.ecore.EObject)
      */
-    public String getNameInSource(EObject eObject) {
+    @Override
+	public String getNameInSource(EObject eObject) {
         CoreArgCheck.isInstanceOf(MappingClassObject.class, eObject); 
         MappingClassObject entity = (MappingClassObject) eObject;       
         return entity.getName();

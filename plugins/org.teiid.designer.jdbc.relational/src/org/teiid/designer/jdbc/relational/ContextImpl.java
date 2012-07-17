@@ -55,7 +55,8 @@ public class ContextImpl implements Context {
      * @param pathInModel the path of the EObject in the model; may not be null
      * @return the model object with the corresponding path; may be null only if no such object was found in the model
      */
-    public EObject findObject( final IPath pathInModel ) {
+    @Override
+	public EObject findObject( final IPath pathInModel ) {
         CoreArgCheck.isNotNull(pathInModel);
 
         // First, attempt to find the object in the map (which means we have already found it) ...
@@ -63,7 +64,8 @@ public class ContextImpl implements Context {
         return obj;
     }
 
-    public EObject addNewObject( final IPath path,
+    @Override
+	public EObject addNewObject( final IPath path,
                                  final EObject obj ) {
         return (EObject)eObjectByIPath.put(path, obj);
     }
@@ -71,63 +73,72 @@ public class ContextImpl implements Context {
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.relational.Context#getResource()
      */
-    public Resource getResource() {
+    @Override
+	public Resource getResource() {
         return this.resource;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.relational.Context#getModelContents()
      */
-    public ModelContents getModelContents() {
+    @Override
+	public ModelContents getModelContents() {
         return this.modelContents;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.relational.Context#getJdbcDatabase()
      */
-    public JdbcDatabase getJdbcDatabase() {
+    @Override
+	public JdbcDatabase getJdbcDatabase() {
         return this.jdbcDatabase;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.relational.Context#getJdbcImportSettings()
      */
-    public JdbcImportSettings getJdbcImportSettings() {
+    @Override
+	public JdbcImportSettings getJdbcImportSettings() {
         return this.importSettings;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.relational.Context#getProgressMonitor()
      */
-    public IProgressMonitor getProgressMonitor() {
+    @Override
+	public IProgressMonitor getProgressMonitor() {
         return this.monitor;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.relational.Context#getErrors()
      */
-    public List getErrors() {
+    @Override
+	public List getErrors() {
         return this.errors;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.relational.Context#getWarnings()
      */
-    public List getWarnings() {
+    @Override
+	public List getWarnings() {
         return this.warnings;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.relational.Context#setVerboseLogging(boolean)
      */
-    public void setVerboseLogging( final boolean verbose ) {
+    @Override
+	public void setVerboseLogging( final boolean verbose ) {
         this.verbose = verbose;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.relational.Context#isVerbose()
      */
-    public boolean isVerbose() {
+    @Override
+	public boolean isVerbose() {
         return verbose;
     }
 }

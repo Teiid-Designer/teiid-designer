@@ -196,7 +196,8 @@ public class GenerateXsdSchemaAction2 extends SortableSelectionAction {
                 // causing more Progress monitors to appear (lots of flashing).
                 final List messgs = msgs;
                 Display.getCurrent().asyncExec(new Runnable() {
-                    public void run() {
+                    @Override
+					public void run() {
                         ListMessageDialog.openInformation(wizard.getShell(), okTitle, null, ok, messgs, null);
                         if (wizard.getWebServiceModel() != null) {
                             // Changed to use method that insures Object editor mode is on
@@ -336,7 +337,8 @@ public class GenerateXsdSchemaAction2 extends SortableSelectionAction {
          * @see org.eclipse.ui.dialogs.ISelectionStatusValidator#validate(java.lang.Object[])
          * @since 4.2
          */
-        public IStatus validate( Object[] theSelection ) {
+        @Override
+		public IStatus validate( Object[] theSelection ) {
             IStructuredSelection selection = new StructuredSelection(theSelection);
 
             IStatus result = STATUS_OK;

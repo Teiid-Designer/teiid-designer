@@ -59,7 +59,8 @@ public class InputImpl extends MessageImpl implements Input {
      * 
      * @generated
      */
-    public Operation getOperation() {
+    @Override
+	public Operation getOperation() {
         if (eContainerFeatureID != WebServicePackage.INPUT__OPERATION) return null;
         return (Operation)eContainer;
     }
@@ -69,7 +70,8 @@ public class InputImpl extends MessageImpl implements Input {
      * 
      * @generated
      */
-    public void setOperation( Operation newOperation ) {
+    @Override
+	public void setOperation( Operation newOperation ) {
         if (newOperation != eContainer || (eContainerFeatureID != WebServicePackage.INPUT__OPERATION && newOperation != null)) {
             if (EcoreUtil.isAncestor(this, newOperation)) throw new IllegalArgumentException(
                                                                                              "Recursive containment not allowed for " + toString()); //$NON-NLS-1$

@@ -53,7 +53,8 @@ public class MappingNotificationListener implements INotifyChangedListener {
     /* (non-Javadoc)
      * @see org.eclipse.emf.edit.provider.INotifyChangedListener#notifyChanged(org.eclipse.emf.common.notify.Notification)
      */
-    public void notifyChanged( Notification notification ) {
+    @Override
+	public void notifyChanged( Notification notification ) {
 
         if (notification instanceof SourcedNotification) {
             if (isValidSource((SourcedNotification)notification) && shouldHandleNotification(notification)) {

@@ -469,7 +469,8 @@ public class ExecutionPlanView extends ViewPart {
          * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
          * @since 5.0.1
          */
-        public Object[] getChildren( Object element ) {
+        @Override
+		public Object[] getChildren( Object element ) {
             if (element instanceof ExecutionPlan) {
                 Object[] result = new Object[1];
                 result[0] = ((ExecutionPlan)element).getRoot();
@@ -491,7 +492,8 @@ public class ExecutionPlanView extends ViewPart {
          * @see org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(java.lang.Object)
          * @since 4.0
          */
-        public boolean hasChildren( Object element ) {
+        @Override
+		public boolean hasChildren( Object element ) {
             Object[] children = ((PlanElement)element).getChildElements();
             return (children.length > 0);
         }

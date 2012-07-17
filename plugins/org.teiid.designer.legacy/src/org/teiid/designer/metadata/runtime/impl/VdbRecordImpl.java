@@ -49,63 +49,72 @@ public class VdbRecordImpl extends AbstractMetadataRecord implements VdbRecord {
     /**
      * @see org.teiid.designer.metadata.runtime.VdbRecord#getDescription()
      */
-    public String getDescription() {
+    @Override
+	public String getDescription() {
         return description;
     }
 
     /**
      * @see org.teiid.designer.metadata.runtime.VdbRecord#getIdentifier()
      */
-    public String getIdentifier() {
+    @Override
+	public String getIdentifier() {
         return identifier;
     }
 
     /**
      * @see org.teiid.designer.metadata.runtime.VdbRecord#getModelIDs()
      */
-    public List getModelIDs() {
+    @Override
+	public List getModelIDs() {
         return modelIDs;
     }
 
     /**
      * @see org.teiid.designer.metadata.runtime.VdbRecord#getProducerName()
      */
-    public String getProducerName() {
+    @Override
+	public String getProducerName() {
         return producerName;
     }
 
     /**
      * @see org.teiid.designer.metadata.runtime.VdbRecord#getProducerVersion()
      */
-    public String getProducerVersion() {
+    @Override
+	public String getProducerVersion() {
         return producerVersion;
     }
 
     /**
      * @see org.teiid.designer.metadata.runtime.VdbRecord#getProvider()
      */
-    public String getProvider() {
+    @Override
+	public String getProvider() {
         return provider;
     }
 
     /**
      * @see org.teiid.designer.metadata.runtime.VdbRecord#getTimeLastChanged()
      */
-    public String getTimeLastChanged() {
+    @Override
+	public String getTimeLastChanged() {
         return timeLastChanged;
     }
 
     /**
      * @see org.teiid.designer.metadata.runtime.VdbRecord#getTimeLastProduced()
      */
-    public String getTimeLastProduced() {
+    @Override
+	public String getTimeLastProduced() {
         return timeLastProduced;
     }
 
     /**
      * @see org.teiid.designer.metadata.runtime.VdbRecord#getVersion()
      */
-    public String getVersion() {
+    @Override
+	public String getVersion() {
         return version;
     }
 

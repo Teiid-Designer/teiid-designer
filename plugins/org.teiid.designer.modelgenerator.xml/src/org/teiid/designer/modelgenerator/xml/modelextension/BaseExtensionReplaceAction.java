@@ -51,7 +51,8 @@ public abstract class BaseExtensionReplaceAction extends Action
         setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_OBJS_ERROR_TSK));
     }
 
-    public int compareTo( final Object o ) {
+    @Override
+	public int compareTo( final Object o ) {
         if (o instanceof String) {
             return getText().compareTo((String)o);
         }
@@ -62,11 +63,14 @@ public abstract class BaseExtensionReplaceAction extends Action
         return 0;
     }
 
-    public abstract ExtensionManager getExtensionManager();
+    @Override
+	public abstract ExtensionManager getExtensionManager();
 
-    public abstract String getExtensionName();
+    @Override
+	public abstract String getExtensionName();
 
-    public boolean isApplicable( final ISelection selection ) {
+    @Override
+	public boolean isApplicable( final ISelection selection ) {
         boolean result = false;
         final List selectedObjs = SelectionUtilities.getSelectedObjects(selection);
         if (!selectedObjs.isEmpty()) {
@@ -204,7 +208,8 @@ public abstract class BaseExtensionReplaceAction extends Action
     /**
      * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction, org.eclipse.jface.viewers.ISelection)
      */
-    public void selectionChanged( final IWorkbenchPart part,
+    @Override
+	public void selectionChanged( final IWorkbenchPart part,
                                   final ISelection selection ) {
         selectedModels = SelectionUtilities.getSelectedObjects(selection);
         boolean enable = true;

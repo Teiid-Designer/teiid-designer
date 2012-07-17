@@ -247,6 +247,7 @@ public class WebServiceItemProviderAdapterFactory extends WebServiceAdapterFacto
 	 * <!-- end-user-doc -->
      * @generated
      */
+	@Override
 	public ComposeableAdapterFactory getRootAdapterFactory() {
         return parentAdapterFactory == null ? this : parentAdapterFactory.getRootAdapterFactory();
     }
@@ -257,6 +258,7 @@ public class WebServiceItemProviderAdapterFactory extends WebServiceAdapterFacto
 	 * <!-- end-user-doc -->
      * @generated
      */
+	@Override
 	public void setParentAdapterFactory(ComposedAdapterFactory parentAdapterFactory) {
         this.parentAdapterFactory = parentAdapterFactory;
     }
@@ -305,6 +307,7 @@ public class WebServiceItemProviderAdapterFactory extends WebServiceAdapterFacto
 	 * <!-- end-user-doc -->
      * @generated
      */
+	@Override
 	public void addListener(INotifyChangedListener notifyChangedListener) {
         changeNotifier.addListener(notifyChangedListener);
     }
@@ -315,6 +318,7 @@ public class WebServiceItemProviderAdapterFactory extends WebServiceAdapterFacto
 	 * <!-- end-user-doc -->
      * @generated
      */
+	@Override
 	public void removeListener(INotifyChangedListener notifyChangedListener) {
         changeNotifier.removeListener(notifyChangedListener);
     }
@@ -325,6 +329,7 @@ public class WebServiceItemProviderAdapterFactory extends WebServiceAdapterFacto
 	 * <!-- end-user-doc -->
      * @generated
      */
+	@Override
 	public void fireNotifyChanged(Notification notification) {
         changeNotifier.fireNotifyChanged(notification);
 
@@ -339,7 +344,8 @@ public class WebServiceItemProviderAdapterFactory extends WebServiceAdapterFacto
      * <!-- end-user-doc -->
      * @generated
      */
-    public void dispose() {
+    @Override
+	public void dispose() {
         if (operationItemProvider != null) operationItemProvider.dispose();
         if (inputItemProvider != null) inputItemProvider.dispose();
         if (outputItemProvider != null) outputItemProvider.dispose();

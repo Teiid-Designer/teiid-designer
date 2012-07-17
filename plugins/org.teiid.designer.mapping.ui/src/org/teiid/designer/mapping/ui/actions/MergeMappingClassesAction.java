@@ -62,7 +62,8 @@ public class MergeMappingClassesAction extends MappingAction {
     private boolean mergeWithProgress() {
         boolean success = false;
         final IRunnableWithProgress op = new IRunnableWithProgress() {
-            public void run( final IProgressMonitor monitor ) {
+            @Override
+			public void run( final IProgressMonitor monitor ) {
                 Object[] mcArray = getOrderedSelectedMappingClasses();
                 printMCArray(mcArray);
                 int nWork = 10 * mcArray.length;

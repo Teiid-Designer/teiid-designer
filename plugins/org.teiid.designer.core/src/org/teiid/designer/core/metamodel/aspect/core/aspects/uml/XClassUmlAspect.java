@@ -37,7 +37,8 @@ public class XClassUmlAspect extends AbstractExtensionUmlAspect implements UmlCl
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodels.aspects.UmlDiagramAspect#getStereotype(java.lang.Object)
      */
-    public String getStereotype(Object eObject) {
+    @Override
+	public String getStereotype(Object eObject) {
         final XClass xclass = assertXClass(eObject);
         final EClass extendedClass = xclass.getExtendedClass();
         if ( extendedClass != null ) {
@@ -52,7 +53,8 @@ public class XClassUmlAspect extends AbstractExtensionUmlAspect implements UmlCl
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodels.aspects.UmlDiagramAspect#setSignature(java.lang.Object, java.lang.String)
      */
-    public IStatus setSignature(Object eObject, String newSignature) {
+    @Override
+	public IStatus setSignature(Object eObject, String newSignature) {
         try {
             final XClass xclass = assertXClass(eObject);
             xclass.setName(newSignature);
@@ -63,7 +65,8 @@ public class XClassUmlAspect extends AbstractExtensionUmlAspect implements UmlCl
         return new Status(IStatus.OK, ModelerCore.PLUGIN_ID, 0, ModelerCore.Util.getString("XClassUmlAspect.Signature_changed"), null); //$NON-NLS-1$
     }
 
-    public Collection getRelationships(Object eObject) {
+    @Override
+	public Collection getRelationships(Object eObject) {
         return new ArrayList();
 //        final XClass xclass = assertXClass(eObject);
 //        Collection results = new ArrayList();
@@ -71,11 +74,13 @@ public class XClassUmlAspect extends AbstractExtensionUmlAspect implements UmlCl
 //        return results;
     }
 
-    public Collection getSupertypes(Object eObject) {
+    @Override
+	public Collection getSupertypes(Object eObject) {
         return new ArrayList();
     }
 
-    public String getSignature(Object eObject, int showMask) {
+    @Override
+	public String getSignature(Object eObject, int showMask) {
         final XClass xclass = assertXClass(eObject);
         StringBuffer result = new StringBuffer();
         switch (showMask) {
@@ -102,14 +107,16 @@ public class XClassUmlAspect extends AbstractExtensionUmlAspect implements UmlCl
         return result.toString();
     }
 
-    public String getEditableSignature(Object eObject) {
+    @Override
+	public String getEditableSignature(Object eObject) {
         return getSignature(eObject, UmlClassifier.SIGNATURE_NAME);
     }
 
     /** 
      * @see org.teiid.designer.core.metamodel.aspect.uml.UmlClassifier#isAbstract(java.lang.Object)
      */
-    public boolean isAbstract(Object eObject) {
+    @Override
+	public boolean isAbstract(Object eObject) {
         return false;
     }
 

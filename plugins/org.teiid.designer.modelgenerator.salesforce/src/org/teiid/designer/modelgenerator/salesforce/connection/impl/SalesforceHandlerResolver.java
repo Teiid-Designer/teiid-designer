@@ -37,7 +37,8 @@ class SalesforceHandlerResolver implements HandlerResolver {
         this.headerHandler = new SalesforceHeaderHandler(sh);
     }
 
-    public List<Handler> getHandlerChain( PortInfo portInfo ) {
+    @Override
+	public List<Handler> getHandlerChain( PortInfo portInfo ) {
         List<Handler> handlerChain = new ArrayList<Handler>();
 
         handlerChain.add(this.headerHandler);
@@ -53,9 +54,10 @@ class SalesforceHandlerResolver implements HandlerResolver {
             this.sh = sh;
         }
 
-        public boolean handleMessage( SOAPMessageContext smc ) {
+        @Override
+		public boolean handleMessage( SOAPMessageContext smc ) {
             QName sessionHeader = new QName("urn:partner.soap.sforce.com", "SessionHeader"); //$NON-NLS-1$ //$NON-NLS-2$
-            QName sessionId = new QName("urn:partner.soap.sforce.com", "sessionId");
+            QName sessionId = new QName("urn:partner.soap.sforce.com", "sessionId"); //$NON-NLS-1$ //$NON-NLS-2$
             try {
                 // If the SessionHeader is null, or the session id is null - do nothing.
                 if (sh != null && sh.getSessionId() != null) {
@@ -76,15 +78,18 @@ class SalesforceHandlerResolver implements HandlerResolver {
             return true;
         }
 
-        public Set getHeaders() {
+        @Override
+		public Set getHeaders() {
             return null;
         }
 
-        public boolean handleFault( SOAPMessageContext context ) {
+        @Override
+		public boolean handleFault( SOAPMessageContext context ) {
             return true;
         }
 
-        public void close( MessageContext context ) {
+        @Override
+		public void close( MessageContext context ) {
         }
     }
 }

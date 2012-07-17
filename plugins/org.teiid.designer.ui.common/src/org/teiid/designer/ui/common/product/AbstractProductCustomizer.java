@@ -178,7 +178,8 @@ public abstract class AbstractProductCustomizer implements IProductCustomizer,
      * @see org.teiid.designer.ui.common.product.IProductCustomizer#supports(org.teiid.designer.ui.common.product.IProductContext)
      * @since 4.3
      */
-    public boolean supports(IProductContext theContext) {
+    @Override
+	public boolean supports(IProductContext theContext) {
         boolean result = true;
         
         Collection values = (Collection)this.supportedMap.get(theContext);
@@ -196,7 +197,8 @@ public abstract class AbstractProductCustomizer implements IProductCustomizer,
      * @see org.teiid.designer.ui.common.product.IProductCustomizer#supports(org.teiid.designer.ui.common.product.IProductContext, java.lang.Object)
      * @since 4.3
      */
-    public boolean supports(IProductContext theContext,
+    @Override
+	public boolean supports(IProductContext theContext,
                             Object theValue) {
         boolean result = true;
         

@@ -53,21 +53,24 @@ public class ModelTransformationsImpl extends NonOpenableModelWorkspaceItemImpl 
     /**
      * @see org.teiid.designer.core.workspace.ModelWorkspaceItem#getResource()
      */
-    public IResource getResource() {
+    @Override
+	public IResource getResource() {
         return this.getModelResource().getResource();
     }
 
     /**
      * @see org.teiid.designer.core.workspace.ModelWorkspaceItem#getUnderlyingResource()
      */
-    public IResource getUnderlyingResource() {
+    @Override
+	public IResource getUnderlyingResource() {
         return getResource();
     }
 
     /**
      * @see org.teiid.designer.core.workspace.ModelWorkspaceItem#getPath()
      */
-    public IPath getPath() {
+    @Override
+	public IPath getPath() {
         return this.getModelResource().getPath();
     }
 
@@ -87,42 +90,48 @@ public class ModelTransformationsImpl extends NonOpenableModelWorkspaceItemImpl 
     /**
      * @see org.teiid.designer.core.workspace.ModelResource#getDiagrams(org.eclipse.emf.ecore.EObject)
      */
-    public List getTransformations( final EObject target ) throws ModelWorkspaceException {
+    @Override
+	public List getTransformations( final EObject target ) throws ModelWorkspaceException {
         return getModelBuffer().getModelContents().getTransformations(target);
     }
 
     /**
      * @see org.teiid.designer.core.workspace.ModelResource#getDiagrams(org.eclipse.emf.ecore.EObject)
      */
-    public List getTransformations() throws ModelWorkspaceException {
+    @Override
+	public List getTransformations() throws ModelWorkspaceException {
         return getModelBuffer().getModelContents().getTransformations();
     }
 
     /**
      * @see org.teiid.designer.core.workspace.ModelResource#createNewDiagram(org.eclipse.emf.ecore.EObject, boolean)
      */
-    public SqlTransformationMappingRoot createNewSqlTransformation( final EObject target ) throws ModelWorkspaceException {
+    @Override
+	public SqlTransformationMappingRoot createNewSqlTransformation( final EObject target ) throws ModelWorkspaceException {
         return ModelResourceContainerFactory.createNewSqlTransformationMappingRoot(target, getModelResource().getEmfResource());
     }
 
     /**
      * @see org.teiid.designer.core.workspace.ModelResource#createNewDiagram(org.eclipse.emf.ecore.EObject, boolean)
      */
-    public FragmentMappingRoot createNewFragmentMapping( final EObject target ) throws ModelWorkspaceException {
+    @Override
+	public FragmentMappingRoot createNewFragmentMapping( final EObject target ) throws ModelWorkspaceException {
         return ModelResourceContainerFactory.createNewFragmentMappingRoot(target, getModelResource().getEmfResource());
     }
 
     /**
      * @see org.teiid.designer.core.workspace.ModelResource#createNewDiagram(org.eclipse.emf.ecore.EObject, boolean)
      */
-    public TreeMappingRoot createNewTreeMapping( final EObject target ) throws ModelWorkspaceException {
+    @Override
+	public TreeMappingRoot createNewTreeMapping( final EObject target ) throws ModelWorkspaceException {
         return ModelResourceContainerFactory.createNewTreeMappingRoot(target, getModelResource().getEmfResource());
     }
 
     /**
      * @see org.teiid.designer.core.workspace.ModelResource#createNewDiagram(org.eclipse.emf.ecore.EObject, boolean)
      */
-    public TransformationMappingRoot addNewTransformation( final EObject target,
+    @Override
+	public TransformationMappingRoot addNewTransformation( final EObject target,
                                                            final TransformationMappingRoot newMappingRoot )
         throws ModelWorkspaceException {
 
@@ -143,7 +152,8 @@ public class ModelTransformationsImpl extends NonOpenableModelWorkspaceItemImpl 
     /**
      * @see org.teiid.designer.core.workspace.ModelDiagrams#delete(org.teiid.designer.metamodels.diagram.Diagram)
      */
-    public boolean delete( final TransformationMappingRoot transformation ) {
+    @Override
+	public boolean delete( final TransformationMappingRoot transformation ) {
         return ModelResourceContainerFactory.deleteTransformation(transformation);
     }
 

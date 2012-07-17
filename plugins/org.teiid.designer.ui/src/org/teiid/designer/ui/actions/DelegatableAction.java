@@ -86,7 +86,8 @@ public class DelegatableAction extends Action
      * <code>selectionChanged(IStructuredSelection)</code> when the selection is
      * a structured one. Subclasses may extend this method to react to the change.
      */
-    public void selectionChanged(IWorkbenchPart part, ISelection sel) {
+    @Override
+	public void selectionChanged(IWorkbenchPart part, ISelection sel) {
         selectionChanged( sel );
     }
         

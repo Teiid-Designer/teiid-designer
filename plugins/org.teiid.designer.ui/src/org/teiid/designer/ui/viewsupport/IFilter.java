@@ -27,7 +27,8 @@ public interface IFilter {
              * @see org.teiid.designer.ui.viewsupport.IFilter#passes(java.lang.Object)
              * @since 4.3
              */
-            public boolean passes(final Object object) {
+            @Override
+			public boolean passes(final Object object) {
                 return false;
             }
         };
@@ -42,7 +43,8 @@ public interface IFilter {
              * @see org.teiid.designer.ui.viewsupport.IFilter#passes(java.lang.Object)
              * @since 4.3
              */
-            public boolean passes(final Object object) {
+            @Override
+			public boolean passes(final Object object) {
                 return true;
             }
         };

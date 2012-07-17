@@ -42,7 +42,8 @@ public class XmiResourceValidator implements ResourceValidator {
      * @see org.teiid.designer.core.builder.ResourceValidator#isValidatorForObject(java.lang.Object)
      * @since 4.2
      */
-    public boolean isValidatorForObject(final Object obj) {
+    @Override
+	public boolean isValidatorForObject(final Object obj) {
         if (obj instanceof IResource) {
             return this.isValidatorForResource((IResource)obj);
             
@@ -58,7 +59,8 @@ public class XmiResourceValidator implements ResourceValidator {
      * @see org.teiid.designer.core.builder.ResourceValidator#validate(org.eclipse.core.runtime.IProgressMonitor, java.lang.Object, org.teiid.designer.core.validation.ValidationContext)
      * @since 4.2
      */
-    public void validate(final IProgressMonitor monitor, final Object obj, final ValidationContext context) throws ModelerCoreException {
+    @Override
+	public void validate(final IProgressMonitor monitor, final Object obj, final ValidationContext context) throws ModelerCoreException {
         
         if(!isValidatorForObject(obj) ){
             final Object[] params = new Object[] {this.getClass().getName(),(obj != null ? obj.getClass().getName() : null)};
@@ -95,7 +97,8 @@ public class XmiResourceValidator implements ResourceValidator {
      * @see org.teiid.designer.core.builder.ResourceValidator#addMarkers(org.teiid.designer.core.validation.ValidationContext, org.eclipse.core.resources.IResource)
      * @since 4.2
      */
-    public void addMarkers(final ValidationContext context, final IResource iResource) throws ModelerCoreException {
+    @Override
+	public void addMarkers(final ValidationContext context, final IResource iResource) throws ModelerCoreException {
         if (context != null && context.hasResults()) {
             final List results = context.getValidationResults();
             try {
@@ -138,14 +141,16 @@ public class XmiResourceValidator implements ResourceValidator {
     /**
      * @see org.teiid.designer.core.builder.ResourceValidator#isValidatorForResource(org.eclipse.core.resources.IResource)
      */
-    public boolean isValidatorForResource(IResource iResource) {
+    @Override
+	public boolean isValidatorForResource(IResource iResource) {
          return (ModelUtil.isModelFile(iResource) && !ModelUtil.isXsdFile(iResource) );
     }
 
     /**
      * @see org.teiid.designer.core.builder.ResourceValidator#validate(org.eclipse.emf.ecore.resource.Resource, org.eclipse.core.resources.IResource, org.teiid.designer.core.validation.ValidationContext)
      */
-    public void validate(final IProgressMonitor progressMonitor, final Resource resource, 
+    @Override
+	public void validate(final IProgressMonitor progressMonitor, final Resource resource, 
                          final IResource iResource, final ValidationContext context) throws ModelerCoreException {
         
         final IProgressMonitor monitor = progressMonitor != null ? progressMonitor : new NullProgressMonitor();        
@@ -179,7 +184,8 @@ public class XmiResourceValidator implements ResourceValidator {
      * @see org.teiid.designer.core.builder.ResourceValidator#validationStarted(java.util.Collection, org.teiid.designer.core.validation.ValidationContext)
      * @since 4.3
      */
-    public void validationStarted(final Collection resources, 
+    @Override
+	public void validationStarted(final Collection resources, 
                                   final ValidationContext context) {
     }
     
@@ -187,7 +193,8 @@ public class XmiResourceValidator implements ResourceValidator {
      * @see org.teiid.designer.core.builder.ResourceValidator#validationEnded(org.teiid.designer.core.validation.ValidationContext)
      * @since 4.3
      */
-    public void validationEnded(final ValidationContext context) {
+    @Override
+	public void validationEnded(final ValidationContext context) {
     }
     
     // ==================================================================================

@@ -35,63 +35,72 @@ public class DatabaseInfoImpl implements DatabaseInfo {
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.DatabaseInfo#getProductName()
      */
-    public String getProductName() {
+    @Override
+	public String getProductName() {
         return this.productName;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.DatabaseInfo#getProductVersion()
      */
-    public String getProductVersion() {
+    @Override
+	public String getProductVersion() {
         return this.productVersion;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.DatabaseInfo#getMajorVersion()
      */
-    public int getDriverMajorVersion() {
+    @Override
+	public int getDriverMajorVersion() {
         return this.driverMajorVersion;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.DatabaseInfo#getMinorVersion()
      */
-    public int getDriverMinorVersion() {
+    @Override
+	public int getDriverMinorVersion() {
         return this.driverMinorVersion;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.DatabaseInfo#getDriverName()
      */
-    public String getDriverName() {
+    @Override
+	public String getDriverName() {
         return this.driverName;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.DatabaseInfo#getDriverVersion()
      */
-    public String getDriverVersion() {
+    @Override
+	public String getDriverVersion() {
         return this.driverVersion;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.DatabaseInfo#getDatabaseURL()
      */
-    public String getDatabaseURL() {
+    @Override
+	public String getDatabaseURL() {
         return this.databaseURL;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.DatabaseInfo#getUserName()
      */
-    public String getUserName() {
+    @Override
+	public String getUserName() {
         return this.userName;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.DatabaseInfo#isReadOnly()
      */
-    public boolean isReadOnly() {
+    @Override
+	public boolean isReadOnly() {
         return this.readOnly;
     }
 

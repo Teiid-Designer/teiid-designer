@@ -18,6 +18,7 @@ public interface SchemaObject {
 
 	public abstract SchemaObject copy(ISchemaModelCopyTraversalContext ctx);
 
+	@Override
 	public abstract boolean equals(Object obj);
 
 	public abstract void addAttribute(Column col);
@@ -44,6 +45,7 @@ public interface SchemaObject {
 
 	public abstract List getAttributes();
 
+	@Override
 	public abstract String toString();
 
 	public abstract void setMustBeQualified();

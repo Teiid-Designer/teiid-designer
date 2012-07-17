@@ -70,7 +70,8 @@ public class ModelObjectTableSelectionManager extends SelectionProvider implemen
      * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
      * @since 4.0
      */
-    public void selectionChanged(final SelectionChangedEvent event) {
+    @Override
+	public void selectionChanged(final SelectionChangedEvent event) {
         if (this.isSelecting) {
             return;
         }

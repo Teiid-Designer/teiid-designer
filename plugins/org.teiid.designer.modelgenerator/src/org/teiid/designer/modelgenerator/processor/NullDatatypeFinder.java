@@ -19,28 +19,32 @@ public class NullDatatypeFinder implements DatatypeFinder {
     /**
      * @See org.teiid.designer.modelgenerator.DatatypeFinder#findDatatype(java.lang.String)
      */
-    public EObject findDatatype( String name ) {
+    @Override
+	public EObject findDatatype( String name ) {
         return null;
     }
 
     /**
      * @See org.teiid.designer.modelgenerator.DatatypeFinder#findDatatype(org.eclipse.emf.common.util.URI)
      */
-    public EObject findDatatype( URI uri ) {
+    @Override
+	public EObject findDatatype( URI uri ) {
         return null;
     }
 
     /**
      * @See org.teiid.designer.modelgenerator.DatatypeFinder#findAllDatatypes(java.lang.String)
      */
-    public List findAllDatatypes( String name ) {
+    @Override
+	public List findAllDatatypes( String name ) {
         return null;
     }
 
     /**
      * @See org.teiid.designer.modelgenerator.DatatypeFinder#findAllDatatypes(org.eclipse.emf.common.util.URI)
      */
-    public List findAllDatatypes( URI uri ) {
+    @Override
+	public List findAllDatatypes( URI uri ) {
         return null;
     }
 

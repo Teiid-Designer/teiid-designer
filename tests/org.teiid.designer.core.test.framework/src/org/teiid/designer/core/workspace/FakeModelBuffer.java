@@ -47,7 +47,8 @@ public class FakeModelBuffer implements ModelBuffer {
     /* (non-Javadoc)
      * @See org.teiid.designer.core.ModelBuffer#close()
      */
-    public void close() {
+    @Override
+	public void close() {
         if (ModelerCore.DEBUG_MODEL_WORKSPACE) {
             ModelerCore.Util.log("Closing FakeModelBuffer " + key); //$NON-NLS-1$
         }
@@ -57,49 +58,56 @@ public class FakeModelBuffer implements ModelBuffer {
     /* (non-Javadoc)
      * @See org.teiid.designer.core.ModelBuffer#getOwner()
      */
-    public Openable getOwner() {
+    @Override
+	public Openable getOwner() {
         return null;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.ModelBuffer#getUnderlyingResource()
      */
-    public IResource getUnderlyingResource() {
+    @Override
+	public IResource getUnderlyingResource() {
         return null;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.ModelBuffer#getEmfResource()
      */
-    public Resource getEmfResource() {
+    @Override
+	public Resource getEmfResource() {
         return null;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.ModelBuffer#hasUnsavedChanges()
      */
-    public boolean hasUnsavedChanges() {
+    @Override
+	public boolean hasUnsavedChanges() {
         return changed;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.ModelBuffer#isClosed()
      */
-    public boolean isClosed() {
+    @Override
+	public boolean isClosed() {
         return this.closed;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.ModelBuffer#isReadOnly()
      */
-    public boolean isReadOnly() {
+    @Override
+	public boolean isReadOnly() {
         return this.readonly;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.ModelBuffer#save(org.eclipse.core.runtime.IProgressMonitor, boolean)
      */
-    public void save( IProgressMonitor progress,
+    @Override
+	public void save( IProgressMonitor progress,
                       boolean force ) {
         if (ModelerCore.DEBUG_MODEL_WORKSPACE) {
             ModelerCore.Util.log("Saving FakeModelBuffer" + key); //$NON-NLS-1$
@@ -110,14 +118,16 @@ public class FakeModelBuffer implements ModelBuffer {
     /**
      * @see org.teiid.designer.core.workspace.ModelBuffer#unload()
      */
-    public void unload() {
+    @Override
+	public void unload() {
     }
 
     /**
      * @see org.teiid.designer.core.workspace.ModelBuffer#getLastModificationStamp()
      * @since 4.2
      */
-    public long getLastModificationStamp() {
+    @Override
+	public long getLastModificationStamp() {
         return 0;
     }
 
@@ -125,7 +135,8 @@ public class FakeModelBuffer implements ModelBuffer {
      * @see org.teiid.designer.core.workspace.ModelBuffer#isInProcessOfSaving()
      * @since 4.2
      */
-    public boolean isInProcessOfSaving() {
+    @Override
+	public boolean isInProcessOfSaving() {
         return false;
     }
 
@@ -140,7 +151,8 @@ public class FakeModelBuffer implements ModelBuffer {
      * @see org.teiid.designer.core.workspace.ModelBuffer#getLastFileSize()
      * @since 4.2
      */
-    public long getLastFileSize() {
+    @Override
+	public long getLastFileSize() {
         return 0;
     }
 
@@ -148,7 +160,8 @@ public class FakeModelBuffer implements ModelBuffer {
      * @see org.teiid.designer.core.workspace.ModelBuffer#getLastChecksum()
      * @since 4.2
      */
-    public long getLastChecksum() {
+    @Override
+	public long getLastChecksum() {
         return 0;
     }
 
@@ -156,7 +169,8 @@ public class FakeModelBuffer implements ModelBuffer {
      * @see org.teiid.designer.core.workspace.ModelBuffer#hasErrors()
      * @since 4.2
      */
-    public boolean hasErrors() {
+    @Override
+	public boolean hasErrors() {
         return false;
     }
 
@@ -164,7 +178,8 @@ public class FakeModelBuffer implements ModelBuffer {
      * @see org.teiid.designer.core.workspace.ModelBuffer#getErrors()
      * @since 4.2
      */
-    public IStatus getErrors() {
+    @Override
+	public IStatus getErrors() {
         return null;
     }
 

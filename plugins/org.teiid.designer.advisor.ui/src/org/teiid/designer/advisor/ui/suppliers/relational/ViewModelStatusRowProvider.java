@@ -50,7 +50,7 @@ public class ViewModelStatusRowProvider  implements IStatusRowProvider {
      */
     @Override
     public String getImageTooltip( IStatus status ) {
-        return "View Models Tooltip";
+        return "View Models Tooltip"; //$NON-NLS-1$
     }
 
     /**
@@ -70,7 +70,7 @@ public class ViewModelStatusRowProvider  implements IStatusRowProvider {
      */
     @Override
     public String getLinkTooltip( IStatus status ) {
-        return "View Models Tooltip";
+        return "View Models Tooltip"; //$NON-NLS-1$
     }
 
     /**
@@ -80,7 +80,7 @@ public class ViewModelStatusRowProvider  implements IStatusRowProvider {
      */
     @Override
     public String getText( IStatus status ) {
-        return "View Models Text";
+        return "View Models Text"; //$NON-NLS-1$
     }
 
     /**
@@ -90,7 +90,7 @@ public class ViewModelStatusRowProvider  implements IStatusRowProvider {
      */
     @Override
     public String getTextTooltip( IStatus status ) {
-        return "View Models Text Tooltip";
+        return "View Models Text Tooltip"; //$NON-NLS-1$
     }
 
 }

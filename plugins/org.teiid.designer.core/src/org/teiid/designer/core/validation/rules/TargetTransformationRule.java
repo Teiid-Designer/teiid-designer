@@ -38,7 +38,8 @@ public class TargetTransformationRule implements ResourceValidationRule {
     /* (non-Javadoc)
      * @See org.teiid.designer.core.validation.ResourceValidationRule#validate(org.eclipse.emf.ecore.resource.Resource, org.teiid.designer.core.validation.ValidationContext)
      */
-    public void validate( final Resource resource,
+    @Override
+	public void validate( final Resource resource,
                           final ValidationContext context ) {
         CoreArgCheck.isNotNull(resource);
         CoreArgCheck.isNotNull(context);

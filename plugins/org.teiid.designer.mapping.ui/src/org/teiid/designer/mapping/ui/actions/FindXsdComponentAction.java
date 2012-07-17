@@ -84,7 +84,8 @@ public class FindXsdComponentAction extends MappingAction {
             final EObject xsdComponent = ModelMapperFactory.getXsdComponent(eObject);
             if( xsdComponent != null ) {
                 Display.getCurrent().asyncExec(new Runnable() {
-                    public void run() {
+                    @Override
+					public void run() {
                         try {
                             final ISelection selection = new StructuredSelection(xsdComponent);
                             String viewId = ProductCustomizerMgr.getInstance().getProductCharacteristics().getPrimaryNavigationViewId();

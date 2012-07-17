@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -45,11 +46,13 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchWizard;
 import org.teiid.core.util.I18nUtil;
 import org.teiid.designer.core.container.Container;
 import org.teiid.designer.roles.Crud;
 import org.teiid.designer.roles.DataRole;
 import org.teiid.designer.roles.Permission;
+import org.teiid.designer.ui.common.InternalUiConstants.Widgets;
 import org.teiid.designer.ui.common.text.StyledTextEditor;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.widget.Dialog;
@@ -57,7 +60,6 @@ import org.teiid.designer.ui.common.widget.IListPanelController;
 import org.teiid.designer.ui.common.widget.ListPanel;
 import org.teiid.designer.ui.common.widget.ListPanelAdapter;
 import org.teiid.designer.ui.common.wizard.AbstractWizard;
-
 
 public class NewDataRoleWizard extends AbstractWizard {
     private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(NewDataRoleWizard.class);
@@ -268,7 +270,7 @@ public class NewDataRoleWizard extends AbstractWizard {
                 } else {
                     enableEdit = true;
                 }
-                mappedRolesPanel.getButton(ListPanel.EDIT_BUTTON).setEnabled(enableEdit);
+                mappedRolesPanel.getButton(Widgets.EDIT_BUTTON).setEnabled(enableEdit);
             }
         };
         mappedRolesPanel = new ListPanel(mainPanel, getString("dataRolesGroupLabel"), ctrlr, SWT.H_SCROLL | SWT.V_SCROLL, 2); //$NON-NLS-1$
@@ -279,8 +281,8 @@ public class NewDataRoleWizard extends AbstractWizard {
         rolesGridData.minimumHeight = 120;
         rolesGridData.grabExcessVerticalSpace = true;
         mappedRolesPanel.setLayoutData(rolesGridData);
-        mappedRolesPanel.getButton(ListPanel.EDIT_BUTTON).setEnabled(false);
-        mappedRolesPanel.getButton(ListPanel.REMOVE_BUTTON).setEnabled(false);
+        mappedRolesPanel.getButton(Widgets.EDIT_BUTTON).setEnabled(false);
+        mappedRolesPanel.getButton(Widgets.REMOVE_BUTTON).setEnabled(false);
 
         mappedRolesPanel.setEnabled(!anyAuthentication);
 
@@ -523,7 +525,8 @@ public class NewDataRoleWizard extends AbstractWizard {
                 }
                 nameText.setSelection(0);
                 nameText.addModifyListener(new ModifyListener() {
-                    public void modifyText( final ModifyEvent event ) {
+                    @Override
+					public void modifyText( final ModifyEvent event ) {
                         handleModifyText(nameText);
                     }
                 });

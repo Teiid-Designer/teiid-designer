@@ -13,12 +13,13 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+
 import org.teiid.core.types.DataTypeManager;
 import org.teiid.designer.udf.UdfManager;
 import org.teiid.language.SQLConstants;
 import org.teiid.query.function.FunctionForm;
 import org.teiid.query.function.FunctionLibrary;
-import org.teiid.query.ui.UiPlugin;
+import org.teiid.query.ui.UiConstants;
 
 /**
  * This class provides static Lists of SQL syntax words. RESERVED_WORDS contains reserved SQL words, FUNCTION_NAMES contains
@@ -58,7 +59,7 @@ public class SqlSyntax {
             }
 			Collections.sort(RESERVED_WORDS);
 		} catch (Exception e) {
-			UiPlugin.Util.log(e);
+			UiConstants.Util.log(e);
 		}
 
         Set allFunctionNames = new HashSet();
@@ -85,7 +86,7 @@ public class SqlSyntax {
 			FUNCTION_NAMES.addAll(allFunctionNames);
 			Collections.sort(FUNCTION_NAMES);
 		} catch (Exception e) {
-			UiPlugin.Util.log(e);
+			UiConstants.Util.log(e);
 		}
 
         // DATATYPE NAMES List
@@ -103,7 +104,7 @@ public class SqlSyntax {
 			}
 			Collections.sort(DATATYPE_NAMES);
 		} catch (Exception e) {
-			UiPlugin.Util.log(e);
+			UiConstants.Util.log(e);
 		}
 
         // ALL WORDS List

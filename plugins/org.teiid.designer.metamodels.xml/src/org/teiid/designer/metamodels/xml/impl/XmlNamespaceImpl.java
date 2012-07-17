@@ -98,7 +98,8 @@ public class XmlNamespaceImpl extends XmlDocumentEntityImpl implements XmlNamesp
      * <!-- end-user-doc -->
      * @generated
      */
-    public String getPrefix() {
+    @Override
+	public String getPrefix() {
         return prefix;
     }
 
@@ -107,7 +108,8 @@ public class XmlNamespaceImpl extends XmlDocumentEntityImpl implements XmlNamesp
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setPrefix(String newPrefix) {
+    @Override
+	public void setPrefix(String newPrefix) {
         String oldPrefix = prefix;
         prefix = newPrefix;
         if (eNotificationRequired())
@@ -119,7 +121,8 @@ public class XmlNamespaceImpl extends XmlDocumentEntityImpl implements XmlNamesp
      * <!-- end-user-doc -->
      * @generated
      */
-    public String getUri() {
+    @Override
+	public String getUri() {
         return uri;
     }
 
@@ -128,7 +131,8 @@ public class XmlNamespaceImpl extends XmlDocumentEntityImpl implements XmlNamesp
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setUri(String newUri) {
+    @Override
+	public void setUri(String newUri) {
         String oldUri = uri;
         uri = newUri;
         if (eNotificationRequired())
@@ -140,7 +144,8 @@ public class XmlNamespaceImpl extends XmlDocumentEntityImpl implements XmlNamesp
      * <!-- end-user-doc -->
      * @generated
      */
-    public XmlElement getElement() {
+    @Override
+	public XmlElement getElement() {
         if (eContainerFeatureID != XmlDocumentPackage.XML_NAMESPACE__ELEMENT) return null;
         return (XmlElement)eContainer;
     }
@@ -150,7 +155,8 @@ public class XmlNamespaceImpl extends XmlDocumentEntityImpl implements XmlNamesp
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setElement(XmlElement newElement) {
+    @Override
+	public void setElement(XmlElement newElement) {
         if (newElement != eContainer || (eContainerFeatureID != XmlDocumentPackage.XML_NAMESPACE__ELEMENT && newElement != null)) {
             if (EcoreUtil.isAncestor(this, newElement))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$

@@ -104,7 +104,8 @@ public class GenerateXsdSchemaAction extends ActionDelegate implements
                 // causing more Progress monitors to appear (lots of flashing).
                 final List messgs = msgs;
                 Display.getCurrent().asyncExec(new Runnable() {  
-                    public void run() {   
+                    @Override
+					public void run() {   
                             ListMessageDialog.openInformation(wizard.getShell(), okTitle, null, ok, messgs , null);
                     }
                 });                          
@@ -167,7 +168,8 @@ public class GenerateXsdSchemaAction extends ActionDelegate implements
      * 
      * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#init(org.eclipse.ui.IWorkbenchWindow)
      */
-    public void init(IWorkbenchWindow window) {
+    @Override
+	public void init(IWorkbenchWindow window) {
     }
 
     /*
@@ -175,7 +177,8 @@ public class GenerateXsdSchemaAction extends ActionDelegate implements
      * 
      * @see org.eclipse.ui.IViewActionDelegate#init(org.eclipse.ui.IViewPart)
      */
-    public void init(IViewPart view) {
+    @Override
+	public void init(IViewPart view) {
     }
     
 }

@@ -26,7 +26,8 @@ public class NullModelSelector implements ModelSelector {
     private final URI uri;
     private final ModelAnnotation modelAnnotation;
     private final ModelHelper modelHelper = new ModelHelper() {
-        public Annotation getAnnotation( EObject eObject ) {
+        @Override
+		public Annotation getAnnotation( EObject eObject ) {
             return null;
         }
     };
@@ -52,77 +53,88 @@ public class NullModelSelector implements ModelSelector {
     /**
      * @see org.teiid.designer.compare.selector.ModelSelector#open()
      */
-    public void open() {
+    @Override
+	public void open() {
 
     }
 
     /**
      * @see org.teiid.designer.compare.selector.ModelSelector#close()
      */
-    public void close() {
+    @Override
+	public void close() {
 
     }
 
     /**
      * @see org.teiid.designer.compare.selector.ModelSelector#getLabel()
      */
-    public String getLabel() {
+    @Override
+	public String getLabel() {
         return this.label;
     }
 
     /**
      * @see org.teiid.designer.compare.selector.ModelSelector#setLabel(java.lang.String)
      */
-    public void setLabel( final String label ) {
+    @Override
+	public void setLabel( final String label ) {
         this.label = label;
     }
 
     /**
      * @see org.teiid.designer.compare.selector.ModelSelector#getRootObjects()
      */
-    public List getRootObjects() {
+    @Override
+	public List getRootObjects() {
         return this.rootObjects;
     }
 
     /**
      * @see org.teiid.designer.compare.selector.ModelSelector#getUri()
      */
-    public URI getUri() {
+    @Override
+	public URI getUri() {
         return this.uri;
     }
 
     /**
      * @see org.teiid.designer.compare.selector.ModelSelector#getModelAnnotation()
      */
-    public ModelAnnotation getModelAnnotation() {
+    @Override
+	public ModelAnnotation getModelAnnotation() {
         return this.modelAnnotation;
     }
 
     /**
      * @see org.teiid.designer.compare.selector.ModelSelector#getModelHelper()
      */
-    public ModelHelper getModelHelper() {
+    @Override
+	public ModelHelper getModelHelper() {
         return this.modelHelper;
     }
 
     /**
      * @see org.teiid.designer.compare.selector.ModelSelector#getModelContents()
      */
-    public ModelContents getModelContents() {
+    @Override
+	public ModelContents getModelContents() {
         return this.contents;
     }
 
     /**
      * @see org.teiid.designer.compare.selector.ModelSelector#addRootObjects(java.util.List)
      */
-    public void addRootObjects( List newRoots ) {
+    @Override
+	public void addRootObjects( List newRoots ) {
         this.rootObjects.addAll(newRoots);
     }
 
     /**
      * @see org.teiid.designer.compare.selector.ModelSelector#addRootObjects(java.util.List, int)
      */
-    public void addRootObjects( List newRoots,
+    @Override
+	public void addRootObjects( List newRoots,
                                 int startingIndex ) {
         this.rootObjects.addAll(startingIndex, newRoots);
     }
@@ -130,7 +142,8 @@ public class NullModelSelector implements ModelSelector {
     /**
      * @see org.teiid.designer.compare.selector.ModelSelector#rebuildModelImports()
      */
-    public void rebuildModelImports() {
+    @Override
+	public void rebuildModelImports() {
         // do nothing
     }
 

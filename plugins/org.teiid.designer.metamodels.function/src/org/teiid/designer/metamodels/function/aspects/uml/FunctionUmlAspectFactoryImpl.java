@@ -19,7 +19,8 @@ import org.teiid.designer.metamodels.function.FunctionPlugin;
  * RelationalUmlAspectFactoryImpl
  */
 public class FunctionUmlAspectFactoryImpl implements MetamodelAspectFactory {
-    public MetamodelAspect create(EClassifier classifier, MetamodelEntity entity) {
+    @Override
+	public MetamodelAspect create(EClassifier classifier, MetamodelEntity entity) {
         switch (classifier.getClassifierID()) {
             case FunctionPackage.FUNCTION:            return null;      // abstract class
             case FunctionPackage.SCALAR_FUNCTION:     return new ScalarFunctionAspect(entity);

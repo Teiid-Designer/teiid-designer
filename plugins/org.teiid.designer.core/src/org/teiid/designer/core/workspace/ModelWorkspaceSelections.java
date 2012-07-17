@@ -31,7 +31,8 @@ public class ModelWorkspaceSelections implements TreeSelection {
      * A reusable filter that shows everything in the view.
      */
     public static final ModelWorkspaceSelectionFilter ALL_SELECTABLE_FILTER = new ModelWorkspaceSelectionFilter() {
-        public boolean isSelectable(final Object element) {
+        @Override
+		public boolean isSelectable(final Object element) {
             return true;
         }
     };
@@ -202,7 +203,8 @@ public class ModelWorkspaceSelections implements TreeSelection {
      * @return the selection mode; one of {@link #SELECTED}, {@link #UNSELECTED},
      * {@link #PARTIALLY_SELECTED} or {@link #UNKNOWN_SELECTION}.
      */
-    public int getSelectionMode( final Object modelObject ) {
+    @Override
+	public int getSelectionMode( final Object modelObject ) {
         CoreArgCheck.isNotNull(modelObject);
         assertNonNullView();
         final IPath path = this.modelWorkspaceView.getPath(modelObject);
@@ -540,7 +542,8 @@ public class ModelWorkspaceSelections implements TreeSelection {
         final List sortedPaths = new LinkedList();
         sortedPaths.addAll(paths);
         final Comparator comparator = new Comparator() {
-            public int compare(Object o1, Object o2) {
+            @Override
+			public int compare(Object o1, Object o2) {
                 return ((IPath)o1).toString().compareTo(((IPath)o2).toString());
             }
             @Override

@@ -407,7 +407,8 @@ public class XmlDocumentBuilderImpl implements XmlDocumentBuilder {
     /* (non-Javadoc)
      * @see org.teiid.designer.metamodels.xml.XmlDocumentBuilder#buildDocument(org.teiid.designer.metamodels.xml.XmlElement, org.eclipse.core.runtime.IProgressMonitor)
      */
-    public int buildDocument( final XmlElement rootElement,
+    @Override
+	public int buildDocument( final XmlElement rootElement,
                               final IProgressMonitor progressMonitor ) throws ModelerCoreException {
         CoreArgCheck.isNotNull(rootElement);
         this.root = rootElement;
@@ -508,7 +509,8 @@ public class XmlDocumentBuilderImpl implements XmlDocumentBuilder {
     /* (non-Javadoc)
      * @see org.teiid.designer.metamodels.xml.XmlDocumentBuilder#buildXmlFragments(org.eclipse.xsd.XSDSchema)
      */
-    public Collection buildXmlFragments( final XSDSchema schema ) throws ModelerCoreException {
+    @Override
+	public Collection buildXmlFragments( final XSDSchema schema ) throws ModelerCoreException {
         CoreArgCheck.isNotNull(schema);
         final Collection fragments = new ArrayList();
         final Iterator iter = schema.getContents().iterator();
@@ -646,7 +648,8 @@ public class XmlDocumentBuilderImpl implements XmlDocumentBuilder {
      * 
      * @return Colection of ObjectIDs... never null
      */
-    public Collection getRecursiveElementObjectIDs() {
+    @Override
+	public Collection getRecursiveElementObjectIDs() {
         return recursiveElementUUIDs;
     }
 
@@ -1042,7 +1045,8 @@ public class XmlDocumentBuilderImpl implements XmlDocumentBuilder {
      * 
      * @param addNamespaces
      */
-    public void setAddNamespaces( final boolean addNamespaces ) {
+    @Override
+	public void setAddNamespaces( final boolean addNamespaces ) {
     }
 
     private void setBuildStatusProperty( final XmlBuildable xb,
@@ -1056,7 +1060,8 @@ public class XmlDocumentBuilderImpl implements XmlDocumentBuilder {
     /* (non-Javadoc)
      * @see org.teiid.designer.metamodels.xml.XmlDocumentBuilder#setFragments(java.util.Collection)
      */
-    public void setFragments( final Collection xmlFragments ) throws ModelerCoreException {
+    @Override
+	public void setFragments( final Collection xmlFragments ) throws ModelerCoreException {
         // Check arguements and initialize variables
         CoreArgCheck.isNotNull(xmlFragments);
         final Iterator iter = xmlFragments.iterator();
@@ -1084,7 +1089,8 @@ public class XmlDocumentBuilderImpl implements XmlDocumentBuilder {
     /* (non-Javadoc)
      * @see org.teiid.designer.metamodels.xml.XmlDocumentBuilder#setNumberOfLevelsToBuild(int)
      */
-    public void setNumberOfLevelsToBuild( final int numberOfLevelsToBuild ) {
+    @Override
+	public void setNumberOfLevelsToBuild( final int numberOfLevelsToBuild ) {
         this.numberOfLevelsToBuild = numberOfLevelsToBuild;
     }
 
@@ -1599,7 +1605,8 @@ public class XmlDocumentBuilderImpl implements XmlDocumentBuilder {
     /* (non-Javadoc)
      * @see org.teiid.designer.metamodels.xml.XmlDocumentBuilder#updateFromSchema(org.teiid.designer.metamodels.xml.XmlElement, org.eclipse.core.runtime.IProgressMonitor)
      */
-    public int updateFromSchema( final XmlElement rootElement,
+    @Override
+	public int updateFromSchema( final XmlElement rootElement,
                                  final IProgressMonitor progressMonitor ) throws ModelerCoreException {
         CoreArgCheck.isNotNull(rootElement);
         this.root = rootElement;

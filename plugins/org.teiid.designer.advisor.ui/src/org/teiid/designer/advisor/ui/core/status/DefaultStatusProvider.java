@@ -29,7 +29,7 @@ public class DefaultStatusProvider implements IStatusContentProvider {
      */
     @Override
     public String getDescription() {
-        return "Focused object not selected for advisor.";
+        return "Focused object not selected for advisor."; //$NON-NLS-1$
     }
 
     /**
@@ -49,7 +49,7 @@ public class DefaultStatusProvider implements IStatusContentProvider {
      */
     @Override
     public String getLinkTooltip( int id ) {
-        return "Default Status Tooltip";
+        return "Default Status Tooltip"; //$NON-NLS-1$
     }
 
     /**
@@ -92,7 +92,7 @@ public class DefaultStatusProvider implements IStatusContentProvider {
      */
     @Override
     public String getText( int id ) {
-        return "Default Advisor Text";
+        return "Default Advisor Text"; //$NON-NLS-1$
     }
 
     /**
@@ -103,7 +103,7 @@ public class DefaultStatusProvider implements IStatusContentProvider {
     @Override
     public String getTitle() {
     	if( statusManager == null || statusManager.getCurrentObject() == null ) {
-    		return "Advisor Object Title";
+    		return "Advisor Object Title"; //$NON-NLS-1$
     	}
     	
         return ((IProject)statusManager.getCurrentObject()).getName();
@@ -115,7 +115,7 @@ public class DefaultStatusProvider implements IStatusContentProvider {
 	@Override
 	public String getId() {
 		// TODO Auto-generated method stub
-		return "defaultStatusProviderId";
+		return "defaultStatusProviderId"; //$NON-NLS-1$
 	}
 	
     @Override

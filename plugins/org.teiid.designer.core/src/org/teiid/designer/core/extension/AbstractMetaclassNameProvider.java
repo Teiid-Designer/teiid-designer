@@ -144,7 +144,8 @@ public abstract class AbstractMetaclassNameProvider implements ExtendableMetacla
         }
     }
 
-    public String[] getExtendableMetaclassRoots() {
+    @Override
+	public String[] getExtendableMetaclassRoots() {
         String[] resultArray = new String[0];
         if (RELATIONAL_URI.equals(this.metamodelUri)) {
             resultArray = new String[4];
@@ -165,7 +166,8 @@ public abstract class AbstractMetaclassNameProvider implements ExtendableMetacla
         return resultArray;
     }
 
-    public String[] getExtendableMetaclassChildren( String metaclassName ) {
+    @Override
+	public String[] getExtendableMetaclassChildren( String metaclassName ) {
         if (!this.parentChildMap.containsKey(metaclassName)) {
             return new String[0];
         }
@@ -177,11 +179,13 @@ public abstract class AbstractMetaclassNameProvider implements ExtendableMetacla
         return childNames;
     }
 
-    public boolean hasChildren( String metaclassName ) {
+    @Override
+	public boolean hasChildren( String metaclassName ) {
         return getExtendableMetaclassChildren(metaclassName).length > 0;
     }
 
-    public String getParent( String metaclassName ) {
+    @Override
+	public String getParent( String metaclassName ) {
         return null;
     }
 
@@ -189,7 +193,8 @@ public abstract class AbstractMetaclassNameProvider implements ExtendableMetacla
         return null;
     }
 
-    public String getLabelText( String metaclassName ) {
+    @Override
+	public String getLabelText( String metaclassName ) {
         // This extracts the name between ".impl." and "Impl" from the metaclass name
         if (!CoreStringUtil.isEmpty(metaclassName)) {
             int indx1 = metaclassName.indexOf(MC_PREFIX);
@@ -199,7 +204,8 @@ public abstract class AbstractMetaclassNameProvider implements ExtendableMetacla
         return null;
     }
 
-    public String getMetamodelUri() {
+    @Override
+	public String getMetamodelUri() {
         return this.metamodelUri;
     }
 

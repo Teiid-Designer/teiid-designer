@@ -36,14 +36,16 @@ public class TransientRelationTrackerImpl implements RelationTracker {
     /**
      * @See org.teiid.designer.modelgenerator.RelationTracker#recordGeneratedFrom(org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject)
      */
-    public void recordGeneratedFrom(final EObject input, final EObject output, final List problems) {
+    @Override
+	public void recordGeneratedFrom(final EObject input, final EObject output, final List problems) {
         doMapping(input, output);
     }
 
     /**
      * @See org.teiid.designer.modelgenerator.RelationTracker#recordGeneratedFrom(org.eclipse.emf.ecore.EObject, java.util.List)
      */
-    public void recordGeneratedFrom(final EObject input, final List outputs, final List problems) {
+    @Override
+	public void recordGeneratedFrom(final EObject input, final List outputs, final List problems) {
         if(outputs.size()>0){
             doMapping(input, (EObject)outputs.get(0));
         }
@@ -52,7 +54,8 @@ public class TransientRelationTrackerImpl implements RelationTracker {
     /**
      * @See org.teiid.designer.modelgenerator.RelationTracker#recordGeneratedFrom(java.util.List, java.util.List)
      */
-    public void recordGeneratedFrom(final List inputs, final List outputs, final List problems) {
+    @Override
+	public void recordGeneratedFrom(final List inputs, final List outputs, final List problems) {
         /*
          * the top two objects in each of the lists will be 'directly' related to one another.
          */
@@ -64,7 +67,8 @@ public class TransientRelationTrackerImpl implements RelationTracker {
     /**
      * @See org.teiid.designer.modelgenerator.RelationTracker#getGeneratedFrom(org.eclipse.emf.ecore.EObject)
      */
-    public EObject getGeneratedFrom(EObject output) {
+    @Override
+	public EObject getGeneratedFrom(EObject output) {
         return (EObject)outputToInputMap.get(output);
     }
 
@@ -72,7 +76,8 @@ public class TransientRelationTrackerImpl implements RelationTracker {
     /* (non-Javadoc)
      * @See org.teiid.designer.modelgenerator.processor.RelationTracker#getGeneratedTo(org.eclipse.emf.ecore.EObject)
      */
-    public EObject getGeneratedTo(EObject input) {
+    @Override
+	public EObject getGeneratedTo(EObject input) {
         return (EObject)inputToOutputMap.get(input);
     }
     

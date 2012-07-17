@@ -51,7 +51,8 @@ public class XPackageImpl extends EPackageImpl implements XPackage {
      *         end-user-doc -->
      * @generated NOT
      */
-    public XClass findXClass( EClass extendedClass ) {
+    @Override
+	public XClass findXClass( EClass extendedClass ) {
         if (extendedClass == null) {
             return null;
         }

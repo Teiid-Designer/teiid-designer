@@ -180,7 +180,8 @@ public class BindingOperationImpl extends EObjectImpl implements BindingOperatio
      * 
      * @generated
      */
-    public Documentation getDocumentation() {
+    @Override
+	public Documentation getDocumentation() {
         return documentation;
     }
 
@@ -208,7 +209,8 @@ public class BindingOperationImpl extends EObjectImpl implements BindingOperatio
      * 
      * @generated
      */
-    public void setDocumentation( Documentation newDocumentation ) {
+    @Override
+	public void setDocumentation( Documentation newDocumentation ) {
         if (newDocumentation != documentation) {
             NotificationChain msgs = null;
             if (documentation != null) msgs = ((InternalEObject)documentation).eInverseRemove(this,
@@ -231,7 +233,8 @@ public class BindingOperationImpl extends EObjectImpl implements BindingOperatio
      * 
      * @generated
      */
-    public EList getDeclaredNamespaces() {
+    @Override
+	public EList getDeclaredNamespaces() {
         if (declaredNamespaces == null) {
             declaredNamespaces = new EObjectContainmentWithInverseEList(NamespaceDeclaration.class, this,
                                                                         WsdlPackage.BINDING_OPERATION__DECLARED_NAMESPACES,
@@ -245,7 +248,8 @@ public class BindingOperationImpl extends EObjectImpl implements BindingOperatio
      * 
      * @generated
      */
-    public EList getElements() {
+    @Override
+	public EList getElements() {
         if (elements == null) {
             elements = new EObjectContainmentWithInverseEList(Element.class, this, WsdlPackage.BINDING_OPERATION__ELEMENTS,
                                                               WsdlPackage.ELEMENT__ELEMENT_OWNER);
@@ -258,7 +262,8 @@ public class BindingOperationImpl extends EObjectImpl implements BindingOperatio
      * 
      * @generated
      */
-    public String getName() {
+    @Override
+	public String getName() {
         return name;
     }
 
@@ -267,7 +272,8 @@ public class BindingOperationImpl extends EObjectImpl implements BindingOperatio
      * 
      * @generated
      */
-    public void setName( String newName ) {
+    @Override
+	public void setName( String newName ) {
         String oldName = name;
         name = newName;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, WsdlPackage.BINDING_OPERATION__NAME,
@@ -279,7 +285,8 @@ public class BindingOperationImpl extends EObjectImpl implements BindingOperatio
      * 
      * @generated
      */
-    public Binding getBinding() {
+    @Override
+	public Binding getBinding() {
         if (eContainerFeatureID != WsdlPackage.BINDING_OPERATION__BINDING) return null;
         return (Binding)eContainer;
     }
@@ -289,7 +296,8 @@ public class BindingOperationImpl extends EObjectImpl implements BindingOperatio
      * 
      * @generated
      */
-    public void setBinding( Binding newBinding ) {
+    @Override
+	public void setBinding( Binding newBinding ) {
         if (newBinding != eContainer || (eContainerFeatureID != WsdlPackage.BINDING_OPERATION__BINDING && newBinding != null)) {
             if (EcoreUtil.isAncestor(this, newBinding)) throw new IllegalArgumentException(
                                                                                            "Recursive containment not allowed for " + toString()); //$NON-NLS-1$
@@ -311,7 +319,8 @@ public class BindingOperationImpl extends EObjectImpl implements BindingOperatio
      * 
      * @generated
      */
-    public BindingInput getBindingInput() {
+    @Override
+	public BindingInput getBindingInput() {
         return bindingInput;
     }
 
@@ -339,7 +348,8 @@ public class BindingOperationImpl extends EObjectImpl implements BindingOperatio
      * 
      * @generated
      */
-    public void setBindingInput( BindingInput newBindingInput ) {
+    @Override
+	public void setBindingInput( BindingInput newBindingInput ) {
         if (newBindingInput != bindingInput) {
             NotificationChain msgs = null;
             if (bindingInput != null) msgs = ((InternalEObject)bindingInput).eInverseRemove(this,
@@ -362,7 +372,8 @@ public class BindingOperationImpl extends EObjectImpl implements BindingOperatio
      * 
      * @generated
      */
-    public EList getBindingFaults() {
+    @Override
+	public EList getBindingFaults() {
         if (bindingFaults == null) {
             bindingFaults = new EObjectContainmentWithInverseEList(BindingFault.class, this,
                                                                    WsdlPackage.BINDING_OPERATION__BINDING_FAULTS,
@@ -376,7 +387,8 @@ public class BindingOperationImpl extends EObjectImpl implements BindingOperatio
      * 
      * @generated
      */
-    public BindingOutput getBindingOutput() {
+    @Override
+	public BindingOutput getBindingOutput() {
         return bindingOutput;
     }
 
@@ -404,7 +416,8 @@ public class BindingOperationImpl extends EObjectImpl implements BindingOperatio
      * 
      * @generated
      */
-    public void setBindingOutput( BindingOutput newBindingOutput ) {
+    @Override
+	public void setBindingOutput( BindingOutput newBindingOutput ) {
         if (newBindingOutput != bindingOutput) {
             NotificationChain msgs = null;
             if (bindingOutput != null) msgs = ((InternalEObject)bindingOutput).eInverseRemove(this,
@@ -427,7 +440,8 @@ public class BindingOperationImpl extends EObjectImpl implements BindingOperatio
      * 
      * @generated
      */
-    public SoapOperation getSoapOperation() {
+    @Override
+	public SoapOperation getSoapOperation() {
         return soapOperation;
     }
 
@@ -455,7 +469,8 @@ public class BindingOperationImpl extends EObjectImpl implements BindingOperatio
      * 
      * @generated
      */
-    public void setSoapOperation( SoapOperation newSoapOperation ) {
+    @Override
+	public void setSoapOperation( SoapOperation newSoapOperation ) {
         if (newSoapOperation != soapOperation) {
             NotificationChain msgs = null;
             if (soapOperation != null) msgs = ((InternalEObject)soapOperation).eInverseRemove(this,
@@ -478,7 +493,8 @@ public class BindingOperationImpl extends EObjectImpl implements BindingOperatio
      * 
      * @generated
      */
-    public HttpOperation getHttpOperation() {
+    @Override
+	public HttpOperation getHttpOperation() {
         return httpOperation;
     }
 
@@ -506,7 +522,8 @@ public class BindingOperationImpl extends EObjectImpl implements BindingOperatio
      * 
      * @generated
      */
-    public void setHttpOperation( HttpOperation newHttpOperation ) {
+    @Override
+	public void setHttpOperation( HttpOperation newHttpOperation ) {
         if (newHttpOperation != httpOperation) {
             NotificationChain msgs = null;
             if (httpOperation != null) msgs = ((InternalEObject)httpOperation).eInverseRemove(this,
@@ -529,7 +546,8 @@ public class BindingOperationImpl extends EObjectImpl implements BindingOperatio
      * 
      * @generated
      */
-    public boolean isNameValid() {
+    @Override
+	public boolean isNameValid() {
         // TODO: implement this method
         // Ensure that you remove @generated or mark it @generated NOT
         throw new UnsupportedOperationException();

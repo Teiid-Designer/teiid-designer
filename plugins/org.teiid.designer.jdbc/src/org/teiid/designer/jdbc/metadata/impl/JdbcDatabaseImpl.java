@@ -101,7 +101,8 @@ public class JdbcDatabaseImpl extends JdbcNodeImpl implements JdbcDatabase, Inte
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.metadata.impl.InternalJdbcDatabase#getJdbcNodeSelections()
      */
-    public JdbcNodeSelections getJdbcNodeSelections() {
+    @Override
+	public JdbcNodeSelections getJdbcNodeSelections() {
         return this.selections;
     }
 
@@ -116,7 +117,8 @@ public class JdbcDatabaseImpl extends JdbcNodeImpl implements JdbcDatabase, Inte
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.metadata.JdbcNode#getPathInSource(boolean, boolean)
      */
-    public IPath getPathInSource( final boolean includeCatalog,
+    @Override
+	public IPath getPathInSource( final boolean includeCatalog,
                                   final boolean includeSchema ) {
         return null;
     }
@@ -141,29 +143,34 @@ public class JdbcDatabaseImpl extends JdbcNodeImpl implements JdbcDatabase, Inte
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.metadata.JdbcNode#getJdbcDatabase()
      */
-    public JdbcDatabase getJdbcDatabase() {
+    @Override
+	public JdbcDatabase getJdbcDatabase() {
         return this;
     }
 
-    public JdbcNodeCache getJdbcNodeCache() {
+    @Override
+	public JdbcNodeCache getJdbcNodeCache() {
         return this.cache;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.metadata.JdbcDatabase#findJdbcNode(org.eclipse.core.runtime.IPath)
      */
-    public JdbcNode findJdbcNode( IPath path ) {
+    @Override
+	public JdbcNode findJdbcNode( IPath path ) {
         return this.cache.get(path);
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.metadata.JdbcDatabase#findJdbcNode(java.lang.String)
      */
-    public JdbcNode findJdbcNode( String path ) {
+    @Override
+	public JdbcNode findJdbcNode( String path ) {
         return findJdbcNode(new Path(path));
     }
 
-    public JdbcNode[] getSelectedChildren() throws JdbcException {
+    @Override
+	public JdbcNode[] getSelectedChildren() throws JdbcException {
         List selectedNodes = new ArrayList();
 
         final JdbcNode[] nodes = this.getChildren();
@@ -186,11 +193,13 @@ public class JdbcDatabaseImpl extends JdbcNodeImpl implements JdbcDatabase, Inte
         return new JdbcNode[0];
     }
 
-    public Connection getConnection() {
+    @Override
+	public Connection getConnection() {
         return this.connection;
     }
 
-    public DatabaseMetaData getDatabaseMetaData() throws JdbcException {
+    @Override
+	public DatabaseMetaData getDatabaseMetaData() throws JdbcException {
         if (this.metadata == null) {
             try {
                 this.metadata = this.connection.getMetaData();
@@ -206,7 +215,8 @@ public class JdbcDatabaseImpl extends JdbcNodeImpl implements JdbcDatabase, Inte
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.metadata.JdbcDatabase#getCapabilities()
      */
-    public Capabilities getCapabilities() throws JdbcException {
+    @Override
+	public Capabilities getCapabilities() throws JdbcException {
         if (capabilities == null) {
             synchronized (capabilitiesLock) {
                 if (capabilities == null) {
@@ -220,7 +230,8 @@ public class JdbcDatabaseImpl extends JdbcNodeImpl implements JdbcDatabase, Inte
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.metadata.JdbcDatabase#getDatabaseInfo()
      */
-    public DatabaseInfo getDatabaseInfo() throws JdbcException {
+    @Override
+	public DatabaseInfo getDatabaseInfo() throws JdbcException {
         if (databaseInfo == null) {
             synchronized (databaseInfoLock) {
                 if (databaseInfo == null) {
@@ -234,7 +245,8 @@ public class JdbcDatabaseImpl extends JdbcNodeImpl implements JdbcDatabase, Inte
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.metadata.impl.JdbcNodeImpl#getTypeName()
      */
-    public String getTypeName() {
+    @Override
+	public String getTypeName() {
         return JdbcPlugin.Util.getString("JdbcDatabaseImpl.DatabaseTypeName"); //$NON-NLS-1$
     }
 
@@ -363,7 +375,8 @@ public class JdbcDatabaseImpl extends JdbcNodeImpl implements JdbcDatabase, Inte
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.metadata.JdbcNode#getFullyQualifiedName()
      */
-    public String getFullyQualifiedName() {
+    @Override
+	public String getFullyQualifiedName() {
         return NOT_APPLICABLE;
     }
 
@@ -534,7 +547,8 @@ public class JdbcDatabaseImpl extends JdbcNodeImpl implements JdbcDatabase, Inte
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.metadata.JdbcDatabase#getIncludes()
      */
-    public Includes getIncludes() {
+    @Override
+	public Includes getIncludes() {
         return this.includes;
     }
 
@@ -618,7 +632,8 @@ public class JdbcDatabaseImpl extends JdbcNodeImpl implements JdbcDatabase, Inte
             return this.match;
         }
 
-        public boolean visit( final JdbcNode node ) {
+        @Override
+		public boolean visit( final JdbcNode node ) {
             // return if we already found a match
             if (foundMatch()) {
                 return false;

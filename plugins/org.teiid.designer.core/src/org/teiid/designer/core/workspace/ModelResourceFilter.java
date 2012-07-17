@@ -18,7 +18,8 @@ public class ModelResourceFilter implements ResourceFilter {
     /* (non-Javadoc)
      * @See org.teiid.designer.core.workspace.ResourceFilter#accept(org.eclipse.core.resources.IResource)
      */
-    public boolean accept(IResource res) {
+    @Override
+	public boolean accept(IResource res) {
         return ModelUtil.isModelFile(res,true);
     }
 

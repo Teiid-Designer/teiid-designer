@@ -546,7 +546,8 @@ public final class ModelerActionService extends AbstractActionService
      * @param theActionId the identifier of the default action being requested
      * @return the default action or <code>null</code> if not found
      */
-    public IAction getDefaultAction( String theActionId ) {
+    @Override
+	public IAction getDefaultAction( String theActionId ) {
         return defaultActionsMap.getAction(theActionId);
     }
 

@@ -161,7 +161,8 @@ public class DiagramImpl extends PresentationEntityImpl implements Diagram {
      * <!-- end-user-doc -->
      * @generated
      */
-    public String getType() {
+    @Override
+	public String getType() {
         return type;
     }
 
@@ -170,7 +171,8 @@ public class DiagramImpl extends PresentationEntityImpl implements Diagram {
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setType(String newType) {
+    @Override
+	public void setType(String newType) {
         String oldType = type;
         type = newType;
         if (eNotificationRequired())
@@ -182,7 +184,8 @@ public class DiagramImpl extends PresentationEntityImpl implements Diagram {
      * <!-- end-user-doc -->
      * @generated
      */
-    public String getNotation() {
+    @Override
+	public String getNotation() {
         return notation;
     }
 
@@ -191,7 +194,8 @@ public class DiagramImpl extends PresentationEntityImpl implements Diagram {
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setNotation(String newNotation) {
+    @Override
+	public void setNotation(String newNotation) {
         String oldNotation = notation;
         notation = newNotation;
         if (eNotificationRequired())
@@ -203,6 +207,7 @@ public class DiagramImpl extends PresentationEntityImpl implements Diagram {
 	 * <!-- end-user-doc -->
      * @generated
      */
+	@Override
 	public DiagramLinkType getLinkType() {
         return linkType;
     }
@@ -212,6 +217,7 @@ public class DiagramImpl extends PresentationEntityImpl implements Diagram {
 	 * <!-- end-user-doc -->
      * @generated
      */
+	@Override
 	public void setLinkType(DiagramLinkType newLinkType) {
         DiagramLinkType oldLinkType = linkType;
         linkType = newLinkType == null ? LINK_TYPE_EDEFAULT : newLinkType;
@@ -224,7 +230,8 @@ public class DiagramImpl extends PresentationEntityImpl implements Diagram {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EList getDiagramEntity() {
+    @Override
+	public EList getDiagramEntity() {
         if (diagramEntity == null) {
             diagramEntity = new EObjectContainmentWithInverseEList(DiagramEntity.class, this, DiagramPackage.DIAGRAM__DIAGRAM_ENTITY, DiagramPackage.DIAGRAM_ENTITY__DIAGRAM);
         }
@@ -236,7 +243,8 @@ public class DiagramImpl extends PresentationEntityImpl implements Diagram {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EObject getTarget() {
+    @Override
+	public EObject getTarget() {
         if (target != null && target.eIsProxy()) {
             EObject oldTarget = target;
             target = eResolveProxy((InternalEObject)target);
@@ -262,7 +270,8 @@ public class DiagramImpl extends PresentationEntityImpl implements Diagram {
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setTarget(EObject newTarget) {
+    @Override
+	public void setTarget(EObject newTarget) {
         EObject oldTarget = target;
         target = newTarget;
         if (eNotificationRequired())
@@ -274,7 +283,8 @@ public class DiagramImpl extends PresentationEntityImpl implements Diagram {
      * <!-- end-user-doc -->
      * @generated
      */
-    public DiagramContainer getDiagramContainer() {
+    @Override
+	public DiagramContainer getDiagramContainer() {
         if (eContainerFeatureID != DiagramPackage.DIAGRAM__DIAGRAM_CONTAINER) return null;
         return (DiagramContainer)eContainer;
     }
@@ -284,7 +294,8 @@ public class DiagramImpl extends PresentationEntityImpl implements Diagram {
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setDiagramContainer(DiagramContainer newDiagramContainer) {
+    @Override
+	public void setDiagramContainer(DiagramContainer newDiagramContainer) {
         if (newDiagramContainer != eContainer || (eContainerFeatureID != DiagramPackage.DIAGRAM__DIAGRAM_CONTAINER && newDiagramContainer != null)) {
             if (EcoreUtil.isAncestor(this, newDiagramContainer))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
@@ -305,7 +316,8 @@ public class DiagramImpl extends PresentationEntityImpl implements Diagram {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EList getDiagramLinks() {
+    @Override
+	public EList getDiagramLinks() {
         if (diagramLinks == null) {
             diagramLinks = new EObjectContainmentWithInverseEList(DiagramLink.class, this, DiagramPackage.DIAGRAM__DIAGRAM_LINKS, DiagramPackage.DIAGRAM_LINK__DIAGRAM);
         }

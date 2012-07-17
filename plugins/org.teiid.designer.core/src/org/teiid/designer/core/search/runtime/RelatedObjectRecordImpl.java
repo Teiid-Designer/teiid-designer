@@ -36,6 +36,7 @@ public class RelatedObjectRecordImpl extends AbstractRelationshipRecord implemen
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.relationship.search.index.RelatedObjectRecord#getRelationshipUUID()
 	 */
+	@Override
 	public String getRelationshipUUID() {
 		return relationshipUUID;
 	}
@@ -43,6 +44,7 @@ public class RelatedObjectRecordImpl extends AbstractRelationshipRecord implemen
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.relationship.search.index.RelatedObjectRecord#isSourceObject()
 	 */
+	@Override
 	public boolean isSourceObject() {
 		return isSourceObject;
 	}
@@ -50,6 +52,7 @@ public class RelatedObjectRecordImpl extends AbstractRelationshipRecord implemen
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.relationship.search.index.SearchRecord#getRecordType()
 	 */
+	@Override
 	public char getRecordType() {
 		return IndexConstants.SEARCH_RECORD_TYPE.RELATED_OBJECT;
 	}
@@ -87,6 +90,7 @@ public class RelatedObjectRecordImpl extends AbstractRelationshipRecord implemen
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.relationship.search.index.RelatedObjectRecord#getOpossiteObjectUUID()
 	 */
+	@Override
 	public String getRelatedObjectUUID() {
 		return this.relatedObjUUID;
 	}
@@ -96,6 +100,7 @@ public class RelatedObjectRecordImpl extends AbstractRelationshipRecord implemen
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.relationship.search.index.RelatedObjectRecord#getRelatedObjectUri()
 	 */
+	@Override
 	public String getRelatedObjectUri() {
 		return this.relatedObjectUri;
 	}
@@ -103,6 +108,7 @@ public class RelatedObjectRecordImpl extends AbstractRelationshipRecord implemen
 	/**
 	 * @return
 	 */
+	@Override
 	public String getMetaClassUri() {
 		return metaClassUri;
 	}
@@ -110,6 +116,7 @@ public class RelatedObjectRecordImpl extends AbstractRelationshipRecord implemen
 	/**
 	 * @return
 	 */
+	@Override
 	public String getRelatedMetaClassUri() {
 		return relatedMetaClassUri;
 	}
@@ -131,6 +138,7 @@ public class RelatedObjectRecordImpl extends AbstractRelationshipRecord implemen
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.relationship.search.index.RelatedObjectRecord#getRelatedRoleName()
 	 */
+	@Override
 	public String getRelatedRoleName() {
 		return this.relatedRoleName;
 	}
@@ -138,6 +146,7 @@ public class RelatedObjectRecordImpl extends AbstractRelationshipRecord implemen
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.relationship.search.index.RelatedObjectRecord#getRoleName()
 	 */
+	@Override
 	public String getRoleName() {
 		return this.roleName;
 	}
@@ -161,6 +170,7 @@ public class RelatedObjectRecordImpl extends AbstractRelationshipRecord implemen
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.core.relationship.search.index.RelatedObjectRecord#getRelatedObjectName()
 	 */
+	@Override
 	public String getRelatedObjectName() {
 		return this.relatedObjectName;
 	}
@@ -177,6 +187,7 @@ public class RelatedObjectRecordImpl extends AbstractRelationshipRecord implemen
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.core.search.runtime.RelatedObjectRecord#getRelatedResourcePath()
 	 */
+	@Override
 	public String getRelatedResourcePath() {
 		return this.relatedResourcePath;
 	}
@@ -184,6 +195,7 @@ public class RelatedObjectRecordImpl extends AbstractRelationshipRecord implemen
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.core.search.runtime.RelatedObjectRecord#getResourcePath()
 	 */
+	@Override
 	public String getResourcePath() {
 		return this.resourcePath;
 	}

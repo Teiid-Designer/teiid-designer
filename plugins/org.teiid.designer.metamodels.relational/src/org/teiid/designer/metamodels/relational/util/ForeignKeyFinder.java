@@ -28,7 +28,8 @@ public class ForeignKeyFinder extends RelationalEntityFinder {
     /**
      * @see org.teiid.designer.core.util.ModelVisitor#visit(org.eclipse.emf.ecore.EObject)
      */
-    public boolean visit( final EObject object ) {
+    @Override
+	public boolean visit( final EObject object ) {
 
         if (object instanceof ForeignKey) {
             found((ForeignKey)object);

@@ -166,7 +166,8 @@ public class URLHelper {
             urlConn = url.openConnection();
             setCredentials(urlConn, userName, password);
             if (!verifyHostname && urlConn instanceof HttpsURLConnection) ((HttpsURLConnection)urlConn).setHostnameVerifier(new HostnameVerifier() {
-                public boolean verify( final String arg,
+                @Override
+				public boolean verify( final String arg,
                                        final SSLSession session ) {
                     return true;
                 }
@@ -271,7 +272,8 @@ public class URLHelper {
             urlConn = url.openConnection();
             setCredentials(urlConn, userName, password);
             if (!verifyHostname && urlConn instanceof HttpsURLConnection) ((HttpsURLConnection)urlConn).setHostnameVerifier(new HostnameVerifier() {
-                public boolean verify( final String arg,
+                @Override
+				public boolean verify( final String arg,
                                        final SSLSession session ) {
                     return true;
                 }

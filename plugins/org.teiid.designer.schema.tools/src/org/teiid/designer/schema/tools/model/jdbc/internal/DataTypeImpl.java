@@ -24,18 +24,22 @@ public class DataTypeImpl implements DataType {
 
 	}
 
+	@Override
 	public String getTypeName() {
 		return m_type;
 	}
 
+	@Override
 	public void setTypeName(String name) {
 		m_type = name;
 	}
 
+	@Override
 	public String getTypeNamespace() {
 		return m_namespace;
 	}
 
+	@Override
 	public void setTypeNamespace(String namespace) {
 		m_namespace = namespace;
 	}

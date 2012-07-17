@@ -122,7 +122,8 @@ public class XsdTextEditorPage extends TextEditor implements ModelEditorPage, IS
     protected ISelectionChangedListener selectionChangedListener;
 
     protected INotifyChangedListener notifyChangedListener = new INotifyChangedListener() {
-        public void notifyChanged( Notification notification ) {
+        @Override
+		public void notifyChanged( Notification notification ) {
             if (getXsdSchema() != null) {
                 if (notification instanceof SourcedNotification) {
                     if (((SourcedNotification)notification).getSource() != null) {
@@ -354,20 +355,25 @@ public class XsdTextEditorPage extends TextEditor implements ModelEditorPage, IS
 
             // code to close the editor when the resource is deleted
             getDocumentProvider().addElementStateListener(new IElementStateListener() {
-                public void elementDirtyStateChanged( Object element,
+                @Override
+				public void elementDirtyStateChanged( Object element,
                                                       boolean isDirty ) {
                 }
 
-                public void elementContentAboutToBeReplaced( Object element ) {
+                @Override
+				public void elementContentAboutToBeReplaced( Object element ) {
                 }
 
-                public void elementContentReplaced( Object element ) {
+                @Override
+				public void elementContentReplaced( Object element ) {
                 }
 
-                public void elementDeleted( Object element ) {
+                @Override
+				public void elementDeleted( Object element ) {
                     Display display = getSite().getShell().getDisplay();
                     display.asyncExec(new Runnable() {
-                        public void run() {
+                        @Override
+						public void run() {
                             if (sourceViewer != null) {
                                 getSite().getPage().closeEditor(XsdTextEditorPage.this, false);
                             }
@@ -375,7 +381,8 @@ public class XsdTextEditorPage extends TextEditor implements ModelEditorPage, IS
                     });
                 }
 
-                public void elementMoved( Object originalElement,
+                @Override
+				public void elementMoved( Object originalElement,
                                           Object movedElement ) {
                 }
             });
@@ -446,7 +453,8 @@ public class XsdTextEditorPage extends TextEditor implements ModelEditorPage, IS
             final int length = oldEndIndex - startIndex + 1;
             handledStructuredModelChange = true;
             UiUtil.runInSwtThread(new Runnable() {
-                public void run() {
+                @Override
+				public void run() {
                     try {
                         document.replace(start, length, replacement);
                     } catch (Exception exception) {
@@ -656,7 +664,8 @@ public class XsdTextEditorPage extends TextEditor implements ModelEditorPage, IS
             IWorkspaceRunnable operation = new IWorkspaceRunnable() {
 
                 // This is the method that gets invoked when the operation runs.
-                public void run( IProgressMonitor localProgressMonitor ) {
+                @Override
+				public void run( IProgressMonitor localProgressMonitor ) {
                     handleDiagnostics(localProgressMonitor);
                 }
             };
@@ -758,7 +767,8 @@ public class XsdTextEditorPage extends TextEditor implements ModelEditorPage, IS
             else if (newSelection != null) {
                 final IStructuredSelection errorSelection = new StructuredSelection(newSelection);
                 getSite().getShell().getDisplay().asyncExec(new Runnable() {
-                    public void run() {
+                    @Override
+					public void run() {
                         setSelectionInternal(errorSelection);
                         handleSourceCaretPosition();
                     }
@@ -770,7 +780,8 @@ public class XsdTextEditorPage extends TextEditor implements ModelEditorPage, IS
     /**
      * @see org.teiid.designer.ui.editors.ModelEditorPage#canDisplay(org.eclipse.ui.IEditorInput)
      */
-    public boolean canDisplay( IEditorInput input ) {
+    @Override
+	public boolean canDisplay( IEditorInput input ) {
         if (input instanceof IFileEditorInput) {
             return ModelUtil.isXsdFile(((IFileEditorInput)input).getFile());
         }
@@ -780,33 +791,38 @@ public class XsdTextEditorPage extends TextEditor implements ModelEditorPage, IS
     /**
      * @see org.teiid.designer.ui.editors.ModelEditorPage#canOpenContext(java.lang.Object)
      */
-    public boolean canOpenContext( Object input ) {
+    @Override
+	public boolean canOpenContext( Object input ) {
         return false;
     }
 
     /**
      * @see org.teiid.designer.ui.editors.ModelEditorPage#getActionBarContributor()
      */
-    public AbstractModelEditorPageActionBarContributor getActionBarContributor() {
+    @Override
+	public AbstractModelEditorPageActionBarContributor getActionBarContributor() {
         return null;
     }
 
     /**
      * @see org.teiid.designer.ui.editors.ModelEditorPage#getControl()
      */
-    public Control getControl() {
+    @Override
+	public Control getControl() {
         return super.getSourceViewer().getTextWidget();
     }
 
     /**
      * @see org.teiid.designer.ui.editors.ModelEditorPage#getModelObjectSelectionChangedListener()
      */
-    public ISelectionChangedListener getModelObjectSelectionChangedListener() {
+    @Override
+	public ISelectionChangedListener getModelObjectSelectionChangedListener() {
         if (selectionChangedListener == null) {
             // Create the listener on demand.
             selectionChangedListener = new ISelectionChangedListener() {
                 // This just notifies those things that are affected by the section.
-                public void selectionChanged( SelectionChangedEvent selectionChangedEvent ) {
+                @Override
+				public void selectionChanged( SelectionChangedEvent selectionChangedEvent ) {
                     setSelection(selectionChangedEvent.getSelection());
                 }
             };
@@ -817,34 +833,39 @@ public class XsdTextEditorPage extends TextEditor implements ModelEditorPage, IS
     /**
      * @see org.teiid.designer.ui.editors.ModelEditorPage#getModelObjectSelectionProvider()
      */
-    public ISelectionProvider getModelObjectSelectionProvider() {
+    @Override
+	public ISelectionProvider getModelObjectSelectionProvider() {
         return this;
     }
 
     /**
      * @see org.teiid.designer.ui.editors.ModelEditorPage#getNotifyChangedListener()
      */
-    public INotifyChangedListener getNotifyChangedListener() {
+    @Override
+	public INotifyChangedListener getNotifyChangedListener() {
         return notifyChangedListener;
     }
 
     /**
      * @see org.teiid.designer.ui.editors.ModelEditorPage#getOutlineContribution()
      */
-    public ModelEditorPageOutline getOutlineContribution() {
+    @Override
+	public ModelEditorPageOutline getOutlineContribution() {
         return null;
     }
 
     /**
      * @see org.teiid.designer.ui.editors.ModelEditorPage#openContext(java.lang.Object)
      */
-    public void openContext( Object input ) {
+    @Override
+	public void openContext( Object input ) {
     }
 
     /**
      * @see org.teiid.designer.ui.editors.ModelEditorPage#openContext(java.lang.Object)
      */
-    public void openContext( Object input,
+    @Override
+	public void openContext( Object input,
                              boolean forceRefresh ) {
 
     }
@@ -855,13 +876,15 @@ public class XsdTextEditorPage extends TextEditor implements ModelEditorPage, IS
      * @see org.teiid.designer.ui.editors.ModelEditorPage#initializeEditorPage()
      * @since 5.0.2
      */
-    public void initializeEditorPage() {
+    @Override
+	public void initializeEditorPage() {
     }
 
     /**
      * @see org.teiid.designer.ui.editors.ModelEditorPage#setLabelProvider(org.eclipse.jface.viewers.ILabelProvider)
      */
-    public void setLabelProvider( ILabelProvider provider ) {
+    @Override
+	public void setLabelProvider( ILabelProvider provider ) {
     }
 
     /**
@@ -937,14 +960,16 @@ public class XsdTextEditorPage extends TextEditor implements ModelEditorPage, IS
     /**
      * @see org.teiid.designer.ui.editors.ModelEditorPage#setTitleText(java.lang.String)
      */
-    public void setTitleText( String title ) {
+    @Override
+	public void setTitleText( String title ) {
         // do nothing;
     }
 
     /**
      * This implements {@link org.eclipse.jface.viewers.ISelectionProvider}.
      */
-    public void addSelectionChangedListener( ISelectionChangedListener listener ) {
+    @Override
+	public void addSelectionChangedListener( ISelectionChangedListener listener ) {
         if (listener != null && !selectionChangedListeners.contains(listener)) {
             selectionChangedListeners.add(listener);
         }
@@ -953,14 +978,16 @@ public class XsdTextEditorPage extends TextEditor implements ModelEditorPage, IS
     /**
      * This implements {@link org.eclipse.jface.viewers.ISelectionProvider}.
      */
-    public void removeSelectionChangedListener( ISelectionChangedListener listener ) {
+    @Override
+	public void removeSelectionChangedListener( ISelectionChangedListener listener ) {
         selectionChangedListeners.remove(listener);
     }
 
     /**
      * This implements {@link org.eclipse.jface.viewers.ISelectionProvider} to return this editor's overall selection.
      */
-    public ISelection getSelection() {
+    @Override
+	public ISelection getSelection() {
         return editorSelection;
     }
 
@@ -968,7 +995,8 @@ public class XsdTextEditorPage extends TextEditor implements ModelEditorPage, IS
      * This implements {@link org.eclipse.jface.viewers.ISelectionProvider} to set this editor's overall selection. Calling this
      * result will notify the listeners.
      */
-    public void setSelection( ISelection selection ) {
+    @Override
+	public void setSelection( ISelection selection ) {
         if (SelectionUtilities.isSingleSelection(selection)) {
             if (SelectionUtilities.isAllEObjects(selection)) {
                 EObject selectedObject = SelectionUtilities.getSelectedEObject(selection);
@@ -1004,7 +1032,8 @@ public class XsdTextEditorPage extends TextEditor implements ModelEditorPage, IS
     /**
      * @see org.teiid.designer.ui.editors.ModelEditorPage#preDispose()
      */
-    public void preDispose() {
+    @Override
+	public void preDispose() {
         ModelUtilities.removeNotifyChangedListener(notifyChangedListener);
         if (document != null) document.removeDocumentListener(this);
         notifyChangedListener = null;
@@ -1029,7 +1058,8 @@ public class XsdTextEditorPage extends TextEditor implements ModelEditorPage, IS
     /**
      * @see org.teiid.designer.ui.editors.ModelEditorPage#updateReadOnlyState(boolean)
      */
-    public void updateReadOnlyState( boolean isReadOnly ) {
+    @Override
+	public void updateReadOnlyState( boolean isReadOnly ) {
     }
 
     /**
@@ -1044,7 +1074,8 @@ public class XsdTextEditorPage extends TextEditor implements ModelEditorPage, IS
      * @see org.teiid.core.event.EventObjectListener#processEvent(java.util.EventObject)
      * @since 4.2
      */
-    public void processEvent( EventObject obj ) {
+    @Override
+	public void processEvent( EventObject obj ) {
         if (getEditorInput() != null) {
             ModelResourceEvent event = (ModelResourceEvent)obj;
             final IResource file = event.getResource();
@@ -1052,7 +1083,8 @@ public class XsdTextEditorPage extends TextEditor implements ModelEditorPage, IS
             if (file.equals(currentFile)) {
                 if (event.getType() == ModelResourceEvent.RELOADED || event.getType() == ModelResourceEvent.CHANGED) {
                     Display.getDefault().asyncExec(new Runnable() {
-                        public void run() {
+                        @Override
+						public void run() {
                             setInput(getEditorInput());
                             handleStructuredModelChange(true);
                         }
@@ -1066,14 +1098,16 @@ public class XsdTextEditorPage extends TextEditor implements ModelEditorPage, IS
      * @see org.eclipse.jface.text.IDocumentListener#documentAboutToBeChanged(org.eclipse.jface.text.DocumentEvent)
      * @since 4.2
      */
-    public void documentAboutToBeChanged( DocumentEvent documentEvent ) {
+    @Override
+	public void documentAboutToBeChanged( DocumentEvent documentEvent ) {
     }
 
     /**
      * @see org.eclipse.jface.text.IDocumentListener#documentChanged(org.eclipse.jface.text.DocumentEvent)
      * @since 4.2
      */
-    public void documentChanged( final DocumentEvent documentEvent ) {
+    @Override
+	public void documentChanged( final DocumentEvent documentEvent ) {
         try {
             // This is need for the Properties view.
             //
@@ -1093,7 +1127,8 @@ public class XsdTextEditorPage extends TextEditor implements ModelEditorPage, IS
                     @Override
                     public void run() {
                         getSite().getShell().getDisplay().asyncExec(new Runnable() {
-                            public void run() {
+                            @Override
+							public void run() {
                                 handleDocumentChange(true);
                             }
                         });
@@ -1111,7 +1146,8 @@ public class XsdTextEditorPage extends TextEditor implements ModelEditorPage, IS
      * @see org.teiid.designer.ui.editors.ModelEditorPage#openComplete()
      * @since 4.2
      */
-    public void openComplete() {
+    @Override
+	public void openComplete() {
         // Default Implementation
     }
 
@@ -1120,7 +1156,8 @@ public class XsdTextEditorPage extends TextEditor implements ModelEditorPage, IS
      * @see org.teiid.designer.ui.editors.ModelEditorPage#isSelectedFirst(org.eclipse.ui.IEditorInput)
      * @since 5.0.1
      */
-    public boolean isSelectedFirst( IEditorInput input ) {
+    @Override
+	public boolean isSelectedFirst( IEditorInput input ) {
         return false;
     }
 }

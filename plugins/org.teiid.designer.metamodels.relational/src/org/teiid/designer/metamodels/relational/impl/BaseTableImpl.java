@@ -98,7 +98,8 @@ public class BaseTableImpl extends TableImpl implements BaseTable {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EList getForeignKeys() {
+    @Override
+	public EList getForeignKeys() {
         if (foreignKeys == null) {
             foreignKeys = new EObjectContainmentWithInverseEList(ForeignKey.class, this, RelationalPackage.BASE_TABLE__FOREIGN_KEYS, RelationalPackage.FOREIGN_KEY__TABLE);
         }
@@ -110,7 +111,8 @@ public class BaseTableImpl extends TableImpl implements BaseTable {
      * <!-- end-user-doc -->
      * @generated
      */
-    public PrimaryKey getPrimaryKey() {
+    @Override
+	public PrimaryKey getPrimaryKey() {
         return primaryKey;
     }
 
@@ -134,7 +136,8 @@ public class BaseTableImpl extends TableImpl implements BaseTable {
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setPrimaryKey(PrimaryKey newPrimaryKey) {
+    @Override
+	public void setPrimaryKey(PrimaryKey newPrimaryKey) {
         if (newPrimaryKey != primaryKey) {
             NotificationChain msgs = null;
             if (primaryKey != null)
@@ -153,7 +156,8 @@ public class BaseTableImpl extends TableImpl implements BaseTable {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EList getUniqueConstraints() {
+    @Override
+	public EList getUniqueConstraints() {
         if (uniqueConstraints == null) {
             uniqueConstraints = new EObjectContainmentWithInverseEList(UniqueConstraint.class, this, RelationalPackage.BASE_TABLE__UNIQUE_CONSTRAINTS, RelationalPackage.UNIQUE_CONSTRAINT__TABLE);
         }

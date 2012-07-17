@@ -51,7 +51,8 @@ public class ExpandSelect extends AbstractAction implements EventObjectListener 
         setEnabledState();
     }
 
-    public void processEvent(EventObject e) {
+    @Override
+	public void processEvent(EventObject e) {
         //------------------------------------------------
         // respond to internal events from SqlEditorPanel
         //------------------------------------------------

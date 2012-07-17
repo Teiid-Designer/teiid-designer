@@ -72,7 +72,8 @@ public class InputSetImpl extends EObjectImpl implements InputSet {
      * 
      * @generated
      */
-    public MappingClass getMappingClass() {
+    @Override
+	public MappingClass getMappingClass() {
         if (eContainerFeatureID != TransformationPackage.INPUT_SET__MAPPING_CLASS) return null;
         return (MappingClass)eContainer;
     }
@@ -82,7 +83,8 @@ public class InputSetImpl extends EObjectImpl implements InputSet {
      * 
      * @generated
      */
-    public void setMappingClass( MappingClass newMappingClass ) {
+    @Override
+	public void setMappingClass( MappingClass newMappingClass ) {
         if (newMappingClass != eContainer
             || (eContainerFeatureID != TransformationPackage.INPUT_SET__MAPPING_CLASS && newMappingClass != null)) {
             if (EcoreUtil.isAncestor(this, newMappingClass)) throw new IllegalArgumentException(
@@ -105,7 +107,8 @@ public class InputSetImpl extends EObjectImpl implements InputSet {
      * 
      * @generated
      */
-    public EList getInputParameters() {
+    @Override
+	public EList getInputParameters() {
         if (inputParameters == null) {
             inputParameters = new EObjectContainmentWithInverseEList(InputParameter.class, this,
                                                                      TransformationPackage.INPUT_SET__INPUT_PARAMETERS,

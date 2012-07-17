@@ -375,7 +375,8 @@ public class XmlChoiceImpl extends XmlContainerNodeImpl implements XmlChoice {
      * 
      * @generated
      */
-    public ChoiceErrorMode getDefaultErrorMode() {
+    @Override
+	public ChoiceErrorMode getDefaultErrorMode() {
         return defaultErrorMode;
     }
 
@@ -384,7 +385,8 @@ public class XmlChoiceImpl extends XmlContainerNodeImpl implements XmlChoice {
      * 
      * @generated
      */
-    public ChoiceOption getDefaultOption() {
+    @Override
+	public ChoiceOption getDefaultOption() {
         if (defaultOption != null && defaultOption.eIsProxy()) {
             final ChoiceOption oldDefaultOption = defaultOption;
             defaultOption = (ChoiceOption)eResolveProxy((InternalEObject)defaultOption);
@@ -403,7 +405,8 @@ public class XmlChoiceImpl extends XmlContainerNodeImpl implements XmlChoice {
      * 
      * @generated NOT
      */
-    public List getOrderedChoiceOptions() {
+    @Override
+	public List getOrderedChoiceOptions() {
         final List choices = getChoiceOptions();
 
         // Sort the list using the comparator ...
@@ -428,7 +431,8 @@ public class XmlChoiceImpl extends XmlContainerNodeImpl implements XmlChoice {
      * 
      * @generated
      */
-    public void setDefaultErrorMode( final ChoiceErrorMode newDefaultErrorMode ) {
+    @Override
+	public void setDefaultErrorMode( final ChoiceErrorMode newDefaultErrorMode ) {
         final ChoiceErrorMode oldDefaultErrorMode = defaultErrorMode;
         defaultErrorMode = newDefaultErrorMode == null ? DEFAULT_ERROR_MODE_EDEFAULT : newDefaultErrorMode;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
@@ -441,7 +445,8 @@ public class XmlChoiceImpl extends XmlContainerNodeImpl implements XmlChoice {
      * 
      * @generated
      */
-    public void setDefaultOption( final ChoiceOption newDefaultOption ) {
+    @Override
+	public void setDefaultOption( final ChoiceOption newDefaultOption ) {
         if (newDefaultOption != defaultOption) {
             NotificationChain msgs = null;
             if (defaultOption != null) msgs = ((InternalEObject)defaultOption).eInverseRemove(this,
@@ -464,7 +469,8 @@ public class XmlChoiceImpl extends XmlContainerNodeImpl implements XmlChoice {
      * 
      * @generated NOT
      */
-    public void setOrderedChoiceOptions( final List options ) {
+    @Override
+	public void setOrderedChoiceOptions( final List options ) {
         // Iterate through the options, and set the indexes ...
         int index = 0;
         final Iterator iter = options.iterator();
@@ -513,7 +519,8 @@ public class XmlChoiceImpl extends XmlContainerNodeImpl implements XmlChoice {
      * @since 4.2
      */
     protected class ChoiceOptionSorter implements Comparator {
-        public int compare( final Object o1,
+        @Override
+		public int compare( final Object o1,
                             final Object o2 ) {
             if (o1 instanceof ChoiceOption && o2 instanceof ChoiceOption) {
                 final ChoiceOption co1 = (ChoiceOption)o1;

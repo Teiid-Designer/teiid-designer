@@ -78,7 +78,8 @@ public class ReturnParameterImpl extends EObjectImpl implements ReturnParameter 
      * <!-- end-user-doc -->
      * @generated
      */
-    public String getType() {
+    @Override
+	public String getType() {
         return type;
     }
 
@@ -87,7 +88,8 @@ public class ReturnParameterImpl extends EObjectImpl implements ReturnParameter 
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setType(String newType) {
+    @Override
+	public void setType(String newType) {
         String oldType = type;
         type = newType;
         if (eNotificationRequired())
@@ -99,7 +101,8 @@ public class ReturnParameterImpl extends EObjectImpl implements ReturnParameter 
      * <!-- end-user-doc -->
      * @generated
      */
-    public ScalarFunction getFunction() {
+    @Override
+	public ScalarFunction getFunction() {
         if (eContainerFeatureID != FunctionPackage.RETURN_PARAMETER__FUNCTION) return null;
         return (ScalarFunction)eContainer;
     }
@@ -109,7 +112,8 @@ public class ReturnParameterImpl extends EObjectImpl implements ReturnParameter 
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setFunction(ScalarFunction newFunction) {
+    @Override
+	public void setFunction(ScalarFunction newFunction) {
         if (newFunction != eContainer || (eContainerFeatureID != FunctionPackage.RETURN_PARAMETER__FUNCTION && newFunction != null)) {
             if (EcoreUtil.isAncestor(this, newFunction))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$

@@ -88,7 +88,8 @@ public class DiagramLabelProvider implements ILabelProvider, UiConstants.Extensi
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.ILabelProvider#getImage(java.lang.Object)
      */
-    public Image getImage(Object element) {
+    @Override
+	public Image getImage(Object element) {
         Image result = null;
         
         if ( element instanceof Diagram ) {
@@ -131,7 +132,8 @@ public class DiagramLabelProvider implements ILabelProvider, UiConstants.Extensi
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.ILabelProvider#getText(java.lang.Object)
      */
-    public String getText(Object element) {
+    @Override
+	public String getText(Object element) {
         String result = null;
         
         if ( element instanceof Diagram ) {
@@ -175,14 +177,16 @@ public class DiagramLabelProvider implements ILabelProvider, UiConstants.Extensi
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.IBaseLabelProvider#addListener(org.eclipse.jface.viewers.ILabelProviderListener)
      */
-    public void addListener(ILabelProviderListener listener) {
+    @Override
+	public void addListener(ILabelProviderListener listener) {
 
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.IBaseLabelProvider#dispose()
      */
-    public void dispose() {
+    @Override
+	public void dispose() {
         if ( providerMap != null ) {
             for ( Iterator iter = providerMap.values().iterator() ; iter.hasNext() ; ) {
                 ILabelProvider provider = (ILabelProvider) iter.next();
@@ -203,14 +207,16 @@ public class DiagramLabelProvider implements ILabelProvider, UiConstants.Extensi
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.IBaseLabelProvider#isLabelProperty(java.lang.Object, java.lang.String)
      */
-    public boolean isLabelProperty(Object element, String property) {
+    @Override
+	public boolean isLabelProperty(Object element, String property) {
         return false;
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.IBaseLabelProvider#removeListener(org.eclipse.jface.viewers.ILabelProviderListener)
      */
-    public void removeListener(ILabelProviderListener listener) {
+    @Override
+	public void removeListener(ILabelProviderListener listener) {
 
     }
 

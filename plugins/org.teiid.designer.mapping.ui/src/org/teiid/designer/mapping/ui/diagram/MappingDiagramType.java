@@ -77,7 +77,8 @@ public class MappingDiagramType extends AbstractDiagramType {
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.IDiagramType#getEditPartFactory()
      */
-    public DiagramEditPartFactory getEditPartFactory() {
+    @Override
+	public DiagramEditPartFactory getEditPartFactory() {
         if (editPartFactory == null) editPartFactory = new MappingDiagramPartFactory();
 
         return editPartFactory;
@@ -86,7 +87,8 @@ public class MappingDiagramType extends AbstractDiagramType {
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.IDiagramType#getFigureFactory()
      */
-    public DiagramFigureFactory getFigureFactory() {
+    @Override
+	public DiagramFigureFactory getFigureFactory() {
         if (figureFactory == null) figureFactory = new MappingDiagramFigureFactory();
 
         return figureFactory;
@@ -95,7 +97,8 @@ public class MappingDiagramType extends AbstractDiagramType {
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.IDiagramType#getModelFactory()
      */
-    public DiagramModelFactory getModelFactory() {
+    @Override
+	public DiagramModelFactory getModelFactory() {
         if (modelFactory == null) modelFactory = new MappingDiagramModelFactory();
 
         return modelFactory;
@@ -104,14 +107,16 @@ public class MappingDiagramType extends AbstractDiagramType {
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.IDiagramType#getActionAdapter()
      */
-    public IDiagramActionAdapter getActionAdapter( ModelEditorPage editor ) {
+    @Override
+	public IDiagramActionAdapter getActionAdapter( ModelEditorPage editor ) {
         return new MappingDiagramActionAdapter(editor);
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.IDiagramType#getDisplayName()
      */
-    public String getDisplayName() {
+    @Override
+	public String getDisplayName() {
         return UiConstants.Util.getString("DiagramNames.mappingDiagram"); //$NON-NLS-1$) ;
     }
 
@@ -154,7 +159,8 @@ public class MappingDiagramType extends AbstractDiagramType {
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.IDiagramType#canOpenContext(java.lang.Object)
      */
-    public boolean canOpenContext( Object input ) throws CanOpenContextException {
+    @Override
+	public boolean canOpenContext( Object input ) throws CanOpenContextException {
         boolean canOpen = false;
         boolean readOnlyFailure = false;
         if (input instanceof EObject) {
@@ -228,7 +234,8 @@ public class MappingDiagramType extends AbstractDiagramType {
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.IDiagramType#getDiagramForContext(java.lang.Object)
      */
-    public Diagram getDiagramForContext( Object input ) {
+    @Override
+	public Diagram getDiagramForContext( Object input ) {
         Diagram mappingDiagram = null;
 
         if (input instanceof Diagram
@@ -296,7 +303,8 @@ public class MappingDiagramType extends AbstractDiagramType {
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.IDiagramType#getBackgroundColorObject()
      */
-    public DiagramColorObject getBackgroundColorObject( String extensionID ) {
+    @Override
+	public DiagramColorObject getBackgroundColorObject( String extensionID ) {
         if (bkgdColorObject == null) {
             bkgdColorObject = new DiagramColorObject(getDisplayName(), PluginConstants.Prefs.Appearance.MAPPING_BKGD_COLOR);
         }
@@ -359,7 +367,8 @@ public class MappingDiagramType extends AbstractDiagramType {
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.IDiagramType#getDisplayedPath(org.teiid.designer.metamodels.diagram.Diagram, org.eclipse.emf.ecore.EObject)
      */
-    public String getDisplayedPath( Diagram diagram,
+    @Override
+	public String getDisplayedPath( Diagram diagram,
                                     EObject eObject ) {
         String path = null;
         if (diagram.getType() != null && diagram.getType().equals(PluginConstants.MAPPING_TRANSFORMATION_DIAGRAM_TYPE_ID)) {

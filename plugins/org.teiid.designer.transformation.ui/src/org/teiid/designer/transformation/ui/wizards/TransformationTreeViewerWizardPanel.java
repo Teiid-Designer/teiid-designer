@@ -101,7 +101,8 @@ public class TransformationTreeViewerWizardPanel extends TreeViewerWizardPanel i
      * @see org.teiid.designer.ui.common.widget.ICheckableController#isEditable(java.lang.Object)
      * @since 4.2
      */
-    public boolean isEditable( Object theObject ) {
+    @Override
+	public boolean isEditable( Object theObject ) {
         boolean result = true;
 
         if (theObject instanceof EObject) {

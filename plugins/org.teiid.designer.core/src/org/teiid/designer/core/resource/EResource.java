@@ -8,17 +8,17 @@
 package org.teiid.designer.core.resource;
 
 import java.util.Map;
+
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.teiid.core.id.ObjectID;
 import org.teiid.designer.core.util.ModelContents;
 import org.teiid.designer.metamodels.core.ModelType;
 
-
 /**
  * MTK implementation of a Resource
  */
-public interface EResource extends Resource, Resource.Internal {
+public interface EResource extends Resource.Internal {
 
     /**
      * Return the {@link org.teiid.designer.metamodels.core.ModelType} for this

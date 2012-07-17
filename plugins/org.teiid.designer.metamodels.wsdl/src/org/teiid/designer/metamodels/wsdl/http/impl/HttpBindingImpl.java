@@ -76,7 +76,8 @@ public class HttpBindingImpl extends EObjectImpl implements HttpBinding {
      * 
      * @generated
      */
-    public String getVerb() {
+    @Override
+	public String getVerb() {
         return verb;
     }
 
@@ -85,7 +86,8 @@ public class HttpBindingImpl extends EObjectImpl implements HttpBinding {
      * 
      * @generated
      */
-    public void setVerb( String newVerb ) {
+    @Override
+	public void setVerb( String newVerb ) {
         String oldVerb = verb;
         verb = newVerb;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, HttpPackage.HTTP_BINDING__VERB,
@@ -97,7 +99,8 @@ public class HttpBindingImpl extends EObjectImpl implements HttpBinding {
      * 
      * @generated
      */
-    public Binding getBinding() {
+    @Override
+	public Binding getBinding() {
         if (eContainerFeatureID != HttpPackage.HTTP_BINDING__BINDING) return null;
         return (Binding)eContainer;
     }
@@ -107,7 +110,8 @@ public class HttpBindingImpl extends EObjectImpl implements HttpBinding {
      * 
      * @generated
      */
-    public void setBinding( Binding newBinding ) {
+    @Override
+	public void setBinding( Binding newBinding ) {
         if (newBinding != eContainer || (eContainerFeatureID != HttpPackage.HTTP_BINDING__BINDING && newBinding != null)) {
             if (EcoreUtil.isAncestor(this, newBinding)) throw new IllegalArgumentException(
                                                                                            "Recursive containment not allowed for " + toString()); //$NON-NLS-1$

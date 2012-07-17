@@ -571,7 +571,8 @@ public class ModelTableEditor extends NavigableEditor
         // each page's table columns are created only after their associated tab in the tabfolder
         // has been selected. make sure the colums have been built.
         BusyIndicator.showWhile(null, new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 if (getCurrentModel() != null) {
                     getCurrentModel().buildColumns();
                 }
@@ -627,7 +628,8 @@ public class ModelTableEditor extends NavigableEditor
     /**
      * @see org.teiid.designer.ui.editors.INavigationSupported
      **/
-    public IMarker createMarker() {
+    @Override
+	public IMarker createMarker() {
         // jhTODO: implement
         //        System.out.println("[ModelTableEditor.createMarker] TOP"); //$NON-NLS-1$
         NavigationMarker nmMarker = new NavigationMarker();
@@ -725,21 +727,24 @@ public class ModelTableEditor extends NavigableEditor
      * @see org.teiid.designer.ui.editors.ModelEditorPage#preDispose()
      * @since 4.2
      */
-    public void preDispose() {
+    @Override
+	public void preDispose() {
         // Default Implementation
     }
 
     /**
      * @see org.teiid.designer.ui.editors.ModelEditorPage#canDisplay(org.eclipse.ui.IEditorInput)
      */
-    public boolean canDisplay( IEditorInput input ) {
+    @Override
+	public boolean canDisplay( IEditorInput input ) {
         return true;
     }
 
     /**
      * @see org.teiid.designer.ui.editors.ModelEditorPage#canOpenContext(java.lang.Object)
      */
-    public boolean canOpenContext( Object input ) {
+    @Override
+	public boolean canOpenContext( Object input ) {
         if (input instanceof EObject) {
             return true;
         }
@@ -749,14 +754,16 @@ public class ModelTableEditor extends NavigableEditor
     /**
      * @see org.teiid.designer.ui.editors.ModelEditorPage#openContext(java.lang.Object)
      */
-    public void openContext( Object input ) {
+    @Override
+	public void openContext( Object input ) {
 
     }
 
     /**
      * @see org.teiid.designer.ui.editors.ModelEditorPage#openContext(java.lang.Object)
      */
-    public void openContext( Object input,
+    @Override
+	public void openContext( Object input,
                              boolean forceRefresh ) {
 
     }
@@ -765,20 +772,23 @@ public class ModelTableEditor extends NavigableEditor
      * @see org.teiid.designer.ui.editors.ModelEditorPage#initializeEditorPage()
      * @since 5.0.2
      */
-    public void initializeEditorPage() {
+    @Override
+	public void initializeEditorPage() {
     }
 
     /**
      * @see org.teiid.designer.ui.editors.ModelEditorPage#getControl()
      */
-    public Control getControl() {
+    @Override
+	public Control getControl() {
         return getControl(getActiveTab());
     }
 
     /**
      * @see org.teiid.designer.ui.editors.ModelEditorPage#getModelObjectSelectionProvider()
      */
-    public ISelectionProvider getModelObjectSelectionProvider() {
+    @Override
+	public ISelectionProvider getModelObjectSelectionProvider() {
         return this.selectionMgr;
     }
 
@@ -787,14 +797,16 @@ public class ModelTableEditor extends NavigableEditor
      * 
      * @see org.teiid.designer.ui.editors.ModelEditorPage#getModelObjectSelectionChangedListener()
      */
-    public ISelectionChangedListener getModelObjectSelectionChangedListener() {
+    @Override
+	public ISelectionChangedListener getModelObjectSelectionChangedListener() {
         return this.selectionMgr;
     }
 
     /**
      * @see org.teiid.designer.ui.editors.ModelEditorPage#getActionBarContributor()
      */
-    public AbstractModelEditorPageActionBarContributor getActionBarContributor() {
+    @Override
+	public AbstractModelEditorPageActionBarContributor getActionBarContributor() {
         if (actionContributor == null) {
             actionContributor = new ModelTableEditorActionContributor(this);
         }
@@ -804,28 +816,32 @@ public class ModelTableEditor extends NavigableEditor
     /**
      * @see org.teiid.designer.ui.editors.ModelEditorPage#setLabelProvider(org.eclipse.jface.viewers.ILabelProvider)
      */
-    public void setLabelProvider( ILabelProvider provider ) {
+    @Override
+	public void setLabelProvider( ILabelProvider provider ) {
 
     }
 
     /**
      * @see org.teiid.designer.ui.editors.ModelEditorPage#getNotifyChangedListener()
      */
-    public INotifyChangedListener getNotifyChangedListener() {
+    @Override
+	public INotifyChangedListener getNotifyChangedListener() {
         return getNotificationHandler();
     }
 
     /**
      * @see org.teiid.designer.ui.editors.ModelEditorPage#getOutlineContribution()
      */
-    public ModelEditorPageOutline getOutlineContribution() {
+    @Override
+	public ModelEditorPageOutline getOutlineContribution() {
         return null;
     }
 
     /**
      * @see org.teiid.designer.ui.editors.ModelEditorPage#setParent()
      */
-    public void setParent( ModelEditor meParentEditor ) {
+    @Override
+	public void setParent( ModelEditor meParentEditor ) {
         this.meParentEditor = meParentEditor;
     }
 
@@ -834,7 +850,8 @@ public class ModelTableEditor extends NavigableEditor
 
         Object lastGetValue = null;
 
-        public boolean canModify( Object element,
+        @Override
+		public boolean canModify( Object element,
                                   String property ) {
             if (isReadOnly()) {
                 return false;
@@ -844,14 +861,16 @@ public class ModelTableEditor extends NavigableEditor
             return true;
         }
 
-        public Object getValue( Object element,
+        @Override
+		public Object getValue( Object element,
                                 String property ) {
             ModelRowElement row = (ModelRowElement)element;
             lastGetValue = row.getValueObject(property);
             return lastGetValue;
         }
 
-        public void modify( Object element,
+        @Override
+		public void modify( Object element,
                             String property,
                             Object theValue ) {
             boolean modifyValue = false;
@@ -895,7 +914,8 @@ public class ModelTableEditor extends NavigableEditor
 
     /** Comparator to order the tabs in this editor */
     class EClassNameComparator implements Comparator {
-        public int compare( Object o1,
+        @Override
+		public int compare( Object o1,
                             Object o2 ) {
             // Order alphabetically by name (ascending)
             EClass c1 = (EClass)o1;
@@ -911,7 +931,8 @@ public class ModelTableEditor extends NavigableEditor
         /**
          * @since 4.0
          */
-        public void selectionChanged( final SelectionChangedEvent event ) {
+        @Override
+		public void selectionChanged( final SelectionChangedEvent event ) {
             getModelObjectSelectionProvider().setSelection(event.getSelection());
             if (SelectionUtilities.isSingleSelection(event.getSelection())) {
                 Object obj = ((IStructuredSelection)event.getSelection()).getFirstElement();
@@ -1097,7 +1118,8 @@ public class ModelTableEditor extends NavigableEditor
     /**
      * @see org.teiid.designer.ui.table.ITablePasteValidator#constructPasteStatusRecord(java.lang.String, int, int)
      */
-    public ClipboardPasteStatusRecord constructPasteStatusRecord( String theProposedValue,
+    @Override
+	public ClipboardPasteStatusRecord constructPasteStatusRecord( String theProposedValue,
                                                                   int theRow,
                                                                   int theColumn ) {
         /* ----- DESIGN NOTE -----
@@ -1272,7 +1294,8 @@ public class ModelTableEditor extends NavigableEditor
     /**
      * @see org.teiid.designer.ui.table.ITablePasteValidator#getSelectedRowAndColumn()
      */
-    public int[] getSelectedRowAndColumn() {
+    @Override
+	public int[] getSelectedRowAndColumn() {
         TableViewer viewer = getCurrentViewer();
         TableColumnSelectionHelper helper = (TableColumnSelectionHelper)selectionHelperMap.get(viewer);
 
@@ -1573,7 +1596,8 @@ public class ModelTableEditor extends NavigableEditor
      * @see org.teiid.designer.ui.editors.ModelEditorPage#setTitleText(java.lang.String)
      * @since 4.2
      */
-    public void setTitleText( String newTitle ) {
+    @Override
+	public void setTitleText( String newTitle ) {
         this.title = newTitle;
     }
 
@@ -1592,7 +1616,8 @@ public class ModelTableEditor extends NavigableEditor
     /**
      * @see org.teiid.designer.ui.editors.ModelEditorPage#updateReadOnlyState(boolean)
      */
-    public void updateReadOnlyState( boolean isReadOnly ) {
+    @Override
+	public void updateReadOnlyState( boolean isReadOnly ) {
         // defect 16345 - table editor not working on checkout
         if (lastReadOnly != isReadOnly) {
             lastReadOnly = isReadOnly;
@@ -1619,7 +1644,8 @@ public class ModelTableEditor extends NavigableEditor
      * @see org.teiid.core.event.EventObjectListener#processEvent(java.util.EventObject)
      * @since 4.2
      */
-    public void processEvent( EventObject obj ) {
+    @Override
+	public void processEvent( EventObject obj ) {
         ModelResourceEvent event = (ModelResourceEvent)obj;
         if (event.getType() == ModelResourceEvent.RELOADED) {
             refresh();
@@ -1628,7 +1654,8 @@ public class ModelTableEditor extends NavigableEditor
 
     private void refresh() {
         Display.getDefault().asyncExec(new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 if (getControl() != null && !getControl().isDisposed()) {
                     // Remove Tab items.
                     TabItem[] tabs = tabFolder.getItems();
@@ -1664,7 +1691,8 @@ public class ModelTableEditor extends NavigableEditor
      * @see org.teiid.designer.ui.editors.ModelEditorPage#openComplete()
      * @since 4.2
      */
-    public void openComplete() {
+    @Override
+	public void openComplete() {
         // Default Implementation
     }
 
@@ -1672,7 +1700,8 @@ public class ModelTableEditor extends NavigableEditor
      * @see org.teiid.designer.ui.editors.IInlineRenameable#canRenameInline(org.eclipse.emf.ecore.EObject)
      * @since 5.0
      */
-    public IInlineRenameable getInlineRenameable( EObject theObj ) {
+    @Override
+	public IInlineRenameable getInlineRenameable( EObject theObj ) {
         return this;
     }
 
@@ -1680,13 +1709,15 @@ public class ModelTableEditor extends NavigableEditor
      * @see org.teiid.designer.ui.editors.IInlineRenameable#renameInline(org.eclipse.emf.ecore.EObject)
      * @since 5.0
      */
-    public void renameInline( final EObject targetEObject,
+    @Override
+	public void renameInline( final EObject targetEObject,
                               IInlineRenameable renameable ) {
         if (renameable == this && targetEObject != null) {
             // Set Selection
             // Let's asynch this off
             Display.getCurrent().asyncExec(new Runnable() {
-                public void run() {
+                @Override
+				public void run() {
                     selectionMgr.setSelection(new StructuredSelection(targetEObject));
                     DoubleClickTableViewer dctv = (DoubleClickTableViewer)getCurrentViewer();
                     // We need to get the column for the Name property (if it exists)
@@ -1754,7 +1785,8 @@ public class ModelTableEditor extends NavigableEditor
      * @see org.teiid.designer.ui.editors.ModelEditorPage#isSelectedFirst(org.eclipse.ui.IEditorInput)
      * @since 5.0.1
      */
-    public boolean isSelectedFirst( IEditorInput input ) {
+    @Override
+	public boolean isSelectedFirst( IEditorInput input ) {
         return false;
     }
 }

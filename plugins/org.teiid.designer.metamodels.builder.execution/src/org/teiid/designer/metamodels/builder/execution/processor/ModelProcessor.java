@@ -58,7 +58,8 @@ public class ModelProcessor extends AbstractProcessor {
     /* (non-Javadoc)
      * @see org.teiid.designer.metamodels.builder.processor.Processor#getRecordCount(org.eclipse.core.runtime.IStatus)
      */
-    public int getRecordCount() {
+    @Override
+	public int getRecordCount() {
         int totalRows = 0;
 
         // ----------------------------------------------
@@ -96,7 +97,8 @@ public class ModelProcessor extends AbstractProcessor {
     /* (non-Javadoc)
      * @see org.teiid.designer.metamodels.builder.processor.Processor#process(org.eclipse.core.runtime.IProgressMonitor)
      */
-    public IStatus process( IProgressMonitor monitor ) {
+    @Override
+	public IStatus process( IProgressMonitor monitor ) {
         if (monitor != null) {
             monitor.subTask("Processing Models"); //$NON-NLS-1$
         }

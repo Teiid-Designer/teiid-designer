@@ -35,7 +35,8 @@ public class FakeIFile extends FakeIResource implements IFile {
      * 
      * @see org.eclipse.core.resources.IFile#createLink(java.net.URI, int, org.eclipse.core.runtime.IProgressMonitor)
      */
-    public void createLink( URI location,
+    @Override
+	public void createLink( URI location,
                             int updateFlags,
                             IProgressMonitor monitor ) {
     }
@@ -45,7 +46,8 @@ public class FakeIFile extends FakeIResource implements IFile {
      *      org.eclipse.core.runtime.IProgressMonitor)
      * @since 4.2
      */
-    public void appendContents( InputStream source,
+    @Override
+	public void appendContents( InputStream source,
                                 boolean force,
                                 boolean keepHistory,
                                 IProgressMonitor monitor ) {
@@ -55,7 +57,8 @@ public class FakeIFile extends FakeIResource implements IFile {
      * @see org.eclipse.core.resources.IFile#appendContents(java.io.InputStream, int, org.eclipse.core.runtime.IProgressMonitor)
      * @since 4.2
      */
-    public void appendContents( InputStream source,
+    @Override
+	public void appendContents( InputStream source,
                                 int updateFlags,
                                 IProgressMonitor monitor ) {
     }
@@ -64,7 +67,8 @@ public class FakeIFile extends FakeIResource implements IFile {
      * @see org.eclipse.core.resources.IFile#create(java.io.InputStream, boolean, org.eclipse.core.runtime.IProgressMonitor)
      * @since 4.2
      */
-    public void create( InputStream source,
+    @Override
+	public void create( InputStream source,
                         boolean force,
                         IProgressMonitor monitor ) {
     }
@@ -73,7 +77,8 @@ public class FakeIFile extends FakeIResource implements IFile {
      * @see org.eclipse.core.resources.IFile#create(java.io.InputStream, int, org.eclipse.core.runtime.IProgressMonitor)
      * @since 4.2
      */
-    public void create( InputStream source,
+    @Override
+	public void create( InputStream source,
                         int updateFlags,
                         IProgressMonitor monitor ) {
     }
@@ -83,7 +88,8 @@ public class FakeIFile extends FakeIResource implements IFile {
      *      org.eclipse.core.runtime.IProgressMonitor)
      * @since 4.2
      */
-    public void createLink( IPath localLocation,
+    @Override
+	public void createLink( IPath localLocation,
                             int updateFlags,
                             IProgressMonitor monitor ) {
     }
@@ -92,7 +98,8 @@ public class FakeIFile extends FakeIResource implements IFile {
      * @see org.eclipse.core.resources.IFile#delete(boolean, boolean, org.eclipse.core.runtime.IProgressMonitor)
      * @since 4.2
      */
-    public void delete( boolean force,
+    @Override
+	public void delete( boolean force,
                         boolean keepHistory,
                         IProgressMonitor monitor ) {
     }
@@ -101,7 +108,8 @@ public class FakeIFile extends FakeIResource implements IFile {
      * @see org.eclipse.core.resources.IFile#getContents()
      * @since 4.2
      */
-    public InputStream getContents() {
+    @Override
+	public InputStream getContents() {
         return null;
     }
 
@@ -109,14 +117,16 @@ public class FakeIFile extends FakeIResource implements IFile {
      * @see org.eclipse.core.resources.IFile#getContents(boolean)
      * @since 4.2
      */
-    public InputStream getContents( boolean force ) {
+    @Override
+	public InputStream getContents( boolean force ) {
         return null;
     }
 
     /**
      * @since 4.2
      */
-    public int getEncoding() {
+    @Override
+	public int getEncoding() {
         return 0;
     }
 
@@ -124,7 +134,8 @@ public class FakeIFile extends FakeIResource implements IFile {
      * @see org.eclipse.core.resources.IFile#getHistory(org.eclipse.core.runtime.IProgressMonitor)
      * @since 4.2
      */
-    public IFileState[] getHistory( IProgressMonitor monitor ) {
+    @Override
+	public IFileState[] getHistory( IProgressMonitor monitor ) {
         return null;
     }
 
@@ -133,7 +144,8 @@ public class FakeIFile extends FakeIResource implements IFile {
      *      org.eclipse.core.runtime.IProgressMonitor)
      * @since 4.2
      */
-    public void move( IPath destination,
+    @Override
+	public void move( IPath destination,
                       boolean force,
                       boolean keepHistory,
                       IProgressMonitor monitor ) {
@@ -144,7 +156,8 @@ public class FakeIFile extends FakeIResource implements IFile {
      *      org.eclipse.core.runtime.IProgressMonitor)
      * @since 4.2
      */
-    public void setContents( InputStream source,
+    @Override
+	public void setContents( InputStream source,
                              boolean force,
                              boolean keepHistory,
                              IProgressMonitor monitor ) {
@@ -155,7 +168,8 @@ public class FakeIFile extends FakeIResource implements IFile {
      *      org.eclipse.core.runtime.IProgressMonitor)
      * @since 4.2
      */
-    public void setContents( IFileState source,
+    @Override
+	public void setContents( IFileState source,
                              boolean force,
                              boolean keepHistory,
                              IProgressMonitor monitor ) {
@@ -165,7 +179,8 @@ public class FakeIFile extends FakeIResource implements IFile {
      * @see org.eclipse.core.resources.IFile#setContents(java.io.InputStream, int, org.eclipse.core.runtime.IProgressMonitor)
      * @since 4.2
      */
-    public void setContents( InputStream source,
+    @Override
+	public void setContents( InputStream source,
                              int updateFlags,
                              IProgressMonitor monitor ) {
     }
@@ -175,28 +190,34 @@ public class FakeIFile extends FakeIResource implements IFile {
      *      org.eclipse.core.runtime.IProgressMonitor)
      * @since 4.2
      */
-    public void setContents( IFileState source,
+    @Override
+	public void setContents( IFileState source,
                              int updateFlags,
                              IProgressMonitor monitor ) {
     }
 
-    public String getCharset() {
+    @Override
+	public String getCharset() {
         return null;
     }
 
-    public String getCharset( boolean checkImplicit ) {
+    @Override
+	public String getCharset( boolean checkImplicit ) {
         return null;
     }
 
-    public IContentDescription getContentDescription() {
+    @Override
+	public IContentDescription getContentDescription() {
         return null;
     }
 
-    public void setCharset( String newCharset,
+    @Override
+	public void setCharset( String newCharset,
                             IProgressMonitor monitor ) {
     }
 
-    public void setCharset( String newCharset ) {
+    @Override
+	public void setCharset( String newCharset ) {
     }
 
     @Override
@@ -232,7 +253,8 @@ public class FakeIFile extends FakeIResource implements IFile {
         return false;
     }
 
-    public String getCharsetFor( Reader reader ) {
+    @Override
+	public String getCharsetFor( Reader reader ) {
         return null;
     }
 }

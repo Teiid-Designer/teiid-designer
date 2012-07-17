@@ -56,14 +56,16 @@ public class ValidationResultImpl implements ValidationResult {
      * @see org.teiid.designer.core.validation.ValidationResult#getTarget()
      * @since 4.2
      */
-    public Object getTarget() {
+    @Override
+	public Object getTarget() {
         return this.target;
     }
 
     /*
      * @See org.teiid.designer.core.validation.ValidationResult#isFatalObject()
      */
-    public boolean isFatalObject(Object eObject) {
+    @Override
+	public boolean isFatalObject(Object eObject) {
         if(eObject != null && eObject.equals(this.target)) {
             return isFatalObj;
         }
@@ -73,14 +75,16 @@ public class ValidationResultImpl implements ValidationResult {
     /*
      * @See org.teiid.designer.core.validation.ValidationResult#isFatalResource()
      */
-    public boolean isFatalResource() {
+    @Override
+	public boolean isFatalResource() {
         return isFatalResource;
     }
 
     /**
      * @see org.teiid.designer.core.validation.ValidationResult#getProblems()
      */
-    public ValidationProblem[] getProblems() {
+    @Override
+	public ValidationProblem[] getProblems() {
     	if (problems != null && problems.size() != 0) {
 			final ValidationProblem[] result = new ValidationProblem[problems.size()];
 			problems.toArray(result);
@@ -92,7 +96,8 @@ public class ValidationResultImpl implements ValidationResult {
     /**
      * @see org.teiid.designer.core.validation.ValidationResult#hasProblems()
      */
-    public boolean hasProblems() {
+    @Override
+	public boolean hasProblems() {
         if (problems != null && problems.size() > 0) {
             return true;
         }
@@ -102,7 +107,8 @@ public class ValidationResultImpl implements ValidationResult {
     /**
      * @see org.teiid.designer.core.validation.ValidationResult#addProblem(org.teiid.designer.core.validation.ValidationProblem)
      */
-    public void addProblem(final ValidationProblem problem) {
+    @Override
+	public void addProblem(final ValidationProblem problem) {
         if(problem != null) {
 	        isFatalObj = (problem.getSeverity() == IStatus.ERROR);
 	        if(problems == null) {
@@ -117,14 +123,16 @@ public class ValidationResultImpl implements ValidationResult {
     /**
      * @see org.teiid.designer.core.validation.ValidationResult#getLocationPath()
      */
-    public String getLocationPath() {
+    @Override
+	public String getLocationPath() {
         return this.locationPath;
     }
 
     /**
      * @see org.teiid.designer.core.validation.ValidationResult#setLocationPath(java.lang.String)
      */
-    public void setLocationPath(final String locationPath) {
+    @Override
+	public void setLocationPath(final String locationPath) {
         CoreArgCheck.isNotNull(locationPath);
         this.locationPath = locationPath;
     }
@@ -132,14 +140,16 @@ public class ValidationResultImpl implements ValidationResult {
     /**
      * @see org.teiid.designer.core.validation.ValidationResult#getLocationUri()
      */
-    public String getLocationUri() {
+    @Override
+	public String getLocationUri() {
         return this.locationUri;
     }
 
     /**
      * @see org.teiid.designer.core.validation.ValidationResult#getTargetUri()
      */
-    public String getTargetUri() {
+    @Override
+	public String getTargetUri() {
         return this.targetUri;
     }
 
@@ -150,7 +160,8 @@ public class ValidationResultImpl implements ValidationResult {
     /*
      * @See org.teiid.designer.core.validation.ValidationResult#setFatalResource(boolean)
      */
-    public void setFatalResource(boolean fatal) {
+    @Override
+	public void setFatalResource(boolean fatal) {
         this.isFatalResource = fatal;
     }
 

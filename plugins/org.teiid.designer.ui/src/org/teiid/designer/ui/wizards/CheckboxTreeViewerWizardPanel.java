@@ -95,11 +95,13 @@ public class CheckboxTreeViewerWizardPanel extends Composite implements UiConsta
         return populator;
     }
 
-    public void enableCheckboxChangeListener( boolean flag ) {
+    @Override
+	public void enableCheckboxChangeListener( boolean flag ) {
         this.listenForCheckboxChanges = flag;
     }
 
-    public void checkboxStateChanged() {
+    @Override
+	public void checkboxStateChanged() {
         checkedItemsChanged();
     }
 
@@ -154,7 +156,8 @@ public class CheckboxTreeViewerWizardPanel extends Composite implements UiConsta
                                                        InheritanceCheckboxTreeViewer.CHECKED_WHITE_IF_ALL_DESCENDANTS_CHECKED_ELSE_CHECKED_GRAYED_IF_ANY_CHECKED,
                                                        deselectionHandler);
         treeViewer.addCheckStateListener(new ICheckStateListener() {
-            public void checkStateChanged( CheckStateChangedEvent event ) {
+            @Override
+			public void checkStateChanged( CheckStateChangedEvent event ) {
                 if (listenForCheckboxChanges) {
                     checkedItemsChanged();
                 }
@@ -198,11 +201,13 @@ public class CheckboxTreeViewerWizardPanel extends Composite implements UiConsta
 
         // copy selection buttons
         SelectionListener sl = new SelectionListener() {
-            public void widgetDefaultSelected( SelectionEvent e ) {
+            @Override
+			public void widgetDefaultSelected( SelectionEvent e ) {
                 widgetSelected(e);
             }
 
-            public void widgetSelected( SelectionEvent e ) {
+            @Override
+			public void widgetSelected( SelectionEvent e ) {
                 boolean copyEntire = !selectFeatures.getSelection();
                 setCopyEntireModel(copyEntire);
             }

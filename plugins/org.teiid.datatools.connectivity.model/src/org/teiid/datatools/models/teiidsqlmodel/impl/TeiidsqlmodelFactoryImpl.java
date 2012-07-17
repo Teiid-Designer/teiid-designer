@@ -10,12 +10,12 @@ package org.teiid.datatools.models.teiidsqlmodel.impl;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
-
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
-
-import org.teiid.datatools.models.teiidsqlmodel.*;
+import org.teiid.datatools.models.teiidsqlmodel.Document;
+import org.teiid.datatools.models.teiidsqlmodel.TeiidSchema;
+import org.teiid.datatools.models.teiidsqlmodel.TeiidsqlmodelFactory;
+import org.teiid.datatools.models.teiidsqlmodel.TeiidsqlmodelPackage;
 
 /**
  * <!-- begin-user-doc -->
@@ -65,6 +65,7 @@ public class TeiidsqlmodelFactoryImpl extends EFactoryImpl implements Teiidsqlmo
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
 			case TeiidsqlmodelPackage.DOCUMENT: return createDocument();
@@ -79,6 +80,7 @@ public class TeiidsqlmodelFactoryImpl extends EFactoryImpl implements Teiidsqlmo
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TeiidSchema createTeiidSchema() {
 		TeiidSchemaImpl teiidSchema = new TeiidSchemaImpl();
 		return teiidSchema;
@@ -89,6 +91,7 @@ public class TeiidsqlmodelFactoryImpl extends EFactoryImpl implements Teiidsqlmo
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Document createDocument() {
 		DocumentImpl document = new DocumentImpl();
 		return document;
@@ -99,6 +102,7 @@ public class TeiidsqlmodelFactoryImpl extends EFactoryImpl implements Teiidsqlmo
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TeiidsqlmodelPackage getTeiidsqlmodelPackage() {
 		return (TeiidsqlmodelPackage)getEPackage();
 	}
@@ -109,7 +113,8 @@ public class TeiidsqlmodelFactoryImpl extends EFactoryImpl implements Teiidsqlmo
 	 * @deprecated
 	 * @generated
 	 */
-	public static TeiidsqlmodelPackage getPackage() {
+	@Deprecated
+    public static TeiidsqlmodelPackage getPackage() {
 		return TeiidsqlmodelPackage.eINSTANCE;
 	}
 

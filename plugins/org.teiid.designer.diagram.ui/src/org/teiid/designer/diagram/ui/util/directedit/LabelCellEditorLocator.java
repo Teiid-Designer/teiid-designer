@@ -22,7 +22,8 @@ final public class LabelCellEditorLocator implements CellEditorLocator {
         setLabel(label);
     }
 
-    public void relocate(CellEditor celleditor) {
+    @Override
+	public void relocate(CellEditor celleditor) {
         Text text = (Text)celleditor.getControl();
         Point sel = text.getSelection();
         Point pref = text.computeSize(-1, -1);

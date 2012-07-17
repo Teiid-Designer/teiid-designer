@@ -114,7 +114,8 @@ public class WsdlWriter implements XMLSave, WsdlConstants {
      * @see org.eclipse.emf.ecore.xmi.XMLSave#save(org.eclipse.emf.ecore.xmi.XMLResource, java.io.OutputStream, java.util.Map)
      * @since 4.2
      */
-    public void save( final XMLResource resource,
+    @Override
+	public void save( final XMLResource resource,
                       final OutputStream outputStream,
                       final Map options ) throws IOException {
         CoreArgCheck.isNotNull(resource);
@@ -149,7 +150,8 @@ public class WsdlWriter implements XMLSave, WsdlConstants {
      *      org.eclipse.emf.ecore.xmi.DOMHandler)
      * @since 4.3
      */
-    public org.w3c.dom.Document save( final XMLResource resource,
+    @Override
+	public org.w3c.dom.Document save( final XMLResource resource,
                                       final org.w3c.dom.Document document,
                                       final Map options,
                                       final DOMHandler handler ) {
@@ -161,7 +163,8 @@ public class WsdlWriter implements XMLSave, WsdlConstants {
      * 
      * @see org.eclipse.emf.ecore.xmi.XMLSave#save(org.eclipse.emf.ecore.xmi.XMLResource, java.io.Writer, java.util.Map)
      */
-    public void save( XMLResource resource,
+    @Override
+	public void save( XMLResource resource,
                       Writer writer,
                       Map<?, ?> options ) throws IOException {
         CoreArgCheck.isNotNull(resource);

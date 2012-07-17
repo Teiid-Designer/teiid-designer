@@ -41,7 +41,8 @@ public interface PrimaryKey extends UniqueKey{
      * @model opposite="primaryKey"
      * @generated
      */
-    BaseTable getTable();
+    @Override
+	BaseTable getTable();
 
     /**
      * Sets the value of the '{@link org.teiid.designer.metamodels.relational.PrimaryKey#getTable <em>Table</em>}' container reference.

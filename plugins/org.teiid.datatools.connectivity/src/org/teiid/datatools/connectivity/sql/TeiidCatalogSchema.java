@@ -26,6 +26,7 @@ public class TeiidCatalogSchema extends TeiidSchemaImpl {
     }
 
     //@SuppressWarnings("rawtypes")
+	@Override
 	public EList getDocuments() {
     	synchronized (documents_LOCK) {
 			if (!documentsLoaded.booleanValue())
@@ -37,6 +38,7 @@ public class TeiidCatalogSchema extends TeiidSchemaImpl {
 	/* (non-Javadoc)
 	 * @see org.eclipse.datatools.connectivity.sqm.core.rte.jdbc.JDBCSchema#refresh()
 	 */
+	@Override
 	public void refresh() {
 		synchronized (documents_LOCK) {
 			if (documentsLoaded.booleanValue()) {

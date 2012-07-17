@@ -70,7 +70,8 @@ public class TeiidAdHocScriptRunnable extends SimpleSQLResultRunnable {
 	 * 
 	 * @see org.eclipse.core.internal.jobs.InternalJob#run(org.eclipse.core.runtime.IProgressMonitor)
 	 */
-    protected IStatus run(IProgressMonitor monitor)
+    @Override
+	protected IStatus run(IProgressMonitor monitor)
     {
         if (monitor == null)
         {
@@ -279,7 +280,8 @@ public class TeiidAdHocScriptRunnable extends SimpleSQLResultRunnable {
             this.statement = stmt;
         }
 
-        public void run() {
+        @Override
+		public void run() {
             handleShowExecutionPlan(this.statement);
             handleShowResultsView();
         }
@@ -291,7 +293,8 @@ public class TeiidAdHocScriptRunnable extends SimpleSQLResultRunnable {
         volatile boolean _end = true;
         IStatus _returnStatus = null;
         
-        public void run()
+        @Override
+		public void run()
         {
             if(_monitor == null)
             {
@@ -345,7 +348,8 @@ public class TeiidAdHocScriptRunnable extends SimpleSQLResultRunnable {
             _monitorThread = monitorThread;
         }
         
-        protected IStatus run(IProgressMonitor monitor)
+        @Override
+		protected IStatus run(IProgressMonitor monitor)
         {
             monitor.beginTask(Messages.ResultSupportRunnable_handseccess_task, TASK_TOTAL);
             monitor.worked(TASK_STATEMENT);
@@ -356,7 +360,8 @@ public class TeiidAdHocScriptRunnable extends SimpleSQLResultRunnable {
         }
     }
 	
-    public void loopThroughResults(Statement cstmt, boolean moreResult)
+    @Override
+	public void loopThroughResults(Statement cstmt, boolean moreResult)
     throws SQLException
 {
     boolean hasException = false;//if there are some Exception, we should thrown it out to triger finishFail

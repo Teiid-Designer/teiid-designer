@@ -124,7 +124,8 @@ public class TransformationDiagramPartFactory extends AbstractDiagramEditPartFac
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.part.DiagramEditPartFactory#getAnchorManager(org.teiid.designer.diagram.ui.part.DiagramEditPart)
      */
-    public AnchorManager getAnchorManager( DiagramEditPart editPart ) {
+    @Override
+	public AnchorManager getAnchorManager( DiagramEditPart editPart ) {
         if (editPart instanceof TransformationEditPart) {
             return new ChopBoxAnchorManager(editPart);
         }

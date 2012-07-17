@@ -33,77 +33,88 @@ public class DisabledCommand implements Command {
     /**
      * @see org.eclipse.emf.common.command.Command#canExecute()
      */
-    public boolean canExecute() {
+    @Override
+	public boolean canExecute() {
         return false;
     }
 
     /**
      * @see org.eclipse.emf.common.command.Command#execute()
      */
-    public void execute() {
+    @Override
+	public void execute() {
         throw new UnsupportedOperationException();
     }
 
     /**
      * @see org.eclipse.emf.common.command.Command#canUndo()
      */
-    public boolean canUndo() {
+    @Override
+	public boolean canUndo() {
         return false;
     }
 
     /**
      * @see org.eclipse.emf.common.command.Command#undo()
      */
-    public void undo() {
+    @Override
+	public void undo() {
         throw new UnsupportedOperationException();
     }
 
     /**
      * @see org.eclipse.emf.common.command.Command#redo()
      */
-    public void redo() {
+    @Override
+	public void redo() {
         throw new UnsupportedOperationException();
     }
 
     /**
      * @see org.eclipse.emf.common.command.Command#getResult()
      */
-    public Collection getResult() {
+    @Override
+	public Collection getResult() {
         return command.getResult();
     }
 
     /**
      * @see org.eclipse.emf.common.command.Command#getAffectedObjects()
      */
-    public Collection getAffectedObjects() {
+    @Override
+	public Collection getAffectedObjects() {
         return command.getAffectedObjects();
     }
 
     /**
      * @see org.eclipse.emf.common.command.Command#getLabel()
      */
-    public String getLabel() {
+    @Override
+	public String getLabel() {
         return command.getLabel();
     }
 
     /**
      * @see org.eclipse.emf.common.command.Command#getDescription()
      */
-    public String getDescription() {
+    @Override
+	public String getDescription() {
         return command.getDescription();
     }
 
     /**
      * @see org.eclipse.emf.common.command.Command#dispose()
      */
-    public void dispose() {
+    @Override
+	public void dispose() {
         command.dispose();
     }
 
     /**
      * @see org.eclipse.emf.common.command.Command#chain(org.eclipse.emf.common.command.Command)
      */
-    public Command chain(Command command) {
+    @Override
+	public Command chain(Command command) {
         return command.chain(command);
     }
 }

@@ -245,7 +245,7 @@ public class DescriptionView extends ModelerView
         if (this.currentObject instanceof EObject) {
             return ModelerCore.getModelEditor().getName((EObject)this.currentObject);
         } else if (this.currentObject instanceof ModelResource) {
-            return ((ModelResource)this.currentModel).getItemName();
+            return this.currentModel.getItemName();
         } else {
             // TODO: Check for VDB SELECTION
         }
@@ -300,7 +300,8 @@ public class DescriptionView extends ModelerView
      * @see org.eclipse.emf.edit.provider.INotifyChangedListener#notifyChanged(org.eclipse.emf.common.notify.Notification)
      * @since 5.5
      */
-    public void notifyChanged( Notification notification ) {
+    @Override
+	public void notifyChanged( Notification notification ) {
         boolean descriptionChanged = false;
 
         // if the target of the notification is this object's annotation, refresh the display
@@ -411,7 +412,8 @@ public class DescriptionView extends ModelerView
 
                 Display.getDefault().asyncExec(new Runnable() {
 
-                    public void run() {
+                    @Override
+					public void run() {
                         setFocus();
                     }
                 });
@@ -430,7 +432,8 @@ public class DescriptionView extends ModelerView
      */
     void refresh() {
         Runnable work = new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 setText(getCurrentObjectDescription());
                 updateActions();
             }
@@ -475,7 +478,8 @@ public class DescriptionView extends ModelerView
      *      org.eclipse.jface.viewers.ISelection)
      * @since 5.5
      */
-    public void selectionChanged( IWorkbenchPart part,
+    @Override
+	public void selectionChanged( IWorkbenchPart part,
                                   ISelection selection ) {
         if ((part != this) && !(part instanceof PropertySheet)) {
             setCurrentObject(SelectionUtilities.getSelectedObject(selection));
@@ -612,7 +616,8 @@ public class DescriptionView extends ModelerView
      * @see org.eclipse.ui.texteditor.ITextEditorExtension2#isEditorInputModifiable()
      * @since 5.5.3
      */
-    public boolean isEditorInputModifiable() {
+    @Override
+	public boolean isEditorInputModifiable() {
         return false; //this.textEditor.isEditable();
     }
 
@@ -620,7 +625,8 @@ public class DescriptionView extends ModelerView
      * @see org.eclipse.ui.texteditor.ITextEditorExtension2#validateEditorInputState()
      * @since 5.5.3
      */
-    public boolean validateEditorInputState() {
+    @Override
+	public boolean validateEditorInputState() {
         return false;
     }
 

@@ -117,7 +117,8 @@ public class UnitOfWorkImpl implements UnitOfWork {
     /**
      * Begin the transaction.
      */
-    public void begin() {
+    @Override
+	public void begin() {
         if (isStarted()) {
             CoreArgCheck.isTrue(false, ModelerCore.Util.getString("UnitOfWorkImpl.Transaction_already_started_1")); //$NON-NLS-1$
         }
@@ -143,7 +144,8 @@ public class UnitOfWorkImpl implements UnitOfWork {
     /**
      * @return
      */
-    public Object getId() {
+    @Override
+	public Object getId() {
         return this.id;
     }
 
@@ -153,7 +155,8 @@ public class UnitOfWorkImpl implements UnitOfWork {
      * 
      * @param notification
      */
-    public void processNotification( final Notification notification ) throws ModelerCoreException {
+    @Override
+	public void processNotification( final Notification notification ) throws ModelerCoreException {
         if (!isStarted() && !isRollingBack() && !isCommitting()) {
             int preState = getState();
             setState(TransactionStateConstants.FAILED);
@@ -180,7 +183,8 @@ public class UnitOfWorkImpl implements UnitOfWork {
     /**
      * @return the UoW source attribute
      */
-    public Object getSource() {
+    @Override
+	public Object getSource() {
         return this.source;
     }
 
@@ -189,14 +193,16 @@ public class UnitOfWorkImpl implements UnitOfWork {
      * 
      * @param object
      */
-    public void setSource( Object object ) {
+    @Override
+	public void setSource( Object object ) {
         this.source = object;
     }
 
     /**
      * Process all the notifications on the event queue, flush the command stack and create the undoable edit
      */
-    public void commit() throws ModelerCoreException {
+    @Override
+	public void commit() throws ModelerCoreException {
         boolean success = false;
         try {
             if (!isStarted() && !isRollingBack()) {
@@ -298,7 +304,8 @@ public class UnitOfWorkImpl implements UnitOfWork {
      * 
      * @param description
      */
-    public void setDescription( String description ) {
+    @Override
+	public void setDescription( String description ) {
         this.description = description;
     }
 
@@ -307,7 +314,8 @@ public class UnitOfWorkImpl implements UnitOfWork {
      * 
      * @see org.teiid.designer.core.transaction.api.mtk.core.transaction.MtkTransaction#rollback()
      */
-    public void rollback() {
+    @Override
+	public void rollback() {
         boolean success = false;
         try {
             if (!isStarted() && !isFailed()) {
@@ -351,7 +359,8 @@ public class UnitOfWorkImpl implements UnitOfWork {
      * @return true if the command was executed, or false if it could not be executed
      * @see com.metamatrix.mtk.emf.container.container.transaction.api.UnitOfWork#executeCommand(Command)
      */
-    public boolean executeCommand( final Command command ) throws ModelerCoreException {
+    @Override
+	public boolean executeCommand( final Command command ) throws ModelerCoreException {
         if (!isStarted() && !isRollingBack()) {
             int preState = getState();
             setState(TransactionStateConstants.FAILED);
@@ -396,39 +405,45 @@ public class UnitOfWorkImpl implements UnitOfWork {
     /**
      * @see org.teiid.designer.core.transaction.api.mtk.core.transaction.MtkTransaction#isStarted()
      */
-    public boolean isStarted() {
+    @Override
+	public boolean isStarted() {
         return getState() == TransactionStateConstants.STARTED;
     }
 
     /**
      * @see org.teiid.designer.core.transaction.api.mtk.core.transaction.MtkTransaction#isCommitting()
      */
-    public boolean isCommitting() {
+    @Override
+	public boolean isCommitting() {
         return getState() == TransactionStateConstants.COMMITTING;
     }
 
     /**
      * @see org.teiid.designer.core.transaction.api.mtk.core.transaction.MtkTransaction#isCommitting()
      */
-    public boolean isComplete() {
+    @Override
+	public boolean isComplete() {
         return getState() == TransactionStateConstants.COMPLETE;
     }
 
     /**
      * @see org.teiid.designer.core.transaction.api.mtk.core.transaction.MtkTransaction#isRollingBack()
      */
-    public boolean isRollingBack() {
+    @Override
+	public boolean isRollingBack() {
         return getState() == TransactionStateConstants.ROLLING_BACK;
     }
 
     /**
      * @see org.teiid.designer.core.transaction.api.mtk.core.transaction.MtkTransaction#isFailed()
      */
-    public boolean isFailed() {
+    @Override
+	public boolean isFailed() {
         return getState() == TransactionStateConstants.FAILED;
     }
 
-    public boolean requiresStart() {
+    @Override
+	public boolean requiresStart() {
         switch (this.state) {
             case TransactionStateConstants.COMMITTING:
                 return false;
@@ -446,7 +461,8 @@ public class UnitOfWorkImpl implements UnitOfWork {
      * 
      * @param b
      */
-    public void setSignificant( boolean b ) throws ModelerCoreException {
+    @Override
+	public void setSignificant( boolean b ) throws ModelerCoreException {
         if (!isStarted()) {
             int preState = getState();
             throw new ModelerCoreException(
@@ -459,7 +475,8 @@ public class UnitOfWorkImpl implements UnitOfWork {
     /**
      * @return the isUndoable flag
      */
-    public boolean isUndoable() {
+    @Override
+	public boolean isUndoable() {
         return this.isUndoable;
     }
 
@@ -468,7 +485,8 @@ public class UnitOfWorkImpl implements UnitOfWork {
      * 
      * @param b
      */
-    public void setUndoable( boolean b ) {
+    @Override
+	public void setUndoable( boolean b ) {
         this.isUndoable = b;
     }
 

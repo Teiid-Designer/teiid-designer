@@ -84,7 +84,8 @@ public class NodeConnectionEditPart extends AbstractConnectionEditPart
     /* (non-JavaDoc)
      * @see java.beans.PropertyChangeListener#propertyChange(PropertyChangeEvent)
     **/
-    public void propertyChange(PropertyChangeEvent evt) {
+    @Override
+	public void propertyChange(PropertyChangeEvent evt) {
         String prop = evt.getPropertyName();
 
         if (prop.equals(DiagramUiConstants.DiagramNodeProperties.CHILDREN)) {
@@ -151,7 +152,8 @@ public class NodeConnectionEditPart extends AbstractConnectionEditPart
 
     }   
     
-    public void figureMoved( IFigure fig ) {
+    @Override
+	public void figureMoved( IFigure fig ) {
 //        System.out.println("[NodeConnectionEditPart.figureMoved] TOP"); //$NON-NLS-1$        
 
         // when our polyline figure changes, we must re-layout the Assocation's labels

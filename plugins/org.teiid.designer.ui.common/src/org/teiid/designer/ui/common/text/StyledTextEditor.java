@@ -325,11 +325,13 @@ public class StyledTextEditor implements IMenuListener, KeyListener, UiConstants
         // focus listener to wire/unwire accelerators
         getTextWidget().addFocusListener(new FocusListener() {
 
-            public void focusGained( FocusEvent e ) {
+            @Override
+			public void focusGained( FocusEvent e ) {
                 handleFocusGained(e);
             }
 
-            public void focusLost( FocusEvent e ) {
+            @Override
+			public void focusLost( FocusEvent e ) {
                 handleFocusLost(e);
             }
         });
@@ -618,7 +620,8 @@ public class StyledTextEditor implements IMenuListener, KeyListener, UiConstants
      * @see org.eclipse.swt.events.KeyListener#keyPressed(org.eclipse.swt.events.KeyEvent)
      * @since 5.5.3
      */
-    public void keyPressed( KeyEvent e ) {
+    @Override
+	public void keyPressed( KeyEvent e ) {
         // nothing to do
     }
 
@@ -626,7 +629,8 @@ public class StyledTextEditor implements IMenuListener, KeyListener, UiConstants
      * @see org.eclipse.swt.events.KeyListener#keyReleased(org.eclipse.swt.events.KeyEvent)
      * @since 5.5.3
      */
-    public void keyReleased( KeyEvent e ) {
+    @Override
+	public void keyReleased( KeyEvent e ) {
     	if ( !this.bHaveFocus ) {
     		return;
     	}
@@ -659,7 +663,8 @@ public class StyledTextEditor implements IMenuListener, KeyListener, UiConstants
      * @see org.eclipse.jface.action.IMenuListener#menuAboutToShow(org.eclipse.jface.action.IMenuManager)
      * @since 5.5.3
      */
-    public void menuAboutToShow( IMenuManager menuMgr ) {
+    @Override
+	public void menuAboutToShow( IMenuManager menuMgr ) {
         if (this.isAllowCut()) {
             menuMgr.add(getAction(CUT_ID));
         }

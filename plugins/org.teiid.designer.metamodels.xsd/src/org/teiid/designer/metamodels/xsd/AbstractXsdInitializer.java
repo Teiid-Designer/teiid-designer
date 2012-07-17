@@ -43,7 +43,8 @@ public abstract class AbstractXsdInitializer implements ModelInitializer {
     /**
      * @see org.teiid.designer.core.ModelInitializer#execute(org.eclipse.emf.ecore.resource.Resource)
      */
-    public IStatus execute( final Resource model) {
+    @Override
+	public IStatus execute( final Resource model) {
         CoreArgCheck.isNotNull(model);
         // Check the resource type ...
         if ( !(model instanceof XSDResourceImpl) ) {

@@ -39,7 +39,8 @@ public class XsdImportMainPage extends AbstractWizardPage {
         return ModelerXsdUiConstants.Util.getString(I18N_PREFIX + SEPARATOR + id);
     }
 
-    public void createControl( Composite theParent ) {
+    @Override
+	public void createControl( Composite theParent ) {
         final int COLUMNS = 1;
         Composite pnlMain = WidgetFactory.createPanel(theParent, SWT.NONE, GridData.FILL_BOTH);
         pnlMain.setLayout(new GridLayout(COLUMNS, false));

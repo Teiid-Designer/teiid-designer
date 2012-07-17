@@ -96,6 +96,7 @@ public class DiagramLinkImpl extends AbstractDiagramEntityImpl implements Diagra
 	 * <!-- end-user-doc -->
      * @generated
      */
+	@Override
 	public DiagramLinkType getType() {
         return type;
     }
@@ -105,6 +106,7 @@ public class DiagramLinkImpl extends AbstractDiagramEntityImpl implements Diagra
 	 * <!-- end-user-doc -->
      * @generated
      */
+	@Override
 	public void setType(DiagramLinkType newType) {
         DiagramLinkType oldType = type;
         type = newType == null ? TYPE_EDEFAULT : newType;
@@ -117,7 +119,8 @@ public class DiagramLinkImpl extends AbstractDiagramEntityImpl implements Diagra
      * <!-- end-user-doc -->
      * @generated
      */
-    public Diagram getDiagram() {
+    @Override
+	public Diagram getDiagram() {
         if (eContainerFeatureID != DiagramPackage.DIAGRAM_LINK__DIAGRAM) return null;
         return (Diagram)eContainer;
     }
@@ -127,7 +130,8 @@ public class DiagramLinkImpl extends AbstractDiagramEntityImpl implements Diagra
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setDiagram(Diagram newDiagram) {
+    @Override
+	public void setDiagram(Diagram newDiagram) {
         if (newDiagram != eContainer || (eContainerFeatureID != DiagramPackage.DIAGRAM_LINK__DIAGRAM && newDiagram != null)) {
             if (EcoreUtil.isAncestor(this, newDiagram))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
@@ -148,7 +152,8 @@ public class DiagramLinkImpl extends AbstractDiagramEntityImpl implements Diagra
      * <!-- end-user-doc -->
      * @generated
      */
-    public EList getRoutePoints() {
+    @Override
+	public EList getRoutePoints() {
         if (routePoints == null) {
             routePoints = new EObjectContainmentWithInverseEList(DiagramPosition.class, this, DiagramPackage.DIAGRAM_LINK__ROUTE_POINTS, DiagramPackage.DIAGRAM_POSITION__DIAGRAM_LINK);
         }

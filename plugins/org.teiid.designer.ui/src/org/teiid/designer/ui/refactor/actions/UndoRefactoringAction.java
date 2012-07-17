@@ -40,7 +40,8 @@ public class UndoRefactoringAction extends ActionDelegate
     /* (non-Javadoc)
      * @see org.eclipse.ui.IViewActionDelegate#init(org.eclipse.ui.IViewPart)
      */
-    public void init(IViewPart view) {
+    @Override
+	public void init(IViewPart view) {
         if ( actionService == null ) {
             this.actionService = (ModelerActionService) UiPlugin.getDefault().getActionService(view.getSite().getPage());
         }
@@ -49,7 +50,8 @@ public class UndoRefactoringAction extends ActionDelegate
     /* (non-Javadoc)
      * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#init(org.eclipse.ui.IWorkbenchWindow)
      */
-    public void init(IWorkbenchWindow window) {
+    @Override
+	public void init(IWorkbenchWindow window) {
         if ( actionService == null ) {
             this.actionService = (ModelerActionService) UiPlugin.getDefault().getActionService(window.getActivePage());
         }
@@ -79,7 +81,8 @@ public class UndoRefactoringAction extends ActionDelegate
     /* (non-Javadoc)
      * @see org.teiid.designer.ui.refactor.RefactorUndoListener#stateChanged()
      */
-    public void stateChanged() {
+    @Override
+	public void stateChanged() {
         action.setEnabled(getUndoManager().canUndo());
         action.setText(getUndoManager().getUndoLabel());
     }

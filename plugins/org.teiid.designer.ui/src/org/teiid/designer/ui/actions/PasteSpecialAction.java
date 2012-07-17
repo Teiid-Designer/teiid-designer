@@ -131,7 +131,7 @@ public class PasteSpecialAction extends ModelObjectAction implements UiConstants
     @Override
     protected void doRun() {
         if (this.enabledExtensionList.size() == 1) {
-            ((IPasteSpecialContributor)this.enabledExtensionList.get(0)).run(this);
+            this.enabledExtensionList.get(0).run(this);
         }
 
         // swjTODO; handle multiple enabled contributors

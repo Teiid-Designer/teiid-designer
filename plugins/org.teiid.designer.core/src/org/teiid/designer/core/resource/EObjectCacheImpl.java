@@ -51,7 +51,8 @@ public class EObjectCacheImpl implements EObjectCache {
      * @see org.teiid.designer.core.resource.EObjectCache#add(org.eclipse.emf.ecore.EObject[], boolean)
      * @since 4.3
      */
-    public void add(final EObject[] values,
+    @Override
+	public void add(final EObject[] values,
                     final boolean recurse) {
         for (int i = 0; i != values.length; ++i) {
             add(values[i],recurse);
@@ -62,7 +63,8 @@ public class EObjectCacheImpl implements EObjectCache {
      * @see org.teiid.designer.core.resource.EObjectCache#add(org.eclipse.emf.ecore.EObject, boolean)
      * @since 4.3
      */
-    public void add(final EObject value,
+    @Override
+	public void add(final EObject value,
                     final boolean recurse) {
         CoreArgCheck.isNotNull(value);
 
@@ -119,7 +121,8 @@ public class EObjectCacheImpl implements EObjectCache {
      * @see org.teiid.designer.core.resource.EObjectCache#clear()
      * @since 4.3
      */
-    public void clear() {
+    @Override
+	public void clear() {
         try {
             for (final Iterator iter = mapOfMaps.iterator(); iter.hasNext();) {
                 Map next = (Map)iter.next();
@@ -140,7 +143,8 @@ public class EObjectCacheImpl implements EObjectCache {
      * @see org.teiid.designer.core.resource.EObjectCache#containsKey(org.teid.core.id.ObjectID)
      * @since 4.3
      */
-    public boolean containsKey(final ObjectID key) {
+    @Override
+	public boolean containsKey(final ObjectID key) {
         if (this.currentMap.containsKey(key)) {
             return true;
         }
@@ -157,7 +161,8 @@ public class EObjectCacheImpl implements EObjectCache {
      * @see org.teiid.designer.core.resource.EObjectCache#containsValue(org.eclipse.emf.ecore.EObject)
      * @since 4.3
      */
-    public boolean containsValue(final EObject value) {
+    @Override
+	public boolean containsValue(final EObject value) {
         if (this.currentMap.containsValue(value)) {
             return true;
         }
@@ -174,7 +179,8 @@ public class EObjectCacheImpl implements EObjectCache {
      * @see org.teiid.designer.core.resource.EObjectCache#get(org.teiid.core.id.ObjectID)
      * @since 4.3
      */
-    public EObject get(final ObjectID key) {
+    @Override
+	public EObject get(final ObjectID key) {
         if (key == null) {
             return null;
         }
@@ -189,7 +195,8 @@ public class EObjectCacheImpl implements EObjectCache {
      * @see org.teiid.designer.core.resource.EObjectCache#remove(org.eclipse.emf.ecore.EObject, boolean)
      * @since 4.3
      */
-    public void remove(final EObject value,
+    @Override
+	public void remove(final EObject value,
                        final boolean recurse) {
         CoreArgCheck.isNotNull(value);
 
@@ -220,7 +227,8 @@ public class EObjectCacheImpl implements EObjectCache {
      * @see org.teiid.designer.core.resource.EObjectCache#remove(org.eclipse.emf.ecore.EObject[], boolean)
      * @since 4.3
      */
-    public void remove(final EObject[] values,
+    @Override
+	public void remove(final EObject[] values,
                        final boolean recurse) {
         for (int i = 0; i != values.length; ++i) {
             remove(values[i],recurse);
@@ -231,7 +239,8 @@ public class EObjectCacheImpl implements EObjectCache {
      * @see org.teiid.designer.core.resource.EObjectCache#remove(com.metamatrix.core.id.ObjectID, boolean)
      * @since 4.3
      */
-    public void remove(final ObjectID key,
+    @Override
+	public void remove(final ObjectID key,
                        final boolean recurse) {
         CoreArgCheck.isNotNull(key);
 
@@ -262,7 +271,8 @@ public class EObjectCacheImpl implements EObjectCache {
      * @see org.teiid.designer.core.resource.EObjectCache#remove(com.metamatrix.core.id.ObjectID[], boolean)
      * @since 4.3
      */
-    public void remove(final ObjectID[] keys,
+    @Override
+	public void remove(final ObjectID[] keys,
                        final boolean recurse) {
         for (int i = 0; i != keys.length; ++i) {
             remove(keys[i],recurse);
@@ -273,7 +283,8 @@ public class EObjectCacheImpl implements EObjectCache {
      * @see org.teiid.designer.core.resource.EObjectCache#size()
      * @since 4.3
      */
-    public int size() {
+    @Override
+	public int size() {
         int size = 0;
         for (final Iterator iter = mapOfMaps.iterator(); iter.hasNext();) {
             Map next = (Map)iter.next();
@@ -286,7 +297,8 @@ public class EObjectCacheImpl implements EObjectCache {
      * @see org.teiid.designer.core.resource.EObjectCache#values()
      * @since 4.3
      */
-    public EObject[] values() {
+    @Override
+	public EObject[] values() {
         final List values = new ArrayList(size());
         for (final Iterator iter = mapOfMaps.iterator(); iter.hasNext();) {
             Map next = (Map)iter.next();

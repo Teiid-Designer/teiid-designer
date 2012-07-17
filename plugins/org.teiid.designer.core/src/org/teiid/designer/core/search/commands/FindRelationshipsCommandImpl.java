@@ -59,13 +59,15 @@ public class FindRelationshipsCommandImpl implements FindRelationshipsCommand {
     /**
      * @see org.teiid.designer.core.search.commands.FindRelationshipsCommand#setIndexSelector(org.teiid.designer.core.index.IndexSelector)
      */
-    public void setIndexSelector(final IndexSelector selector) {
+    @Override
+	public void setIndexSelector(final IndexSelector selector) {
         this.selector = selector;
     }
 
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.relationship.search.commands.RelationshipSearchCommand#canExecute()
 	 */
+	@Override
 	public boolean canExecute() {
 	    if(this.participantList != null && this.participantList.isEmpty()) {
 	        return false;
@@ -76,6 +78,7 @@ public class FindRelationshipsCommandImpl implements FindRelationshipsCommand {
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.relationship.search.commands.RelationshipSearchCommand#execute()
 	 */
+	@Override
 	public IStatus execute() {
 		if(!canExecute()) {
 			return null;
@@ -249,6 +252,7 @@ public class FindRelationshipsCommandImpl implements FindRelationshipsCommand {
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.relationship.search.commands.FindRelationshipsCommand#getRelationShipInfo()
 	 */
+	@Override
 	public Collection getRelationShipInfo() {
 		return this.relationsInfo;
 	}
@@ -256,21 +260,24 @@ public class FindRelationshipsCommandImpl implements FindRelationshipsCommand {
     /* (non-Javadoc)
      * @See org.teiid.designer.core.search.commands.FindRelationshipsCommand#setCaseSensitive(boolean)
      */
-    public void setCaseSensitive(boolean caseSensitive) {
+    @Override
+	public void setCaseSensitive(boolean caseSensitive) {
         this.caseSensitive = caseSensitive;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.search.commands.FindRelationshipsCommand#setNamePattern(java.lang.String)
      */
-    public void setNamePattern(String namePattern) {
+    @Override
+	public void setNamePattern(String namePattern) {
         this.namePattern = namePattern;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.search.commands.FindRelationshipsCommand#setParticipantList(java.util.List)
      */
-    public void setParticipantList(List participantList) {
+    @Override
+	public void setParticipantList(List participantList) {
         this.participantList = participantList;
     }
 
@@ -278,27 +285,31 @@ public class FindRelationshipsCommandImpl implements FindRelationshipsCommand {
      * @see org.teiid.designer.core.search.commands.FindRelationshipsCommand#setScopeResourceList(java.util.List)
      * @since 4.2
      */
-    public void setRelationshipResourceScopeList(List scopeResourceList) {
+    @Override
+	public void setRelationshipResourceScopeList(List scopeResourceList) {
         this.relationshipScope = scopeResourceList;        
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.search.commands.FindRelationshipsCommand#setIncludeSubtypes(boolean)
      */
-    public void setIncludeSubtypes(boolean includeSubtypes) {
+    @Override
+	public void setIncludeSubtypes(boolean includeSubtypes) {
         this.includeSubtypes = includeSubtypes;
     }
     
     /* (non-Javadoc)
      * @See org.teiid.designer.core.search.commands.FindRelationshipsCommand#setRelationshipTypeName(String)
      */
-    public void setRelationshipTypeName(String relationshipTypeName) {
+    @Override
+	public void setRelationshipTypeName(String relationshipTypeName) {
         this.relationshipTypeName = relationshipTypeName;
     }
    
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.core.search.commands.FindRelationshipsCommand#setRelationshipUUID(java.lang.String)
 	 */
+	@Override
 	public void setRelationshipUUID(String uuid) {
 		this.relationshipUUID = uuid;
 	}

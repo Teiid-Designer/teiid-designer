@@ -66,7 +66,8 @@ public class EditViewTableDialog extends TitleAreaDialog implements IDialogStatu
         return mainPanel;
     }
     
-    public void notifyStatusChanged(IStatus status) {
+    @Override
+	public void notifyStatusChanged(IStatus status) {
         Button okButton = getButton(IDialogConstants.OK_ID);
     	if( status.isOK() ) {
     		setErrorMessage(null);

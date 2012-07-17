@@ -26,21 +26,24 @@ public class FakeEObject implements EObject {
     /* (non-Javadoc)
      * @see org.eclipse.emf.ecore.EObject#eClass()
      */
-    public EClass eClass() {
+    @Override
+	public EClass eClass() {
         return null;
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.emf.ecore.EObject#eResource()
      */
-    public Resource eResource() {
+    @Override
+	public Resource eResource() {
         return null;
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.emf.ecore.EObject#eContainer()
      */
-    public EObject eContainer() {
+    @Override
+	public EObject eContainer() {
         return null;
     }
 
@@ -48,105 +51,120 @@ public class FakeEObject implements EObject {
      * @see org.eclipse.emf.ecore.EObject#eContainingFeature()
      * @since 4.3
      */
-    public EStructuralFeature eContainingFeature() {
+    @Override
+	public EStructuralFeature eContainingFeature() {
         return null;
     }
     
     /* (non-Javadoc)
      * @see org.eclipse.emf.ecore.EObject#eContainmentFeature()
      */
-    public EReference eContainmentFeature() {
+    @Override
+	public EReference eContainmentFeature() {
         return null;
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.emf.ecore.EObject#eContents()
      */
-    public EList eContents() {
+    @Override
+	public EList eContents() {
         return null;
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.emf.ecore.EObject#eAllContents()
      */
-    public TreeIterator eAllContents() {
+    @Override
+	public TreeIterator eAllContents() {
         return null;
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.emf.ecore.EObject#eIsProxy()
      */
-    public boolean eIsProxy() {
+    @Override
+	public boolean eIsProxy() {
         return false;
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.emf.ecore.EObject#eCrossReferences()
      */
-    public EList eCrossReferences() {
+    @Override
+	public EList eCrossReferences() {
         return null;
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.emf.ecore.EObject#eGet(org.eclipse.emf.ecore.EStructuralFeature)
      */
-    public Object eGet(EStructuralFeature feature) {
+    @Override
+	public Object eGet(EStructuralFeature feature) {
         return null;
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.emf.ecore.EObject#eGet(org.eclipse.emf.ecore.EStructuralFeature, boolean)
      */
-    public Object eGet(EStructuralFeature feature, boolean resolve) {
+    @Override
+	public Object eGet(EStructuralFeature feature, boolean resolve) {
         return null;
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.emf.ecore.EObject#eSet(org.eclipse.emf.ecore.EStructuralFeature, java.lang.Object)
      */
-    public void eSet(EStructuralFeature feature, Object newValue) {
+    @Override
+	public void eSet(EStructuralFeature feature, Object newValue) {
 
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.emf.ecore.EObject#eIsSet(org.eclipse.emf.ecore.EStructuralFeature)
      */
-    public boolean eIsSet(EStructuralFeature feature) {
+    @Override
+	public boolean eIsSet(EStructuralFeature feature) {
         return false;
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.emf.ecore.EObject#eUnset(org.eclipse.emf.ecore.EStructuralFeature)
      */
-    public void eUnset(EStructuralFeature feature) {
+    @Override
+	public void eUnset(EStructuralFeature feature) {
 
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.emf.common.notify.Notifier#eAdapters()
      */
-    public EList eAdapters() {
+    @Override
+	public EList eAdapters() {
         return null;
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.emf.common.notify.Notifier#eDeliver()
      */
-    public boolean eDeliver() {
+    @Override
+	public boolean eDeliver() {
         return false;
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.emf.common.notify.Notifier#eSetDeliver(boolean)
      */
-    public void eSetDeliver(boolean deliver) {
+    @Override
+	public void eSetDeliver(boolean deliver) {
 
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.emf.common.notify.Notifier#eNotify(org.eclipse.emf.common.notify.Notification)
      */
-    public void eNotify(Notification notification) {
+    @Override
+	public void eNotify(Notification notification) {
 
     }    
     

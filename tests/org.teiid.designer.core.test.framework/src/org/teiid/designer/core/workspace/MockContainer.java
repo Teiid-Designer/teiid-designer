@@ -40,7 +40,8 @@ public class MockContainer implements IContainer {
     private ArrayList members = new ArrayList();
     private boolean throwException = false;
 
-    public boolean exists( IPath path ) {
+    @Override
+	public boolean exists( IPath path ) {
 
         return false;
     }
@@ -48,7 +49,8 @@ public class MockContainer implements IContainer {
     /* (non-Javadoc)
      * @see org.eclipse.core.resources.IContainer#findMember(java.lang.String)
      */
-    public IResource findMember( String name ) {
+    @Override
+	public IResource findMember( String name ) {
 
         return null;
     }
@@ -56,7 +58,8 @@ public class MockContainer implements IContainer {
     /* (non-Javadoc)
      * @see org.eclipse.core.resources.IContainer#findMember(java.lang.String, boolean)
      */
-    public IResource findMember( String name,
+    @Override
+	public IResource findMember( String name,
                                  boolean includePhantoms ) {
 
         return null;
@@ -65,7 +68,8 @@ public class MockContainer implements IContainer {
     /* (non-Javadoc)
      * @see org.eclipse.core.resources.IContainer#findMember(org.eclipse.core.runtime.IPath)
      */
-    public IResource findMember( IPath path ) {
+    @Override
+	public IResource findMember( IPath path ) {
 
         return null;
     }
@@ -73,7 +77,8 @@ public class MockContainer implements IContainer {
     /* (non-Javadoc)
      * @see org.eclipse.core.resources.IContainer#findMember(org.eclipse.core.runtime.IPath, boolean)
      */
-    public IResource findMember( IPath path,
+    @Override
+	public IResource findMember( IPath path,
                                  boolean includePhantoms ) {
 
         return null;
@@ -82,7 +87,8 @@ public class MockContainer implements IContainer {
     /* (non-Javadoc)
      * @see org.eclipse.core.resources.IContainer#getFile(org.eclipse.core.runtime.IPath)
      */
-    public IFile getFile( IPath path ) {
+    @Override
+	public IFile getFile( IPath path ) {
 
         return null;
     }
@@ -90,7 +96,8 @@ public class MockContainer implements IContainer {
     /* (non-Javadoc)
      * @see org.eclipse.core.resources.IContainer#getFolder(org.eclipse.core.runtime.IPath)
      */
-    public IFolder getFolder( IPath path ) {
+    @Override
+	public IFolder getFolder( IPath path ) {
 
         return null;
     }
@@ -102,7 +109,8 @@ public class MockContainer implements IContainer {
     /* (non-Javadoc)
      * @see org.eclipse.core.resources.IContainer#members()
      */
-    public IResource[] members() throws CoreException {
+    @Override
+	public IResource[] members() throws CoreException {
         String id = "id"; //$NON-NLS-1$
         String message = "message"; //$NON-NLS-1$
         if (this.throwException) {
@@ -115,7 +123,8 @@ public class MockContainer implements IContainer {
     /* (non-Javadoc)
      * @see org.eclipse.core.resources.IContainer#members(boolean)
      */
-    public IResource[] members( boolean includePhantoms ) {
+    @Override
+	public IResource[] members( boolean includePhantoms ) {
 
         return null;
     }
@@ -123,7 +132,8 @@ public class MockContainer implements IContainer {
     /* (non-Javadoc)
      * @see org.eclipse.core.resources.IContainer#members(int)
      */
-    public IResource[] members( int memberFlags ) {
+    @Override
+	public IResource[] members( int memberFlags ) {
 
         return null;
     }
@@ -131,7 +141,8 @@ public class MockContainer implements IContainer {
     /* (non-Javadoc)
      * @see org.eclipse.core.resources.IContainer#findDeletedMembersWithHistory(int, org.eclipse.core.runtime.IProgressMonitor)
      */
-    public IFile[] findDeletedMembersWithHistory( int depth,
+    @Override
+	public IFile[] findDeletedMembersWithHistory( int depth,
                                                   IProgressMonitor monitor ) {
 
         return null;
@@ -140,7 +151,8 @@ public class MockContainer implements IContainer {
     /* (non-Javadoc)
      * @see org.eclipse.core.resources.IResource#accept(org.eclipse.core.resources.IResourceProxyVisitor, int)
      */
-    public void accept( IResourceProxyVisitor visitor,
+    @Override
+	public void accept( IResourceProxyVisitor visitor,
                         int memberFlags ) {
 
     }
@@ -148,14 +160,16 @@ public class MockContainer implements IContainer {
     /* (non-Javadoc)
      * @see org.eclipse.core.resources.IResource#accept(org.eclipse.core.resources.IResourceVisitor)
      */
-    public void accept( IResourceVisitor visitor ) {
+    @Override
+	public void accept( IResourceVisitor visitor ) {
 
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.core.resources.IResource#accept(org.eclipse.core.resources.IResourceVisitor, int, boolean)
      */
-    public void accept( IResourceVisitor visitor,
+    @Override
+	public void accept( IResourceVisitor visitor,
                         int depth,
                         boolean includePhantoms ) {
 
@@ -164,7 +178,8 @@ public class MockContainer implements IContainer {
     /* (non-Javadoc)
      * @see org.eclipse.core.resources.IResource#accept(org.eclipse.core.resources.IResourceVisitor, int, int)
      */
-    public void accept( IResourceVisitor visitor,
+    @Override
+	public void accept( IResourceVisitor visitor,
                         int depth,
                         int memberFlags ) {
 
@@ -173,7 +188,8 @@ public class MockContainer implements IContainer {
     /* (non-Javadoc)
      * @see org.eclipse.core.resources.IResource#accept(org.eclipse.core.resources.IResourceProxyVisitor, int, int)
      */
-    public void accept( IResourceProxyVisitor visitor,
+    @Override
+	public void accept( IResourceProxyVisitor visitor,
                         int depth,
                         int memberFlags ) {
     }
@@ -181,14 +197,16 @@ public class MockContainer implements IContainer {
     /* (non-Javadoc)
      * @see org.eclipse.core.resources.IResource#clearHistory(org.eclipse.core.runtime.IProgressMonitor)
      */
-    public void clearHistory( IProgressMonitor monitor ) {
+    @Override
+	public void clearHistory( IProgressMonitor monitor ) {
 
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.core.resources.IResource#copy(org.eclipse.core.runtime.IPath, boolean, org.eclipse.core.runtime.IProgressMonitor)
      */
-    public void copy( IPath destination,
+    @Override
+	public void copy( IPath destination,
                       boolean force,
                       IProgressMonitor monitor ) {
 
@@ -197,7 +215,8 @@ public class MockContainer implements IContainer {
     /* (non-Javadoc)
      * @see org.eclipse.core.resources.IResource#copy(org.eclipse.core.runtime.IPath, int, org.eclipse.core.runtime.IProgressMonitor)
      */
-    public void copy( IPath destination,
+    @Override
+	public void copy( IPath destination,
                       int updateFlags,
                       IProgressMonitor monitor ) {
 
@@ -206,7 +225,8 @@ public class MockContainer implements IContainer {
     /* (non-Javadoc)
      * @see org.eclipse.core.resources.IResource#copy(org.eclipse.core.resources.IProjectDescription, boolean, org.eclipse.core.runtime.IProgressMonitor)
      */
-    public void copy( IProjectDescription description,
+    @Override
+	public void copy( IProjectDescription description,
                       boolean force,
                       IProgressMonitor monitor ) {
 
@@ -215,7 +235,8 @@ public class MockContainer implements IContainer {
     /* (non-Javadoc)
      * @see org.eclipse.core.resources.IResource#copy(org.eclipse.core.resources.IProjectDescription, int, org.eclipse.core.runtime.IProgressMonitor)
      */
-    public void copy( IProjectDescription description,
+    @Override
+	public void copy( IProjectDescription description,
                       int updateFlags,
                       IProgressMonitor monitor ) {
 
@@ -224,7 +245,8 @@ public class MockContainer implements IContainer {
     /* (non-Javadoc)
      * @see org.eclipse.core.resources.IResource#createMarker(java.lang.String)
      */
-    public IMarker createMarker( String type ) {
+    @Override
+	public IMarker createMarker( String type ) {
 
         return null;
     }
@@ -232,7 +254,8 @@ public class MockContainer implements IContainer {
     /* (non-Javadoc)
      * @see org.eclipse.core.resources.IResource#delete(boolean, org.eclipse.core.runtime.IProgressMonitor)
      */
-    public void delete( boolean force,
+    @Override
+	public void delete( boolean force,
                         IProgressMonitor monitor ) {
 
     }
@@ -240,7 +263,8 @@ public class MockContainer implements IContainer {
     /* (non-Javadoc)
      * @see org.eclipse.core.resources.IResource#delete(int, org.eclipse.core.runtime.IProgressMonitor)
      */
-    public void delete( int updateFlags,
+    @Override
+	public void delete( int updateFlags,
                         IProgressMonitor monitor ) {
 
     }
@@ -248,7 +272,8 @@ public class MockContainer implements IContainer {
     /* (non-Javadoc)
      * @see org.eclipse.core.resources.IResource#deleteMarkers(java.lang.String, boolean, int)
      */
-    public void deleteMarkers( String type,
+    @Override
+	public void deleteMarkers( String type,
                                boolean includeSubtypes,
                                int depth ) {
 
@@ -257,7 +282,8 @@ public class MockContainer implements IContainer {
     /* (non-Javadoc)
      * @see org.eclipse.core.resources.IResource#exists()
      */
-    public boolean exists() {
+    @Override
+	public boolean exists() {
 
         return false;
     }
@@ -265,7 +291,8 @@ public class MockContainer implements IContainer {
     /* (non-Javadoc)
      * @see org.eclipse.core.resources.IResource#findMarker(long)
      */
-    public IMarker findMarker( long id ) {
+    @Override
+	public IMarker findMarker( long id ) {
 
         return null;
     }
@@ -273,7 +300,8 @@ public class MockContainer implements IContainer {
     /* (non-Javadoc)
      * @see org.eclipse.core.resources.IResource#findMarkers(java.lang.String, boolean, int)
      */
-    public IMarker[] findMarkers( String type,
+    @Override
+	public IMarker[] findMarkers( String type,
                                   boolean includeSubtypes,
                                   int depth ) {
 
@@ -283,7 +311,8 @@ public class MockContainer implements IContainer {
     /* (non-Javadoc)
      * @see org.eclipse.core.resources.IResource#getFileExtension()
      */
-    public String getFileExtension() {
+    @Override
+	public String getFileExtension() {
 
         return null;
     }
@@ -291,7 +320,8 @@ public class MockContainer implements IContainer {
     /* (non-Javadoc)
      * @see org.eclipse.core.resources.IResource#getFullPath()
      */
-    public IPath getFullPath() {
+    @Override
+	public IPath getFullPath() {
 
         return null;
     }
@@ -299,7 +329,8 @@ public class MockContainer implements IContainer {
     /* (non-Javadoc)
      * @see org.eclipse.core.resources.IResource#getLocation()
      */
-    public IPath getLocation() {
+    @Override
+	public IPath getLocation() {
 
         return null;
     }
@@ -307,7 +338,8 @@ public class MockContainer implements IContainer {
     /* (non-Javadoc)
      * @see org.eclipse.core.resources.IResource#getMarker(long)
      */
-    public IMarker getMarker( long id ) {
+    @Override
+	public IMarker getMarker( long id ) {
 
         return null;
     }
@@ -315,7 +347,8 @@ public class MockContainer implements IContainer {
     /* (non-Javadoc)
      * @see org.eclipse.core.resources.IResource#getModificationStamp()
      */
-    public long getModificationStamp() {
+    @Override
+	public long getModificationStamp() {
 
         return 0;
     }
@@ -323,7 +356,8 @@ public class MockContainer implements IContainer {
     /* (non-Javadoc)
      * @see org.eclipse.core.resources.IResource#getName()
      */
-    public String getName() {
+    @Override
+	public String getName() {
 
         return null;
     }
@@ -331,7 +365,8 @@ public class MockContainer implements IContainer {
     /* (non-Javadoc)
      * @see org.eclipse.core.resources.IResource#getParent()
      */
-    public IContainer getParent() {
+    @Override
+	public IContainer getParent() {
 
         return null;
     }
@@ -339,7 +374,8 @@ public class MockContainer implements IContainer {
     /* (non-Javadoc)
      * @see org.eclipse.core.resources.IResource#getPersistentProperty(org.eclipse.core.runtime.QualifiedName)
      */
-    public String getPersistentProperty( QualifiedName key ) {
+    @Override
+	public String getPersistentProperty( QualifiedName key ) {
 
         return null;
     }
@@ -353,7 +389,8 @@ public class MockContainer implements IContainer {
     /* (non-Javadoc)
      * @see org.eclipse.core.resources.IResource#getProject()
      */
-    public IProject getProject() {
+    @Override
+	public IProject getProject() {
 
         return null;
     }
@@ -361,7 +398,8 @@ public class MockContainer implements IContainer {
     /* (non-Javadoc)
      * @see org.eclipse.core.resources.IResource#getProjectRelativePath()
      */
-    public IPath getProjectRelativePath() {
+    @Override
+	public IPath getProjectRelativePath() {
 
         return null;
     }
@@ -369,7 +407,8 @@ public class MockContainer implements IContainer {
     /* (non-Javadoc)
      * @see org.eclipse.core.resources.IResource#getRawLocation()
      */
-    public IPath getRawLocation() {
+    @Override
+	public IPath getRawLocation() {
 
         return null;
     }
@@ -377,7 +416,8 @@ public class MockContainer implements IContainer {
     /* (non-Javadoc)
      * @see org.eclipse.core.resources.IResource#getSessionProperty(org.eclipse.core.runtime.QualifiedName)
      */
-    public Object getSessionProperty( QualifiedName key ) {
+    @Override
+	public Object getSessionProperty( QualifiedName key ) {
 
         return null;
     }
@@ -391,14 +431,16 @@ public class MockContainer implements IContainer {
     /* (non-Javadoc)
      * @see org.eclipse.core.resources.IResource#getType()
      */
-    public int getType() {
+    @Override
+	public int getType() {
         return IResource.PROJECT;
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.core.resources.IResource#getWorkspace()
      */
-    public IWorkspace getWorkspace() {
+    @Override
+	public IWorkspace getWorkspace() {
 
         return null;
     }
@@ -406,7 +448,8 @@ public class MockContainer implements IContainer {
     /* (non-Javadoc)
      * @see org.eclipse.core.resources.IResource#isAccessible()
      */
-    public boolean isAccessible() {
+    @Override
+	public boolean isAccessible() {
 
         return false;
     }
@@ -414,7 +457,8 @@ public class MockContainer implements IContainer {
     /* (non-Javadoc)
      * @see org.eclipse.core.resources.IResource#isDerived()
      */
-    public boolean isDerived() {
+    @Override
+	public boolean isDerived() {
 
         return false;
     }
@@ -422,7 +466,8 @@ public class MockContainer implements IContainer {
     /* (non-Javadoc)
      * @see org.eclipse.core.resources.IResource#isLocal(int)
      */
-    public boolean isLocal( int depth ) {
+    @Override
+	public boolean isLocal( int depth ) {
 
         return false;
     }
@@ -430,7 +475,8 @@ public class MockContainer implements IContainer {
     /* (non-Javadoc)
      * @see org.eclipse.core.resources.IResource#isLinked()
      */
-    public boolean isLinked() {
+    @Override
+	public boolean isLinked() {
 
         return false;
     }
@@ -438,7 +484,8 @@ public class MockContainer implements IContainer {
     /* (non-Javadoc)
      * @see org.eclipse.core.resources.IResource#isPhantom()
      */
-    public boolean isPhantom() {
+    @Override
+	public boolean isPhantom() {
 
         return false;
     }
@@ -446,7 +493,8 @@ public class MockContainer implements IContainer {
     /* (non-Javadoc)
      * @see org.eclipse.core.resources.IResource#isReadOnly()
      */
-    public boolean isReadOnly() {
+    @Override
+	public boolean isReadOnly() {
 
         return false;
     }
@@ -454,7 +502,8 @@ public class MockContainer implements IContainer {
     /* (non-Javadoc)
      * @see org.eclipse.core.resources.IResource#isSynchronized(int)
      */
-    public boolean isSynchronized( int depth ) {
+    @Override
+	public boolean isSynchronized( int depth ) {
 
         return false;
     }
@@ -462,7 +511,8 @@ public class MockContainer implements IContainer {
     /* (non-Javadoc)
      * @see org.eclipse.core.resources.IResource#isTeamPrivateMember()
      */
-    public boolean isTeamPrivateMember() {
+    @Override
+	public boolean isTeamPrivateMember() {
 
         return false;
     }
@@ -470,7 +520,8 @@ public class MockContainer implements IContainer {
     /* (non-Javadoc)
      * @see org.eclipse.core.resources.IResource#move(org.eclipse.core.runtime.IPath, boolean, org.eclipse.core.runtime.IProgressMonitor)
      */
-    public void move( IPath destination,
+    @Override
+	public void move( IPath destination,
                       boolean force,
                       IProgressMonitor monitor ) {
 
@@ -479,7 +530,8 @@ public class MockContainer implements IContainer {
     /* (non-Javadoc)
      * @see org.eclipse.core.resources.IResource#move(org.eclipse.core.runtime.IPath, int, org.eclipse.core.runtime.IProgressMonitor)
      */
-    public void move( IPath destination,
+    @Override
+	public void move( IPath destination,
                       int updateFlags,
                       IProgressMonitor monitor ) {
 
@@ -488,7 +540,8 @@ public class MockContainer implements IContainer {
     /* (non-Javadoc)
      * @see org.eclipse.core.resources.IResource#move(org.eclipse.core.resources.IProjectDescription, boolean, boolean, org.eclipse.core.runtime.IProgressMonitor)
      */
-    public void move( IProjectDescription description,
+    @Override
+	public void move( IProjectDescription description,
                       boolean force,
                       boolean keepHistory,
                       IProgressMonitor monitor ) {
@@ -498,7 +551,8 @@ public class MockContainer implements IContainer {
     /* (non-Javadoc)
      * @see org.eclipse.core.resources.IResource#move(org.eclipse.core.resources.IProjectDescription, int, org.eclipse.core.runtime.IProgressMonitor)
      */
-    public void move( IProjectDescription description,
+    @Override
+	public void move( IProjectDescription description,
                       int updateFlags,
                       IProgressMonitor monitor ) {
 
@@ -507,7 +561,8 @@ public class MockContainer implements IContainer {
     /* (non-Javadoc)
      * @see org.eclipse.core.resources.IResource#refreshLocal(int, org.eclipse.core.runtime.IProgressMonitor)
      */
-    public void refreshLocal( int depth,
+    @Override
+	public void refreshLocal( int depth,
                               IProgressMonitor monitor ) {
 
     }
@@ -515,14 +570,16 @@ public class MockContainer implements IContainer {
     /* (non-Javadoc)
      * @see org.eclipse.core.resources.IResource#setDerived(boolean)
      */
-    public void setDerived( boolean isDerived ) {
+    @Override
+	public void setDerived( boolean isDerived ) {
 
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.core.resources.IResource#setLocal(boolean, int, org.eclipse.core.runtime.IProgressMonitor)
      */
-    public void setLocal( boolean flag,
+    @Override
+	public void setLocal( boolean flag,
                           int depth,
                           IProgressMonitor monitor ) {
 
@@ -531,7 +588,8 @@ public class MockContainer implements IContainer {
     /* (non-Javadoc)
      * @see org.eclipse.core.resources.IResource#setPersistentProperty(org.eclipse.core.runtime.QualifiedName, java.lang.String)
      */
-    public void setPersistentProperty( QualifiedName key,
+    @Override
+	public void setPersistentProperty( QualifiedName key,
                                        String value ) {
 
     }
@@ -539,14 +597,16 @@ public class MockContainer implements IContainer {
     /* (non-Javadoc)
      * @see org.eclipse.core.resources.IResource#setReadOnly(boolean)
      */
-    public void setReadOnly( boolean readOnly ) {
+    @Override
+	public void setReadOnly( boolean readOnly ) {
 
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.core.resources.IResource#setSessionProperty(org.eclipse.core.runtime.QualifiedName, java.lang.Object)
      */
-    public void setSessionProperty( QualifiedName key,
+    @Override
+	public void setSessionProperty( QualifiedName key,
                                     Object value ) {
 
     }
@@ -554,21 +614,24 @@ public class MockContainer implements IContainer {
     /* (non-Javadoc)
      * @see org.eclipse.core.resources.IResource#setTeamPrivateMember(boolean)
      */
-    public void setTeamPrivateMember( boolean isTeamPrivate ) {
+    @Override
+	public void setTeamPrivateMember( boolean isTeamPrivate ) {
 
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.core.resources.IResource#touch(org.eclipse.core.runtime.IProgressMonitor)
      */
-    public void touch( IProgressMonitor monitor ) {
+    @Override
+	public void touch( IProgressMonitor monitor ) {
 
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
      */
-    public Object getAdapter( Class adapter ) {
+    @Override
+	public Object getAdapter( Class adapter ) {
 
         return null;
     }
@@ -577,54 +640,65 @@ public class MockContainer implements IContainer {
         this.members.add(resource);
     }
 
-    public String getDefaultCharset() {
+    @Override
+	public String getDefaultCharset() {
 
         return null;
     }
 
-    public String getDefaultCharset( boolean checkImplicit ) {
+    @Override
+	public String getDefaultCharset( boolean checkImplicit ) {
 
         return null;
     }
 
-    public void setDefaultCharset( String charset,
+    @Override
+	public void setDefaultCharset( String charset,
                                    IProgressMonitor monitor ) {
 
     }
 
-    public void setDefaultCharset( String charset ) {
+    @Override
+	public void setDefaultCharset( String charset ) {
 
     }
 
-    public long getLocalTimeStamp() {
+    @Override
+	public long getLocalTimeStamp() {
 
         return 0;
     }
 
-    public ResourceAttributes getResourceAttributes() {
+    @Override
+	public ResourceAttributes getResourceAttributes() {
 
         return null;
     }
 
-    public void revertModificationStamp( long value ) {
+    @Override
+	public void revertModificationStamp( long value ) {
 
     }
 
-    public long setLocalTimeStamp( long value ) {
+    @Override
+	public long setLocalTimeStamp( long value ) {
 
         return 0;
     }
 
-    public void setResourceAttributes( ResourceAttributes attributes ) {
+    @Override
+	public void setResourceAttributes( ResourceAttributes attributes ) {
 
     }
 
-    public boolean contains( ISchedulingRule rule ) {
+    @Override
+	public boolean contains( ISchedulingRule rule ) {
 
         return false;
     }
 
-    public boolean isConflicting( ISchedulingRule rule ) {
+    @Override
+	public boolean isConflicting( ISchedulingRule rule ) {
 
         return false;
     }
@@ -634,7 +708,8 @@ public class MockContainer implements IContainer {
      * 
      * @see org.eclipse.core.resources.IResource#createProxy()
      */
-    public IResourceProxy createProxy() {
+    @Override
+	public IResourceProxy createProxy() {
         return null;
     }
 
@@ -643,7 +718,8 @@ public class MockContainer implements IContainer {
      * 
      * @see org.eclipse.core.resources.IResource#findMaxProblemSeverity(java.lang.String, boolean, int)
      */
-    public int findMaxProblemSeverity( String type,
+    @Override
+	public int findMaxProblemSeverity( String type,
                                        boolean includeSubtypes,
                                        int depth ) {
         return 0;
@@ -654,7 +730,8 @@ public class MockContainer implements IContainer {
      * 
      * @see org.eclipse.core.resources.IResource#getLocationURI()
      */
-    public URI getLocationURI() {
+    @Override
+	public URI getLocationURI() {
         return null;
     }
 
@@ -663,7 +740,8 @@ public class MockContainer implements IContainer {
      * 
      * @see org.eclipse.core.resources.IResource#getRawLocationURI()
      */
-    public URI getRawLocationURI() {
+    @Override
+	public URI getRawLocationURI() {
         return null;
     }
 
@@ -672,7 +750,8 @@ public class MockContainer implements IContainer {
      * 
      * @see org.eclipse.core.resources.IResource#isDerived(int)
      */
-    public boolean isDerived( int options ) {
+    @Override
+	public boolean isDerived( int options ) {
         return false;
     }
 
@@ -681,7 +760,8 @@ public class MockContainer implements IContainer {
      * 
      * @see org.eclipse.core.resources.IResource#isHidden()
      */
-    public boolean isHidden() {
+    @Override
+	public boolean isHidden() {
         return false;
     }
 
@@ -690,7 +770,8 @@ public class MockContainer implements IContainer {
      * 
      * @see org.eclipse.core.resources.IResource#isLinked(int)
      */
-    public boolean isLinked( int options ) {
+    @Override
+	public boolean isLinked( int options ) {
         return false;
     }
 
@@ -699,7 +780,8 @@ public class MockContainer implements IContainer {
      * 
      * @see org.eclipse.core.resources.IResource#setHidden(boolean)
      */
-    public void setHidden( boolean isHidden ) {
+    @Override
+	public void setHidden( boolean isHidden ) {
     }
 
     /**

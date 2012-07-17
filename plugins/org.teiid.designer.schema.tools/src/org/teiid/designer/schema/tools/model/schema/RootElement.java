@@ -10,6 +10,7 @@ package org.teiid.designer.schema.tools.model.schema;
 
 public interface RootElement {
 
+	@Override
 	public abstract String toString();
 
 	public abstract boolean isUseAsRoot();

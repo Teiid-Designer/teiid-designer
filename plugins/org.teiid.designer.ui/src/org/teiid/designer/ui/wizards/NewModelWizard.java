@@ -253,7 +253,8 @@ public class NewModelWizard extends AbstractWizard
                 if (annotation != null) {
 
                     Display.getDefault().syncExec(new Runnable() {
-                        public void run() {
+                        @Override
+						public void run() {
                             MetamodelDescriptor descriptor = metamodelSelectionPage.getMetamodelDescriptor();
                             String uri = descriptor.getNamespaceURI();
                             annotation.setPrimaryMetamodelUri(uri);
@@ -349,7 +350,8 @@ public class NewModelWizard extends AbstractWizard
         if (annotation != null) {
 
             Display.getDefault().syncExec(new Runnable() {
-                public void run() {
+                @Override
+				public void run() {
                     MetamodelDescriptor descriptor = metamodelSelectionPage.getMetamodelDescriptor();
                     String uri = descriptor.getNamespaceURI();
                     annotation.setPrimaryMetamodelUri(uri);
@@ -451,7 +453,8 @@ public class NewModelWizard extends AbstractWizard
      * 
      * @see IWorkbenchWizard#init(IWorkbench, IStructuredSelection)
      */
-    public void init( IWorkbench workbench,
+    @Override
+	public void init( IWorkbench workbench,
                       IStructuredSelection selection ) {
         this.selection = selection;
 

@@ -913,7 +913,8 @@ public class DatatypeReconcilerPanel extends SashForm implements ISelectionChang
     /**
      * Handler for Table Selection changed
      */
-    public void selectionChanged( SelectionChangedEvent event ) {
+    @Override
+	public void selectionChanged( SelectionChangedEvent event ) {
         IStructuredSelection selection = (IStructuredSelection)event.getSelection();
         Binding binding = null;
         if (SelectionUtilities.isSingleSelection(selection)) {
@@ -1079,16 +1080,19 @@ public class DatatypeReconcilerPanel extends SashForm implements ISelectionChang
      */
     class BindingContentProvider implements IStructuredContentProvider {
 
-        public void inputChanged( Viewer v,
+        @Override
+		public void inputChanged( Viewer v,
                                   Object oldInput,
                                   Object newInput ) {
         }
 
-        public void dispose() {
+        @Override
+		public void dispose() {
         }
 
         // Return the bindings as an array of Objects
-        public Object[] getElements( Object parent ) {
+        @Override
+		public Object[] getElements( Object parent ) {
             return bindingList.getAll().toArray();
         }
     }

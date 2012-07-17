@@ -146,7 +146,8 @@ public class WsdlResourceImpl extends XMLResourceImpl implements XResource {
      * 
      * @see org.teiid.designer.core.resource.XResource#getUuid(org.eclipse.emf.ecore.EObject)
      */
-    public String getUuid( EObject object ) {
+    @Override
+	public String getUuid( EObject object ) {
         return getID(object);
     }
 
@@ -175,7 +176,8 @@ public class WsdlResourceImpl extends XMLResourceImpl implements XResource {
      * @see org.teiid.designer.core.resource.XResource#isUnloading()
      * @since 5.0.3
      */
-    public boolean isUnloading() {
+    @Override
+	public boolean isUnloading() {
         return delegate.isUnloading();
     }
 
@@ -186,7 +188,8 @@ public class WsdlResourceImpl extends XMLResourceImpl implements XResource {
      * 
      * @see org.teiid.designer.core.resource.XResource#setUuid(org.eclipse.emf.ecore.EObject, java.lang.String)
      */
-    public void setUuid( EObject object,
+    @Override
+	public void setUuid( EObject object,
                          String uuid ) {
         setID(object, uuid);
     }

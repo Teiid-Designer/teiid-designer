@@ -126,7 +126,8 @@ public class FavoritesView extends ViewPart
 
         MenuManager popupMenuManager = new ExtendedMenuManager();
         IMenuListener listener = new IMenuListener() {
-            public void menuAboutToShow( IMenuManager mng ) {
+            @Override
+			public void menuAboutToShow( IMenuManager mng ) {
                 fillContextMenu(mng);
             }
         };
@@ -170,14 +171,17 @@ public class FavoritesView extends ViewPart
         WidgetFactory.createTableColumn(table, getString("columns.name")); //$NON-NLS-1$
         WidgetFactory.createTableColumn(table, getString("columns.location")); //$NON-NLS-1$}
         this.tableViewer.setContentProvider(new IStructuredContentProvider() {
-            public void dispose() {
+            @Override
+			public void dispose() {
             }
 
-            public Object[] getElements( final Object inputElement ) {
+            @Override
+			public Object[] getElements( final Object inputElement ) {
                 return UiPlugin.getDefault().getEObjectCache().toArray();
             }
 
-            public void inputChanged( final Viewer viewer,
+            @Override
+			public void inputChanged( final Viewer viewer,
                                       final Object oldInput,
                                       final Object newInput ) {
             }
@@ -192,7 +196,8 @@ public class FavoritesView extends ViewPart
                 return null;
             }
 
-            public String getColumnText( final Object element,
+            @Override
+			public String getColumnText( final Object element,
                                          final int column ) {
                 switch (column) {
                     case NAME_COLUMN: {
@@ -209,7 +214,8 @@ public class FavoritesView extends ViewPart
 
         this.tableViewer.setSorter(new OrderableViewerSorter());
         this.tableViewer.addDoubleClickListener(new IDoubleClickListener() {
-            public void doubleClick( final DoubleClickEvent event ) {
+            @Override
+			public void doubleClick( final DoubleClickEvent event ) {
                 // Assume that we have an Open request here.
                 if (SelectionUtilities.isSingleSelection(event.getSelection())) {
                     EObject eObj = SelectionUtilities.getSelectedEObject(event.getSelection());
@@ -221,7 +227,8 @@ public class FavoritesView extends ViewPart
         });
 
         tableViewer.addSelectionChangedListener(new ISelectionChangedListener() {
-            public void selectionChanged( final SelectionChangedEvent event ) {
+            @Override
+			public void selectionChanged( final SelectionChangedEvent event ) {
                 handleSelectionChanged(event.getSelection());
             }
         });
@@ -552,7 +559,8 @@ public class FavoritesView extends ViewPart
      * @see org.eclipse.jface.viewers.ISelectionProvider#addSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
      * @since 4.2
      */
-    public void addSelectionChangedListener( ISelectionChangedListener listener ) {
+    @Override
+	public void addSelectionChangedListener( ISelectionChangedListener listener ) {
         if (!listenerList.contains(listener)) {
             listenerList.add(listener);
         }
@@ -562,7 +570,8 @@ public class FavoritesView extends ViewPart
      * @see org.eclipse.jface.viewers.ISelectionProvider#getSelection()
      * @since 4.2
      */
-    public ISelection getSelection() {
+    @Override
+	public ISelection getSelection() {
         return tableViewer.getSelection();
     }
 
@@ -570,7 +579,8 @@ public class FavoritesView extends ViewPart
      * @see org.eclipse.jface.viewers.ISelectionProvider#removeSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
      * @since 4.2
      */
-    public void removeSelectionChangedListener( ISelectionChangedListener listener ) {
+    @Override
+	public void removeSelectionChangedListener( ISelectionChangedListener listener ) {
         listenerList.remove(listener);
     }
 
@@ -578,7 +588,8 @@ public class FavoritesView extends ViewPart
      * @see org.eclipse.jface.viewers.ISelectionProvider#setSelection(org.eclipse.jface.viewers.ISelection)
      * @since 4.2
      */
-    public void setSelection( ISelection selection ) {
+    @Override
+	public void setSelection( ISelection selection ) {
         tableViewer.setSelection(selection, true);
         setActionsState();
     }
@@ -617,10 +628,12 @@ public class FavoritesView extends ViewPart
      * @see org.teiid.designer.ui.IModelerCacheListener#cacheChanged(org.teiid.designer.ui.ModelerCacheEvent)
      * @since 4.2
      */
-    public void cacheChanged( final ModelerCacheEvent theEvent ) {
+    @Override
+	public void cacheChanged( final ModelerCacheEvent theEvent ) {
         // make sure event handling in right thread
         getSite().getShell().getDisplay().asyncExec(new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 if (!tableViewer.getControl().isDisposed()) {
                     if (theEvent.isClear()) {
                         removeAllItems();
@@ -650,7 +663,8 @@ public class FavoritesView extends ViewPart
      *      org.eclipse.jface.viewers.ISelection)
      * @since 4.2
      */
-    public void selectionChanged( IWorkbenchPart part,
+    @Override
+	public void selectionChanged( IWorkbenchPart part,
                                   ISelection selection ) {
         if (part != this) {
             externalSelection = selection;

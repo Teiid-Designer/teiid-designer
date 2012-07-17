@@ -50,6 +50,7 @@ public class RefreshAction extends DiagramEditorAction {
             editor.openContext(diagramNode.getModelObject(), true);
 
 			Display.getDefault().asyncExec(new Runnable() {
+				@Override
 				public void run() {
 					scrolledCanvas.getViewport().getContents().setVisible(false);
 //					if( selectedEPs != null && !selectedEPs.isEmpty() ) { 

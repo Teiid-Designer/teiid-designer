@@ -98,7 +98,8 @@ public class ProcessingInstructionImpl extends XmlDocumentEntityImpl implements 
      * <!-- end-user-doc -->
      * @generated
      */
-    public String getRawText() {
+    @Override
+	public String getRawText() {
         return rawText;
     }
 
@@ -107,7 +108,8 @@ public class ProcessingInstructionImpl extends XmlDocumentEntityImpl implements 
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setRawText(String newRawText) {
+    @Override
+	public void setRawText(String newRawText) {
         String oldRawText = rawText;
         rawText = newRawText;
         if (eNotificationRequired())
@@ -119,7 +121,8 @@ public class ProcessingInstructionImpl extends XmlDocumentEntityImpl implements 
      * <!-- end-user-doc -->
      * @generated
      */
-    public String getTarget() {
+    @Override
+	public String getTarget() {
         return target;
     }
 
@@ -128,7 +131,8 @@ public class ProcessingInstructionImpl extends XmlDocumentEntityImpl implements 
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setTarget(String newTarget) {
+    @Override
+	public void setTarget(String newTarget) {
         String oldTarget = target;
         target = newTarget;
         if (eNotificationRequired())
@@ -140,7 +144,8 @@ public class ProcessingInstructionImpl extends XmlDocumentEntityImpl implements 
      * <!-- end-user-doc -->
      * @generated
      */
-    public ProcessingInstructionHolder getParent() {
+    @Override
+	public ProcessingInstructionHolder getParent() {
         if (eContainerFeatureID != XmlDocumentPackage.PROCESSING_INSTRUCTION__PARENT) return null;
         return (ProcessingInstructionHolder)eContainer;
     }
@@ -150,7 +155,8 @@ public class ProcessingInstructionImpl extends XmlDocumentEntityImpl implements 
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setParent(ProcessingInstructionHolder newParent) {
+    @Override
+	public void setParent(ProcessingInstructionHolder newParent) {
         if (newParent != eContainer || (eContainerFeatureID != XmlDocumentPackage.PROCESSING_INSTRUCTION__PARENT && newParent != null)) {
             if (EcoreUtil.isAncestor(this, newParent))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$

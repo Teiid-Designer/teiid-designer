@@ -115,7 +115,8 @@ public class AliasEntryPanel extends Composite implements ModifyListener {
     /* (non-Javadoc)
      * @see org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.swt.events.ModifyEvent)
      */
-    public void modifyText(ModifyEvent e) {
+    @Override
+	public void modifyText(ModifyEvent e) {
         String text = this.aliasText.getText();
         if ((text == null) || (text.trim().equals(""))) { //$NON-NLS-1$
             setError(NO_ALIAS_ENTERED);

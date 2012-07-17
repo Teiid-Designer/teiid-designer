@@ -80,13 +80,15 @@ public class BuildImportsAllAction extends ActionDelegate implements IWorkbenchW
     /**
      * @see org.eclipse.ui.IViewActionDelegate#init(org.eclipse.ui.IViewPart)
      */
-    public void init( final IViewPart view ) {
+    @Override
+	public void init( final IViewPart view ) {
     }
 
     /**
      * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#init(org.eclipse.ui.IWorkbenchWindow)
      */
-    public void init( final IWorkbenchWindow window ) {
+    @Override
+	public void init( final IWorkbenchWindow window ) {
     }
 
     void rebuildImports( final IProgressMonitor theMonitor ) {
@@ -154,7 +156,8 @@ public class BuildImportsAllAction extends ActionDelegate implements IWorkbenchW
             final String title = UiConstants.Util.getString("RebuildImports.readOnlyTitle"); //$NON-NLS-1$
             final String message = UiConstants.Util.getString("RebuildImports.readOnlyMessage"); //$NON-NLS-1$
             Display.getDefault().syncExec(new Runnable() {
-                public void run() {
+                @Override
+				public void run() {
                     ListMessageDialog.openWarning(Display.getDefault().getActiveShell(), title, null, message, readOnlyModels, null);
                 }
             });
@@ -167,7 +170,8 @@ public class BuildImportsAllAction extends ActionDelegate implements IWorkbenchW
             final String title = UiConstants.Util.getString("RebuildImports.errorTitle"); //$NON-NLS-1$
             final String message = UiConstants.Util.getString("RebuildImports.errorMessage"); //$NON-NLS-1$
             Display.getDefault().syncExec(new Runnable() {
-                public void run() {
+                @Override
+				public void run() {
                     ListMessageDialog.openError(Display.getDefault().getActiveShell(), title, null, message, errorModels, null);
                 }
             });

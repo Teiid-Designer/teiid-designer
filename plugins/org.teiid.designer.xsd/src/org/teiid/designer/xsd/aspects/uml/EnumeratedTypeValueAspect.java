@@ -52,7 +52,8 @@ public class EnumeratedTypeValueAspect extends AbstractXsdEntityAspect
      * @see org.teiid.designer.core.metamodel.aspect.uml.UmlDiagramAspect#getEditableSignature(java.lang.Object)
      * @since 5.0.2
      */
-    public String getEditableSignature(Object theObject) {
+    @Override
+	public String getEditableSignature(Object theObject) {
         return getSignature(theObject, UmlProperty.SIGNATURE_NAME);
     }
     
@@ -74,7 +75,8 @@ public class EnumeratedTypeValueAspect extends AbstractXsdEntityAspect
      * @see org.teiid.designer.xsd.aspects.uml.AbstractXsdEntityAspect#getSignature(java.lang.Object, int)
      * @since 5.0.2
      */
-    public String getSignature(Object theObject,
+    @Override
+	public String getSignature(Object theObject,
                                int theShowMaskFlag) {
         XSDEnumerationFacet value = assertEnumeratedValue(theObject);
         StringBuffer result = new StringBuffer();
@@ -113,7 +115,8 @@ public class EnumeratedTypeValueAspect extends AbstractXsdEntityAspect
      * @see org.teiid.designer.core.metamodel.aspect.uml.UmlDiagramAspect#getStereotype(java.lang.Object)
      * @since 5.0.2
      */
-    public String getStereotype(Object theObject) {
+    @Override
+	public String getStereotype(Object theObject) {
         return Util.getString(I18nUtil.getPropertyPrefix(EnumeratedTypeValueAspect.class) + "stereoType"); //$NON-NLS-1$
     }
     
@@ -121,7 +124,8 @@ public class EnumeratedTypeValueAspect extends AbstractXsdEntityAspect
      * @see org.teiid.designer.core.metamodel.aspect.uml.UmlProperty#isAssociationEnd(java.lang.Object)
      * @since 5.0.2
      */
-    public boolean isAssociationEnd(Object theProperty) {
+    @Override
+	public boolean isAssociationEnd(Object theProperty) {
         return false;
     }
     
@@ -129,7 +133,8 @@ public class EnumeratedTypeValueAspect extends AbstractXsdEntityAspect
      * @see org.teiid.designer.xsd.aspects.uml.AbstractXsdEntityAspect#setSignature(java.lang.Object, java.lang.String)
      * @since 5.0.2
      */
-    public IStatus setSignature(Object theObject,
+    @Override
+	public IStatus setSignature(Object theObject,
                                 String theNewSignature) {
         // cannot change a value
         return Status.OK_STATUS;

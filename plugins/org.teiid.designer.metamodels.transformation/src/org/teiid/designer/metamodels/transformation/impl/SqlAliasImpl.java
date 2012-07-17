@@ -87,7 +87,8 @@ public class SqlAliasImpl extends EObjectImpl implements SqlAlias {
      * 
      * @generated
      */
-    public String getAlias() {
+    @Override
+	public String getAlias() {
         return alias;
     }
 
@@ -96,7 +97,8 @@ public class SqlAliasImpl extends EObjectImpl implements SqlAlias {
      * 
      * @generated
      */
-    public void setAlias( String newAlias ) {
+    @Override
+	public void setAlias( String newAlias ) {
         String oldAlias = alias;
         alias = newAlias;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
@@ -108,7 +110,8 @@ public class SqlAliasImpl extends EObjectImpl implements SqlAlias {
      * 
      * @generated
      */
-    public EObject getAliasedObject() {
+    @Override
+	public EObject getAliasedObject() {
         if (aliasedObject != null && aliasedObject.eIsProxy()) {
             EObject oldAliasedObject = aliasedObject;
             aliasedObject = eResolveProxy((InternalEObject)aliasedObject);
@@ -135,7 +138,8 @@ public class SqlAliasImpl extends EObjectImpl implements SqlAlias {
      * 
      * @generated
      */
-    public void setAliasedObject( EObject newAliasedObject ) {
+    @Override
+	public void setAliasedObject( EObject newAliasedObject ) {
         EObject oldAliasedObject = aliasedObject;
         aliasedObject = newAliasedObject;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
@@ -148,7 +152,8 @@ public class SqlAliasImpl extends EObjectImpl implements SqlAlias {
      * 
      * @generated
      */
-    public SqlTransformation getSqlTransformation() {
+    @Override
+	public SqlTransformation getSqlTransformation() {
         if (eContainerFeatureID != TransformationPackage.SQL_ALIAS__SQL_TRANSFORMATION) return null;
         return (SqlTransformation)eContainer;
     }
@@ -158,7 +163,8 @@ public class SqlAliasImpl extends EObjectImpl implements SqlAlias {
      * 
      * @generated
      */
-    public void setSqlTransformation( SqlTransformation newSqlTransformation ) {
+    @Override
+	public void setSqlTransformation( SqlTransformation newSqlTransformation ) {
         if (newSqlTransformation != eContainer
             || (eContainerFeatureID != TransformationPackage.SQL_ALIAS__SQL_TRANSFORMATION && newSqlTransformation != null)) {
             if (EcoreUtil.isAncestor(this, newSqlTransformation)) throw new IllegalArgumentException(

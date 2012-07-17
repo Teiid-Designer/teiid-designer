@@ -36,7 +36,8 @@ public class ColumnNativeTypeRule implements ObjectValidationRule {
     /*
      * @See org.teiid.designer.core.validation.ObjectValidationRule#validate(org.eclipse.emf.ecore.EObject, org.teiid.designer.core.validation.ValidationContext)
      */
-    public void validate(EObject theObject,
+    @Override
+	public void validate(EObject theObject,
                          ValidationContext theContext) {
         CoreArgCheck.isInstanceOf(Column.class, theObject);
 

@@ -175,7 +175,8 @@ public class ListPanel extends AbstractVerticalButtonPanel implements CoreString
             });
             // Add double-click listener to list that auto-edits if editing enabled
             viewer.addDoubleClickListener(new IDoubleClickListener() {
-                public void doubleClick( final DoubleClickEvent event ) {
+                @Override
+				public void doubleClick( final DoubleClickEvent event ) {
                     if (ListPanel.this.editButton.isEnabled()) {
                         editButtonSelected();
                     }
@@ -277,7 +278,8 @@ public class ListPanel extends AbstractVerticalButtonPanel implements CoreString
                 final ICheckStateListener l = (ICheckStateListener)array[i];
 
                 SafeRunner.run(new SafeRunnable() {
-                    public void run() {
+                    @Override
+					public void run() {
                         l.checkStateChanged(theEvent);
                     }
 
@@ -305,7 +307,8 @@ public class ListPanel extends AbstractVerticalButtonPanel implements CoreString
         if (WidgetUtil.hasState(style, SWT.CHECK)) {
             final CheckListPanelViewer viewer = new CheckListPanelViewer(parent, style);
             viewer.addSelectionChangedListener(new ISelectionChangedListener() {
-                public void selectionChanged( final SelectionChangedEvent event ) {
+                @Override
+				public void selectionChanged( final SelectionChangedEvent event ) {
                     itemsSelected((IStructuredSelection)event.getSelection());
                 }
             });
@@ -314,7 +317,8 @@ public class ListPanel extends AbstractVerticalButtonPanel implements CoreString
             // all the items in the panel then. so when the component does disable just undo the checked state
             // being set.
             viewer.addCheckStateListenerAccess(new ICheckStateListener() {
-                public void checkStateChanged( CheckStateChangedEvent theEvent ) {
+                @Override
+				public void checkStateChanged( CheckStateChangedEvent theEvent ) {
                     // undo the check
                     if (!getEnabled() && theEvent.getSource() != this) {
                         viewer.setChecked(theEvent.getElement(), !theEvent.getChecked());
@@ -328,7 +332,8 @@ public class ListPanel extends AbstractVerticalButtonPanel implements CoreString
 
         final ListPanelViewer viewer = new ListPanelViewer(parent, style);
         viewer.addSelectionChangedListener(new ISelectionChangedListener() {
-            public void selectionChanged( final SelectionChangedEvent event ) {
+            @Override
+			public void selectionChanged( final SelectionChangedEvent event ) {
                 itemsSelected((IStructuredSelection)event.getSelection());
             }
         });

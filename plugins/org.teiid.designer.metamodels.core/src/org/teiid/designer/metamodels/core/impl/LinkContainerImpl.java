@@ -67,7 +67,8 @@ public class LinkContainerImpl extends EObjectImpl implements LinkContainer {
      * 
      * @generated
      */
-    public EList getLinks() {
+    @Override
+	public EList getLinks() {
         if (links == null) {
             links = new EObjectContainmentWithInverseEList(Link.class, this, CorePackage.LINK_CONTAINER__LINKS,
                                                            CorePackage.LINK__LINK_CONTAINER);

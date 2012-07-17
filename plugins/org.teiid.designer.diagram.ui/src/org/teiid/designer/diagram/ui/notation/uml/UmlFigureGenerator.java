@@ -53,7 +53,8 @@ public class UmlFigureGenerator implements NotationFigureGenerator {
         super();
     }
 
-    public Figure createFigure(Object modelObject) {
+    @Override
+	public Figure createFigure(Object modelObject) {
         int objectType = getObjectType(modelObject);
         
         Figure newFigure = null;

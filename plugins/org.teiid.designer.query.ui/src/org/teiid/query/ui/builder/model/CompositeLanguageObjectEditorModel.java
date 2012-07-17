@@ -216,7 +216,8 @@ public abstract class CompositeLanguageObjectEditorModel extends AbstractLanguag
         /**
          * @see org.teiid.query.ui.builder.model.ILanguageObjectEditorModelListener#modelChanged(org.teiid.query.ui.builder.model.LanguageObjectEditorModelEvent)
          */
-        public void modelChanged( LanguageObjectEditorModelEvent theEvent ) {
+        @Override
+		public void modelChanged( LanguageObjectEditorModelEvent theEvent ) {
             handleModelChanged(theEvent);
         }
 

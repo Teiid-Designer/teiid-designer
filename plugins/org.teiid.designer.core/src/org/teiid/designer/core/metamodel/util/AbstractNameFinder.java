@@ -35,14 +35,16 @@ public abstract class AbstractNameFinder implements ModelVisitor {
     /**
      * @see org.teiid.designer.core.util.ModelVisitor#visit(org.eclipse.emf.ecore.resource.Resource)
      */
-    public boolean visit( final Resource resource ) {
+    @Override
+	public boolean visit( final Resource resource ) {
         return true;
     }
 
     /**
      * @see org.teiid.designer.core.util.ModelVisitor#visit(org.eclipse.emf.ecore.EObject)
      */
-    public boolean visit( final EObject eObject ) {
+    @Override
+	public boolean visit( final EObject eObject ) {
         // If the match was already found then do not visit this EObject
         if (!this.isPartialName) {
             if (!this.matchingEObjects.isEmpty()) {

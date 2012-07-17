@@ -44,70 +44,80 @@ public class ModelRecordImpl extends AbstractMetadataRecord implements ModelReco
     /**
      * @see org.teiid.designer.metadata.runtime.ModelRecord#getPrimaryMetamodelUri()
      */
-    public String getPrimaryMetamodelUri() {
+    @Override
+	public String getPrimaryMetamodelUri() {
         return primaryMetamodelUri;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metadata.runtime.ModelRecord#getMaxSetSize()
      */
-    public int getMaxSetSize() {
+    @Override
+	public int getMaxSetSize() {
         return maxSetSize;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metadata.runtime.ModelRecord#isVisible()
      */
-    public boolean isVisible() {
+    @Override
+	public boolean isVisible() {
         return isVisible;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metadata.runtime.ModelRecord#supportsDistinct()
      */
-    public boolean supportsDistinct() {
+    @Override
+	public boolean supportsDistinct() {
         return supportsDistinct;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metadata.runtime.ModelRecord#supportsJoin()
      */
-    public boolean supportsJoin() {
+    @Override
+	public boolean supportsJoin() {
         return supportsJoin;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metadata.runtime.ModelRecord#supportsOrderBy()
      */
-    public boolean supportsOrderBy() {
+    @Override
+	public boolean supportsOrderBy() {
         return supportsOrderBy;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metadata.runtime.ModelRecord#supportsOuterJoin()
      */
-    public boolean supportsOuterJoin() {
+    @Override
+	public boolean supportsOuterJoin() {
         return supportsOuterJoin;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metadata.runtime.ModelRecord#supportsWhereAll()
      */
-    public boolean supportsWhereAll() {
+    @Override
+	public boolean supportsWhereAll() {
         return supportsWhereAll;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metadata.runtime.ModelRecord#getModelType()
      */
-    public int getModelType() {
+    @Override
+	public int getModelType() {
         return modelType;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metadata.runtime.ModelRecord#isPhysical()
      */
-    public boolean isPhysical() {
+    @Override
+	public boolean isPhysical() {
         if (getModelType() == ModelType.PHYSICAL) {
             return true;
         }

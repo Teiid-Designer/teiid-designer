@@ -268,11 +268,13 @@ public class TransformationObjectEditorPage
 
     // SelectionListener for CheckBox controls
     private SelectionListener checkBoxListener = new SelectionListener() {
-        public void widgetDefaultSelected( SelectionEvent e ) {
+        @Override
+		public void widgetDefaultSelected( SelectionEvent e ) {
             handleCheckBoxStateChanged(e);
         }
 
-        public void widgetSelected( SelectionEvent e ) {
+        @Override
+		public void widgetSelected( SelectionEvent e ) {
             handleCheckBoxStateChanged(e);
         }
     };
@@ -281,14 +283,16 @@ public class TransformationObjectEditorPage
      * @see org.teiid.designer.ui.editors.ModelObjectEditorPage#canClose()
      * @since 5.0.1
      */
-    public boolean canClose() {
+    @Override
+	public boolean canClose() {
         return true;
     }
 
     /**
      * @see org.teiid.designer.ui.editors.ModelObjectEditorPage#createControl(org.eclipse.swt.widgets.Composite)
      */
-    public void createControl( Composite parent ) {
+    @Override
+	public void createControl( Composite parent ) {
 
         this.parent = parent;
 
@@ -319,7 +323,8 @@ public class TransformationObjectEditorPage
         return objEditorParentLayout.topControl;
     }
 
-    public ModelEditor getParentModelEditor() {
+    @Override
+	public ModelEditor getParentModelEditor() {
     	return this.parentModelEditor;
     }
 
@@ -665,7 +670,8 @@ public class TransformationObjectEditorPage
         Display display = this.getControl().getDisplay();
         if (display != null) {
             display.asyncExec(new Runnable() {
-                public void run() {
+                @Override
+				public void run() {
                     sqlEditorPanelWrapper.refreshFontManager();
                 }
             });
@@ -728,21 +734,24 @@ public class TransformationObjectEditorPage
     /**
      * @see org.teiid.designer.ui.editors.ModelObjectEditorPage#getControl()
      */
-    public Control getControl() {
+    @Override
+	public Control getControl() {
         return this.objEditorParent;
     }
 
     /**
      * @see org.teiid.designer.ui.editors.ModelObjectEditorPage#getTitle()
      */
-    public String getTitle() {
+    @Override
+	public String getTitle() {
         return getString(TITLE_TEXT, getTransformationName());
     }
 
     /**
      * @see org.teiid.designer.ui.editors.ModelObjectEditorPage#getTitleToolTip()
      */
-    public String getTitleToolTip() {
+    @Override
+	public String getTitleToolTip() {
         return getString(TITLE_TOOLTIP, getTransformationName());
     }
 
@@ -753,7 +762,8 @@ public class TransformationObjectEditorPage
     /**
      * @see org.teiid.designer.ui.editors.ModelObjectEditorPage#getTitleImage()
      */
-    public Image getTitleImage() {
+    @Override
+	public Image getTitleImage() {
         return null;
     }
 
@@ -761,7 +771,8 @@ public class TransformationObjectEditorPage
      * @see org.teiid.designer.ui.editors.ModelObjectEditorPage#canEdit(java.lang.Object, org.eclipse.ui.IEditorPart)
      * @since 5.0.1
      */
-    public boolean canEdit( Object modelObject,
+    @Override
+	public boolean canEdit( Object modelObject,
                             IEditorPart editor ) {
         if (this.override != null && this.override.canEdit(modelObject, editor)) {
             return false;
@@ -791,7 +802,8 @@ public class TransformationObjectEditorPage
     /**
      * @see org.teiid.designer.ui.editors.ModelObjectEditorPage#edit(org.eclipse.emf.ecore.EObject)
      */
-    public void edit( Object rootOrVirtualSqlTable ) {
+    @Override
+	public void edit( Object rootOrVirtualSqlTable ) {
         Object obj = getEditableObject(rootOrVirtualSqlTable);
         if (obj instanceof SqlTransformationMappingRoot) {
             SqlTransformationMappingRoot workingMappingRoot = (SqlTransformationMappingRoot)obj;
@@ -893,7 +905,8 @@ public class TransformationObjectEditorPage
 
     private void setEditorFocus( final SqlEditorPanel editor ) {
         Display.getDefault().asyncExec(new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 if (editor != null) {
                     TextViewer tv = editor.getTextViewer();
 
@@ -1116,7 +1129,8 @@ public class TransformationObjectEditorPage
             	final SqlTransformationResult currentSelectStatus = SqlMappingRootCache.getSqlTransformationStatus(currentMappingRoot,QueryValidator.SELECT_TRNS, true, null);
 	            if( selectStatus != null ) {
 	            	UiUtil.runInSwtThread(new Runnable() {
-                        public void run() {
+                        @Override
+						public void run() {
                         	updateUpdateTabs(currentSelectStatus);
                         }
                     }, true);
@@ -1504,7 +1518,8 @@ public class TransformationObjectEditorPage
     /**
      * @see org.teiid.designer.ui.editors.ModelObjectEditorPage#deactivate()
      */
-    public boolean deactivate() {
+    @Override
+	public boolean deactivate() {
 
         // this editor is being closed so perform save
         // Defect 17115 involved a problem where the doSave() call resulted in an NPE
@@ -1586,14 +1601,16 @@ public class TransformationObjectEditorPage
     /**
      * @see org.teiid.designer.ui.editors.ModelObjectEditorPage#addPropertyListener(org.eclipse.ui.IPropertyListener)
      */
-    public void addPropertyListener( IPropertyListener listener ) {
+    @Override
+	public void addPropertyListener( IPropertyListener listener ) {
         propListeners.addListener(IPropertyListener.class, listener);
     }
 
     /**
      * @see org.teiid.designer.ui.editors.ModelObjectEditorPage#removePropertyListener(org.eclipse.ui.IPropertyListener)
      */
-    public void removePropertyListener( IPropertyListener listener ) {
+    @Override
+	public void removePropertyListener( IPropertyListener listener ) {
         propListeners.removeListener(IPropertyListener.class, listener);
     }
 
@@ -1624,7 +1641,8 @@ public class TransformationObjectEditorPage
                         // We want to do this because the txnSource is NOT this T-Editor and we need to assume that the SQL has
                         // changed and we need to re-set the Editor from the SQL T-Root object and it's SQL
                         UiUtil.runInSwtThread(new Runnable() {
-                            public void run() {
+                            @Override
+							public void run() {
                                 setEditorContent(getSelectedItem(), reconcileTarget, txnSource, overwriteDirty, true);
                             }
                         }, true);
@@ -1637,7 +1655,8 @@ public class TransformationObjectEditorPage
                 // FIX for Invalid SWT Thread Access
                 // put on SWT thread
                 UiUtil.runInSwtThread(new Runnable() {
-                    public void run() {
+                    @Override
+					public void run() {
                         refreshTabs();
                     }
                 }, true);
@@ -1650,7 +1669,8 @@ public class TransformationObjectEditorPage
                 // FIX for Invalid SWT Thread Access. Was coming through processEvent() listener
                 // put on SWT thread
                 UiUtil.runInSwtThread(new Runnable() {
-                    public void run() {
+                    @Override
+					public void run() {
                         objEditorParent.layout();
                     }
                 }, true);
@@ -1695,7 +1715,8 @@ public class TransformationObjectEditorPage
     /**
      * @see org.eclipse.emf.edit.provider.INotifyChangedListener#notifyChanged(org.eclipse.emf.common.notify.Notification)
      */
-    public void notifyChanged( Notification notification ) {
+    @Override
+	public void notifyChanged( Notification notification ) {
         if (!isEditorValid()) return;
 
         // Check for SourcedNotification (we should only get SourcedNotifications)
@@ -1859,7 +1880,8 @@ public class TransformationObjectEditorPage
      * 
      * @param theMenuMgr the context menu being contributed to
      */
-    public void contributeExportedActions( IMenuManager theMenuMgr ) {
+    @Override
+	public void contributeExportedActions( IMenuManager theMenuMgr ) {
         IAction action = null;
         IWorkbenchWindow window = UiPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow();
         DiagramActionService service = (DiagramActionService)DiagramUiPlugin.getDefault().getActionService(window.getActivePage());
@@ -1923,7 +1945,8 @@ public class TransformationObjectEditorPage
      * @see org.teiid.designer.ui.editors.IEditorActionExporter#getAdditionalModelingActions(org.eclipse.jface.viewers.ISelection)
      * @since 5.0
      */
-    public List<IAction> getAdditionalModelingActions( ISelection selection ) {
+    @Override
+	public List<IAction> getAdditionalModelingActions( ISelection selection ) {
         List<IAction> addedActions = new ArrayList<IAction>();
         IAction action = null;
         IWorkbenchWindow window = UiPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow();
@@ -1975,7 +1998,8 @@ public class TransformationObjectEditorPage
     /**
      * @see org.teiid.designer.ui.editors.ModelObjectEditorPage#contributeToolbarActions(org.eclipse.jface.action.ToolBarManager)
      */
-    public void contributeToolbarActions( ToolBarManager toolBarMgr ) {
+    @Override
+	public void contributeToolbarActions( ToolBarManager toolBarMgr ) {
 
         if (toolBarMgr == null) return;
 
@@ -2175,7 +2199,8 @@ public class TransformationObjectEditorPage
     /**
      * @see org.teiid.designer.ui.editors.ModelObjectEditorPage#doSave()
      */
-    public void doSave( boolean isClosing ) {
+    @Override
+	public void doSave( boolean isClosing ) {
         if (this.parent.isDisposed()) return;
 
         boolean saveChanges = true;
@@ -2197,7 +2222,8 @@ public class TransformationObjectEditorPage
         }
     }
 
-    public Object getAdapter( Class key ) {
+    @Override
+	public Object getAdapter( Class key ) {
         if (key.equals(IFindReplaceTarget.class) && (this.currentSqlEditor != null)) {
             return this.currentSqlEditor.getTextViewer().getFindReplaceTarget();
         }
@@ -2213,7 +2239,8 @@ public class TransformationObjectEditorPage
     // SelectionListener Interface
     // ==========================================================
 
-    public void widgetSelected( SelectionEvent e ) {
+    @Override
+	public void widgetSelected( SelectionEvent e ) {
         Object eventSource = e.getSource();
 
         // ---------------------------------------
@@ -2224,7 +2251,8 @@ public class TransformationObjectEditorPage
         }
     }
 
-    public void widgetDefaultSelected( SelectionEvent e ) {
+    @Override
+	public void widgetDefaultSelected( SelectionEvent e ) {
         widgetSelected(e);
     }
 
@@ -2521,7 +2549,8 @@ public class TransformationObjectEditorPage
         // FIX for Invalid SWT Thread Access
         // put on SWT thread
         UiUtil.runInSwtThread(new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 getCheckBoxContributionForSupportsUpdates().setEnabled(true);
                 getCheckBoxContributionForSupportsUpdates().setSelection(getTargetAllowsUpdates());
             }
@@ -2535,7 +2564,8 @@ public class TransformationObjectEditorPage
         // FIX for Invalid SWT Thread Access
         // put on SWT thread
         UiUtil.runInSwtThread(new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 boolean enableState = isEnableSelected(item);
                 // Set useDefault INSERT CheckBox State
                 if (item == insertTab && !chkUseDefaultForInsert.isDisposed()) {
@@ -2602,7 +2632,8 @@ public class TransformationObjectEditorPage
      * 
      * @param e the EventObject
      */
-    public void processEvent( final EventObject e ) {
+    @Override
+	public void processEvent( final EventObject e ) {
         if (!isEditorValid()) return;
 
         // -----------------------------------------
@@ -2784,7 +2815,8 @@ public class TransformationObjectEditorPage
      * @see org.teiid.designer.ui.undo.IUndoManager#canRedo()
      * @since 5.5.3
      */
-    public boolean canRedo() {
+    @Override
+	public boolean canRedo() {
         return getCurrentSqlEditor().getUndoManager().redoable();
     }
 
@@ -2792,7 +2824,8 @@ public class TransformationObjectEditorPage
      * @see org.teiid.designer.ui.undo.IUndoManager#canUndo()
      * @since 5.5.3
      */
-    public boolean canUndo() {
+    @Override
+	public boolean canUndo() {
         return getCurrentSqlEditor().getUndoManager().undoable();
     }
 
@@ -2800,7 +2833,8 @@ public class TransformationObjectEditorPage
      * @see org.teiid.designer.ui.undo.IUndoManager#getRedoLabel()
      * @since 5.5.3
      */
-    public String getRedoLabel() {
+    @Override
+	public String getRedoLabel() {
         return getString("redoMenuLabel"); //$NON-NLS-1$
     }
 
@@ -2808,7 +2842,8 @@ public class TransformationObjectEditorPage
      * @see org.teiid.designer.ui.undo.IUndoManager#getUndoLabel()
      * @since 5.5.3
      */
-    public String getUndoLabel() {
+    @Override
+	public String getUndoLabel() {
         return getString("undoMenuLabel"); //$NON-NLS-1$
     }
 
@@ -2816,7 +2851,8 @@ public class TransformationObjectEditorPage
      * @see org.teiid.designer.ui.undo.IUndoManager#redo(org.eclipse.core.runtime.IProgressMonitor)
      * @since 5.5.3
      */
-    public void redo( IProgressMonitor monitor ) {
+    @Override
+	public void redo( IProgressMonitor monitor ) {
         getCurrentSqlEditor().getUndoManager().redo();
         monitor.done();
     }
@@ -2825,7 +2861,8 @@ public class TransformationObjectEditorPage
      * @see org.teiid.designer.ui.undo.IUndoManager#undo(org.eclipse.core.runtime.IProgressMonitor)
      * @since 5.5.3
      */
-    public void undo( IProgressMonitor monitor ) {
+    @Override
+	public void undo( IProgressMonitor monitor ) {
         getCurrentSqlEditor().getUndoManager().undo();
         monitor.done();
     }
@@ -2961,7 +2998,8 @@ public class TransformationObjectEditorPage
      * @see org.teiid.designer.ui.editors.ModelObjectEditorPage#updateReadOnlyState(boolean)
      * @since 4.2
      */
-    public void updateReadOnlyState() {
+    @Override
+	public void updateReadOnlyState() {
         if (currentMappingRoot != null) {
             boolean isReadOnly = ModelObjectUtilities.isReadOnly(currentMappingRoot);
             if (isReadOnly != this.currentReadonlyState) {
@@ -2983,7 +3021,8 @@ public class TransformationObjectEditorPage
     /*  Update check boxes on insert/update/delete tabs */
     private void updateReadOnlyStateOfCheckBoxes( final boolean isReadOnly ) {
         UiUtil.runInSwtThread(new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 if (chkUseDefaultForInsert != null) chkUseDefaultForInsert.setEnabled(!isReadOnly);
                 if (chkUseDefaultForUpdate != null) chkUseDefaultForUpdate.setEnabled(!isReadOnly);
                 if (chkUseDefaultForDelete != null) chkUseDefaultForDelete.setEnabled(!isReadOnly);
@@ -2995,7 +3034,8 @@ public class TransformationObjectEditorPage
     /**
      * @see org.teiid.designer.ui.editors.ModelObjectEditorPage#isDirty()
      */
-    public boolean isDirty() {
+    @Override
+	public boolean isDirty() {
         return this.isDirty;
     }
 
@@ -3016,7 +3056,8 @@ public class TransformationObjectEditorPage
      * @see org.teiid.designer.ui.editors.ModelObjectEditorPage#isEditingObject(java.lang.Object)
      * @since 4.2
      */
-    public boolean isEditingObject( Object modelObject ) {
+    @Override
+	public boolean isEditingObject( Object modelObject ) {
         if (currentMappingRoot != null && modelObject != null) {
             if (modelObject instanceof InputSet) {
                 return false;
@@ -3037,7 +3078,8 @@ public class TransformationObjectEditorPage
      * @see org.teiid.designer.ui.editors.ModelObjectEditorPage#getEditableObject(java.lang.Object)
      * @since 4.2
      */
-    public Object getEditableObject( Object modelObject ) {
+    @Override
+	public Object getEditableObject( Object modelObject ) {
         // check edit object type and set mapping root.
         SqlTransformationMappingRoot workingMappingRoot = null;
 
@@ -3069,7 +3111,8 @@ public class TransformationObjectEditorPage
      * @see org.teiid.designer.ui.editors.ModelObjectEditorPage#isResourceValid()
      * @since 4.2
      */
-    public boolean isResourceValid() {
+    @Override
+	public boolean isResourceValid() {
         if (currentMappingRoot != null) {
             if (currentMappingRoot.eResource() != null) {
                 ModelResource mr = ModelUtilities.getModelResourceForModelObject(currentMappingRoot);
@@ -3104,7 +3147,8 @@ public class TransformationObjectEditorPage
      * @see org.teiid.designer.ui.editors.ModelObjectEditorPage#initialize(org.teiid.designer.ui.editors.MultiPageModelEditor)
      * @since 5.0.1
      */
-    public void initialize( MultiPageModelEditor editor ) {
+    @Override
+	public void initialize( MultiPageModelEditor editor ) {
     	if( editor instanceof ModelEditor ) {
     		this.parentModelEditor = (ModelEditor)editor;
     	}
@@ -3118,7 +3162,8 @@ public class TransformationObjectEditorPage
      * @see org.teiid.designer.ui.editors.ModelObjectEditorPage#setOverride(org.teiid.designer.ui.editors.ModelObjectEditorPage)
      * @since 5.0.1
      */
-    public void setOverride( ModelObjectEditorPage editor ) {
+    @Override
+	public void setOverride( ModelObjectEditorPage editor ) {
         this.override = editor;
     }
 
@@ -3156,7 +3201,8 @@ public class TransformationObjectEditorPage
             // I call this solution evil and messy, but it matches pretty well how
             // the rest of the class is written.
             chkSupportsUpdates.addDisposeListener(new DisposeListener() {
-                public void widgetDisposed( DisposeEvent e ) {
+                @Override
+				public void widgetDisposed( DisposeEvent e ) {
                     chkSupportsUpdatesContribution = null;
                 }
             });

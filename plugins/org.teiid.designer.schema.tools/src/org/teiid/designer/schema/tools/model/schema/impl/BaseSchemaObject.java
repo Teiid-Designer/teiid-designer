@@ -64,27 +64,33 @@ public abstract class BaseSchemaObject implements SchemaObject {
         this.schema = schema;
     }
 
-    public void setMustBeQualified() {
+    @Override
+	public void setMustBeQualified() {
         doesNotHaveUniqueName = true;
     }
 
-    public void setFileName( String fileName ) {
+    @Override
+	public void setFileName( String fileName ) {
         this.fileName = fileName;
     }
 
-    public String getFileName() {
+    @Override
+	public String getFileName() {
         return fileName;
     }
 
-    public boolean isWithinSelectedHierarchy() {
+    @Override
+	public boolean isWithinSelectedHierarchy() {
         return withinSelectedHierarchy;
     }
 
-    public void setWithinSelectedHierarchy( boolean under ) {
+    @Override
+	public void setWithinSelectedHierarchy( boolean under ) {
         withinSelectedHierarchy = under;
     }
 
-    public boolean isCanBeRoot() {
+    @Override
+	public boolean isCanBeRoot() {
         if (!availableRoot || children.size() == 0 || parents.size() > 0) {
             return false;
         }
@@ -115,7 +121,8 @@ public abstract class BaseSchemaObject implements SchemaObject {
         return attributesCopy;
     }
 
-    public void addParent( SchemaObject parent,
+    @Override
+	public void addParent( SchemaObject parent,
                            int minOccurs,
                            int maxOccurs ) {
         if (parent == null) {
@@ -152,12 +159,14 @@ public abstract class BaseSchemaObject implements SchemaObject {
         }
     }
 
-    public void addAttribute( Column col ) {
+    @Override
+	public void addAttribute( Column col ) {
         col.setTable(this);
         attributes.add(col);
     }
 
-    public String recursiveGetXpath() {
+    @Override
+	public String recursiveGetXpath() {
         if (recursivityDetector) {
             return null;
         }
@@ -271,7 +280,8 @@ public abstract class BaseSchemaObject implements SchemaObject {
         }
     }
 
-    public void cascadeRootSelection( boolean b ) {
+    @Override
+	public void cascadeRootSelection( boolean b ) {
         Set visitedElements = new HashSet();
         this.setUseAsRoot(b);
         this.setWithinSelectedHierarchy(b);
@@ -293,11 +303,13 @@ public abstract class BaseSchemaObject implements SchemaObject {
         }
     }
 
-    public String getInputXPath() {
+    @Override
+	public String getInputXPath() {
         return GetXPath();
     }
 
-    public String getOutputXPath() {
+    @Override
+	public String getOutputXPath() {
         return GetXPath();
     }
 
@@ -315,7 +327,8 @@ public abstract class BaseSchemaObject implements SchemaObject {
         return xpath;
     }
 
-    public String getRelativeXpath() {
+    @Override
+	public String getRelativeXpath() {
         String qname;
         String name = getName();
         if (prefix != null && !prefix.equals("")) { //$NON-NLS-1$
@@ -326,15 +339,18 @@ public abstract class BaseSchemaObject implements SchemaObject {
         return qname;
     }
 
-    public List getParents() {
+    @Override
+	public List getParents() {
         return parents;
     }
 
-    public List getChildren() {
+    @Override
+	public List getChildren() {
         return children;
     }
 
-    public List getAttributes() {
+    @Override
+	public List getAttributes() {
         return attributes;
     }
 
@@ -352,7 +368,8 @@ public abstract class BaseSchemaObject implements SchemaObject {
         }
     }
 
-    public void setAllParentRepresentations( int representation,
+    @Override
+	public void setAllParentRepresentations( int representation,
                                              RelationshipProcessor processor ) {
         // TODO: Setting the relationship type into the Relationship was a failed implementation, all vestiges should be removed.
         List parents = getParents();
@@ -366,15 +383,18 @@ public abstract class BaseSchemaObject implements SchemaObject {
         }
     }
 
-    public boolean isUseAsRoot() {
+    @Override
+	public boolean isUseAsRoot() {
         return useAsRoot;
     }
 
-    public void setUseAsRoot( boolean useAsRoot ) {
+    @Override
+	public void setUseAsRoot( boolean useAsRoot ) {
         this.useAsRoot = useAsRoot;
     }
 
-    public boolean isSimpleElement( RelationshipProcessor processor ) {
+    @Override
+	public boolean isSimpleElement( RelationshipProcessor processor ) {
         boolean isSimpleRequest = true;
         /*
          * for (Iterator iter = children.iterator(); iter.hasNext(); ){
@@ -386,15 +406,18 @@ public abstract class BaseSchemaObject implements SchemaObject {
          */return isSimpleRequest;
     }
 
-    public boolean representAsTable() {
+    @Override
+	public boolean representAsTable() {
         return representAsTable;
     }
 
-    public void setRepresentAsTable( boolean table ) {
+    @Override
+	public void setRepresentAsTable( boolean table ) {
         this.representAsTable = table;
     }
 
-    public List getAllModelColumns() {
+    @Override
+	public List getAllModelColumns() {
         ArrayList columns = new ArrayList();
         for (Iterator iter = attributes.iterator(); iter.hasNext();) {
             Column column = (Column)iter.next();
@@ -403,7 +426,8 @@ public abstract class BaseSchemaObject implements SchemaObject {
         return columns;
     }
 
-    public List getAttributeList() {
+    @Override
+	public List getAttributeList() {
         List result;
         if (type instanceof XSDComplexTypeDefinition) {
             result = ((XSDComplexTypeDefinition)type).getAttributeUses();
@@ -435,19 +459,23 @@ public abstract class BaseSchemaObject implements SchemaObject {
         copy.withinSelectedHierarchy = withinSelectedHierarchy;
     }
 
-    public XSDSchema getSchema() {
+    @Override
+	public XSDSchema getSchema() {
         return schema;
     }
 
-    public boolean hasComplexTypeDefinition() {
+    @Override
+	public boolean hasComplexTypeDefinition() {
         return type instanceof XSDComplexTypeDefinition;
     }
 
-    public boolean hasSimpleTypeDefinition() {
+    @Override
+	public boolean hasSimpleTypeDefinition() {
         return type instanceof XSDSimpleTypeDefinition;
     }
 
-    public XSDComplexTypeContent getContent() {
+    @Override
+	public XSDComplexTypeContent getContent() {
         XSDComplexTypeContent result = null;
         if (type instanceof XSDComplexTypeDefinition) {
             XSDComplexTypeDefinition complexType = (XSDComplexTypeDefinition)type;
@@ -456,7 +484,8 @@ public abstract class BaseSchemaObject implements SchemaObject {
         return result;
     }
 
-    public XSDSimpleTypeDefinition getTextType() {
+    @Override
+	public XSDSimpleTypeDefinition getTextType() {
         XSDSimpleTypeDefinition textType = null;
         if (hasSimpleTypeDefinition()) {
             textType = (XSDSimpleTypeDefinition)getType();

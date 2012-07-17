@@ -143,7 +143,8 @@ public class ModelResourceIndexSelector extends AbstractIndexSelector {
                 // If there are models with unsaved changes create temporary index files
                 // for use in query validation and resolution
                 final TransactionRunnable runnable = new TransactionRunnable() {
-                    public Object run( final UnitOfWork uow ) {
+                    @Override
+					public Object run( final UnitOfWork uow ) {
                         ModelBuildUtil.createModelIndexes(null, nonIndexedResources);
                         return null;
                     }

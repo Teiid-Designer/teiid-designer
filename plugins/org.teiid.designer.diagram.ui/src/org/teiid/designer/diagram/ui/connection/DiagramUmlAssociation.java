@@ -201,6 +201,7 @@ public class DiagramUmlAssociation implements NodeConnectionModel {
 		}
 	}
 
+	@Override
 	public void updateLabels() {
 		if (sourceRoleName != null)
 			sourceRoleName.setName(bAssociation.getRoleName(BinaryAssociation.SOURCE_END));
@@ -250,6 +251,7 @@ public class DiagramUmlAssociation implements NodeConnectionModel {
 		}
 	}
 
+	@Override
 	public void setName(String sName) {
 		this.sName = sName;
 	}
@@ -257,10 +259,12 @@ public class DiagramUmlAssociation implements NodeConnectionModel {
 	/**
 	 * @param 
 	 */
+	@Override
 	public String getName() {
 		return sName;
 	}
 
+	@Override
 	public void layout() {
 		//        System.out.println( "[DiagramAssociation.layout 0 arg ] TOP, node name: " + getName() );  //$NON-NLS-1$                 
 	}
@@ -290,6 +294,7 @@ public class DiagramUmlAssociation implements NodeConnectionModel {
         return false;
     }
 
+	@Override
 	public void setRouterStyle(String newStyle) {
 
 		if (this.sRouterStyle == null || !this.sRouterStyle.equals(newStyle)) {
@@ -302,7 +307,8 @@ public class DiagramUmlAssociation implements NodeConnectionModel {
 	}
     
 
-    public void setRouterStyle(int iRouterStyle) {
+    @Override
+	public void setRouterStyle(int iRouterStyle) {
 //        // refresh the label layout manager
 //        if( getDiagramLink() != null )
 //            DiagramLinkAdapter.setType(getDiagramLink(), iRouterStyle);
@@ -312,6 +318,7 @@ public class DiagramUmlAssociation implements NodeConnectionModel {
             
     }
 
+	@Override
 	public int getRouterStyle() {
 //        if( getDiagramLink() != null ) {
 //            return DiagramLinkAdapter.getType(getDiagramLink());
@@ -328,6 +335,7 @@ public class DiagramUmlAssociation implements NodeConnectionModel {
 	/**
 	 * @return sourceNode
 	 */
+	@Override
 	public Object getSourceNode() {
 		return sourceNode;
 	}
@@ -335,6 +343,7 @@ public class DiagramUmlAssociation implements NodeConnectionModel {
 	/**
 	 * @return targetNode
 	 */
+	@Override
 	public Object getTargetNode() {
 		return targetNode;
 	}
@@ -342,6 +351,7 @@ public class DiagramUmlAssociation implements NodeConnectionModel {
 	/**
 	 * @param node
 	 */
+	@Override
 	public void setSourceNode(Object node) {
 		sourceNode = (DiagramModelNode)node;
 	}
@@ -349,6 +359,7 @@ public class DiagramUmlAssociation implements NodeConnectionModel {
 	/**
 	 * @param node
 	 */
+	@Override
 	public void setTargetNode(Object node) {
 		targetNode = (DiagramModelNode)node;
 	}
@@ -437,6 +448,7 @@ public class DiagramUmlAssociation implements NodeConnectionModel {
 		targetRoleName = node;
 	}
 
+	@Override
 	public List getLabelNodes() {
 		List currentLabels = new ArrayList();
 
@@ -469,14 +481,17 @@ public class DiagramUmlAssociation implements NodeConnectionModel {
 	// =====================================================================
 	transient protected PropertyChangeSupport listeners = new PropertyChangeSupport(this);
 
+	@Override
 	public void addPropertyChangeListener(PropertyChangeListener l) {
 		listeners.addPropertyChangeListener(l);
 	}
 
+	@Override
 	public void removePropertyChangeListener(PropertyChangeListener l) {
 		listeners.removePropertyChangeListener(l);
 	}
 
+	@Override
 	public void firePropertyChange(String prop, Object old, Object newValue) {
 		listeners.firePropertyChange(prop, old, newValue);
 	}
@@ -584,6 +599,7 @@ public class DiagramUmlAssociation implements NodeConnectionModel {
 	/**
 	 * Creates all the labels and icons for the link.
 	 */
+	@Override
 	public void layout(
 		ConnectionAnchor sourceAnchor,
 		ConnectionAnchor targetAnchor,
@@ -1109,6 +1125,7 @@ public class DiagramUmlAssociation implements NodeConnectionModel {
 
 	}
 
+	@Override
 	public void placeStereotypeAndName(
 		int iSourceSide,
 		int iTargetSide,
@@ -1626,6 +1643,7 @@ public class DiagramUmlAssociation implements NodeConnectionModel {
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.diagram.ui.connection.NodeConnectionModel#getDecoratorId()
 	 */
+	@Override
 	public int getSourceDecoratorId() {
 		if (getBAssociation().getAggregation(BinaryAssociation.SOURCE_END)
 			== BinaryAssociation.AGGREGATION_COMPOSITE)
@@ -1646,6 +1664,7 @@ public class DiagramUmlAssociation implements NodeConnectionModel {
 		return BinaryAssociation.DECORATOR_NONE;
 	}
 
+	@Override
 	public int getTargetDecoratorId() {
 		if (getBAssociation().getAggregation(BinaryAssociation.TARGET_END)
 			== BinaryAssociation.AGGREGATION_COMPOSITE)
@@ -1669,6 +1688,7 @@ public class DiagramUmlAssociation implements NodeConnectionModel {
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.diagram.ui.connection.NodeConnectionModel#getLineStyle()
 	 */
+	@Override
 	public int getLineStyle() {
 		return BinaryAssociation.LINE_SOLID;
 	}
@@ -1683,6 +1703,7 @@ public class DiagramUmlAssociation implements NodeConnectionModel {
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.diagram.ui.connection.NodeConnectionModel#getModelObject()
 	 */
+	@Override
 	public EObject getModelObject() {
 		return getBAssociation().getReference();
 	}
@@ -1690,6 +1711,7 @@ public class DiagramUmlAssociation implements NodeConnectionModel {
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.diagram.ui.connection.NodeConnectionModel#getToolTipString()
 	 */
+	@Override
 	public List getToolTipStrings() {
 		if (getBAssociation().getReference() != null
 			&& getBAssociation().getRelationshipAspect() != null
@@ -1727,7 +1749,8 @@ public class DiagramUmlAssociation implements NodeConnectionModel {
      * @see org.teiid.designer.diagram.ui.connection.NodeConnectionModel#getBendpoints()
      * @since 4.2
      */
-    public List getBendpoints() {
+    @Override
+	public List getBendpoints() {
         return bendpoints;
     }
     /**
@@ -1735,7 +1758,8 @@ public class DiagramUmlAssociation implements NodeConnectionModel {
      * @see org.teiid.designer.diagram.ui.connection.NodeConnectionModel#insertBendpoint(int, org.eclipse.draw2d.Bendpoint)
      * @since 4.2
      */
-    public void insertBendpoint(int index, Bendpoint point) {
+    @Override
+	public void insertBendpoint(int index, Bendpoint point) {
         getBendpoints().add(index, point);
         if( getDiagramLink() != null )
             DiagramLinkAdapter.addBendpoint(getDiagramLink(), index, point.getLocation());
@@ -1746,7 +1770,8 @@ public class DiagramUmlAssociation implements NodeConnectionModel {
      * @see org.teiid.designer.diagram.ui.connection.NodeConnectionModel#removeBendpoint(int)
      * @since 4.2
      */
-    public void removeBendpoint(int index) {
+    @Override
+	public void removeBendpoint(int index) {
         getBendpoints().remove(index);
         if( getDiagramLink() != null )
             DiagramLinkAdapter.removeBendpoint(getDiagramLink(), index);
@@ -1758,7 +1783,8 @@ public class DiagramUmlAssociation implements NodeConnectionModel {
      * @see org.teiid.designer.diagram.ui.connection.NodeConnectionModel#removeBendpoint(int)
      * @since 4.2
      */
-    public void clearBendpoints() {
+    @Override
+	public void clearBendpoints() {
         getBendpoints().clear();
         if( getDiagramLink() != null )
             DiagramLinkAdapter.clearBendpoints(getDiagramLink());
@@ -1769,7 +1795,8 @@ public class DiagramUmlAssociation implements NodeConnectionModel {
      * @see org.teiid.designer.diagram.ui.connection.NodeConnectionModel#setBendpoint(int, org.eclipse.draw2d.Bendpoint)
      * @since 4.2
      */
-    public void setBendpoint(int index, Bendpoint bPoint) {
+    @Override
+	public void setBendpoint(int index, Bendpoint bPoint) {
         getBendpoints().set(index, bPoint);
         if( getDiagramLink() != null )
             DiagramLinkAdapter.setBendpoint(getDiagramLink(), index, bPoint.getLocation());
@@ -1780,7 +1807,8 @@ public class DiagramUmlAssociation implements NodeConnectionModel {
      * @see org.teiid.designer.diagram.ui.connection.NodeConnectionModel#setBendpoints(java.util.Vector)
      * @since 4.2
      */ 
-    public void setBendpoints(Vector newPoints) {
+    @Override
+	public void setBendpoints(Vector newPoints) {
         List newBendpoints = new ArrayList(newPoints.size());
         Object nextObj = null;
         Iterator iter = newPoints.iterator();
@@ -1807,7 +1835,8 @@ public class DiagramUmlAssociation implements NodeConnectionModel {
      * @see org.teiid.designer.diagram.ui.connection.NodeConnectionModel#getDiagramLink()
      * @since 4.2
      */
-    public DiagramLink getDiagramLink() {
+    @Override
+	public DiagramLink getDiagramLink() {
         if( !getBendpoints().isEmpty() && diagramLink == null ) {
             diagramLink = DiagramUiUtilities.findDiagramLink(getDiagram(), getModelObject());
             if( diagramLink == null )
@@ -1838,7 +1867,8 @@ public class DiagramUmlAssociation implements NodeConnectionModel {
      * @see org.teiid.designer.diagram.ui.connection.NodeConnectionModel#refreshBendPoints()
      * @since 4.2
      */
-    public void refreshBendPoints() {
+    @Override
+	public void refreshBendPoints() {
         firePropertyChange(DiagramUiConstants.DiagramNodeProperties.BENDPOINT, null, null);
     }
 

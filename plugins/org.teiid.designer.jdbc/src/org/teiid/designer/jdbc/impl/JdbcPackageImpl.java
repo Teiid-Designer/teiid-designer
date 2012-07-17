@@ -168,7 +168,8 @@ public class JdbcPackageImpl extends EPackageImpl implements JdbcPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EClass getJdbcSourceProperty() {
+    @Override
+	public EClass getJdbcSourceProperty() {
         return jdbcSourcePropertyEClass;
     }
 
@@ -177,7 +178,8 @@ public class JdbcPackageImpl extends EPackageImpl implements JdbcPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getJdbcSourceProperty_Source() {
+    @Override
+	public EReference getJdbcSourceProperty_Source() {
         return (EReference)jdbcSourcePropertyEClass.getEStructuralFeatures().get(0);
     }
 
@@ -186,7 +188,8 @@ public class JdbcPackageImpl extends EPackageImpl implements JdbcPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getJdbcSourceProperty_Name() {
+    @Override
+	public EAttribute getJdbcSourceProperty_Name() {
         return (EAttribute)jdbcSourcePropertyEClass.getEStructuralFeatures().get(1);
     }
 
@@ -195,7 +198,8 @@ public class JdbcPackageImpl extends EPackageImpl implements JdbcPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getJdbcSourceProperty_Value() {
+    @Override
+	public EAttribute getJdbcSourceProperty_Value() {
         return (EAttribute)jdbcSourcePropertyEClass.getEStructuralFeatures().get(2);
     }
 
@@ -204,7 +208,8 @@ public class JdbcPackageImpl extends EPackageImpl implements JdbcPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EClass getJdbcDriver() {
+    @Override
+	public EClass getJdbcDriver() {
         return jdbcDriverEClass;
     }
 
@@ -213,7 +218,8 @@ public class JdbcPackageImpl extends EPackageImpl implements JdbcPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getJdbcDriver_JdbcDriverContainer() {
+    @Override
+	public EReference getJdbcDriver_JdbcDriverContainer() {
         return (EReference)jdbcDriverEClass.getEStructuralFeatures().get(0);
     }
 
@@ -222,7 +228,8 @@ public class JdbcPackageImpl extends EPackageImpl implements JdbcPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getJdbcDriver_Name() {
+    @Override
+	public EAttribute getJdbcDriver_Name() {
         return (EAttribute)jdbcDriverEClass.getEStructuralFeatures().get(1);
     }
 
@@ -231,7 +238,8 @@ public class JdbcPackageImpl extends EPackageImpl implements JdbcPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getJdbcDriver_UrlSyntax() {
+    @Override
+	public EAttribute getJdbcDriver_UrlSyntax() {
         return (EAttribute)jdbcDriverEClass.getEStructuralFeatures().get(2);
     }
 
@@ -240,7 +248,8 @@ public class JdbcPackageImpl extends EPackageImpl implements JdbcPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getJdbcDriver_JarFileUris() {
+    @Override
+	public EAttribute getJdbcDriver_JarFileUris() {
         return (EAttribute)jdbcDriverEClass.getEStructuralFeatures().get(3);
     }
 
@@ -249,7 +258,8 @@ public class JdbcPackageImpl extends EPackageImpl implements JdbcPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getJdbcDriver_AvailableDriverClassNames() {
+    @Override
+	public EAttribute getJdbcDriver_AvailableDriverClassNames() {
         return (EAttribute)jdbcDriverEClass.getEStructuralFeatures().get(4);
     }
 
@@ -258,7 +268,8 @@ public class JdbcPackageImpl extends EPackageImpl implements JdbcPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getJdbcDriver_PreferredDriverClassName() {
+    @Override
+	public EAttribute getJdbcDriver_PreferredDriverClassName() {
         return (EAttribute)jdbcDriverEClass.getEStructuralFeatures().get(5);
     }
 
@@ -267,7 +278,8 @@ public class JdbcPackageImpl extends EPackageImpl implements JdbcPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EClass getJdbcSource() {
+    @Override
+	public EClass getJdbcSource() {
         return jdbcSourceEClass;
     }
 
@@ -276,7 +288,8 @@ public class JdbcPackageImpl extends EPackageImpl implements JdbcPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getJdbcSource_JdbcDriver() {
+    @Override
+	public EReference getJdbcSource_JdbcDriver() {
         return (EReference)jdbcSourceEClass.getEStructuralFeatures().get(0);
     }
 
@@ -285,7 +298,8 @@ public class JdbcPackageImpl extends EPackageImpl implements JdbcPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getJdbcSource_Properties() {
+    @Override
+	public EReference getJdbcSource_Properties() {
         return (EReference)jdbcSourceEClass.getEStructuralFeatures().get(1);
     }
 
@@ -294,7 +308,8 @@ public class JdbcPackageImpl extends EPackageImpl implements JdbcPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getJdbcSource_JdbcSourceContainer() {
+    @Override
+	public EReference getJdbcSource_JdbcSourceContainer() {
         return (EReference)jdbcSourceEClass.getEStructuralFeatures().get(2);
     }
 
@@ -303,7 +318,8 @@ public class JdbcPackageImpl extends EPackageImpl implements JdbcPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getJdbcSource_ImportSettings() {
+    @Override
+	public EReference getJdbcSource_ImportSettings() {
         return (EReference)jdbcSourceEClass.getEStructuralFeatures().get(3);
     }
 
@@ -312,7 +328,8 @@ public class JdbcPackageImpl extends EPackageImpl implements JdbcPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getJdbcSource_Name() {
+    @Override
+	public EAttribute getJdbcSource_Name() {
         return (EAttribute)jdbcSourceEClass.getEStructuralFeatures().get(4);
     }
 
@@ -321,7 +338,8 @@ public class JdbcPackageImpl extends EPackageImpl implements JdbcPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getJdbcSource_DriverName() {
+    @Override
+	public EAttribute getJdbcSource_DriverName() {
         return (EAttribute)jdbcSourceEClass.getEStructuralFeatures().get(5);
     }
 
@@ -330,7 +348,8 @@ public class JdbcPackageImpl extends EPackageImpl implements JdbcPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getJdbcSource_DriverClass() {
+    @Override
+	public EAttribute getJdbcSource_DriverClass() {
         return (EAttribute)jdbcSourceEClass.getEStructuralFeatures().get(6);
     }
 
@@ -339,7 +358,8 @@ public class JdbcPackageImpl extends EPackageImpl implements JdbcPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getJdbcSource_Username() {
+    @Override
+	public EAttribute getJdbcSource_Username() {
         return (EAttribute)jdbcSourceEClass.getEStructuralFeatures().get(7);
     }
 
@@ -348,7 +368,8 @@ public class JdbcPackageImpl extends EPackageImpl implements JdbcPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getJdbcSource_Url() {
+    @Override
+	public EAttribute getJdbcSource_Url() {
         return (EAttribute)jdbcSourceEClass.getEStructuralFeatures().get(8);
     }
 
@@ -357,7 +378,8 @@ public class JdbcPackageImpl extends EPackageImpl implements JdbcPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EClass getJdbcDriverContainer() {
+    @Override
+	public EClass getJdbcDriverContainer() {
         return jdbcDriverContainerEClass;
     }
 
@@ -366,7 +388,8 @@ public class JdbcPackageImpl extends EPackageImpl implements JdbcPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getJdbcDriverContainer_JdbcDrivers() {
+    @Override
+	public EReference getJdbcDriverContainer_JdbcDrivers() {
         return (EReference)jdbcDriverContainerEClass.getEStructuralFeatures().get(0);
     }
 
@@ -375,7 +398,8 @@ public class JdbcPackageImpl extends EPackageImpl implements JdbcPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EClass getJdbcSourceContainer() {
+    @Override
+	public EClass getJdbcSourceContainer() {
         return jdbcSourceContainerEClass;
     }
 
@@ -384,7 +408,8 @@ public class JdbcPackageImpl extends EPackageImpl implements JdbcPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getJdbcSourceContainer_JdbcSources() {
+    @Override
+	public EReference getJdbcSourceContainer_JdbcSources() {
         return (EReference)jdbcSourceContainerEClass.getEStructuralFeatures().get(0);
     }
 
@@ -393,7 +418,8 @@ public class JdbcPackageImpl extends EPackageImpl implements JdbcPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EClass getJdbcImportSettings() {
+    @Override
+	public EClass getJdbcImportSettings() {
         return jdbcImportSettingsEClass;
     }
 
@@ -402,7 +428,8 @@ public class JdbcPackageImpl extends EPackageImpl implements JdbcPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getJdbcImportSettings_Source() {
+    @Override
+	public EReference getJdbcImportSettings_Source() {
         return (EReference)jdbcImportSettingsEClass.getEStructuralFeatures().get(0);
     }
 
@@ -411,7 +438,8 @@ public class JdbcPackageImpl extends EPackageImpl implements JdbcPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getJdbcImportSettings_Options() {
+    @Override
+	public EReference getJdbcImportSettings_Options() {
         return (EReference)jdbcImportSettingsEClass.getEStructuralFeatures().get(1);
     }
 
@@ -420,7 +448,8 @@ public class JdbcPackageImpl extends EPackageImpl implements JdbcPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getJdbcImportSettings_CreateCatalogsInModel() {
+    @Override
+	public EAttribute getJdbcImportSettings_CreateCatalogsInModel() {
         return (EAttribute)jdbcImportSettingsEClass.getEStructuralFeatures().get(2);
     }
 
@@ -429,7 +458,8 @@ public class JdbcPackageImpl extends EPackageImpl implements JdbcPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getJdbcImportSettings_CreateSchemasInModel() {
+    @Override
+	public EAttribute getJdbcImportSettings_CreateSchemasInModel() {
         return (EAttribute)jdbcImportSettingsEClass.getEStructuralFeatures().get(3);
     }
 
@@ -438,7 +468,8 @@ public class JdbcPackageImpl extends EPackageImpl implements JdbcPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getJdbcImportSettings_ConvertCaseInModel() {
+    @Override
+	public EAttribute getJdbcImportSettings_ConvertCaseInModel() {
         return (EAttribute)jdbcImportSettingsEClass.getEStructuralFeatures().get(4);
     }
 
@@ -447,7 +478,8 @@ public class JdbcPackageImpl extends EPackageImpl implements JdbcPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getJdbcImportSettings_GenerateSourceNamesInModel() {
+    @Override
+	public EAttribute getJdbcImportSettings_GenerateSourceNamesInModel() {
         return (EAttribute)jdbcImportSettingsEClass.getEStructuralFeatures().get(5);
     }
 
@@ -456,7 +488,8 @@ public class JdbcPackageImpl extends EPackageImpl implements JdbcPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getJdbcImportSettings_IncludedCatalogPaths() {
+    @Override
+	public EAttribute getJdbcImportSettings_IncludedCatalogPaths() {
         return (EAttribute)jdbcImportSettingsEClass.getEStructuralFeatures().get(6);
     }
 
@@ -465,7 +498,8 @@ public class JdbcPackageImpl extends EPackageImpl implements JdbcPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getJdbcImportSettings_IncludedSchemaPaths() {
+    @Override
+	public EAttribute getJdbcImportSettings_IncludedSchemaPaths() {
         return (EAttribute)jdbcImportSettingsEClass.getEStructuralFeatures().get(7);
     }
 
@@ -474,7 +508,8 @@ public class JdbcPackageImpl extends EPackageImpl implements JdbcPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getJdbcImportSettings_ExcludedObjectPaths() {
+    @Override
+	public EAttribute getJdbcImportSettings_ExcludedObjectPaths() {
         return (EAttribute)jdbcImportSettingsEClass.getEStructuralFeatures().get(8);
     }
 
@@ -483,7 +518,8 @@ public class JdbcPackageImpl extends EPackageImpl implements JdbcPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getJdbcImportSettings_IncludeForeignKeys() {
+    @Override
+	public EAttribute getJdbcImportSettings_IncludeForeignKeys() {
         return (EAttribute)jdbcImportSettingsEClass.getEStructuralFeatures().get(9);
     }
 
@@ -492,7 +528,8 @@ public class JdbcPackageImpl extends EPackageImpl implements JdbcPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getJdbcImportSettings_IncludeIndexes() {
+    @Override
+	public EAttribute getJdbcImportSettings_IncludeIndexes() {
         return (EAttribute)jdbcImportSettingsEClass.getEStructuralFeatures().get(10);
     }
 
@@ -501,7 +538,8 @@ public class JdbcPackageImpl extends EPackageImpl implements JdbcPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getJdbcImportSettings_IncludeProcedures() {
+    @Override
+	public EAttribute getJdbcImportSettings_IncludeProcedures() {
         return (EAttribute)jdbcImportSettingsEClass.getEStructuralFeatures().get(11);
     }
 
@@ -510,7 +548,8 @@ public class JdbcPackageImpl extends EPackageImpl implements JdbcPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getJdbcImportSettings_IncludeApproximateIndexes() {
+    @Override
+	public EAttribute getJdbcImportSettings_IncludeApproximateIndexes() {
         return (EAttribute)jdbcImportSettingsEClass.getEStructuralFeatures().get(12);
     }
 
@@ -519,7 +558,8 @@ public class JdbcPackageImpl extends EPackageImpl implements JdbcPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getJdbcImportSettings_IncludeUniqueIndexes() {
+    @Override
+	public EAttribute getJdbcImportSettings_IncludeUniqueIndexes() {
         return (EAttribute)jdbcImportSettingsEClass.getEStructuralFeatures().get(13);
     }
 
@@ -528,7 +568,8 @@ public class JdbcPackageImpl extends EPackageImpl implements JdbcPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getJdbcImportSettings_IncludedTableTypes() {
+    @Override
+	public EAttribute getJdbcImportSettings_IncludedTableTypes() {
         return (EAttribute)jdbcImportSettingsEClass.getEStructuralFeatures().get(14);
     }
 
@@ -537,7 +578,8 @@ public class JdbcPackageImpl extends EPackageImpl implements JdbcPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EClass getJdbcImportOptions() {
+    @Override
+	public EClass getJdbcImportOptions() {
         return jdbcImportOptionsEClass;
     }
 
@@ -546,7 +588,8 @@ public class JdbcPackageImpl extends EPackageImpl implements JdbcPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getJdbcImportOptions_ImportSettings() {
+    @Override
+	public EReference getJdbcImportOptions_ImportSettings() {
         return (EReference)jdbcImportOptionsEClass.getEStructuralFeatures().get(0);
     }
 
@@ -555,7 +598,8 @@ public class JdbcPackageImpl extends EPackageImpl implements JdbcPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getJdbcImportOptions_Name() {
+    @Override
+	public EAttribute getJdbcImportOptions_Name() {
         return (EAttribute)jdbcImportOptionsEClass.getEStructuralFeatures().get(1);
     }
 
@@ -564,7 +608,8 @@ public class JdbcPackageImpl extends EPackageImpl implements JdbcPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getJdbcImportOptions_Value() {
+    @Override
+	public EAttribute getJdbcImportOptions_Value() {
         return (EAttribute)jdbcImportOptionsEClass.getEStructuralFeatures().get(2);
     }
 
@@ -573,7 +618,8 @@ public class JdbcPackageImpl extends EPackageImpl implements JdbcPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EEnum getCaseConversion() {
+    @Override
+	public EEnum getCaseConversion() {
         return caseConversionEEnum;
     }
 
@@ -582,7 +628,8 @@ public class JdbcPackageImpl extends EPackageImpl implements JdbcPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EEnum getSourceNames() {
+    @Override
+	public EEnum getSourceNames() {
         return sourceNamesEEnum;
     }
 
@@ -591,7 +638,8 @@ public class JdbcPackageImpl extends EPackageImpl implements JdbcPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public JdbcFactory getJdbcFactory() {
+    @Override
+	public JdbcFactory getJdbcFactory() {
         return (JdbcFactory)getEFactoryInstance();
     }
 

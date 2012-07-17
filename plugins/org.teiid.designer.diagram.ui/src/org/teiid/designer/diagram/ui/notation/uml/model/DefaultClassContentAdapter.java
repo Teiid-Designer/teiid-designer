@@ -26,7 +26,8 @@ public class DefaultClassContentAdapter implements IClassifierContentAdapter {
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.notation.uml.model.IClassifierContentAdapter#showInnerClasses(org.eclipse.emf.ecore.EObject)
      */
-    public boolean showInnerClasses(EObject classifierEObject, Diagram diagram) {
+    @Override
+	public boolean showInnerClasses(EObject classifierEObject, Diagram diagram) {
         return true;
     }
 

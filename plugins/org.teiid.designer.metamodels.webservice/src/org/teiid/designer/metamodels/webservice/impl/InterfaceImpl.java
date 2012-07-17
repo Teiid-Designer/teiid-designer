@@ -66,7 +66,8 @@ public class InterfaceImpl extends WebServiceComponentImpl implements Interface 
      * 
      * @generated
      */
-    public EList getOperations() {
+    @Override
+	public EList getOperations() {
         if (operations == null) {
             operations = new EObjectContainmentWithInverseEList(Operation.class, this, WebServicePackage.INTERFACE__OPERATIONS,
                                                                 WebServicePackage.OPERATION__INTERFACE);

@@ -119,7 +119,8 @@ public class XsdAsRelationalImportWizard extends AbstractWizard implements IImpo
     JdbcFactory jdbcFactory;
     ConnectionImpl jdbcConnection;
 
-    public void init( final IWorkbench workbench,
+    @Override
+	public void init( final IWorkbench workbench,
                       final IStructuredSelection selection ) {
         createState();
 
@@ -399,7 +400,8 @@ public class XsdAsRelationalImportWizard extends AbstractWizard implements IImpo
 
         // Save object selections from previous page
         final IRunnableWithProgress op = new IRunnableWithProgress() {
-            public void run( final IProgressMonitor monitor ) throws InvocationTargetException {
+            @Override
+			public void run( final IProgressMonitor monitor ) throws InvocationTargetException {
                 try {
 
                     if (ppProcessorPack == null) {
@@ -634,7 +636,8 @@ public class XsdAsRelationalImportWizard extends AbstractWizard implements IImpo
 
             // Save object selections from previous page
             final IRunnableWithProgress op = new IRunnableWithProgress() {
-                public void run( final IProgressMonitor monitor ) throws InvocationTargetException {
+                @Override
+				public void run( final IProgressMonitor monitor ) throws InvocationTargetException {
                     try {
                         final JdbcSource src = getSource();
                         final RelationalModelProcessor processor = JdbcModelProcessorManager.createRelationalModelProcessor();

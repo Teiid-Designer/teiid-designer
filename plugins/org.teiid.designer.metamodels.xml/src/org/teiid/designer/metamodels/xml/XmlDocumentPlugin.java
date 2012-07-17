@@ -40,7 +40,8 @@ public class XmlDocumentPlugin extends Plugin {
     private static final ResourceLocator RESOURCE_LOCATOR = new ResourceLocator() {
         private ResourceLocator delegate = XSDPlugin.INSTANCE.getPluginResourceLocator();
 
-        public URL getBaseURL() {
+        @Override
+		public URL getBaseURL() {
             if (INSTANCE != null) {
                 URL baseUrl;
                 try {
@@ -59,7 +60,8 @@ public class XmlDocumentPlugin extends Plugin {
             }
         }
 
-        public Object getImage( String key ) {
+        @Override
+		public Object getImage( String key ) {
             try {
                 final URL baseUrl = getBaseURL();
                 final URL url = new URL(baseUrl + "icons/" + key + ".gif"); //$NON-NLS-1$//$NON-NLS-2$
@@ -73,7 +75,8 @@ public class XmlDocumentPlugin extends Plugin {
             }
         }
 
-        public String getString( String key ) {
+        @Override
+		public String getString( String key ) {
             String result = Util.getString(key);
             if (result.startsWith(MISSING_RESOURCE)) {
                 result = delegate.getString(key);
@@ -81,7 +84,8 @@ public class XmlDocumentPlugin extends Plugin {
             return result;
         }
 
-        public String getString( String key,
+        @Override
+		public String getString( String key,
                                  Object[] substitutions ) {
             String result = Util.getString(key);
             if (result.startsWith(MISSING_RESOURCE)) {
@@ -90,12 +94,14 @@ public class XmlDocumentPlugin extends Plugin {
             return result;
         }
 
-        public String getString( final String key,
+        @Override
+		public String getString( final String key,
                                  final boolean translate ) {
             return getString(key);
         }
 
-        public String getString( final String key,
+        @Override
+		public String getString( final String key,
                                  final Object[] substitutions,
                                  final boolean translate ) {
             return getString(key, substitutions);

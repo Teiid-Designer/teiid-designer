@@ -42,7 +42,8 @@ public class ForeignKeyAssociationProvider implements AssociationProvider {
     /* (non-Javadoc)
      * @See org.teiid.designer.core.association.AssociationProvider#getNewAssociationDescriptors(java.util.List)
      */
-    public Collection getNewAssociationDescriptors( List eObjects ) {
+    @Override
+	public Collection getNewAssociationDescriptors( List eObjects ) {
 
         // If the list of selected objects contains invalid entities then return
         if (!containsValidObjects(eObjects, VALID_CLASSES_TYPES)) {

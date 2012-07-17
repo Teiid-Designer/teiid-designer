@@ -26,7 +26,8 @@ public class MergedRelationship extends BaseRelationship {
         this.child = child;
     }
 
-    public String getParentRelativeXpath() {
+    @Override
+	public String getParentRelativeXpath() {
         String parentPart = parent.getParentRelativeXpath();
         String childPart = child.getParentRelativeXpath();
         // This is the xpath "from" the child "to" the parent, so it's
@@ -35,31 +36,36 @@ public class MergedRelationship extends BaseRelationship {
         return retval;
     }
 
-    public String getChildRelativeXpath() {
+    @Override
+	public String getChildRelativeXpath() {
         String parentPart = parent.getChildRelativeXpath();
         String childPart = child.getChildRelativeXpath();
         String retval = parentPart + "/" + childPart; //$NON-NLS-1$
         return retval;
     }
 
-    public SchemaObject getParent() {
+    @Override
+	public SchemaObject getParent() {
         SchemaObject retval = parent.getParent();
         return retval;
     }
 
-    public SchemaObject getChild() {
+    @Override
+	public SchemaObject getChild() {
         SchemaObject retval = child.getChild();
         return retval;
     }
 
-    public int getMinOccurs() {
+    @Override
+	public int getMinOccurs() {
         int parentMinOccurs = parent.getMinOccurs();
         int childMinOccurs = child.getMinOccurs();
         int retval = multiplyCardinalities(parentMinOccurs, childMinOccurs);
         return retval;
     }
 
-    public int getMaxOccurs() {
+    @Override
+	public int getMaxOccurs() {
         int parentMinOccurs = parent.getMinOccurs();
         int childMinOccurs = child.getMinOccurs();
         int retval = multiplyCardinalities(parentMinOccurs, childMinOccurs);
@@ -77,7 +83,8 @@ public class MergedRelationship extends BaseRelationship {
         return parentName + ":" + childName; //$NON-NLS-1$
     }
 
-    public void printDebug() {
+    @Override
+	public void printDebug() {
         System.out.println("MergedRelationship: "); //$NON-NLS-1$
         System.out.println("Begin Parent"); //$NON-NLS-1$
         parent.printDebug();

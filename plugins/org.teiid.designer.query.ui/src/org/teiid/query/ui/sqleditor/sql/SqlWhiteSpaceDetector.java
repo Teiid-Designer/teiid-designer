@@ -20,6 +20,7 @@ public class SqlWhiteSpaceDetector implements IWhitespaceDetector {
 	 * Whitespace test method.
 	 * @see org.eclipse.jface.text.rules.IWhitespaceDetector#isWhitespace(char)
 	 */
+	@Override
 	public boolean isWhitespace(char c) {
 		return Character.isWhitespace(c);
 	}

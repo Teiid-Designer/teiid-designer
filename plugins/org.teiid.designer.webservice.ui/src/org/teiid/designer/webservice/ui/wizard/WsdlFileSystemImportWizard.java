@@ -144,7 +144,8 @@ public class WsdlFileSystemImportWizard extends AbstractWizard implements IImpor
     /**
      * Method declared on IWorkbenchWizard.
      */
-    public void init( IWorkbench workbench,
+    @Override
+	public void init( IWorkbench workbench,
                       IStructuredSelection currentSelection ) {
         this.selection = currentSelection;
 
@@ -172,7 +173,8 @@ public class WsdlFileSystemImportWizard extends AbstractWizard implements IImpor
         } else {
             // Create empty page
             WizardPage page = new WizardPage(WsdlFileSystemImportWizard.class.getSimpleName(), TITLE, null) {
-                public void createControl( final Composite parent ) {
+                @Override
+				public void createControl( final Composite parent ) {
                     setControl(createEmptyPageControl(parent));
                 }
             };
@@ -257,7 +259,8 @@ public class WsdlFileSystemImportWizard extends AbstractWizard implements IImpor
         // Save object selections from previous page
         final IRunnableWithProgress op = new IRunnableWithProgress() {
 
-            public void run( final IProgressMonitor monitor ) {
+            @Override
+			public void run( final IProgressMonitor monitor ) {
                 // Wrap in transaction so it doesn't result in Significant Undoable
                 boolean started = ModelerCore.startTxn(false, false, "Create WS from WSDL on File System", //$NON-NLS-1$
                                                        new DefaultIgnorableNotificationSource(WsdlFileSystemImportWizard.this));
@@ -379,7 +382,8 @@ public class WsdlFileSystemImportWizard extends AbstractWizard implements IImpor
                         if (filteredStatus != null) {
                             // display
                             UiUtil.getWorkbenchShellOnlyIfUiThread().getDisplay().asyncExec(new Runnable() {
-                                public void run() {
+                                @Override
+								public void run() {
                                     // ErrorDialog does not open if status OK. And doesn't ever display embedded OK statuses.
                                     ErrorDialog.openError(UiUtil.getWorkbenchShellOnlyIfUiThread(),
                                                           UTIL.getString(I18N_PREFIX + "dialog.messages.title"), //$NON-NLS-1$
@@ -499,7 +503,8 @@ public class WsdlFileSystemImportWizard extends AbstractWizard implements IImpor
                 Job.getJobManager().removeJobChangeListener(this);
 
                 Display.getDefault().asyncExec(new Runnable() {
-                    public void run() {
+                    @Override
+					public void run() {
                         JobUtils.setAutoBuild(true);
                     }
                 });

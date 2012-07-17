@@ -29,7 +29,8 @@ public class ListContentProvider implements IStructuredContentProvider {
      * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
      * @since 4.2
      */
-    public Object[] getElements(Object inputElement) {
+    @Override
+	public Object[] getElements(Object inputElement) {
         if ( inputElement instanceof Collection ) {
             return ((Collection) inputElement).toArray();
         }
@@ -40,14 +41,16 @@ public class ListContentProvider implements IStructuredContentProvider {
      * @see org.eclipse.jface.viewers.IContentProvider#dispose()
      * @since 4.2
      */
-    public void dispose() {
+    @Override
+	public void dispose() {
     }
 
     /** 
      * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
      * @since 4.2
      */
-    public void inputChanged(Viewer viewer,
+    @Override
+	public void inputChanged(Viewer viewer,
                              Object oldInput,
                              Object newInput) {
     }

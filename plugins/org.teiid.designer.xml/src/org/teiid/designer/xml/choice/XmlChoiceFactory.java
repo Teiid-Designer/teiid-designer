@@ -31,7 +31,8 @@ public class XmlChoiceFactory implements IChoiceFactory {
     /* (non-Javadoc)
      * @See org.teiid.designer.mapping.factory.IChoiceFactory#supports(org.eclipse.emf.ecore.EObject)
      */
-    public boolean supports(EObject eobj) {
+    @Override
+	public boolean supports(EObject eobj) {
 //        System.out.println("[XmlChoiceFactory.supports]"); //$NON-NLS-1$        return false;
         return ( eobj instanceof XmlChoice );         
     }
@@ -39,7 +40,8 @@ public class XmlChoiceFactory implements IChoiceFactory {
     /* (non-Javadoc)
      * @See org.teiid.designer.mapping.factory.IChoiceFactory#createChoiceObject(org.eclipse.emf.ecore.EObject)
      */
-    public IChoiceObject createChoiceObject(EObject eobj) {
+    @Override
+	public IChoiceObject createChoiceObject(EObject eobj) {
 //        System.out.println("[XmlChoiceFactory.createChoiceObject]"); //$NON-NLS-1$        return false;
         if ( eobj instanceof XmlChoice ) {        
              return new XmlChoiceObject( (XmlChoice)eobj );

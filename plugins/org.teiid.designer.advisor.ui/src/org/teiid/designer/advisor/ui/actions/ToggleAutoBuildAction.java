@@ -27,7 +27,7 @@ public class ToggleAutoBuildAction extends Action implements
 	 *            The window for parenting dialogs associated with this action
 	 */
 	public ToggleAutoBuildAction(IWorkbenchWindow window) {
-		super("Build Automatically");
+		super("Build Automatically"); //$NON-NLS-1$
 		this.window = window;
 		setChecked(ModelerCore.getWorkspace().isAutoBuilding());
 	}
@@ -37,6 +37,7 @@ public class ToggleAutoBuildAction extends Action implements
 	 * 
 	 * @see org.eclipse.ui.actions.ActionFactory.IWorkbenchAction#dispose()
 	 */
+	@Override
 	public void dispose() {
 		// nothing to dispose
 	}
@@ -46,6 +47,7 @@ public class ToggleAutoBuildAction extends Action implements
 	 * 
 	 * @see org.eclipse.jface.action.IAction#run()
 	 */
+	@Override
 	public void run() {
 		IWorkspace workspace = ModelerCore.getWorkspace();
 		IWorkspaceDescription description = workspace.getDescription();

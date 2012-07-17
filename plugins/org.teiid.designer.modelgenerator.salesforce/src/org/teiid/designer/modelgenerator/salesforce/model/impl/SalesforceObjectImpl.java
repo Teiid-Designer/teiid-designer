@@ -86,7 +86,7 @@ public class SalesforceObjectImpl implements SalesforceObject {
         SalesforceField[] result = new SalesforceField[fields.size()];
 
         for (int i = 0; i < fields.size(); i++) {
-            result[i] = new SalesforceFieldImpl((Field)fields.get(i));
+            result[i] = new SalesforceFieldImpl(fields.get(i));
         }
 
         return result;

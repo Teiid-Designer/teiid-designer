@@ -26,6 +26,7 @@ public abstract class DiagramHelper implements IDiagramHelper {
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.ui.actions.IDiagramHelper#canClone(org.teiid.designer.metamodels.diagram.Diagram)
 	 */
+	@Override
 	public boolean canClone(Diagram diagram) {
 		// XXX Auto-generated method stub
 		return false;
@@ -34,6 +35,7 @@ public abstract class DiagramHelper implements IDiagramHelper {
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.ui.actions.IDiagramHelper#canCopy(org.teiid.designer.metamodels.diagram.Diagram)
 	 */
+	@Override
 	public boolean canCopy(Diagram diagram) {
 		// XXX Auto-generated method stub
 		return false;
@@ -42,6 +44,7 @@ public abstract class DiagramHelper implements IDiagramHelper {
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.ui.actions.IDiagramHelper#canCut(org.teiid.designer.metamodels.diagram.Diagram)
 	 */
+	@Override
 	public boolean canCut(Diagram diagram) {
 		// XXX Auto-generated method stub
 		return false;
@@ -50,6 +53,7 @@ public abstract class DiagramHelper implements IDiagramHelper {
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.ui.actions.IDiagramHelper#canDelete(org.teiid.designer.metamodels.diagram.Diagram)
 	 */
+	@Override
 	public boolean canDelete(Diagram diagram) {
 		// XXX Auto-generated method stub
 		return false;
@@ -58,6 +62,7 @@ public abstract class DiagramHelper implements IDiagramHelper {
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.ui.actions.IDiagramHelper#canRename(org.teiid.designer.metamodels.diagram.Diagram)
 	 */
+	@Override
 	public boolean canRename(Diagram diagram) {
 		// XXX Auto-generated method stub
 		return false;
@@ -66,6 +71,7 @@ public abstract class DiagramHelper implements IDiagramHelper {
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.ui.actions.IDiagramHelper#clone(org.teiid.designer.metamodels.diagram.Diagram)
 	 */
+	@Override
 	public void clone(Diagram diagram) {
 		// XXX Auto-generated method stub
 
@@ -74,6 +80,7 @@ public abstract class DiagramHelper implements IDiagramHelper {
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.ui.actions.IDiagramHelper#copy(org.teiid.designer.metamodels.diagram.Diagram)
 	 */
+	@Override
 	public void copy(Diagram diagram) {
 		// XXX Auto-generated method stub
 
@@ -82,6 +89,7 @@ public abstract class DiagramHelper implements IDiagramHelper {
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.ui.actions.IDiagramHelper#cut(org.teiid.designer.metamodels.diagram.Diagram)
 	 */
+	@Override
 	public void cut(Diagram diagram) {
 		// XXX Auto-generated method stub
 
@@ -90,6 +98,7 @@ public abstract class DiagramHelper implements IDiagramHelper {
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.ui.actions.IDiagramHelper#delete(org.teiid.designer.metamodels.diagram.Diagram)
 	 */
+	@Override
 	public void delete(Diagram diagram) {
 		// XXX Auto-generated method stub
 
@@ -98,6 +107,7 @@ public abstract class DiagramHelper implements IDiagramHelper {
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.ui.actions.IDiagramHelper#rename(org.teiid.designer.metamodels.diagram.Diagram)
 	 */
+	@Override
 	public void rename(Diagram diagram) {
 		// XXX Auto-generated method stub
 
@@ -106,6 +116,7 @@ public abstract class DiagramHelper implements IDiagramHelper {
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.ui.actions.IDiagramHelper#canCreate(org.teiid.designer.metamodels.diagram.Diagram)
 	 */
+	@Override
 	public boolean canCreate(Diagram diagram) {
 		return false;
 	}

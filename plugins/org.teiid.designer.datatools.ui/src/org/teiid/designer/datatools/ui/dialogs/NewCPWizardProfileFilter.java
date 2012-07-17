@@ -16,6 +16,7 @@ public class NewCPWizardProfileFilter extends ViewerFilter {
 		setProviderID(categoryID);
 	}
 
+	@Override
 	public boolean select(Viewer viewer, Object parentElement, Object element) {
 		CPWizardNode wizardNode = (CPWizardNode) element;
 		if (!(wizardNode.getProvider() instanceof IWizardCategoryProvider)) {

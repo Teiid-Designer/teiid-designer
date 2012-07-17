@@ -43,11 +43,13 @@ public abstract class TemporaryResourceModelSelector extends AbstractModelSelect
     /**
      * @see org.teiid.designer.compare.selector.ModelSelector#getLabel()
      */
-    public String getLabel() {
+    @Override
+	public String getLabel() {
         return this.label;
     }
     
-    public void setLabel( final String label ) {
+    @Override
+	public void setLabel( final String label ) {
         this.label = label;
     }
 

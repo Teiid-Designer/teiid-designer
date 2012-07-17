@@ -165,14 +165,16 @@ public final class ShowDependenciesDialog extends Dialog implements IInternalUiC
          * @see org.eclipse.jface.viewers.IContentProvider#dispose()
          * @since 4.1
          */
-        public void dispose() {
+        @Override
+		public void dispose() {
         }
 
         /**
          * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
          * @since 4.1
          */
-        public Object[] getElements( Object theInputElement ) {
+        @Override
+		public Object[] getElements( Object theInputElement ) {
             List result = new ArrayList();
             IWebServiceModelBuilder builder = getBuilder();
             Iterator itr = builder.getResources().iterator();
@@ -198,7 +200,8 @@ public final class ShowDependenciesDialog extends Dialog implements IInternalUiC
          *      java.lang.Object)
          * @since 4.1
          */
-        public void inputChanged( Viewer theViewer,
+        @Override
+		public void inputChanged( Viewer theViewer,
                                   Object theOldInput,
                                   Object theNewInput ) {
         }
@@ -211,7 +214,8 @@ public final class ShowDependenciesDialog extends Dialog implements IInternalUiC
          * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang.Object, int)
          * @since 4.1
          */
-        public Image getColumnImage( Object theElement,
+        @Override
+		public Image getColumnImage( Object theElement,
                                      int theIndex ) {
             Image result = null;
 
@@ -244,7 +248,8 @@ public final class ShowDependenciesDialog extends Dialog implements IInternalUiC
          * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.lang.Object, int)
          * @since 4.1
          */
-        public String getColumnText( Object theElement,
+        @Override
+		public String getColumnText( Object theElement,
                                      int theIndex ) {
             String result = null;
 

@@ -88,7 +88,8 @@ public class WorkspaceTreeAccumulatorSource implements IAccumulatorSource {
     /* (non-Javadoc)
      * @see org.teiid.designer.ui.common.widget.accumulator.IAccumulatorSource#accumulatedValuesRemoved(java.util.Collection)
      */
-    public void accumulatedValuesRemoved(Collection values) {
+    @Override
+	public void accumulatedValuesRemoved(Collection values) {
         // this accumulator source does not modify the tree to reflect selected values
         this.currentValues.removeAll(values);
     }
@@ -96,7 +97,8 @@ public class WorkspaceTreeAccumulatorSource implements IAccumulatorSource {
     /* (non-Javadoc)
      * @see org.teiid.designer.ui.common.widget.accumulator.IAccumulatorSource#accumulatedValuesAdded(java.util.Collection)
      */
-    public void accumulatedValuesAdded(Collection values) {
+    @Override
+	public void accumulatedValuesAdded(Collection values) {
         // this accumulator source does not modify the tree to reflect selected values
         this.currentValues.addAll(values);
         
@@ -108,7 +110,8 @@ public class WorkspaceTreeAccumulatorSource implements IAccumulatorSource {
     /* (non-Javadoc)
      * @see org.teiid.designer.ui.common.widget.accumulator.IAccumulatorSource#getAvailableValues()
      */
-    public Collection getAvailableValues() {
+    @Override
+	public Collection getAvailableValues() {
         // since Add All is not supported, return an empty list.
         return Collections.EMPTY_LIST;
     }
@@ -116,7 +119,8 @@ public class WorkspaceTreeAccumulatorSource implements IAccumulatorSource {
     /* (non-Javadoc)
      * @see org.teiid.designer.ui.common.widget.accumulator.IAccumulatorSource#getAvailableValuesCount()
      */
-    public int getAvailableValuesCount() {
+    @Override
+	public int getAvailableValuesCount() {
         // must return a non-0 value or the accumulator controls will not enable.
         return 10;
     }
@@ -124,7 +128,8 @@ public class WorkspaceTreeAccumulatorSource implements IAccumulatorSource {
     /* (non-Javadoc)
      * @see org.teiid.designer.ui.common.widget.accumulator.IAccumulatorSource#getSelectedAvailableValues()
      */
-    public Collection getSelectedAvailableValues() {
+    @Override
+	public Collection getSelectedAvailableValues() {
         ISelection selection = treeViewer.getSelection();
         Collection result = SelectionUtilities.getSelectedObjects(selection);
         if ( validator != null ) {
@@ -136,14 +141,16 @@ public class WorkspaceTreeAccumulatorSource implements IAccumulatorSource {
     /* (non-Javadoc)
      * @see org.teiid.designer.ui.common.widget.accumulator.IAccumulatorSource#getSelectedAvailableValuesCount()
      */
-    public int getSelectedAvailableValuesCount() {
+    @Override
+	public int getSelectedAvailableValuesCount() {
         return getSelectedAvailableValues().size();
     }
 
     /* (non-Javadoc)
      * @see org.teiid.designer.ui.common.widget.accumulator.IAccumulatorSource#createControl(org.eclipse.swt.widgets.Composite)
      */
-    public Control createControl(Composite parent) {
+    @Override
+	public Control createControl(Composite parent) {
         treeViewer = new TreeViewer(parent);
         treeViewer.setLabelProvider(labelProvider);
         treeViewer.setContentProvider(contentProvider);
@@ -158,21 +165,24 @@ public class WorkspaceTreeAccumulatorSource implements IAccumulatorSource {
     /* (non-Javadoc)
      * @see org.teiid.designer.ui.common.widget.accumulator.IAccumulatorSource#addSelectionListener(org.eclipse.swt.events.SelectionListener)
      */
-    public void addSelectionListener(SelectionListener listener) {
+    @Override
+	public void addSelectionListener(SelectionListener listener) {
         treeViewer.getTree().addSelectionListener(listener);
     }
 
     /* (non-Javadoc)
      * @see org.teiid.designer.ui.common.widget.accumulator.IAccumulatorSource#supportsAddAll()
      */
-    public boolean supportsAddAll() {
+    @Override
+	public boolean supportsAddAll() {
         return false;
     }
 
     /* (non-Javadoc)
      * @see org.teiid.designer.ui.common.widget.accumulator.IAccumulatorSource#getSelectionStatus()
      */
-    public IStatus getSelectionStatus() {
+    @Override
+	public IStatus getSelectionStatus() {
         getSelectedAvailableValues();
         return currentStatus;
     }

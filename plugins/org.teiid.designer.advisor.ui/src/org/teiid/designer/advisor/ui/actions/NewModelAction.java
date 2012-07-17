@@ -10,10 +10,10 @@ package org.teiid.designer.advisor.ui.actions;
 import java.util.Properties;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.teiid.designer.advisor.ui.AdvisorUiConstants;
@@ -71,7 +71,8 @@ public final class NewModelAction extends Action implements AdvisorUiConstants {
     /* (non-Javadoc)
      * @see org.eclipse.jface.action.IAction#run()
      */
-    public void run() {
+    @Override
+	public void run() {
         final IWorkbenchWindow iww = AdvisorUiPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow();
         boolean successful = false;
         try {
@@ -84,7 +85,7 @@ public final class NewModelAction extends Action implements AdvisorUiConstants {
             wizard.init(iww.getWorkbench(), (IStructuredSelection)theSelection);
             WizardDialog dialog = new WizardDialog(iww.getShell(), wizard);
             int result = dialog.open();
-            if (result == Dialog.OK) {
+            if (result == Window.OK) {
                 successful = true;
             }
         } catch (Exception e) {

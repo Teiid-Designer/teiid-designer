@@ -40,7 +40,8 @@ abstract class AbstractFontWrapper extends DiagramAction
         initialize();
     }
 
-    public void initialize() {
+    @Override
+	public void initialize() {
                 
         setEnableState();
         addAsPartListener();       
@@ -108,7 +109,8 @@ abstract class AbstractFontWrapper extends DiagramAction
     /* (non-Javadoc)
      * @see org.eclipse.ui.IPartListener#partActivated(org.eclipse.ui.IWorkbenchPart)
      */
-    public void partActivated(IWorkbenchPart part) {
+    @Override
+	public void partActivated(IWorkbenchPart part) {
         if (isEventForThisPart(part)) {
             setEnableState();
         }
@@ -117,7 +119,8 @@ abstract class AbstractFontWrapper extends DiagramAction
     /* (non-Javadoc)
      * @see org.eclipse.ui.IPartListener#partBroughtToTop(org.eclipse.ui.IWorkbenchPart)
      */
-    public void partBroughtToTop(IWorkbenchPart part) {
+    @Override
+	public void partBroughtToTop(IWorkbenchPart part) {
         if (isEventForThisPart(part)) {
             setEnableState();
         }
@@ -126,7 +129,8 @@ abstract class AbstractFontWrapper extends DiagramAction
     /* (non-Javadoc)
      * @see org.eclipse.ui.IPartListener#partClosed(org.eclipse.ui.IWorkbenchPart)
      */
-    public void partClosed(IWorkbenchPart part) {
+    @Override
+	public void partClosed(IWorkbenchPart part) {
         if (isEventForThisPart(part)) {
             getPlugin().getCurrentWorkbenchWindow().getPartService().removePartListener( this );
         	getFontManager().removeFontChangeListener(this);
@@ -136,7 +140,8 @@ abstract class AbstractFontWrapper extends DiagramAction
     /* (non-Javadoc)
      * @see org.eclipse.ui.IPartListener#partDeactivated(org.eclipse.ui.IWorkbenchPart)
      */
-    public void partDeactivated(IWorkbenchPart part) {
+    @Override
+	public void partDeactivated(IWorkbenchPart part) {
         if (isEventForThisPart(part)) {
             setEnableState();
         }
@@ -154,7 +159,8 @@ abstract class AbstractFontWrapper extends DiagramAction
     /* (non-Javadoc)
      * @see org.eclipse.ui.IPartListener#partOpened(org.eclipse.ui.IWorkbenchPart)
      */
-    public void partOpened(IWorkbenchPart part) {
+    @Override
+	public void partOpened(IWorkbenchPart part) {
         if (isEventForThisPart(part)) {
             setEnableState();
         }
@@ -165,7 +171,8 @@ abstract class AbstractFontWrapper extends DiagramAction
      * Called whenever the DiagramFontManager's font size changes.
      * 
      */
-    public void fontChanged() {
+    @Override
+	public void fontChanged() {
         setEnableState();
     }
 }

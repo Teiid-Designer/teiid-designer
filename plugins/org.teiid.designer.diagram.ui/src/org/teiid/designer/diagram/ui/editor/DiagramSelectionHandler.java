@@ -42,17 +42,20 @@ public class DiagramSelectionHandler implements IDiagramSelectionHandler {
         this.viewer = viewer;
     }
 
-    public DiagramViewer getViewer() {
+    @Override
+	public DiagramViewer getViewer() {
         return this.viewer;
     }
 
-    public void deselectAll() {
+    @Override
+	public void deselectAll() {
         if (!getViewer().getSelectedEditParts().isEmpty()) {
             getViewer().deselectAll();
         }
     }
 
-    public void select( EObject selectedObject ) {
+    @Override
+	public void select( EObject selectedObject ) {
         EditPart selectedPart = findEditPart(selectedObject, false);
         if (selectedPart != null) {
             deselectAll();
@@ -96,7 +99,8 @@ public class DiagramSelectionHandler implements IDiagramSelectionHandler {
         return true;
     }
 
-    public List getSelectedEObjects() {
+    @Override
+	public List getSelectedEObjects() {
         List selectedEObjects = new ArrayList();
         Iterator iter = getViewer().getSelectedEditParts().iterator();
         Object obj = null;
@@ -114,7 +118,8 @@ public class DiagramSelectionHandler implements IDiagramSelectionHandler {
         return selectedEObjects;
     }
 
-    public void select( ISelection selection ) {
+    @Override
+	public void select( ISelection selection ) {
         if (SelectionUtilities.isEmptySelection(selection)) {
             deselectAll();
             return;
@@ -131,7 +136,8 @@ public class DiagramSelectionHandler implements IDiagramSelectionHandler {
 
     }
 
-    public void clearDependencyHilites() {
+    @Override
+	public void clearDependencyHilites() {
         // get all parts and call clearHiliting();
         if (viewerContainsPart()) {
 
@@ -149,7 +155,8 @@ public class DiagramSelectionHandler implements IDiagramSelectionHandler {
         }
     }
 
-    public void hiliteDependencies( Object selectedObject ) {
+    @Override
+	public void hiliteDependencies( Object selectedObject ) {
         clearDependencyHilites();
         if (selectedObject == null) clearConnectionHilites();
 
@@ -184,11 +191,13 @@ public class DiagramSelectionHandler implements IDiagramSelectionHandler {
         // System.out.println("[DiagramSelectionHandler.hiliteDependencies] BOT");
     }
 
-    public void selectAndReveal( EObject selectedObject ) {
+    @Override
+	public void selectAndReveal( EObject selectedObject ) {
 
     }
 
-    public EditPart findEditPart( EObject selectedObject,
+    @Override
+	public EditPart findEditPart( EObject selectedObject,
                                   boolean linksAllowed ) {
         // System.out.println("[DiagramSelectionHandler.findEditPart] TOP; selectedObject: " + selectedObject );
         EditPart matchingPart = null;
@@ -218,7 +227,8 @@ public class DiagramSelectionHandler implements IDiagramSelectionHandler {
         return matchingPart;
     }
 
-    public EditPart findDiagramChildEditPart( EObject selectedObject,
+    @Override
+	public EditPart findDiagramChildEditPart( EObject selectedObject,
                                               boolean linksAllowed ) {
         if (viewerContainsPart()) {
 
@@ -250,14 +260,16 @@ public class DiagramSelectionHandler implements IDiagramSelectionHandler {
         return null;
     }
 
-    public boolean handleDoubleClick( EObject selectedObject ) {
+    @Override
+	public boolean handleDoubleClick( EObject selectedObject ) {
         boolean handledHere = false;
         if (getViewer() != null) {
             final EditPart selectedEP = findEditPart(selectedObject, false);
             if (selectedEP != null && selectedEP instanceof EditableEditPart) {
                 // Check to see if we want to direct edit
                 UiBusyIndicator.showWhile(Display.getCurrent(), new Runnable() {
-                    public void run() {
+                    @Override
+					public void run() {
                         ((EditableEditPart)selectedEP).edit();
                     }
                 });
@@ -268,25 +280,29 @@ public class DiagramSelectionHandler implements IDiagramSelectionHandler {
         return handledHere;
     }
 
-    public String getDiagramType() {
+    @Override
+	public String getDiagramType() {
         if (getViewer().getEditor().getDiagram() != null) return getViewer().getEditor().getDiagram().getType();
 
         return "UNKNOWN TYPE"; //$NON-NLS-1$
     }
 
-    public boolean shouldReveal( EObject eObject ) {
+    @Override
+	public boolean shouldReveal( EObject eObject ) {
         return true;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.editor.IDiagramSelectionHandler#hiliteConnection(null)
      */
-    public void hiliteConnection( NodeConnectionEditPart connectionEditPart ) {
+    @Override
+	public void hiliteConnection( NodeConnectionEditPart connectionEditPart ) {
         clearConnectionHilites();
         connectionEditPart.hilite(true);
     }
 
-    public void clearConnectionHilites() {
+    @Override
+	public void clearConnectionHilites() {
         if (!clearHilites) return;
 
         if (viewerContainsPart()) {
@@ -327,14 +343,16 @@ public class DiagramSelectionHandler implements IDiagramSelectionHandler {
     /**
      * @param b
      */
-    public void setClearHilites( boolean clear ) {
+    @Override
+	public void setClearHilites( boolean clear ) {
         clearHilites = clear;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.editor.IDiagramSelectionHandler#fireMouseExit()
      */
-    public void fireMouseExit() {
+    @Override
+	public void fireMouseExit() {
         // This is where we need to locate any DirectEditParts, find out if they have a DEM and
         // find out if it's in the edit mode, then call commit;
         if (viewerContainsPart()) {
@@ -356,7 +374,8 @@ public class DiagramSelectionHandler implements IDiagramSelectionHandler {
         }
     }
 
-    public boolean shouldRename( EObject dClickedEObject ) {
+    @Override
+	public boolean shouldRename( EObject dClickedEObject ) {
         return true;
     }
 
@@ -366,13 +385,15 @@ public class DiagramSelectionHandler implements IDiagramSelectionHandler {
      * @see org.teiid.designer.diagram.ui.editor.IDiagramSelectionHandler#renameInline(org.eclipse.emf.ecore.EObject)
      * @since 5.0.2
      */
-    public void renameInline( EObject theSelectedEObject ) {
+    @Override
+	public void renameInline( EObject theSelectedEObject ) {
         if (getViewer() != null) {
             final EditPart selectedEP = findEditPart(theSelectedEObject, false);
             if (selectedEP != null && selectedEP instanceof DirectEditPart) {
                 // Check to see if we want to direct edit
                 UiBusyIndicator.showWhile(Display.getCurrent(), new Runnable() {
-                    public void run() {
+                    @Override
+					public void run() {
                         ((DirectEditPart)selectedEP).performDirectEdit();
                     }
                 });

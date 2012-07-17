@@ -29,26 +29,32 @@ public abstract class DatabaseElementImpl implements DatabaseElement {
 		setOutputXPath(xpathOut);
 	}
 
+	@Override
 	public String getName() {
 		return m_name;
 	}
 
+	@Override
 	public void setName(String name) {
 		m_name = name;
 	}
 
+	@Override
 	public String getInputXPath() {
 		return m_inputXPath;
 	}
 
+	@Override
 	public void setInputXPath(String xpathIn) {
 		m_inputXPath = xpathIn;
 	}
 
+	@Override
 	public String getOutputXPath() {
 		return m_outputXPath;
 	}
 
+	@Override
 	public void setOutputXPath(String xpath) {
 		m_outputXPath = xpath;
 	}

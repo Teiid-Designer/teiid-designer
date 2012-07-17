@@ -54,7 +54,8 @@ public class DefaultEObjectFinder extends AbstractFinder {
      * @see org.teiid.designer.core.container.EObjectFinder#find(java.lang.Object)
      * @since 4.3
      */
-    public Object find( Object key ) {
+    @Override
+	public Object find( Object key ) {
         if (key instanceof URI) {
             return getResourceSet().getEObject((URI)key, true);
         } else if (key instanceof String) {

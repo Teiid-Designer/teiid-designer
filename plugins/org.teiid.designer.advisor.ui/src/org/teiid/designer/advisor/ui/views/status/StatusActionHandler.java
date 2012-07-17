@@ -336,7 +336,8 @@ public class StatusActionHandler implements IAdvisorActionHandler, AdvisorUiCons
             public void run() {
 
                 Display.getDefault().syncExec(new Runnable() {
-                    public void run() {
+                    @Override
+					public void run() {
                         newRelationalSourceModelAction.setModelType(ModelType.PHYSICAL_LITERAL);
                         newRelationalSourceModelAction.setMetamodelClass(RELATIONAL_ID);
                         newRelationalSourceModelAction.run();
@@ -360,7 +361,8 @@ public class StatusActionHandler implements IAdvisorActionHandler, AdvisorUiCons
             public void run() {
 
                 Display.getDefault().syncExec(new Runnable() {
-                    public void run() {
+                    @Override
+					public void run() {
                         newRelationalViewModelAction.setModelType(ModelType.VIRTUAL_LITERAL);
                         newRelationalViewModelAction.setMetamodelClass(RELATIONAL_ID);
                         newRelationalViewModelAction.run();
@@ -377,7 +379,8 @@ public class StatusActionHandler implements IAdvisorActionHandler, AdvisorUiCons
                                                            imageHelper.NEW_MODEL_IMAGE);
     }
 
-    public InfoPopAction[] getActions( int groupType ) {
+    @Override
+	public InfoPopAction[] getActions( int groupType ) {
         Collection actions = new ArrayList();
         boolean hasErrors = false;
 
@@ -480,7 +483,8 @@ public class StatusActionHandler implements IAdvisorActionHandler, AdvisorUiCons
     /**
      * @return status
      */
-    public AdvisorStatus getStatus() {
+    @Override
+	public AdvisorStatus getStatus() {
         return null;
     }
 

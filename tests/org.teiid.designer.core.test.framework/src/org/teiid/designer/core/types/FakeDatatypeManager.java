@@ -42,7 +42,8 @@ public class FakeDatatypeManager implements DatatypeManager {
      * @see org.teiid.designer.core.types.DatatypeManager#getBuiltInTypeManager()
      * @since 4.3
      */
-    public DatatypeManager getBuiltInTypeManager() {
+    @Override
+	public DatatypeManager getBuiltInTypeManager() {
         return null;
     }
 
@@ -63,14 +64,16 @@ public class FakeDatatypeManager implements DatatypeManager {
     /**
      * @see org.teiid.designer.core.types.DatatypeManager#isSimpleDatatype(org.eclipse.emf.ecore.EObject)
      */
-    public boolean isSimpleDatatype( EObject type ) {
+    @Override
+	public boolean isSimpleDatatype( EObject type ) {
         return type instanceof XSDSimpleTypeDefinition;
     }
 
     /**
      * @see org.teiid.designer.core.types.DatatypeManager#getUUID(org.eclipse.emf.ecore.EObject)
      */
-    public ObjectID getUuid( EObject type ) {
+    @Override
+	public ObjectID getUuid( EObject type ) {
         if (type instanceof XSDSimpleTypeDefinition) {
             XSDAnnotation annotation = ((XSDSimpleTypeDefinition)type).getAnnotation();
             if (annotation == null) {
@@ -100,7 +103,8 @@ public class FakeDatatypeManager implements DatatypeManager {
     /**
      * @see org.teiid.designer.core.types.DatatypeManager#getUUID(org.eclipse.emf.ecore.EObject)
      */
-    public String getUuidString( EObject type ) {
+    @Override
+	public String getUuidString( EObject type ) {
         if (type instanceof XSDSimpleTypeDefinition) {
             XSDAnnotation annotation = ((XSDSimpleTypeDefinition)type).getAnnotation();
             if (annotation == null) {
@@ -124,7 +128,8 @@ public class FakeDatatypeManager implements DatatypeManager {
     /**
      * @see org.teiid.designer.core.types.DatatypeManager#getEnterpriseExtensionsMap(org.eclipse.emf.ecore.EObject)
      */
-    public Map getEnterpriseExtensionsMap( EObject type ) {
+    @Override
+	public Map getEnterpriseExtensionsMap( EObject type ) {
         Map result = Collections.EMPTY_MAP;
         if (type instanceof XSDSimpleTypeDefinition) {
             // Get the annotation for the type
@@ -157,7 +162,8 @@ public class FakeDatatypeManager implements DatatypeManager {
     /**
      * @see org.teiid.designer.core.types.DatatypeManager#getName(org.eclipse.emf.ecore.EObject)
      */
-    public String getName( EObject type ) {
+    @Override
+	public String getName( EObject type ) {
         if (type instanceof XSDSimpleTypeDefinition) {
             return ((XSDSimpleTypeDefinition)type).getName();
         }
@@ -168,42 +174,48 @@ public class FakeDatatypeManager implements DatatypeManager {
     /**
      * @see org.teiid.designer.core.types.DatatypeManager#getAnySimpleType()
      */
-    public EObject getAnySimpleType() {
+    @Override
+	public EObject getAnySimpleType() {
         return null;
     }
 
     /**
      * @see org.teiid.designer.core.types.DatatypeManager#getAnyType()
      */
-    public EObject getAnyType() {
+    @Override
+	public EObject getAnyType() {
         return null;
     }
 
     /**
      * @see org.teiid.designer.core.types.DatatypeManager#getAllDatatypes()
      */
-    public EObject[] getAllDatatypes() {
+    @Override
+	public EObject[] getAllDatatypes() {
         return null;
     }
 
     /**
      * @see org.teiid.designer.core.types.DatatypeManager#getAllowableBaseTypeValues(org.eclipse.emf.ecore.EObject)
      */
-    public EObject[] getAllowableBaseTypeValues( EObject datatype ) {
+    @Override
+	public EObject[] getAllowableBaseTypeValues( EObject datatype ) {
         return null;
     }
 
     /**
      * @see org.teiid.designer.core.types.DatatypeManager#getAllowableItemTypeValues(org.eclipse.emf.ecore.EObject)
      */
-    public EObject[] getAllowableItemTypeValues( EObject datatype ) {
+    @Override
+	public EObject[] getAllowableItemTypeValues( EObject datatype ) {
         return null;
     }
 
     /**
      * @see org.teiid.designer.core.types.DatatypeManager#getAllowableMemberTypeValues(org.eclipse.emf.ecore.EObject)
      */
-    public EObject[] getAllowableMemberTypeValues( EObject datatype ) {
+    @Override
+	public EObject[] getAllowableMemberTypeValues( EObject datatype ) {
         return null;
     }
 
@@ -211,7 +223,8 @@ public class FakeDatatypeManager implements DatatypeManager {
      * @see org.teiid.designer.core.types.DatatypeManager#getAllowableTypeValues(org.eclipse.emf.ecore.EObject,
      *      org.eclipse.emf.ecore.EStructuralFeature)
      */
-    public EObject[] getAllowableTypeValues( EObject datatype,
+    @Override
+	public EObject[] getAllowableTypeValues( EObject datatype,
                                              EStructuralFeature feature ) {
         return null;
     }
@@ -219,126 +232,144 @@ public class FakeDatatypeManager implements DatatypeManager {
     /**
      * @see org.teiid.designer.core.types.DatatypeManager#getDefaultDatatypeForRuntimeTypeName(java.lang.String)
      */
-    public EObject getDefaultDatatypeForRuntimeTypeName( String runtimeTypeName ) {
+    @Override
+	public EObject getDefaultDatatypeForRuntimeTypeName( String runtimeTypeName ) {
         return null;
     }
 
     /**
      * @see org.teiid.designer.core.types.DatatypeManager#getBuiltInDatatype(java.lang.String)
      */
-    public EObject getBuiltInDatatype( String name ) {
+    @Override
+	public EObject getBuiltInDatatype( String name ) {
         return null;
     }
 
     /**
      * @see org.teiid.designer.core.types.DatatypeManager#isBuiltInDatatype(org.eclipse.emf.ecore.EObject)
      */
-    public boolean isBuiltInDatatype( EObject datatype ) {
+    @Override
+	public boolean isBuiltInDatatype( EObject datatype ) {
         return false;
     }
 
     /**
      * @see org.teiid.designer.core.types.DatatypeManager#findDatatype(java.lang.String)
      */
-    public EObject findDatatype( String id ) {
+    @Override
+	public EObject findDatatype( String id ) {
         return null;
     }
 
     /**
      * @see org.teiid.designer.core.types.DatatypeManager#getDatatypeForXsdType(org.eclipse.emf.ecore.EObject)
      */
-    public EObject getDatatypeForXsdType( EObject xsdType ) {
+    @Override
+	public EObject getDatatypeForXsdType( EObject xsdType ) {
         return null;
     }
 
     /**
      * @see org.teiid.designer.core.types.DatatypeManager#getRuntimeTypeJavaClassName(java.lang.String)
      */
-    public String getRuntimeTypeJavaClassName( String id ) {
+    @Override
+	public String getRuntimeTypeJavaClassName( String id ) {
         return null;
     }
 
     /**
      * @see org.teiid.designer.core.types.DatatypeManager#getRuntimeTypeName(java.lang.String)
      */
-    public String getRuntimeTypeName( String id ) {
+    @Override
+	public String getRuntimeTypeName( String id ) {
         return null;
     }
 
     /**
      * @see org.teiid.designer.core.types.DatatypeManager#getRuntimeTypeName(org.eclipse.emf.ecore.EObject)
      */
-    public String getRuntimeTypeName( EObject datatype ) {
+    @Override
+	public String getRuntimeTypeName( EObject datatype ) {
         return null;
     }
 
     /**
      * @see org.teiid.designer.core.types.DatatypeManager#getBaseType(org.eclipse.emf.ecore.EObject)
      */
-    public EObject getBaseType( EObject datatype ) {
+    @Override
+	public EObject getBaseType( EObject datatype ) {
         return null;
     }
 
     /**
      * @see org.teiid.designer.core.types.DatatypeManager#getSubtypes(org.eclipse.emf.ecore.EObject)
      */
-    public EObject[] getSubtypes( EObject datatype ) {
+    @Override
+	public EObject[] getSubtypes( EObject datatype ) {
         return null;
     }
 
     /**
      * @see org.teiid.designer.core.types.DatatypeManager#getBuiltInPrimitiveTypes()
      */
-    public EObject[] getBuiltInPrimitiveTypes() {
+    @Override
+	public EObject[] getBuiltInPrimitiveTypes() {
         return null;
     }
 
     /**
      * @see org.teiid.designer.core.types.DatatypeManager#getBuiltInPrimitiveType(org.eclipse.emf.ecore.EObject)
      */
-    public EObject getBuiltInPrimitiveType( EObject type ) {
+    @Override
+	public EObject getBuiltInPrimitiveType( EObject type ) {
         return null;
     }
 
     /**
      * @see org.teiid.designer.core.types.DatatypeManager#isBinary(org.eclipse.emf.ecore.EObject)
      */
-    public boolean isBinary( EObject type ) {
+    @Override
+	public boolean isBinary( EObject type ) {
         return false;
     }
 
     /**
      * @see org.teiid.designer.core.types.DatatypeManager#isCharacter(org.eclipse.emf.ecore.EObject)
      */
-    public boolean isCharacter( EObject type ) {
+    @Override
+	public boolean isCharacter( EObject type ) {
         return false;
     }
 
     /**
      * @see org.teiid.designer.core.types.DatatypeManager#isNumeric(org.eclipse.emf.ecore.EObject)
      */
-    public boolean isNumeric( EObject type ) {
+    @Override
+	public boolean isNumeric( EObject type ) {
         return false;
     }
 
     /**
      * @see org.teiid.designer.core.types.DatatypeManager#isNumeric(org.eclipse.emf.ecore.EObject)
      */
-    public boolean isEnumeration( EObject type ) {
+    @Override
+	public boolean isEnumeration( EObject type ) {
         return false;
     }
 
     /**
      * @see org.teiid.designer.core.types.DatatypeManager#isBounded(org.eclipse.emf.ecore.EObject)
      */
-    public boolean isBounded( EObject type ) {
+    @Override
+	public boolean isBounded( EObject type ) {
         return false;
     }
 
     /**
      * @see org.teiid.designer.core.types.DatatypeManager#getDescription(org.eclipse.emf.ecore.EObject)
      */
-    public String getDescription( EObject type ) {
+    @Override
+	public String getDescription( EObject type ) {
         return ""; //$NON-NLS-1$
     }
 
@@ -346,7 +377,8 @@ public class FakeDatatypeManager implements DatatypeManager {
      * @see org.teiid.designer.core.types.DatatypeManager#getContainer()
      * @since 4.2
      */
-    public ResourceSet getContainer() {
+    @Override
+	public ResourceSet getContainer() {
         return null;
     }
 
@@ -361,7 +393,8 @@ public class FakeDatatypeManager implements DatatypeManager {
      * @see org.teiid.designer.core.types.DatatypeManager#getBuiltInDatatypes()
      * @since 4.3
      */
-    public EObject[] getBuiltInDatatypes() {
+    @Override
+	public EObject[] getBuiltInDatatypes() {
         return null;
     }
 
@@ -369,7 +402,8 @@ public class FakeDatatypeManager implements DatatypeManager {
      * @see org.teiid.designer.core.types.DatatypeManager#isEnterpriseDatatype(org.eclipse.emf.ecore.EObject)
      * @since 4.3
      */
-    public boolean isEnterpriseDatatype( EObject simpleType ) {
+    @Override
+	public boolean isEnterpriseDatatype( EObject simpleType ) {
         return false;
     }
 
@@ -377,7 +411,8 @@ public class FakeDatatypeManager implements DatatypeManager {
      * @see org.teiid.designer.core.types.DatatypeManager#getEnterpriseDatatypeInfo(org.eclipse.xsd.XSDSimpleTypeDefinition)
      * @since 4.3
      */
-    public EnterpriseDatatypeInfo getEnterpriseDatatypeInfo( XSDSimpleTypeDefinition simpleType ) {
+    @Override
+	public EnterpriseDatatypeInfo getEnterpriseDatatypeInfo( XSDSimpleTypeDefinition simpleType ) {
         return null;
     }
 
@@ -385,7 +420,8 @@ public class FakeDatatypeManager implements DatatypeManager {
      * @see org.teiid.designer.core.types.DatatypeManager#getRuntimeTypeFixed(org.eclipse.emf.ecore.EObject)
      * @since 4.3
      */
-    public Boolean getRuntimeTypeFixed( EObject datatype ) {
+    @Override
+	public Boolean getRuntimeTypeFixed( EObject datatype ) {
         return null;
     }
 
@@ -394,7 +430,8 @@ public class FakeDatatypeManager implements DatatypeManager {
      *      org.eclipse.xsd.XSDSimpleTypeDefinition)
      * @since 4.3
      */
-    public void setBasetypeDefinition( XSDSimpleTypeDefinition simpleType,
+    @Override
+	public void setBasetypeDefinition( XSDSimpleTypeDefinition simpleType,
                                        XSDSimpleTypeDefinition baseType ) {
     }
 
@@ -402,7 +439,8 @@ public class FakeDatatypeManager implements DatatypeManager {
      * @see org.teiid.designer.core.types.DatatypeManager#getTypeHierarchy(org.eclipse.emf.ecore.EObject)
      * @since 4.3
      */
-    public EObject[] getTypeHierarchy( EObject type ) {
+    @Override
+	public EObject[] getTypeHierarchy( EObject type ) {
         return new EObject[] {type};
     }
 

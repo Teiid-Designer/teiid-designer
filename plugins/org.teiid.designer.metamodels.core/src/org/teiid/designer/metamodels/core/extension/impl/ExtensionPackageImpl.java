@@ -132,7 +132,8 @@ public class ExtensionPackageImpl extends EPackageImpl implements ExtensionPacka
      * 
      * @generated
      */
-    public EClass getXClass() {
+    @Override
+	public EClass getXClass() {
         return xClassEClass;
     }
 
@@ -141,7 +142,8 @@ public class ExtensionPackageImpl extends EPackageImpl implements ExtensionPacka
      * 
      * @generated
      */
-    public EReference getXClass_ExtendedClass() {
+    @Override
+	public EReference getXClass_ExtendedClass() {
         return (EReference)xClassEClass.getEStructuralFeatures().get(0);
     }
 
@@ -150,7 +152,8 @@ public class ExtensionPackageImpl extends EPackageImpl implements ExtensionPacka
      * 
      * @generated
      */
-    public EClass getXPackage() {
+    @Override
+	public EClass getXPackage() {
         return xPackageEClass;
     }
 
@@ -159,7 +162,8 @@ public class ExtensionPackageImpl extends EPackageImpl implements ExtensionPacka
      * 
      * @generated
      */
-    public EClass getXAttribute() {
+    @Override
+	public EClass getXAttribute() {
         return xAttributeEClass;
     }
 
@@ -168,7 +172,8 @@ public class ExtensionPackageImpl extends EPackageImpl implements ExtensionPacka
      * 
      * @generated
      */
-    public EClass getXEnum() {
+    @Override
+	public EClass getXEnum() {
         return xEnumEClass;
     }
 
@@ -177,7 +182,8 @@ public class ExtensionPackageImpl extends EPackageImpl implements ExtensionPacka
      * 
      * @generated
      */
-    public EClass getXEnumLiteral() {
+    @Override
+	public EClass getXEnumLiteral() {
         return xEnumLiteralEClass;
     }
 
@@ -186,7 +192,8 @@ public class ExtensionPackageImpl extends EPackageImpl implements ExtensionPacka
      * 
      * @generated
      */
-    public ExtensionFactory getExtensionFactory() {
+    @Override
+	public ExtensionFactory getExtensionFactory() {
         return (ExtensionFactory)getEFactoryInstance();
     }
 

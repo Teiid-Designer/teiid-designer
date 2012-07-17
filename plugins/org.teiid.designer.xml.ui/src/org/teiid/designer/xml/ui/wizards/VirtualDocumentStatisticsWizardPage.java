@@ -87,7 +87,8 @@ public class VirtualDocumentStatisticsWizardPage extends WizardPage
         model = wizardModel;
     }
 
-    public void createControl( Composite parent ) {
+    @Override
+	public void createControl( Composite parent ) {
         model.setWizHolder(parent);
         Composite panel = new Composite(parent, SWT.NONE);
         GridLayout gl = new GridLayout(2, false);
@@ -156,12 +157,14 @@ public class VirtualDocumentStatisticsWizardPage extends WizardPage
     //
     // Implementation of the IVirtualDocumentFragmentSource
     //
-    public XmlFragment[] getFragments( ModelResource modelResource,
+    @Override
+	public XmlFragment[] getFragments( ModelResource modelResource,
                                        IProgressMonitor monitor ) {
         return model.getFragments(modelResource, monitor);
     }
 
-    public void updateSourceFragments( boolean isVisible,
+    @Override
+	public void updateSourceFragments( boolean isVisible,
                                        IProgressMonitor monitor ) {
         // isVisible parm not used for now.
         monitor.subTask(SUBTASK_BUILDING);
@@ -197,7 +200,8 @@ public class VirtualDocumentStatisticsWizardPage extends WizardPage
     private void updateDisplay( boolean async,
                                 final int fragmentCount ) {
         Runnable r = new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 // set text fields:
                 if (fragmentCount != -1) {
                     // a real count:

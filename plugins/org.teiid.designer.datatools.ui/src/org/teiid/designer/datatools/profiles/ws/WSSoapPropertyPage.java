@@ -16,12 +16,9 @@ import org.eclipse.help.IContext;
 import org.eclipse.help.IContextProvider;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
@@ -31,9 +28,8 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.teiid.designer.datatools.ui.DatatoolsUiConstants;
 import org.teiid.designer.datatools.ui.DatatoolsUiPlugin;
-import org.teiid.designer.ui.common.ICredentialsCommon.SecurityType;
+import org.teiid.designer.ui.common.ICredentialsCommon;
 import org.teiid.designer.ui.common.widget.CredentialsComposite;
-
 
 public class WSSoapPropertyPage extends ProfileDetailsPropertyPage implements IContextProvider, DatatoolsUiConstants {
 
@@ -157,16 +153,16 @@ public class WSSoapPropertyPage extends ProfileDetailsPropertyPage implements IC
 			urlText.setText((String) props.get(IWSProfileConstants.WSDL_URI_PROP_ID));
 		}
 		
- 		if (null != props.get(IWSProfileConstants.SECURITY_TYPE_ID)) {
- 			credentialsComposite.setSecurityOption((String) props.get(IWSProfileConstants.SECURITY_TYPE_ID));
+ 		if (null != props.get(ICredentialsCommon.SECURITY_TYPE_ID)) {
+ 			credentialsComposite.setSecurityOption((String) props.get(ICredentialsCommon.SECURITY_TYPE_ID));
  		}
 		
- 		if (null != props.get(IWSProfileConstants.USERNAME_PROP_ID)) {
- 	 		credentialsComposite.setUserName((String) props.get(IWSProfileConstants.USERNAME_PROP_ID));
+ 		if (null != props.get(ICredentialsCommon.USERNAME_PROP_ID)) {
+ 	 		credentialsComposite.setUserName((String) props.get(ICredentialsCommon.USERNAME_PROP_ID));
  	 	}
 		
-		if (null != props.get(IWSProfileConstants.PASSWORD_PROP_ID)) {
-	 		credentialsComposite.setPassword((String) props.get(IWSProfileConstants.PASSWORD_PROP_ID));
+		if (null != props.get(ICredentialsCommon.PASSWORD_PROP_ID)) {
+	 		credentialsComposite.setPassword((String) props.get(ICredentialsCommon.PASSWORD_PROP_ID));
 	 	}
 	}
 
@@ -182,9 +178,9 @@ public class WSSoapPropertyPage extends ProfileDetailsPropertyPage implements IC
 			result = new Properties();
 		}
 		result.setProperty(IWSProfileConstants.WSDL_URI_PROP_ID, urlText.getText());
-		result.setProperty(IWSProfileConstants.SECURITY_TYPE_ID, credentialsComposite.getSecurityOption().name());
-		result.setProperty(IWSProfileConstants.USERNAME_PROP_ID, credentialsComposite.getUserName());
-		result.setProperty(IWSProfileConstants.PASSWORD_PROP_ID, credentialsComposite.getPassword());
+		result.setProperty(ICredentialsCommon.SECURITY_TYPE_ID, credentialsComposite.getSecurityOption().name());
+		result.setProperty(ICredentialsCommon.USERNAME_PROP_ID, credentialsComposite.getUserName());
+		result.setProperty(ICredentialsCommon.PASSWORD_PROP_ID, credentialsComposite.getPassword());
 		return result;
 	}
 

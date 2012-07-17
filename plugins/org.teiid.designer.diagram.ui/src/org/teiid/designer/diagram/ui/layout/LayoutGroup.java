@@ -112,18 +112,21 @@ public class LayoutGroup implements LayoutNode {
         }
     }
     
-    public void setPosition(Point point ) {
+    @Override
+	public void setPosition(Point point ) {
         setX(point.x);
         setY(point.y);
         move(point.x, point.y);
 //        System.out.println(" -->> LayoutGroup.setPosition():  New XY Point = " + point);
     }
     
-    public double getWidth() {
+    @Override
+	public double getWidth() {
         return getCurrentWidth();
     }
     
-    public double getHeight() {
+    @Override
+	public double getHeight() {
         return getCurrentHeight();
     }
     
@@ -223,91 +226,104 @@ public class LayoutGroup implements LayoutNode {
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.layout.LayoutNode#getBounds()
      */
-    public Rectangle getBounds() {
+    @Override
+	public Rectangle getBounds() {
         return null;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.layout.LayoutNode#getCenterX()
      */
-    public double getCenterX() {
+    @Override
+	public double getCenterX() {
         return 0;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.layout.LayoutNode#getCenterY()
      */
-    public double getCenterY() {
+    @Override
+	public double getCenterY() {
         return 0;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.layout.LayoutNode#getModelNode()
      */
-    public DiagramModelNode getModelNode() {
+    @Override
+	public DiagramModelNode getModelNode() {
         return null;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.layout.LayoutNode#getPosition()
      */
-    public org.eclipse.draw2d.geometry.Point getPosition() {
+    @Override
+	public org.eclipse.draw2d.geometry.Point getPosition() {
         return null;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.layout.LayoutNode#getX()
      */
-    public double getX() {
+    @Override
+	public double getX() {
         return thisX;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.layout.LayoutNode#getY()
      */
-    public double getY() {
+    @Override
+	public double getY() {
         return thisY;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.layout.LayoutNode#setBounds(java.awt.Rectangle)
      */
-    public void setBounds(Rectangle rectangle) {
+    @Override
+	public void setBounds(Rectangle rectangle) {
 
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.layout.LayoutNode#setCenterX(double)
      */
-    public void setCenterX(double x) {
+    @Override
+	public void setCenterX(double x) {
 
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.layout.LayoutNode#setCenterXY(double, double)
      */
-    public void setCenterXY(double x, double y) {
+    @Override
+	public void setCenterXY(double x, double y) {
 
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.layout.LayoutNode#setCenterY(double)
      */
-    public void setCenterY(double y) {
+    @Override
+	public void setCenterY(double y) {
 
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.layout.LayoutNode#setFinalPosition()
      */
-    public void setFinalPosition() {
+    @Override
+	public void setFinalPosition() {
 
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.layout.LayoutNode#setPosition(double, double)
      */
-    public void setPosition(double x, double y) {
+    @Override
+	public void setPosition(double x, double y) {
         setX(x);
         setY(y);
         move(x, y);
@@ -316,14 +332,16 @@ public class LayoutGroup implements LayoutNode {
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.layout.LayoutNode#setX(double)
      */
-    public void setX(double x) {
+    @Override
+	public void setX(double x) {
         thisX = x;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.layout.LayoutNode#setY(double)
      */
-    public void setY(double y) {
+    @Override
+	public void setY(double y) {
         thisY = y;
     }
     

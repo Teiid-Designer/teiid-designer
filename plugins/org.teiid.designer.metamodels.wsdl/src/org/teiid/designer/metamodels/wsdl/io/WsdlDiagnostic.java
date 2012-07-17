@@ -53,7 +53,8 @@ public class WsdlDiagnostic implements Diagnostic {
      * @see org.eclipse.emf.ecore.resource.Resource.Diagnostic#getMessage()
      * @since 4.2
      */
-    public String getMessage() {
+    @Override
+	public String getMessage() {
         return this.message;
     }
 
@@ -61,7 +62,8 @@ public class WsdlDiagnostic implements Diagnostic {
      * @see org.eclipse.emf.ecore.resource.Resource.Diagnostic#getLocation()
      * @since 4.2
      */
-    public String getLocation() {
+    @Override
+	public String getLocation() {
         return this.location;
     }
 
@@ -69,7 +71,8 @@ public class WsdlDiagnostic implements Diagnostic {
      * @see org.eclipse.emf.ecore.resource.Resource.Diagnostic#getLine()
      * @since 4.2
      */
-    public int getLine() {
+    @Override
+	public int getLine() {
         return this.line;
     }
 
@@ -77,7 +80,8 @@ public class WsdlDiagnostic implements Diagnostic {
      * @see org.eclipse.emf.ecore.resource.Resource.Diagnostic#getColumn()
      * @since 4.2
      */
-    public int getColumn() {
+    @Override
+	public int getColumn() {
         return this.column;
     }
 

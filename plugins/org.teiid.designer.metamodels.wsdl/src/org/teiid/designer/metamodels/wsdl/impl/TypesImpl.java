@@ -111,7 +111,8 @@ public class TypesImpl extends EObjectImpl implements Types {
      * 
      * @generated
      */
-    public Documentation getDocumentation() {
+    @Override
+	public Documentation getDocumentation() {
         return documentation;
     }
 
@@ -138,7 +139,8 @@ public class TypesImpl extends EObjectImpl implements Types {
      * 
      * @generated
      */
-    public void setDocumentation( Documentation newDocumentation ) {
+    @Override
+	public void setDocumentation( Documentation newDocumentation ) {
         if (newDocumentation != documentation) {
             NotificationChain msgs = null;
             if (documentation != null) msgs = ((InternalEObject)documentation).eInverseRemove(this,
@@ -161,7 +163,8 @@ public class TypesImpl extends EObjectImpl implements Types {
      * 
      * @generated
      */
-    public EList getDeclaredNamespaces() {
+    @Override
+	public EList getDeclaredNamespaces() {
         if (declaredNamespaces == null) {
             declaredNamespaces = new EObjectContainmentWithInverseEList(NamespaceDeclaration.class, this,
                                                                         WsdlPackage.TYPES__DECLARED_NAMESPACES,
@@ -175,7 +178,8 @@ public class TypesImpl extends EObjectImpl implements Types {
      * 
      * @generated
      */
-    public EList getElements() {
+    @Override
+	public EList getElements() {
         if (elements == null) {
             elements = new EObjectContainmentWithInverseEList(Element.class, this, WsdlPackage.TYPES__ELEMENTS,
                                                               WsdlPackage.ELEMENT__ELEMENT_OWNER);
@@ -188,7 +192,8 @@ public class TypesImpl extends EObjectImpl implements Types {
      * 
      * @generated
      */
-    public Definitions getDefinitions() {
+    @Override
+	public Definitions getDefinitions() {
         if (eContainerFeatureID != WsdlPackage.TYPES__DEFINITIONS) return null;
         return (Definitions)eContainer;
     }
@@ -198,7 +203,8 @@ public class TypesImpl extends EObjectImpl implements Types {
      * 
      * @generated
      */
-    public void setDefinitions( Definitions newDefinitions ) {
+    @Override
+	public void setDefinitions( Definitions newDefinitions ) {
         if (newDefinitions != eContainer || (eContainerFeatureID != WsdlPackage.TYPES__DEFINITIONS && newDefinitions != null)) {
             if (EcoreUtil.isAncestor(this, newDefinitions)) throw new IllegalArgumentException(
                                                                                                "Recursive containment not allowed for " + toString()); //$NON-NLS-1$
@@ -219,7 +225,8 @@ public class TypesImpl extends EObjectImpl implements Types {
      * 
      * @generated
      */
-    public EList getSchemas() {
+    @Override
+	public EList getSchemas() {
         if (schemas == null) {
             schemas = new EObjectContainmentEList(XSDSchema.class, this, WsdlPackage.TYPES__SCHEMAS);
         }

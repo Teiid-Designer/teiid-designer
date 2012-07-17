@@ -36,7 +36,8 @@ public class ElementImpl extends BaseSchemaObject {
         this.doesNotHaveUniqueName = false;
     }
 
-    public SchemaObject copy( ISchemaModelCopyTraversalContext ctx ) {
+    @Override
+	public SchemaObject copy( ISchemaModelCopyTraversalContext ctx ) {
         ElementImpl copy = new ElementImpl(elem, getNamespacePrefix(), type, schema);
         return copy;
     }
@@ -52,7 +53,8 @@ public class ElementImpl extends BaseSchemaObject {
         return false;
     }
 
-    public String getSimpleName() {
+    @Override
+	public String getSimpleName() {
         String elemName = elem.getName();
         String uniqueName;
         if (doesNotHaveUniqueName) {
@@ -64,20 +66,24 @@ public class ElementImpl extends BaseSchemaObject {
         return uniqueName;
     }
 
-    public XSDTypeDefinition getType() {
+    @Override
+	public XSDTypeDefinition getType() {
         return type;
     }
 
-    public String getElementTypeNamespace() {
+    @Override
+	public String getElementTypeNamespace() {
         String namespace = elem.getType().getTargetNamespace();
         return namespace;
     }
 
-    public String getNamespace() {
+    @Override
+	public String getNamespace() {
         return elem.getTargetNamespace();
     }
 
-    public String getName() {
+    @Override
+	public String getName() {
         return elem.getName();
     }
 
@@ -90,22 +96,26 @@ public class ElementImpl extends BaseSchemaObject {
         return retval;
     }
 
-    public RootElement getRootRepresentation() {
+    @Override
+	public RootElement getRootRepresentation() {
         return new RootElementImpl(getKey(), getSimpleName(), getNamespace(), isCanBeRoot());
     }
 
-    public String getCatalog() {
+    @Override
+	public String getCatalog() {
         return null;
     }
 
-    public int getMinOccurs() {
+    @Override
+	public int getMinOccurs() {
         XSDTypeDefinition def = elem.getTypeDefinition();
         XSDParticle particle = def.getComplexType();
         if (particle == null) return 1;
         return particle.getMinOccurs();
     }
 
-    public int getMaxOccurs() {
+    @Override
+	public int getMaxOccurs() {
         XSDTypeDefinition def = elem.getTypeDefinition();
         XSDParticle particle = def.getComplexType();
         if (particle == null) return 1;
@@ -147,7 +157,8 @@ public class ElementImpl extends BaseSchemaObject {
 
     }
 
-    public SchemaObjectKey getKey() {
+    @Override
+	public SchemaObjectKey getKey() {
         return new ElementImplKey(elem);
     }
 }

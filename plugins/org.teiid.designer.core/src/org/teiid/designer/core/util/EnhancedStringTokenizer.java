@@ -295,7 +295,8 @@ class EnhancedStringTokenizer implements Enumeration {
      * @see     java.util.Enumeration
      * @see     java.util.StringTokenizer#hasMoreTokens()
      */
-    public boolean hasMoreElements() {
+    @Override
+	public boolean hasMoreElements() {
     return hasMoreTokens();
     }
 
@@ -311,7 +312,8 @@ class EnhancedStringTokenizer implements Enumeration {
      * @see        java.util.Enumeration
      * @see        java.util.StringTokenizer#nextToken()
      */
-    public Object nextElement() {
+    @Override
+	public Object nextElement() {
     return nextToken();
     }
 

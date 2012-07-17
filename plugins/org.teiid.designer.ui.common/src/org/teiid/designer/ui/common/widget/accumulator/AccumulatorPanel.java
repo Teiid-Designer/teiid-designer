@@ -198,11 +198,13 @@ public class AccumulatorPanel extends Composite implements InternalUiConstants {
         // Add the control which displays the Available side list
         Control leftSideControl = source.createControl(this);
         source.addSelectionListener(new SelectionListener() {
-            public void widgetDefaultSelected( SelectionEvent ev ) {
+            @Override
+			public void widgetDefaultSelected( SelectionEvent ev ) {
                 leftSideControlSelectionChanged();
             }
 
-            public void widgetSelected( SelectionEvent ev ) {
+            @Override
+			public void widgetSelected( SelectionEvent ev ) {
                 leftSideControlSelectionChanged();
             }
         });
@@ -291,11 +293,13 @@ public class AccumulatorPanel extends Composite implements InternalUiConstants {
             tableViewer.setLabelProvider(labelProvider);
         }
         rightTable.addSelectionListener(new SelectionListener() {
-            public void widgetDefaultSelected( SelectionEvent ev ) {
+            @Override
+			public void widgetDefaultSelected( SelectionEvent ev ) {
                 rightSideControlSelectionChanged();
             }
 
-            public void widgetSelected( SelectionEvent ev ) {
+            @Override
+			public void widgetSelected( SelectionEvent ev ) {
                 rightSideControlSelectionChanged();
             }
         });

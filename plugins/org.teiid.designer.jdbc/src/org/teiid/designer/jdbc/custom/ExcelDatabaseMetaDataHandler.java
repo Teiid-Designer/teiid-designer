@@ -80,7 +80,8 @@ public class ExcelDatabaseMetaDataHandler implements
      * @see java.lang.reflect.InvocationHandler#invoke(java.lang.Object, java.lang.reflect.Method, java.lang.Object[])
      * @since 4.3
      */
-    public Object invoke(Object proxy,
+    @Override
+	public Object invoke(Object proxy,
                          Method method,
                          Object[] args) throws Throwable {
         String methodName = method.getName();

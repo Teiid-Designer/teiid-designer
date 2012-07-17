@@ -217,7 +217,8 @@ public class JdbcSourceImpl extends EObjectImpl implements JdbcSource {
      * <!-- end-user-doc -->
      * @generated
      */
-    public JdbcDriver getJdbcDriver() {
+    @Override
+	public JdbcDriver getJdbcDriver() {
         if (jdbcDriver != null && jdbcDriver.eIsProxy()) {
             JdbcDriver oldJdbcDriver = jdbcDriver;
             jdbcDriver = (JdbcDriver)eResolveProxy((InternalEObject)jdbcDriver);
@@ -244,7 +245,8 @@ public class JdbcSourceImpl extends EObjectImpl implements JdbcSource {
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setJdbcDriver( JdbcDriver newJdbcDriver ) {
+    @Override
+	public void setJdbcDriver( JdbcDriver newJdbcDriver ) {
         JdbcDriver oldJdbcDriver = jdbcDriver;
         jdbcDriver = newJdbcDriver;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, JdbcPackage.JDBC_SOURCE__JDBC_DRIVER,
@@ -256,7 +258,8 @@ public class JdbcSourceImpl extends EObjectImpl implements JdbcSource {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EList getProperties() {
+    @Override
+	public EList getProperties() {
         if (properties == null) {
             properties = new EObjectContainmentWithInverseEList(JdbcSourceProperty.class, this,
                                                                 JdbcPackage.JDBC_SOURCE__PROPERTIES,
@@ -270,7 +273,8 @@ public class JdbcSourceImpl extends EObjectImpl implements JdbcSource {
      * <!-- end-user-doc -->
      * @generated
      */
-    public JdbcSourceContainer getJdbcSourceContainer() {
+    @Override
+	public JdbcSourceContainer getJdbcSourceContainer() {
         if (eContainerFeatureID != JdbcPackage.JDBC_SOURCE__JDBC_SOURCE_CONTAINER) return null;
         return (JdbcSourceContainer)eContainer;
     }
@@ -280,7 +284,8 @@ public class JdbcSourceImpl extends EObjectImpl implements JdbcSource {
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setJdbcSourceContainer( JdbcSourceContainer newJdbcSourceContainer ) {
+    @Override
+	public void setJdbcSourceContainer( JdbcSourceContainer newJdbcSourceContainer ) {
         if (newJdbcSourceContainer != eContainer
             || (eContainerFeatureID != JdbcPackage.JDBC_SOURCE__JDBC_SOURCE_CONTAINER && newJdbcSourceContainer != null)) {
             if (EcoreUtil.isAncestor(this, newJdbcSourceContainer)) throw new IllegalArgumentException(
@@ -305,7 +310,8 @@ public class JdbcSourceImpl extends EObjectImpl implements JdbcSource {
      * <!-- end-user-doc -->
      * @generated
      */
-    public JdbcImportSettings getImportSettings() {
+    @Override
+	public JdbcImportSettings getImportSettings() {
         return importSettings;
     }
 
@@ -333,7 +339,8 @@ public class JdbcSourceImpl extends EObjectImpl implements JdbcSource {
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setImportSettings( JdbcImportSettings newImportSettings ) {
+    @Override
+	public void setImportSettings( JdbcImportSettings newImportSettings ) {
         if (newImportSettings != importSettings) {
             NotificationChain msgs = null;
             if (importSettings != null) msgs = ((InternalEObject)importSettings).eInverseRemove(this,
@@ -356,7 +363,8 @@ public class JdbcSourceImpl extends EObjectImpl implements JdbcSource {
      * <!-- end-user-doc -->
      * @generated
      */
-    public String getName() {
+    @Override
+	public String getName() {
         return name;
     }
 
@@ -365,7 +373,8 @@ public class JdbcSourceImpl extends EObjectImpl implements JdbcSource {
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setName( String newName ) {
+    @Override
+	public void setName( String newName ) {
         String oldName = name;
         name = newName;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, JdbcPackage.JDBC_SOURCE__NAME,
@@ -377,7 +386,8 @@ public class JdbcSourceImpl extends EObjectImpl implements JdbcSource {
      * <!-- end-user-doc -->
      * @generated
      */
-    public String getDriverName() {
+    @Override
+	public String getDriverName() {
         return driverName;
     }
 
@@ -386,7 +396,8 @@ public class JdbcSourceImpl extends EObjectImpl implements JdbcSource {
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setDriverName( String newDriverName ) {
+    @Override
+	public void setDriverName( String newDriverName ) {
         String oldDriverName = driverName;
         driverName = newDriverName;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, JdbcPackage.JDBC_SOURCE__DRIVER_NAME,
@@ -398,7 +409,8 @@ public class JdbcSourceImpl extends EObjectImpl implements JdbcSource {
      * <!-- end-user-doc -->
      * @generated
      */
-    public String getDriverClass() {
+    @Override
+	public String getDriverClass() {
         return driverClass;
     }
 
@@ -407,7 +419,8 @@ public class JdbcSourceImpl extends EObjectImpl implements JdbcSource {
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setDriverClass( String newDriverClass ) {
+    @Override
+	public void setDriverClass( String newDriverClass ) {
         String oldDriverClass = driverClass;
         driverClass = newDriverClass;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, JdbcPackage.JDBC_SOURCE__DRIVER_CLASS,
@@ -419,7 +432,8 @@ public class JdbcSourceImpl extends EObjectImpl implements JdbcSource {
      * <!-- end-user-doc -->
      * @generated
      */
-    public String getUsername() {
+    @Override
+	public String getUsername() {
         return username;
     }
 
@@ -428,7 +442,8 @@ public class JdbcSourceImpl extends EObjectImpl implements JdbcSource {
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setUsername( String newUsername ) {
+    @Override
+	public void setUsername( String newUsername ) {
         String oldUsername = username;
         username = newUsername;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, JdbcPackage.JDBC_SOURCE__USERNAME,
@@ -440,7 +455,8 @@ public class JdbcSourceImpl extends EObjectImpl implements JdbcSource {
      * <!-- end-user-doc -->
      * @generated
      */
-    public String getUrl() {
+    @Override
+	public String getUrl() {
         return url;
     }
 
@@ -449,7 +465,8 @@ public class JdbcSourceImpl extends EObjectImpl implements JdbcSource {
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setUrl( String newUrl ) {
+    @Override
+	public void setUrl( String newUrl ) {
         String oldUrl = url;
         url = newUrl;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, JdbcPackage.JDBC_SOURCE__URL, oldUrl,

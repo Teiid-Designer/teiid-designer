@@ -94,7 +94,8 @@ public abstract class RelationalEntityImpl extends EObjectImpl implements Relati
      * <!-- end-user-doc -->
      * @generated
      */
-    public String getName() {
+    @Override
+	public String getName() {
         return name;
     }
 
@@ -103,7 +104,8 @@ public abstract class RelationalEntityImpl extends EObjectImpl implements Relati
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setName(String newName) {
+    @Override
+	public void setName(String newName) {
         String oldName = name;
         name = newName;
         if (eNotificationRequired())
@@ -115,7 +117,8 @@ public abstract class RelationalEntityImpl extends EObjectImpl implements Relati
      * <!-- end-user-doc -->
      * @generated
      */
-    public String getNameInSource() {
+    @Override
+	public String getNameInSource() {
         return nameInSource;
     }
 
@@ -124,7 +127,8 @@ public abstract class RelationalEntityImpl extends EObjectImpl implements Relati
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setNameInSource(String newNameInSource) {
+    @Override
+	public void setNameInSource(String newNameInSource) {
         String oldNameInSource = nameInSource;
         nameInSource = newNameInSource;
         if (eNotificationRequired())

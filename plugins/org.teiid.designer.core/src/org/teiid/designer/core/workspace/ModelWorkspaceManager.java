@@ -415,7 +415,8 @@ public class ModelWorkspaceManager implements XmiHeaderCache {
                 try {
                     TransactionUtil.executeNonUndoable(new IOperation() {
 
-                        public void execute() throws CoreException {
+                        @Override
+						public void execute() throws CoreException {
                             remove(resource);
                         }
                     }, this);
@@ -671,7 +672,8 @@ public class ModelWorkspaceManager implements XmiHeaderCache {
         }
     }
 
-    public XMIHeader getCachedXmiHeader( final File resource ) {
+    @Override
+	public XMIHeader getCachedXmiHeader( final File resource ) {
         final XMIHeaderCachedObject headerCachedObject = (XMIHeaderCachedObject)FileToxmlHeaderMap.get(resource.getAbsolutePath());
         if (headerCachedObject != null) {
             if (!headerCachedObject.isModified(resource)) return headerCachedObject.getXMIHeader();
@@ -763,7 +765,8 @@ public class ModelWorkspaceManager implements XmiHeaderCache {
                 return resources;
             }
 
-            public boolean visit( final IResource resource ) throws CoreException {
+            @Override
+			public boolean visit( final IResource resource ) throws CoreException {
                 if (resource != null && resource.getType() == IResource.FILE) {
                     final ModelWorkspaceItem modelWorkspaceItem = findModelWorkspaceItem(resource);
                     if (modelWorkspaceItem != null && modelWorkspaceItem instanceof ModelResource) {
@@ -989,7 +992,8 @@ public class ModelWorkspaceManager implements XmiHeaderCache {
                     return false;
                 }
 
-                public boolean visit( final IResource resource ) {
+                @Override
+				public boolean visit( final IResource resource ) {
                     if (isIncludedResource(resource)) resources.add(resource);
                     return true;
                 }
@@ -1015,7 +1019,8 @@ public class ModelWorkspaceManager implements XmiHeaderCache {
         this.indexType = type;
     }
 
-    public void setXmiHeaderToCache( final File resource,
+    @Override
+	public void setXmiHeaderToCache( final File resource,
                                      final XMIHeader header ) {
         final XMIHeaderCachedObject headerCachedObject = new XMIHeaderCachedObject(header, resource.lastModified());
         FileToxmlHeaderMap.put(resource.getAbsolutePath(), headerCachedObject);
@@ -1061,7 +1066,8 @@ public class ModelWorkspaceManager implements XmiHeaderCache {
             super();
         }
 
-        public int compare( final Object rsc1,
+        @Override
+		public int compare( final Object rsc1,
                             final Object rsc2 ) {
             CoreArgCheck.isInstanceOf(IResource.class, rsc1);
             CoreArgCheck.isInstanceOf(IResource.class, rsc2);
@@ -1102,7 +1108,8 @@ public class ModelWorkspaceManager implements XmiHeaderCache {
             return true;
         }
 
-        public boolean visit( final IResource resource ) {
+        @Override
+		public boolean visit( final IResource resource ) {
             if (isIncludedResource(resource)) {
                 resources.add(resource);
                 if (resource.getType() != IResource.FILE) return true;
@@ -1131,7 +1138,8 @@ public class ModelWorkspaceManager implements XmiHeaderCache {
             }
         }
 
-        public void notifyChanged( final Notification notification ) {
+        @Override
+		public void notifyChanged( final Notification notification ) {
             // If the notification is just a touch, don't do anything.
             if (notification.isTouch()) return;
             if (notification instanceof SourcedNotification) {

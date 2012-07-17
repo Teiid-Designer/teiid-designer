@@ -42,7 +42,8 @@ public class XsdSchemaUiNewModelObjectHelper implements
      * @see org.teiid.designer.core.util.INewModelObjectHelper#canHelpCreate(java.lang.Object)
      * @since 4.3
      */
-    public boolean canHelpCreate(Object newObject) {
+    @Override
+	public boolean canHelpCreate(Object newObject) {
         CoreArgCheck.isNotNull(newObject);
         if(newObject instanceof XSDSchemaImpl) {
             return true;
@@ -54,7 +55,8 @@ public class XsdSchemaUiNewModelObjectHelper implements
      * @see org.teiid.designer.core.util.INewModelObjectHelper#helpCreate(java.lang.Object, Map)
      * @since 4.3
      */
-    public boolean helpCreate(Object newObject, Map properties) throws ModelerCoreException {
+    @Override
+	public boolean helpCreate(Object newObject, Map properties) throws ModelerCoreException {
         XSDSchemaImpl xsdSchemaImpl = (XSDSchemaImpl) newObject;
         MetamodelDescriptor descriptor = ModelUtilities.getModelResourceForModelObject(xsdSchemaImpl).getPrimaryMetamodelDescriptor();
         

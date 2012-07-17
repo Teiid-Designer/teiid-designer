@@ -223,7 +223,8 @@ public abstract class AbstractFacetSet extends SimpleComponentSet implements Fac
         return currentFV.cloneValue();
     }
 
-    public void setValue( Object o ) {
+    @Override
+	public void setValue( Object o ) {
         init();
 
         if (o instanceof FacetValue) {
@@ -315,11 +316,13 @@ public abstract class AbstractFacetSet extends SimpleComponentSet implements Fac
         } // endif
     }
 
-    public boolean isUserSet() {
+    @Override
+	public boolean isUserSet() {
         return currentFV.isDefault(); // myList.isChanged;
     }
 
-    public void reset() {
+    @Override
+	public void reset() {
         currentFV.resetToDefault();
         currentFV.isFixedLocal = false;
         updateGUI(currentFV);
@@ -368,7 +371,8 @@ public abstract class AbstractFacetSet extends SimpleComponentSet implements Fac
         }
 
         // implementation of listeners:
-        public void widgetSelected( SelectionEvent e ) {
+        @Override
+		public void widgetSelected( SelectionEvent e ) {
             if (e.widget == dft) {
                 fireUpdate(true);
                 dft.setSelection(true); // should always be true: currentFV.isDefault());
@@ -386,10 +390,12 @@ public abstract class AbstractFacetSet extends SimpleComponentSet implements Fac
             } // endif
         }
 
-        public void widgetDefaultSelected( SelectionEvent e ) {
+        @Override
+		public void widgetDefaultSelected( SelectionEvent e ) {
         } // ignore
 
-        public void update( ComponentSetEvent event ) {
+        @Override
+		public void update( ComponentSetEvent event ) {
             // make sure the value has changed:
             if (event.isDelete || event.value instanceof FacetValue || !FormUtil.safeEquals(event.value, lastVal)) {
                 // we want to process this event:

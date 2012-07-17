@@ -138,7 +138,8 @@ public class AddSqlSymbolsPanel extends Composite {
 
         // Implement a "fake" tooltip
         final Listener labelListener = new Listener() {
-            public void handleEvent( Event event ) {
+            @Override
+			public void handleEvent( Event event ) {
                 Label label = (Label)event.widget;
                 Shell shell = label.getShell();
                 switch (event.type) {
@@ -162,7 +163,8 @@ public class AddSqlSymbolsPanel extends Composite {
             Shell tip = null;
             Label label = null;
 
-            public void handleEvent( Event event ) {
+            @Override
+			public void handleEvent( Event event ) {
                 switch (event.type) {
                     case SWT.Dispose:
                     case SWT.KeyDown:
@@ -227,16 +229,19 @@ public class AddSqlSymbolsPanel extends Composite {
      * interface since it must register changeListeners with the BindingList
      */
     class MySqlContentProvider implements IStructuredContentProvider {
-        public void inputChanged( Viewer v,
+        @Override
+		public void inputChanged( Viewer v,
                                   Object oldInput,
                                   Object newInput ) {
         }
 
-        public void dispose() {
+        @Override
+		public void dispose() {
         }
 
         // Return the bindings as an array of Objects
-        public Object[] getElements( Object parent ) {
+        @Override
+		public Object[] getElements( Object parent ) {
             return availableSymbols.toArray();
         }
 

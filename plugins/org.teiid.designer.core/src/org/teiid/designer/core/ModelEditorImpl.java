@@ -179,7 +179,8 @@ public class ModelEditorImpl implements ModelEditor {
         ModelEditorImpl.ctnr = container;
     }
 
-    public boolean isDatatypeFeature( final EObject object,
+    @Override
+	public boolean isDatatypeFeature( final EObject object,
                                       final EStructuralFeature feature ) {
         if (object == null || feature == null) {
             return false;
@@ -191,7 +192,8 @@ public class ModelEditorImpl implements ModelEditor {
         return false;
     }
 
-    public Collection getTags( final EObject obj ) {
+    @Override
+	public Collection getTags( final EObject obj ) {
         Annotation annotation = this.getAnnotation(obj, false);
         if (annotation == null) {
             return Collections.EMPTY_LIST;
@@ -215,7 +217,8 @@ public class ModelEditorImpl implements ModelEditor {
     /**
      * @see org.teiid.designer.core.ModelEditor#equals(org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject)
      */
-    public boolean equals( final EObject eObject1,
+    @Override
+	public boolean equals( final EObject eObject1,
                            final EObject eObject2 ) {
         if (eObject1 == null || eObject2 == null) {
             return false;
@@ -255,7 +258,8 @@ public class ModelEditorImpl implements ModelEditor {
      * @see org.teiid.designer.core.ModelEditor#createInitialModel(org.eclipse.emf.ecore.resource.Resource,
      *      org.eclipse.emf.ecore.EClass)
      */
-    public EObject createInitialModel( final Resource resource,
+    @Override
+	public EObject createInitialModel( final Resource resource,
                                        final EClass eClass ) throws ModelerCoreException {
         if (!isRootObject(eClass)) {
             throw new ModelerCoreException(
@@ -275,7 +279,8 @@ public class ModelEditorImpl implements ModelEditor {
      * @param object
      * @return the MetamodelDescriptor for the given EObject
      */
-    public MetamodelDescriptor getMetamodelDescriptor( final EObject object ) {
+    @Override
+	public MetamodelDescriptor getMetamodelDescriptor( final EObject object ) {
         CoreArgCheck.isNotNull(object);
         Container cntr = getContainer();
         String uri = object.eClass().getEPackage().getNsURI();
@@ -295,7 +300,8 @@ public class ModelEditorImpl implements ModelEditor {
     /**
      * @see org.teiid.designer.core.ModelEditor#getPrimaryMetamodelDescriptor(org.teiid.designer.core.workspace.ModelResource)
      */
-    public MetamodelDescriptor getPrimaryMetamodelDescriptor( final ModelResource resource ) throws ModelWorkspaceException {
+    @Override
+	public MetamodelDescriptor getPrimaryMetamodelDescriptor( final ModelResource resource ) throws ModelWorkspaceException {
         CoreArgCheck.isNotNull(resource);
         return resource.getPrimaryMetamodelDescriptor();
     }
@@ -303,7 +309,8 @@ public class ModelEditorImpl implements ModelEditor {
     /**
      * @see org.teiid.designer.core.ModelEditor#getPrimaryMetamodelDescriptor(org.eclipse.emf.ecore.resource.Resource)
      */
-    public MetamodelDescriptor getPrimaryMetamodelDescriptor( final Resource resource ) throws ModelWorkspaceException {
+    @Override
+	public MetamodelDescriptor getPrimaryMetamodelDescriptor( final Resource resource ) throws ModelWorkspaceException {
         CoreArgCheck.isNotNull(resource);
 
         // See if this resource is an EmfResource; if so, there is a shortcut to not look up the Model Resource ...
@@ -344,7 +351,8 @@ public class ModelEditorImpl implements ModelEditor {
     /**
      * @see org.teiid.designer.core.ModelEditor#getNewChildDescriptors(org.eclipse.emf.ecore.EObject)
      */
-    public Collection getNewChildCommands( final EObject eObject ) throws ModelerCoreException {
+    @Override
+	public Collection getNewChildCommands( final EObject eObject ) throws ModelerCoreException {
         final ContainerImpl container = getContainer();
         if (container != null) {
 
@@ -353,7 +361,8 @@ public class ModelEditorImpl implements ModelEditor {
             // operation will not be present in the edit->undo menu. This functionality is called
             // when you open the New Child sub-menu.
             final TransactionRunnable runnable = new TransactionRunnable() {
-                public Object run( final UnitOfWork uow ) {
+                @Override
+				public Object run( final UnitOfWork uow ) {
                     final EditingDomain domain = container.getEditingDomain();
                     Collection result = domain.getNewChildDescriptors(eObject, null);
 
@@ -418,7 +427,8 @@ public class ModelEditorImpl implements ModelEditor {
     /**
      * @see org.teiid.designer.core.ModelEditor#getNewChildDescriptors(org.eclipse.emf.ecore.EObject)
      */
-    public Collection getNewRootObjectCommands( final Resource resource ) {
+    @Override
+	public Collection getNewRootObjectCommands( final Resource resource ) {
         final ContainerImpl container = getContainer();
         final EditingDomain domain = container.getEditingDomain();
         Collection descriptors = getRootDescriptors(resource);
@@ -429,7 +439,8 @@ public class ModelEditorImpl implements ModelEditor {
     /**
      * @see org.teiid.designer.core.ModelEditor#getNewSiblingDescriptors(org.eclipse.emf.ecore.EObject)
      */
-    public Collection getNewSiblingCommands( final EObject eObject ) throws ModelerCoreException {
+    @Override
+	public Collection getNewSiblingCommands( final EObject eObject ) throws ModelerCoreException {
         final ContainerImpl container = getContainer();
 
         // Wrapping this in a transaction to avoid the sub-set operations from being placed in the
@@ -437,7 +448,8 @@ public class ModelEditorImpl implements ModelEditor {
         // operation will not be present in the edit->undo menu. This functionality is called
         // when you open the New Sibling sub-menu.
         final TransactionRunnable runnable = new TransactionRunnable() {
-            public Object run( final UnitOfWork uow ) {
+            @Override
+			public Object run( final UnitOfWork uow ) {
                 Collection descriptors = null;
                 final EditingDomain domain = container.getEditingDomain();
                 if (eObject.eContainer() == null) {
@@ -480,7 +492,8 @@ public class ModelEditorImpl implements ModelEditor {
      *      java.lang.String, boolean)
      * @since 4.0
      */
-    public Object executeAsTransaction( final TransactionRunnable runnable,
+    @Override
+	public Object executeAsTransaction( final TransactionRunnable runnable,
                                         final String description,
                                         final boolean significant,
                                         final Object source ) throws ModelerCoreException {
@@ -499,7 +512,8 @@ public class ModelEditorImpl implements ModelEditor {
      *      java.lang.String, boolean)
      * @since 4.0
      */
-    public Object executeAsTransaction( final TransactionRunnable runnable,
+    @Override
+	public Object executeAsTransaction( final TransactionRunnable runnable,
                                         final String description,
                                         final boolean significant,
                                         final boolean undoable,
@@ -580,7 +594,8 @@ public class ModelEditorImpl implements ModelEditor {
 
     /**
 	 */
-    public Object executeAsTransaction( final TransactionRunnable runnable,
+    @Override
+	public Object executeAsTransaction( final TransactionRunnable runnable,
                                         final Container container,
                                         final String operationDescription,
                                         final boolean isSignificant,
@@ -591,13 +606,15 @@ public class ModelEditorImpl implements ModelEditor {
     /**
      * @see org.teiid.designer.core.ModelEditor#createNewChildFromDescriptor(java.lang.Object)
      */
-    public EObject createNewChildFromCommand( final EObject parent,
+    @Override
+	public EObject createNewChildFromCommand( final EObject parent,
                                               final Command cmd ) throws ModelerCoreException {
         final boolean isSignificant = true;
         final String operationDescription = ModelerCore.Util.getString("ModelEditorImpl.Create_New_Child_for_{0}_1", getPresentationValue(parent)); //$NON-NLS-1$
         final ContainerImpl cntr = getContainer();
         final TransactionRunnable runnable = new TransactionRunnable() {
-            public Object run( final UnitOfWork uow ) throws ModelerCoreException {
+            @Override
+			public Object run( final UnitOfWork uow ) throws ModelerCoreException {
                 executeCommandInTransaction(uow, parent, cmd);
 
                 EObject child = null;
@@ -619,7 +636,8 @@ public class ModelEditorImpl implements ModelEditor {
     /**
      * @see org.teiid.designer.core.ModelEditor#createNewChildFromDescriptor(java.lang.Object)
      */
-    public EObject createNewRootObjectFromCommand( final Resource parent,
+    @Override
+	public EObject createNewRootObjectFromCommand( final Resource parent,
                                                    final Command cmd ) throws ModelerCoreException {
         CoreArgCheck.isNotNull(parent);
         CoreArgCheck.isNotNull(cmd);
@@ -628,7 +646,8 @@ public class ModelEditorImpl implements ModelEditor {
                                                                        getPresentationValue(parent));
         final ContainerImpl cntr = getContainer();
         final TransactionRunnable runnable = new TransactionRunnable() {
-            public Object run( final UnitOfWork uow ) throws ModelerCoreException {
+            @Override
+			public Object run( final UnitOfWork uow ) throws ModelerCoreException {
                 executeCommandInTransaction(uow, parent, cmd);
 
                 EObject child = null;
@@ -647,13 +666,15 @@ public class ModelEditorImpl implements ModelEditor {
     /**
      * @see org.teiid.designer.core.ModelEditor#createNewSiblingFromDescriptor(java.lang.Object)
      */
-    public EObject createNewSiblingFromCommand( final EObject sibling,
+    @Override
+	public EObject createNewSiblingFromCommand( final EObject sibling,
                                                 final Command cmd ) throws ModelerCoreException {
         final boolean isSignificant = true;
         final String operationDescription = ModelerCore.Util.getString("ModelEditorImpl.Create_New_Sibling_for_{0}_2", getPresentationValue(sibling)); //$NON-NLS-1$
         final ContainerImpl cntr = getContainer();
         final TransactionRunnable runnable = new TransactionRunnable() {
-            public Object run( final UnitOfWork uow ) throws ModelerCoreException {
+            @Override
+			public Object run( final UnitOfWork uow ) throws ModelerCoreException {
                 executeCommandInTransaction(uow, sibling, cmd);
 
                 EObject newSibling = null;
@@ -672,7 +693,8 @@ public class ModelEditorImpl implements ModelEditor {
     /**
      * @see org.teiid.designer.core.ModelEditor#createNewAssociationFromDescriptor(java.lang.Object)
      */
-    public EObject createNewAssociationFromDescriptor( Object descriptor ) throws ModelerCoreException {
+    @Override
+	public EObject createNewAssociationFromDescriptor( Object descriptor ) throws ModelerCoreException {
         if (descriptor != null && descriptor instanceof AbstractAssociationDescriptor) {
             final AbstractAssociationDescriptor assocDescr = (AbstractAssociationDescriptor)descriptor;
 
@@ -684,7 +706,8 @@ public class ModelEditorImpl implements ModelEditor {
                 final String operationDescription = ModelerCore.Util.getString("ModelEditorImpl.Create_new_Association_3"); //$NON-NLS-1$
                 final ContainerImpl cntr = getContainer();
                 final TransactionRunnable runnable = new TransactionRunnable() {
-                    public Object run( final UnitOfWork uow ) throws ModelerCoreException {
+                    @Override
+					public Object run( final UnitOfWork uow ) throws ModelerCoreException {
                         // If the descriptor is considered ambiguous then construct the association using
                         // the first AssociationDescriptor instance in the list of creation possibilities
                         EObject result = null;
@@ -710,7 +733,8 @@ public class ModelEditorImpl implements ModelEditor {
     /**
      * @see org.teiid.designer.core.ModelEditor#getNewAssociationDescriptors(java.util.List)
      */
-    public Collection getNewAssociationDescriptors( final List eObjects ) throws ModelerCoreException {
+    @Override
+	public Collection getNewAssociationDescriptors( final List eObjects ) throws ModelerCoreException {
 
         // Retrieve the list of AssociationProvider instances from the ExtensionDescriptor
         // instances available through the ModelerCore Configuration
@@ -732,7 +756,8 @@ public class ModelEditorImpl implements ModelEditor {
     /**
      * @see org.teiid.designer.core.ModelEditor#copy(org.eclipse.emf.ecore.EObject)
      */
-    public EObject copy( final EObject eObject ) throws ModelerCoreException {
+    @Override
+	public EObject copy( final EObject eObject ) throws ModelerCoreException {
         CoreArgCheck.isNotNull(eObject);
         return copy(eObject, null);
     }
@@ -740,7 +765,8 @@ public class ModelEditorImpl implements ModelEditor {
     /**
      * @see org.teiid.designer.core.ModelEditor#copy(org.eclipse.emf.ecore.EObject)
      */
-    public EObject copy( final EObject eObject,
+    @Override
+	public EObject copy( final EObject eObject,
                          final Map originalsToCopies ) throws ModelerCoreException {
         CoreArgCheck.isNotNull(eObject);
 
@@ -748,7 +774,8 @@ public class ModelEditorImpl implements ModelEditor {
         final String operationDescription = ModelerCore.Util.getString("ModelEditorImpl.Copy_{0}_4", getPresentationValue(eObject)); //$NON-NLS-1$
         final ContainerImpl cntr = getContainer();
         final TransactionRunnable runnable = new TransactionRunnable() {
-            public Object run( final UnitOfWork uow ) throws ModelerCoreException {
+            @Override
+			public Object run( final UnitOfWork uow ) throws ModelerCoreException {
                 final EditingDomain ed = cntr.getEditingDomain();
                 final CopyCommand.Helper helper = new CopyCommand.Helper();
                 if (originalsToCopies != null && !originalsToCopies.isEmpty()) {
@@ -780,7 +807,8 @@ public class ModelEditorImpl implements ModelEditor {
     /**
      * @see org.teiid.designer.core.ModelEditor#copy(org.eclipse.emf.ecore.EObject)
      */
-    public Collection copyMultiple( final EObject eObject,
+    @Override
+	public Collection copyMultiple( final EObject eObject,
                                     final int numCopies ) throws ModelerCoreException {
         CoreArgCheck.isNotNull(eObject);
         CoreArgCheck.isPositive(numCopies);
@@ -791,7 +819,8 @@ public class ModelEditorImpl implements ModelEditor {
         final String operationDescription = ModelerCore.Util.getString("ModelEditorImpl.Copy_{0}_4", getPresentationValue(eObject)); //$NON-NLS-1$
         final ContainerImpl cntr = getContainer();
         final TransactionRunnable runnable = new TransactionRunnable() {
-            public Object run( final UnitOfWork uow ) throws ModelerCoreException {
+            @Override
+			public Object run( final UnitOfWork uow ) throws ModelerCoreException {
                 final EditingDomain ed = cntr.getEditingDomain();
                 while (copies.size() < numCopies) {
                     final Command command = CopyCommand.create(ed, eObject);
@@ -815,7 +844,8 @@ public class ModelEditorImpl implements ModelEditor {
     /**
      * @see org.teiid.designer.core.ModelEditor#delete(java.util.Collecction)
      */
-    public boolean delete( final Collection eObjects ) throws ModelerCoreException {
+    @Override
+	public boolean delete( final Collection eObjects ) throws ModelerCoreException {
         CoreArgCheck.isNotNull(eObjects);
 
         if (eObjects.isEmpty()) {
@@ -830,7 +860,8 @@ public class ModelEditorImpl implements ModelEditor {
     /**
      * @see org.teiid.designer.core.ModelEditor#delete(java.util.Collecction)
      */
-    public boolean delete( final Collection eObjects,
+    @Override
+	public boolean delete( final Collection eObjects,
                            final IProgressMonitor monitor ) throws ModelerCoreException {
         CoreArgCheck.isNotNull(eObjects);
 
@@ -843,7 +874,8 @@ public class ModelEditorImpl implements ModelEditor {
         final ContainerImpl cntr = getContainer();
         final String operationDescription = ModelerCore.Util.getString("ModelEditorImpl.Delete_multiple_objects_1"); //$NON-NLS-1$
         final TransactionRunnable runnable = new TransactionRunnable() {
-            public Object run( final UnitOfWork uow ) throws ModelerCoreException {
+            @Override
+			public Object run( final UnitOfWork uow ) throws ModelerCoreException {
                 final EditingDomain ed = cntr.getEditingDomain();
                 Command command = createDeleteManyCommand(ed, eObjects, monitor);
 
@@ -1029,7 +1061,8 @@ public class ModelEditorImpl implements ModelEditor {
     /**
      * @see org.teiid.designer.core.ModelEditor#delete(org.eclipse.emf.ecore.EObject, boolean)
      */
-    public boolean delete( final EObject eObject,
+    @Override
+	public boolean delete( final EObject eObject,
                            final boolean performResourceCheck,
                            final boolean performRelatedObjectCheck ) throws ModelerCoreException {
         CoreArgCheck.isNotNull(eObject);
@@ -1050,7 +1083,8 @@ public class ModelEditorImpl implements ModelEditor {
         final ContainerImpl cntr = getContainer();
         final String operationDescription = ModelerCore.Util.getString("ModelEditorImpl.Delete_{0}_5", getPresentationValue(eObject)); //$NON-NLS-1$
         final TransactionRunnable runnable = new TransactionRunnable() {
-            public Object run( final UnitOfWork uow ) throws ModelerCoreException {
+            @Override
+			public Object run( final UnitOfWork uow ) throws ModelerCoreException {
                 DebuggingStopwatch watch = new DebuggingStopwatch(
                                                                   "ModelEditorImpl.delete(EObject)  Ignore XSD's = " + ignoreXsdResources, 10, false); //$NON-NLS-1$
                 watch.start();
@@ -1112,7 +1146,8 @@ public class ModelEditorImpl implements ModelEditor {
     /**
      * @see org.teiid.designer.core.ModelEditor#delete(org.eclipse.emf.ecore.EObject)
      */
-    public boolean delete( final EObject eObject,
+    @Override
+	public boolean delete( final EObject eObject,
                            final boolean performResourceCheck ) throws ModelerCoreException {
         return this.delete(eObject, performResourceCheck, true);
     }
@@ -1120,7 +1155,8 @@ public class ModelEditorImpl implements ModelEditor {
     /**
      * @see org.teiid.designer.core.ModelEditor#delete(org.eclipse.emf.ecore.EObject)
      */
-    public boolean delete( final EObject eObject ) throws ModelerCoreException {
+    @Override
+	public boolean delete( final EObject eObject ) throws ModelerCoreException {
         return this.delete(eObject, true);
     }
 
@@ -1177,7 +1213,8 @@ public class ModelEditorImpl implements ModelEditor {
      * @param editingDomain the editing domain; never null
      * @param additionalCommands the list into which any additional delete commands should be placed; never null
      */
-    public void findReferencesToObjectsBeingDeleted( final Collection allDeleted,
+    @Override
+	public void findReferencesToObjectsBeingDeleted( final Collection allDeleted,
                                                      final EditingDomain editingDomain,
                                                      final List additionalCommands,
                                                      final ModelWorkspaceSearch workspaceSearch ) throws ModelerCoreException {
@@ -1315,7 +1352,8 @@ public class ModelEditorImpl implements ModelEditor {
      * @param editingDomain the editing domain
      * @return the list of all objects that are related to the original object or a member of the list of objects.
      */
-    public List findRelatedObjects( final Collection objects,
+    @Override
+	public List findRelatedObjects( final Collection objects,
                                     final EditingDomain domain ) {
         if (domain instanceof ContainerEditingDomain) {
 
@@ -1347,7 +1385,8 @@ public class ModelEditorImpl implements ModelEditor {
      * @param allDeleted the Collection of all related objects that are being deleted
      * @return the Collection of all objects that reference the original object or a member of the list of deleted objects.
      */
-    public Collection findExternalReferencesToObjectsBeingDeleted( final EObject eObject,
+    @Override
+	public Collection findExternalReferencesToObjectsBeingDeleted( final EObject eObject,
                                                                    final Collection allDeleted ) {
         CoreArgCheck.isNotNull(eObject);
 
@@ -1396,7 +1435,8 @@ public class ModelEditorImpl implements ModelEditor {
      * @param eObject the original object that is being deleted; never null
      * @return the Collection of all objects that are being deleted
      */
-    public Collection findOtherObjectsToBeDeleted( final EObject eObject ) throws ModelerCoreException {
+    @Override
+	public Collection findOtherObjectsToBeDeleted( final EObject eObject ) throws ModelerCoreException {
         CoreArgCheck.isNotNull(eObject);
         final ContainerImpl cntr = getContainer();
         final EditingDomain ed = cntr.getEditingDomain();
@@ -1417,7 +1457,8 @@ public class ModelEditorImpl implements ModelEditor {
      * @param additionalCommands the list into which any additional delete commands should be placed; never null
      * @return the collection of commands for all objects that are being deleted
      */
-    public Collection findOtherObjectsToBeDeleted( final Collection eObjects,
+    @Override
+	public Collection findOtherObjectsToBeDeleted( final Collection eObjects,
                                                    final EditingDomain editingDomain,
                                                    final List additionalCommands,
                                                    final ModelWorkspaceSearch workspaceSearch ) throws ModelerCoreException {
@@ -1521,7 +1562,8 @@ public class ModelEditorImpl implements ModelEditor {
     /**
      * @see org.teiid.designer.core.ModelEditor#rename(org.eclipse.emf.ecore.EObject, java.lang.String)
      */
-    public boolean rename( final EObject eObject,
+    @Override
+	public boolean rename( final EObject eObject,
                            final String newName ) throws ModelerCoreException {
         CoreArgCheck.isNotNull(eObject);
         final EStructuralFeature nameFeature = getNameFeature(eObject);
@@ -1533,7 +1575,8 @@ public class ModelEditorImpl implements ModelEditor {
         final String operationDescription = ModelerCore.Util.getString("ModelEditorImpl.Rename_{0}_6", getPresentationValue(eObject)); //$NON-NLS-1$
         final ContainerImpl cntr = getContainer();
         final TransactionRunnable runnable = new TransactionRunnable() {
-            public Object run( final UnitOfWork uow ) throws ModelerCoreException {
+            @Override
+			public Object run( final UnitOfWork uow ) throws ModelerCoreException {
                 final EditingDomain ed = cntr.getEditingDomain();
                 Command command = SetCommand.create(ed, eObject, nameFeature, newName);
                 executeCommandInTransaction(uow, eObject, command);
@@ -1549,7 +1592,8 @@ public class ModelEditorImpl implements ModelEditor {
      * 
      * @see org.teiid.designer.core.ModelEditor#getNameFeature(org.eclipse.emf.ecore.EObject)
      */
-    public EStructuralFeature getNameFeature( final EObject eObject ) {
+    @Override
+	public EStructuralFeature getNameFeature( final EObject eObject ) {
         CoreArgCheck.isNotNull(eObject);
         final EClass eClass = eObject.eClass();
         for (Iterator iter = eClass.getEAllStructuralFeatures().iterator(); iter.hasNext();) {
@@ -1564,7 +1608,8 @@ public class ModelEditorImpl implements ModelEditor {
     /**
      * @see org.teiid.designer.core.ModelEditor#getName(org.eclipse.emf.ecore.EObject)
      */
-    public String getName( final EObject eObject ) {
+    @Override
+	public String getName( final EObject eObject ) {
         CoreArgCheck.isNotNull(eObject);
         final EStructuralFeature nameFeature = getNameFeature(eObject);
         if (nameFeature == null) {
@@ -1577,7 +1622,8 @@ public class ModelEditorImpl implements ModelEditor {
     /**
      * @see org.teiid.designer.core.ModelEditor#hasName(org.eclipse.emf.ecore.EObject)
      */
-    public boolean hasName( final EObject eObject ) {
+    @Override
+	public boolean hasName( final EObject eObject ) {
         CoreArgCheck.isNotNull(eObject);
         final EStructuralFeature nameFeature = getNameFeature(eObject);
         return nameFeature != null;
@@ -1630,13 +1676,15 @@ public class ModelEditorImpl implements ModelEditor {
     /**
      * @see org.teiid.designer.core.ModelEditor#executeCommand(org.eclipse.emf.common.command.Command)
      */
-    public void executeCommand( final EObject owner,
+    @Override
+	public void executeCommand( final EObject owner,
                                 final Command cmd ) throws ModelerCoreException {
         final boolean isSignificant = true;
         final String operationDescription = null;
         final ContainerImpl cntr = getContainer();
         final TransactionRunnable runnable = new TransactionRunnable() {
-            public Object run( final UnitOfWork uow ) throws ModelerCoreException {
+            @Override
+			public Object run( final UnitOfWork uow ) throws ModelerCoreException {
                 executeCommandInTransaction(uow, owner, cmd);
                 return null;
             }
@@ -1654,7 +1702,8 @@ public class ModelEditorImpl implements ModelEditor {
     public void postExecuteCommand( final EObject owner,
                                     final Command cmd ) throws ModelerCoreException {
         executeAsTransaction(new TransactionRunnable() {
-            public Object run( UnitOfWork uow ) throws ModelerCoreException {
+            @Override
+			public Object run( UnitOfWork uow ) throws ModelerCoreException {
                 ((UnitOfWorkImpl)uow).setAlreadyExecuted(true);
                 executeCommandInTransaction(uow, owner, cmd);
                 return null;
@@ -1881,7 +1930,8 @@ public class ModelEditorImpl implements ModelEditor {
     /**
      * @see org.teiid.designer.core.ModelEditor#move(org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject)
      */
-    public boolean move( final Object newParent,
+    @Override
+	public boolean move( final Object newParent,
                          final EObject eObject ) throws ModelerCoreException {
         CoreArgCheck.isNotNull(newParent);
         CoreArgCheck.isNotNull(eObject);
@@ -1909,7 +1959,8 @@ public class ModelEditorImpl implements ModelEditor {
     /**
      * @see org.teiid.designer.core.ModelEditor#newParent
      */
-    public boolean move( final Object newParent,
+    @Override
+	public boolean move( final Object newParent,
                          final EObject eObject,
                          final int index ) throws ModelerCoreException {
         CoreArgCheck.isNotNull(newParent);
@@ -1923,7 +1974,8 @@ public class ModelEditorImpl implements ModelEditor {
         final String operationDescription = ModelerCore.Util.getString("ModelEditorImpl.Move_{0}_7", getPresentationValue(eObject)); //$NON-NLS-1$
         final ContainerImpl cntr = getContainer();
         final TransactionRunnable runnable = new TransactionRunnable() {
-            public Object run( final UnitOfWork uow ) throws ModelerCoreException {
+            @Override
+			public Object run( final UnitOfWork uow ) throws ModelerCoreException {
                 final EditingDomain ed = cntr.getEditingDomain();
                 Command command = null;
                 if (eObject.eContainer() != null && eObject.eContainer() == newParent) {
@@ -1948,7 +2000,8 @@ public class ModelEditorImpl implements ModelEditor {
     /**
      * @see org.teiid.designer.core.ModelEditor#copyToClipboard
      */
-    public void copyToClipboard( final EObject eObject ) throws ModelerCoreException {
+    @Override
+	public void copyToClipboard( final EObject eObject ) throws ModelerCoreException {
         CoreArgCheck.isNotNull(eObject);
         Collection objects = new ArrayList(1);
         objects.add(eObject);
@@ -1959,7 +2012,8 @@ public class ModelEditorImpl implements ModelEditor {
     /**
      * @see org.teiid.designer.core.ModelEditor#copyAllToClipboard
      */
-    public void copyAllToClipboard( final Collection eObjects ) throws ModelerCoreException {
+    @Override
+	public void copyAllToClipboard( final Collection eObjects ) throws ModelerCoreException {
         CoreArgCheck.isNotEmpty(eObjects);
 
         final EObject eObject = (EObject)eObjects.iterator().next();
@@ -1967,7 +2021,8 @@ public class ModelEditorImpl implements ModelEditor {
         final String operationDescription = ModelerCore.Util.getString("ModelEditorImpl.Copy_{0}_8", getPresentationValue(eObjects)); //$NON-NLS-1$
         final ContainerImpl cntr = getContainer();
         final TransactionRunnable runnable = new TransactionRunnable() {
-            public Object run( final UnitOfWork uow ) throws ModelerCoreException {
+            @Override
+			public Object run( final UnitOfWork uow ) throws ModelerCoreException {
                 final EditingDomain ed = cntr.getEditingDomain();
                 final Command command = CopyToClipboardCommand.create(ed, eObjects);
                 executeCommandInTransaction(uow, eObject, command);
@@ -1980,7 +2035,8 @@ public class ModelEditorImpl implements ModelEditor {
     /**
      * @see org.teiid.designer.core.ModelEditor#cutToClipboard
      */
-    public void cutToClipboard( final EObject eObject ) throws ModelerCoreException {
+    @Override
+	public void cutToClipboard( final EObject eObject ) throws ModelerCoreException {
         CoreArgCheck.isNotNull(eObject);
         Collection objects = new ArrayList(1);
         objects.add(eObject);
@@ -1991,7 +2047,8 @@ public class ModelEditorImpl implements ModelEditor {
     /**
      * @see org.teiid.designer.core.ModelEditor#cutAllToClipboard
      */
-    public void cutAllToClipboard( final Collection eObjects ) throws ModelerCoreException {
+    @Override
+	public void cutAllToClipboard( final Collection eObjects ) throws ModelerCoreException {
         CoreArgCheck.isNotEmpty(eObjects);
 
         final EObject eObject = (EObject)eObjects.iterator().next();
@@ -1999,7 +2056,8 @@ public class ModelEditorImpl implements ModelEditor {
         final String operationDescription = ModelerCore.Util.getString("ModelEditorImpl.Cut_{0}_9", getPresentationValue(eObjects)); //$NON-NLS-1$
         final ContainerImpl cntr = getContainer();
         final TransactionRunnable runnable = new TransactionRunnable() {
-            public Object run( final UnitOfWork uow ) throws ModelerCoreException {
+            @Override
+			public Object run( final UnitOfWork uow ) throws ModelerCoreException {
                 final EditingDomain ed = cntr.getEditingDomain();
                 final CompoundCommand command = CompoundCommandFactory.create(eObjects, new ArrayList(1));
                 command.append(CutToClipboardCommand.create(ed, eObjects));
@@ -2013,14 +2071,16 @@ public class ModelEditorImpl implements ModelEditor {
     /**
      * @see org.teiid.designer.core.ModelEditor#pasteFromClipboard
      */
-    public boolean pasteFromClipboard( final Object owner ) throws ModelerCoreException {
+    @Override
+	public boolean pasteFromClipboard( final Object owner ) throws ModelerCoreException {
         CoreArgCheck.isNotNull(owner);
 
         final boolean isSignificant = true;
         final String operationDescription = ModelerCore.Util.getString("ModelEditorImpl.Paste_{0}_10", getPresentationValue(owner)); //$NON-NLS-1$
         final ContainerImpl cntr = getContainer();
         final TransactionRunnable runnable = new TransactionRunnable() {
-            public Object run( final UnitOfWork uow ) throws ModelerCoreException {
+            @Override
+			public Object run( final UnitOfWork uow ) throws ModelerCoreException {
                 final EditingDomain ed = cntr.getEditingDomain();
                 final Object realOwner = owner instanceof ModelResource ? ((ModelResource)owner).getEmfResource() : owner;
                 final Command command = PasteFromClipboardCommand.create(ed, realOwner, null);
@@ -2035,7 +2095,8 @@ public class ModelEditorImpl implements ModelEditor {
     /**
      * @see org.teiid.designer.core.ModelEditor#getClipboardContents
      */
-    public Collection getClipboardContents( final Object target ) {
+    @Override
+	public Collection getClipboardContents( final Object target ) {
         try {
             final ContainerImpl cntr = getContainer();
             final EditingDomain ed = cntr.getEditingDomain();
@@ -2053,7 +2114,8 @@ public class ModelEditorImpl implements ModelEditor {
     /**
      * @see org.teiid.designer.core.ModelEditor#getClipboardContentsOriginalToCopyMapping(java.lang.Object)
      */
-    public Map getClipboardContentsOriginalToCopyMapping( Object target ) {
+    @Override
+	public Map getClipboardContentsOriginalToCopyMapping( Object target ) {
         try {
             final ContainerImpl cntr = getContainer();
             final EditingDomain ed = cntr.getEditingDomain();
@@ -2070,7 +2132,8 @@ public class ModelEditorImpl implements ModelEditor {
     /**
      * @see org.teiid.designer.core.ModelEditor#getClipboardContentsCopyToOriginalMapping(java.lang.Object)
      */
-    public Map getClipboardContentsCopyToOriginalMapping( Object target ) {
+    @Override
+	public Map getClipboardContentsCopyToOriginalMapping( Object target ) {
         final Map originalToCopy = getClipboardContentsOriginalToCopyMapping(target);
         if (originalToCopy != null) {
             final Map copyToOriginal = new HashMap();
@@ -2089,7 +2152,8 @@ public class ModelEditorImpl implements ModelEditor {
     /**
      * @see org.teiid.designer.core.ModelEditor#copyAll(java.util.Collection)
      */
-    public Collection copyAll( final Collection eObjects ) throws ModelerCoreException {
+    @Override
+	public Collection copyAll( final Collection eObjects ) throws ModelerCoreException {
         if (eObjects == null || eObjects.isEmpty()) {
             return Collections.EMPTY_LIST;
         }
@@ -2099,7 +2163,8 @@ public class ModelEditorImpl implements ModelEditor {
     /**
      * @see org.teiid.designer.core.ModelEditor#copyAll(java.util.Collection)
      */
-    public Collection copyAll( final Collection eObjects,
+    @Override
+	public Collection copyAll( final Collection eObjects,
                                final Map originalsToCopies ) throws ModelerCoreException {
         if (eObjects == null || eObjects.isEmpty()) {
             return Collections.EMPTY_LIST;
@@ -2110,7 +2175,8 @@ public class ModelEditorImpl implements ModelEditor {
         final String operationDescription = ModelerCore.Util.getString("ModelEditorImpl.Copy_{0}_11", getPresentationValue(eObjects)); //$NON-NLS-1$
         final ContainerImpl cntr = getContainer();
         final TransactionRunnable runnable = new TransactionRunnable() {
-            public Object run( final UnitOfWork uow ) throws ModelerCoreException {
+            @Override
+			public Object run( final UnitOfWork uow ) throws ModelerCoreException {
                 final EditingDomain ed = cntr.getEditingDomain();
                 final CopyCommand.Helper helper = new CopyCommand.Helper();
                 if (originalsToCopies != null && !originalsToCopies.isEmpty()) {
@@ -2155,7 +2221,8 @@ public class ModelEditorImpl implements ModelEditor {
      * @return
      * @throws ModelerCoreException if there is an error executing the command
      */
-    public void addValue( final Object owner,
+    @Override
+	public void addValue( final Object owner,
                           final Object value,
                           final EList feature ) throws ModelerCoreException {
         addValue(owner, value, feature, CommandParameter.NO_INDEX);
@@ -2171,7 +2238,8 @@ public class ModelEditorImpl implements ModelEditor {
      * @return
      * @throws ModelerCoreException if there is an error executing the command
      */
-    public void addValue( final Object owner,
+    @Override
+	public void addValue( final Object owner,
                           final Object value,
                           final EList feature,
                           final int index ) throws ModelerCoreException {
@@ -2194,7 +2262,8 @@ public class ModelEditorImpl implements ModelEditor {
             final boolean isSignificant = true;
             final String operationDescription = ModelerCore.Util.getString("ModelEditorImpl.Add_values_to_{0}_1", getPresentationValue(owner)); //$NON-NLS-1$
             final TransactionRunnable runnable = new TransactionRunnable() {
-                public Object run( final UnitOfWork uow ) throws ModelerCoreException {
+                @Override
+				public Object run( final UnitOfWork uow ) throws ModelerCoreException {
                     final EditingDomain ed = cntr.getEditingDomain();
                     Command command = AddCommandFactory.create(owner, ed, feature, values, index);
                     executeCommandInTransaction(uow, owner, command);
@@ -2215,7 +2284,8 @@ public class ModelEditorImpl implements ModelEditor {
      * @return
      * @throws ModelerCoreException if there is an error executing the command
      */
-    public void addMapValue( final Object owner,
+    @Override
+	public void addMapValue( final Object owner,
                              final Map map,
                              final Object key,
                              final Object value ) throws ModelerCoreException {
@@ -2230,7 +2300,8 @@ public class ModelEditorImpl implements ModelEditor {
             final boolean isSignificant = false;
             final String operationDescription = ModelerCore.Util.getString("ModelEditorImpl.Add_value_to_map_for_{0}", getPresentationValue(owner)); //$NON-NLS-1$
             final TransactionRunnable runnable = new TransactionRunnable() {
-                public Object run( final UnitOfWork uow ) throws ModelerCoreException {
+                @Override
+				public Object run( final UnitOfWork uow ) throws ModelerCoreException {
                     final EditingDomain ed = cntr.getEditingDomain();
                     final AddValueToMapCommand command = new AddValueToMapCommand(ed, owner, map, key, value);
                     executeCommandInTransaction(uow, owner, command);
@@ -2250,7 +2321,8 @@ public class ModelEditorImpl implements ModelEditor {
      * @return
      * @throws ModelerCoreException if there is an error executing the command
      */
-    public void removeValue( final Object owner,
+    @Override
+	public void removeValue( final Object owner,
                              final Object value,
                              final EList feature ) throws ModelerCoreException {
         CoreArgCheck.isNotNull(owner);
@@ -2272,7 +2344,8 @@ public class ModelEditorImpl implements ModelEditor {
             final boolean isSignificant = true;
             final String operationDescription = ModelerCore.Util.getString("ModelEditorImpl.Remove_values_from_{0}_1", getPresentationValue(owner)); //$NON-NLS-1$
             final TransactionRunnable runnable = new TransactionRunnable() {
-                public Object run( final UnitOfWork uow ) throws ModelerCoreException {
+                @Override
+				public Object run( final UnitOfWork uow ) throws ModelerCoreException {
                     final EditingDomain ed = cntr.getEditingDomain();
                     final RemoveCommand command = new RemoveCommand(ed, feature, values);
                     executeCommandInTransaction(uow, owner, command);
@@ -2293,7 +2366,8 @@ public class ModelEditorImpl implements ModelEditor {
      * @return
      * @throws ModelerCoreException if there is an error executing the command
      */
-    public void removeMapValue( final Object owner,
+    @Override
+	public void removeMapValue( final Object owner,
                                 final Map map,
                                 final Object key ) throws ModelerCoreException {
         CoreArgCheck.isNotNull(owner);
@@ -2307,7 +2381,8 @@ public class ModelEditorImpl implements ModelEditor {
             final boolean isSignificant = false;
             final String operationDescription = ModelerCore.Util.getString("ModelEditorImpl.Remove_value_from_map_for_{0}", getPresentationValue(owner)); //$NON-NLS-1$
             final TransactionRunnable runnable = new TransactionRunnable() {
-                public Object run( final UnitOfWork uow ) throws ModelerCoreException {
+                @Override
+				public Object run( final UnitOfWork uow ) throws ModelerCoreException {
                     final EditingDomain ed = cntr.getEditingDomain();
                     final RemoveValueFromMapCommand command = new RemoveValueFromMapCommand(ed, owner, map, key);
                     executeCommandInTransaction(uow, owner, command);
@@ -2322,7 +2397,8 @@ public class ModelEditorImpl implements ModelEditor {
      * @see org.teiid.designer.core.ModelEditor#setPropertyValue(org.eclipse.emf.ecore.EObject, java.lang.Object,
      *      org.eclipse.emf.edit.provider.ItemPropertyDescriptor)
      */
-    public boolean setPropertyValue( final EObject eObject,
+    @Override
+	public boolean setPropertyValue( final EObject eObject,
                                      final Object value,
                                      final ItemPropertyDescriptor descriptor ) {
         if (eObject == null || descriptor == null) {
@@ -2341,7 +2417,8 @@ public class ModelEditorImpl implements ModelEditor {
      * @param value - Should be an instanceof EnterpriseDatatypeInfo
      * @return true if successful
      */
-    public boolean setEnterpriseDatatypePropertyValue( final EObject owner,
+    @Override
+	public boolean setEnterpriseDatatypePropertyValue( final EObject owner,
                                                        final Object object ) {
         if (owner == null || object == null || !(owner instanceof XSDSimpleTypeDefinition)
             || !(object instanceof EnterpriseDatatypeInfo)) {
@@ -2360,7 +2437,8 @@ public class ModelEditorImpl implements ModelEditor {
         final boolean isSignificant = true;
         final String operationDescription = ModelerCore.Util.getString("ModelEditorImpl.Set_{0}_1", object.toString()); //$NON-NLS-1$
         final TransactionRunnable runnable = new TransactionRunnable() {
-            public Object run( final UnitOfWork uow ) throws ModelerCoreException {
+            @Override
+			public Object run( final UnitOfWork uow ) throws ModelerCoreException {
                 final EditingDomain ed = cntr.getEditingDomain();
                 Command cmd = new EnterpriseDatatypeInfoSetCommand(ed, simpleType, newEdtInfo, oldEdtInfo);
                 executeCommandInTransaction(uow, object, cmd);
@@ -2402,7 +2480,8 @@ public class ModelEditorImpl implements ModelEditor {
      * @param owner - the owning EObject for the dom node.
      * @return true if successful
      */
-    public boolean unsetEnterpriseDatatypePropertyValue( final EObject owner ) {
+    @Override
+	public boolean unsetEnterpriseDatatypePropertyValue( final EObject owner ) {
         if (owner == null || !(owner instanceof XSDSimpleTypeDefinition)) {
             return false;
         }
@@ -2414,7 +2493,8 @@ public class ModelEditorImpl implements ModelEditor {
         final boolean isSignificant = true;
         final String operationDescription = ModelerCore.Util.getString("ModelEditorImpl.Set_{0}_1", owner.toString()); //$NON-NLS-1$
         final TransactionRunnable runnable = new TransactionRunnable() {
-            public Object run( final UnitOfWork uow ) throws ModelerCoreException {
+            @Override
+			public Object run( final UnitOfWork uow ) throws ModelerCoreException {
                 final EditingDomain ed = cntr.getEditingDomain();
                 Command cmd = new EnterpriseDatatypeInfoUnsetCommand(ed, simpleType, oldEdtInfo);
                 executeCommandInTransaction(uow, owner, cmd);
@@ -2439,7 +2519,8 @@ public class ModelEditorImpl implements ModelEditor {
      * @param propertyID String name of the sf
      * @return true if successful
      */
-    public boolean setPropertyValue( final EObject eObject,
+    @Override
+	public boolean setPropertyValue( final EObject eObject,
                                      final Object value,
                                      final Object feature ) {
         if (eObject == null || feature == null || !(feature instanceof EStructuralFeature)) {
@@ -2452,7 +2533,8 @@ public class ModelEditorImpl implements ModelEditor {
         final String operationDescription = ModelerCore.Util.getString("ModelEditorImpl.Set_{0}_1", sf.getName()); //$NON-NLS-1$
         final ContainerImpl cntr = getContainer();
         final TransactionRunnable runnable = new TransactionRunnable() {
-            public Object run( final UnitOfWork uow ) throws ModelerCoreException {
+            @Override
+			public Object run( final UnitOfWork uow ) throws ModelerCoreException {
                 final EditingDomain ed = cntr.getEditingDomain();
                 if (sf.isMany()) {
                     // Compute which values in the newValue are added and which values in the
@@ -2522,14 +2604,16 @@ public class ModelEditorImpl implements ModelEditor {
     /**
      * @see org.teiid.designer.core.ModelEditor#clone(org.eclipse.emf.ecore.EObject)
      */
-    public EObject clone( final EObject eObject ) throws ModelerCoreException {
+    @Override
+	public EObject clone( final EObject eObject ) throws ModelerCoreException {
         CoreArgCheck.isNotNull(eObject);
 
         final boolean isSignificant = true;
         final String operationDescription = ModelerCore.Util.getString("ModelEditorImpl.Clone_{0}_12", getPresentationValue(eObject)); //$NON-NLS-1$
         final ContainerImpl cntr = getContainer();
         final TransactionRunnable runnable = new TransactionRunnable() {
-            public Object run( final UnitOfWork uow ) throws ModelerCoreException {
+            @Override
+			public Object run( final UnitOfWork uow ) throws ModelerCoreException {
                 final EditingDomain ed = cntr.getEditingDomain();
                 final CloneCommand command = new CloneCommand(ed, eObject);
                 executeCommandInTransaction(uow, eObject, command);
@@ -2546,7 +2630,8 @@ public class ModelEditorImpl implements ModelEditor {
     /*
      * 
      */
-    public void cloneProject( final String originalProjectPath,
+    @Override
+	public void cloneProject( final String originalProjectPath,
                               final String clonedProjectPath ) throws IOException {
         cloneProject(originalProjectPath, clonedProjectPath, null);
     }
@@ -3328,7 +3413,8 @@ public class ModelEditorImpl implements ModelEditor {
     /**
      * @see org.teiid.designer.core.ModelEditor#cloneMultiple(org.eclipse.emf.ecore.EObject, int)
      */
-    public Collection cloneMultiple( final EObject eObject,
+    @Override
+	public Collection cloneMultiple( final EObject eObject,
                                      final int numClones ) throws ModelerCoreException {
         CoreArgCheck.isNotNull(eObject);
         CoreArgCheck.isPositive(numClones);
@@ -3337,7 +3423,8 @@ public class ModelEditorImpl implements ModelEditor {
         final String operationDescription = ModelerCore.Util.getString("ModelEditorImpl.Clone_{0}_12", getPresentationValue(eObject)); //$NON-NLS-1$
         final ContainerImpl cntr = getContainer();
         final TransactionRunnable runnable = new TransactionRunnable() {
-            public Object run( final UnitOfWork uow ) throws ModelerCoreException {
+            @Override
+			public Object run( final UnitOfWork uow ) throws ModelerCoreException {
                 final EditingDomain ed = cntr.getEditingDomain();
                 final Collection resultsList = new ArrayList();
                 for (int i = 0; i != numClones; ++i) {
@@ -3369,7 +3456,8 @@ public class ModelEditorImpl implements ModelEditor {
      * @param child
      * @return true if the child may be added to this parent
      */
-    public boolean isValidParent( final Object parent,
+    @Override
+	public boolean isValidParent( final Object parent,
                                   final EObject child ) {
         if (parent instanceof EObject) {
             EObject eParent = (EObject)parent;
@@ -3434,7 +3522,8 @@ public class ModelEditorImpl implements ModelEditor {
         return false;
     }
 
-    public boolean isValidPasteParent( final Object potentialParent ) {
+    @Override
+	public boolean isValidPasteParent( final Object potentialParent ) {
         final ContainerImpl cntr = getContainer();
 
         if (cntr == null) {
@@ -3825,7 +3914,8 @@ public class ModelEditorImpl implements ModelEditor {
     /**
      * @see org.teiid.designer.core.ModelEditor#getDescription(org.eclipse.emf.ecore.EObject)
      */
-    public String getDescription( final EObject eObject ) {
+    @Override
+	public String getDescription( final EObject eObject ) {
         CoreArgCheck.isNotNull(eObject);
         // Find the existing annotation object ...
         final Annotation annotation = getAnnotation(eObject, false);
@@ -3839,7 +3929,8 @@ public class ModelEditorImpl implements ModelEditor {
     /**
      * @see org.teiid.designer.core.ModelEditor#setDescription(org.eclipse.emf.ecore.EObject, java.lang.String)
      */
-    public void setDescription( final EObject eObject,
+    @Override
+	public void setDescription( final EObject eObject,
                                 final String desc ) throws ModelerCoreException {
         CoreArgCheck.isNotNull(eObject);
         if (eObject.eIsProxy()) {
@@ -3849,7 +3940,8 @@ public class ModelEditorImpl implements ModelEditor {
         final String operationDescription = ModelerCore.Util.getString("ModelEditorImpl.Set_Description_on_{0}_14", eObject.toString()); //$NON-NLS-1$
         final ContainerImpl cntr = getContainer();
         final TransactionRunnable runnable = new TransactionRunnable() {
-            public Object run( final UnitOfWork uow ) {
+            @Override
+			public Object run( final UnitOfWork uow ) {
                 // If the description is null ...
                 if (desc == null || desc.trim().length() == 0) {
                     // Find the existing annotation object ...
@@ -3879,14 +3971,16 @@ public class ModelEditorImpl implements ModelEditor {
     /**
      * @see org.teiid.designer.core.ModelEditor#findModelResource(org.eclipse.emf.ecore.resource.Resource)
      */
-    public ModelResource findModelResource( final Resource resource ) {
+    @Override
+	public ModelResource findModelResource( final Resource resource ) {
         return ModelerCore.getModelWorkspace().findModelResource(resource);
     }
 
     /**
      * @see org.teiid.designer.core.ModelEditor#findModelResource(EObject)
      */
-    public ModelResource findModelResource( final EObject eObject ) {
+    @Override
+	public ModelResource findModelResource( final EObject eObject ) {
         ModelResource modelResource = ModelerCore.getModelWorkspace().findModelResource(eObject);
         if (modelResource == null) {
             // See if the object is a transient diagram ...
@@ -3905,7 +3999,8 @@ public class ModelEditorImpl implements ModelEditor {
      * @See org.teiid.designer.core.ModelEditor#findResource(org.teiid.designer.core.container.Container,
      *      org.eclipse.emf.ecore.EObject)
      */
-    public Resource findResource( final Container container,
+    @Override
+	public Resource findResource( final Container container,
                                   final EObject eObject ) {
         CoreArgCheck.isNotNull(container);
         CoreArgCheck.isNotNull(eObject);
@@ -3915,7 +4010,8 @@ public class ModelEditorImpl implements ModelEditor {
     /*
      * @See org.teiid.designer.core.ModelEditor#findResource(org.teiid.designer.core.container.Container,org.eclipse.emf.ecore.EObject,boolean)
      */
-    public Resource findResource( final Container container,
+    @Override
+	public Resource findResource( final Container container,
                                   final EObject eObject,
                                   final boolean resolve ) {
         CoreArgCheck.isNotNull(eObject);
@@ -3939,7 +4035,8 @@ public class ModelEditorImpl implements ModelEditor {
     /**
      * @see org.teiid.designer.core.ModelEditor#findModelResource(org.eclipse.core.resources.IResource)
      */
-    public ModelResource findModelResource( final IFile resource ) throws ModelWorkspaceException {
+    @Override
+	public ModelResource findModelResource( final IFile resource ) throws ModelWorkspaceException {
         CoreArgCheck.isNotNull(resource);
         return (ModelResource)ModelWorkspaceManager.getModelWorkspaceManager().findModelWorkspaceItem(resource);
     }
@@ -3948,7 +4045,8 @@ public class ModelEditorImpl implements ModelEditor {
      * @see org.teiid.designer.core.ModelEditor#addModelImport(org.teiid.designer.core.resource.EmfResource,
      *      org.eclipse.emf.ecore.resource.Resource)
      */
-    public boolean addModelImport( final MMXmiResource resource,
+    @Override
+	public boolean addModelImport( final MMXmiResource resource,
                                    final Resource importedResource ) throws ModelerCoreException {
         if (resource != null && importedResource != null && resource != importedResource) {
             // If the resource is the same as this model's (same URI),
@@ -3986,7 +4084,8 @@ public class ModelEditorImpl implements ModelEditor {
      *      java.lang.String)
      * @since 5.0.2
      */
-    public ModelImport getExistingModelImportForLocation( final MMXmiResource resource,
+    @Override
+	public ModelImport getExistingModelImportForLocation( final MMXmiResource resource,
                                                           String someModelLocation ) {
         CoreArgCheck.isNotNull(resource);
         CoreArgCheck.isNotNull(someModelLocation);
@@ -4016,7 +4115,8 @@ public class ModelEditorImpl implements ModelEditor {
      *      org.eclipse.emf.ecore.resource.Resource)
      * @since 5.0.2
      */
-    public String createModelLocation( final MMXmiResource resource,
+    @Override
+	public String createModelLocation( final MMXmiResource resource,
                                        final Resource importedResource ) {
         CoreArgCheck.isNotNull(importedResource);
 
@@ -4093,7 +4193,8 @@ public class ModelEditorImpl implements ModelEditor {
      *      org.eclipse.emf.ecore.resource.Resource)
      * @since 4.3
      */
-    public ModelImport createModelImport( final MMXmiResource resource,
+    @Override
+	public ModelImport createModelImport( final MMXmiResource resource,
                                           final Resource importedResource ) {
         CoreArgCheck.isNotNull(importedResource);
 
@@ -4151,7 +4252,8 @@ public class ModelEditorImpl implements ModelEditor {
      *      org.eclipse.emf.ecore.resource.Resource)
      * @since 4.3
      */
-    public void updateModelImport( final ModelImport modelImport,
+    @Override
+	public void updateModelImport( final ModelImport modelImport,
                                    final Resource importedResource ) {
         CoreArgCheck.isNotNull(modelImport);
         CoreArgCheck.isNotNull(importedResource);
@@ -4185,7 +4287,8 @@ public class ModelEditorImpl implements ModelEditor {
      * @see org.teiid.designer.core.ModelEditor#removeModelImports(org.teiid.designer.core.resource.EmfResource,
      *      org.eclipse.emf.ecore.resource.Resource)
      */
-    public void removeModelImport( final MMXmiResource resource,
+    @Override
+	public void removeModelImport( final MMXmiResource resource,
                                    final Resource importedResource ) throws ModelerCoreException {
         if (resource != null && importedResource != null && resource != importedResource) {
 
@@ -4220,7 +4323,8 @@ public class ModelEditorImpl implements ModelEditor {
      *      org.eclipse.emf.ecore.resource.Resource)
      * @since 4.3
      */
-    public ModelImport findModelImport( final MMXmiResource resource,
+    @Override
+	public ModelImport findModelImport( final MMXmiResource resource,
                                         final Resource importedResource ) {
         CoreArgCheck.isNotNull(resource);
         if (importedResource == null || resource.getURI().isRelative() || importedResource.getURI().isRelative()) {
@@ -4302,7 +4406,8 @@ public class ModelEditorImpl implements ModelEditor {
     /**
      * @see org.teiid.designer.core.ModelEditor#getAnnotation(org.eclipse.emf.ecore.EObject, boolean)
      */
-    public Annotation getAnnotation( EObject eObject,
+    @Override
+	public Annotation getAnnotation( EObject eObject,
                                      boolean forceCreate ) {
         final Resource eObjectResource = eObject.eResource();
         if (eObjectResource instanceof MMXmiResource) {
@@ -4321,7 +4426,8 @@ public class ModelEditorImpl implements ModelEditor {
      * @see org.teiid.designer.core.ModelEditor#getAnnotation(org.teiid.designer.core.workspace.ModelResource,
      *      org.eclipse.emf.ecore.EObject, boolean)
      */
-    public Annotation getAnnotation( ModelResource modelResource,
+    @Override
+	public Annotation getAnnotation( ModelResource modelResource,
                                      EObject eObject,
                                      boolean forceCreate ) {
         return getAnnotation(eObject, forceCreate);
@@ -4330,7 +4436,8 @@ public class ModelEditorImpl implements ModelEditor {
     /**
      * @see org.teiid.designer.core.ModelEditor#getExtension(org.eclipse.emf.ecore.EObject)
      */
-    public EObject getExtension( EObject eObject ) throws ModelerCoreException {
+    @Override
+	public EObject getExtension( EObject eObject ) throws ModelerCoreException {
         CoreArgCheck.isNotNull(eObject);
 
         final EClass eClass = eObject.eClass();
@@ -4418,7 +4525,8 @@ public class ModelEditorImpl implements ModelEditor {
     /**
      * @see org.teiid.designer.core.ModelEditor#findModelResource(org.teiid.designer.metamodels.core.ModelImport)
      */
-    public ModelResource findModelResource( final ModelImport modelImport ) {
+    @Override
+	public ModelResource findModelResource( final ModelImport modelImport ) {
         CoreArgCheck.isNotNull(modelImport);
         String thePath = modelImport.getPath();
         if (thePath != null) {
@@ -4432,7 +4540,8 @@ public class ModelEditorImpl implements ModelEditor {
     /**
      * @see org.teiid.designer.core.ModelEditor#getURI(org.eclipse.emf.ecore.EObject)
      */
-    public URI getUri( final EObject object ) {
+    @Override
+	public URI getUri( final EObject object ) {
         CoreArgCheck.isNotNull(object);
 
         // If the object is a metamodel EClass then we need to return a URI based on the metamodel's
@@ -4461,7 +4570,8 @@ public class ModelEditorImpl implements ModelEditor {
      * 
      * @see org.teiid.designer.core.ModelEditor#getObjectID(org.eclipse.emf.ecore.EObject)
      */
-    public ObjectID getObjectID( final EObject object ) {
+    @Override
+	public ObjectID getObjectID( final EObject object ) {
         CoreArgCheck.isNotNull(object);
 
         try {
@@ -4487,7 +4597,8 @@ public class ModelEditorImpl implements ModelEditor {
      * 
      * @see org.teiid.designer.core.ModelEditor#getObjectIdString(org.eclipse.emf.ecore.EObject)
      */
-    public String getObjectIdString( EObject object ) {
+    @Override
+	public String getObjectIdString( EObject object ) {
         CoreArgCheck.isNotNull(object);
         return getContainer().getObjectManager().getObjectId(object);
     }
@@ -4497,7 +4608,8 @@ public class ModelEditorImpl implements ModelEditor {
      * 
      * @see org.teiid.designer.core.ModelEditor#setObjectID(org.eclipse.emf.ecore.EObject, com.metamatrix.core.id.ObjectID)
      */
-    public void setObjectID( EObject object,
+    @Override
+	public void setObjectID( EObject object,
                              ObjectID objectId ) {
         setObjectID(object, objectId.toString());
     }
@@ -4507,7 +4619,8 @@ public class ModelEditorImpl implements ModelEditor {
      * 
      * @see org.teiid.designer.core.ModelEditor#setObjectID(org.eclipse.emf.ecore.EObject, java.lang.String)
      */
-    public void setObjectID( EObject object,
+    @Override
+	public void setObjectID( EObject object,
                              String objectId ) {
         CoreArgCheck.isNotNull(object);
 
@@ -4559,7 +4672,8 @@ public class ModelEditorImpl implements ModelEditor {
     /**
      * @see org.teiid.designer.core.ModelEditor#findObjectID(java.lang.Object)
      */
-    public EObject findObject( final Object objectId ) {
+    @Override
+	public EObject findObject( final Object objectId ) {
         CoreArgCheck.isNotNull(objectId);
 
         // Look in the main container ...
@@ -4607,7 +4721,8 @@ public class ModelEditorImpl implements ModelEditor {
      * @see org.teiid.designer.core.ModelEditor#findObjectID(java.lang.Object,
      *      org.teiid.designer.core.workspace.ModelResource)
      */
-    public EObject findObject( final Object objectId,
+    @Override
+	public EObject findObject( final Object objectId,
                                final ModelResource resource,
                                final IProgressMonitor monitor ) throws ModelerCoreException {
         CoreArgCheck.isNotNull(objectId);
@@ -4622,7 +4737,8 @@ public class ModelEditorImpl implements ModelEditor {
     /**
      * @see org.teiid.designer.core.ModelEditor#getChangedObject(org.eclipse.emf.common.notify.Notification)
      */
-    public Object getChangedObject( final Notification notification ) {
+    @Override
+	public Object getChangedObject( final Notification notification ) {
         CoreArgCheck.isNotNull(notification);
         return notification.getNotifier();
     }
@@ -4631,7 +4747,8 @@ public class ModelEditorImpl implements ModelEditor {
      * @see org.teiid.designer.core.ModelEditor#findObjectByPath(org.eclipse.emf.ecore.resource.Resource,
      *      org.eclipse.core.runtime.IPath)
      */
-    public EObject findObjectByPath( final Resource resource,
+    @Override
+	public EObject findObjectByPath( final Resource resource,
                                      final IPath modelRelativePath ) {
         CoreArgCheck.isNotNull(resource);
         CoreArgCheck.isNotNull(modelRelativePath);
@@ -4670,7 +4787,8 @@ public class ModelEditorImpl implements ModelEditor {
      * @see org.teiid.designer.core.ModelEditor#findObjectByPath(org.teiid.designer.core.workspace.ModelResource,
      *      org.eclipse.core.runtime.IPath)
      */
-    public EObject findObjectByPath( final ModelResource resource,
+    @Override
+	public EObject findObjectByPath( final ModelResource resource,
                                      final IPath modelRelativePath ) throws ModelWorkspaceException {
         CoreArgCheck.isNotNull(resource);
         CoreArgCheck.isNotNull(modelRelativePath);
@@ -4681,7 +4799,8 @@ public class ModelEditorImpl implements ModelEditor {
     /**
      * @see org.teiid.designer.core.ModelEditor#getModelRelativatePath(org.eclipse.emf.ecore.EObject)
      */
-    public IPath getModelRelativePath( EObject object ) {
+    @Override
+	public IPath getModelRelativePath( EObject object ) {
         return getModelRelativePath(object, true);
     }
 
@@ -4689,7 +4808,8 @@ public class ModelEditorImpl implements ModelEditor {
      * @see org.teiid.designer.core.ModelEditor#getModelRelativePath(org.eclipse.emf.ecore.EObject, boolean)
      * @since 5.0.1
      */
-    public IPath getModelRelativePath( EObject object,
+    @Override
+	public IPath getModelRelativePath( EObject object,
                                        boolean includeUnnamedObjects ) {
         CoreArgCheck.isNotNull(object);
         return computeModelRelativePath(object, false, includeUnnamedObjects);
@@ -4698,7 +4818,8 @@ public class ModelEditorImpl implements ModelEditor {
     /**
      * @see org.teiid.designer.core.ModelEditor#getModelRelativatePathIncludingModel(org.eclipse.emf.ecore.EObject)
      */
-    public IPath getModelRelativePathIncludingModel( EObject object ) {
+    @Override
+	public IPath getModelRelativePathIncludingModel( EObject object ) {
         return getModelRelativePathIncludingModel(object, true);
     }
 
@@ -4706,7 +4827,8 @@ public class ModelEditorImpl implements ModelEditor {
      * @see org.teiid.designer.core.ModelEditor#getModelRelativePathIncludingModel(org.eclipse.emf.ecore.EObject, boolean)
      * @since 5.0.1
      */
-    public IPath getModelRelativePathIncludingModel( EObject object,
+    @Override
+	public IPath getModelRelativePathIncludingModel( EObject object,
                                                      boolean includeUnnamedObjects ) {
         CoreArgCheck.isNotNull(object);
         return computeModelRelativePath(object, true, includeUnnamedObjects);
@@ -4715,7 +4837,8 @@ public class ModelEditorImpl implements ModelEditor {
     /**
      * @see org.teiid.designer.core.ModelEditor#getFullPathToParent(org.eclipse.emf.ecore.EObject)
      */
-    public IPath getFullPathToParent( final EObject object ) {
+    @Override
+	public IPath getFullPathToParent( final EObject object ) {
         CoreArgCheck.isNotNull(object);
         // Get the path to the resource ...
         final Resource resource = object.eResource();
@@ -4799,7 +4922,8 @@ public class ModelEditorImpl implements ModelEditor {
         return name;
     }
 
-    public String getModelName( final EObject object ) {
+    @Override
+	public String getModelName( final EObject object ) {
         CoreArgCheck.isNotNull(object);
         if (object.eIsProxy()) {
             URI proxyUri = ((InternalEObject)object).eProxyURI();
@@ -4815,7 +4939,8 @@ public class ModelEditorImpl implements ModelEditor {
     /**
      * @see org.teiid.designer.core.ModelEditor#getModelName(org.eclipse.emf.ecore.resource.Resource)
      */
-    public String getModelName( Resource resource ) {
+    @Override
+	public String getModelName( Resource resource ) {
         CoreArgCheck.isNotNull(resource);
         // derive the model name from the EMF resource URI ...
         return getModelName(resource.getURI());
@@ -4830,7 +4955,8 @@ public class ModelEditorImpl implements ModelEditor {
     /**
      * @see org.teiid.designer.core.ModelEditor#getModelName(org.teiid.designer.core.workspace.ModelResource)
      */
-    public String getModelName( ModelResource modelResource ) {
+    @Override
+	public String getModelName( ModelResource modelResource ) {
         CoreArgCheck.isNotNull(modelResource);
         final IResource modelFile = modelResource.getResource();
         String modelName = null;
@@ -4861,7 +4987,8 @@ public class ModelEditorImpl implements ModelEditor {
      * @return
      * @since 4.3
      */
-    public Collection getAllContainers( Resource resource ) {
+    @Override
+	public Collection getAllContainers( Resource resource ) {
         if (resource == null || !(resource instanceof MMXmiResource)) return Collections.EMPTY_LIST;
 
         return ModelResourceContainerFactory.getAllContainers(resource, true);
@@ -4932,7 +5059,8 @@ public class ModelEditorImpl implements ModelEditor {
     /**
      * @see org.teiid.designer.core.ModelEditor#getModelContents(org.eclipse.emf.ecore.EObject)
      */
-    public ModelContents getModelContents( final EObject eObject ) {
+    @Override
+	public ModelContents getModelContents( final EObject eObject ) {
         CoreArgCheck.isNotNull(eObject);
         final Resource resource = eObject.eResource();
         return getModelContents(resource);
@@ -4941,7 +5069,8 @@ public class ModelEditorImpl implements ModelEditor {
     /**
      * @see org.teiid.designer.core.ModelEditor#getModelContents(org.eclipse.emf.ecore.resource.Resource)
      */
-    public ModelContents getModelContents( final Resource resource ) {
+    @Override
+	public ModelContents getModelContents( final Resource resource ) {
         CoreArgCheck.isNotNull(resource);
         if (resource instanceof MtkXmiResourceImpl) {
             return ((MtkXmiResourceImpl)resource).getModelContents();
@@ -4953,7 +5082,8 @@ public class ModelEditorImpl implements ModelEditor {
     /**
      * @see org.teiid.designer.core.ModelEditor#getModelContents(org.teiid.designer.core.workspace.ModelResource)
      */
-    public ModelContents getModelContents( final ModelResource modelResource ) {
+    @Override
+	public ModelContents getModelContents( final ModelResource modelResource ) {
         CoreArgCheck.isNotNull(modelResource);
         try {
             return ModelContents.getModelContents(modelResource);
@@ -4966,7 +5096,8 @@ public class ModelEditorImpl implements ModelEditor {
     /**
      * @see org.teiid.designer.core.ModelEditor#getModelAnnotation(org.eclipse.emf.ecore.EObject)
      */
-    public ModelAnnotation getModelAnnotation( final EObject eObject ) throws ModelerCoreException {
+    @Override
+	public ModelAnnotation getModelAnnotation( final EObject eObject ) throws ModelerCoreException {
         CoreArgCheck.isNotNull(eObject);
         final Resource resource = eObject.eResource();
         if (resource instanceof MMXmiResource) {

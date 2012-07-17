@@ -35,7 +35,8 @@ public class ModelResourceCollectorVisitor implements IResourceVisitor {
         this.modelResources = new ArrayList();
     }
 
-    public boolean visit( IResource resource ) {
+    @Override
+	public boolean visit( IResource resource ) {
         if (resource != null && resource instanceof IFile) {
             resources.add(resource);
             return false; // don't need to go deeper

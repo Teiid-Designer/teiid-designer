@@ -46,12 +46,14 @@ public class IndexUtil {
             this.monitor = monitor;
         }
 
-        public void beginTask( String name,
+        @Override
+		public void beginTask( String name,
                                int totalWork ) {
             monitor.beginTask(name, totalWork);
         }
 
-        public void worked( int work ) {
+        @Override
+		public void worked( int work ) {
             monitor.worked(work);
         }
     }

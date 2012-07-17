@@ -212,7 +212,8 @@ public class WsdlFileSystemResourcePage extends WizardResourceImportPage {
             /*
              * @see KeyListener.keyPressed
              */
-            public void keyPressed( KeyEvent e ) {
+            @Override
+			public void keyPressed( KeyEvent e ) {
                 // If there has been a key pressed then mark as dirty
                 entryChanged = true;
             }
@@ -220,7 +221,8 @@ public class WsdlFileSystemResourcePage extends WizardResourceImportPage {
             /*
              * @see KeyListener.keyReleased
              */
-            public void keyReleased( KeyEvent e ) {
+            @Override
+			public void keyReleased( KeyEvent e ) {
             }
         });
 
@@ -228,14 +230,16 @@ public class WsdlFileSystemResourcePage extends WizardResourceImportPage {
             /*
              * @see FocusListener.focusGained(FocusEvent)
              */
-            public void focusGained( FocusEvent e ) {
+            @Override
+			public void focusGained( FocusEvent e ) {
                 // Do nothing when getting focus
             }
 
             /*
              * @see FocusListener.focusLost(FocusEvent)
              */
-            public void focusLost( FocusEvent e ) {
+            @Override
+			public void focusLost( FocusEvent e ) {
                 // Clear the flag to prevent constant update
                 if (entryChanged) {
                     entryChanged = false;
@@ -614,7 +618,8 @@ public class WsdlFileSystemResourcePage extends WizardResourceImportPage {
         final MinimizedFileSystemElement[] results = new MinimizedFileSystemElement[1];
 
         BusyIndicator.showWhile(getShell().getDisplay(), new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 // Create the root element from the supplied file system object
                 results[0] = createRootElement(rootFileSystemObject, structureProvider);
             }
@@ -672,7 +677,8 @@ public class WsdlFileSystemResourcePage extends WizardResourceImportPage {
 
         final IElementFilter filter = new IElementFilter() {
 
-            public void filterElements( Collection files,
+            @Override
+			public void filterElements( Collection files,
                                         IProgressMonitor monitor ) throws InterruptedException {
                 if (files == null) {
                     throw new InterruptedException();
@@ -684,7 +690,8 @@ public class WsdlFileSystemResourcePage extends WizardResourceImportPage {
                 }
             }
 
-            public void filterElements( Object[] files,
+            @Override
+			public void filterElements( Object[] files,
                                         IProgressMonitor monitor ) throws InterruptedException {
                 if (files == null) {
                     throw new InterruptedException();
@@ -709,7 +716,8 @@ public class WsdlFileSystemResourcePage extends WizardResourceImportPage {
         };
 
         IRunnableWithProgress runnable = new IRunnableWithProgress() {
-            public void run( final IProgressMonitor monitor ) throws InterruptedException {
+            @Override
+			public void run( final IProgressMonitor monitor ) throws InterruptedException {
                 handleGetSelectedResources(filter, monitor);
             }
         };

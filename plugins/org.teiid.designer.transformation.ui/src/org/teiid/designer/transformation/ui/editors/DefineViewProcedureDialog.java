@@ -18,7 +18,6 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.viewers.ILabelProvider;
@@ -377,6 +376,7 @@ public class DefineViewProcedureDialog extends TitleAreaDialog implements
 	 * @see org.teiid.core.event.IChangeListener#stateChanged(org.teiid.core.event.IChangeNotifier)
 	 * @since 5.5.3
 	 */
+	@Override
 	public void stateChanged(IChangeNotifier theSource) {
 		updateState();
 	}
@@ -417,8 +417,8 @@ public class DefineViewProcedureDialog extends TitleAreaDialog implements
 		ModelWorkspaceDialog sdDialog = createViewProcedureSelector();
 
 		// add filters
-		((ModelWorkspaceDialog) sdDialog).addFilter(new ClosedProjectFilter());
-		((ModelWorkspaceDialog) sdDialog).addFilter(new SingleProjectFilter(
+		sdDialog.addFilter(new ClosedProjectFilter());
+		sdDialog.addFilter(new SingleProjectFilter(
 				this.designerProperties));
 
 		sdDialog.open();
@@ -472,7 +472,7 @@ public class DefineViewProcedureDialog extends TitleAreaDialog implements
 
 			WizardDialog dialog = new WizardDialog(iww.getShell(), wizard);
 			int result = dialog.open();
-			if (result == Dialog.OK) {
+			if (result == Window.OK) {
 				successful = true;
 			}
 		} catch (Exception e) {
@@ -503,8 +503,8 @@ public class DefineViewProcedureDialog extends TitleAreaDialog implements
 		ModelWorkspaceDialog sdDialog = createViewModelSelector();
 
 		// add filters
-		((ModelWorkspaceDialog) sdDialog).addFilter(new ClosedProjectFilter());
-		((ModelWorkspaceDialog) sdDialog).addFilter(new SingleProjectFilter(
+		sdDialog.addFilter(new ClosedProjectFilter());
+		sdDialog.addFilter(new SingleProjectFilter(
 				this.designerProperties));
 
 		sdDialog.open();
@@ -535,6 +535,7 @@ public class DefineViewProcedureDialog extends TitleAreaDialog implements
 		result.setInput(ModelerCore.getWorkspace().getRoot());
 
 		result.setValidator(new ISelectionStatusValidator() {
+			@Override
 			public IStatus validate(Object[] selection) {
 				boolean ok = false;
 				if (selection != null && selection.length == 1
@@ -573,6 +574,7 @@ public class DefineViewProcedureDialog extends TitleAreaDialog implements
 		result.setInput(ModelerCore.getWorkspace().getRoot());
 
 		result.setValidator(new ISelectionStatusValidator() {
+			@Override
 			public IStatus validate(Object[] selection) {
 				boolean ok = false;
 				if (selection != null && selection.length == 1 && selection[0] instanceof IResource) {

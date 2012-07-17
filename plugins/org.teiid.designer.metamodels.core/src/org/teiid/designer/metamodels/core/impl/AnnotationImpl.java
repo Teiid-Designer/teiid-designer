@@ -129,7 +129,8 @@ public class AnnotationImpl extends EObjectImpl implements Annotation {
      * 
      * @generated
      */
-    public String getDescription() {
+    @Override
+	public String getDescription() {
         return description;
     }
 
@@ -138,7 +139,8 @@ public class AnnotationImpl extends EObjectImpl implements Annotation {
      * 
      * @generated
      */
-    public void setDescription( String newDescription ) {
+    @Override
+	public void setDescription( String newDescription ) {
         String oldDescription = description;
         description = newDescription;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, CorePackage.ANNOTATION__DESCRIPTION,
@@ -150,7 +152,8 @@ public class AnnotationImpl extends EObjectImpl implements Annotation {
      * 
      * @generated
      */
-    public EList getKeywords() {
+    @Override
+	public EList getKeywords() {
         if (keywords == null) {
             keywords = new EDataTypeUniqueEList(String.class, this, CorePackage.ANNOTATION__KEYWORDS);
         }
@@ -162,7 +165,8 @@ public class AnnotationImpl extends EObjectImpl implements Annotation {
      * 
      * @generated
      */
-    public EObject getAnnotatedObject() {
+    @Override
+	public EObject getAnnotatedObject() {
         if (annotatedObject != null && annotatedObject.eIsProxy()) {
             EObject oldAnnotatedObject = annotatedObject;
             annotatedObject = eResolveProxy((InternalEObject)annotatedObject);
@@ -189,7 +193,8 @@ public class AnnotationImpl extends EObjectImpl implements Annotation {
      * 
      * @generated NOT
      */
-    public void setAnnotatedObject( EObject newAnnotatedObject ) {
+    @Override
+	public void setAnnotatedObject( EObject newAnnotatedObject ) {
         EObject oldAnnotatedObject = annotatedObject;
         // Start customized code
         final AnnotationContainer annContainer = this.getAnnotationContainer();
@@ -225,7 +230,8 @@ public class AnnotationImpl extends EObjectImpl implements Annotation {
      * 
      * @generated
      */
-    public EObject getExtensionObject() {
+    @Override
+	public EObject getExtensionObject() {
         return extensionObject;
     }
 
@@ -253,7 +259,8 @@ public class AnnotationImpl extends EObjectImpl implements Annotation {
      * 
      * @generated
      */
-    public void setExtensionObject( EObject newExtensionObject ) {
+    @Override
+	public void setExtensionObject( EObject newExtensionObject ) {
         if (newExtensionObject != extensionObject) {
             NotificationChain msgs = null;
             if (extensionObject != null) msgs = ((InternalEObject)extensionObject).eInverseRemove(this,
@@ -278,7 +285,8 @@ public class AnnotationImpl extends EObjectImpl implements Annotation {
      * 
      * @generated
      */
-    public EMap getTags() {
+    @Override
+	public EMap getTags() {
         if (tags == null) {
             tags = new EcoreEMap(EcorePackage.eINSTANCE.getEStringToStringMapEntry(), EStringToStringMapEntryImpl.class, this,
                                  CorePackage.ANNOTATION__TAGS);
@@ -291,7 +299,8 @@ public class AnnotationImpl extends EObjectImpl implements Annotation {
      * 
      * @generated
      */
-    public AnnotationContainer getAnnotationContainer() {
+    @Override
+	public AnnotationContainer getAnnotationContainer() {
         if (eContainerFeatureID != CorePackage.ANNOTATION__ANNOTATION_CONTAINER) return null;
         return (AnnotationContainer)eContainer;
     }
@@ -301,7 +310,8 @@ public class AnnotationImpl extends EObjectImpl implements Annotation {
      * 
      * @generated
      */
-    public void setAnnotationContainer( AnnotationContainer newAnnotationContainer ) {
+    @Override
+	public void setAnnotationContainer( AnnotationContainer newAnnotationContainer ) {
         if (newAnnotationContainer != eContainer
             || (eContainerFeatureID != CorePackage.ANNOTATION__ANNOTATION_CONTAINER && newAnnotationContainer != null)) {
             if (EcoreUtil.isAncestor(this, newAnnotationContainer)) throw new IllegalArgumentException(

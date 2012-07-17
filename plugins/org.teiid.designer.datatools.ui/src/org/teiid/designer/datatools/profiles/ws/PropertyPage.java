@@ -27,8 +27,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.teiid.designer.datatools.ui.DatatoolsUiConstants;
 import org.teiid.designer.datatools.ui.DatatoolsUiPlugin;
+import org.teiid.designer.ui.common.ICredentialsCommon;
 import org.teiid.designer.ui.common.ICredentialsCommon.SecurityType;
-
 
 public class PropertyPage extends ProfileDetailsPropertyPage implements
 		IContextProvider, DatatoolsUiConstants {
@@ -227,17 +227,17 @@ public class PropertyPage extends ProfileDetailsPropertyPage implements
     private void initControls() {
         IConnectionProfile profile = getConnectionProfile();
         Properties props = profile.getBaseProperties();
-        if (null != props.get(IWSProfileConstants.USERNAME_PROP_ID)) {
-            usernameText.setText((String)props.get(IWSProfileConstants.USERNAME_PROP_ID));
+        if (null != props.get(ICredentialsCommon.USERNAME_PROP_ID)) {
+            usernameText.setText((String)props.get(ICredentialsCommon.USERNAME_PROP_ID));
         }
-        if (null != props.get(IWSProfileConstants.PASSWORD_PROP_ID)) {
-            passwordText.setText((String)props.get(IWSProfileConstants.PASSWORD_PROP_ID));
+        if (null != props.get(ICredentialsCommon.PASSWORD_PROP_ID)) {
+            passwordText.setText((String)props.get(ICredentialsCommon.PASSWORD_PROP_ID));
         }
         if (null != props.get(IWSProfileConstants.URL_PROP_ID)) {
             urlText.setText((String)props.get(IWSProfileConstants.URL_PROP_ID));
         }
-        if (null != props.get(IWSProfileConstants.SECURITY_TYPE_ID)) {
-            securityText.setText((String)props.get(IWSProfileConstants.SECURITY_TYPE_ID));
+        if (null != props.get(ICredentialsCommon.SECURITY_TYPE_ID)) {
+            securityText.setText((String)props.get(ICredentialsCommon.SECURITY_TYPE_ID));
         }
     }
 
@@ -253,9 +253,9 @@ public class PropertyPage extends ProfileDetailsPropertyPage implements
             result = new Properties();
         }
         result.setProperty(IWSProfileConstants.URL_PROP_ID, urlText.getText());
-        result.setProperty(IWSProfileConstants.SECURITY_TYPE_ID, securityText.getText());
-        result.setProperty(IWSProfileConstants.USERNAME_PROP_ID, usernameText.getText());
-        result.setProperty(IWSProfileConstants.PASSWORD_PROP_ID, passwordText.getText());
+        result.setProperty(ICredentialsCommon.SECURITY_TYPE_ID, securityText.getText());
+        result.setProperty(ICredentialsCommon.USERNAME_PROP_ID, usernameText.getText());
+        result.setProperty(ICredentialsCommon.PASSWORD_PROP_ID, passwordText.getText());
         return result;
     }
 

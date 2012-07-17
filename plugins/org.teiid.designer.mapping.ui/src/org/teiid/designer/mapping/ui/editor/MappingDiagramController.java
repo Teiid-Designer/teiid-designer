@@ -111,7 +111,8 @@ public class MappingDiagramController
         diagramEditor.getModelObjectSelectionProvider().addSelectionChangedListener(documentController);
     }
 
-    public void setDiagramEditor( DiagramEditor editor ) {
+    @Override
+	public void setDiagramEditor( DiagramEditor editor ) {
         diagramEditor = editor;
     }
 
@@ -139,7 +140,8 @@ public class MappingDiagramController
      * @see org.eclipse.ui.ISelectionListener#selectionChanged(org.eclipse.ui.IWorkbenchPart,
      *      org.eclipse.jface.viewers.ISelection)
      */
-    public void selectionChanged( IWorkbenchPart part,
+    @Override
+	public void selectionChanged( IWorkbenchPart part,
                                   ISelection selection ) {
         // System.out.println("[MappingDiagramController.selectionChanged(IWorkbenchPart part, ISelection selection)] TOP!!!");
         List selectedEObjects = SelectionUtilities.getSelectedEObjects(selection);
@@ -151,7 +153,8 @@ public class MappingDiagramController
     /**
      * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
      */
-    public void selectionChanged( SelectionChangedEvent event ) {
+    @Override
+	public void selectionChanged( SelectionChangedEvent event ) {
         // System.out.println("[MappingDiagramController.selectionChanged(SelectionChangedEvent event)] TOP!!!");
         ISelection selection = event.getSelection();
         List selectedEObjects = SelectionUtilities.getSelectedEObjects(selection);
@@ -167,7 +170,8 @@ public class MappingDiagramController
     /**
      * @see org.teiid.designer.diagram.ui.editor.DiagramController#wireDiagram(org.teiid.designer.metamodels.diagram.Diagram)
      */
-    public void wireDiagram( Diagram theInput ) {
+    @Override
+	public void wireDiagram( Diagram theInput ) {
         // System.out.println("[MappingDiagramController.wireDiagram] TOP!!!");
         try {
             currentDiagram = theInput;
@@ -280,7 +284,8 @@ public class MappingDiagramController
         if (dclDocumentTreeDoubleClickListener == null) {
             dclDocumentTreeDoubleClickListener = new IDoubleClickListener() {
 
-                public void doubleClick( DoubleClickEvent event ) {
+                @Override
+				public void doubleClick( DoubleClickEvent event ) {
 
                     IStructuredSelection sel = (IStructuredSelection)event.getSelection();
                     Object element = sel.getFirstElement();
@@ -386,7 +391,8 @@ public class MappingDiagramController
         return iResult;
     }
 
-    public void deactivate() {
+    @Override
+	public void deactivate() {
         diagramEditor.getModelObjectSelectionProvider().removeSelectionChangedListener(documentController);
 
         removeVerticalScrollListener();
@@ -414,7 +420,8 @@ public class MappingDiagramController
 
     }
 
-    public void dispose() {
+    @Override
+	public void dispose() {
         // Tell DocumentTreeController to clean up it's listeners....
         // Defect 22290 reflects memory (leaks) issues within designer.
         // Need to tell controller to clean up somehow. Added method dispose() to controller.
@@ -622,13 +629,15 @@ public class MappingDiagramController
 
             if (nVisibleObjects < 60) {
                 UiBusyIndicator.showWhile(Display.getCurrent(), new Runnable() {
-                    public void run() {
+                    @Override
+					public void run() {
                         refreshDiagram(null, reconcileMappingClasses);
                     }
                 });
             } else {
                 final IRunnableWithProgress op = new IRunnableWithProgress() {
-                    public void run( final IProgressMonitor monitor ) {
+                    @Override
+					public void run( final IProgressMonitor monitor ) {
                         monitor.beginTask(Util.getString(PREFIX + "taskMappingDiagram"), 100); //$NON-NLS-1$
 
                         diagramEditor.getDiagramViewForm().setRedraw(false);
@@ -660,7 +669,8 @@ public class MappingDiagramController
             final DiagramModelNode diagramNode = diagramEditor.getCurrentModel();
             if (thisDiagram != null && diagramNode != null) {
                 UiBusyIndicator.showWhile(Display.getCurrent(), new Runnable() {
-                    public void run() {
+                    @Override
+					public void run() {
                         MappingAdapterFilter mappingFilter = documentController.getMappingAdapterFilter();
                         MappingDiagramModelFactory modelFactory = (MappingDiagramModelFactory)DiagramUiPlugin.getDiagramTypeManager().getDiagram(PluginConstants.MAPPING_DIAGRAM_TYPE_ID).getModelFactory();
                         modelFactory.resetExtentLocations(diagramNode, thisDiagram, mappingFilter, tempY);
@@ -674,7 +684,8 @@ public class MappingDiagramController
     public void resetExtentLocationsFromDocument( int newY ) {
         final int tempY = newY;
         UiBusyIndicator.showWhile(Display.getCurrent(), new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 // System.out.println("[MappingtDiagramConotroller.resetExtentLocationsFromDocument$run]");
                 treeYOrigin = tempY;
 
@@ -697,7 +708,8 @@ public class MappingDiagramController
     public void resetExtentLocationsFromDiagram( int newY ) { // NO_UCD
         final int tempY = newY;
         UiBusyIndicator.showWhile(Display.getCurrent(), new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 // System.out.println("[MappingtDiagramConotroller.resetExtentLocationsFromDiagram$run]");
                 scrollBarYPosition = tempY;
 
@@ -765,7 +777,8 @@ public class MappingDiagramController
 
         if (coordinateListener == null) {
             coordinateListener = new CoordinateListener() {
-                public void coordinateSystemChanged( IFigure f ) {
+                @Override
+				public void coordinateSystemChanged( IFigure f ) {
                     // System.out.println("[MappingDiagramController.addCoordinateControlListener$coordinateSystemChanged]");
                     documentController.resetExtentsFromDocument();
                 }
@@ -788,14 +801,16 @@ public class MappingDiagramController
     /**
      * @see org.teiid.designer.diagram.ui.editor.DiagramController#getSelectionSource()
      */
-    public ISelectionProvider getSelectionSource() {
+    @Override
+	public ISelectionProvider getSelectionSource() {
         return this.documentController;
     }
 
     /**
      * @see org.teiid.designer.diagram.ui.editor.DiagramController#handleNotification(org.eclipse.emf.common.notify.Notification)
      */
-    public void handleNotification( Notification notification ) {
+    @Override
+	public void handleNotification( Notification notification ) {
         if (notificationHandler != null) notificationHandler.handleNotification(notification);
     }
 
@@ -822,7 +837,8 @@ public class MappingDiagramController
     /**
      * @see org.teiid.designer.diagram.ui.editor.DiagramController#isControllerOK(org.teiid.designer.metamodels.diagram.Diagram)
      */
-    public boolean maintainControl( Diagram newDiagram ) {
+    @Override
+	public boolean maintainControl( Diagram newDiagram ) {
         boolean isSameDocument = false;
         try {
             // Let's set mapping type;
@@ -849,7 +865,8 @@ public class MappingDiagramController
         return isSameDocument;
     }
 
-    public void rewireDiagram( Diagram newDiagram ) {
+    @Override
+	public void rewireDiagram( Diagram newDiagram ) {
         if (newDiagram.getType() != null && newDiagram.getType().equals(PluginConstants.MAPPING_TRANSFORMATION_DIAGRAM_TYPE_ID)) setMappingType(PluginConstants.DETAILED_MAPPING);
         else setMappingType(PluginConstants.COARSE_MAPPING);
 
@@ -933,14 +950,16 @@ public class MappingDiagramController
     /**
      * @see org.teiid.designer.diagram.ui.editor.DiagramController#clearDiagramSelection()
      */
-    public void clearDiagramSelection() {
+    @Override
+	public void clearDiagramSelection() {
         diagramEditor.getDiagramViewer().clearAllSelections(false);
     }
 
     /**
      * @see org.teiid.designer.diagram.ui.editor.DiagramController#updateForAutoLayout()
      */
-    public void updateForAutoLayout() {
+    @Override
+	public void updateForAutoLayout() {
         autoScrollToReveal();
 
         // jh Defect 21263 - call resetExtents on tree
@@ -950,7 +969,8 @@ public class MappingDiagramController
     /**
      * @see org.eclipse.swt.events.ControlListener#controlMoved(org.eclipse.swt.events.ControlEvent)
      */
-    public void controlMoved( ControlEvent e ) {
+    @Override
+	public void controlMoved( ControlEvent e ) {
         // Don't care about anything here.
 
     }
@@ -958,7 +978,8 @@ public class MappingDiagramController
     /**
      * @see org.eclipse.swt.events.ControlListener#controlResized(org.eclipse.swt.events.ControlEvent)
      */
-    public void controlResized( ControlEvent e ) {
+    @Override
+	public void controlResized( ControlEvent e ) {
         // We need to tell the diagram to update from it's current scroll position
         if (diagramEditor.getControl() != null && !diagramEditor.getControl().isDisposed()) {
             documentController.resetExtentsFromDocument();
@@ -969,7 +990,8 @@ public class MappingDiagramController
      * @see org.teiid.designer.diagram.ui.editor.DiagramController#handleZoomChanged()
      * @since 4.2
      */
-    public void handleZoomChanged() {
+    @Override
+	public void handleZoomChanged() {
         if (diagramEditor.getControl() != null && !diagramEditor.getControl().isDisposed()) {
             documentController.resetExtentsFromDocument();
         }
@@ -979,7 +1001,8 @@ public class MappingDiagramController
         return currentDiagram;
     }
 
-    public void notifyElementsRevealed( Object oSource,
+    @Override
+	public void notifyElementsRevealed( Object oSource,
                                         List lstElements ) {
         if (bSynchronizeInProgress) {
             return;
@@ -992,7 +1015,8 @@ public class MappingDiagramController
         }
     }
 
-    public boolean isRevealHideBehaviorEnabled() {
+    @Override
+	public boolean isRevealHideBehaviorEnabled() {
         boolean bFeatureIsOn = MappingDiagramUtil.getCurrentMappingDiagramBehavior().getSyncTreeAndDiagramState();
         return bFeatureIsOn;
     }
@@ -1001,7 +1025,8 @@ public class MappingDiagramController
         return this;
     }
 
-    public void notifyElementsHidden( Object oSource,
+    @Override
+	public void notifyElementsHidden( Object oSource,
                                       List lstElements ) {
         if (bSynchronizeInProgress) {
             return;

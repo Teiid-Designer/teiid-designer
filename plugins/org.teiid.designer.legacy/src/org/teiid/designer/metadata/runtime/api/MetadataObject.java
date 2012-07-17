@@ -55,7 +55,8 @@ public interface MetadataObject extends java.io.Serializable{
      * Returns a string representing the current state of the object.
      * @return the string representation of this instance.
      */
-    String toString();
+    @Override
+	String toString();
 
     /**
      * Returns true if the specified object is semantically equal to this instance.
@@ -64,7 +65,8 @@ public interface MetadataObject extends java.io.Serializable{
      * @param obj the object that this instance is to be compared to.
      * @return whether the object is equal to this object.
      */
-    boolean equals(Object obj);
+    @Override
+	boolean equals(Object obj);
 
     /**
      * Return a deep cloned instance of this object.  Subclasses must override

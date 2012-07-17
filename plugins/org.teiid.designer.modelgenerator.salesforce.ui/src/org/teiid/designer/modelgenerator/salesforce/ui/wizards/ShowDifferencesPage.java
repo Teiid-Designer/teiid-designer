@@ -120,7 +120,7 @@ public class ShowDifferencesPage extends AbstractWizardPage
                 Throwable cause = e.getCause();
                 Shell shell = this.getShell();
                 Status status = new Status(IStatus.ERROR, PLUGIN_ID, 0, cause.getLocalizedMessage(), cause);
-                System.err.println("cause message="+cause.getLocalizedMessage());
+                System.err.println("cause message="+cause.getLocalizedMessage()); //$NON-NLS-1$
                 ErrorDialog.openError(shell,
                                       getString("dialog.dataModelCreationError.title"), cause.getLocalizedMessage(), status); //$NON-NLS-1$  
                 super.setVisible(false);

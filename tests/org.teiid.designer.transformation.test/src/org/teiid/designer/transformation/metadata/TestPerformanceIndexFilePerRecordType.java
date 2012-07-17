@@ -366,11 +366,13 @@ public class TestPerformanceIndexFilePerRecordType extends TestCase {
             nc = numColumns;
         }
 
-        public String[] getFileTypes() {
+        @Override
+		public String[] getFileTypes() {
             return null;
         }
 
-        public void index( IDocument document,
+        @Override
+		public void index( IDocument document,
                            IIndexerOutput output ) {
             TestDocument testDoc = (TestDocument)document;
             String indexFileName = testDoc.getIndexFileName();
@@ -433,10 +435,12 @@ public class TestPerformanceIndexFilePerRecordType extends TestCase {
             }
         }
 
-        public void setFileTypes( String[] fileTypes ) {
+        @Override
+		public void setFileTypes( String[] fileTypes ) {
         }
 
-        public boolean shouldIndex( IDocument document ) {
+        @Override
+		public boolean shouldIndex( IDocument document ) {
             return true;
         }
     }

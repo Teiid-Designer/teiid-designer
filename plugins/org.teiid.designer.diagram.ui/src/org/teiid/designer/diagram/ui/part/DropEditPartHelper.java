@@ -29,7 +29,8 @@ public abstract class DropEditPartHelper implements
      * @see org.teiid.designer.diagram.ui.part.DropEditPart#drop(org.eclipse.draw2d.geometry.Point, java.util.List)
      * @since 4.3
      */
-    public void drop(Point dropPoint,
+    @Override
+	public void drop(Point dropPoint,
                      List dropList) {
     }
 
@@ -37,14 +38,16 @@ public abstract class DropEditPartHelper implements
      * @see org.teiid.designer.diagram.ui.part.DropEditPart#hilite(boolean)
      * @since 4.3
      */
-    public void hilite(boolean hilite) {
+    @Override
+	public void hilite(boolean hilite) {
     }
 
     /** 
      * @see org.teiid.designer.diagram.ui.part.DropEditPart#getLastHoverPoint()
      * @since 4.3
      */
-    public Point getLastHoverPoint() {
+    @Override
+	public Point getLastHoverPoint() {
         return null;
     }
 
@@ -52,7 +55,8 @@ public abstract class DropEditPartHelper implements
      * @see org.teiid.designer.diagram.ui.part.DropEditPart#setLastHoverPoint(org.eclipse.draw2d.geometry.Point)
      * @since 4.3
      */
-    public void setLastHoverPoint(Point lastHoverPoint) {
+    @Override
+	public void setLastHoverPoint(Point lastHoverPoint) {
     }
 
 }

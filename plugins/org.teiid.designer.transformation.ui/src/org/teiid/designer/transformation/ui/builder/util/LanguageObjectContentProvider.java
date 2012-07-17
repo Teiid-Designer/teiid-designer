@@ -52,7 +52,8 @@ public class LanguageObjectContentProvider implements ITreeContentProvider, UiCo
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.IContentProvider#dispose()
      */
-    public void dispose() {
+    @Override
+	public void dispose() {
     }
 
     public Object getChildAt( int theIndex,
@@ -146,7 +147,8 @@ public class LanguageObjectContentProvider implements ITreeContentProvider, UiCo
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
      */
-    public Object[] getChildren( Object theParent ) {
+    @Override
+	public Object[] getChildren( Object theParent ) {
         Object[] result = null;
 
         if (theParent != null) {
@@ -162,14 +164,16 @@ public class LanguageObjectContentProvider implements ITreeContentProvider, UiCo
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
      */
-    public Object[] getElements( Object theInputElement ) {
+    @Override
+	public Object[] getElements( Object theInputElement ) {
         return roots;
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object)
      */
-    public Object getParent( Object theElement ) {
+    @Override
+	public Object getParent( Object theElement ) {
         return getParent(langObj, theElement);
     }
 
@@ -208,14 +212,16 @@ public class LanguageObjectContentProvider implements ITreeContentProvider, UiCo
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(java.lang.Object)
      */
-    public boolean hasChildren( Object theElement ) {
+    @Override
+	public boolean hasChildren( Object theElement ) {
         return getChildren(theElement).length > 0;
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
      */
-    public void inputChanged( Viewer theViewer,
+    @Override
+	public void inputChanged( Viewer theViewer,
                               Object theOldInput,
                               Object theNewInput ) {
         // theNewInput is null when disposing of the view

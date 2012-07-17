@@ -52,14 +52,16 @@ public class StyleFromUrlStream implements Style {
     /* (non-Javadoc)
      * @See org.teiid.designer.ddl.Style#getName()
      */
-    public String getName() {
+    @Override
+	public String getName() {
         return name;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.ddl.Style#getDescription()
      */
-    public String getDescription() {
+    @Override
+	public String getDescription() {
         return description;
     }
 
@@ -73,7 +75,8 @@ public class StyleFromUrlStream implements Style {
     /* (non-Javadoc)
      * @see Style#getInputStream()
      */
-    public InputStream getInputStream() throws IOException, TeiidException {
+    @Override
+	public InputStream getInputStream() throws IOException, TeiidException {
         // first, try to load them out of a jar
         final String xsltURL = getXsltUrl();
         final URL url = new URL(this.xsltUrl);
@@ -96,7 +99,8 @@ public class StyleFromUrlStream implements Style {
     /* (non-Javadoc)
      * @see Style#getStreamSource()
      */
-    public StreamSource getStreamSource() throws IOException, TeiidException {
+    @Override
+	public StreamSource getStreamSource() throws IOException, TeiidException {
         final InputStream stream = getInputStream();
         return new StreamSource(stream);
     }

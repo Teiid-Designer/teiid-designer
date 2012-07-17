@@ -20,7 +20,8 @@ public class XsdSqlAspectFactoryImpl implements MetamodelAspectFactory {
     
     private XsdSimpleTypeDefinitionAspect sdtAspect;
     
-    public MetamodelAspect create(EClassifier classifier, MetamodelEntity entity) {
+    @Override
+	public MetamodelAspect create(EClassifier classifier, MetamodelEntity entity) {
         switch (classifier.getClassifierID()) {
             case XSDPackage.XSD_ANNOTATION: return null;
             case XSDPackage.XSD_ATTRIBUTE_DECLARATION: return null;

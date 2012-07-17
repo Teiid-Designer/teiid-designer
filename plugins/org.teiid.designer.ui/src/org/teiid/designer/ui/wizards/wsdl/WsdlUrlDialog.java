@@ -146,10 +146,12 @@ public class WsdlUrlDialog extends Dialog implements IHelpContextIds, UiConstant
         }
 
         this.btnOk.addSelectionListener(new SelectionListener() {
-            public void widgetSelected( SelectionEvent theEvent ) {
+            @Override
+			public void widgetSelected( SelectionEvent theEvent ) {
             }
 
-            public void widgetDefaultSelected( SelectionEvent theEvent ) {
+            @Override
+			public void widgetDefaultSelected( SelectionEvent theEvent ) {
                 okPressed();
             }
         });
@@ -221,7 +223,8 @@ public class WsdlUrlDialog extends Dialog implements IHelpContextIds, UiConstant
         Text txf = new Text(panel, SWT.BORDER);
         txf.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         txf.addModifyListener(new ModifyListener() {
-            public void modifyText( ModifyEvent theEvent ) {
+            @Override
+			public void modifyText( ModifyEvent theEvent ) {
                 handleModifyText(theEvent);
             }
         });
@@ -374,7 +377,8 @@ public class WsdlUrlDialog extends Dialog implements IHelpContextIds, UiConstant
          * @see org.eclipse.jface.viewers.ICellEditorValidator#isValid(java.lang.Object)
          * @since 4.3
          */
-        public String isValid( Object theValue ) {
+        @Override
+		public String isValid( Object theValue ) {
             String result = null;
 
             if (theValue instanceof String) {

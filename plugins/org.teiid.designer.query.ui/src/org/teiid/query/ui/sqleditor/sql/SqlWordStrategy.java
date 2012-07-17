@@ -21,12 +21,14 @@ public class SqlWordStrategy implements IFormattingStrategy {
 	/**
 	 * @see org.eclipse.jface.text.formatter.IFormattingStrategy#formatterStarts(String)
 	 */
+	@Override
 	public void formatterStarts(String initialIndentation) {
 	}
 
 	/**
 	 * @see org.eclipse.jface.text.formatter.IFormattingStrategy#format(String, boolean, String, int[])
 	 */
+	@Override
 	public String format(
 		String content,
 		boolean isLineStart,
@@ -68,6 +70,7 @@ public class SqlWordStrategy implements IFormattingStrategy {
     /**
      * @see org.eclipse.jface.text.formatter.IFormattingStrategy#formatterStops()
      */
+	@Override
 	public void formatterStops() {
 	}
 

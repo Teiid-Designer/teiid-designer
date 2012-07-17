@@ -156,7 +156,8 @@ public class SqlDisplayPanel extends Composite implements UiConstants {
          * @param cacheResult Boolean to determine if the result needs to be cached.
          * @return The ValidationResult.
          */
-        public QueryValidationResult validateSql( String sqlString,
+        @Override
+		public QueryValidationResult validateSql( String sqlString,
                                                   int type,
                                                   boolean cacheResult ) {
             Command command = null;
@@ -177,11 +178,13 @@ public class SqlDisplayPanel extends Composite implements UiConstants {
          * 
          * @return QueryMetadataInterface
          */
-        public QueryMetadataInterface getQueryMetadata() {
+        @Override
+		public QueryMetadataInterface getQueryMetadata() {
             return null;
         }
 
-        public boolean isValidRoot() {
+        @Override
+		public boolean isValidRoot() {
             return true;
         }
 
@@ -228,7 +231,8 @@ public class SqlDisplayPanel extends Composite implements UiConstants {
          * 
          * @return 'true' if parsable, 'false' if not
          */
-        public boolean isParsable() {
+        @Override
+		public boolean isParsable() {
             return this.isParsable;
         }
 
@@ -237,7 +241,8 @@ public class SqlDisplayPanel extends Composite implements UiConstants {
          * 
          * @return 'true' if resolvable, 'false' if not
          */
-        public boolean isResolvable() {
+        @Override
+		public boolean isResolvable() {
             return this.isResolvable;
         }
 
@@ -246,7 +251,8 @@ public class SqlDisplayPanel extends Composite implements UiConstants {
          * 
          * @return 'true' if validatable, 'false' if not
          */
-        public boolean isValidatable() {
+        @Override
+		public boolean isValidatable() {
             return this.isValidatable;
         }
 
@@ -255,7 +261,8 @@ public class SqlDisplayPanel extends Composite implements UiConstants {
          * 
          * @return the SQL command
          */
-        public Command getCommand() {
+        @Override
+		public Command getCommand() {
             return this.command;
         }
 
@@ -263,7 +270,8 @@ public class SqlDisplayPanel extends Composite implements UiConstants {
          * @see org.teiid.designer.core.query.query.resolver.util.QueryValidationResult#getStatusList()
          * @since 4.2
          */
-        public Collection<IStatus> getStatusList() {
+        @Override
+		public Collection<IStatus> getStatusList() {
             return this.statuses;
         }
 

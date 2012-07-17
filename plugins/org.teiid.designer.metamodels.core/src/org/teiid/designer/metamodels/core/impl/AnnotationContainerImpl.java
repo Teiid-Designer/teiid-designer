@@ -73,7 +73,8 @@ public class AnnotationContainerImpl extends EObjectImpl implements AnnotationCo
      * 
      * @generated
      */
-    public EList getAnnotations() {
+    @Override
+	public EList getAnnotations() {
         if (annotations == null) {
             annotations = new EObjectContainmentWithInverseEList(Annotation.class, this,
                                                                  CorePackage.ANNOTATION_CONTAINER__ANNOTATIONS,
@@ -250,7 +251,8 @@ public class AnnotationContainerImpl extends EObjectImpl implements AnnotationCo
         return eDynamicIsSet(eFeature);
     }
 
-    public Annotation findAnnotation( final EObject annotatedObject ) {
+    @Override
+	public Annotation findAnnotation( final EObject annotatedObject ) {
         final Annotation result = (Annotation)this.annotationByTarget.get(annotatedObject);
         return result;
     }
@@ -270,7 +272,8 @@ public class AnnotationContainerImpl extends EObjectImpl implements AnnotationCo
     /**
      * @param annotation
      */
-    public void addAnnotation( final Annotation annotation ) {
+    @Override
+	public void addAnnotation( final Annotation annotation ) {
         if (annotation != null) {
             this.annotationByTarget.put(annotation.getAnnotatedObject(), annotation);
         }
@@ -279,7 +282,8 @@ public class AnnotationContainerImpl extends EObjectImpl implements AnnotationCo
     /**
      * @param annotation
      */
-    public void removeAnnotation( Annotation annotation ) {
+    @Override
+	public void removeAnnotation( Annotation annotation ) {
         if (annotation != null) {
             this.annotationByTarget.remove(annotation.getAnnotatedObject());
         }

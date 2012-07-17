@@ -158,7 +158,8 @@ abstract public class AbstractDiagramModelNode implements DiagramModelNode, Diag
         }
     }
 
-    public Diagram getDiagram() {
+    @Override
+	public Diagram getDiagram() {
         return this.diagram;
     }
 
@@ -185,7 +186,8 @@ abstract public class AbstractDiagramModelNode implements DiagramModelNode, Diag
      *  (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.model.DiagramModelNode#recoverObjectProperties()
      */
-    public void recoverObjectProperties() {
+    @Override
+	public void recoverObjectProperties() {
         setInitialSize();
         setInitialPosition();
     }
@@ -193,35 +195,40 @@ abstract public class AbstractDiagramModelNode implements DiagramModelNode, Diag
     /**
      * Set the Model Object
      */
-    public void setModelObject( EObject object ) {
+    @Override
+	public void setModelObject( EObject object ) {
         modelObject = object;
     }
 
     /**
      * Set the Diagram Model Object
      */
-    public void setDiagramModelObject( DiagramEntity object ) {
+    @Override
+	public void setDiagramModelObject( DiagramEntity object ) {
         diagramEntity = object;
     }
 
     /**
      * Get the Model Object
      */
-    public EObject getModelObject() {
+    @Override
+	public EObject getModelObject() {
         return modelObject;
     }
 
     /**
      * Get the Diagram Model Object
      */
-    public DiagramEntity getDiagramModelObject() {
+    @Override
+	public DiagramEntity getDiagramModelObject() {
         return diagramEntity;
     }
 
     /**
      * Add a Child
      */
-    public void addChild( DiagramModelNode child ) {
+    @Override
+	public void addChild( DiagramModelNode child ) {
         if (children == null) {
             children = new ArrayList();
         }
@@ -233,7 +240,8 @@ abstract public class AbstractDiagramModelNode implements DiagramModelNode, Diag
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.model.DiagramModelNode#addChildren(java.util.List)
      */
-    public void addChildren( List newChildren ) {
+    @Override
+	public void addChildren( List newChildren ) {
         if (newChildren != null && !newChildren.isEmpty()) {
             if (children == null) {
                 children = new ArrayList();
@@ -253,7 +261,8 @@ abstract public class AbstractDiagramModelNode implements DiagramModelNode, Diag
     /**
      * Remove a Child
      */
-    public void removeChild( DiagramModelNode child,
+    @Override
+	public void removeChild( DiagramModelNode child,
                              boolean deleteDiagramEntity ) {
         if (children == null) {
             return;
@@ -266,7 +275,8 @@ abstract public class AbstractDiagramModelNode implements DiagramModelNode, Diag
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.model.DiagramModelNode#removeChildren(java.util.List)
      */
-    public void removeChildren( List oldChildren,
+    @Override
+	public void removeChildren( List oldChildren,
                                 boolean deleteDiagramEntities ) {
         if (oldChildren != null && !oldChildren.isEmpty()) {
             if (children == null) {
@@ -284,21 +294,24 @@ abstract public class AbstractDiagramModelNode implements DiagramModelNode, Diag
         }
     }
 
-    public void updateForChild( boolean isMove ) {
+    @Override
+	public void updateForChild( boolean isMove ) {
         fireStructureChange(DiagramNodeProperties.CHILDREN, "EMPTY"); //$NON-NLS-1$
     }
 
     /**
      * Set the List of Children
      */
-    public void setChildren( List childList ) {
+    @Override
+	public void setChildren( List childList ) {
         children = childList;
     }
 
     /**
      * Get the List of Children
      */
-    public List getChildren() {
+    @Override
+	public List getChildren() {
         if (children == null || children.isEmpty()) {
             return Collections.EMPTY_LIST;
         }
@@ -316,11 +329,13 @@ abstract public class AbstractDiagramModelNode implements DiagramModelNode, Diag
         return children.size();
     }
 
-    public void setParent( DiagramModelNode parent ) {
+    @Override
+	public void setParent( DiagramModelNode parent ) {
         this.parent = parent;
     }
 
-    public DiagramModelNode getParent() {
+    @Override
+	public DiagramModelNode getParent() {
         return this.parent;
     }
 
@@ -328,7 +343,8 @@ abstract public class AbstractDiagramModelNode implements DiagramModelNode, Diag
      *  (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.model.DiagramModelNode#setPosition(org.eclipse.draw2d.geometry.Point)
      */
-    public void setPosition( Point position ) {
+    @Override
+	public void setPosition( Point position ) {
         if (position.x != thisPosition.x || position.y != thisPosition.y) {
             if (isWritableDiagramEntity(diagramEntity)) {
                 DiagramEntityAdapter.setPosition(diagramEntity, position.x, position.y);
@@ -354,7 +370,8 @@ abstract public class AbstractDiagramModelNode implements DiagramModelNode, Diag
         firePropertyChange(DiagramNodeProperties.LOCATION, null, getPosition());
     }
 
-    public void setCenterXY( int newCenterX,
+    @Override
+	public void setCenterXY( int newCenterX,
                              int newCenterY ) {
         int newX = newCenterX - this.getWidth() / 2;
         int newY = newCenterY - this.getHeight() / 2;
@@ -372,7 +389,8 @@ abstract public class AbstractDiagramModelNode implements DiagramModelNode, Diag
         }
     }
 
-    public void setCenterX( int newCenterX ) {
+    @Override
+	public void setCenterX( int newCenterX ) {
         int newX = newCenterX - this.getWidth() / 2;
 
         if (newX != thisPosition.x) {
@@ -386,7 +404,8 @@ abstract public class AbstractDiagramModelNode implements DiagramModelNode, Diag
         }
     }
 
-    public void setCenterY( int newCenterY ) {
+    @Override
+	public void setCenterY( int newCenterY ) {
         int newY = newCenterY - this.getHeight() / 2;
 
         if (newY != thisPosition.y) {
@@ -400,11 +419,13 @@ abstract public class AbstractDiagramModelNode implements DiagramModelNode, Diag
         }
     }
 
-    public Point getPosition() {
+    @Override
+	public Point getPosition() {
         return this.thisPosition; // new Point(this.thisPosition);
     }
 
-    public void setSize( Dimension dimension ) {
+    @Override
+	public void setSize( Dimension dimension ) {
         if (dimension.height != thisSize.height || dimension.width != thisSize.width) {
             thisSize.width = dimension.width;
             thisSize.height = dimension.height;
@@ -420,21 +441,25 @@ abstract public class AbstractDiagramModelNode implements DiagramModelNode, Diag
         firePropertyChange(DiagramNodeProperties.SIZE, null, thisSize);
     }
 
-    public Dimension getSize() {
+    @Override
+	public Dimension getSize() {
         return thisSize;
     }
 
     transient protected PropertyChangeSupport listeners = new PropertyChangeSupport(this);
 
-    public void addPropertyChangeListener( PropertyChangeListener l ) {
+    @Override
+	public void addPropertyChangeListener( PropertyChangeListener l ) {
         listeners.addPropertyChangeListener(l);
     }
 
-    public void removePropertyChangeListener( PropertyChangeListener l ) {
+    @Override
+	public void removePropertyChangeListener( PropertyChangeListener l ) {
         listeners.removePropertyChangeListener(l);
     }
 
-    public void firePropertyChange( String prop,
+    @Override
+	public void firePropertyChange( String prop,
                                     Object old,
                                     Object newValue ) {
         listeners.firePropertyChange(prop, old, newValue);
@@ -451,21 +476,25 @@ abstract public class AbstractDiagramModelNode implements DiagramModelNode, Diag
         return this;
     }
 
-    public void update() {
+    @Override
+	public void update() {
         firePropertyChange(DiagramNodeProperties.PROPERTIES, null, null);
     }
 
-    public void update( String property ) {
+    @Override
+	public void update( String property ) {
         firePropertyChange(property, null, null);
     }
 
-    public void update( String prop,
+    @Override
+	public void update( String prop,
                         String oldValue,
                         String newValue ) {
         firePropertyChange(prop, oldValue, newValue);
     }
 
-    public void setName( String name ) {
+    @Override
+	public void setName( String name ) {
         if (isWritableDiagramEntity(diagramEntity)) {
             String oldName = "xxxXxxx"; //$NON-NLS-1$
 
@@ -475,13 +504,15 @@ abstract public class AbstractDiagramModelNode implements DiagramModelNode, Diag
         }
     }
 
-    public String getName() {
+    @Override
+	public String getName() {
         if (diagramEntity != null) return DiagramEntityAdapter.getName(diagramEntity);
 
         return null;
     }
 
-    public String getDisplayString() {
+    @Override
+	public String getDisplayString() {
         return getName();
     }
 
@@ -497,27 +528,33 @@ abstract public class AbstractDiagramModelNode implements DiagramModelNode, Diag
         return this.thisPosition.y;
     }
 
-    public int getX() {
+    @Override
+	public int getX() {
         return this.thisPosition.x;
     }
 
-    public int getY() {
+    @Override
+	public int getY() {
         return this.thisPosition.y;
     }
 
-    public int getCenterX() {
+    @Override
+	public int getCenterX() {
         return (this.thisPosition.x + thisSize.width / 2);
     }
 
-    public int getCenterY() {
+    @Override
+	public int getCenterY() {
         return (this.thisPosition.y + thisSize.height / 2);
     }
 
-    public int getWidth() {
+    @Override
+	public int getWidth() {
         return thisSize.width;
     }
 
-    public int getHeight() {
+    @Override
+	public int getHeight() {
         return thisSize.height;
     }
 
@@ -540,38 +577,46 @@ abstract public class AbstractDiagramModelNode implements DiagramModelNode, Diag
         return result.toString();
     }
 
-    public Vector getSourceConnections() {
+    @Override
+	public Vector getSourceConnections() {
         return m_sourceConnections;
     }
 
-    public Vector getTargetConnections() {
+    @Override
+	public Vector getTargetConnections() {
         return m_targetConnections;
     }
 
-    public void addSourceConnection( NodeConnectionModel iConnection ) {
+    @Override
+	public void addSourceConnection( NodeConnectionModel iConnection ) {
         m_sourceConnections.addElement(iConnection);
     }
 
-    public void addTargetConnection( NodeConnectionModel iConnection ) {
+    @Override
+	public void addTargetConnection( NodeConnectionModel iConnection ) {
         m_targetConnections.addElement(iConnection);
     }
 
-    public void removeSourceConnection( NodeConnectionModel iConnection ) {
+    @Override
+	public void removeSourceConnection( NodeConnectionModel iConnection ) {
         m_sourceConnections.removeElement(iConnection);
     }
 
-    public void removeTargetConnection( NodeConnectionModel iConnection ) {
+    @Override
+	public void removeTargetConnection( NodeConnectionModel iConnection ) {
         m_targetConnections.removeElement(iConnection);
     }
 
-    public List getAssociations( HashMap nodeMap ) {
+    @Override
+	public List getAssociations( HashMap nodeMap ) {
         return Collections.EMPTY_LIST;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.model.DiagramModelNode#updateAssociations()
      */
-    public void updateAssociations() {
+    @Override
+	public void updateAssociations() {
 
         firePropertyChange(DiagramNodeProperties.CONNECTION, null, null);
     }
@@ -579,14 +624,16 @@ abstract public class AbstractDiagramModelNode implements DiagramModelNode, Diag
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.model.DiagramModelNode#hasErrors()
      */
-    public boolean hasErrors() {
+    @Override
+	public boolean hasErrors() {
         return errorState;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.model.DiagramModelNode#hasWarnings()
      */
-    public boolean hasWarnings() {
+    @Override
+	public boolean hasWarnings() {
         return warningState;
     }
 
@@ -594,7 +641,8 @@ abstract public class AbstractDiagramModelNode implements DiagramModelNode, Diag
      *  (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.model.DiagramModelNode#wasLayedOut()
      */
-    public boolean wasLayedOut() {
+    @Override
+	public boolean wasLayedOut() {
         return layoutState;
     }
 
@@ -605,21 +653,24 @@ abstract public class AbstractDiagramModelNode implements DiagramModelNode, Diag
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.model.DiagramModelNode#getDependencies()
      */
-    public List getDependencies() {
+    @Override
+	public List getDependencies() {
         return Collections.EMPTY_LIST;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.model.DiagramModelNode#getFirstOverlayImage()
      */
-    public Image getFirstOverlayImage() {
+    @Override
+	public Image getFirstOverlayImage() {
         return firstOverlayImage;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.model.DiagramModelNode#setFirstOverlayImage(org.eclipse.swt.graphics.Image)
      */
-    public void setFirstOverlayImage( Image image,
+    @Override
+	public void setFirstOverlayImage( Image image,
                                       String editorID ) {
         this.firstOverlayImage = image;
         this.editorID = editorID;
@@ -628,26 +679,30 @@ abstract public class AbstractDiagramModelNode implements DiagramModelNode, Diag
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.model.DiagramModelNode#getSecondOverlayImage()
      */
-    public Image getSecondOverlayImage() {
+    @Override
+	public Image getSecondOverlayImage() {
         return secondOverlayImage;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.model.DiagramModelNode#setSecondOverlayImage(org.eclipse.swt.graphics.Image)
      */
-    public void setSecondOverlayImage( Image image,
+    @Override
+	public void setSecondOverlayImage( Image image,
                                        int positionIndex ) {
         this.secondOverlayImage = image;
     }
 
-    public boolean isReadOnly() {
+    @Override
+	public boolean isReadOnly() {
         return readOnly;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.model.DiagramModelNode#updateForErrorsAndWarnings()
      */
-    public void updateForErrorsAndWarnings() {
+    @Override
+	public void updateForErrorsAndWarnings() {
         setErrorState();
         firePropertyChange(DiagramNodeProperties.ERRORS, null, null);
     }
@@ -665,7 +720,8 @@ abstract public class AbstractDiagramModelNode implements DiagramModelNode, Diag
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.model.DiagramModelNode#setReadOnly(boolean)
      */
-    public void setReadOnly( boolean readOnly ) {
+    @Override
+	public void setReadOnly( boolean readOnly ) {
         this.readOnly = readOnly;
     }
 
@@ -673,7 +729,8 @@ abstract public class AbstractDiagramModelNode implements DiagramModelNode, Diag
      * @see org.teiid.designer.diagram.ui.model.DiagramModelNode#hideLocation()
      * @since 4.2
      */
-    public boolean hideLocation() {
+    @Override
+	public boolean hideLocation() {
         return hideLocationValue;
     }
 
@@ -681,11 +738,13 @@ abstract public class AbstractDiagramModelNode implements DiagramModelNode, Diag
      * @see org.teiid.designer.diagram.ui.model.DiagramModelNode#setHideLocation(boolean)
      * @since 4.2
      */
-    public void setHideLocation( boolean hideLocation ) {
+    @Override
+	public void setHideLocation( boolean hideLocation ) {
         hideLocationValue = hideLocation;
     }
 
-    public String getEditorID() {
+    @Override
+	public String getEditorID() {
         return this.editorID;
     }
 
@@ -693,11 +752,13 @@ abstract public class AbstractDiagramModelNode implements DiagramModelNode, Diag
         this.editorID = editorID;
     }
 
-    public int getFixedHeight() {
+    @Override
+	public int getFixedHeight() {
         return this.fixedHeight;
     }
 
-    public void setFixedHeight( int theFixedHeight ) {
+    @Override
+	public void setFixedHeight( int theFixedHeight ) {
         this.fixedHeight = theFixedHeight;
 
         if (children != null && !children.isEmpty()) {
@@ -708,11 +769,13 @@ abstract public class AbstractDiagramModelNode implements DiagramModelNode, Diag
         }
     }
 
-    public boolean isHeightFixed() {
+    @Override
+	public boolean isHeightFixed() {
         return this.heightFixed;
     }
 
-    public void setHeightFixed( boolean theHeightFixed ) {
+    @Override
+	public void setHeightFixed( boolean theHeightFixed ) {
         this.heightFixed = theHeightFixed;
         if (children != null && !children.isEmpty()) {
             for (Iterator iter = children.iterator(); iter.hasNext();) {

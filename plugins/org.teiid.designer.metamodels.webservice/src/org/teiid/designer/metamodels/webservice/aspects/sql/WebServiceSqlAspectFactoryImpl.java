@@ -24,7 +24,8 @@ public class WebServiceSqlAspectFactoryImpl implements MetamodelAspectFactory {
      * @see org.teiid.designer.core.metamodel.aspect.MetamodelAspectFactory#create(org.eclipse.emf.ecore.EClassifier, org.teiid.designer.core.metamodel.aspect.MetamodelEntity)
      * @since 4.2
      */
-    public MetamodelAspect create(EClassifier classifier,
+    @Override
+	public MetamodelAspect create(EClassifier classifier,
                                   MetamodelEntity entity) {
         switch (classifier.getClassifierID()) {
             case WebServicePackage.INTERFACE: return new InterfaceAspect(entity);

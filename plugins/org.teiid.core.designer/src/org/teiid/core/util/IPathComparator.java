@@ -51,7 +51,8 @@ public class IPathComparator implements Comparator {
      * @throws ClassCastException if the arguments' types prevent them from being 
      * compared by this Comparator.
      */
-    public int compare( final Object o1, final Object o2) {
+    @Override
+	public int compare( final Object o1, final Object o2) {
         final IPath path1 = (IPath)o1;
         final IPath path2 = (IPath)o2;
         if ( path1 == path2 ) {

@@ -304,7 +304,8 @@ public class SqlTransformationImpl extends MappingHelperImpl implements SqlTrans
      * 
      * @generated
      */
-    public String getSelectSql() {
+    @Override
+	public String getSelectSql() {
         return selectSql;
     }
 
@@ -313,7 +314,8 @@ public class SqlTransformationImpl extends MappingHelperImpl implements SqlTrans
      * 
      * @generated
      */
-    public void setSelectSql( String newSelectSql ) {
+    @Override
+	public void setSelectSql( String newSelectSql ) {
         String oldSelectSql = selectSql;
         selectSql = newSelectSql;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
@@ -326,7 +328,8 @@ public class SqlTransformationImpl extends MappingHelperImpl implements SqlTrans
      * 
      * @generated
      */
-    public String getInsertSql() {
+    @Override
+	public String getInsertSql() {
         return insertSql;
     }
 
@@ -335,7 +338,8 @@ public class SqlTransformationImpl extends MappingHelperImpl implements SqlTrans
      * 
      * @generated
      */
-    public void setInsertSql( String newInsertSql ) {
+    @Override
+	public void setInsertSql( String newInsertSql ) {
         String oldInsertSql = insertSql;
         insertSql = newInsertSql;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
@@ -348,7 +352,8 @@ public class SqlTransformationImpl extends MappingHelperImpl implements SqlTrans
      * 
      * @generated
      */
-    public String getUpdateSql() {
+    @Override
+	public String getUpdateSql() {
         return updateSql;
     }
 
@@ -357,7 +362,8 @@ public class SqlTransformationImpl extends MappingHelperImpl implements SqlTrans
      * 
      * @generated
      */
-    public void setUpdateSql( String newUpdateSql ) {
+    @Override
+	public void setUpdateSql( String newUpdateSql ) {
         String oldUpdateSql = updateSql;
         updateSql = newUpdateSql;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
@@ -370,7 +376,8 @@ public class SqlTransformationImpl extends MappingHelperImpl implements SqlTrans
      * 
      * @generated
      */
-    public String getDeleteSql() {
+    @Override
+	public String getDeleteSql() {
         return deleteSql;
     }
 
@@ -379,7 +386,8 @@ public class SqlTransformationImpl extends MappingHelperImpl implements SqlTrans
      * 
      * @generated
      */
-    public void setDeleteSql( String newDeleteSql ) {
+    @Override
+	public void setDeleteSql( String newDeleteSql ) {
         String oldDeleteSql = deleteSql;
         deleteSql = newDeleteSql;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
@@ -392,7 +400,8 @@ public class SqlTransformationImpl extends MappingHelperImpl implements SqlTrans
      * 
      * @generated
      */
-    public boolean isInsertAllowed() {
+    @Override
+	public boolean isInsertAllowed() {
         return insertAllowed;
     }
 
@@ -401,7 +410,8 @@ public class SqlTransformationImpl extends MappingHelperImpl implements SqlTrans
      * 
      * @generated
      */
-    public void setInsertAllowed( boolean newInsertAllowed ) {
+    @Override
+	public void setInsertAllowed( boolean newInsertAllowed ) {
         boolean oldInsertAllowed = insertAllowed;
         insertAllowed = newInsertAllowed;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
@@ -414,7 +424,8 @@ public class SqlTransformationImpl extends MappingHelperImpl implements SqlTrans
      * 
      * @generated
      */
-    public boolean isUpdateAllowed() {
+    @Override
+	public boolean isUpdateAllowed() {
         return updateAllowed;
     }
 
@@ -423,7 +434,8 @@ public class SqlTransformationImpl extends MappingHelperImpl implements SqlTrans
      * 
      * @generated
      */
-    public void setUpdateAllowed( boolean newUpdateAllowed ) {
+    @Override
+	public void setUpdateAllowed( boolean newUpdateAllowed ) {
         boolean oldUpdateAllowed = updateAllowed;
         updateAllowed = newUpdateAllowed;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
@@ -436,7 +448,8 @@ public class SqlTransformationImpl extends MappingHelperImpl implements SqlTrans
      * 
      * @generated
      */
-    public boolean isDeleteAllowed() {
+    @Override
+	public boolean isDeleteAllowed() {
         return deleteAllowed;
     }
 
@@ -445,7 +458,8 @@ public class SqlTransformationImpl extends MappingHelperImpl implements SqlTrans
      * 
      * @generated
      */
-    public void setDeleteAllowed( boolean newDeleteAllowed ) {
+    @Override
+	public void setDeleteAllowed( boolean newDeleteAllowed ) {
         boolean oldDeleteAllowed = deleteAllowed;
         deleteAllowed = newDeleteAllowed;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
@@ -458,7 +472,8 @@ public class SqlTransformationImpl extends MappingHelperImpl implements SqlTrans
      * 
      * @generated
      */
-    public boolean isOutputLocked() {
+    @Override
+	public boolean isOutputLocked() {
         return outputLocked;
     }
 
@@ -467,7 +482,8 @@ public class SqlTransformationImpl extends MappingHelperImpl implements SqlTrans
      * 
      * @generated
      */
-    public void setOutputLocked( boolean newOutputLocked ) {
+    @Override
+	public void setOutputLocked( boolean newOutputLocked ) {
         boolean oldOutputLocked = outputLocked;
         outputLocked = newOutputLocked;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
@@ -480,7 +496,8 @@ public class SqlTransformationImpl extends MappingHelperImpl implements SqlTrans
      * 
      * @generated
      */
-    public boolean isInsertSqlDefault() {
+    @Override
+	public boolean isInsertSqlDefault() {
         return insertSqlDefault;
     }
 
@@ -489,7 +506,8 @@ public class SqlTransformationImpl extends MappingHelperImpl implements SqlTrans
      * 
      * @generated
      */
-    public void setInsertSqlDefault( boolean newInsertSqlDefault ) {
+    @Override
+	public void setInsertSqlDefault( boolean newInsertSqlDefault ) {
         boolean oldInsertSqlDefault = insertSqlDefault;
         insertSqlDefault = newInsertSqlDefault;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
@@ -502,7 +520,8 @@ public class SqlTransformationImpl extends MappingHelperImpl implements SqlTrans
      * 
      * @generated
      */
-    public boolean isUpdateSqlDefault() {
+    @Override
+	public boolean isUpdateSqlDefault() {
         return updateSqlDefault;
     }
 
@@ -511,7 +530,8 @@ public class SqlTransformationImpl extends MappingHelperImpl implements SqlTrans
      * 
      * @generated
      */
-    public void setUpdateSqlDefault( boolean newUpdateSqlDefault ) {
+    @Override
+	public void setUpdateSqlDefault( boolean newUpdateSqlDefault ) {
         boolean oldUpdateSqlDefault = updateSqlDefault;
         updateSqlDefault = newUpdateSqlDefault;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
@@ -524,7 +544,8 @@ public class SqlTransformationImpl extends MappingHelperImpl implements SqlTrans
      * 
      * @generated
      */
-    public boolean isDeleteSqlDefault() {
+    @Override
+	public boolean isDeleteSqlDefault() {
         return deleteSqlDefault;
     }
 
@@ -533,7 +554,8 @@ public class SqlTransformationImpl extends MappingHelperImpl implements SqlTrans
      * 
      * @generated
      */
-    public void setDeleteSqlDefault( boolean newDeleteSqlDefault ) {
+    @Override
+	public void setDeleteSqlDefault( boolean newDeleteSqlDefault ) {
         boolean oldDeleteSqlDefault = deleteSqlDefault;
         deleteSqlDefault = newDeleteSqlDefault;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
@@ -546,7 +568,8 @@ public class SqlTransformationImpl extends MappingHelperImpl implements SqlTrans
      * 
      * @generated
      */
-    public EList getAliases() {
+    @Override
+	public EList getAliases() {
         if (aliases == null) {
             aliases = new EObjectContainmentWithInverseEList(SqlAlias.class, this,
                                                              TransformationPackage.SQL_TRANSFORMATION__ALIASES,

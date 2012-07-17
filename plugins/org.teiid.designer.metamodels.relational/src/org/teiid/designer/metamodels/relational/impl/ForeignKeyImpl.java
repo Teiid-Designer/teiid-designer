@@ -151,7 +151,8 @@ public class ForeignKeyImpl extends RelationshipImpl implements ForeignKey {
      * 
      * @generated
      */
-    public MultiplicityKind getForeignKeyMultiplicity() {
+    @Override
+	public MultiplicityKind getForeignKeyMultiplicity() {
         return foreignKeyMultiplicity;
     }
 
@@ -160,7 +161,8 @@ public class ForeignKeyImpl extends RelationshipImpl implements ForeignKey {
      * 
      * @generated
      */
-    public void setForeignKeyMultiplicity( MultiplicityKind newForeignKeyMultiplicity ) {
+    @Override
+	public void setForeignKeyMultiplicity( MultiplicityKind newForeignKeyMultiplicity ) {
         MultiplicityKind oldForeignKeyMultiplicity = foreignKeyMultiplicity;
         foreignKeyMultiplicity = newForeignKeyMultiplicity == null ? FOREIGN_KEY_MULTIPLICITY_EDEFAULT : newForeignKeyMultiplicity;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
@@ -173,7 +175,8 @@ public class ForeignKeyImpl extends RelationshipImpl implements ForeignKey {
      * 
      * @generated
      */
-    public MultiplicityKind getPrimaryKeyMultiplicity() {
+    @Override
+	public MultiplicityKind getPrimaryKeyMultiplicity() {
         return primaryKeyMultiplicity;
     }
 
@@ -182,7 +185,8 @@ public class ForeignKeyImpl extends RelationshipImpl implements ForeignKey {
      * 
      * @generated
      */
-    public void setPrimaryKeyMultiplicity( MultiplicityKind newPrimaryKeyMultiplicity ) {
+    @Override
+	public void setPrimaryKeyMultiplicity( MultiplicityKind newPrimaryKeyMultiplicity ) {
         MultiplicityKind oldPrimaryKeyMultiplicity = primaryKeyMultiplicity;
         primaryKeyMultiplicity = newPrimaryKeyMultiplicity == null ? PRIMARY_KEY_MULTIPLICITY_EDEFAULT : newPrimaryKeyMultiplicity;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
@@ -195,7 +199,8 @@ public class ForeignKeyImpl extends RelationshipImpl implements ForeignKey {
      * 
      * @generated
      */
-    public EList getColumns() {
+    @Override
+	public EList getColumns() {
         if (columns == null) {
             columns = new EObjectWithInverseResolvingEList.ManyInverse(Column.class, this,
                                                                        RelationalPackage.FOREIGN_KEY__COLUMNS,
@@ -209,7 +214,8 @@ public class ForeignKeyImpl extends RelationshipImpl implements ForeignKey {
      * 
      * @generated
      */
-    public UniqueKey getUniqueKey() {
+    @Override
+	public UniqueKey getUniqueKey() {
         if (uniqueKey != null && uniqueKey.eIsProxy()) {
             UniqueKey oldUniqueKey = uniqueKey;
             uniqueKey = (UniqueKey)eResolveProxy((InternalEObject)uniqueKey);
@@ -257,7 +263,8 @@ public class ForeignKeyImpl extends RelationshipImpl implements ForeignKey {
      * 
      * @generated
      */
-    public void setUniqueKey( UniqueKey newUniqueKey ) {
+    @Override
+	public void setUniqueKey( UniqueKey newUniqueKey ) {
         if (newUniqueKey != uniqueKey) {
             NotificationChain msgs = null;
             if (uniqueKey != null) msgs = ((InternalEObject)uniqueKey).eInverseRemove(this,
@@ -304,7 +311,8 @@ public class ForeignKeyImpl extends RelationshipImpl implements ForeignKey {
      * 
      * @generated
      */
-    public void unsetUniqueKey() {
+    @Override
+	public void unsetUniqueKey() {
         if (uniqueKey != null) {
             NotificationChain msgs = null;
             msgs = ((InternalEObject)uniqueKey).eInverseRemove(this,
@@ -327,7 +335,8 @@ public class ForeignKeyImpl extends RelationshipImpl implements ForeignKey {
      * 
      * @generated
      */
-    public boolean isSetUniqueKey() {
+    @Override
+	public boolean isSetUniqueKey() {
         return uniqueKeyESet;
     }
 
@@ -336,7 +345,8 @@ public class ForeignKeyImpl extends RelationshipImpl implements ForeignKey {
      * 
      * @generated
      */
-    public BaseTable getTable() {
+    @Override
+	public BaseTable getTable() {
         if (eContainerFeatureID != RelationalPackage.FOREIGN_KEY__TABLE) return null;
         return (BaseTable)eContainer;
     }
@@ -346,7 +356,8 @@ public class ForeignKeyImpl extends RelationshipImpl implements ForeignKey {
      * 
      * @generated
      */
-    public void setTable( BaseTable newTable ) {
+    @Override
+	public void setTable( BaseTable newTable ) {
         if (newTable != eContainer || (eContainerFeatureID != RelationalPackage.FOREIGN_KEY__TABLE && newTable != null)) {
             if (EcoreUtil.isAncestor(this, newTable)) throw new IllegalArgumentException(
                                                                                          "Recursive containment not allowed for " + toString()); //$NON-NLS-1$

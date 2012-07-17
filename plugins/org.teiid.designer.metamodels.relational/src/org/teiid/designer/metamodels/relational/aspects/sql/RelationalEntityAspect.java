@@ -54,7 +54,8 @@ public abstract class RelationalEntityAspect extends AbstractMetamodelAspect imp
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlAspect#getName(org.eclipse.emf.ecore.EObject)
      */
-    public String getName( EObject eObject ) {
+    @Override
+	public String getName( EObject eObject ) {
         CoreArgCheck.isInstanceOf(RelationalEntity.class, eObject);
         RelationalEntity entity = (RelationalEntity)eObject;
         return entity.getName();
@@ -63,7 +64,8 @@ public abstract class RelationalEntityAspect extends AbstractMetamodelAspect imp
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlAspect#getNameInSource(org.eclipse.emf.ecore.EObject)
      */
-    public String getNameInSource( EObject eObject ) {
+    @Override
+	public String getNameInSource( EObject eObject ) {
         CoreArgCheck.isInstanceOf(RelationalEntity.class, eObject);
         RelationalEntity entity = (RelationalEntity)eObject;
         return entity.getNameInSource();
@@ -116,7 +118,8 @@ public abstract class RelationalEntityAspect extends AbstractMetamodelAspect imp
     /**
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlAspect#isQueryable(org.eclipse.emf.ecore.EObject)
      */
-    public boolean isQueryable( final EObject eObject ) {
+    @Override
+	public boolean isQueryable( final EObject eObject ) {
         return true;
     }
 

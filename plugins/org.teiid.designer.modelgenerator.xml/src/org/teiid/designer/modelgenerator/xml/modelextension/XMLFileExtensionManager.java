@@ -48,19 +48,23 @@ public class XMLFileExtensionManager extends BaseXMLRelationalExtensionManagerIm
         }
     }
 
-    public String getModelFileName() {
+    @Override
+	public String getModelFileName() {
         return MODEL_FILE_NAME;
     }
 
-    public String getPackageName() {
+    @Override
+	public String getPackageName() {
         return PACKAGE_NAME;
     }
 
-    public String getPackageNsUri() {
+    @Override
+	public String getPackageNsUri() {
         return PACKAGE_NS_URI;
     }
 
-    public String getPackagePrefix() {
+    @Override
+	public String getPackagePrefix() {
         return PACKAGE_PREFIX;
     }
 

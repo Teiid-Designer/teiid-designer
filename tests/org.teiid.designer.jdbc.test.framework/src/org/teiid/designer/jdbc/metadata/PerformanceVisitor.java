@@ -30,7 +30,8 @@ public class PerformanceVisitor implements JdbcNodeVisitor {
     /**
      * @see org.teiid.designer.jdbc.metadata.JdbcNodeVisitor#visit(org.teiid.designer.jdbc.metadata.JdbcNode)
      */
-    public boolean visit( JdbcNode node ) {
+    @Override
+	public boolean visit( JdbcNode node ) {
         if (sw == null) {
             sw = new Stopwatch();
             sw.start();

@@ -532,7 +532,8 @@ public abstract class XmlContainerNodeImpl extends XmlDocumentEntityImpl impleme
      * 
      * @generated
      */
-    public BuildStatus getBuildState() {
+    @Override
+	public BuildStatus getBuildState() {
         return buildState;
     }
 
@@ -541,7 +542,8 @@ public abstract class XmlContainerNodeImpl extends XmlDocumentEntityImpl impleme
      * 
      * @generated
      */
-    public String getChoiceCriteria() {
+    @Override
+	public String getChoiceCriteria() {
         return choiceCriteria;
     }
 
@@ -550,7 +552,8 @@ public abstract class XmlContainerNodeImpl extends XmlDocumentEntityImpl impleme
      * 
      * @generated
      */
-    public int getChoiceOrder() {
+    @Override
+	public int getChoiceOrder() {
         return choiceOrder;
     }
 
@@ -559,7 +562,8 @@ public abstract class XmlContainerNodeImpl extends XmlDocumentEntityImpl impleme
      * 
      * @generated
      */
-    public XmlChoice getDefaultFor() {
+    @Override
+	public XmlChoice getDefaultFor() {
         if (defaultFor != null && defaultFor.eIsProxy()) {
             final XmlChoice oldDefaultFor = defaultFor;
             defaultFor = (XmlChoice)eResolveProxy((InternalEObject)defaultFor);
@@ -577,7 +581,8 @@ public abstract class XmlContainerNodeImpl extends XmlDocumentEntityImpl impleme
      * 
      * @generated
      */
-    public EList getEntities() {
+    @Override
+	public EList getEntities() {
         if (entities == null) entities = new EObjectContainmentWithInverseEList(XmlHolderEntity.class, this,
                                                                                 XmlDocumentPackage.XML_CONTAINER_NODE__ENTITIES,
                                                                                 XmlDocumentPackage.XML_HOLDER_ENTITY__PARENT);
@@ -589,7 +594,8 @@ public abstract class XmlContainerNodeImpl extends XmlDocumentEntityImpl impleme
      * 
      * @generated NOT
      */
-    public int getMaxOccurs() {
+    @Override
+	public int getMaxOccurs() {
         final XSDComponent schemaComp = this.getXsdComponent();
         if (schemaComp != null) {
             if (schemaComp instanceof XSDParticle) return XsdUtil.getMaxOccurs(schemaComp);
@@ -623,7 +629,8 @@ public abstract class XmlContainerNodeImpl extends XmlDocumentEntityImpl impleme
      * 
      * @generated NOT
      */
-    public int getMinOccurs() {
+    @Override
+	public int getMinOccurs() {
         final XSDComponent schemaComp = this.getXsdComponent();
         if (schemaComp != null) {
             if (schemaComp instanceof XSDParticle) return XsdUtil.getMinOccurs(schemaComp);
@@ -657,7 +664,8 @@ public abstract class XmlContainerNodeImpl extends XmlDocumentEntityImpl impleme
      * 
      * @generated
      */
-    public XmlEntityHolder getParent() {
+    @Override
+	public XmlEntityHolder getParent() {
         if (eContainerFeatureID != XmlDocumentPackage.XML_CONTAINER_NODE__PARENT) return null;
         return (XmlEntityHolder)eContainer;
     }
@@ -667,7 +675,8 @@ public abstract class XmlContainerNodeImpl extends XmlDocumentEntityImpl impleme
      * 
      * @generated
      */
-    public XSDComponent getXsdComponent() {
+    @Override
+	public XSDComponent getXsdComponent() {
         if (xsdComponent != null && xsdComponent.eIsProxy()) {
             final XSDComponent oldXsdComponent = xsdComponent;
             xsdComponent = (XSDComponent)eResolveProxy((InternalEObject)xsdComponent);
@@ -686,7 +695,8 @@ public abstract class XmlContainerNodeImpl extends XmlDocumentEntityImpl impleme
      * 
      * @generated
      */
-    public boolean isExcludeFromDocument() {
+    @Override
+	public boolean isExcludeFromDocument() {
         return excludeFromDocument;
     }
 
@@ -695,7 +705,8 @@ public abstract class XmlContainerNodeImpl extends XmlDocumentEntityImpl impleme
      * 
      * @generated
      */
-    public void setBuildState( final BuildStatus newBuildState ) {
+    @Override
+	public void setBuildState( final BuildStatus newBuildState ) {
         final BuildStatus oldBuildState = buildState;
         buildState = newBuildState == null ? BUILD_STATE_EDEFAULT : newBuildState;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
@@ -708,7 +719,8 @@ public abstract class XmlContainerNodeImpl extends XmlDocumentEntityImpl impleme
      * 
      * @generated
      */
-    public void setChoiceCriteria( final String newChoiceCriteria ) {
+    @Override
+	public void setChoiceCriteria( final String newChoiceCriteria ) {
         final String oldChoiceCriteria = choiceCriteria;
         choiceCriteria = newChoiceCriteria;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
@@ -721,7 +733,8 @@ public abstract class XmlContainerNodeImpl extends XmlDocumentEntityImpl impleme
      * 
      * @generated
      */
-    public void setChoiceOrder( final int newChoiceOrder ) {
+    @Override
+	public void setChoiceOrder( final int newChoiceOrder ) {
         final int oldChoiceOrder = choiceOrder;
         choiceOrder = newChoiceOrder;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
@@ -734,7 +747,8 @@ public abstract class XmlContainerNodeImpl extends XmlDocumentEntityImpl impleme
      * 
      * @generated
      */
-    public void setDefaultFor( final XmlChoice newDefaultFor ) {
+    @Override
+	public void setDefaultFor( final XmlChoice newDefaultFor ) {
         if (newDefaultFor != defaultFor) {
             NotificationChain msgs = null;
             if (defaultFor != null) msgs = ((InternalEObject)defaultFor).eInverseRemove(this,
@@ -757,7 +771,8 @@ public abstract class XmlContainerNodeImpl extends XmlDocumentEntityImpl impleme
      * 
      * @generated
      */
-    public void setExcludeFromDocument( final boolean newExcludeFromDocument ) {
+    @Override
+	public void setExcludeFromDocument( final boolean newExcludeFromDocument ) {
         final boolean oldExcludeFromDocument = excludeFromDocument;
         excludeFromDocument = newExcludeFromDocument;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
@@ -770,7 +785,8 @@ public abstract class XmlContainerNodeImpl extends XmlDocumentEntityImpl impleme
      * 
      * @generated
      */
-    public void setParent( final XmlEntityHolder newParent ) {
+    @Override
+	public void setParent( final XmlEntityHolder newParent ) {
         if (newParent != eContainer || (eContainerFeatureID != XmlDocumentPackage.XML_CONTAINER_NODE__PARENT && newParent != null)) {
             if (EcoreUtil.isAncestor(this, newParent)) throw new IllegalArgumentException(
                                                                                           "Recursive containment not allowed for " + toString()); //$NON-NLS-1$
@@ -792,7 +808,8 @@ public abstract class XmlContainerNodeImpl extends XmlDocumentEntityImpl impleme
      * 
      * @generated
      */
-    public void setXsdComponent( final XSDComponent newXsdComponent ) {
+    @Override
+	public void setXsdComponent( final XSDComponent newXsdComponent ) {
         final XSDComponent oldXsdComponent = xsdComponent;
         xsdComponent = newXsdComponent;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,

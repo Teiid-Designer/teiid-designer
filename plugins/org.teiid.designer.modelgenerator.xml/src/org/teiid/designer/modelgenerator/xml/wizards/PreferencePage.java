@@ -82,6 +82,7 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
         addField(new StringFieldEditor(XmlImporterUiPlugin.mergedChildSep, mergedChildSepLabel, getFieldEditorParent()));
     }
 	
+	@Override
 	public void init(IWorkbench workbench) {
 	}
 }

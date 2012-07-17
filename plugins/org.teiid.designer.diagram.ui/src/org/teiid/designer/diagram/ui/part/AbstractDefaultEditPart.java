@@ -76,14 +76,16 @@ public abstract class AbstractDefaultEditPart extends AbstractGraphicalEditPart
     /* (non-JavaDoc)
      * @See org.teiid.designer.diagram.ui.DiagramEditPart#getModelObject()
     **/
-    public EObject getModelObject() {
+    @Override
+	public EObject getModelObject() {
         return ((DiagramModelNode)getModel()).getModelObject();
     }
 
     /* (non-JavaDoc)
      * @See org.teiid.designer.diagram.ui.DiagramEditPart#getDiagramFigure()
     **/
-    public DiagramFigure getDiagramFigure() {
+    @Override
+	public DiagramFigure getDiagramFigure() {
         if (getFigure() instanceof DiagramFigure) return (DiagramFigure)getFigure();
 
         return null;
@@ -129,13 +131,15 @@ public abstract class AbstractDefaultEditPart extends AbstractGraphicalEditPart
     /* (non-JavaDoc)
      * @See org.teiid.designer.diagram.ui.DiagramEditPart#clearSelections(boolean)
     **/
-    public void clearSelections( boolean clearSubSelections ) {
+    @Override
+	public void clearSelections( boolean clearSubSelections ) {
     }
 
     /* (non-JavaDoc)
      * @See org.teiid.designer.diagram.ui.DiagramEditPart#layout(boolean)
     **/
-    public void layout( boolean layoutChildren ) {
+    @Override
+	public void layout( boolean layoutChildren ) {
         // Layout out it's children first
         if (layoutChildren) {
             List editPartChildren = getChildren();
@@ -164,7 +168,8 @@ public abstract class AbstractDefaultEditPart extends AbstractGraphicalEditPart
     /* (non-JavaDoc)
      * @See org.teiid.designer.diagram.ui.DiagramEditPart#layout(boolean)
     **/
-    public void layout() {
+    @Override
+	public void layout() {
         // Then do a getFigure().layout here.
         if (getDiagramFigure() != null) getDiagramFigure().layoutFigure();
 
@@ -183,7 +188,8 @@ public abstract class AbstractDefaultEditPart extends AbstractGraphicalEditPart
     /* (non-JavaDoc)
      * @see java.beans.PropertyChangeListener#propertyChange(PropertyChangeEvent)
     **/
-    public void propertyChange( PropertyChangeEvent evt ) {
+    @Override
+	public void propertyChange( PropertyChangeEvent evt ) {
 
         String prop = evt.getPropertyName();
 
@@ -215,35 +221,40 @@ public abstract class AbstractDefaultEditPart extends AbstractGraphicalEditPart
         }
     }
 
-    public void updateContent() {
+    @Override
+	public void updateContent() {
 
     }
 
     /* (non-JavaDoc)
      * @See org.teiid.designer.diagram.ui.DiagramEditPart#updateModelLocation()
     **/
-    public void updateModelPosition() {
+    @Override
+	public void updateModelPosition() {
         ((DiagramModelNode)getModel()).setPosition(new Point(getFigure().getBounds().x, getFigure().getBounds().y));
     }
 
     /* (non-JavaDoc)
      * @See org.teiid.designer.diagram.ui.DiagramEditPart#updateModelSize()
     **/
-    public void updateModelSize() {
+    @Override
+	public void updateModelSize() {
         ((DiagramModelNode)getModel()).setSize(getFigure().getSize());
     }
 
     /* (non-JavaDoc)
      * @See org.teiid.designer.diagram.ui.DiagramEditPart#resizeChildren()
     **/
-    public void resizeChildren() {
+    @Override
+	public void resizeChildren() {
         // default implementation does nothing
     }
 
     /* (non-JavaDoc)
      * @See org.teiid.designer.diagram.ui.DiagramEditPart#resizeChildren()
     **/
-    public void refreshName() {
+    @Override
+	public void refreshName() {
         // Need to get the figure and update the name
         getDiagramFigure().updateForName(((DiagramModelNode)getModel()).getName());
     }
@@ -251,7 +262,8 @@ public abstract class AbstractDefaultEditPart extends AbstractGraphicalEditPart
     /* (non-JavaDoc)
      * @See org.teiid.designer.diagram.ui.DiagramEditPart#selectPrimaryParent()
     **/
-    public void selectPrimaryParent() {
+    @Override
+	public void selectPrimaryParent() {
         DiagramEditPart editPart = getPrimaryParent();
         if (editPart != null) ((EditPart)editPart).setSelected(EditPart.SELECTED_PRIMARY);
     }
@@ -259,7 +271,8 @@ public abstract class AbstractDefaultEditPart extends AbstractGraphicalEditPart
     /* (non-JavaDoc)
      * @See org.teiid.designer.diagram.ui.DiagramEditPart#getPrimaryParent()
     **/
-    public DiagramEditPart getPrimaryParent() {
+    @Override
+	public DiagramEditPart getPrimaryParent() {
         if (getParent() instanceof DiagramEditPart) {
             if (((DiagramEditPart)getParent()).isPrimaryParent()) return (DiagramEditPart)getParent();
             return getPrimaryParent();
@@ -270,7 +283,8 @@ public abstract class AbstractDefaultEditPart extends AbstractGraphicalEditPart
     /* (non-JavaDoc)
      * @See org.teiid.designer.diagram.ui.DiagramEditPart#isPrimaryParent()
     **/
-    public boolean isPrimaryParent() {
+    @Override
+	public boolean isPrimaryParent() {
         return isPrimary;
     }
 
@@ -281,7 +295,8 @@ public abstract class AbstractDefaultEditPart extends AbstractGraphicalEditPart
     /* (non-JavaDoc)
      * @See org.teiid.designer.diagram.ui.DiagramEditPart#isPrimaryParent()
     **/
-    public boolean isSelectablePart() {
+    @Override
+	public boolean isSelectablePart() {
         return isSelectable;
     }
 
@@ -293,7 +308,8 @@ public abstract class AbstractDefaultEditPart extends AbstractGraphicalEditPart
      *  (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.part.DiagramEditPart#getEditPartFactory()
      */
-    public DiagramEditPartFactory getEditPartFactory() {
+    @Override
+	public DiagramEditPartFactory getEditPartFactory() {
         return DiagramUiPlugin.getDiagramTypeManager().getDiagram(getDiagramTypeId()).getEditPartFactory();
     }
 
@@ -301,7 +317,8 @@ public abstract class AbstractDefaultEditPart extends AbstractGraphicalEditPart
      *  (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.part.DiagramEditPart#getEditPart(org.teiid.designer.diagram.ui.model.DiagramModelNode)
      */
-    public DiagramEditPart getEditPart( DiagramModelNode someModelNode ) {
+    @Override
+	public DiagramEditPart getEditPart( DiagramModelNode someModelNode ) {
         if (getModel() != null && getModel().equals(someModelNode)) {
             return this;
         }
@@ -327,7 +344,8 @@ public abstract class AbstractDefaultEditPart extends AbstractGraphicalEditPart
      *  (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.part.DiagramEditPart#getEditPart(org.eclipse.emf.ecore.EObject)
      */
-    public EditPart getEditPart( EObject someModelObject,
+    @Override
+	public EditPart getEditPart( EObject someModelObject,
                                  boolean linksAllowed ) {
         if (getModelObject() != null) {
             if (getModelObject() instanceof Diagram) {
@@ -377,28 +395,32 @@ public abstract class AbstractDefaultEditPart extends AbstractGraphicalEditPart
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.part.DiagramEditPartFactory#getNotationId()
      */
-    public String getNotationId() {
+    @Override
+	public String getNotationId() {
         return sNotationId;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.part.DiagramEditPartFactory#setNotationId(java.lang.String)
      */
-    public void setNotationId( String sNotationId ) {
+    @Override
+	public void setNotationId( String sNotationId ) {
         this.sNotationId = sNotationId;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.part.DiagramEditPartFactory#getNotationId()
      */
-    public String getDiagramTypeId() {
+    @Override
+	public String getDiagramTypeId() {
         return sDiagramTypeId;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.part.DiagramEditPartFactory#setNotationId(java.lang.String)
      */
-    public void setDiagramTypeId( String sDiagramTypeId ) {
+    @Override
+	public void setDiagramTypeId( String sDiagramTypeId ) {
         this.sDiagramTypeId = sDiagramTypeId;
     }
 
@@ -492,7 +514,8 @@ public abstract class AbstractDefaultEditPart extends AbstractGraphicalEditPart
     /**
      * @see org.eclipse.gef.NodeEditPart#getSourceConnectionAnchor(ConnectionEditPart)
      **/
-    public ConnectionAnchor getSourceConnectionAnchor( ConnectionEditPart connection ) {
+    @Override
+	public ConnectionAnchor getSourceConnectionAnchor( ConnectionEditPart connection ) {
         if (this.getAnchorManager() != null) return this.getAnchorManager().getSourceAnchor((NodeConnectionEditPart)connection);
 
         return null;
@@ -501,7 +524,8 @@ public abstract class AbstractDefaultEditPart extends AbstractGraphicalEditPart
     /**
      * @see org.eclipse.gef.NodeEditPart#getSourceConnectionAnchor(Request)
      **/
-    public ConnectionAnchor getSourceConnectionAnchor( Request request ) {
+    @Override
+	public ConnectionAnchor getSourceConnectionAnchor( Request request ) {
         // Somehow translate this request to a specific connection
         // ConnectionEditPart someConnection = null;
         // return anchorManager.getSourceAnchor((NodeConnectionEditPart)someConnection);
@@ -511,7 +535,8 @@ public abstract class AbstractDefaultEditPart extends AbstractGraphicalEditPart
     /**
      * @see org.eclipse.gef.NodeEditPart#getTargetConnectionAnchor(ConnectionEditPart)
      **/
-    public ConnectionAnchor getTargetConnectionAnchor( ConnectionEditPart connection ) {
+    @Override
+	public ConnectionAnchor getTargetConnectionAnchor( ConnectionEditPart connection ) {
         if (this.getAnchorManager() != null) return this.getAnchorManager().getTargetAnchor((NodeConnectionEditPart)connection);
 
         return null;
@@ -520,21 +545,24 @@ public abstract class AbstractDefaultEditPart extends AbstractGraphicalEditPart
     /**
      * @see org.eclipse.gef.NodeEditPart#getTargetConnectionAnchor(Request)
      **/
-    public ConnectionAnchor getTargetConnectionAnchor( Request request ) {
+    @Override
+	public ConnectionAnchor getTargetConnectionAnchor( Request request ) {
         // Somehow translate this request to a specific connection
         // ConnectionEditPart someConnection = null;
         // return anchorManager.getTargetAnchor((NodeConnectionEditPart)someConnection);
         return null;
     }
 
-    public AnchorManager getAnchorManager() {
+    @Override
+	public AnchorManager getAnchorManager() {
         return anchorManager;
     }
 
     /**
      * Set the anchors location based on current figure's rectangle size.
      **/
-    public void createOrUpdateAnchorsLocations( boolean updateOtherEnds ) {
+    @Override
+	public void createOrUpdateAnchorsLocations( boolean updateOtherEnds ) {
         if (this.getAnchorManager() == null) return;
 
         Dimension size = ((DiagramModelNode)getModel()).getSize();
@@ -559,7 +587,8 @@ public abstract class AbstractDefaultEditPart extends AbstractGraphicalEditPart
     /**
      * Update the positions of the association's labels
      **/
-    public void refreshFont( boolean refreshChildren ) {
+    @Override
+	public void refreshFont( boolean refreshChildren ) {
         setCurrentDiagramFont(ScaledFontManager.getFont());
         // Walk the children and tell them to refresh font.
         // Layout out it's children first
@@ -680,14 +709,16 @@ public abstract class AbstractDefaultEditPart extends AbstractGraphicalEditPart
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.part.DiagramEditPart#hiliteBackground(org.eclipse.swt.graphics.Color)
      */
-    public void hiliteBackground( Color hiliteColor ) {
+    @Override
+	public void hiliteBackground( Color hiliteColor ) {
         // Default does nothing;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.part.DiagramEditPart#shouldHiliteBackground()
      */
-    public boolean shouldHiliteBackground( List sourceEditParts ) {
+    @Override
+	public boolean shouldHiliteBackground( List sourceEditParts ) {
         // Default Behavior
         return false;
     }
@@ -695,7 +726,8 @@ public abstract class AbstractDefaultEditPart extends AbstractGraphicalEditPart
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.part.DiagramEditPart#setAnchorManager(org.teiid.designer.diagram.ui.connection.AnchorManager)
      */
-    public void setAnchorManager( AnchorManager anchorManager ) {
+    @Override
+	public void setAnchorManager( AnchorManager anchorManager ) {
         this.anchorManager = anchorManager;
     }
 
@@ -720,14 +752,16 @@ public abstract class AbstractDefaultEditPart extends AbstractGraphicalEditPart
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.part.DiagramEditPart#showSelected(boolean)
      */
-    public void showSelected( boolean selected ) {
+    @Override
+	public void showSelected( boolean selected ) {
         if (getDiagramFigure() != null) getDiagramFigure().showSelected(selected);
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.part.DiagramEditPart#clearHiliting()
      */
-    public void clearHiliting() {
+    @Override
+	public void clearHiliting() {
         // Check the children
         List contents = this.getChildren();
 
@@ -746,39 +780,45 @@ public abstract class AbstractDefaultEditPart extends AbstractGraphicalEditPart
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.part.DiagramEditPart#getEditPartDependencies()
      */
-    public List getDependencies() {
+    @Override
+	public List getDependencies() {
         return Collections.EMPTY_LIST;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.part.DiagramEditPart#isResizable()
      */
-    public boolean isResizable() {
+    @Override
+	public boolean isResizable() {
         return canResize;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.part.DiagramEditPart#setResizable(boolean)
      */
-    public void setResizable( boolean canResize ) {
+    @Override
+	public void setResizable( boolean canResize ) {
         this.canResize = canResize;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.part.DiagramEditPart#updateForPreferences()
      */
-    public void updateForPreferences() {
+    @Override
+	public void updateForPreferences() {
         // Default does nothing
     }
 
-    public boolean shouldReveal() {
+    @Override
+	public boolean shouldReveal() {
         return true;
     }
 
     /**
      * @return
      */
-    public Font getCurrentDiagramFont() {
+    @Override
+	public Font getCurrentDiagramFont() {
         return currentDiagramFont;
     }
 
@@ -793,7 +833,8 @@ public abstract class AbstractDefaultEditPart extends AbstractGraphicalEditPart
      * @see org.teiid.designer.diagram.ui.part.DiagramEditPart#handleZoomChanged()
      * @since 4.2
      */
-    public void handleZoomChanged() {
+    @Override
+	public void handleZoomChanged() {
         // Default does nothing;
     }
 
@@ -819,7 +860,8 @@ public abstract class AbstractDefaultEditPart extends AbstractGraphicalEditPart
      * @see org.teiid.designer.diagram.ui.part.DropEditPart#drop(org.eclipse.draw2d.geometry.Point, java.util.List)
      * @since 4.2
      */
-    public void drop( Point dropPoint,
+    @Override
+	public void drop( Point dropPoint,
                       List dropList ) {
         if (dropHelper != null) dropHelper.drop(dropPoint, dropList);
     }
@@ -828,7 +870,8 @@ public abstract class AbstractDefaultEditPart extends AbstractGraphicalEditPart
      * @see org.teiid.designer.diagram.ui.part.DropEditPart#hilite(boolean)
      * @since 4.2
      */
-    public void hilite( boolean hilite ) {
+    @Override
+	public void hilite( boolean hilite ) {
         if (dropHelper != null) dropHelper.hilite(hilite);
     }
 
@@ -836,7 +879,8 @@ public abstract class AbstractDefaultEditPart extends AbstractGraphicalEditPart
      * @see org.teiid.designer.diagram.ui.part.DropEditPart#getLastHoverPoint()
      * @since 4.2
      */
-    public Point getLastHoverPoint() {
+    @Override
+	public Point getLastHoverPoint() {
         if (dropHelper != null) return dropHelper.getLastHoverPoint();
         return new Point(0, 0);
     }
@@ -845,7 +889,8 @@ public abstract class AbstractDefaultEditPart extends AbstractGraphicalEditPart
      * @see org.teiid.designer.diagram.ui.part.DropEditPart#setLastHoverPoint(org.eclipse.draw2d.geometry.Point)
      * @since 4.2
      */
-    public void setLastHoverPoint( Point lastHoverPoint ) {
+    @Override
+	public void setLastHoverPoint( Point lastHoverPoint ) {
         if (dropHelper != null) dropHelper.setLastHoverPoint(lastHoverPoint);
     }
 
@@ -853,14 +898,16 @@ public abstract class AbstractDefaultEditPart extends AbstractGraphicalEditPart
      * @see org.teiid.designer.diagram.ui.part.DropEditPart#allowsDrop(org.eclipse.draw2d.geometry.Point, java.util.List)
      * @since 4.3
      */
-    public boolean allowsDrop( Object target,
+    @Override
+	public boolean allowsDrop( Object target,
                                List dropList ) {
         if (dropHelper != null) return dropHelper.allowsDrop(target, dropList);
 
         return false;
     }
 
-    public PropertyChangeManager getChangeManager() {
+    @Override
+	public PropertyChangeManager getChangeManager() {
         if (changeManager == null) {
             changeManager = new PropertyChangeManager(this);
         }
@@ -872,7 +919,8 @@ public abstract class AbstractDefaultEditPart extends AbstractGraphicalEditPart
      * @see org.teiid.designer.diagram.ui.part.DiagramEditPart#isUnderConstruction()
      * @since 5.0
      */
-    public boolean isUnderConstruction() {
+    @Override
+	public boolean isUnderConstruction() {
         return this.underConstruction;
     }
 
@@ -880,7 +928,8 @@ public abstract class AbstractDefaultEditPart extends AbstractGraphicalEditPart
      * @param theUnderConstruction The underConstruction to set.
      * @since 5.0
      */
-    public void setUnderConstruction( boolean theUnderConstruction ) {
+    @Override
+	public void setUnderConstruction( boolean theUnderConstruction ) {
         this.underConstruction = theUnderConstruction;
         List contents = this.getChildren();
 
@@ -899,7 +948,8 @@ public abstract class AbstractDefaultEditPart extends AbstractGraphicalEditPart
      * @see org.teiid.designer.diagram.ui.part.DiagramEditPart#constructionCompleted()
      * @since 5.0
      */
-    public void constructionCompleted( boolean updateLinkedParts ) {
+    @Override
+	public void constructionCompleted( boolean updateLinkedParts ) {
         if (this.underConstruction) {
             // Find all it's children and tell them first
             List contents = this.getChildren();
@@ -921,7 +971,8 @@ public abstract class AbstractDefaultEditPart extends AbstractGraphicalEditPart
      * @see org.teiid.designer.diagram.ui.part.DiagramEditPart#refreshAllLabels(boolean)
      * @since 5.0
      */
-    public void refreshAllLabels( boolean theForceRefresh ) {
+    @Override
+	public void refreshAllLabels( boolean theForceRefresh ) {
         this.refreshAllLabels();
     }
 
@@ -929,7 +980,8 @@ public abstract class AbstractDefaultEditPart extends AbstractGraphicalEditPart
      * @see org.teiid.designer.diagram.ui.part.DiagramEditPart#refreshAnchors(boolean)
      * @since 5.0
      */
-    public void refreshAnchors( boolean updateOtherEnds ) {
+    @Override
+	public void refreshAnchors( boolean updateOtherEnds ) {
         this.createOrUpdateAnchorsLocations(updateOtherEnds);
     }
 
@@ -937,7 +989,8 @@ public abstract class AbstractDefaultEditPart extends AbstractGraphicalEditPart
      * @see org.teiid.designer.diagram.ui.part.DiagramEditPart#refreshChildren(boolean)
      * @since 5.0
      */
-    public void refreshChildren( boolean theForceRefresh ) {
+    @Override
+	public void refreshChildren( boolean theForceRefresh ) {
         this.refreshChildren();
     }
 
@@ -945,7 +998,8 @@ public abstract class AbstractDefaultEditPart extends AbstractGraphicalEditPart
      * @see org.teiid.designer.diagram.ui.part.DiagramEditPart#refreshPath(boolean)
      * @since 5.0
      */
-    public void refreshPath( boolean theForceRefresh ) {
+    @Override
+	public void refreshPath( boolean theForceRefresh ) {
         // NO Op
     }
 
@@ -953,7 +1007,8 @@ public abstract class AbstractDefaultEditPart extends AbstractGraphicalEditPart
      * @see org.teiid.designer.diagram.ui.part.DiagramEditPart#refreshSourceConnections(boolean)
      * @since 5.0
      */
-    public void refreshSourceConnections( boolean theForceRefresh ) {
+    @Override
+	public void refreshSourceConnections( boolean theForceRefresh ) {
         this.refreshSourceConnections();
     }
 
@@ -961,7 +1016,8 @@ public abstract class AbstractDefaultEditPart extends AbstractGraphicalEditPart
      * @see org.teiid.designer.diagram.ui.part.DiagramEditPart#refreshTargetConnections(boolean)
      * @since 5.0
      */
-    public void refreshTargetConnections( boolean theForceRefresh ) {
+    @Override
+	public void refreshTargetConnections( boolean theForceRefresh ) {
         this.refreshTargetConnections();
     }
 
@@ -969,7 +1025,8 @@ public abstract class AbstractDefaultEditPart extends AbstractGraphicalEditPart
      * @see org.teiid.designer.diagram.ui.part.DiagramEditPart#refreshVisuals(boolean)
      * @since 5.0
      */
-    public void refreshVisuals( boolean theForceRefresh ) {
+    @Override
+	public void refreshVisuals( boolean theForceRefresh ) {
         this.refreshVisuals();
     }
 
@@ -977,7 +1034,8 @@ public abstract class AbstractDefaultEditPart extends AbstractGraphicalEditPart
      * @see org.teiid.designer.diagram.ui.part.DiagramEditPart#refreshChildren(boolean)
      * @since 5.0
      */
-    public void resizeChildren( boolean theForceRefresh ) {
+    @Override
+	public void resizeChildren( boolean theForceRefresh ) {
         this.resizeChildren();
     }
 

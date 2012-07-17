@@ -74,7 +74,8 @@ public class OperationNodeGroupImpl extends AbstractOperationNodeImpl implements
      * 
      * @generated
      */
-    public EList getContents() {
+    @Override
+	public EList getContents() {
         if (contents == null) {
             contents = new EObjectContainmentWithInverseEList(AbstractOperationNode.class, this,
                                                               TransformationPackage.OPERATION_NODE_GROUP__CONTENTS,
@@ -88,7 +89,8 @@ public class OperationNodeGroupImpl extends AbstractOperationNodeImpl implements
      * 
      * @generated NOT
      */
-    public List getAllContents() {
+    @Override
+	public List getAllContents() {
         final List result = new ArrayList();
         addOperationNodesToList(getContents(), result);
         return result;

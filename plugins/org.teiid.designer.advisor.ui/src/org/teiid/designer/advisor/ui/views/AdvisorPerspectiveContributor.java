@@ -28,7 +28,8 @@ public class AdvisorPerspectiveContributor implements IModelerPerspectiveContrib
      * @see org.teiid.designer.ui.util.IModelerPerspectiveContributor#getContributions()
      * @since 4.3
      */
-    public PerspectiveObject[] getContributions() {
+    @Override
+	public PerspectiveObject[] getContributions() {
         return contributions;
     }
     

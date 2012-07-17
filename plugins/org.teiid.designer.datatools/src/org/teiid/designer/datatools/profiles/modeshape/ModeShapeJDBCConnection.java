@@ -4,7 +4,7 @@ import java.sql.Driver;
 import java.util.Properties;
 
 import org.eclipse.datatools.connectivity.IConnectionProfile;
-import org.eclipse.datatools.connectivity.drivers.jdbc.IJDBCConnectionProfileConstants;
+import org.eclipse.datatools.connectivity.drivers.jdbc.IJDBCDriverDefinitionConstants;
 import org.eclipse.datatools.connectivity.drivers.jdbc.JDBCConnection;
 
 public class ModeShapeJDBCConnection extends JDBCConnection {
@@ -21,14 +21,14 @@ public class ModeShapeJDBCConnection extends JDBCConnection {
 
         String driverClass = null;
         if (getDriverDefinition() != null) {
-            driverClass = getDriverDefinition().getProperty(IJDBCConnectionProfileConstants.DRIVER_CLASS_PROP_ID);
+            driverClass = getDriverDefinition().getProperty(IJDBCDriverDefinitionConstants.DRIVER_CLASS_PROP_ID);
         } else {
-            driverClass = props.getProperty(IJDBCConnectionProfileConstants.DRIVER_CLASS_PROP_ID);
+            driverClass = props.getProperty(IJDBCDriverDefinitionConstants.DRIVER_CLASS_PROP_ID);
         }
 
-        String connectURL = props.getProperty(IJDBCConnectionProfileConstants.URL_PROP_ID);
-        String uid = props.getProperty(IJDBCConnectionProfileConstants.USERNAME_PROP_ID);
-        String pwd = props.getProperty(IJDBCConnectionProfileConstants.PASSWORD_PROP_ID);
+        String connectURL = props.getProperty(IJDBCDriverDefinitionConstants.URL_PROP_ID);
+        String uid = props.getProperty(IJDBCDriverDefinitionConstants.USERNAME_PROP_ID);
+        String pwd = props.getProperty(IJDBCDriverDefinitionConstants.PASSWORD_PROP_ID);
 
         if (uid != null) {
             connectionProps.setProperty("user", uid); //$NON-NLS-1$

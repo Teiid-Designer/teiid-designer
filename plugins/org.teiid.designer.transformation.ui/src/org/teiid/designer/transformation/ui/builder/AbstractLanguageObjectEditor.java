@@ -88,7 +88,8 @@ public abstract class AbstractLanguageObjectEditor implements ILanguageObjectEdi
     /* (non-Javadoc)
      * @see org.teiid.query.ui.builder.ILanguageObjectEditor#acceptFocus()
      */
-    public abstract void acceptFocus();
+    @Override
+	public abstract void acceptFocus();
 
     /**
      * Convenience method to add model listener.
@@ -105,7 +106,8 @@ public abstract class AbstractLanguageObjectEditor implements ILanguageObjectEdi
     /* (non-Javadoc)
      * @see org.teiid.query.ui.builder.ILanguageObjectEditor#clear()
      */
-    public void clear() {
+    @Override
+	public void clear() {
         model.clear();
     }
 
@@ -117,59 +119,68 @@ public abstract class AbstractLanguageObjectEditor implements ILanguageObjectEdi
     /* (non-Javadoc)
      * @see org.teiid.query.ui.builder.ILanguageObjectEditor#getEditorType()
      */
-    public Class getEditorType() {
+    @Override
+	public Class getEditorType() {
         return editorType;
     }
 
     /* (non-Javadoc)
      * @see org.teiid.query.ui.builder.ILanguageObjectEditor#getLanguageObject()
      */
-    public LanguageObject getLanguageObject() {
+    @Override
+	public LanguageObject getLanguageObject() {
         return model.getLanguageObject();
     }
 
     /* (non-Javadoc)
      * @see org.teiid.query.ui.builder.ILanguageObjectEditor#getModel()
      */
-    public ILanguageObjectEditorModel getModel() {
+    @Override
+	public ILanguageObjectEditorModel getModel() {
         return model;
     }
 
     /* (non-Javadoc)
      * @see org.teiid.query.ui.builder.ILanguageObjectEditor#getTitle()
      */
-    public abstract String getTitle();
+    @Override
+	public abstract String getTitle();
 
     /* (non-Javadoc)
      * @see org.teiid.query.ui.builder.ILanguageObjectEditor#getToolTipText()
      */
-    public abstract String getToolTipText();
+    @Override
+	public abstract String getToolTipText();
 
     /* (non-Javadoc)
      * @see org.teiid.query.ui.builder.ILanguageObjectEditor#getUi()
      */
-    public final Control getUi() {
+    @Override
+	public final Control getUi() {
         return pnlUi;
     }
 
     /* (non-Javadoc)
      * @see org.teiid.query.ui.builder.ILanguageObjectEditor#hasChanged()
      */
-    public boolean hasChanged() {
+    @Override
+	public boolean hasChanged() {
         return model.hasChanged();
     }
 
     /* (non-Javadoc)
      * @see org.teiid.query.ui.builder.ILanguageObjectEditor#isComplete()
      */
-    public boolean isComplete() {
+    @Override
+	public boolean isComplete() {
         return model.isComplete();
     }
 
     /* (non-Javadoc)
      * @see org.teiid.query.ui.builder.ILanguageObjectEditor#isEnabled()
      */
-    public boolean isEnabled() {
+    @Override
+	public boolean isEnabled() {
         return pnlUi.isEnabled();
     }
 
@@ -188,21 +199,24 @@ public abstract class AbstractLanguageObjectEditor implements ILanguageObjectEdi
     /* (non-Javadoc)
      * @see org.teiid.query.ui.builder.ILanguageObjectEditor#reset()
      */
-    public void reset() {
+    @Override
+	public void reset() {
         model.reset();
     }
 
     /* (non-Javadoc)
      * @see org.teiid.query.ui.builder.ILanguageObjectEditor#save()
      */
-    public void save() {
+    @Override
+	public void save() {
         model.save();
     }
 
     /* (non-Javadoc)
      * @see org.teiid.query.ui.builder.ILanguageObjectEditor#setEditorType(java.lang.Class)
      */
-    public void setEditorType( Class theEditorType ) {
+    @Override
+	public void setEditorType( Class theEditorType ) {
         CoreArgCheck.isNotNull(theEditorType, Util.getString(PREFIX + "nullEditorType")); //$NON-NLS-1$
 
         if (!LanguageObject.class.isAssignableFrom(theEditorType)) {
@@ -216,7 +230,8 @@ public abstract class AbstractLanguageObjectEditor implements ILanguageObjectEdi
     /* (non-Javadoc)
      * @see org.teiid.query.ui.builder.ILanguageObjectEditor#setEnabled(boolean)
      */
-    public void setEnabled( boolean theEnableFlag ) {
+    @Override
+	public void setEnabled( boolean theEnableFlag ) {
         if (theEnableFlag) {
             WidgetUtil.enable(pnlUi);
         } else {
@@ -227,7 +242,8 @@ public abstract class AbstractLanguageObjectEditor implements ILanguageObjectEdi
     /* (non-Javadoc)
      * @see org.teiid.query.ui.builder.ILanguageObjectEditor#setModel(org.teiid.query.internal.ui.builder.model.ILanguageObjectEditorModel)
      */
-    public void setModel( ILanguageObjectEditorModel theModel ) {
+    @Override
+	public void setModel( ILanguageObjectEditorModel theModel ) {
         CoreArgCheck.isNotNull(theModel);
         CoreArgCheck.isEqual(editorType, theModel.getModelType());
         model = theModel;
@@ -236,6 +252,7 @@ public abstract class AbstractLanguageObjectEditor implements ILanguageObjectEdi
     /* (non-Javadoc)
      * @see org.teiid.query.ui.builder.ILanguageObjectEditor#setLanguageObject(org.teiid.query.sql.LanguageObject)
      */
-    public abstract void setLanguageObject( LanguageObject theLanguageObject );
+    @Override
+	public abstract void setLanguageObject( LanguageObject theLanguageObject );
 
 }

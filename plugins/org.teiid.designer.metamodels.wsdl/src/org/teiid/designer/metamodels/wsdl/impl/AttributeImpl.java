@@ -134,7 +134,8 @@ public class AttributeImpl extends EObjectImpl implements Attribute {
      * 
      * @generated
      */
-    public String getName() {
+    @Override
+	public String getName() {
         return name;
     }
 
@@ -143,7 +144,8 @@ public class AttributeImpl extends EObjectImpl implements Attribute {
      * 
      * @generated
      */
-    public void setName( String newName ) {
+    @Override
+	public void setName( String newName ) {
         String oldName = name;
         name = newName;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, WsdlPackage.ATTRIBUTE__NAME, oldName,
@@ -155,7 +157,8 @@ public class AttributeImpl extends EObjectImpl implements Attribute {
      * 
      * @generated
      */
-    public String getPrefix() {
+    @Override
+	public String getPrefix() {
         return prefix;
     }
 
@@ -164,7 +167,8 @@ public class AttributeImpl extends EObjectImpl implements Attribute {
      * 
      * @generated
      */
-    public void setPrefix( String newPrefix ) {
+    @Override
+	public void setPrefix( String newPrefix ) {
         String oldPrefix = prefix;
         prefix = newPrefix;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, WsdlPackage.ATTRIBUTE__PREFIX,
@@ -176,7 +180,8 @@ public class AttributeImpl extends EObjectImpl implements Attribute {
      * 
      * @generated
      */
-    public String getValue() {
+    @Override
+	public String getValue() {
         return value;
     }
 
@@ -185,7 +190,8 @@ public class AttributeImpl extends EObjectImpl implements Attribute {
      * 
      * @generated
      */
-    public void setValue( String newValue ) {
+    @Override
+	public void setValue( String newValue ) {
         String oldValue = value;
         value = newValue;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, WsdlPackage.ATTRIBUTE__VALUE,
@@ -197,7 +203,8 @@ public class AttributeImpl extends EObjectImpl implements Attribute {
      * 
      * @generated
      */
-    public String getNamespaceUri() {
+    @Override
+	public String getNamespaceUri() {
         return namespaceUri;
     }
 
@@ -206,7 +213,8 @@ public class AttributeImpl extends EObjectImpl implements Attribute {
      * 
      * @generated
      */
-    public void setNamespaceUri( String newNamespaceUri ) {
+    @Override
+	public void setNamespaceUri( String newNamespaceUri ) {
         String oldNamespaceUri = namespaceUri;
         namespaceUri = newNamespaceUri;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, WsdlPackage.ATTRIBUTE__NAMESPACE_URI,
@@ -218,7 +226,8 @@ public class AttributeImpl extends EObjectImpl implements Attribute {
      * 
      * @generated
      */
-    public AttributeOwner getAttributeOwner() {
+    @Override
+	public AttributeOwner getAttributeOwner() {
         if (eContainerFeatureID != WsdlPackage.ATTRIBUTE__ATTRIBUTE_OWNER) return null;
         return (AttributeOwner)eContainer;
     }
@@ -228,7 +237,8 @@ public class AttributeImpl extends EObjectImpl implements Attribute {
      * 
      * @generated
      */
-    public void setAttributeOwner( AttributeOwner newAttributeOwner ) {
+    @Override
+	public void setAttributeOwner( AttributeOwner newAttributeOwner ) {
         if (newAttributeOwner != eContainer
             || (eContainerFeatureID != WsdlPackage.ATTRIBUTE__ATTRIBUTE_OWNER && newAttributeOwner != null)) {
             if (EcoreUtil.isAncestor(this, newAttributeOwner)) throw new IllegalArgumentException(

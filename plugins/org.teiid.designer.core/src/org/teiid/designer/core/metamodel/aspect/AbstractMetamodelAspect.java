@@ -28,14 +28,16 @@ public abstract class AbstractMetamodelAspect implements MetamodelAspect {
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.MetamodelAspect#getMetamodelEntity()
      */
-    public MetamodelEntity getMetamodelEntity() {
+    @Override
+	public MetamodelEntity getMetamodelEntity() {
         return entity;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.MetamodelAspect#getID()
      */
-    public String getID() {
+    @Override
+	public String getID() {
         return id;
     }
 

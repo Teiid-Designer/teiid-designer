@@ -180,7 +180,8 @@ public abstract class PluginUtilities {
             bootFolderPath.append(PLUGINS_FOLDER);
             // Look for the boot plugin folder under the plugins folder
             final File[] bootPluginFolders = new File(bootFolderPath.toString()).listFiles(new FileFilter() {
-                public boolean accept( final File file ) {
+                @Override
+				public boolean accept( final File file ) {
                     if (file.isDirectory() && file.getName().startsWith(BOOT_PLUGIN_FOLDER)) {
                         return true;
                     }

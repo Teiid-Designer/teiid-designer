@@ -73,7 +73,8 @@ public class ShowNonModelsAction extends Action
      * @see org.eclipse.ui.IActionDelegate2#dispose()
      * @since 5.0.1
      */
-    public void dispose() {
+    @Override
+	public void dispose() {
         // nothing to do
     }
     
@@ -106,7 +107,8 @@ public class ShowNonModelsAction extends Action
      * @see org.eclipse.ui.IActionDelegate2#init(org.eclipse.jface.action.IAction)
      * @since 5.0.1
      */
-    public void init(IAction theAction) {
+    @Override
+	public void init(IAction theAction) {
         this.action = theAction;
     }
 
@@ -114,7 +116,8 @@ public class ShowNonModelsAction extends Action
      * @see org.eclipse.ui.IViewActionDelegate#init(org.eclipse.ui.IViewPart)
      * @since 5.0.1
      */
-    public void init(IViewPart theView) {
+    @Override
+	public void init(IViewPart theView) {
         this.viewer = ((ResourceNavigator)theView).getTreeViewer();
 
         // set initial state based on preference
@@ -127,7 +130,8 @@ public class ShowNonModelsAction extends Action
      * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
      * @since 5.0.1
      */
-    public void run(IAction theAction) {
+    @Override
+	public void run(IAction theAction) {
         if (!theAction.isChecked()) {
             this.viewer.addFilter(this.filter);
         } else {
@@ -143,7 +147,8 @@ public class ShowNonModelsAction extends Action
      * @see org.eclipse.ui.IActionDelegate2#runWithEvent(org.eclipse.jface.action.IAction, org.eclipse.swt.widgets.Event)
      * @since 5.0.1
      */
-    public void runWithEvent(IAction theAction,
+    @Override
+	public void runWithEvent(IAction theAction,
                              Event theEvent) {
         run(theAction);
     }
@@ -152,7 +157,8 @@ public class ShowNonModelsAction extends Action
      * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction, org.eclipse.jface.viewers.ISelection)
      * @since 5.0.1
      */
-    public void selectionChanged(IAction theAction,
+    @Override
+	public void selectionChanged(IAction theAction,
                                  ISelection theSelection) {
         // do nothing
     }

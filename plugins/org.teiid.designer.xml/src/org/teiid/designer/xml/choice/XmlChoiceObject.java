@@ -47,13 +47,15 @@ public class XmlChoiceObject implements IChoiceObject {
     /* (non-Javadoc)
      * @See org.teiid.designer.mapping.choice.IChoiceObject#getOrderedOptions()
      */
-    public List getOrderedOptions() {
+    @Override
+	public List getOrderedOptions() {
         List contents = xcChoice.getOrderedChoiceOptions();
 
         return contents;
     }
 
-    public void setOrderedOptions( List lst ) {
+    @Override
+	public void setOrderedOptions( List lst ) {
         xcChoice.setOrderedChoiceOptions( lst );
     }
 
@@ -64,7 +66,8 @@ public class XmlChoiceObject implements IChoiceObject {
      * 
      * @See org.teiid.designer.mapping.choice.IChoiceObject#getName()
      */
-    public String getName( Object option ) {
+    @Override
+	public String getName( Object option ) {
         String result = null;
         if ( option instanceof EObject ) {
             result = ModelerCore.getModelEditor().getName((EObject) option);
@@ -89,14 +92,16 @@ public class XmlChoiceObject implements IChoiceObject {
     /**
      * @see org.teiid.designer.mapping.choice.IChoiceObject#getCriteria(java.lang.Object)
      */
-    public String getCriteria(final Object option) {
+    @Override
+	public String getCriteria(final Object option) {
         return ((ChoiceOption)option).getChoiceCriteria();
     }
 
     /**
      * @see org.teiid.designer.mapping.choice.IChoiceObject#setCriteria(java.lang.Object, java.lang.String)
      */
-    public void setCriteria(final Object option,
+    @Override
+	public void setCriteria(final Object option,
                             final String criteria) {
         ((ChoiceOption)option).setChoiceCriteria(criteria);
     }
@@ -105,7 +110,8 @@ public class XmlChoiceObject implements IChoiceObject {
      * @see org.teiid.designer.mapping.choice.IChoiceObject#getSqlCriteria(java.lang.Object)
      * @since 4.3
      */
-    public String getSqlCriteria(final Object option) {
+    @Override
+	public String getSqlCriteria(final Object option) {
         return (String)this.optionSqlCriteriaMap.get(option);
     }
     
@@ -113,7 +119,8 @@ public class XmlChoiceObject implements IChoiceObject {
      * @see org.teiid.designer.mapping.choice.IChoiceObject#setSqlCriteria(java.lang.Object, java.lang.String)
      * @since 4.3
      */
-    public void setSqlCriteria(final Object option,
+    @Override
+	public void setSqlCriteria(final Object option,
                                final String criteria) {
         this.optionSqlCriteriaMap.put(option, criteria);
     }
@@ -121,7 +128,8 @@ public class XmlChoiceObject implements IChoiceObject {
     /* (non-Javadoc) 
      * @See org.teiid.designer.mapping.choice.IChoiceObject#isIncluded(java.lang.Object)
      */
-    public boolean isIncluded( Object option ) {
+    @Override
+	public boolean isIncluded( Object option ) {
         if ( option instanceof XmlDocumentNode ) {
             return !((XmlDocumentNode)option).isExcludeFromDocument();        
         } 
@@ -137,7 +145,8 @@ public class XmlChoiceObject implements IChoiceObject {
     /* (non-Javadoc)
      * @See org.teiid.designer.mapping.choice.IChoiceObject#setIncluded(java.lang.Object, boolean)
      */
-    public void setIncluded( Object option, boolean b ) {
+    @Override
+	public void setIncluded( Object option, boolean b ) {
         if ( option instanceof XmlDocumentNode ) {        
             ((XmlDocumentNode)option).setExcludeFromDocument( !b );
         } 
@@ -150,7 +159,8 @@ public class XmlChoiceObject implements IChoiceObject {
     /* (non-Javadoc)
      * @See org.teiid.designer.mapping.choice.IChoiceObject#move(int, Object)
      */    
-    public void move( int iNewPosition, Object object ) {
+    @Override
+	public void move( int iNewPosition, Object object ) {
         /*
          * this method has been replaced by getOrderedOptions/setOrderedOptions.
          */
@@ -175,7 +185,8 @@ public class XmlChoiceObject implements IChoiceObject {
     /* (non-Javadoc)
      * @See org.teiid.designer.mapping.choice.IChoiceObject#move(int, Object)
      */    
-    public void move( int iNewPosition, int iOldPosition ) {        
+    @Override
+	public void move( int iNewPosition, int iOldPosition ) {        
         /*
          * jh note:  Since we now must use 'ModelerCore.getModelEditor().move(...)',
          *           which takes an object and a destination index, this move is no 
@@ -187,25 +198,29 @@ public class XmlChoiceObject implements IChoiceObject {
     /* (non-Javadoc)
      * @See org.teiid.designer.mapping.choice.IChoiceObject#getMinOccurs()
      */    
-    public int getMinOccurs() {
+    @Override
+	public int getMinOccurs() {
         return xcChoice.getMinOccurs();
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.mapping.choice.IChoiceObject#getDefaultErrorMode()
      */    
-    public String getDefaultErrorMode() {
+    @Override
+	public String getDefaultErrorMode() {
         return xcChoice.getDefaultErrorMode().getName();  
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.mapping.choice.IChoiceObject#setDefaultErrorMode()
      */    
-    public void setDefaultErrorMode( String value ) {                
+    @Override
+	public void setDefaultErrorMode( String value ) {                
         xcChoice.setDefaultErrorMode( ChoiceErrorMode.get( value ) );
     }
 
-    public String[] getValidErrorModeValues() {
+    @Override
+	public String[] getValidErrorModeValues() {
         List lstValues = ChoiceErrorMode.VALUES;
                 
         String[] saValues = new String[ lstValues.size() ];
@@ -223,18 +238,21 @@ public class XmlChoiceObject implements IChoiceObject {
     /* (non-Javadoc)
      * @See org.teiid.designer.mapping.choice.IChoiceObject#getDefaultOption()
      */    
-    public Object getDefaultOption() {
+    @Override
+	public Object getDefaultOption() {
         return xcChoice.getDefaultOption();
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.mapping.choice.IChoiceObject#setDefaultOption()
      */    
-    public void setDefaultOption( Object value ) {
+    @Override
+	public void setDefaultOption( Object value ) {
         xcChoice.setDefaultOption( (ChoiceOption)value );
     }
 
-    public EObject getRoot() {
+    @Override
+	public EObject getRoot() {
         // get the choice object's root by walking upward until we find a XmlFragment
         EObject eoRoot = null;
         int iCounter = 0;
@@ -261,11 +279,13 @@ public class XmlChoiceObject implements IChoiceObject {
         return eoRoot;
     }
 
-    public EObject getChoice() {
+    @Override
+	public EObject getChoice() {
         return xcChoice;
     }
 
-    public EObject getParent() {
+    @Override
+	public EObject getParent() {
         return xcChoice.getParent();
     }
 }

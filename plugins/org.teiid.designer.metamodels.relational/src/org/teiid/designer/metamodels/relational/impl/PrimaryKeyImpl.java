@@ -69,7 +69,8 @@ public class PrimaryKeyImpl extends UniqueKeyImpl implements PrimaryKey {
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setTable(BaseTable newTable) {
+    @Override
+	public void setTable(BaseTable newTable) {
         if (newTable != eContainer || (eContainerFeatureID != RelationalPackage.PRIMARY_KEY__TABLE && newTable != null)) {
             if (EcoreUtil.isAncestor(this, newTable))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$

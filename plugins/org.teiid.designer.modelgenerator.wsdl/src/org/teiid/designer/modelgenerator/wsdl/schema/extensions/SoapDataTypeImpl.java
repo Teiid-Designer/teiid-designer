@@ -23,19 +23,23 @@ public class SoapDataTypeImpl implements DataType {
         setArrayNamespace(arrayNamespace);
     }
 
-    public String getTypeName() {
+    @Override
+	public String getTypeName() {
         return name;
     }
 
-    public void setTypeName(String name) {
+    @Override
+	public void setTypeName(String name) {
         this.name = name;
     }
 
-    public String getTypeNamespace() {
+    @Override
+	public String getTypeNamespace() {
         return namespace;
     }
 
-    public void setTypeNamespace(String namespace) {
+    @Override
+	public void setTypeNamespace(String namespace) {
         this.namespace = namespace;
     }
 

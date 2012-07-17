@@ -331,7 +331,8 @@ public class ResourceMoveCommand extends ResourceRefactorCommand {
         return new MultiStatus(PID, REBUILD_IMPORTS_COMPLETE, (IStatus[])errorList.toArray(EMPTY_ISTATUS), msg, null);
     }
     
-    protected IStatus refactorModelContents(IProgressMonitor monitor, final Map refactoredPaths ) {
+    @Override
+	protected IStatus refactorModelContents(IProgressMonitor monitor, final Map refactoredPaths ) {
     	return null;
     }
 

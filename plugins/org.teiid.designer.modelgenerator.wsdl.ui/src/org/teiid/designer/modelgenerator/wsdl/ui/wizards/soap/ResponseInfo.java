@@ -31,6 +31,7 @@ public class ResponseInfo extends ProcedureInfo {
 		setProcedureName(getDefaultProcedureName());
 	}
 	
+	@Override
 	public String getDefaultProcedureName() {
 		return getOperation().getName() + "_response";//$NON-NLS-1$
 	}

@@ -76,7 +76,8 @@ public class ModelStatisticsVisitor implements ModelVisitor {
     /**
      * @see org.teiid.designer.core.util.ModelVisitor#visit(org.eclipse.emf.ecore.EObject)
      */
-    public boolean visit( EObject object ) {
+    @Override
+	public boolean visit( EObject object ) {
         if (object == null) {
             return false;
         }
@@ -88,7 +89,8 @@ public class ModelStatisticsVisitor implements ModelVisitor {
     /**
      * @see org.teiid.designer.core.util.ModelVisitor#visit(org.eclipse.emf.ecore.resource.Resource)
      */
-    public boolean visit( Resource resource ) {
+    @Override
+	public boolean visit( Resource resource ) {
         if (resource == null) {
             return false;
         }

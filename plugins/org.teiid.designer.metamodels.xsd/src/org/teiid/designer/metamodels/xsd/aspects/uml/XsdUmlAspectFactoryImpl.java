@@ -19,7 +19,8 @@ import org.teiid.designer.metamodels.xsd.XsdPlugin;
  * RelationalSqlAspectFactoryImpl
  */
 public class XsdUmlAspectFactoryImpl implements MetamodelAspectFactory {
-    public MetamodelAspect create(EClassifier classifier, MetamodelEntity entity) {
+    @Override
+	public MetamodelAspect create(EClassifier classifier, MetamodelEntity entity) {
         switch (classifier.getClassifierID()) {
             case XSDPackage.XSD_BOUNDED_FACET: return new XSDFacetAspect(entity);
             case XSDPackage.XSD_CARDINALITY_FACET: return new XSDFacetAspect(entity);

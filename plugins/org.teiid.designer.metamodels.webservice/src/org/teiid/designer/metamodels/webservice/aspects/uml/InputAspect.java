@@ -46,7 +46,8 @@ public class InputAspect extends WebServiceComponentAspect implements
      * @see org.teiid.designer.core.metamodel.aspect.uml.UmlProperty#isAssociationEnd(java.lang.Object)
      * @since 4.2
      */
-    public boolean isAssociationEnd(Object property) {
+    @Override
+	public boolean isAssociationEnd(Object property) {
         return false;
     }
 
@@ -54,7 +55,8 @@ public class InputAspect extends WebServiceComponentAspect implements
      * @see org.teiid.designer.core.metamodel.aspect.uml.UmlDiagramAspect#getStereotype(java.lang.Object)
      * @since 4.2
      */
-    public String getStereotype(Object eObject) {
+    @Override
+	public String getStereotype(Object eObject) {
         return WebServiceMetamodelPlugin.Util.getString("_UI_Input_type"); //$NON-NLS-1$
     }
     

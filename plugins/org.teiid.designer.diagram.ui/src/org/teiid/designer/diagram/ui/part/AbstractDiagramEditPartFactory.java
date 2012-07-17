@@ -23,7 +23,8 @@ public abstract class AbstractDiagramEditPartFactory implements DiagramEditPartF
     /**
      * @see org.eclipse.gef.EditPartFactory;#createEditPart()
      */
-    public EditPart createEditPart( EditPart context,
+    @Override
+	public EditPart createEditPart( EditPart context,
                                     Object model ) {
         return null;
     }
@@ -31,35 +32,40 @@ public abstract class AbstractDiagramEditPartFactory implements DiagramEditPartF
     /**
      * @see org.teiid.designer.diagram.ui.part.DiagramEditPartFactory#getNotationId()
      */
-    public String getNotationId() {
+    @Override
+	public String getNotationId() {
         return sNotationId;
     }
 
     /**
      * @see org.teiid.designer.diagram.ui.part.DiagramEditPartFactory#setNotationId(java.lang.String)
      */
-    public void setNotationId( String sNotationId ) {
+    @Override
+	public void setNotationId( String sNotationId ) {
         this.sNotationId = sNotationId;
     }
 
     /**
      * @see org.teiid.designer.diagram.ui.part.DiagramEditPartFactory#getSelectionHandler()
      */
-    public IDiagramSelectionHandler getSelectionHandler() {
+    @Override
+	public IDiagramSelectionHandler getSelectionHandler() {
         return selectionHandler;
     }
 
     /**
      * @see org.teiid.designer.diagram.ui.part.DiagramEditPartFactory#setSelectionHandler(org.teiid.designer.diagram.ui.editor.DiagramSelectionHandler)
      */
-    public void setSelectionHandler( IDiagramSelectionHandler selectionHandler ) {
+    @Override
+	public void setSelectionHandler( IDiagramSelectionHandler selectionHandler ) {
         this.selectionHandler = selectionHandler;
     }
 
     /**
      * @see org.teiid.designer.diagram.ui.part.DiagramEditPartFactory#getConnectionEditPart()
      */
-    public NodeConnectionEditPart getConnectionEditPart() {
+    @Override
+	public NodeConnectionEditPart getConnectionEditPart() {
         return new NodeConnectionEditPart();
     }
 

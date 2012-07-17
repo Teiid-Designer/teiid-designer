@@ -50,6 +50,7 @@ public class TeiidDBConfiguration extends SQLDevToolsConfiguration {
 	/* (non-Javadoc)
 	 * @see org.eclipse.datatools.sqltools.core.SQLDevToolsConfiguration#getExecutionService()
 	 */
+	@Override
 	public ExecutionService getExecutionService() {
 		return new TeiidExcecutionService();
 	}

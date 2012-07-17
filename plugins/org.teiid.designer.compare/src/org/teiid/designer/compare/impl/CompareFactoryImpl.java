@@ -97,7 +97,8 @@ public class CompareFactoryImpl extends EFactoryImpl implements CompareFactory {
      * 
      * @generated
      */
-    public DifferenceDescriptor createDifferenceDescriptor() {
+    @Override
+	public DifferenceDescriptor createDifferenceDescriptor() {
         DifferenceDescriptorImpl differenceDescriptor = new DifferenceDescriptorImpl();
         return differenceDescriptor;
     }
@@ -107,7 +108,8 @@ public class CompareFactoryImpl extends EFactoryImpl implements CompareFactory {
      * 
      * @generated
      */
-    public DifferenceReport createDifferenceReport() {
+    @Override
+	public DifferenceReport createDifferenceReport() {
         DifferenceReportImpl differenceReport = new DifferenceReportImpl();
         return differenceReport;
     }
@@ -117,7 +119,8 @@ public class CompareFactoryImpl extends EFactoryImpl implements CompareFactory {
      * 
      * @generated
      */
-    public PropertyDifference createPropertyDifference() {
+    @Override
+	public PropertyDifference createPropertyDifference() {
         PropertyDifferenceImpl propertyDifference = new PropertyDifferenceImpl();
         return propertyDifference;
     }
@@ -147,7 +150,8 @@ public class CompareFactoryImpl extends EFactoryImpl implements CompareFactory {
      * 
      * @generated
      */
-    public ComparePackage getComparePackage() {
+    @Override
+	public ComparePackage getComparePackage() {
         return (ComparePackage)getEPackage();
     }
 

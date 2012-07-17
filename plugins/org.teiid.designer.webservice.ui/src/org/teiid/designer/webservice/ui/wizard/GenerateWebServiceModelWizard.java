@@ -82,7 +82,8 @@ public class GenerateWebServiceModelWizard extends AbstractWizard implements INe
     @Override
     public boolean finish() {
         final IRunnableWithProgress op = new IRunnableWithProgress() {
-            public void run( final IProgressMonitor monitor ) {
+            @Override
+			public void run( final IProgressMonitor monitor ) {
                 // Get the WebService edit object from the wizard create the interface
                 webServiceBuildOptions = interfaceDefinitionPage.getWebServiceBuildOptions();
                 doFinish(monitor);
@@ -136,7 +137,8 @@ public class GenerateWebServiceModelWizard extends AbstractWizard implements INe
         }
 
         Display.getCurrent().asyncExec(new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 if (webServiceBuilderHelper.getWebServiceModel() != null) {
                     // Changed to use method that insures Object editor mode is on
                     ModelEditorManager.openInEditMode(webServiceBuilderHelper.getWebServiceModel(),
@@ -153,7 +155,8 @@ public class GenerateWebServiceModelWizard extends AbstractWizard implements INe
      * 
      * @see IWorkbenchWizard#init(IWorkbench, IStructuredSelection)
      */
-    public void init( IWorkbench workbench,
+    @Override
+	public void init( IWorkbench workbench,
                       IStructuredSelection selection ) {
         this.selection = selection;
     }

@@ -25,7 +25,7 @@ import org.eclipse.datatools.connectivity.ui.wizards.ConnectionProfileDetailsPag
 import org.eclipse.datatools.connectivity.ui.wizards.ExtensibleNewConnectionProfileWizard;
 import org.eclipse.datatools.connectivity.ui.wizards.IDriverUIContributorInformation;
 import org.eclipse.datatools.help.HelpUtil;
-import org.eclipse.jface.dialogs.DialogPage;
+import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -67,6 +67,7 @@ public class TeiidProfileDetailsWizardPage extends
 		setWizard(wizard); 
     }
 
+	@Override
 	public void createCustomControl(Composite parent) {
 		/*
 		 * This bit of code uses the new provider ID mapping functionality added
@@ -100,6 +101,7 @@ public class TeiidProfileDetailsWizardPage extends
 				this, false);
 
 		driverChangeListener  = new ChangeListener() {
+			@Override
 			public void stateChanged(ChangeEvent e) {
 				handleDriverComboSelectionChangeEvent(e);
 			}
@@ -109,10 +111,11 @@ public class TeiidProfileDetailsWizardPage extends
 		if (driverCombo.getCombo().getItemCount() > 0) {
 			driverCombo.getCombo().select(0);
 		} else if (driverCombo.getErrorMessage() != null) {
-			setMessage(driverCombo.getErrorMessage(), DialogPage.INFORMATION);//ErrorMessage(driverCombo.getErrorMessage());
+			setMessage(driverCombo.getErrorMessage(), IMessageProvider.INFORMATION);//ErrorMessage(driverCombo.getErrorMessage());
 		}
 	}
 
+	@Override
 	public void createControl(Composite parent) {
 		super.createControl(parent);
 		HelpUtil.setHelp( getControl(), HelpUtil.getContextId(IHelpConstants.GENERIC_DB_PROFILE_WIZARD_PAGE, ConnectivityUIPlugin.getDefault().getBundle().getSymbolicName()));
@@ -153,15 +156,18 @@ public class TeiidProfileDetailsWizardPage extends
 		return isComplete;
 	}
 
+	@Override
 	public Properties getProperties() {
 		return this.properties;
 	}
 
+	@Override
 	public void setProperties(Properties properties) {
 		this.properties = properties;
 		setPageComplete(determinePageCompletion());
 	}
 
+	@Override
 	public List getSummaryData() {
 		List summaryData = new ArrayList();
 		summaryData = contributedUIComposite.getSummaryData();
@@ -178,6 +184,7 @@ public class TeiidProfileDetailsWizardPage extends
 		return copy;
 	}
 
+	@Override
 	public boolean isPageComplete() {
 		if (driverCombo == null) // means this control hasn't been instantiated yet
 			return false;

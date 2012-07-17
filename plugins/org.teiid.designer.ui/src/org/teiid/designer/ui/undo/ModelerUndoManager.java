@@ -210,7 +210,8 @@ public class ModelerUndoManager implements UndoableListener, IUndoManager {
      * @see org.teiid.designer.ui.undo.IUndoManager#canUndo()
      * @since 5.5.3
      */
-    public boolean canUndo() {
+    @Override
+	public boolean canUndo() {
         Undoable edit = editToBeUndone();
         return edit != null && edit.canUndo();
     }
@@ -219,7 +220,8 @@ public class ModelerUndoManager implements UndoableListener, IUndoManager {
      * @see org.teiid.designer.ui.undo.IUndoManager#canRedo()
      * @since 5.5.3
      */
-    public boolean canRedo() {
+    @Override
+	public boolean canRedo() {
         Undoable edit = editToBeRedone();
         return edit != null && edit.canRedo();
     }
@@ -266,7 +268,8 @@ public class ModelerUndoManager implements UndoableListener, IUndoManager {
      * @see org.teiid.designer.ui.undo.IUndoManager#getUndoLabel()
      * @since 5.5.3
      */
-    public String getUndoLabel() {
+    @Override
+	public String getUndoLabel() {
         if (canUndo()) {
             return editToBeUndone().getUndoPresentationName();
         }
@@ -278,7 +281,8 @@ public class ModelerUndoManager implements UndoableListener, IUndoManager {
      * @see org.teiid.designer.ui.undo.IUndoManager#getRedoLabel()
      * @since 5.5.3
      */
-    public String getRedoLabel() {
+    @Override
+	public String getRedoLabel() {
         if (canRedo()) {
             return editToBeRedone().getRedoPresentationName();
         }
@@ -290,7 +294,8 @@ public class ModelerUndoManager implements UndoableListener, IUndoManager {
      * @see org.teiid.designer.ui.undo.IUndoManager#undo(org.eclipse.core.runtime.IProgressMonitor)
      * @since 5.5.3
      */
-    public void undo( IProgressMonitor monitor ) {
+    @Override
+	public void undo( IProgressMonitor monitor ) {
         Undoable edit = editToBeUndone();
         if (edit != null) {
             // Start txn
@@ -340,7 +345,8 @@ public class ModelerUndoManager implements UndoableListener, IUndoManager {
      * @see org.teiid.designer.ui.undo.IUndoManager#redo(org.eclipse.core.runtime.IProgressMonitor)
      * @since 5.5.3
      */
-    public void redo( IProgressMonitor monitor ) {
+    @Override
+	public void redo( IProgressMonitor monitor ) {
         // the redo stack operates on insignificant edits in the opposite manner as the undo
         // stack. The first edit will always be significant (because that's where undo stops),
         // then any insignificant edits will be redone until the next significant is found, at
@@ -547,7 +553,8 @@ public class ModelerUndoManager implements UndoableListener, IUndoManager {
     /* (non-Javadoc)
      * @See org.teiid.designer.core.transaction.UndoableListener#process(org.teiid.designer.core.transaction.Undoable)
      */
-    public void process( Undoable event ) {
+    @Override
+	public void process( Undoable event ) {
         if (ignoredToolkitEditIDs.contains(event.getId())) {
             return;
         }

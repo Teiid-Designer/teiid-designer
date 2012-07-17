@@ -27,7 +27,8 @@ public class ModelImportComparator implements Comparator {
     /**
      * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
      */
-    public int compare(final Object o1, final Object o2) {
+    @Override
+	public int compare(final Object o1, final Object o2) {
         final ModelImport i1 = (ModelImport)o1;
         final ModelImport i2 = (ModelImport)o2;
         final String path1 = i1.getModelLocation();

@@ -97,7 +97,8 @@ abstract public class AbstractEventBroker extends AbstractEventSource implements
         super.addListener(listener);
     }
 
-    public void processEvent( EventObject obj ) {
+    @Override
+	public void processEvent( EventObject obj ) {
         // Do not allow an event to be processed if the event broker is shutdown
         assertReady();
         if (obj != null) {

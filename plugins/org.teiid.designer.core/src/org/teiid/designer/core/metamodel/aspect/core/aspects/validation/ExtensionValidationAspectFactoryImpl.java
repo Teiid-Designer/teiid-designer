@@ -23,7 +23,8 @@ public class ExtensionValidationAspectFactoryImpl implements MetamodelAspectFact
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.MetamodelAspectFactory#create(org.eclipse.emf.ecore.EClassifier, org.teiid.designer.core.metamodel.aspect.MetamodelEntity)
      */
-    public MetamodelAspect create(EClassifier classifier, MetamodelEntity entity) {
+    @Override
+	public MetamodelAspect create(EClassifier classifier, MetamodelEntity entity) {
         switch (classifier.getClassifierID()) {
             case ExtensionPackage.XATTRIBUTE: return new XAttributeAspect(entity);
             case ExtensionPackage.XCLASS: return new XClassAspect(entity);

@@ -178,7 +178,8 @@ public class JdbcImportOptionsPage extends WizardPage implements
      * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
      * @since 4.0
      */
-    public void createControl(final Composite parent) {
+    @Override
+	public void createControl(final Composite parent) {
         usesHiddenProject = ProductCustomizerMgr.getInstance().getProductCharacteristics().isHiddenProjectCentric();
 
         // Create page
@@ -197,7 +198,8 @@ public class JdbcImportOptionsPage extends WizardPage implements
         this.nameText = WidgetFactory.createTextField(modelGroup, GridData.FILL_HORIZONTAL);
         this.nameText.addModifyListener(new ModifyListener() {
 
-            public void modifyText(final ModifyEvent event) {
+            @Override
+			public void modifyText(final ModifyEvent event) {
                 nameModified();
             }
         });
@@ -226,7 +228,8 @@ public class JdbcImportOptionsPage extends WizardPage implements
         }
         this.folderText.addModifyListener(new ModifyListener() {
 
-            public void modifyText(final ModifyEvent event) {
+            @Override
+			public void modifyText(final ModifyEvent event) {
                 folderModified();
             }
         });
@@ -245,6 +248,7 @@ public class JdbcImportOptionsPage extends WizardPage implements
 		this.virtualModelBox = WidgetFactory.createCheckBox(modelGroup, VIRTUAL_MODEL_CHECKBOX, 0, COLUMN_COUNT);
 		this.virtualModelBox.addSelectionListener(new SelectionAdapter() {
 
+			@Override
 			public void widgetSelected(final SelectionEvent event) {
 				virtualModelBoxSelected();
 			}
@@ -335,7 +339,8 @@ public class JdbcImportOptionsPage extends WizardPage implements
      * @see org.teiid.designer.ui.common.wizard.IPersistentWizardPage#saveSettings()
      * @since 4.0
      */
-    public void saveSettings() {
+    @Override
+	public void saveSettings() {
         final IDialogSettings dlgSettings = getDialogSettings();
         final JdbcImportWizard wizard = (JdbcImportWizard)getWizard();
         // Information must be obtained from wizard, not local variables, since this method may be called w/o this page every

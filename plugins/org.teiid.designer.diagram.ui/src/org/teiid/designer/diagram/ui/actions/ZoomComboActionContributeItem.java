@@ -61,24 +61,29 @@ public class ZoomComboActionContributeItem extends ActionContributionItem implem
         service = partService;
         Assert.isNotNull(partService);
         partService.addPartListener(partListener = new IPartListener() {
-            public void partActivated( IWorkbenchPart part ) {
+            @Override
+			public void partActivated( IWorkbenchPart part ) {
                 if (!isListening && getZoomManager() != null) getZoomManager().addZoomListener(getThis());
             }
 
-            public void partBroughtToTop( IWorkbenchPart p ) {
+            @Override
+			public void partBroughtToTop( IWorkbenchPart p ) {
             }
 
-            public void partClosed( IWorkbenchPart p ) {
+            @Override
+			public void partClosed( IWorkbenchPart p ) {
                 if (isListening && getZoomManager() != null) getZoomManager().removeZoomListener(getThis());
                 isListening = false;
             }
 
-            public void partDeactivated( IWorkbenchPart p ) {
+            @Override
+			public void partDeactivated( IWorkbenchPart p ) {
                 if (isListening && getZoomManager() != null) getZoomManager().removeZoomListener(getThis());
                 isListening = false;
             }
 
-            public void partOpened( IWorkbenchPart p ) {
+            @Override
+			public void partOpened( IWorkbenchPart p ) {
             }
         });
     }
@@ -110,24 +115,29 @@ public class ZoomComboActionContributeItem extends ActionContributionItem implem
         service = partService;
         Assert.isNotNull(partService);
         partService.addPartListener(partListener = new IPartListener() {
-            public void partActivated( IWorkbenchPart part ) {
+            @Override
+			public void partActivated( IWorkbenchPart part ) {
                 if (!isListening) getZoomManager().addZoomListener(getThis());
             }
 
-            public void partBroughtToTop( IWorkbenchPart p ) {
+            @Override
+			public void partBroughtToTop( IWorkbenchPart p ) {
             }
 
-            public void partClosed( IWorkbenchPart p ) {
+            @Override
+			public void partClosed( IWorkbenchPart p ) {
                 if (isListening) getZoomManager().removeZoomListener(getThis());
                 isListening = false;
             }
 
-            public void partDeactivated( IWorkbenchPart p ) {
+            @Override
+			public void partDeactivated( IWorkbenchPart p ) {
                 if (isListening) getZoomManager().removeZoomListener(getThis());
                 isListening = false;
             }
 
-            public void partOpened( IWorkbenchPart p ) {
+            @Override
+			public void partOpened( IWorkbenchPart p ) {
             }
         });
     }
@@ -211,16 +221,19 @@ public class ZoomComboActionContributeItem extends ActionContributionItem implem
     protected Control createControl( Composite parent ) {
         combo = new Combo(parent, SWT.DROP_DOWN);
         combo.addSelectionListener(new SelectionListener() {
-            public void widgetSelected( SelectionEvent e ) {
+            @Override
+			public void widgetSelected( SelectionEvent e ) {
                 handleWidgetSelected(e);
             }
 
-            public void widgetDefaultSelected( SelectionEvent e ) {
+            @Override
+			public void widgetDefaultSelected( SelectionEvent e ) {
                 handleWidgetDefaultSelected(e);
             }
         });
         combo.addDisposeListener(new DisposeListener() {
-            public void widgetDisposed( DisposeEvent e ) {
+            @Override
+			public void widgetDisposed( DisposeEvent e ) {
                 dispose();
             }
         });
@@ -323,7 +336,8 @@ public class ZoomComboActionContributeItem extends ActionContributionItem implem
     /**
      * @see ZoomListener#zoomChanged(double)
      */
-    public void zoomChanged( double zoom ) {
+    @Override
+	public void zoomChanged( double zoom ) {
         if (!thisIsSource && combo != null && !combo.isDisposed()) {
             String zoomString = "" + (int)(zoom * 100) + "%"; //$NON-NLS-1$ //$NON-NLS-2$
             combo.setText(zoomString);

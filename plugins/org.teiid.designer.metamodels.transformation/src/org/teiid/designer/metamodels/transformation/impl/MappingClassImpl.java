@@ -190,7 +190,8 @@ public class MappingClassImpl extends MappingClassObjectImpl implements MappingC
      * 
      * @generated
      */
-    public boolean isRecursive() {
+    @Override
+	public boolean isRecursive() {
         return recursive;
     }
 
@@ -199,7 +200,8 @@ public class MappingClassImpl extends MappingClassObjectImpl implements MappingC
      * 
      * @generated
      */
-    public void setRecursive( boolean newRecursive ) {
+    @Override
+	public void setRecursive( boolean newRecursive ) {
         boolean oldRecursive = recursive;
         recursive = newRecursive;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
@@ -212,7 +214,8 @@ public class MappingClassImpl extends MappingClassObjectImpl implements MappingC
      * 
      * @generated
      */
-    public boolean isRecursionAllowed() {
+    @Override
+	public boolean isRecursionAllowed() {
         return recursionAllowed;
     }
 
@@ -221,7 +224,8 @@ public class MappingClassImpl extends MappingClassObjectImpl implements MappingC
      * 
      * @generated
      */
-    public void setRecursionAllowed( boolean newRecursionAllowed ) {
+    @Override
+	public void setRecursionAllowed( boolean newRecursionAllowed ) {
         boolean oldRecursionAllowed = recursionAllowed;
         recursionAllowed = newRecursionAllowed;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
@@ -234,7 +238,8 @@ public class MappingClassImpl extends MappingClassObjectImpl implements MappingC
      * 
      * @generated
      */
-    public String getRecursionCriteria() {
+    @Override
+	public String getRecursionCriteria() {
         return recursionCriteria;
     }
 
@@ -243,7 +248,8 @@ public class MappingClassImpl extends MappingClassObjectImpl implements MappingC
      * 
      * @generated
      */
-    public void setRecursionCriteria( String newRecursionCriteria ) {
+    @Override
+	public void setRecursionCriteria( String newRecursionCriteria ) {
         String oldRecursionCriteria = recursionCriteria;
         recursionCriteria = newRecursionCriteria;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
@@ -256,7 +262,8 @@ public class MappingClassImpl extends MappingClassObjectImpl implements MappingC
      * 
      * @generated
      */
-    public int getRecursionLimit() {
+    @Override
+	public int getRecursionLimit() {
         return recursionLimit;
     }
 
@@ -265,7 +272,8 @@ public class MappingClassImpl extends MappingClassObjectImpl implements MappingC
      * 
      * @generated
      */
-    public void setRecursionLimit( int newRecursionLimit ) {
+    @Override
+	public void setRecursionLimit( int newRecursionLimit ) {
         int oldRecursionLimit = recursionLimit;
         recursionLimit = newRecursionLimit;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
@@ -278,7 +286,8 @@ public class MappingClassImpl extends MappingClassObjectImpl implements MappingC
      * 
      * @generated
      */
-    public RecursionErrorMode getRecursionLimitErrorMode() {
+    @Override
+	public RecursionErrorMode getRecursionLimitErrorMode() {
         return recursionLimitErrorMode;
     }
 
@@ -287,7 +296,8 @@ public class MappingClassImpl extends MappingClassObjectImpl implements MappingC
      * 
      * @generated
      */
-    public void setRecursionLimitErrorMode( RecursionErrorMode newRecursionLimitErrorMode ) {
+    @Override
+	public void setRecursionLimitErrorMode( RecursionErrorMode newRecursionLimitErrorMode ) {
         RecursionErrorMode oldRecursionLimitErrorMode = recursionLimitErrorMode;
         recursionLimitErrorMode = newRecursionLimitErrorMode == null ? RECURSION_LIMIT_ERROR_MODE_EDEFAULT : newRecursionLimitErrorMode;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(
@@ -302,7 +312,8 @@ public class MappingClassImpl extends MappingClassObjectImpl implements MappingC
      * 
      * @generated
      */
-    public EList getColumns() {
+    @Override
+	public EList getColumns() {
         if (columns == null) {
             columns = new EObjectContainmentWithInverseEList(MappingClassColumn.class, this,
                                                              TransformationPackage.MAPPING_CLASS__COLUMNS,
@@ -316,7 +327,8 @@ public class MappingClassImpl extends MappingClassObjectImpl implements MappingC
      * 
      * @generated
      */
-    public MappingClassSet getMappingClassSet() {
+    @Override
+	public MappingClassSet getMappingClassSet() {
         if (eContainerFeatureID != TransformationPackage.MAPPING_CLASS__MAPPING_CLASS_SET) return null;
         return (MappingClassSet)eContainer;
     }
@@ -326,7 +338,8 @@ public class MappingClassImpl extends MappingClassObjectImpl implements MappingC
      * 
      * @generated
      */
-    public void setMappingClassSet( MappingClassSet newMappingClassSet ) {
+    @Override
+	public void setMappingClassSet( MappingClassSet newMappingClassSet ) {
         if (newMappingClassSet != eContainer
             || (eContainerFeatureID != TransformationPackage.MAPPING_CLASS__MAPPING_CLASS_SET && newMappingClassSet != null)) {
             if (EcoreUtil.isAncestor(this, newMappingClassSet)) throw new IllegalArgumentException(
@@ -351,7 +364,8 @@ public class MappingClassImpl extends MappingClassObjectImpl implements MappingC
      * 
      * @generated
      */
-    public InputSet getInputSet() {
+    @Override
+	public InputSet getInputSet() {
         return inputSet;
     }
 
@@ -379,7 +393,8 @@ public class MappingClassImpl extends MappingClassObjectImpl implements MappingC
      * 
      * @generated
      */
-    public void setInputSet( InputSet newInputSet ) {
+    @Override
+	public void setInputSet( InputSet newInputSet ) {
         if (newInputSet != inputSet) {
             NotificationChain msgs = null;
             if (inputSet != null) msgs = ((InternalEObject)inputSet).eInverseRemove(this,

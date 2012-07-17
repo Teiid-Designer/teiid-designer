@@ -50,7 +50,7 @@ public class XmlModelStatusRowProvider implements IStatusRowProvider {
      */
     @Override
     public String getImageTooltip( IStatus status ) {
-        return "Xml Models Tooltip";
+        return "Xml Models Tooltip"; //$NON-NLS-1$
     }
 
     /**
@@ -70,7 +70,7 @@ public class XmlModelStatusRowProvider implements IStatusRowProvider {
      */
     @Override
     public String getLinkTooltip( IStatus status ) {
-        return "Xml Models Tooltip";
+        return "Xml Models Tooltip"; //$NON-NLS-1$
     }
 
     /**
@@ -80,7 +80,7 @@ public class XmlModelStatusRowProvider implements IStatusRowProvider {
      */
     @Override
     public String getText( IStatus status ) {
-        return "Xml Models Text";
+        return "Xml Models Text"; //$NON-NLS-1$
     }
 
     /**
@@ -90,7 +90,7 @@ public class XmlModelStatusRowProvider implements IStatusRowProvider {
      */
     @Override
     public String getTextTooltip( IStatus status ) {
-        return "Xml Models Text Tooltip";
+        return "Xml Models Text Tooltip"; //$NON-NLS-1$
     }
 
 }

@@ -132,7 +132,8 @@ public class MessageImpl extends EObjectImpl implements Message {
      * 
      * @generated
      */
-    public String getName() {
+    @Override
+	public String getName() {
         return name;
     }
 
@@ -141,7 +142,8 @@ public class MessageImpl extends EObjectImpl implements Message {
      * 
      * @generated
      */
-    public void setName( String newName ) {
+    @Override
+	public void setName( String newName ) {
         String oldName = name;
         name = newName;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, WsdlPackage.MESSAGE__NAME, oldName,
@@ -153,7 +155,8 @@ public class MessageImpl extends EObjectImpl implements Message {
      * 
      * @generated
      */
-    public Documentation getDocumentation() {
+    @Override
+	public Documentation getDocumentation() {
         return documentation;
     }
 
@@ -180,7 +183,8 @@ public class MessageImpl extends EObjectImpl implements Message {
      * 
      * @generated
      */
-    public void setDocumentation( Documentation newDocumentation ) {
+    @Override
+	public void setDocumentation( Documentation newDocumentation ) {
         if (newDocumentation != documentation) {
             NotificationChain msgs = null;
             if (documentation != null) msgs = ((InternalEObject)documentation).eInverseRemove(this,
@@ -203,7 +207,8 @@ public class MessageImpl extends EObjectImpl implements Message {
      * 
      * @generated
      */
-    public EList getDeclaredNamespaces() {
+    @Override
+	public EList getDeclaredNamespaces() {
         if (declaredNamespaces == null) {
             declaredNamespaces = new EObjectContainmentWithInverseEList(NamespaceDeclaration.class, this,
                                                                         WsdlPackage.MESSAGE__DECLARED_NAMESPACES,
@@ -217,7 +222,8 @@ public class MessageImpl extends EObjectImpl implements Message {
      * 
      * @generated
      */
-    public EList getElements() {
+    @Override
+	public EList getElements() {
         if (elements == null) {
             elements = new EObjectContainmentWithInverseEList(Element.class, this, WsdlPackage.MESSAGE__ELEMENTS,
                                                               WsdlPackage.ELEMENT__ELEMENT_OWNER);
@@ -230,7 +236,8 @@ public class MessageImpl extends EObjectImpl implements Message {
      * 
      * @generated
      */
-    public Definitions getDefinitions() {
+    @Override
+	public Definitions getDefinitions() {
         if (eContainerFeatureID != WsdlPackage.MESSAGE__DEFINITIONS) return null;
         return (Definitions)eContainer;
     }
@@ -240,7 +247,8 @@ public class MessageImpl extends EObjectImpl implements Message {
      * 
      * @generated
      */
-    public void setDefinitions( Definitions newDefinitions ) {
+    @Override
+	public void setDefinitions( Definitions newDefinitions ) {
         if (newDefinitions != eContainer || (eContainerFeatureID != WsdlPackage.MESSAGE__DEFINITIONS && newDefinitions != null)) {
             if (EcoreUtil.isAncestor(this, newDefinitions)) throw new IllegalArgumentException(
                                                                                                "Recursive containment not allowed for " + toString()); //$NON-NLS-1$
@@ -262,7 +270,8 @@ public class MessageImpl extends EObjectImpl implements Message {
      * 
      * @generated
      */
-    public EList getParts() {
+    @Override
+	public EList getParts() {
         if (parts == null) {
             parts = new EObjectContainmentWithInverseEList(MessagePart.class, this, WsdlPackage.MESSAGE__PARTS,
                                                            WsdlPackage.MESSAGE_PART__MESSAGE);
@@ -275,7 +284,8 @@ public class MessageImpl extends EObjectImpl implements Message {
      * 
      * @generated
      */
-    public boolean isNameValid() {
+    @Override
+	public boolean isNameValid() {
         // TODO: implement this method
         // Ensure that you remove @generated or mark it @generated NOT
         throw new UnsupportedOperationException();
@@ -286,7 +296,8 @@ public class MessageImpl extends EObjectImpl implements Message {
      * 
      * @generated
      */
-    public IStatus isValid() {
+    @Override
+	public IStatus isValid() {
         // TODO: implement this method
         // Ensure that you remove @generated or mark it @generated NOT
         throw new UnsupportedOperationException();

@@ -40,7 +40,8 @@ public class UmlModelGenerator implements NotationModelGenerator {
     /**
      * Create a DiagramModelNode.
      */
-    public DiagramModelNode createModel( Object inputEObject,
+    @Override
+	public DiagramModelNode createModel( Object inputEObject,
                                          Diagram diagramContainerObject ) {
 
         // Return null if the baseObject is not a EObject
@@ -70,7 +71,8 @@ public class UmlModelGenerator implements NotationModelGenerator {
     /**
      * Create a DiagramModelNode.
      */
-    public DiagramModelNode createChildModel( DiagramModelNode parentDiagramModelNode,
+    @Override
+	public DiagramModelNode createChildModel( DiagramModelNode parentDiagramModelNode,
                                               Object inputEObject ) {
         // Return null if the baseObject is not a EObject
         if (!(inputEObject instanceof EObject)) {
@@ -101,12 +103,14 @@ public class UmlModelGenerator implements NotationModelGenerator {
         return DiagramUiPlugin.getDiagramAspectManager().getUmlAspect(eObject);
     }
 
-    public boolean isAssociation( EObject eObj ) {
+    @Override
+	public boolean isAssociation( EObject eObj ) {
         MetamodelAspect aspect = getUmlAspect(eObj);
         return aspect instanceof UmlAssociation;
     }
 
-    public List getAssociations( List candidateAssociationNodes,
+    @Override
+	public List getAssociations( List candidateAssociationNodes,
                                  List diagramModelNodes ) {
         return Collections.EMPTY_LIST;
     }
@@ -114,7 +118,8 @@ public class UmlModelGenerator implements NotationModelGenerator {
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.notation.NotationModelGenerator#performUpdate(org.teiid.designer.diagram.ui.model.DiagramModelNode, org.eclipse.emf.common.notify.Notification)
      */
-    public void performUpdate( DiagramModelNode targetNode,
+    @Override
+	public void performUpdate( DiagramModelNode targetNode,
                                Notification setNotification ) {
         if (targetNode instanceof UmlClassifierNode) {
             ((UmlClassifierNode)targetNode).refreshForNameChange();

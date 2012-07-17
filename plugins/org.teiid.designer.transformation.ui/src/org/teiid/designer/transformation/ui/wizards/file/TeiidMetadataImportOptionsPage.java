@@ -363,7 +363,8 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
     	this.headerLineNumberText.setLayoutData(gd);
     	this.headerLineNumberText.addModifyListener(new ModifyListener() {
 
-            public void modifyText( final ModifyEvent event ) {
+            @Override
+			public void modifyText( final ModifyEvent event ) {
             	if( !synchronizing ) {
 	            	if( !headerLineNumberText.getText().isEmpty()) {
 	            		try {
@@ -401,7 +402,8 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
 	    this.delimitedFirstDataRowText.setLayoutData(gd);
     	this.delimitedFirstDataRowText.addModifyListener(new ModifyListener() {
 
-            public void modifyText( final ModifyEvent event ) {
+            @Override
+			public void modifyText( final ModifyEvent event ) {
             	if( !synchronizing ) {
 	            	if( !delimitedFirstDataRowText.getText().isEmpty()) {
 	            		try {
@@ -716,7 +718,8 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
 	    this.fixedFirstDataRowText.setLayoutData(gd);
     	this.fixedFirstDataRowText.addModifyListener(new ModifyListener() {
 
-            public void modifyText( final ModifyEvent event ) {
+            @Override
+			public void modifyText( final ModifyEvent event ) {
             	if( !synchronizing ) {
 	            	if( !fixedFirstDataRowText.getText().isEmpty()) {
 	            		try {
@@ -1346,6 +1349,7 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
 		 * 
 		 * @see org.eclipse.jface.viewers.EditingSupport#canEdit(java.lang.Object)
 		 */
+		@Override
 		protected boolean canEdit(Object element) {
 			return true;
 		}
@@ -1355,6 +1359,7 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
 		 * 
 		 * @see org.eclipse.jface.viewers.EditingSupport#getCellEditor(java.lang.Object)
 		 */
+		@Override
 		protected CellEditor getCellEditor(Object element) {
 			return editor;
 		}
@@ -1364,6 +1369,7 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
 		 * 
 		 * @see org.eclipse.jface.viewers.EditingSupport#getValue(java.lang.Object)
 		 */
+		@Override
 		protected Object getValue(Object element) {
 			if( element instanceof TeiidColumnInfo ) {
 				return ((TeiidColumnInfo)element).getName();
@@ -1377,6 +1383,7 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
 		 * @see org.eclipse.jface.viewers.EditingSupport#setValue(java.lang.Object,
 		 *      java.lang.Object)
 		 */
+		@Override
 		protected void setValue(Object element, Object value) {
 			if( element instanceof TeiidColumnInfo ) {
 				String oldValue = ((TeiidColumnInfo)element).getName();
@@ -1410,6 +1417,7 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
 		 * 
 		 * @see org.eclipse.jface.viewers.EditingSupport#canEdit(java.lang.Object)
 		 */
+		@Override
 		protected boolean canEdit(Object element) {
 			return true;
 		}
@@ -1419,6 +1427,7 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
 		 * 
 		 * @see org.eclipse.jface.viewers.EditingSupport#getCellEditor(java.lang.Object)
 		 */
+		@Override
 		protected CellEditor getCellEditor(Object element) {
 			return editor;
 		}
@@ -1428,6 +1437,7 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
 		 * 
 		 * @see org.eclipse.jface.viewers.EditingSupport#getValue(java.lang.Object)
 		 */
+		@Override
 		protected Object getValue(Object element) {
 			if( element instanceof TeiidColumnInfo ) {
 				return Integer.toString(((TeiidColumnInfo)element).getWidth());
@@ -1441,6 +1451,7 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
 		 * @see org.eclipse.jface.viewers.EditingSupport#setValue(java.lang.Object,
 		 *      java.lang.Object)
 		 */
+		@Override
 		protected void setValue(Object element, Object value) {
 			if( element instanceof TeiidColumnInfo ) {
 				int oldValue = ((TeiidColumnInfo)element).getWidth();

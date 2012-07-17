@@ -49,7 +49,8 @@ public class RegisteredUriConverter implements URIConverter {
     /**
      * @see org.eclipse.emf.ecore.resource.impl.URIConverterImpl#createInputStream(org.eclipse.emf.common.util.URI)
      */
-    public InputStream createInputStream(final URI uri) throws IOException {
+    @Override
+	public InputStream createInputStream(final URI uri) throws IOException {
         final InputStream result = this.istreamByURI.get(uri);
         if ( result != null ) {
             return result;
@@ -61,21 +62,24 @@ public class RegisteredUriConverter implements URIConverter {
     /**
      * @see org.eclipse.emf.ecore.resource.URIConverter#normalize(org.eclipse.emf.common.util.URI)
      */
-    public URI normalize(URI uri) {
+    @Override
+	public URI normalize(URI uri) {
         return this.delegate.normalize(uri);
     }
 
     /**
      * @see org.eclipse.emf.ecore.resource.URIConverter#getURIMap()
      */
-    public Map<URI, URI> getURIMap() {
+    @Override
+	public Map<URI, URI> getURIMap() {
         return this.delegate.getURIMap();
     }
 
     /**
      * @see org.eclipse.emf.ecore.resource.URIConverter#createOutputStream(org.eclipse.emf.common.util.URI)
      */
-    public OutputStream createOutputStream(URI uri) throws IOException {
+    @Override
+	public OutputStream createOutputStream(URI uri) throws IOException {
         return this.delegate.createOutputStream(uri);
     }
 
@@ -84,6 +88,7 @@ public class RegisteredUriConverter implements URIConverter {
 	 *
 	 * @see org.eclipse.emf.ecore.resource.URIConverter#contentDescription(org.eclipse.emf.common.util.URI, java.util.Map)
 	 */
+	@Override
 	public Map<String, ?> contentDescription( URI uri,
 	                                          Map<?, ?> options ) throws IOException {
 		return this.delegate.contentDescription(uri, options);
@@ -94,6 +99,7 @@ public class RegisteredUriConverter implements URIConverter {
 	 *
 	 * @see org.eclipse.emf.ecore.resource.URIConverter#createInputStream(org.eclipse.emf.common.util.URI, java.util.Map)
 	 */
+	@Override
 	public InputStream createInputStream( URI uri,
 	                                      Map<?, ?> options ) throws IOException {
 		return this.delegate.createInputStream(uri, options);
@@ -104,6 +110,7 @@ public class RegisteredUriConverter implements URIConverter {
 	 *
 	 * @see org.eclipse.emf.ecore.resource.URIConverter#createOutputStream(org.eclipse.emf.common.util.URI, java.util.Map)
 	 */
+	@Override
 	public OutputStream createOutputStream( URI uri,
 	                                        Map<?, ?> options ) throws IOException {
         return this.delegate.createOutputStream(uri);
@@ -114,6 +121,7 @@ public class RegisteredUriConverter implements URIConverter {
 	 *
 	 * @see org.eclipse.emf.ecore.resource.URIConverter#delete(org.eclipse.emf.common.util.URI, java.util.Map)
 	 */
+	@Override
 	public void delete( URI uri,
 	                    Map<?, ?> options ) throws IOException {
         this.delegate.delete(uri, options);
@@ -124,6 +132,7 @@ public class RegisteredUriConverter implements URIConverter {
 	 *
 	 * @see org.eclipse.emf.ecore.resource.URIConverter#exists(org.eclipse.emf.common.util.URI, java.util.Map)
 	 */
+	@Override
 	public boolean exists( URI uri,
 	                       Map<?, ?> options ) {
         return this.delegate.exists(uri, options);
@@ -134,6 +143,7 @@ public class RegisteredUriConverter implements URIConverter {
 	 *
 	 * @see org.eclipse.emf.ecore.resource.URIConverter#getAttributes(org.eclipse.emf.common.util.URI, java.util.Map)
 	 */
+	@Override
 	public Map<String, ?> getAttributes( URI uri,
 	                                     Map<?, ?> options ) {
 		return this.delegate.getAttributes(uri, options);
@@ -144,6 +154,7 @@ public class RegisteredUriConverter implements URIConverter {
 	 *
 	 * @see org.eclipse.emf.ecore.resource.URIConverter#getContentHandlers()
 	 */
+	@Override
 	public EList<ContentHandler> getContentHandlers() {
 		return this.delegate.getContentHandlers();
 	}
@@ -153,6 +164,7 @@ public class RegisteredUriConverter implements URIConverter {
 	 *
 	 * @see org.eclipse.emf.ecore.resource.URIConverter#getURIHandler(org.eclipse.emf.common.util.URI)
 	 */
+	@Override
 	public URIHandler getURIHandler( URI uri ) {
 		return this.delegate.getURIHandler(uri);
 	}
@@ -162,6 +174,7 @@ public class RegisteredUriConverter implements URIConverter {
 	 *
 	 * @see org.eclipse.emf.ecore.resource.URIConverter#getURIHandlers()
 	 */
+	@Override
 	public EList<URIHandler> getURIHandlers() {
 		return this.delegate.getURIHandlers();
 	}
@@ -172,6 +185,7 @@ public class RegisteredUriConverter implements URIConverter {
 	 * @see org.eclipse.emf.ecore.resource.URIConverter#setAttributes(org.eclipse.emf.common.util.URI, java.util.Map,
 	 *      java.util.Map)
 	 */
+	@Override
 	public void setAttributes( URI uri,
 	                           Map<String, ?> attributes,
 	                           Map<?, ?> options ) throws IOException {

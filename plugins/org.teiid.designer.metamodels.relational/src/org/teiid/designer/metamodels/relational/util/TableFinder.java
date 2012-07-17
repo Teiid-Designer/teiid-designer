@@ -30,7 +30,8 @@ public class TableFinder extends RelationalEntityFinder {
      * 
      * @see org.teiid.designer.core.util.ModelVisitor#visit(org.eclipse.emf.ecore.EObject)
      */
-    public boolean visit( final EObject object ) {
+    @Override
+	public boolean visit( final EObject object ) {
         // Tables are contained by Catalogs, Schemas and Resources
         if (object instanceof Table) {
             found((Table)object);

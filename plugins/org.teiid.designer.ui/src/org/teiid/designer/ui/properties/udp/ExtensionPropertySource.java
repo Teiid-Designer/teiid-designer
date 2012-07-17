@@ -73,14 +73,16 @@ public class ExtensionPropertySource implements IPropertySource {
     /**
      * @see org.eclipse.ui.views.properties.IPropertySource#getEditableValue()
      */
-    public Object getEditableValue() {
+    @Override
+	public Object getEditableValue() {
         return object;
     }
 
     /**
      * @see org.eclipse.ui.views.properties.IPropertySource#getPropertyDescriptors()
      */
-    public IPropertyDescriptor[] getPropertyDescriptors() {
+    @Override
+	public IPropertyDescriptor[] getPropertyDescriptors() {
         IPropertyDescriptor[] result = new IPropertyDescriptor[0];
         if (extension != null) {
             // Validate extension
@@ -143,7 +145,8 @@ public class ExtensionPropertySource implements IPropertySource {
     /**
      * @see org.eclipse.ui.views.properties.IPropertySource#getPropertyValue(java.lang.Object)
      */
-    public Object getPropertyValue( Object id ) {
+    @Override
+	public Object getPropertyValue( Object id ) {
         if (id instanceof ModelAnnotationExtensionDescriptor) {
             // the user edited an Extension property
             final ExtensionPropertyDescriptor extensionDescriptor = (ExtensionPropertyDescriptor)id;
@@ -168,21 +171,24 @@ public class ExtensionPropertySource implements IPropertySource {
     /**
      * @see org.eclipse.ui.views.properties.IPropertySource#isPropertySet(java.lang.Object)
      */
-    public boolean isPropertySet( Object id ) {
+    @Override
+	public boolean isPropertySet( Object id ) {
         return getPropertyValue(id) != null;
     }
 
     /**
      * @see org.eclipse.ui.views.properties.IPropertySource#resetPropertyValue(java.lang.Object)
      */
-    public void resetPropertyValue( Object id ) {
+    @Override
+	public void resetPropertyValue( Object id ) {
         setPropertyValue(id, null);
     }
 
     /**
      * @see org.eclipse.ui.views.properties.IPropertySource#setPropertyValue(java.lang.Object, java.lang.Object)
      */
-    public void setPropertyValue( Object id,
+    @Override
+	public void setPropertyValue( Object id,
                                   Object value ) {
         if (id instanceof ModelAnnotationExtensionDescriptor) {
             // the user edited an Extension property

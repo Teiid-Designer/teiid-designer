@@ -259,7 +259,8 @@ public class UmlClassifierEditPart extends AbstractNotationEditPart implements D
     /**
      * @see org.teiid.designer.diagram.ui.part.EditableEditPart#edit()
      */
-    public void edit() {
+    @Override
+	public void edit() {
         if (!clickedOnArrow()) {
             if (doubleClickedName()) {
                 if (getSelectionHandler().shouldRename(getModelObject())) {
@@ -375,11 +376,13 @@ public class UmlClassifierEditPart extends AbstractNotationEditPart implements D
     /**
      * @see org.teiid.designer.diagram.ui.util.directedit.DirectEditPart#getEditManager()
      */
-    public DirectEditPartManager getEditManager() {
+    @Override
+	public DirectEditPartManager getEditManager() {
         return (DirectEditPartManager)manager;
     }
 
-    public String getEditString() {
+    @Override
+	public String getEditString() {
         return ((DiagramModelNode)getModel()).getName();
     }
 
@@ -404,7 +407,8 @@ public class UmlClassifierEditPart extends AbstractNotationEditPart implements D
         return revealHideListener;
     }
 
-    public String getText() {
+    @Override
+	public String getText() {
         return ((DiagramModelNode)getModel()).getName();
     }
 
@@ -434,7 +438,8 @@ public class UmlClassifierEditPart extends AbstractNotationEditPart implements D
         super.layout(layoutChildren);
     }
 
-    public void performDirectEdit() {
+    @Override
+	public void performDirectEdit() {
         if (manager == null) manager = new DirectEditPartManager(this, TextCellEditor.class,
                                                                  new LabelCellEditorLocator(getLabel()));
         manager.show();
@@ -612,7 +617,8 @@ public class UmlClassifierEditPart extends AbstractNotationEditPart implements D
         this.revealHideListener = listener;
     }
 
-    public void setText( String newName ) {
+    @Override
+	public void setText( String newName ) {
         ((DiagramModelNode)getModel()).setName(newName);
     }
 

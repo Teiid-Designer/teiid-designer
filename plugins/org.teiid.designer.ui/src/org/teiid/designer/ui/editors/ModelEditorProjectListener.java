@@ -30,7 +30,8 @@ public class ModelEditorProjectListener implements IResourceChangeListener {
     /* (non-Javadoc)
      * @see org.eclipse.core.resources.IResourceChangeListener#resourceChanged(org.eclipse.core.resources.IResourceChangeEvent)
      */
-    public void resourceChanged(final IResourceChangeEvent event) {
+    @Override
+	public void resourceChanged(final IResourceChangeEvent event) {
     	// It appears that the event is not guarenteed to be NON-NULL, so we need to add the check
     	if( event != null ) {
 	        int type = event.getType();
@@ -78,7 +79,8 @@ public class ModelEditorProjectListener implements IResourceChangeListener {
                             // this editor is in the project that is closing/being deleted.  It must be closed.
                             final IEditorReference ref = referenceArray[i];
                             Display.getDefault().syncExec(new Runnable() {
-                                public void run() {
+                                @Override
+								public void run() {
                                     // casting to WorkbenchPage is the only way I've found to close an editor reference
                                     page.closeEditors(new IEditorReference[] {ref}, false);
                                 }

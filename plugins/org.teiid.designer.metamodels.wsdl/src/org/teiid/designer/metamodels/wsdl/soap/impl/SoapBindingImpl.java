@@ -98,7 +98,8 @@ public class SoapBindingImpl extends EObjectImpl implements SoapBinding {
      * 
      * @generated
      */
-    public String getTransport() {
+    @Override
+	public String getTransport() {
         return transport;
     }
 
@@ -107,7 +108,8 @@ public class SoapBindingImpl extends EObjectImpl implements SoapBinding {
      * 
      * @generated
      */
-    public void setTransport( String newTransport ) {
+    @Override
+	public void setTransport( String newTransport ) {
         String oldTransport = transport;
         transport = newTransport;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, SoapPackage.SOAP_BINDING__TRANSPORT,
@@ -119,7 +121,8 @@ public class SoapBindingImpl extends EObjectImpl implements SoapBinding {
      * 
      * @generated
      */
-    public SoapStyleType getStyle() {
+    @Override
+	public SoapStyleType getStyle() {
         return style;
     }
 
@@ -128,7 +131,8 @@ public class SoapBindingImpl extends EObjectImpl implements SoapBinding {
      * 
      * @generated
      */
-    public void setStyle( SoapStyleType newStyle ) {
+    @Override
+	public void setStyle( SoapStyleType newStyle ) {
         SoapStyleType oldStyle = style;
         style = newStyle == null ? STYLE_EDEFAULT : newStyle;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, SoapPackage.SOAP_BINDING__STYLE,
@@ -140,7 +144,8 @@ public class SoapBindingImpl extends EObjectImpl implements SoapBinding {
      * 
      * @generated
      */
-    public Binding getBinding() {
+    @Override
+	public Binding getBinding() {
         if (eContainerFeatureID != SoapPackage.SOAP_BINDING__BINDING) return null;
         return (Binding)eContainer;
     }
@@ -150,7 +155,8 @@ public class SoapBindingImpl extends EObjectImpl implements SoapBinding {
      * 
      * @generated
      */
-    public void setBinding( Binding newBinding ) {
+    @Override
+	public void setBinding( Binding newBinding ) {
         if (newBinding != eContainer || (eContainerFeatureID != SoapPackage.SOAP_BINDING__BINDING && newBinding != null)) {
             if (EcoreUtil.isAncestor(this, newBinding)) throw new IllegalArgumentException(
                                                                                            "Recursive containment not allowed for " + toString()); //$NON-NLS-1$

@@ -37,10 +37,12 @@ public abstract class BaseRelationshipProcessor implements RelationshipProcessor
 		this.schemaModel = model;
 	}
 
+	@Override
 	public void addRelationship(String key, Integer value) {
 		tableRelationships.put(key, value);
 	}
 
+	@Override
 	public void setRelationshipRules(RelationshipRules rules) {
 		this.rules = rules;
 	}

@@ -306,7 +306,8 @@ public class MappingProducer {
                                                    final Map inputsToOutputsMap ) {
         // Walk through the mappings and build up the object equivalence maps ...
         final ModelVisitor visitor = new ModelVisitor() {
-            public boolean visit( final EObject object ) {
+            @Override
+			public boolean visit( final EObject object ) {
                 if (object instanceof Mapping) {
                     final Mapping mapping = (Mapping)object;
                     final List inputs = mapping.getInputs();
@@ -321,7 +322,8 @@ public class MappingProducer {
                 return false;
             }
 
-            public boolean visit( Resource resource ) {
+            @Override
+			public boolean visit( Resource resource ) {
                 return true;
             }
         };

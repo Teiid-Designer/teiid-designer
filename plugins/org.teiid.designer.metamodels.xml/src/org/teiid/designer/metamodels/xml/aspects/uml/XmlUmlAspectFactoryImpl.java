@@ -19,7 +19,8 @@ import org.teiid.designer.metamodels.xml.XmlDocumentPlugin;
  * XmlUmlAspectFactoryImpl
  */
 public class XmlUmlAspectFactoryImpl implements MetamodelAspectFactory {
-    public MetamodelAspect create(EClassifier classifier, MetamodelEntity entity) {
+    @Override
+	public MetamodelAspect create(EClassifier classifier, MetamodelEntity entity) {
         switch (classifier.getClassifierID()) {
             case XmlDocumentPackage.XML_FRAGMENT: return createXmlFragmentAspect(entity);
             case XmlDocumentPackage.XML_DOCUMENT: return createXmlDocumentAspect(entity);

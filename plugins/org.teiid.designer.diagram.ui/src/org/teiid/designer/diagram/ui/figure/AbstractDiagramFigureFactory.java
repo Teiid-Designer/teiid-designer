@@ -19,7 +19,8 @@ public abstract class AbstractDiagramFigureFactory implements DiagramFigureFacto
     /**
      * @See org.teiid.designer.diagram.ui.FigureFactory#createFigure(java.lang.Object)
      */
-    public Figure createFigure( Object modelObject ) {
+    @Override
+	public Figure createFigure( Object modelObject ) {
         System.err.println("[AbstractDiagramFigureFactory.createFigure(modelObject)]  SHOULDN'T BE HERE!!!!!"); //$NON-NLS-1$
         return null;
     }
@@ -27,7 +28,8 @@ public abstract class AbstractDiagramFigureFactory implements DiagramFigureFacto
     /**
      * @See org.teiid.designer.diagram.ui.FigureFactory#createFigure(java.lang.Object, String)
      */
-    public Figure createFigure( Object modelObject,
+    @Override
+	public Figure createFigure( Object modelObject,
                                 String sNotationId ) {
         System.err.println("[AbstractDiagramFigureFactory.createFigure(modelObject, notationId)]  SHOULDN'T BE HERE!!!!!"); //$NON-NLS-1$
         return null;

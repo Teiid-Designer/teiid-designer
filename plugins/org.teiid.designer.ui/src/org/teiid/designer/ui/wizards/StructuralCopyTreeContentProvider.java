@@ -43,6 +43,7 @@ public class StructuralCopyTreeContentProvider implements ITreeContentProvider {
 	////////////////////////////////////////////////////////////////////////////////////////
 	// INSTANCE METHODS
 	////////////////////////////////////////////////////////////////////////////////////////
+	@Override
 	public Object[] getChildren(Object node) {
 		Object[] result;
 		if (node instanceof ModelResource) {
@@ -55,12 +56,14 @@ public class StructuralCopyTreeContentProvider implements ITreeContentProvider {
 		return result;
 	}
 	
+	@Override
 	public boolean hasChildren(Object node) {
 		EObject parent = (EObject)node;
 		EList children = parent.eContents();
 		return (children.size() > 0);
 	}
 	
+	@Override
 	public Object[] getElements(Object node) {
 		ModelResource parent = (ModelResource)node;
 		java.util.List elements = null;
@@ -76,15 +79,18 @@ public class StructuralCopyTreeContentProvider implements ITreeContentProvider {
 		return array;
 	}
 	
+	@Override
 	public Object getParent(Object node) {
 		EObject child = (EObject)node;
 		EObject parent = child.eContainer();
 		return parent;
 	}
 	
+	@Override
 	public void dispose() {
 	}
 	
-    public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+    @Override
+	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 	}
 }

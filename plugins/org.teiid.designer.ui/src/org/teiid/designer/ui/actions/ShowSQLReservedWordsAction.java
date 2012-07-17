@@ -31,7 +31,8 @@ public final class ShowSQLReservedWordsAction implements IWorkbenchWindowActionD
      * 
      * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#dispose()
      */
-    public void dispose() {
+    @Override
+	public void dispose() {
     }
 
     /**
@@ -40,7 +41,8 @@ public final class ShowSQLReservedWordsAction implements IWorkbenchWindowActionD
      * 
      * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#init(org.eclipse.ui.IWorkbenchWindow)
      */
-    public void init( final IWorkbenchWindow window ) {
+    @Override
+	public void init( final IWorkbenchWindow window ) {
     }
 
     /**
@@ -49,7 +51,8 @@ public final class ShowSQLReservedWordsAction implements IWorkbenchWindowActionD
      * 
      * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
      */
-    public void run( final IAction action ) {
+    @Override
+	public void run( final IAction action ) {
         try {
             UiUtil.getWorkbenchPage().showView(SQL_RESERVED_WORDS_VIEW);
         } catch (final PartInitException err) {
@@ -66,7 +69,8 @@ public final class ShowSQLReservedWordsAction implements IWorkbenchWindowActionD
      *      org.eclipse.jface.viewers.ISelection)
      * @since 4.3
      */
-    public void selectionChanged( final IAction action,
+    @Override
+	public void selectionChanged( final IAction action,
                                   final ISelection selection ) {
     }
 }

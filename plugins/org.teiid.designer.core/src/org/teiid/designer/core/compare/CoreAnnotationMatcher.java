@@ -33,7 +33,8 @@ public class CoreAnnotationMatcher extends AbstractEObjectMatcher implements Two
     /**
      * @see org.teiid.designer.core.compare.EObjectMatcher#addMappingsForRoots(java.util.List, java.util.List, org.eclipse.emf.mapping.Mapping, org.eclipse.emf.mapping.MappingFactory)
      */
-    public void addMappingsForRoots(final List inputs, final List outputs,
+    @Override
+	public void addMappingsForRoots(final List inputs, final List outputs,
                                     final Map inputsToOutputs, 
                                     final Mapping mapping, final MappingFactory factory) {
         // do nothing for roots ...
@@ -42,7 +43,8 @@ public class CoreAnnotationMatcher extends AbstractEObjectMatcher implements Two
     /**
      * @see org.teiid.designer.core.compare.EObjectMatcher#addMappings(org.eclipse.emf.ecore.EReference, java.util.List, java.util.List, org.eclipse.emf.mapping.Mapping, org.eclipse.emf.mapping.MappingFactory)
      */
-    public void addMappings( final EReference reference, final List inputs, final List outputs, 
+    @Override
+	public void addMappings( final EReference reference, final List inputs, final List outputs, 
                              final Map inputsToOutputs, 
                              final Mapping mapping, final MappingFactory factory) {
         final Map inputAnnotationsByAnnotatedObject = new HashMap();
@@ -79,14 +81,16 @@ public class CoreAnnotationMatcher extends AbstractEObjectMatcher implements Two
     /**
      * @see org.teiid.designer.core.compare.EObjectMatcher#addMappingsForRoots(java.util.List, java.util.List, org.eclipse.emf.mapping.Mapping, org.eclipse.emf.mapping.MappingFactory)
      */
-    public void addMappingsForRoots(List inputs, List outputs, Mapping mapping, MappingFactory factory) {
+    @Override
+	public void addMappingsForRoots(List inputs, List outputs, Mapping mapping, MappingFactory factory) {
         // do nothing for the first phase ...
     }
 
     /**
      * @see org.teiid.designer.core.compare.EObjectMatcher#addMappings(org.eclipse.emf.ecore.EReference, java.util.List, java.util.List, org.eclipse.emf.mapping.Mapping, org.eclipse.emf.mapping.MappingFactory)
      */
-    public void addMappings(EReference reference, List inputs, List outputs, Mapping mapping, MappingFactory factory) {
+    @Override
+	public void addMappings(EReference reference, List inputs, List outputs, Mapping mapping, MappingFactory factory) {
         // do nothing for the first phase ...
     }
 

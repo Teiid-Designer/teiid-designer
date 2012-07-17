@@ -85,7 +85,8 @@ public class ImportWsdlSoapWizard extends AbstractWizard implements IImportWizar
     /**
      * Method declared on IWorkbenchWizard.
      */
-    public void init( IWorkbench workbench,
+    @Override
+	public void init( IWorkbench workbench,
                       IStructuredSelection currentSelection ) {
         
         this.selection = currentSelection;
@@ -135,7 +136,7 @@ public class ImportWsdlSoapWizard extends AbstractWizard implements IImportWizar
         }
 
         // give the WSDL selection page the current workspace selection
-        ((WsdlDefinitionPage)this.selectWsdlPage).setInitialSelection(theSelection);
+        this.selectWsdlPage.setInitialSelection(theSelection);
     }
 
     /**
@@ -154,7 +155,8 @@ public class ImportWsdlSoapWizard extends AbstractWizard implements IImportWizar
         // Save object selections from previous page
         final IRunnableWithProgress op = new IRunnableWithProgress() {
 
-            public void run( final IProgressMonitor monitor ) throws InvocationTargetException {
+            @Override
+			public void run( final IProgressMonitor monitor ) throws InvocationTargetException {
                 // Wrap in transaction so it doesn't result in Significant Undoable
                 boolean started = ModelerCore.startTxn(false, false, "Generate Models From WSDL", //$NON-NLS-1$
                                                        new Object());

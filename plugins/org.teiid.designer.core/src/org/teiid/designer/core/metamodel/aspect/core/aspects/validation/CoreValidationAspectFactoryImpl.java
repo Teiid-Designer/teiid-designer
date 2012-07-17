@@ -23,7 +23,8 @@ public class CoreValidationAspectFactoryImpl implements MetamodelAspectFactory {
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.MetamodelAspectFactory#create(org.eclipse.emf.ecore.EClassifier, org.teiid.designer.core.metamodel.aspect.MetamodelEntity)
      */
-    public MetamodelAspect create(EClassifier classifier, MetamodelEntity entity) {
+    @Override
+	public MetamodelAspect create(EClassifier classifier, MetamodelEntity entity) {
         switch (classifier.getClassifierID()) {
             case CorePackage.ANNOTATION: return new AnnotationAspect(entity);
             case CorePackage.ANNOTATION_CONTAINER: return null;

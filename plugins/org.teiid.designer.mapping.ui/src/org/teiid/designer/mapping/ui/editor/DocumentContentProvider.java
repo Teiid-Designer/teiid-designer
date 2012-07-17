@@ -30,7 +30,8 @@ public class DocumentContentProvider implements ITreeContentProvider {
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.IContentProvider#dispose()
      */
-    public void dispose() {
+    @Override
+	public void dispose() {
         if ( emfProvider != null )
             emfProvider.dispose();
     }
@@ -38,7 +39,8 @@ public class DocumentContentProvider implements ITreeContentProvider {
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
      */
-    public Object[] getChildren(Object parentElement) {
+    @Override
+	public Object[] getChildren(Object parentElement) {
         if ( parentElement instanceof EObject ) {
             return diagramController.getMappableTree().getChildren((EObject) parentElement).toArray();
         }
@@ -48,7 +50,8 @@ public class DocumentContentProvider implements ITreeContentProvider {
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
      */
-    public Object[] getElements(Object inputElement) {
+    @Override
+	public Object[] getElements(Object inputElement) {
         if ( inputElement instanceof Diagram ) {
             EObject root = ((Diagram) inputElement).getTarget();
             return root.eContents().toArray();
@@ -62,21 +65,24 @@ public class DocumentContentProvider implements ITreeContentProvider {
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object)
      */
-    public Object getParent(Object element) {
+    @Override
+	public Object getParent(Object element) {
         return emfProvider.getParent(element);
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(java.lang.Object)
      */
-    public boolean hasChildren(Object element) {
+    @Override
+	public boolean hasChildren(Object element) {
         return emfProvider.hasChildren(element);
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
      */
-    public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+    @Override
+	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
         emfProvider.inputChanged(viewer, oldInput, newInput);        
     }
 

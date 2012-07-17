@@ -164,7 +164,8 @@ public class PortImpl extends EObjectImpl implements Port {
      * 
      * @generated
      */
-    public String getName() {
+    @Override
+	public String getName() {
         return name;
     }
 
@@ -173,7 +174,8 @@ public class PortImpl extends EObjectImpl implements Port {
      * 
      * @generated
      */
-    public void setName( String newName ) {
+    @Override
+	public void setName( String newName ) {
         String oldName = name;
         name = newName;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, WsdlPackage.PORT__NAME, oldName, name));
@@ -184,7 +186,8 @@ public class PortImpl extends EObjectImpl implements Port {
      * 
      * @generated
      */
-    public Documentation getDocumentation() {
+    @Override
+	public Documentation getDocumentation() {
         return documentation;
     }
 
@@ -211,7 +214,8 @@ public class PortImpl extends EObjectImpl implements Port {
      * 
      * @generated
      */
-    public void setDocumentation( Documentation newDocumentation ) {
+    @Override
+	public void setDocumentation( Documentation newDocumentation ) {
         if (newDocumentation != documentation) {
             NotificationChain msgs = null;
             if (documentation != null) msgs = ((InternalEObject)documentation).eInverseRemove(this,
@@ -234,7 +238,8 @@ public class PortImpl extends EObjectImpl implements Port {
      * 
      * @generated
      */
-    public EList getDeclaredNamespaces() {
+    @Override
+	public EList getDeclaredNamespaces() {
         if (declaredNamespaces == null) {
             declaredNamespaces = new EObjectContainmentWithInverseEList(NamespaceDeclaration.class, this,
                                                                         WsdlPackage.PORT__DECLARED_NAMESPACES,
@@ -248,7 +253,8 @@ public class PortImpl extends EObjectImpl implements Port {
      * 
      * @generated
      */
-    public EList getElements() {
+    @Override
+	public EList getElements() {
         if (elements == null) {
             elements = new EObjectContainmentWithInverseEList(Element.class, this, WsdlPackage.PORT__ELEMENTS,
                                                               WsdlPackage.ELEMENT__ELEMENT_OWNER);
@@ -261,7 +267,8 @@ public class PortImpl extends EObjectImpl implements Port {
      * 
      * @generated
      */
-    public String getBinding() {
+    @Override
+	public String getBinding() {
         return binding;
     }
 
@@ -270,7 +277,8 @@ public class PortImpl extends EObjectImpl implements Port {
      * 
      * @generated
      */
-    public void setBinding( String newBinding ) {
+    @Override
+	public void setBinding( String newBinding ) {
         String oldBinding = binding;
         binding = newBinding;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, WsdlPackage.PORT__BINDING, oldBinding,
@@ -282,7 +290,8 @@ public class PortImpl extends EObjectImpl implements Port {
      * 
      * @generated
      */
-    public Service getService() {
+    @Override
+	public Service getService() {
         if (eContainerFeatureID != WsdlPackage.PORT__SERVICE) return null;
         return (Service)eContainer;
     }
@@ -292,7 +301,8 @@ public class PortImpl extends EObjectImpl implements Port {
      * 
      * @generated
      */
-    public void setService( Service newService ) {
+    @Override
+	public void setService( Service newService ) {
         if (newService != eContainer || (eContainerFeatureID != WsdlPackage.PORT__SERVICE && newService != null)) {
             if (EcoreUtil.isAncestor(this, newService)) throw new IllegalArgumentException(
                                                                                            "Recursive containment not allowed for " + toString()); //$NON-NLS-1$
@@ -313,7 +323,8 @@ public class PortImpl extends EObjectImpl implements Port {
      * 
      * @generated
      */
-    public SoapAddress getSoapAddress() {
+    @Override
+	public SoapAddress getSoapAddress() {
         return soapAddress;
     }
 
@@ -340,7 +351,8 @@ public class PortImpl extends EObjectImpl implements Port {
      * 
      * @generated
      */
-    public void setSoapAddress( SoapAddress newSoapAddress ) {
+    @Override
+	public void setSoapAddress( SoapAddress newSoapAddress ) {
         if (newSoapAddress != soapAddress) {
             NotificationChain msgs = null;
             if (soapAddress != null) msgs = ((InternalEObject)soapAddress).eInverseRemove(this,
@@ -362,7 +374,8 @@ public class PortImpl extends EObjectImpl implements Port {
      * 
      * @generated
      */
-    public HttpAddress getHttpAddress() {
+    @Override
+	public HttpAddress getHttpAddress() {
         return httpAddress;
     }
 
@@ -389,7 +402,8 @@ public class PortImpl extends EObjectImpl implements Port {
      * 
      * @generated
      */
-    public void setHttpAddress( HttpAddress newHttpAddress ) {
+    @Override
+	public void setHttpAddress( HttpAddress newHttpAddress ) {
         if (newHttpAddress != httpAddress) {
             NotificationChain msgs = null;
             if (httpAddress != null) msgs = ((InternalEObject)httpAddress).eInverseRemove(this,
@@ -411,7 +425,8 @@ public class PortImpl extends EObjectImpl implements Port {
      * 
      * @generated
      */
-    public boolean isNameValid() {
+    @Override
+	public boolean isNameValid() {
         // TODO: implement this method
         // Ensure that you remove @generated or mark it @generated NOT
         throw new UnsupportedOperationException();

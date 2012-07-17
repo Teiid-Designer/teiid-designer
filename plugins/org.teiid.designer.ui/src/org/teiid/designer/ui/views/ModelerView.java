@@ -59,7 +59,8 @@ public abstract class ModelerView extends ViewPart {
         site.setSelectionProvider(selectionProvider);
 
         this.selectionListener = new ISelectionListener() {
-            public void selectionChanged(IWorkbenchPart part, ISelection selection) {
+            @Override
+			public void selectionChanged(IWorkbenchPart part, ISelection selection) {
                 if (part != ModelerView.this && !(part instanceof PropertySheet)) {
                     selectionProvider.setSelection(selection);
                 }

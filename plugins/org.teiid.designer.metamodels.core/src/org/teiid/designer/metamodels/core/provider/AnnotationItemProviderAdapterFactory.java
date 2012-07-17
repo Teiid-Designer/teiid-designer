@@ -190,7 +190,8 @@ public class AnnotationItemProviderAdapterFactory extends CoreAdapterFactory
      * 
      * @generated
      */
-    public ComposeableAdapterFactory getRootAdapterFactory() {
+    @Override
+	public ComposeableAdapterFactory getRootAdapterFactory() {
         return parentAdapterFactory == null ? this : parentAdapterFactory.getRootAdapterFactory();
     }
 
@@ -199,7 +200,8 @@ public class AnnotationItemProviderAdapterFactory extends CoreAdapterFactory
      * 
      * @generated
      */
-    public void setParentAdapterFactory( ComposedAdapterFactory parentAdapterFactory ) {
+    @Override
+	public void setParentAdapterFactory( ComposedAdapterFactory parentAdapterFactory ) {
         this.parentAdapterFactory = parentAdapterFactory;
     }
 
@@ -248,7 +250,8 @@ public class AnnotationItemProviderAdapterFactory extends CoreAdapterFactory
      * 
      * @generated
      */
-    public void addListener( INotifyChangedListener notifyChangedListener ) {
+    @Override
+	public void addListener( INotifyChangedListener notifyChangedListener ) {
         changeNotifier.addListener(notifyChangedListener);
     }
 
@@ -257,7 +260,8 @@ public class AnnotationItemProviderAdapterFactory extends CoreAdapterFactory
      * 
      * @generated
      */
-    public void removeListener( INotifyChangedListener notifyChangedListener ) {
+    @Override
+	public void removeListener( INotifyChangedListener notifyChangedListener ) {
         changeNotifier.removeListener(notifyChangedListener);
     }
 
@@ -267,7 +271,8 @@ public class AnnotationItemProviderAdapterFactory extends CoreAdapterFactory
      * 
      * @generated
      */
-    public void fireNotifyChanged( Notification notification ) {
+    @Override
+	public void fireNotifyChanged( Notification notification ) {
         changeNotifier.fireNotifyChanged(notification);
 
         if (parentAdapterFactory != null) {

@@ -31,7 +31,8 @@ public class InvalidModelImportRule implements ObjectValidationRule {
      *      org.teiid.designer.core.validation.ValidationContext)
      * @since 4.3
      */
-    public void validate( EObject eObject,
+    @Override
+	public void validate( EObject eObject,
                           ValidationContext context ) {
 
         CoreArgCheck.isInstanceOf(ModelImport.class, eObject);

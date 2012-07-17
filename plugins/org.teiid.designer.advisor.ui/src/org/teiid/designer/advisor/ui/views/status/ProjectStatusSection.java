@@ -20,6 +20,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 import org.teiid.core.util.CoreArgCheck;
@@ -91,7 +92,7 @@ public class ProjectStatusSection implements AdvisorUiConstants.Groups {
         
         SECTION : {
 	        this.section = this.toolkit.createSection(parent, 
-	        		Section.TITLE_BAR | Section.COMPACT ); //| Section.TWISTIE | Section.EXPANDED  );
+	        		ExpandableComposite.TITLE_BAR | ExpandableComposite.COMPACT ); //| Section.TWISTIE | Section.EXPANDED  );
 	        
 	        section.setExpanded(false);
 	        section.setText(Messages.Status);

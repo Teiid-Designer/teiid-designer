@@ -35,7 +35,8 @@ public class UniqueKeyColumnsRule implements ObjectValidationRule {
     /*
      * @See org.teiid.designer.core.validation.ObjectValidationRule#validate(org.eclipse.emf.ecore.EObject, org.teiid.designer.core.validation.ValidationContext)
      */
-    public void validate( final EObject eObject,
+    @Override
+	public void validate( final EObject eObject,
                           final ValidationContext context ) {
         CoreArgCheck.isInstanceOf(UniqueKey.class, eObject);
 

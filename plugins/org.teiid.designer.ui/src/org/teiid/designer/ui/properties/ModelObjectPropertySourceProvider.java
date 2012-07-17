@@ -46,7 +46,8 @@ public class ModelObjectPropertySourceProvider implements IPropertySourceProvide
      * @see org.eclipse.ui.views.properties.IPropertySourceProvider#getPropertySource(java.lang.Object)
      * @since 4.0
      */
-    public IPropertySource getPropertySource(Object object) {
+    @Override
+	public IPropertySource getPropertySource(Object object) {
         if ( object == null ) {
             return null;
         }

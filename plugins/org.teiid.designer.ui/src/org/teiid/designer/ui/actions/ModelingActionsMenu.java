@@ -11,7 +11,8 @@ public final class ModelingActionsMenu extends NewMenuContributionsManager {
      * @see org.teiid.designer.ui.actions.NewMenuContributionsManager#getContributionManager(org.teiid.designer.ui.actions.ModelerActionService,
      *      org.eclipse.jface.viewers.ISelection)
      */
-    protected IContributionManager getContributionManager( ModelerActionService actionService,
+    @Override
+	protected IContributionManager getContributionManager( ModelerActionService actionService,
                                                            ISelection selection ) {
         return actionService.getModelingActionMenu(selection);
     }

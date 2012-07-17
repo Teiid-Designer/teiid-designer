@@ -198,7 +198,8 @@ public class CredentialsPage extends AbstractWizardPage
         this.textFieldPassword.setEchoChar('*');
         this.textFieldPassword.addModifyListener(new ModifyListener() {
 
-            public void modifyText( final ModifyEvent event ) {
+            @Override
+			public void modifyText( final ModifyEvent event ) {
                 //passwordModified();
             }
         });
@@ -304,7 +305,8 @@ public class CredentialsPage extends AbstractWizardPage
         }
     }
     
-    public void profileChanged(IConnectionProfile profile) {
+    @Override
+	public void profileChanged(IConnectionProfile profile) {
     	resetCPComboItems();
     	
     	selectConnectionProfile(profile.getName());

@@ -312,7 +312,8 @@ public class MappingDiagramSelectionHandler extends DiagramSelectionHandler {
                         if (detailedDiagram != null) {
                             if (getViewer().getEditor().canOpenContext(detailedDiagram)) {
                                 UiBusyIndicator.showWhile(Display.getCurrent(), new Runnable() {
-                                    public void run() {
+                                    @Override
+									public void run() {
                                         if (selectedEP instanceof EditableEditPart) {
 
                                             // ==> do Edit
@@ -379,7 +380,8 @@ public class MappingDiagramSelectionHandler extends DiagramSelectionHandler {
 
                         if (getViewer().getEditor().canOpenContext(detailedDiagram)) {
                             UiBusyIndicator.showWhile(Display.getCurrent(), new Runnable() {
-                                public void run() {
+                                @Override
+								public void run() {
                                     getViewer().getEditor().openContext(detailedDiagram);
                                     select(selectedObject);
                                 }
@@ -407,7 +409,8 @@ public class MappingDiagramSelectionHandler extends DiagramSelectionHandler {
                     if (selectedEP instanceof UmlClassifierEditPart || selectedObject instanceof InputSet) {
                         if (ModelEditorManager.canEdit(selectedObject)) {
                             UiBusyIndicator.showWhile(Display.getCurrent(), new Runnable() {
-                                public void run() {
+                                @Override
+								public void run() {
                                     ModelEditorManager.edit(selectedObject);
                                 }
                             });

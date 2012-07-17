@@ -40,7 +40,8 @@ public abstract class BaseXMLRelationalExtensionManagerImpl extends ExtensionMan
         }
     }
 
-    public void setNamespacePrefixesAttribute( RelationalEntity table,
+    @Override
+	public void setNamespacePrefixesAttribute( RelationalEntity table,
                                                String prefixes ) {
         ObjectExtension extension = new ObjectExtension(table, theTableXClass, ModelerCore.getModelEditor());
         extension.eDynamicSet(namespacePrefixesTableAttribute, prefixes);

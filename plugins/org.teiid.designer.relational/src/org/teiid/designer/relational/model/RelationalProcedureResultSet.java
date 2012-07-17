@@ -119,7 +119,8 @@ public class RelationalProcedureResultSet extends RelationalTable {
         throw new UnsupportedOperationException("setSystem() not supported for Procedure Result Sets"); //$NON-NLS-1$
     }
 
-    public void setProperties(Properties props) {
+    @Override
+	public void setProperties(Properties props) {
         for( Object key : props.keySet() ) {
             String keyStr = (String)key;
             String value = props.getProperty(keyStr);

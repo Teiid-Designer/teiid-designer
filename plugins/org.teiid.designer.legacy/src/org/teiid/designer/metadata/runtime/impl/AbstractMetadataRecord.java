@@ -61,28 +61,32 @@ public abstract class AbstractMetadataRecord implements MetadataRecord {
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metadata.runtime.MetadataRecord#getUUID()
      */
-    public String getUUID() {
+    @Override
+	public String getUUID() {
         return this.delegate.getUUID();
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metadata.runtime.MetadataRecord#getParentUUID()
      */
-    public String getParentUUID() {
+    @Override
+	public String getParentUUID() {
         return this.delegate.getParentUUID();
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metadata.runtime.MetadataRecord#getNameInSource()
      */
-    public String getNameInSource() {
+    @Override
+	public String getNameInSource() {
         return this.delegate.getNameInSource();
     }
 
     /**
      * @see org.teiid.designer.metadata.runtime.MetadataRecord#getModelName()
      */
-    public String getModelName() {
+    @Override
+	public String getModelName() {
         if (this.modelName == null) {
             int prntIdx = getFullName() != null ? getFullName().indexOf(IndexConstants.NAME_DELIM_CHAR) : -1;
             if (prntIdx <= 0) {
@@ -98,21 +102,24 @@ public abstract class AbstractMetadataRecord implements MetadataRecord {
     /*
      * @See org.teiid.designer.core.metadata.runtime.MetadataRecord#getFullName()
      */
-    public String getFullName() {
+    @Override
+	public String getFullName() {
         return this.delegate.getFullName();
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metadata.runtime.MetadataRecord#getName()
      */
-    public String getName() {
+    @Override
+	public String getName() {
         return this.delegate.getName();
     }
 
     /*
      * @See org.teiid.designer.core.metadata.runtime.MetadataRecord#getPathString()
      */
-    public String getPathString() {
+    @Override
+	public String getPathString() {
         if (this.pathString == null) {
             this.pathString = getFullName() != null ? getFullName().replace(IndexConstants.NAME_DELIM_CHAR, FileUtils.SEPARATOR) : null;
         }
@@ -122,7 +129,8 @@ public abstract class AbstractMetadataRecord implements MetadataRecord {
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metadata.runtime.MetadataRecord#getPath()
      */
-    public String getPath() {
+    @Override
+	public String getPath() {
         return getPathString();
     }
 
@@ -130,7 +138,8 @@ public abstract class AbstractMetadataRecord implements MetadataRecord {
      * @see org.teiid.designer.metadata.runtime.MetadataRecord#getParentFullName()
      * @deprecated the returned value may be incorrect in the case of an XML element (see defects #11326 and #11362)
      */
-    @Deprecated
+    @Override
+	@Deprecated
     public String getParentFullName() {
         int prntIdx = getFullName() != null ? getFullName().lastIndexOf(IndexConstants.NAME_DELIM_CHAR + getName()) : -1;
         if (prntIdx <= 0) {
@@ -143,7 +152,8 @@ public abstract class AbstractMetadataRecord implements MetadataRecord {
      * @see org.teiid.designer.metadata.runtime.MetadataRecord#getParentPathString()
      * @deprecated the returned value may be incorrect in the case of an XML element (see defects #11326 and #11362)
      */
-    @Deprecated
+    @Override
+	@Deprecated
     public String getParentPathString() {
         String parentFullName = getParentFullName();
         return parentFullName != null ? parentFullName.replace(IndexConstants.NAME_DELIM_CHAR, FileUtils.SEPARATOR) : null;
@@ -152,7 +162,8 @@ public abstract class AbstractMetadataRecord implements MetadataRecord {
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metadata.runtime.MetadataRecord#getRecordType()
      */
-    public char getRecordType() {
+    @Override
+	public char getRecordType() {
         return this.recordType;
     }
 
@@ -242,7 +253,8 @@ public abstract class AbstractMetadataRecord implements MetadataRecord {
     /**
      * @return
      */
-    public String getResourcePath() {
+    @Override
+	public String getResourcePath() {
         return resourcePath;
     }
 
@@ -263,7 +275,8 @@ public abstract class AbstractMetadataRecord implements MetadataRecord {
     /*
      * @See org.teiid.designer.core.metadata.runtime.MetadataRecord#getPropertyValue(java.lang.String)
      */
-    public Object getPropertyValue( String propertyName ) {
+    @Override
+	public Object getPropertyValue( String propertyName ) {
         ArgCheck.isNotNull(propertyName);
         if (propValues != null) {
             return propValues.get(propertyName);
@@ -274,7 +287,8 @@ public abstract class AbstractMetadataRecord implements MetadataRecord {
     /*
      * @See org.teiid.designer.core.metadata.runtime.MetadataRecord#setPropertyValue(java.lang.String, java.lang.Object)
      */
-    public void setPropertyValue( String propertyName,
+    @Override
+	public void setPropertyValue( String propertyName,
                                   Object propertyVame ) {
         if (propertyName != null && propertyVame != null) {
             if (propValues == null) {

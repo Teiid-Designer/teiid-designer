@@ -18,7 +18,8 @@ import org.teiid.designer.metamodels.transformation.TransformationPackage;
  * TransformationUmlAspectFactoryImpl
  */
 public class TransformationUmlAspectFactoryImpl implements MetamodelAspectFactory {
-    public MetamodelAspect create(EClassifier classifier, MetamodelEntity entity) {
+    @Override
+	public MetamodelAspect create(EClassifier classifier, MetamodelEntity entity) {
         switch (classifier.getClassifierID()) {
             case TransformationPackage.MAPPING_CLASS: return createMappingClassAspect();
             case TransformationPackage.MAPPING_CLASS_COLUMN: return createMappingClassColumnAspect();

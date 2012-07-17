@@ -43,7 +43,8 @@ public class XsdUiPlugin extends AbstractUiPlugin {
     public static final PluginUtil Util = new PluginUtilImpl(PLUGIN_ID,I18N_NAME,ResourceBundle.getBundle(I18N_NAME));
 
     private static final ResourceLocator RESOURCE_LOCATOR = new ResourceLocator() {
-        public URL getBaseURL() {
+        @Override
+		public URL getBaseURL() {
             if ( INSTANCE != null ) {
                 URL baseUrl;
                 try {
@@ -61,7 +62,8 @@ public class XsdUiPlugin extends AbstractUiPlugin {
                 throw new WrappedException(exception);
             }
         }
-        public Object getImage(String key) {
+        @Override
+		public Object getImage(String key) {
             try {
                 final URL baseUrl = getBaseURL();
                 final URL url = new URL( baseUrl + "icons/" + key + ".gif");  //$NON-NLS-1$//$NON-NLS-2$
@@ -78,19 +80,23 @@ public class XsdUiPlugin extends AbstractUiPlugin {
                    key);
             }
         }
-        public String getString(String key) {
+        @Override
+		public String getString(String key) {
             return Util.getString(key);
         }
 
-        public String getString(String key, Object[] substitutions) {
+        @Override
+		public String getString(String key, Object[] substitutions) {
             return Util.getString(key,substitutions);
         }
 
-        public String getString(final String key, final boolean translate) {
+        @Override
+		public String getString(final String key, final boolean translate) {
             return getString(key);
         }
 
-        public String getString(final String key, final Object[] substitutions, final boolean translate) {
+        @Override
+		public String getString(final String key, final Object[] substitutions, final boolean translate) {
             return getString(key, substitutions);
         }
     };

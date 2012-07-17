@@ -43,7 +43,8 @@ public class XmiStreamReader implements StreamReader {
     /**
      * @see com.metamatrix.api.mtk.core.reader.MtkStreamReader#read(java.io.InputStream, java.util.Map)
      */
-    public Collection read( InputStream inputStream,
+    @Override
+	public Collection read( InputStream inputStream,
                             Map options ) throws IOException {
         if (inputStream == null) {
             final String msg = ModelerCore.Util.getString("XmiStreamReader.The_InputStream_reference_may_not_be_null_1"); //$NON-NLS-1$
@@ -115,13 +116,15 @@ public class XmiStreamReader implements StreamReader {
         }
     }
 
-    public Collection read( InputStream inputStream,
+    @Override
+	public Collection read( InputStream inputStream,
                             Map options,
                             Resource resource ) {
         throw new UnsupportedOperationException(ModelerCore.Util.getString("XmiStreamReader.Can_not_perform_operation_6")); //$NON-NLS-1$
     }
 
-    public Collection read( InputStream inputStream,
+    @Override
+	public Collection read( InputStream inputStream,
                             Map options,
                             EObject parent ) {
         throw new UnsupportedOperationException(ModelerCore.Util.getString("XmiStreamReader.Can_not_perform_operation_7")); //$NON-NLS-1$

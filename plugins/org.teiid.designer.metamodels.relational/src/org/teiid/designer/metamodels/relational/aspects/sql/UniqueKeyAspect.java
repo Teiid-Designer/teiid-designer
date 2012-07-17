@@ -29,14 +29,16 @@ public class UniqueKeyAspect extends RelationalEntityAspect implements SqlUnique
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlAspect#isRecordType(char)
      */
-    public boolean isRecordType(char recordType) {
+    @Override
+	public boolean isRecordType(char recordType) {
         return (recordType == IndexConstants.RECORD_TYPE.UNIQUE_KEY || recordType == IndexConstants.RECORD_TYPE.PRIMARY_KEY);
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlColumnSetAspect#getColumns(org.eclipse.emf.ecore.EObject)
      */
-    public List getColumns(EObject eObject) {
+    @Override
+	public List getColumns(EObject eObject) {
         CoreArgCheck.isInstanceOf(UniqueKey.class, eObject); 
         UniqueKey uniqueKey = (UniqueKey) eObject;        
         return uniqueKey.getColumns();
@@ -45,7 +47,8 @@ public class UniqueKeyAspect extends RelationalEntityAspect implements SqlUnique
     /*
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlUniqueKeyAspect#getForeignKeys(org.eclipse.emf.ecore.EObject)
      */
-    public List getForeignKeys(EObject eObject) {
+    @Override
+	public List getForeignKeys(EObject eObject) {
         CoreArgCheck.isInstanceOf(UniqueKey.class, eObject); 
         UniqueKey uniqueKey = (UniqueKey) eObject;
         return uniqueKey.getForeignKeys();
@@ -54,14 +57,16 @@ public class UniqueKeyAspect extends RelationalEntityAspect implements SqlUnique
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlColumnSetAspect#getType()
      */
-    public int getColumnSetType() {
+    @Override
+	public int getColumnSetType() {
         return MetadataConstants.COLUMN_SET_TYPES.UNIQUE_KEY;
     }
 
     /*
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlAspect#updateObject(org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject)
      */
-    public void updateObject(EObject targetObject, EObject sourceObject) {
+    @Override
+	public void updateObject(EObject targetObject, EObject sourceObject) {
 
     }
 

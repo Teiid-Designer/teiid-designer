@@ -36,14 +36,16 @@ public abstract class TableAspect extends RelationalEntityAspect implements UmlC
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodels.aspects.UmlDiagramAspect#getStereotype(java.lang.Object)
      */
-    public String getStereotype(Object eObject) {
+    @Override
+	public String getStereotype(Object eObject) {
         return RelationalPlugin.getPluginResourceLocator().getString("_UI_Table_type"); //$NON-NLS-1$
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodels.aspects.UmlDiagramAspect#setSignature(java.lang.Object, java.lang.String)
      */
-    public IStatus setSignature(Object eObject, String newSignature) {
+    @Override
+	public IStatus setSignature(Object eObject, String newSignature) {
         try {
             Table dt = assertTable(eObject);
             dt.setName(newSignature);
@@ -61,11 +63,13 @@ public abstract class TableAspect extends RelationalEntityAspect implements UmlC
 //        return results;
 //    }
 //
-    public Collection getSupertypes(Object eObject) {
+    @Override
+	public Collection getSupertypes(Object eObject) {
         return new ArrayList();
     }
 
-    public String getSignature(Object eObject, int showMask) {
+    @Override
+	public String getSignature(Object eObject, int showMask) {
         Table table = assertTable(eObject);
         StringBuffer result = new StringBuffer();
         switch (showMask) {
@@ -92,7 +96,8 @@ public abstract class TableAspect extends RelationalEntityAspect implements UmlC
         return result.toString();
     }
 
-    public String getEditableSignature(Object eObject) {
+    @Override
+	public String getEditableSignature(Object eObject) {
         return getSignature(eObject, UmlClassifier.SIGNATURE_NAME);
     }
 

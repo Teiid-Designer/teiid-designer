@@ -80,7 +80,8 @@ public final class DocumentTreeViewer extends TreeViewer implements UiConstants 
         MenuManager menuMgr = new MenuManager();
         menuMgr.setRemoveAllWhenShown(true);
         menuMgr.addMenuListener(new IMenuListener() {
-            public void menuAboutToShow( IMenuManager theMenuMgr ) {
+            @Override
+			public void menuAboutToShow( IMenuManager theMenuMgr ) {
                 fillContextMenu(theMenuMgr);
             }
         });

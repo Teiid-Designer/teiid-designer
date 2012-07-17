@@ -72,6 +72,7 @@ public class RestUtils {
 			password = pass;
 		}
 
+		@Override
 		public PasswordAuthentication getPasswordAuthentication() {
 			return new PasswordAuthentication(username, password.toCharArray());
 		}

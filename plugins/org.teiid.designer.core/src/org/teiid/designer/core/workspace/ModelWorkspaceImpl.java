@@ -110,14 +110,16 @@ public class ModelWorkspaceImpl extends OpenableImpl implements ModelWorkspace {
     /**
      * @see org.teiid.designer.core.workspace.ModelWorkspaceItem
      */
-    public IPath getPath() {
+    @Override
+	public IPath getPath() {
         return Path.ROOT;
     }
 
     /**
      * @see org.teiid.designer.core.workspace.ModelWorkspaceItem
      */
-    public IResource getResource() {
+    @Override
+	public IResource getResource() {
         return getWorkspace().getRoot();
     }
 
@@ -132,6 +134,7 @@ public class ModelWorkspaceImpl extends OpenableImpl implements ModelWorkspace {
     /**
      * Returns the workbench associated with this object.
      */
+    @Override
     public IWorkspace getWorkspace() {
         return ModelerCore.getWorkspace();
     }
@@ -160,7 +163,8 @@ public class ModelWorkspaceImpl extends OpenableImpl implements ModelWorkspace {
     /**
      * @see org.teiid.designer.core.workspace.ModelWorkspace#findModelProject(java.lang.String)
      */
-    public ModelProject findModelProject( final String name ) {
+    @Override
+	public ModelProject findModelProject( final String name ) {
         CoreArgCheck.isNotNull(name);
         try {
             final ModelProject[] projects = getModelProjects();
@@ -179,7 +183,8 @@ public class ModelWorkspaceImpl extends OpenableImpl implements ModelWorkspace {
     /**
      * @see org.teiid.designer.core.workspace.ModelWorkspace#findModelProject(IResource)
      */
-    public ModelProject findModelProject( final IResource resource ) {
+    @Override
+	public ModelProject findModelProject( final IResource resource ) {
         CoreArgCheck.isNotNull(resource);
 
         // if(!ModelerCore.hasModelNature(resource.getProject())) {
@@ -216,7 +221,8 @@ public class ModelWorkspaceImpl extends OpenableImpl implements ModelWorkspace {
         return null;
     }
 
-    public ModelWorkspaceItem getParent( final IResource resource ) {
+    @Override
+	public ModelWorkspaceItem getParent( final IResource resource ) {
         CoreArgCheck.isNotNull(resource);
 
         IProject project = resource.getProject();
@@ -360,7 +366,8 @@ public class ModelWorkspaceImpl extends OpenableImpl implements ModelWorkspace {
      *      org.eclipse.core.runtime.IProgressMonitor)
      * @since 4.0
      */
-    public ModelProject createModelProject( final String name,
+    @Override
+	public ModelProject createModelProject( final String name,
                                             final IPath path,
                                             final IProgressMonitor monitor ) throws CoreException {
         CoreArgCheck.isNotNull(name);
@@ -380,7 +387,8 @@ public class ModelWorkspaceImpl extends OpenableImpl implements ModelWorkspace {
         desc.setLocation(path);
         desc.setNatureIds(MODEL_NATURES);
         final IWorkspaceRunnable op = new IWorkspaceRunnable() {
-            public void run( final IProgressMonitor monitor ) throws CoreException {
+            @Override
+			public void run( final IProgressMonitor monitor ) throws CoreException {
                 project.create(desc, monitor);
                 project.open(monitor);
             }
@@ -396,7 +404,8 @@ public class ModelWorkspaceImpl extends OpenableImpl implements ModelWorkspace {
      * @exception IllegalArgumentException if the given resource is not one of an IProject, IFolder, IRoot or IFile.
      * @see ModelWorkspace
      */
-    public ModelProject getModelProject( final IResource resource ) {
+    @Override
+	public ModelProject getModelProject( final IResource resource ) {
         if (!ModelerCore.hasModelNature(resource.getProject())) {
             return null;
         }
@@ -422,7 +431,8 @@ public class ModelWorkspaceImpl extends OpenableImpl implements ModelWorkspace {
     /**
      * @see ModelWorkspace
      */
-    public ModelProject[] getModelProjects() throws ModelWorkspaceException {
+    @Override
+	public ModelProject[] getModelProjects() throws ModelWorkspaceException {
         ArrayList list = getChildrenOfType(MODEL_PROJECT);
         ModelProject[] array = new ModelProject[list.size()];
         list.toArray(array);
@@ -434,7 +444,8 @@ public class ModelWorkspaceImpl extends OpenableImpl implements ModelWorkspace {
      * @see org.teiid.designer.core.workspace.ModelWorkspace#getModelResources()
      * @since 4.2
      */
-    public ModelResource[] getModelResources() throws CoreException {
+    @Override
+	public ModelResource[] getModelResources() throws CoreException {
         List temp = new ArrayList();
         ModelProject[] projects = getModelProjects();
 
@@ -457,7 +468,8 @@ public class ModelWorkspaceImpl extends OpenableImpl implements ModelWorkspace {
      * @see org.teiid.designer.core.workspace.ModelWorkspace#getEmfResources()
      * @since 4.2
      */
-    public Resource[] getEmfResources() throws CoreException {
+    @Override
+	public Resource[] getEmfResources() throws CoreException {
         Resource[] result = null;
         ModelResource[] modelResources = getModelResources();
 
@@ -488,7 +500,8 @@ public class ModelWorkspaceImpl extends OpenableImpl implements ModelWorkspace {
     /**
      * @see ModelWorkspace
      */
-    public Object[] getNonModelingResources() throws ModelWorkspaceException {
+    @Override
+	public Object[] getNonModelingResources() throws ModelWorkspaceException {
         return ((ModelWorkspaceInfo)getItemInfo()).getNonModelResources();
     }
 
@@ -503,7 +516,8 @@ public class ModelWorkspaceImpl extends OpenableImpl implements ModelWorkspace {
     /* (non-Javadoc)
      * @See org.teiid.designer.core.workspace.ModelWorkspace#findModelResource(org.eclipse.emf.ecore.resource.Resource)
      */
-    public ModelResource findModelResource( final IResource resource ) {
+    @Override
+	public ModelResource findModelResource( final IResource resource ) {
         CoreArgCheck.isNotNull(resource);
         if (!ModelUtil.isModelFile(resource)) {
             return null;
@@ -514,7 +528,8 @@ public class ModelWorkspaceImpl extends OpenableImpl implements ModelWorkspace {
     /* (non-Javadoc)
      * @See org.teiid.designer.core.workspace.ModelWorkspace#findModelResource(org.eclipse.emf.ecore.resource.Resource)
      */
-    public ModelResource findModelResource( final Resource resource ) {
+    @Override
+	public ModelResource findModelResource( final Resource resource ) {
         CoreArgCheck.isNotNull(resource);
         return ModelWorkspaceManager.getModelWorkspaceManager().findModelResource(resource);
     }
@@ -522,7 +537,8 @@ public class ModelWorkspaceImpl extends OpenableImpl implements ModelWorkspace {
     /**
      * @see org.teiid.designer.core.workspace.ModelWorkspace#findModelResource(IPath)
      */
-    public ModelResource findModelResource( final IPath pathInWorkspace ) {
+    @Override
+	public ModelResource findModelResource( final IPath pathInWorkspace ) {
         CoreArgCheck.isNotNull(pathInWorkspace);
         try {
             ModelWorkspaceItem item = this;
@@ -547,7 +563,8 @@ public class ModelWorkspaceImpl extends OpenableImpl implements ModelWorkspace {
     /* (non-Javadoc)
      * @See org.teiid.designer.core.workspace.ModelWorkspace#findModelResource(org.eclipse.emf.ecore.EObject)
      */
-    public ModelResource findModelResource( final EObject eObject ) {
+    @Override
+	public ModelResource findModelResource( final EObject eObject ) {
         CoreArgCheck.isNotNull(eObject);
         try {
             final Container container = ModelerCore.getModelContainer();
@@ -564,7 +581,8 @@ public class ModelWorkspaceImpl extends OpenableImpl implements ModelWorkspace {
     /* (non-Javadoc)
      * @See org.teiid.designer.core.workspace.ModelWorkspace#addNotificationListener(org.teiid.designer.core.workspace.ModelWorkspaceNotificationListener)
      */
-    public void addNotificationListener( ModelWorkspaceNotificationListener listener ) {
+    @Override
+	public void addNotificationListener( ModelWorkspaceNotificationListener listener ) {
         CoreArgCheck.isNotNull(listener);
         ModelWorkspaceManager.getModelWorkspaceManager().addNotificationListener(listener);
     }
@@ -572,7 +590,8 @@ public class ModelWorkspaceImpl extends OpenableImpl implements ModelWorkspace {
     /* (non-Javadoc)
      * @See org.teiid.designer.core.workspace.ModelWorkspace#removeNotificationListener(org.teiid.designer.core.workspace.ModelWorkspaceNotificationListener)
      */
-    public void removeNotificationListener( ModelWorkspaceNotificationListener listener ) {
+    @Override
+	public void removeNotificationListener( ModelWorkspaceNotificationListener listener ) {
         CoreArgCheck.isNotNull(listener);
         ModelWorkspaceManager.getModelWorkspaceManager().removeNotificationListener(listener);
     }
@@ -581,7 +600,8 @@ public class ModelWorkspaceImpl extends OpenableImpl implements ModelWorkspace {
      * @see org.teiid.designer.core.workspace.ModelWorkspace#addModelResourceReloadVetoListener(org.teiid.designer.core.workspace.ModelResourceReloadVetoListener)
      * @since 4.2
      */
-    public void addModelResourceReloadVetoListener( ModelResourceReloadVetoListener listener ) {
+    @Override
+	public void addModelResourceReloadVetoListener( ModelResourceReloadVetoListener listener ) {
         CoreArgCheck.isNotNull(listener);
         ModelWorkspaceManager.getModelWorkspaceManager().addModelResourceReloadVetoListener(listener);
     }
@@ -590,7 +610,8 @@ public class ModelWorkspaceImpl extends OpenableImpl implements ModelWorkspace {
      * @see org.teiid.designer.core.workspace.ModelWorkspace#removeModelResourceReloadVetoListener(org.teiid.designer.core.workspace.ModelResourceReloadVetoListener)
      * @since 4.2
      */
-    public void removeModelResourceReloadVetoListener( ModelResourceReloadVetoListener listener ) {
+    @Override
+	public void removeModelResourceReloadVetoListener( ModelResourceReloadVetoListener listener ) {
         CoreArgCheck.isNotNull(listener);
         ModelWorkspaceManager.getModelWorkspaceManager().removeModelResourceReloadVetoListener(listener);
     }

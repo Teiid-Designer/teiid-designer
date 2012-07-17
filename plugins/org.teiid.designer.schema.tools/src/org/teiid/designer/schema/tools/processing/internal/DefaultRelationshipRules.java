@@ -19,6 +19,7 @@ public class DefaultRelationshipRules implements RelationshipRules {
 		this.processor = processor;
 	}
 	
+	@Override
 	public int calculateRelationship(int P_value, int C_value,
 			boolean canBeRoot, int F_value) {
 		boolean P_eq_0 = P_value == 0;

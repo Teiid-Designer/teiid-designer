@@ -71,7 +71,8 @@ public class TableNotificationHandler implements INotifyChangedListener, UiConst
     /* (non-Javadoc)
       * @see org.eclipse.emf.edit.provider.INotifyChangedListener#notifyChanged(org.eclipse.emf.common.notify.Notification)
       */
-    public void notifyChanged( final Notification notification ) {
+    @Override
+	public void notifyChanged( final Notification notification ) {
         // determine if the notification is within the scope of the table
         // jh 10/24: to handle SourcedNotifications correctly, I am moving calls to
         // checkNotification to the handleNotification method.

@@ -90,7 +90,8 @@ public class WebServiceModelProducer implements ModelProducer {
      * @see org.teiid.designer.compare.ModelProducer#execute(org.eclipse.core.runtime.IProgressMonitor, java.util.List)
      * @since 4.2
      */
-    public void execute( IProgressMonitor monitor,
+    @Override
+	public void execute( IProgressMonitor monitor,
                          List problems ) throws Exception {
         this.roots.clear();
 
@@ -155,7 +156,8 @@ public class WebServiceModelProducer implements ModelProducer {
      * @see org.teiid.designer.compare.ModelProducer#getOutputSelector()
      * @since 4.2
      */
-    public ModelSelector getOutputSelector() {
+    @Override
+	public ModelSelector getOutputSelector() {
         return this.output;
     }
 

@@ -151,7 +151,8 @@ public class MimePackageImpl extends EPackageImpl implements MimePackage {
      * 
      * @generated
      */
-    public EClass getMimeContent() {
+    @Override
+	public EClass getMimeContent() {
         return mimeContentEClass;
     }
 
@@ -160,7 +161,8 @@ public class MimePackageImpl extends EPackageImpl implements MimePackage {
      * 
      * @generated
      */
-    public EAttribute getMimeContent_Type() {
+    @Override
+	public EAttribute getMimeContent_Type() {
         return (EAttribute)mimeContentEClass.getEStructuralFeatures().get(1);
     }
 
@@ -169,7 +171,8 @@ public class MimePackageImpl extends EPackageImpl implements MimePackage {
      * 
      * @generated
      */
-    public EAttribute getMimeContent_Xml() {
+    @Override
+	public EAttribute getMimeContent_Xml() {
         return (EAttribute)mimeContentEClass.getEStructuralFeatures().get(2);
     }
 
@@ -178,7 +181,8 @@ public class MimePackageImpl extends EPackageImpl implements MimePackage {
      * 
      * @generated
      */
-    public EReference getMimeContent_MessagePart() {
+    @Override
+	public EReference getMimeContent_MessagePart() {
         return (EReference)mimeContentEClass.getEStructuralFeatures().get(0);
     }
 
@@ -187,7 +191,8 @@ public class MimePackageImpl extends EPackageImpl implements MimePackage {
      * 
      * @generated
      */
-    public EClass getMimeMultipartRelated() {
+    @Override
+	public EClass getMimeMultipartRelated() {
         return mimeMultipartRelatedEClass;
     }
 
@@ -196,7 +201,8 @@ public class MimePackageImpl extends EPackageImpl implements MimePackage {
      * 
      * @generated
      */
-    public EReference getMimeMultipartRelated_MimeParts() {
+    @Override
+	public EReference getMimeMultipartRelated_MimeParts() {
         return (EReference)mimeMultipartRelatedEClass.getEStructuralFeatures().get(0);
     }
 
@@ -205,7 +211,8 @@ public class MimePackageImpl extends EPackageImpl implements MimePackage {
      * 
      * @generated
      */
-    public EClass getMimePart() {
+    @Override
+	public EClass getMimePart() {
         return mimePartEClass;
     }
 
@@ -214,7 +221,8 @@ public class MimePackageImpl extends EPackageImpl implements MimePackage {
      * 
      * @generated
      */
-    public EReference getMimePart_MimeMultipartRelated() {
+    @Override
+	public EReference getMimePart_MimeMultipartRelated() {
         return (EReference)mimePartEClass.getEStructuralFeatures().get(0);
     }
 
@@ -223,7 +231,8 @@ public class MimePackageImpl extends EPackageImpl implements MimePackage {
      * 
      * @generated
      */
-    public EClass getMimeElementOwner() {
+    @Override
+	public EClass getMimeElementOwner() {
         return mimeElementOwnerEClass;
     }
 
@@ -232,7 +241,8 @@ public class MimePackageImpl extends EPackageImpl implements MimePackage {
      * 
      * @generated
      */
-    public EReference getMimeElementOwner_MimeElements() {
+    @Override
+	public EReference getMimeElementOwner_MimeElements() {
         return (EReference)mimeElementOwnerEClass.getEStructuralFeatures().get(0);
     }
 
@@ -241,7 +251,8 @@ public class MimePackageImpl extends EPackageImpl implements MimePackage {
      * 
      * @generated
      */
-    public EClass getMimeElement() {
+    @Override
+	public EClass getMimeElement() {
         return mimeElementEClass;
     }
 
@@ -250,7 +261,8 @@ public class MimePackageImpl extends EPackageImpl implements MimePackage {
      * 
      * @generated
      */
-    public EReference getMimeElement_MimeElementOwner() {
+    @Override
+	public EReference getMimeElement_MimeElementOwner() {
         return (EReference)mimeElementEClass.getEStructuralFeatures().get(0);
     }
 
@@ -259,7 +271,8 @@ public class MimePackageImpl extends EPackageImpl implements MimePackage {
      * 
      * @generated
      */
-    public MimeFactory getMimeFactory() {
+    @Override
+	public MimeFactory getMimeFactory() {
         return (MimeFactory)getEFactoryInstance();
     }
 

@@ -72,7 +72,8 @@ public class DiagramPreferencePage extends PreferencePage
     // ////////////////////////////////////////////////////////////////////
     // Instance methods
     // ////////////////////////////////////////////////////////////////////
-    public void init( IWorkbench workbench ) {
+    @Override
+	public void init( IWorkbench workbench ) {
     }
 
     @Override
@@ -318,7 +319,8 @@ public class DiagramPreferencePage extends PreferencePage
     }
 
     class SizeModifyListener implements ModifyListener {
-        public void modifyText( ModifyEvent e ) {
+        @Override
+		public void modifyText( ModifyEvent e ) {
             try {
                 Integer.parseInt(modelSizeTextField.getText());
                 DiagramPreferencePage.this.setValid(true);

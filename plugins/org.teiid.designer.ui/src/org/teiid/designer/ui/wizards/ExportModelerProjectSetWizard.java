@@ -166,13 +166,15 @@ public final class ExportModelerProjectSetWizard extends AbstractWizard
      * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench, org.eclipse.jface.viewers.IStructuredSelection)
      * @since 4.0
      */
-    public void init( final IWorkbench workbench,
+    @Override
+	public void init( final IWorkbench workbench,
                       final IStructuredSelection selection ) {
         this.selection = selection;
         this.selections = new ModelWorkspaceSelections();
         this.page1 = new AbstractWizardPage(ExportModelerProjectSetWizard.class.getSimpleName(), PAGE_TITLE) {
 
-            public void createControl( final Composite parent ) {
+            @Override
+			public void createControl( final Composite parent ) {
                 setControl(createPageControl(parent));
             }
         };
@@ -199,7 +201,8 @@ public final class ExportModelerProjectSetWizard extends AbstractWizard
         this.viewer = (CheckboxTreeViewer)WidgetFactory.createTreeViewer(group, SWT.CHECK | SWT.MULTI);
         viewer.addCheckStateListener(new ICheckStateListener() {
 
-            public void checkStateChanged( CheckStateChangedEvent event ) {
+            @Override
+			public void checkStateChanged( CheckStateChangedEvent event ) {
                 validatePage();
             }
         });
@@ -210,7 +213,8 @@ public final class ExportModelerProjectSetWizard extends AbstractWizard
         view.setRestrictedToModelWorkspaceItemsOnly(true);
         view.getModelWorkspaceFilters().add(new ModelWorkspaceFilter() {
 
-            public boolean select( final Object parent,
+            @Override
+			public boolean select( final Object parent,
                                    final Object node ) {
                 if (node instanceof ModelProject && ((ModelProject)node).isOpen()) {
                     try {
@@ -228,14 +232,17 @@ public final class ExportModelerProjectSetWizard extends AbstractWizard
 
         final ITreeContentProvider treeContentProvider = new ITreeContentProvider() {
 
-            public void dispose() {
+            @Override
+			public void dispose() {
             }
 
-            public Object[] getChildren( final Object node ) {
+            @Override
+			public Object[] getChildren( final Object node ) {
                 return EMPTY_STRING_ARRAY;
             }
 
-            public Object[] getElements( final Object inputElement ) {
+            @Override
+			public Object[] getElements( final Object inputElement ) {
                 try {
                     return view.getChildren(ModelerCore.getModelWorkspace());
                 } catch (final ModelWorkspaceException err) {
@@ -244,15 +251,18 @@ public final class ExportModelerProjectSetWizard extends AbstractWizard
                 }
             }
 
-            public Object getParent( final Object node ) {
+            @Override
+			public Object getParent( final Object node ) {
                 return null;
             }
 
-            public boolean hasChildren( final Object node ) {
+            @Override
+			public boolean hasChildren( final Object node ) {
                 return false;
             }
 
-            public void inputChanged( final Viewer viewer,
+            @Override
+			public void inputChanged( final Viewer viewer,
                                       final Object oldInput,
                                       final Object newInput ) {
             }
@@ -298,7 +308,8 @@ public final class ExportModelerProjectSetWizard extends AbstractWizard
                                                           settings.getArray(FILE_LABEL));
             this.zipFileCombo.addModifyListener(new ModifyListener() {
 
-                public void modifyText( final ModifyEvent event ) {
+                @Override
+				public void modifyText( final ModifyEvent event ) {
                     handleSourceFileChanged();
                 }
             });
@@ -334,7 +345,8 @@ public final class ExportModelerProjectSetWizard extends AbstractWizard
         this.page1.setMessage(INITIAL_MESSAGE);
         this.getShell().getDisplay().asyncExec(new Runnable() {
 
-            public void run() {
+            @Override
+			public void run() {
                 validatePage();
             }
         });

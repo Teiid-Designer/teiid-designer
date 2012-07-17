@@ -56,7 +56,8 @@ public class TableMaterializedRule implements StructuralFeatureValidationRule {
      *      org.eclipse.emf.ecore.EObject, java.lang.Object, org.teiid.designer.core.validation.ValidationContext)
      * @since 4.2
      */
-    public void validate( final EStructuralFeature eStructuralFeature,
+    @Override
+	public void validate( final EStructuralFeature eStructuralFeature,
                           final EObject eObject,
                           final Object value,
                           final ValidationContext context ) {

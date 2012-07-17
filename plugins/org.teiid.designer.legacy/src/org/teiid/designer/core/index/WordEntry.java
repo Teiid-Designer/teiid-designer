@@ -159,6 +159,7 @@ public class WordEntry implements Comparable<WordEntry> {
     public String toString() {
 		return new String(fWord);
 	}
+	@Override
 	public int compareTo(WordEntry other) {
 		return Util.compare(this.fWord, other.fWord);
 	}

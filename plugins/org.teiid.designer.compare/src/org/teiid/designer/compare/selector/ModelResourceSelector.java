@@ -44,7 +44,8 @@ public class ModelResourceSelector extends AbstractModelSelector {
     /**
      * @See org.teiid.designer.compare.processor.ModelSelector#open()
      */
-    public void open() {
+    @Override
+	public void open() {
         // don't do anything ...
     }
 
@@ -64,14 +65,16 @@ public class ModelResourceSelector extends AbstractModelSelector {
     /**
      * @see org.teiid.designer.compare.selector.ModelSelector#getRootObjects()
      */
-    public List getRootObjects() throws ModelerCoreException {
+    @Override
+	public List getRootObjects() throws ModelerCoreException {
         return this.getResource().getContents();
     }
 
     /**
      * @See org.teiid.designer.compare.processor.ModelSelector#getUri()
      */
-    public URI getUri() {
+    @Override
+	public URI getUri() {
         final IPath path = this.modelResource.getPath();
         final URI result = URI.createFileURI(path.toFile().getAbsolutePath());
         return result;
@@ -80,32 +83,37 @@ public class ModelResourceSelector extends AbstractModelSelector {
     /**
      * @See org.teiid.designer.compare.processor.ModelSelector#close()
      */
-    public void close() {
+    @Override
+	public void close() {
         this.helper = null;
     }
 
     /**
      * @see org.teiid.designer.compare.selector.ModelSelector#getLabel()
      */
-    public String getLabel() {
+    @Override
+	public String getLabel() {
         return this.label;
     }
 
-    public void setLabel(final String label) {
+    @Override
+	public void setLabel(final String label) {
         this.label = label;
     }
 
     /**
      * @see org.teiid.designer.compare.selector.ModelSelector#getModelAnnotation()
      */
-    public ModelAnnotation getModelAnnotation() throws ModelWorkspaceException {
+    @Override
+	public ModelAnnotation getModelAnnotation() throws ModelWorkspaceException {
         return this.modelResource.getModelAnnotation();
     }
 
     /**
      * @see org.teiid.designer.compare.selector.ModelSelector#getModelHelper()
      */
-    public ModelHelper getModelHelper() throws ModelWorkspaceException {
+    @Override
+	public ModelHelper getModelHelper() throws ModelWorkspaceException {
         if (this.helper == null) {
             this.helper = new ModelContentsModelHelper(getModelContents());
         }
@@ -115,7 +123,8 @@ public class ModelResourceSelector extends AbstractModelSelector {
     /**
      * @see org.teiid.designer.compare.selector.ModelSelector#getModelContents()
      */
-    public ModelContents getModelContents() throws ModelWorkspaceException {
+    @Override
+	public ModelContents getModelContents() throws ModelWorkspaceException {
         if (this.contents == null) {
             this.contents = ModelContents.getModelContents(this.modelResource);
         }

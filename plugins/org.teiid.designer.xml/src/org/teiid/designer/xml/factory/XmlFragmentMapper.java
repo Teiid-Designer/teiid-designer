@@ -76,14 +76,16 @@ public class XmlFragmentMapper implements ITreeToRelationalMapper, PluginConstan
     /* (non-Javadoc)
      * @See org.teiid.designer.mapping.factory.ITreeToRelationalMapper#allowsMappingClass(org.eclipse.emf.ecore.EObject)
      */
-    public boolean allowsMappingClass(EObject theTreeNode) {
+    @Override
+	public boolean allowsMappingClass(EObject theTreeNode) {
         return ((theTreeNode instanceof XmlElement) || (theTreeNode instanceof XmlContainerNode));
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.mapping.factory.ITreeToRelationalMapper#allowsStagingTable(org.eclipse.emf.ecore.EObject)
      */
-    public boolean allowsStagingTable(EObject theTreeNode) {
+    @Override
+	public boolean allowsStagingTable(EObject theTreeNode) {
         // can put a StagingTable anywhere that a MappingClass is allowed.
         return allowsMappingClass(theTreeNode);
     }
@@ -91,7 +93,8 @@ public class XmlFragmentMapper implements ITreeToRelationalMapper, PluginConstan
     /* (non-Javadoc)
      * @See org.teiid.designer.mapping.factory.ITreeToRelationalMapper#canIterate(org.eclipse.emf.ecore.EObject)
      */
-    public boolean canIterate(EObject theTreeNode) {
+    @Override
+	public boolean canIterate(EObject theTreeNode) {
         checkNodeIsXmlDocumentEntity(theTreeNode);
 
         int maxOccurs = 0;
@@ -123,7 +126,8 @@ public class XmlFragmentMapper implements ITreeToRelationalMapper, PluginConstan
     /* (non-Javadoc)
      * @See org.teiid.designer.mapping.factory.ITreeToRelationalMapper#getMappableTree()
      */
-    public IMappableTree getMappableTree() {
+    @Override
+	public IMappableTree getMappableTree() {
         if ( tree == null ) {
             tree = new XmlMappableTree(this.fragment);
         }
@@ -135,7 +139,8 @@ public class XmlFragmentMapper implements ITreeToRelationalMapper, PluginConstan
     /* (non-Javadoc)
      * @See org.teiid.designer.mapping.factory.ITreeToRelationalMapper#isContainerNode()
      */
-    public boolean isContainerNode(EObject theTreeNode) {
+    @Override
+	public boolean isContainerNode(EObject theTreeNode) {
         //swjTODO: check this logic against the metamodel
         return theTreeNode instanceof XmlContainerNode;
     }
@@ -143,7 +148,8 @@ public class XmlFragmentMapper implements ITreeToRelationalMapper, PluginConstan
     /* (non-Javadoc)
      * @See org.teiid.designer.mapping.factory.ITreeToRelationalMapper#isMappable(org.eclipse.emf.ecore.EObject)
      */
-    public boolean isMappable(final EObject theTreeNode) {
+    @Override
+	public boolean isMappable(final EObject theTreeNode) {
         checkNodeIsXmlDocumentEntity(theTreeNode);
 
         if ( theTreeNode instanceof XmlAttribute ) {
@@ -232,7 +238,8 @@ public class XmlFragmentMapper implements ITreeToRelationalMapper, PluginConstan
     /* (non-Javadoc)
      * @See org.teiid.designer.mapping.factory.ITreeToRelationalMapper#isMappingRequired(org.eclipse.emf.ecore.EObject)
      */
-    public boolean isMappingRequired(EObject theTreeNode) {
+    @Override
+	public boolean isMappingRequired(EObject theTreeNode) {
       checkNodeIsXmlDocumentEntity(theTreeNode);
       throw new RuntimeException("XmlFragmentMapper.isMappingRequired not yet implemented"); //$NON-NLS-1$
     }
@@ -240,7 +247,8 @@ public class XmlFragmentMapper implements ITreeToRelationalMapper, PluginConstan
     /* (non-Javadoc)
      * @See org.teiid.designer.mapping.factory.ITreeToRelationalMapper#isRecursive(org.eclipse.emf.ecore.EObject)
      */
-    public boolean isRecursive(EObject theTreeNode) {
+    @Override
+	public boolean isRecursive(EObject theTreeNode) {
       checkNodeIsXmlDocumentEntity(theTreeNode);
       return ((theTreeNode instanceof XmlElement) && ((XmlElement)theTreeNode).isRecursive());
     }
@@ -248,7 +256,8 @@ public class XmlFragmentMapper implements ITreeToRelationalMapper, PluginConstan
     /* (non-Javadoc)
      * @See org.teiid.designer.mapping.factory.ITreeToRelationalMapper#isTreeRoot(org.eclipse.emf.ecore.EObject)
      */
-    public boolean isTreeRoot(EObject theTreeNode) {
+    @Override
+	public boolean isTreeRoot(EObject theTreeNode) {
         CoreArgCheck.isNotNull(theTreeNode);
         return (theTreeNode instanceof XmlFragment);
     }
@@ -256,7 +265,8 @@ public class XmlFragmentMapper implements ITreeToRelationalMapper, PluginConstan
     /* (non-Javadoc)
      * @See org.teiid.designer.mapping.factory.ITreeToRelationalMapper#setTreeRoot(org.eclipse.emf.ecore.EObject)
      */
-    public void setTreeRoot(EObject theFragment) {
+    @Override
+	public void setTreeRoot(EObject theFragment) {
         CoreArgCheck.isNotNull(theFragment);
         fragment = (XmlFragment) theFragment;
         
@@ -271,6 +281,7 @@ public class XmlFragmentMapper implements ITreeToRelationalMapper, PluginConstan
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.mapping.factory.ITreeToRelationalMapper#isTreeRoot(org.eclipse.emf.ecore.EObject)
 	 */
+	@Override
 	public boolean isTreeNode(EObject theTreeNode) {
 		CoreArgCheck.isNotNull(theTreeNode);
 		return (theTreeNode instanceof XmlDocumentNode 
@@ -278,6 +289,7 @@ public class XmlFragmentMapper implements ITreeToRelationalMapper, PluginConstan
 				|| theTreeNode instanceof XmlContainerNode );
 	}
 
+	@Override
 	public String getPathInDocument(EObject theTreeNode) {
 		CoreArgCheck.isNotNull(theTreeNode);
 		if( theTreeNode instanceof XmlDocumentNode ) {
@@ -289,6 +301,7 @@ public class XmlFragmentMapper implements ITreeToRelationalMapper, PluginConstan
 		return null;
 	}
 	
+	@Override
 	public String getXsdQualifiedName(EObject theTreeNode) {
 		CoreArgCheck.isNotNull(theTreeNode);
 		if( theTreeNode instanceof XmlDocumentNode ) {
@@ -300,6 +313,7 @@ public class XmlFragmentMapper implements ITreeToRelationalMapper, PluginConstan
 		return null;
 	}
 	
+	@Override
 	public String getXsdTargetNamespace(EObject theTreeNode) {
 		CoreArgCheck.isNotNull(theTreeNode);
 		if( theTreeNode instanceof XmlDocumentNode ) {
@@ -315,7 +329,8 @@ public class XmlFragmentMapper implements ITreeToRelationalMapper, PluginConstan
      * @see org.teiid.designer.mapping.factory.ITreeToRelationalMapper#getXsdComponent(org.eclipse.emf.ecore.EObject)
      * @since 4.3
      */
-    public EObject getXsdComponent(EObject theTreeNode) {
+    @Override
+	public EObject getXsdComponent(EObject theTreeNode) {
         CoreArgCheck.isNotNull(theTreeNode);
         if( theTreeNode instanceof XmlDocumentNode ) {
             EObject xsdComp = ((XmlDocumentNode)theTreeNode).getXsdComponent();
@@ -332,7 +347,8 @@ public class XmlFragmentMapper implements ITreeToRelationalMapper, PluginConstan
         return null;
     }
 
-    public boolean isChoiceNode(EObject theTreeNode) {
+    @Override
+	public boolean isChoiceNode(EObject theTreeNode) {
         return theTreeNode instanceof XmlChoice;
     }
     

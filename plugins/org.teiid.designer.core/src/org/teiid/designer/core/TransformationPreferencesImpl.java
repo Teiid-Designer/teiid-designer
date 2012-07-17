@@ -51,7 +51,8 @@ public class TransformationPreferencesImpl implements TransformationPreferences 
      *
      * @see org.teiid.designer.core.TransformationPreferences#getDefaultStringLength()
      */
-    public int getDefaultStringLength() {
+    @Override
+	public int getDefaultStringLength() {
         if (HEADLESS) return DEFAULT_LENGTH;
 
         if (!hasInitialized) {
@@ -67,7 +68,8 @@ public class TransformationPreferencesImpl implements TransformationPreferences 
      *
      * @see org.teiid.designer.core.TransformationPreferences#getDefaultStringLengthDefault()
      */
-    public int getDefaultStringLengthDefault() {
+    @Override
+	public int getDefaultStringLengthDefault() {
         return DEFAULT_LENGTH;
     }
     
@@ -76,7 +78,8 @@ public class TransformationPreferencesImpl implements TransformationPreferences 
      *
      * @see org.teiid.designer.core.TransformationPreferences#setDefaultStringLength(int)
      */
-    public void setDefaultStringLength( int val ) {
+    @Override
+	public void setDefaultStringLength( int val ) {
         if (HEADLESS) return;
         getPreferences().putInt(DEFAULT_STRING_LENGTH_KEY, val);
         save();
@@ -87,7 +90,8 @@ public class TransformationPreferencesImpl implements TransformationPreferences 
      *
      * @see org.teiid.designer.core.TransformationPreferences#setUpperRecursionLimit(int)
      */
-    public void setUpperRecursionLimit( int val ) {
+    @Override
+	public void setUpperRecursionLimit( int val ) {
         if (HEADLESS) return;
         getPreferences().putInt(UPPER_RECURSION_LIMIT_KEY, val);
         save();
@@ -98,7 +102,8 @@ public class TransformationPreferencesImpl implements TransformationPreferences 
      *
      * @see org.teiid.designer.core.TransformationPreferences#getUpperRecursionLimit()
      */
-    public int getUpperRecursionLimit() {
+    @Override
+	public int getUpperRecursionLimit() {
         if (HEADLESS) return UPPER_RECURSION_LIMIT;
 
         if (!hasInitialized) {
@@ -114,11 +119,13 @@ public class TransformationPreferencesImpl implements TransformationPreferences 
      *
      * @see org.teiid.designer.core.TransformationPreferences#getUpperRecursionLimitDefault()
      */
-    public int getUpperRecursionLimitDefault() {
+    @Override
+	public int getUpperRecursionLimitDefault() {
         return UPPER_RECURSION_LIMIT;
     }
 
-    public boolean getRemoveDuplicateAttibutes() {
+    @Override
+	public boolean getRemoveDuplicateAttibutes() {
         if (HEADLESS) return DEFAULT_REMOVE_ATTRIBUTES_VALUE;
 
         if (!hasInitialized) {
@@ -134,11 +141,13 @@ public class TransformationPreferencesImpl implements TransformationPreferences 
      *
      * @see org.teiid.designer.core.TransformationPreferences#getRemoveDuplicateAttibutesDefault()
      */
-    public boolean getRemoveDuplicateAttibutesDefault() {
+    @Override
+	public boolean getRemoveDuplicateAttibutesDefault() {
         return DEFAULT_REMOVE_ATTRIBUTES_VALUE;
     }
     
-    public void setRemoveDuplicateAttibutes( boolean val ) {
+    @Override
+	public void setRemoveDuplicateAttibutes( boolean val ) {
         if (HEADLESS) return;
         getPreferences().putBoolean(REMOVE_DUPLICATE_ATTRIBUTES_KEY, val);
         save();

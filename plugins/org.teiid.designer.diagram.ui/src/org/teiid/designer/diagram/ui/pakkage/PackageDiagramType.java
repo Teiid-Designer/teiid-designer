@@ -72,7 +72,8 @@ public class PackageDiagramType extends AbstractDiagramType {
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.IDiagramType#getEditPartFactory()
      */
-    public DiagramEditPartFactory getEditPartFactory() {
+    @Override
+	public DiagramEditPartFactory getEditPartFactory() {
         if( editPartFactory == null )
             editPartFactory = new PackageDiagramPartFactory();
             
@@ -82,7 +83,8 @@ public class PackageDiagramType extends AbstractDiagramType {
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.IDiagramType#getFigureFactory()
      */
-    public DiagramFigureFactory getFigureFactory() {
+    @Override
+	public DiagramFigureFactory getFigureFactory() {
         if( figureFactory == null )
             figureFactory = new PackageDiagramFigureFactory();
             
@@ -92,7 +94,8 @@ public class PackageDiagramType extends AbstractDiagramType {
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.IDiagramType#getModelFactory()
      */
-    public DiagramModelFactory getModelFactory() {
+    @Override
+	public DiagramModelFactory getModelFactory() {
         if( modelFactory == null )
             modelFactory = new PackageDiagramModelFactory();
             
@@ -102,21 +105,24 @@ public class PackageDiagramType extends AbstractDiagramType {
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.IDiagramType#getActionAdapter()
      */
-    public IDiagramActionAdapter getActionAdapter(ModelEditorPage editor) {
+    @Override
+	public IDiagramActionAdapter getActionAdapter(ModelEditorPage editor) {
         return new PackageDiagramActionAdapter(editor);
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.IDiagramType#getDisplayName()
      */
-    public String getDisplayName() {
+    @Override
+	public String getDisplayName() {
         return DiagramUiConstants.Util.getString("DiagramNames.packageDiagram"); //$NON-NLS-1$) ;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.IDiagramType#canOpenContext(java.lang.Object)
      */
-    public boolean canOpenContext(Object input) {
+    @Override
+	public boolean canOpenContext(Object input) {
         boolean canOpen = false;
         if( input instanceof EObject ) {
             EObject eObj = (EObject)input;
@@ -159,7 +165,8 @@ public class PackageDiagramType extends AbstractDiagramType {
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.IDiagramType#getDiagramForContext(java.lang.Object)
      */
-    public Diagram getDiagramForContext(Object actualInput) {
+    @Override
+	public Diagram getDiagramForContext(Object actualInput) {
         Diagram packageDiagram = null;
         Object input = actualInput;
         if( input instanceof DiagramProxy ) {
@@ -218,7 +225,8 @@ public class PackageDiagramType extends AbstractDiagramType {
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.IDiagramType#getBackgroundColorObject()
      */
-    public DiagramColorObject getBackgroundColorObject(String extensionID) {
+    @Override
+	public DiagramColorObject getBackgroundColorObject(String extensionID) {
         if( bkgdColorObject == null ) {
             bkgdColorObject = new DiagramColorObject(getDisplayName(), PluginConstants.Prefs.Appearance.PACKAGE_BKGD_COLOR);
         }
@@ -237,7 +245,8 @@ public class PackageDiagramType extends AbstractDiagramType {
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.IDiagramType#getDisplayedPath(org.eclipse.emf.ecore.EObject)
      */
-    public String getDisplayedPath(Diagram diagram, EObject eObject) {
+    @Override
+	public String getDisplayedPath(Diagram diagram, EObject eObject) {
         return null;
     }
 

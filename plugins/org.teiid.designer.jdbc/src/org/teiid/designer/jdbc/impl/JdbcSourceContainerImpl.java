@@ -68,7 +68,8 @@ public class JdbcSourceContainerImpl extends EObjectImpl implements JdbcSourceCo
      * <!-- end-user-doc -->
      * @generated
      */
-    public EList getJdbcSources() {
+    @Override
+	public EList getJdbcSources() {
         if (jdbcSources == null) {
             jdbcSources = new EObjectContainmentWithInverseEList(JdbcSource.class, this, JdbcPackage.JDBC_SOURCE_CONTAINER__JDBC_SOURCES, JdbcPackage.JDBC_SOURCE__JDBC_SOURCE_CONTAINER);
         }

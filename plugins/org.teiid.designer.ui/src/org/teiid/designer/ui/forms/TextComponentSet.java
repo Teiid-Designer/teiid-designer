@@ -100,11 +100,13 @@ public class TextComponentSet extends SimpleComponentSet {
         } // endif
     }
 
-    public void reset() {
+    @Override
+	public void reset() {
         setValue(lastSetValue);
     }
 
-    public boolean isUserSet() {
+    @Override
+	public boolean isUserSet() {
         // TODO this needs to be able to deal with nulls and ""s
         return !(getValue().equals(lastSetValue));
     }
@@ -122,7 +124,8 @@ public class TextComponentSet extends SimpleComponentSet {
         modList.mon = null;
     }
 
-    public void setValue( Object o ) {
+    @Override
+	public void setValue( Object o ) {
         if (o instanceof String) {
             lastSetValue = (String)o;
         } else {
@@ -139,7 +142,8 @@ public class TextComponentSet extends SimpleComponentSet {
         public ComponentSetMonitor mon;
         private String lastVal;
 
-        public void modifyText( ModifyEvent e ) {
+        @Override
+		public void modifyText( ModifyEvent e ) {
             if (mon != null) {
                 String newVal = getValue();
                 if (!FormUtil.safeEquals(newVal, lastVal)) {

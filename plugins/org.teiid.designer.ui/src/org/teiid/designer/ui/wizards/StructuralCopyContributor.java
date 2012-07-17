@@ -40,14 +40,16 @@ public class StructuralCopyContributor implements INewModelWizardContributor, Ui
      * @see org.teiid.designer.ui.wizards.INewModelWizardContributor#canFinishEarly(org.eclipse.jface.wizard.IWizardPage)
      * @since 4.2
      */
-    public boolean canFinishEarly(IWizardPage theCurrentPage) {
+    @Override
+	public boolean canFinishEarly(IWizardPage theCurrentPage) {
         return false;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.ui.wizards.INewModelWizardContributor#createWizardPages(org.eclipse.swt.widgets.Composite, org.eclipse.core.resources.IProject, org.teiid.designer.core.MetamodelDescriptor, boolean)
      */
-    public void createWizardPages(
+    @Override
+	public void createWizardPages(
         ISelection selection,
         IResource targetResource,
         IPath targetFilePath,
@@ -65,13 +67,15 @@ public class StructuralCopyContributor implements INewModelWizardContributor, Ui
      * @see org.teiid.designer.ui.wizards.INewModelWizardContributor#doCancel()
      * @since 4.2
      */
-    public void doCancel() {
+    @Override
+	public void doCancel() {
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.ui.wizards.INewModelWizardContributor#doFinish(org.teiid.designer.core.workspace.ModelResource)
      */
-    public void doFinish(ModelResource modelResource, IProgressMonitor monitor) {
+    @Override
+	public void doFinish(ModelResource modelResource, IProgressMonitor monitor) {
     	String transactionName = Util.getString("StructuralCopyContributor.copyExistingModelTransactionName"); //$NON-NLS-1$
     	boolean started = ModelerCore.startTxn(transactionName,this);
         boolean succeeded = false;
@@ -101,21 +105,24 @@ public class StructuralCopyContributor implements INewModelWizardContributor, Ui
     /* (non-Javadoc)
      * @See org.teiid.designer.ui.wizards.INewModelWizardContributor#getWizardPages()
      */
-    public IWizardPage[] getWizardPages() {
+    @Override
+	public IWizardPage[] getWizardPages() {
         return pages;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.ui.wizards.INewModelWizardContributor#inputChanged(org.eclipse.core.resources.IProject, org.teiid.designer.core.MetamodelDescriptor, boolean)
      */
-    public void inputChanged(
+    @Override
+	public void inputChanged(
         ISelection selection,
         IResource targetResource,
         MetamodelDescriptor descriptor,
         boolean isVirtual) {
     }
 
-    public void currentPageChanged(IWizardPage page) {
+    @Override
+	public void currentPageChanged(IWizardPage page) {
         // unneeded, for now
     }
 }

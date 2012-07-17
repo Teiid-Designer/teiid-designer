@@ -35,6 +35,7 @@ public abstract class AbstractValidationAspect extends AbstractMetamodelAspect i
 		setID(ASPECT_ID);
 	}
 
+	@Override
 	public ValidationRuleSet getValidationRules() {
 		return ruleSet;
 	}    
@@ -62,6 +63,7 @@ public abstract class AbstractValidationAspect extends AbstractMetamodelAspect i
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.core.metamodel.aspect.ValidationAspect#updateContext(org.teiid.designer.core.validation.ValidationContext)
 	 */
+	@Override
 	public void updateContext(final EObject eObject, final ValidationContext context) {
 		// individual aspects can override this as needed
 	}
@@ -70,7 +72,8 @@ public abstract class AbstractValidationAspect extends AbstractMetamodelAspect i
      * @see org.teiid.designer.core.metamodel.aspect.ValidationAspect#shouldValidate(org.eclipse.emf.ecore.EObject, org.teiid.designer.core.validation.ValidationContext)
      * @since 4.2
      */
-    public boolean shouldValidate(final EObject eObject, final ValidationContext context) {
+    @Override
+	public boolean shouldValidate(final EObject eObject, final ValidationContext context) {
         return true;
     }
 }

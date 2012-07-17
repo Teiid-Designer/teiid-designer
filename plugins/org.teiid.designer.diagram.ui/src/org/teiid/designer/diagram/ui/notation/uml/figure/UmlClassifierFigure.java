@@ -114,7 +114,8 @@ public class UmlClassifierFigure extends AbstractDiagramFigure implements Direct
             editButton.setSize(new Dimension(image.getImageData().width + 6, image.getImageData().height + 4));
             editButton.addActionListener(new ActionListener() {
 
-                public void actionPerformed( ActionEvent event ) {
+                @Override
+				public void actionPerformed( ActionEvent event ) {
                     // We need to call some generic edit event here
                     // swj: yes we do! I don't like that this button knows about recursion.
                     if (getDiagramModelNode() != null) {
@@ -124,7 +125,8 @@ public class UmlClassifierFigure extends AbstractDiagramFigure implements Direct
                             && ModelEditorManager.canEdit((EObject)modelObject)) {
                             Display.getCurrent().asyncExec(new Runnable() {
 
-                                public void run() {
+                                @Override
+								public void run() {
                                     if (editorID != null) ModelEditorManager.edit((EObject)modelObject, editorID);
                                     else ModelEditorManager.edit((EObject)modelObject);
                                 }
@@ -189,7 +191,8 @@ public class UmlClassifierFigure extends AbstractDiagramFigure implements Direct
         }
     }
 
-    public void collapse() {
+    @Override
+	public void collapse() {
         // System.out.println("[UmlClassifierFigure.collapse] About to set direction EAST");
         topLeftArrow.setDirection(PositionConstants.EAST);
         topLeftArrow.setBackgroundColor(ColorConstants.black);
@@ -236,7 +239,8 @@ public class UmlClassifierFigure extends AbstractDiagramFigure implements Direct
 
     }
 
-    public void expand() {
+    @Override
+	public void expand() {
         // System.out.println("[UmlClassifierFigure.expand] About to set direction SOUTH");
         topLeftArrow.setDirection(PositionConstants.SOUTH);
 
@@ -265,11 +269,13 @@ public class UmlClassifierFigure extends AbstractDiagramFigure implements Direct
         return this.editButton;
     }
 
-    public IFigure getExpansionFigure() {
+    @Override
+	public IFigure getExpansionFigure() {
         return this.topLeftArrow;
     }
 
-    public Label getLabelFigure() {
+    @Override
+	public Label getLabelFigure() {
         return header.getNameLabel();
     }
 
@@ -346,7 +352,8 @@ public class UmlClassifierFigure extends AbstractDiagramFigure implements Direct
         header.setExpandControl(getExpansionFigure());
     }
 
-    public boolean isExpandable() {
+    @Override
+	public boolean isExpandable() {
         return expandable;
     }
 
@@ -463,7 +470,8 @@ public class UmlClassifierFigure extends AbstractDiagramFigure implements Direct
 
     }
 
-    public void setExpandable( boolean expandable ) {
+    @Override
+	public void setExpandable( boolean expandable ) {
         this.expandable = expandable;
         topLeftArrow.setVisible(expandable);
         // jh Lyra enh / defect 20421: Now that expanded state is controlled by a user preferece

@@ -133,7 +133,8 @@ public class ClipboardActionsAdapter {
     // Inner classes:
     //
     class MySelectionChangedListener implements ISelectionChangedListener {
-        public void selectionChanged( SelectionChangedEvent event ) {
+        @Override
+		public void selectionChanged( SelectionChangedEvent event ) {
             boolean empty = event.getSelection().isEmpty();
             cut.setEnabled(!empty);
             copy.setEnabled(!empty);

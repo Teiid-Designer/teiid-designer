@@ -133,7 +133,8 @@ public class TransformationAnchorManager implements AnchorManager {
         return false;
     }
     
-    public boolean add(NodeConnectionAnchor targetAnchor) {
+    @Override
+	public boolean add(NodeConnectionAnchor targetAnchor) {
         boolean added = false;
         
         if( targetAnchor.getDirection() == NORTH ) {
@@ -149,7 +150,8 @@ public class TransformationAnchorManager implements AnchorManager {
         return added;
     }
     
-    public boolean move(NodeConnectionAnchor targetAnchor) {
+    @Override
+	public boolean move(NodeConnectionAnchor targetAnchor) {
         // Need to move the target anchor from one anchor list to another.
         
         // remove from any list.
@@ -164,7 +166,8 @@ public class TransformationAnchorManager implements AnchorManager {
         return false;
     }
     
-    public boolean remove(NodeConnectionAnchor targetAnchor) {
+    @Override
+	public boolean remove(NodeConnectionAnchor targetAnchor) {
         boolean removed = false;
         if( targetAnchor.getDirection() != NORTH &&
             getNorthAnchors() != null && getNorthAnchors().contains(targetAnchor) ) {
@@ -193,7 +196,8 @@ public class TransformationAnchorManager implements AnchorManager {
         return removed;
     }
     
-    public void resetSourceAnchors(boolean updateTargetEnd) {  
+    @Override
+	public void resetSourceAnchors(boolean updateTargetEnd) {  
         
         List sConnections = getSourceConnections();
         if( sConnections.isEmpty())
@@ -220,7 +224,8 @@ public class TransformationAnchorManager implements AnchorManager {
         }
     }
     
-    public void resetTargetAnchors(boolean updateSourceEnd) {    
+    @Override
+	public void resetTargetAnchors(boolean updateSourceEnd) {    
         List tConnections = getTargetConnections();
         if( tConnections.isEmpty())
             return;
@@ -253,20 +258,23 @@ public class TransformationAnchorManager implements AnchorManager {
     /**
      * @return
      */
-    public List getSourceConnections() {
+    @Override
+	public List getSourceConnections() {
         return diagramEditPart.getSourceConnections();
     }
 
     /**
      * @return
      */
-    public List getTargetConnections() {
+    @Override
+	public List getTargetConnections() {
         return diagramEditPart.getTargetConnections();
     }
     /**
      * @return
      */
-    public ConnectionAnchor getSourceAnchor(NodeConnectionEditPart connection) {
+    @Override
+	public ConnectionAnchor getSourceAnchor(NodeConnectionEditPart connection) {
         // This anchor manager  belongs to the edit part.
         // This edit part knows about all it's target connections
         // An anchor is either target or source
@@ -284,7 +292,8 @@ public class TransformationAnchorManager implements AnchorManager {
     /**
      * @return
      */
-    public ConnectionAnchor getTargetAnchor(NodeConnectionEditPart connection) {
+    @Override
+	public ConnectionAnchor getTargetAnchor(NodeConnectionEditPart connection) {
         // This anchor manager  belongs to the edit part.
         // This edit part knows about all it's target connections
         // An anchor is either target or source
@@ -317,7 +326,8 @@ public class TransformationAnchorManager implements AnchorManager {
         return newAnchor;
     }
     
-    public boolean hasSourceAnchors() {
+    @Override
+	public boolean hasSourceAnchors() {
         NodeConnectionAnchor nextAnchor = null;
         Iterator iter = null;
         
@@ -361,7 +371,8 @@ public class TransformationAnchorManager implements AnchorManager {
     }
     
     
-    public boolean hasTargetAnchors() {
+    @Override
+	public boolean hasTargetAnchors() {
         NodeConnectionAnchor nextAnchor = null;
         Iterator iter = null;
         
@@ -404,7 +415,8 @@ public class TransformationAnchorManager implements AnchorManager {
         return false;
     }
     
-    public void setAnchorPosition(NodeConnectionAnchor theAnchor, int direction ) {
+    @Override
+	public void setAnchorPosition(NodeConnectionAnchor theAnchor, int direction ) {
           
         Dimension partSize = ((DiagramModelNode)diagramEditPart.getModel()).getSize();
         
@@ -494,7 +506,8 @@ public class TransformationAnchorManager implements AnchorManager {
      * @see org.teiid.designer.diagram.ui.connection.AnchorManager#reorderAllAnchors()
      * @since 4.2
      */
-    public void reorderAllAnchors(boolean updateBothEnds) {
+    @Override
+	public void reorderAllAnchors(boolean updateBothEnds) {
         resetSourceAnchors(updateBothEnds);
         resetTargetAnchors(updateBothEnds);
     }

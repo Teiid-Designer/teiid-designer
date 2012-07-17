@@ -41,7 +41,8 @@ public class MappingDiagramProvider implements IPackageDiagramProvider {
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.pakkage.IPackageDiagramProvider#getPackageDiagram(org.teiid.designer.core.workspace.ModelResource, org.eclipse.emf.ecore.EObject)
      */
-    public Diagram getPackageDiagram( ModelResource modelResource,
+    @Override
+	public Diagram getPackageDiagram( ModelResource modelResource,
                                       EObject eObject,
                                       boolean forceCreate ) {
         Diagram mappingDiagram = null;
@@ -116,7 +117,8 @@ public class MappingDiagramProvider implements IPackageDiagramProvider {
     /* (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.pakkage.IPackageDiagramProvider#getPackageDiagram(java.lang.Object)
      */
-    public Diagram getPackageDiagram( Object targetObject,
+    @Override
+	public Diagram getPackageDiagram( Object targetObject,
                                       boolean forceCreate ) {
         Diagram mappingDiagram = null;
         EObject treeRootEObject = null;

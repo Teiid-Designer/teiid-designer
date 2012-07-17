@@ -92,7 +92,8 @@ public class UmlAttributeFigure extends LabeledRectangleFigure implements Direct
      *  (non-Javadoc)
      * @See org.teiid.designer.diagram.ui.util.directedit.DirectEditFigure#getLabelFigure()
      */
-    public Label getLabelFigure() {
+    @Override
+	public Label getLabelFigure() {
         return this.getLabel();
     }
     /*

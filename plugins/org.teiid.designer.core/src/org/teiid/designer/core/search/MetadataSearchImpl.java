@@ -126,7 +126,8 @@ public class MetadataSearchImpl implements MetadataSearch {
     /**
      * @see org.teiid.designer.core.search.MetadataSearch#getModelWorkspace()
      */
-    public ModelWorkspace getModelWorkspace() {
+    @Override
+	public ModelWorkspace getModelWorkspace() {
         return this.workspace;
     }
 
@@ -138,7 +139,8 @@ public class MetadataSearchImpl implements MetadataSearch {
      * @see org.teiid.designer.core.search.MetadataSearch#getMetaClass()
      * @since 4.1
      */
-    public EClass getMetaClass() {
+    @Override
+	public EClass getMetaClass() {
         return null;
     }
 
@@ -146,7 +148,8 @@ public class MetadataSearchImpl implements MetadataSearch {
      * @see org.teiid.designer.core.search.MetadataSearch#setMetaClass(org.eclipse.emf.ecore.EClass)
      * @since 4.1
      */
-    public void setMetaClass( final EClass metaClass ) {
+    @Override
+	public void setMetaClass( final EClass metaClass ) {
         this.metaClass = metaClass;
     }
 
@@ -154,7 +157,8 @@ public class MetadataSearchImpl implements MetadataSearch {
      * @see org.teiid.designer.core.search.MetadataSearch#getDatatype()
      * @since 4.1
      */
-    public EObject getDatatype() {
+    @Override
+	public EObject getDatatype() {
         return this.datatype;
     }
 
@@ -162,7 +166,8 @@ public class MetadataSearchImpl implements MetadataSearch {
      * @see org.teiid.designer.core.search.MetadataSearch#getDatatypes()
      * @since 4.1
      */
-    public EObject[] getDatatypes() {
+    @Override
+	public EObject[] getDatatypes() {
         try {
             return ModelerCore.getWorkspaceDatatypeManager().getAllDatatypes();
         } catch (Throwable t) {
@@ -176,7 +181,8 @@ public class MetadataSearchImpl implements MetadataSearch {
      * @see org.teiid.designer.core.search.MetadataSearch#getModelScope()
      * @since 4.1
      */
-    public List getModelScope() {
+    @Override
+	public List getModelScope() {
         return this.readOnlyModelScope;
     }
 
@@ -184,7 +190,8 @@ public class MetadataSearchImpl implements MetadataSearch {
      * @see org.teiid.designer.core.search.MetadataSearch#getFeatureCriteria()
      * @since 4.1
      */
-    public String getFeatureCriteria() {
+    @Override
+	public String getFeatureCriteria() {
         return this.textPattern;
     }
 
@@ -192,7 +199,8 @@ public class MetadataSearchImpl implements MetadataSearch {
      * @see org.teiid.designer.core.search.MetadataSearch#getRuntimeType()
      * @since 4.1
      */
-    public String getRuntimeType() {
+    @Override
+	public String getRuntimeType() {
         return this.runtimeType;
     }
 
@@ -200,7 +208,8 @@ public class MetadataSearchImpl implements MetadataSearch {
      * @see org.teiid.designer.core.search.MetadataSearch#getRuntimeTypes()
      * @since 4.1
      */
-    public String[] getRuntimeTypes() {
+    @Override
+	public String[] getRuntimeTypes() {
         return RUNTIME_TYPE_NAMES;
     }
 
@@ -208,7 +217,8 @@ public class MetadataSearchImpl implements MetadataSearch {
      * @see org.teiid.designer.core.search.MetadataSearch#getFeaturesNames()
      * @since 4.1
      */
-    public String[] getFeaturesNames() {
+    @Override
+	public String[] getFeaturesNames() {
         return MetadataSearch.ALLOWABLE_SEARCH_FEATURES;
     }
 
@@ -216,7 +226,8 @@ public class MetadataSearchImpl implements MetadataSearch {
      * @see org.teiid.designer.core.search.MetadataSearch#getSelectedFeatureName()
      * @since 4.1
      */
-    public String getSelectedFeatureName() {
+    @Override
+	public String getSelectedFeatureName() {
         return null;
     }
 
@@ -224,7 +235,8 @@ public class MetadataSearchImpl implements MetadataSearch {
      * @see org.teiid.designer.core.search.MetadataSearch#isIncludeSubtypes()
      * @since 4.1
      */
-    public boolean isIncludeSubtypes() {
+    @Override
+	public boolean isIncludeSubtypes() {
         return this.includeSubtypes;
     }
 
@@ -232,7 +244,8 @@ public class MetadataSearchImpl implements MetadataSearch {
      * @see org.teiid.designer.core.search.MetadataSearch#isTypedMetaClass(org.eclipse.emf.ecore.EClass)
      * @since 4.2
      */
-    public boolean isTypedMetaClass( final EClass metaClass ) {
+    @Override
+	public boolean isTypedMetaClass( final EClass metaClass ) {
         if (metaClass == null) {
             return true;
         }
@@ -246,7 +259,8 @@ public class MetadataSearchImpl implements MetadataSearch {
      * @see org.teiid.designer.core.search.MetadataSearch#setDatatype(org.eclipse.emf.ecore.EObject, boolean)
      * @since 4.1
      */
-    public void setDatatype( final EObject datatype,
+    @Override
+	public void setDatatype( final EObject datatype,
                              final boolean includeSubtypes ) {
         this.datatype = datatype;
         this.includeSubtypes = includeSubtypes;
@@ -256,7 +270,8 @@ public class MetadataSearchImpl implements MetadataSearch {
      * @see org.teiid.designer.core.search.MetadataSearch#setModelScope(java.util.List)
      * @since 4.1
      */
-    public void setModelScope( final List modelWorkspaceItems ) {
+    @Override
+	public void setModelScope( final List modelWorkspaceItems ) {
 
         CoreArgCheck.isNotNull(modelWorkspaceItems);
 
@@ -329,7 +344,8 @@ public class MetadataSearchImpl implements MetadataSearch {
      *      boolean)
      * @since 4.1
      */
-    public void setFeatureCriteria( String featureName,
+    @Override
+	public void setFeatureCriteria( String featureName,
                                     String textPattern,
                                     boolean containsPattern ) {
         this.featureName = featureName;
@@ -341,7 +357,8 @@ public class MetadataSearchImpl implements MetadataSearch {
      * @see org.teiid.designer.core.search.MetadataSearch#setRuntimeType(java.lang.String)
      * @since 4.1
      */
-    public void setRuntimeType( final String runtimeType ) {
+    @Override
+	public void setRuntimeType( final String runtimeType ) {
         this.runtimeType = runtimeType;
     }
 
@@ -352,7 +369,8 @@ public class MetadataSearchImpl implements MetadataSearch {
     /**
      * @See org.teiid.designer.relationship.RelationshipSearch#canExecute()
      */
-    public IStatus canExecute() {
+    @Override
+	public IStatus canExecute() {
         final boolean invalidMetaclassSearch = (this.metaClass == null);
         final boolean invalidDatatypeSearch = (this.datatype == null && this.runtimeType == null);
         final boolean invalidFeatureSearch = (this.featureName == null || this.textPattern == null || this.textPattern.length() == 0);
@@ -431,7 +449,8 @@ public class MetadataSearchImpl implements MetadataSearch {
     /**
      * @See org.teiid.designer.relationship.RelationshipSearch#execute(org.eclipse.core.runtime.IProgressMonitor)
      */
-    public IStatus execute( final IProgressMonitor progressMonitor ) {
+    @Override
+	public IStatus execute( final IProgressMonitor progressMonitor ) {
         final IStatus canStatus = canExecute();
         if (!canStatus.isOK()) {
             return canStatus;
@@ -642,7 +661,8 @@ public class MetadataSearchImpl implements MetadataSearch {
     /**
      * @See org.teiid.designer.relationship.RelationshipSearch#getResults()
      */
-    public List getResults() {
+    @Override
+	public List getResults() {
         return this.readOnlyResults;
     }
 

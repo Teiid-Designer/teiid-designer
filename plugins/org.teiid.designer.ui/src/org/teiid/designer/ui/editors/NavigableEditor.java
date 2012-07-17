@@ -64,7 +64,8 @@ public class NavigableEditor extends EditorPart implements INavigationLocationPr
     /**
      * @see org.eclipse.ui.IEditorPart#gotoMarker(org.eclipse.core.resources.IMarker)
      */
-    public void gotoMarker( IMarker marker ) {
+    @Override
+	public void gotoMarker( IMarker marker ) {
 
         System.out.println("[NavigableEditor.gotoMarker] TOP"); //$NON-NLS-1$
 
@@ -122,14 +123,16 @@ public class NavigableEditor extends EditorPart implements INavigationLocationPr
     /**
      * @see org.eclipse.ui.INavigationLocationProvider#createEmptyNavigationLocation()
      */
-    public INavigationLocation createEmptyNavigationLocation() {
+    @Override
+	public INavigationLocation createEmptyNavigationLocation() {
         return null;
     }
 
     /**
      * @see org.eclipse.ui.INavigationLocationProvider#createNavigationLocation()
      */
-    public INavigationLocation createNavigationLocation() {
+    @Override
+	public INavigationLocation createNavigationLocation() {
         if (iepEditor != null && iepEditor instanceof INavigationSupported) {
 
             IMarker imMarker = ((INavigationSupported)iepEditor).createMarker();

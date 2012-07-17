@@ -21,9 +21,6 @@ import org.teiid.core.util.I18nUtil;
 import org.teiid.designer.core.validation.rules.StringNameValidator;
 import org.teiid.designer.metamodels.relational.aspects.validation.RelationalStringNameValidator;
 import org.teiid.designer.transformation.ui.UiConstants;
-import org.teiid.designer.transformation.ui.UiPlugin;
-
-
 
 /**
  * Business object used to manage Teiid-specific Metadata File information used during import
@@ -457,6 +454,7 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants 
 		validate();
 	}
 	
+	@Override
 	public void validate() {
 		if( this.useHeaderForColumnNames ) {
 			if( this.getHeaderString() == null || this.getHeaderString().length() == 0 ) {
@@ -919,7 +917,7 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants 
     	}
     	String string_4 = sb.toString();
     	
-    	String finalSQLString = UiPlugin.Util.getString(
+    	String finalSQLString = UiConstants.Util.getString(
     			"TeiidMetadataFileInfo.textTableSqlTemplate", //$NON-NLS-1$
     			string_0,
     			relationalModelName,

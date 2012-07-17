@@ -43,6 +43,7 @@ public class EditorPreferencePage extends PreferencePage implements IEditorPrefe
 	//////////////////////////////////////////////////////////////////////
 	// Instance methods
 	//////////////////////////////////////////////////////////////////////
+	@Override
 	public void init(IWorkbench workbench) {
 	}
 
@@ -115,7 +116,8 @@ public class EditorPreferencePage extends PreferencePage implements IEditorPrefe
     /* (non-Javadoc)
      * @see org.teiid.designer.ui.common.preferences.IEditorPreferencesValidationListener#validationStatus(boolean, java.lang.String)
      */
-    public void validationStatus(boolean status, String message) {
+    @Override
+	public void validationStatus(boolean status, String message) {
         setValid(status);
         setErrorMessage(message);
 

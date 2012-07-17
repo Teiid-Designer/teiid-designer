@@ -23,6 +23,7 @@ public class CoreImportAspectFactoryImpl implements MetamodelAspectFactory {
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.core.metamodel.aspect.MetamodelAspectFactory#create(org.eclipse.emf.ecore.EClassifier, org.teiid.designer.core.metamodel.aspect.MetamodelEntity)
 	 */
+	@Override
 	public MetamodelAspect create(EClassifier classifier, MetamodelEntity entity) {
 		switch (classifier.getClassifierID()) {
 			case CorePackage.ANNOTATION: return null;

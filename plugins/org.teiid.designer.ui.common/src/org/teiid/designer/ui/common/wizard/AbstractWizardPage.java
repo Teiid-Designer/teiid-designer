@@ -37,7 +37,8 @@ public abstract class AbstractWizardPage extends WizardPage implements IPersiste
      * @see org.teiid.designer.ui.common.wizard.IPersistentWizardPage#saveSettings()
      * @since 4.0
      */
-    public void saveSettings() {
+    @Override
+	public void saveSettings() {
     }
     
     //============================================================================================================================

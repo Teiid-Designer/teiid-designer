@@ -74,7 +74,8 @@ public abstract class WebServiceComponentImpl extends EObjectImpl implements Web
      * 
      * @generated
      */
-    public String getName() {
+    @Override
+	public String getName() {
         return name;
     }
 
@@ -83,7 +84,8 @@ public abstract class WebServiceComponentImpl extends EObjectImpl implements Web
      * 
      * @generated
      */
-    public void setName( String newName ) {
+    @Override
+	public void setName( String newName ) {
         String oldName = name;
         name = newName;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
@@ -95,7 +97,8 @@ public abstract class WebServiceComponentImpl extends EObjectImpl implements Web
      * 
      * @generated NOT
      */
-    public IStatus isValid() {
+    @Override
+	public IStatus isValid() {
         // construct a validation context into which we are the rules would write their results
         final ValidationContext validationContext = new ValidationContext();
 

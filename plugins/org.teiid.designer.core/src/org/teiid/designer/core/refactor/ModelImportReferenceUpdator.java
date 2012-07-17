@@ -31,7 +31,8 @@ public class ModelImportReferenceUpdator implements ReferenceUpdator {
      * @see org.teiid.designer.core.refactor.ReferenceUpdator#updateEObject(org.eclipse.emf.ecore.EObject, java.util.Map)
      * @since 4.2
      */
-    public void updateEObject(final EObject eObject, final Map oldToNewObjects) {
+    @Override
+	public void updateEObject(final EObject eObject, final Map oldToNewObjects) {
         CoreArgCheck.isNotNull(eObject);
         CoreArgCheck.isNotNull(oldToNewObjects);
 

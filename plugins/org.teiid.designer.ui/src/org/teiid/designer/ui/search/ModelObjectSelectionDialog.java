@@ -45,7 +45,6 @@ import org.teiid.designer.core.search.runtime.ResourceObjectRecord;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.ui.UiConstants;
 
-
 /**
  * ModelObjectSelectionDialog Adapted from the eclipse class TwoPaneElementSelector, because that class had the functionality but
  * lacked extensibility.
@@ -337,19 +336,22 @@ public class ModelObjectSelectionDialog extends AbstractElementListSelectionDial
         Table list = new Table(parent, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
 
         list.addListener(SWT.Selection, new Listener() {
-            public void handleEvent( Event evt ) {
+            @Override
+			public void handleEvent( Event evt ) {
                 handleLowerSelectionChanged();
             }
         });
 
         list.addListener(SWT.MouseDoubleClick, new Listener() {
-            public void handleEvent( Event evt ) {
+            @Override
+			public void handleEvent( Event evt ) {
                 handleDefaultSelected();
             }
         });
 
         list.addDisposeListener(new DisposeListener() {
-            public void widgetDisposed( DisposeEvent e ) {
+            @Override
+			public void widgetDisposed( DisposeEvent e ) {
                 fQualifierRenderer.dispose();
             }
         });

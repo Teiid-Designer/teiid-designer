@@ -45,28 +45,32 @@ public class ResourceDescriptorImpl implements ResourceDescriptor {
      * 
      * @return the unique identifier
      */
-    public String getUniqueIdentifier() {
+    @Override
+	public String getUniqueIdentifier() {
         return uniqueID;
     }
 
     /**
      * @return
      */
-    public List getExtensions() {
+    @Override
+	public List getExtensions() {
         return extensions;
     }
 
     /**
      * @return
      */
-    public List getProtocols() {
+    @Override
+	public List getProtocols() {
         return protocols;
     }
 
     /**
      * @see org.teiid.designer.core.metamodel.api.mtk.core.MetamodelDescriptor#getFactoryClass()
      */
-    public Resource.Factory getResourceFactory() throws ModelerCoreException {
+    @Override
+	public Resource.Factory getResourceFactory() throws ModelerCoreException {
         try {
             final Class factoryClass = this.factoryBundle.loadClass(this.factoryClassName);
             return (Resource.Factory)factoryClass.newInstance();

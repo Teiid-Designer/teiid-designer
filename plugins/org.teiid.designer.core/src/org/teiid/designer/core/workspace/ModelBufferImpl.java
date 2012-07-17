@@ -93,7 +93,8 @@ public class ModelBufferImpl implements ModelBuffer {
     /**
      * @see org.teiid.designer.core.workspace.ModelBuffer#getEmfResource()
      */
-    public Resource getEmfResource() {
+    @Override
+	public Resource getEmfResource() {
         return this.emfResource;
     }
 
@@ -112,21 +113,24 @@ public class ModelBufferImpl implements ModelBuffer {
     /**
      * @see org.teiid.designer.core.workspace.ModelBuffer#getOwner()
      */
-    public Openable getOwner() {
+    @Override
+	public Openable getOwner() {
         return this.owner;
     }
 
     /**
      * @see org.teiid.designer.core.workspace.ModelBuffer#getUnderlyingResource()
      */
-    public IResource getUnderlyingResource() {
+    @Override
+	public IResource getUnderlyingResource() {
         return this.file;
     }
 
     /**
      * @see org.teiid.designer.core.workspace.ModelBuffer#hasUnsavedChanges()
      */
-    public boolean hasUnsavedChanges() {
+    @Override
+	public boolean hasUnsavedChanges() {
         if (this.emfResource != null) {
             return this.emfResource.isModified();
         }
@@ -136,7 +140,8 @@ public class ModelBufferImpl implements ModelBuffer {
     /**
      * @see org.teiid.designer.core.workspace.ModelBuffer#isClosed()
      */
-    public boolean isClosed() {
+    @Override
+	public boolean isClosed() {
         if (this.emfResource == null || !this.emfResource.isLoaded()) {
             return true;
         }
@@ -147,7 +152,8 @@ public class ModelBufferImpl implements ModelBuffer {
     /**
      * @see org.teiid.designer.core.workspace.ModelBuffer#isReadOnly()
      */
-    public boolean isReadOnly() {
+    @Override
+	public boolean isReadOnly() {
         if (this.file == null) {
             return this.readonly;
         }
@@ -164,7 +170,8 @@ public class ModelBufferImpl implements ModelBuffer {
     /**
      * @see org.teiid.designer.core.workspace.ModelBuffer#unload()
      */
-    public void unload() {
+    @Override
+	public void unload() {
         if (!isClosed()) {
             this.emfResource.unload();
             this.contents = null;
@@ -364,7 +371,8 @@ public class ModelBufferImpl implements ModelBuffer {
      * @see org.teiid.designer.core.workspace.ModelBuffer#getErrors()
      * @since 4.2
      */
-    public IStatus getErrors() {
+    @Override
+	public IStatus getErrors() {
         if (hasErrors()) {
             final String msg = this.errorMessage != null ? this.errorMessage : ""; //$NON-NLS-1$
             return new Status(IStatus.ERROR, ModelerCore.PLUGIN_ID, 0, msg, null);
@@ -376,7 +384,8 @@ public class ModelBufferImpl implements ModelBuffer {
      * @see org.teiid.designer.core.workspace.ModelBuffer#hasErrors()
      * @since 4.2
      */
-    public boolean hasErrors() {
+    @Override
+	public boolean hasErrors() {
         if (this.file == null) {
             return false;
         }
@@ -395,7 +404,8 @@ public class ModelBufferImpl implements ModelBuffer {
     /**
      * @see org.teiid.designer.core.workspace.ModelBuffer#close()
      */
-    public void close() {
+    @Override
+	public void close() {
         if (this.emfResource != null) {
             if ((this.file != null) && ModelerCore.DEBUG_MODEL_WORKSPACE) {
                 final String pathInProj = this.file.getProject().getName() + IPath.SEPARATOR + this.file.getProjectRelativePath();
@@ -449,7 +459,8 @@ public class ModelBufferImpl implements ModelBuffer {
     /**
      * @see org.teiid.designer.core.workspace.ModelBuffer#save(org.eclipse.core.runtime.IProgressMonitor)
      */
-    public void save( final IProgressMonitor progress,
+    @Override
+	public void save( final IProgressMonitor progress,
                       boolean force ) throws ModelWorkspaceException {
         if (this.file == null) {
             return;
@@ -599,7 +610,8 @@ public class ModelBufferImpl implements ModelBuffer {
      * @see org.teiid.designer.core.workspace.ModelBuffer#getLastModificationStamp()
      * @since 4.2
      */
-    public long getLastModificationStamp() {
+    @Override
+	public long getLastModificationStamp() {
         return lastModificationStamp;
     }
 
@@ -607,7 +619,8 @@ public class ModelBufferImpl implements ModelBuffer {
      * @see org.teiid.designer.core.workspace.ModelBuffer#getLastFileSize()
      * @since 4.2
      */
-    public long getLastFileSize() {
+    @Override
+	public long getLastFileSize() {
         return lastFileSize;
     }
 
@@ -615,7 +628,8 @@ public class ModelBufferImpl implements ModelBuffer {
      * @see org.teiid.designer.core.workspace.ModelBuffer#getLastChecksum()
      * @since 4.2
      */
-    public long getLastChecksum() {
+    @Override
+	public long getLastChecksum() {
         return lastChecksum;
     }
 
@@ -623,7 +637,8 @@ public class ModelBufferImpl implements ModelBuffer {
      * @see org.teiid.designer.core.workspace.ModelBuffer#isInProcessOfSaving()
      * @since 4.2
      */
-    public boolean isInProcessOfSaving() {
+    @Override
+	public boolean isInProcessOfSaving() {
         return inProcessOfSavingContents;
     }
 }

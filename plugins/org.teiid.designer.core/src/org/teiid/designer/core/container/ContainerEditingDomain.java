@@ -163,83 +163,95 @@ public class ContainerEditingDomain extends AdapterFactoryEditingDomain implemen
      * @see org.eclipse.emf.mapping.domain.MappingDomain#getMappingEnablementFlags()
      * @since 4.2
      */
-    public int getMappingEnablementFlags() {
+    @Override
+	public int getMappingEnablementFlags() {
         return 0;
     }
     /** 
      * @see org.eclipse.emf.mapping.domain.MappingDomain#getMappingRoot()
      * @since 4.2
      */
-    public MappingRoot getMappingRoot() {
+    @Override
+	public MappingRoot getMappingRoot() {
         return null;
     }
     /** 
      * @see org.eclipse.emf.mapping.domain.MappingDomain#getName(java.lang.Object)
      * @since 4.2
      */
-    public String getName(Object object) {
+    @Override
+	public String getName(Object object) {
         return null;
     }
     /** 
      * @see org.eclipse.emf.mapping.domain.MappingDomain#getOutputMetaObject(org.eclipse.emf.ecore.EObject)
      * @since 4.2
      */
-    public EObject getOutputMetaObject(EObject inputMetaObject) {
+    @Override
+	public EObject getOutputMetaObject(EObject inputMetaObject) {
         return null;
     }
     /** 
      * @see org.eclipse.emf.mapping.domain.MappingDomain#getOutputName(java.lang.String)
      * @since 4.2
      */
-    public String getOutputName(String inputName) {
+    @Override
+	public String getOutputName(String inputName) {
         return null;
     }
     /** 
      * @see org.eclipse.emf.mapping.domain.MappingDomain#getOutputTypeClassifier(java.lang.Object)
      * @since 4.2
      */
-    public Object getOutputTypeClassifier(Object inputTypeClassifier) {
+    @Override
+	public Object getOutputTypeClassifier(Object inputTypeClassifier) {
         return null;
     }
     /** 
      * @see org.eclipse.emf.mapping.domain.MappingDomain#getTypeClassifier(java.lang.Object)
      * @since 4.2
      */
-    public Object getTypeClassifier(Object mappedObject) {
+    @Override
+	public Object getTypeClassifier(Object mappedObject) {
         return null;
     }
     /** 
      * @see org.eclipse.emf.mapping.domain.MappingDomain#parseInputName(java.lang.String)
      * @since 4.2
      */
-    public List parseInputName(String inputName) {
+    @Override
+	public List parseInputName(String inputName) {
         return null;
     }
     /** 
      * @see org.eclipse.emf.mapping.domain.MappingDomain#parseOutputName(java.lang.String)
      * @since 4.2
      */
-    public List parseOutputName(String outputName) {
+    @Override
+	public List parseOutputName(String outputName) {
         return null;
     }
     /** 
      * @see org.eclipse.emf.mapping.domain.MappingDomain#setMappingRoot(org.eclipse.emf.mapping.MappingRoot)
      * @since 4.2
      */
-    public void setMappingRoot(MappingRoot root) {
+    @Override
+	public void setMappingRoot(MappingRoot root) {
     }
     /** 
      * @see org.eclipse.emf.mapping.domain.MappingDomain#setName(java.lang.Object, java.lang.String)
      * @since 4.2
      */
-    public void setName(Object object,
+    @Override
+	public void setName(Object object,
                         String name) {
     }
     /** 
      * @see org.eclipse.emf.mapping.domain.MappingDomain#setTypeClassifier(java.lang.Object, java.lang.Object)
      * @since 4.2
      */
-    public void setTypeClassifier(Object mappedObject,
+    @Override
+	public void setTypeClassifier(Object mappedObject,
                                   Object typeClassifier) {
     }
     protected class ClipboardModelContents extends ModelContents {

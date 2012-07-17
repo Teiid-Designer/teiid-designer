@@ -87,7 +87,8 @@ public class ModelEditorSite implements IEditorSite {
      * The <code>MultiPageEditorSite</code> implementation of this <code>IEditorSite</code> method returns <code>null</code>,
      * since nested editors do not have their own action bar contributor.
      */
-    public IEditorActionBarContributor getActionBarContributor() {
+    @Override
+	public IEditorActionBarContributor getActionBarContributor() {
         return null;
     }
 
@@ -95,7 +96,8 @@ public class ModelEditorSite implements IEditorSite {
      * The <code>MultiPageEditorSite</code> implementation of this <code>IEditorSite</code> method forwards to the multi-page
      * editor to return the action bars.
      */
-    public IActionBars getActionBars() {
+    @Override
+	public IActionBars getActionBars() {
         return multiPageEditor.getEditorSite().getActionBars();
     }
 
@@ -123,7 +125,8 @@ public class ModelEditorSite implements IEditorSite {
      * The <code>MultiPageEditorSite</code> implementation of this <code>IWorkbenchPartSite</code> method returns an empty string
      * since the nested editor is not created from the registry.
      */
-    public String getId() {
+    @Override
+	public String getId() {
         return ""; //$NON-NLS-1$
     }
 
@@ -132,7 +135,8 @@ public class ModelEditorSite implements IEditorSite {
      * 
      * @see org.eclipse.ui.IWorkbenchPartSite#getKeyBindingService()
      */
-    public IKeyBindingService getKeyBindingService() {
+    @Override
+	public IKeyBindingService getKeyBindingService() {
         return getMultiPageEditor().getEditorSite().getKeyBindingService();
     }
 
@@ -149,7 +153,8 @@ public class ModelEditorSite implements IEditorSite {
      * The <code>MultiPageEditorSite</code> implementation of this <code>IWorkbenchPartSite</code> method forwards to the
      * multi-page editor to return the workbench page.
      */
-    public IWorkbenchPage getPage() {
+    @Override
+	public IWorkbenchPage getPage() {
         return getMultiPageEditor().getSite().getPage();
     }
 
@@ -157,7 +162,8 @@ public class ModelEditorSite implements IEditorSite {
      * The <code>MultiPageEditorSite</code> implementation of this <code>IWorkbenchPartSite</code> method returns an empty string
      * since the nested editor is not created from the registry.
      */
-    public String getPluginId() {
+    @Override
+	public String getPluginId() {
         return ""; //$NON-NLS-1$
     }
 
@@ -165,7 +171,8 @@ public class ModelEditorSite implements IEditorSite {
      * The <code>MultiPageEditorSite</code> implementation of this <code>IWorkbenchPartSite</code> method returns an empty string
      * since the nested editor is not created from the registry.
      */
-    public String getRegisteredName() {
+    @Override
+	public String getRegisteredName() {
         return ""; //$NON-NLS-1$
     }
 
@@ -178,7 +185,8 @@ public class ModelEditorSite implements IEditorSite {
     private ISelectionChangedListener getSelectionChangedListener() {
         if (selectionChangedListener == null) {
             selectionChangedListener = new ISelectionChangedListener() {
-                public void selectionChanged( SelectionChangedEvent event ) {
+                @Override
+				public void selectionChanged( SelectionChangedEvent event ) {
                     ModelEditorSite.this.handleSelectionChanged(event);
                 }
             };
@@ -190,7 +198,8 @@ public class ModelEditorSite implements IEditorSite {
      * The <code>MultiPageEditorSite</code> implementation of this <code>IWorkbenchPartSite</code> method returns the selection
      * provider set by <code>setSelectionProvider</code>.
      */
-    public ISelectionProvider getSelectionProvider() {
+    @Override
+	public ISelectionProvider getSelectionProvider() {
         return selectionProvider;
     }
 
@@ -198,7 +207,8 @@ public class ModelEditorSite implements IEditorSite {
      * The <code>MultiPageEditorSite</code> implementation of this <code>IWorkbenchPartSite</code> method forwards to the
      * multi-page editor to return the shell.
      */
-    public Shell getShell() {
+    @Override
+	public Shell getShell() {
         return getMultiPageEditor().getSite().getShell();
     }
 
@@ -206,7 +216,8 @@ public class ModelEditorSite implements IEditorSite {
      * The <code>MultiPageEditorSite</code> implementation of this <code>IWorkbenchPartSite</code> method forwards to the
      * multi-page editor to return the workbench window.
      */
-    public IWorkbenchWindow getWorkbenchWindow() {
+    @Override
+	public IWorkbenchWindow getWorkbenchWindow() {
         return getMultiPageEditor().getSite().getWorkbenchWindow();
     }
 
@@ -232,7 +243,8 @@ public class ModelEditorSite implements IEditorSite {
      * The <code>MultiPageEditorSite</code> implementation of this <code>IWorkbenchPartSite</code> method forwards to the
      * multi-page editor for registration.
      */
-    public void registerContextMenu( String menuID,
+    @Override
+	public void registerContextMenu( String menuID,
                                      MenuManager menuMgr,
                                      ISelectionProvider selProvider ) {
         if (menuExtenders == null) {
@@ -245,7 +257,8 @@ public class ModelEditorSite implements IEditorSite {
      * The <code>MultiPageEditorSite</code> implementation of this <code>IWorkbenchPartSite</code> method forwards to the
      * multi-page editor for registration.
      */
-    public void registerContextMenu( MenuManager menuManager,
+    @Override
+	public void registerContextMenu( MenuManager menuManager,
                                      ISelectionProvider selectionProvider ) {
         getMultiPageEditor().getSite().registerContextMenu(menuManager, selectionProvider);
     }
@@ -254,7 +267,8 @@ public class ModelEditorSite implements IEditorSite {
      * The <code>MultiPageEditorSite</code> implementation of this <code>IWorkbenchPartSite</code> method forwards to the
      * multi-page editor for registration.
      */
-    public void registerContextMenu( final String menuId,
+    @Override
+	public void registerContextMenu( final String menuId,
                                      final MenuManager menuManager,
                                      final ISelectionProvider selectionProvider,
                                      final boolean includeEditorInput ) {
@@ -265,7 +279,8 @@ public class ModelEditorSite implements IEditorSite {
      * The <code>MultiPageEditorSite</code> implementation of this <code>IWorkbenchPartSite</code> method forwards to the
      * multi-page editor for registration.
      */
-    public void registerContextMenu( final MenuManager menuManager,
+    @Override
+	public void registerContextMenu( final MenuManager menuManager,
                                      final ISelectionProvider selectionProvider,
                                      final boolean includeEditorInput ) {
         registerContextMenu(menuManager, selectionProvider);
@@ -278,7 +293,8 @@ public class ModelEditorSite implements IEditorSite {
      * 
      * @see #handleSelectionChanged
      */
-    public void setSelectionProvider( ISelectionProvider provider ) {
+    @Override
+	public void setSelectionProvider( ISelectionProvider provider ) {
         ISelectionProvider oldSelectionProvider = selectionProvider;
         selectionProvider = provider;
         if (oldSelectionProvider != null) {
@@ -293,11 +309,13 @@ public class ModelEditorSite implements IEditorSite {
      * @see org.eclipse.ui.IWorkbenchPartSite#getPart()
      * @since 5.0.1
      */
-    public IWorkbenchPart getPart() {
+    @Override
+	public IWorkbenchPart getPart() {
         return this.multiPageEditor;
     }
 
-    public Object getAdapter( Class adapter ) {
+    @Override
+	public Object getAdapter( Class adapter ) {
         return null;
     }
 
@@ -306,7 +324,8 @@ public class ModelEditorSite implements IEditorSite {
      * 
      * @see org.eclipse.ui.services.IServiceLocator#getService(java.lang.Class)
      */
-    public Object getService( Class api ) {
+    @Override
+	public Object getService( Class api ) {
         return getMultiPageEditor().getEditorSite().getService(api);
     }
 
@@ -315,7 +334,8 @@ public class ModelEditorSite implements IEditorSite {
      * 
      * @see org.eclipse.ui.services.IServiceLocator#hasService(java.lang.Class)
      */
-    public boolean hasService( Class api ) {
+    @Override
+	public boolean hasService( Class api ) {
         return false;
     }
 }

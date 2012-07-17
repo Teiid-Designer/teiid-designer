@@ -641,7 +641,7 @@ public class TransformationMetadataFacade extends BasicQueryMetadataWrapper {
             }
         }
 
-        return (MappingNode)mappingNode.clone();
+        return mappingNode.clone();
     }
 
 

@@ -61,7 +61,8 @@ public class NewMedDetailsPage extends AbstractWizardPage {
         this.initialMed = initialMed;
     }
 
-    public void createControl( Composite theParent ) {
+    @Override
+	public void createControl( Composite theParent ) {
 
         Composite pnlMain = WidgetFactory.createPanel(theParent, SWT.NONE, GridData.FILL_BOTH);
         pnlMain.setLayout(new GridLayout(COLUMN_COUNT, false));
@@ -97,7 +98,8 @@ public class NewMedDetailsPage extends AbstractWizardPage {
         this.namespacePrefixText.setToolTipText(Messages.medNamespacePrefixTooltip);
         if (nsPrefix != null) this.namespacePrefixText.setText(nsPrefix);
         this.namespacePrefixText.addModifyListener(new ModifyListener() {
-            public void modifyText( final ModifyEvent event ) {
+            @Override
+			public void modifyText( final ModifyEvent event ) {
                 nsPrefixModified();
             }
         });
@@ -112,7 +114,8 @@ public class NewMedDetailsPage extends AbstractWizardPage {
         this.namespaceUriText.setToolTipText(Messages.medNamespaceUriTooltip);
         if (nsUri != null) this.namespaceUriText.setText(nsUri);
         this.namespaceUriText.addModifyListener(new ModifyListener() {
-            public void modifyText( final ModifyEvent event ) {
+            @Override
+			public void modifyText( final ModifyEvent event ) {
                 nsUriModified();
             }
         });
@@ -138,7 +141,8 @@ public class NewMedDetailsPage extends AbstractWizardPage {
         this.cbxMetamodelUris.select(mmIndx);
         if (copyMode) this.cbxMetamodelUris.setEnabled(false);
         this.cbxMetamodelUris.addModifyListener(new ModifyListener() {
-            public void modifyText( final ModifyEvent event ) {
+            @Override
+			public void modifyText( final ModifyEvent event ) {
                 handleMetamodelUriChanged();
             }
         });
@@ -245,7 +249,8 @@ public class NewMedDetailsPage extends AbstractWizardPage {
         this.descriptionText.setToolTipText(Messages.medDescriptionToolTip);
         if (description != null) this.descriptionText.setText(description);
         this.descriptionText.addModifyListener(new ModifyListener() {
-            public void modifyText( final ModifyEvent event ) {
+            @Override
+			public void modifyText( final ModifyEvent event ) {
                 descriptionModified();
             }
         });
@@ -349,7 +354,8 @@ public class NewMedDetailsPage extends AbstractWizardPage {
         return versionInt;
     }
 
-    public String getDescription() {
+    @Override
+	public String getDescription() {
         return this.descriptionText.getText();
     }
 

@@ -47,7 +47,8 @@ public class ModelAspect extends AbstractMetamodelAspect implements SqlModelAspe
     /** 
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlModelAspect#getPrimaryMetamodelURI(org.eclipse.emf.ecore.EObject)
      */
-    public String getPrimaryMetamodelUri(EObject eObject) {
+    @Override
+	public String getPrimaryMetamodelUri(EObject eObject) {
         final ModelAnnotation modelAnnotation = getModelAnnotation(eObject);
         return modelAnnotation.getPrimaryMetamodelUri();
     }
@@ -55,7 +56,8 @@ public class ModelAspect extends AbstractMetamodelAspect implements SqlModelAspe
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlModelAspect#getModelType(org.eclipse.emf.ecore.EObject)
      */
-    public int getModelType(EObject eObject) {
+    @Override
+	public int getModelType(EObject eObject) {
         final ModelAnnotation modelAnnotation = getModelAnnotation(eObject);
         ModelType type = modelAnnotation.getModelType();
         return (type != null ? type.getValue() : ModelType.UNKNOWN);
@@ -64,7 +66,8 @@ public class ModelAspect extends AbstractMetamodelAspect implements SqlModelAspe
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlModelAspect#supportsOrderBy(org.eclipse.emf.ecore.EObject)
      */
-    public boolean supportsOrderBy(EObject eObject) {
+    @Override
+	public boolean supportsOrderBy(EObject eObject) {
         final ModelAnnotation modelAnnotation = getModelAnnotation(eObject);
         return modelAnnotation.isSupportsOrderBy();
     }
@@ -72,7 +75,8 @@ public class ModelAspect extends AbstractMetamodelAspect implements SqlModelAspe
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlModelAspect#supportsOuterJoin(org.eclipse.emf.ecore.EObject)
      */
-    public boolean supportsOuterJoin(EObject eObject) {
+    @Override
+	public boolean supportsOuterJoin(EObject eObject) {
         final ModelAnnotation modelAnnotation = getModelAnnotation(eObject);
         return modelAnnotation.isSupportsOuterJoin();
     }
@@ -80,7 +84,8 @@ public class ModelAspect extends AbstractMetamodelAspect implements SqlModelAspe
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlModelAspect#supportsWhereAll(org.eclipse.emf.ecore.EObject)
      */
-    public boolean supportsWhereAll(EObject eObject) {
+    @Override
+	public boolean supportsWhereAll(EObject eObject) {
         final ModelAnnotation modelAnnotation = getModelAnnotation(eObject);
         return modelAnnotation.isSupportsWhereAll();
     }
@@ -88,7 +93,8 @@ public class ModelAspect extends AbstractMetamodelAspect implements SqlModelAspe
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlModelAspect#supportsDistinct(org.eclipse.emf.ecore.EObject)
      */
-    public boolean supportsDistinct(EObject eObject) {
+    @Override
+	public boolean supportsDistinct(EObject eObject) {
         final ModelAnnotation modelAnnotation = getModelAnnotation(eObject);
         return modelAnnotation.isSupportsDistinct();
     }
@@ -96,7 +102,8 @@ public class ModelAspect extends AbstractMetamodelAspect implements SqlModelAspe
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlModelAspect#supportsJoin(org.eclipse.emf.ecore.EObject)
      */
-    public boolean supportsJoin(EObject eObject) {
+    @Override
+	public boolean supportsJoin(EObject eObject) {
         final ModelAnnotation modelAnnotation = getModelAnnotation(eObject);
         return modelAnnotation.isSupportsJoin();
     }
@@ -104,7 +111,8 @@ public class ModelAspect extends AbstractMetamodelAspect implements SqlModelAspe
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlModelAspect#isVisible(org.eclipse.emf.ecore.EObject)
      */
-    public boolean isVisible(EObject eObject) {
+    @Override
+	public boolean isVisible(EObject eObject) {
         final ModelAnnotation modelAnnotation = getModelAnnotation(eObject);
         return modelAnnotation.isVisible();
     }
@@ -112,7 +120,8 @@ public class ModelAspect extends AbstractMetamodelAspect implements SqlModelAspe
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlModelAspect#getMaxSetSize(org.eclipse.emf.ecore.EObject)
      */
-    public int getMaxSetSize(EObject eObject) {
+    @Override
+	public int getMaxSetSize(EObject eObject) {
         final ModelAnnotation modelAnnotation = getModelAnnotation(eObject);
         return modelAnnotation.getMaxSetSize();
     }
@@ -120,14 +129,16 @@ public class ModelAspect extends AbstractMetamodelAspect implements SqlModelAspe
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlAspect#isRecordType(char)
      */
-    public boolean isRecordType(char recordType) {
+    @Override
+	public boolean isRecordType(char recordType) {
         return (recordType == IndexConstants.RECORD_TYPE.MODEL || recordType == IndexConstants.RECORD_TYPE.ANNOTATION);
     }
 
     /**
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlAspect#isQueryable(org.eclipse.emf.ecore.EObject)
      */
-    public boolean isQueryable(final EObject eObject) {
+    @Override
+	public boolean isQueryable(final EObject eObject) {
 		int type = getModelType(eObject);
         return (type == ModelType.PHYSICAL || type == ModelType.VIRTUAL || type == ModelType.MATERIALIZATION);
     }
@@ -135,14 +146,16 @@ public class ModelAspect extends AbstractMetamodelAspect implements SqlModelAspe
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlAspect#getName(org.eclipse.emf.ecore.EObject)
      */
-    public String getName(EObject eObject) {
+    @Override
+	public String getName(EObject eObject) {
         return ModelerCore.getModelEditor().getModelName(eObject);
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlAspect#getNameInSource(org.eclipse.emf.ecore.EObject)
      */
-    public String getNameInSource(EObject eObject) {
+    @Override
+	public String getNameInSource(EObject eObject) {
         final ModelAnnotation modelAnnotation = getModelAnnotation(eObject);
         return modelAnnotation.getNameInSource();
     }
@@ -150,7 +163,8 @@ public class ModelAspect extends AbstractMetamodelAspect implements SqlModelAspe
     /** 
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlAnnotationAspect#getDescription(org.eclipse.emf.ecore.EObject)
      */
-    public String getDescription(EObject eObject) {
+    @Override
+	public String getDescription(EObject eObject) {
         final ModelAnnotation modelAnnotation = getModelAnnotation(eObject);
         return modelAnnotation.getDescription();
     }
@@ -158,7 +172,8 @@ public class ModelAspect extends AbstractMetamodelAspect implements SqlModelAspe
     /** 
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlAnnotationAspect#getKeywords(org.eclipse.emf.ecore.EObject)
      */
-    public List getKeywords(EObject eObject) {
+    @Override
+	public List getKeywords(EObject eObject) {
         return Collections.EMPTY_LIST;
     }
 
@@ -188,7 +203,8 @@ public class ModelAspect extends AbstractMetamodelAspect implements SqlModelAspe
     /*
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlAnnotationAspect#getTags(org.eclipse.emf.ecore.EObject)
      */
-    public Map getTags(EObject eObject) {
+    @Override
+	public Map getTags(EObject eObject) {
         final ModelAnnotation annotation = getModelAnnotation(eObject);
         final EMap tags = annotation.getTags();
         if ( tags != null && tags.size() != 0 ) {
@@ -200,7 +216,8 @@ public class ModelAspect extends AbstractMetamodelAspect implements SqlModelAspe
     /*
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlAspect#updateObject(org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject)
      */
-    public void updateObject(EObject targetObject, EObject sourceObject) {
+    @Override
+	public void updateObject(EObject targetObject, EObject sourceObject) {
 
     }
 
@@ -216,7 +233,8 @@ public class ModelAspect extends AbstractMetamodelAspect implements SqlModelAspe
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlAnnotationAspect#getURI(org.eclipse.emf.ecore.EObject)
      * @since 4.2
      */
-    public URI getURI(EObject eObject) {
+    @Override
+	public URI getURI(EObject eObject) {
         return ModelerCore.getModelEditor().getUri(eObject);
     }
 
@@ -224,7 +242,8 @@ public class ModelAspect extends AbstractMetamodelAspect implements SqlModelAspe
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlAnnotationAspect#getMetaclassURI(org.eclipse.emf.ecore.EObject)
      * @since 4.2
      */
-    public URI getMetaclassURI(EObject eObject) {
+    @Override
+	public URI getMetaclassURI(EObject eObject) {
         return ModelerCore.getModelEditor().getUri(eObject.eClass());
     }
 }

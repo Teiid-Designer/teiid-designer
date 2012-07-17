@@ -114,7 +114,8 @@ public class RenameAction extends DiagramAction implements UiConstants {
                     final Text nameText = WidgetFactory.createTextField(dlgPanel, GridData.FILL_HORIZONTAL, oldName);
                     nameText.setSelection(0, oldName.length());
                     nameText.addModifyListener(new ModifyListener() {
-                        public void modifyText( final ModifyEvent event ) {
+                        @Override
+						public void modifyText( final ModifyEvent event ) {
                             handleModifyText(nameText);
                         }
                     });

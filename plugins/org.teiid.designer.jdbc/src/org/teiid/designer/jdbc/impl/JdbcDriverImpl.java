@@ -145,7 +145,8 @@ public class JdbcDriverImpl extends EObjectImpl implements JdbcDriver {
      * <!-- end-user-doc -->
      * @generated
      */
-    public JdbcDriverContainer getJdbcDriverContainer() {
+    @Override
+	public JdbcDriverContainer getJdbcDriverContainer() {
         if (eContainerFeatureID != JdbcPackage.JDBC_DRIVER__JDBC_DRIVER_CONTAINER) return null;
         return (JdbcDriverContainer)eContainer;
     }
@@ -155,7 +156,8 @@ public class JdbcDriverImpl extends EObjectImpl implements JdbcDriver {
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setJdbcDriverContainer(JdbcDriverContainer newJdbcDriverContainer) {
+    @Override
+	public void setJdbcDriverContainer(JdbcDriverContainer newJdbcDriverContainer) {
         if (newJdbcDriverContainer != eContainer || (eContainerFeatureID != JdbcPackage.JDBC_DRIVER__JDBC_DRIVER_CONTAINER && newJdbcDriverContainer != null)) {
             if (EcoreUtil.isAncestor(this, newJdbcDriverContainer))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
@@ -176,7 +178,8 @@ public class JdbcDriverImpl extends EObjectImpl implements JdbcDriver {
      * <!-- end-user-doc -->
      * @generated
      */
-    public String getName() {
+    @Override
+	public String getName() {
         return name;
     }
 
@@ -185,7 +188,8 @@ public class JdbcDriverImpl extends EObjectImpl implements JdbcDriver {
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setName(String newName) {
+    @Override
+	public void setName(String newName) {
         String oldName = name;
         name = newName;
         if (eNotificationRequired())
@@ -197,7 +201,8 @@ public class JdbcDriverImpl extends EObjectImpl implements JdbcDriver {
      * <!-- end-user-doc -->
      * @generated
      */
-    public String getUrlSyntax() {
+    @Override
+	public String getUrlSyntax() {
         return urlSyntax;
     }
 
@@ -206,7 +211,8 @@ public class JdbcDriverImpl extends EObjectImpl implements JdbcDriver {
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setUrlSyntax(String newUrlSyntax) {
+    @Override
+	public void setUrlSyntax(String newUrlSyntax) {
         String oldUrlSyntax = urlSyntax;
         urlSyntax = newUrlSyntax;
         if (eNotificationRequired())
@@ -218,7 +224,8 @@ public class JdbcDriverImpl extends EObjectImpl implements JdbcDriver {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EList getJarFileUris() {
+    @Override
+	public EList getJarFileUris() {
         if (jarFileUris == null) {
             jarFileUris = new EDataTypeUniqueEList(String.class, this, JdbcPackage.JDBC_DRIVER__JAR_FILE_URIS);
         }
@@ -230,7 +237,8 @@ public class JdbcDriverImpl extends EObjectImpl implements JdbcDriver {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EList getAvailableDriverClassNames() {
+    @Override
+	public EList getAvailableDriverClassNames() {
         if (availableDriverClassNames == null) {
             availableDriverClassNames = new EDataTypeUniqueEList(String.class, this, JdbcPackage.JDBC_DRIVER__AVAILABLE_DRIVER_CLASS_NAMES);
         }
@@ -242,7 +250,8 @@ public class JdbcDriverImpl extends EObjectImpl implements JdbcDriver {
      * <!-- end-user-doc -->
      * @generated
      */
-    public String getPreferredDriverClassName() {
+    @Override
+	public String getPreferredDriverClassName() {
         return preferredDriverClassName;
     }
 
@@ -251,7 +260,8 @@ public class JdbcDriverImpl extends EObjectImpl implements JdbcDriver {
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setPreferredDriverClassName(String newPreferredDriverClassName) {
+    @Override
+	public void setPreferredDriverClassName(String newPreferredDriverClassName) {
         String oldPreferredDriverClassName = preferredDriverClassName;
         preferredDriverClassName = newPreferredDriverClassName;
         if (eNotificationRequired())

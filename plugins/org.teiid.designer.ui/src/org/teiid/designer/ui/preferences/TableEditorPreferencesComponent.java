@@ -112,7 +112,8 @@ public class TableEditorPreferencesComponent implements IEditorPreferencesCompon
     /**
      * @see org.teiid.designer.ui.preferences.IEditorPreferencesComponent#createEditorPreferencesTab(null, int)
      */
-    public Composite createEditorPreferencesComponent( Composite parent ) {
+    @Override
+	public Composite createEditorPreferencesComponent( Composite parent ) {
         Composite columnComposite = new Composite(parent, SWT.NONE);
         GridLayout columnLayout = new GridLayout();
         columnLayout.numColumns = 3;
@@ -273,18 +274,21 @@ public class TableEditorPreferencesComponent implements IEditorPreferencesCompon
         return table.getSelectionIndex();
     }
 
-    public String getName() {
+    @Override
+	public String getName() {
         return TABLE_LABEL;
     }
 
-    public String getTooltip() {
+    @Override
+	public String getTooltip() {
         return TABLE_LABEL;
     }
 
     /**
      * @see org.teiid.designer.ui.common.preferences.IEditorPreferencesComponent#performDefaults()
      */
-    public void performDefaults() {
+    @Override
+	public void performDefaults() {
         String eObject = getEObjectSelection();
         if (eObject != null) {
             this.columnArrays.remove(eObject);
@@ -298,7 +302,8 @@ public class TableEditorPreferencesComponent implements IEditorPreferencesCompon
     /**
      * @see org.teiid.designer.ui.common.preferences.IEditorPreferencesComponent#performOk()
      */
-    public boolean performOk() {
+    @Override
+	public boolean performOk() {
         for (int i = 0; i < this.modifiedEObjects.size(); i++) {
             String eObject = (String)this.modifiedEObjects.get(i);
             // Test if defaults were restored which removes the eObject
@@ -329,27 +334,33 @@ public class TableEditorPreferencesComponent implements IEditorPreferencesCompon
 
     class TableLabelProvider implements ILabelProvider {
 
-        public Image getImage( Object element ) {
+        @Override
+		public Image getImage( Object element ) {
             return null;
         }
 
-        public String getText( Object element ) {
+        @Override
+		public String getText( Object element ) {
             return CoreStringUtil.computePluralForm(CoreStringUtil.computeDisplayableForm(element.toString()));
         }
 
-        public void addListener( ILabelProviderListener listener ) {
+        @Override
+		public void addListener( ILabelProviderListener listener ) {
 
         }
 
-        public void dispose() {
+        @Override
+		public void dispose() {
         }
 
-        public boolean isLabelProperty( Object element,
+        @Override
+		public boolean isLabelProperty( Object element,
                                         String property ) {
             return false;
         }
 
-        public void removeListener( ILabelProviderListener listener ) {
+        @Override
+		public void removeListener( ILabelProviderListener listener ) {
 
         }
     }
@@ -364,16 +375,19 @@ public class TableEditorPreferencesComponent implements IEditorPreferencesCompon
             return null;
         }
 
-        public void addListener( ILabelProviderListener listener ) {
+        @Override
+		public void addListener( ILabelProviderListener listener ) {
 
         }
 
-        public Image getColumnImage( Object element,
+        @Override
+		public Image getColumnImage( Object element,
                                      int columnIndex ) {
             return null;
         }
 
-        public String getColumnText( Object element,
+        @Override
+		public String getColumnText( Object element,
                                      int columnIndex ) {
             PropertyOrder columnOrder = (PropertyOrder)element;
             if (columnIndex == 0) {
@@ -382,15 +396,18 @@ public class TableEditorPreferencesComponent implements IEditorPreferencesCompon
             return columnOrder.isVisible() ? YES : NO;
         }
 
-        public void dispose() {
+        @Override
+		public void dispose() {
         }
 
-        public boolean isLabelProperty( Object element,
+        @Override
+		public boolean isLabelProperty( Object element,
                                         String property ) {
             return false;
         }
 
-        public void removeListener( ILabelProviderListener listener ) {
+        @Override
+		public void removeListener( ILabelProviderListener listener ) {
 
         }
 
@@ -407,7 +424,8 @@ public class TableEditorPreferencesComponent implements IEditorPreferencesCompon
     }
 
     class TableSelectionChangedListener implements ISelectionChangedListener {
-        public void selectionChanged( SelectionChangedEvent event ) {
+        @Override
+		public void selectionChanged( SelectionChangedEvent event ) {
             clearColumnSelection();
             populateColumnsList();
             setUpDownButtonState();
@@ -415,17 +433,20 @@ public class TableEditorPreferencesComponent implements IEditorPreferencesCompon
     }
 
     class ColumnCellModifier implements ICellModifier {
-        public boolean canModify( Object element,
+        @Override
+		public boolean canModify( Object element,
                                   String property ) {
             return property.equals(VISIBLE_HEADER);
         }
 
-        public Object getValue( Object element,
+        @Override
+		public Object getValue( Object element,
                                 String property ) {
             return new Boolean(((PropertyOrder)element).isVisible());
         }
 
-        public void modify( Object element,
+        @Override
+		public void modify( Object element,
                             String property,
                             Object value ) {
             PropertyOrder columnOrder = (PropertyOrder)((TableItem)element).getData();
@@ -441,7 +462,8 @@ public class TableEditorPreferencesComponent implements IEditorPreferencesCompon
      * 
      * @see org.teiid.designer.ui.common.preferences.IEditorPreferencesComponent#addValidationListener(org.teiid.designer.ui.common.preferences.IEditorPreferencesValidationListener)
      */
-    public void addValidationListener( IEditorPreferencesValidationListener listener ) {
+    @Override
+	public void addValidationListener( IEditorPreferencesValidationListener listener ) {
         this.validationListeners.add(listener);
     }
 
@@ -450,7 +472,8 @@ public class TableEditorPreferencesComponent implements IEditorPreferencesCompon
      * 
      * @see org.teiid.designer.ui.common.preferences.IEditorPreferencesComponent#removeValidationListener(org.teiid.designer.ui.common.preferences.IEditorPreferencesValidationListener)
      */
-    public void removeValidationListener( IEditorPreferencesValidationListener listener ) {
+    @Override
+	public void removeValidationListener( IEditorPreferencesValidationListener listener ) {
         this.validationListeners.remove(listener);
     }
 
@@ -461,7 +484,8 @@ public class TableEditorPreferencesComponent implements IEditorPreferencesCompon
         }
     }
 
-    public void validate() {
+    @Override
+	public void validate() {
         boolean valid = true;
         Iterator eObjectsIterator = this.columnArrays.keySet().iterator();
         while (eObjectsIterator.hasNext()) {

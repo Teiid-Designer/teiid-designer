@@ -109,7 +109,8 @@ public interface MetadataSearch extends ISearchEngine {
      * 
      * @see org.teiid.designer.core.search.ISearchEngine#getSearchCriteria()
      */
-    String getSearchCriteria();
+    @Override
+	String getSearchCriteria();
 
     /**
      * Return the name feature of the feature to be used for executing the search.

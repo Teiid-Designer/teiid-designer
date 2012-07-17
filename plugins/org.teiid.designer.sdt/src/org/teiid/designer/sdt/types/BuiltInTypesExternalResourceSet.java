@@ -39,7 +39,8 @@ public class BuiltInTypesExternalResourceSet implements ExternalResourceSet {
     /**
      * @see org.teiid.designer.core.ExternalResourceSet#getResourceSet()
      */
-    public ResourceSet getResourceSet() {
+    @Override
+	public ResourceSet getResourceSet() {
         if (this.builtInTypesContainer == null) {
             Container container = this.createContainer(BUILTIN_DATATYPES_CONTAINER_NAME);
             this.loadContainer(container);

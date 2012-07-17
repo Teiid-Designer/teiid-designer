@@ -35,7 +35,8 @@ public class DiagramToolBarManager extends ToolBarManager {
         // Required to provide actions the ability to know that it's item may
         // have been selected
         paneToolBar.addMouseMoveListener(new MouseMoveListener() {
-            public void mouseMove( MouseEvent e ) {
+            @Override
+			public void mouseMove( MouseEvent e ) {
                 Point thisPoint = new Point(e.x, e.y);
                 setFocusedToolItem(thisPoint);
             }

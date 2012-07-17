@@ -92,13 +92,15 @@ public class RevalidateModelAction extends ActionDelegate implements IWorkbenchW
     /**
      * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#init(org.eclipse.ui.IWorkbenchWindow)
      */
-    public void init( IWorkbenchWindow window ) {
+    @Override
+	public void init( IWorkbenchWindow window ) {
     }
 
     /**
      * @see org.eclipse.ui.IViewActionDelegate#init(org.eclipse.ui.IViewPart)
      */
-    public void init( IViewPart view ) {
+    @Override
+	public void init( IViewPart view ) {
     }
 
 }

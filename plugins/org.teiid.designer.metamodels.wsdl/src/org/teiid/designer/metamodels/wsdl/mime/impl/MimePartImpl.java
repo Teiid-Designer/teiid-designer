@@ -72,7 +72,8 @@ public class MimePartImpl extends EObjectImpl implements MimePart {
      * 
      * @generated
      */
-    public EList getMimeElements() {
+    @Override
+	public EList getMimeElements() {
         if (mimeElements == null) {
             mimeElements = new EObjectContainmentWithInverseEList(MimeElement.class, this, MimePackage.MIME_PART__MIME_ELEMENTS,
                                                                   MimePackage.MIME_ELEMENT__MIME_ELEMENT_OWNER);
@@ -85,7 +86,8 @@ public class MimePartImpl extends EObjectImpl implements MimePart {
      * 
      * @generated
      */
-    public MimeMultipartRelated getMimeMultipartRelated() {
+    @Override
+	public MimeMultipartRelated getMimeMultipartRelated() {
         if (eContainerFeatureID != MimePackage.MIME_PART__MIME_MULTIPART_RELATED) return null;
         return (MimeMultipartRelated)eContainer;
     }
@@ -95,7 +97,8 @@ public class MimePartImpl extends EObjectImpl implements MimePart {
      * 
      * @generated
      */
-    public void setMimeMultipartRelated( MimeMultipartRelated newMimeMultipartRelated ) {
+    @Override
+	public void setMimeMultipartRelated( MimeMultipartRelated newMimeMultipartRelated ) {
         if (newMimeMultipartRelated != eContainer
             || (eContainerFeatureID != MimePackage.MIME_PART__MIME_MULTIPART_RELATED && newMimeMultipartRelated != null)) {
             if (EcoreUtil.isAncestor(this, newMimeMultipartRelated)) throw new IllegalArgumentException(

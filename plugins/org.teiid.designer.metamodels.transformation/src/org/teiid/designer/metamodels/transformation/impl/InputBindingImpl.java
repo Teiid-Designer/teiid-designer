@@ -80,7 +80,8 @@ public class InputBindingImpl extends EObjectImpl implements InputBinding {
      * 
      * @generated
      */
-    public MappingClassSet getMappingClassSet() {
+    @Override
+	public MappingClassSet getMappingClassSet() {
         if (eContainerFeatureID != TransformationPackage.INPUT_BINDING__MAPPING_CLASS_SET) return null;
         return (MappingClassSet)eContainer;
     }
@@ -90,7 +91,8 @@ public class InputBindingImpl extends EObjectImpl implements InputBinding {
      * 
      * @generated
      */
-    public void setMappingClassSet( MappingClassSet newMappingClassSet ) {
+    @Override
+	public void setMappingClassSet( MappingClassSet newMappingClassSet ) {
         if (newMappingClassSet != eContainer
             || (eContainerFeatureID != TransformationPackage.INPUT_BINDING__MAPPING_CLASS_SET && newMappingClassSet != null)) {
             if (EcoreUtil.isAncestor(this, newMappingClassSet)) throw new IllegalArgumentException(
@@ -115,7 +117,8 @@ public class InputBindingImpl extends EObjectImpl implements InputBinding {
      * 
      * @generated
      */
-    public InputParameter getInputParameter() {
+    @Override
+	public InputParameter getInputParameter() {
         if (inputParameter != null && inputParameter.eIsProxy()) {
             InputParameter oldInputParameter = inputParameter;
             inputParameter = (InputParameter)eResolveProxy((InternalEObject)inputParameter);
@@ -142,7 +145,8 @@ public class InputBindingImpl extends EObjectImpl implements InputBinding {
      * 
      * @generated
      */
-    public void setInputParameter( InputParameter newInputParameter ) {
+    @Override
+	public void setInputParameter( InputParameter newInputParameter ) {
         InputParameter oldInputParameter = inputParameter;
         inputParameter = newInputParameter;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
@@ -155,7 +159,8 @@ public class InputBindingImpl extends EObjectImpl implements InputBinding {
      * 
      * @generated
      */
-    public MappingClassColumn getMappingClassColumn() {
+    @Override
+	public MappingClassColumn getMappingClassColumn() {
         if (mappingClassColumn != null && mappingClassColumn.eIsProxy()) {
             MappingClassColumn oldMappingClassColumn = mappingClassColumn;
             mappingClassColumn = (MappingClassColumn)eResolveProxy((InternalEObject)mappingClassColumn);
@@ -184,7 +189,8 @@ public class InputBindingImpl extends EObjectImpl implements InputBinding {
      * 
      * @generated
      */
-    public void setMappingClassColumn( MappingClassColumn newMappingClassColumn ) {
+    @Override
+	public void setMappingClassColumn( MappingClassColumn newMappingClassColumn ) {
         MappingClassColumn oldMappingClassColumn = mappingClassColumn;
         mappingClassColumn = newMappingClassColumn;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,

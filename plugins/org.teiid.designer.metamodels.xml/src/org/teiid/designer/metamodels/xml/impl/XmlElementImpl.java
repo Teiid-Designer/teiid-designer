@@ -576,7 +576,8 @@ public class XmlElementImpl extends XmlBaseElementImpl implements XmlElement {
      * 
      * @generated
      */
-    public EList getAttributes() {
+    @Override
+	public EList getAttributes() {
         if (attributes == null) attributes = new EObjectContainmentWithInverseEList(XmlAttribute.class, this,
                                                                                     XmlDocumentPackage.XML_ELEMENT__ATTRIBUTES,
                                                                                     XmlDocumentPackage.XML_ATTRIBUTE__ELEMENT);
@@ -588,7 +589,8 @@ public class XmlElementImpl extends XmlBaseElementImpl implements XmlElement {
      * 
      * @generated
      */
-    public EList getComments() {
+    @Override
+	public EList getComments() {
         if (comments == null) comments = new EObjectContainmentWithInverseEList(XmlComment.class, this,
                                                                                 XmlDocumentPackage.XML_ELEMENT__COMMENTS,
                                                                                 XmlDocumentPackage.XML_COMMENT__PARENT);
@@ -600,7 +602,8 @@ public class XmlElementImpl extends XmlBaseElementImpl implements XmlElement {
      * 
      * @generated
      */
-    public EList getDeclaredNamespaces() {
+    @Override
+	public EList getDeclaredNamespaces() {
         if (declaredNamespaces == null) declaredNamespaces = new EObjectContainmentWithInverseEList(
                                                                                                     XmlNamespace.class,
                                                                                                     this,
@@ -614,7 +617,8 @@ public class XmlElementImpl extends XmlBaseElementImpl implements XmlElement {
      * 
      * @generated
      */
-    public EList getEntities() {
+    @Override
+	public EList getEntities() {
         if (entities == null) entities = new EObjectContainmentWithInverseEList(XmlHolderEntity.class, this,
                                                                                 XmlDocumentPackage.XML_ELEMENT__ENTITIES,
                                                                                 XmlDocumentPackage.XML_HOLDER_ENTITY__PARENT);
@@ -626,7 +630,8 @@ public class XmlElementImpl extends XmlBaseElementImpl implements XmlElement {
      * 
      * @generated
      */
-    public EList getProcessingInstructions() {
+    @Override
+	public EList getProcessingInstructions() {
         if (processingInstructions == null) processingInstructions = new EObjectContainmentWithInverseEList(
                                                                                                             ProcessingInstruction.class,
                                                                                                             this,
@@ -640,7 +645,8 @@ public class XmlElementImpl extends XmlBaseElementImpl implements XmlElement {
      * 
      * @generated
      */
-    public String getValue() {
+    @Override
+	public String getValue() {
         return value;
     }
 
@@ -649,7 +655,8 @@ public class XmlElementImpl extends XmlBaseElementImpl implements XmlElement {
      * 
      * @generated
      */
-    public ValueType getValueType() {
+    @Override
+	public ValueType getValueType() {
         return valueType;
     }
 
@@ -658,7 +665,8 @@ public class XmlElementImpl extends XmlBaseElementImpl implements XmlElement {
      * 
      * @generated
      */
-    public boolean isRecursive() {
+    @Override
+	public boolean isRecursive() {
         return recursive;
     }
 
@@ -667,7 +675,8 @@ public class XmlElementImpl extends XmlBaseElementImpl implements XmlElement {
      * 
      * @generated NOT
      */
-    public boolean isValueDefault() {
+    @Override
+	public boolean isValueDefault() {
         final ValueType valueType = getValueType();
         return ValueType.DEFAULT == valueType.getValue();
     }
@@ -688,7 +697,8 @@ public class XmlElementImpl extends XmlBaseElementImpl implements XmlElement {
      * 
      * @generated NOT
      */
-    public boolean isValueFixed() {
+    @Override
+	public boolean isValueFixed() {
         final ValueType valueType = getValueType();
         return ValueType.FIXED == valueType.getValue();
     }
@@ -709,7 +719,8 @@ public class XmlElementImpl extends XmlBaseElementImpl implements XmlElement {
      * 
      * @generated
      */
-    public void setRecursive( final boolean newRecursive ) {
+    @Override
+	public void setRecursive( final boolean newRecursive ) {
         final boolean oldRecursive = recursive;
         recursive = newRecursive;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
@@ -722,7 +733,8 @@ public class XmlElementImpl extends XmlBaseElementImpl implements XmlElement {
      * 
      * @generated
      */
-    public void setValue( final String newValue ) {
+    @Override
+	public void setValue( final String newValue ) {
         final String oldValue = value;
         value = newValue;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, XmlDocumentPackage.XML_ELEMENT__VALUE,
@@ -734,7 +746,8 @@ public class XmlElementImpl extends XmlBaseElementImpl implements XmlElement {
      * 
      * @generated
      */
-    public void setValueType( final ValueType newValueType ) {
+    @Override
+	public void setValueType( final ValueType newValueType ) {
         final ValueType oldValueType = valueType;
         valueType = newValueType == null ? VALUE_TYPE_EDEFAULT : newValueType;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,

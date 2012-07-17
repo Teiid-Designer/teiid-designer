@@ -33,7 +33,8 @@ public class InterfaceAspect extends WebServiceComponentAspect implements UmlPac
      * @see org.teiid.designer.core.metamodel.aspect.uml.UmlDiagramAspect#getStereotype(java.lang.Object)
      * @since 4.2
      */
-    public String getStereotype(Object eObject) {
+    @Override
+	public String getStereotype(Object eObject) {
         return WebServiceMetamodelPlugin.Util.getString("_UI_Interface_type"); //$NON-NLS-1$
     }
 

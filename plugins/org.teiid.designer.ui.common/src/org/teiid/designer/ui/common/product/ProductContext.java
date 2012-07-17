@@ -52,7 +52,8 @@ public class ProductContext implements IProductContext {
      * @see org.teiid.designer.ui.common.product.IProductContext#getId()
      * @since 4.4
      */
-    public String getId() {
+    @Override
+	public String getId() {
         return new StringBuffer().append(this.category).append('.').append(this.id).toString();
     }
     

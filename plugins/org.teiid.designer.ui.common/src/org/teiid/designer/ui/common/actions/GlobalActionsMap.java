@@ -82,35 +82,40 @@ public class GlobalActionsMap implements Map,
      * This operation is not supported.
      * @throws UnsupportedOperationException if called.
      */
-    public void clear() {
+    @Override
+	public void clear() {
         throw new UnsupportedOperationException(Util.getString("GlobalActionsMap.unsupportedOperation")); //$NON-NLS-1$
     }
 
     /* (non-Javadoc)
      * @see java.util.Map#containsKey(java.lang.Object)
      */
-    public boolean containsKey(Object theKey) {
+    @Override
+	public boolean containsKey(Object theKey) {
         return map.containsKey(theKey);
     }
 
     /* (non-Javadoc)
      * @see java.util.Map#containsValue(java.lang.Object)
      */
-    public boolean containsValue(Object theValue) {
+    @Override
+	public boolean containsValue(Object theValue) {
         return map.containsValue(theValue);
     }
 
     /* (non-Javadoc)
      * @see java.util.Map#entrySet()
      */
-    public Set entrySet() {
+    @Override
+	public Set entrySet() {
         return map.entrySet();
     }
 
     /* (non-Javadoc)
      * @see java.util.Map#get(java.lang.Object)
      */
-    public Object get(Object theKey) {
+    @Override
+	public Object get(Object theKey) {
         return map.get(theKey);
     }
     
@@ -137,7 +142,8 @@ public class GlobalActionsMap implements Map,
      * This map is never empty as it always contains entries for each global action.
      * @return <code>false</code>
      */
-    public boolean isEmpty() {
+    @Override
+	public boolean isEmpty() {
         return false;
     }
     
@@ -182,7 +188,8 @@ public class GlobalActionsMap implements Map,
     /* (non-Javadoc)
      * @see java.util.Map#keySet()
      */
-    public Set keySet() {
+    @Override
+	public Set keySet() {
         return map.keySet();
     }
 
@@ -196,7 +203,8 @@ public class GlobalActionsMap implements Map,
      * @throws IllegalArgumentException if key is invalid
      * @throws NullPointerException if key is <code>null</code>
      */
-    public Object put(Object theKey,
+    @Override
+	public Object put(Object theKey,
                       Object theValue) {
         if (theKey == null) {
             throw new NullPointerException(Util.getString("GlobalActionsMap.nullKey")); //$NON-NLS-1$
@@ -215,7 +223,8 @@ public class GlobalActionsMap implements Map,
      * @throws IllegalArgumentException if key is invalid
      * @throws NullPointerException if key is <code>null</code>
      */
-    public void putAll(Map theMap) {
+    @Override
+	public void putAll(Map theMap) {
         if (theMap !=  null) {
             Iterator itr = theMap.entrySet().iterator();
             
@@ -230,7 +239,8 @@ public class GlobalActionsMap implements Map,
      * This operation is not supported.
      * @throws UnsupportedOperationException if called.
      */
-    public Object remove(Object theKey) {
+    @Override
+	public Object remove(Object theKey) {
         throw new UnsupportedOperationException(Util.getString("GlobalActionsMap.unsupportedOperation")); //$NON-NLS-1$
     }
 
@@ -244,7 +254,8 @@ public class GlobalActionsMap implements Map,
     }
 
     /** Always returns the current number of global actions. */
-    public int size() {
+    @Override
+	public int size() {
         return map.size();
     }
     
@@ -260,7 +271,8 @@ public class GlobalActionsMap implements Map,
     /* (non-Javadoc)
      * @see java.util.Map#values()
      */
-    public Collection values() {
+    @Override
+	public Collection values() {
         return map.values();
     }
 

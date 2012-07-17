@@ -35,7 +35,8 @@ public class ProcedureParameterAspect extends RelationalEntityAspect implements 
     /**
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlProcedureParameterAspect#getDatatypeName(org.eclipse.emf.ecore.EObject)
      */
-    public String getDatatypeName(EObject eObject) {
+    @Override
+	public String getDatatypeName(EObject eObject) {
         CoreArgCheck.isInstanceOf(ProcedureParameter.class, eObject);
         ProcedureParameter proc = (ProcedureParameter) eObject;
         final EObject dataType = proc.getType();
@@ -48,7 +49,8 @@ public class ProcedureParameterAspect extends RelationalEntityAspect implements 
     /**
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlProcedureParameterAspect#getDatatype(org.eclipse.emf.ecore.EObject)
      */
-    public EObject getDatatype(EObject eObject) {
+    @Override
+	public EObject getDatatype(EObject eObject) {
         CoreArgCheck.isInstanceOf(ProcedureParameter.class, eObject);
         ProcedureParameter proc = (ProcedureParameter) eObject;
         return proc.getType();
@@ -57,7 +59,8 @@ public class ProcedureParameterAspect extends RelationalEntityAspect implements 
     /**
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlProcedureParameterAspect#getRuntimeType(org.eclipse.emf.ecore.EObject)
      */
-    public String getRuntimeType(EObject eObject) {
+    @Override
+	public String getRuntimeType(EObject eObject) {
         CoreArgCheck.isInstanceOf(ProcedureParameter.class, eObject);
         ProcedureParameter proc = (ProcedureParameter) eObject;
         final EObject datatype = proc.getType();
@@ -68,7 +71,8 @@ public class ProcedureParameterAspect extends RelationalEntityAspect implements 
     /*
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlProcedureParameterAspect#getDefaultValue(org.eclipse.emf.ecore.EObject)
      */
-    public Object getDefaultValue(EObject eObject) {
+    @Override
+	public Object getDefaultValue(EObject eObject) {
         CoreArgCheck.isInstanceOf(ProcedureParameter.class, eObject);
         ProcedureParameter proc = (ProcedureParameter) eObject;
         return proc.getDefaultValue();
@@ -77,7 +81,8 @@ public class ProcedureParameterAspect extends RelationalEntityAspect implements 
     /*
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlProcedureParameterAspect#getType(org.eclipse.emf.ecore.EObject)
      */
-    public int getType(EObject eObject) {
+    @Override
+	public int getType(EObject eObject) {
         CoreArgCheck.isInstanceOf(ProcedureParameter.class, eObject);
         ProcedureParameter proc = (ProcedureParameter) eObject;
         DirectionKind direction = proc.getDirection();
@@ -89,7 +94,8 @@ public class ProcedureParameterAspect extends RelationalEntityAspect implements 
     /*
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlProcedureParameterAspect#getLength(org.eclipse.emf.ecore.EObject)
      */
-    public int getLength(EObject eObject) {
+    @Override
+	public int getLength(EObject eObject) {
         CoreArgCheck.isInstanceOf(ProcedureParameter.class, eObject);
         ProcedureParameter proc = (ProcedureParameter) eObject;
         return proc.getLength();
@@ -98,7 +104,8 @@ public class ProcedureParameterAspect extends RelationalEntityAspect implements 
     /*
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlProcedureParameterAspect#getPrecision(org.eclipse.emf.ecore.EObject)
      */
-    public int getPrecision(EObject eObject) {
+    @Override
+	public int getPrecision(EObject eObject) {
         CoreArgCheck.isInstanceOf(ProcedureParameter.class, eObject);
         ProcedureParameter proc = (ProcedureParameter) eObject;
         return proc.getPrecision();
@@ -107,7 +114,8 @@ public class ProcedureParameterAspect extends RelationalEntityAspect implements 
     /*
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlProcedureParameterAspect#getRadix(org.eclipse.emf.ecore.EObject)
      */
-    public int getRadix(EObject eObject) {
+    @Override
+	public int getRadix(EObject eObject) {
         CoreArgCheck.isInstanceOf(ProcedureParameter.class, eObject);
         ProcedureParameter proc = (ProcedureParameter) eObject;
         return proc.getRadix();
@@ -116,7 +124,8 @@ public class ProcedureParameterAspect extends RelationalEntityAspect implements 
     /*
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlProcedureParameterAspect#getPosition(org.eclipse.emf.ecore.EObject)
      */
-    public int getPosition(EObject eObject) {
+    @Override
+	public int getPosition(EObject eObject) {
         CoreArgCheck.isInstanceOf(ProcedureParameter.class, eObject);
         ProcedureParameter proc = (ProcedureParameter) eObject;
         List params = proc.getProcedure().getParameters();
@@ -127,7 +136,8 @@ public class ProcedureParameterAspect extends RelationalEntityAspect implements 
     /*
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlProcedureParameterAspect#getScale(org.eclipse.emf.ecore.EObject)
      */
-    public int getScale(EObject eObject) {
+    @Override
+	public int getScale(EObject eObject) {
         CoreArgCheck.isInstanceOf(ProcedureParameter.class, eObject);
         ProcedureParameter proc = (ProcedureParameter) eObject;
         return proc.getScale();
@@ -136,7 +146,8 @@ public class ProcedureParameterAspect extends RelationalEntityAspect implements 
     /*
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlProcedureParameterAspect#getNullType(org.eclipse.emf.ecore.EObject)
      */
-    public int getNullType(EObject eObject) {
+    @Override
+	public int getNullType(EObject eObject) {
         CoreArgCheck.isInstanceOf(ProcedureParameter.class, eObject);
         ProcedureParameter proc = (ProcedureParameter) eObject;
         NullableType nullType = proc.getNullable();
@@ -148,14 +159,16 @@ public class ProcedureParameterAspect extends RelationalEntityAspect implements 
     /*
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlAspect#isRecordType(char)
      */
-    public boolean isRecordType(char recordType) {
+    @Override
+	public boolean isRecordType(char recordType) {
         return (recordType == IndexConstants.RECORD_TYPE.CALLABLE_PARAMETER);
     }
 
     /*
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlProcedureParameterAspect#getDatatypeObjectID(org.eclipse.emf.ecore.EObject)
      */
-    public String getDatatypeObjectID(EObject eObject) {
+    @Override
+	public String getDatatypeObjectID(EObject eObject) {
         final EObject datatype = getDatatype(eObject);
         final DatatypeManager dtMgr = ModelerCore.getDatatypeManager(eObject,true);
         return dtMgr.getUuidString(datatype);
@@ -164,21 +177,24 @@ public class ProcedureParameterAspect extends RelationalEntityAspect implements 
     /*
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlProcedureParameterAspect#isOptional()
      */
-    public boolean isOptional(EObject eObject) {
+    @Override
+	public boolean isOptional(EObject eObject) {
         return false;
     }
 
     /*
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlAspect#updateObject(org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject)
      */
-    public void updateObject(EObject targetObject, EObject sourceObject) {
+    @Override
+	public void updateObject(EObject targetObject, EObject sourceObject) {
 
     }
 
     /** 
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlColumnAspect#isDatatypeFeature(org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EStructuralFeature)
      */
-    public boolean isDatatypeFeature(final EObject eObject, final EStructuralFeature eFeature) {
+    @Override
+	public boolean isDatatypeFeature(final EObject eObject, final EStructuralFeature eFeature) {
         CoreArgCheck.isInstanceOf(ProcedureParameter.class, eObject); 
         final EObjectImpl eObjectImpl = super.getEObjectImpl(eObject);
         if (eObjectImpl != null) {
@@ -194,14 +210,16 @@ public class ProcedureParameterAspect extends RelationalEntityAspect implements 
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlProcedureParameterAspect#canSetDatatype()
      * @since 4.2
      */
-    public boolean canSetDatatype() {
+    @Override
+	public boolean canSetDatatype() {
         return true;
     }
     /** 
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlProcedureParameterAspect#setDatatype(org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject)
      * @since 4.2
      */
-    public void setDatatype(EObject eObject, EObject datatype) {
+    @Override
+	public void setDatatype(EObject eObject, EObject datatype) {
         CoreArgCheck.isInstanceOf(ProcedureParameter.class, eObject);
         ProcedureParameter procParam = (ProcedureParameter) eObject;
         procParam.setType(datatype);
@@ -211,7 +229,8 @@ public class ProcedureParameterAspect extends RelationalEntityAspect implements 
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlProcedureParameterAspect#canSetLength()
      * @since 4.2
      */
-    public boolean canSetLength() {
+    @Override
+	public boolean canSetLength() {
         return true;
     }
     
@@ -219,7 +238,8 @@ public class ProcedureParameterAspect extends RelationalEntityAspect implements 
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlProcedureParameterAspect#setLength(org.eclipse.emf.ecore.EObject, int)
      * @since 4.2
      */
-    public void setLength(EObject eObject, int length) {
+    @Override
+	public void setLength(EObject eObject, int length) {
         CoreArgCheck.isInstanceOf(ProcedureParameter.class, eObject);
         ProcedureParameter procParam = (ProcedureParameter) eObject;
         procParam.setLength(length);
@@ -229,7 +249,8 @@ public class ProcedureParameterAspect extends RelationalEntityAspect implements 
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlProcedureParameterAspect#canSetNullType()
      * @since 4.2
      */
-    public boolean canSetNullType() {
+    @Override
+	public boolean canSetNullType() {
         return true;
     }
     
@@ -237,7 +258,8 @@ public class ProcedureParameterAspect extends RelationalEntityAspect implements 
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlProcedureParameterAspect#setNullType(org.eclipse.emf.ecore.EObject, int)
      * @since 4.2
      */
-    public void setNullType(EObject eObject, int nullType) {
+    @Override
+	public void setNullType(EObject eObject, int nullType) {
         CoreArgCheck.isInstanceOf(ProcedureParameter.class, eObject);
         ProcedureParameter procParam = (ProcedureParameter) eObject;
         procParam.setNullable(convertMetadataConstantToNullableType(nullType));
@@ -247,7 +269,8 @@ public class ProcedureParameterAspect extends RelationalEntityAspect implements 
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlProcedureParameterAspect#isInputParam()
      * @since 4.3
      */
-    public boolean isInputParam(final EObject eObject) {
+    @Override
+	public boolean isInputParam(final EObject eObject) {
         CoreArgCheck.isInstanceOf(ProcedureParameter.class, eObject);
         ProcedureParameter procParam = (ProcedureParameter) eObject;
         final DirectionKind dir = procParam.getDirection();
@@ -258,7 +281,8 @@ public class ProcedureParameterAspect extends RelationalEntityAspect implements 
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlProcedureParameterAspect#setDirection(org.eclipse.emf.ecore.EObject, int)
      * @since 4.3
      */
-    public void setDirection(EObject eObject,
+    @Override
+	public void setDirection(EObject eObject,
                              int dir) {
         CoreArgCheck.isInstanceOf(ProcedureParameter.class, eObject);
         ProcedureParameter proc = (ProcedureParameter) eObject;

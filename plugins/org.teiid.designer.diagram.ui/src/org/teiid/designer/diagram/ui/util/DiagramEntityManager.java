@@ -45,7 +45,8 @@ public class DiagramEntityManager  {
     static {
             // Need to register a new listener here.        
         eventObjectListener = new EventObjectListener() {
-            public void processEvent(EventObject event) {
+            @Override
+			public void processEvent(EventObject event) {
                 DiagramEntityManager.processEvent(event);
             }
         };

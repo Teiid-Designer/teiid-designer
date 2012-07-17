@@ -58,7 +58,8 @@ public class DiagramPolylineConnection extends Polyline implements Connection, A
      * polyline connection.
      * @param anchor the anchor that moved
      */
-    public void anchorMoved(ConnectionAnchor anchor) {
+    @Override
+	public void anchorMoved(ConnectionAnchor anchor) {
         revalidate();
     }
 
@@ -85,7 +86,8 @@ public class DiagramPolylineConnection extends Polyline implements Connection, A
      * return <code>null</code>.
      * @return this connection's router
      */
-    public ConnectionRouter getConnectionRouter() {
+    @Override
+	public ConnectionRouter getConnectionRouter() {
         return connectionRouter;
     }
 
@@ -94,7 +96,8 @@ public class DiagramPolylineConnection extends Polyline implements Connection, A
      * <code>null</code>.
      * @return the connection's routing constraint
      */
-    public Object getRoutingConstraint() {
+    @Override
+	public Object getRoutingConstraint() {
         if (getConnectionRouter() != null)
             return getConnectionRouter().getConstraint(this);
         return null;
@@ -103,7 +106,8 @@ public class DiagramPolylineConnection extends Polyline implements Connection, A
     /**
      * @return the anchor at the start of this polyline connection (may be null)
      */
-    public ConnectionAnchor getSourceAnchor() {
+    @Override
+	public ConnectionAnchor getSourceAnchor() {
         return startAnchor;
     }
 
@@ -117,7 +121,8 @@ public class DiagramPolylineConnection extends Polyline implements Connection, A
     /**
      * @return the anchor at the end of this polyline connection (may be null)
      */
-    public ConnectionAnchor getTargetAnchor() {
+    @Override
+	public ConnectionAnchor getTargetAnchor() {
         return endAnchor;
     }
 
@@ -173,7 +178,8 @@ public class DiagramPolylineConnection extends Polyline implements Connection, A
      * the parent handling the polyline connection.
      * @param cr the connection router
      */
-    public void setConnectionRouter(ConnectionRouter cr) {
+    @Override
+	public void setConnectionRouter(ConnectionRouter cr) {
         if (cr == null)
             cr = ConnectionRouter.NULL;
         if (connectionRouter != cr) {
@@ -189,7 +195,8 @@ public class DiagramPolylineConnection extends Polyline implements Connection, A
      * Sets the routing constraint for this connection.
      * @param cons the constraint
      */
-    public void setRoutingConstraint(Object cons) {
+    @Override
+	public void setRoutingConstraint(Object cons) {
         if (getConnectionRouter() != null)
             getConnectionRouter().setConstraint(this, cons);
         revalidate();
@@ -199,7 +206,8 @@ public class DiagramPolylineConnection extends Polyline implements Connection, A
      * Sets the anchor to be used at the start of this polyline connection.
      * @param anchor the new source anchor
      */
-    public void setSourceAnchor(ConnectionAnchor anchor) {
+    @Override
+	public void setSourceAnchor(ConnectionAnchor anchor) {
         unhookSourceAnchor();
         getConnectionRouter().invalidate(this);
         startAnchor = anchor;
@@ -226,7 +234,8 @@ public class DiagramPolylineConnection extends Polyline implements Connection, A
      * from the old anchor and adds it to the new anchor.
      * @param anchor the new target anchor
      */
-    public void setTargetAnchor(ConnectionAnchor anchor) {
+    @Override
+	public void setTargetAnchor(ConnectionAnchor anchor) {
         unhookTargetAnchor();
         getConnectionRouter().invalidate(this);
         endAnchor = anchor;

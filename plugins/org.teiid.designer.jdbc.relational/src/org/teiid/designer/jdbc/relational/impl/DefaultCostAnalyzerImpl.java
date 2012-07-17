@@ -57,7 +57,8 @@ public class DefaultCostAnalyzerImpl implements CostAnalyzer {
      * @see org.teiid.designer.jdbc.relational.CostAnalyzer#analyzeCost()
      * @since 4.3
      */
-    public void collectStatistics( final Map tblStats,
+    @Override
+	public void collectStatistics( final Map tblStats,
                                    IProgressMonitor monitor ) throws Exception {
         log("\nLoading table statistics..."); //$NON-NLS-1$
         if (monitor == null) {
@@ -350,7 +351,8 @@ public class DefaultCostAnalyzerImpl implements CostAnalyzer {
      * @see org.teiid.designer.jdbc.relational.CostAnalyzer#setOutputStream(java.io.PrintStream)
      * @since 4.3
      */
-    public void setOutputStream( final PrintStream outputStream ) {
+    @Override
+	public void setOutputStream( final PrintStream outputStream ) {
         this.outputStream = outputStream;
     }
 }

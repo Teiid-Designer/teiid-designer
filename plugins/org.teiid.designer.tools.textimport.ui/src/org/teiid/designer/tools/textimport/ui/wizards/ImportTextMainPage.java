@@ -82,7 +82,8 @@ public class ImportTextMainPage extends WizardDataTransferPage implements UiCons
      * 
      * @param event Event
      */
-    public void handleEvent( Event event ) {
+    @Override
+	public void handleEvent( Event event ) {
         if (!initializing) {
             boolean validate = false;
 
@@ -140,7 +141,8 @@ public class ImportTextMainPage extends WizardDataTransferPage implements UiCons
      * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
      * @since 4.2
      */
-    public void createControl( Composite parent ) {
+    @Override
+	public void createControl( Composite parent ) {
         initializeDialogUnits(parent);
 
         Composite composite = new Composite(parent, SWT.NULL);
@@ -217,7 +219,8 @@ public class ImportTextMainPage extends WizardDataTransferPage implements UiCons
             /*
              * @see KeyListener.keyPressed
              */
-            public void keyPressed( KeyEvent e ) {
+            @Override
+			public void keyPressed( KeyEvent e ) {
                 // If there has been a key pressed then mark as dirty
                 entryChanged = true;
             }
@@ -225,7 +228,8 @@ public class ImportTextMainPage extends WizardDataTransferPage implements UiCons
             /*
              * @see KeyListener.keyReleased
              */
-            public void keyReleased( KeyEvent e ) {
+            @Override
+			public void keyReleased( KeyEvent e ) {
             }
         });
 
@@ -234,14 +238,16 @@ public class ImportTextMainPage extends WizardDataTransferPage implements UiCons
             /*
              * @see FocusListener.focusGained(FocusEvent)
              */
-            public void focusGained( FocusEvent e ) {
+            @Override
+			public void focusGained( FocusEvent e ) {
                 // Do nothing when getting focus
             }
 
             /*
              * @see FocusListener.focusLost(FocusEvent)
              */
-            public void focusLost( FocusEvent e ) {
+            @Override
+			public void focusLost( FocusEvent e ) {
                 // Clear the flag to prevent constant update
                 if (entryChanged) {
                     entryChanged = false;

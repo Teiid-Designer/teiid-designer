@@ -20,6 +20,7 @@ public class ReferencesRecordImpl extends AbstractSearchRecord implements Refere
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.core.search.runtime.ReferencesRecord#getReferencedUUIDs()
 	 */
+	@Override
 	public String getReferencedUUID() {
 		return this.referencedUUID;
 	}
@@ -27,6 +28,7 @@ public class ReferencesRecordImpl extends AbstractSearchRecord implements Refere
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.core.search.runtime.SearchRecord#getRecordType()
 	 */
+	@Override
 	public char getRecordType() {
 		return IndexConstants.SEARCH_RECORD_TYPE.OBJECT_REF;
 	}

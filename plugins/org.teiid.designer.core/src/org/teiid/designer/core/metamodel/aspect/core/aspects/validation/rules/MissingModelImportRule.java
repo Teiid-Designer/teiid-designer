@@ -38,7 +38,8 @@ public class MissingModelImportRule implements ObjectValidationRule {
     /*
      * @See org.teiid.designer.core.validation.ObjectValidationRule#validate(org.eclipse.emf.ecore.EObject, org.teiid.designer.core.validation.ValidationContext)
      */
-    public void validate( EObject eObject,
+    @Override
+	public void validate( EObject eObject,
                           ValidationContext context ) {
         CoreArgCheck.isInstanceOf(ModelAnnotation.class, eObject);
 

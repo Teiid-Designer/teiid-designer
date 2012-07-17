@@ -42,7 +42,8 @@ public class RedoRefactoringAction
     /* (non-Javadoc)
      * @see org.eclipse.ui.IViewActionDelegate#init(org.eclipse.ui.IViewPart)
      */
-    public void init(IViewPart view) {
+    @Override
+	public void init(IViewPart view) {
         if ( actionService == null ) {
             IViewSite site = view.getViewSite();
             this.actionService = (ModelerActionService) UiPlugin.getDefault().getActionService(site.getPage());
@@ -52,7 +53,8 @@ public class RedoRefactoringAction
     /* (non-Javadoc)
      * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#init(org.eclipse.ui.IWorkbenchWindow)
      */
-    public void init(IWorkbenchWindow window) {
+    @Override
+	public void init(IWorkbenchWindow window) {
         if ( actionService == null ) {
             this.actionService = (ModelerActionService) UiPlugin.getDefault().getActionService(window.getActivePage());
         }
@@ -81,7 +83,8 @@ public class RedoRefactoringAction
     /* (non-Javadoc)
      * @see org.teiid.designer.ui.refactor.RefactorUndoListener#stateChanged()
      */
-    public void stateChanged() {
+    @Override
+	public void stateChanged() {
         action.setEnabled(getUndoManager().canRedo());
         action.setText(getUndoManager().getRedoLabel());
     }

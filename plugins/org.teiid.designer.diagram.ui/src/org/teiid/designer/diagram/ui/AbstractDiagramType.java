@@ -45,7 +45,8 @@ public abstract class AbstractDiagramType implements IDiagramType {
     //
     // Implementation of IDiagramType methods:
     //
-    public boolean dependsOnResource(DiagramModelNode root, IResource res) {
+    @Override
+	public boolean dependsOnResource(DiagramModelNode root, IResource res) {
         // Query all the objects in the diagram to see from whence they come.
         if( root != null ) {
             boolean result = false;
@@ -70,18 +71,21 @@ public abstract class AbstractDiagramType implements IDiagramType {
         return false;
     }
 
-    public IClassifierContentAdapter getClassifierContentAdapter() {
+    @Override
+	public IClassifierContentAdapter getClassifierContentAdapter() {
         return new DefaultClassContentAdapter();
     }
 
-    public ColorPaletteManager getColorPaletteManager() {
+    @Override
+	public ColorPaletteManager getColorPaletteManager() {
         if( colorPaletteManager == null )
             colorPaletteManager = new DefaultColorPaletteManager();
             
         return colorPaletteManager;
     }
 
-    public DiagramController getDiagramController(DiagramEditor editor) {
+    @Override
+	public DiagramController getDiagramController(DiagramEditor editor) {
         return null;
     }
     
@@ -90,51 +94,63 @@ public abstract class AbstractDiagramType implements IDiagramType {
         return null;
     }
 
-    public Diagram getDiagramForGoToMarkerEObject(EObject eObject) {
+    @Override
+	public Diagram getDiagramForGoToMarkerEObject(EObject eObject) {
         return null;
     }
 
-    public Object getDiagramSelectionStandin(Diagram diagram) {
+    @Override
+	public Object getDiagramSelectionStandin(Diagram diagram) {
         return diagram;
     }
 
-    public EObject getInitialSelection(Object object) {
+    @Override
+	public EObject getInitialSelection(Object object) {
         return null;
     }
 
-    public IPackageDiagramProvider getPackageDiagramProvider() {
+    @Override
+	public IPackageDiagramProvider getPackageDiagramProvider() {
         return null;
     }
 
-    public EObject getRevealedEObject(Diagram diagram, Object object) {
+    @Override
+	public EObject getRevealedEObject(Diagram diagram, Object object) {
         return null;
     }
 
-    public String getType() {
+    @Override
+	public String getType() {
         return typeId;
     }
 
-    public boolean isDiagramLarge(Diagram diagram) {
+    @Override
+	public boolean isDiagramLarge(Diagram diagram) {
     	return false;
     }
 
-    public boolean isDiagramTooLarge(Diagram diagram) {
+    @Override
+	public boolean isDiagramTooLarge(Diagram diagram) {
     	return false;
     }
 
-    public boolean isTransientDiagram(Diagram diagram) {
+    @Override
+	public boolean isTransientDiagram(Diagram diagram) {
         return false;
     }
 
-    public void setDisplayName(String displayName) {
+    @Override
+	public void setDisplayName(String displayName) {
         // does nothing. Name set by plugin constants.
     }
 
-    public void setType(String diagramType) {
+    @Override
+	public void setType(String diagramType) {
         typeId = diagramType;
     }
 
-    public IDiagramSelectionHandler getSelectionHandler(DiagramViewer viewer) {
+    @Override
+	public IDiagramSelectionHandler getSelectionHandler(DiagramViewer viewer) {
         return new DiagramSelectionHandler(viewer);
     }
     

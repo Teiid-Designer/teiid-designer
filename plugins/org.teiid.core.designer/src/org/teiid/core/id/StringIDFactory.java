@@ -35,7 +35,8 @@ public class StringIDFactory implements ObjectIDFactory {
      * Return the description for the type of ObjectID described by this object.
      * @return the description
      */
-    public String getDescription() {
+    @Override
+	public String getDescription() {
         return CorePlugin.Util.getString("StringIDFactory.Description"); //$NON-NLS-1$
     }
 
@@ -47,7 +48,8 @@ public class StringIDFactory implements ObjectIDFactory {
      * Create a new ObjectID instance using this protocol.
      * @return the new instance
      */
-    public ObjectID create(){
+    @Override
+	public ObjectID create(){
 	    return new StringID( getNextValue() );
     }
     /**
@@ -79,7 +81,8 @@ public class StringIDFactory implements ObjectIDFactory {
      * @throws InvalidIDException if the parser is aware of this protocol, but it is of the wrong
      * format for this type of ObjectID.
      */
-    public ObjectID stringWithoutProtocolToObject(String value) throws InvalidIDException {
+    @Override
+	public ObjectID stringWithoutProtocolToObject(String value) throws InvalidIDException {
         try {
             return new StringID( value );
         } catch ( NumberFormatException e ) {
@@ -96,7 +99,8 @@ public class StringIDFactory implements ObjectIDFactory {
      * @throws InvalidIDException if the parser is aware of this protocol, but it is of the wrong
      * format for this type of ObjectID.
      */
-    public ObjectID stringToObject(String value) throws InvalidIDException {
+    @Override
+	public ObjectID stringToObject(String value) throws InvalidIDException {
         final ParsedObjectID parsedID = ParsedObjectID.parsedStringifiedObjectID(value,LongID.PROTOCOL);
         try {
             return new StringID( parsedID.getRemainder() );
@@ -109,7 +113,8 @@ public class StringIDFactory implements ObjectIDFactory {
      * Return the name of the protocol that this factory uses.
      * @return the protocol name
      */
-    public String getProtocol() {
+    @Override
+	public String getProtocol() {
 	    return StringID.PROTOCOL;
     }
 }

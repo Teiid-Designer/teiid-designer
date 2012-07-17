@@ -34,14 +34,16 @@ public class XPackageUmlAspect extends AbstractExtensionUmlAspect implements Uml
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodels.aspects.UmlDiagramAspect#getStereotype(java.lang.Object)
      */
-    public String getStereotype(Object eObject) {
+    @Override
+	public String getStereotype(Object eObject) {
         return CoreMetamodelPlugin.getPluginResourceLocator().getString("_UI_XPackage_type"); //$NON-NLS-1$
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodels.aspects.UmlDiagramAspect#setSignature(java.lang.Object, java.lang.String)
      */
-    public IStatus setSignature(Object eObject, String newSignature) {
+    @Override
+	public IStatus setSignature(Object eObject, String newSignature) {
         try {
             final XPackage xpkg = assertXPackage(eObject);
             xpkg.setName(newSignature);
@@ -52,7 +54,8 @@ public class XPackageUmlAspect extends AbstractExtensionUmlAspect implements Uml
         return new Status(IStatus.OK, ModelerCore.PLUGIN_ID, 0, ModelerCore.Util.getString("XPackageUmlAspect.Signature_changed"), null); //$NON-NLS-1$
     }
 
-    public String getSignature(Object eObject, int showMask) {
+    @Override
+	public String getSignature(Object eObject, int showMask) {
         final XPackage xpkg = assertXPackage(eObject);
         StringBuffer result = new StringBuffer();
         switch (showMask) {
@@ -79,7 +82,8 @@ public class XPackageUmlAspect extends AbstractExtensionUmlAspect implements Uml
         return result.toString();
     }
 
-    public String getEditableSignature(Object eObject) {
+    @Override
+	public String getEditableSignature(Object eObject) {
         return getSignature(eObject, UmlPackage.SIGNATURE_NAME);
     }
 

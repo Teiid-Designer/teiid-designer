@@ -176,7 +176,8 @@ public final class ExportDdlWizard extends AbstractWizard
         try {
             final FileOutputStream stream = new FileOutputStream(this.file);
             new ProgressMonitorDialog(getShell()).run(false, true, new IRunnableWithProgress() {
-                public void run( final IProgressMonitor monitor ) throws InvocationTargetException {
+                @Override
+				public void run( final IProgressMonitor monitor ) throws InvocationTargetException {
                     try {
                         ExportDdlWizard.this.status = ExportDdlWizard.this.writer.write(ExportDdlWizard.this.selections,
                                                                                         stream,
@@ -224,7 +225,8 @@ public final class ExportDdlWizard extends AbstractWizard
      * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench, org.eclipse.jface.viewers.IStructuredSelection)
      * @since 4.0
      */
-    public void init( final IWorkbench workbench,
+    @Override
+	public void init( final IWorkbench workbench,
                       final IStructuredSelection selection ) {
     	invalidSelection = false;
     	//invalidSelectionMessage = null;
@@ -253,7 +255,8 @@ public final class ExportDdlWizard extends AbstractWizard
         this.selections = new ModelWorkspaceSelections();
         this.writer = DdlPlugin.getInstance().createDdlWriter();
         this.pg = new AbstractWizardPage(ExportDdlWizard.class.getSimpleName(), PAGE_TITLE) {
-            public void createControl( final Composite parent ) {
+            @Override
+			public void createControl( final Composite parent ) {
             	setControl(createPageControl(parent));
             }
         };
@@ -282,7 +285,8 @@ public final class ExportDdlWizard extends AbstractWizard
         tree.setLayoutData(new GridData(GridData.FILL_BOTH));
         final ModelWorkspaceView view = new ModelWorkspaceView();
         view.getModelWorkspaceFilters().add(new ModelWorkspaceFilter() {
-            public boolean select( final Object parent,
+            @Override
+			public boolean select( final Object parent,
                                    final Object node ) {
                 if (node instanceof ModelResource) {
                     try {
@@ -303,7 +307,8 @@ public final class ExportDdlWizard extends AbstractWizard
         });
         this.selections.setModelWorkspaceView(view);
         this.selectionFilter = new ModelWorkspaceSelectionFilter() {
-            public boolean isSelectable( final Object node ) {
+            @Override
+			public boolean isSelectable( final Object node ) {
                 if (node instanceof ModelWorkspaceItem) {
                     return true;
                 }
@@ -313,10 +318,12 @@ public final class ExportDdlWizard extends AbstractWizard
         };
         this.selections.getModelWorkspaceSelectionFilters().add(this.selectionFilter);
         final ITreeContentProvider treeContentProvider = new ITreeContentProvider() {
-            public void dispose() {
+            @Override
+			public void dispose() {
             }
 
-            public Object[] getChildren( final Object node ) {
+            @Override
+			public Object[] getChildren( final Object node ) {
                 try {
                     return view.getChildren(node);
                 } catch (final ModelWorkspaceException err) {
@@ -325,15 +332,18 @@ public final class ExportDdlWizard extends AbstractWizard
                 }
             }
 
-            public Object[] getElements( final Object inputElement ) {
+            @Override
+			public Object[] getElements( final Object inputElement ) {
                 return getChildren(inputElement);
             }
 
-            public Object getParent( final Object node ) {
+            @Override
+			public Object getParent( final Object node ) {
                 return view.getParent(node);
             }
             
-            public boolean hasChildren( final Object node ) {
+            @Override
+			public boolean hasChildren( final Object node ) {
                 try {
                     return view.hasChildren(node);
                 } catch (final ModelWorkspaceException err) {
@@ -342,7 +352,8 @@ public final class ExportDdlWizard extends AbstractWizard
                 }
             }
 
-            public void inputChanged( final Viewer viewer,
+            @Override
+			public void inputChanged( final Viewer viewer,
                                       final Object oldInput,
                                       final Object newInput ) {
             }
@@ -369,7 +380,8 @@ public final class ExportDdlWizard extends AbstractWizard
         });
         // Add listener to expand/collapse node when double-clicked
         this.viewer.addDoubleClickListener(new IDoubleClickListener() {
-            public void doubleClick( final DoubleClickEvent event ) {
+            @Override
+			public void doubleClick( final DoubleClickEvent event ) {
                 nodeDoubleClicked(event);
             }
         });
@@ -382,11 +394,13 @@ public final class ExportDdlWizard extends AbstractWizard
         });
         // Add listener to select node when expanded/collapsed
         this.viewer.addTreeListener(new ITreeViewerListener() {
-            public void treeCollapsed( final TreeExpansionEvent event ) {
+            @Override
+			public void treeCollapsed( final TreeExpansionEvent event ) {
                 nodeExpandedOrCollapsed(event);
             }
 
-            public void treeExpanded( final TreeExpansionEvent event ) {
+            @Override
+			public void treeExpanded( final TreeExpansionEvent event ) {
                 nodeExpanded(event);
             }
         });
@@ -423,7 +437,8 @@ public final class ExportDdlWizard extends AbstractWizard
                                                        style,
                                                        comboLabelProvider);
             this.typeCombo.addModifyListener(new ModifyListener() {
-                public void modifyText( final ModifyEvent event ) {
+                @Override
+				public void modifyText( final ModifyEvent event ) {
                     typeModified();
                 }
             });
@@ -512,7 +527,8 @@ public final class ExportDdlWizard extends AbstractWizard
             WidgetFactory.createLabel(group, FILE_LABEL);
             this.fileCombo = WidgetFactory.createCombo(group, SWT.NONE, GridData.FILL_HORIZONTAL, settings.getArray(FILE_LABEL));
             this.fileCombo.addModifyListener(new ModifyListener() {
-                public void modifyText( final ModifyEvent event ) {
+                @Override
+				public void modifyText( final ModifyEvent event ) {
                     fileModified();
                 }
             });

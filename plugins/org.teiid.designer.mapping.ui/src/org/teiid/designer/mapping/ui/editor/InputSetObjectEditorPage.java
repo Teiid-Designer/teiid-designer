@@ -68,14 +68,16 @@ public class InputSetObjectEditorPage
      * @see org.teiid.designer.ui.editors.ModelObjectEditorPage#canClose()
      * @since 5.0.1
      */
-    public boolean canClose() {
+    @Override
+	public boolean canClose() {
         return true;
     }
 
     /* (non-Javadoc)    
      * @See org.teiid.designer.ui.editors.ModelObjectEditor#createControl(org.eclipse.swt.widgets.Composite)
      */
-    public void createControl( Composite parent ) {
+    @Override
+	public void createControl( Composite parent ) {
         ispInputSetPanel = new InputSetPanel(parent);
         ModelUtilities.addNotifyChangedListener(this);
     }
@@ -108,32 +110,37 @@ public class InputSetObjectEditorPage
     /* (non-Javadoc)
      * @See org.teiid.designer.ui.editors.ModelObjectEditor#getControl()
      */
-    public Control getControl() {
+    @Override
+	public Control getControl() {
         return ispInputSetPanel;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.ui.editors.ModelObjectEditor#getTitle()
      */
-    public String getTitle() {
+    @Override
+	public String getTitle() {
         return TITLE_TEXT;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.ui.editors.ModelObjectEditor#getTitleToolTip()
      */
-    public String getTitleToolTip() {
+    @Override
+	public String getTitleToolTip() {
         return TITLE_TOOLTIP;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.ui.editors.ModelObjectEditor#getTitleImage()
      */
-    public Image getTitleImage() {
+    @Override
+	public Image getTitleImage() {
         return null;
     }
 
-    public boolean isDirty() {
+    @Override
+	public boolean isDirty() {
         // this panel changes the model directly, so no state is held in the panel.
         return false;
     }
@@ -142,7 +149,8 @@ public class InputSetObjectEditorPage
      * @see org.teiid.designer.ui.editors.ModelObjectEditorPage#canEdit(java.lang.Object, org.eclipse.ui.IEditorPart)
      * @since 5.0.1
      */
-    public boolean canEdit( Object modelObject,
+    @Override
+	public boolean canEdit( Object modelObject,
                             IEditorPart editor ) {
         return (modelObject instanceof InputSet || modelObject instanceof InputParameter);
     }
@@ -150,7 +158,8 @@ public class InputSetObjectEditorPage
     /**
      * @See org.teiid.designer.ui.editors.ModelObjectEditor#edit(org.eclipse.emf.ecore.EObject)
      */
-    public void edit( Object input ) {
+    @Override
+	public void edit( Object input ) {
         if (input instanceof InputSet) {
             setMappingAdapters((InputSet)input);
             currentMappingClass = ((InputSet)input).getMappingClass();
@@ -174,7 +183,8 @@ public class InputSetObjectEditorPage
     /* (non-Javadoc)
      * @See org.teiid.designer.ui.editors.ModelObjectEditor#deactivate()
      */
-    public boolean deactivate() {
+    @Override
+	public boolean deactivate() {
         // this panel changes the model directly, so no state is held in the panel.
         // Defect 22290 reflects memory (leaks) issues within designer.
         // remove this listener when deactivated.
@@ -185,21 +195,24 @@ public class InputSetObjectEditorPage
     /* (non-Javadoc)
      * @See org.teiid.designer.ui.editors.ModelObjectEditor#addPropertyListener(org.eclipse.ui.IPropertyListener)
      */
-    public void addPropertyListener( IPropertyListener listener ) {
+    @Override
+	public void addPropertyListener( IPropertyListener listener ) {
 
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.ui.editors.ModelObjectEditor#removePropertyListener(org.eclipse.ui.IPropertyListener)
      */
-    public void removePropertyListener( IPropertyListener listener ) {
+    @Override
+	public void removePropertyListener( IPropertyListener listener ) {
 
     }
 
     /* (non-Javadoc)    
      * @see org.eclipse.emf.edit.provider.INotifyChangedListener#notifyChanged(org.eclipse.emf.common.notify.Notification)
      */
-    public void notifyChanged( Notification notification ) {
+    @Override
+	public void notifyChanged( Notification notification ) {
         boolean doUpdate = false;
         // Need to break this down into SourceNotification too
         if (notification instanceof SourcedNotification) {
@@ -357,7 +370,8 @@ public class InputSetObjectEditorPage
     /* (non-Javadoc)
      * @See org.teiid.designer.ui.editors.ModelObjectEditor#contributeToolbarActions(org.eclipse.jface.action.ToolBarManager)
      */
-    public void contributeExportedActions( IMenuManager menu ) {
+    @Override
+	public void contributeExportedActions( IMenuManager menu ) {
         // jhTODO: do we have any actions? I do not think so...
         if (menu == null) return;
     }
@@ -366,7 +380,8 @@ public class InputSetObjectEditorPage
      * @see org.teiid.designer.ui.editors.IEditorActionExporter#getAdditionalModelingActions(org.eclipse.jface.viewers.ISelection)
      * @since 5.0
      */
-    public List<IAction> getAdditionalModelingActions( ISelection selection ) {
+    @Override
+	public List<IAction> getAdditionalModelingActions( ISelection selection ) {
         // jhTODO: do we have any actions? I do not think so...
         return Collections.EMPTY_LIST;
     }
@@ -374,14 +389,16 @@ public class InputSetObjectEditorPage
     /* (non-Javadoc)
      * @See org.teiid.designer.ui.editors.ModelObjectEditor#contributeToolbarActions(org.eclipse.jface.action.ToolBarManager)
      */
-    public void contributeToolbarActions( ToolBarManager toolBarMgr ) {
+    @Override
+	public void contributeToolbarActions( ToolBarManager toolBarMgr ) {
         if (toolBarMgr == null) return;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.ui.editors.ModelObjectEditorPage#doSave()
      */
-    public void doSave( boolean isClosing ) {
+    @Override
+	public void doSave( boolean isClosing ) {
         // there's no difference to this panel between isClosing true and false
         deactivate();
     }
@@ -390,7 +407,8 @@ public class InputSetObjectEditorPage
      * @see org.teiid.designer.ui.editors.ModelObjectEditorPage#updateReadOnlyState()
      * @since 4.2
      */
-    public void updateReadOnlyState() {
+    @Override
+	public void updateReadOnlyState() {
     }
 
     /* (non-Javadoc)
@@ -398,7 +416,8 @@ public class InputSetObjectEditorPage
      * @See org.teiid.designer.ui.editors.ModelObjectEditorPage#isEditingObject(java.lang.Object)
      * @since 4.2
      */
-    public boolean isEditingObject( Object modelObject ) {
+    @Override
+	public boolean isEditingObject( Object modelObject ) {
         if (inputSet != null && modelObject != null && modelObject instanceof InputSet) {
             if (modelObject.equals(inputSet)) return true;
         } else {
@@ -414,7 +433,8 @@ public class InputSetObjectEditorPage
      * @see org.teiid.designer.ui.editors.ModelObjectEditorPage#getEditableObject(java.lang.Object)
      * @since 4.2
      */
-    public Object getEditableObject( Object modelObject ) {
+    @Override
+	public Object getEditableObject( Object modelObject ) {
         if (modelObject instanceof InputSet) {
             return modelObject;
         } else if (modelObject instanceof InputParameter) {
@@ -431,7 +451,8 @@ public class InputSetObjectEditorPage
      * @see org.teiid.designer.ui.editors.ModelObjectEditorPage#isResourceValid()
      * @since 4.2
      */
-    public boolean isResourceValid() {
+    @Override
+	public boolean isResourceValid() {
         if (inputSet != null) {
             ModelResource mr = ModelUtilities.getModelResourceForModelObject(inputSet);
             if (mr != null) return true;
@@ -445,7 +466,8 @@ public class InputSetObjectEditorPage
      * @see org.teiid.designer.ui.editors.ModelObjectEditorPage#initialize(org.teiid.designer.ui.editors.MultiPageModelEditor)
      * @since 5.0.1
      */
-    public void initialize( MultiPageModelEditor editor ) {
+    @Override
+	public void initialize( MultiPageModelEditor editor ) {
     	if( editor instanceof ModelEditor ) {
     		this.parentModelEditor = (ModelEditor)editor;
     	}
@@ -457,10 +479,12 @@ public class InputSetObjectEditorPage
      * @see org.teiid.designer.ui.editors.ModelObjectEditorPage#setOverride(org.teiid.designer.ui.editors.ModelObjectEditorPage)
      * @since 5.0.1
      */
-    public void setOverride( ModelObjectEditorPage editor ) {
+    @Override
+	public void setOverride( ModelObjectEditorPage editor ) {
     }
     
-    public ModelEditor getParentModelEditor() {
+    @Override
+	public ModelEditor getParentModelEditor() {
     	return this.parentModelEditor;
     }
 }

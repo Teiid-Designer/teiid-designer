@@ -41,7 +41,8 @@ public class XsdResourceValidationRule implements ResourceValidationRule {
      *      org.teiid.designer.core.validation.ValidationContext)
      * @since 4.2
      */
-    public void validate( final Resource resource,
+    @Override
+	public void validate( final Resource resource,
                           final ValidationContext context ) {
         CoreArgCheck.isNotNull(resource);
         CoreArgCheck.isNotNull(context);

@@ -56,7 +56,8 @@ public class MimeFactoryImpl extends EFactoryImpl implements MimeFactory {
      * 
      * @generated
      */
-    public MimeContent createMimeContent() {
+    @Override
+	public MimeContent createMimeContent() {
         MimeContentImpl mimeContent = new MimeContentImpl();
         return mimeContent;
     }
@@ -66,7 +67,8 @@ public class MimeFactoryImpl extends EFactoryImpl implements MimeFactory {
      * 
      * @generated
      */
-    public MimeMultipartRelated createMimeMultipartRelated() {
+    @Override
+	public MimeMultipartRelated createMimeMultipartRelated() {
         MimeMultipartRelatedImpl mimeMultipartRelated = new MimeMultipartRelatedImpl();
         return mimeMultipartRelated;
     }
@@ -76,7 +78,8 @@ public class MimeFactoryImpl extends EFactoryImpl implements MimeFactory {
      * 
      * @generated
      */
-    public MimePart createMimePart() {
+    @Override
+	public MimePart createMimePart() {
         MimePartImpl mimePart = new MimePartImpl();
         return mimePart;
     }
@@ -86,7 +89,8 @@ public class MimeFactoryImpl extends EFactoryImpl implements MimeFactory {
      * 
      * @generated
      */
-    public MimePackage getMimePackage() {
+    @Override
+	public MimePackage getMimePackage() {
         return (MimePackage)getEPackage();
     }
 

@@ -148,11 +148,13 @@ public class SQLTemplateDialog  extends TitleAreaDialog {
         }
 
         tabFolder.addSelectionListener(new SelectionListener() {
-            public void widgetSelected( SelectionEvent e ) {
+            @Override
+			public void widgetSelected( SelectionEvent e ) {
                 setSQLTemplateArea();
             }
 
-            public void widgetDefaultSelected( SelectionEvent e ) {
+            @Override
+			public void widgetDefaultSelected( SelectionEvent e ) {
                 widgetSelected(e);
             }
         });

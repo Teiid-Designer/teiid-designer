@@ -156,7 +156,8 @@ public class MtkXmiResourceImpl extends XMIResourceImpl implements EmfResource, 
      * @see org.teiid.designer.core.resource.XResource#isUnloading()
      * @since 5.0.3
      */
-    public boolean isUnloading() {
+    @Override
+	public boolean isUnloading() {
         return delegate.isUnloading();
     }
 
@@ -449,7 +450,8 @@ public class MtkXmiResourceImpl extends XMIResourceImpl implements EmfResource, 
      * @see org.teiid.designer.core.resource.EmfResource#getDescription()
      * @since 4.3
      */
-    public String getDescription() {
+    @Override
+	public String getDescription() {
         String description = null;
         if (isLoaded() && getModelContents().getModelAnnotation() != null) {
             description = getModelContents().getModelAnnotation().getDescription();
@@ -466,7 +468,8 @@ public class MtkXmiResourceImpl extends XMIResourceImpl implements EmfResource, 
      * @see org.teiid.designer.core.resource.EmfResource#getModelType()
      * @since 4.3
      */
-    public ModelType getModelType() {
+    @Override
+	public ModelType getModelType() {
         ModelType type = null;
         if (isLoaded() && getModelContents().getModelAnnotation() != null) {
             type = getModelContents().getModelAnnotation().getModelType();
@@ -483,7 +486,8 @@ public class MtkXmiResourceImpl extends XMIResourceImpl implements EmfResource, 
      * @see org.teiid.designer.core.resource.EmfResource#getPrimaryMetamodelUri()
      * @since 4.3
      */
-    public URI getPrimaryMetamodelUri() {
+    @Override
+	public URI getPrimaryMetamodelUri() {
         String primaryMetamodelUri = null;
         if (isLoaded() && getModelContents().getModelAnnotation() != null) {
             primaryMetamodelUri = getModelContents().getModelAnnotation().getPrimaryMetamodelUri();
@@ -503,7 +507,8 @@ public class MtkXmiResourceImpl extends XMIResourceImpl implements EmfResource, 
      * @see org.teiid.designer.core.resource.EmfResource#isVisible()
      * @since 5.0
      */
-    public boolean isVisible() {
+    @Override
+	public boolean isVisible() {
         boolean isVisible = true;
         if (isLoaded() && getModelContents().getModelAnnotation() != null) {
             isVisible = getModelContents().getModelAnnotation().isVisible();
@@ -520,7 +525,8 @@ public class MtkXmiResourceImpl extends XMIResourceImpl implements EmfResource, 
      * @see org.teiid.designer.core.resource.EmfResource#getUuid()
      * @since 4.3
      */
-    public ObjectID getUuid() {
+    @Override
+	public ObjectID getUuid() {
         ObjectID uuid = null;
         if (isLoaded() && getModelContents().getModelAnnotation() != null) {
             uuid = getObjectIDFromString(getID(getModelAnnotation()));
@@ -538,7 +544,8 @@ public class MtkXmiResourceImpl extends XMIResourceImpl implements EmfResource, 
      * 
      * @see org.teiid.designer.core.resource.XResource#getUuid(org.eclipse.emf.ecore.EObject)
      */
-    public String getUuid( EObject object ) {
+    @Override
+	public String getUuid( EObject object ) {
         return getID(object);
     }
 
@@ -888,7 +895,8 @@ public class MtkXmiResourceImpl extends XMIResourceImpl implements EmfResource, 
     /**
      * @see org.teiid.designer.core.resource.EmfResource#getModelAnnotation()
      */
-    public ModelAnnotation getModelAnnotation() {
+    @Override
+	public ModelAnnotation getModelAnnotation() {
         if (this.modelContents != null) {
             return this.modelContents.getModelAnnotation();
         }
@@ -898,14 +906,16 @@ public class MtkXmiResourceImpl extends XMIResourceImpl implements EmfResource, 
     /**
      * @see org.teiid.designer.core.resource.EmfResource#getModelContents()
      */
-    public ModelContents getModelContents() {
+    @Override
+	public ModelContents getModelContents() {
         if (this.modelContents == null) {
             this.modelContents = new ModelContents(this);
         }
         return this.modelContents;
     }
 
-    public List getNamespacePrefixToUris() {
+    @Override
+	public List getNamespacePrefixToUris() {
         return this.prefixesToURIs;
     }
 
@@ -966,7 +976,8 @@ public class MtkXmiResourceImpl extends XMIResourceImpl implements EmfResource, 
     /**
      * @see org.teiid.designer.core.resource.mtk.emf.resource.EmfResource#getContainer()
      */
-    public Container getContainer() {
+    @Override
+	public Container getContainer() {
         if (this.container == null) {
             final ResourceSet resourceSet = super.resourceSet;
             if (resourceSet == null) {
@@ -1004,19 +1015,23 @@ public class MtkXmiResourceImpl extends XMIResourceImpl implements EmfResource, 
 
     protected ObjectManager doGetDefaultObjectManager() {
         return new ObjectManager() {
-            public String getObjectId( EObject object ) {
+            @Override
+			public String getObjectId( EObject object ) {
                 return null;
             }
 
-            public void setObjectId( EObject object,
+            @Override
+			public void setObjectId( EObject object,
                                      String uuid ) {
             }
 
-            public EObject findEObject( String id ) {
+            @Override
+			public EObject findEObject( String id ) {
                 return null;
             }
 
-            public EObject findEObject( String id,
+            @Override
+			public EObject findEObject( String id,
                                         Resource resource ) {
                 return null;
             }
@@ -1027,7 +1042,8 @@ public class MtkXmiResourceImpl extends XMIResourceImpl implements EmfResource, 
     /**
      * @see org.teiid.designer.core.resource.mtk.emf.resource.EmfResource#getEObject(Object)
      */
-    public EObject getEObject( final Object object ) {
+    @Override
+	public EObject getEObject( final Object object ) {
         if (ModelerCore.DEBUG || ModelerCore.DEBUG_METAMODEL) {
             ModelerCore.Util.log(IStatus.INFO,
                                  ModelerCore.Util.getString("MtkXmiResourceImpl.DEBUG.MtkXmiResourceImpl.getEObject()_7", new Object[] {object})); //$NON-NLS-1$
@@ -1136,14 +1152,16 @@ public class MtkXmiResourceImpl extends XMIResourceImpl implements EmfResource, 
     /**
      * @see org.teiid.designer.core.resource.MMXmiResource#getAnnotation(org.eclipse.emf.ecore.EObject)
      */
-    public Annotation getAnnotation( EObject eobj ) {
+    @Override
+	public Annotation getAnnotation( EObject eobj ) {
         return getModelContents().getAnnotation(eobj);
     }
 
     /**
      * @see org.teiid.designer.core.resource.MMXmiResource#getAnnotationContainer(boolean)
      */
-    public AnnotationContainer getAnnotationContainer( boolean createIfNeeded ) {
+    @Override
+	public AnnotationContainer getAnnotationContainer( boolean createIfNeeded ) {
         return getModelContents().getAnnotationContainer(createIfNeeded);
     }
 
@@ -1172,7 +1190,8 @@ public class MtkXmiResourceImpl extends XMIResourceImpl implements EmfResource, 
      * 
      * @see org.teiid.designer.core.resource.XResource#setUuid(org.eclipse.emf.ecore.EObject, java.lang.String)
      */
-    public void setUuid( EObject object,
+    @Override
+	public void setUuid( EObject object,
                          String uuid ) {
         super.setID(object, uuid);
     }

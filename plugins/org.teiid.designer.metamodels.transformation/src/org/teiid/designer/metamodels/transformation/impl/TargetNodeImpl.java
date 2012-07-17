@@ -66,7 +66,8 @@ public class TargetNodeImpl extends DataFlowNodeImpl implements TargetNode {
      * 
      * @generated
      */
-    public EObject getTarget() {
+    @Override
+	public EObject getTarget() {
         if (target != null && target.eIsProxy()) {
             EObject oldTarget = target;
             target = eResolveProxy((InternalEObject)target);
@@ -93,7 +94,8 @@ public class TargetNodeImpl extends DataFlowNodeImpl implements TargetNode {
      * 
      * @generated
      */
-    public void setTarget( EObject newTarget ) {
+    @Override
+	public void setTarget( EObject newTarget ) {
         EObject oldTarget = target;
         target = newTarget;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,

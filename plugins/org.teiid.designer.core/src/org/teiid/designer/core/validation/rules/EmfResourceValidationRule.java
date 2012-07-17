@@ -35,7 +35,8 @@ public class EmfResourceValidationRule implements ResourceValidationRule {
      * @see org.teiid.designer.core.validation.ResourceValidationRule#validate(org.eclipse.emf.ecore.resource.Resource, org.teiid.designer.core.validation.ValidationContext)
      * @since 4.2
      */
-    public void validate(final Resource resource, final ValidationContext context) {
+    @Override
+	public void validate(final Resource resource, final ValidationContext context) {
 	    CoreArgCheck.isNotNull(resource);
 	    CoreArgCheck.isNotNull(context);
 	    // xsd validator generateds markers for XSDDiagnostics

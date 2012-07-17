@@ -32,7 +32,8 @@ public final class ShowSystemCatalogAction implements IWorkbenchWindowActionDele
      * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#dispose()
      * @since 4.3
      */
-    public void dispose() {
+    @Override
+	public void dispose() {
     }
 
     /**<p>
@@ -40,7 +41,8 @@ public final class ShowSystemCatalogAction implements IWorkbenchWindowActionDele
      * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#init(org.eclipse.ui.IWorkbenchWindow)
      * @since 4.3
      */
-    public void init(final IWorkbenchWindow window) {
+    @Override
+	public void init(final IWorkbenchWindow window) {
     }
 
     /**<p>
@@ -48,7 +50,8 @@ public final class ShowSystemCatalogAction implements IWorkbenchWindowActionDele
      * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
      * @since 4.3
      */
-    public void run(final IAction action) {
+    @Override
+	public void run(final IAction action) {
         try {
             UiUtil.getWorkbenchPage().showView(SYSTEM_CATALOG_VIEW);
         } catch (final PartInitException err) {
@@ -62,7 +65,8 @@ public final class ShowSystemCatalogAction implements IWorkbenchWindowActionDele
      * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction, org.eclipse.jface.viewers.ISelection)
      * @since 4.3
      */
-    public void selectionChanged(final IAction action,
+    @Override
+	public void selectionChanged(final IAction action,
                                  final ISelection selection) {
     }
 }

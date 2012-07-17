@@ -129,6 +129,7 @@ public class WsdlDefinitionPage extends WizardPage
 	 * @param event
 	 *            the widget event
 	 */
+	@Override
 	public void handleEvent(Event event) {
 		if (!initializing) {
 			boolean validate = false;
@@ -177,6 +178,7 @@ public class WsdlDefinitionPage extends WizardPage
 	/**
 	 * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
 	 */
+	@Override
 	public void createControl(Composite theParent) {
 		//
 		// create main container
@@ -353,6 +355,7 @@ public class WsdlDefinitionPage extends WizardPage
 	 */
 	private void handleValidateWSDLButtonPressed() {
 		final IRunnableWithProgress op = new IRunnableWithProgress() {
+			@Override
 			public void run(final IProgressMonitor monitor) {
 				validateWSDL(monitor);
 			}
@@ -461,6 +464,7 @@ public class WsdlDefinitionPage extends WizardPage
 		synchronizing = false;
 	}
 
+	@Override
 	public void profileChanged(IConnectionProfile profile) {
 		resetCPComboItems();
 
@@ -623,6 +627,7 @@ public class WsdlDefinitionPage extends WizardPage
         this.importManager.setConnectionProfile(profile);
 	}
 
+	@Override
 	public void setVisible(boolean visible) {
 		super.setVisible(visible);
 

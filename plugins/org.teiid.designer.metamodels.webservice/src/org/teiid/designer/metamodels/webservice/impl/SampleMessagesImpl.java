@@ -84,7 +84,8 @@ public class SampleMessagesImpl extends EObjectImpl implements SampleMessages {
      * 
      * @generated
      */
-    public Message getMessage() {
+    @Override
+	public Message getMessage() {
         if (eContainerFeatureID != WebServicePackage.SAMPLE_MESSAGES__MESSAGE) return null;
         return (Message)eContainer;
     }
@@ -94,7 +95,8 @@ public class SampleMessagesImpl extends EObjectImpl implements SampleMessages {
      * 
      * @generated
      */
-    public void setMessage( Message newMessage ) {
+    @Override
+	public void setMessage( Message newMessage ) {
         if (newMessage != eContainer || (eContainerFeatureID != WebServicePackage.SAMPLE_MESSAGES__MESSAGE && newMessage != null)) {
             if (EcoreUtil.isAncestor(this, newMessage)) throw new IllegalArgumentException(
                                                                                            "Recursive containment not allowed for " + toString()); //$NON-NLS-1$
@@ -116,7 +118,8 @@ public class SampleMessagesImpl extends EObjectImpl implements SampleMessages {
      * 
      * @generated
      */
-    public EList getSampleFiles() {
+    @Override
+	public EList getSampleFiles() {
         if (sampleFiles == null) {
             sampleFiles = new EObjectContainmentWithInverseEList(SampleFile.class, this,
                                                                  WebServicePackage.SAMPLE_MESSAGES__SAMPLE_FILES,
@@ -130,7 +133,8 @@ public class SampleMessagesImpl extends EObjectImpl implements SampleMessages {
      * 
      * @generated
      */
-    public SampleFromXsd getSampleFromXsd() {
+    @Override
+	public SampleFromXsd getSampleFromXsd() {
         return sampleFromXsd;
     }
 
@@ -158,7 +162,8 @@ public class SampleMessagesImpl extends EObjectImpl implements SampleMessages {
      * 
      * @generated
      */
-    public void setSampleFromXsd( SampleFromXsd newSampleFromXsd ) {
+    @Override
+	public void setSampleFromXsd( SampleFromXsd newSampleFromXsd ) {
         if (newSampleFromXsd != sampleFromXsd) {
             NotificationChain msgs = null;
             if (sampleFromXsd != null) msgs = ((InternalEObject)sampleFromXsd).eInverseRemove(this,

@@ -329,7 +329,8 @@ implements INullSelectionListener, ISelectionChangedListener {
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
      */
-    public void selectionChanged(SelectionChangedEvent theEvent) {
+    @Override
+	public void selectionChanged(SelectionChangedEvent theEvent) {
         selection = theEvent.getSelection();
         this.part = null;
         selectionEvent = theEvent;
@@ -338,7 +339,8 @@ implements INullSelectionListener, ISelectionChangedListener {
     /* (non-Javadoc)
      * @see org.eclipse.ui.ISelectionListener#selectionChanged(IWorkbenchPart, ISelection)
      */
-    public void selectionChanged(IWorkbenchPart thePart,
+    @Override
+	public void selectionChanged(IWorkbenchPart thePart,
                                  ISelection theSelection) {
 
         this.part = thePart;
@@ -534,7 +536,8 @@ implements INullSelectionListener, ISelectionChangedListener {
         if( preRun() ) {
             if (useWaitCursor) {
                 Runnable runnable = new Runnable() {
-                    public void run() {
+                    @Override
+					public void run() {
                         doRun();
                     }
                 };

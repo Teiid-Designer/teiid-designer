@@ -181,7 +181,8 @@ public interface DiagramEditPart extends NodeEditPart {
      * @throws NullPointerException if the root is not found
      * @return the EditPartViewer
      */
-    EditPartViewer getViewer();
+    @Override
+	EditPartViewer getViewer();
 
     /**
      * Method used to locate get the EditPart's NotationID

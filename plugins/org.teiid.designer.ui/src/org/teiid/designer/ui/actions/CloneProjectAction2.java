@@ -54,7 +54,8 @@ public class CloneProjectAction2 extends Action implements ISelectionListener, C
     /**
      * 
      */
-    public void selectionChanged( IWorkbenchPart part,
+    @Override
+	public void selectionChanged( IWorkbenchPart part,
                                   ISelection selection ) {
         boolean enable = false;
         if (!SelectionUtilities.isMultiSelection(selection)) {
@@ -67,7 +68,8 @@ public class CloneProjectAction2 extends Action implements ISelectionListener, C
         setEnabled(enable);
     }
 
-    public int compareTo( Object o ) {
+    @Override
+	public int compareTo( Object o ) {
         if (o instanceof String) {
             return getText().compareTo((String)o);
         }
@@ -78,7 +80,8 @@ public class CloneProjectAction2 extends Action implements ISelectionListener, C
         return 0;
     }
 
-    public boolean isApplicable( ISelection selection ) {
+    @Override
+	public boolean isApplicable( ISelection selection ) {
         boolean result = false;
         if (!SelectionUtilities.isMultiSelection(selection)) {
             Object obj = SelectionUtilities.getSelectedObject(selection);

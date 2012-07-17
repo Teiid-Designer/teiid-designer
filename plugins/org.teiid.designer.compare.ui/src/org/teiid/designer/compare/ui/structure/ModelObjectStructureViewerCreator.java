@@ -21,7 +21,8 @@ import org.eclipse.swt.widgets.Composite;
  */
 public class ModelObjectStructureViewerCreator implements IViewerCreator {
     
-    public Viewer createViewer( Composite parent, CompareConfiguration cc ) {
+    @Override
+	public Viewer createViewer( Composite parent, CompareConfiguration cc ) {
         return new ModelObjectStructureViewer( parent, cc );
     }
 }

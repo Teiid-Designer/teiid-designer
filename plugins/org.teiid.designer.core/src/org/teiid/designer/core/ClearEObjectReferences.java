@@ -53,7 +53,8 @@ public class ClearEObjectReferences implements ModelVisitor {
      * @see org.teiid.designer.core.util.ModelVisitor#visit(org.eclipse.emf.ecore.EObject)
      * @since 4.3
      */
-    public boolean visit( final EObject object ) {
+    @Override
+	public boolean visit( final EObject object ) {
         // Find all references ...
         final EClass eclass = object.eClass();
         final Collection allRefs = eclass.getEAllReferences();
@@ -97,7 +98,8 @@ public class ClearEObjectReferences implements ModelVisitor {
      * @see org.teiid.designer.core.util.ModelVisitor#visit(org.eclipse.emf.ecore.resource.Resource)
      * @since 4.3
      */
-    public boolean visit( Resource resource ) {
+    @Override
+	public boolean visit( Resource resource ) {
         return resource != null;
     }
 

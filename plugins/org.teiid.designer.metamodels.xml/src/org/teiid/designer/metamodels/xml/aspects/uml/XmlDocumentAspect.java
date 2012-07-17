@@ -43,7 +43,8 @@ public class XmlDocumentAspect extends AbstractMetamodelAspect implements UmlPac
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodels.aspects.UmlDiagramAspect#getStereotype(java.lang.Object)
      */
-    public String getStereotype(Object eObject) {
+    @Override
+	public String getStereotype(Object eObject) {
         String theStereoType = null;
 
         theStereoType = XmlDocumentPlugin.Util.getString("_UI_XmlDocument_type"); //$NON-NLS-1$
@@ -67,7 +68,8 @@ public class XmlDocumentAspect extends AbstractMetamodelAspect implements UmlPac
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodels.aspects.UmlDiagramAspect#setSignature(java.lang.Object, java.lang.String)
      */
-    public IStatus setSignature(Object eObject, String newSignature) {
+    @Override
+	public IStatus setSignature(Object eObject, String newSignature) {
         try {
             XmlDocument xmlDoc = assertXmlDocument(eObject);
             xmlDoc.setName(newSignature);
@@ -78,7 +80,8 @@ public class XmlDocumentAspect extends AbstractMetamodelAspect implements UmlPac
         return new Status(IStatus.OK, XmlDocumentPlugin.PLUGIN_ID, 0, XmlDocumentPlugin.Util.getString("XmlDocumentAspect.Aspect.OK_1"), null);  //$NON-NLS-1$
     }
 
-    public String getSignature(Object eObject, int showMask) {
+    @Override
+	public String getSignature(Object eObject, int showMask) {
         XmlDocument xmlDoc = assertXmlDocument(eObject);
         StringBuffer result = new StringBuffer();
         switch (showMask) {
@@ -105,7 +108,8 @@ public class XmlDocumentAspect extends AbstractMetamodelAspect implements UmlPac
         return result.toString();
     }
 
-    public String getEditableSignature(Object eObject) {
+    @Override
+	public String getEditableSignature(Object eObject) {
         return getSignature(eObject, UmlPackage.SIGNATURE_NAME);
     }
     
@@ -113,7 +117,8 @@ public class XmlDocumentAspect extends AbstractMetamodelAspect implements UmlPac
      * @see org.teiid.designer.core.metamodel.aspect.uml.UmlDiagramAspect#getImage(java.lang.Object)
      * @since 4.2
      */
-    public Object getImage(Object eObject) {
+    @Override
+	public Object getImage(Object eObject) {
         assertXmlDocument(eObject);        
         // get the adapter factory
         final AdapterFactory adapterFactory = ModelerCore.getMetamodelRegistry().getAdapterFactory();
@@ -126,7 +131,8 @@ public class XmlDocumentAspect extends AbstractMetamodelAspect implements UmlPac
     /** 
      * @see org.teiid.designer.core.metamodel.aspect.uml.UmlDiagramAspect#getVisibility(java.lang.Object)
      */
-    public int getVisibility(Object eObject) {
+    @Override
+	public int getVisibility(Object eObject) {
         return VISIBILITY_PUBLIC;
     }
 

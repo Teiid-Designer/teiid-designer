@@ -156,7 +156,8 @@ public class ModelSelectorDialog extends ModelWorkspaceDialog implements UiConst
         // listener for typing changes
         txtModelName.addModifyListener(new ModifyListener() {
 
-            public void modifyText( final ModifyEvent event ) {
+            @Override
+			public void modifyText( final ModifyEvent event ) {
                 handleSetModelName();
             }
         });

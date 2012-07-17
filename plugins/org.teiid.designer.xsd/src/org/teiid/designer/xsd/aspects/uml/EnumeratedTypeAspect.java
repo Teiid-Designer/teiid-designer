@@ -59,7 +59,8 @@ public class EnumeratedTypeAspect extends AbstractXsdEntityAspect
      * @see org.teiid.designer.xsd.aspects.uml.AbstractXsdEntityAspect#getEditableSignature(java.lang.Object)
      * @since 5.0.2
      */
-    public String getEditableSignature(Object theObject) {
+    @Override
+	public String getEditableSignature(Object theObject) {
         return getSignature(theObject, UmlClassifier.SIGNATURE_NAME);
     }
     
@@ -67,7 +68,8 @@ public class EnumeratedTypeAspect extends AbstractXsdEntityAspect
      * @see org.teiid.designer.core.metamodel.aspect.uml.UmlClassifier#getRelationships(java.lang.Object)
      * @since 5.0.2
      */
-    public Collection getRelationships(Object theObject) {
+    @Override
+	public Collection getRelationships(Object theObject) {
         return Collections.EMPTY_LIST;
     }
 
@@ -75,7 +77,8 @@ public class EnumeratedTypeAspect extends AbstractXsdEntityAspect
      * @see org.teiid.designer.xsd.aspects.uml.AbstractXsdEntityAspect#getSignature(java.lang.Object, int)
      * @since 5.0.2
      */
-    public String getSignature(Object theObject,
+    @Override
+	public String getSignature(Object theObject,
                                int theShowMask) {
         XSDSimpleTypeDefinition type = assertEnumeratedType(theObject);
         StringBuffer result = new StringBuffer();
@@ -121,7 +124,8 @@ public class EnumeratedTypeAspect extends AbstractXsdEntityAspect
      * @see org.teiid.designer.xsd.aspects.uml.AbstractXsdEntityAspect#getStereotype(java.lang.Object)
      * @since 5.0.2
      */
-    public String getStereotype(Object theObject) {
+    @Override
+	public String getStereotype(Object theObject) {
         final String PREFIX = I18nUtil.getPropertyPrefix(EnumeratedTypeAspect.class);
         XSDSimpleTypeDefinition type = assertEnumeratedType(theObject);
         DatatypeManager dm = ModelerCore.getDatatypeManager(type);
@@ -143,7 +147,8 @@ public class EnumeratedTypeAspect extends AbstractXsdEntityAspect
      * @see org.teiid.designer.core.metamodel.aspect.uml.UmlClassifier#getSupertypes(java.lang.Object)
      * @since 5.0.2
      */
-    public Collection getSupertypes(Object theObject) {
+    @Override
+	public Collection getSupertypes(Object theObject) {
         return Collections.EMPTY_LIST;
     }
     
@@ -151,7 +156,8 @@ public class EnumeratedTypeAspect extends AbstractXsdEntityAspect
      * @see org.teiid.designer.core.metamodel.aspect.uml.UmlClassifier#isAbstract(java.lang.Object)
      * @since 5.0.2
      */
-    public boolean isAbstract(Object theObject) {
+    @Override
+	public boolean isAbstract(Object theObject) {
         return false;
     }
     
@@ -159,7 +165,8 @@ public class EnumeratedTypeAspect extends AbstractXsdEntityAspect
      * @see org.teiid.designer.xsd.aspects.uml.AbstractXsdEntityAspect#setSignature(java.lang.Object, java.lang.String)
      * @since 5.0.2
      */
-    public IStatus setSignature(Object theObject,
+    @Override
+	public IStatus setSignature(Object theObject,
                                 String theNewSignature) {
         // cannot change a type name
         return Status.OK_STATUS;

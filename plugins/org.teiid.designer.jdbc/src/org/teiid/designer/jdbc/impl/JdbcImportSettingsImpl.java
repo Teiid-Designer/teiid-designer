@@ -309,7 +309,8 @@ public class JdbcImportSettingsImpl extends EObjectImpl implements JdbcImportSet
      * <!-- end-user-doc -->
      * @generated
      */
-    public JdbcSource getSource() {
+    @Override
+	public JdbcSource getSource() {
         if (eContainerFeatureID != JdbcPackage.JDBC_IMPORT_SETTINGS__SOURCE) return null;
         return (JdbcSource)eContainer;
     }
@@ -319,7 +320,8 @@ public class JdbcImportSettingsImpl extends EObjectImpl implements JdbcImportSet
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setSource(JdbcSource newSource) {
+    @Override
+	public void setSource(JdbcSource newSource) {
         if (newSource != eContainer || (eContainerFeatureID != JdbcPackage.JDBC_IMPORT_SETTINGS__SOURCE && newSource != null)) {
             if (EcoreUtil.isAncestor(this, newSource))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
@@ -340,7 +342,8 @@ public class JdbcImportSettingsImpl extends EObjectImpl implements JdbcImportSet
      * <!-- end-user-doc -->
      * @generated
      */
-    public EList getOptions() {
+    @Override
+	public EList getOptions() {
         if (options == null) {
             options = new EObjectContainmentWithInverseEList(JdbcImportOptions.class, this, JdbcPackage.JDBC_IMPORT_SETTINGS__OPTIONS, JdbcPackage.JDBC_IMPORT_OPTIONS__IMPORT_SETTINGS);
         }
@@ -352,7 +355,8 @@ public class JdbcImportSettingsImpl extends EObjectImpl implements JdbcImportSet
      * <!-- end-user-doc -->
      * @generated
      */
-    public boolean isCreateCatalogsInModel() {
+    @Override
+	public boolean isCreateCatalogsInModel() {
         return createCatalogsInModel;
     }
 
@@ -361,7 +365,8 @@ public class JdbcImportSettingsImpl extends EObjectImpl implements JdbcImportSet
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setCreateCatalogsInModel(boolean newCreateCatalogsInModel) {
+    @Override
+	public void setCreateCatalogsInModel(boolean newCreateCatalogsInModel) {
         boolean oldCreateCatalogsInModel = createCatalogsInModel;
         createCatalogsInModel = newCreateCatalogsInModel;
         if (eNotificationRequired())
@@ -373,7 +378,8 @@ public class JdbcImportSettingsImpl extends EObjectImpl implements JdbcImportSet
      * <!-- end-user-doc -->
      * @generated
      */
-    public boolean isCreateSchemasInModel() {
+    @Override
+	public boolean isCreateSchemasInModel() {
         return createSchemasInModel;
     }
 
@@ -382,7 +388,8 @@ public class JdbcImportSettingsImpl extends EObjectImpl implements JdbcImportSet
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setCreateSchemasInModel(boolean newCreateSchemasInModel) {
+    @Override
+	public void setCreateSchemasInModel(boolean newCreateSchemasInModel) {
         boolean oldCreateSchemasInModel = createSchemasInModel;
         createSchemasInModel = newCreateSchemasInModel;
         if (eNotificationRequired())
@@ -394,7 +401,8 @@ public class JdbcImportSettingsImpl extends EObjectImpl implements JdbcImportSet
      * <!-- end-user-doc -->
      * @generated
      */
-    public CaseConversion getConvertCaseInModel() {
+    @Override
+	public CaseConversion getConvertCaseInModel() {
         return convertCaseInModel;
     }
 
@@ -403,7 +411,8 @@ public class JdbcImportSettingsImpl extends EObjectImpl implements JdbcImportSet
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setConvertCaseInModel(CaseConversion newConvertCaseInModel) {
+    @Override
+	public void setConvertCaseInModel(CaseConversion newConvertCaseInModel) {
         CaseConversion oldConvertCaseInModel = convertCaseInModel;
         convertCaseInModel = newConvertCaseInModel == null ? CONVERT_CASE_IN_MODEL_EDEFAULT : newConvertCaseInModel;
         if (eNotificationRequired())
@@ -415,7 +424,8 @@ public class JdbcImportSettingsImpl extends EObjectImpl implements JdbcImportSet
      * <!-- end-user-doc -->
      * @generated
      */
-    public SourceNames getGenerateSourceNamesInModel() {
+    @Override
+	public SourceNames getGenerateSourceNamesInModel() {
         return generateSourceNamesInModel;
     }
 
@@ -424,7 +434,8 @@ public class JdbcImportSettingsImpl extends EObjectImpl implements JdbcImportSet
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setGenerateSourceNamesInModel(SourceNames newGenerateSourceNamesInModel) {
+    @Override
+	public void setGenerateSourceNamesInModel(SourceNames newGenerateSourceNamesInModel) {
         SourceNames oldGenerateSourceNamesInModel = generateSourceNamesInModel;
         generateSourceNamesInModel = newGenerateSourceNamesInModel == null ? GENERATE_SOURCE_NAMES_IN_MODEL_EDEFAULT : newGenerateSourceNamesInModel;
         if (eNotificationRequired())
@@ -436,7 +447,8 @@ public class JdbcImportSettingsImpl extends EObjectImpl implements JdbcImportSet
      * <!-- end-user-doc -->
      * @generated
      */
-    public EList getIncludedCatalogPaths() {
+    @Override
+	public EList getIncludedCatalogPaths() {
         if (includedCatalogPaths == null) {
             includedCatalogPaths = new EDataTypeUniqueEList(String.class, this, JdbcPackage.JDBC_IMPORT_SETTINGS__INCLUDED_CATALOG_PATHS);
         }
@@ -448,7 +460,8 @@ public class JdbcImportSettingsImpl extends EObjectImpl implements JdbcImportSet
      * <!-- end-user-doc -->
      * @generated
      */
-    public EList getIncludedSchemaPaths() {
+    @Override
+	public EList getIncludedSchemaPaths() {
         if (includedSchemaPaths == null) {
             includedSchemaPaths = new EDataTypeUniqueEList(String.class, this, JdbcPackage.JDBC_IMPORT_SETTINGS__INCLUDED_SCHEMA_PATHS);
         }
@@ -460,7 +473,8 @@ public class JdbcImportSettingsImpl extends EObjectImpl implements JdbcImportSet
      * <!-- end-user-doc -->
      * @generated
      */
-    public EList getExcludedObjectPaths() {
+    @Override
+	public EList getExcludedObjectPaths() {
         if (excludedObjectPaths == null) {
             excludedObjectPaths = new EDataTypeUniqueEList(String.class, this, JdbcPackage.JDBC_IMPORT_SETTINGS__EXCLUDED_OBJECT_PATHS);
         }
@@ -472,7 +486,8 @@ public class JdbcImportSettingsImpl extends EObjectImpl implements JdbcImportSet
      * <!-- end-user-doc -->
      * @generated
      */
-    public boolean isIncludeForeignKeys() {
+    @Override
+	public boolean isIncludeForeignKeys() {
         return includeForeignKeys;
     }
 
@@ -481,7 +496,8 @@ public class JdbcImportSettingsImpl extends EObjectImpl implements JdbcImportSet
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setIncludeForeignKeys(boolean newIncludeForeignKeys) {
+    @Override
+	public void setIncludeForeignKeys(boolean newIncludeForeignKeys) {
         boolean oldIncludeForeignKeys = includeForeignKeys;
         includeForeignKeys = newIncludeForeignKeys;
         if (eNotificationRequired())
@@ -493,7 +509,8 @@ public class JdbcImportSettingsImpl extends EObjectImpl implements JdbcImportSet
      * <!-- end-user-doc -->
      * @generated
      */
-    public boolean isIncludeIndexes() {
+    @Override
+	public boolean isIncludeIndexes() {
         return includeIndexes;
     }
 
@@ -502,7 +519,8 @@ public class JdbcImportSettingsImpl extends EObjectImpl implements JdbcImportSet
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setIncludeIndexes(boolean newIncludeIndexes) {
+    @Override
+	public void setIncludeIndexes(boolean newIncludeIndexes) {
         boolean oldIncludeIndexes = includeIndexes;
         includeIndexes = newIncludeIndexes;
         if (eNotificationRequired())
@@ -514,7 +532,8 @@ public class JdbcImportSettingsImpl extends EObjectImpl implements JdbcImportSet
      * <!-- end-user-doc -->
      * @generated
      */
-    public boolean isIncludeProcedures() {
+    @Override
+	public boolean isIncludeProcedures() {
         return includeProcedures;
     }
 
@@ -523,7 +542,8 @@ public class JdbcImportSettingsImpl extends EObjectImpl implements JdbcImportSet
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setIncludeProcedures(boolean newIncludeProcedures) {
+    @Override
+	public void setIncludeProcedures(boolean newIncludeProcedures) {
         boolean oldIncludeProcedures = includeProcedures;
         includeProcedures = newIncludeProcedures;
         if (eNotificationRequired())
@@ -535,7 +555,8 @@ public class JdbcImportSettingsImpl extends EObjectImpl implements JdbcImportSet
      * <!-- end-user-doc -->
      * @generated
      */
-    public boolean isIncludeApproximateIndexes() {
+    @Override
+	public boolean isIncludeApproximateIndexes() {
         return includeApproximateIndexes;
     }
 
@@ -544,7 +565,8 @@ public class JdbcImportSettingsImpl extends EObjectImpl implements JdbcImportSet
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setIncludeApproximateIndexes(boolean newIncludeApproximateIndexes) {
+    @Override
+	public void setIncludeApproximateIndexes(boolean newIncludeApproximateIndexes) {
         boolean oldIncludeApproximateIndexes = includeApproximateIndexes;
         includeApproximateIndexes = newIncludeApproximateIndexes;
         if (eNotificationRequired())
@@ -556,7 +578,8 @@ public class JdbcImportSettingsImpl extends EObjectImpl implements JdbcImportSet
      * <!-- end-user-doc -->
      * @generated
      */
-    public boolean isIncludeUniqueIndexes() {
+    @Override
+	public boolean isIncludeUniqueIndexes() {
         return includeUniqueIndexes;
     }
 
@@ -565,7 +588,8 @@ public class JdbcImportSettingsImpl extends EObjectImpl implements JdbcImportSet
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setIncludeUniqueIndexes(boolean newIncludeUniqueIndexes) {
+    @Override
+	public void setIncludeUniqueIndexes(boolean newIncludeUniqueIndexes) {
         boolean oldIncludeUniqueIndexes = includeUniqueIndexes;
         includeUniqueIndexes = newIncludeUniqueIndexes;
         if (eNotificationRequired())
@@ -577,7 +601,8 @@ public class JdbcImportSettingsImpl extends EObjectImpl implements JdbcImportSet
      * <!-- end-user-doc -->
      * @generated
      */
-    public EList getIncludedTableTypes() {
+    @Override
+	public EList getIncludedTableTypes() {
         if (includedTableTypes == null) {
             includedTableTypes = new EDataTypeUniqueEList(String.class, this, JdbcPackage.JDBC_IMPORT_SETTINGS__INCLUDED_TABLE_TYPES);
         }

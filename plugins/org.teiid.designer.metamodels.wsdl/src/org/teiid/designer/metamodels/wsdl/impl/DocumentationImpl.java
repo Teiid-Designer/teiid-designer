@@ -129,7 +129,8 @@ public class DocumentationImpl extends EObjectImpl implements Documentation {
      * 
      * @generated
      */
-    public EList getDeclaredNamespaces() {
+    @Override
+	public EList getDeclaredNamespaces() {
         if (declaredNamespaces == null) {
             declaredNamespaces = new EObjectContainmentWithInverseEList(NamespaceDeclaration.class, this,
                                                                         WsdlPackage.DOCUMENTATION__DECLARED_NAMESPACES,
@@ -143,7 +144,8 @@ public class DocumentationImpl extends EObjectImpl implements Documentation {
      * 
      * @generated
      */
-    public Documentation getDocumentation() {
+    @Override
+	public Documentation getDocumentation() {
         return documentation;
     }
 
@@ -171,7 +173,8 @@ public class DocumentationImpl extends EObjectImpl implements Documentation {
      * 
      * @generated
      */
-    public void setDocumentation( Documentation newDocumentation ) {
+    @Override
+	public void setDocumentation( Documentation newDocumentation ) {
         if (newDocumentation != documentation) {
             NotificationChain msgs = null;
             if (documentation != null) msgs = ((InternalEObject)documentation).eInverseRemove(this,
@@ -194,7 +197,8 @@ public class DocumentationImpl extends EObjectImpl implements Documentation {
      * 
      * @generated
      */
-    public EList getElements() {
+    @Override
+	public EList getElements() {
         if (elements == null) {
             elements = new EObjectContainmentWithInverseEList(Element.class, this, WsdlPackage.DOCUMENTATION__ELEMENTS,
                                                               WsdlPackage.ELEMENT__ELEMENT_OWNER);
@@ -207,7 +211,8 @@ public class DocumentationImpl extends EObjectImpl implements Documentation {
      * 
      * @generated
      */
-    public String getTextContent() {
+    @Override
+	public String getTextContent() {
         return textContent;
     }
 
@@ -216,7 +221,8 @@ public class DocumentationImpl extends EObjectImpl implements Documentation {
      * 
      * @generated
      */
-    public void setTextContent( String newTextContent ) {
+    @Override
+	public void setTextContent( String newTextContent ) {
         String oldTextContent = textContent;
         textContent = newTextContent;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
@@ -229,7 +235,8 @@ public class DocumentationImpl extends EObjectImpl implements Documentation {
      * 
      * @generated
      */
-    public EList getContents() {
+    @Override
+	public EList getContents() {
         if (contents == null) {
             contents = new EObjectContainmentEList(EObject.class, this, WsdlPackage.DOCUMENTATION__CONTENTS);
         }
@@ -241,7 +248,8 @@ public class DocumentationImpl extends EObjectImpl implements Documentation {
      * 
      * @generated
      */
-    public Documented getDocumented() {
+    @Override
+	public Documented getDocumented() {
         if (eContainerFeatureID != WsdlPackage.DOCUMENTATION__DOCUMENTED) return null;
         return (Documented)eContainer;
     }
@@ -251,7 +259,8 @@ public class DocumentationImpl extends EObjectImpl implements Documentation {
      * 
      * @generated
      */
-    public void setDocumented( Documented newDocumented ) {
+    @Override
+	public void setDocumented( Documented newDocumented ) {
         if (newDocumented != eContainer
             || (eContainerFeatureID != WsdlPackage.DOCUMENTATION__DOCUMENTED && newDocumented != null)) {
             if (EcoreUtil.isAncestor(this, newDocumented)) throw new IllegalArgumentException(

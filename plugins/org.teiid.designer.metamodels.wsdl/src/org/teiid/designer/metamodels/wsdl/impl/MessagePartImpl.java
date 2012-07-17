@@ -156,7 +156,8 @@ public class MessagePartImpl extends EObjectImpl implements MessagePart {
      * 
      * @generated
      */
-    public Documentation getDocumentation() {
+    @Override
+	public Documentation getDocumentation() {
         return documentation;
     }
 
@@ -184,7 +185,8 @@ public class MessagePartImpl extends EObjectImpl implements MessagePart {
      * 
      * @generated
      */
-    public void setDocumentation( Documentation newDocumentation ) {
+    @Override
+	public void setDocumentation( Documentation newDocumentation ) {
         if (newDocumentation != documentation) {
             NotificationChain msgs = null;
             if (documentation != null) msgs = ((InternalEObject)documentation).eInverseRemove(this,
@@ -207,7 +209,8 @@ public class MessagePartImpl extends EObjectImpl implements MessagePart {
      * 
      * @generated
      */
-    public EList getDeclaredNamespaces() {
+    @Override
+	public EList getDeclaredNamespaces() {
         if (declaredNamespaces == null) {
             declaredNamespaces = new EObjectContainmentWithInverseEList(NamespaceDeclaration.class, this,
                                                                         WsdlPackage.MESSAGE_PART__DECLARED_NAMESPACES,
@@ -221,7 +224,8 @@ public class MessagePartImpl extends EObjectImpl implements MessagePart {
      * 
      * @generated
      */
-    public EList getAttributes() {
+    @Override
+	public EList getAttributes() {
         if (attributes == null) {
             attributes = new EObjectContainmentWithInverseEList(Attribute.class, this, WsdlPackage.MESSAGE_PART__ATTRIBUTES,
                                                                 WsdlPackage.ATTRIBUTE__ATTRIBUTE_OWNER);
@@ -234,7 +238,8 @@ public class MessagePartImpl extends EObjectImpl implements MessagePart {
      * 
      * @generated
      */
-    public String getName() {
+    @Override
+	public String getName() {
         return name;
     }
 
@@ -243,7 +248,8 @@ public class MessagePartImpl extends EObjectImpl implements MessagePart {
      * 
      * @generated
      */
-    public void setName( String newName ) {
+    @Override
+	public void setName( String newName ) {
         String oldName = name;
         name = newName;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, WsdlPackage.MESSAGE_PART__NAME,
@@ -255,7 +261,8 @@ public class MessagePartImpl extends EObjectImpl implements MessagePart {
      * 
      * @generated
      */
-    public String getType() {
+    @Override
+	public String getType() {
         return type;
     }
 
@@ -264,7 +271,8 @@ public class MessagePartImpl extends EObjectImpl implements MessagePart {
      * 
      * @generated
      */
-    public void setType( String newType ) {
+    @Override
+	public void setType( String newType ) {
         String oldType = type;
         type = newType;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, WsdlPackage.MESSAGE_PART__TYPE,
@@ -276,7 +284,8 @@ public class MessagePartImpl extends EObjectImpl implements MessagePart {
      * 
      * @generated
      */
-    public String getElement() {
+    @Override
+	public String getElement() {
         return element;
     }
 
@@ -285,7 +294,8 @@ public class MessagePartImpl extends EObjectImpl implements MessagePart {
      * 
      * @generated
      */
-    public void setElement( String newElement ) {
+    @Override
+	public void setElement( String newElement ) {
         String oldElement = element;
         element = newElement;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, WsdlPackage.MESSAGE_PART__ELEMENT,
@@ -297,7 +307,8 @@ public class MessagePartImpl extends EObjectImpl implements MessagePart {
      * 
      * @generated
      */
-    public Message getMessage() {
+    @Override
+	public Message getMessage() {
         if (eContainerFeatureID != WsdlPackage.MESSAGE_PART__MESSAGE) return null;
         return (Message)eContainer;
     }
@@ -307,7 +318,8 @@ public class MessagePartImpl extends EObjectImpl implements MessagePart {
      * 
      * @generated
      */
-    public void setMessage( Message newMessage ) {
+    @Override
+	public void setMessage( Message newMessage ) {
         if (newMessage != eContainer || (eContainerFeatureID != WsdlPackage.MESSAGE_PART__MESSAGE && newMessage != null)) {
             if (EcoreUtil.isAncestor(this, newMessage)) throw new IllegalArgumentException(
                                                                                            "Recursive containment not allowed for " + toString()); //$NON-NLS-1$
@@ -329,7 +341,8 @@ public class MessagePartImpl extends EObjectImpl implements MessagePart {
      * 
      * @generated
      */
-    public boolean isNameValid() {
+    @Override
+	public boolean isNameValid() {
         // TODO: implement this method
         // Ensure that you remove @generated or mark it @generated NOT
         throw new UnsupportedOperationException();

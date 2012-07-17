@@ -25,7 +25,8 @@ public class DefaultColorPaletteManager implements ColorPaletteManager {
         super();
     }
     
-    public ColorPalette getColorPalette(EObject eObject) {
+    @Override
+	public ColorPalette getColorPalette(EObject eObject) {
         ColorPalette newPalette = null;
         // if( not virtual, then color palette should be default;
         
@@ -72,6 +73,7 @@ public class DefaultColorPaletteManager implements ColorPaletteManager {
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.diagram.ui.util.colors.ColorPaletteManager#getColorPalette(java.lang.Object)
 	 */
+	@Override
 	public ColorPalette getColorPalette(Object object) {
 		if( object instanceof EObject )
 			return getColorPalette((EObject) object);

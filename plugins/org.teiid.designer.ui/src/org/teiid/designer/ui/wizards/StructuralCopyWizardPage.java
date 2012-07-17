@@ -8,7 +8,6 @@
 package org.teiid.designer.ui.wizards;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.jface.dialogs.IDialogPage;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.wizard.WizardPage;
@@ -65,6 +64,7 @@ public class StructuralCopyWizardPage extends WizardPage implements UiConstants,
 	/**
 	 * @see IDialogPage#createControl(Composite)
 	 */
+	@Override
 	public void createControl(Composite parent) {
         
         ModelResource selectedResource = null;
@@ -107,6 +107,7 @@ public class StructuralCopyWizardPage extends WizardPage implements UiConstants,
 		return panel.getTreePopulator();
 	}
 	
+	@Override
 	public boolean deselectDescendants(Object node) {
 		boolean deselect;
 		switch (StructuralCopyWizardPage.deselectionInstruction) {

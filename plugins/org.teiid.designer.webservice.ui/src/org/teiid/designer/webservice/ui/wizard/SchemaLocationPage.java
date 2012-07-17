@@ -127,7 +127,8 @@ public class SchemaLocationPage extends AbstractWizardPage
      * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
      * @since 4.2
      */
-    public void createControl( Composite theParent ) {
+    @Override
+	public void createControl( Composite theParent ) {
         //
         // Create main container
         //
@@ -153,7 +154,8 @@ public class SchemaLocationPage extends AbstractWizardPage
         this.editor = new SchemaLocationEditor(pnlMain, this.builder);
         this.editor.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         this.editor.addListener(new Listener() {
-            public void handleEvent( Event theEvent ) {
+            @Override
+			public void handleEvent( Event theEvent ) {
                 processEditorEvent(theEvent);
             }
         });
@@ -190,12 +192,14 @@ public class SchemaLocationPage extends AbstractWizardPage
         this.viewer.setContentProvider(new TableContentProvider());
         this.viewer.setLabelProvider(new TableLabelProvider());
         this.viewer.addSelectionChangedListener(new ISelectionChangedListener() {
-            public void selectionChanged( SelectionChangedEvent theEvent ) {
+            @Override
+			public void selectionChanged( SelectionChangedEvent theEvent ) {
                 handleRowSelected();
             }
         });
         this.viewer.addDoubleClickListener(new IDoubleClickListener() {
-            public void doubleClick( DoubleClickEvent theEvent ) {
+            @Override
+			public void doubleClick( DoubleClickEvent theEvent ) {
                 handleDoubleClick();
             }
         });
@@ -506,14 +510,16 @@ public class SchemaLocationPage extends AbstractWizardPage
          * @see org.eclipse.jface.viewers.IContentProvider#dispose()
          * @since 4.1
          */
-        public void dispose() {
+        @Override
+		public void dispose() {
         }
 
         /**
          * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
          * @since 4.1
          */
-        public Object[] getElements( Object theInputElement ) {
+        @Override
+		public Object[] getElements( Object theInputElement ) {
             Collection xsdResources = getBuilder().getXsdDestinations();
             return (xsdResources == null) ? Collections.EMPTY_LIST.toArray() : xsdResources.toArray();
         }
@@ -523,7 +529,8 @@ public class SchemaLocationPage extends AbstractWizardPage
          *      java.lang.Object)
          * @since 4.1
          */
-        public void inputChanged( Viewer theViewer,
+        @Override
+		public void inputChanged( Viewer theViewer,
                                   Object theOldInput,
                                   Object theNewInput ) {
         }
@@ -536,7 +543,8 @@ public class SchemaLocationPage extends AbstractWizardPage
          * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang.Object, int)
          * @since 4.1
          */
-        public Image getColumnImage( Object theElement,
+        @Override
+		public Image getColumnImage( Object theElement,
                                      int theColumnIndex ) {
             Image result = null;
 
@@ -558,7 +566,8 @@ public class SchemaLocationPage extends AbstractWizardPage
          * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.lang.Object, int)
          * @since 4.1
          */
-        public String getColumnText( Object theElement,
+        @Override
+		public String getColumnText( Object theElement,
                                      int theIndex ) {
             String result = null;
 

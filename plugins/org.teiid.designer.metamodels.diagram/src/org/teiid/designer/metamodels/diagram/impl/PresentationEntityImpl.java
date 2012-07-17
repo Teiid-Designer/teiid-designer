@@ -74,7 +74,8 @@ public abstract class PresentationEntityImpl extends EObjectImpl implements Pres
      * <!-- end-user-doc -->
      * @generated
      */
-    public String getName() {
+    @Override
+	public String getName() {
         return name;
     }
 
@@ -83,7 +84,8 @@ public abstract class PresentationEntityImpl extends EObjectImpl implements Pres
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setName(String newName) {
+    @Override
+	public void setName(String newName) {
         String oldName = name;
         name = newName;
         if (eNotificationRequired())

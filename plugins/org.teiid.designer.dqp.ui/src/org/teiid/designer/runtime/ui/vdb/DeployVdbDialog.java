@@ -223,6 +223,7 @@ public class DeployVdbDialog extends TitleAreaDialog implements DqpUiConstants,
 	 * @see org.teiid.core.event.IChangeListener#stateChanged(org.teiid.core.event.IChangeNotifier)
 	 * @since 5.5.3
 	 */
+	@Override
 	public void stateChanged(IChangeNotifier theSource) {
 		updateState();
 	}
@@ -244,8 +245,8 @@ public class DeployVdbDialog extends TitleAreaDialog implements DqpUiConstants,
 		ModelWorkspaceDialog vdbDialog = createVdbSelector();
 
 		// add filters
-		((ModelWorkspaceDialog) vdbDialog).addFilter(new ClosedProjectFilter());
-		((ModelWorkspaceDialog) vdbDialog).addFilter(new SingleProjectFilter(this.designerProperties));
+		vdbDialog.addFilter(new ClosedProjectFilter());
+		vdbDialog.addFilter(new SingleProjectFilter(this.designerProperties));
 
 		vdbDialog.open();
 
@@ -275,6 +276,7 @@ public class DeployVdbDialog extends TitleAreaDialog implements DqpUiConstants,
 		result.setInput(ModelerCore.getWorkspace().getRoot());
 
 		result.setValidator(new ISelectionStatusValidator() {
+			@Override
 			public IStatus validate(Object[] selection) {
 				if (selection != null && selection.length == 1) {
 					if (selection[0] instanceof IFile) {

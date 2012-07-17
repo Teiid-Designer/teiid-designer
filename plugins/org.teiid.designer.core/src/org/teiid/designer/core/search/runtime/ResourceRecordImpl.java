@@ -26,6 +26,7 @@ public class ResourceRecordImpl extends AbstractSearchRecord implements Resource
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.core.search.runtime.ResourceRecord#getPath()
 	 */
+	@Override
 	public String getPath() {
 		return this.path;
 	}
@@ -33,6 +34,7 @@ public class ResourceRecordImpl extends AbstractSearchRecord implements Resource
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.core.search.runtime.ResourceRecord#getURI()
 	 */
+	@Override
 	public String getURI() {
 		return this.URI;
 	}
@@ -40,6 +42,7 @@ public class ResourceRecordImpl extends AbstractSearchRecord implements Resource
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.core.search.runtime.ResourceRecord#getMetamodelURI()
 	 */
+	@Override
 	public String getMetamodelURI() {
 		return this.metamodelURI;
 	}
@@ -47,6 +50,7 @@ public class ResourceRecordImpl extends AbstractSearchRecord implements Resource
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.core.search.runtime.ResourceRecord#getModelType()
 	 */
+	@Override
 	public String getModelType() {
 		return this.modelType;
 	}
@@ -54,6 +58,7 @@ public class ResourceRecordImpl extends AbstractSearchRecord implements Resource
 	/* (non-Javadoc)
 	 * @See org.teiid.designer.core.search.runtime.SearchRecord#getRecordType()
 	 */
+	@Override
 	public char getRecordType() {
 		return IndexConstants.SEARCH_RECORD_TYPE.RESOURCE;
 	}

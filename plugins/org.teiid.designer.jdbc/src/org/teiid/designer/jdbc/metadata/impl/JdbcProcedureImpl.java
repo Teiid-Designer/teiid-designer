@@ -51,7 +51,8 @@ public class JdbcProcedureImpl extends JdbcNodeImpl implements JdbcProcedure {
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.metadata.impl.JdbcNodeImpl#getTypeName()
      */
-    public String getTypeName() {
+    @Override
+	public String getTypeName() {
         // Return the table type for this table
         return getParent().getName();
     }
@@ -81,7 +82,8 @@ public class JdbcProcedureImpl extends JdbcNodeImpl implements JdbcProcedure {
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.metadata.JdbcNode#getFullyQualifiedName()
      */
-    public String getFullyQualifiedName() {
+    @Override
+	public String getFullyQualifiedName() {
         final StringBuffer sb = new StringBuffer();
         final String prefix = this.getParent().getFullyQualifiedName();
         if (prefix.length() != 0) {
@@ -104,7 +106,8 @@ public class JdbcProcedureImpl extends JdbcNodeImpl implements JdbcProcedure {
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.metadata.JdbcNode#getPathInSource(boolean, boolean)
      */
-    public IPath getPathInSource( final boolean includeCatalog,
+    @Override
+	public IPath getPathInSource( final boolean includeCatalog,
                                   final boolean includeSchema ) {
         // Go up until we get to the schema, catalog or database that contains this object ...
         JdbcNode parent = getParent();
@@ -153,14 +156,16 @@ public class JdbcProcedureImpl extends JdbcNodeImpl implements JdbcProcedure {
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.metadata.JdbcNode#getJdbcDatabase()
      */
-    public JdbcDatabase getJdbcDatabase() {
+    @Override
+	public JdbcDatabase getJdbcDatabase() {
         return getParent().getJdbcDatabase();
     }
 
     /**
      * @return
      */
-    public String getRemarks() {
+    @Override
+	public String getRemarks() {
         return remarks;
     }
 
@@ -174,7 +179,8 @@ public class JdbcProcedureImpl extends JdbcNodeImpl implements JdbcProcedure {
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.metadata.JdbcProcedure#getProcedureType()
      */
-    public short getProcedureType() {
+    @Override
+	public short getProcedureType() {
         return procType;
     }
 

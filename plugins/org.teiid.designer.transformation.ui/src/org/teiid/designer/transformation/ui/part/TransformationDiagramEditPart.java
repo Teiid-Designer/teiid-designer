@@ -141,11 +141,13 @@ public class TransformationDiagramEditPart extends AbstractDiagramEditPart
      * @see org.eclipse.jface.util.IPropertyChangeListener#propertyChange(org.eclipse.jface.util.PropertyChangeEvent)
      * @since 5.0
      */
-    public void propertyChange(org.eclipse.jface.util.PropertyChangeEvent theEvent) {
+    @Override
+	public void propertyChange(org.eclipse.jface.util.PropertyChangeEvent theEvent) {
         if (theEvent.getProperty().equals(UiConstants.Prefs.TREE_DIAGRAM_LAYOUT)) {
             // We need to re-open the diagram to fully re-draw and layout.
             Display.getDefault().asyncExec(new Runnable() {
-                public void run() {
+                @Override
+				public void run() {
                     ModelEditorManager.open(getModelObject(), true);
                 }                    
             });

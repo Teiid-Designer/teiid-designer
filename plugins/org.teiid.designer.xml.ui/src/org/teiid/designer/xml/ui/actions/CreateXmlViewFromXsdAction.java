@@ -85,7 +85,8 @@ public class CreateXmlViewFromXsdAction extends SortableSelectionAction implemen
      */
     protected void activateModelEditor( final ModelResource theModel ) {
         Display.getDefault().asyncExec(new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 try {
                     final IFile file = (IFile)theModel.getUnderlyingResource();
 
@@ -161,7 +162,8 @@ public class CreateXmlViewFromXsdAction extends SortableSelectionAction implemen
                         // delete model is just created and wizard canceled
                         if (!xmlModel.getPath().toFile().getAbsoluteFile().exists()) {
                             Display.getCurrent().asyncExec(new Runnable() {
-                                public void run() {
+                                @Override
+								public void run() {
                                     try {
                                         IResource resource = xmlModel.getUnderlyingResource();
 

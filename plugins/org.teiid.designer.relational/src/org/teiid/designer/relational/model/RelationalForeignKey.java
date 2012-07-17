@@ -58,7 +58,8 @@ public class RelationalForeignKey extends RelationalReference {
         setNameValidator(new RelationalStringNameValidator(false, true));
     }
     
-    public RelationalForeignKey clone() {
+    @Override
+	public RelationalForeignKey clone() {
     	RelationalForeignKey clonedFK = new RelationalForeignKey(getName());
     	clonedFK.setNameInSource(getNameInSource());
     	clonedFK.setDescription(getDescription());

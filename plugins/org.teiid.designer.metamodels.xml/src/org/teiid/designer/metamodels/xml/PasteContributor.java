@@ -30,7 +30,8 @@ public class PasteContributor implements
      * @see org.teiid.designer.core.metamodel.IPasteContributor#contribute(java.util.Map, java.lang.String)
      * @since 4.3.2
      */
-    public void contribute(final Map map,
+    @Override
+	public void contribute(final Map map,
                            final String uri) {
         // Contribute if pasting into an XML Document model
         if (XmlDocumentPackage.eNS_URI.equals(uri)) {

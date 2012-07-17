@@ -66,7 +66,8 @@ public class NumberOfLevelsWizard extends AbstractWizard implements ModelerXmlUi
 
         // build the document within a transaction
         final IRunnableWithProgress op = new IRunnableWithProgress() {
-            public void run( IProgressMonitor theMonitor ) {
+            @Override
+			public void run( IProgressMonitor theMonitor ) {
                 // open and activate editor first so that the editor is dirty after building
                 ModelResource mr = ModelUtilities.getModelResourceForModelObject(element);
 

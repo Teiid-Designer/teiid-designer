@@ -78,7 +78,8 @@ public class ControlledPopupMenuExtender implements IMenuListener {
     /**
      * Notifies the listener that the menu is about to be shown.
      */
-    public void menuAboutToShow(IMenuManager mgr) {
+    @Override
+	public void menuAboutToShow(IMenuManager mgr) {
         testForAdditions();
         if (menuWrapper != null) {
             mgr = menuWrapper;

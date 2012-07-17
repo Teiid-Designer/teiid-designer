@@ -61,7 +61,8 @@ public class ConvertToEnterpriseTypesAction extends Action implements ISelection
     /* (non-Javadoc)
      * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction, org.eclipse.jface.viewers.ISelection)
      */
-    public void selectionChanged(IWorkbenchPart part, ISelection selection) {
+    @Override
+	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
         this.selection = selection;
         boolean enable = false;
         if ( ! SelectionUtilities.isMultiSelection(selection) ) {
@@ -73,7 +74,8 @@ public class ConvertToEnterpriseTypesAction extends Action implements ISelection
         setEnabled(enable);
     }
     
-    public int compareTo(Object o) {
+    @Override
+	public int compareTo(Object o) {
         if( o instanceof String) {
             return getText().compareTo((String)o);
         }
@@ -84,7 +86,8 @@ public class ConvertToEnterpriseTypesAction extends Action implements ISelection
         return 0;
     }
     
-    public boolean isApplicable(ISelection selection) {
+    @Override
+	public boolean isApplicable(ISelection selection) {
         this.selection = selection;
         boolean enable = false;
         if ( ! SelectionUtilities.isMultiSelection(selection) ) {

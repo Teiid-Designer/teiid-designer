@@ -124,7 +124,8 @@ public class ModelResourceImpl extends OpenableImpl implements ModelResource {
     /**
      * Return true if an open buffer exists for this ModelResource
      */
-    public boolean isLoaded() {
+    @Override
+	public boolean isLoaded() {
         return getBufferManager().getOpenBuffer(this) != null;
     }
 
@@ -132,7 +133,8 @@ public class ModelResourceImpl extends OpenableImpl implements ModelResource {
      * @see org.teiid.designer.core.workspace.ModelResource#hasErrors()
      * @since 4.2
      */
-    public boolean hasErrors() {
+    @Override
+	public boolean hasErrors() {
         if (this.errors == null) {
             try {
                 getBuffer(); // may record errors
@@ -153,7 +155,8 @@ public class ModelResourceImpl extends OpenableImpl implements ModelResource {
      * @see org.teiid.designer.core.workspace.ModelResource#getErrors()
      * @since 4.2
      */
-    public IStatus getErrors() {
+    @Override
+	public IStatus getErrors() {
         try {
             final ModelBuffer buffer = getBuffer();
             if (buffer != null) {
@@ -174,7 +177,8 @@ public class ModelResourceImpl extends OpenableImpl implements ModelResource {
      * 
      * @see org.teiid.designer.core.workspace.ModelResource#isXsd()
      */
-    public boolean isXsd() {
+    @Override
+	public boolean isXsd() {
         return ModelUtil.isXsdFile(getResource());
     }
 
@@ -184,7 +188,8 @@ public class ModelResourceImpl extends OpenableImpl implements ModelResource {
      * 
      * @see org.teiid.designer.core.workspace.ModelResource#getTargetNamespace()
      */
-    public String getTargetNamespace() throws ModelWorkspaceException {
+    @Override
+	public String getTargetNamespace() throws ModelWorkspaceException {
         String targetNamespace = null;
 
         // If the model resource has not been opened then retrieve the
@@ -212,7 +217,8 @@ public class ModelResourceImpl extends OpenableImpl implements ModelResource {
     /**
      * @see org.teiid.designer.core.workspace.ModelResource#unload()
      */
-    public void unload() {
+    @Override
+	public void unload() {
         final ModelBuffer modelBuffer = getBufferManager().getOpenBuffer(this);
         if (modelBuffer != null) {
             closeBuffer(null);
@@ -228,14 +234,16 @@ public class ModelResourceImpl extends OpenableImpl implements ModelResource {
     /* (non-Javadoc)
      * @See org.teiid.designer.core.workspace.ModelResource#getIndexType()
      */
-    public int getIndexType() {
+    @Override
+	public int getIndexType() {
         return this.indexType;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.workspace.ModelResource#refreshIndexType()
      */
-    public void refreshIndexType() {
+    @Override
+	public void refreshIndexType() {
         try {
             final ModelBuffer buf = getBuffer();
             if (buf != null) {
@@ -295,7 +303,8 @@ public class ModelResourceImpl extends OpenableImpl implements ModelResource {
     /* (non-Javadoc)
      * @See org.teiid.designer.core.workspace.ModelResource#setIndexType(int)
      */
-    public void setIndexType( int indexType ) {
+    @Override
+	public void setIndexType( int indexType ) {
         // if (indexType == ModelResource.NOT_INDEXED) {
         // System.out.println("----> Marking ModelResource as NOT_INDEXED "+this.getResource().getFullPath());
         // }
@@ -350,7 +359,8 @@ public class ModelResourceImpl extends OpenableImpl implements ModelResource {
     /* (non-Javadoc)
      * @See org.teiid.designer.core.ModelResource#getEObjects()
      */
-    public List getEObjects() throws ModelWorkspaceException {
+    @Override
+	public List getEObjects() throws ModelWorkspaceException {
         // They want the objects, so force the buffer to be loaded ...
         final ModelBufferImpl buffer = (ModelBufferImpl)super.getBuffer();
         return (buffer.getModelContents() != null ? buffer.getModelContents().getEObjects() : Collections.EMPTY_LIST);
@@ -359,7 +369,8 @@ public class ModelResourceImpl extends OpenableImpl implements ModelResource {
     /* (non-Javadoc)
      * @See org.teiid.designer.core.ModelResource#getEObjects()
      */
-    public List getAllRootEObjects() throws ModelWorkspaceException {
+    @Override
+	public List getAllRootEObjects() throws ModelWorkspaceException {
         // They want the objects, so force the buffer to be loaded ...
         final ModelBufferImpl buffer = (ModelBufferImpl)super.getBuffer();
         return (buffer.getModelContents() != null ? buffer.getModelContents().getAllRootEObjects() : Collections.EMPTY_LIST);
@@ -368,7 +379,8 @@ public class ModelResourceImpl extends OpenableImpl implements ModelResource {
     /* (non-Javadoc)
      * @See org.teiid.designer.core.ModelResource#getEmfResource()
      */
-    public synchronized Resource getEmfResource() throws ModelWorkspaceException {
+    @Override
+	public synchronized Resource getEmfResource() throws ModelWorkspaceException {
         final Resource resource = super.getBuffer().getEmfResource();
         CoreArgCheck.isNotNull(resource);
         return resource;
@@ -377,7 +389,8 @@ public class ModelResourceImpl extends OpenableImpl implements ModelResource {
     /* (non-Javadoc)
      * @See org.teiid.designer.core.ModelWorkspaceItem#getResource()
      */
-    public IResource getResource() {
+    @Override
+	public IResource getResource() {
         final ModelWorkspaceItem parent = this.getParent();
         if (parent == null) {
             return null;
@@ -390,7 +403,8 @@ public class ModelResourceImpl extends OpenableImpl implements ModelResource {
     /* (non-Javadoc)
      * @See org.teiid.designer.core.ModelWorkspaceItem#getPath()
      */
-    public IPath getPath() {
+    @Override
+	public IPath getPath() {
         final ModelWorkspaceItem parent = this.getParent();
         if (parent == null) {
             return null;
@@ -462,35 +476,40 @@ public class ModelResourceImpl extends OpenableImpl implements ModelResource {
     /* (non-Javadoc)
      * @See org.teiid.designer.core.workspace.ModelResource#getModelDiagramContainer()
      */
-    public ModelDiagrams getModelDiagrams() throws ModelWorkspaceException {
+    @Override
+	public ModelDiagrams getModelDiagrams() throws ModelWorkspaceException {
         return (ModelDiagrams)this.getFirstChildrenOfType(DIAGRAMS);
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.workspace.ModelResource#getModelTransformations()
      */
-    public ModelTransformations getModelTransformations() throws ModelWorkspaceException {
+    @Override
+	public ModelTransformations getModelTransformations() throws ModelWorkspaceException {
         return (ModelTransformations)this.getFirstChildrenOfType(TRANSFORMATIONS);
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.workspace.ModelResource#getModelTransformations()
      */
-    public ModelObjectAnnotations getAnnotations() throws ModelWorkspaceException {
+    @Override
+	public ModelObjectAnnotations getAnnotations() throws ModelWorkspaceException {
         return (ModelObjectAnnotations)this.getFirstChildrenOfType(ANNOTATIONS);
     }
 
     /**
      * @see org.teiid.designer.core.workspace.ModelResource#getModelMappingClassSets()
      */
-    public ModelMappingClassSets getModelMappingClassSets() throws ModelWorkspaceException {
+    @Override
+	public ModelMappingClassSets getModelMappingClassSets() throws ModelWorkspaceException {
         return (ModelMappingClassSets)this.getFirstChildrenOfType(MAPPING_CLASS_SETS);
     }
 
     /**
      * @see org.teiid.designer.core.workspace.ModelResource#getModelType()
      */
-    public ModelType getModelType() throws ModelWorkspaceException {
+    @Override
+	public ModelType getModelType() throws ModelWorkspaceException {
         if (this.mdlType != null) {
             return this.mdlType;
         }
@@ -529,7 +548,8 @@ public class ModelResourceImpl extends OpenableImpl implements ModelResource {
     /**
      * @see org.teiid.designer.core.workspace.ModelResource#getDescription()
      */
-    public String getDescription() throws ModelWorkspaceException {
+    @Override
+	public String getDescription() throws ModelWorkspaceException {
         String description = null;
 
         // If the model resource has not been opened then retrieve the
@@ -552,7 +572,8 @@ public class ModelResourceImpl extends OpenableImpl implements ModelResource {
     /**
      * @see org.teiid.designer.core.workspace.ModelResource#getUuid()
      */
-    public String getUuid() throws ModelWorkspaceException {
+    @Override
+	public String getUuid() throws ModelWorkspaceException {
         String uuidString = null;
 
         // If the model resource has not been opened then retrieve the
@@ -577,7 +598,8 @@ public class ModelResourceImpl extends OpenableImpl implements ModelResource {
         return uuidString;
     }
 
-    public String getPrimaryMetamodelUri() throws ModelWorkspaceException {
+    @Override
+	public String getPrimaryMetamodelUri() throws ModelWorkspaceException {
         String uriString = null;
 
         // If the model resource has not been opened then retrieve the
@@ -602,7 +624,8 @@ public class ModelResourceImpl extends OpenableImpl implements ModelResource {
     /* (non-Javadoc)
      * @See org.teiid.designer.core.workspace.ModelResource#getModelAnnotation()
      */
-    public synchronized ModelAnnotation getModelAnnotation() throws ModelWorkspaceException {
+    @Override
+	public synchronized ModelAnnotation getModelAnnotation() throws ModelWorkspaceException {
         // This is either loaded with no errors or unloaded ...
         final ModelBufferImpl buffer = (ModelBufferImpl)getBufferHack();
         final ModelContents contents = buffer.getModelContents();
@@ -672,7 +695,8 @@ public class ModelResourceImpl extends OpenableImpl implements ModelResource {
     /**
      * @see org.teiid.designer.core.workspace.ModelResource#getPrimaryMetamodelDescriptor()
      */
-    public MetamodelDescriptor getPrimaryMetamodelDescriptor() throws ModelWorkspaceException {
+    @Override
+	public MetamodelDescriptor getPrimaryMetamodelDescriptor() throws ModelWorkspaceException {
         String primaryMetamodelUri = null;
 
         // defect 19183 - prevent undo stack filling when selecting XSD models.
@@ -728,7 +752,8 @@ public class ModelResourceImpl extends OpenableImpl implements ModelResource {
     /**
      * @see org.teiid.designer.core.workspace.ModelResource#getAllMetamodelDescriptors()
      */
-    public List getAllMetamodelDescriptors() throws ModelWorkspaceException {
+    @Override
+	public List getAllMetamodelDescriptors() throws ModelWorkspaceException {
 
         // If the model resource has not been opened then retrieve the
         // metamodel information by reading the XMI header
@@ -784,7 +809,8 @@ public class ModelResourceImpl extends OpenableImpl implements ModelResource {
     /**
      * @see org.teiid.designer.core.workspace.ModelResource#getModelImports()
      */
-    public List getModelImports() throws ModelWorkspaceException {
+    @Override
+	public List getModelImports() throws ModelWorkspaceException {
 
         // If the model resource has not been opened then retrieve the
         // model import information by reading the XMI header

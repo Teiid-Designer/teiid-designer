@@ -137,49 +137,56 @@ public class VirtualDocumentModelPopulator implements IDocumentsAndFragmentsPopu
     /* (non-Javadoc)
      * @See org.teiid.designer.xml.internal.ui.wizards.IDocumentsAndFragmentsPopulator#getItem()
      */
-    public Object getItem() {
+    @Override
+	public Object getItem() {
         return this.schemaModel;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.xml.internal.ui.wizards.IDocumentsAndFragmentsPopulator#getItemName()
      */
-    public String getItemName() {
+    @Override
+	public String getItemName() {
         return schemaModel.getFullPath().toOSString();
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.xml.internal.ui.wizards.IDocumentsAndFragmentsPopulator#getInitialAvailableDocuments()
      */
-    public Collection getInitialAvailableDocuments() {
+    @Override
+	public Collection getInitialAvailableDocuments() {
         return allRootElements;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.xml.internal.ui.wizards.IDocumentsAndFragmentsPopulator#getInitialSelectedDocuments()
      */
-    public Collection getSelectedDocuments() {
+    @Override
+	public Collection getSelectedDocuments() {
         return selectedRootElements;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.xml.internal.ui.wizards.IDocumentsAndFragmentsPopulator#getInitialAvailableFragments()
      */
-    public Collection getInitialAvailableFragments() {
+    @Override
+	public Collection getInitialAvailableFragments() {
         return allComplexTypes;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.xml.internal.ui.wizards.IDocumentsAndFragmentsPopulator#getInitialSelectedFragments()
      */
-    public Collection getSelectedFragments() {
+    @Override
+	public Collection getSelectedFragments() {
         return selectedComplexTypes;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.xml.internal.ui.wizards.IDocumentsAndFragmentsPopulator#setSelectedDocuments(java.util.Collection)
      */
-    public void setSelectedDocuments( Collection selectedItems ) {
+    @Override
+	public void setSelectedDocuments( Collection selectedItems ) {
         this.selectedRootElements = selectedItems;
     }
 
@@ -209,14 +216,16 @@ public class VirtualDocumentModelPopulator implements IDocumentsAndFragmentsPopu
     /* (non-Javadoc)
      * @See org.teiid.designer.xml.internal.ui.wizards.IDocumentsAndFragmentsPopulator#setSelectedFragments(java.util.Collection)
      */
-    public void setSelectedFragments( Collection selectedItems ) {
+    @Override
+	public void setSelectedFragments( Collection selectedItems ) {
         this.selectedComplexTypes = selectedItems;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.xml.internal.ui.wizards.IDocumentsAndFragmentsPopulator#buildModel(org.eclipse.core.resources.IResource)
      */
-    public XmlFragment[] buildModel( ModelResource modelResource,
+    @Override
+	public XmlFragment[] buildModel( ModelResource modelResource,
                                      boolean buildEntireDocument,
                                      boolean buildMappingClasses,
                                      MappingClassBuilderStrategy strategy,
@@ -439,14 +448,16 @@ public class VirtualDocumentModelPopulator implements IDocumentsAndFragmentsPopu
         return newName;
     }
 
-    public Collection getUnhandledModelImports() {
+    @Override
+	public Collection getUnhandledModelImports() {
         if (unhandledModelImports == null) {
             unhandledModelImports = new HashSet();
         }
         return unhandledModelImports;
     }
 
-    public void buildMappingClasses( XmlFragment treeNode,
+    @Override
+	public void buildMappingClasses( XmlFragment treeNode,
                                      MappingClassBuilderStrategy strategy ) {
         XmlRoot docRoot = treeNode.getRoot();
         ITreeToRelationalMapper mapper = ModelMapperFactory.createModelMapper(treeNode);
@@ -455,7 +466,8 @@ public class VirtualDocumentModelPopulator implements IDocumentsAndFragmentsPopu
 
     }
 
-    public int getLastEstimatedNodeCount() {
+    @Override
+	public int getLastEstimatedNodeCount() {
         return estimatedNodeCount;
     }
 

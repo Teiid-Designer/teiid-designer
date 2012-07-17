@@ -77,7 +77,8 @@ public class CreateVirtualModelFromSchemaAction extends Action implements ISelec
     /* (non-Javadoc)
      * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction, org.eclipse.jface.viewers.ISelection)
      */
-    public void selectionChanged(IWorkbenchPart part, ISelection selection) {
+    @Override
+	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
         this.selection = selection;
         boolean enable = false;
         if ( ! SelectionUtilities.isMultiSelection(selection) ) {
@@ -89,7 +90,8 @@ public class CreateVirtualModelFromSchemaAction extends Action implements ISelec
         setEnabled(enable);
     }
     
-    public int compareTo(Object o) {
+    @Override
+	public int compareTo(Object o) {
         if( o instanceof String) {
             return getText().compareTo((String)o);
         }
@@ -100,7 +102,8 @@ public class CreateVirtualModelFromSchemaAction extends Action implements ISelec
         return 0;
     }
     
-    public boolean isApplicable(ISelection selection) {
+    @Override
+	public boolean isApplicable(ISelection selection) {
         this.selection = selection;
         boolean enable = false;
         if ( ! SelectionUtilities.isMultiSelection(selection) ) {

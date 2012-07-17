@@ -107,7 +107,8 @@ public final class ProductCustomizerMgr implements IProductCustomizer,
      * @see #DEFAULT_PRODUCT_ID
      * @since 4.3
      */
-    public String getProductId() {
+    @Override
+	public String getProductId() {
         return (this.delegate == null) ? DEFAULT_PRODUCT_ID : this.delegate.getProductId();
     }
 
@@ -125,7 +126,8 @@ public final class ProductCustomizerMgr implements IProductCustomizer,
      * @see org.teiid.designer.ui.common.product.IProductCustomizer#loadCustomizations()
      * @since 4.3
      */
-    public void loadCustomizations() {
+    @Override
+	public void loadCustomizations() {
         // establish the running product. no product if running via IDE.
         IProduct product = Platform.getProduct();
 
@@ -175,7 +177,8 @@ public final class ProductCustomizerMgr implements IProductCustomizer,
      * @see org.teiid.designer.ui.common.product.IProductCustomizer#supports(org.teiid.designer.ui.product.ProductContext)
      * @since 4.3
      */
-    public boolean supports(IProductContext theContext) {
+    @Override
+	public boolean supports(IProductContext theContext) {
         return (this.delegate == null) ? true : this.delegate.supports(theContext);
     }
 
@@ -183,12 +186,14 @@ public final class ProductCustomizerMgr implements IProductCustomizer,
      * @see org.teiid.designer.ui.common.product.IProductCustomizer#supports(org.teiid.designer.ui.product.ProductContext, java.lang.Object)
      * @since 4.3
      */
-    public boolean supports(IProductContext theContext,
+    @Override
+	public boolean supports(IProductContext theContext,
                             Object theValue) {
         return (this.delegate == null) ? true : this.delegate.supports(theContext, theValue);
     }
 
-    public IProductCharacteristics getProductCharacteristics() {
+    @Override
+	public IProductCharacteristics getProductCharacteristics() {
         return  (this.delegate == null) ? DEFAULT_PRODUCT_CHARACTERISTICS : this.delegate.getProductCharacteristics();
     }
 }

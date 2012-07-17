@@ -50,6 +50,7 @@ public interface Document extends ViewTable {
 	 * @model opposite="Documents" required="true"
 	 * @generated
 	 */
+	@Override
 	TeiidSchema getSchema();
 
 	/**

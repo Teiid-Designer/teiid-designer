@@ -176,7 +176,8 @@ public class ModelWorkspaceDialog extends ElementTreeSelectionDialog implements 
         getTreeViewer().addSelectionChangedListener(this);
     }
 
-    public void selectionChanged( SelectionChangedEvent event ) {
+    @Override
+	public void selectionChanged( SelectionChangedEvent event ) {
         IStructuredSelection sel = (IStructuredSelection)getTreeViewer().getSelection();
 
         if (sel.getFirstElement() instanceof EObject) {

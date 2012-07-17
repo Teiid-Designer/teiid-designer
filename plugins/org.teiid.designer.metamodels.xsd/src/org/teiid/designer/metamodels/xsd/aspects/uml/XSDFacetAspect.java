@@ -57,7 +57,8 @@ public class XSDFacetAspect extends AbstractMetamodelAspect implements UmlProper
         setMetamodelEntity(entity);
     }
     
-    public int getVisibility(Object eObject) {
+    @Override
+	public int getVisibility(Object eObject) {
         return VISIBILITY_PUBLIC;
     }
 
@@ -65,7 +66,8 @@ public class XSDFacetAspect extends AbstractMetamodelAspect implements UmlProper
      * @see org.teiid.designer.core.metamodel.aspect.uml.UmlDiagramAspect#getImage(java.lang.Object)
      * @since 4.2
      */
-    public Object getImage(Object eObject) {
+    @Override
+	public Object getImage(Object eObject) {
         // get the adapter factory
         final AdapterFactory adapterFactory = ModelerCore.getMetamodelRegistry().getAdapterFactory();
 		// lookup item provider for the eobjet
@@ -77,14 +79,16 @@ public class XSDFacetAspect extends AbstractMetamodelAspect implements UmlProper
     /** 
      * @see org.teiid.designer.core.metamodel.aspect.uml.UmlProperty#isAssociationEnd(java.lang.Object)
      */
-    public boolean isAssociationEnd(Object property) {
+    @Override
+	public boolean isAssociationEnd(Object property) {
         return false;
     }
     
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodels.aspects.UmlDiagramAspect#getStereotype(java.lang.Object)
      */
-    public String getStereotype(Object eObject) {
+    @Override
+	public String getStereotype(Object eObject) {
         XSDFacetImpl facet = assertFacet(eObject);
         String stereotype = null;
         if (facet instanceof XSDFundamentalFacet) {
@@ -101,7 +105,8 @@ public class XSDFacetAspect extends AbstractMetamodelAspect implements UmlProper
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodels.aspects.UmlDiagramAspect#setSignature(java.lang.Object, java.lang.String)
      */
-    public IStatus setSignature(Object eObject, String newSignature) {
+    @Override
+	public IStatus setSignature(Object eObject, String newSignature) {
         try {
             XSDFacetImpl facet = assertFacet(eObject);
             facet.setLexicalValue(newSignature);
@@ -112,7 +117,8 @@ public class XSDFacetAspect extends AbstractMetamodelAspect implements UmlProper
         return new Status(IStatus.OK, XsdPlugin.PLUGIN_ID, 0, XsdPlugin.Util.getString("Aspect.ok"), null);  //$NON-NLS-1$
     }
 
-    public String getSignature(Object eObject, int showMask) {
+    @Override
+	public String getSignature(Object eObject, int showMask) {
         XSDFacetImpl facet  = assertFacet(eObject);
         StringBuffer result = new StringBuffer();
         String facetName    = facet.getFacetName();
@@ -317,7 +323,8 @@ public class XSDFacetAspect extends AbstractMetamodelAspect implements UmlProper
         return type;
     }
 
-    public String getEditableSignature(Object eObject) {
+    @Override
+	public String getEditableSignature(Object eObject) {
         return getSignature(eObject, UmlProperty.SIGNATURE_NAME);
     }
 

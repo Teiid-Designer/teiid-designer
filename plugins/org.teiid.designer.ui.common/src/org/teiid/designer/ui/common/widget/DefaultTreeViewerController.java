@@ -31,7 +31,8 @@ public class DefaultTreeViewerController implements
      * @see org.teiid.designer.ui.common.widget.ITreeViewerController#checkedStateToggled(org.eclipse.swt.widgets.TreeItem)
      * @since 4.0
      */
-    public void checkedStateToggled(final TreeItem item) {
+    @Override
+	public void checkedStateToggled(final TreeItem item) {
     }
 
     /**
@@ -39,7 +40,8 @@ public class DefaultTreeViewerController implements
      * @see org.teiid.designer.ui.common.widget.ITreeViewerController#isItemCheckable(org.eclipse.swt.widgets.TreeItem)
      * @since 4.0
      */
-    public boolean isItemCheckable(final TreeItem item) {
+    @Override
+	public boolean isItemCheckable(final TreeItem item) {
         return true;
     }
 
@@ -49,7 +51,8 @@ public class DefaultTreeViewerController implements
      * @see org.teiid.designer.ui.common.widget.ITreeViewerController#itemCollapsed(org.eclipse.jface.viewers.TreeExpansionEvent)
      * @since 4.0
      */
-    public void itemCollapsed(final TreeExpansionEvent event) {
+    @Override
+	public void itemCollapsed(final TreeExpansionEvent event) {
     }
 
     /**
@@ -58,7 +61,8 @@ public class DefaultTreeViewerController implements
      * @see org.teiid.designer.ui.common.widget.ITreeViewerController#itemDoubleClicked(org.eclipse.jface.viewers.DoubleClickEvent)
      * @since 4.0
      */
-    public void itemDoubleClicked(final DoubleClickEvent event) {
+    @Override
+	public void itemDoubleClicked(final DoubleClickEvent event) {
     }
 
     /**
@@ -67,7 +71,8 @@ public class DefaultTreeViewerController implements
      * @see org.teiid.designer.ui.common.widget.ITreeViewerController#itemExpanded(org.eclipse.jface.viewers.TreeExpansionEvent)
      * @since 4.0
      */
-    public void itemExpanded(final TreeExpansionEvent event) {
+    @Override
+	public void itemExpanded(final TreeExpansionEvent event) {
         if(((TreeViewer)event.getTreeViewer()).getTree().getSelection().length > 0) {
             final TreeItem item = ((TreeViewer)event.getTreeViewer()).getTree().getSelection()[0];
             if (WidgetUtil.isChecked(item)) {
@@ -82,7 +87,8 @@ public class DefaultTreeViewerController implements
      * @see org.teiid.designer.ui.common.widget.ITreeViewerController#itemSelected(org.eclipse.jface.viewers.SelectionChangedEvent)
      * @since 4.0
      */
-    public void itemSelected(final SelectionChangedEvent event) {
+    @Override
+	public void itemSelected(final SelectionChangedEvent event) {
     }
 
     /**
@@ -91,7 +97,8 @@ public class DefaultTreeViewerController implements
      * @see org.teiid.designer.ui.common.widget.ITreeViewerController#update(org.eclipse.swt.widgets.TreeItem, boolean)
      * @since 4.0
      */
-    public void update(final TreeItem item,
+    @Override
+	public void update(final TreeItem item,
                        final boolean selected) {
         final boolean checked = !WidgetUtil.isUnchecked(item);
         item.setChecked(checked);

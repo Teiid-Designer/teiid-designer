@@ -114,14 +114,16 @@ public class ModelPropertySource implements IPropertySource {
     /* (non-Javadoc)
      * @see org.eclipse.ui.views.properties.IPropertySource#getEditableValue()
      */
-    public Object getEditableValue() {
+    @Override
+	public Object getEditableValue() {
         return delegate.getEditableValue();
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.ui.views.properties.IPropertySource#getPropertyDescriptors()
      */
-    public IPropertyDescriptor[] getPropertyDescriptors() {
+    @Override
+	public IPropertyDescriptor[] getPropertyDescriptors() {
         if ( this.annotation == null ) {
             return delegate.getPropertyDescriptors();
         }
@@ -154,7 +156,8 @@ public class ModelPropertySource implements IPropertySource {
     /* (non-Javadoc)
      * @see org.eclipse.ui.views.properties.IPropertySource#getPropertyValue(java.lang.Object)
      */
-    public Object getPropertyValue(Object id) {
+    @Override
+	public Object getPropertyValue(Object id) {
         if ( extensionDelegate != null && extensionDelegate.isExtensionProperty(id) ) {
             return extensionDelegate.getPropertyValue(id);
         }
@@ -165,7 +168,8 @@ public class ModelPropertySource implements IPropertySource {
     /* (non-Javadoc)
      * @see org.eclipse.ui.views.properties.IPropertySource#isPropertySet(java.lang.Object)
      */
-    public boolean isPropertySet(Object id) {
+    @Override
+	public boolean isPropertySet(Object id) {
         if ( extensionDelegate != null && extensionDelegate.isExtensionProperty(id) ) {
             return extensionDelegate.isPropertySet(id);
         }
@@ -176,7 +180,8 @@ public class ModelPropertySource implements IPropertySource {
     /* (non-Javadoc)
      * @see org.eclipse.ui.views.properties.IPropertySource#resetPropertyValue(java.lang.Object)
      */
-    public void resetPropertyValue(Object id) {
+    @Override
+	public void resetPropertyValue(Object id) {
         if ( extensionDelegate != null && extensionDelegate.isExtensionProperty(id) ) {
             extensionDelegate.resetPropertyValue(id);
         } else {
@@ -187,7 +192,8 @@ public class ModelPropertySource implements IPropertySource {
     /* (non-Javadoc)
      * @see org.eclipse.ui.views.properties.IPropertySource#setPropertyValue(java.lang.Object, java.lang.Object)
      */
-    public void setPropertyValue(Object id, Object value) {
+    @Override
+	public void setPropertyValue(Object id, Object value) {
         if ( extensionDelegate != null && extensionDelegate.isExtensionProperty(id) ) {
             extensionDelegate.setPropertyValue(id, value);
         } else {

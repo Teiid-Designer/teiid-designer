@@ -23,7 +23,8 @@ public class RelationalValidationAspectFactoryImpl implements MetamodelAspectFac
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.MetamodelAspectFactory#create(org.eclipse.emf.ecore.EClassifier, org.teiid.designer.core.metamodel.aspect.MetamodelEntity)
      */
-    public MetamodelAspect create(EClassifier classifier, MetamodelEntity entity) {
+    @Override
+	public MetamodelAspect create(EClassifier classifier, MetamodelEntity entity) {
             switch (classifier.getClassifierID()) {
                 case RelationalPackage.ACCESS_PATTERN: return createAccessPatternAspect(entity);
                 case RelationalPackage.CATALOG: return createCatalogAspect(entity);

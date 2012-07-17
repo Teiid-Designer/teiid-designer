@@ -29,14 +29,16 @@ public class AccessPatternAspect extends RelationalEntityAspect implements SqlCo
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlAspect#isRecordType(char)
      */
-    public boolean isRecordType(char recordType) {
+    @Override
+	public boolean isRecordType(char recordType) {
         return (recordType == IndexConstants.RECORD_TYPE.ACCESS_PATTERN);
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlColumnSetAspect#getColumns(org.eclipse.emf.ecore.EObject)
      */
-    public List getColumns(EObject eObject) {
+    @Override
+	public List getColumns(EObject eObject) {
         CoreArgCheck.isInstanceOf(AccessPattern.class, eObject); 
         AccessPattern accessPattern = (AccessPattern) eObject;        
         return accessPattern.getColumns();
@@ -45,14 +47,16 @@ public class AccessPatternAspect extends RelationalEntityAspect implements SqlCo
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlColumnSetAspect#getType()
      */
-    public int getColumnSetType() {
+    @Override
+	public int getColumnSetType() {
         return MetadataConstants.COLUMN_SET_TYPES.ACCESS_PATTERN;
     }
 
     /*
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlAspect#updateObject(org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject)
      */
-    public void updateObject(EObject targetObject, EObject sourceObject) {
+    @Override
+	public void updateObject(EObject targetObject, EObject sourceObject) {
     }
 
 }

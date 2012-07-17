@@ -77,7 +77,8 @@ public class HttpAddressImpl extends EObjectImpl implements HttpAddress {
      * 
      * @generated
      */
-    public String getLocation() {
+    @Override
+	public String getLocation() {
         return location;
     }
 
@@ -86,7 +87,8 @@ public class HttpAddressImpl extends EObjectImpl implements HttpAddress {
      * 
      * @generated
      */
-    public void setLocation( String newLocation ) {
+    @Override
+	public void setLocation( String newLocation ) {
         String oldLocation = location;
         location = newLocation;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, HttpPackage.HTTP_ADDRESS__LOCATION,
@@ -98,7 +100,8 @@ public class HttpAddressImpl extends EObjectImpl implements HttpAddress {
      * 
      * @generated
      */
-    public Port getPort() {
+    @Override
+	public Port getPort() {
         if (eContainerFeatureID != HttpPackage.HTTP_ADDRESS__PORT) return null;
         return (Port)eContainer;
     }
@@ -108,7 +111,8 @@ public class HttpAddressImpl extends EObjectImpl implements HttpAddress {
      * 
      * @generated
      */
-    public void setPort( Port newPort ) {
+    @Override
+	public void setPort( Port newPort ) {
         if (newPort != eContainer || (eContainerFeatureID != HttpPackage.HTTP_ADDRESS__PORT && newPort != null)) {
             if (EcoreUtil.isAncestor(this, newPort)) throw new IllegalArgumentException(
                                                                                         "Recursive containment not allowed for " + toString()); //$NON-NLS-1$

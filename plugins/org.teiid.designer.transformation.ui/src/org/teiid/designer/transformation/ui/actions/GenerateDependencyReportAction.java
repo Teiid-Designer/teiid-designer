@@ -98,7 +98,8 @@ public class GenerateDependencyReportAction extends TransformationAction impleme
                              final String theContents ) {
         // write file
         UiBusyIndicator.showWhile(Display.getCurrent(), new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 try {
                     File file = new File(theFileName);
 

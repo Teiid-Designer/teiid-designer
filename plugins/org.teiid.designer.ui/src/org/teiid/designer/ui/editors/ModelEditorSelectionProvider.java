@@ -35,7 +35,8 @@ public class ModelEditorSelectionProvider implements ISelectionProvider {
      */
     private ISelectionChangedListener theSelectionChangedListener = new ISelectionChangedListener() {
         /** Called by the ModelEditorPage to signal a selection change */
-        public void selectionChanged( SelectionChangedEvent e ) {
+        @Override
+		public void selectionChanged( SelectionChangedEvent e ) {
             if (isVisible(sourcePage)) {
 
                 // save the current selection state and broadcast to all listeners
@@ -81,7 +82,8 @@ public class ModelEditorSelectionProvider implements ISelectionProvider {
         return sourcePage;
     }
 
-    public void addSelectionChangedListener( ISelectionChangedListener listener ) {
+    @Override
+	public void addSelectionChangedListener( ISelectionChangedListener listener ) {
         synchronized (listeners) {
             if (!listeners.contains(listener)) {
                 listeners.add(listener);
@@ -93,7 +95,8 @@ public class ModelEditorSelectionProvider implements ISelectionProvider {
      * Return the current selection. If the active editor has a selection provider, return it's selection. Otherwise, return the
      * last selection that came through this object.
      */
-    public ISelection getSelection() {
+    @Override
+	public ISelection getSelection() {
         if (sourcePage != null && isVisible(sourcePage)) {
             ISelectionProvider selectionProvider = sourcePage.getModelObjectSelectionProvider();
             if (selectionProvider != null) {
@@ -103,7 +106,8 @@ public class ModelEditorSelectionProvider implements ISelectionProvider {
         return selection;
     }
 
-    public void removeSelectionChangedListener( ISelectionChangedListener listener ) {
+    @Override
+	public void removeSelectionChangedListener( ISelectionChangedListener listener ) {
         synchronized (listeners) {
             listeners.remove(listener);
         }
@@ -112,7 +116,8 @@ public class ModelEditorSelectionProvider implements ISelectionProvider {
     /**
      * Called when events come in from the ModelEditorPage and need to get broadcast out to other Viewers.
      */
-    public synchronized void setSelection( ISelection selection ) {
+    @Override
+	public synchronized void setSelection( ISelection selection ) {
         this.selection = selection;
         // if the modelEditor is not the active part, then the selection originated outside the editor
         // and should be fired to the selection service. Otherwise, it should be consumed.
@@ -140,7 +145,8 @@ public class ModelEditorSelectionProvider implements ISelectionProvider {
         while (iter.hasNext()) {
             final ISelectionChangedListener l = (ISelectionChangedListener)iter.next();
             SafeRunner.run(new SafeRunnable() {
-                public void run() {
+                @Override
+				public void run() {
                     l.selectionChanged(event);
                 }
 

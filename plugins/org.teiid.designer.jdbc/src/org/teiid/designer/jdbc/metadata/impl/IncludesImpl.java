@@ -41,105 +41,120 @@ public class IncludesImpl implements Includes {
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.metadata.Includes#getJdbcDatabase()
      */
-    public JdbcDatabase getJdbcDatabase() {
+    @Override
+	public JdbcDatabase getJdbcDatabase() {
         return this.database;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.metadata.Includes#getIncludedTableTypes()
      */
-    public String[] getIncludedTableTypes() {
+    @Override
+	public String[] getIncludedTableTypes() {
         return includedTableTypes;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.metadata.Includes#getIncludedTableTypes(java.lang.String[])
      */
-    public void setIncludedTableTypes(String[] typesToInclude) {
+    @Override
+	public void setIncludedTableTypes(String[] typesToInclude) {
         includedTableTypes = typesToInclude != null ? typesToInclude : NO_TYPES;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.metadata.Includes#includeProcedures()
      */
-    public boolean includeProcedures() {
+    @Override
+	public boolean includeProcedures() {
         return procedures;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.metadata.Includes#setIncludeProcedures(boolean)
      */
-    public void setIncludeProcedures(boolean include) {
+    @Override
+	public void setIncludeProcedures(boolean include) {
         procedures = include;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.metadata.Includes#setIncludeForeignKeys(boolean)
      */
-    public void setIncludeForeignKeys( boolean include ) {
+    @Override
+	public void setIncludeForeignKeys( boolean include ) {
         fks = include;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.metadata.Includes#includeForeignKeys()
      */
-    public boolean includeForeignKeys() {
+    @Override
+	public boolean includeForeignKeys() {
         return fks;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.metadata.Includes#setIncludeIncompleteFKs(boolean)
      */
-    public void setIncludeIncompleteFKs( boolean include ) {
+    @Override
+	public void setIncludeIncompleteFKs( boolean include ) {
         incompleteFKs = include;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.metadata.Includes#includeIncompleteFKs()
      */
-    public boolean includeIncompleteFKs() {
+    @Override
+	public boolean includeIncompleteFKs() {
         return incompleteFKs;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.metadata.Includes#includeIndexes()
      */
-    public boolean includeIndexes() {
+    @Override
+	public boolean includeIndexes() {
         return indexes;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.metadata.Includes#setIncludeIndexes(boolean)
      */
-    public void setIncludeIndexes(boolean include) {
+    @Override
+	public void setIncludeIndexes(boolean include) {
         indexes = include;
     }
 
     /**
      * @return
      */
-    public boolean getApproximateIndexes() {
+    @Override
+	public boolean getApproximateIndexes() {
         return approximateIndexes;
     }
 
     /**
      * @return
      */
-    public boolean getUniqueIndexesOnly() {
+    @Override
+	public boolean getUniqueIndexesOnly() {
         return uniqueIndexes;
     }
 
     /**
      * @param b
      */
-    public void setApproximateIndexes(boolean b) {
+    @Override
+	public void setApproximateIndexes(boolean b) {
         approximateIndexes = b;
     }
 
     /**
      * @param b
      */
-    public void setUniqueIndexesOnly(boolean b) {
+    @Override
+	public void setUniqueIndexesOnly(boolean b) {
         uniqueIndexes = b;
     }
 

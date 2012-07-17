@@ -42,7 +42,8 @@ public class ModelIndexerVisitor implements ModelVisitor {
      * @see org.teiid.designer.core.util.ModelVisitor#visit(org.eclipse.emf.ecore.EObject)
      * @since 4.2
      */
-    public boolean visit( final EObject object ) {
+    @Override
+	public boolean visit( final EObject object ) {
         if (object == null) {
             return false;
         }
@@ -54,7 +55,8 @@ public class ModelIndexerVisitor implements ModelVisitor {
      * @see org.teiid.designer.core.util.ModelVisitor#visit(org.eclipse.emf.ecore.resource.Resource)
      * @since 4.2
      */
-    public boolean visit( final Resource resource ) {
+    @Override
+	public boolean visit( final Resource resource ) {
         if (resource == null) {
             return false;
         }

@@ -334,6 +334,7 @@ public class UmlPackageFigure extends AbstractDiagramFigure implements DirectEdi
         }
     }
     
+	@Override
 	public Label getLabelFigure() {
 		return nameLabel.getLabel();
 	}

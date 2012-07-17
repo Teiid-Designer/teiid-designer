@@ -29,8 +29,8 @@ import org.teiid.designer.modelgenerator.wsdl.model.Port;
 import org.teiid.designer.modelgenerator.wsdl.ui.util.ModelGeneratorWsdlUiUtil;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.ImportManagerValidator;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.ProcedureGenerator;
+import org.teiid.designer.ui.common.ICredentialsCommon;
 import org.teiid.designer.ui.common.ICredentialsCommon.SecurityType;
-
 
 /**
  * WSDL Import Manager - Business Object for interacting with GUI
@@ -278,9 +278,9 @@ public class WSDLImportWizardManager implements IChangeNotifier {
 		if( this.connectionProfile != null ) {
             Properties props = this.connectionProfile.getBaseProperties();
 
-            String securityTypeValue = props.getProperty(IWSProfileConstants.SECURITY_TYPE_ID);
-            String userName = props.getProperty(IWSProfileConstants.USERNAME_PROP_ID);
-            String password = props.getProperty(IWSProfileConstants.PASSWORD_PROP_ID);
+            String securityTypeValue = props.getProperty(ICredentialsCommon.SECURITY_TYPE_ID);
+            String userName = props.getProperty(ICredentialsCommon.USERNAME_PROP_ID);
+            String password = props.getProperty(ICredentialsCommon.PASSWORD_PROP_ID);
             setWSDLCredentials(securityTypeValue, userName, password);
 
             String fileUri = props.getProperty(IWSProfileConstants.WSDL_URI_PROP_ID);

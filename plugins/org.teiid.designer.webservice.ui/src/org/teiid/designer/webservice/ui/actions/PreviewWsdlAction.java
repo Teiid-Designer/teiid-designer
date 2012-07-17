@@ -174,7 +174,8 @@ public class PreviewWsdlAction extends SortableSelectionAction {
         /* (non-Javadoc)
          * @see org.eclipse.jface.window.Window#createDialogArea(org.eclipse.swt.widgets.Composite)
          */
-        protected Control createDialogArea(Composite parent) {
+        @Override
+		protected Control createDialogArea(Composite parent) {
             Composite composite = (Composite)super.createDialogArea(parent);
             // add controls to composite as necessary
 
@@ -203,7 +204,8 @@ public class PreviewWsdlAction extends SortableSelectionAction {
         /* (non-Javadoc)
          * @see org.eclipse.jface.window.Window#create()
          */
-        public void create() {
+        @Override
+		public void create() {
             setShellStyle(getShellStyle() | SWT.RESIZE);
             super.create();
             super.getShell().setText(WSDL_DIALOG_TITLE);
@@ -212,7 +214,8 @@ public class PreviewWsdlAction extends SortableSelectionAction {
         /* (non-Javadoc)
          * @see org.eclipse.jface.dialogs.Dialog#createButtonsForButtonBar(org.eclipse.swt.widgets.Composite)
          */
-        protected void createButtonsForButtonBar(Composite parent) {
+        @Override
+		protected void createButtonsForButtonBar(Composite parent) {
             Button okButton = createButton(
                 parent,
                 IDialogConstants.OK_ID,

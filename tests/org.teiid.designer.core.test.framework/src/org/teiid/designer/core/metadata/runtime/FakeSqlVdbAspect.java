@@ -26,48 +26,68 @@ public class FakeSqlVdbAspect implements SqlVdbAspect {
     public IPath path;
     public Object uuid, parentUuid;
         
-    public String getName(EObject eObject) { return name; }
+    @Override
+	public String getName(EObject eObject) { return name; }
     
-    public String getFullName(EObject eObject) { return fullName; }    
+    @Override
+	public String getFullName(EObject eObject) { return fullName; }    
     
-    public String getNameInSource(EObject eObject) { return nameInSource; }
+    @Override
+	public String getNameInSource(EObject eObject) { return nameInSource; }
     
-    public IPath getPath(EObject eObject) { return path; }
+    @Override
+	public IPath getPath(EObject eObject) { return path; }
     
-    public Object getObjectID(EObject eObject) { return uuid; }
+    @Override
+	public Object getObjectID(EObject eObject) { return uuid; }
     
-    public boolean isRecordType(char recordType) { return (recordType == IndexConstants.RECORD_TYPE.VDB_ARCHIVE ); } 
+    @Override
+	public boolean isRecordType(char recordType) { return (recordType == IndexConstants.RECORD_TYPE.VDB_ARCHIVE ); } 
 
-    public boolean isQueryable(EObject eObject) { return true; }
+    @Override
+	public boolean isQueryable(EObject eObject) { return true; }
     
-    public String getID() { return null; }
+    @Override
+	public String getID() { return null; }
     
-    public MetamodelEntity getMetamodelEntity() { return null; }
+    @Override
+	public MetamodelEntity getMetamodelEntity() { return null; }
 
-    public Object getParentObjectID(EObject eObject) { return parentUuid; }
+    @Override
+	public Object getParentObjectID(EObject eObject) { return parentUuid; }
 
-    public String getDescription(EObject eObject) { return description; }
+    @Override
+	public String getDescription(EObject eObject) { return description; }
 
-    public String getIdentifier(EObject eObject) { return identifier; }
+    @Override
+	public String getIdentifier(EObject eObject) { return identifier; }
 
-    public List getModelIDs(EObject eObject) { return models; }
+    @Override
+	public List getModelIDs(EObject eObject) { return models; }
 
-    public String getProducerName(EObject eObject) { return producerName; }
+    @Override
+	public String getProducerName(EObject eObject) { return producerName; }
 
-    public String getProducerVersion(EObject eObject) { return producerVersion; }
+    @Override
+	public String getProducerVersion(EObject eObject) { return producerVersion; }
 
-    public String getProvider(EObject eObject) { return provider; }
+    @Override
+	public String getProvider(EObject eObject) { return provider; }
 
-    public String getTimeLastChanged(EObject eObject) { return timeLastChanged; }
+    @Override
+	public String getTimeLastChanged(EObject eObject) { return timeLastChanged; }
 
-    public String getTimeLastProduced(EObject eObject) { return timeLastProduced; }
+    @Override
+	public String getTimeLastProduced(EObject eObject) { return timeLastProduced; }
 
-    public String getVersion(EObject eObject) { return version; }
+    @Override
+	public String getVersion(EObject eObject) { return version; }
 
     /*
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlAspect#updateObject(org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject)
      */
-    public void updateObject(EObject targetObject, EObject sourceObject) {
+    @Override
+	public void updateObject(EObject targetObject, EObject sourceObject) {
 
     }
 

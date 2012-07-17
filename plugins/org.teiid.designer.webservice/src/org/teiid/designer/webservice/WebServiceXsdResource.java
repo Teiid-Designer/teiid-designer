@@ -26,7 +26,7 @@ import org.teiid.designer.core.ModelerCore;
 /** 
  * @since 4.2
  */
-public class WebServiceXsdResource implements IWebServiceXsdResource, IInternalWebServiceXsdResource {
+public class WebServiceXsdResource implements IInternalWebServiceXsdResource {
 
     private final String targetNamespace;
     private final String originalPath;
@@ -55,7 +55,8 @@ public class WebServiceXsdResource implements IWebServiceXsdResource, IInternalW
         this.validator = validator != null ? validator : new WorkspaceValidator();
     }
     
-    public XSDSchema getSchema() {
+    @Override
+	public XSDSchema getSchema() {
         return this.schema;
     }
 
@@ -63,7 +64,8 @@ public class WebServiceXsdResource implements IWebServiceXsdResource, IInternalW
      * @see org.teiid.designer.webservice.IWebServiceXsdResource#getTargetNamespace()
      * @since 4.2
      */
-    public String getTargetNamespace() {
+    @Override
+	public String getTargetNamespace() {
         return this.targetNamespace;
     }
 
@@ -71,7 +73,8 @@ public class WebServiceXsdResource implements IWebServiceXsdResource, IInternalW
      * @see org.teiid.designer.webservice.IWebServiceXsdResource#getOriginalPath()
      * @since 4.2
      */
-    public String getOriginalPath() {
+    @Override
+	public String getOriginalPath() {
         return this.originalPath;
     }
 
@@ -79,7 +82,8 @@ public class WebServiceXsdResource implements IWebServiceXsdResource, IInternalW
      * @see org.teiid.designer.webservice.IWebServiceXsdResource#getDestinationPath()
      * @since 4.2
      */
-    public IPath getDestinationPath() {
+    @Override
+	public IPath getDestinationPath() {
         return this.destinationPath;
     }
 
@@ -87,7 +91,8 @@ public class WebServiceXsdResource implements IWebServiceXsdResource, IInternalW
      * @see org.teiid.designer.webservice.IWebServiceXsdResource#setDestinationPath(org.eclipse.core.runtime.IPath)
      * @since 4.2
      */
-    public void setDestinationPath( final IPath workspacePathForXsd) {
+    @Override
+	public void setDestinationPath( final IPath workspacePathForXsd) {
         this.destinationPath = workspacePathForXsd;
     }
 
@@ -95,7 +100,8 @@ public class WebServiceXsdResource implements IWebServiceXsdResource, IInternalW
      * @see org.teiid.designer.webservice.IWebServiceXsdResource#isValid()
      * @since 4.2
      */
-    public IStatus isValid() {
+    @Override
+	public IStatus isValid() {
                 
         IStatus stResult = null;
         IStatus stSchemaStatus = null;
@@ -154,7 +160,8 @@ public class WebServiceXsdResource implements IWebServiceXsdResource, IInternalW
      * @see org.teiid.designer.webservice.IWebServiceXsdResource#isValid(org.eclipse.core.runtime.IPath)
      * @since 4.2
      */
-    public IStatus isValid(final IPath proposedDestination) {
+    @Override
+	public IStatus isValid(final IPath proposedDestination) {
         return this.validator.isValid(proposedDestination);
     }
     
@@ -163,7 +170,8 @@ public class WebServiceXsdResource implements IWebServiceXsdResource, IInternalW
     }
     
     public class WorkspaceValidator implements Validator {
-        public IStatus isValid(final IPath destPath) {
+        @Override
+		public IStatus isValid(final IPath destPath) {
             return WebServiceXsdResource.isValidInWorkspace(destPath);
         }
     }

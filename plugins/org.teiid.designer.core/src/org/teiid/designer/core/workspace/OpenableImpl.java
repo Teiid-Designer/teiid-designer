@@ -53,7 +53,8 @@ public abstract class OpenableImpl extends ModelWorkspaceItemImpl implements Ope
     /**
      * @see ModelWorkspaceItem
      */
-    public IResource getUnderlyingResource() throws ModelWorkspaceException {
+    @Override
+	public IResource getUnderlyingResource() throws ModelWorkspaceException {
         IResource parentResource = fParent.getUnderlyingResource();
         if (parentResource == null) {
             return null;
@@ -114,7 +115,8 @@ public abstract class OpenableImpl extends ModelWorkspaceItemImpl implements Ope
     /**
      * Open an <code>Openable</code> that is known to be closed (no check for <code>isOpen()</code>).
      */
-    public void openWhenClosed( final IProgressMonitor pm ) throws ModelWorkspaceException {
+    @Override
+	public void openWhenClosed( final IProgressMonitor pm ) throws ModelWorkspaceException {
         try {
 
             if (ModelWorkspaceManager.VERBOSE) {
@@ -171,14 +173,16 @@ public abstract class OpenableImpl extends ModelWorkspaceItemImpl implements Ope
     /**
      * @see IParent
      */
-    public boolean hasChildren() throws ModelWorkspaceException {
+    @Override
+	public boolean hasChildren() throws ModelWorkspaceException {
         return getChildren().length > 0;
     }
 
     /**
      * @see IOpenable
      */
-    public boolean hasUnsavedChanges() {
+    @Override
+	public boolean hasUnsavedChanges() {
 
         if (isReadOnly() || !isOpen()) {
             return false;
@@ -225,7 +229,8 @@ public abstract class OpenableImpl extends ModelWorkspaceItemImpl implements Ope
     /**
      * @see IOpenable
      */
-    public boolean isOpen() {
+    @Override
+	public boolean isOpen() {
         synchronized (ModelWorkspaceManager.getModelWorkspaceManager()) {
             return ModelWorkspaceManager.getModelWorkspaceManager().getInfo(this) != null;
         }
@@ -251,7 +256,8 @@ public abstract class OpenableImpl extends ModelWorkspaceItemImpl implements Ope
     /**
      * @see IOpenable
      */
-    public void open( IProgressMonitor pm ) throws ModelWorkspaceException {
+    @Override
+	public void open( IProgressMonitor pm ) throws ModelWorkspaceException {
         if (!isOpen()) {
             // TODO: need to synchronize (IOpenable.open(IProgressMonitor) is API
             // TODO: could use getItemInfo instead
@@ -296,7 +302,8 @@ public abstract class OpenableImpl extends ModelWorkspaceItemImpl implements Ope
     /**
      * @see IOpenable
      */
-    public void save( IProgressMonitor pm,
+    @Override
+	public void save( IProgressMonitor pm,
                       boolean force ) throws ModelWorkspaceException {
         if (isReadOnly() || ModelUtil.isIResourceReadOnly(getResource())) {
             throw new ModelWorkspaceException(new ModelStatusImpl(ModelStatusConstants.READ_ONLY, this));

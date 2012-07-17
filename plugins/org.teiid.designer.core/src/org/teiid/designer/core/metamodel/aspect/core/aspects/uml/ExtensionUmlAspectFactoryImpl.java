@@ -19,7 +19,8 @@ import org.teiid.designer.metamodels.core.extension.ExtensionPackage;
  * RelationalUmlAspectFactoryImpl
  */
 public class ExtensionUmlAspectFactoryImpl implements MetamodelAspectFactory {
-    public MetamodelAspect create(EClassifier classifier, MetamodelEntity entity) {
+    @Override
+	public MetamodelAspect create(EClassifier classifier, MetamodelEntity entity) {
         switch (classifier.getClassifierID()) {
             case ExtensionPackage.XATTRIBUTE:       return new XAttributeUmlAspect(entity);
             case ExtensionPackage.XCLASS:           return new XClassUmlAspect(entity);

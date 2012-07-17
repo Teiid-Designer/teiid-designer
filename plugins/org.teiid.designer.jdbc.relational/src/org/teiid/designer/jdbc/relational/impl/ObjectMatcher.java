@@ -33,7 +33,8 @@ public class ObjectMatcher {
      * supplied object.
      */
     static MatchValueProvider DEFAULT_MATCH_VALUE_PROVIDER = new MatchValueProvider() {
-        public String getMatchValue( final Object obj ) {
+        @Override
+		public String getMatchValue( final Object obj ) {
             CoreArgCheck.isNotNull(obj);
             return obj.toString();
         }
@@ -44,7 +45,8 @@ public class ObjectMatcher {
      * supplied object is an instance of {@link JdbcNode}.
      */
     static MatchValueProvider JDBC_NODE_VALUE_PROVIDER = new MatchValueProvider() {
-        public String getMatchValue( final Object obj ) {
+        @Override
+		public String getMatchValue( final Object obj ) {
             CoreArgCheck.isNotNull(obj);
             return ((JdbcNode)obj).getName();
         }
@@ -55,7 +57,8 @@ public class ObjectMatcher {
      * assumes the supplied object is an instance of {@link RelationalEntity}.
      */
     static MatchValueProvider RELATION_OBJECT_NAME_PROVIDER = new MatchValueProvider() {
-        public String getMatchValue( final Object obj ) {
+        @Override
+		public String getMatchValue( final Object obj ) {
             CoreArgCheck.isNotNull(obj);
             return ((RelationalEntity)obj).getName();
         }

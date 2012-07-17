@@ -17,8 +17,6 @@ import org.teiid.designer.core.container.Container;
 import org.teiid.designer.jdbc.metadata.JdbcNode;
 import org.teiid.designer.metamodels.relational.RelationalPackage;
 
-import org.teiid.designer.jdbc.relational.ModelerJdbcRelationalConstants;
-
 /**
  * @since 4.0
  */

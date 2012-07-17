@@ -24,7 +24,6 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.jface.dialogs.IDialogPage;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -113,7 +112,8 @@ public class GenerateXsdWizardOptionslPage extends WizardPage
     private void setDefaults() {
         this.getControl().getDisplay().asyncExec(new Runnable() {
 
-            public void run() {
+            @Override
+			public void run() {
                 // Set default names if singleSelection
                 if (rootName != null) {
                     outputNameText.setText(rootName + Util.getString("GenerateXsdWizard.outSuffix")); //$NON-NLS-1$
@@ -128,7 +128,8 @@ public class GenerateXsdWizardOptionslPage extends WizardPage
     /**
      * @see IDialogPage#createControl(Composite)
      */
-    public void createControl( Composite parent ) {
+    @Override
+	public void createControl( Composite parent ) {
         Composite container = new Composite(parent, SWT.NULL);
         GridLayout layout = new GridLayout();
         container.setLayout(layout);
@@ -147,7 +148,8 @@ public class GenerateXsdWizardOptionslPage extends WizardPage
         GridData gd = new GridData(GridData.FILL_HORIZONTAL);
         containerText.setLayoutData(gd);
         containerText.addModifyListener(new ModifyListener() {
-            public void modifyText( ModifyEvent e ) {
+            @Override
+			public void modifyText( ModifyEvent e ) {
                 checkStatus();
             }
         });
@@ -179,7 +181,8 @@ public class GenerateXsdWizardOptionslPage extends WizardPage
         outputNameText.setLayoutData(outputGridData);
         outputNameText.addModifyListener(new ModifyListener() {
 
-            public void modifyText( ModifyEvent e ) {
+            @Override
+			public void modifyText( ModifyEvent e ) {
                 checkStatus();
             }
         });
@@ -230,7 +233,8 @@ public class GenerateXsdWizardOptionslPage extends WizardPage
         inputNameText.setLayoutData(gd);
         inputNameText.addModifyListener(new ModifyListener() {
 
-            public void modifyText( ModifyEvent e ) {
+            @Override
+			public void modifyText( ModifyEvent e ) {
                 checkStatus();
             }
         });
@@ -265,7 +269,8 @@ public class GenerateXsdWizardOptionslPage extends WizardPage
         wsNameText.setLayoutData(gd);
         wsNameText.addModifyListener(new ModifyListener() {
 
-            public void modifyText( ModifyEvent e ) {
+            @Override
+			public void modifyText( ModifyEvent e ) {
                 checkStatus();
             }
         });

@@ -118,7 +118,8 @@ public class TablePanel extends AbstractVerticalButtonPanel implements Widgets {
             });
             // Add double-click listener to list that auto-edits if editing enabled
             viewer.addDoubleClickListener(new IDoubleClickListener() {
-                public void doubleClick( final DoubleClickEvent event ) {
+                @Override
+				public void doubleClick( final DoubleClickEvent event ) {
                     // defect 15983 - allow double-clicks even if VDB is read-only
                     // note that we can't just call editButton.isEnabled() -- the javadocs
                     // for that state that all ancestors must be enabled, too, which is
@@ -185,7 +186,8 @@ public class TablePanel extends AbstractVerticalButtonPanel implements Widgets {
         messageLabel.setVisible(false);
 
         tableSelectionListener = new ISelectionChangedListener() {
-            public void selectionChanged( final SelectionChangedEvent event ) {
+            @Override
+			public void selectionChanged( final SelectionChangedEvent event ) {
                 itemsSelected((IStructuredSelection)event.getSelection());
             }
         };
@@ -199,7 +201,8 @@ public class TablePanel extends AbstractVerticalButtonPanel implements Widgets {
             // all the items in the panel then. so when the component does disable just undo the checked state
             // being set.
             viewer.addCheckStateListenerAccess(new ICheckStateListener() {
-                public void checkStateChanged( CheckStateChangedEvent theEvent ) {
+                @Override
+				public void checkStateChanged( CheckStateChangedEvent theEvent ) {
                     // undo the check
                     if (!getEnabled() && theEvent.getSource() != this) {
                         viewer.setChecked(theEvent.getElement(), !theEvent.getChecked());
@@ -501,7 +504,8 @@ public class TablePanel extends AbstractVerticalButtonPanel implements Widgets {
                 final ICheckStateListener l = (ICheckStateListener)array[i];
 
                 SafeRunner.run(new SafeRunnable() {
-                    public void run() {
+                    @Override
+					public void run() {
                         l.checkStateChanged(theEvent);
                     }
 

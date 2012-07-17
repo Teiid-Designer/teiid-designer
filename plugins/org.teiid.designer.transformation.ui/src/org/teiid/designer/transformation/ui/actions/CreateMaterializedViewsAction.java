@@ -16,6 +16,7 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -27,11 +28,9 @@ import org.teiid.designer.transformation.util.TransformationHelper;
 import org.teiid.designer.ui.PluginConstants;
 import org.teiid.designer.ui.actions.SortableSelectionAction;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
-import org.teiid.designer.ui.common.widget.Dialog;
 import org.teiid.designer.ui.editors.ModelEditorManager;
 import org.teiid.designer.ui.viewsupport.ModelIdentifier;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
-
 
 public class CreateMaterializedViewsAction extends SortableSelectionAction {
 	
@@ -142,7 +141,7 @@ public class CreateMaterializedViewsAction extends SortableSelectionAction {
             }
 
             if (forceOpen) {
-                ModelEditorManager.open((EObject)firstEObj, true);
+                ModelEditorManager.open(firstEObj, true);
             }
         }
         if( userCancelled ) {
@@ -155,7 +154,7 @@ public class CreateMaterializedViewsAction extends SortableSelectionAction {
         final WizardDialog dialog = new WizardDialog(wizard.getShell(), wizard);
         final int rc = dialog.open();
         
-        if( rc == Dialog.OK ) {
+        if( rc == Window.OK ) {
         	
         }
     	

@@ -117,7 +117,8 @@ public class XmlAttributeImpl extends XmlDocumentNodeImpl implements XmlAttribut
      * <!-- end-user-doc -->
      * @generated
      */
-    public String getValue() {
+    @Override
+	public String getValue() {
         return value;
     }
 
@@ -126,7 +127,8 @@ public class XmlAttributeImpl extends XmlDocumentNodeImpl implements XmlAttribut
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setValue(String newValue) {
+    @Override
+	public void setValue(String newValue) {
         String oldValue = value;
         value = newValue;
         if (eNotificationRequired())
@@ -138,7 +140,8 @@ public class XmlAttributeImpl extends XmlDocumentNodeImpl implements XmlAttribut
      * <!-- end-user-doc -->
      * @generated
      */
-    public ValueType getValueType() {
+    @Override
+	public ValueType getValueType() {
         return valueType;
     }
 
@@ -147,7 +150,8 @@ public class XmlAttributeImpl extends XmlDocumentNodeImpl implements XmlAttribut
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setValueType(ValueType newValueType) {
+    @Override
+	public void setValueType(ValueType newValueType) {
         ValueType oldValueType = valueType;
         valueType = newValueType == null ? VALUE_TYPE_EDEFAULT : newValueType;
         if (eNotificationRequired())
@@ -159,7 +163,8 @@ public class XmlAttributeImpl extends XmlDocumentNodeImpl implements XmlAttribut
      * <!-- end-user-doc -->
      * @generated NOT
      */
-    public XSDAttributeUseCategory getUse() {
+    @Override
+	public XSDAttributeUseCategory getUse() {
         final XSDComponent schemaComp = getXsdComponent();
         if (schemaComp != null) {
             return XsdUtil.getUse(schemaComp);
@@ -183,7 +188,8 @@ public class XmlAttributeImpl extends XmlDocumentNodeImpl implements XmlAttribut
      * <!-- end-user-doc -->
      * @generated
      */
-    public XmlElement getElement() {
+    @Override
+	public XmlElement getElement() {
         if (eContainerFeatureID != XmlDocumentPackage.XML_ATTRIBUTE__ELEMENT) return null;
         return (XmlElement)eContainer;
     }
@@ -193,7 +199,8 @@ public class XmlAttributeImpl extends XmlDocumentNodeImpl implements XmlAttribut
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setElement(XmlElement newElement) {
+    @Override
+	public void setElement(XmlElement newElement) {
         if (newElement != eContainer || (eContainerFeatureID != XmlDocumentPackage.XML_ATTRIBUTE__ELEMENT && newElement != null)) {
             if (EcoreUtil.isAncestor(this, newElement))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
@@ -214,7 +221,8 @@ public class XmlAttributeImpl extends XmlDocumentNodeImpl implements XmlAttribut
      * <!-- end-user-doc -->
      * @generated NOT
      */
-    public boolean isValueFixed() {
+    @Override
+	public boolean isValueFixed() {
         final ValueType valueType = getValueType();
         return ValueType.FIXED == valueType.getValue();
     }
@@ -235,7 +243,8 @@ public class XmlAttributeImpl extends XmlDocumentNodeImpl implements XmlAttribut
      * <!-- end-user-doc -->
      * @generated NOT
      */
-    public boolean isValueDefault() {
+    @Override
+	public boolean isValueDefault() {
         final ValueType valueType = getValueType();
         return ValueType.DEFAULT == valueType.getValue();
     }

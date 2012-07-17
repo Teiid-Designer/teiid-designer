@@ -43,7 +43,8 @@ public class OperationEditorNotifyChangedListener implements
      * @see org.eclipse.emf.edit.provider.INotifyChangedListener#notifyChanged(org.eclipse.emf.common.notify.Notification)
      * @since 5.0
      */
-    public void notifyChanged(Notification theNotification) {
+    @Override
+	public void notifyChanged(Notification theNotification) {
         boolean refreshTree = false;
         if( iResource != null ) {
             // For starter's let's throw this thing at a SourceNotificationHelper

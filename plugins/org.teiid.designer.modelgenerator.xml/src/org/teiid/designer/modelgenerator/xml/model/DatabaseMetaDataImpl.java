@@ -945,7 +945,8 @@ public class DatabaseMetaDataImpl extends DatabaseMetaDataBase {
     /**
      * @see java.sql.DatabaseMetaData#getCatalogs()
      */
-    public ResultSet getCatalogs() {
+    @Override
+	public ResultSet getCatalogs() {
         synchronized (syncObject) {
             ensureInitialized();
             ResultSet retval = new MapResultSet(catalogsResultsetData, catalogsResultsetMetadata);
@@ -956,7 +957,8 @@ public class DatabaseMetaDataImpl extends DatabaseMetaDataBase {
     /**
      * @see java.sql.DatabaseMetaData#getTableTypes()
      */
-    public ResultSet getTableTypes() {
+    @Override
+	public ResultSet getTableTypes() {
         synchronized (syncObject) {
             return new MapResultSet(tableTypesResultsetData, tableTypesResultsetMetadata);
         }
@@ -965,7 +967,8 @@ public class DatabaseMetaDataImpl extends DatabaseMetaDataBase {
     /**
      * @see java.sql.DatabaseMetaData#getExportedKeys(java.lang.String, java.lang.String, java.lang.String)
      */
-    public ResultSet getExportedKeys( String catalog,
+    @Override
+	public ResultSet getExportedKeys( String catalog,
                                       String schema,
                                       String table ) {
         synchronized (syncObject) {
@@ -999,7 +1002,8 @@ public class DatabaseMetaDataImpl extends DatabaseMetaDataBase {
     /**
      * @see java.sql.DatabaseMetaData#getImportedKeys(java.lang.String, java.lang.String, java.lang.String)
      */
-    public ResultSet getImportedKeys( String catalog,
+    @Override
+	public ResultSet getImportedKeys( String catalog,
                                       String schema,
                                       String table ) {
         synchronized (syncObject) {
@@ -1049,7 +1053,8 @@ public class DatabaseMetaDataImpl extends DatabaseMetaDataBase {
     /**
      * @see java.sql.DatabaseMetaData#getPrimaryKeys(java.lang.String, java.lang.String, java.lang.String)
      */
-    public ResultSet getPrimaryKeys( String catalog,
+    @Override
+	public ResultSet getPrimaryKeys( String catalog,
                                      String schema,
                                      String tableNamePattern ) {
         synchronized (syncObject) {
@@ -1084,7 +1089,8 @@ public class DatabaseMetaDataImpl extends DatabaseMetaDataBase {
     /**
      * @see java.sql.DatabaseMetaData#getColumns(java.lang.String, java.lang.String, java.lang.String, java.lang.String)
      */
-    public ResultSet getColumns( String catalog,
+    @Override
+	public ResultSet getColumns( String catalog,
                                  String schemaPattern,
                                  String tableNamePattern,
                                  String columnNamePattern ) {
@@ -1187,7 +1193,8 @@ public class DatabaseMetaDataImpl extends DatabaseMetaDataBase {
     /**
      * @see java.sql.DatabaseMetaData#getTables(java.lang.String, java.lang.String, java.lang.String, java.lang.String[])
      */
-    public ResultSet getTables( String catalog,
+    @Override
+	public ResultSet getTables( String catalog,
                                 String schemaPattern,
                                 String tableNamePattern,
                                 String[] types ) {
@@ -1298,7 +1305,8 @@ public class DatabaseMetaDataImpl extends DatabaseMetaDataBase {
      * @see java.sql.DatabaseMetaData#getCrossReference(java.lang.String, java.lang.String, java.lang.String, java.lang.String,
      *      java.lang.String, java.lang.String)
      */
-    public ResultSet getCrossReference( String primaryCatalog,
+    @Override
+	public ResultSet getCrossReference( String primaryCatalog,
                                         String primarySchema,
                                         String primaryTable,
                                         String foreignCatalog,

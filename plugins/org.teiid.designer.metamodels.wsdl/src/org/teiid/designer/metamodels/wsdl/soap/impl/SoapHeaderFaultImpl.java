@@ -103,7 +103,8 @@ public class SoapHeaderFaultImpl extends SoapFaultImpl implements SoapHeaderFaul
      * 
      * @generated
      */
-    public EList getParts() {
+    @Override
+	public EList getParts() {
         if (parts == null) {
             parts = new EDataTypeUniqueEList(String.class, this, SoapPackage.SOAP_HEADER_FAULT__PARTS);
         }
@@ -115,7 +116,8 @@ public class SoapHeaderFaultImpl extends SoapFaultImpl implements SoapHeaderFaul
      * 
      * @generated
      */
-    public String getMessage() {
+    @Override
+	public String getMessage() {
         return message;
     }
 
@@ -124,7 +126,8 @@ public class SoapHeaderFaultImpl extends SoapFaultImpl implements SoapHeaderFaul
      * 
      * @generated
      */
-    public void setMessage( String newMessage ) {
+    @Override
+	public void setMessage( String newMessage ) {
         String oldMessage = message;
         message = newMessage;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
@@ -136,7 +139,8 @@ public class SoapHeaderFaultImpl extends SoapFaultImpl implements SoapHeaderFaul
      * 
      * @generated
      */
-    public EList getMessagePart() {
+    @Override
+	public EList getMessagePart() {
         if (messagePart == null) {
             messagePart = new EObjectResolvingEList(MessagePart.class, this, SoapPackage.SOAP_HEADER_FAULT__MESSAGE_PART);
         }
@@ -148,7 +152,8 @@ public class SoapHeaderFaultImpl extends SoapFaultImpl implements SoapHeaderFaul
      * 
      * @generated
      */
-    public SoapHeader getSoapHeader() {
+    @Override
+	public SoapHeader getSoapHeader() {
         if (eContainerFeatureID != SoapPackage.SOAP_HEADER_FAULT__SOAP_HEADER) return null;
         return (SoapHeader)eContainer;
     }
@@ -158,7 +163,8 @@ public class SoapHeaderFaultImpl extends SoapFaultImpl implements SoapHeaderFaul
      * 
      * @generated
      */
-    public void setSoapHeader( SoapHeader newSoapHeader ) {
+    @Override
+	public void setSoapHeader( SoapHeader newSoapHeader ) {
         if (newSoapHeader != eContainer
             || (eContainerFeatureID != SoapPackage.SOAP_HEADER_FAULT__SOAP_HEADER && newSoapHeader != null)) {
             if (EcoreUtil.isAncestor(this, newSoapHeader)) throw new IllegalArgumentException(

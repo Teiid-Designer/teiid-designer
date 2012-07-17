@@ -80,7 +80,8 @@ public class JdbcSchemaImpl extends JdbcNodeImpl implements JdbcSchema {
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.metadata.impl.JdbcNodeImpl#getTypeName()
      */
-    public String getTypeName() {
+    @Override
+	public String getTypeName() {
         try {
             return getJdbcDatabase().getCapabilities().getSchemaTerm();
         } catch (Throwable t) {
@@ -91,7 +92,8 @@ public class JdbcSchemaImpl extends JdbcNodeImpl implements JdbcSchema {
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.metadata.JdbcNode#getFullyQualifiedName()
      */
-    public String getFullyQualifiedName() {
+    @Override
+	public String getFullyQualifiedName() {
         // Determine whether catalogs are supported in qualified names ...
         boolean includeSchemas = false;
         try {
@@ -124,7 +126,8 @@ public class JdbcSchemaImpl extends JdbcNodeImpl implements JdbcSchema {
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.metadata.JdbcNode#getPathInSource(boolean, boolean)
      */
-    public IPath getPathInSource( final boolean includeCatalog, final boolean includeSchema) {
+    @Override
+	public IPath getPathInSource( final boolean includeCatalog, final boolean includeSchema) {
         if ( includeSchema && includeCatalog ) {
             return this.getPath();
         }
@@ -156,7 +159,8 @@ public class JdbcSchemaImpl extends JdbcNodeImpl implements JdbcSchema {
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.metadata.JdbcNode#getJdbcDatabase()
      */
-    public JdbcDatabase getJdbcDatabase() {
+    @Override
+	public JdbcDatabase getJdbcDatabase() {
         return getParent().getJdbcDatabase();
     }
 

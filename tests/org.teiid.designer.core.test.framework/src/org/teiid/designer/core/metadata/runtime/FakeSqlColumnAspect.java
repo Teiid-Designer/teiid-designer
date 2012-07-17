@@ -27,113 +27,158 @@ public class FakeSqlColumnAspect implements SqlColumnAspect {
     public Object defaultValue, minValue, maxValue, uuid, parentUuid;
     public int length, scale, precision, charOctetLength, radix, nullType, searchType, position, nullValues, distinctValues;
         
-    public int getCharOctetLength(EObject eObject) { return charOctetLength; }
+    @Override
+	public int getCharOctetLength(EObject eObject) { return charOctetLength; }
 
-    public EObject getDatatype(EObject eObject) { return datatype; }
+    @Override
+	public EObject getDatatype(EObject eObject) { return datatype; }
     
-    public String getDatatypeName(EObject eObject) { return datatypeName; }
+    @Override
+	public String getDatatypeName(EObject eObject) { return datatypeName; }
     
-    public String getNativeType(EObject eObject) { return datatypeName; }    
+    @Override
+	public String getNativeType(EObject eObject) { return datatypeName; }    
     
-    public String getRuntimeType(EObject eObject) { return runtimeType; }
+    @Override
+	public String getRuntimeType(EObject eObject) { return runtimeType; }
     
-    public String getDatatypeObjectID(EObject eObject) {return datatypeUUID;}
+    @Override
+	public String getDatatypeObjectID(EObject eObject) {return datatypeUUID;}
     
-    public Object getDefaultValue(EObject eObject) { return defaultValue; }
+    @Override
+	public Object getDefaultValue(EObject eObject) { return defaultValue; }
     
-    public int getLength(EObject eObject) { return length; }
+    @Override
+	public int getLength(EObject eObject) { return length; }
     
-    public Object getMaxValue(EObject eObject) { return maxValue; }
+    @Override
+	public Object getMaxValue(EObject eObject) { return maxValue; }
     
-    public Object getMinValue(EObject eObject) { return minValue; }
+    @Override
+	public Object getMinValue(EObject eObject) { return minValue; }
     
-    public String getFormat(EObject eObject) { return format; }        
+    @Override
+	public String getFormat(EObject eObject) { return format; }        
     
-    public String getName(EObject eObject) { return name; }
+    @Override
+	public String getName(EObject eObject) { return name; }
     
-    public String getFullName(EObject eObject) { return fullName; }    
+    @Override
+	public String getFullName(EObject eObject) { return fullName; }    
 
-    public String getNameInSource(EObject eObject) { return nameInSource; }
+    @Override
+	public String getNameInSource(EObject eObject) { return nameInSource; }
     
-    public IPath getPath(EObject eObject) { return path; }
+    @Override
+	public IPath getPath(EObject eObject) { return path; }
     
-    public Object getObjectID(EObject eObject) { return uuid; }
+    @Override
+	public Object getObjectID(EObject eObject) { return uuid; }
     
-    public int getPrecision(EObject eObject) { return precision; }
+    @Override
+	public int getPrecision(EObject eObject) { return precision; }
     
-    public int getPosition(EObject eObject) {return position;}
+    @Override
+	public int getPosition(EObject eObject) {return position;}
 
-    public int getScale(EObject eObject) { return scale; }
+    @Override
+	public int getScale(EObject eObject) { return scale; }
 
-    public int getRadix(EObject eObject) { return radix; }    
+    @Override
+	public int getRadix(EObject eObject) { return radix; }    
 
-    public int getSearchType(EObject eObject) { return searchType; }
+    @Override
+	public int getSearchType(EObject eObject) { return searchType; }
     
-    public int getDistinctValues(EObject eObject) { return distinctValues; }
+    @Override
+	public int getDistinctValues(EObject eObject) { return distinctValues; }
 
-    public int getNullValues(EObject eObject) { return nullValues; }
+    @Override
+	public int getNullValues(EObject eObject) { return nullValues; }
 
-    public boolean isAutoIncrementable(EObject eObject) { return autoIncrementable; }
+    @Override
+	public boolean isAutoIncrementable(EObject eObject) { return autoIncrementable; }
     
-    public boolean isCaseSensitive(EObject eObject) { return caseSensitive; }
+    @Override
+	public boolean isCaseSensitive(EObject eObject) { return caseSensitive; }
     
-    public boolean isCurrency(EObject eObject) { return currency; }
+    @Override
+	public boolean isCurrency(EObject eObject) { return currency; }
     
-    public boolean isFixedLength(EObject eObject) { return fixedLength; }
+    @Override
+	public boolean isFixedLength(EObject eObject) { return fixedLength; }
     
-    public int getNullType(EObject eObject) { return nullType; }
+    @Override
+	public int getNullType(EObject eObject) { return nullType; }
     
-    public boolean isSelectable(EObject eObject) { return selectable; }
+    @Override
+	public boolean isSelectable(EObject eObject) { return selectable; }
     
-    public boolean isSigned(EObject eObject) { return signed; }
+    @Override
+	public boolean isSigned(EObject eObject) { return signed; }
     
-    public boolean isUpdatable(EObject eObject) { return updatable; }
+    @Override
+	public boolean isUpdatable(EObject eObject) { return updatable; }
     
-    public boolean isRecordType(char recordType) { return (recordType == IndexConstants.RECORD_TYPE.COLUMN ); } 
+    @Override
+	public boolean isRecordType(char recordType) { return (recordType == IndexConstants.RECORD_TYPE.COLUMN ); } 
 
-    public boolean isQueryable(EObject eObject) { return true; }
+    @Override
+	public boolean isQueryable(EObject eObject) { return true; }
     
-    public String getID() { return null; }
+    @Override
+	public String getID() { return null; }
     
-    public MetamodelEntity getMetamodelEntity() { return null; }
+    @Override
+	public MetamodelEntity getMetamodelEntity() { return null; }
 
-    public Object getParentObjectID(EObject eObject) { return parentUuid; }
+    @Override
+	public Object getParentObjectID(EObject eObject) { return parentUuid; }
 
-    public void updateObject(EObject targetObject, EObject sourceObject) {}
+    @Override
+	public void updateObject(EObject targetObject, EObject sourceObject) {}
 
     
     /** 
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlColumnAspect#canSetDatatype()
      * @since 4.2
      */
-    public boolean canSetDatatype() {
+    @Override
+	public boolean canSetDatatype() {
         return true;
     }
     
-    public void setDatatype(EObject eObject, EObject newValue) { datatype = newValue; }
+    @Override
+	public void setDatatype(EObject eObject, EObject newValue) { datatype = newValue; }
 
     /** 
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlColumnAspect#canSetLength()
      * @since 4.2
      */
-    public boolean canSetLength() {
+    @Override
+	public boolean canSetLength() {
         return true;
     }
     
-    public void setLength(EObject eObject, int newValue) { length = newValue; }
+    @Override
+	public void setLength(EObject eObject, int newValue) { length = newValue; }
     
     /** 
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlColumnAspect#canSetNullType()
      * @since 4.2
      */
-    public boolean canSetNullType() {
+    @Override
+	public boolean canSetNullType() {
         return true;
     }
     
-    public void setNullType(EObject eObject, int newValue) { nullType = newValue; }
+    @Override
+	public void setNullType(EObject eObject, int newValue) { nullType = newValue; }
 
-    public boolean isDatatypeFeature(EObject eObject, EStructuralFeature eFeature) { return false; }
+    @Override
+	public boolean isDatatypeFeature(EObject eObject, EStructuralFeature eFeature) { return false; }
 
-    public boolean isTranformationInputParameter(EObject eObject) { return tranformationInputParameter; }
+    @Override
+	public boolean isTranformationInputParameter(EObject eObject) { return tranformationInputParameter; }
 
 }

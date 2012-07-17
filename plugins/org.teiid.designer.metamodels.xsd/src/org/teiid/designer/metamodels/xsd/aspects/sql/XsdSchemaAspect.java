@@ -47,7 +47,8 @@ public class XsdSchemaAspect extends AbstractMetamodelAspect implements SqlModel
     /** 
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlAspect#getName(org.eclipse.emf.ecore.EObject)
      */
-    public String getName(EObject eObject) {
+    @Override
+	public String getName(EObject eObject) {
         CoreArgCheck.isInstanceOf(XSDSchema.class, eObject); 
 
         Resource resource = eObject.eResource();
@@ -80,28 +81,32 @@ public class XsdSchemaAspect extends AbstractMetamodelAspect implements SqlModel
     /** 
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlAspect#getNameInSource(org.eclipse.emf.ecore.EObject)
      */
-    public String getNameInSource(EObject eObject) {
+    @Override
+	public String getNameInSource(EObject eObject) {
         return this.getName(eObject);
     }
 
     /** 
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlAspect#isRecordType(char)
      */
-    public boolean isRecordType(char recordType) {
+    @Override
+	public boolean isRecordType(char recordType) {
         return (recordType == IndexConstants.RECORD_TYPE.MODEL);
     }
 
     /** 
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlAspect#isQueryable(org.eclipse.emf.ecore.EObject)
      */
-    public boolean isQueryable(final EObject eObject) {
+    @Override
+	public boolean isQueryable(final EObject eObject) {
         return false;
     }
 
     /** 
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlAspect#updateObject(org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject)
      */
-    public void updateObject(EObject targetObject, EObject sourceObject) {
+    @Override
+	public void updateObject(EObject targetObject, EObject sourceObject) {
         // do nothing
     }
 
@@ -143,63 +148,72 @@ public class XsdSchemaAspect extends AbstractMetamodelAspect implements SqlModel
     /** 
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlModelAspect#getMaxSetSize(org.eclipse.emf.ecore.EObject)
      */
-    public int getMaxSetSize(EObject eObject) {
+    @Override
+	public int getMaxSetSize(EObject eObject) {
         return MAX_SET_SIZE_EDEFAULT;
     }
 
     /** 
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlModelAspect#getModelType(org.eclipse.emf.ecore.EObject)
      */
-    public int getModelType(EObject eObject) {
+    @Override
+	public int getModelType(EObject eObject) {
         return ModelType.TYPE;
     }
 
     /** 
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlModelAspect#getPrimaryMetamodelUri(org.eclipse.emf.ecore.EObject)
      */
-    public String getPrimaryMetamodelUri(EObject eObject) {
+    @Override
+	public String getPrimaryMetamodelUri(EObject eObject) {
         return XSDPackage.eNS_URI;
     }
 
     /** 
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlModelAspect#isVisible(org.eclipse.emf.ecore.EObject)
      */
-    public boolean isVisible(EObject eObject) {
+    @Override
+	public boolean isVisible(EObject eObject) {
         return false;
     }
 
     /** 
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlModelAspect#supportsDistinct(org.eclipse.emf.ecore.EObject)
      */
-    public boolean supportsDistinct(EObject eObject) {
+    @Override
+	public boolean supportsDistinct(EObject eObject) {
         return false;
     }
 
     /** 
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlModelAspect#supportsJoin(org.eclipse.emf.ecore.EObject)
      */
-    public boolean supportsJoin(EObject eObject) {
+    @Override
+	public boolean supportsJoin(EObject eObject) {
         return false;
     }
 
     /** 
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlModelAspect#supportsOrderBy(org.eclipse.emf.ecore.EObject)
      */
-    public boolean supportsOrderBy(EObject eObject) {
+    @Override
+	public boolean supportsOrderBy(EObject eObject) {
         return false;
     }
 
     /** 
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlModelAspect#supportsOuterJoin(org.eclipse.emf.ecore.EObject)
      */
-    public boolean supportsOuterJoin(EObject eObject) {
+    @Override
+	public boolean supportsOuterJoin(EObject eObject) {
         return false;
     }
 
     /** 
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlModelAspect#supportsWhereAll(org.eclipse.emf.ecore.EObject)
      */
-    public boolean supportsWhereAll(EObject eObject) {
+    @Override
+	public boolean supportsWhereAll(EObject eObject) {
         return false;
     }
     

@@ -72,7 +72,8 @@ public class ConvertEnterpriseTypesPage extends WizardPage
     /**
      * @see IDialogPage#createControl(Composite)
      */
-    public void createControl( Composite parent ) {
+    @Override
+	public void createControl( Composite parent ) {
         Composite container = new Composite(parent, SWT.NULL);
 
         GridLayout layout = new GridLayout();
@@ -93,7 +94,8 @@ public class ConvertEnterpriseTypesPage extends WizardPage
         checkStatus();
     }
 
-    public void accumulatedValuesChanged( AccumulatorPanel source ) {
+    @Override
+	public void accumulatedValuesChanged( AccumulatorPanel source ) {
         typesToConvert = source.getItemsMovedToSelected();
         checkStatus();
     }
@@ -228,51 +230,61 @@ public class ConvertEnterpriseTypesPage extends WizardPage
             this.caller = cllr;
         }
 
-        public void accumulatedValuesRemoved( Collection values ) {
+        @Override
+		public void accumulatedValuesRemoved( Collection values ) {
             caller.typesToConvertRemoved(values);
             caller.typesToConvertChanged();
         }
 
-        public void accumulatedValuesAdded( Collection values ) {
+        @Override
+		public void accumulatedValuesAdded( Collection values ) {
             caller.typesToConvertAdded(values);
             caller.typesToConvertChanged();
         }
 
-        public Collection getAvailableValues() {
+        @Override
+		public Collection getAvailableValues() {
             return caller.getAvailableTypes();
         }
 
-        public int getAvailableValuesCount() {
+        @Override
+		public int getAvailableValuesCount() {
             return caller.getAvailableTypesCount();
         }
 
-        public Collection getSelectedAvailableValues() {
+        @Override
+		public Collection getSelectedAvailableValues() {
             return caller.getSelectedAvailableTypes();
         }
 
-        public int getSelectedAvailableValuesCount() {
+        @Override
+		public int getSelectedAvailableValuesCount() {
             return caller.getSelectedAvailableTypeCount();
         }
 
-        public Control createControl( Composite parent ) {
+        @Override
+		public Control createControl( Composite parent ) {
             return caller.createTypeControl(parent);
         }
 
-        public void addSelectionListener( SelectionListener listener ) {
+        @Override
+		public void addSelectionListener( SelectionListener listener ) {
             caller.addTypeSelectionListener(listener);
         }
 
         /* (non-Javadoc)
          * @see org.teiid.designer.ui.common.widget.accumulator.IAccumulatorSource#supportsAddAll()
          */
-        public boolean supportsAddAll() {
+        @Override
+		public boolean supportsAddAll() {
             return true;
         }
 
         /* (non-Javadoc)
          * @see org.teiid.designer.ui.common.widget.accumulator.IAccumulatorSource#getSelectionStatus()
          */
-        public IStatus getSelectionStatus() {
+        @Override
+		public IStatus getSelectionStatus() {
             return OK_STATUS;
         }
     }

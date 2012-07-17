@@ -75,7 +75,8 @@ public final class WebServiceModelContributor implements INewModelWizardContribu
      * @see org.teiid.designer.ui.wizards.INewModelWizardContributor#canFinishEarly(org.eclipse.jface.wizard.IWizardPage)
      * @since 4.2
      */
-    public boolean canFinishEarly( IWizardPage theCurrentPage ) {
+    @Override
+	public boolean canFinishEarly( IWizardPage theCurrentPage ) {
         return false;
     }
 
@@ -85,7 +86,8 @@ public final class WebServiceModelContributor implements INewModelWizardContribu
      *      org.teiid.designer.core.metamodel.MetamodelDescriptor, boolean)
      * @since 4.2
      */
-    public void createWizardPages( ISelection theSelection,
+    @Override
+	public void createWizardPages( ISelection theSelection,
                                    IResource theModelResource,
                                    IPath theModelPath,
                                    MetamodelDescriptor theDescriptor,
@@ -132,7 +134,8 @@ public final class WebServiceModelContributor implements INewModelWizardContribu
      * @see org.teiid.designer.ui.wizards.INewModelWizardContributor#doCancel()
      * @since 4.2
      */
-    public void doCancel() {
+    @Override
+	public void doCancel() {
         List newResources = this.builder.getAllNewResources();
 
         if (newResources != null && !newResources.isEmpty()) {
@@ -145,7 +148,8 @@ public final class WebServiceModelContributor implements INewModelWizardContribu
      *      org.eclipse.core.runtime.IProgressMonitor)
      * @since 4.2
      */
-    public void doFinish( ModelResource theModelResource,
+    @Override
+	public void doFinish( ModelResource theModelResource,
                           IProgressMonitor theMonitor ) {
         int severity = this.builder.validateWSDLNamespaces().getSeverity();
         CoreArgCheck.isTrue(severity < IStatus.ERROR, "ERROR validating WSDL Namespaces"); //$NON-NLS-1$
@@ -166,7 +170,8 @@ public final class WebServiceModelContributor implements INewModelWizardContribu
                 if (filteredStatus != null) {
                     // display
                     UiUtil.getWorkbenchShellOnlyIfUiThread().getDisplay().asyncExec(new Runnable() {
-                        public void run() {
+                        @Override
+						public void run() {
                             // ErrorDialog does not open if status OK. And doesn't ever display embedded OK statuses.
                             ErrorDialog.openError(UiUtil.getWorkbenchShellOnlyIfUiThread(),
                                                   UTIL.getString(PREFIX + "dialog.messages.title"), //$NON-NLS-1$
@@ -227,7 +232,8 @@ public final class WebServiceModelContributor implements INewModelWizardContribu
      * @see org.teiid.designer.ui.wizards.INewModelWizardContributor#getWizardPages()
      * @since 4.2
      */
-    public IWizardPage[] getWizardPages() {
+    @Override
+	public IWizardPage[] getWizardPages() {
         return this.pages;
     }
 
@@ -236,7 +242,8 @@ public final class WebServiceModelContributor implements INewModelWizardContribu
      *      org.eclipse.core.resources.IResource, org.teiid.designer.core.metamodel.MetamodelDescriptor, boolean)
      * @since 4.2
      */
-    public void inputChanged( ISelection theSelection,
+    @Override
+	public void inputChanged( ISelection theSelection,
                               IResource theTargetResource,
                               MetamodelDescriptor theDescriptor,
                               boolean theIsVirtual ) {
@@ -265,11 +272,13 @@ public final class WebServiceModelContributor implements INewModelWizardContribu
         }
     }
 
-    public void currentPageChanged( IWizardPage page ) {
+    @Override
+	public void currentPageChanged( IWizardPage page ) {
 
     }
 
-    public IWizardPage getNextPage( IWizardPage page ) {
+    @Override
+	public IWizardPage getNextPage( IWizardPage page ) {
         CoreArgCheck.isNotNull(page);
         final int ndx = indexOf(page);
         List pgs = Arrays.asList(getPages());
@@ -312,7 +321,8 @@ public final class WebServiceModelContributor implements INewModelWizardContribu
         return pages;
     }
 
-    public IWizardPage getPreviousPage( IWizardPage page ) {
+    @Override
+	public IWizardPage getPreviousPage( IWizardPage page ) {
         CoreArgCheck.isNotNull(page);
         final int ndx = indexOf(page);
         // Return null if last page or page not found

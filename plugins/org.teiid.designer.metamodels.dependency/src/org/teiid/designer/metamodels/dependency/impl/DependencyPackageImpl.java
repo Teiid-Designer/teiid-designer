@@ -101,7 +101,8 @@ public class DependencyPackageImpl extends EPackageImpl implements DependencyPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EClass getDependencyInfo() {
+    @Override
+	public EClass getDependencyInfo() {
         return dependencyInfoEClass;
     }
 
@@ -110,7 +111,8 @@ public class DependencyPackageImpl extends EPackageImpl implements DependencyPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public DependencyFactory getDependencyFactory() {
+    @Override
+	public DependencyFactory getDependencyFactory() {
         return (DependencyFactory)getEFactoryInstance();
     }
 

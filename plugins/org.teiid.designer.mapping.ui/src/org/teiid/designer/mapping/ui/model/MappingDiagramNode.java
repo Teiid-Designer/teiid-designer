@@ -74,25 +74,30 @@ public class MappingDiagramNode extends AbstractLocalDiagramModelNode implements
         this.currentYOrigin = currentYOrigin;
     }
 
-    public boolean canExpand() {
+    @Override
+	public boolean canExpand() {
     	return isCoarse();
     }
     
+	@Override
 	public void collapseAll() {
 		// TODO Auto-generated method stub
 		
 	}
 
+	@Override
 	public void collapse(Object child) {
 		// TODO Auto-generated method stub
 		
 	}
 
+	@Override
 	public void expandAll() {
 		// TODO Auto-generated method stub
 		
 	}
 
+	@Override
 	public void expand(Object child) {
 		// TODO Auto-generated method stub
 		

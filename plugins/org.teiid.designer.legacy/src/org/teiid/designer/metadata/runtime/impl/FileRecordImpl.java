@@ -35,7 +35,8 @@ public class FileRecordImpl extends AbstractMetadataRecord implements FileRecord
      * @see org.teiid.designer.metadata.runtime.FileRecord#getPathInVdb()
      * @since 4.2
      */
-    public String getPathInVdb() {
+    @Override
+	public String getPathInVdb() {
         return this.pathInVdb;
     }
 
@@ -43,7 +44,8 @@ public class FileRecordImpl extends AbstractMetadataRecord implements FileRecord
      * @see org.teiid.designer.metadata.runtime.FileRecord#isBinary()
      * @since 4.2
      */
-    public boolean getBinary() {
+    @Override
+	public boolean getBinary() {
         if (this.pathInVdb != null && this.pathInVdb.endsWith(IndexConstants.INDEX_EXT)) {
             return true;
         }
@@ -54,7 +56,8 @@ public class FileRecordImpl extends AbstractMetadataRecord implements FileRecord
      * @see org.teiid.designer.metadata.runtime.FileRecord#getContent()
      * @since 4.2
      */
-    public InputStream getContent() {
+    @Override
+	public InputStream getContent() {
         if (this.tokens != null) {
             return this.selector.getFileContent(getPathInVdb(), this.tokens, this.tokenReplacements);
         }
@@ -81,7 +84,8 @@ public class FileRecordImpl extends AbstractMetadataRecord implements FileRecord
      * @see org.teiid.designer.metadata.runtime.FileRecord#getTokenReplacementString1()
      * @since 4.2
      */
-    public String[] getTokens() {
+    @Override
+	public String[] getTokens() {
         return this.tokens;
     }
 
@@ -89,7 +93,8 @@ public class FileRecordImpl extends AbstractMetadataRecord implements FileRecord
      * @see org.teiid.designer.metadata.runtime.FileRecord#getTokenReplacements()
      * @since 4.2
      */
-    public String[] getTokenReplacements() {
+    @Override
+	public String[] getTokenReplacements() {
         return this.tokenReplacements;
     }
 
@@ -97,7 +102,8 @@ public class FileRecordImpl extends AbstractMetadataRecord implements FileRecord
      * @see org.teiid.designer.metadata.runtime.FileRecord#setTokens(java.lang.String[])
      * @since 4.2
      */
-    public void setTokens( final String[] tokens ) {
+    @Override
+	public void setTokens( final String[] tokens ) {
         this.tokens = tokens;
     }
 
@@ -105,7 +111,8 @@ public class FileRecordImpl extends AbstractMetadataRecord implements FileRecord
      * @see org.teiid.designer.metadata.runtime.FileRecord#setTokenReplacementString2(java.lang.String[])
      * @since 4.2
      */
-    public void setTokenReplacements( final String[] tokenReplacements ) {
+    @Override
+	public void setTokenReplacements( final String[] tokenReplacements ) {
         this.tokenReplacements = tokenReplacements;
     }
 
@@ -113,7 +120,8 @@ public class FileRecordImpl extends AbstractMetadataRecord implements FileRecord
      * @see org.teiid.designer.metadata.runtime.FileRecord#setIndexSelector(org.teiid.designer.core.index.IndexSelector)
      * @since 4.2
      */
-    public void setIndexSelector( final IndexSelector selector ) {
+    @Override
+	public void setIndexSelector( final IndexSelector selector ) {
         this.selector = selector;
     }
 
@@ -121,7 +129,8 @@ public class FileRecordImpl extends AbstractMetadataRecord implements FileRecord
      * @see org.teiid.designer.metadata.runtime.FileRecord#getFileRecord()
      * @since 4.2
      */
-    public FileRecord getFileRecord() {
+    @Override
+	public FileRecord getFileRecord() {
         return this;
     }
 
@@ -141,7 +150,8 @@ public class FileRecordImpl extends AbstractMetadataRecord implements FileRecord
      * @see org.teiid.designer.metadata.runtime.FileRecord#isIndexFile()
      * @since 4.2
      */
-    public boolean isIndexFile() {
+    @Override
+	public boolean isIndexFile() {
         if (this.pathInVdb != null && this.pathInVdb.endsWith(IndexConstants.INDEX_EXT)) {
             return true;
         }
@@ -152,7 +162,8 @@ public class FileRecordImpl extends AbstractMetadataRecord implements FileRecord
      * @see org.teiid.designer.metadata.runtime.FileRecord#getModelName()
      * @since 4.2
      */
-    public boolean isModelFile() {
+    @Override
+	public boolean isModelFile() {
         if (this.pathInVdb != null) {
             File fileInVdb = this.selector.getFile(this.pathInVdb);
             return ModelFileUtil.isModelFile(fileInVdb);

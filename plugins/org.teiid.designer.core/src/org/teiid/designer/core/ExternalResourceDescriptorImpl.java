@@ -42,42 +42,48 @@ public class ExternalResourceDescriptorImpl implements ExternalResourceDescripto
     /** 
      * @see org.teiid.designer.core.ExternalResourceDescriptor#getExtensionID()
      */
-    public String getExtensionID() {
+    @Override
+	public String getExtensionID() {
         return this.extensionID;
     }
 
     /** 
      * @see org.teiid.designer.core.ExternalResourceDescriptor#getPluginID()
      */
-    public String getPluginID() {
+    @Override
+	public String getPluginID() {
         return this.pluginID;
     }
 
     /** 
      * @see org.teiid.designer.core.ExternalResourceDescriptor#getName()
      */
-    public String getResourceName() {
+    @Override
+	public String getResourceName() {
         return this.name;
     }
 
     /** 
      * @see org.teiid.designer.core.ExternalResourceDescriptor#getURI()
      */
-    public String getInternalUri() {
+    @Override
+	public String getInternalUri() {
         return this.uri;
     }
 
     /** 
      * @see org.teiid.designer.core.ExternalResourceDescriptor#getURL()
      */
-    public String getResourceUrl() {
+    @Override
+	public String getResourceUrl() {
         return this.url;
     }
 
     /** 
      * @see org.teiid.designer.core.ExternalResourceDescriptor#getProperties()
      */
-    public Properties getProperties() {
+    @Override
+	public Properties getProperties() {
         return this.properties;
     }
 
@@ -145,7 +151,8 @@ public class ExternalResourceDescriptorImpl implements ExternalResourceDescripto
      * @see org.teiid.designer.core.ExternalResourceDescriptor#getPriority()
      * @since 4.3
      */
-    public int getPriority() {
+    @Override
+	public int getPriority() {
         return priority;
     }
 

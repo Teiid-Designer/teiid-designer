@@ -49,7 +49,8 @@ public class XsdExternalResourceSet implements ExternalResourceSet {
     /** 
      * @see org.teiid.designer.core.ExternalResourceSet#getResourceSet()
      */
-    public ResourceSet getResourceSet() {
+    @Override
+	public ResourceSet getResourceSet() {
         return xsdResourceSet;
     }
 

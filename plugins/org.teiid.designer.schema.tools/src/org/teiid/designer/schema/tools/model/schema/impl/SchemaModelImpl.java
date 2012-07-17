@@ -64,7 +64,8 @@ public class SchemaModelImpl implements SchemaModel {
         }
     }
 
-    public List getPotentialRootElements() {
+    @Override
+	public List getPotentialRootElements() {
         ArrayList roots = new ArrayList();
         for (Iterator iter = elements.iterator(); iter.hasNext();) {
             SchemaObject element = (SchemaObject)iter.next();
@@ -73,7 +74,8 @@ public class SchemaModelImpl implements SchemaModel {
         return roots;
     }
 
-    public void setTypeAsRoot( String typeName,
+    @Override
+	public void setTypeAsRoot( String typeName,
                                String namespace ) throws SchemaProcessingException {
         if (!typeAware) {
             throw new SchemaProcessingException(ToolsPlugin.Util.getString("SchemaModelImpl.schemaNotTypeAware")); //$NON-NLS-1$
@@ -100,7 +102,8 @@ public class SchemaModelImpl implements SchemaModel {
                                                                        namespace));
     }
 
-    public SchemaModel copy() {
+    @Override
+	public SchemaModel copy() {
         SchemaModelCopyTraversalContext ctx = new SchemaModelCopyTraversalContext(elements, rootElements);
         List modelClone = ctx.getCopiedElements();
         Set rootsCopy = ctx.getCopiedRoots();
@@ -115,15 +118,18 @@ public class SchemaModelImpl implements SchemaModel {
         return copy;
     }
 
-    public List getElements() {
+    @Override
+	public List getElements() {
         return elements;
     }
 
-    public Map getNamespaces() {
+    @Override
+	public Map getNamespaces() {
         return namespaces;
     }
 
-    public void setSelectedRootElements( Set roots ) {
+    @Override
+	public void setSelectedRootElements( Set roots ) {
         if (null == roots) {
             this.rootElements = null;
         } else {
@@ -151,7 +157,8 @@ public class SchemaModelImpl implements SchemaModel {
         }
     }
 
-    public boolean isSelectedRootElement( SchemaObject element ) {
+    @Override
+	public boolean isSelectedRootElement( SchemaObject element ) {
         boolean result;
         if (null == rootElements) {
             // Model everything if no selections were made.
@@ -162,11 +169,13 @@ public class SchemaModelImpl implements SchemaModel {
         return result;
     }
 
-    public void setElements( List nonMergedTables ) {
+    @Override
+	public void setElements( List nonMergedTables ) {
         elements = nonMergedTables;
     }
 
-    public List getTables() {
+    @Override
+	public List getTables() {
         List tableNamespaces = getNamespacePrefixesValue();
 
         ArrayList result = new ArrayList();
@@ -198,7 +207,8 @@ public class SchemaModelImpl implements SchemaModel {
         return result;
     }
 
-    public Map getNamespacePrefixes() {
+    @Override
+	public Map getNamespacePrefixes() {
         // reverse the m_namespaces map
         Map nsMap = getNamespaces();
         HashMap returnMap = new HashMap();
@@ -239,7 +249,8 @@ public class SchemaModelImpl implements SchemaModel {
     		System.out.println("SchemaModel End");
     	}
     */
-    public Table findTable( String simpleName ) {
+    @Override
+	public Table findTable( String simpleName ) {
         return (Table)tableImplementations.get(simpleName);
     }
 
@@ -259,7 +270,8 @@ public class SchemaModelImpl implements SchemaModel {
         this.typeAware = typeAware;
     }
 
-    public boolean isTypeAware() {
+    @Override
+	public boolean isTypeAware() {
         return typeAware;
     }
 

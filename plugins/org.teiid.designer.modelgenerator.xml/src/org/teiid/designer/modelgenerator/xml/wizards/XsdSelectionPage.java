@@ -142,7 +142,8 @@ public abstract class XsdSelectionPage extends AbstractWizardPage {
 
     /** Validator that makes sure the selection containes all XSD files. */
     private ISelectionStatusValidator xsdValidator = new ISelectionStatusValidator() {
-        public IStatus validate( Object[] theSelection ) {
+        @Override
+		public IStatus validate( Object[] theSelection ) {
             IStatus result = null;
             boolean valid = true;
 
@@ -199,7 +200,8 @@ public abstract class XsdSelectionPage extends AbstractWizardPage {
     public void addXsdFiles( final Object[] theFiles,
                              final boolean theWorkspaceResourceFlag ) {
         UiBusyIndicator.showWhile(getShell().getDisplay(), new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 List problems = null;
                 List newXsds = new ArrayList(theFiles.length);
 
@@ -277,7 +279,8 @@ public abstract class XsdSelectionPage extends AbstractWizardPage {
      * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
      * @since 4.2
      */
-    public void createControl( Composite theParent ) {
+    @Override
+	public void createControl( Composite theParent ) {
         //
         // create main container
         //
@@ -436,7 +439,8 @@ public abstract class XsdSelectionPage extends AbstractWizardPage {
         };
         this.viewer.setLabelProvider(this.labelProvider);
         this.viewer.addSelectionChangedListener(new ISelectionChangedListener() {
-            public void selectionChanged( SelectionChangedEvent theEvent ) {
+            @Override
+			public void selectionChanged( SelectionChangedEvent theEvent ) {
                 handleTableSelectionChanged();
             }
         });
@@ -878,14 +882,16 @@ public abstract class XsdSelectionPage extends AbstractWizardPage {
          * @see org.eclipse.jface.viewers.IContentProvider#dispose()
          * @since 4.1
          */
-        public void dispose() {
+        @Override
+		public void dispose() {
         }
 
         /**
          * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
          * @since 4.1
          */
-        public Object[] getElements( Object theInputElement ) {
+        @Override
+		public Object[] getElements( Object theInputElement ) {
             return manager.getSchemaKeySet().toArray();
         }
 
@@ -894,7 +900,8 @@ public abstract class XsdSelectionPage extends AbstractWizardPage {
          *      java.lang.Object)
          * @since 4.1
          */
-        public void inputChanged( Viewer theViewer,
+        @Override
+		public void inputChanged( Viewer theViewer,
                                   Object theOldInput,
                                   Object theNewInput ) {
         }

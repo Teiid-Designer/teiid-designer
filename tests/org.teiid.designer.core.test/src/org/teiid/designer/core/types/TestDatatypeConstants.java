@@ -116,34 +116,34 @@ public class TestDatatypeConstants extends TestCase {
     }
     
     public void testGetUuidParts() {
-        UUID uuid = (UUID) DatatypeConstants.BUILTIN_DATATYPES_MODEL_UUID;
+        UUID uuid = DatatypeConstants.BUILTIN_DATATYPES_MODEL_UUID;
         System.out.println(uuid+", "+UUID.getPart1(uuid)+", "+UUID.getPart2(uuid)+", 'BUILTIN_DATATYPES_MODEL'");   //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
 
-        uuid = (UUID) DatatypeConstants.XML_SCHEMA_UUID_1999;
+        uuid = DatatypeConstants.XML_SCHEMA_UUID_1999;
         System.out.println(uuid+", "+UUID.getPart1(uuid)+", "+UUID.getPart2(uuid)+", 'XML_SCHEMA_UUID_1999'");   //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
 
-        uuid = (UUID) DatatypeConstants.XML_MAGIC_SCHEMA_UUID_1999;
+        uuid = DatatypeConstants.XML_MAGIC_SCHEMA_UUID_1999;
         System.out.println(uuid+", "+UUID.getPart1(uuid)+", "+UUID.getPart2(uuid)+", 'XML_MAGIC_SCHEMA_UUID_1999'");   //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
 
-        uuid = (UUID) DatatypeConstants.XML_SCHEMA_INSTANCE_UUID_1999;
+        uuid = DatatypeConstants.XML_SCHEMA_INSTANCE_UUID_1999;
         System.out.println(uuid+", "+UUID.getPart1(uuid)+", "+UUID.getPart2(uuid)+", 'XML_SCHEMA_INSTANCE_UUID_1999'");   //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
 
-        uuid = (UUID) DatatypeConstants.XML_SCHEMA_UUID_2000_10;
+        uuid = DatatypeConstants.XML_SCHEMA_UUID_2000_10;
         System.out.println(uuid+", "+UUID.getPart1(uuid)+", "+UUID.getPart2(uuid)+", 'XML_SCHEMA_UUID_2000_10'");   //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
 
-        uuid = (UUID) DatatypeConstants.XML_MAGIC_SCHEMA_UUID_2000_10;
+        uuid = DatatypeConstants.XML_MAGIC_SCHEMA_UUID_2000_10;
         System.out.println(uuid+", "+UUID.getPart1(uuid)+", "+UUID.getPart2(uuid)+", 'XML_MAGIC_SCHEMA_UUID_2000_10'");   //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
 
-        uuid = (UUID) DatatypeConstants.XML_SCHEMA_INSTANCE_UUID_2000_10;
+        uuid = DatatypeConstants.XML_SCHEMA_INSTANCE_UUID_2000_10;
         System.out.println(uuid+", "+UUID.getPart1(uuid)+", "+UUID.getPart2(uuid)+", 'XML_SCHEMA_INSTANCE_UUID_2000_10'");   //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
 
-        uuid = (UUID) DatatypeConstants.XML_SCHEMA_UUID_2001;
+        uuid = DatatypeConstants.XML_SCHEMA_UUID_2001;
         System.out.println(uuid+", "+UUID.getPart1(uuid)+", "+UUID.getPart2(uuid)+", 'XML_SCHEMA_UUID_2001'");   //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
 
-        uuid = (UUID) DatatypeConstants.XML_MAGIC_SCHEMA_UUID_2001;
+        uuid = DatatypeConstants.XML_MAGIC_SCHEMA_UUID_2001;
         System.out.println(uuid+", "+UUID.getPart1(uuid)+", "+UUID.getPart2(uuid)+", 'XML_MAGIC_SCHEMA_UUID_2001'");   //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
 
-        uuid = (UUID) DatatypeConstants.XML_SCHEMA_INSTANCE_UUID_2001;
+        uuid = DatatypeConstants.XML_SCHEMA_INSTANCE_UUID_2001;
         System.out.println(uuid+", "+UUID.getPart1(uuid)+", "+UUID.getPart2(uuid)+", 'XML_SCHEMA_INSTANCE_UUID_2001'");   //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
 
         UUIDFactory factory = new UUIDFactory();

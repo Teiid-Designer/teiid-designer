@@ -155,7 +155,8 @@ public class NewModelWizardMetamodelPage extends WizardPage
     /**
      * @see IDialogPage#createControl(Composite)
      */
-    public void createControl( Composite parent ) {
+    @Override
+	public void createControl( Composite parent ) {
         Composite container = new Composite(parent, SWT.NULL);
         GridLayout layout = new GridLayout();
         container.setLayout(layout);
@@ -175,7 +176,8 @@ public class NewModelWizardMetamodelPage extends WizardPage
             gd = new GridData(GridData.FILL_HORIZONTAL);
             containerText.setLayoutData(gd);
             containerText.addModifyListener(new ModifyListener() {
-                public void modifyText( ModifyEvent e ) {
+                @Override
+				public void modifyText( ModifyEvent e ) {
                     updateStatusMessage();
                 }
             });
@@ -201,7 +203,8 @@ public class NewModelWizardMetamodelPage extends WizardPage
         gd = new GridData(GridData.FILL_HORIZONTAL);
         fileText.setLayoutData(gd);
         fileText.addModifyListener(new ModifyListener() {
-            public void modifyText( ModifyEvent e ) {
+            @Override
+			public void modifyText( ModifyEvent e ) {
                 updateStatusMessage();
             }
         });
@@ -221,7 +224,8 @@ public class NewModelWizardMetamodelPage extends WizardPage
         // call the selection listener handler method and put on the UI queue since the listeners
         // don't get events during construction
         metamodelCombo.getDisplay().asyncExec(new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 metamodelComboSelected();
             }
         });
@@ -267,7 +271,8 @@ public class NewModelWizardMetamodelPage extends WizardPage
         gd.grabExcessVerticalSpace = true;
         contributorTable.getTable().setLayoutData(gd);
         contributorTable.addSelectionChangedListener(new ISelectionChangedListener() {
-            public void selectionChanged( SelectionChangedEvent event ) {
+            @Override
+			public void selectionChanged( SelectionChangedEvent event ) {
                 handleTableSelection();
             }
         });
@@ -282,7 +287,8 @@ public class NewModelWizardMetamodelPage extends WizardPage
 
         // set initial state of the metamodel and model type combos
         container.getDisplay().asyncExec(new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 setInitialComboStates();
             }
         });

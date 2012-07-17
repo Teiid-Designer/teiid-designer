@@ -51,7 +51,8 @@ public class DupRemovalNodeImpl extends OperationNodeImpl implements DupRemovalN
      * 
      * @generated
      */
-    public String getDistinct() {
+    @Override
+	public String getDistinct() {
         // TODO: implement this method
         // Ensure that you remove @generated or mark it @generated NOT
         throw new UnsupportedOperationException();

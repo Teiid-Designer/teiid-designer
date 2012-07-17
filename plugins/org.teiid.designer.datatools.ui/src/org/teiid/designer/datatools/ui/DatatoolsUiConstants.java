@@ -31,7 +31,7 @@ public interface DatatoolsUiConstants {
 	 * @since 4.3
 	 */
 	class PC {
-	    public static final String I18N_NAME = DatatoolsUiPlugin.PACKAGE_ID + ".i18n"; //$NON-NLS-1$
+	    public static final String I18N_NAME = DatatoolsUiConstants.PACKAGE_ID + ".i18n"; //$NON-NLS-1$
 	
 	    public static final String ICON_PATH = "icons/full/"; //$NON-NLS-1$
 	

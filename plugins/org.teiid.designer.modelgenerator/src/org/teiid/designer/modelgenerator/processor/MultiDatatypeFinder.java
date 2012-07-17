@@ -37,7 +37,8 @@ public class MultiDatatypeFinder implements DatatypeFinder {
      * Go through the finders until the first one is found ...
      * @see org.teiid.designer.modelgenerator.processor.DatatypeFinder#findDatatype(java.lang.String)
      */
-    public EObject findDatatype(final String name) throws CoreException {
+    @Override
+	public EObject findDatatype(final String name) throws CoreException {
         final Iterator iter = this.datatypeFinders.iterator();
         while (iter.hasNext()) {
             final DatatypeFinder finder = (DatatypeFinder)iter.next();
@@ -52,7 +53,8 @@ public class MultiDatatypeFinder implements DatatypeFinder {
     /**
      * @see org.teiid.designer.modelgenerator.processor.DatatypeFinder#findDatatype(org.eclipse.emf.common.util.URI)
      */
-    public EObject findDatatype(URI uri) throws CoreException {
+    @Override
+	public EObject findDatatype(URI uri) throws CoreException {
         final Iterator iter = this.datatypeFinders.iterator();
         while (iter.hasNext()) {
             final DatatypeFinder finder = (DatatypeFinder)iter.next();
@@ -67,7 +69,8 @@ public class MultiDatatypeFinder implements DatatypeFinder {
     /**
      * @see org.teiid.designer.modelgenerator.processor.DatatypeFinder#findAllDatatypes(java.lang.String)
      */
-    public List findAllDatatypes(String name) throws CoreException {
+    @Override
+	public List findAllDatatypes(String name) throws CoreException {
         final List results = new LinkedList();
         final Iterator iter = this.datatypeFinders.iterator();
         while (iter.hasNext()) {
@@ -87,7 +90,8 @@ public class MultiDatatypeFinder implements DatatypeFinder {
     /**
      * @see org.teiid.designer.modelgenerator.processor.DatatypeFinder#findAllDatatypes(org.eclipse.emf.common.util.URI)
      */
-    public List findAllDatatypes(URI uri) throws CoreException {
+    @Override
+	public List findAllDatatypes(URI uri) throws CoreException {
         final List results = new LinkedList();
         final Iterator iter = this.datatypeFinders.iterator();
         while (iter.hasNext()) {

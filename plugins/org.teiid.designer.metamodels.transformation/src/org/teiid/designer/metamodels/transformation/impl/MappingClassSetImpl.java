@@ -92,7 +92,8 @@ public class MappingClassSetImpl extends EObjectImpl implements MappingClassSet 
      * 
      * @generated
      */
-    public EList getMappingClasses() {
+    @Override
+	public EList getMappingClasses() {
         if (mappingClasses == null) {
             mappingClasses = new EObjectContainmentWithInverseEList(MappingClass.class, this,
                                                                     TransformationPackage.MAPPING_CLASS_SET__MAPPING_CLASSES,
@@ -106,7 +107,8 @@ public class MappingClassSetImpl extends EObjectImpl implements MappingClassSet 
      * 
      * @generated
      */
-    public EObject getTarget() {
+    @Override
+	public EObject getTarget() {
         if (target != null && target.eIsProxy()) {
             EObject oldTarget = target;
             target = eResolveProxy((InternalEObject)target);
@@ -133,7 +135,8 @@ public class MappingClassSetImpl extends EObjectImpl implements MappingClassSet 
      * 
      * @generated
      */
-    public void setTarget( EObject newTarget ) {
+    @Override
+	public void setTarget( EObject newTarget ) {
         EObject oldTarget = target;
         target = newTarget;
         if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
@@ -146,7 +149,8 @@ public class MappingClassSetImpl extends EObjectImpl implements MappingClassSet 
      * 
      * @generated
      */
-    public EList getInputBinding() {
+    @Override
+	public EList getInputBinding() {
         if (inputBinding == null) {
             inputBinding = new EObjectContainmentWithInverseEList(InputBinding.class, this,
                                                                   TransformationPackage.MAPPING_CLASS_SET__INPUT_BINDING,

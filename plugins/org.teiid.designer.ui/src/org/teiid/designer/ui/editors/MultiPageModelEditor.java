@@ -209,7 +209,8 @@ public abstract class MultiPageModelEditor extends EditorPart implements IGotoMa
             editor.createPartControl(parent);
             editor.addPropertyListener(new IPropertyListener() {
 
-                public void propertyChanged( Object source,
+                @Override
+				public void propertyChanged( Object source,
                                              int propertyId ) {
                     MultiPageModelEditor.this.handlePropertyChange(propertyId);
                 }
@@ -268,11 +269,13 @@ public abstract class MultiPageModelEditor extends EditorPart implements IGotoMa
                         // dirty.
                         ((ModelObjectEditorPage)extension).addPropertyListener(new IPropertyListener() {
 
-                            public void propertyChanged( Object theSource,
+                            @Override
+							public void propertyChanged( Object theSource,
                                                          final int thePropId ) {
                                 UiUtil.runInSwtThread(new Runnable() {
 
-                                    public void run() {
+                                    @Override
+									public void run() {
                                         changeProperty(thePropId);
                                     }
                                 }, true);
@@ -435,7 +438,8 @@ public abstract class MultiPageModelEditor extends EditorPart implements IGotoMa
                 // System.out.println("MultiPageModelEditor.createContainer()$SelectionAdapter.widgetSelected"); //$NON-NLS-1$
                 UiBusyIndicator.showWhile(Display.getCurrent(), new Runnable() {
 
-                    public void run() {
+                    @Override
+					public void run() {
                         CTabItem item = (CTabItem)e.item;
                         IEditorPart editor = (IEditorPart)item.getData();
                         // see if this tab's IEditorPart has been initialized
@@ -753,7 +757,8 @@ public abstract class MultiPageModelEditor extends EditorPart implements IGotoMa
     private void disposePart( final IWorkbenchPart part ) {
         SafeRunner.run(new SafeRunnable() {
 
-            public void run() {
+            @Override
+			public void run() {
                 part.dispose();
             }
 
@@ -817,13 +822,16 @@ public abstract class MultiPageModelEditor extends EditorPart implements IGotoMa
         if (getSite().getWorkbenchWindow().getActivePage() == null) {
             getSite().getWorkbenchWindow().addPageListener(new IPageListener() {
 
-                public void pageOpened( IWorkbenchPage page ) {
+                @Override
+				public void pageOpened( IWorkbenchPage page ) {
                 }
 
-                public void pageClosed( IWorkbenchPage page ) {
+                @Override
+				public void pageClosed( IWorkbenchPage page ) {
                 }
 
-                public void pageActivated( IWorkbenchPage page ) {
+                @Override
+				public void pageActivated( IWorkbenchPage page ) {
                     // System.out.println("MultiPageModelEditor.setFocus()$IPageListener.pageActivated"); //$NON-NLS-1$
                     page.getWorkbenchWindow().removePageListener(this);
                     // ----------------------------
@@ -987,7 +995,8 @@ public abstract class MultiPageModelEditor extends EditorPart implements IGotoMa
      *
      * @see org.eclipse.ui.IEditorPart#gotoMarker(org.eclipse.core.resources.IMarker)
      */
-    public void gotoMarker( IMarker marker ) {
+    @Override
+	public void gotoMarker( IMarker marker ) {
 
         // until there's a better way, just send the marker to all open ModelEditorPages
         for (Iterator iter = this.nestedEditors.iterator(); iter.hasNext();) {

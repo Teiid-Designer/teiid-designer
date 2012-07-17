@@ -165,7 +165,6 @@ public class DefineSourceDialog  extends TitleAreaDialog implements IChangeListe
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.dialogs.TitleAreaDialog#createContents(org.eclipse.swt.widgets.Composite)
 	 */
-	@SuppressWarnings("javadoc")
 	@Override
 	protected Control createContents(Composite parent) {
 		Control control = super.createContents(parent);

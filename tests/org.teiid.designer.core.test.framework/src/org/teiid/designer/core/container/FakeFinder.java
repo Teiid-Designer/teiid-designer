@@ -21,6 +21,7 @@ public class FakeFinder implements EObjectFinder {
 	 * @see org.teiid.designer.core.container.api.mtk.core.EObjectFinder#find(java.lang.Object)
      * @since 3.1
 	 */
+	@Override
 	public Object find(final Object key) {
 		return null;
 	}
@@ -29,6 +30,7 @@ public class FakeFinder implements EObjectFinder {
 	 * @see org.teiid.designer.core.container.api.mtk.core.EObjectFinder#findKey(java.lang.Object)
      * @since 3.1
 	 */
+	@Override
 	public Object findKey(final Object object) {
 		return null;
 	}

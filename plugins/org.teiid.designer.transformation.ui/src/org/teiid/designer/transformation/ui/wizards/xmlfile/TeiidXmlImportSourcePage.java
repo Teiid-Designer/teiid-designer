@@ -43,7 +43,6 @@ import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.window.Window;
-import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -86,6 +85,7 @@ import org.teiid.designer.transformation.ui.UiPlugin;
 import org.teiid.designer.transformation.ui.wizards.file.FlatFileRelationalModelFactory;
 import org.teiid.designer.transformation.ui.wizards.file.TeiidMetadataImportInfo;
 import org.teiid.designer.transformation.ui.wizards.file.TeiidMetadataImportSourcePage;
+import org.teiid.designer.ui.common.ICredentialsCommon;
 import org.teiid.designer.ui.common.InternalUiConstants;
 import org.teiid.designer.ui.common.product.ProductCustomizerMgr;
 import org.teiid.designer.ui.common.util.WidgetFactory;
@@ -102,7 +102,6 @@ import org.teiid.designer.ui.viewsupport.ModelResourceSelectionValidator;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
 import org.teiid.designer.ui.viewsupport.ModelWorkspaceViewerFilter;
 import org.teiid.designer.ui.viewsupport.ModelingResourceFilter;
-
 
 public class TeiidXmlImportSourcePage extends AbstractWizardPage
 		implements UiConstants, InternalUiConstants.Widgets,
@@ -243,6 +242,7 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 				this.srcLabelProvider, true);
 		this.srcCombo.addModifyListener(new ModifyListener() {
 
+			@Override
 			public void modifyText(final ModifyEvent event) {
 				// profileModified();
 				// fileViewer.refresh();
@@ -350,6 +350,7 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 		this.fileViewer.getTable().addSelectionListener(
 				new SelectionListener() {
 
+					@Override
 					public void widgetSelected(SelectionEvent e) {
 						if (processingChecks) {
 							return;
@@ -378,6 +379,7 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 						validatePage();
 					}
 
+					@Override
 					public void widgetDefaultSelected(SelectionEvent e) {
 					}
 				});
@@ -426,6 +428,7 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 		gridData = new GridData(GridData.FILL_HORIZONTAL);
 		sourceModelFileText.setLayoutData(gridData);
 		sourceModelFileText.addModifyListener(new ModifyListener() {
+			@Override
 			public void modifyText(ModifyEvent e) {
 				handleSourceModelTextChanged();
 			}
@@ -570,8 +573,8 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 	private File getXmlFileFromRestUrl(IConnectionProfile profile) {
 		Properties props = profile.getBaseProperties();
 		String endpoint = (String) props.get(IWSProfileConstants.URL_PROP_ID);
-		String username = (String) props.get(IWSProfileConstants.USERNAME_PROP_ID);
-		String password = (String) props.get(IWSProfileConstants.PASSWORD_PROP_ID);
+		String username = (String) props.get(ICredentialsCommon.USERNAME_PROP_ID);
+		String password = (String) props.get(ICredentialsCommon.PASSWORD_PROP_ID);
 		File xmlFile = null;
 		FileOutputStream fos = null;
 		
@@ -743,19 +746,19 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 			if (dialog.open() == Window.OK) {
 				boolean isRestProfile = dialog.isRestProfile();
 				if( isRestProfile ) {
-					wiz = (INewWizard) new NewTeiidFilteredCPWizard(TEIID_WS_ID);
+					wiz = new NewTeiidFilteredCPWizard(TEIID_WS_ID);
 				} else {
-					wiz = (INewWizard) new NewTeiidFilteredCPWizard(XML_URL_FILE_ID);
+					wiz = new NewTeiidFilteredCPWizard(XML_URL_FILE_ID);
 				}
 			}
 			
 			
 		} else {
-			wiz = (INewWizard) new NewTeiidFilteredCPWizard(XML_FILE_ID);
+			wiz = new NewTeiidFilteredCPWizard(XML_FILE_ID);
 		}
 		
 		if( wiz != null ) {
-			WizardDialog wizardDialog = new WizardDialog(Display.getCurrent().getActiveShell(), (Wizard) wiz);
+			WizardDialog wizardDialog = new WizardDialog(Display.getCurrent().getActiveShell(), wiz);
 			wizardDialog.setBlockOnOpen(true);
 	
 			CPListener listener = new CPListener();
@@ -1247,6 +1250,7 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 		 * @see org.eclipse.jface.viewers.IContentProvider#dispose()
 		 * @since 4.2
 		 */
+		@Override
 		public void dispose() {
 		}
 
@@ -1254,6 +1258,7 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 		 * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
 		 * @since 4.2
 		 */
+		@Override
 		public Object[] getChildren(Object theParent) {
 			Object[] result = null;
 
@@ -1268,6 +1273,7 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 		 * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
 		 * @since 4.2
 		 */
+		@Override
 		public Object[] getElements(Object theInput) {
 			if (theInput instanceof File && ((File) theInput).isDirectory()) {
 				File[] allFiles = ((File) theInput).listFiles();
@@ -1300,6 +1306,7 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 		 * @see org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object)
 		 * @since 4.2
 		 */
+		@Override
 		public Object getParent(Object theElement) {
 			return ((theElement instanceof File) ? ((File) theElement)
 					.getParentFile() : null);
@@ -1309,6 +1316,7 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 		 * @see org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(java.lang.Object)
 		 * @since 4.2
 		 */
+		@Override
 		public boolean hasChildren(Object theElement) {
 			Object[] kids = getChildren(theElement);
 			return ((kids != null) && (kids.length > 0));
@@ -1319,6 +1327,7 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 		 *      java.lang.Object, java.lang.Object)
 		 * @since 4.2
 		 */
+		@Override
 		public void inputChanged(Viewer theViewer, Object theOldInput,
 				Object theNewInput) {
 		}

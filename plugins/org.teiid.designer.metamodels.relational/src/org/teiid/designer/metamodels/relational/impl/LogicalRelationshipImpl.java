@@ -74,7 +74,8 @@ public class LogicalRelationshipImpl extends RelationshipImpl implements Logical
      * <!-- end-user-doc -->
      * @generated
      */
-    public Catalog getCatalog() {
+    @Override
+	public Catalog getCatalog() {
         if (eContainerFeatureID != RelationalPackage.LOGICAL_RELATIONSHIP__CATALOG) return null;
         return (Catalog)eContainer;
     }
@@ -84,7 +85,8 @@ public class LogicalRelationshipImpl extends RelationshipImpl implements Logical
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setCatalog(Catalog newCatalog) {
+    @Override
+	public void setCatalog(Catalog newCatalog) {
         if (newCatalog != eContainer || (eContainerFeatureID != RelationalPackage.LOGICAL_RELATIONSHIP__CATALOG && newCatalog != null)) {
             if (EcoreUtil.isAncestor(this, newCatalog))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
@@ -105,7 +107,8 @@ public class LogicalRelationshipImpl extends RelationshipImpl implements Logical
      * <!-- end-user-doc -->
      * @generated
      */
-    public Schema getSchema() {
+    @Override
+	public Schema getSchema() {
         if (eContainerFeatureID != RelationalPackage.LOGICAL_RELATIONSHIP__SCHEMA) return null;
         return (Schema)eContainer;
     }
@@ -115,7 +118,8 @@ public class LogicalRelationshipImpl extends RelationshipImpl implements Logical
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setSchema(Schema newSchema) {
+    @Override
+	public void setSchema(Schema newSchema) {
         if (newSchema != eContainer || (eContainerFeatureID != RelationalPackage.LOGICAL_RELATIONSHIP__SCHEMA && newSchema != null)) {
             if (EcoreUtil.isAncestor(this, newSchema))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
@@ -136,7 +140,8 @@ public class LogicalRelationshipImpl extends RelationshipImpl implements Logical
      * <!-- end-user-doc -->
      * @generated
      */
-    public EList getEnds() {
+    @Override
+	public EList getEnds() {
         if (ends == null) {
             ends = new EObjectContainmentWithInverseEList(LogicalRelationshipEnd.class, this, RelationalPackage.LOGICAL_RELATIONSHIP__ENDS, RelationalPackage.LOGICAL_RELATIONSHIP_END__RELATIONSHIP);
         }

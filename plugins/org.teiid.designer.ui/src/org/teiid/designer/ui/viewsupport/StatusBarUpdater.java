@@ -41,7 +41,8 @@ implements ISelectionChangedListener, UiConstants {
     /*
      * @see ISelectionChangedListener#selectionChanged
      */
-    public void selectionChanged(SelectionChangedEvent event) {
+    @Override
+	public void selectionChanged(SelectionChangedEvent event) {
         ISelection selection = event.getSelection();
         String statusBarMessage= formatMessage(selection);
         statusLineManager.setMessage(statusBarMessage);

@@ -42,7 +42,8 @@ public class StatusInfo implements IStatus {
     /**
      *  Returns if the status' severity is OK.
      */
-    public boolean isOK() {
+    @Override
+	public boolean isOK() {
         return fSeverity == IStatus.OK;
     }
 
@@ -70,7 +71,8 @@ public class StatusInfo implements IStatus {
     /**
      * @see IStatus#getMessage
      */
-    public String getMessage() {
+    @Override
+	public String getMessage() {
         return fStatusMessage;
     }
 
@@ -107,7 +109,8 @@ public class StatusInfo implements IStatus {
     /*
      * @see IStatus#matches(int)
      */
-    public boolean matches(int severityMask) {
+    @Override
+	public boolean matches(int severityMask) {
         return (fSeverity & severityMask) != 0;
     }
 
@@ -115,21 +118,24 @@ public class StatusInfo implements IStatus {
      * Returns always <code>false</code>.
      * @see IStatus#isMultiStatus()
      */
-    public boolean isMultiStatus() {
+    @Override
+	public boolean isMultiStatus() {
         return false;
     }
 
     /*
      * @see IStatus#getSeverity()
      */
-    public int getSeverity() {
+    @Override
+	public int getSeverity() {
         return fSeverity;
     }
 
     /*
      * @see IStatus#getPlugin()
      */
-    public String getPlugin() {
+    @Override
+	public String getPlugin() {
         return this.pluginID;
     }
 
@@ -137,7 +143,8 @@ public class StatusInfo implements IStatus {
      * Returns always <code>null</code>.
      * @see IStatus#getException()
      */
-    public Throwable getException() {
+    @Override
+	public Throwable getException() {
         return null;
     }
 
@@ -145,7 +152,8 @@ public class StatusInfo implements IStatus {
      * Returns always the error severity.
      * @see IStatus#getCode()
      */
-    public int getCode() {
+    @Override
+	public int getCode() {
         return fSeverity;
     }
 
@@ -153,7 +161,8 @@ public class StatusInfo implements IStatus {
      * Returns always <code>null</code>.
      * @see IStatus#getChildren()
      */
-    public IStatus[] getChildren() {
+    @Override
+	public IStatus[] getChildren() {
         return new IStatus[0];
     }
 

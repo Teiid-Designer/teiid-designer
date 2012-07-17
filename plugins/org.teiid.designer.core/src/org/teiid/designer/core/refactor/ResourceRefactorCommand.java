@@ -166,7 +166,8 @@ public abstract class ResourceRefactorCommand implements RefactorCommand {
      * @see org.teiid.designer.core.refactor.RefactorCommand#canExecute()
      * @return an IStatus
      */
-    final public IStatus canExecute() {
+    @Override
+	final public IStatus canExecute() {
         if (this.resource == null) {
             final String msg = ModelerCore.Util.getString("ResourceRefactorCommand.No_resource_has_been_selected"); //$NON-NLS-1$
             return new Status(IStatus.ERROR, PID, ERROR_MISSING_RESOURCE, msg, null);
@@ -194,7 +195,8 @@ public abstract class ResourceRefactorCommand implements RefactorCommand {
      * Subclasses must not implement behavior.
      * @See org.teiid.designer.core.refactor.RefactorCommand#execute(org.eclipse.core.runtime.IProgressMonitor)
      */
-    final public IStatus execute( IProgressMonitor monitor ) {
+    @Override
+	final public IStatus execute( IProgressMonitor monitor ) {
 
         problems.clear();
 
@@ -603,7 +605,8 @@ public abstract class ResourceRefactorCommand implements RefactorCommand {
     protected void validateDependentResources() {
         if (!dependentResources.isEmpty()) {
             final TransactionRunnable runnable = new TransactionRunnable() {
-                public Object run( final UnitOfWork uow ) {
+                @Override
+				public Object run( final UnitOfWork uow ) {
                     Container cont = null;
                     try {
                         cont = ModelerCore.getModelContainer();
@@ -646,7 +649,8 @@ public abstract class ResourceRefactorCommand implements RefactorCommand {
      * Default implementation returns true.  Override to return false.
      * @See org.teiid.designer.core.refactor.RefactorCommand#canUndo()
      */
-    public boolean canUndo() {
+    @Override
+	public boolean canUndo() {
         if (anyResourceReadOnly()) return false;
 
         return true;
@@ -656,7 +660,8 @@ public abstract class ResourceRefactorCommand implements RefactorCommand {
      * Default implementation returns true.  Override to return false.
      * @See org.teiid.designer.core.refactor.RefactorCommand#canRedo()
      */
-    public boolean canRedo() {
+    @Override
+	public boolean canRedo() {
         if (anyResourceReadOnly()) return false;
 
         return true;
@@ -666,7 +671,8 @@ public abstract class ResourceRefactorCommand implements RefactorCommand {
      * Returns an empty list.  Subclasses may override to implement
      * @See org.teiid.designer.core.refactor.RefactorCommand#getResult()
      */
-    public Collection getResult() {
+    @Override
+	public Collection getResult() {
         return Collections.EMPTY_LIST;
     }
 
@@ -674,14 +680,16 @@ public abstract class ResourceRefactorCommand implements RefactorCommand {
      * Returns an empty list.  Subclasses may override to implement
      * @See org.teiid.designer.core.refactor.RefactorCommand#getAffectedObjects()
      */
-    public Collection getAffectedObjects() {
+    @Override
+	public Collection getAffectedObjects() {
         return Collections.EMPTY_LIST;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.refactor.RefactorCommand#getLabel()
      */
-    public String getLabel() {
+    @Override
+	public String getLabel() {
         return label;
     }
 
@@ -689,7 +697,8 @@ public abstract class ResourceRefactorCommand implements RefactorCommand {
      * Returns the label property.  Subclasses may override to implement.
      * @See org.teiid.designer.core.refactor.RefactorCommand#getDescription()
      */
-    public String getDescription() {
+    @Override
+	public String getDescription() {
         return label;
     }
 
@@ -697,14 +706,16 @@ public abstract class ResourceRefactorCommand implements RefactorCommand {
      * Returns an empty list.  Subclasses may override to implement
      * @See org.teiid.designer.core.refactor.RefactorCommand#getPostExecuteMessages()
      */
-    public Collection getPostExecuteMessages() {
+    @Override
+	public Collection getPostExecuteMessages() {
         return this.problems;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.refactor.RefactorCommand#redo(org.eclipse.core.runtime.IProgressMonitor)
      */
-    final public IStatus redo( IProgressMonitor monitor ) {
+    @Override
+	final public IStatus redo( IProgressMonitor monitor ) {
         problems.clear();
 
         int severity = checkDependentResources(NOT_UNDO_REQUEST);
@@ -738,7 +749,8 @@ public abstract class ResourceRefactorCommand implements RefactorCommand {
     /* (non-Javadoc)
      * @See org.teiid.designer.core.refactor.RefactorCommand#undo(org.eclipse.core.runtime.IProgressMonitor)
      */
-    final public IStatus undo( IProgressMonitor monitor ) {
+    @Override
+	final public IStatus undo( IProgressMonitor monitor ) {
         problems.clear();
 
         int severity = checkDependentResources(UNDO_REQUEST);
@@ -828,7 +840,8 @@ public abstract class ResourceRefactorCommand implements RefactorCommand {
             // If there are models with unsaved changes create temporary index files
             // for use in query validation and resolution
             final TransactionRunnable runnable = new TransactionRunnable() {
-                public Object run( final UnitOfWork uow ) {
+                @Override
+				public Object run( final UnitOfWork uow ) {
                     ModelBuildUtil.indexResources(null, iResources);
                     return null;
                 }

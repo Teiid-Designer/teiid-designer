@@ -69,7 +69,8 @@ public class UpFont extends AbstractAction implements IFontChangeListener {
         setEnabled( getFontManager().canIncrease() );        
     }
         
-    public void fontChanged() {        
+    @Override
+	public void fontChanged() {        
         setEnableState();
     }
 }

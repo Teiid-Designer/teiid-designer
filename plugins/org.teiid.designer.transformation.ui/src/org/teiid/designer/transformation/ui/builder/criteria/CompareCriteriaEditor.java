@@ -69,24 +69,28 @@ public class CompareCriteriaEditor extends AbstractPredicateCriteriaTypeEditor {
         return title;
     }
 
-    public Control createLeftComponent( Composite parent ) {
+    @Override
+	public Control createLeftComponent( Composite parent ) {
         leftEditor = new CriteriaExpressionEditor(parent, theModel.getLeftExpressionModel());
         leftComponent = leftEditor.getUi();
         return leftComponent;
     }
 
-    public Control createRightComponent( Composite parent ) {
+    @Override
+	public Control createRightComponent( Composite parent ) {
         rightEditor = new CriteriaExpressionEditor(parent, theModel.getRightExpressionModel());
         rightComponent = rightEditor.getUi();
         return rightComponent;
     }
 
-    public Expression getLeftExpression() {
+    @Override
+	public Expression getLeftExpression() {
         Expression leftExpression = theModel.getLeftExpression();
         return leftExpression;
     }
 
-    public Expression getRightExpression() {
+    @Override
+	public Expression getRightExpression() {
         Expression rightExpression = theModel.getRightExpression();
         return rightExpression;
     }
@@ -97,7 +101,8 @@ public class CompareCriteriaEditor extends AbstractPredicateCriteriaTypeEditor {
         theModel.setLanguageObject(obj);
     }
 
-    public String[] getOperators() {
+    @Override
+	public String[] getOperators() {
         return theModel.getOperators();
     }
 
@@ -106,11 +111,13 @@ public class CompareCriteriaEditor extends AbstractPredicateCriteriaTypeEditor {
         leftEditor.acceptFocus();
     }
 
-    public void setOperator( String op ) {
+    @Override
+	public void setOperator( String op ) {
         theModel.setCurrentOperator(op);
     }
 
-    public String getCurrentOperator() {
+    @Override
+	public String getCurrentOperator() {
         return theModel.getCurrentOperator();
     }
 
@@ -137,7 +144,8 @@ public class CompareCriteriaEditor extends AbstractPredicateCriteriaTypeEditor {
 
         public void initialize() {
             Display.getDefault().asyncExec(new Runnable() {
-                public void run() {
+                @Override
+				public void run() {
                     modelChanged(new LanguageObjectEditorModelEvent(theModel, LanguageObjectEditorModelEvent.SAVED));
                 }
             });
@@ -146,7 +154,8 @@ public class CompareCriteriaEditor extends AbstractPredicateCriteriaTypeEditor {
         /**
          * @see org.teiid.query.ui.builder.model.ILanguageObjectEditorModelListener#modelChanged(org.teiid.query.ui.builder.model.LanguageObjectEditorModelEvent)
          */
-        public void modelChanged( LanguageObjectEditorModelEvent theEvent ) {
+        @Override
+		public void modelChanged( LanguageObjectEditorModelEvent theEvent ) {
             String type = theEvent.getType();
             if (type.equals(CompareCriteriaEditorModel.LEFT_EXPRESSION)) {
                 displayLeftExpression();

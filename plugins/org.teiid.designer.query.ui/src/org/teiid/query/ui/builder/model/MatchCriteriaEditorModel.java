@@ -140,7 +140,8 @@ public class MatchCriteriaEditorModel extends AbstractPredicateCriteriaTypeEdito
         }
     }
 
-    public void modelChanged( LanguageObjectEditorModelEvent theEvent ) {
+    @Override
+	public void modelChanged( LanguageObjectEditorModelEvent theEvent ) {
         String type = theEvent.getType();
         String eventType;
         if (type.equals(CompositeLanguageObjectEditorModel.MODEL_CHANGE)) {

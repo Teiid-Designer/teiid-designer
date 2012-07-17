@@ -66,7 +66,8 @@ public class ModelWorkspaceIndexSelector extends TargetLocationIndexSelector {
                 // If there are models with unsaved changes create temporary index files
                 // for use in query validation and resolution
                 final TransactionRunnable runnable = new TransactionRunnable() {
-                    public Object run( final UnitOfWork uow ) {
+                    @Override
+					public Object run( final UnitOfWork uow ) {
                         ModelBuildUtil.createModelIndexes(null, nonIndexedResources);
                         return null;
                     }
@@ -123,7 +124,8 @@ public class ModelWorkspaceIndexSelector extends TargetLocationIndexSelector {
     public static class IndexFilter implements FilenameFilter {
         public static IndexFilter FILTER_INSTANCE = new IndexFilter();
 
-        public boolean accept( File dir,
+        @Override
+		public boolean accept( File dir,
                                String name ) {
             IPath path = new Path(name);
             String extension = path.getFileExtension();

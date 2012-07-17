@@ -148,7 +148,8 @@ public class TransformationNotificationListener implements INotifyChangedListene
     /**
      * @see org.eclipse.emf.edit.provider.INotifyChangedListener#notifyChanged(org.eclipse.emf.common.notify.Notification)
      */
-    public void notifyChanged( Notification notification ) {
+    @Override
+	public void notifyChanged( Notification notification ) {
         // If notifications are shut off, just return
         if (ignoreNotifications) return;
 
@@ -1307,7 +1308,8 @@ public class TransformationNotificationListener implements INotifyChangedListene
                         // Prompt whether to add the Group Elements to the query
                         // put on SWT thread
                         UiUtil.runInSwtThread(new Runnable() {
-                            public void run() {
+                            @Override
+							public void run() {
                                 // Ensure that preference is false initially, this may be reset
                                 UiPlugin.getDefault().getPreferenceStore().setValue(PluginConstants.Prefs.TableSupportsUpdateChange.IGNORE_TABLE_SUPPORTSUPDATE_CHANGED_TRUE,
                                                                                     ""); //$NON-NLS-1$
@@ -1346,7 +1348,8 @@ public class TransformationNotificationListener implements INotifyChangedListene
                         final String message = UiConstants.Util.getString("TransformationNotificationListener.tableSupportsUpdateChangedFalse.message"); //$NON-NLS-1$
                         // Show Table supports update dialog
                         UiUtil.runInSwtThread(new Runnable() {
-                            public void run() {
+                            @Override
+							public void run() {
                                 // Ensure that preference is false initially, this may be reset
                                 UiPlugin.getDefault().getPreferenceStore().setValue(PluginConstants.Prefs.TableSupportsUpdateChange.IGNORE_TABLE_SUPPORTSUPDATE_CHANGED_FALSE,
                                                                                     ""); //$NON-NLS-1$
@@ -1505,7 +1508,8 @@ public class TransformationNotificationListener implements INotifyChangedListene
                             // Note that the first radio in the array (save) is selected by default.
                             // put on SWT thread
                             UiUtil.runInSwtThread(new Runnable() {
-                                public void run() {
+                                @Override
+								public void run() {
                                     uiIntegerResult = RadioMessageDialog.openMulti(UiUtil.getWorkbenchWindow().getShell(),
                                                                                    MessageDialog.WARNING,
                                                                                    SAVE_BEFORE_CHANGE_TITLE,
@@ -2187,7 +2191,8 @@ public class TransformationNotificationListener implements INotifyChangedListene
                     // Prompt whether to add the Group Elements to the query
                     // put on SWT thread
                     UiUtil.runInSwtThread(new Runnable() {
-                        public void run() {
+                        @Override
+						public void run() {
                             uiBooleanResult = MessageDialog.openQuestion(UiUtil.getWorkbenchWindow().getShell(),
                                                                          ADD_SQL_ELEM_GRP_REFS_TITLE,
                                                                          message);
@@ -2233,7 +2238,8 @@ public class TransformationNotificationListener implements INotifyChangedListene
                     // Prompt whether to remove the Group Elements from the query
                     // put on SWT thread
                     UiUtil.runInSwtThread(new Runnable() {
-                        public void run() {
+                        @Override
+						public void run() {
                             uiBooleanResult = MessageDialog.openQuestion(UiUtil.getWorkbenchWindow().getShell(),
                                                                          REMOVE_SQL_ELEM_GRP_REFS_TITLE,
                                                                          message);
@@ -2278,7 +2284,8 @@ public class TransformationNotificationListener implements INotifyChangedListene
                     // Prompt whether to remove the Elements from the query
                     // put on SWT thread
                     UiUtil.runInSwtThread(new Runnable() {
-                        public void run() {
+                        @Override
+						public void run() {
                             uiBooleanResult = MessageDialog.openQuestion(UiUtil.getWorkbenchWindow().getShell(),
                                                                          REMOVE_SQL_ELEMS_TITLE,
                                                                          REMOVE_SQL_ELEMS_MSG);
@@ -2299,11 +2306,13 @@ public class TransformationNotificationListener implements INotifyChangedListene
      * @see org.teiid.core.event.EventObjectListener#processEvent(java.util.EventObject)
      * @since 4.2
      */
-    public void processEvent( EventObject obj ) {
+    @Override
+	public void processEvent( EventObject obj ) {
         ModelResourceEvent event = (ModelResourceEvent)obj;
         if (event.getType() == ModelResourceEvent.RELOADED) {
             Display.getDefault().asyncExec(new Runnable() {
-                public void run() {
+                @Override
+				public void run() {
                     SqlMappingRootCache.invalidateRootsOnProjectOrModelRemove();
                 }
             });
@@ -2317,16 +2326,19 @@ public class TransformationNotificationListener implements INotifyChangedListene
         public WorkspaceNotificationListener() {
         }
 
-        public void notifyAdd( ModelWorkspaceNotification notification ) {
+        @Override
+		public void notifyAdd( ModelWorkspaceNotification notification ) {
         }
 
-        public void notifyRemove( ModelWorkspaceNotification notification ) {
+        @Override
+		public void notifyRemove( ModelWorkspaceNotification notification ) {
             // Invalidate the SqlMappingRoot cache on Project or Model Removal
             if (notification.isPostChange()) {
                 // Project Close/Remove notification
                 if (notification.isProject()) {
                     Display.getDefault().asyncExec(new Runnable() {
-                        public void run() {
+                        @Override
+						public void run() {
                             SqlMappingRootCache.invalidateRootsOnProjectOrModelRemove();
                         }
                     });
@@ -2335,7 +2347,8 @@ public class TransformationNotificationListener implements INotifyChangedListene
                     IResource resource = (IResource)notification.getNotifier();
                     if (ModelUtil.isModelFile(resource)) {
                         Display.getDefault().asyncExec(new Runnable() {
-                            public void run() {
+                            @Override
+							public void run() {
                                 SqlMappingRootCache.invalidateRootsOnProjectOrModelRemove();
                             }
                         });
@@ -2344,27 +2357,35 @@ public class TransformationNotificationListener implements INotifyChangedListene
             }
         }
 
-        public void notifyMove( ModelWorkspaceNotification notification ) {
+        @Override
+		public void notifyMove( ModelWorkspaceNotification notification ) {
         }
 
-        public void notifyRename( ModelWorkspaceNotification notification ) {
+        @Override
+		public void notifyRename( ModelWorkspaceNotification notification ) {
         }
 
-        public void notifyOpen( ModelWorkspaceNotification notification ) {
+        @Override
+		public void notifyOpen( ModelWorkspaceNotification notification ) {
         }
 
-        public void notifyClosing( ModelWorkspaceNotification notification ) {
+        @Override
+		public void notifyClosing( ModelWorkspaceNotification notification ) {
         }
 
-        public void notifyChanged( Notification theNotification ) {
+        @Override
+		public void notifyChanged( Notification theNotification ) {
         }
 
-        public void notifyReloaded( ModelWorkspaceNotification notification ) {
+        @Override
+		public void notifyReloaded( ModelWorkspaceNotification notification ) {
         }
 
-        public void notifyClean( final IProject proj ) {
+        @Override
+		public void notifyClean( final IProject proj ) {
             Display.getDefault().asyncExec(new Runnable() {
-                public void run() {
+                @Override
+				public void run() {
                     SqlMappingRootCache.invalidateCacheForProject(proj);
                 }
             });

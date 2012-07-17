@@ -54,13 +54,15 @@ public class BuildImportsAction extends ActionDelegate implements IWorkbenchWind
     /* (non-Javadoc)
      * @see org.eclipse.ui.IViewActionDelegate#init(org.eclipse.ui.IViewPart)
      */
-    public void init( final IViewPart view ) {
+    @Override
+	public void init( final IViewPart view ) {
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#init(org.eclipse.ui.IWorkbenchWindow)
      */
-    public void init( final IWorkbenchWindow window ) {
+    @Override
+	public void init( final IWorkbenchWindow window ) {
 
     }
 

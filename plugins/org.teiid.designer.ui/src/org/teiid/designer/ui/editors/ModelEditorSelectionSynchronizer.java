@@ -228,7 +228,8 @@ public class ModelEditorSelectionSynchronizer implements
      * 
      * @see org.eclipse.ui.IPartListener#partActivated(org.eclipse.ui.IWorkbenchPart)
      */
-    public synchronized void partActivated(IWorkbenchPart part) {
+    @Override
+	public synchronized void partActivated(IWorkbenchPart part) {
         if (part instanceof ModelViewer) {
             register((ModelViewer)part);
         } else if (part instanceof PageBookView) {
@@ -251,7 +252,8 @@ public class ModelEditorSelectionSynchronizer implements
      * 
      * @see org.eclipse.ui.IPartListener#partBroughtToTop(org.eclipse.ui.IWorkbenchPart)
      */
-    public void partBroughtToTop(IWorkbenchPart part) {
+    @Override
+	public void partBroughtToTop(IWorkbenchPart part) {
     }
 
     /*
@@ -259,7 +261,8 @@ public class ModelEditorSelectionSynchronizer implements
      * 
      * @see org.eclipse.ui.IPartListener#partClosed(org.eclipse.ui.IWorkbenchPart)
      */
-    public void partClosed(IWorkbenchPart part) {
+    @Override
+	public void partClosed(IWorkbenchPart part) {
         if (part instanceof ModelViewer) {
             unregister((ModelViewer)part);
         }
@@ -270,7 +273,8 @@ public class ModelEditorSelectionSynchronizer implements
      * 
      * @see org.eclipse.ui.IPartListener#partDeactivated(org.eclipse.ui.IWorkbenchPart)
      */
-    public void partDeactivated(IWorkbenchPart part) {
+    @Override
+	public void partDeactivated(IWorkbenchPart part) {
     }
 
     /*
@@ -278,7 +282,8 @@ public class ModelEditorSelectionSynchronizer implements
      * 
      * @see org.eclipse.ui.IPartListener#partOpened(org.eclipse.ui.IWorkbenchPart)
      */
-    public void partOpened(IWorkbenchPart part) {
+    @Override
+	public void partOpened(IWorkbenchPart part) {
         if (part instanceof ModelViewer) {
             register((ModelViewer)part);
         } else if (part instanceof PageBookView) {
@@ -297,7 +302,8 @@ public class ModelEditorSelectionSynchronizer implements
      * @see org.eclipse.ui.ISelectionListener#selectionChanged(org.eclipse.ui.IWorkbenchPart,
      *      org.eclipse.jface.viewers.ISelection)
      */
-    public void selectionChanged(IWorkbenchPart part,
+    @Override
+	public void selectionChanged(IWorkbenchPart part,
                                  ISelection selection) {
         final boolean startedTxn = ModelerCore.startTxn(false, false, null, this);
         try {
@@ -356,7 +362,8 @@ public class ModelEditorSelectionSynchronizer implements
      * 
      * @see org.eclipse.jface.viewers.ISelectionProvider#getSelection()
      */
-    public ISelection getSelection() {
+    @Override
+	public ISelection getSelection() {
         return lastSelection;
     }
 
@@ -365,7 +372,8 @@ public class ModelEditorSelectionSynchronizer implements
      * 
      * @see org.eclipse.jface.viewers.ISelectionProvider#addSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
      */
-    public void addSelectionChangedListener(ISelectionChangedListener listener) {
+    @Override
+	public void addSelectionChangedListener(ISelectionChangedListener listener) {
         // functionality not provided -
         //    this class implements ISelectionProvider only to be the source of SelectionChangeEvent
     }
@@ -375,7 +383,8 @@ public class ModelEditorSelectionSynchronizer implements
      * 
      * @see org.eclipse.jface.viewers.ISelectionProvider#removeSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
      */
-    public void removeSelectionChangedListener(ISelectionChangedListener listener) {
+    @Override
+	public void removeSelectionChangedListener(ISelectionChangedListener listener) {
         // functionality not provided -
         //    this class implements ISelectionProvider only to be the source of SelectionChangeEvent
     }
@@ -385,7 +394,8 @@ public class ModelEditorSelectionSynchronizer implements
      * 
      * @see org.eclipse.jface.viewers.ISelectionProvider#setSelection(org.eclipse.jface.viewers.ISelection)
      */
-    public void setSelection(ISelection selection) {
+    @Override
+	public void setSelection(ISelection selection) {
         lastSelection = selection;
         selectionChanged(this.modelEditor, selection);
     }
@@ -395,7 +405,8 @@ public class ModelEditorSelectionSynchronizer implements
      * 
      * @see org.eclipse.jface.viewers.IDoubleClickListener#doubleClick(org.eclipse.jface.viewers.DoubleClickEvent)
      */
-    public void doubleClick(DoubleClickEvent event) {
+    @Override
+	public void doubleClick(DoubleClickEvent event) {
         // first, get the object out of the event and make sure this is the correct editor
         IStructuredSelection selection = (IStructuredSelection)event.getSelection();
         Object object = selection.getFirstElement();

@@ -127,11 +127,13 @@ public class CheckboxComponentSet extends SimpleComponentSet {
         selList.mon = null;
     }
 
-    public boolean isUserSet() {
+    @Override
+	public boolean isUserSet() {
         return !(FormUtil.safeEquals(getValue(), lastSetValue));
     }
 
-    public void setValue( Object o ) {
+    @Override
+	public void setValue( Object o ) {
         if (o != null) {
             lastSetValue = o;
         } else {
@@ -177,7 +179,8 @@ public class CheckboxComponentSet extends SimpleComponentSet {
         return rv;
     }
 
-    public void reset() {
+    @Override
+	public void reset() {
         setValue(lastSetValue);
     }
 

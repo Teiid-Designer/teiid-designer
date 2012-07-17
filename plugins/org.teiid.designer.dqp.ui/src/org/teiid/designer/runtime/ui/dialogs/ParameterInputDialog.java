@@ -110,7 +110,8 @@ public class ParameterInputDialog extends TitleAreaDialog implements
      * @see org.teiid.core.event.IChangeListener#stateChanged(org.teiid.core.event.IChangeNotifier)
      * @since 5.5.3
      */
-    public void stateChanged(IChangeNotifier theSource) {
+    @Override
+	public void stateChanged(IChangeNotifier theSource) {
         IStatus status = this.pnlParams.getStatus();
 
         if (status.getSeverity() == IStatus.ERROR) {

@@ -26,6 +26,7 @@ public class ShowModelStatisticsAction extends Action implements ISelectionListe
 		setImageDescriptor(UiPlugin.getDefault().getImageDescriptor( PluginConstants.Images.MODEL_STATISTICS_ICON));
 	}
 
+	@Override
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
         boolean enable = false;
         if ( ! SelectionUtilities.isMultiSelection(selection) ) {
@@ -47,6 +48,7 @@ public class ShowModelStatisticsAction extends Action implements ISelectionListe
 	}
 
     
+	@Override
 	public int compareTo(Object o) {
 		if( o instanceof String) {
 			return getText().compareTo((String)o);
@@ -59,6 +61,7 @@ public class ShowModelStatisticsAction extends Action implements ISelectionListe
 	}
 	
 	
+	@Override
 	public boolean isApplicable(ISelection selection) {
         boolean result = false;
         if ( ! SelectionUtilities.isMultiSelection(selection) ) {

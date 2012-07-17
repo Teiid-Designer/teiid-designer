@@ -51,7 +51,8 @@ public class StringLengthRule implements StructuralFeatureValidationRule {
     /* (non-Javadoc)
      * @See org.teiid.designer.core.validation.ValidationRule#validate(java.lang.Object, org.teiid.designer.core.validation.ValidationContext)
      */
-    public void validate( final EStructuralFeature eStructuralFeature,
+    @Override
+	public void validate( final EStructuralFeature eStructuralFeature,
                           final EObject eObject,
                           final Object value,
                           final ValidationContext context ) {

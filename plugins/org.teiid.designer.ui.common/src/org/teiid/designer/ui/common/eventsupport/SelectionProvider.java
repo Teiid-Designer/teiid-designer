@@ -41,7 +41,8 @@ public class SelectionProvider implements ISelectionProvider {
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.ISelectionProvider#addSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
      */
-    public synchronized void addSelectionChangedListener(ISelectionChangedListener listener) {
+    @Override
+	public synchronized void addSelectionChangedListener(ISelectionChangedListener listener) {
         if ( listener != null && ! listenerList.contains(listener) ) {
             listenerList.add(listener);
         }
@@ -50,14 +51,16 @@ public class SelectionProvider implements ISelectionProvider {
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.ISelectionProvider#getSelection()
      */
-    public ISelection getSelection() {
+    @Override
+	public ISelection getSelection() {
         return currentSelection;
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.ISelectionProvider#removeSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
      */
-    public synchronized void removeSelectionChangedListener(ISelectionChangedListener listener) {
+    @Override
+	public synchronized void removeSelectionChangedListener(ISelectionChangedListener listener) {
         listenerList.remove(listener);
     }
 
@@ -94,7 +97,8 @@ public class SelectionProvider implements ISelectionProvider {
      * @param selection the content of the selection
      * @see org.eclipse.jface.viewers.ISelectionProvider#setSelection(org.eclipse.jface.viewers.ISelection)
      */
-    public void setSelection(ISelection selection) {
+    @Override
+	public void setSelection(ISelection selection) {
         this.setSelection(selection, true, null);
     }
 

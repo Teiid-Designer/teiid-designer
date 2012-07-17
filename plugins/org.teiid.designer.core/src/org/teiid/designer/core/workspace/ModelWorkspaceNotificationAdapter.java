@@ -22,7 +22,8 @@ public class ModelWorkspaceNotificationAdapter implements ModelWorkspaceNotifica
     /* (non-Javadoc)
      * @See org.teiid.designer.core.workspace.ModelWorkspaceNotificationListener#notifyAdd(org.eclipse.emf.common.notify.Notification)
      */
-    public void notifyAdd(ModelWorkspaceNotification theNotification) {}
+    @Override
+	public void notifyAdd(ModelWorkspaceNotification theNotification) {}
     
     /* (non-Javadoc)
      * @see org.eclipse.emf.edit.provider.INotifyChangedListener#notifyChanged(org.eclipse.emf.common.notify.Notification)
@@ -32,43 +33,51 @@ public class ModelWorkspaceNotificationAdapter implements ModelWorkspaceNotifica
     /* (non-Javadoc)
      * @see org.eclipse.emf.edit.provider.INotifyChangedListener#notifyChanged(org.eclipse.emf.common.notify.Notification)
      */
-    public void notifyChanged(Notification theNotification) {}
+    @Override
+	public void notifyChanged(Notification theNotification) {}
     
     /* (non-Javadoc)
      * @See org.teiid.designer.core.workspace.ModelWorkspaceNotificationListener#notifyClosing(org.eclipse.emf.common.notify.Notification)
      */
-    public void notifyClosing(ModelWorkspaceNotification theNotification) {}
+    @Override
+	public void notifyClosing(ModelWorkspaceNotification theNotification) {}
     
     /* (non-Javadoc)
      * @See org.teiid.designer.core.workspace.ModelWorkspaceNotificationListener#notifyMove(org.eclipse.emf.common.notify.Notification)
      */
-    public void notifyMove(ModelWorkspaceNotification theNotification) {}
+    @Override
+	public void notifyMove(ModelWorkspaceNotification theNotification) {}
     
     /* (non-Javadoc)
      * @See org.teiid.designer.core.workspace.ModelWorkspaceNotificationListener#notifyOpen(org.eclipse.emf.common.notify.Notification)
      */
-    public void notifyOpen(ModelWorkspaceNotification theNotification) {}
+    @Override
+	public void notifyOpen(ModelWorkspaceNotification theNotification) {}
     
     /* (non-Javadoc)
      * @See org.teiid.designer.core.workspace.ModelWorkspaceNotificationListener#notifyRemove(org.eclipse.emf.common.notify.Notification)
      */
-    public void notifyRemove(ModelWorkspaceNotification theNotification) {}
+    @Override
+	public void notifyRemove(ModelWorkspaceNotification theNotification) {}
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.workspace.ModelWorkspaceNotificationListener#notifyRename(org.eclipse.emf.common.notify.Notification)
      */
-    public void notifyRename(ModelWorkspaceNotification theNotification) {}
+    @Override
+	public void notifyRename(ModelWorkspaceNotification theNotification) {}
     
     /** 
      * @see org.teiid.designer.core.workspace.ModelWorkspaceNotificationListener#notifyReloaded(org.teiid.designer.core.workspace.ModelWorkspaceNotification)
      * @since 4.2
      */
-    public void notifyReloaded(ModelWorkspaceNotification notification) {}
+    @Override
+	public void notifyReloaded(ModelWorkspaceNotification notification) {}
     
     /** 
      * @see org.teiid.designer.core.workspace.ModelWorkspaceNotificationListener#notifyClean(org.eclipse.core.resources.IProject)
      * @since 5.5
      */
-    public void notifyClean(IProject proj) {}
+    @Override
+	public void notifyClean(IProject proj) {}
 
 }

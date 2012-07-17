@@ -94,7 +94,8 @@ public class DiagramPrintPreferencePage extends PreferencePage
 
     }
 
-    public void init( IWorkbench workbench ) {
+    @Override
+	public void init( IWorkbench workbench ) {
     }
 
     @Override

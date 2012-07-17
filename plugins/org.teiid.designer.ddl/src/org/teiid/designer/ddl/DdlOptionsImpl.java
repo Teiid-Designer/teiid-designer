@@ -46,7 +46,8 @@ public class DdlOptionsImpl implements DdlOptions {
      * @return the style, or null if no style has been specified
      * @see DdlOptions#getStyle()
      */
-    public Style getStyle() {
+    @Override
+	public Style getStyle() {
         return this.style;
     }
     /**
@@ -54,7 +55,8 @@ public class DdlOptionsImpl implements DdlOptions {
      * @param style the style, or null if the current style is to be cleared
      * @see DdlOptions#setStyle(Style)
      */
-    public void setStyle( final Style style ) {
+    @Override
+	public void setStyle( final Style style ) {
         this.style = style;
     }
 
@@ -64,7 +66,8 @@ public class DdlOptionsImpl implements DdlOptions {
      * false otherwise.
      * @see DdlOptions#isGenerateSchema()
      */
-    public boolean isGenerateSchema() {
+    @Override
+	public boolean isGenerateSchema() {
         return generateSchema;
     }
 
@@ -74,18 +77,22 @@ public class DdlOptionsImpl implements DdlOptions {
      * false otherwise.
      * @see DdlOptions#setGenerateSchema(boolean)
      */
-    public void setGenerateSchema(final boolean generateSchema) {
+    @Override
+	public void setGenerateSchema(final boolean generateSchema) {
         this.generateSchema = generateSchema;
     }
 
-    public boolean isGenerateTableComments() {
+    @Override
+	public boolean isGenerateTableComments() {
 		return generateTableComments;
 	}
 
+	@Override
 	public void setGenerateTableComments(boolean generateTableComments) {
 		this.generateTableComments = generateTableComments;
 	}
 
+	@Override
 	public boolean isGenerateColumnComments() {
 		return generateColumnComments;
 	}
@@ -95,6 +102,7 @@ public class DdlOptionsImpl implements DdlOptions {
     * @return true if comments are to be generated in the DDL, or false otherwise
     * @see DdlOptions#isGenerateComments()
     */
+	@Override
 	public void setGenerateColumnComments(final boolean generateColumnComments) {
 		this.generateColumnComments = generateColumnComments;
 	}
@@ -104,6 +112,7 @@ public class DdlOptionsImpl implements DdlOptions {
     * @return true if comments are to be generated in the DDL, or false otherwise
     * @see DdlOptions#isGenerateInfoComments()
     */
+	@Override
 	public boolean isGenerateInfoComments() {
 		return generateInfoComments;
 	}
@@ -112,6 +121,7 @@ public class DdlOptionsImpl implements DdlOptions {
     * Set whether informational comments are to be put into the DDL
     * @see DdlOptions#setGenerateInfoComments()
     */
+	@Override
 	public void setGenerateInfoComments(final boolean generateInfoComments) {
 		this.generateInfoComments = generateInfoComments;
 	}
@@ -121,7 +131,8 @@ public class DdlOptionsImpl implements DdlOptions {
      * @return true if drop statements are to be generated in the DDL, or false otherwise
      * @see DdlOptions#isGenerateDropStatements()
      */
-    public boolean isGenerateDropStatements() {
+    @Override
+	public boolean isGenerateDropStatements() {
         return generateDropStatements;
     }
 
@@ -130,7 +141,8 @@ public class DdlOptionsImpl implements DdlOptions {
      * @param generateDrops true if drop statements are to be generated in the DDL, or false otherwise
      * @see DdlOptions#setGenerateDropStatements(boolean)
      */
-    public void setGenerateDropStatements(final boolean generateDrops) {
+    @Override
+	public void setGenerateDropStatements(final boolean generateDrops) {
         this.generateDropStatements = generateDrops;
     }
 
@@ -140,7 +152,8 @@ public class DdlOptionsImpl implements DdlOptions {
      * @return true if entities' name in source rather than their name should be used for the object
      * names in the DDL, or false if only their names should be used.
      */
-    public boolean isNameInSourceUsed() {
+    @Override
+	public boolean isNameInSourceUsed() {
         return this.nameInSourceUsed;
     }
 
@@ -150,35 +163,40 @@ public class DdlOptionsImpl implements DdlOptions {
      * @param useNameInSource true if entities' name in source rather than their name should be used for the object
      * names in the DDL, or false if only their names should be used.
      */
-    public void setNameInSourceUsed( final boolean useNameInSource) {
+    @Override
+	public void setNameInSourceUsed( final boolean useNameInSource) {
         this.nameInSourceUsed = useNameInSource;
     }
 
     /**
      * @see org.teiid.designer.ddl.DdlOptions#isNativeTypeUsed()
      */
-    public boolean isNativeTypeUsed() {
+    @Override
+	public boolean isNativeTypeUsed() {
         return this.nativeTypeUsed;
     }
 
     /**
      * @see org.teiid.designer.ddl.DdlOptions#setNativeTypeUsed(boolean)
      */
-    public void setNativeTypeUsed(boolean useNativeType) {
+    @Override
+	public void setNativeTypeUsed(boolean useNativeType) {
         this.nativeTypeUsed = useNativeType;
     }
 
     /**
      * @see org.teiid.designer.ddl.DdlOptions#isUniqueNamesEnforced()
      */
-    public boolean isUniqueNamesEnforced() {
+    @Override
+	public boolean isUniqueNamesEnforced() {
         return this.enforceUniqueNames;
     }
 
     /**
      * @see org.teiid.designer.ddl.DdlOptions#setUniqueNamesEnforced(boolean)
      */
-    public void setUniqueNamesEnforced(boolean useUniqueNames) {
+    @Override
+	public void setUniqueNamesEnforced(boolean useUniqueNames) {
         this.enforceUniqueNames = useUniqueNames;        
     }
 

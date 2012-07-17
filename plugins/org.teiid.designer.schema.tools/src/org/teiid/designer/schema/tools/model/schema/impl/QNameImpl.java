@@ -79,15 +79,18 @@ public class QNameImpl implements QName {
         return namespace + "#" + lname; //$NON-NLS-1$
     }
 
-    public String getNamespace() {
+    @Override
+	public String getNamespace() {
         return namespace;
     }
 
-    public void setNamespace( String namespace ) {
+    @Override
+	public void setNamespace( String namespace ) {
         this.namespace = namespace;
     }
 
-    public String getLName() {
+    @Override
+	public String getLName() {
         return lname;
     }
 }

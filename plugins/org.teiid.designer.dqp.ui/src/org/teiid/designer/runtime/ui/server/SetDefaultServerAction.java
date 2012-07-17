@@ -85,7 +85,8 @@ public class SetDefaultServerAction extends BaseSelectionListenerAction {
         	final Server theNewDefaultServer = this.selectedServer;
             BusyIndicator.showWhile(Display.getDefault(), new Runnable() {
 
-                public void run() {
+                @Override
+				public void run() {
 			        try {
 			        	// Call disconnect() first to clear out Server & admin caches
 			        	theNewDefaultServer.getAdmin().refresh();

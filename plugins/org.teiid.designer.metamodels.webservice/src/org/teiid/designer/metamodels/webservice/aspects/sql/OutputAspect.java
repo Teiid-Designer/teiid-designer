@@ -43,7 +43,8 @@ public class OutputAspect extends WebServiceComponentAspect implements SqlResult
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlColumnSetAspect#getColumns(org.eclipse.emf.ecore.EObject)
      * @since 4.2
      */
-    public List getColumns(final EObject eObject) {
+    @Override
+	public List getColumns(final EObject eObject) {
         CoreArgCheck.isInstanceOf(Output.class, eObject);
         final Output output = (Output)eObject;
         SampleMessages sampleMsgs = output.getSamples();
@@ -59,7 +60,8 @@ public class OutputAspect extends WebServiceComponentAspect implements SqlResult
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlColumnSetAspect#getColumnSetType()
      * @since 4.2
      */
-    public int getColumnSetType() {
+    @Override
+	public int getColumnSetType() {
         return MetadataConstants.COLUMN_SET_TYPES.PROCEDURE_RESULT;
     }
 
@@ -67,7 +69,8 @@ public class OutputAspect extends WebServiceComponentAspect implements SqlResult
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlAspect#isRecordType(char)
      * @since 4.2
      */
-    public boolean isRecordType(final char recordType) {
+    @Override
+	public boolean isRecordType(final char recordType) {
         return (recordType == IndexConstants.RECORD_TYPE.RESULT_SET);
     }
 
@@ -75,7 +78,8 @@ public class OutputAspect extends WebServiceComponentAspect implements SqlResult
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlDatatypeCheckerAspect#isDatatypeFeature(org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EStructuralFeature)
      * @since 4.3
      */
-    public boolean isDatatypeFeature(EObject eObject, EStructuralFeature eFeature) {
+    @Override
+	public boolean isDatatypeFeature(EObject eObject, EStructuralFeature eFeature) {
         CoreArgCheck.isInstanceOf(Output.class, eObject); 
         final EObjectImpl eObjectImpl = super.getEObjectImpl(eObject);
         if (eObjectImpl != null) {
@@ -92,7 +96,8 @@ public class OutputAspect extends WebServiceComponentAspect implements SqlResult
      * @return
      * @since 5.0.2
      */
-    public Object getProcedure(EObject eObject) {
+    @Override
+	public Object getProcedure(EObject eObject) {
         CoreArgCheck.isInstanceOf(Output.class, eObject); 
         return ((Output)eObject).getOperation();
     }

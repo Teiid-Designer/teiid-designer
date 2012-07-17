@@ -34,14 +34,16 @@ public class CatalogAspect extends RelationalEntityAspect implements UmlPackage 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodels.aspects.UmlDiagramAspect#getStereotype(java.lang.Object)
      */
-    public String getStereotype(Object eObject) {
+    @Override
+	public String getStereotype(Object eObject) {
         return RelationalPlugin.getPluginResourceLocator().getString("_UI_Catalog_type"); //$NON-NLS-1$
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodels.aspects.UmlDiagramAspect#setSignature(java.lang.Object, java.lang.String)
      */
-    public IStatus setSignature(Object eObject, String newSignature) {
+    @Override
+	public IStatus setSignature(Object eObject, String newSignature) {
         try {
             Catalog catalog = assertCatalog(eObject);
             catalog.setName(newSignature);
@@ -52,7 +54,8 @@ public class CatalogAspect extends RelationalEntityAspect implements UmlPackage 
         return new Status(IStatus.OK, RelationalMetamodelConstants.PLUGIN_ID, 0, RelationalPlugin.Util.getString("Aspect.ok"), null); //$NON-NLS-1$
     }
 
-    public String getSignature(Object eObject, int showMask) {
+    @Override
+	public String getSignature(Object eObject, int showMask) {
         Catalog catalog = assertCatalog(eObject);
         StringBuffer result = new StringBuffer();
         switch (showMask) {
@@ -79,7 +82,8 @@ public class CatalogAspect extends RelationalEntityAspect implements UmlPackage 
         return result.toString();
     }
 
-    public String getEditableSignature(Object eObject) {
+    @Override
+	public String getEditableSignature(Object eObject) {
         return getSignature(eObject, UmlPackage.SIGNATURE_NAME);
     }
 

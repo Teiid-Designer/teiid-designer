@@ -312,7 +312,8 @@ public class DiagramNotationManager
         return nclNotationListener;
     }
 
-    public void setNotationId( String sNotationId ) {
+    @Override
+	public void setNotationId( String sNotationId ) {
         // this method is obsolete for now; may return when we implement notation prefs.
 
     }

@@ -32,15 +32,18 @@ public class DefaultLayoutNode implements LayoutNode {
         }
     }
     
-    public DiagramModelNode getModelNode() {
+    @Override
+	public DiagramModelNode getModelNode() {
         return modelNode;
     }
         
-    public Rectangle getBounds() {
+    @Override
+	public Rectangle getBounds() {
         return bounds;
     }
     
-    public void setCenterXY(double x, double y) {
+    @Override
+	public void setCenterXY(double x, double y) {
         centerX = x;
         centerY = y;
         thisX = centerX - getWidth()/2;
@@ -49,23 +52,27 @@ public class DefaultLayoutNode implements LayoutNode {
 //        System.out.println(" -->> DefaultLayoutNode.setCenterXY():  New XY Point = " + getPosition());
     }
     
-    public void setCenterX(double x) {
+    @Override
+	public void setCenterX(double x) {
         centerX = x;
         thisX = centerX - getWidth()/2;
 		bounds.setLocation((int)thisX, (int)thisY);
     }
     
-    public void setCenterY(double y) {
+    @Override
+	public void setCenterY(double y) {
         centerY = y;
         thisY = centerY - getHeight()/2;
 		bounds.setLocation((int)thisX, (int)thisY);
     }
     
-    public Point getPosition() {
+    @Override
+	public Point getPosition() {
         return new Point(thisX, thisY);
     }
     
-    public void setPosition(Point point ) {
+    @Override
+	public void setPosition(Point point ) {
         thisX = point.x;
         thisY = point.y;
         setCenterX(thisX + getWidth()/2);
@@ -74,7 +81,8 @@ public class DefaultLayoutNode implements LayoutNode {
 //        System.out.println(" -->> DefaultLayoutNode.setPosition():  New XY Point = " + point);
     }
     
-    public void setPosition(double x, double y) {
+    @Override
+	public void setPosition(double x, double y) {
         thisX = x;
         thisY = y;
         setCenterX(thisX + getWidth()/2);
@@ -82,48 +90,58 @@ public class DefaultLayoutNode implements LayoutNode {
 		bounds.setLocation((int)thisX, (int)thisY);
     }
     
-    public void setX(double x) {
+    @Override
+	public void setX(double x) {
         thisX = x;
         setCenterX(thisX + getWidth()/2);
 		bounds.setLocation((int)thisX, (int)thisY);
     }
     
-    public void setY(double y) {
+    @Override
+	public void setY(double y) {
         thisY = y;
         setCenterY(thisY + getHeight()/2);
 		bounds.setLocation((int)thisX, (int)thisY);
     }
     
-    public double getX() {
+    @Override
+	public double getX() {
         return thisX;
     }
     
-    public double getY() {
+    @Override
+	public double getY() {
         return thisY;
     }
     
-    public double getWidth() {
+    @Override
+	public double getWidth() {
         return bounds.width;
     }
     
-    public double getHeight() {
+    @Override
+	public double getHeight() {
         return bounds.height;
     }
 
-    public double getCenterX() {
+    @Override
+	public double getCenterX() {
         return centerX;
     }
 
-    public double getCenterY() {
+    @Override
+	public double getCenterY() {
         return centerY;
     }
 
-    public void setFinalPosition() {
+    @Override
+	public void setFinalPosition() {
         getModelNode().setCenterXY((int)getCenterX(), (int)getCenterY());    
     }    /**
      * @param rectangle
      */
-    public void setBounds(Rectangle rectangle) {
+    @Override
+	public void setBounds(Rectangle rectangle) {
         bounds = rectangle;
     }
 

@@ -399,7 +399,8 @@ public class XmlRootImpl extends XmlElementImpl implements XmlRoot {
      * 
      * @generated
      */
-    public XmlFragment getFragment() {
+    @Override
+	public XmlFragment getFragment() {
         if (eContainerFeatureID != XmlDocumentPackage.XML_ROOT__FRAGMENT) return null;
         return (XmlFragment)eContainer;
     }
@@ -422,7 +423,8 @@ public class XmlRootImpl extends XmlElementImpl implements XmlRoot {
      * 
      * @generated
      */
-    public void setFragment( final XmlFragment newFragment ) {
+    @Override
+	public void setFragment( final XmlFragment newFragment ) {
         if (newFragment != eContainer || (eContainerFeatureID != XmlDocumentPackage.XML_ROOT__FRAGMENT && newFragment != null)) {
             if (EcoreUtil.isAncestor(this, newFragment)) throw new IllegalArgumentException(
                                                                                             "Recursive containment not allowed for " + toString()); //$NON-NLS-1$

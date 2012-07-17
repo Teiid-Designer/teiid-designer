@@ -98,63 +98,72 @@ public class DatatypeRecordImpl extends AbstractMetadataRecord implements Dataty
     /**
      * @see org.teiid.designer.metadata.runtime.DatatypeRecord#getLength()
      */
-    public int getLength() {
+    @Override
+	public int getLength() {
         return this.length;
     }
 
     /**
      * @see org.teiid.designer.metadata.runtime.DatatypeRecord#getPrecisionLength()
      */
-    public int getPrecisionLength() {
+    @Override
+	public int getPrecisionLength() {
         return this.precisionLength;
     }
 
     /**
      * @see org.teiid.designer.metadata.runtime.DatatypeRecord#getScale()
      */
-    public int getScale() {
+    @Override
+	public int getScale() {
         return this.scale;
     }
 
     /**
      * @see org.teiid.designer.metadata.runtime.DatatypeRecord#getRadix()
      */
-    public int getRadix() {
+    @Override
+	public int getRadix() {
         return this.radix;
     }
 
     /**
      * @see org.teiid.designer.metadata.runtime.DatatypeRecord#isSigned()
      */
-    public boolean isSigned() {
+    @Override
+	public boolean isSigned() {
         return this.isSigned;
     }
 
     /**
      * @see org.teiid.designer.metadata.runtime.DatatypeRecord#isAutoIncrement()
      */
-    public boolean isAutoIncrement() {
+    @Override
+	public boolean isAutoIncrement() {
         return this.isAutoIncrement;
     }
 
     /**
      * @see org.teiid.designer.metadata.runtime.DatatypeRecord#isCaseSensitive()
      */
-    public boolean isCaseSensitive() {
+    @Override
+	public boolean isCaseSensitive() {
         return this.isCaseSensitive;
     }
 
     /**
      * @see org.teiid.designer.metadata.runtime.DatatypeRecord#getType()
      */
-    public short getType() {
+    @Override
+	public short getType() {
         return this.type;
     }
 
     /**
      * @see org.teiid.designer.metadata.runtime.DatatypeRecord#isBuiltin()
      */
-    public boolean isBuiltin() {
+    @Override
+	public boolean isBuiltin() {
         if ( getType() == MetadataConstants.DATATYPE_TYPES.BASIC ) {
             return true;
         }
@@ -165,49 +174,56 @@ public class DatatypeRecordImpl extends AbstractMetadataRecord implements Dataty
     /**
      * @see org.teiid.designer.metadata.runtime.DatatypeRecord#getSearchType()
      */
-    public short getSearchType() {
+    @Override
+	public short getSearchType() {
         return this.searchType;
     }
 
     /**
      * @see org.teiid.designer.metadata.runtime.DatatypeRecord#getNullType()
      */
-    public short getNullType() {
+    @Override
+	public short getNullType() {
         return this.nullType;
     }
 
     /**
      * @see org.teiid.designer.metadata.runtime.DatatypeRecord#getJavaClassName()
      */
-    public String getJavaClassName() {
+    @Override
+	public String getJavaClassName() {
         return this.javaClassName;
     }
 
     /**
      * @see org.teiid.designer.metadata.runtime.DatatypeRecord#getRuntimeTypeName()
      */
-    public String getRuntimeTypeName() {
+    @Override
+	public String getRuntimeTypeName() {
         return this.runtimeTypeName;
     }
 
     /**
      * @see org.teiid.designer.metadata.runtime.DatatypeRecord#getDatatypeID()
      */
-    public String getDatatypeID() {
+    @Override
+	public String getDatatypeID() {
         return this.datatypeID;
     }
 
     /**
      * @see org.teiid.designer.metadata.runtime.DatatypeRecord#getBasetypeID()
      */
-    public String getBasetypeID() {
+    @Override
+	public String getBasetypeID() {
         return this.basetypeID;
     }
 
     /**
      * @see org.teiid.designer.metadata.runtime.DatatypeRecord#getBasetypeName()
      */
-    public String getBasetypeName() {
+    @Override
+	public String getBasetypeName() {
         if ( this.basetypeID != null ) {
             final int i = getBasetypeID().lastIndexOf(DatatypeConstants.URI_REFERENCE_DELIMITER);
             if ( i != -1 && getBasetypeID().length() > (i+1)) {
@@ -221,21 +237,24 @@ public class DatatypeRecordImpl extends AbstractMetadataRecord implements Dataty
      * @see org.teiid.designer.metadata.runtime.DatatypeRecord#getPrimitiveTypeID()
      * @since 4.3
      */
-    public String getPrimitiveTypeID() {
+    @Override
+	public String getPrimitiveTypeID() {
         return this.primitiveTypeID;
     }
 
     /**
      * @see org.teiid.designer.metadata.runtime.DatatypeRecord#getVarietyType()
      */
-    public short getVarietyType() {
+    @Override
+	public short getVarietyType() {
         return this.varietyType;
     }
 
     /**
      * @see org.teiid.designer.metadata.runtime.DatatypeRecord#getVarietyProps()
      */
-    public List getVarietyProps() {
+    @Override
+	public List getVarietyProps() {
         return this.varietyProps;
     }
 

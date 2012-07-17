@@ -238,7 +238,8 @@ public class MergeProcessorImpl implements MergeProcessor {
     /**
      * @see org.teiid.designer.compare.MergeProcessor#execute(org.eclipse.core.runtime.IProgressMonitor)
      */
-    public IStatus execute( final IProgressMonitor progressMonitor ) {
+    @Override
+	public IStatus execute( final IProgressMonitor progressMonitor ) {
         if (closed) {
             final int code = PROCESSOR_ALREADY_CLOSED;
             final String msg = ModelerComparePlugin.Util.getString("MergeProcessorImpl.The_processor_has_already_been_closed"); //$NON-NLS-1$
@@ -332,14 +333,16 @@ public class MergeProcessorImpl implements MergeProcessor {
      * @see org.teiid.designer.compare.MergeProcessor#reresolve(org.eclipse.core.runtime.IProgressMonitor)
      * @since 4.2
      */
-    public void reresolve( IProgressMonitor monitor ) {
+    @Override
+	public void reresolve( IProgressMonitor monitor ) {
         doReResolveAndRebuildImports();
     }
 
     /**
      * @see org.teiid.designer.compare.MergeProcessor#close()
      */
-    public void close() {
+    @Override
+	public void close() {
         if (this.closed) {
             return;
         }
@@ -889,7 +892,8 @@ public class MergeProcessorImpl implements MergeProcessor {
         /**
          * @see org.teiid.designer.core.util.ModelVisitor#visit(org.eclipse.emf.ecore.EObject)
          */
-        public boolean visit( EObject object ) {
+        @Override
+		public boolean visit( EObject object ) {
             if (object instanceof Mapping) {
                 ++numMappings;
                 final Mapping mapping = (Mapping)object;
@@ -914,7 +918,8 @@ public class MergeProcessorImpl implements MergeProcessor {
         /**
          * @see org.teiid.designer.core.util.ModelVisitor#visit(org.eclipse.emf.ecore.resource.Resource)
          */
-        public boolean visit( Resource resource ) {
+        @Override
+		public boolean visit( Resource resource ) {
             return true;
         }
 
@@ -927,7 +932,8 @@ public class MergeProcessorImpl implements MergeProcessor {
         /**
          * @see org.teiid.designer.core.util.ModelVisitor#visit(org.eclipse.emf.ecore.EObject)
          */
-        public boolean visit( EObject object ) throws ModelerCoreException {
+        @Override
+		public boolean visit( EObject object ) throws ModelerCoreException {
             if (object instanceof Mapping) {
                 MergeProcessorImpl.this.doProcess((Mapping)object, true, false, true);
                 return true;
@@ -938,14 +944,16 @@ public class MergeProcessorImpl implements MergeProcessor {
         /**
          * @see org.teiid.designer.core.util.ModelVisitor#visit(org.eclipse.emf.ecore.resource.Resource)
          */
-        public boolean visit( Resource resource ) {
+        @Override
+		public boolean visit( Resource resource ) {
             return true;
         }
 
         /**
          * @see org.teiid.designer.core.util.ModelVisitorWithFinish#postVisit(org.eclipse.emf.ecore.EObject)
          */
-        public void postVisit( EObject object ) {
+        @Override
+		public void postVisit( EObject object ) {
             if (object instanceof Mapping) {
                 MergeProcessorImpl.this.doPostProcess((Mapping)object);
             }
@@ -956,7 +964,8 @@ public class MergeProcessorImpl implements MergeProcessor {
         /**
          * @see org.teiid.designer.core.util.ModelVisitor#visit(org.eclipse.emf.ecore.EObject)
          */
-        public boolean visit( EObject object ) throws ModelerCoreException {
+        @Override
+		public boolean visit( EObject object ) throws ModelerCoreException {
             if (object instanceof Mapping) {
                 MergeProcessorImpl.this.doProcess((Mapping)object, false, true, false);
                 return true;
@@ -967,7 +976,8 @@ public class MergeProcessorImpl implements MergeProcessor {
         /**
          * @see org.teiid.designer.core.util.ModelVisitor#visit(org.eclipse.emf.ecore.resource.Resource)
          */
-        public boolean visit( Resource resource ) {
+        @Override
+		public boolean visit( Resource resource ) {
             return true;
         }
     }
@@ -976,7 +986,8 @@ public class MergeProcessorImpl implements MergeProcessor {
         /**
          * @see org.teiid.designer.core.util.ModelVisitor#visit(org.eclipse.emf.ecore.EObject)
          */
-        public boolean visit( EObject object ) {
+        @Override
+		public boolean visit( EObject object ) {
             MergeProcessorImpl.this.doResolve(object);
             return true;
         }
@@ -984,7 +995,8 @@ public class MergeProcessorImpl implements MergeProcessor {
         /**
          * @see org.teiid.designer.core.util.ModelVisitor#visit(org.eclipse.emf.ecore.resource.Resource)
          */
-        public boolean visit( Resource resource ) {
+        @Override
+		public boolean visit( Resource resource ) {
             return true;
         }
     }

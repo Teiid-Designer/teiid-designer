@@ -110,7 +110,8 @@ public class LanguageObjectBuilderTreeViewer extends TreeViewer implements ILang
         final Object selection = newSelection;
 
         Display.getDefault().asyncExec(new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 setSelection(new StructuredSelection(selection));
             }
         });
@@ -244,7 +245,8 @@ public class LanguageObjectBuilderTreeViewer extends TreeViewer implements ILang
                 final Object selection = newSelection;
 
                 Display.getDefault().asyncExec(new Runnable() {
-                    public void run() {
+                    @Override
+					public void run() {
                         setSelection(new StructuredSelection(selection));
                     }
                 });
@@ -259,7 +261,8 @@ public class LanguageObjectBuilderTreeViewer extends TreeViewer implements ILang
     /**
      * @see org.teiid.designer.transformation.ui.builder.ILanguageObjectInputProvider#getLanguageObject()
      */
-    public LanguageObject getLanguageObject() {
+    @Override
+	public LanguageObject getLanguageObject() {
         return langObj;
     }
 
@@ -444,7 +447,8 @@ public class LanguageObjectBuilderTreeViewer extends TreeViewer implements ILang
         // put this in the back of the UI thread event queue.
         // at startup the listeners we're working. this makes sure the listeners have all been wired.
         Display.getDefault().asyncExec(new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 setSelection(new StructuredSelection(contentProvider.getRoot()));
             }
         });

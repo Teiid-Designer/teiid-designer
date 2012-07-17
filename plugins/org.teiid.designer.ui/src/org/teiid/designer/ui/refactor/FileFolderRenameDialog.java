@@ -176,7 +176,8 @@ public class FileFolderRenameDialog extends SelectionDialog {
 
     private void setErrorMessage( final IStatus status ) {
         Display.getCurrent().asyncExec(new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 if (messageLabel != null && !messageLabel.isDisposed()) {
                     messageLabel.setErrorStatus(status);
                 }
@@ -186,21 +187,25 @@ public class FileFolderRenameDialog extends SelectionDialog {
 
     private void registerControls() {
         txtOldNameNewName.addFocusListener(new FocusListener() {
-            public void focusGained( final FocusEvent event ) {
+            @Override
+			public void focusGained( final FocusEvent event ) {
                 // no action
             }
 
-            public void focusLost( final FocusEvent event ) {
+            @Override
+			public void focusLost( final FocusEvent event ) {
                 handleFocusLost();
             }
         });
 
         txtOldNameNewName.addKeyListener(new KeyListener() {
 
-            public void keyPressed( final KeyEvent event ) {
+            @Override
+			public void keyPressed( final KeyEvent event ) {
             }
 
-            public void keyReleased( final KeyEvent event ) {
+            @Override
+			public void keyReleased( final KeyEvent event ) {
                 handleKeyReleased();
             }
         });

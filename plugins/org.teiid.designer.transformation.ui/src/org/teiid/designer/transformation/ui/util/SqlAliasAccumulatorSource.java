@@ -56,7 +56,8 @@ public class SqlAliasAccumulatorSource implements IAccumulatorSource {
         this.initialValues = initialValues;
     }
     
-    public void accumulatedValuesRemoved(Collection values) {
+    @Override
+	public void accumulatedValuesRemoved(Collection values) {
         //Any items that were originally in our table we will reinsert into the same relative 
         //location.  Any ones that did not start here we will insert at the end.
         Iterator it = values.iterator();
@@ -72,7 +73,8 @@ public class SqlAliasAccumulatorSource implements IAccumulatorSource {
         }
     }
     
-    public void accumulatedValuesAdded(Collection values) {
+    @Override
+	public void accumulatedValuesAdded(Collection values) {
         Iterator it = values.iterator();
         while (it.hasNext()) {
             Object value = it.next();
@@ -82,7 +84,8 @@ public class SqlAliasAccumulatorSource implements IAccumulatorSource {
         }
     }
     
-    public Collection getAvailableValues() {
+    @Override
+	public Collection getAvailableValues() {
         Collection itemsColl = new ArrayList(currentValues.size());
         Iterator it = currentValues.iterator();
         while (it.hasNext()) {
@@ -91,12 +94,14 @@ public class SqlAliasAccumulatorSource implements IAccumulatorSource {
         return itemsColl;
     }
     
-    public int getAvailableValuesCount() {
+    @Override
+	public int getAvailableValuesCount() {
         int count = table.getItemCount();
         return count;
     }
     
-    public Collection getSelectedAvailableValues() {
+    @Override
+	public Collection getSelectedAvailableValues() {
         int[] itemIndices = table.getSelectionIndices();
         Collection itemsColl = new ArrayList(itemIndices.length);
         for (int i = 0; i < itemIndices.length; i++) {
@@ -106,12 +111,14 @@ public class SqlAliasAccumulatorSource implements IAccumulatorSource {
         return itemsColl;
     }
     
-    public int getSelectedAvailableValuesCount() {
+    @Override
+	public int getSelectedAvailableValuesCount() {
         int count = table.getSelectionCount();
         return count;
     }
     
-    public Control createControl(Composite parent) {
+    @Override
+	public Control createControl(Composite parent) {
         //Create the table
         table = new Table(parent, SWT.MULTI | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
         GridData tableGridData = new GridData();
@@ -139,7 +146,8 @@ public class SqlAliasAccumulatorSource implements IAccumulatorSource {
         return table;
     }
     
-    public void addSelectionListener(SelectionListener listener) {
+    @Override
+	public void addSelectionListener(SelectionListener listener) {
         table.addSelectionListener(listener);
     }
     
@@ -181,14 +189,16 @@ public class SqlAliasAccumulatorSource implements IAccumulatorSource {
     /* (non-Javadoc)
      * @see org.teiid.designer.ui.common.widget.accumulator.IAccumulatorSource#supportsAddAll()
      */
-    public boolean supportsAddAll() {
+    @Override
+	public boolean supportsAddAll() {
         return true;
     }
 
     /* (non-Javadoc)
      * @see org.teiid.designer.ui.common.widget.accumulator.IAccumulatorSource#getSelectionStatus()
      */
-    public IStatus getSelectionStatus() {
+    @Override
+	public IStatus getSelectionStatus() {
         return OK_STATUS;
     }
 

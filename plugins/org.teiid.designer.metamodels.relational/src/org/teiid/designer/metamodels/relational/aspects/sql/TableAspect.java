@@ -48,7 +48,8 @@ public class TableAspect extends RelationalEntityAspect implements SqlTableAspec
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlBaseTableAspect#supportsUpdate(org.eclipse.emf.ecore.EObject)
      */
-    public boolean supportsUpdate(final EObject eObject) {
+    @Override
+	public boolean supportsUpdate(final EObject eObject) {
         CoreArgCheck.isInstanceOf(Table.class, eObject); 
         Table table = (Table) eObject;       
         return table.isSupportsUpdate();
@@ -57,7 +58,8 @@ public class TableAspect extends RelationalEntityAspect implements SqlTableAspec
     /**
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlTableAspect#getTableType(org.eclipse.emf.ecore.EObject)
      */
-    public int getTableType(final EObject eObject) {
+    @Override
+	public int getTableType(final EObject eObject) {
         CoreArgCheck.isInstanceOf(Table.class, eObject); 
         Table table = (Table) eObject;
         if(table instanceof View) {
@@ -78,7 +80,8 @@ public class TableAspect extends RelationalEntityAspect implements SqlTableAspec
     /** 
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlTableAspect#isSystem(org.eclipse.emf.ecore.EObject)
      */
-    public boolean isSystem(final EObject eObject) {
+    @Override
+	public boolean isSystem(final EObject eObject) {
         CoreArgCheck.isInstanceOf(Table.class, eObject); 
         Table table = (Table) eObject;       
         return table.isSystem();
@@ -88,7 +91,8 @@ public class TableAspect extends RelationalEntityAspect implements SqlTableAspec
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlTableAspect#getMaterializedTableId(org.eclipse.emf.ecore.EObject)
      * @since 4.2
      */
-    public String getMaterializedTableId(EObject eObject) {
+    @Override
+	public String getMaterializedTableId(EObject eObject) {
         CoreArgCheck.isInstanceOf(Table.class, eObject); 
         Table table = (Table) eObject;
         if( table != null ) {
@@ -104,7 +108,8 @@ public class TableAspect extends RelationalEntityAspect implements SqlTableAspec
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlBaseTableAspect#isVirtual(org.eclipse.emf.ecore.EObject)
      */
-    public boolean isVirtual(final EObject eObject) {
+    @Override
+	public boolean isVirtual(final EObject eObject) {
         CoreArgCheck.isInstanceOf(Table.class, eObject); 
         Table table = (Table) eObject;
     	try {    
@@ -121,7 +126,8 @@ public class TableAspect extends RelationalEntityAspect implements SqlTableAspec
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlTableAspect#isMaterialized(org.eclipse.emf.ecore.EObject)
      * @since 4.2
      */
-    public boolean isMaterialized(EObject eObject) {
+    @Override
+	public boolean isMaterialized(EObject eObject) {
         CoreArgCheck.isInstanceOf(Table.class, eObject); 
         Table table = (Table) eObject;       
         return table.isMaterialized();
@@ -130,7 +136,8 @@ public class TableAspect extends RelationalEntityAspect implements SqlTableAspec
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlBaseTableAspect#getColumns(org.eclipse.emf.ecore.EObject)
      */
-    public List getColumns(final EObject eObject) {
+    @Override
+	public List getColumns(final EObject eObject) {
         CoreArgCheck.isInstanceOf(Table.class, eObject); 
         Table baseTable = (Table) eObject;       
         return baseTable.getColumns();
@@ -139,7 +146,8 @@ public class TableAspect extends RelationalEntityAspect implements SqlTableAspec
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlBaseTableAspect#getIndexes(org.eclipse.emf.ecore.EObject)
      */
-    public Collection getIndexes(final EObject eObject) {
+    @Override
+	public Collection getIndexes(final EObject eObject) {
         // Go through the columns and grab the indexes used by each column
         final List results = new ArrayList();
         if ( eObject instanceof BaseTable ) {
@@ -166,7 +174,8 @@ public class TableAspect extends RelationalEntityAspect implements SqlTableAspec
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlBaseTableAspect#getForeignKeys(org.eclipse.emf.ecore.EObject)
      */
-    public Collection getForeignKeys(final EObject eObject) {
+    @Override
+	public Collection getForeignKeys(final EObject eObject) {
         CoreArgCheck.isInstanceOf(Table.class, eObject);
         if(eObject instanceof BaseTable){ 
             BaseTable baseTable = (BaseTable) eObject;        
@@ -179,7 +188,8 @@ public class TableAspect extends RelationalEntityAspect implements SqlTableAspec
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlBaseTableAspect#getPrimaryKey(org.eclipse.emf.ecore.EObject)
      */
-    public Object getPrimaryKey(final EObject eObject) {
+    @Override
+	public Object getPrimaryKey(final EObject eObject) {
         CoreArgCheck.isInstanceOf(Table.class, eObject); 
 		if(eObject instanceof BaseTable){ 
 			BaseTable baseTable = (BaseTable) eObject;        
@@ -191,7 +201,8 @@ public class TableAspect extends RelationalEntityAspect implements SqlTableAspec
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlTableAspect#getUniqueKeys(org.eclipse.emf.ecore.EObject)
      */
-    public Collection getUniqueKeys(final EObject eObject) {
+    @Override
+	public Collection getUniqueKeys(final EObject eObject) {
         CoreArgCheck.isInstanceOf(Table.class, eObject); 
         // Go through the columns and grab the indexes used by each column
         final List results = new ArrayList();
@@ -219,7 +230,8 @@ public class TableAspect extends RelationalEntityAspect implements SqlTableAspec
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlBaseTableAspect#getAccessPatterns(org.eclipse.emf.ecore.EObject)
      */
-    public Collection getAccessPatterns(final EObject eObject) {
+    @Override
+	public Collection getAccessPatterns(final EObject eObject) {
         CoreArgCheck.isInstanceOf(Table.class, eObject); 
         Table baseTable = (Table) eObject;       
         return baseTable.getAccessPatterns();
@@ -228,7 +240,8 @@ public class TableAspect extends RelationalEntityAspect implements SqlTableAspec
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlBaseTableAspect#getCardinality(org.eclipse.emf.ecore.EObject)
      */
-    public int getCardinality(final EObject eObject) {
+    @Override
+	public int getCardinality(final EObject eObject) {
         CoreArgCheck.isInstanceOf(Table.class, eObject);
         Table baseTable = (Table) eObject;       
         return baseTable.getCardinality();
@@ -237,21 +250,24 @@ public class TableAspect extends RelationalEntityAspect implements SqlTableAspec
     /*
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlColumnSetAspect#getType()
      */
-    public int getColumnSetType() {
+    @Override
+	public int getColumnSetType() {
         return MetadataConstants.COLUMN_SET_TYPES.TABLE;
     }
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlAspect#isRecordType(char)
      */
-    public boolean isRecordType(final char recordType) {
+    @Override
+	public boolean isRecordType(final char recordType) {
         return (recordType == IndexConstants.RECORD_TYPE.TABLE);
     }
 
     /*
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlTableAspect#isMappable(org.eclipse.emf.ecore.EObject, int)
      */
-    public boolean isMappable(final EObject eObject, final int mappingType) {
+    @Override
+	public boolean isMappable(final EObject eObject, final int mappingType) {
         if(isVirtual(eObject)) {
             return (mappingType == SqlTableAspect.MAPPINGS.SQL_TRANSFORM);
         }
@@ -262,7 +278,8 @@ public class TableAspect extends RelationalEntityAspect implements SqlTableAspec
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlTableAspect#canAcceptTransformationSource(org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject)
      * @since 4.3
      */
-    public boolean canAcceptTransformationSource(EObject target, EObject source) {
+    @Override
+	public boolean canAcceptTransformationSource(EObject target, EObject source) {
         CoreArgCheck.isInstanceOf(Table.class, target);
         CoreArgCheck.isNotNull(source);
         // no object should be source of itself
@@ -282,7 +299,8 @@ public class TableAspect extends RelationalEntityAspect implements SqlTableAspec
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlTableAspect#canBeTransformationSource(org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject)
      * @since 4.3
      */
-    public boolean canBeTransformationSource(EObject source, EObject target) {
+    @Override
+	public boolean canBeTransformationSource(EObject source, EObject target) {
         CoreArgCheck.isInstanceOf(Table.class, source);
         CoreArgCheck.isNotNull(target);
         // no object should be source of itself
@@ -301,14 +319,16 @@ public class TableAspect extends RelationalEntityAspect implements SqlTableAspec
     /*
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlAspect#updateObject(org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject)
      */
-    public void updateObject(final EObject targetObject, final EObject sourceObject) {
+    @Override
+	public void updateObject(final EObject targetObject, final EObject sourceObject) {
 
     }
 
     /*
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlTableAspect#setSupportsUpdate(org.eclipse.emf.ecore.EObject, boolean)
      */
-    public void setSupportsUpdate(final EObject eObject, final boolean supportsUpdate) {
+    @Override
+	public void setSupportsUpdate(final EObject eObject, final boolean supportsUpdate) {
         CoreArgCheck.isInstanceOf(Table.class, eObject); 
         Table baseTable = (Table) eObject;
         baseTable.setSupportsUpdate(supportsUpdate);

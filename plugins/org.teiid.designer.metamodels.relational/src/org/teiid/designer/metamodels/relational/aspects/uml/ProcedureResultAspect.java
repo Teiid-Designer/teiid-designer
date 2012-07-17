@@ -41,25 +41,29 @@ public class ProcedureResultAspect extends RelationalEntityAspect implements Uml
     /**
      * @see org.teiid.designer.core.metamodel.aspect.uml.UmlClassifier#getRelationships(java.lang.Object)
      */
-    public Collection getRelationships(Object eObject) {
+    @Override
+	public Collection getRelationships(Object eObject) {
         return Collections.EMPTY_LIST;
     }
 
     /**
      * @see org.teiid.designer.core.metamodel.aspect.uml.UmlClassifier#getSupertypes(java.lang.Object)
      */
-    public Collection getSupertypes(Object eObject) {
+    @Override
+	public Collection getSupertypes(Object eObject) {
         return Collections.EMPTY_LIST;
     }
 
     /**
      * @see org.teiid.designer.core.metamodel.aspect.uml.UmlDiagramAspect#getStereotype(java.lang.Object)
      */
-    public String getStereotype(Object eObject) {
+    @Override
+	public String getStereotype(Object eObject) {
         return RelationalPlugin.getPluginResourceLocator().getString("_UI_ProcedureResult_type"); //$NON-NLS-1$
     }
 
-    public String getSignature(Object eObject, int showMask) {
+    @Override
+	public String getSignature(Object eObject, int showMask) {
         ProcedureResult procResult = assertProcedureResult(eObject);
         StringBuffer result = new StringBuffer();
         switch (showMask) {
@@ -86,14 +90,16 @@ public class ProcedureResultAspect extends RelationalEntityAspect implements Uml
         return result.toString();
     }
 
-    public String getEditableSignature(Object eObject) {
+    @Override
+	public String getEditableSignature(Object eObject) {
         return getSignature(eObject, UmlClassifier.SIGNATURE_NAME);
     }
 
     /**
      * @see org.teiid.designer.core.metamodel.aspect.uml.UmlDiagramAspect#setSignature(java.lang.Object, java.lang.String)
      */
-    public IStatus setSignature(Object eObject, String newSignature) {
+    @Override
+	public IStatus setSignature(Object eObject, String newSignature) {
         try {
             ProcedureResult result = assertProcedureResult(eObject);
             result.setName(newSignature);
@@ -107,7 +113,8 @@ public class ProcedureResultAspect extends RelationalEntityAspect implements Uml
     /** 
      * @see org.teiid.designer.core.metamodel.aspect.uml.UmlClassifier#isAbstract(java.lang.Object)
      */
-    public boolean isAbstract(Object eObject) {
+    @Override
+	public boolean isAbstract(Object eObject) {
         return false;
     }
 

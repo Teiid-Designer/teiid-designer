@@ -246,7 +246,8 @@ public class EResourceSetImpl extends ResourceSetImpl implements EResourceSet {
      * @see com.org.teiid.designer.core.resource.EResourceSet#getEObjectHrefConverter()
      * @since 4.3
      */
-    public EObjectHrefConverter getEObjectHrefConverter() {
+    @Override
+	public EObjectHrefConverter getEObjectHrefConverter() {
         if (this.eObjectHrefConverter == null) {
             this.eObjectHrefConverter = new BuiltInTypesHrefConverter(this);
 
@@ -258,7 +259,8 @@ public class EResourceSetImpl extends ResourceSetImpl implements EResourceSet {
      * @see com.org.teiid.designer.core.resource.EResourceSet#setEObjectHrefConverter(com.org.teiid.designer.core.resource.EObjectHrefConverter)
      * @since 4.3
      */
-    public void setEObjectHrefConverter( final EObjectHrefConverter theConverter ) {
+    @Override
+	public void setEObjectHrefConverter( final EObjectHrefConverter theConverter ) {
         this.eObjectHrefConverter = theConverter;
     }
 
@@ -266,7 +268,8 @@ public class EResourceSetImpl extends ResourceSetImpl implements EResourceSet {
      * @see com.org.teiid.designer.core.resource.EResourceSet#addListener(org.eclipse.emf.edit.provider.INotifyChangedListener)
      * @since 4.3
      */
-    public void addListener( final INotifyChangedListener notifyChangedListener ) {
+    @Override
+	public void addListener( final INotifyChangedListener notifyChangedListener ) {
         changeNotifier.addListener(notifyChangedListener);
     }
 
@@ -274,7 +277,8 @@ public class EResourceSetImpl extends ResourceSetImpl implements EResourceSet {
      * @see com.org.teiid.designer.core.resource.EResourceSet#removeListener(org.eclipse.emf.edit.provider.INotifyChangedListener)
      * @since 4.3
      */
-    public void removeListener( final INotifyChangedListener notifyChangedListener ) {
+    @Override
+	public void removeListener( final INotifyChangedListener notifyChangedListener ) {
         changeNotifier.removeListener(notifyChangedListener);
     }
 
@@ -303,7 +307,8 @@ public class EResourceSetImpl extends ResourceSetImpl implements EResourceSet {
         }
     }
 
-    public void addExternalResourceSet( final ResourceSet resourceSet ) {
+    @Override
+	public void addExternalResourceSet( final ResourceSet resourceSet ) {
         if (resourceSet != null && !this.externalResourceSets.contains(resourceSet)) {
             this.externalResourceSets.add(resourceSet);
         }
@@ -316,7 +321,8 @@ public class EResourceSetImpl extends ResourceSetImpl implements EResourceSet {
      * @return
      * @since 4.3
      */
-    public ResourceSet[] getExternalResourceSets() {
+    @Override
+	public ResourceSet[] getExternalResourceSets() {
         return (ResourceSet[])this.externalResourceSets.toArray(new ResourceSet[this.externalResourceSets.size()]);
     }
 

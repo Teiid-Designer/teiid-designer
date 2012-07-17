@@ -53,7 +53,8 @@ public class CompositeNotifyChangeListener implements INotifyChangedListener {
     /* (non-Javadoc)
      * @see org.eclipse.emf.edit.provider.INotifyChangedListener#notifyChanged(org.eclipse.emf.common.notify.Notification)
      */
-    public void notifyChanged(Notification theNotification) {
+    @Override
+	public void notifyChanged(Notification theNotification) {
         for (int size = subListeners.size(), i = 0; i < size; i++) {
             INotifyChangedListener l = subListeners.get(i);
             l.notifyChanged(theNotification);

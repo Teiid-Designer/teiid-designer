@@ -155,20 +155,24 @@ public class SaveAsDialog extends ElementTreeSelectionDialog implements UiConsta
     private void registerControls() {
         fileNameText.addFocusListener(new FocusListener() {
 
-            public void focusGained( final FocusEvent event ) {
+            @Override
+			public void focusGained( final FocusEvent event ) {
             }
 
-            public void focusLost( final FocusEvent event ) {
+            @Override
+			public void focusLost( final FocusEvent event ) {
                 updateOkButton();
             }
         });
 
         fileNameText.addKeyListener(new KeyListener() {
 
-            public void keyPressed( final KeyEvent event ) {
+            @Override
+			public void keyPressed( final KeyEvent event ) {
             }
 
-            public void keyReleased( final KeyEvent event ) {
+            @Override
+			public void keyReleased( final KeyEvent event ) {
                 updateOkButton();
             }
         });
@@ -186,7 +190,8 @@ public class SaveAsDialog extends ElementTreeSelectionDialog implements UiConsta
     }
 
     public class SaveAsValidator implements ISelectionStatusValidator {
-        public IStatus validate( Object[] selection ) {
+        @Override
+		public IStatus validate( Object[] selection ) {
             IStatus result = null;
 
             if (selection.length == 1 && selection[0] != null) {

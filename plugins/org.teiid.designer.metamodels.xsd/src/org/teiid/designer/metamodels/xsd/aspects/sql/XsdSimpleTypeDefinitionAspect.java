@@ -96,7 +96,8 @@ public class XsdSimpleTypeDefinitionAspect extends AbstractMetamodelAspect imple
     /**
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlAspect#getName(org.eclipse.emf.ecore.EObject)
      */
-    public String getName( EObject eObject ) {
+    @Override
+	public String getName( EObject eObject ) {
         CoreArgCheck.isInstanceOf(XSDSimpleTypeDefinition.class, eObject);
         XSDSimpleTypeDefinition entity = (XSDSimpleTypeDefinition)eObject;
         return entity.getName();
@@ -105,7 +106,8 @@ public class XsdSimpleTypeDefinitionAspect extends AbstractMetamodelAspect imple
     /**
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlAspect#getNameInSource(org.eclipse.emf.ecore.EObject)
      */
-    public String getNameInSource( EObject eObject ) {
+    @Override
+	public String getNameInSource( EObject eObject ) {
         CoreArgCheck.isInstanceOf(XSDSimpleTypeDefinition.class, eObject);
         XSDSimpleTypeDefinition entity = (XSDSimpleTypeDefinition)eObject;
         return entity.getName();
@@ -170,14 +172,16 @@ public class XsdSimpleTypeDefinitionAspect extends AbstractMetamodelAspect imple
     /**
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlAspect#isRecordType(char)
      */
-    public boolean isRecordType( char recordType ) {
+    @Override
+	public boolean isRecordType( char recordType ) {
         return (recordType == IndexConstants.RECORD_TYPE.DATATYPE);
     }
 
     /**
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlAspect#isQueryable(org.eclipse.emf.ecore.EObject)
      */
-    public boolean isQueryable( final EObject eObject ) {
+    @Override
+	public boolean isQueryable( final EObject eObject ) {
         // If the EObject is a simple datatype but it is not a global datatype then return false
         if ((eObject instanceof XSDSimpleTypeDefinition) && !(eObject.eContainer() instanceof XSDSchema)) {
             return false;
@@ -188,77 +192,88 @@ public class XsdSimpleTypeDefinitionAspect extends AbstractMetamodelAspect imple
     /**
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlDatatypeAspect#getLength(org.eclipse.emf.ecore.EObject)
      */
-    public int getLength( EObject eObject ) {
+    @Override
+	public int getLength( EObject eObject ) {
         return 0;
     }
 
     /**
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlDatatypeAspect#getPrecisionLength(org.eclipse.emf.ecore.EObject)
      */
-    public int getPrecisionLength( EObject eObject ) {
+    @Override
+	public int getPrecisionLength( EObject eObject ) {
         return 0;
     }
 
     /**
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlDatatypeAspect#getRadix(org.eclipse.emf.ecore.EObject)
      */
-    public int getRadix( EObject eObject ) {
+    @Override
+	public int getRadix( EObject eObject ) {
         return 0;
     }
 
     /**
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlDatatypeAspect#getScale(org.eclipse.emf.ecore.EObject)
      */
-    public int getScale( EObject eObject ) {
+    @Override
+	public int getScale( EObject eObject ) {
         return 0;
     }
 
     /**
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlDatatypeAspect#isAutoIncrement(org.eclipse.emf.ecore.EObject)
      */
-    public boolean isAutoIncrement( EObject eObject ) {
+    @Override
+	public boolean isAutoIncrement( EObject eObject ) {
         return false;
     }
 
     /**
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlDatatypeAspect#isCaseSensitive(org.eclipse.emf.ecore.EObject)
      */
-    public boolean isCaseSensitive( EObject eObject ) {
+    @Override
+	public boolean isCaseSensitive( EObject eObject ) {
         return false;
     }
 
     /**
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlDatatypeAspect#isSigned(org.eclipse.emf.ecore.EObject)
      */
-    public boolean isSigned( EObject eObject ) {
+    @Override
+	public boolean isSigned( EObject eObject ) {
         return false;
     }
 
     /**
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlDatatypeAspect#getType(org.eclipse.emf.ecore.EObject)
      */
-    public short getType( EObject eObject ) {
+    @Override
+	public short getType( EObject eObject ) {
         return MetadataConstants.DATATYPE_TYPES.USER_DEFINED;
     }
 
     /**
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlDatatypeAspect#getSearchType(org.eclipse.emf.ecore.EObject)
      */
-    public short getSearchType( EObject eObject ) {
+    @Override
+	public short getSearchType( EObject eObject ) {
         return MetadataConstants.SEARCH_TYPES.SEARCHABLE;
     }
 
     /**
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlDatatypeAspect#getNullType(org.eclipse.emf.ecore.EObject)
      */
-    public short getNullType( EObject eObject ) {
+    @Override
+	public short getNullType( EObject eObject ) {
         return MetadataConstants.NULL_TYPES.NOT_NULL;
     }
 
     /**
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlDatatypeAspect#getUuidString(org.eclipse.emf.ecore.EObject)
      */
-    public String getUuidString( EObject eObject ) {
+    @Override
+	public String getUuidString( EObject eObject ) {
         CoreArgCheck.isInstanceOf(XSDSimpleTypeDefinition.class, eObject);
         // If the datatype is a built-in datatype then use the Teiid Designer
         // instance since the instance found in the org.eclipse.xsd plugin
@@ -277,7 +292,8 @@ public class XsdSimpleTypeDefinitionAspect extends AbstractMetamodelAspect imple
     /**
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlDatatypeAspect#getJavaClassName(org.eclipse.emf.ecore.EObject)
      */
-    public String getJavaClassName( EObject eObject ) {
+    @Override
+	public String getJavaClassName( EObject eObject ) {
         CoreArgCheck.isInstanceOf(XSDSimpleTypeDefinition.class, eObject);
         XSDSimpleTypeDefinition entity = (XSDSimpleTypeDefinition)eObject;
         // Retrieve the runtime type name from the appInfo
@@ -295,7 +311,8 @@ public class XsdSimpleTypeDefinitionAspect extends AbstractMetamodelAspect imple
     /**
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlDatatypeAspect#getRuntimeTypeName(org.eclipse.emf.ecore.EObject)
      */
-    public String getRuntimeTypeName( EObject eObject ) {
+    @Override
+	public String getRuntimeTypeName( EObject eObject ) {
         CoreArgCheck.isInstanceOf(XSDSimpleTypeDefinition.class, eObject);
         // If the datatype is a ur-type return a predefined runtime type
         if (this.isURType(eObject)) {
@@ -326,7 +343,8 @@ public class XsdSimpleTypeDefinitionAspect extends AbstractMetamodelAspect imple
     /**
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlDatatypeAspect#getRuntimeTypeFixed(org.eclipse.emf.ecore.EObject)
      */
-    public Boolean getRuntimeTypeFixed( EObject eObject ) {
+    @Override
+	public Boolean getRuntimeTypeFixed( EObject eObject ) {
         CoreArgCheck.isInstanceOf(XSDSimpleTypeDefinition.class, eObject);
         Boolean fixed = Boolean.FALSE;
         // If the datatype is a ur-type return a predefined runtime type
@@ -357,7 +375,8 @@ public class XsdSimpleTypeDefinitionAspect extends AbstractMetamodelAspect imple
     /**
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlDatatypeAspect#getDatatypeID(org.eclipse.emf.ecore.EObject)
      */
-    public String getDatatypeID( EObject eObject ) {
+    @Override
+	public String getDatatypeID( EObject eObject ) {
         CoreArgCheck.isInstanceOf(XSDSimpleTypeDefinition.class, eObject);
         XSDSimpleTypeDefinition entity = (XSDSimpleTypeDefinition)eObject;
         return this.getURI(entity);
@@ -366,7 +385,8 @@ public class XsdSimpleTypeDefinitionAspect extends AbstractMetamodelAspect imple
     /**
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlDatatypeAspect#getBasetypeID(org.eclipse.emf.ecore.EObject)
      */
-    public String getBasetypeID( EObject eObject ) {
+    @Override
+	public String getBasetypeID( EObject eObject ) {
         CoreArgCheck.isInstanceOf(XSDSimpleTypeDefinition.class, eObject);
 
         XSDSimpleTypeDefinition basetype = (XSDSimpleTypeDefinition)getBasetype(eObject);
@@ -379,7 +399,8 @@ public class XsdSimpleTypeDefinitionAspect extends AbstractMetamodelAspect imple
     /**
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlDatatypeAspect#getBasetype(org.eclipse.emf.ecore.EObject)
      */
-    public Object getBasetype( EObject eObject ) {
+    @Override
+	public Object getBasetype( EObject eObject ) {
         CoreArgCheck.isInstanceOf(XSDSimpleTypeDefinition.class, eObject);
         XSDSimpleTypeDefinition type = (XSDSimpleTypeDefinition)eObject;
         XSDSimpleTypeDefinition basetype = null;
@@ -429,7 +450,8 @@ public class XsdSimpleTypeDefinitionAspect extends AbstractMetamodelAspect imple
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlDatatypeAspect#getPrimitiveType(org.eclipse.emf.ecore.EObject)
      * @since 4.3
      */
-    public Object getPrimitiveType( EObject eObject ) {
+    @Override
+	public Object getPrimitiveType( EObject eObject ) {
         CoreArgCheck.isInstanceOf(XSDSimpleTypeDefinition.class, eObject);
 
         // While the datatype type is not a built-in primitive type ...
@@ -455,7 +477,8 @@ public class XsdSimpleTypeDefinitionAspect extends AbstractMetamodelAspect imple
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlDatatypeAspect#getPrimitiveTypeID(org.eclipse.emf.ecore.EObject)
      * @since 4.3
      */
-    public String getPrimitiveTypeID( EObject eObject ) {
+    @Override
+	public String getPrimitiveTypeID( EObject eObject ) {
         CoreArgCheck.isInstanceOf(XSDSimpleTypeDefinition.class, eObject);
 
         XSDSimpleTypeDefinition primitiveType = (XSDSimpleTypeDefinition)getPrimitiveType(eObject);
@@ -468,7 +491,8 @@ public class XsdSimpleTypeDefinitionAspect extends AbstractMetamodelAspect imple
     /**
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlDatatypeAspect#getEnterpriseExtensionsMap(org.eclipse.emf.ecore.EObject)
      */
-    public Map getEnterpriseExtensionsMap( EObject eObject ) {
+    @Override
+	public Map getEnterpriseExtensionsMap( EObject eObject ) {
         CoreArgCheck.isInstanceOf(XSDSimpleTypeDefinition.class, eObject);
         // If the datatype is a built-in datatype then use the Teiid Designer
         // instance since the instance found in the org.eclipse.xsd plugin
@@ -483,7 +507,8 @@ public class XsdSimpleTypeDefinitionAspect extends AbstractMetamodelAspect imple
     /**
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlDatatypeAspect#getDescription(org.eclipse.emf.ecore.EObject)
      */
-    public String getDescription( EObject eObject ) {
+    @Override
+	public String getDescription( EObject eObject ) {
         CoreArgCheck.isInstanceOf(XSDSimpleTypeDefinition.class, eObject);
         // If the datatype is a built-in datatype then use the Teiid Designer
         // instance since the instance found in the org.eclipse.xsd plugin
@@ -509,7 +534,8 @@ public class XsdSimpleTypeDefinitionAspect extends AbstractMetamodelAspect imple
     /**
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlDatatypeAspect#isBuiltInDatatype(org.eclipse.emf.ecore.EObject)
      */
-    public boolean isBuiltInDatatype( EObject eObject ) {
+    @Override
+	public boolean isBuiltInDatatype( EObject eObject ) {
         CoreArgCheck.isInstanceOf(XSDSimpleTypeDefinition.class, eObject);
         XSDSimpleTypeDefinition entity = (XSDSimpleTypeDefinition)eObject;
 
@@ -558,7 +584,8 @@ public class XsdSimpleTypeDefinitionAspect extends AbstractMetamodelAspect imple
     /**
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlDatatypeAspect#isComplexDatatype(org.eclipse.emf.ecore.EObject)
      */
-    public boolean isComplexDatatype( EObject eObject ) {
+    @Override
+	public boolean isComplexDatatype( EObject eObject ) {
         CoreArgCheck.isInstanceOf(XSDSimpleTypeDefinition.class, eObject);
         return false;
     }
@@ -566,7 +593,8 @@ public class XsdSimpleTypeDefinitionAspect extends AbstractMetamodelAspect imple
     /**
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlDatatypeAspect#isXSDSimpleTypeDefinition(org.eclipse.emf.ecore.EObject)
      */
-    public boolean isSimpleDatatype( EObject eObject ) {
+    @Override
+	public boolean isSimpleDatatype( EObject eObject ) {
         CoreArgCheck.isInstanceOf(XSDSimpleTypeDefinition.class, eObject);
         return true;
     }
@@ -574,7 +602,8 @@ public class XsdSimpleTypeDefinitionAspect extends AbstractMetamodelAspect imple
     /**
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlDatatypeAspect#isURType(org.eclipse.emf.ecore.EObject)
      */
-    public boolean isURType( EObject eObject ) {
+    @Override
+	public boolean isURType( EObject eObject ) {
         CoreArgCheck.isInstanceOf(XSDSimpleTypeDefinition.class, eObject);
         XSDSimpleTypeDefinition entity = (XSDSimpleTypeDefinition)eObject;
         return XSDConstants.isURType(entity);
@@ -583,7 +612,8 @@ public class XsdSimpleTypeDefinitionAspect extends AbstractMetamodelAspect imple
     /**
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlDatatypeAspect#getVarietyType(org.eclipse.emf.ecore.EObject)
      */
-    public short getVarietyType( EObject eObject ) {
+    @Override
+	public short getVarietyType( EObject eObject ) {
         CoreArgCheck.isInstanceOf(XSDSimpleTypeDefinition.class, eObject);
         XSDSimpleTypeDefinition entity = (XSDSimpleTypeDefinition)eObject;
 
@@ -603,7 +633,8 @@ public class XsdSimpleTypeDefinitionAspect extends AbstractMetamodelAspect imple
     /**
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlDatatypeAspect#getVarietyProps(org.eclipse.emf.ecore.EObject)
      */
-    public List getVarietyProps( EObject eObject ) {
+    @Override
+	public List getVarietyProps( EObject eObject ) {
         CoreArgCheck.isInstanceOf(XSDSimpleTypeDefinition.class, eObject);
         XSDSimpleTypeDefinition entity = (XSDSimpleTypeDefinition)eObject;
 
@@ -636,7 +667,8 @@ public class XsdSimpleTypeDefinitionAspect extends AbstractMetamodelAspect imple
     /*
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlAspect#updateObject(org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject)
      */
-    public void updateObject( EObject targetObject,
+    @Override
+	public void updateObject( EObject targetObject,
                               EObject sourceObject ) {
         // do nothing
     }
@@ -645,7 +677,8 @@ public class XsdSimpleTypeDefinitionAspect extends AbstractMetamodelAspect imple
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlColumnAspect#isDatatypeFeature(org.eclipse.emf.ecore.EObject,
      *      org.eclipse.emf.ecore.EStructuralFeature)
      */
-    public boolean isDatatypeFeature( final EObject eObject,
+    @Override
+	public boolean isDatatypeFeature( final EObject eObject,
                                       final EStructuralFeature eFeature ) {
         CoreArgCheck.isInstanceOf(XSDSimpleTypeDefinition.class, eObject);
         final EObjectImpl eObjectImpl = super.getEObjectImpl(eObject);
@@ -670,7 +703,8 @@ public class XsdSimpleTypeDefinitionAspect extends AbstractMetamodelAspect imple
      * @param type
      * @return success true if this is an enterprise datatype
      */
-    public boolean isEnterpriseDataType( final EObject type ) {
+    @Override
+	public boolean isEnterpriseDataType( final EObject type ) {
         CoreArgCheck.isNotNull(type);
         argCheckIsResolved(type);
         boolean success = false;
@@ -700,7 +734,8 @@ public class XsdSimpleTypeDefinitionAspect extends AbstractMetamodelAspect imple
      * @param type
      * @param edtInfo
      */
-    public void setEnterpriseDataAttributes( final XSDSimpleTypeDefinition type,
+    @Override
+	public void setEnterpriseDataAttributes( final XSDSimpleTypeDefinition type,
                                              final EnterpriseDatatypeInfo edtInfo ) {
         CoreArgCheck.isNotNull(type);
         argCheckIsResolved(type);
@@ -751,7 +786,8 @@ public class XsdSimpleTypeDefinitionAspect extends AbstractMetamodelAspect imple
      * 
      * @param type
      */
-    public void unSetEnterpriseDataAttributes( final XSDSimpleTypeDefinition type ) {
+    @Override
+	public void unSetEnterpriseDataAttributes( final XSDSimpleTypeDefinition type ) {
         CoreArgCheck.isNotNull(type);
         argCheckIsResolved(type);
 
@@ -775,7 +811,8 @@ public class XsdSimpleTypeDefinitionAspect extends AbstractMetamodelAspect imple
      * @param type
      * @return edtInfo
      */
-    public EnterpriseDatatypeInfo getEnterpriseDatatypeInfo( final XSDSimpleTypeDefinition type ) {
+    @Override
+	public EnterpriseDatatypeInfo getEnterpriseDatatypeInfo( final XSDSimpleTypeDefinition type ) {
         CoreArgCheck.isNotNull(type);
         argCheckIsResolved(type);
 
@@ -816,7 +853,8 @@ public class XsdSimpleTypeDefinitionAspect extends AbstractMetamodelAspect imple
      *      org.eclipse.xsd.XSDSimpleTypeDefinition)
      * @since 4.3
      */
-    public void setBasetype( final XSDSimpleTypeDefinition simpleType,
+    @Override
+	public void setBasetype( final XSDSimpleTypeDefinition simpleType,
                              final XSDSimpleTypeDefinition baseType ) {
         CoreArgCheck.isNotNull(simpleType);
         CoreArgCheck.isNotNull(baseType);

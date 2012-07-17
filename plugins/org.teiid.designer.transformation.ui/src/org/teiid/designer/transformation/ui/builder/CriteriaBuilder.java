@@ -56,7 +56,8 @@ public class CriteriaBuilder extends AbstractLanguageObjectBuilder {
 
         // add the AndCriteriaAction
         Runnable andRunner = new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 handleAndSelected();
             }
         };
@@ -64,7 +65,8 @@ public class CriteriaBuilder extends AbstractLanguageObjectBuilder {
 
         // add the OrCriteriaAction
         Runnable orRunner = new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 handleOrSelected();
             }
         };
@@ -72,7 +74,8 @@ public class CriteriaBuilder extends AbstractLanguageObjectBuilder {
 
         // add the NotCriteriaAction
         Runnable notRunner = new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 handleNotSelected();
             }
         };

@@ -42,7 +42,8 @@ public class MetamodelRootClassDescriptorImpl extends ExtensionDescriptorImpl im
     /**
      * @see org.teiid.designer.core.metamodel.MetamodelRootClassDescriptor#getMaxOccurs()
      */
-    public int getMaxOccurs() {
+    @Override
+	public int getMaxOccurs() {
         return maxOccurs;
     }
 

@@ -82,7 +82,8 @@ public interface MetadataID extends Cloneable, Comparable, Serializable {
      * @param obj the object that this instance is to be compared to.
      * @return whether the object is equal to this object.
      */
-    public boolean equals(Object obj);
+    @Override
+	public boolean equals(Object obj);
 
     /**
      * Compares this object to another. If the specified object is an instance of
@@ -108,7 +109,8 @@ public interface MetadataID extends Cloneable, Comparable, Serializable {
      * @throws ClassCastException if the specified object's type prevents it
      *      from being compared to this instance.
      */
-    public int compareTo(Object obj);
+    @Override
+	public int compareTo(Object obj);
 
     /**
      * Compares this object to another lexicographically. If the specified object is an instance of
@@ -129,13 +131,15 @@ public interface MetadataID extends Cloneable, Comparable, Serializable {
      * Returns the hash code value for this object.
      *  @return a hash code value for this object.
      */
-    public  int hashCode();
+    @Override
+	public  int hashCode();
 
     /**
      * Returns a string representing the current state of the object.
      * @return the string representation of this instance.
      */
-    public  String toString();
+    @Override
+	public  String toString();
     /**
      * Return a deep cloned instance of this object.  Subclasses must override
      * this method.

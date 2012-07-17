@@ -72,7 +72,8 @@ public class FindObjectCommandImpl implements FindObjectCommand {
      * @see org.teiid.designer.core.search.commands.FindTypedObjectCommand#getRecordInfo()
      * @since 4.1
      */
-    public Collection getRecordInfo() {
+    @Override
+	public Collection getRecordInfo() {
         return this.recordInfos;
     }
 
@@ -80,7 +81,8 @@ public class FindObjectCommandImpl implements FindObjectCommand {
      * @see org.teiid.designer.core.search.commands.FindObjectCommand#setFeatureCriteria(java.lang.String, java.lang.String, boolean, boolean)
      * @since 4.1
      */
-    public void setFeatureCriteria(final String featureName,
+    @Override
+	public void setFeatureCriteria(final String featureName,
                                    final String textPattern,
                                    final boolean containsPattern) {
         this.featureName = featureName;
@@ -92,14 +94,16 @@ public class FindObjectCommandImpl implements FindObjectCommand {
      * @see org.teiid.designer.core.search.commands.FindObjectCommand#setMetaClass(org.eclipse.emf.ecore.EClass)
      * @since 4.1
      */
-    public void setMetaClass(final EClass metaClass) {
+    @Override
+	public void setMetaClass(final EClass metaClass) {
         this.metaClass = metaClass;
     }
     
     /**
      * @see org.teiid.designer.core.search.commands.FindRelationshipsCommand#setIndexSelector(org.teiid.designer.core.index.IndexSelector)
      */
-    public void setIndexSelector(final IndexSelector selector) {
+    @Override
+	public void setIndexSelector(final IndexSelector selector) {
         this.selector = selector;
     }
     
@@ -107,7 +111,8 @@ public class FindObjectCommandImpl implements FindObjectCommand {
      * @see org.teiid.designer.core.search.commands.SearchCommand#canExecute()
      * @since 4.1
      */
-    public boolean canExecute() {
+    @Override
+	public boolean canExecute() {
         return (this.isMetaclassSearch() || this.isFeatureSearch());
     }
     
@@ -136,7 +141,8 @@ public class FindObjectCommandImpl implements FindObjectCommand {
      * @see org.teiid.designer.core.search.commands.SearchCommand#execute()
      * @since 4.1
      */
-    public IStatus execute() {
+    @Override
+	public IStatus execute() {
         if (!canExecute()) {
             return null;
         }
