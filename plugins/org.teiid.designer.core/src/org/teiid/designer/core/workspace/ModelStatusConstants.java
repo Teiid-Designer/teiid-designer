@@ -7,6 +7,8 @@
  */
 package org.teiid.designer.core.workspace;
 
+import org.teiid.designer.core.ModelerCore;
+
 /**
  * Status codes used with model status objects.
  * <p>

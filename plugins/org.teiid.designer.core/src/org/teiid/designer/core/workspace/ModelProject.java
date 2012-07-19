@@ -9,6 +9,7 @@ package org.teiid.designer.core.workspace;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.teiid.designer.core.ModelerCore;
 
 /**
  * A ModelProject encapsulates an {@link org.eclipse.core.resources.IProject Eclipse project}
