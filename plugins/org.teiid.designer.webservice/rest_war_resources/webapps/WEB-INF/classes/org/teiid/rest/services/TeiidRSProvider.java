@@ -30,12 +30,7 @@ import org.teiid.rest.RestPlugin;
 public class TeiidRSProvider {
 
     protected WebServiceContext webServiceContext;
-    private Connection conn;
-    private PreparedStatement statement;
-    private ResultSet set;
-
     private static Logger logger = Logger.getLogger("org.teiid.rest"); //$NON-NLS-1$
-
     private static Properties properties = new Properties();
 
     @javax.annotation.Resource
@@ -55,6 +50,10 @@ public class TeiidRSProvider {
 
     public String execute( String procedureName,
                            Map<String, String> parameterMap ) throws WebApplicationException {
+    	
+    	Connection conn = null;
+   	    PreparedStatement statement = null;
+    	ResultSet set = null;
 
         // Load
         try {
