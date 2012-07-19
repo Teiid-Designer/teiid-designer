@@ -8,7 +8,6 @@
 package org.teiid.designer.advisor.ui.views.status;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.swt.SWT;

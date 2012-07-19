@@ -1182,19 +1182,13 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 			if( element instanceof RelationalColumn ) {
 				switch (this.columnNumber) {
 					case 0: {
-						if(element instanceof RelationalColumn) {
-							return ((RelationalColumn)element).getName();
-						}
+						return ((RelationalColumn)element).getName();
 					}
 					case 1: {
-						if(element instanceof RelationalColumn) {
-							return ((RelationalColumn)element).getDatatype();
-						}
+						return ((RelationalColumn)element).getDatatype();
 					}
 					case 2: {
-						if(element instanceof RelationalColumn) {
-							return Integer.toString(((RelationalColumn)element).getLength());
-						}
+						return Integer.toString(((RelationalColumn)element).getLength());
 					}
 				}
 			}
@@ -1985,7 +1979,7 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
     						}
 		        			String tblName = EMPTY_STRING;
 		        			String keyName = EMPTY_STRING;
-		        			boolean foundCheckedItem = false;;
+		        			boolean foundCheckedItem = false;
     						for( TableItem item : keyViewer.getTable().getItems()) {
 	    		        		if( item.getChecked() ) {
 	    		        			foundCheckedItem = true;

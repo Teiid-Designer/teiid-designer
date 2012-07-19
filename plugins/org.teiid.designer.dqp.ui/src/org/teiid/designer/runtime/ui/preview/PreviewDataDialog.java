@@ -8,7 +8,7 @@
 package org.teiid.designer.runtime.ui.preview;
 
 import java.util.Properties;
-import org.eclipse.core.resources.ResourcesPlugin;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;

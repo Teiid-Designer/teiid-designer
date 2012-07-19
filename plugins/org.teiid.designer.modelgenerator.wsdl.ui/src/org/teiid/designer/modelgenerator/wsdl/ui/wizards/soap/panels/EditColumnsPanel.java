@@ -193,27 +193,19 @@ public class EditColumnsPanel {
 			if (element instanceof ColumnInfo) {
 				switch(this.columnNumber) {
 					case 0: {
-						if(element instanceof ColumnInfo) {
-							return ((ColumnInfo)element).getName();
-						}
+						return ((ColumnInfo)element).getName();
 					}
 					case 1: {
 						return EMPTY;
 					}
 					case 2: {
-						if(element instanceof ColumnInfo) {
-							return ((ColumnInfo)element).getDatatype();
-						}
+						return ((ColumnInfo)element).getDatatype();
 					}
 					case 3: {
-						if(element instanceof ColumnInfo) {
-							return ((ColumnInfo)element).getDefaultValue();
-						}
+						return ((ColumnInfo)element).getDefaultValue();
 					}
 					case 4: {
-						if(element instanceof ColumnInfo) {
-							return ((ColumnInfo)element).getRelativePath();
-						}
+						return ((ColumnInfo)element).getRelativePath();
 					}
 				}
 			}

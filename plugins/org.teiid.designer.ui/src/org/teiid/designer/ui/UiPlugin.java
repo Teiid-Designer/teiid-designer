@@ -11,7 +11,6 @@ import static org.teiid.designer.ui.UiConstants.TableEditorAttributes.COLUMN_ORD
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;

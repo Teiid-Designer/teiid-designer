@@ -18,7 +18,6 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 import net.jcip.annotations.GuardedBy;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.IDecoration;
 import org.eclipse.jface.viewers.ILightweightLabelDecorator;
@@ -150,24 +149,13 @@ public class TeiidViewTreeProvider extends ColumnLabelProvider implements ILight
         // the getElements method
         if (getServerManager() != null) {
             assert (element instanceof Server) : "element is not a server (check plugin.xml enablement)"; //$NON-NLS-1$
-            ImageDescriptor overlay = null;
             Server server = (Server)element;
 
             if (isOkToConnect(server)) {
                 // decorate server if can't connect
                 if (!server.isConnected()) {
                     addOfflineServer(server);
-                    //ISharedImages images = DqpUiPlugin.getDefault().getWorkbench().getSharedImages();
-                    //overlay = images.getImageDescriptor(ISharedImages.IMG_DEC_FIELD_ERROR);
                 }
-            } else {
-            	if( server.isConnected() ) {
-            		overlay = null;
-            	}
-            }
-
-            if (overlay != null) {
-                decoration.addOverlay(overlay);
             }
         }
     }

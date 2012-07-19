@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -379,7 +380,7 @@ public class AddToNewCustomDiagramAction extends DiagramAction implements Diagra
             EObject nextEObj = null;
             while (iter.hasNext()) {
                 nextEObj = (EObject)iter.next();
-                if (editor != null && editor.getCurrentModel() != null) {
+                if (editor.getCurrentModel() != null) {
                     if (!(DiagramUiUtilities.diagramContainsEObject(nextEObj, diagramNode))) newObjects.add(nextEObj);
                 }
             }

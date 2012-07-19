@@ -10,6 +10,7 @@ package org.teiid.designer.roles.ui;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
@@ -472,6 +473,8 @@ public class PermissionHandler {
 	                	case READ: return true;
 	                	case UPDATE: return TransformationHelper.isUpdateAllowed(transMappingRoot);
 	                	case DELETE: return TransformationHelper.isDeleteAllowed(transMappingRoot);
+	                	default:
+	                		return false;
                     }
                 } else {
                     return tableAspect.supportsUpdate((EObject)targetObj);

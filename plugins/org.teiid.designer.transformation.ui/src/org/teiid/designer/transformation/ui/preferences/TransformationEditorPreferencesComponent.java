@@ -49,7 +49,7 @@ public class TransformationEditorPreferencesComponent implements IEditorPreferen
     private String invalidNumberMessage = getString("TransformationEditorPreferencesComponent.invalidNumber"); //$NON-NLS-1$
 
     private static String getString(String key) {
-    	return org.teiid.designer.transformation.ui.UiPlugin.Util.getString(key);
+    	return org.teiid.designer.transformation.ui.UiConstants.Util.getString(key);
     }
     
     private static int MAX_NUMBER = 255;

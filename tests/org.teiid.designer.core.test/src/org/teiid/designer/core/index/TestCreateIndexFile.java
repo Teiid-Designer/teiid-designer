@@ -113,9 +113,11 @@ public class TestCreateIndexFile extends TestCase {
         assertNotNull(f);
         assertTrue(f.exists());
         List entries = new ArrayList();
+        FileReader fr = null;
+        BufferedReader br = null;
         try {
-            FileReader fr = new FileReader(f);
-            BufferedReader br = new BufferedReader(fr);
+            fr = new FileReader(f);
+            br = new BufferedReader(fr);
 
             System.out.println("Reading " + f); //$NON-NLS-1$
             String record = null;
@@ -127,6 +129,18 @@ public class TestCreateIndexFile extends TestCase {
             }
         } catch (Throwable t) {
             t.printStackTrace();
+        } finally {
+        	try {
+        		if (br != null) {
+        			br.close();
+        		}
+        		
+        		if (fr != null) {
+        			fr.close();
+        		}
+        	} catch (IOException ex) {
+        		ex.printStackTrace();
+        	}
         }
         return (WordEntry[])entries.toArray(new WordEntry[entries.size()]);
     }

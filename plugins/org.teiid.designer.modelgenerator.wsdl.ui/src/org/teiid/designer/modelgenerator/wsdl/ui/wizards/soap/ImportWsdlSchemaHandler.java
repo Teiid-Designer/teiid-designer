@@ -11,7 +11,6 @@ package org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -884,8 +883,6 @@ public class ImportWsdlSchemaHandler {
 	}
 	
 	private void getRelativeXpath(SchemaNode node, StringBuilder xpath, SchemaTreeModel schemaTreeModel) {
-		Object element = node.getElement();
-		Map<String, String> nsMap = this.operationsDetailsPage.getProcedureGenerator().getResponseInfo().getNamespaceMap();
 		String relativeXpath = node == null ? "" : node.getRelativeXpath(); //$NON-NLS-1$
 		//We need to append the full path and then remove the root path.
 		//This allows us to resolve nested complex types

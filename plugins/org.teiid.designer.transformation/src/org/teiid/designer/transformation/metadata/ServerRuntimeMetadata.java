@@ -13,7 +13,6 @@ import org.teiid.designer.core.index.IEntryResult;
 import org.teiid.designer.core.index.Index;
 import org.teiid.designer.core.index.IndexSelector;
 import org.teiid.designer.core.index.SimpleIndexUtil;
-import org.teiid.designer.metadata.runtime.RuntimeMetadataPlugin;
 import org.teiid.designer.transformation.TransformationPlugin;
 
 /**

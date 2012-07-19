@@ -1281,19 +1281,13 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
 			if( element instanceof TeiidColumnInfo ) {
 				switch (this.columnNumber) {
 					case 0: {
-						if(element instanceof TeiidColumnInfo) {
-							return ((TeiidColumnInfo)element).getName();
-						}
+						return ((TeiidColumnInfo)element).getName();
 					}
 					case 1: {
-						if(element instanceof TeiidColumnInfo) {
-							return ((TeiidColumnInfo)element).getDatatype();
-						}
+						return ((TeiidColumnInfo)element).getDatatype();
 					}
 					case 2: {
-						if(element instanceof TeiidColumnInfo) {
-							return Integer.toString(((TeiidColumnInfo)element).getWidth());
-						}
+						return Integer.toString(((TeiidColumnInfo)element).getWidth());
 					}
 				}
 			}

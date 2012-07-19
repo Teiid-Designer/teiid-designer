@@ -16,6 +16,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -380,7 +381,6 @@ public class ImportTransformationSqlFromTextAction extends SortableSelectionActi
         boolean sqlChanged = false;
         Collection leftOverTables = new HashSet();
         Collection<SqlRow> leftOverRows = new HashSet<SqlRow>();
-        int iRow = 0;
         String tableName = null;
         for (Iterator iter = sqlRows.iterator(); iter.hasNext();) {
             SqlRow nextRow = (SqlRow)iter.next();
@@ -464,7 +464,6 @@ public class ImportTransformationSqlFromTextAction extends SortableSelectionActi
                 }
 
             }
-            iRow++;
         }
         anyLeftOverRows = leftOverRows;
         notifyUserOfLeftovers(modelResource, new ArrayList(leftOverTables), new ArrayList<SqlRow>(leftOverRows));

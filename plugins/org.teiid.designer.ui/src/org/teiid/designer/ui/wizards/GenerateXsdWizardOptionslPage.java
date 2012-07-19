@@ -82,7 +82,7 @@ public class GenerateXsdWizardOptionslPage extends WizardPage
 
     private boolean validResources;
     private Button genSqlButton;
-    private Button genInputButton;;
+    private Button genInputButton;
     private Button doFlatOutputButton;
     private Button doFlatInputButton;
     Text outputNameText;

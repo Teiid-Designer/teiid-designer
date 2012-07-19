@@ -175,27 +175,19 @@ public class EditColumnsPanel {
 			if( element instanceof TeiidXmlColumnInfo ) {
 				switch (this.columnNumber) {
 					case 0: {
-						if(element instanceof TeiidXmlColumnInfo) {
-							return ((TeiidXmlColumnInfo)element).getName();
-						}
+						return ((TeiidXmlColumnInfo)element).getName();
 					}
 					case 1: {
 						return EMPTY;
 					}
 					case 2: {
-						if(element instanceof TeiidXmlColumnInfo) {
-							return ((TeiidXmlColumnInfo)element).getDatatype();
-						}
+						return ((TeiidXmlColumnInfo)element).getDatatype();
 					}
 					case 3: {
-						if(element instanceof TeiidXmlColumnInfo) {
-							return ((TeiidXmlColumnInfo)element).getDefaultValue();
-						}
+						return ((TeiidXmlColumnInfo)element).getDefaultValue();
 					}
 					case 4: {
-						if(element instanceof TeiidXmlColumnInfo) {
-							return ((TeiidXmlColumnInfo)element).getRelativePath();
-						}
+						return ((TeiidXmlColumnInfo)element).getRelativePath();
 					}
 				}
 			}

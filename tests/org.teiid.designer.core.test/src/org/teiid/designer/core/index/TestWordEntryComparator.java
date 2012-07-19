@@ -10,13 +10,10 @@ package org.teiid.designer.core.index;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import org.teiid.designer.core.index.IndexConstants;
-import org.teiid.designer.core.index.WordEntry;
-
 
 import junit.extensions.TestSetup;
 import junit.framework.Test;
@@ -133,9 +130,12 @@ public class TestWordEntryComparator extends TestCase {
         assertNotNull(indexFile);
         assertTrue(indexFile.exists());
         List entries = new ArrayList();
+        FileReader fr = null;
+        BufferedReader br = null;
+        
         try {
-            FileReader fr = new FileReader(indexFile);
-            BufferedReader br = new BufferedReader(fr);
+            fr = new FileReader(indexFile);
+            br = new BufferedReader(fr);
             
             System.out.println("Reading "+indexFile); //$NON-NLS-1$
             String record = null;
@@ -147,6 +147,18 @@ public class TestWordEntryComparator extends TestCase {
             }
         } catch (Throwable t) {
             t.printStackTrace();
+        } finally {
+        	try {
+        		if (br != null) {
+        			br.close();
+        		}
+        		
+        		if (fr != null) {
+        			fr.close();
+        		}
+        	} catch (IOException ex) {
+        		ex.printStackTrace();
+        	}
         }
         return (WordEntry[]) entries.toArray(new WordEntry[entries.size()]);
     }

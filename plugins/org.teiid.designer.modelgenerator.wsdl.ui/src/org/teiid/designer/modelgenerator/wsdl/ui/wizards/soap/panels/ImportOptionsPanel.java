@@ -151,7 +151,7 @@ public class ImportOptionsPanel implements IChangeListener, ModelGeneratorWsdlUi
     			sourceModelHelpText.setLayoutData(gd);
     		}
 		
-		};
+		}
 
 		VIEW_MODEL_INFO : {
 			Group group = WidgetFactory.createGroup(parent, Messages.ViewModelDefinition, GridData.FILL_HORIZONTAL, 1);
@@ -218,7 +218,7 @@ public class ImportOptionsPanel implements IChangeListener, ModelGeneratorWsdlUi
         		helpGroup.setLayout(new GridLayout(1, false));
         		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
         		gd.horizontalSpan = 3;
-        		helpGroup.setLayoutData(gd);;
+        		helpGroup.setLayoutData(gd);
         
     
     			viewModelHelpText = new Text(helpGroup, SWT.WRAP | SWT.READ_ONLY);

@@ -550,7 +550,7 @@ public class AdvisorActionFactory implements AdvisorUiConstants, IPropertyChange
 	        return;
 		}
 		
-		if( id.equalsIgnoreCase(COMMAND_IDS.NEW_TEIID_MODEL_PROJECT)) {;
+		if( id.equalsIgnoreCase(COMMAND_IDS.NEW_TEIID_MODEL_PROJECT)) {
 			ModelerUiViewUtils.launchWizard("newModelProject", new StructuredSelection(), properties, synchronous); //$NON-NLS-1$
 	        return;
 		}
