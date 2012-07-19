@@ -13,7 +13,7 @@ import org.eclipse.swt.widgets.Composite;
 
 
 /** 
- * @since 4.2
+ * @since 8.0
  */
 public interface IFinderHostDialog {
     

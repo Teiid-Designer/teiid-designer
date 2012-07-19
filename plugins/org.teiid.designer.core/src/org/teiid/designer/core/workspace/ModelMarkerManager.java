@@ -32,7 +32,7 @@ import org.teiid.designer.core.ModelerCore;
  * or associated EObjects.  This was prompted by use of eclipse's decorator scheduler framework. Our content providers
  * were resolving EObjects for UUID's on ALL markers for a given resource. This was very inefficient. This class keeps track
  * of markers for existing resources and refreshes a map of marker-to-eObject for each resource.
- * @since 5.0
+ * @since 8.0
  */
 public class ModelMarkerManager implements IResourceChangeListener {
 

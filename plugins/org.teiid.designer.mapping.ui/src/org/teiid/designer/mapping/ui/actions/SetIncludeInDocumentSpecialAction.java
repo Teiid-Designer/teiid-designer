@@ -13,7 +13,7 @@ import org.teiid.designer.mapping.ui.UiConstants;
 
 
 /** 
- * @since 5.0
+ * @since 8.0
  */
 public class SetIncludeInDocumentSpecialAction extends SetExcludeFromDocumentSpecialAction {
     

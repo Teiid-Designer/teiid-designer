@@ -10,7 +10,7 @@ package org.teiid.designer.metamodels.wsdl.io;
 import org.eclipse.emf.ecore.resource.Resource.Diagnostic;
 
 /**
- * @since 4.2
+ * @since 8.0
  */
 public class WsdlDiagnostic implements Diagnostic {
 

@@ -55,7 +55,7 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 import org.teiid.designer.xsd.ui.ModelerXsdUiConstants;
 
 /**
- * @since 5.5
+ * @since 8.0
  */
 public class XsdFileSystemImportUtil {
     private static final String I18N_PREFIX = "XsdFileSystemImportUtil"; //$NON-NLS-1$

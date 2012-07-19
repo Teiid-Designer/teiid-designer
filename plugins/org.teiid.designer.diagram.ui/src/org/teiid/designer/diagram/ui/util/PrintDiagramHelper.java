@@ -20,7 +20,7 @@ import org.teiid.designer.diagram.ui.DiagramUiPlugin;
 
 
 /** 
- * @since 5.0
+ * @since 8.0
  */
 public class PrintDiagramHelper 
   implements DiagramUiConstants{

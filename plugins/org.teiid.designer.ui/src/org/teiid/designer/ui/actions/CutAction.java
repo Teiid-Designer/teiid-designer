@@ -22,7 +22,7 @@ import org.teiid.designer.ui.editors.ModelEditorManager;
 
 /**
  * The <code>CutAction</code> class is the action that handles the global cut.
- * @since 4.0
+ * @since 8.0
  */
 public class CutAction extends ModelObjectAction implements UiConstants {
     //============================================================================================================================

@@ -19,7 +19,7 @@ import org.eclipse.ui.IWorkbenchPart;
  * mechanism for plugins to add actions to either Resource (i.e. Model) or EObject (model object) selections.  The isApplicable() 
  * method will be called for each selection to determine if the action should be inluded in a context menu, for instance.
  *  
- * @since 5.0
+ * @since 8.0
  */
 
 public abstract class SortableSelectionAction extends Action 

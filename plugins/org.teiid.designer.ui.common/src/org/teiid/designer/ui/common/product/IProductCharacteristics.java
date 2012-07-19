@@ -18,7 +18,7 @@ import org.eclipse.swt.widgets.Shell;
 /** 
  * Interface which allows the product manager to relay the workbench/product characteristics
  * or behaviors to actions, widgets, dialogs and wizards.
- * @since 4.3
+ * @since 8.0
  */
 public interface IProductCharacteristics {
     

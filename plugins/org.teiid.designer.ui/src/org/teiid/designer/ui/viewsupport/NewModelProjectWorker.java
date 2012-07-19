@@ -43,7 +43,7 @@ import org.teiid.designer.ui.common.product.ProductCustomizerMgr;
 
 
 /**
- * @since 4.3
+ * @since 8.0
  */
 public class NewModelProjectWorker {
     private static final String[] MODEL_NATURES = new String[] {ModelerCore.NATURE_ID};

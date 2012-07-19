@@ -9,7 +9,7 @@ package org.teiid.designer.ui.viewsupport;
 
 
 /** 
- * @since 4.2
+ * @since 8.0
  */
 public interface IContentFilter {
     Object[] filter(Object[] elements);

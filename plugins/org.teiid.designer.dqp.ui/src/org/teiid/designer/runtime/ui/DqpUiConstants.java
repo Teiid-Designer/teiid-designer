@@ -14,7 +14,7 @@ import org.teiid.core.util.PluginUtilImpl;
 
 
 /**
- * @since 4.3
+ * @since 8.0
  */
 public interface DqpUiConstants {
     public static final char DOT = '.';

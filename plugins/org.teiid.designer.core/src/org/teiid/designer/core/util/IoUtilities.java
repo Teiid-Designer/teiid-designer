@@ -20,7 +20,7 @@ import org.teiid.designer.core.workspace.ModelWorkspaceException;
 
 /**
  * This class contains static utilities to load and save resources.
- * @since 3.1
+ * @since 8.0
  * @version 3.1
  * @author <a href="mailto:jverhaeg@metamatrix.com">John P. A. Verhaeg</a>
  */

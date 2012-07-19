@@ -54,7 +54,7 @@ import org.teiid.designer.webservice.ui.util.WebServiceUiUtil;
 /**
  * The <code>NamespaceResolutionPage</code> allows the user to resolve namespaces to files.
  * 
- * @since 4.2
+ * @since 8.0
  */
 public final class NamespaceResolutionPage extends AbstractWizardPage
     implements IInternalUiConstants, IInternalUiConstants.HelpContexts, IInternalUiConstants.Images {

@@ -9,7 +9,7 @@ package org.teiid.designer.ui.util;
 
 
 /** 
- * @since 4.3
+ * @since 8.0
  */
 public class PerspectiveObject {
     public static final int NO_LOCATION = -1;

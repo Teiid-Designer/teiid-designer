@@ -18,7 +18,7 @@ import org.teiid.designer.jdbc.metadata.JdbcNode;
 import org.teiid.designer.metamodels.relational.RelationalPackage;
 
 /**
- * @since 4.0
+ * @since 8.0
  */
 public class JdbcRelationalPlugin extends Plugin implements ModelerJdbcRelationalConstants {
 

@@ -15,7 +15,7 @@ import org.teiid.designer.ui.event.ModelResourceEvent;
 
 
 /**
- * @since 4.2
+ * @since 8.0
  */
 public class ModelEditorEventObjectListener implements EventObjectListener {
 

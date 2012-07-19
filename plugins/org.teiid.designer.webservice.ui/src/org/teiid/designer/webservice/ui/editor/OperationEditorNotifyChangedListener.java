@@ -17,7 +17,7 @@ import org.teiid.designer.ui.util.ModelObjectNotificationHelper;
 
 
 /** 
- * @since 5.0
+ * @since 8.0
  */
 public class OperationEditorNotifyChangedListener implements
                                                  INotifyChangedListener {

@@ -11,7 +11,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 
 /**
- * @since 4.0
+ * @since 8.0
  */
 public interface PluginUtil {
     // ============================================================================================================================

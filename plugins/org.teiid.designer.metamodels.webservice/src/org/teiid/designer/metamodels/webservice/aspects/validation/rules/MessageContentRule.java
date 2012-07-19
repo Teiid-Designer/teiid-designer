@@ -27,7 +27,7 @@ import org.teiid.designer.metamodels.webservice.WebServiceMetamodelPlugin;
 
 /** 
  * MessageContentRule
- * @since 4.2
+ * @since 8.0
  */
 public class MessageContentRule implements ObjectValidationRule {
 

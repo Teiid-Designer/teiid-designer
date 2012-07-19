@@ -20,7 +20,7 @@ import org.teiid.designer.core.resource.XResource;
 import org.teiid.designer.core.resource.XResourceDelegate;
 
 /**
- * @since 5.0.3
+ * @since 8.0
  */
 public final class XsdResourceFactory extends XSDResourceFactoryImpl {
 

@@ -20,7 +20,7 @@ import org.teiid.designer.metamodels.xml.XmlDocumentNode;
 
 
 /** 
- * @since 4.2
+ * @since 8.0
  */
 public abstract class AbstractXmlNodeAspect extends AbstractXmlAspect {
 

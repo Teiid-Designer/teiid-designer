@@ -16,7 +16,7 @@ import org.eclipse.jface.viewers.ViewerFilter;
 
 /**
  * A <code>ViewerFilter</code> that can contain other filters.
- * @since 5.0.2
+ * @since 8.0
  */
 public class CompositeViewerFilter extends ViewerFilter {
     

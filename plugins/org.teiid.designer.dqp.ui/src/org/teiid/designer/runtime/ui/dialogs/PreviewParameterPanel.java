@@ -43,7 +43,7 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 
 /**
- * @since 5.5.3
+ * @since 8.0
  */
 public class PreviewParameterPanel extends ScrolledComposite implements DqpUiConstants, IChangeNotifier {
     

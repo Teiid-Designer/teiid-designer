@@ -25,7 +25,7 @@ import org.teiid.designer.metamodels.diagram.DiagramLink;
 
 
 /** 
- * @since 4.2
+ * @since 8.0
  */
 public class RelationalUmlEObjectHelper {
     public static final int UNKNOWN = -1;

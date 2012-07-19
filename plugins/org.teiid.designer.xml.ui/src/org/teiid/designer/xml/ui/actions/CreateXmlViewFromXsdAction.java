@@ -54,7 +54,7 @@ import org.teiid.designer.xml.ui.wizards.XmlViewModelSelectionValidator;
 
 
 /**
- * @since 5.0
+ * @since 8.0
  */
 public class CreateXmlViewFromXsdAction extends SortableSelectionAction implements ModelerXmlUiConstants {
 

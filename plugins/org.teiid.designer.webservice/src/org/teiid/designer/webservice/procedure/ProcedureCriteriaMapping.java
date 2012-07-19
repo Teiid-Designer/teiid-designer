@@ -14,7 +14,7 @@ package org.teiid.designer.webservice.procedure;
  * expression on an elemnt on the inputdocument to the procedure.
  * This object provides a mapping between element used in criteria, the variable it is bounded to and 
  * the XPath expression defined for that variable.
- * @since 4.3
+ * @since 8.0
  */
 public interface ProcedureCriteriaMapping {
     

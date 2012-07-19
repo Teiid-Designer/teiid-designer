@@ -14,7 +14,7 @@ import org.teiid.designer.metamodels.transformation.InputParameter;
 
 
 /** 
- * @since 4.2
+ * @since 8.0
  */
 public class InputParameterNameToNameMatcher extends AbstractEObjectNameMatcher {
 

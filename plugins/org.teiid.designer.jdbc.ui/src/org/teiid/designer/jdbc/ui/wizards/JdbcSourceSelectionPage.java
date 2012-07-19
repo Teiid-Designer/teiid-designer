@@ -61,7 +61,7 @@ import org.teiid.designer.ui.common.wizard.AbstractWizardPage;
 
 
 /**
- * @since 4.0
+ * @since 8.0
  */
 public class JdbcSourceSelectionPage extends AbstractWizardPage
     implements IChangeNotifier, InternalModelerJdbcUiPluginConstants, InternalModelerJdbcUiPluginConstants.Widgets,

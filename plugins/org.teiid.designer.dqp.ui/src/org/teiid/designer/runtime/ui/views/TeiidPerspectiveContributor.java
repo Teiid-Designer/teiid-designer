@@ -14,7 +14,7 @@ import org.teiid.designer.ui.util.PerspectiveObject;
 
 
 /** 
- * @since 5.0
+ * @since 8.0
  */
 public class TeiidPerspectiveContributor implements IModelerPerspectiveContributor {
     

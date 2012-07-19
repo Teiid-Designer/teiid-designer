@@ -16,7 +16,7 @@ import org.teiid.designer.core.ModelerCore;
 
 
 /** 
- * @since 4.3
+ * @since 8.0
  */
 public class DefaultProductCharacteristics implements IProductCharacteristics {
     private WorkbenchState defaultWorkbenchState;

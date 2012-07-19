@@ -27,7 +27,7 @@ import org.teiid.designer.ui.viewsupport.NonModelViewerFilter;
 /**
  * The <code>ShowNonModelsAction</code> controls whether the Model Explorer shows/hides non-model files.
  * It uses and updates the associated preference value.
- * @since 5.0.1
+ * @since 8.0
  */
 public class ShowNonModelsAction extends Action
                                  implements IActionDelegate2,

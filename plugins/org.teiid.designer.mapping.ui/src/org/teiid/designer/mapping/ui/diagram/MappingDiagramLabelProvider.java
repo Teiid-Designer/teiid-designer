@@ -28,7 +28,7 @@ import org.teiid.designer.ui.viewsupport.ModelObjectUtilities;
 
 /**
  * MappingDiagramLabelProvider
- * @since 4.0
+ * @since 8.0
  */
 public class MappingDiagramLabelProvider extends LabelProvider
 implements ILightweightLabelDecorator, UiConstants, PluginConstants.Images {

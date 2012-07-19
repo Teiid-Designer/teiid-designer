@@ -54,7 +54,7 @@ import org.w3c.dom.Node;
  * mmDefect_12555 - Created XsdObjectExtension to specialize the behavior of getting and setting extension properties for XSD
  * resource entities.
  * 
- * @since 4.2
+ * @since 8.0
  */
 public class XsdObjectExtension extends ObjectExtension {
 

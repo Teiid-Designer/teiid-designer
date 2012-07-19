@@ -18,7 +18,7 @@ import org.apache.tools.ant.taskdefs.Zip;
  * Contains integrated Apache Ant tasks. See the online Ant documentation on Apache's Web site for more information about how the
  * tasks work.
  * 
- * @since 4.4
+ * @since 8.0
  */
 public class AntTasks {
 

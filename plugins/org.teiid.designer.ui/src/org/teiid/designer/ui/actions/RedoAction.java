@@ -19,7 +19,7 @@ import org.teiid.designer.ui.undo.IUndoManager;
 /**
  * The <code>RedoAction</code> class is the action that handles the global redo.
  * 
- * @since 4.0
+ * @since 8.0
  */
 public class RedoAction extends AbstractUndoRedoAction {
 

@@ -12,7 +12,7 @@ import java.util.Map;
 import org.eclipse.core.runtime.IProgressMonitor;
 
 /** 
- * @since 4.3
+ * @since 8.0
  */
 public interface CostAnalyzer {
 

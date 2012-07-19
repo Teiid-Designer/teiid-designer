@@ -48,7 +48,7 @@ import org.teiid.query.ui.sqleditor.component.QueryDisplayNode;
 /**
  * The <code>ReconcileSql</code> class is the action that handles the global copy.
  * 
- * @since 4.0
+ * @since 8.0
  */
 public class ReconcileTransformationAction extends TransformationAction implements EventObjectListener {
 

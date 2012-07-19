@@ -40,7 +40,7 @@ import org.teiid.designer.ui.explorer.ModelExplorerLabelProvider;
 
 
 /**
- * @since 5.5.3
+ * @since 8.0
  */
 public class AccessPatternColumnsDialog extends TitleAreaDialog
     implements DqpUiConstants, ISelectionChangedListener, IChangeListener {

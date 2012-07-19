@@ -18,7 +18,7 @@ import org.teiid.language.SQLConstants;
 
 
 /** 
- * @since 4.3
+ * @since 8.0
  */
 public abstract class DatatypeUtilities {
     private static final String COLON = ":"; //$NON-NLS-1$

@@ -22,7 +22,7 @@ import org.teiid.designer.ui.common.viewsupport.CompositeViewerFilter;
  * {@link org.teiid.designer.ui.explorer.ModelExplorerResourceNavigator}. Add other
  * {@link org.eclipse.jface.viewers.ViewerFilter}s if needed. By default, hidden projects are not shown.
  * 
- * @since 5.0.2
+ * @since 8.0
  */
 public class ModelingResourceFilter extends CompositeViewerFilter implements UiConstants.Extensions.Explorer {
 

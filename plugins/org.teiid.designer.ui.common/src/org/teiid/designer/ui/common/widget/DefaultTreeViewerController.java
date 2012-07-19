@@ -16,7 +16,7 @@ import org.teiid.designer.ui.common.InternalUiConstants;
 import org.teiid.designer.ui.common.util.WidgetUtil;
 
 /**
- * @since 4.0
+ * @since 8.0
  */
 public class DefaultTreeViewerController implements
                                         InternalUiConstants.Widgets,

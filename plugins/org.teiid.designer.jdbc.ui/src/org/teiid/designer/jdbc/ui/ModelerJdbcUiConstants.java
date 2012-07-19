@@ -15,7 +15,7 @@ import org.teiid.designer.ui.common.UiConstants;
 
 
 /**
- * @since 4.0
+ * @since 8.0
  */
 public interface ModelerJdbcUiConstants {
 

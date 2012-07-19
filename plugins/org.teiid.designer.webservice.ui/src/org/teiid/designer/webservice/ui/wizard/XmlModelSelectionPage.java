@@ -49,7 +49,7 @@ import org.teiid.designer.webservice.ui.IInternalUiConstants;
 import org.teiid.designer.webservice.ui.util.WebServiceUiUtil;
 
 /**
- * @since 4.2
+ * @since 8.0
  */
 public class XmlModelSelectionPage extends AbstractWizardPage
     implements FileUtils.Constants, IInternalUiConstants, IInternalUiConstants.HelpContexts, IInternalUiConstants.Images {

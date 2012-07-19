@@ -17,7 +17,7 @@ import org.teiid.designer.ui.common.actions.AbstractAction;
 
 /**
  * The <code>LaunchCriteriaBuilder</code> class launches the Criteria Builder
- * @since 4.0
+ * @since 8.0
  */
 public class LaunchCriteriaBuilder extends AbstractAction {
 

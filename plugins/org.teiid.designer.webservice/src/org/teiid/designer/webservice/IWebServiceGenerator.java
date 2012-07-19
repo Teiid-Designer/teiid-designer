@@ -22,7 +22,7 @@ import org.teiid.designer.metamodels.wsdl.Definitions;
  * Interface for a component that generates a 
  * {@link org.teiid.designer.metamodels.webservice.WebServicePackage Web Service model} given
  * a set of {@link Definitions WSDL definitions} and {@link XSDSchema XML Schemas}.
- * @since 4.2
+ * @since 8.0
  */
 public interface IWebServiceGenerator {
     

@@ -13,7 +13,7 @@ import org.teiid.designer.compare.DifferenceReport;
 
 
 /** 
- * @since 4.3
+ * @since 8.0
  */
 public interface IDifferencingWizard extends IImportWizard {
     List<DifferenceReport> getDifferenceReports();

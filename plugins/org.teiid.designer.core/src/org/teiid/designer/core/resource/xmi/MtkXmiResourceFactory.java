@@ -15,7 +15,7 @@ import org.eclipse.emf.ecore.resource.impl.ResourceImpl;
 /**
  * @author Lance Phillips
  *
- * @since 3.1
+ * @since 8.0
  */
 public class MtkXmiResourceFactory extends ResourceFactoryImpl {
     

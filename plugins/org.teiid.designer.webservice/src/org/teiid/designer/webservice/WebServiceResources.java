@@ -29,7 +29,7 @@ import org.teiid.designer.metamodels.wsdl.io.WsdlResourceImpl;
 
 
 /** 
- * @since 4.2
+ * @since 8.0
  */
 public class WebServiceResources {
 

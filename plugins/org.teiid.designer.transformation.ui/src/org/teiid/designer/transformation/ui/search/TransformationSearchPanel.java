@@ -61,7 +61,7 @@ import org.teiid.designer.ui.viewsupport.SelectModelObjectLabelProvider;
 
 
 /**
- * @since 5.0
+ * @since 8.0
  */
 public class TransformationSearchPanel extends Composite implements ModifyListener {
 

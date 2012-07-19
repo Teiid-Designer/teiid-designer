@@ -11,7 +11,7 @@ package org.teiid.designer.core.xmi;
 /**
  * Class used to store ModelImport information extracted from the ModelAnnotation header
  * 
- * @since 4.3
+ * @since 8.0
  */
 public class ModelImportInfo {
 

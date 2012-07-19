@@ -23,7 +23,7 @@ import org.teiid.designer.core.index.Index;
  * This class provides a caching mechanism for Dimension's workspace to locate and re-use Index files without closing and re-opening
  * the files. Without caching, Indexes are opened and closed for each query otherwise, creating a substantial unneeded performance
  * penalty.
- * @since 5.0
+ * @since 8.0
  */
 public class ModelWorkspaceIndexManager {
 

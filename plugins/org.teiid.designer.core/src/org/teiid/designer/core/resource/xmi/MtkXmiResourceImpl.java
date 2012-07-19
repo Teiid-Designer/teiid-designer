@@ -67,7 +67,7 @@ import org.teiid.designer.metamodels.core.ModelType;
  * XMIResourceImpl). In addition the load methods are overridden to provide hooks into our loading mechanisms.
  * 
  * @author Lance Phillips
- * @since 3.1
+ * @since 8.0
  */
 public class MtkXmiResourceImpl extends XMIResourceImpl implements EmfResource, XResource {
 

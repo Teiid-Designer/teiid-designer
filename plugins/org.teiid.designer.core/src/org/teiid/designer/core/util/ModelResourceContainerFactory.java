@@ -50,7 +50,7 @@ import org.teiid.designer.metamodels.transformation.XQueryTransformationMappingR
  * Access/Logical = AnnotationContainer, DiagramContainer Virtual Models = AnnotationContainer, DiagramContainer,
  * TransformationContainer XML Models = AnnotationContainer, DiagramContainer, TransformationContainer, MappingClassSetContainer
  * 
- * @since 4.3
+ * @since 8.0
  */
 public class ModelResourceContainerFactory {
 

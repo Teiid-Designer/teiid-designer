@@ -16,7 +16,7 @@ import org.teiid.designer.core.ModelerCore;
 /** 
  * Simple label provider which displays a simple String labels, or if EObjects, the EObject's name. In addition, if showPath == true
  * the label is appended with the full path name up to and including the project name.
- * @since 5.0
+ * @since 8.0
  */
 public class SelectModelObjectLabelProvider extends LabelProvider {
     private ModelObjectLabelProvider delegate = new ModelObjectLabelProvider();

@@ -23,7 +23,7 @@ import org.teiid.designer.ui.explorer.ModelExplorerContentProvider;
 /**
  * An action that sorts {@link org.eclipse.jface.viewers.ContentViewer}s that use
  * a {@link org.teiid.designer.ui.explorer.ModelExplorerContentProvider}.
- * @since 4.4
+ * @since 8.0
  */
 public final class SortModelContentsAction extends Action
                                            implements UiConstants {

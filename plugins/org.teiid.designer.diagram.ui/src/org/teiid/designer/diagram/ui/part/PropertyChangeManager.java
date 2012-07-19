@@ -11,7 +11,7 @@ import org.teiid.designer.diagram.ui.DiagramUiConstants;
 
 
 /** 
- * @since 5.0
+ * @since 8.0
  */
 public class PropertyChangeManager implements DiagramUiConstants.DiagramNodeProperties {
     public final static int GENERAL            = 0;

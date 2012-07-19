@@ -40,7 +40,7 @@ import org.teiid.designer.ui.viewsupport.NewModelProjectWorker;
 
 
 /** 
- * @since 4.2
+ * @since 8.0
  */
 public abstract class AbstractObjectProcessor implements UiConstants {
     private static final String XMI_EXTENSION           = "xmi";//$NON-NLS-1$

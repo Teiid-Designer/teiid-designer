@@ -49,7 +49,7 @@ import org.teiid.designer.ui.UiConstants;
  * ModelObjectSelectionDialog Adapted from the eclipse class TwoPaneElementSelector, because that class had the functionality but
  * lacked extensibility.
  * 
- * @since 4.2
+ * @since 8.0
  */
 public class ModelObjectSelectionDialog extends AbstractElementListSelectionDialog {
 

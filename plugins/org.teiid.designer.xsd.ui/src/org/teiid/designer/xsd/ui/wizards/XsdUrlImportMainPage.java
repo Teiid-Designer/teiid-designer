@@ -67,7 +67,7 @@ import org.teiid.designer.xsd.ui.ModelerXsdUiConstants;
 
 
 /**
- * @since 5.5
+ * @since 8.0
  */
 public class XsdUrlImportMainPage extends AbstractWizardPage implements IOverwriteQuery {
     private static final String I18N_PREFIX = "XsdUrlImportMainPage"; //$NON-NLS-1$

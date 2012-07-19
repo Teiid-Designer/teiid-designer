@@ -9,7 +9,7 @@ package org.teiid.designer.ui.util;
 
 
 /** 
- * @since 4.3
+ * @since 8.0
  */
 public interface IModelerPerspectiveContributor {
     

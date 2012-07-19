@@ -16,7 +16,7 @@ import org.teiid.designer.ui.common.actions.AbstractAction;
 /**
  * The <code>ExportToFile</code> class is the action that Exports the SqlEditor Text to
  * a User file.
- * @since 4.0
+ * @since 8.0
  */
 public class ExportToFile extends AbstractAction {
 

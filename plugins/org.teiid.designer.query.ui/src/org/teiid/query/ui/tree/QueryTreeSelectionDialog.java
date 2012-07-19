@@ -44,7 +44,7 @@ import org.teiid.query.ui.UiConstants;
         d.open();
    </code>
  * 
- * @since 4.2
+ * @since 8.0
  */
 public class QueryTreeSelectionDialog extends ElementTreeSelectionDialog implements UiConstants {
 

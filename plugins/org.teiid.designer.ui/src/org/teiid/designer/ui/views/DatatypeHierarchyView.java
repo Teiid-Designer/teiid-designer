@@ -53,7 +53,7 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 /**
  * DatatypeHierarchyView is the ViewPart to display Datatypes in the Modeler.
  * 
- * @since 4.0
+ * @since 8.0
  */
 public class DatatypeHierarchyView extends ModelerView {
 

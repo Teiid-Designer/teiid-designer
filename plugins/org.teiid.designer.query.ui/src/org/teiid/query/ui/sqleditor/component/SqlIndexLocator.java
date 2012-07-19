@@ -38,7 +38,7 @@ import org.teiid.query.sql.visitor.CommandCollectorVisitor;
  * This class provides the GroupSymbolFinder the knowledge to know where the cursor is at so it can make decisions about what
  * group symbols to include in the builders.
  * 
- * @since 4.2
+ * @since 8.0
  */
 public class SqlIndexLocator {
     public static final int UNKNOWN = -1;

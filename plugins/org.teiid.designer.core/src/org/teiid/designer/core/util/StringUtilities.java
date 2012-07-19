@@ -17,7 +17,7 @@ import org.teiid.core.TeiidRuntimeException;
 /**
  * This class contains static utilities that return strings that are the result of manipulating other strings or objects.
  * 
- * @since 3.1
+ * @since 8.0
  */
 public class StringUtilities {
 

@@ -20,7 +20,7 @@ import org.teiid.designer.ui.common.widget.Dialog;
 
 /**<p>
  * </p>
- * @since 4.0
+ * @since 8.0
  */
 public abstract class AbstractPasswordDialog extends Dialog implements InternalUiConstants,
                                                                        InternalUiConstants.Widgets {

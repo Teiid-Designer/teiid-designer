@@ -14,7 +14,7 @@ import org.eclipse.jface.viewers.Viewer;
 
 /** 
  * A simple implementation of IStructuredContentProvider that supports any Collection input
- * @since 4.2
+ * @since 8.0
  */
 public class ListContentProvider implements IStructuredContentProvider {
 

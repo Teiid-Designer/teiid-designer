@@ -22,7 +22,7 @@ import org.teiid.designer.metamodels.diagram.Diagram;
 
 
 /** 
- * @since 4.2
+ * @since 8.0
  */
 public class DiagramTargetMatcher extends AbstractEObjectMatcher implements
                                                                 TwoPhaseEObjectMatcher {

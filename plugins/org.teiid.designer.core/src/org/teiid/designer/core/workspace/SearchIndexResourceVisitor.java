@@ -20,7 +20,7 @@ import org.teiid.designer.core.index.IndexUtil;
  * Visitor that collects all associated {@link org.eclipse.core.resources.IResource}s. Index names and index files are also
  * collected.
  * 
- * @since 5.0.1
+ * @since 8.0
  */
 public class SearchIndexResourceVisitor implements IResourceVisitor {
 

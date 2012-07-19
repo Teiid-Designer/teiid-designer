@@ -25,7 +25,7 @@ import org.teiid.designer.ui.common.widget.Dialog;
 /**
  * A dialog that displays text in a {@link org.eclipse.swt.custom.StyledText} widget. Dialog is
  * centered on the screen.
- * @since 4.4
+ * @since 8.0
  */
 public class TextAreaDialog extends Dialog {
 

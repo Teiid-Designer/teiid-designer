@@ -64,7 +64,7 @@ import org.teiid.designer.ui.common.widget.WrappingLabel;
 
 
 /**
- * @since 4.0
+ * @since 8.0
  */
 public final class WidgetFactory implements
                                 InternalUiConstants.Widgets {

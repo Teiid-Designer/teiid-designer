@@ -13,7 +13,7 @@ import org.eclipse.ui.views.properties.IPropertyDescriptor;
 /** 
  * The <code>ITransientPropertyDescriptor</code> is an <code>IPropertyDescriptor</code> whose property is not
  * persisted and is not found in the model definition.
- * @since 4.3
+ * @since 8.0
  * @see org.teiid.designer.ui.properties.ModelObjectPropertySource
  */
 public interface ITransientPropertyDescriptor extends IPropertyDescriptor {

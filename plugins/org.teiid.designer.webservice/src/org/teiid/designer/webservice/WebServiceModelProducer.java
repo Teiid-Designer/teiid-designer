@@ -63,7 +63,7 @@ import org.w3c.dom.ls.LSOutput;
 import org.w3c.dom.ls.LSSerializer;
 
 /**
- * @since 4.2
+ * @since 8.0
  */
 public class WebServiceModelProducer implements ModelProducer {
 

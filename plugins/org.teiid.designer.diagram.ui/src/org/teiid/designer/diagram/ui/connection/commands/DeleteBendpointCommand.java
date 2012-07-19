@@ -10,7 +10,7 @@ package org.teiid.designer.diagram.ui.connection.commands;
 import org.eclipse.draw2d.Bendpoint;
 
 /** 
- * @since 4.2
+ * @since 8.0
  */
 public class DeleteBendpointCommand extends BendpointCommand {
     private Bendpoint bendpoint;

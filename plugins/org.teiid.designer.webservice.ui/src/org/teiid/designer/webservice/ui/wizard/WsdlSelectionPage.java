@@ -105,7 +105,7 @@ import org.teiid.designer.webservice.ui.util.WebServiceUiUtil;
  * The <code>WsdlSelectionPage</code> allows the user to select WSDL files from the file system which will be used to generate the
  * new model.
  * 
- * @since 4.2
+ * @since 8.0
  */
 public final class WsdlSelectionPage extends AbstractWizardPage
     implements FileUtils.Constants, IInternalUiConstants, IInternalUiConstants.HelpContexts, IInternalUiConstants.Images,

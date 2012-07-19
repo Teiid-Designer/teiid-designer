@@ -20,7 +20,7 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 
 /**
- * @since 5.0
+ * @since 8.0
  */
 public class Label extends CLabel {
 

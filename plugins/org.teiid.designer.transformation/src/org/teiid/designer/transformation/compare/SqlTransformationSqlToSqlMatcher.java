@@ -24,7 +24,7 @@ import org.teiid.designer.metamodels.transformation.SqlTransformation;
 
 
 /**
- * @since 4.2
+ * @since 8.0
  */
 public class SqlTransformationSqlToSqlMatcher extends AbstractEObjectMatcher implements TwoPhaseEObjectMatcher {
 

@@ -33,7 +33,7 @@ import org.teiid.designer.core.ModelerCoreException;
  *  To generically contribute an implementation of this interface, use the org.teiid.designer.ui.newModelObjectHelper 
  *  extension point ID.
  *  
- * @since 4.3
+ * @since 8.0
  */
 public abstract class NewModelObjectHelperManager {
     private static final String ID              = "newModelObjectHelper"; //$NON-NLS-1$

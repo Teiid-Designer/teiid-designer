@@ -30,7 +30,7 @@ import org.teiid.designer.transformation.metadata.QueryMetadataContext;
 /**
  * Metadata implementation used by VDB to validate models.
  * 
- * @since 4.2
+ * @since 8.0
  */
 public class VdbMetadata extends ModelerMetadata {
 

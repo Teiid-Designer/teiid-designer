@@ -12,7 +12,7 @@ package org.teiid.designer.core.transaction;
 /**
  * Interface to Manage EMF Transactions within an EMFContainer
  * @author lphillips
- * @since 3.1
+ * @since 8.0
  * 
  */
 public interface UnitOfWorkProvider {

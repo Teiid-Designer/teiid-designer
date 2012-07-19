@@ -15,7 +15,7 @@ package org.teiid.designer.ui.editors;
  * The <code>ModelEditor</code> can now perform a save when the <code>DiagramEditor</code> has completed it's display.
  * 
  * see <code>IInitializationCompleteNotifier</code> for the companion notifier class
- * @since 4.3
+ * @since 8.0
  */
 public interface IInitializationCompleteListener {
 

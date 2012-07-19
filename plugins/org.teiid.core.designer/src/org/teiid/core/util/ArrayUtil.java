@@ -9,7 +9,7 @@ package org.teiid.core.util;
 
 
 /**
- * @since 4.0
+ * @since 8.0
  */
 public final class ArrayUtil {
 

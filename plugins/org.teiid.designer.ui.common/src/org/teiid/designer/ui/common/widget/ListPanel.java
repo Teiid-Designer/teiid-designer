@@ -39,7 +39,7 @@ import org.teiid.designer.ui.common.util.WidgetUtil;
 /**
  * Must be added to a container that has a {@link org.eclipse.swt.layout.GridLayout}.
  * 
- * @since 4.0
+ * @since 8.0
  */
 public class ListPanel extends AbstractVerticalButtonPanel implements CoreStringUtil.Constants, Widgets {
 

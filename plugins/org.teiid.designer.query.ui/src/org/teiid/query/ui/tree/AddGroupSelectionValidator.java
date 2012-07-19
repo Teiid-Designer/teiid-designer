@@ -20,7 +20,7 @@ import org.teiid.query.ui.UiConstants;
 /** 
  * The selection validator for the QueryTreeSelectionDialog when used for adding a group
  * to a virtual transformation as either a UNION or a join in a FROM clause.
- * @since 4.2
+ * @since 8.0
  */
 public class AddGroupSelectionValidator implements ISelectionStatusValidator {
 

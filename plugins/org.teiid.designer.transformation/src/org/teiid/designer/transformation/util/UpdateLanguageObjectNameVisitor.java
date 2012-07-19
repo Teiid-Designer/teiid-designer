@@ -24,7 +24,7 @@ import org.teiid.query.sql.symbol.SingleElementSymbol;
  * This visitor update the language objects in the Command being visited by replacing
  * the names of language objects which point to the old EObjects in the map with
  * the names of the coressponding new objects.   
- * @since 4.2
+ * @since 8.0
  */
 public class UpdateLanguageObjectNameVisitor extends LanguageVisitor {
 

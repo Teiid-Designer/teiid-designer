@@ -9,7 +9,7 @@ package org.teiid.designer.runtime.ui.jdbc;
 
 
 /** 
- * @since 5.5.3
+ * @since 8.0
  */
 public interface IResultsProvider {
 

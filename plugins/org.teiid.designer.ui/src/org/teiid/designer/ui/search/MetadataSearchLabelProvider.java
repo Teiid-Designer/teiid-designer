@@ -20,7 +20,7 @@ import org.teiid.designer.ui.viewsupport.ModelIdentifier;
 /**
  * The <code>MetadataSearchLabelProvider</code> is a label provider for use in metadata searching.
  * 
- * @since 6.0.0
+ * @since 8.0
  */
 public class MetadataSearchLabelProvider extends LabelProvider implements UiConstants {
 

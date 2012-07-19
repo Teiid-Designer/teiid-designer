@@ -58,7 +58,7 @@ import org.teiid.designer.metamodels.core.ModelImport;
 import org.xml.sax.Attributes;
 
 /**
- * @since 3.1
+ * @since 8.0
  */
 public class MtkXmiHandler extends SAXXMIHandler {
 

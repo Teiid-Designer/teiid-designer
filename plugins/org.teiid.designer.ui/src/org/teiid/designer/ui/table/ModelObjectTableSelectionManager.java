@@ -27,7 +27,7 @@ import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
  * ModelTableEditor.  It's job is to listen for SelectionChangedEvents on the table and broadcast
  * them to the ModelTableEditor's selection provider.  It also can set a desired selection on the
  * table.
- * @since 4.0
+ * @since 8.0
  */
 public class ModelObjectTableSelectionManager extends SelectionProvider implements ISelectionChangedListener {
     //============================================================================================================================

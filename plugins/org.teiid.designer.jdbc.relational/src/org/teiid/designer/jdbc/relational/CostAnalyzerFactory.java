@@ -13,7 +13,7 @@ import org.teiid.designer.jdbc.relational.impl.OracleCostAnalyzerImpl;
 
 
 /** 
- * @since 4.3
+ * @since 8.0
  */
 public class CostAnalyzerFactory {
 

@@ -35,7 +35,7 @@ import org.teiid.designer.webservice.WebServicePlugin;
 
 
 /**
- * @since 7.1
+ * @since 8.0
  */
 public class WarDeploymentInfoDialog extends TitleAreaDialog implements InternalModelerWarUiConstants {
 

@@ -20,7 +20,7 @@ import org.teiid.designer.core.ModelerCoreException;
  *  To generically contribute an implementation of this interface, use the org.teiid.designer.ui.newModelObjectHelper 
  *  extension point ID.
  *  The NewModelObjectHelperManager collects all extensions of this type and provides the hooks to do the work.
- * @since 4.3
+ * @since 8.0
  */
 public interface INewModelObjectHelper {
 

@@ -87,7 +87,7 @@ import org.teiid.designer.vdb.ui.editor.VdbEditor;
 
 
 /**
- * @since 4.0
+ * @since 8.0
  */
 public final class NewVdbWizard extends AbstractWizard
     implements IPropertiesContext, INewWizard, InternalUiConstants.Widgets, CoreStringUtil.Constants, UiConstants {

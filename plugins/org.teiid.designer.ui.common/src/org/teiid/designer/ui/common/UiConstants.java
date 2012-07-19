@@ -17,7 +17,7 @@ import org.teiid.core.util.PluginUtilImpl;
 
 /**
  * UiConstants
- * @since 4.0
+ * @since 8.0
  */
 public interface UiConstants {
     //============================================================================================================================

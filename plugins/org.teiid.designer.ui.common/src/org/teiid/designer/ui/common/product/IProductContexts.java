@@ -10,7 +10,7 @@ package org.teiid.designer.ui.common.product;
 /**
  * Collection of Modeler product contexts used to determine if features are supported by the current
  * application.
- * @since 4.4
+ * @since 8.0
  */
 public interface IProductContexts {
     

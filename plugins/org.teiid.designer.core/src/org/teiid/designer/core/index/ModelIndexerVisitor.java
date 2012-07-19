@@ -16,7 +16,7 @@ import org.teiid.designer.core.util.ModelVisitor;
 
 
 /**
- * @since 4.2
+ * @since 8.0
  */
 public class ModelIndexerVisitor implements ModelVisitor {
 

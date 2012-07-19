@@ -11,7 +11,7 @@ package org.teiid.designer.ui.common.product;
 /**
  * A product context is used to identify areas supported by an application. Usually only used when a
  * feature or parts of a feature are being removed.
- * @since 4.4
+ * @since 8.0
  */
 public interface IProductContext {
 

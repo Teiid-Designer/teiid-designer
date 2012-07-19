@@ -20,7 +20,7 @@ import org.teiid.designer.ui.viewsupport.ImportContainer;
 
 
 /** 
- * @since 4.2
+ * @since 8.0
  */
 public class CopyNameWorker extends ModelObjectWorker {
 //    private static final String PROBLEM = "CopyNameWorker.problem"; //$NON-NLS-1$

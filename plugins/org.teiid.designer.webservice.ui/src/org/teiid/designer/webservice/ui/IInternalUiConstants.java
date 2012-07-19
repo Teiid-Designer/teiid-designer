@@ -16,7 +16,7 @@ import org.teiid.core.util.PluginUtilImpl;
 /**
  * The internal UI constants.
  * 
- * @since 4.2
+ * @since 8.0
  */
 public interface IInternalUiConstants extends IUiConstants {
 

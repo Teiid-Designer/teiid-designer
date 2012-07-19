@@ -23,7 +23,7 @@ import org.teiid.designer.ui.common.UiConstants;
 /**
  * The <code>JobUtils</code> class provides job utility methods when running in the Eclipse environment.
  * 
- * @since 5.0
+ * @since 8.0
  */
 public class JobUtils {
 	

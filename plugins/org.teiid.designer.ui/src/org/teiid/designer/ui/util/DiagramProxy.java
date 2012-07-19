@@ -14,7 +14,7 @@ import org.teiid.designer.metamodels.diagram.impl.DiagramImpl;
 
 
 /** 
- * @since 5.0
+ * @since 8.0
  */
 public class DiagramProxy extends DiagramImpl {
     private ModelResource modelResource;

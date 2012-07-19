@@ -11,7 +11,7 @@ import org.eclipse.xsd.util.XSDConstants;
 import org.teiid.designer.core.types.DatatypeConstants;
 
 /**
- * @since 4.3
+ * @since 8.0
  */
 public class XsdConstants extends XSDConstants {
 

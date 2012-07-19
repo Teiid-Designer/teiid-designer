@@ -135,7 +135,7 @@ import org.teiid.designer.vdb.ui.translators.TranslatorOverridesPanel;
 
 
 /**
- * @since 4.0
+ * @since 8.0
  */
 // TODO: read-only, undo/redo, function model 259
 public final class VdbEditor extends EditorPart implements IResourceChangeListener {

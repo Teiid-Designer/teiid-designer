@@ -23,7 +23,7 @@ import org.teiid.designer.metamodels.diagram.Diagram;
 
 /** 
  * This class provides the Add To Diagram capability for DND on to Custom diagrams
- * @since 5.0
+ * @since 8.0
  */
 public class CustomDiagramDropEditPartHelper extends DropEditPartHelper {
     private CustomDiagramEditPart customDiagramEditPart;

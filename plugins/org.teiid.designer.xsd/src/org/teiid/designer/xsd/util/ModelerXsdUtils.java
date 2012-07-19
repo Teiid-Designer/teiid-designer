@@ -13,7 +13,7 @@ import org.eclipse.xsd.XSDSimpleTypeDefinition;
 
 
 /** 
- * @since 5.0.2
+ * @since 8.0
  */
 public class ModelerXsdUtils {
     

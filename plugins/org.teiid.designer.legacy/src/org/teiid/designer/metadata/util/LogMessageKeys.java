@@ -10,7 +10,7 @@ package org.teiid.designer.metadata.util;
 
 /**
  * @author lphillips
- * @since 3.1 Class for maintaining the property file keys for Metadata log messages.
+ * @since 8.0 Class for maintaining the property file keys for Metadata log messages.
  */
 public interface LogMessageKeys {
     // *********************** Generic Metadata ***********************

@@ -22,7 +22,7 @@ import org.teiid.designer.metamodels.diagram.DiagramLinkType;
 
 
 /** 
- * @since 4.2
+ * @since 8.0
  */
 public abstract class AbstractNodeConnectionModel implements
                                                  NodeConnectionModel {

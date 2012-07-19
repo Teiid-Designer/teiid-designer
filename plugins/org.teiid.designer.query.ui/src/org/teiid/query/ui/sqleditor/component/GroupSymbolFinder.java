@@ -22,7 +22,7 @@ import org.teiid.query.sql.visitor.GroupCollectorVisitor;
 
 /** This class, along with SqlIndexLocator provides actions and panels a way to narrow down the
  * scope of the query that is currently selected or the cursor is currently in.
- * @since 4.2
+ * @since 8.0
  */
 public class GroupSymbolFinder {
     SqlIndexLocator locator;

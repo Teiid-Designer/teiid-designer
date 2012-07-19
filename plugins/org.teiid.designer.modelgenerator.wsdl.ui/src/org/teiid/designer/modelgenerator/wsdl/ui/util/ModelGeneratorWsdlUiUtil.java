@@ -29,7 +29,7 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 
 /** 
- * @since 4.2
+ * @since 8.0
  */
 public class ModelGeneratorWsdlUiUtil implements FileUtils.Constants {
     

@@ -22,7 +22,7 @@ import org.teiid.designer.metamodels.core.ModelImport;
 
 
 /**
- * @since 4.3
+ * @since 8.0
  */
 public class InvalidModelImportRule implements ObjectValidationRule {
 

@@ -24,7 +24,7 @@ import org.teiid.core.util.CoreArgCheck;
 import org.teiid.designer.core.ModelerCore;
 
 /** 
- * @since 4.2
+ * @since 8.0
  */
 public class WebServiceXsdResource implements IInternalWebServiceXsdResource {
 

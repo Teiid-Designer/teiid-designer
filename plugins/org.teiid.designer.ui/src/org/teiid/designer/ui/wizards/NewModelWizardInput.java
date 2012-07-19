@@ -14,7 +14,7 @@ import org.teiid.designer.metamodels.core.ModelType;
  * This class provides a data-structure that the NewModelWizard framekwork can use to prepopulate the NewModelWizardMetaModelPage
  * (i.e. first wizard page). Intitial implementation provides the ability of the wizard to auto-populate all fields when selecting
  * an XML Schema (xsd) file, including an initial name. (saves multiple clicks) (see Defect 22363)
- * @since 5.0
+ * @since 8.0
  */
 public class NewModelWizardInput {
     private String metamodelClass;

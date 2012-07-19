@@ -61,7 +61,7 @@ import org.teiid.designer.webservice.WebServicePlugin;
 
 
 /**
- * @since 4.2
+ * @since 8.0
  */
 public class BasicWebServiceGenerator implements IWebServiceGenerator {
 

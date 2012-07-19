@@ -38,7 +38,7 @@ import org.teiid.designer.ui.common.widget.MessageLabel;
 /**
  * The <code>NamespaceUriRenameDialog</code> class is the dialog that obtains user input for managing a model's Namespace URI.
  * 
- * @since 4.3
+ * @since 8.0
  */
 public class NamespaceUriRenameDialog extends Dialog implements IHelpContextIds, UiConstants {
 

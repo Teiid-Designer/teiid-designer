@@ -14,7 +14,7 @@ import org.xml.sax.helpers.DefaultHandler;
 
 
 /**
- * @since 4.3
+ * @since 8.0
  */
 public class EResourceLoader extends XMILoadImpl {
 

@@ -20,7 +20,7 @@ import org.teiid.designer.ui.common.actions.ActionService;
 
 
 /**
- * @since 4.2
+ * @since 8.0
  */
 public class VdbUiPlugin extends AbstractUiPlugin implements VdbUiConstants {
 

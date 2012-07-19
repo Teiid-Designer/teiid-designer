@@ -60,8 +60,7 @@ import java.util.NoSuchElementException;
  * </pre></blockquote>
  *
  */
-public
-class EnhancedStringTokenizer implements Enumeration {
+public class EnhancedStringTokenizer implements Enumeration {
     private int currentPosition;
     private int newPosition;
     private int maxPosition;

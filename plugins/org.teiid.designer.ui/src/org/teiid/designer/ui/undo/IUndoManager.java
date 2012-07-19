@@ -10,7 +10,7 @@ package org.teiid.designer.ui.undo;
 import org.eclipse.core.runtime.IProgressMonitor;
 
 /**
- * @since 5.5.3
+ * @since 8.0
  */
 public interface IUndoManager {
 

@@ -10,7 +10,7 @@ package org.teiid.designer.runtime.ui.wizards.webservices.util;
 /**
  * This class contains constants for working with a WebArchiveBuilder.
  * 
- * @since 7.1
+ * @since 8.0
  */
 public class WebArchiveBuilderConstants {
 

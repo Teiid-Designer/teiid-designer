@@ -92,7 +92,7 @@ import org.w3c.dom.NodeList;
  * For these reasons, I've completely implemented my own XMLSave, which uses JDOM to do all the serialization to XML.
  * </p>
  * 
- * @since 4.2
+ * @since 8.0
  */
 public class WsdlWriter implements XMLSave, WsdlConstants {
 

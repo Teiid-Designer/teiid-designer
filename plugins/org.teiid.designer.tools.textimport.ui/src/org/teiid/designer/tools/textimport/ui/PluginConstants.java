@@ -12,7 +12,7 @@ import org.teiid.designer.ui.common.UiConstants;
 
 /**
  * This class is intended for use within this plugin only.
- * @since 4.0
+ * @since 8.0
  */
 public interface PluginConstants {
     //============================================================================================================================

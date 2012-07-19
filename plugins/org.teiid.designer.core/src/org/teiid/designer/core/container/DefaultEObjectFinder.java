@@ -27,7 +27,7 @@ import org.teiid.designer.core.workspace.ModelWorkspaceException;
 
 
 /**
- * @since 4.3
+ * @since 8.0
  */
 public class DefaultEObjectFinder extends AbstractFinder {
 

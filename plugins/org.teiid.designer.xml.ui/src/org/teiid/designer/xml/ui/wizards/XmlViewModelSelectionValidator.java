@@ -26,7 +26,7 @@ import org.teiid.designer.xml.ui.ModelerXmlUiConstants;
 
 
 /** 
- * @since 5.0
+ * @since 8.0
  */
 public class XmlViewModelSelectionValidator implements ISelectionStatusValidator, ModelerXmlUiConstants {
     

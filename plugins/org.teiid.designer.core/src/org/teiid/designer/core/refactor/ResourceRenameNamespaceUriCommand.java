@@ -23,7 +23,7 @@ import org.teiid.designer.metamodels.core.ModelAnnotation;
 
 
 /** 
- * @since 4.3
+ * @since 8.0
  */
 public final class ResourceRenameNamespaceUriCommand extends ResourceRefactorCommand {
     

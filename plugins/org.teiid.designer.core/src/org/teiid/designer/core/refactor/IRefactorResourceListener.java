@@ -12,7 +12,7 @@ package org.teiid.designer.core.refactor;
  * This interface provides non-ui plugins to listener for changes in resources within the Designer workspace.
  * 
  * Currently Refactor actions for Move, Rename & Delete are wired to notify when commands are completed including Undo/Redo
- * @since 5.0
+ * @since 8.0
  */
 public interface IRefactorResourceListener {
 

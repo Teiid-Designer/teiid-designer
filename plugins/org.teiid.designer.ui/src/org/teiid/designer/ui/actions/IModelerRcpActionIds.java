@@ -75,7 +75,7 @@ package org.teiid.designer.ui.actions;
  *      <li>mainmenu.help/menuadditions</li>
  *      <li>mainmenu.help/help.end</li>
  * </ul>
- * @since 4.4
+ * @since 8.0
  */
 public interface IModelerRcpActionIds {
     

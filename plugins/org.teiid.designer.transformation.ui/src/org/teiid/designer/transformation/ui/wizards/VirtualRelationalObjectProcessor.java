@@ -29,7 +29,7 @@ import org.teiid.designer.transformation.util.TransformationHelper;
 
 
 /** 
- * @since 4.2
+ * @since 8.0
  */
 public class VirtualRelationalObjectProcessor extends AbstractObjectProcessor {
     private static final String I18N_PREFIX             = "VirtualRelationalObjectProcessor"; //$NON-NLS-1$

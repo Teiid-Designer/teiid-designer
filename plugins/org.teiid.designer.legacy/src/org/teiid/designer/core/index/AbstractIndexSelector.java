@@ -17,7 +17,7 @@ import java.util.List;
 
 
 /** 
- * @since 4.2
+ * @since 8.0
  */
 public abstract class AbstractIndexSelector implements IndexSelector {
 

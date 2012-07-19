@@ -56,7 +56,7 @@ import org.teiid.designer.ui.viewsupport.ModelerNotificationHelper;
 /**
  * The main plugin class to be used in the desktop.
  * 
- * @since 4.0
+ * @since 8.0
  */
 public final class UiPlugin extends AbstractUiPlugin implements Debug, PluginConstants, UiConstants, IModelerProductContexts {
 

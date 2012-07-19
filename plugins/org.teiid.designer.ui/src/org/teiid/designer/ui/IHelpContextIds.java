@@ -9,7 +9,7 @@ package org.teiid.designer.ui;
 
 
 /** 
- * @since 4.3
+ * @since 8.0
  */
 public interface IHelpContextIds {
     String PREFIX = UiConstants.PLUGIN_ID + '.';

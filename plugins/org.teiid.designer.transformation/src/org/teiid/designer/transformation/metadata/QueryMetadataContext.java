@@ -15,7 +15,7 @@ import org.teiid.designer.core.index.IndexSelector;
 
 /** 
  * This class contains all the information needed for lookup of metadata.
- * @since 4.2
+ * @since 8.0
  */
 public class QueryMetadataContext {
 

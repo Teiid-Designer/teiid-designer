@@ -19,7 +19,7 @@ import org.teiid.designer.ui.common.graphics.GlobalUiColorManager;
 /**
  * DiagramUiConstants
  * 
- * @since 4.0
+ * @since 8.0
  */
 public interface DiagramUiConstants {
     /**

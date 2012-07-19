@@ -8,7 +8,7 @@
 package org.teiid.core.aspects;
 
 /**
- * @since 4.1
+ * @since 8.0
  */
 public interface DeclarativeTransactionManager {
 }

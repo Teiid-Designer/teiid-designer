@@ -14,7 +14,7 @@ import org.teiid.designer.diagram.ui.part.DiagramEditPart;
 
 
 /** 
- * @since 4.3
+ * @since 8.0
  */
 public class ChopBoxAnchorManager implements AnchorManager {
 //    private ConnectionAnchor sourceAnchor;

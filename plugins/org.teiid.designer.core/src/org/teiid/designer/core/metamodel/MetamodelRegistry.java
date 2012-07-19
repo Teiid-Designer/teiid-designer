@@ -22,7 +22,7 @@ import org.teiid.designer.core.metamodel.aspect.MetamodelAspect;
 
 /** 
  * The MetamodelRegistry manages metamodel information through the EPackage.Registry
- * @since 5.0
+ * @since 8.0
  */
 public interface MetamodelRegistry{
     

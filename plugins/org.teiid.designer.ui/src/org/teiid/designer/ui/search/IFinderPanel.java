@@ -12,7 +12,7 @@ import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 
 
 /** 
- * @since 4.2
+ * @since 8.0
  */
 public interface IFinderPanel {
 

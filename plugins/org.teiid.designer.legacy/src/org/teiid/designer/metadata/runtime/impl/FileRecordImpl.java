@@ -19,7 +19,7 @@ import org.teiid.designer.core.workspace.ModelFileUtil;
 import org.teiid.designer.metadata.runtime.FileRecord;
 
 /**
- * @since 4.2
+ * @since 8.0
  */
 public class FileRecordImpl extends AbstractMetadataRecord implements FileRecord {
 

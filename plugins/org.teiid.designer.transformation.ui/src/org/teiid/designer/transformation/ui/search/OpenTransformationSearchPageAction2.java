@@ -16,7 +16,7 @@ import org.teiid.designer.ui.common.util.UiUtil;
 
 
 /**
- * @since 5.0
+ * @since 8.0
  */
 public class OpenTransformationSearchPageAction2 extends Action implements UiConstants {
 

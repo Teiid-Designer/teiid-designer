@@ -27,7 +27,7 @@ import org.teiid.designer.ui.UiPlugin;
 /**
  * Simple Text file export worker.
  * This class provides actions, views and editors the ability to export a desired text object to a file.
- * @since 5.0
+ * @since 8.0
  */
 public class ExportTextToFileWorker {
 

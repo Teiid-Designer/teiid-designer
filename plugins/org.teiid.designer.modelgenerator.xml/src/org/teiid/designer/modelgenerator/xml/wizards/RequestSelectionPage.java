@@ -14,7 +14,7 @@ import org.teiid.core.util.I18nUtil;
 /** 
  * The <code>RequestSelectionPage</code> allows the user to select XSD files from the file system which will be
  * used to generate the new model.
- * @since 4.2
+ * @since 8.0
  */
 public final class RequestSelectionPage extends XsdSelectionPage
 {

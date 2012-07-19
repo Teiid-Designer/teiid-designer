@@ -42,7 +42,7 @@ import org.teiid.query.ui.UiPlugin;
 
 
 /**
- * @since 5.0
+ * @since 8.0
  */
 public class ExportTransformationSqlToTextAction extends SortableSelectionAction implements UiConstants {
 

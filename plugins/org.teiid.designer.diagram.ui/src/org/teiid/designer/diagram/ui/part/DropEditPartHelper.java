@@ -12,7 +12,7 @@ import org.eclipse.draw2d.geometry.Point;
 
 
 /** 
- * @since 4.3
+ * @since 8.0
  */
 public abstract class DropEditPartHelper implements
                                         DropEditPart {

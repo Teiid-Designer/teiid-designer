@@ -28,7 +28,7 @@ import org.teiid.designer.metamodels.diagram.Diagram;
 
 /** 
  * Set of Utilities to manage content from a standard custom diagram
- * @since 5.0
+ * @since 8.0
  */
 public class CustomDiagramContentHelper {
 

@@ -35,7 +35,7 @@ import org.teiid.designer.ui.common.util.WidgetUtil;
 
 
 /**
- * @since 7.1
+ * @since 8.0
  */
 public abstract class WarDeploymentInfoPanel extends Composite implements InternalModelerWarUiConstants {
 

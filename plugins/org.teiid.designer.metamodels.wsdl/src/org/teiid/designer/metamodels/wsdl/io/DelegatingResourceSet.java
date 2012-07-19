@@ -18,7 +18,7 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 
 
 /** 
- * @since 4.2
+ * @since 8.0
  */
 public class DelegatingResourceSet extends ResourceSetImpl {
 

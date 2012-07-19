@@ -15,7 +15,7 @@ import org.teiid.designer.ui.actions.workers.CopyNameWorker;
 
 /**
  * The <code>CopyFullNameAction</code> class is the action copies the full name to the clipboard.
- * @since 4.0
+ * @since 8.0
  */
 public class CopyFullNameAction extends ModelObjectAction {
 

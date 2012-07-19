@@ -10,7 +10,7 @@ package org.teiid.designer.webservice.ui;
 /**
  * Public constants.
  * 
- * @since 4.4
+ * @since 8.0
  */
 public interface IUiConstants {
 

@@ -128,7 +128,7 @@ import org.teiid.designer.ui.viewsupport.StatusBarUpdater;
 /**
  * ModelExplorerResourceNavigator is the Navigator View for the MetaBase Modeler.
  * 
- * @since 4.0
+ * @since 8.0
  */
 public class ModelExplorerResourceNavigator extends ResourceNavigator
     implements IModelerActionConstants, IGotoMarker, ModelViewer, UiConstants {

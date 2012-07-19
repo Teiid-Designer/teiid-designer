@@ -20,7 +20,7 @@ import org.teiid.designer.metamodels.diagram.Diagram;
 
 
 /** 
- * @since 4.3
+ * @since 8.0
  */
 public class PackageDiagramUtil {
     private static boolean PERSIST_PACKAGE_DIAGRAMS = true;

@@ -18,7 +18,7 @@ import org.teiid.designer.webservice.ui.editor.OperationObjectEditorPage;
 
 
 /** 
- * @since 5.0.2
+ * @since 8.0
  */
 public class WebServiceObjectEditHelper extends ModelObjectEditHelper {
 

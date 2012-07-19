@@ -24,7 +24,7 @@ import org.teiid.designer.metamodels.xml.XmlDocumentPackage;
 
 
 /** 
- * @since 4.2
+ * @since 8.0
  */
 public class XmlDocumentModelProducer implements ModelProducer {
 

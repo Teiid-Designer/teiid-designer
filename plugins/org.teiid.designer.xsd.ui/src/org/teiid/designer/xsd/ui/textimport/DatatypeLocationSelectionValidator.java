@@ -25,7 +25,7 @@ import org.teiid.designer.xsd.ui.ModelerXsdUiConstants;
 
 
 /** 
- * @since 4.2
+ * @since 8.0
  */
 public class DatatypeLocationSelectionValidator  implements ISelectionStatusValidator, ModelerXsdUiConstants {
 

@@ -38,7 +38,7 @@ import org.teiid.designer.core.metamodel.MetamodelDescriptor;
  *   <li>Obtain and execute the {@link #getModelGenerator() model generator}</li>
  * </ul>
  * </p>
- * @since 4.2
+ * @since 8.0
  */
 public interface IWebServiceModelBuilder {
     

@@ -42,7 +42,7 @@ import org.teiid.designer.ui.common.widget.Dialog;
 /**
  * The <code>DependencyReportDialog</code> is the UI which obtains information used to generate and save a dependency report.
  * 
- * @since 4.2
+ * @since 8.0
  */
 public class DependencyReportDialog extends Dialog implements UiConstants {
 

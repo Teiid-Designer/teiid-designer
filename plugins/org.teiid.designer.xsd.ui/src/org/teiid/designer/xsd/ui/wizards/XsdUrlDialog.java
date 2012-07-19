@@ -40,7 +40,7 @@ import org.teiid.designer.xsd.ui.ModelerXsdUiConstants;
 /**
  * The <code>XsdUrlDialog</code> class is the dialog that obtains user input for entering a XSD Url.
  * 
- * @since 5.5
+ * @since 8.0
  */
 public class XsdUrlDialog extends Dialog implements IHelpContextIds, ModelerXsdUiConstants {
 

@@ -14,7 +14,7 @@ import org.teiid.designer.metamodels.webservice.WebServiceComponent;
 
 
 /** 
- * @since 4.2
+ * @since 8.0
  */
 public class WebServiceComponentNameToNameMatcher extends AbstractEObjectNameMatcher {
 

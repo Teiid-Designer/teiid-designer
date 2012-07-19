@@ -22,7 +22,7 @@ import org.eclipse.emf.mapping.MappingFactory;
 
 /** 
  * This matcher compares two eObjects one or both of which are eProxys.
- * @since 4.2
+ * @since 8.0
  */
 public class EProxyUriMatcher extends AbstractEObjectMatcher {
 

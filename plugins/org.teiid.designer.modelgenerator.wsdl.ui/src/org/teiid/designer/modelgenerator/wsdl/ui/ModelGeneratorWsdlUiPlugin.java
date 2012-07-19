@@ -21,7 +21,7 @@ import org.teiid.designer.ui.common.actions.ActionService;
 
 /**
  * The <code>ModelGeneratorWsdlUiPlugin</code> is the plugin for the Modeler Web Service UI.
- * @since 4.2
+ * @since 8.0
  */
 public final class ModelGeneratorWsdlUiPlugin extends AbstractUiPlugin 
                                               implements ModelGeneratorWsdlUiConstants {

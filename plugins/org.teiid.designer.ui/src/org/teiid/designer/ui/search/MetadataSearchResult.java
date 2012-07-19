@@ -26,7 +26,7 @@ import org.teiid.designer.ui.UiConstants;
  * The <code>NewMetadataSearchResult</code> class is the result object for a metadata search. A {@link MetadataSearchQuery} is
  * used to construct a result instance. Then {@link MetadataMatch}es are added later.
  * 
- * @since 6.0.0
+ * @since 8.0
  */
 public class MetadataSearchResult extends AbstractTextSearchResult implements IEditorMatchAdapter, IFileMatchAdapter, UiConstants {
 

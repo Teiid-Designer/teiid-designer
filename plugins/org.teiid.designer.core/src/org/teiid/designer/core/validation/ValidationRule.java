@@ -9,7 +9,7 @@ package org.teiid.designer.core.validation;
 
 /**
  * Marker interface for all implementations that provide rule-based validation.
- * @since 4.0
+ * @since 8.0
  */
 public interface ValidationRule {
 

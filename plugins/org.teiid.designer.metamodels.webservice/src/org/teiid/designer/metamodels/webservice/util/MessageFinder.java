@@ -13,7 +13,7 @@ import org.teiid.designer.metamodels.webservice.Message;
 import org.teiid.designer.metamodels.webservice.Operation;
 
 /**
- * @since 4.2
+ * @since 8.0
  */
 public class MessageFinder extends WebServiceComponentFinder {
 

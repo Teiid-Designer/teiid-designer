@@ -31,7 +31,7 @@ import org.teiid.designer.ui.common.util.WidgetFactory;
 
 
 /**
- * @since 5.5
+ * @since 8.0
  */
 public class ConnectionPropertySource implements IPropertySource {
 

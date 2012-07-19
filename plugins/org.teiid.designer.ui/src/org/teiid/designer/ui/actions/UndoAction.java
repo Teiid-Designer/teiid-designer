@@ -19,7 +19,7 @@ import org.teiid.designer.ui.undo.IUndoManager;
 /**
  * The <code>UndoAction</code> class is the action that handles the global undo.
  * 
- * @since 4.0
+ * @since 8.0
  */
 public class UndoAction extends AbstractUndoRedoAction {
 

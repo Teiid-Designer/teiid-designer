@@ -26,7 +26,7 @@ import org.teiid.designer.metamodels.core.extension.XEnumLiteral;
 
 
 /**
- * @since 4.3
+ * @since 8.0
  */
 public class XEnumLiteralValueRule extends StringNameRule {
 

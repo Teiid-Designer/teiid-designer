@@ -32,7 +32,7 @@ import org.teiid.designer.ui.editors.ModelEditorPage;
 
 
 /**
- * @since 5.0
+ * @since 8.0
  */
 public class DiagramActionAdapter extends AbstractModelEditorPageActionBarContributor
     implements IDiagramActionAdapter, DiagramUiConstants {

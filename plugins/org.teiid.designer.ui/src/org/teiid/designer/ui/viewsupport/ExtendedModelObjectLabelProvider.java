@@ -21,7 +21,7 @@ import org.teiid.designer.ui.UiConstants;
 
 
 /** 
- * @since 5.0
+ * @since 8.0
  */
 public class ExtendedModelObjectLabelProvider implements ILabelProvider, UiConstants.ExtensionPoints.ExtendedModelLabelProvider {
 

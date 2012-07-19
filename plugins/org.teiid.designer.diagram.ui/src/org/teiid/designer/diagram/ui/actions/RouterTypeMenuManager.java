@@ -16,7 +16,7 @@ import org.teiid.designer.diagram.ui.editor.DiagramEditorUtil;
 /**
  * MenuManager desiged to create and maintain router type selection actions. This includes handling the update to the preferences.
  * 
- * @since 4.2
+ * @since 8.0
  */
 public class RouterTypeMenuManager extends MenuManager implements DiagramUiConstants.LinkRouter {
     private static final String LABEL = DiagramUiConstants.Util.getString("LinkSelectionAction.label"); //$NON-NLS-1$

@@ -38,7 +38,7 @@ import org.teiid.designer.xml.ui.ModelerXmlUiConstants;
  * Dialog designed specifically for users to select XML Document nodes or XML Document Roots Used initiallyl by
  * GenerateWebServiceModelAction2
  * 
- * @since 5.0
+ * @since 8.0
  */
 public class XmlDocumentSelectorDialog extends ModelWorkspaceDialog implements ModelerXmlUiConstants {
 

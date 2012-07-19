@@ -18,7 +18,7 @@ import org.teiid.designer.core.index.Index;
 
 
 /**
- * @since 4.2
+ * @since 8.0
  */
 public class TargetLocationIndexSelector extends AbstractIndexSelector {
 

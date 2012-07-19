@@ -45,7 +45,7 @@ import org.teiid.designer.core.workspace.ModelFileUtil;
 import org.teiid.designer.core.workspace.ModelUtil;
 
 /**
- * @since 3.1
+ * @since 8.0
  */
 public class EmfResourceSetImpl extends ResourceSetImpl implements EmfResourceSet, IEditingDomainProvider {
 

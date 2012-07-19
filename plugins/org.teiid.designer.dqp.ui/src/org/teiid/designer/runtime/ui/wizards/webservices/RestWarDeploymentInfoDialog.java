@@ -39,7 +39,7 @@ import org.teiid.designer.webservice.WebServicePlugin;
 
 
 /**
- * @since 7.4
+ * @since 8.0
  */
 public class RestWarDeploymentInfoDialog extends TitleAreaDialog implements InternalModelerWarUiConstants {
 

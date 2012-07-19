@@ -24,7 +24,7 @@ import org.teiid.designer.ui.UiConstants;
  * A <code>MetadataSearchQuery</code> executes the search using the search engine passed in at construction and creates the {
  * {@link MetadataSearchResult}.
  * 
- * @since 6.0.0
+ * @since 8.0
  */
 public class MetadataSearchQuery implements ISearchQuery, UiConstants {
 

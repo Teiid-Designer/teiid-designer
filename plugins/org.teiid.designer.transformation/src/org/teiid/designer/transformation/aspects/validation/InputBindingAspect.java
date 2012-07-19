@@ -18,7 +18,7 @@ import org.teiid.designer.metamodels.transformation.InputBinding;
 
 
 /** 
- * @since 4.2
+ * @since 8.0
  */
 public class InputBindingAspect extends TransformationAspect {
 

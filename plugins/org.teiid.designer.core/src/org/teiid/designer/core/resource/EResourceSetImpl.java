@@ -40,7 +40,7 @@ import org.teiid.designer.core.container.DuplicateResourceException;
 
 
 /**
- * @since 4.3
+ * @since 8.0
  */
 public class EResourceSetImpl extends ResourceSetImpl implements EResourceSet {
 

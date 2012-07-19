@@ -24,7 +24,7 @@ import org.teiid.designer.ui.common.util.UiUtil;
 /** 
  * <code>ViewerFilter</code> that selects {@link IContainer}s and optionally models found in open 
  * {@link org.eclipse.core.resources.IProject}s.
- * @since 4.2
+ * @since 8.0
  */
 public class ModelWorkspaceViewerFilter extends ViewerFilter implements UiConstants {
 

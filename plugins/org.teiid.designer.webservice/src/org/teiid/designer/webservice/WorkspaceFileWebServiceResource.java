@@ -15,7 +15,7 @@ import org.teiid.core.util.CoreArgCheck;
 
 
 /** 
- * @since 4.2
+ * @since 8.0
  */
 public class WorkspaceFileWebServiceResource extends AbstractWebServiceResource {
 

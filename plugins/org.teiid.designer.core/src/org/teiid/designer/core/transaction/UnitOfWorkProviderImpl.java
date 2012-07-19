@@ -20,7 +20,7 @@ import org.teiid.designer.core.ModelerCore;
 
 /**
  * @author lphillips
- * @since 3.1
+ * @since 8.0
  */
 public class UnitOfWorkProviderImpl implements UnitOfWorkProvider {
     private final static boolean DEBUG = false;

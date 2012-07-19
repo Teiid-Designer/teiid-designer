@@ -15,7 +15,7 @@ import org.teiid.designer.jdbc.relational.util.JdbcRelationalUtil;
 
 /**
  * Table statistics value object 
- * @since 4.3
+ * @since 8.0
  */
 public class TableStatistics {
     

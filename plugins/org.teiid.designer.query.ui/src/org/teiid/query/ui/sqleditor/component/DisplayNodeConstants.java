@@ -10,7 +10,7 @@ package org.teiid.query.ui.sqleditor.component;
 /**
  * The <code>DisplayNodeConstants</code> interface contains constants used when working with {@link DisplayNode}s.
  * @author Mark Drilling 11/22/02
- * @since 3.1
+ * @since 8.0
  * @version 1.0
  */
 public interface DisplayNodeConstants {

@@ -17,7 +17,7 @@ import org.teiid.designer.ui.common.UiConstants;
 /**
  * "Global" Constants with respect to this plug-in that may be used by other plug-ins.
  * 
- * @since 4.2
+ * @since 8.0
  */
 public interface VdbUiConstants {
 

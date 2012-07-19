@@ -28,7 +28,7 @@ import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
 
 /** 
- * @since 5.0
+ * @since 8.0
  */
 public class ExternalResourceImportsHelper {
   

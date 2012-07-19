@@ -12,7 +12,7 @@ import org.teiid.core.util.CoreArgCheck;
 
 /**
  * Basic implementation of an <code>IProductContext</code>. 
- * @since 4.4
+ * @since 8.0
  */
 public class ProductContext implements IProductContext {
 

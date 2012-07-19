@@ -11,7 +11,7 @@ package org.teiid.designer.common.vdb;
 /**
  * Class used to store NonModelReference information extracted from the MetaMatrix-VdbManifestModel.xmi model
  * 
- * @since 4.3
+ * @since 8.0
  */
 public class VdbNonModelInfo {
 

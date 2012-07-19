@@ -36,7 +36,7 @@ import org.teiid.designer.ui.viewsupport.ModelObjectUtilities;
 
 
 /**
- * @since 5.0
+ * @since 8.0
  */
 public class TransformationDiagramFigure extends FreeformLayer {
     private static final String TARGET_TITLE = "VIEW"; //$NON-NLS-1$

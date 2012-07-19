@@ -11,7 +11,7 @@ import org.eclipse.jface.wizard.IWizardPage;
 
 /**<p>
  * </p>
- * @since 4.0
+ * @since 8.0
  */
 public interface IPersistentWizardPage extends IWizardPage {
     //============================================================================================================================

@@ -35,7 +35,7 @@ import org.teiid.designer.extension.ExtensionConstants;
 /**
  * ModelProjectImpl
  * 
- * @since 4.0
+ * @since 8.0
  */
 public class ModelProjectImpl extends OpenableImpl implements IProjectNature, ModelProject {
 

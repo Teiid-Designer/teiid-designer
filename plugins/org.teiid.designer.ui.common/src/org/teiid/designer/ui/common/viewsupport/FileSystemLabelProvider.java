@@ -16,7 +16,7 @@ import org.eclipse.ui.PlatformUI;
 
 /**
  * A {@link org.eclipse.jface.viewers.ILabelProvider} suitable for displaying {@link java.io.File} objects.
- * @since 4.2
+ * @since 8.0
  */
 public class FileSystemLabelProvider extends LabelProvider {
 

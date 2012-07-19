@@ -17,7 +17,7 @@ import org.teiid.designer.ui.actions.workers.PasteWorker;
 
 /**
  * The <code>PasteAction</code> class is the action that handles the global paste.
- * @since 4.0
+ * @since 8.0
  */
 public final class PasteAction extends ModelObjectAction implements UiConstants {
     

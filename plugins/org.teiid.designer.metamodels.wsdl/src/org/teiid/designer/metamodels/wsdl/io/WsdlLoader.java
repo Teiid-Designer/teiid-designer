@@ -94,7 +94,7 @@ import org.xml.sax.InputSource;
  * <code>definitions/types</code> fragment.
  * </p>
  * 
- * @since 4.2
+ * @since 8.0
  */
 public class WsdlLoader implements XMLLoad, WsdlConstants {
 

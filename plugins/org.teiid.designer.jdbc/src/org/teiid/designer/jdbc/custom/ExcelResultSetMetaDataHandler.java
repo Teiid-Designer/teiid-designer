@@ -15,7 +15,7 @@ import java.util.List;
 
 
 /** 
- * @since 4.3
+ * @since 8.0
  */
 public class ExcelResultSetMetaDataHandler implements
                                           InvocationHandler {

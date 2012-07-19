@@ -16,7 +16,7 @@ import org.teiid.designer.ui.actions.workers.CopyWorker;
 
 /**
  * The <code>CopyAction</code> class is the action that handles the global copy.
- * @since 4.0
+ * @since 8.0
  */
 public class CopyAction extends ModelObjectAction implements UiConstants {
     //============================================================================================================================

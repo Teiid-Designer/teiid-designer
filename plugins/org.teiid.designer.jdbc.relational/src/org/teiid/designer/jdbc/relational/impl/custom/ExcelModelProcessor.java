@@ -32,7 +32,7 @@ import org.teiid.designer.metamodels.relational.util.RelationalTypeMapping;
 
 
 /**
- * @since 4.3
+ * @since 8.0
  */
 public class ExcelModelProcessor extends RelationalModelProcessorImpl {
     /**

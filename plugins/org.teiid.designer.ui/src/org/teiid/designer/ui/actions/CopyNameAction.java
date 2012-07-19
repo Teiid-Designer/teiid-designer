@@ -15,7 +15,7 @@ import org.teiid.designer.ui.actions.workers.CopyNameWorker;
 
 /**
  * The <code>CopyNameAction</code> class is the action copies the short name to the clipboard.
- * @since 4.0
+ * @since 8.0
  */
 public class CopyNameAction extends ModelObjectAction {
 

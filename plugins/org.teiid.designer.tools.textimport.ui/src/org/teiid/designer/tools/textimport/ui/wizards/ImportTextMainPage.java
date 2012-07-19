@@ -34,7 +34,7 @@ import org.teiid.designer.ui.common.widget.WrappingLabel;
 
 
 /**
- * @since 4.2
+ * @since 8.0
  */
 public class ImportTextMainPage extends WizardDataTransferPage implements UiConstants {
 

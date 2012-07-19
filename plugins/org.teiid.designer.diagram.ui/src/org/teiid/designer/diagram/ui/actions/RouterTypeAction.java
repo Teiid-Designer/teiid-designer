@@ -8,7 +8,7 @@
 package org.teiid.designer.diagram.ui.actions;
 
 /** 
- * @since 4.2
+ * @since 8.0
  */
 public class RouterTypeAction extends DiagramAction {
     private String type = null;

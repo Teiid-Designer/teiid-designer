@@ -40,7 +40,7 @@ import org.teiid.designer.webservice.ui.util.WebServiceUiUtil;
 /**
  * The <code>ShowDependenciesDialog</code> shows a table identifying for each file their dependencies.
  * 
- * @since 4.2
+ * @since 8.0
  */
 public final class ShowDependenciesDialog extends Dialog implements IInternalUiConstants {
 

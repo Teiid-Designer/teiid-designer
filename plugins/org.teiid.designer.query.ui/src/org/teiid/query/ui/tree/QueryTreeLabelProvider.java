@@ -31,7 +31,7 @@ import org.teiid.query.ui.builder.util.ElementViewerFactory;
  * and icons for LanguageObjects in a Command.  It uses a delegate ILabelProvider for rendering
  * MetadataId objects.  This delegate may be supplied through the constructor, or if one is not
  * supplied it will be obtained from the static class ElementViewerFactory.
- * @since 4.2
+ * @since 8.0
  */
 public class QueryTreeLabelProvider implements ILabelProvider, UiConstants {
     

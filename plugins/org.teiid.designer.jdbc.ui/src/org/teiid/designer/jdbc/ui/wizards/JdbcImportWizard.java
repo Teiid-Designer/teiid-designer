@@ -85,7 +85,7 @@ import org.teiid.designer.ui.viewsupport.ModelerUiViewUtils;
 
 
 /**
- * @since 4.0
+ * @since 8.0
  */
 public class JdbcImportWizard extends AbstractWizard
     implements IPropertiesContext, IDifferencingWizard, IJdbcImportInfoProvider, ModelerJdbcUiConstants, ModelerJdbcUiConstants.Images {

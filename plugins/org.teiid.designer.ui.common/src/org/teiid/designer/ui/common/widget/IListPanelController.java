@@ -10,7 +10,7 @@ package org.teiid.designer.ui.common.widget;
 import org.eclipse.jface.viewers.IStructuredSelection;
 
 /**
- * @since 4.0
+ * @since 8.0
  */
 public interface IListPanelController {
     //============================================================================================================================

@@ -23,7 +23,7 @@ import org.eclipse.ui.PartInitException;
  * This class listens to the workbench and records the active editor for every deactivated perspective so the editor can be
  * re-activated when the perspective is re-opened.
  * 
- * @since 5.0.2
+ * @since 8.0
  */
 public class EditorPerspectiveListener implements IPerspectiveListener3 {
 

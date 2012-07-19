@@ -42,7 +42,7 @@ import org.teiid.designer.ui.common.InternalUiConstants;
  * CheckedListSelectionDialog is an extension of ListSelectionDialog that allows setting an ISelectionStatusValidator. The
  * validator is sent the checked items in the list whenever the check state changes.
  * 
- * @since 4.2
+ * @since 8.0
  */
 public class CheckedListSelectionDialog extends SelectionDialog {
 

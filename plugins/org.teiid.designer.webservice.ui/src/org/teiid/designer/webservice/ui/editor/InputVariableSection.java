@@ -46,7 +46,7 @@ import org.teiid.query.sql.proc.DeclareStatement;
 
 
 /**
- * @since 5.0.1
+ * @since 8.0
  */
 public class InputVariableSection implements IInternalUiConstants {
 

@@ -18,7 +18,7 @@ import org.teiid.designer.ui.common.text.TextFontManager;
 
 /**
  * The <code>CopyAction</code> class is the action that handles the global copy.
- * @since 4.0
+ * @since 8.0
  */
 public class UpFont extends AbstractAction implements IFontChangeListener {
 

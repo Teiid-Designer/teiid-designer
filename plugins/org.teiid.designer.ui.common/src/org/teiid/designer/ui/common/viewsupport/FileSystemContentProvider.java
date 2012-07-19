@@ -13,7 +13,7 @@ import org.eclipse.jface.viewers.Viewer;
 
 /**
  * A <code>ITreeContentProvider</code> for the file system.
- * @since 4.2
+ * @since 8.0
  */
 public class FileSystemContentProvider implements ITreeContentProvider {
 

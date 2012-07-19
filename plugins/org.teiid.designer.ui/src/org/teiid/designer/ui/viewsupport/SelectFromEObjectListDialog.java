@@ -15,7 +15,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.ElementListSelectionDialog;
 
 /**
- * @since 5.0
+ * @since 8.0
  */
 public class SelectFromEObjectListDialog extends ElementListSelectionDialog {
 

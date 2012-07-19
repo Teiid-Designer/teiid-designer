@@ -26,7 +26,7 @@ import org.teiid.designer.ui.viewsupport.ModelObjectEditHelperManager;
 
 
 /** 
- * @since 4.2
+ * @since 8.0
  */
 public class CopyWorker extends ModelObjectWorker {
     private static final String PROBLEM = "CopyWorker.problem"; //$NON-NLS-1$

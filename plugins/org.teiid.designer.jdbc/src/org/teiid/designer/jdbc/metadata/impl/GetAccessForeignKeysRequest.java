@@ -20,7 +20,7 @@ import org.teiid.designer.jdbc.data.MetadataRequest;
 import org.teiid.designer.jdbc.data.Response;
 
 /**
- * @since 5.5
+ * @since 8.0
  */
 public class GetAccessForeignKeysRequest extends MetadataRequest {
     public static final String NAME = JdbcPlugin.Util.getString("GetAccessForeignKeysRequestName"); //$NON-NLS-1$

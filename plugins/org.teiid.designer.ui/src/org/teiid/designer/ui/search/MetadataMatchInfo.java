@@ -13,7 +13,7 @@ import org.eclipse.search.ui.text.Match;
 import org.teiid.designer.core.ModelerCore;
 
 /**
- * @since 6.0.0
+ * @since 8.0
  */
 public class MetadataMatchInfo {
 

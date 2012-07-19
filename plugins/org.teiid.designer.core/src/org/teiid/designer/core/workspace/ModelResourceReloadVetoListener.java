@@ -14,7 +14,7 @@ package org.teiid.designer.core.workspace;
  * {@link ModelWorkspace#addModelResourceReloadVetoListener(ModelResourceReloadVetoListener) registered}
  * will be given the opportunity to veto the reloading of the file's contents.  If any veto listener
  * exercises the veto, the ModelResource will not be reloaded.
- * @since 4.2
+ * @since 8.0
  */
 public interface ModelResourceReloadVetoListener {
 

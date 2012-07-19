@@ -11,7 +11,7 @@ import org.teiid.designer.tools.textimport.ui.wizards.AbstractRowObject;
 
 
 /** 
- * @since 4.2
+ * @since 8.0
  */
 public class DatatypeEnumRowObject extends AbstractRowObject {
     /* SAMPLE DATA

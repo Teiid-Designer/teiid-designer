@@ -10,7 +10,7 @@ package org.teiid.designer.ui.common.product;
 /**
  * An <code>IProductCustomizer</code> provides the ability to customize the Teiid Designer product.
  * 
- * @since 4.3
+ * @since 8.0
  */
 public interface IProductCustomizer {
 

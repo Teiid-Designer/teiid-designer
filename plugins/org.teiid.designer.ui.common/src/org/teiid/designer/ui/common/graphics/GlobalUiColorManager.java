@@ -23,7 +23,7 @@ import org.teiid.designer.ui.common.util.UiUtil;
 /**
  * This class provides the Modeler UI plugins a place to cache their required colors, insure there aren't any duplicates
  * ( Based on RGB values), and insure that the colors are Disposed when the UI plugin is shut-down.
- * @since 5.0
+ * @since 8.0
  */
 public class GlobalUiColorManager {
 

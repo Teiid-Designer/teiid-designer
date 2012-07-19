@@ -55,7 +55,7 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 
 /**
- * @since 5.0
+ * @since 8.0
  */
 public class ImportTransformationSqlFromTextAction extends SortableSelectionAction implements UiConstants {
     private static final String IMPORT_PROBLEM_KEY = "ImportTransformationSqlFromTextAction.importProb"; //$NON-NLS-1$

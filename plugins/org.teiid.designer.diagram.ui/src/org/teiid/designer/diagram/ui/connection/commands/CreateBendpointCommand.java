@@ -11,7 +11,7 @@ import org.eclipse.draw2d.geometry.Point;
 import org.teiid.designer.diagram.ui.connection.LinkBendpoint;
 
 /**
- * @since 4.2
+ * @since 8.0
  */
 public class CreateBendpointCommand extends BendpointCommand {
     private Point bpPoint;

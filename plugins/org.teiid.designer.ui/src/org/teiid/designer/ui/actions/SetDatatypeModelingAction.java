@@ -32,7 +32,7 @@ import org.teiid.designer.ui.viewsupport.ModelObjectUtilities;
 
 
 /** 
- * @since 5.0
+ * @since 8.0
  */
 public class SetDatatypeModelingAction extends SortableSelectionAction  {
     private static final String STRING_STRING = "string"; //$NON-NLS-1$

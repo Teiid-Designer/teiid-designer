@@ -12,7 +12,7 @@ import org.teiid.designer.metamodels.webservice.Interface;
 import org.teiid.designer.metamodels.webservice.Operation;
 
 /**
- * @since 4.2
+ * @since 8.0
  */
 public class OperationFinder extends WebServiceComponentFinder {
 

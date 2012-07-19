@@ -15,7 +15,7 @@ import org.teiid.designer.metamodels.xml.XmlDocument;
 
 
 /** 
- * @since 4.3
+ * @since 8.0
  */
 public class WebServiceBuildOptions implements Comparable {
     ///////////////////////////////////////////////////////////////////////////////////////////////

@@ -37,7 +37,7 @@ import org.teiid.designer.ui.editors.ModelEditor;
 
 
 /**
- * @since 4.2
+ * @since 8.0
  */
 public class ZoomComboActionContributeItem extends ActionContributionItem implements ZoomListener {
 

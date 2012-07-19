@@ -19,7 +19,7 @@ import org.teiid.designer.metamodels.webservice.WebServiceComponent;
 /** 
  * Interface for a component that generates XML Documents given one or more 
  * {@link org.teiid.designer.metamodels.webservice.WebServiceComponent WebServiceComponent} objects.
- * @since 4.2
+ * @since 8.0
  */
 public interface IWebServiceXmlDocumentGenerator {
 

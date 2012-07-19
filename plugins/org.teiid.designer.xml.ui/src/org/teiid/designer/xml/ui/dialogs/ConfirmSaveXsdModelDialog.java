@@ -24,7 +24,7 @@ import org.teiid.designer.xml.ui.ModelerXmlUiConstants;
 /**
  * This dialog asks the user if they want to save the XSD model. If the user wants to save
  * a save is done. Do not use this dialog is the XSD model is not dirty.
- * @since 5.0.2
+ * @since 8.0
  */
 public class ConfirmSaveXsdModelDialog extends MessageDialog
                                        implements ModelerXmlUiConstants {

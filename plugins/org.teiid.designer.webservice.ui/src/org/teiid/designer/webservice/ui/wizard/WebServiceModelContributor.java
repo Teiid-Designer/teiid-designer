@@ -39,7 +39,7 @@ import org.teiid.designer.webservice.ui.wizard.WsdlSelectionPage.EditableNameFie
  * The <code>WebServiceModelContributor</code> contributes pages to the new model wizard only if the new model is a Web Services
  * model.
  * 
- * @since 4.2
+ * @since 8.0
  */
 public final class WebServiceModelContributor implements INewModelWizardContributor2, IInternalUiConstants {
 

@@ -44,7 +44,7 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 /**
  * The <code>DeleteAction</code> class is the action that handles the global delete.
- * @since 4.0
+ * @since 8.0
  */
 public class DeleteAction extends ModelObjectAction {
 

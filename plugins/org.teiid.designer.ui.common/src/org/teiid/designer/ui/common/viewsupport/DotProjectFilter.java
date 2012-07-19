@@ -13,7 +13,7 @@ import org.eclipse.jface.viewers.ViewerFilter;
 
 
 /** 
- * @since 4.3
+ * @since 8.0
  */
 public class DotProjectFilter extends ViewerFilter {
     private static final String DOT_PROJECT = ".project"; //$NON-NLS-1$

@@ -13,7 +13,7 @@ import org.teiid.designer.core.workspace.ModelUtil;
 
 
 /** 
- * @since 4.3
+ * @since 8.0
  */
 public class ModelFileCache {
     private static final String XMI = "xmi";  //$NON-NLS-1$

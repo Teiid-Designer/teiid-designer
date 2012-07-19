@@ -23,7 +23,7 @@ import org.teiid.designer.ui.common.graphics.GlobalUiFontManager;
 /**
  * The main plugin class to be used in the desktop.
  * 
- * @since 4.0
+ * @since 8.0
  */
 public final class UiPlugin extends AbstractUiPlugin implements InternalUiConstants, UiConstants.EclipsePluginIds {
 

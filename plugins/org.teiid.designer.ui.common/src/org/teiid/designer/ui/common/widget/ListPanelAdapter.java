@@ -11,7 +11,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.teiid.core.util.CoreStringUtil;
 
 /**
- * @since 4.0
+ * @since 8.0
  */
 public class ListPanelAdapter
 implements IListPanelController, CoreStringUtil.Constants {

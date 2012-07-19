@@ -67,7 +67,7 @@ import org.teiid.designer.webservice.ui.wizard.WsdlSelectionPage.EditableNameFie
 
 
 /**
- * @since 5.0
+ * @since 8.0
  */
 public class WsdlFileSystemImportWizard extends AbstractWizard implements IImportWizard, IInternalUiConstants {
 

@@ -19,7 +19,7 @@ import org.eclipse.xsd.XSDConcreteComponent;
 import org.w3c.dom.Element;
 
 /** 
- * @since 4.3
+ * @since 8.0
  */
 public class XsdConcreteComponentAddCommand extends AddCommand {
 

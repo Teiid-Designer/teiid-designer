@@ -21,7 +21,7 @@ import org.teiid.designer.ui.refactor.NamespaceUriRenameDialog;
 
 
 /** 
- * @since 4.3
+ * @since 8.0
  */
 public final class CoreModelPropertyEditorFactory implements IPropertyEditorFactory {
 

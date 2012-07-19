@@ -33,7 +33,7 @@ import org.teiid.designer.xsd.ui.ModelerXsdUiConstants;
 
 
 /** 
- * @since 4.3
+ * @since 8.0
  */
 public class XsdFileSystemImportMainPage extends WizardFileSystemResourceImportPage1 {
     protected Button addDependentXsdsCheckbox;

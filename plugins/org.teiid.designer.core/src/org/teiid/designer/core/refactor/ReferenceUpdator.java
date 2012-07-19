@@ -13,7 +13,7 @@ import org.eclipse.emf.ecore.EObject;
 
 /**
  * ReferenceUpdator
- * @since 4.2
+ * @since 8.0
  */
 public interface ReferenceUpdator {
 

@@ -32,7 +32,7 @@ import org.teiid.query.sql.visitor.ValueIteratorProviderCollectorVisitor;
  * QueryTreeContentProvider is the content provider for the QueryTreeViewer.  It handles
  * LanguageObjects in a Command and breaks out individual Query objects inside a SetQuery
  * and From and Criteria objects inside a Query.
- * @since 4.2
+ * @since 8.0
  */
 public class QueryTreeContentProvider implements ITreeContentProvider {
 

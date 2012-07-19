@@ -21,7 +21,7 @@ import org.teiid.designer.metamodels.xml.XmlRoot;
 
 
 /**
- * @since 4.2
+ * @since 8.0
  */
 public class ReferencedXSDSchemaFinder extends WebServiceComponentFinder {
 

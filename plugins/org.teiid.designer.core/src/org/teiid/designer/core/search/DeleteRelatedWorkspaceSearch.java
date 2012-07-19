@@ -26,7 +26,7 @@ import org.teiid.designer.core.workspace.ModelWorkspaceManager;
  * In particular, it insures that if certain model types (i.e. xsd files) are out of scope for the search, they don't get 
  * included. This class can be expanded in the future to handle other cases to help reduce "time-to-delete"
  * see Defect 22774
- * @since 5.0.2
+ * @since 8.0
  */
 public class DeleteRelatedWorkspaceSearch extends ModelWorkspaceSearch {
 

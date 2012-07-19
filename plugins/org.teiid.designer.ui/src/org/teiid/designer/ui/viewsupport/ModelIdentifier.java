@@ -33,7 +33,7 @@ import org.teiid.designer.ui.UiPlugin;
  * information via an <code>IResource</code>. This insures a light-weight check so <code>ModelResource</code>s don't get loaded
  * needlessly/repeatedly. See <code>PdeTestModelIdentifier</code>
  * 
- * @since 5.0
+ * @since 8.0
  */
 public abstract class ModelIdentifier implements UiConstants {
 

@@ -20,7 +20,7 @@ import org.eclipse.emf.ecore.resource.Resource;
  * in a specified org.eclipse.emf.ecore.resource.Resource.  The implementation is 
  * intended to efficiently walk the model while tolerating ConcurrentModificationException
  * if the resource is modified while the EObject instances are collected.
- * @since 4.2
+ * @since 8.0
  */
 public class ModelObjectCollector {
     

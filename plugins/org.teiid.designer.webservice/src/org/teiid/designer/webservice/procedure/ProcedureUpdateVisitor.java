@@ -28,7 +28,7 @@ import org.teiid.query.sql.symbol.Function;
  * This visitor is used to update a CreateProcedureCommand using 
  * {@link org.teiid.designer.webservice.procedure.ProcedureCriteriaMapping} objects. The
  * mapping objects are translated into assignment statements and criteria objects. 
- * @since 4.3
+ * @since 8.0
  */
 public class ProcedureUpdateVisitor extends LanguageVisitor {
 

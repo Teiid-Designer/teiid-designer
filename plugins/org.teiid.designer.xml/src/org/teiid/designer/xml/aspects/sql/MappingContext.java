@@ -11,7 +11,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 
 
 /** 
- * @since 4.2
+ * @since 8.0
  */
 public class MappingContext {
     

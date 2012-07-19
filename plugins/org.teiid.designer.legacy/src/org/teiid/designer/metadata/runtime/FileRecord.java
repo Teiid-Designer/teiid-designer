@@ -14,7 +14,7 @@ import org.teiid.designer.core.index.IndexSelector;
 /**
  * This record represents any file in the vdb
  * 
- * @since 4.2
+ * @since 8.0
  */
 public interface FileRecord extends MetadataRecord, VDBFile {
 

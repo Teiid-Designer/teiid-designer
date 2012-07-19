@@ -54,7 +54,7 @@ import org.teiid.designer.webservice.ui.util.WebServiceUiUtil;
 
 
 /**
- * @since 4.2
+ * @since 8.0
  */
 public class SchemaLocationPage extends AbstractWizardPage
     implements IInternalUiConstants, IInternalUiConstants.HelpContexts, IInternalUiConstants.Images {

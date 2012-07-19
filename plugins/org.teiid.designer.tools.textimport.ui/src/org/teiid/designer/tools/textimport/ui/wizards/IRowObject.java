@@ -9,7 +9,7 @@ package org.teiid.designer.tools.textimport.ui.wizards;
 
 
 /** 
- * @since 4.2
+ * @since 8.0
  */
 public interface IRowObject {
     public static final char COMMA = ',';

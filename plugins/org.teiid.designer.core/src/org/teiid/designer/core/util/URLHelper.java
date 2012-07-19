@@ -32,7 +32,7 @@ import org.teiid.core.util.Base64;
  * alternative, the stream handler must be specified at the time URL it is constructed. This class will help us to this code at one
  * place. Here inspect the given string and build the correct type of URL with correct handler.
  * 
- * @since 4.4
+ * @since 8.0
  */
 public class URLHelper {
 

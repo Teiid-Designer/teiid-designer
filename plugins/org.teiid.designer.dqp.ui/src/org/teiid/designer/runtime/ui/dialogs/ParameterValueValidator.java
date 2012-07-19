@@ -30,7 +30,7 @@ import org.teiid.designer.runtime.ui.DqpUiConstants;
 
 
 /**
- * @since 5.5
+ * @since 8.0
  */
 public class ParameterValueValidator implements
                                     DqpUiConstants {

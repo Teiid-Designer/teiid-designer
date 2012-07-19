@@ -11,7 +11,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 
 /** 
- * @since 4.3
+ * @since 8.0
  */
 public interface SqlDatatypeCheckerAspect {
 

@@ -43,7 +43,7 @@ import org.teiid.designer.runtime.ui.DqpUiPlugin;
 /**
  * Class provides content and label information for ConnectorBindings and ModelInfos in ConnectorsView
  * 
- * @since 5.0
+ * @since 8.0
  */
 public class TeiidViewTreeProvider extends ColumnLabelProvider implements ILightweightLabelDecorator, ITreeContentProvider {
 

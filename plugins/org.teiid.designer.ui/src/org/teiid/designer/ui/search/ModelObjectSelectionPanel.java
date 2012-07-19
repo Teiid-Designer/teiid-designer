@@ -54,7 +54,7 @@ import org.teiid.designer.ui.UiConstants;
 /**
  * Provides model object selection functionality, including object name matching as user types.
  * 
- * @since 4.2
+ * @since 8.0
  */
 public class ModelObjectSelectionPanel extends Composite implements IFinderPanel {
 

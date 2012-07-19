@@ -15,7 +15,7 @@ import org.teiid.designer.mapping.PluginConstants;
 /** 
  * MappingClassBuilderStrategy is an interface for the MappingClassBuilder extension point, to
  * provide different algorithms for generating mapping classes in virtual xml documents.
- * @since 5.0.1
+ * @since 8.0
  */
 public interface MappingClassBuilderStrategy {
 

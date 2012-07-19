@@ -14,7 +14,7 @@ import org.teiid.designer.core.ModelerCoreException;
 /**
  * Interface for the UnitOfWork Object for an Emf Container
  * @author lphillips
- * @since 3.1
+ * @since 8.0
  * 
  */
 public interface UnitOfWork extends MtkTransaction{

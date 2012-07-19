@@ -15,7 +15,7 @@ package org.teiid.designer.core.util;
 /**
  * This class is a collection of helper methods to manipulate char arrays.
  * 
- * @since 2.1
+ * @since 8.0
  */
 public final class CharOperation {
 

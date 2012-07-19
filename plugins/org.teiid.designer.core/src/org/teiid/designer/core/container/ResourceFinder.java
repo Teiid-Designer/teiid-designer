@@ -19,7 +19,7 @@ import org.teiid.designer.metamodels.core.ModelImport;
 /**
  * ResourceFinder. This object helps find resources in a Container.
  * 
- * @since 4.3
+ * @since 8.0
  */
 public interface ResourceFinder {
 

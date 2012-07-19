@@ -20,7 +20,7 @@ import org.teiid.designer.ui.table.ModelTableEditor;
 
 
 /** 
- * @since 4.2
+ * @since 8.0
  */
 public class RefreshTableAction extends AbstractAction {
 

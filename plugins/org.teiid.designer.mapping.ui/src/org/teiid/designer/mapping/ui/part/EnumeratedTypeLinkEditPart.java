@@ -18,7 +18,7 @@ import org.teiid.designer.mapping.ui.UiConstants;
 
 
 /**
- * @since 5.0.2
+ * @since 8.0
  */
 public class EnumeratedTypeLinkEditPart extends NodeConnectionEditPart implements UiConstants {
 

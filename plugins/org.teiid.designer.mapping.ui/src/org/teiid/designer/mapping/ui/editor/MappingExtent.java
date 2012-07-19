@@ -17,7 +17,7 @@ import org.teiid.core.util.HashCodeUtil;
  * mapping transform view and is used as a source point when connecting an extent to a mapping class or a mapping attribute.
  * 
  * @author Barry LaFond & Dan Florian
- * @since 3.0`
+ * @since 8.0`
  * @version 1.0
  */
 

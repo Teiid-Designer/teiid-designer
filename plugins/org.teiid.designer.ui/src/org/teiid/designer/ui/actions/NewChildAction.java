@@ -37,7 +37,7 @@ import org.teiid.designer.ui.wizards.NewModelObjectWizardManager;
 
 /**
  * The <code>NewChildAction</code> class creates a new child object.
- * @since 4.0
+ * @since 8.0
  */
 public class NewChildAction extends ModelObjectAction {
     

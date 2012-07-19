@@ -13,7 +13,7 @@ import org.eclipse.swt.dnd.DropTargetEvent;
 
 
 /** 
- * @since 4.3
+ * @since 8.0
  */
 public class NoOpDropTargetAdapter extends DropTargetAdapter {
     

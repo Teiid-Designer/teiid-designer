@@ -17,7 +17,7 @@ import org.teiid.designer.metamodels.relational.util.RelationalTypeMapping;
 
 
 /**
- * @since 4.2
+ * @since 8.0
  */
 public class AllRelationalModelProcessor extends RelationalModelProcessorImpl {
     private static final String VARCHAR2_TYPE_NAME = "VARCHAR2"; //$NON-NLS-1$

@@ -10,7 +10,7 @@ package org.teiid.designer.core.metamodel;
 import java.util.Map;
 
 /**
- * @since 4.3.1
+ * @since 8.0
  */
 public interface IPasteContributor {
 

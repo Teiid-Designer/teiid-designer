@@ -14,7 +14,7 @@ import org.eclipse.jface.wizard.IWizardPage;
  * Extends the <code>INewModelWizardContributor</code> interface to give the contributor
  * the ability to have more control of which {@link org.eclipse.jface.wizard.IWizardPage}s are shown
  * and in what order.
- * @since 5.0.1
+ * @since 8.0
  */
 public interface INewModelWizardContributor2 extends INewModelWizardContributor {
 

@@ -12,7 +12,7 @@ import org.teiid.core.id.ObjectID;
 
 
 /** 
- * @since 4.3
+ * @since 8.0
  */
 public interface EObjectCacheHolder {
 

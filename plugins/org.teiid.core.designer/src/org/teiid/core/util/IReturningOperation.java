@@ -8,7 +8,7 @@
 package org.teiid.core.util;
 
 /**
- * @since 5.0.2
+ * @since 8.0
  */
 public interface IReturningOperation {
 

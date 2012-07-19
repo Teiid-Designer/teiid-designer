@@ -32,7 +32,7 @@ import org.teiid.designer.ui.common.graphics.GlobalUiColorManager;
 
 
 /** 
- * @since 5.0
+ * @since 8.0
  */
 public class MappingDiagramFigure extends FreeformLayer {
     private static final String TARGET_TITLE = "VIEW"; //$NON-NLS-1$

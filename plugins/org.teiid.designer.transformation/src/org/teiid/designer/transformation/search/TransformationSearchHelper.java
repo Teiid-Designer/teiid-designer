@@ -28,7 +28,7 @@ import org.teiid.designer.transformation.util.TransformationHelper;
 
 
 /**
- * @since 5.0
+ * @since 8.0
  */
 public class TransformationSearchHelper {
 

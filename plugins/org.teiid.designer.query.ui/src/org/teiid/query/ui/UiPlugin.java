@@ -22,7 +22,7 @@ import org.teiid.query.ui.actions.QueryActionService;
 /**
  * The main plugin class to be used in the desktop.
  * 
- * @since 4.0
+ * @since 8.0
  */
 public final class UiPlugin extends AbstractUiPlugin implements Debug, UiConstants {
 

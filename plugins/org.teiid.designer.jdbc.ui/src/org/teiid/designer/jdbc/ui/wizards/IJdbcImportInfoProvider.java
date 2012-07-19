@@ -16,7 +16,7 @@ import org.teiid.designer.jdbc.metadata.JdbcDatabase;
 
 
 /** 
- * @since 5.0
+ * @since 8.0
  */
 public interface IJdbcImportInfoProvider {
     

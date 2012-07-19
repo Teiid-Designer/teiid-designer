@@ -28,7 +28,7 @@ import org.teiid.designer.ui.common.util.WizardUtil;
 
 
 /**
- * @since 4.2
+ * @since 8.0
  */
 public class ShowDifferencesPage extends WizardPage implements InternalUiConstants.Widgets, UiConstants, UiConstants.Images {
 

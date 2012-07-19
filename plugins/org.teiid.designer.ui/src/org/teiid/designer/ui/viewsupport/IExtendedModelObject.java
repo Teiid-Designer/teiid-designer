@@ -14,7 +14,7 @@ import org.eclipse.ui.views.properties.IPropertySource;
 /** 
  * Interface which provides extended model objects that are NOT EObjects to be displayed. This is required to prevent filtering
  * via the ModelWorkspaceViewerFilter for non-EObjects
- * @since 5.0
+ * @since 8.0
  */
 public interface IExtendedModelObject {
     

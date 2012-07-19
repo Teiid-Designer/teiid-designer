@@ -23,7 +23,7 @@ import org.teiid.designer.ui.common.UiConstants;
 /**
  * The <code>AbstractProductCustomizer</code> can be used as a base class for an
  * {@link org.teiid.designer.ui.common.product.IProductCustomizer}.
- * @since 4.3
+ * @since 8.0
  */
 public abstract class AbstractProductCustomizer implements IProductCustomizer,
                                                            UiConstants {

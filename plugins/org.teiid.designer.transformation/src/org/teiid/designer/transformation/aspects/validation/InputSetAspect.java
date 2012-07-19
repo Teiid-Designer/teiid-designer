@@ -18,7 +18,7 @@ import org.teiid.designer.metamodels.transformation.InputSet;
 
 /** 
  * InputSetAspect
- * @since 4.2
+ * @since 8.0
  */
 public class InputSetAspect extends TransformationAspect {
 

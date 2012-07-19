@@ -21,7 +21,7 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
  * This class provides notification analysis and bundling. It will categorize all notifications, collect target objects and
  * filters out ignorable notifications.
  * 
- * @since 4.2
+ * @since 8.0
  */
 public class ModelObjectNotificationHelper extends CoreModelObjectNotificationHelper {
     //    private static final String NEW_LINE = "\n"; //$NON-NLS-1$

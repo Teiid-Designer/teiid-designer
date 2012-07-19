@@ -17,7 +17,7 @@ import org.teiid.designer.ui.editors.ModelEditorManager;
 
 /**
  * The <code>EditAction</code> class is the action that handles editing model objects.
- * @since 4.0
+ * @since 8.0
  */
 public class EditAction extends ModelObjectAction {
 

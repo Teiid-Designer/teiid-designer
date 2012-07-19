@@ -78,7 +78,7 @@ import org.teiid.designer.ui.common.UiConstants;
 import org.teiid.designer.ui.common.widget.ITreeViewerController;
 
 /**
- * @since 4.0
+ * @since 8.0
  */
 public final class WidgetUtil implements
                              InternalUiConstants.Widgets,

@@ -22,7 +22,7 @@ import org.teiid.designer.ui.common.viewsupport.NonDirectoryFileViewerFilter;
 /**
  * A {@link org.eclipse.jface.dialogs.Dialog} suitable for choosing one or more {@link java.io.File}
  * objects from the file system.
- * @since 4.2
+ * @since 8.0
  */
 public class FileSystemDialog extends ElementTreeSelectionDialog
                               implements UiConstants {

@@ -10,7 +10,7 @@ package org.teiid.core.util;
 import java.util.Locale;
 
 /**
- * @since 4.0
+ * @since 8.0
  */
 public final class I18nUtil {
     // ============================================================================================================================

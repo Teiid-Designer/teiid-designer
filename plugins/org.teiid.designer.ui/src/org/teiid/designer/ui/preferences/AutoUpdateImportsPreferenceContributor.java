@@ -20,7 +20,7 @@ import org.teiid.designer.ui.UiPlugin;
 
 
 /** 
- * @since 5.0.2
+ * @since 8.0
  */
 public class AutoUpdateImportsPreferenceContributor implements IGeneralPreferencePageContributor,
                                                             UiConstants {

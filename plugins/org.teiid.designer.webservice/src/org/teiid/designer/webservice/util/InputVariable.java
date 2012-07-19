@@ -16,7 +16,7 @@ import org.teiid.designer.metamodels.xml.XmlValueHolder;
 
 
 /** 
- * @since 4.2
+ * @since 8.0
  */
 public class InputVariable {
 

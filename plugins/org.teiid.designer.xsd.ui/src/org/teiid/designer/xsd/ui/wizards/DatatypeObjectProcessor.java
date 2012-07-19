@@ -36,7 +36,7 @@ DTYPE,Name,Description,BaseType,Length,MinLength,MaxLength,MinBound,MinInclusive
 */
 
 /** 
- * @since 4.2
+ * @since 8.0
  */
 public class DatatypeObjectProcessor extends AbstractObjectProcessor {
     //============================================================================================================================

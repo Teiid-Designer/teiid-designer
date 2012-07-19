@@ -14,7 +14,7 @@ import org.eclipse.core.runtime.IPath;
 /** 
  * This class provides an event data payload for resource refactor commands and actions.
  * 
- * @since 5.0
+ * @since 8.0
  */
 public class RefactorResourceEvent {
     public static final int TYPE_UNKNOWN = -1;

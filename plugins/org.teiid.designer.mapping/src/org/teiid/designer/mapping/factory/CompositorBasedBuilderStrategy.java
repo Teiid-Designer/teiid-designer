@@ -14,7 +14,7 @@ import org.eclipse.emf.ecore.EObject;
 
 /** 
  * This Strategy builds a mapping class wherever an element is a global complex type.
- * @since 5.0.1
+ * @since 8.0
  */
 public class CompositorBasedBuilderStrategy extends IterationBasedBuilderStrategy {
 

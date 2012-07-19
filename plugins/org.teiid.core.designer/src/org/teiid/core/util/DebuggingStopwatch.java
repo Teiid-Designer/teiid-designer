@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @since 5.0.2
+ * @since 8.0
  */
 public class DebuggingStopwatch {
     private static final String NEW_LINE = "\n"; //$NON-NLS-1$

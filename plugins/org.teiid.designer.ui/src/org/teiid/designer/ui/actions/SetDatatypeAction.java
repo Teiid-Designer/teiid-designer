@@ -29,7 +29,7 @@ import org.teiid.designer.ui.viewsupport.ModelObjectUtilities;
 
 
 /**
- * @since 4.2
+ * @since 8.0
  */
 public class SetDatatypeAction extends ModelObjectAction {
     private static final String STRING_STRING = "string"; //$NON-NLS-1$

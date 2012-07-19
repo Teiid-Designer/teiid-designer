@@ -18,7 +18,7 @@ import org.teiid.designer.core.resource.xmi.MtkXmiResourceImpl;
  * used only in limited ways. Currently, the only functionality not supported is {@link #rebuildModelImports()}, and of course no
  * persistence mechanism is available.
  * 
- * @since 4.1
+ * @since 8.0
  */
 public class TransientModelSelector extends URIModelSelector {
     //============================================================================================================================

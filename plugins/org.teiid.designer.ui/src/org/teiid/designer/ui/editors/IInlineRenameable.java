@@ -16,7 +16,7 @@ import org.eclipse.emf.ecore.EObject;
  * if One new child, it auto-renames inline.  If the source is a DiagramEditor, however, it is not renaming in diagram, as expected.
  * Now the ModelExplorerNotificationHandler can ask if the Active Part is of the this type. If it exists, the tree viewer does
  * NOT rename-inline, but calls the renameInline() of the interface.  This delegates the work back on the source (i.e. DiagramEditor).
- * @since 5.0
+ * @since 8.0
  */
 public interface IInlineRenameable {
 

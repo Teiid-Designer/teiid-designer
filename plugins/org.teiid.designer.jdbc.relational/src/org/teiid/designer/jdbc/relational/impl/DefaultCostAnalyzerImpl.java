@@ -29,7 +29,7 @@ import org.teiid.designer.jdbc.relational.util.JdbcRelationalUtil;
 /**
  * Retrieve cost statistics from the tables and columns in the specified catalog and schema in the specified database.
  * 
- * @since 4.3
+ * @since 8.0
  */
 public class DefaultCostAnalyzerImpl implements CostAnalyzer {
 

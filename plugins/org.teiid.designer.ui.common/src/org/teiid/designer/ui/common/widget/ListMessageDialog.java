@@ -24,7 +24,7 @@ import org.teiid.designer.ui.common.util.UiUtil;
 
 /** 
  * A <code>MessageDialog</code> that shows a list of items.
- * @since 4.2
+ * @since 8.0
  */
 public class ListMessageDialog extends MessageDialog {
 

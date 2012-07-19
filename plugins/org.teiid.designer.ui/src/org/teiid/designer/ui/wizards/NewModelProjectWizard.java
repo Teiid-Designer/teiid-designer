@@ -60,7 +60,7 @@ import org.teiid.designer.ui.viewsupport.IPropertiesContext;
 
 
 /**
- * @since 4.0
+ * @since 8.0
  */
 public class NewModelProjectWizard extends BasicNewProjectResourceWizard implements IPropertiesContext, UiConstants {
     private static String SOURCES = getString("sources"); //$NON-NLS-1$

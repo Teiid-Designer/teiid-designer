@@ -11,7 +11,7 @@ import org.eclipse.core.runtime.IPath;
 
 
 /** 
- * @since 4.2
+ * @since 8.0
  */
 public interface IInternalWebServiceXsdResource extends IWebServiceXsdResource {
 

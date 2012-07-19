@@ -11,7 +11,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.teiid.designer.metamodels.webservice.Interface;
 
 /**
- * @since 4.2
+ * @since 8.0
  */
 public class InterfaceFinder extends WebServiceComponentFinder {
 

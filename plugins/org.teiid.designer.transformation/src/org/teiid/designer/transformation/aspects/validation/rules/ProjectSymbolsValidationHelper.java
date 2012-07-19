@@ -40,7 +40,7 @@ import org.teiid.query.sql.symbol.SingleElementSymbol;
  * This rule compares the number of projected symbols of the sql transformation with the number of mappings. Also compare the
  * datatypes of the projected symbols with the datatypes of the outputs of the mappings.
  * 
- * @since 4.3
+ * @since 8.0
  */
 public class ProjectSymbolsValidationHelper {
 

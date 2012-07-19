@@ -23,7 +23,7 @@ import org.teiid.designer.ui.common.UiConstants;
 
 /**<p>
  * </p>
- * @since 4.0
+ * @since 8.0
  */
 public abstract class AbstractSelectionWizard extends AbstractWizard implements CoreStringUtil.Constants,
                                                                                 UiConstants.Images {

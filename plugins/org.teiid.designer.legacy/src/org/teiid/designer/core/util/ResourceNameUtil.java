@@ -14,7 +14,7 @@ import org.teiid.core.CorePlugin;
  * Utility class used for determining if proposed resource names are reserved names or not. This applies for *.vdb, *.xmi and *.xsd
  * resources NOTE: These lists are arranged in alphabetical order. When adding new reserved names, please place them appropriately.
  * 
- * @since 4.3
+ * @since 8.0
  */
 public abstract class ResourceNameUtil {
     private static final String INVALID_EXTENSION_ERROR_ID = "ResourceNameUtil.invalidFileExtensionError"; //$NON-NLS-1$

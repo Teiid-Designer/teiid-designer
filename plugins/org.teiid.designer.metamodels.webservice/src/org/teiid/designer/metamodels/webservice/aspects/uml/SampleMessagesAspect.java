@@ -22,7 +22,7 @@ import org.teiid.designer.metamodels.webservice.provider.WebServicesEditPlugin;
 
 
 /** 
- * @since 4.2
+ * @since 8.0
  */
 public class SampleMessagesAspect extends WebServiceComponentAspect implements
                                                                    UmlProperty {

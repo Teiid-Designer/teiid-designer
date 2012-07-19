@@ -13,7 +13,7 @@ import org.eclipse.core.resources.IFile;
 import org.teiid.designer.runtime.ui.wizards.webservices.util.WebArchiveBuilderConstants;
 
 /**
- * @since 7.1
+ * @since 8.0
  */
 public class WarDataserviceModel {
 

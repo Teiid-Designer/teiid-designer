@@ -23,7 +23,7 @@ import org.teiid.designer.metamodels.relational.RelationalPlugin;
  * The <code>EmptyColumnNativeTypeRule</code> ensures that a column's native type is not
  * empty or only contains spaces. A <code>null</code> value is valid and indicates the default
  * native type should be used.
- * @since 5.0.2 
+ * @since 8.0 
  */
 public class ColumnNativeTypeRule implements ObjectValidationRule {
     

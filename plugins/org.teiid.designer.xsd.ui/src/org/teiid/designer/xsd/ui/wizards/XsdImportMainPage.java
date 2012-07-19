@@ -21,7 +21,7 @@ import org.teiid.designer.xsd.ui.ModelerXsdUiConstants;
 
 
 /**
- * @since 5.5
+ * @since 8.0
  */
 public class XsdImportMainPage extends AbstractWizardPage {
     private static final String I18N_PREFIX = "XsdImportMainPage"; //$NON-NLS-1$

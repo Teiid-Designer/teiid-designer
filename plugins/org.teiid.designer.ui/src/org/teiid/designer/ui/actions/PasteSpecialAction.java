@@ -30,7 +30,7 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 /**
  * The <code>PasteSpecialAction</code> class is the action that handles the global PasteSpecial.
  * 
- * @since 4.0
+ * @since 8.0
  */
 public class PasteSpecialAction extends ModelObjectAction implements UiConstants.ExtensionPoints.MetadataPasteSpecialExtension {
 

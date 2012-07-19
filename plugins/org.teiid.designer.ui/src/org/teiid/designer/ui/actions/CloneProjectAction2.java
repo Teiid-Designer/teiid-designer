@@ -29,7 +29,7 @@ import org.teiid.designer.ui.wizards.CloneProjectWizard;
 
 
 /**
- * @since 5.0
+ * @since 8.0
  */
 public class CloneProjectAction2 extends Action implements ISelectionListener, Comparable, ISelectionAction {
     private static final String TITLE = UiConstants.Util.getString("CloneProjectAction2.title"); //$NON-NLS-1$

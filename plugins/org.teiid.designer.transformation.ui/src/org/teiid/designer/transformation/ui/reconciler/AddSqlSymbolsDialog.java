@@ -22,7 +22,7 @@ import org.teiid.designer.ui.common.widget.ExtendedTitleAreaDialog;
 
 /** 
  * Dialog provides a mechanism for use to select Element symbols to be used to bind to target attributes in the ReconcilerPanel
- * @since 5.0
+ * @since 8.0
  */
 public class AddSqlSymbolsDialog extends ExtendedTitleAreaDialog {
     private String DIALOG_TITLE   = UiConstants.Util.getString("AddSqlSymbolsDialog.dialogTitle"); //$NON-NLS-1$

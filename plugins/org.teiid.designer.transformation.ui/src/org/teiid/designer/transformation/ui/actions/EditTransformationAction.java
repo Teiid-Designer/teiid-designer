@@ -30,7 +30,7 @@ import org.teiid.designer.ui.viewsupport.ModelIdentifier;
 /** 
  * Provides means to edit a specific transformation based on a specific transformation target obtained by querying the user
  * to select from a list of available transformation targets within a specified ModelResource
- * @since 5.0
+ * @since 8.0
  */
 public class EditTransformationAction extends SortableSelectionAction implements UiConstants {
     private static final String label = Util.getString("TransformationObjectEditorPage.editTransformationsId", SWT.DEFAULT); //$NON-NLS-1$

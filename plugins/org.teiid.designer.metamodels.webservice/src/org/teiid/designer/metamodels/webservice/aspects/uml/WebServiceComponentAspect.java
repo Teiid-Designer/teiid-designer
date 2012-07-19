@@ -24,7 +24,7 @@ import org.teiid.designer.metamodels.webservice.WebServiceMetamodelPlugin;
 
 
 /** 
- * @since 4.2
+ * @since 8.0
  */
 public abstract class WebServiceComponentAspect extends AbstractMetamodelAspect implements
                                                                                UmlDiagramAspect {

@@ -20,7 +20,7 @@ import org.teiid.designer.ui.common.UiConstants;
 
 /**
  * The <code>ProductCustomizerMgr</code> manages customization of the running product.
- * @since 4.3
+ * @since 8.0
  */
 public final class ProductCustomizerMgr implements IProductCustomizer,
                                                    UiConstants {

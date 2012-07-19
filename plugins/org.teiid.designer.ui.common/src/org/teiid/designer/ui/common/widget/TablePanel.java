@@ -37,7 +37,7 @@ import org.teiid.designer.ui.common.util.WidgetUtil;
 
 
 /**
- * @since 4.2
+ * @since 8.0
  */
 public class TablePanel extends AbstractVerticalButtonPanel implements Widgets {
 

@@ -19,7 +19,7 @@ import org.teiid.designer.webservice.ui.IUiConstants;
 
 
 /** 
- * @since 5.0
+ * @since 8.0
  */
 public class WsdlFileSystemStructureProvider  implements IImportStructureProvider {
 

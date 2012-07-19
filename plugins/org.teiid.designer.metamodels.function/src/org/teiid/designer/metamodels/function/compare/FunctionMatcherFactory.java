@@ -20,7 +20,7 @@ import org.teiid.designer.metamodels.function.FunctionPackage;
 
 /**
  * FunctionPackage 
- * @since 4.2
+ * @since 8.0
  */
 public class FunctionMatcherFactory implements
                                    EObjectMatcherFactory {

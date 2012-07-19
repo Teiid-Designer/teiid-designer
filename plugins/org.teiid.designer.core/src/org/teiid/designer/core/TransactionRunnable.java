@@ -11,7 +11,7 @@ import org.teiid.designer.core.transaction.UnitOfWork;
 
 /**<p>
  * </p>
- * @since 4.0
+ * @since 8.0
  */
 public interface TransactionRunnable {
     //============================================================================================================================

@@ -31,7 +31,7 @@ import org.teiid.designer.ui.viewsupport.ModelerUiViewUtils;
 
 
 /**
- * @since 4.2
+ * @since 8.0
  */
 public class ImportTextWizard extends AbstractWizard
     implements PluginConstants.Images, IImportWizard, CoreStringUtil.Constants, UiConstants {

@@ -15,7 +15,7 @@ import org.teiid.designer.core.ModelerCoreRuntimeException;
 /** 
  * This exception signifies that a Resource could not be loaded into a Container because one
  * already existed (at a different URI).
- * @since 4.2
+ * @since 8.0
  */
 public class DuplicateResourceException extends ModelerCoreRuntimeException {
 

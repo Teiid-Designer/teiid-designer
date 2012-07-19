@@ -36,7 +36,7 @@ import org.teiid.designer.xml.ui.wizards.VirtualDocumentWizardContributor;
 
 
 /** 
- * @since 5.0
+ * @since 8.0
  */
 public class ViewXmlMessageStructureAction extends CreateXmlViewFromXsdAction {
     private static final String MODEL_NAME           = Util.getString("ViewXmlMessageStructureAction.modelName"); //$NON-NLS-1$

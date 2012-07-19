@@ -46,7 +46,7 @@ import org.teiid.designer.metamodels.webservice.util.WebServiceUtil;
 
 
 /**
- * @since 4.2
+ * @since 8.0
  */
 public class WebServiceComponentNameRule extends StringNameRule {
 

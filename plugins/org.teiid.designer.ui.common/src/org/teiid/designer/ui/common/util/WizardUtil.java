@@ -32,7 +32,7 @@ import org.teiid.designer.ui.common.wizard.IPersistentWizardPage;
 
 /**<p>
  * </p>
- * @since 4.0
+ * @since 8.0
  */
 public final class WizardUtil implements InternalUiConstants.Widgets,
                                          CoreStringUtil.Constants,

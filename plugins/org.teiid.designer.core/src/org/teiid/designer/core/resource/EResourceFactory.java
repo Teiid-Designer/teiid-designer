@@ -13,7 +13,7 @@ import org.eclipse.emf.ecore.resource.impl.ResourceFactoryImpl;
 import org.eclipse.emf.ecore.resource.impl.ResourceImpl;
 
 /**
- * @since 4.3
+ * @since 8.0
  */
 public class EResourceFactory extends ResourceFactoryImpl {
     

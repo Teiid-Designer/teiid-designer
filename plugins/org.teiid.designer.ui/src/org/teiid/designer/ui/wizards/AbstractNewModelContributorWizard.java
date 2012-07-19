@@ -33,7 +33,7 @@ import org.teiid.designer.ui.common.wizard.AbstractWizard;
 
 
 /** 
- * @since 5.0.2
+ * @since 8.0
  */
 public abstract class AbstractNewModelContributorWizard extends AbstractWizard implements UiConstants {
     

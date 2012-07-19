@@ -36,7 +36,7 @@ import org.teiid.designer.ui.common.util.WizardUtil;
  * <p>
  * </p>
  * 
- * @since 4.0
+ * @since 8.0
  */
 public abstract class AbstractWizard extends Wizard {
     // ============================================================================================================================

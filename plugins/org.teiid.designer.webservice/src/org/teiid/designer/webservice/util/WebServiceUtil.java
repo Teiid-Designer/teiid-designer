@@ -43,7 +43,7 @@ import org.teiid.query.sql.symbol.Expression;
 import org.teiid.query.sql.symbol.Function;
 
 /**
- * @since 4.2
+ * @since 8.0
  */
 public class WebServiceUtil {
 

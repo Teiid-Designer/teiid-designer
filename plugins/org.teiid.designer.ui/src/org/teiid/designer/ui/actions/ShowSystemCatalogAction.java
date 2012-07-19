@@ -19,7 +19,7 @@ import org.teiid.designer.ui.common.util.WidgetUtil;
 
 /**<p>
  * </p>
- * @since 4.3
+ * @since 8.0
  */
 public final class ShowSystemCatalogAction implements IWorkbenchWindowActionDelegate,
                                                           UiConstants,

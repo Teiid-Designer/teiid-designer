@@ -22,7 +22,7 @@ import org.teiid.designer.xml.ui.wizards.VirtualDocumentWizardContributor;
 
 
 /** 
- * @since 5.0.2
+ * @since 8.0
  */
 public class ViewXmlMessageStructureWizard extends AbstractNewModelContributorWizard {
     

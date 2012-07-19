@@ -69,7 +69,7 @@ import org.teiid.designer.core.util.ProcessedNotificationResult;
  * This class represents a Container implementation for the MetaBase Toolkit that encapsulates the Eclipse Modeling Framework
  * (EMF).
  * 
- * @since 3.1
+ * @since 8.0
  */
 public class ContainerImpl implements Container, IEditingDomainProvider {
 

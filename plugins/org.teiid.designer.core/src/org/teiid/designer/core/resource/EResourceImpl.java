@@ -55,7 +55,7 @@ import org.teiid.designer.metamodels.core.ModelType;
  * This class extends the XMIResourceImpl class to provide the capability to account for UUIDs (which is explicitly ignored in
  * XMIResourceImpl). In addition the load methods are overridden to provide hooks into our loading mechanisms.
  * 
- * @since 5.0
+ * @since 8.0
  */
 public class EResourceImpl extends XMIResourceImpl
     implements EResource, EProxyCacheHolder, EObjectCacheHolder, EmfResource, XResource {

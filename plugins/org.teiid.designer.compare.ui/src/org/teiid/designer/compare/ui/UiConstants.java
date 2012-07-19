@@ -15,7 +15,7 @@ import org.teiid.core.util.PluginUtilImpl;
 
 /**
  * DiagramUiConstants
- * @since 4.0
+ * @since 8.0
  */
 public interface UiConstants {
     /**

@@ -14,7 +14,7 @@ import org.eclipse.jface.viewers.ViewerFilter;
 
 /**
  * Filters out all {@link java.io.File}s that aren't directories.
- * @since 4.2
+ * @since 8.0
  */
 public class NonDirectoryFileViewerFilter extends ViewerFilter {
 

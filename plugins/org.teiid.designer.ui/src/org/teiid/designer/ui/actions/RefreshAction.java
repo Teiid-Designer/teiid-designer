@@ -31,7 +31,7 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 /**
  * The <code>RefreshAction</code> class is the action that handles the global Refresh of metadata models.
- * @since 4.0
+ * @since 8.0
  */
 public class RefreshAction 
     implements IWorkbenchWindowActionDelegate, UiConstants.ExtensionPoints.MetadataRefreshExtension {

@@ -28,7 +28,7 @@ import org.teiid.designer.ui.common.actions.GlobalActionsMap;
 /**
  * Intended as the supertype for all {@link org.teiid.designer.ui.editors.ModelEditorPage}
  * action contributors.
- * @since 4.0
+ * @since 8.0
  */
 public abstract class AbstractModelEditorPageActionBarContributor
 extends EditorActionBarContributor

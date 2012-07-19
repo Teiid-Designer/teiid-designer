@@ -15,7 +15,7 @@ import org.eclipse.core.runtime.IStatus;
 
 /** 
  * This interface represents an input resource to the {@link IWebServiceModelBuilder}.
- * @since 4.2
+ * @since 8.0
  */
 public interface IWebServiceResource {
     

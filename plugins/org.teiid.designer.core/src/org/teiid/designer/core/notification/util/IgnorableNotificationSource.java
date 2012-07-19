@@ -14,7 +14,7 @@ package org.teiid.designer.core.notification.util;
  * 
  * Initially implemented to handle Open/Close VDB processing in Dimension VdbView, VdbViewWorker, OpenVdbAction and
  * WebServiceValidationHelper
- * @since 5.0
+ * @since 8.0
  */
 public interface IgnorableNotificationSource {
 

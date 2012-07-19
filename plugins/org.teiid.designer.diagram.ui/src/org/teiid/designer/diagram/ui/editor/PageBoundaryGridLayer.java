@@ -19,7 +19,7 @@ import org.eclipse.swt.SWT;
 
 
 /** 
- * @since 4.3
+ * @since 8.0
  */
 public class PageBoundaryGridLayer extends GridLayer {
 

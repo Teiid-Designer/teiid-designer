@@ -21,7 +21,7 @@ import org.teiid.designer.xsd.util.ModelerXsdUtils;
 
 
 /** 
- * @since 4.2
+ * @since 8.0
  */
 public class MappingSelectionHelper extends TransformationSelectionHelper {
     public static final int TYPE_EXTENT = 20;

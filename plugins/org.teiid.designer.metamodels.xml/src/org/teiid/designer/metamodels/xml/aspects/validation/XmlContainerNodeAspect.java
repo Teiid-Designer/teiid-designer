@@ -12,7 +12,7 @@ import org.teiid.designer.core.metamodel.aspect.MetamodelEntity;
 
 /** 
  * XmlContainerNodeAspect
- * @since 4.2
+ * @since 8.0
  */
 public class XmlContainerNodeAspect extends AbstractXmlNodeAspect {
 

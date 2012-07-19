@@ -18,7 +18,7 @@ import org.eclipse.emf.ecore.EObject;
 /** 
  * Specialized visitor which collects and creates ordered lists of mapping classes and staging tables given a set of 
  * maps defining the location object -to- mapping class maps
- * @since 5.0
+ * @since 8.0
  */
 public class XmlDocumentMappingClassVisitor {
     private ArrayList mappingClasses;

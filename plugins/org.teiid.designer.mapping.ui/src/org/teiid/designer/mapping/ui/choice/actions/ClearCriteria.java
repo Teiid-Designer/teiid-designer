@@ -18,7 +18,7 @@ import org.teiid.designer.ui.viewsupport.ModelObjectUtilities;
 
 /**
  * The <code>ClearCriteria</code> class launches the Criteria Builder
- * @since 4.0
+ * @since 8.0
  */
 public class ClearCriteria extends AbstractAction {
 

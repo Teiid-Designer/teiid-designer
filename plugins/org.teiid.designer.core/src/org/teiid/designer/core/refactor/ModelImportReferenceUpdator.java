@@ -23,7 +23,7 @@ import org.teiid.designer.metamodels.core.ModelType;
 
 /**
  * Updates the properties on the model import to poin to the newly copied model.
- * @since 4.2
+ * @since 8.0
  */
 public class ModelImportReferenceUpdator implements ReferenceUpdator {
 

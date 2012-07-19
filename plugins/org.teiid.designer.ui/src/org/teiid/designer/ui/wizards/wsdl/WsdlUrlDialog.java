@@ -46,7 +46,7 @@ import org.teiid.designer.ui.common.widget.MessageLabel;
 /**
  * The <code>WsdlUrlDialog</code> class is the dialog that obtains user input for entering a WSDL Url.
  * 
- * @since 5.0.1
+ * @since 8.0
  */
 public class WsdlUrlDialog extends Dialog implements IHelpContextIds, UiConstants {
 

@@ -48,7 +48,7 @@ import org.teiid.query.sql.visitor.GroupsUsedByElementsVisitor;
  * SqlTransformationMappingRootRule while validating a transformation and assumes that the command on which its applying
  * validation checks is valid.
  * 
- * @since 4.3
+ * @since 8.0
  */
 public class MappingClassTransformationValidationHelper {
 

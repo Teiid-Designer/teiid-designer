@@ -63,7 +63,7 @@ import org.teiid.designer.webservice.util.AntTasks;
 /**
  * This is the default implementation of a WebArchiveBuilder.
  * 
- * @since 7.1
+ * @since 8.0
  */
 public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
 

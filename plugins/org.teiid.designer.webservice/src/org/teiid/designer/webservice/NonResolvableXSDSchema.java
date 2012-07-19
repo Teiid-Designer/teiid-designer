@@ -17,7 +17,7 @@ import org.eclipse.xsd.impl.XSDSchemaImpl;
  * to process a schema with an invalid path just as we would process a resolvable schema. We need
  * this additional layer since we are unable to create a XSDSchemaImpl object with an un-resolvanle resource.
  * 
- * @since 5.0
+ * @since 8.0
  *
  */
 public class NonResolvableXSDSchema extends XSDSchemaImpl {

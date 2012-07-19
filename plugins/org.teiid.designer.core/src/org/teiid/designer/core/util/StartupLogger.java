@@ -13,7 +13,7 @@ import org.teiid.designer.core.ModelerCore;
 
 /** 
  * This static utility class allows methods to log timing values.
- * @since 4.3
+ * @since 8.0
  */
 public abstract class StartupLogger {
     private static boolean propLoaded = false;

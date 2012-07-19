@@ -13,7 +13,7 @@ import org.teiid.designer.ui.viewsupport.SystemModelTreeViewer;
 
 
 /** 
- * @since 4.3
+ * @since 8.0
  */
 public class SystemModelView extends ModelerView {
 

@@ -34,7 +34,7 @@ import org.teiid.designer.ui.viewsupport.SelectModelObjectLabelProvider;
 /**
  * This class provides helper methods to open/edit a transformation for a specific ModelResource
  * 
- * @since 5.0
+ * @since 8.0
  */
 public class EditTransformationHelper {
     private static final String DIALOG_TITLE        = UiConstants.Util.getString("EditTransformationHelper.dialogTitle"); //$NON-NLS-1$

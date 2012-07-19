@@ -10,7 +10,7 @@ package org.teiid.designer.core.validation;
 import org.eclipse.emf.ecore.EObject;
 
 /**
- * @since 4.0
+ * @since 8.0
  */
 public interface ObjectValidationRule extends ValidationRule {
     

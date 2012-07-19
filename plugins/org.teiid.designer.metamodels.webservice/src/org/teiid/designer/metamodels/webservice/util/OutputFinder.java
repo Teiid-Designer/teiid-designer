@@ -13,7 +13,7 @@ import org.teiid.designer.metamodels.webservice.Operation;
 import org.teiid.designer.metamodels.webservice.Output;
 
 /**
- * @since 4.2
+ * @since 8.0
  */
 public class OutputFinder extends WebServiceComponentFinder {
 

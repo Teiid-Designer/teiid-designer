@@ -25,7 +25,7 @@ import org.teiid.designer.ui.common.util.WidgetFactory;
 
 
 /**
- * @since 5.0
+ * @since 8.0
  */
 public class ParameterInputDialog extends TitleAreaDialog implements
                                                          DqpUiConstants,

@@ -35,7 +35,7 @@ import org.teiid.designer.metamodels.transformation.TransformationContainer;
 
 
 /**
- * @since 4.3
+ * @since 8.0
  */
 public class TxnNotificationFilter {
 

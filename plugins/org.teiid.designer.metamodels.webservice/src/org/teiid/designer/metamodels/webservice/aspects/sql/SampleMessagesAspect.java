@@ -24,7 +24,7 @@ import org.teiid.designer.core.types.DatatypeManager;
  * This aspect is here because Output is adapted to a SqlColumnSet, and we need an object
  * that is adapted to SqlColumn, and the name has to be "xml" to match up with the output
  * of transformations that return a result set with a single "xml:string" column.
- * @since 4.2
+ * @since 8.0
  */
 public class SampleMessagesAspect extends WebServiceComponentAspect implements SqlColumnAspect {
 

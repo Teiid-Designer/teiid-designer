@@ -18,7 +18,7 @@ import org.teiid.core.util.HashCodeUtil;
  * such columns.
  * 
  * @author Jerry Helbling
- * @since 4.4
+ * @since 8.0
  * @version 1.0
  */
 public final class SummaryExtent extends MappingExtent {

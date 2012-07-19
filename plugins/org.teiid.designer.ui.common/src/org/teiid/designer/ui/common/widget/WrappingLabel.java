@@ -18,7 +18,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
 /**
- * @since 4.0
+ * @since 8.0
  */
 public class WrappingLabel extends Composite {
 

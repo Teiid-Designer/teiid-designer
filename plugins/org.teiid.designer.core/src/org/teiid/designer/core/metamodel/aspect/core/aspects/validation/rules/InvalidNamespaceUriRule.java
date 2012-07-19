@@ -23,7 +23,7 @@ import org.teiid.designer.metamodels.core.util.UriValidator;
 
 /**
  * Rule to make sure all Namespace URIs are valid. 
- * @since 4.3
+ * @since 8.0
  */
 public final class InvalidNamespaceUriRule implements ObjectValidationRule {
 

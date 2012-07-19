@@ -23,7 +23,7 @@ import org.teiid.designer.ui.editors.ModelEditor;
 
 
 /** 
- * @since 4.3
+ * @since 8.0
  */
 public class LockAction extends TransformationAction {
     private static final String LOCK_ACTION_DESCRIPTION = UiConstants.Util.getString("LockAction.lockText"); //$NON-NLS-1$

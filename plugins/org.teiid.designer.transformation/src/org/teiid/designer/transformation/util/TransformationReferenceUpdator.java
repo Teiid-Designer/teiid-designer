@@ -18,7 +18,7 @@ import org.teiid.query.sql.lang.Command;
 import org.teiid.query.sql.navigator.PreOrderNavigator;
 
 /**
- * @since 4.2
+ * @since 8.0
  */
 public class TransformationReferenceUpdator implements ReferenceUpdator {
 

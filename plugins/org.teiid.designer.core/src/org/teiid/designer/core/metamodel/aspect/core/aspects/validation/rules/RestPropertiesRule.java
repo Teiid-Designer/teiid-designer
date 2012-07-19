@@ -29,7 +29,7 @@ import org.teiid.designer.metamodels.core.Annotation;
 /**
  * Rule to check for valid REST property combinations.
  * 
- * @since 7.5
+ * @since 8.0
  */
 public final class RestPropertiesRule implements ObjectValidationRule {
 

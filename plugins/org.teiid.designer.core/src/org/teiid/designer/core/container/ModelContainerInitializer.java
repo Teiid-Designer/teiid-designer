@@ -8,7 +8,7 @@
 package org.teiid.designer.core.container;
 
 /** 
- * @since 4.3
+ * @since 8.0
  */
 public interface ModelContainerInitializer {
 

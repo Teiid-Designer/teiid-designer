@@ -39,7 +39,7 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 
 /**
- * @since 4.0
+ * @since 8.0
  */
 public class RefreshModelAction
     implements IRefreshContributor, org.teiid.designer.jdbc.relational.ModelerJdbcRelationalConstants.Messages, ModelUtil.Constants, UiConstants {

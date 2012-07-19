@@ -57,7 +57,7 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 /**
  * ModelExplorerLabelProvider
  * 
- * @since 4.0
+ * @since 8.0
  */
 public class ModelExplorerLabelProvider extends LabelProvider
     implements ILightweightLabelDecorator, UiConstants, PluginConstants.Images {

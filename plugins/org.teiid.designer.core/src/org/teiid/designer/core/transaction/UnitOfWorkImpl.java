@@ -43,7 +43,7 @@ import org.teiid.designer.core.util.ProcessedNotificationResult;
 
 /**
  * @author lphillips
- * @since 3.1
+ * @since 8.0
  */
 public class UnitOfWorkImpl implements UnitOfWork {
 

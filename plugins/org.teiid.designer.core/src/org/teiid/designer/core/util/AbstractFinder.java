@@ -16,7 +16,7 @@ import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.container.EObjectFinder;
 
 /**
- * @since 3.1
+ * @since 8.0
  */
 public abstract class AbstractFinder implements EObjectFinder {
     //############################################################################################################################

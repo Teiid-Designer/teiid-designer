@@ -13,7 +13,7 @@ import org.eclipse.ui.IWorkbench;
 
 /**
  * This contributor is used to contribute preferences to the general preference page. 
- * @since 5.0
+ * @since 8.0
  * @see org.teiid.designer.ui.UiConstants.ExtensionPoints.GeneralPreferenceContributor
  */
 public interface IGeneralPreferencePageContributor {

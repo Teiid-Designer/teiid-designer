@@ -18,7 +18,7 @@ import org.teiid.designer.core.ModelerCore;
 /**
  * A collection of utilities for executing operations within a transaction.
  * 
- * @since 5.0.2
+ * @since 8.0
  */
 public class TransactionUtil implements
                             CoreStringUtil.Constants {

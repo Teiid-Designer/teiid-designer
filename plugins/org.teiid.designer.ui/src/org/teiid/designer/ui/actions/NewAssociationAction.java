@@ -26,7 +26,7 @@ import org.teiid.designer.ui.wizards.NewModelObjectWizardManager;
 
 /**
  * The <code>NewAssociationAction</code> class creates a new association.
- * @since 4.0
+ * @since 8.0
  */
 public class NewAssociationAction extends ModelObjectAction {
     

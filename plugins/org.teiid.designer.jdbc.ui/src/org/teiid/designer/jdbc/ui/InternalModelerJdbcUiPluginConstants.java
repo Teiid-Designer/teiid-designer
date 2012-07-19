@@ -12,7 +12,7 @@ import org.teiid.core.util.I18nUtil;
 
 
 /**
- * @since 4.0
+ * @since 8.0
  */
 public interface InternalModelerJdbcUiPluginConstants extends ModelerJdbcUiConstants {
 

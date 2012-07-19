@@ -15,7 +15,7 @@ import org.teiid.query.sql.lang.Command;
  * The <code>CriteriaStrategy</code> interface is used by the <code>SetCriteriaController</code>
  * when subquery are used.
  * @author Dan Florian
- * @since 3.1
+ * @since 8.0
  * @version 1.0
  */
 public interface ICriteriaStrategy {

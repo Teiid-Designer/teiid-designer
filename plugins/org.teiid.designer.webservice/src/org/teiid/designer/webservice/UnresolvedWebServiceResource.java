@@ -12,7 +12,7 @@ import java.io.InputStream;
 
 
 /** 
- * @since 4.2
+ * @since 8.0
  */
 public class UnresolvedWebServiceResource extends AbstractWebServiceResource {
 

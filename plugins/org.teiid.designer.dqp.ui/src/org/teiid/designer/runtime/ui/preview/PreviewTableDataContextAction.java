@@ -18,7 +18,7 @@ import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 
 
 /**
- * @since 5.0
+ * @since 8.0
  */
 public class PreviewTableDataContextAction extends SortableSelectionAction {
 	public static final String THIS_CLASS = I18nUtil.getPropertyPrefix(PreviewTableDataContextAction.class);

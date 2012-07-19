@@ -55,7 +55,7 @@ import org.teiid.designer.ui.editors.ModelEditorSite;
 
 
 /**
- * @since 4.0
+ * @since 8.0
  */
 public final class DiagramActionContributor extends AbstractModelEditorPageActionBarContributor
     implements DiagramUiConstants, IDiagramActionConstants {

@@ -11,7 +11,7 @@ import java.sql.DriverPropertyInfo;
 
 
 /** 
- * @since 4.2
+ * @since 8.0
  */
 public class JdbcDriverProperty {
     

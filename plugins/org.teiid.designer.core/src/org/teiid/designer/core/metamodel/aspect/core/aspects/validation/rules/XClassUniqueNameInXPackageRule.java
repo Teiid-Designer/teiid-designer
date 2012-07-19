@@ -30,7 +30,7 @@ import org.teiid.designer.metamodels.core.extension.XPackage;
 
 
 /** 
- * @since 4.2
+ * @since 8.0
  */
 public class XClassUniqueNameInXPackageRule implements ObjectValidationRule {
 

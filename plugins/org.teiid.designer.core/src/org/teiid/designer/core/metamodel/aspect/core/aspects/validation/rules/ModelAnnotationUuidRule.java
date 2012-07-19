@@ -23,7 +23,7 @@ import org.teiid.designer.metamodels.core.ModelAnnotation;
 
 
 /**
- * @since 4.2
+ * @since 8.0
  */
 public class ModelAnnotationUuidRule implements ObjectValidationRule {
 

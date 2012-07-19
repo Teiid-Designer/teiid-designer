@@ -27,7 +27,7 @@ import org.teiid.designer.ui.viewsupport.MarkerUtilities;
 
 /**
  * TransformationDiagramLabelProvider
- * @since 4.0
+ * @since 8.0
  */
 public class TransformationDiagramLabelProvider extends LabelProvider
 implements ILightweightLabelDecorator, UiConstants, PluginConstants.Images {

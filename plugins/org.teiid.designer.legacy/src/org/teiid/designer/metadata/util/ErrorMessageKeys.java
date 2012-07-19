@@ -12,7 +12,7 @@ package org.teiid.designer.metadata.util;
 
 /**
  * @author lphillips
- * @since 3.1 Class for maintaining the property file keys for Metadata error messages.
+ * @since 8.0 Class for maintaining the property file keys for Metadata error messages.
  */
 public interface ErrorMessageKeys {
     // *********************** Generic Metadata ***********************

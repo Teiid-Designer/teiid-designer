@@ -45,7 +45,7 @@ import org.teiid.designer.ui.wizards.GenerateXsdWizard;
  * 
  * This Action is added to both the Edit Menu and Context menus to drive
  * generation of XSD Schemas for usage as output documents for WebService deployments. 
- * @since 4.2
+ * @since 8.0
  */
 public class GenerateXsdSchemaAction extends ActionDelegate implements
 	IWorkbenchWindowActionDelegate, IViewActionDelegate {

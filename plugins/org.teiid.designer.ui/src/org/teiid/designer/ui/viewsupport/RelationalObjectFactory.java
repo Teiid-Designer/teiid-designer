@@ -32,7 +32,7 @@ import org.teiid.designer.ui.UiConstants;
 
 
 /** 
- * @since 4.2
+ * @since 8.0
  */
 public class RelationalObjectFactory {
     //============================================================================================================================

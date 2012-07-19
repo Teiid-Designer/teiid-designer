@@ -31,7 +31,7 @@ import org.teiid.designer.core.workspace.WorkspaceResourceFinderUtil;
 
 
 /** 
- * @since 4.2
+ * @since 8.0
  */
 public class ResourceInScopeValidationRule implements StructuralFeatureValidationRule {
     

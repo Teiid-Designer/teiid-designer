@@ -31,7 +31,7 @@ import org.teiid.designer.transformation.compare.TransformationMatcherFactory;
 /** 
  * This generator is the component that actually does the work of creating the Web Service
  * and XML Document models from the prescribed input information.
- * @since 4.2
+ * @since 8.0
  */
 public class WebServiceModelGenerator extends CompositeModelGenerator {
 

@@ -57,7 +57,7 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 /**
  * The <code>MetadataSearchPage</code> is the UI to perform workspace Metadata searching.
  * 
- * @since 6.0.0
+ * @since 8.0
  */
 public final class MetadataSearchPage extends DialogPage implements ISearchPage, UiConstants {
 

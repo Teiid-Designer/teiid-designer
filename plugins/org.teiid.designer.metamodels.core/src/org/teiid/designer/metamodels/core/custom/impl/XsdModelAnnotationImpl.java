@@ -20,7 +20,7 @@ import org.teiid.designer.metamodels.core.impl.ModelAnnotationImpl;
  * mmDefect_12555 - Created XsdModelAnnotationImpl so that an Resource reference was available in the ModelAnnotationItemProvider
  * since ModelAnnotation instances associated with XSD resources return null for the eResource reference.
  * 
- * @since 4.2
+ * @since 8.0
  */
 public class XsdModelAnnotationImpl extends ModelAnnotationImpl {
 

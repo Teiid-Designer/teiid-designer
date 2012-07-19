@@ -21,7 +21,7 @@ import org.teiid.designer.runtime.ui.wizards.webservices.util.WebArchiveBuilder;
 import org.teiid.designer.runtime.ui.wizards.webservices.util.WebArchiveBuilderFactory;
 
 /**
- * @since 7.4
+ * @since 8.0
  */
 public class RestWarDeploymentInfoDataPage extends RestWarDeploymentInfoPanel {
 

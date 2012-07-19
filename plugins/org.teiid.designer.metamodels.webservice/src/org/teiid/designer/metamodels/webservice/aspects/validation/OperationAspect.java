@@ -11,7 +11,7 @@ import org.teiid.designer.core.metamodel.aspect.MetamodelEntity;
 
 
 /** 
- * @since 4.2
+ * @since 8.0
  */
 public class OperationAspect extends WebServiceComponentAspect {
 

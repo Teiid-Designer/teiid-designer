@@ -9,7 +9,7 @@ package org.teiid.designer.ui.common.actions;
 
 
 /** 
- * @since 4.2
+ * @since 8.0
  */
 public class WorkerProblem {
     private String title;

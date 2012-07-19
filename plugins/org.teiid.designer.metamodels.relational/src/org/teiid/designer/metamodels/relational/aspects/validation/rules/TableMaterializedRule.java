@@ -34,7 +34,7 @@ import org.teiid.designer.metamodels.relational.Table;
 
 
 /**
- * @since 4.2
+ * @since 8.0
  */
 public class TableMaterializedRule implements StructuralFeatureValidationRule {
 

@@ -68,7 +68,7 @@ import org.teiid.query.sql.symbol.SingleElementSymbol;
  * Panel used by the DatatypeReconcilerDialog to assist in displaying and editing/fixing datatype conflicts for mapped or bound
  * attributes and SQL symbols
  * 
- * @since 5.0
+ * @since 8.0
  */
 public class DatatypeReconcilerPanel extends SashForm implements ISelectionChangedListener, PluginConstants.Images {
 

@@ -24,7 +24,7 @@ import org.teiid.designer.ui.common.util.WidgetFactory;
  * <p>
  * </p>
  * 
- * @since 4.0
+ * @since 8.0
  */
 public abstract class AbstractVerticalButtonPanel extends Composite {
 

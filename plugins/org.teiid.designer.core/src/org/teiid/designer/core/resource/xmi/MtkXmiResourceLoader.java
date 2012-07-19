@@ -18,7 +18,7 @@ import org.xml.sax.helpers.DefaultHandler;
 /**
  * @author Lance Phillips
  *
- * @since 3.1
+ * @since 8.0
  */
 public class MtkXmiResourceLoader extends XMILoadImpl {
     private final Container container;

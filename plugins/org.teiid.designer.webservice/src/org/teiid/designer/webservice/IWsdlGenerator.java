@@ -23,7 +23,7 @@ import org.teiid.designer.metamodels.wsdl.WsdlPackage;
  * {@link org.teiid.designer.metamodels.webservice.WebServicePackage Web Service} models and the
  * supporting {@link XSDSchema XML Schemas}.
  * 
- * @since 4.2
+ * @since 8.0
  */
 public interface IWsdlGenerator {
     

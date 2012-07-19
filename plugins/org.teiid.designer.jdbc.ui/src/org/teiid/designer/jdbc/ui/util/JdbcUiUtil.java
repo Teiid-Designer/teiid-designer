@@ -31,7 +31,7 @@ import org.teiid.designer.ui.common.util.WidgetUtil;
 
 
 /**
- * @since 4.0
+ * @since 8.0
  */
 public final class JdbcUiUtil
     implements InternalModelerJdbcUiPluginConstants, InternalModelerJdbcUiPluginConstants.Widgets, InternalUiConstants.Widgets,

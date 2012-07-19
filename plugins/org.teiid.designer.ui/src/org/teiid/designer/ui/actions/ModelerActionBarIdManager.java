@@ -16,7 +16,7 @@ import org.teiid.designer.ui.common.product.IProductContexts.Product;
 /**
  * Menus, menu items, toolbar items and groups, and menu marker IDs can change from product to product. This class keeps
  * track and returns the correct ID.
- * @since 4.4
+ * @since 8.0
  */
 public class ModelerActionBarIdManager implements IModelerRcpActionIds {
     /**

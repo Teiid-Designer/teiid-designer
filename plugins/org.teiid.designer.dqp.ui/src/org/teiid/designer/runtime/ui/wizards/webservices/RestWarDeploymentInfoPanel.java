@@ -36,7 +36,7 @@ import org.teiid.designer.ui.viewsupport.DesignerProperties;
 
 
 /**
- * @since 7.4
+ * @since 8.0
  */
 public abstract class RestWarDeploymentInfoPanel extends Composite implements InternalModelerWarUiConstants {
 

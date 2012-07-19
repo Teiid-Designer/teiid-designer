@@ -96,7 +96,7 @@ import org.teiid.designer.webservice.WebServicePlugin;
 /**
  * Basic implementation of the {@link org.teiid.designer.webservice.IWsdlGenerator} interface.
  * 
- * @since 4.2
+ * @since 8.0
  */
 public class BasicWsdlGenerator implements IWsdlGenerator {
 

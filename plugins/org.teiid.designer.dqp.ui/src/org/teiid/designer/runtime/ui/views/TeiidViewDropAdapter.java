@@ -27,7 +27,7 @@ import org.teiid.designer.ui.viewsupport.ModelIdentifier;
  * Provides simple DROP capability to the ConnectorsView. performDrop() locates the ModelResource for the selected/dragged
  * IResource and creates a source binding object using the drop target ConnectorBinding.
  * 
- * @since 5.0
+ * @since 8.0
  */
 public class TeiidViewDropAdapter extends PluginDropAdapter {
     /**

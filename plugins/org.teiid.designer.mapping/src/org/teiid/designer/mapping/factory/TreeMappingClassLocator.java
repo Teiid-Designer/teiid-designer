@@ -38,7 +38,7 @@ import org.teiid.designer.metamodels.transformation.TreeMappingRoot;
  * 
  * This improves performance and simplifies follow-on code maintenance.
  * Created: BML 5/9/07
- * @since 5.0
+ * @since 8.0
  */
 public class TreeMappingClassLocator implements PluginConstants {
     // ---------------------------------------------------------------------------------------------------------------------------

@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @since 4.3
+ * @since 8.0
  */
 public class ResultSetImpl implements ResultSet {
 

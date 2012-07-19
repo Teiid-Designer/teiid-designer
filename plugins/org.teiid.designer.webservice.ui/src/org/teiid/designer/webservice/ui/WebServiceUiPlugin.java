@@ -23,7 +23,7 @@ import org.teiid.designer.webservice.ui.util.WebServiceNotificationListener;
 /**
  * The <code>WebServiceUiPlugin</code> is the plugin for the Modeler Web Service UI.
  * 
- * @since 4.2
+ * @since 8.0
  */
 public final class WebServiceUiPlugin extends AbstractUiPlugin implements
                                                               IInternalUiConstants {

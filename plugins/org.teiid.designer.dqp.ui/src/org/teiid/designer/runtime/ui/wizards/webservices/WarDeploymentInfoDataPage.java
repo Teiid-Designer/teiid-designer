@@ -19,7 +19,7 @@ import org.teiid.designer.runtime.ui.wizards.webservices.util.WebArchiveBuilder;
 import org.teiid.designer.runtime.ui.wizards.webservices.util.WebArchiveBuilderFactory;
 
 /**
- * @since 7.1
+ * @since 8.0
  */
 public class WarDeploymentInfoDataPage extends WarDeploymentInfoPanel {
 

@@ -28,7 +28,7 @@ import org.teiid.designer.metamodels.webservice.WebServiceMetamodelPlugin;
 /**
  * GlobalXSDElementRule
  * 
- * @since 4.2
+ * @since 8.0
  */
 public class GlobalSchemaReferenceRule implements
                                       ObjectValidationRule {

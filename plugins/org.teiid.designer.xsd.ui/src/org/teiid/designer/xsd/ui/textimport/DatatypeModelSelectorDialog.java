@@ -55,7 +55,7 @@ import org.teiid.designer.xsd.ui.ModelerXsdUiConstants;
 
 
 /**
- * @since 4.2
+ * @since 8.0
  */
 public class DatatypeModelSelectorDialog extends ModelWorkspaceDialog implements ModelerXsdUiConstants {
     private Label lblDatatypeModelName;

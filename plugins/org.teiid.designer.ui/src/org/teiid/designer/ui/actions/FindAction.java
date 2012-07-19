@@ -30,7 +30,7 @@ import org.teiid.designer.ui.editors.ModelObjectEditorPanel;
 
 /**
  * The <code>FindAction</code> class is the action that handles the global Find.
- * @since 4.0
+ * @since 8.0
  */
 public class FindAction extends AbstractAction 
                 implements IPartListener,

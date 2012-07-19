@@ -35,7 +35,7 @@ import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 
 
 /**
- * @since 4.2
+ * @since 8.0
  */
 public final class SearchPageUtil implements UiConstants {
 

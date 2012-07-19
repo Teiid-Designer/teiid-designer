@@ -22,7 +22,7 @@ import org.teiid.designer.jdbc.relational.util.JdbcRelationalUtil;
 
 
 /** 
- * @since 4.3
+ * @since 8.0
  */
 public class OracleCostAnalyzerImpl extends DefaultCostAnalyzerImpl {
     /**

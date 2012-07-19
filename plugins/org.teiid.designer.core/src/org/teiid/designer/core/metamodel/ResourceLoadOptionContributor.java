@@ -12,7 +12,7 @@ import org.eclipse.emf.ecore.xmi.XMLResource;
 
 /** 
  * Interface defining the methods for the ModelerCore.EXTENSION_POINT.RESOURCE_LOAD_OPTIONS extension.
- * @since 4.3
+ * @since 8.0
  */
 public interface ResourceLoadOptionContributor {
     

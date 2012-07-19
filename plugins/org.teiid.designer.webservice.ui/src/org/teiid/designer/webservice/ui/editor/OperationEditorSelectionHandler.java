@@ -15,7 +15,7 @@ import org.teiid.designer.ui.common.eventsupport.SelectionProvider;
 
 
 /**
- * @since 5.0.2
+ * @since 8.0
  */
 public class OperationEditorSelectionHandler extends SelectionProvider implements
                                                                       ISelectionChangedListener {

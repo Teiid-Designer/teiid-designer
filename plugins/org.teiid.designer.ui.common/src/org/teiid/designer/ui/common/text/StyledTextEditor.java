@@ -55,7 +55,7 @@ import org.teiid.designer.ui.common.util.UiUtil;
  * Copy, Paste, SelectAll, Undo, and Redo actions are taken care of by this class. This class handles the appropriate keyboard
  * accelerators for those actions.
  * 
- * @since 5.5.3
+ * @since 8.0
  */
 public class StyledTextEditor implements IMenuListener, KeyListener, UiConstants {
 

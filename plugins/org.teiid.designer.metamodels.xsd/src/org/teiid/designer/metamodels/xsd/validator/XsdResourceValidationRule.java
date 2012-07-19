@@ -32,7 +32,7 @@ import org.teiid.designer.metamodels.xsd.XsdPlugin;
 
 
 /**
- * @since 5.1
+ * @since 8.0
  */
 public class XsdResourceValidationRule implements ResourceValidationRule {
 

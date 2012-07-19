@@ -81,7 +81,7 @@ import org.teiid.designer.ui.viewsupport.ModelingResourceFilter;
 
 
 /**
- * @since 4.0
+ * @since 8.0
  */
 public class JdbcImportOptionsPage extends WizardPage implements
                                                      InternalUiConstants.Widgets,

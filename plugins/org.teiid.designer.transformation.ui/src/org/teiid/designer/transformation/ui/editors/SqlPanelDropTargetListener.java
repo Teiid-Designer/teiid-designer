@@ -34,7 +34,7 @@ import org.teiid.query.ui.sqleditor.component.DisplayNodeConstants;
 
 
 /** 
- * @since 4.3
+ * @since 8.0
  */
 public class SqlPanelDropTargetListener implements
                                        TransferDropTargetListener {

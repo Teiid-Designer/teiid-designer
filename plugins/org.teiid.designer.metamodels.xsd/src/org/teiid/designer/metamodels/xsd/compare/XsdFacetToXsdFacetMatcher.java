@@ -13,7 +13,7 @@ import org.teiid.designer.core.compare.AbstractEObjectNameMatcher;
 
 
 /** 
- * @since 4.2
+ * @since 8.0
  */
 public class XsdFacetToXsdFacetMatcher extends AbstractEObjectNameMatcher {
 

@@ -18,7 +18,7 @@ import org.eclipse.xsd.XSDSchema;
  * This interface represents a single resource that is to be copied, and captures
  * where in the workspace the XSD is to be placed when the
  * {@link org.teiid.designer.webservice.IWebServiceModelBuilder model builder} completes.
- * @since 4.2
+ * @since 8.0
  */
 public interface IWebServiceXsdResource {
     

@@ -23,7 +23,7 @@ import org.teiid.designer.ui.UiPlugin;
 /**
  * This general preference controls whether an editor is automatically opened when needed by the
  * application. 
- * @since 5.0
+ * @since 8.0
  */
 public class AutoOpenEditorPreferenceContributor implements IGeneralPreferencePageContributor,
                                                             UiConstants {

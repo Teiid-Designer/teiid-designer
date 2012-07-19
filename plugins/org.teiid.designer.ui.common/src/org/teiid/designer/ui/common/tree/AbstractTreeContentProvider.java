@@ -11,7 +11,7 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.teiid.designer.ui.common.widget.DefaultContentProvider;
 
 /**
- * @since 4.0
+ * @since 8.0
  */
 public abstract class AbstractTreeContentProvider extends DefaultContentProvider implements
                                                                                 ITreeContentProvider {

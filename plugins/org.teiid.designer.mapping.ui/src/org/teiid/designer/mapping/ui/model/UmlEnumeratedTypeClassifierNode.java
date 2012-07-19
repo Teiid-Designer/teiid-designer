@@ -18,7 +18,7 @@ import org.teiid.designer.metamodels.diagram.Diagram;
 
 
 /** 
- * @since 5.0.2
+ * @since 8.0
  */
 public class UmlEnumeratedTypeClassifierNode extends UmlClassifierNode {
 

@@ -25,7 +25,7 @@ import org.teiid.core.util.ArgCheck;
 /** 
  * A collection of methods to help with evaluating an XPath against a document.  These
  * utilities currently use Jaxen for XPath implementation.
- * @since 4.2
+ * @since 8.0
  */
 public class XPathHelper {
 

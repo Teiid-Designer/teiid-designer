@@ -14,7 +14,7 @@ import org.teiid.designer.metamodels.wsdl.mime.MimePackage;
 import org.teiid.designer.metamodels.wsdl.soap.SoapPackage;
 
 /**
- * @since 4.2
+ * @since 8.0
  */
 public interface WsdlConstants {
 

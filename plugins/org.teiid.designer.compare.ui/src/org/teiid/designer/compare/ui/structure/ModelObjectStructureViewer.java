@@ -52,7 +52,7 @@ import org.teiid.designer.core.workspace.ModelWorkspaceItemImpl;
 
 
 /**
- * @since 4.2
+ * @since 8.0
  */
 public class ModelObjectStructureViewer extends StructuredViewer /*StructureDiffViewer*/{
 

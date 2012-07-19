@@ -39,7 +39,7 @@ import org.teiid.designer.ui.IDiagramTypeEditPart;
 
 
 /**
- * @since 5.0
+ * @since 8.0
  */
 public class SaveDiagramHelper implements DiagramUiConstants {
 

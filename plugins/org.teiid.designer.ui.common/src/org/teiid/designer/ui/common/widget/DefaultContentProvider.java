@@ -13,7 +13,7 @@ import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
 /**
- * @since 4.0
+ * @since 8.0
  */
 public class DefaultContentProvider implements
                                     IStructuredContentProvider {

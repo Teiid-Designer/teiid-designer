@@ -12,7 +12,7 @@ import org.teiid.designer.core.ModelerCore;
 /**
  * @author Lance Phillips
  *
- * @since 3.1
+ * @since 8.0
  */
 public class TransactionStateConstants {
     public static final int UNINITIALIZED = -1;

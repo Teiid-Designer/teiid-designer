@@ -13,7 +13,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 
 
 /** 
- * @since 5.0
+ * @since 8.0
  */
 public class ProcessedNotificationResult {
     

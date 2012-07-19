@@ -17,7 +17,7 @@ import org.teiid.core.util.CoreArgCheck;
 
 /**
  * A resizable dialog
- * @since 4.0
+ * @since 8.0
  */
 public class Dialog extends org.eclipse.jface.dialogs.Dialog {
     //============================================================================================================================

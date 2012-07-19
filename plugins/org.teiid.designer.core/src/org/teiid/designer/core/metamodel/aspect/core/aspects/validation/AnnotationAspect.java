@@ -12,7 +12,7 @@ import org.teiid.designer.core.validation.ValidationRuleSet;
 
 
 /**
- * @since 4.2
+ * @since 8.0
  */
 public class AnnotationAspect extends CoreEntityAspect {
 

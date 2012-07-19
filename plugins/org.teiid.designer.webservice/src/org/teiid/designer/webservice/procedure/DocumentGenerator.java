@@ -19,7 +19,7 @@ import org.eclipse.xsd.XSDModelGroup;
 import org.teiid.core.util.CoreStringUtil;
 
 /**
- * @since 5.0.1
+ * @since 8.0
  */
 public class DocumentGenerator implements
                               CoreStringUtil.Constants {

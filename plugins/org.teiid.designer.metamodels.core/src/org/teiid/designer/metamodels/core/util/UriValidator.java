@@ -21,7 +21,7 @@ import org.teiid.designer.metamodels.core.CoreMetamodelPlugin;
  * components.
  * 
  * @author <a href="mailto:dflorian@metamatrix.com">Dan Florian</a>
- * @since 4.3
+ * @since 8.0
  */
 public class UriValidator {
 

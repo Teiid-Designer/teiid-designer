@@ -27,7 +27,7 @@ import org.teiid.designer.core.util.ModelObjectCollector;
 
 
 /**
- * @since 5.0
+ * @since 8.0
  */
 public class BuiltInTypesHrefConverter implements EObjectHrefConverter {
 

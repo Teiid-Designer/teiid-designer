@@ -18,7 +18,7 @@ import org.teiid.designer.xsd.PluginConstants;
 
 
 /** 
- * @since 5.0.2
+ * @since 8.0
  */
 public class XsdUmlAspectFactory implements MetamodelAspectFactory,
                                             PluginConstants {

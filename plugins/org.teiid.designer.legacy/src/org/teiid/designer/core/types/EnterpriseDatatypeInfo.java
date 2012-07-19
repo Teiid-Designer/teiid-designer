@@ -13,7 +13,7 @@ import org.teiid.designer.core.types.DatatypeConstants.BuiltInNames;
 
 
 /**
- * @since 4.3
+ * @since 8.0
  */
 public class EnterpriseDatatypeInfo {
 

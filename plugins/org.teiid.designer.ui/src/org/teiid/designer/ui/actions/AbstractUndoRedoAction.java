@@ -31,7 +31,7 @@ import org.teiid.designer.ui.undo.ModelerUndoManager;
 /**
  * The <code>AbstractUndoRedoAction</code> class is the base class for the global undo and redo actions.
  * 
- * @since 5.3.3
+ * @since 8.0
  */
 public abstract class AbstractUndoRedoAction extends AbstractAction implements IMenuListener {
 

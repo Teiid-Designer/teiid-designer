@@ -26,7 +26,7 @@ import org.teiid.designer.ui.product.IModelerProductContexts;
 
 
 /**
- * @since 4.0
+ * @since 8.0
  */
 public final class ImportWizard extends AbstractSelectionWizard implements UiConstants, UiConstants.ExtensionPoints.ImportWizards {
 

@@ -18,7 +18,7 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 
 /**
- * @since 5.0
+ * @since 8.0
  */
 public class MappingUiNewModelObjectHelper implements INewModelObjectHelper {
     private static MappingDiagramProvider mappingDiagramProvider;

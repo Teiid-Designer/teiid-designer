@@ -20,7 +20,7 @@ import org.teiid.core.util.HashCodeUtil;
 
 
 /** 
- * @since 4.2
+ * @since 8.0
  */
 public abstract class AbstractWebServiceResource implements IWebServiceResource {
 

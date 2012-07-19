@@ -13,7 +13,7 @@ import org.teiid.designer.core.validation.rules.StringNameValidator;
 
 
 /** 
- * @since 4.2
+ * @since 8.0
  */
 public abstract class AbstractRowObject implements IRowObject {
 	private static final StringNameValidator nameValidator = new StringNameValidator();

@@ -33,7 +33,7 @@ import org.teiid.designer.ui.wizards.NewModelObjectWizardManager;
 
 /**
  * The <code>NewSiblingAction</code> class creates a new sibling object.
- * @since 4.0
+ * @since 8.0
  */
 public class NewSiblingAction extends ModelObjectAction {
 

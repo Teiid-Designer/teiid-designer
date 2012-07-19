@@ -16,7 +16,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.teiid.designer.mapping.PluginConstants;
 
 /**
- * @since 5.0.1
+ * @since 8.0
  */
 public class IterationBasedBuilderStrategy implements MappingClassBuilderStrategy {
 

@@ -18,7 +18,7 @@ import org.teiid.designer.core.metamodel.IPasteContributor;
 
 
 /**
- * @since 4.3.1
+ * @since 8.0
  */
 public class PasteContributor implements
                              IPasteContributor {

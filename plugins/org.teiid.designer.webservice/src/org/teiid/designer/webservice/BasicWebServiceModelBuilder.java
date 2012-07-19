@@ -56,7 +56,7 @@ import org.w3c.dom.Node;
  * Basic implementation of {@link org.teiid.designer.webservice.IWebServiceModelBuilder}. This class provides management of
  * the various inputs to the Web Service builder, and can create the {@link ModelGenerator} that is used to execute the builder.
  * 
- * @since 4.2
+ * @since 8.0
  */
 public class BasicWebServiceModelBuilder implements IWebServiceModelBuilder {
 

@@ -25,7 +25,7 @@ import org.teiid.designer.ui.preferences.IGeneralPreferencePageContributor;
 
 
 /**
- * @since 5.0
+ * @since 8.0
  */
 public class EnablePreviewPreferenceContributor implements IGeneralPreferencePageContributor, DqpUiConstants {
 

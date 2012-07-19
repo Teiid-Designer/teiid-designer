@@ -81,7 +81,7 @@ import org.teiid.query.ui.sqleditor.component.DisplayNodeFactory;
 
 
 /**
- * @since 4.3
+ * @since 8.0
  */
 public class VariableEditorDialog extends Dialog
     implements IInternalUiConstants, IInternalUiConstants.Images, CoreStringUtil.Constants {

@@ -22,7 +22,7 @@ import org.teiid.designer.core.types.DatatypeManager;
 
 
 /**
- * @since 3.1
+ * @since 8.0
  */
 public interface Container extends ResourceSet, PropertyChangePublisher {
 

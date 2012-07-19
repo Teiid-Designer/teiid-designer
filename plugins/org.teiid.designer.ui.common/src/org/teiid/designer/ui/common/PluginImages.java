@@ -14,7 +14,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 
 
 /** 
- * @since 4.3
+ * @since 8.0
  */
 public class PluginImages {
 

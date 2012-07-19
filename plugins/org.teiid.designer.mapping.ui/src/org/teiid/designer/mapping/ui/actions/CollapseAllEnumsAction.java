@@ -22,7 +22,7 @@ import org.teiid.designer.ui.viewsupport.ModelIdentifier;
 
 
 /** 
- * @since 5.0
+ * @since 8.0
  */
 public class CollapseAllEnumsAction extends MappingAction {
 

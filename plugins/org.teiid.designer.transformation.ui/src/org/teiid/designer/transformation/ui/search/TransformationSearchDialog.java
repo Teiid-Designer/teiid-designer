@@ -28,7 +28,7 @@ import org.teiid.designer.ui.editors.ModelEditorManager;
  * list of transformation targets that contain SQL which contains matches 4) Select target object or SELECT, INSERT, UPDATE or
  * DELETE tree node and view SQL 5) Select EDIT button to open the selected transformation in a ModelEditor
  * 
- * @since 5.0
+ * @since 8.0
  */
 public class TransformationSearchDialog extends Dialog {
 

@@ -24,7 +24,7 @@ import org.teiid.designer.core.ModelerCore;
 /**
  * EObjectCacheImpl - manager of maps containing EObject instances for resources
  * in a resource set.  The maps are keyed on the UUID associated with the EObject.
- * @since 4.3
+ * @since 8.0
  */
 public class EObjectCacheImpl implements EObjectCache {
 

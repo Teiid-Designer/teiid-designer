@@ -15,7 +15,7 @@ import org.eclipse.swt.graphics.Image;
  * Implements all {@link ITableLabelProvider} methods except for
  * {@link ITableLabelProvider#getColumnText(Object, int) getColumnText(Object, int)}.
  * </p>
- * @since 4.0
+ * @since 8.0
  */
 public abstract class AbstractTableLabelProvider
 implements ITableLabelProvider {

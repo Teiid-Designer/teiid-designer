@@ -46,7 +46,7 @@ import org.teiid.query.sql.symbol.SingleElementSymbol;
 /**
  * Panel used by AddSqlSymbolsDialog Contains a table viewer with two columns. One for Symbol Name and one for Location.
  * 
- * @since 5.0
+ * @since 8.0
  */
 public class AddSqlSymbolsPanel extends Composite {
 

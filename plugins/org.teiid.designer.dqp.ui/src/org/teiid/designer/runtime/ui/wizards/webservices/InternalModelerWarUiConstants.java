@@ -14,7 +14,7 @@ import org.teiid.core.util.PluginUtilImpl;
 
 
 /**
- * @since 7.1
+ * @since 8.0
  */
 public interface InternalModelerWarUiConstants {
     // ==================

@@ -53,7 +53,7 @@ import org.teiid.designer.webservice.ui.util.WebServiceUiUtil;
 /**
  * This page is really just a "dummy" page that always displays the web services procedure editor.
  * 
- * @since 5.0.1
+ * @since 8.0
  */
 public final class OperationEditorPage extends EditorPart implements ModelEditorPage, INavigationSupported {
 

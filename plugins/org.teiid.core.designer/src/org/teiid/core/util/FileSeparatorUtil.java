@@ -12,7 +12,7 @@ import java.io.File;
 /**
  * Utility class used to centralize determining File Separator strings independent of OS.
  * 
- * @since 5.0
+ * @since 8.0
  */
 public final class FileSeparatorUtil {
 

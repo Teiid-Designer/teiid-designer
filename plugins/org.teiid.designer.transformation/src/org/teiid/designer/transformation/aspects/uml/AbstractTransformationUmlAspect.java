@@ -16,7 +16,7 @@ import org.teiid.designer.core.metamodel.aspect.uml.UmlDiagramAspect;
 
 
 /** 
- * @since 4.2
+ * @since 8.0
  */
 public abstract class AbstractTransformationUmlAspect extends AbstractMetamodelAspect implements
                                                                             UmlDiagramAspect {

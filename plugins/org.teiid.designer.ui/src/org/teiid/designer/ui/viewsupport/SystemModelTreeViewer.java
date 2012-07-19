@@ -32,7 +32,7 @@ import org.teiid.designer.ui.UiPlugin;
 /**
  * A viewer for displaying the System models in ModelerCore's external container.
  * 
- * @since 4.3
+ * @since 8.0
  */
 public class SystemModelTreeViewer extends TreeViewer {
 

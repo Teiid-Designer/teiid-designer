@@ -9,7 +9,7 @@ package org.teiid.designer.core.notification.util;
 
 
 /** 
- * @since 5.0
+ * @since 8.0
  */
 public class DefaultIgnorableNotificationSource implements
                                                IgnorableNotificationSource {

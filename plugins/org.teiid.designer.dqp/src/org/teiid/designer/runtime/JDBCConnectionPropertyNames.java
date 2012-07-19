@@ -11,7 +11,7 @@ package org.teiid.designer.runtime;
 /** 
  * This has names for properties stored on connectorbindings stored on vdb definition file
  * and also the jdbc import properties stored on physical models. 
- * @since 4.3
+ * @since 8.0
  */
 public class JDBCConnectionPropertyNames {
 

@@ -14,7 +14,7 @@ import org.w3c.dom.Element;
 
 
 /** 
- * @since 4.2
+ * @since 8.0
  */
 public class XsdTagNameToTagNameMatcher extends AbstractEObjectNameMatcher {
 

@@ -26,7 +26,7 @@ import org.teiid.designer.core.types.DatatypeManager;
 
 
 /** 
- * @since 4.2
+ * @since 8.0
  */
 public class InputAspect extends WebServiceComponentAspect implements SqlProcedureParameterAspect {
 

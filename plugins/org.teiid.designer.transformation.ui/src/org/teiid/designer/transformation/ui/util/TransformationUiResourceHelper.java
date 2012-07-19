@@ -16,7 +16,7 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 
 /** This is a utility class that UI components can use to determine if an object resides within a specific Transformation resource
- * @since 5.0
+ * @since 8.0
  */
 public class TransformationUiResourceHelper {
 

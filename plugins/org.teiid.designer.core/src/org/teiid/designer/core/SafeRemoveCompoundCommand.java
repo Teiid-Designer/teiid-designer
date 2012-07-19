@@ -20,7 +20,7 @@ import org.eclipse.emf.edit.command.RemoveCommand;
   *  with RemoveCommands -- see internal comments.
   *  
   * @see org.teiid.designer.core.ModelEditorImpl.CompoundCommandFactory
-  * @since 4.3
+  * @since 8.0
   */
 public class SafeRemoveCompoundCommand extends CompoundCommand
 {

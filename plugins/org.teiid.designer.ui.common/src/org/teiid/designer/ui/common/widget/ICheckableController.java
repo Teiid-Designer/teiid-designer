@@ -10,7 +10,7 @@ package org.teiid.designer.ui.common.widget;
 
 /**
  * The <code>ICheckableController</code> is a controller for an {@link org.eclipse.jface.viewers.ICheckable}.
- * @since 4.2
+ * @since 8.0
  */
 public interface ICheckableController {
 

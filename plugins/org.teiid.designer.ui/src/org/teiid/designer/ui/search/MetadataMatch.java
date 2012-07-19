@@ -22,7 +22,7 @@ import org.teiid.designer.ui.UiConstants;
  * The <code>MetadataMatch</code> class contains one metadata search match. The match may correspond to an {@link EObject} that
  * satisfied the search criteria. This class is used in the search result page.
  * 
- * @since 6.0.0
+ * @since 8.0
  */
 public final class MetadataMatch extends Match implements IModelObjectMatch, UiConstants {
 

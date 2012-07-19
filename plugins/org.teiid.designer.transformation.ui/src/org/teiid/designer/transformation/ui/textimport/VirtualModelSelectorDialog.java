@@ -57,7 +57,7 @@ import org.teiid.designer.ui.viewsupport.ModelWorkspaceDialog;
 
 
 /**
- * @since 4.2
+ * @since 8.0
  */
 public class VirtualModelSelectorDialog extends ModelWorkspaceDialog implements UiConstants {
     private Label lblVirtualModelName;

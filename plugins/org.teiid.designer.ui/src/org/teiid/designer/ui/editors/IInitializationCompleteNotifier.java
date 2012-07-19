@@ -16,7 +16,7 @@ package org.teiid.designer.ui.editors;
  * has completed it's display.
  * 
  * see <code>IInitializationCompletionListener</code> for the companion listener class
- * @since 4.3
+ * @since 8.0
  */
 public interface IInitializationCompleteNotifier {
 

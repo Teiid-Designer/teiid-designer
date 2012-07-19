@@ -20,7 +20,7 @@ import org.teiid.designer.ui.common.actions.AbstractAction;
 /**
  * The <code>ImportFromFile</code> class is the action that Sets the SqlEditor Text by
  * importing from a User file.
- * @since 4.0
+ * @since 8.0
  */
 public class ImportFromFile extends AbstractAction implements EventObjectListener {
 

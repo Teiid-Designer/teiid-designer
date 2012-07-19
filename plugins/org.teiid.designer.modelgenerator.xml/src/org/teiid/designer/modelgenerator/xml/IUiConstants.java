@@ -12,7 +12,7 @@ import org.teiid.core.util.I18nUtil;
 /**
  * The internal UI constants.
  * 
- * @since 4.2
+ * @since 8.0
  */
 public interface IUiConstants {
     /**

@@ -20,7 +20,7 @@ import org.teiid.designer.ui.common.actions.AbstractAction;
 /**
  * The <code>ToggleOptimizer</code> class is the action that handles turning the sql optimizer on
  * and off.
- * @since 4.0
+ * @since 8.0
  */
 public class ToggleOptimizer extends AbstractAction implements EventObjectListener {
 

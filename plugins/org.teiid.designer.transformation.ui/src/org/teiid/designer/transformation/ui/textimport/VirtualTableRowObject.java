@@ -9,7 +9,7 @@ package org.teiid.designer.transformation.ui.textimport;
 
 
 /** 
- * @since 4.2
+ * @since 8.0
  */
 public class VirtualTableRowObject {
     private String row;

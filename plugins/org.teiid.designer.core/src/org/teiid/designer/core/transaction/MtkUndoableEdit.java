@@ -12,7 +12,7 @@ import javax.swing.undo.UndoableEdit;
 /**
  * @author Lance Phillips
  *
- * @since 3.1
+ * @since 8.0
  */
 public interface MtkUndoableEdit extends UndoableEdit {
     

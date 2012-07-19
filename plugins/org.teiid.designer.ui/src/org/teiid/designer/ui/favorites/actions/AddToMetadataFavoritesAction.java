@@ -28,7 +28,7 @@ import org.teiid.designer.ui.favorites.FavoritesView;
 
 
 /**
- * @since 4.2
+ * @since 8.0
  */
 public class AddToMetadataFavoritesAction extends ModelObjectAction {
 

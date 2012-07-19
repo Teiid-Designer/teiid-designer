@@ -19,7 +19,7 @@ import org.teiid.designer.ui.common.actions.AbstractAction;
 
 /**
  * The <code>Validate</code> class is the action that handles SQL editor validation
- * @since 4.0
+ * @since 8.0
  */
 public class Validate extends AbstractAction implements EventObjectListener {
 

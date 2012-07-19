@@ -22,7 +22,7 @@ import org.teiid.designer.ui.UiPlugin;
 
 /** This class provides various IMarker utilities that wrap IMarker calls to allow catching certain exceptions,
  * logging additional information, allow additional input object checking (i.e. resources, etc..)
- * @since 4.2
+ * @since 8.0
  */
 public abstract class MarkerUtilities {
     

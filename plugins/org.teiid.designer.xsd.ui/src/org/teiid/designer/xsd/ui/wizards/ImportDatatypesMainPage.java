@@ -60,7 +60,7 @@ import org.teiid.designer.xsd.ui.textimport.DatatypeModelSelectorDialog;
 
 
 /**
- * @since 4.2
+ * @since 8.0
  */
 public class ImportDatatypesMainPage extends WizardDataTransferPage implements IListPanelController, ITextImportMainPage {
 

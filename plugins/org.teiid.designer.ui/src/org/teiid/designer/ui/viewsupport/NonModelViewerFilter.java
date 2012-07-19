@@ -14,7 +14,7 @@ import org.eclipse.jface.viewers.ViewerFilter;
 
 
 /** 
- * @since 5.0.1
+ * @since 8.0
  */
 public class NonModelViewerFilter extends ViewerFilter {
 

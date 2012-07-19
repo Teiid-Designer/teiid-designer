@@ -28,7 +28,7 @@ import org.teiid.query.sql.symbol.Function;
  * The <code>RuntimeTypeConverter</code> class reconciles the runtime types of 2 lists.
  * 
  * @author Dan Florian
- * @since 3.1
+ * @since 8.0
  * @version 1.0
  */
 public class RuntimeTypeConverter {

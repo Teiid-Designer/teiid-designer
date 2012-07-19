@@ -23,7 +23,7 @@ import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 
 
 /**
- * @since 5.0
+ * @since 8.0
  */
 public abstract class RuntimeAction extends Action implements ISelectionChangedListener {
 

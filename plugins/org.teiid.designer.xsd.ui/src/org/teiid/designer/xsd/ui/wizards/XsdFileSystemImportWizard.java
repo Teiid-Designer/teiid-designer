@@ -31,7 +31,7 @@ import org.teiid.designer.xsd.ui.ModelerXsdUiPlugin;
 /**
  * Wizard for importing XSD resources from the local file system into the workspace.
  * 
- * @since 4.3
+ * @since 8.0
  */
 public class XsdFileSystemImportWizard extends AbstractWizard implements IImportWizard, ModelerXsdUiConstants {
 

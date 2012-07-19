@@ -29,7 +29,7 @@ import org.teiid.designer.ui.viewsupport.MarkerUtilities;
 
 /**
  * PackageDiagramLabelProvider
- * @since 4.0
+ * @since 8.0
  */
 public class CustomDiagramLabelProvider extends LabelProvider
 implements ILightweightLabelDecorator, DiagramUiConstants, PluginConstants.Images {

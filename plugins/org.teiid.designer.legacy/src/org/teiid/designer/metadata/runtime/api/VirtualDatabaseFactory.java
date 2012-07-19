@@ -15,7 +15,7 @@ import org.teiid.designer.metadata.runtime.MetadataConstants;
 /**
  * Interface that allows a {@link VirtualDatabase} loader implementation to create runtime metadata objects for a virtual database.
  * 
- * @since 3.1
+ * @since 8.0
  */
 public interface VirtualDatabaseFactory {
 

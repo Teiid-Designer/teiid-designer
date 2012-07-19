@@ -21,7 +21,7 @@ import org.teiid.query.sql.ProcedureReservedWords;
 
 /**
  * Factory to create {org.teiid.designer.webservice.procedure.ProcedureCriteriaMapping} objects.
- * @since 4.3
+ * @since 8.0
  */
 public class ProcedureCriteriaMappingFactory {
     

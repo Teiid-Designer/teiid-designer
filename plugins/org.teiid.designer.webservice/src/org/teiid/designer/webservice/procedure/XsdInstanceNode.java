@@ -38,7 +38,7 @@ import org.eclipse.xsd.XSDTypeDefinition;
  * document. The parent-child properties of instances of this class represent the possible resolved "paths" that can be taken in
  * an instance document, such that only a single iteration of recursive schema definitions are represented.
  * 
- * @since 5.0.1
+ * @since 8.0
  */
 public class XsdInstanceNode {
 

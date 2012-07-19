@@ -14,7 +14,7 @@ import org.teiid.core.util.PluginUtilImpl;
 
 
 /**
- * @since 5.0.2
+ * @since 8.0
  */
 public interface PluginConstants {
 
